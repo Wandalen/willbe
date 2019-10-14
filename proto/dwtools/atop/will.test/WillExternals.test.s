@@ -11720,6 +11720,180 @@ submodulesDownloadRecursive.timeOut = 300000;
 
 //
 
+function submodulesDownloadErrors( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+  let downloadPath = _.path.join( routinePath, '.module/PathBasic' );
+  let filePath = _.path.join( downloadPath, 'file' );
+  let filesBefore;
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  let shell2 = _.process.starter
+  ({
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = 'error on download, new directory should not be made';
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+  shell({ execPath : '.with bad .submodules.download' })
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Failed to download module' ) );
+    test.is( !_.fileProvider.fileExists( downloadPath ) )
+    return null;
+  })
+
+  //
+
+  .then( () =>
+  {
+    test.case = 'error on download, existing empty directory should be preserved';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    return null;
+  })
+  shell({ execPath : '.with bad .submodules.download' })
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Failed to download module' ) );
+    test.is( _.fileProvider.fileExists( downloadPath ) )
+    test.identical( _.fileProvider.dirRead( downloadPath ), [] );
+    return null;
+  })
+
+  //
+
+  .then( () =>
+  {
+    test.case = 'no error if download path exists and its an empty dir';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    return null;
+  })
+  shell({ execPath : '.with good .submodules.download' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, 'Failed to download module' ) );
+    test.is( _.strHas( got.output, 'module::wPathBasic was downloaded version master in' ) );
+    test.is( _.strHas( got.output, '1/2 submodule(s) were downloaded in' ) );
+
+    let files = self.find( downloadPath );
+    test.gt( files.length, 10 );
+
+    return null;
+  })
+
+  //
+
+  .then( () =>
+  {
+    test.case = 'error if download path exists and its not a empty dir';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    _.fileProvider.fileWrite( filePath,filePath );
+    return null;
+  })
+  shell({ execPath : '.with good .submodules.download' })
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Failed to download module' ) );
+    test.is( _.fileProvider.fileExists( downloadPath ) )
+    test.identical( _.fileProvider.dirRead( downloadPath ), [ 'file' ] );
+    return null;
+  })
+
+  //
+
+  .then( () =>
+  {
+    test.case = 'error if download path exists and its terminal';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.fileWrite( downloadPath,downloadPath );
+    return null;
+  })
+  shell({ execPath : '.with good .submodules.download' })
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Failed to download module' ) );
+    test.is( _.fileProvider.isTerminal( downloadPath ) )
+    return null;
+  })
+
+  //
+
+  .then( () =>
+  {
+    test.case = 'no error if download path exists and it has other git repo';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    return null;
+  })
+  shell2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
+  .then( () =>
+  {
+    filesBefore = self.find( downloadPath );
+    return null;
+  })
+  shell({ execPath : '.with good .submodules.download' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '0/2 submodule(s) were downloaded in' ) );
+    test.is( _.fileProvider.fileExists( downloadPath ) )
+    let filesAfter = self.find( downloadPath );
+    test.identical( filesAfter, filesBefore );
+
+    return null;
+  })
+
+
+  /* - */
+
+  return ready;
+}
+
+submodulesDownloadErrors.timeOut = 300000;
+
+
+//
+
 /*
   Informal module has submodule willbe-experiment#master
   Supermodule has informal module and willbe-experiment#dev in submodules list
@@ -14370,6 +14544,7 @@ var Self =
     submodulesDownloadUpdateDry,
     submodulesDownloadSwitchBranch,
     submodulesDownloadRecursive,
+    submodulesDownloadErrors,
     // submodulesDownloadedUpdate, // xxx : look later
     subModulesUpdate,
     subModulesUpdateSwitchBranch,
