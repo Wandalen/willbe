@@ -4863,7 +4863,7 @@ function exportNonExportable( test )
 
   /* - */
 
-  shell({ execPath : '.clean' })
+  shell({ execPath : '.with super .clean' })
   shell({ args : [ '.with super .export debug:1' ], throwingExitCode : 0 })
 
   .then( ( got ) =>
@@ -4873,9 +4873,11 @@ function exportNonExportable( test )
     test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
-    test.identical( _.strCount( got.output, /.*module::supermodule \/ submodule::Submodule.* is broken/ ), 1 );
-    test.identical( _.strCount( got.output, /Exporting is impossible because .*module::supermodule \/ submodule::Submodule.* is broken!/ ), 1 );
-    test.identical( _.strCount( got.output, /Failed .*module::supermodule \/ step::export.*/ ), 1 );
+    test.identical( _.strCount( got.output, 'module::supermodule / relation::Submodule is not opened' ), 1 );
+    test.identical( _.strCount( got.output, 'Failed module::supermodule / step::reflect.submodules.debug' ), 1 );
+
+    // test.identical( _.strCount( got.output, /Exporting is impossible because .*module::supermodule \/ submodule::Submodule.* is broken!/ ), 1 );
+    // test.identical( _.strCount( got.output, /Failed .*module::supermodule \/ step::export.*/ ), 1 );
 
     return null;
   })
