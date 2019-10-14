@@ -2029,6 +2029,7 @@ function modulesBuild_body( o )
     o2.modules = [ module ];
     if( o2.recursive === 0 )
     o2.recursive = 1;
+    o2.recursive = 2; /* yyy */
     return will.modulesDownload( o2 );
   })
 
@@ -5320,8 +5321,6 @@ function structureExport( o )
   let o2 = _.mapExtend( null, o );
   delete o2.dst;
 
-  debugger;
-
   o.dst.about = module.about.structureExport();
   o.dst.path = module.structureExportResources( module.pathResourceMap, o2 );
   o.dst.submodule = module.structureExportResources( module.submoduleMap, o2 );
@@ -5502,8 +5501,6 @@ function structureExportForModuleExport( o )
   _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'will' ] );
   _.assert( !rootModuleStructure.path.remote || !rootModuleStructure.path.remote.path );
   // _.assert( !module.pathMap.remote ^ !!( rootModuleStructure.path.remote && rootModuleStructure.path.remote.path ) );
-
-  debugger;
 
   // opener2.openedModule = null; // yyy
   // opener2.finit();

@@ -420,6 +420,9 @@ function From( o )
   if( !o.object )
   o.object = o.module || o.opener || o.relation;
 
+  if( o.object && o.object.id === 128 )
+  debugger;
+
   if( o.object && o.object instanceof Self )
   {
     variant = o.object;

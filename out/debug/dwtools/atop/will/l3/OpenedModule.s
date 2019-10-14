@@ -2029,6 +2029,7 @@ function modulesBuild_body( o )
     o2.modules = [ module ];
     if( o2.recursive === 0 )
     o2.recursive = 1;
+    o2.recursive = 2; /* yyy */
     return will.modulesDownload( o2 );
   })
 
@@ -5368,7 +5369,6 @@ function structureExportOut( o )
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
-  // debugger;
   let variants = module.modulesEach
   ({
     withPeers : 1,
@@ -5376,7 +5376,7 @@ function structureExportOut( o )
     recursive : 2,
     outputFormat : '/',
   });
-  // debugger;
+
   let modules = variants.map( ( variant ) =>
   {
     if( !variant.module )
@@ -5390,7 +5390,7 @@ function structureExportOut( o )
     );
     return variant.module;
   });
-  // let modules = _.select( variants, '*/module' );
+
   _.assert( modules.length >= 2 );
   module.structureExportModules( modules, o );
 
@@ -5447,11 +5447,9 @@ function structureExportForModuleExport( o )
   // }
 
   let o3 = opener2.optionsForModuleExport();
-  let rootModule = o3.rootModule = opener2.rootModule; /* xxx : remove rootModule? */
+  let rootModule = o3.rootModule = opener2.rootModule;
 
-  // debugger;
   let module2 = module.cloneExtending( o3 );
-  // debugger;
 
   _.assert( rootModule === opener2.rootModule );
   _.assert( rootModule === module2.rootModule );
@@ -5490,9 +5488,7 @@ function structureExportForModuleExport( o )
   if( module2.ready.errorsCount() )
   module2.ready.sync();
 
-  // debugger;
   let structure = module2.structureExportOut();
-  // debugger;
   let rootModuleStructure = structure.module[ module2.fileName ];
 
   _.assert( !!rootModuleStructure );
@@ -5503,6 +5499,8 @@ function structureExportForModuleExport( o )
   _.assert( !rootModuleStructure.path || rootModuleStructure.path[ 'remote' ] !== undefined );
   _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'current.remote' ] );
   _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'will' ] );
+  _.assert( !rootModuleStructure.path.remote || !rootModuleStructure.path.remote.path );
+  // _.assert( !module.pathMap.remote ^ !!( rootModuleStructure.path.remote && rootModuleStructure.path.remote.path ) );
 
   // opener2.openedModule = null; // yyy
   // opener2.finit();
@@ -5528,7 +5526,7 @@ function structureExportForModuleExport( o )
     o2.searching = 'exact';
     o2.reason = 'export';
     o2.isAuto = 1;
-    o2.remotePath = null;
+    o2.remotePath = null; // yyy
 
     let opener2 = will._openerMake({ opener : o2 });
     _.assert( opener2.isOut === true );
