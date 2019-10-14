@@ -5,12 +5,12 @@ about :
 
 path :
 
-  local : 'A'
+  download : './A/**'
 
 step :
 
   export.A :
-    export : path::local
+    export : path::download
     tar : 0
 
 build :

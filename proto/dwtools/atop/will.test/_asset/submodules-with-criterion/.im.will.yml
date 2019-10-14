@@ -2,11 +2,11 @@
 submodule :
 
   A :
-    path : ./module/A
+    path : ./module/A.out
     criterion :
       debug : 0
   B :
-    path : ./module/B
+    path : ./module/B.out
     criterion :
       debug : 1
 
