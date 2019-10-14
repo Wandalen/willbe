@@ -354,6 +354,9 @@ function From( o )
     _.assert( remotePath === null || variant.remotePath === null || variant.remotePath === remotePath );
   }
 
+  if( o.object && o.object.id === 475 )
+  debugger;
+
   if( !variant )
   variantWithPath();
 
@@ -590,9 +593,6 @@ function VariantOf( will, object )
 
   _.assert( arguments.length === 2 );
   _.assert( !!object );
-
-  // if( object.id === 275 )
-  // debugger;
 
   if( object instanceof _.Will.ModuleVariant )
   return object;
