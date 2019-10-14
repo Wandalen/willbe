@@ -6127,14 +6127,9 @@ function exportMultiple( test )
         "path" : "submodule.out",
         "criterion" : { "predefined" : 1 }
       },
-      "download" :
-      {
-        "path" : "submodule.out",
-        "criterion" : { "predefined" : 1 }
-      },
       "remote" :
       {
-        "criterion" : { "predefined" : 1 }//Vova: qqq why remote property doesn't have path like download?
+        "criterion" : { "predefined" : 1 }
       },
       "proto" : { "path" : "../proto" },
       "temp" : { "path" : "." },
@@ -6387,11 +6382,6 @@ function exportMultiple( test )
       "module.common" :
       {
         "path" : "submodule.out",
-        "criterion" : { "predefined" : 1 }
-      },
-      "download" :
-      {
-        "path" : "submodule.out", //Vova: qqq why remote property doesn't have path like local?
         "criterion" : { "predefined" : 1 }
       },
       "remote" :
