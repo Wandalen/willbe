@@ -1636,7 +1636,7 @@ function verbositySet( test )
     test.is( _.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
     test.is( _.strHas( got.output, 'Failed to read relation::Tools' ) ); debugger;
     test.is( _.strHas( got.output, 'Failed to read relation::PathBasic' ) );
-    test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
+    test.is( _.strHas( got.output, '. Read 6 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.is( _.strHas( got.output, / \+ 2\/3 submodule\(s\) were downloaded in/ ) );
@@ -1663,7 +1663,7 @@ function verbositySet( test )
     test.is( !_.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
     test.is( !_.strHas( got.output, 'Failed to read relation::Tools' ) );
     test.is( !_.strHas( got.output, 'Failed to read relation::PathBasic' ) );
-    test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
+    test.is( _.strHas( got.output, '. Read 6 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.is( _.strHas( got.output, / \+ 2\/3 submodule\(s\) were downloaded in/ ) );
