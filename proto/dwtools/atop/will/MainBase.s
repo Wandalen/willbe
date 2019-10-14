@@ -834,7 +834,7 @@ function modulesFindEachAt( o )
     let files;
     try
     {
-      files = will.willfilesList
+      files = will.willfilesFind
       ({
         dirPath : o.selector,
         includingInFiles : 1,
@@ -995,7 +995,7 @@ function modulesFindWithAt( o )
   let files;
   try
   {
-    files = will.willfilesList
+    files = will.willfilesFind
     ({
       dirPath : o.selector,
       tracing : o.tracing,
@@ -1793,7 +1793,7 @@ function modulesDownload_body( o )
     if( !o.downloadedContainer.length && !o.loggingNoChanges )
     return;
 
-    let total = ( o.remoteContainer.length + o.localContainer.length );
+    let total = ( o.remoteContainer.length + o.localContainer.length ); debugger;
     logger.rbegin({ verbosity : -2 });
     let phrase = '';
     if( o.mode === 'update' )
@@ -2476,7 +2476,7 @@ function _willfilesReadLog()
 
 //
 
-function willfilesList( o )
+function willfilesFind( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -2493,7 +2493,7 @@ function willfilesList( o )
   o.dirPath = _.strRemoveEnd( o.dirPath, '.' );
   o.dirPath = path.resolve( o.dirPath );
 
-  _.routineOptions( willfilesList, o );
+  _.routineOptions( willfilesFind, o );
   _.assert( arguments.length === 1 );
   _.assert( !!will.formed );
   _.assert( _.boolIs( o.recursive ) );
@@ -2549,6 +2549,9 @@ function willfilesList( o )
       mode : 'distinct',
     }
 
+    if( _.strHas( o.dirPath, 'out/submodule' ) )
+    debugger;
+
     filter.filePath = path.mapExtend( filter.filePath );
     filter.filePath = path.filterPairs( filter.filePath, ( it ) =>
     {
@@ -2565,6 +2568,7 @@ function willfilesList( o )
       if( !hasWill )
       {
         postfix += '?(im.|ex.)';
+        if( !o.exact )
         if( o.includingOutFiles && o.includingInFiles )
         {
           postfix += '?(out.)';
@@ -2591,16 +2595,20 @@ function willfilesList( o )
     // debugger;
     let files = fileProvider.filesFind( o2 );
     // debugger;
+    //
+    // if( files.length && _.strHas( files[ 0 ].absolute, 'out/submodule' ) )
+    // debugger;
 
     return files;
   }
 }
 
-willfilesList.defaults =
+willfilesFind.defaults =
 {
   dirPath : null,
   includingInFiles : 1,
   includingOutFiles : 1,
+  exact : 0,
   recursive : false,
   tracing : false,
 }
@@ -2990,7 +2998,7 @@ let Extend =
   _willfilesReadEnd,
   _willfilesReadLog,
 
-  willfilesList,
+  willfilesFind,
   willfilesSelectPaired,
   willfileWithCommon,
   _willfileWithFilePath,

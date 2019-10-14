@@ -837,20 +837,17 @@ function _willfilesFindAct( o )
 
   if( opener.searching === 'exact' )
   {
-    // debugger;
     o.willfilesPath = _.arrayAs( o.willfilesPath );
     records = o.willfilesPath.map( ( willfilePath ) => fileProvider.record( willfilePath ) );
-    // records = fileProvider.record({ filePath : o.willfilesPath });
-    // records = _.arrayAs( records );
-    // debugger;
   }
   else
   {
-    records = will.willfilesList
+    records = will.willfilesFind
     ({
       dirPath : o.willfilesPath,
       includingInFiles : o.includingInFiles,
       includingOutFiles : o.includingOutFiles,
+      exact : !!opener.superRelation,
     });
   }
 
@@ -1423,17 +1420,25 @@ function _remoteDownload( o )
 
   function moduleOpen()
   {
+    let ready = new _.Consequence().take( null );
 
-    if( opener.openedModule )
-    debugger;
+    let variant = will.variantFrom( opener );
+    variant.openers.forEach( ( opener2 ) =>
+    {
 
-    let willf = opener.willfilesArray[ 0 ]; // xxx : check
-    opener.close();
-    _.assert( opener.error === null );
-    _.assert( !_.arrayHas( will.willfilesArray, willf ) );
-    opener.find();
+      if( opener2.openedModule )
+      debugger;
 
-    return opener.open();
+      let willf = opener2.willfilesArray[ 0 ]; // xxx : check
+      opener2.close();
+      _.assert( opener2.error === null );
+      _.assert( !_.arrayHas( will.willfilesArray, willf ) );
+      opener2.find();
+
+      ready.then( () => opener2.open() );
+    });
+
+    return ready;
   }
 
   /* */

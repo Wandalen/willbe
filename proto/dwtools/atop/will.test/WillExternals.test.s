@@ -1634,8 +1634,8 @@ function verbositySet( test )
     test.is( _.strHas( got.output, '.imply verbosity:3 ; .build' ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( _.strHas( got.output, 'Failed to read relation::Tools' ) ); debugger;
-    test.is( _.strHas( got.output, 'Failed to read relation::PathBasic' ) );
+    test.is( _.strHas( got.output, 'Failed to open relation::Tools' ) ); debugger;
+    test.is( _.strHas( got.output, 'Failed to open relation::PathBasic' ) );
     test.is( _.strHas( got.output, '. Read 6 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
@@ -1661,8 +1661,8 @@ function verbositySet( test )
     test.is( _.strHas( got.output, '.imply verbosity:2 ; .build' ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, 'Failed to read relation::Tools' ) );
-    test.is( !_.strHas( got.output, 'Failed to read relation::PathBasic' ) );
+    test.is( !_.strHas( got.output, 'Failed to open relation::Tools' ) );
+    test.is( !_.strHas( got.output, 'Failed to open relation::PathBasic' ) );
     test.is( _.strHas( got.output, '. Read 6 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
@@ -1688,8 +1688,8 @@ function verbositySet( test )
     test.is( _.strHas( got.output, '.imply verbosity:1 ; .build' ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, ' ! Failed to read relation::Tools' ) );
-    test.is( !_.strHas( got.output, ' ! Failed to read relation::PathBasic' ) );
+    test.is( !_.strHas( got.output, ' ! Failed to open relation::Tools' ) );
+    test.is( !_.strHas( got.output, ' ! Failed to open relation::PathBasic' ) );
     test.is( !_.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( !_.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
@@ -3915,6 +3915,7 @@ function cleanBroken2( test )
     var files = _.fileProvider.dirRead( outPath );
     test.identical( files, null );
 
+    xxx // xxx : add agree case
     return null;
   })
 
@@ -4422,8 +4423,9 @@ function cleanRecursive( test )
 
     test.identical( _.strCount( got.output, 'Failed to read' ), 1 );
     test.identical( _.strCount( got.output, 'try to' ), 1 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( got.output, /1\/4 submodule\(s\) of .*module::z.* were downloaded/ ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 24 );
+    test.identical( _.strCount( got.output, '+ 5/10 submodule(s) were downloaded' ), 1 ); /* xxx */
+    test.identical( _.strCount( got.output, '+ 0/8 submodule(s) were downloaded' ), 1 ); /* xxx */
 
     return null;
   })
@@ -4436,10 +4438,22 @@ function cleanRecursive( test )
 
     test.identical( _.strCount( got.output, 'Failed to read' ), 0 );
     test.identical( _.strCount( got.output, 'try to' ), 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 6 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 25 );
 
+    var exp =
+    [
+      '.',
+      './z.will.yml',
+      './group1',
+      './group1/a.will.yml',
+      './group1/b.will.yml',
+      './group1/group10',
+      './group1/group10/a0.will.yml',
+      './group2',
+      './group2/c.will.yml'
+    ]
     var files = self.find( routinePath );
-    test.identical( files, [ 'xxx' ] );
+    test.identical( files, exp );
 
     return null;
   })
@@ -5665,10 +5679,10 @@ function exportMixed( test )
     test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug reflected' ) );
     test.is( _.strHas( got.output, ' + reflector::reflect.submodules reflected' ) );
 
-    test.is( _.strHas( got.output, ' ! Failed to read relation::Tools' ) );
-    test.is( _.strHas( got.output, ' ! Failed to read relation::PathBasic' ) );
-    test.is( _.strHas( got.output, ' ! Failed to read relation::UriBasic' ) );
-    test.is( _.strHas( got.output, ' ! Failed to read relation::Proto' ) );
+    test.is( _.strHas( got.output, ' ! Failed to open relation::Tools' ) );
+    test.is( _.strHas( got.output, ' ! Failed to open relation::PathBasic' ) );
+    test.is( _.strHas( got.output, ' ! Failed to open relation::UriBasic' ) );
+    test.is( _.strHas( got.output, ' ! Failed to open relation::Proto' ) );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) ) );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/UriBasic.informal.out.will.yml' ) ) );
@@ -6694,8 +6708,6 @@ function exportImportMultiple( test )
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     _.fileProvider.filesDelete( outPath );
 
-    debugger;
-
     return null;
   })
 
@@ -6708,7 +6720,7 @@ function exportImportMultiple( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / Exported .*exported::export.debug.* with 2 file\(s\) in/ ) );
+    test.is( _.strHas( got.output, 'Exported module::submodule / build::export.debug with 2 file(s)' ) );
 
     return null;
   })
@@ -6733,7 +6745,7 @@ function exportImportMultiple( test )
     var files = self.find( out2Path );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / Exported .*exported::export\..* with 2 file\(s\) in/ ) );
+    test.is( _.strHas( got.output, 'Exported module::supermodule / build::export. with 2 file(s)' ) );
 
     return null;
   })
@@ -6804,7 +6816,7 @@ function exportImportMultiple( test )
     var files = self.find( out2Path );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / Exported .*exported::export.debug.* with 2 file\(s\) in/ ) );
+    test.is( _.strHas( got.output, 'Exported module::supermodule / build::export.debug with 2 file(s)' ) );
 
     return null;
   })
