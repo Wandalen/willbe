@@ -2531,6 +2531,171 @@ modulesTreeHierarchyRemote.timeOut = 300000;
 
 //
 
+function modulesTreeHierarchyRemoteDownloaded( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( submodulesPath );
+
+  /* - */
+
+  shell({ execPath : '.with * .submodules.clean recursive:2' })
+  shell({ execPath : '.with * .submodules.download recursive:2' })
+
+  /* - */
+
+  shell({ execPath : '.with * .modules.tree withRemotePath:1' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with * .modules.tree withRemotePath:1';
+    test.identical( got.exitCode, 0 );
+
+    let exp =
+`
+ +-- module::z
+   +-- module::a
+   | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
+   | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::a0
+   |   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   |   +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   +-- module::b
+   | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::wProto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+   +-- module::c
+   | +-- module::a0
+   | | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   | +-- module::wUriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/
+   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+`
+    test.identical( _.strCount( got.output, exp ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::wTools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::wPathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::wPathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::wUriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::wProto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function modulesTreeHierarchyRemoteDownloaded */
+
+modulesTreeHierarchyRemoteDownloaded.timeOut = 300000;
+
+//
+
+/*
+cls && local-will .with group1/group10/a0 .clean recursive:2 && local-will .with group1/group10/a0 .export && local-debug-will .with group1/a .export
+*/
+
+function modulesTreeHierarchyRemotePartiallyDownloaded( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( submodulesPath );
+
+  /* - */
+
+  shell({ execPath : '.with group1/group10/a0 .export' })
+  shell({ execPath : '.with group1/a .export' })
+  shell({ execPath : '.with * .modules.tree withRemotePath:1' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with * .modules.tree withRemotePath:1';
+    test.identical( got.exitCode, 0 );
+
+    let exp =
+`
+ +-- module::z
+   +-- module::a
+   | +-- module::Tools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
+   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::a0
+   |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   +-- module::b
+   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
+   | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+   +-- module::c
+   | +-- module::a0
+   | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
+   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+`
+    test.identical( _.strCount( got.output, exp ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function modulesTreeHierarchyRemotePartiallyDownloaded */
+
+modulesTreeHierarchyRemotePartiallyDownloaded.timeOut = 300000;
+
+//
+
 function help( test )
 {
   let self = this;
@@ -8743,15 +8908,22 @@ function reflectGetPath( test )
       './debug/dwtools',
       './debug/dwtools/Tools.s',
       './debug/dwtools/abase',
-      './debug/dwtools/abase/l3',
-      './debug/dwtools/abase/l3/PathBasic.s',
-      './debug/dwtools/abase/l3.test',
-      './debug/dwtools/abase/l3.test/PathBasic.test.html',
-      './debug/dwtools/abase/l3.test/PathBasic.test.s',
-      './debug/dwtools/abase/l4',
-      './debug/dwtools/abase/l4/PathsBasic.s',
-      './debug/dwtools/abase/l4.test',
-      './debug/dwtools/abase/l4.test/Paths.test.s'
+      './debug/dwtools/abase/l3_proto',
+      './debug/dwtools/abase/l3_proto/Include.s',
+      './debug/dwtools/abase/l3_proto/l1',
+      './debug/dwtools/abase/l3_proto/l1/Define.s',
+      './debug/dwtools/abase/l3_proto/l1/Proto.s',
+      './debug/dwtools/abase/l3_proto/l1/Workpiece.s',
+      './debug/dwtools/abase/l3_proto/l3',
+      './debug/dwtools/abase/l3_proto/l3/Accessor.s',
+      './debug/dwtools/abase/l3_proto/l3/Class.s',
+      './debug/dwtools/abase/l3_proto/l3/Complex.s',
+      './debug/dwtools/abase/l3_proto/l3/Like.s',
+      './debug/dwtools/abase/l3_proto.test',
+      './debug/dwtools/abase/l3_proto.test/Class.test.s',
+      './debug/dwtools/abase/l3_proto.test/Complex.test.s',
+      './debug/dwtools/abase/l3_proto.test/Like.test.s',
+      './debug/dwtools/abase/l3_proto.test/Proto.test.s'
     ]
     var files = self.find( outPath );
     test.gt( files.length, 13 );
@@ -9392,7 +9564,7 @@ function reflectRemoteGit( test )
   {
     test.identical( arg.exitCode, 0 );
     var files = self.find( local1Path );
-    test.gt( files.length, 85 );
+    test.ge( files.length, 73 );
     return null;
   }
 
@@ -9403,11 +9575,11 @@ function reflectRemoteGit( test )
     test.identical( arg.exitCode, 0 );
 
     var files = self.find( local1Path );
-    test.gt( files.length, 85 );
+    test.ge( files.length, 73 );
     var files = self.find( local2Path );
-    test.gt( files.length, 70 );
+    test.ge( files.length, 70 );
     var files = self.find( local3Path );
-    test.gt( files.length, 75 );
+    test.ge( files.length, 75 );
 
     return null;
   }
@@ -9505,7 +9677,7 @@ function reflectWithOptions( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect\.proto1.* reflected 3 file(s) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in' ) );
+    test.is( _.strHas( got.output, / \+ reflector::reflect.proto1 reflected 3 file\(s\) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
     var files = self.find( outPath );
     test.identical( files, [ '.', './debug', './debug/File.js', './debug/File.test.js' ] );
     return null;
@@ -9529,7 +9701,7 @@ function reflectWithOptions( test )
     test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
     test.is( _.strHas( got.output, /Failed .*module::.+ \/ step::reflect\.proto2/ ) );
-    test.is( _.strHas( got.output, /Error\. No file moved : .+reflectWithOptions.* : .*out\/debug.* <- .*proto2.*/ ) );
+    test.is( _.strHas( got.output, /No file found at .+/ ) );
     var files = self.find( outPath );
     test.identical( files, [] );
     return null;
@@ -9549,7 +9721,7 @@ function reflectWithOptions( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect\.proto3.* reflected 0 file(s) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in' ) );
+    test.is( _.strHas( got.output, / \+ reflector::reflect.proto3 reflected 0 file\(s\) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
     var files = self.find( outPath );
     test.identical( files, [] );
     return null;
@@ -9914,7 +10086,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect.proto1.* reflected 6 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto1 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug1/File.test.js', './out/debug1/some.test', './out/debug1/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9935,7 +10107,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect.proto2.* reflected 6 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto2 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9956,7 +10128,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect.proto3.* reflected 6 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto3 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug1/File.test.js', './out/debug1/some.test', './out/debug1/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9977,7 +10149,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect.proto4.* reflected 6 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto4 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -9998,7 +10170,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect.proto5.* reflected 6 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.proto5 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -10019,7 +10191,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::reflect\.not\.test\.only\.js\.v1.* reflected 6 file(s)' ) );
+    test.is( _.strHas( got.output, ' + reflector::reflect.not.test.only.js.v1 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out.* <- .*proto.*/ ) );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -10040,7 +10212,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, ' + reflector::reflect\.files1.* reflected 2 file(s) .*:.*out.*<-.*proto' ), 1 );
+    test.identical( _.strCount( got.output, / \+ reflector::reflect.files1 reflected 2 file\(s\) .*:.*out.*<-.*proto/ ), 1 );
     test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -10061,7 +10233,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, ' + reflector::reflect\.files2.* reflected 2 file(s) .*:.*out.*<-.*proto' ), 1 );
+    test.identical( _.strCount( got.output, / \+ reflector::reflect.files2 reflected 2 file\(s\) .*:.*out.*<-.*proto/ ), 1 );
     test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -10082,7 +10254,7 @@ function reflectInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, ' + reflector::reflect\.files3.* reflected 2 file(s) .*:.*out.*<-.*proto' ), 1 );
+    test.identical( _.strCount( got.output, / \+ reflector::reflect\.files3 reflected 2 file\(s\) .*:.*out.*<-.*proto/ ), 1 );
     test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
     var files = self.find( routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
@@ -10326,8 +10498,7 @@ function reflectorMasks( test )
     test.identical( files, [ '.', './release', './release/proto.two' ] );
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, new RegExp( '\\+ .*.reflector::reflect\\.copy\\..* reflected ' + String( files.length - 1 ) + ' files ' ) ) );
-    debugger;
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy. reflected ${files.length-1} file\\(s\\) .* in .*` ) ) );
 
     return null;
   })
@@ -10345,7 +10516,7 @@ function reflectorMasks( test )
     test.identical( files, [ '.', './debug', './debug/build.txt.js', './debug/manual.md', './debug/package.json', './debug/tutorial.md' ] );
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, new RegExp( '\\+ .*.reflector::reflect\\.copy\\..* reflected ' + String( files.length - 1 ) + ' files ' ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy.debug reflected ${files.length -1} file\\(s\\) .* in .*` ) ) );
 
     return null;
   })
@@ -10722,7 +10893,7 @@ function functionPlatform( test )
     platform = 'osx'
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, ' + reflector::copy reflected 2 file(s) .*functionPlatform\/.* : .*out\/dir\..* <- proto in' ), 1 );
+    test.identical( _.strCount( got.output, /\+ reflector::copy reflected 2 file\(s\) .+functionPlatform.* : \.\/out\/dir.windows <- \.\/proto in .*/), 1 );
 
     var files = self.find( outPath );
 
@@ -14083,82 +14254,84 @@ var Self =
   tests :
   {
 
-    // preCloneRepos,
-    // singleModuleWithSpaceTrivial,
-    // make,
-    // transpile,
-    //
-    // openWith,
-    // openEach,
-    // withMixed,
-    // // eachMixed, // xxx : later
-    // withList,
-    // // eachList, // xxx : later
-    // eachBrokenIll,
-    // eachBrokenNon,
-    // eachBrokenCommand,
-    // openExportClean,
-    //
-    // verbositySet,
-    // verbosityStepDelete,
-    // verbosityStepPrintName,
-    // modulesTreeDotless,
-    // modulesTreeHierarchyRemote,
-    //
-    // help,
-    // listSingleModule,
-    // listWithSubmodulesSimple,
-    // listWithSubmodules,
-    // listSteps,
-    // // listComplexPaths, // xxx
-    //
-    // clean,
-    // cleanSingleModule,
-    // cleanBroken1,
-    // cleanBroken2,
-    // cleanBrokenSubmodules,
-    // cleanNoBuild,
-    // cleanDry,
-    // cleanSubmodules,
-    // cleanMixed,
-    // cleanWithInPath,
-    // cleanRecursive, // xxx
-    //
-    // buildSingleModule,
-    // buildSingleStep,
-    // buildSubmodules,
-    // // buildDetached, // xxx : uncomment later
-    //
-    // exportSingle,
-    // exportItself,
-    // exportNonExportable,
-    // exportInformal,
-    // exportWithReflector,
-    // exportToRoot,
-    // exportMixed,
-    // exportSecond,
-    // exportSubmodules,
-    // exportMultiple,
-    // exportImportMultiple,
-    // exportBroken,
-    // exportDoc,
-    // exportImport,
-    // exportBrokenNoreflector,
-    // exportCourrputedOutfileUnknownSection,
-    // exportCourruptedOutfileSyntax,
-    // exportCourruptedSubmodulesDisabled,
-    // exportInconsistent,
-    // exportWholeModule,
-    // exportRecursive,
-    // exportRecursiveUsingSubmodule,
-    // exportDotless,
-    // exportDotlessSingle,
-    // exportTracing,
-    // exportRewritesOutFile,
-    // // exportWithRemoteSubmodules, // xxx
-    // importPathLocal,
-    // importLocalRepo,
-    // importOutWithDeletedSource,
+    preCloneRepos,
+    singleModuleWithSpaceTrivial,
+    make,
+    transpile,
+
+    openWith,
+    openEach,
+    withMixed,
+    // eachMixed, // xxx : later
+    withList,
+    // eachList, // xxx : later
+    eachBrokenIll,
+    eachBrokenNon,
+    eachBrokenCommand,
+    openExportClean,
+
+    verbositySet,
+    verbosityStepDelete,
+    verbosityStepPrintName,
+    modulesTreeDotless,
+    modulesTreeHierarchyRemote,
+    modulesTreeHierarchyRemoteDownloaded,
+    // modulesTreeHierarchyRemotePartiallyDownloaded, // xxx : later
+
+    help,
+    listSingleModule,
+    listWithSubmodulesSimple,
+    listWithSubmodules,
+    listSteps,
+    // listComplexPaths, // xxx
+
+    clean,
+    cleanSingleModule,
+    cleanBroken1,
+    cleanBroken2,
+    cleanBrokenSubmodules,
+    cleanNoBuild,
+    cleanDry,
+    cleanSubmodules,
+    cleanMixed,
+    cleanWithInPath,
+    cleanRecursive, // xxx
+
+    buildSingleModule,
+    buildSingleStep,
+    buildSubmodules,
+    // buildDetached, // xxx : uncomment later
+
+    exportSingle,
+    exportItself,
+    exportNonExportable,
+    exportInformal,
+    exportWithReflector,
+    exportToRoot,
+    exportMixed,
+    exportSecond,
+    exportSubmodules,
+    exportMultiple,
+    exportImportMultiple,
+    exportBroken,
+    exportDoc,
+    exportImport,
+    exportBrokenNoreflector,
+    exportCourrputedOutfileUnknownSection,
+    exportCourruptedOutfileSyntax,
+    exportCourruptedSubmodulesDisabled,
+    exportInconsistent,
+    exportWholeModule,
+    exportRecursive,
+    exportRecursiveUsingSubmodule,
+    exportDotless,
+    exportDotlessSingle,
+    exportTracing,
+    exportRewritesOutFile,
+    // exportWithRemoteSubmodules, // xxx
+    importPathLocal,
+    importLocalRepo,
+    importOutWithDeletedSource,
 
     reflectNothingFromSubmodules,
     reflectGetPath,
@@ -14185,28 +14358,28 @@ var Self =
     functionPlatform,
     fucntionThisCriterion,
 
-    // submodulesDownloadSingle,
-    // submodulesDownloadUpdate,
-    // submodulesDownloadUpdateDry,
-    // submodulesDownloadSwitchBranch,
-    // submodulesDownloadRecursive,
-    // // submodulesDownloadedUpdate, // xxx : look later
-    // subModulesUpdate,
-    // subModulesUpdateSwitchBranch,
-    // stepSubmodulesDownload,
-    // stepWillbeVersionCheck,
-    // stepSubmodulesAreUpdated,
-    // upgradeDryDetached,
-    // upgradeDetached,
-    // fixateDryDetached,
-    // fixateDetached,
-    //
-    // versionsVerify,
-    // versionsAgree
-    //
-    // // runWillbe, // qqq : help to fix, please
-    //
-    // // resourcesFormReflectorsExperiment, // qqq : done?
+    submodulesDownloadSingle,
+    submodulesDownloadUpdate,
+    submodulesDownloadUpdateDry,
+    submodulesDownloadSwitchBranch,
+    submodulesDownloadRecursive,
+    // submodulesDownloadedUpdate, // xxx : look later
+    subModulesUpdate,
+    subModulesUpdateSwitchBranch,
+    stepSubmodulesDownload,
+    stepWillbeVersionCheck,
+    stepSubmodulesAreUpdated,
+    upgradeDryDetached,
+    upgradeDetached,
+    fixateDryDetached,
+    fixateDetached,
+
+    versionsVerify,
+    versionsAgree
+
+    // runWillbe, // qqq : help to fix, please
+
+    // resourcesFormReflectorsExperiment, // qqq : done?
 
   }
 

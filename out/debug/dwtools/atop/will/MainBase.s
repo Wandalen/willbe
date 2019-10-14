@@ -938,7 +938,7 @@ function modulesFindEachAt( o )
 
   con.finally( ( err, arg ) =>
   {
-    debugger;
+    // debugger;
     if( errs.length )
     {
       errs.forEach( ( err, index ) => index > 0 ? _.errAttend( err ) : null );
@@ -1132,7 +1132,7 @@ function modulesOnlyRoots( modules, o )
 
   /* then add in-roots of trees */
 
-  debugger;
+  // debugger;
 
   _.each( modules, ( module ) =>
   {
@@ -1149,7 +1149,7 @@ function modulesOnlyRoots( modules, o )
     });
   });
 
-  debugger;
+  // debugger;
 
   /* add roots of what left */
 
@@ -1169,7 +1169,7 @@ function modulesOnlyRoots( modules, o )
     });
   });
 
-  debugger;
+  // debugger;
 
   /* add what left */
 
@@ -1290,7 +1290,7 @@ function modulesEach_body( o )
   o2.roots = nodes;
   o2.onUp = handleUp;
   o2.onDown = handleDown;
-
+  _.assert( _.boolLike( o2.left ) );
   let result = o.nodesGroup.each( o2 );
 
   if( o.outputFormat !== '/' )
@@ -1346,6 +1346,111 @@ let modulesEach = _.routineFromPreAndBody( modulesEach_pre, modulesEach_body );
 
 //
 
+function modulesFor_pre( routine, args )
+{
+  let module = this;
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length <= 2 );
+
+  let o = args[ 0 ];
+
+  o = _.routineOptions( routine, o );
+
+  return o;
+}
+
+function modulesFor_body( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let visitedSet = new Set;
+
+  _.assert( arguments.length === 1 );
+  _.assertRoutineOptions( modulesFor_body, arguments );
+
+  if( !o.nodesGroup )
+  o.nodesGroup = will.graphGroupMake({ withPeers : 1 });
+
+  o.modules = _.arrayAs( o.nodesGroup.nodesAddOnce( o.modules ) );
+  _.assert( _.arrayIs( o.modules ) );
+
+  let variants = variantsEach( o.modules );
+
+  return act( variants )
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    debugger;
+    if( err )
+    throw _.err( err );
+    return o;
+  });
+
+  /* */
+
+  function act( variants )
+  {
+    let ready = new _.Consequence().take( null );
+
+    ready.then( () =>
+    {
+      let ready = new _.Consequence().take( null );
+      variants.forEach( ( variant ) => ready.then( () => variantAction( variant ) ) );
+      return ready;
+    });
+
+    ready.then( () =>
+    {
+      let variants2 = variantsEach( variants );
+      if( variants2.length > variants.length && o.recursive >= 2 )
+      return act( variants2 );
+      return o;
+    });
+
+    return ready;
+  }
+
+  function variantsEach( variants )
+  {
+    let o2 = _.mapOnly( o, will.modulesEach.defaults );
+    o2.outputFormat = '/';
+    o2.modules = variants;
+    return will.modulesEach( o2 );
+  }
+
+  function variantAction( variant )
+  {
+    if( visitedSet.has( variant ) )
+    return null;
+    visitedSet.add( variant );
+    let o3 = _.mapExtend( null, o );
+    o3.module = variant;
+    return o.onEach( variant, o3 ) || null;
+  }
+
+}
+
+var defaults = modulesFor_body.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults, moduleFit.defaults );
+
+defaults.recursive = 1;
+defaults.withPeers = 1;
+defaults.left = 1;
+defaults.nodesGroup = null;
+defaults.modules = null;
+defaults.onEach = null;
+
+delete defaults.outputFormat;
+delete defaults.onUp;
+delete defaults.onDown;
+delete defaults.onNode;
+
+let modulesFor = _.routineFromPreAndBody( modulesFor_pre, modulesFor_body );
+
+//
+
 function _modulesDownload_pre( routine, args )
 {
   let module = this;
@@ -1387,6 +1492,8 @@ function _modulesDownload_body( o )
 
   ready.finally( ( err, arg ) =>
   {
+    if( err )
+    throw _.err( err );
     return o;
   });
 
@@ -1480,9 +1587,11 @@ function _modulesDownload_body( o )
     else
     {
       let o2 = _.mapOnly( o, variant.opener._remoteDownload.defaults );
+      // debugger;
       let r = _.Consequence.From( variant.opener._remoteDownload( o2 ) );
       return r.then( ( downloaded ) =>
       {
+        // debugger;
         _.assert( _.boolIs( downloaded ) );
         _.assert( _.strIs( variant.opener.remotePath ) );
         if( downloaded )
@@ -1502,7 +1611,10 @@ function _modulesDownload_body( o )
     return null;
     if( variant.peer && variant.peer.object && variant.peer.object.isRemote )
     return null;
+    if( variant.object.root === variant.object )
+    return null;
 
+    // debugger;
     variantLocal( variant );
   }
 
@@ -1595,7 +1707,6 @@ function modulesDownload_body( o )
   o.remoteContainer = [];
   if( !o.doneContainer )
   o.doneContainer = [];
-
   if( !o.nodesGroup )
   o.nodesGroup = will.graphGroupMake({ withPeers : 1 });
 
@@ -1723,111 +1834,6 @@ let modulesDownload = _.routineFromPreAndBody( modulesDownload_pre, modulesDownl
 
 //
 
-function modulesFor_pre( routine, args )
-{
-  let module = this;
-
-  _.assert( arguments.length === 2 );
-  _.assert( args.length <= 2 );
-
-  let o = args[ 0 ];
-
-  o = _.routineOptions( routine, o );
-
-  return o;
-}
-
-function modulesFor_body( o )
-{
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let time = _.timeNow();
-
-  _.assert( arguments.length === 1 );
-  _.assertRoutineOptions( modulesFor_body, arguments );
-
-  if( !o.nodesGroup )
-  o.nodesGroup = will.graphGroupMake({ withPeers : 1 });
-
-  o.modules = _.arrayAs( o.nodesGroup.nodesAddOnce( o.modules ) );
-  _.assert( _.arrayIs( o.modules ) );
-  // _.assert( !o.downloading );
-
-  let variants = variantsEach( o.modules );
-
-  return act( variants )
-  .finally( ( err, arg ) =>
-  {
-    if( err )
-    debugger;
-    if( err )
-    throw _.err( err );
-    return o;
-  });
-
-  /* */
-
-  function act( variants )
-  {
-    let ready = new _.Consequence().take( null );
-
-    ready.then( () =>
-    {
-      let ready = new _.Consequence().take( null );
-      variants.forEach( ( variant ) => ready.then( () => variantAction( variant ) ) );
-      return ready;
-    });
-
-    ready.then( () =>
-    {
-      let variants2 = variantsEach( variants );
-      // debugger;
-      if( variants2.length > variants.length && o.recursive >= 2 )
-      return act( variants2 );
-      return o;
-    });
-
-    return ready;
-  }
-
-  function variantsEach( variants )
-  {
-    let o2 = _.mapOnly( o, will.modulesEach.defaults );
-    o2.outputFormat = '/';
-    o2.modules = variants;
-    return will.modulesEach( o2 );
-  }
-
-  function variantAction( variant )
-  {
-
-    // logger.log( 'variantAction', variant.object.commonPath ); debugger;
-    let o3 = _.mapExtend( null, o );
-    o3.module = variant;
-    return o.onEach( variant, o3 ) || null;
-  }
-
-}
-
-var defaults = modulesFor_body.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults, moduleFit.defaults );
-
-defaults.recursive = 1;
-defaults.withPeers = 1;
-defaults.nodesGroup = null;
-defaults.modules = null;
-defaults.onEach = null;
-
-delete defaults.outputFormat;
-delete defaults.onUp;
-delete defaults.onDown;
-delete defaults.onNode;
-
-let modulesFor = _.routineFromPreAndBody( modulesFor_pre, modulesFor_body );
-
-//
-
 function modulesUpform( o )
 {
   let will = this;
@@ -1891,7 +1897,9 @@ delete defaults.onUp;
 delete defaults.onDown;
 delete defaults.onNode;
 
-//
+// --
+// variant
+// --
 
 function variantFrom( object )
 {
@@ -1986,7 +1994,12 @@ function graphGroupMake( o )
     if( variant.module )
     for( let s in variant.module.submoduleMap )
     {
-      let variant2 = variantFromRelation( variant.module.submoduleMap[ s ] );
+      let relation = variant.module.submoduleMap[ s ];
+
+      if( !relation.enabled ) /* ttt */
+      continue;
+
+      let variant2 = variantFromRelation( relation );
 
       result.push( variant2 );
 
@@ -2111,7 +2124,7 @@ function graphInfoExportAsTree( modules, o )
 
   function variantUp( variant, it )
   {
-    debugger;
+    // debugger;
     let module = variant.module || variant.opener;
     if( module )
     if( module.isOut && it.level !== 0 )
@@ -2933,10 +2946,12 @@ let Extend =
   modulesFindWithAt,
   modulesOnlyRoots,
   modulesEach,
+  modulesFor,
   _modulesDownload,
   modulesDownload,
-  modulesFor,
   modulesUpform,
+
+  // variant
 
   variantFrom,
   variantsFrom,

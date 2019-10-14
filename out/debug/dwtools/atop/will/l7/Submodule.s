@@ -82,7 +82,8 @@ function unform()
   if( relation.formed )
   {
     let variant = will.variantOf( relation );
-    _.assert( !!variant );
+    _.assert( !!variant || !relation.enabled ); 
+    if( variant )
     variant.remove( relation );
   }
 
@@ -127,8 +128,7 @@ function form1()
 
   _.assert( relation.opener.formed >= 2 );
 
-  if( relation.id === 310 )
-  debugger;
+  if( relation.enabled ) /* ttt */
   will.variantFrom( relation );
 
   /* end */
@@ -620,18 +620,15 @@ function errorNotFound( err )
   if( !relation.module.rootModule || relation.module.rootModule === relation.module )
   logger.error
   (
-      // ' ' + _.color.strFormat( '!', 'negative' ) + ' Failed to read ' + relation.decoratedQualifiedName
     ' ' + '!' + ' Failed to read ' + relation.decoratedQualifiedName
     + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading'
     // + '\n' + err.originalMessage
   );
 
-  // logger.log( _.errOnce( err ) ); // xxx
 
   err = _.err( err );
 
-  if( will.verbosity >= 2 )
-  if( !_.errIsBrief( err ) )
+  if( will.verbosity >= 2 && !_.errIsBrief( err ) )
   {
     logger.log( _.errOnce( err ) );
   }

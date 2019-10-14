@@ -96,6 +96,7 @@ function unform()
   }
 
   let variant = will.variantOf( opener );
+  if( variant ) /* ttt */
   variant.remove( opener );
 
   opener.formed = 0;
@@ -1080,6 +1081,7 @@ function _remoteForm()
     should goes after setting formed
   */
 
+  if( !opener.superRelation || opener.superRelation.enabled ) /* ttt */
   will.variantFrom( opener );
 
   return opener;
@@ -1647,6 +1649,7 @@ function _filePathChanged2( o )
   if( !o.isIdentical )
   if( opener.willfilesPath && opener.commonPath && opener.formed >= 2 )
   {
+    if( !opener.superRelation || opener.superRelation.enabled ) /* ttt */
     will.variantFrom( opener );
   }
 

@@ -96,6 +96,7 @@ function unform()
   }
 
   let variant = will.variantOf( opener );
+  if( variant ) /* ttt */
   variant.remove( opener );
 
   opener.formed = 0;
@@ -1080,6 +1081,7 @@ function _remoteForm()
     should goes after setting formed
   */
 
+  if( !opener.superRelation || opener.superRelation.enabled ) /* ttt */
   will.variantFrom( opener );
 
   return opener;
@@ -1208,6 +1210,27 @@ function _remoteFormInformal()
 }
 
 //
+
+/*
+
+qqq : investigate please, fix and cover here and in wFiles
+  - for download :
+  -- if error then new directory should no be made
+  -- if error and directory ( possibly empty ) existed then it should not be deleted
+  - for other modules : investigate is it applicable to other modes
+
+ = Message
+    Process returned exit code 128
+    Launched as "git clone https://github.com/Wandalen/wPathBasic.git ."
+     -> Stderr
+     -  Cloning into '.'...
+     -  fatal: unable to access 'https://github.com/Wandalen/wPathBasic.git/': Could not resolve host: github.com
+     -
+     -< Stderr
+    Failed to download module::reflect-get-path / opener::PathBasic
+    Failed to download submodules
+
+*/
 
 function _remoteDownload( o )
 {
@@ -1345,8 +1368,9 @@ function _remoteDownload( o )
 
   function filesCheck()
   {
-    if( fileProvider.fileExists( opener.downloadPath ) )
+    if( fileProvider.fileExists( opener.downloadPath ) && !fileProvider.dirIsEmpty( opener.downloadPath ) )
     {
+      debugger;
       throw _.err
       (
         'Module', opener.decoratedAbsoluteName, 'is not downloaded, but file at', _.color.strFormat( opener.downloadPath, 'path' ), 'exits.',
@@ -1625,6 +1649,7 @@ function _filePathChanged2( o )
   if( !o.isIdentical )
   if( opener.willfilesPath && opener.commonPath && opener.formed >= 2 )
   {
+    if( !opener.superRelation || opener.superRelation.enabled ) /* ttt */
     will.variantFrom( opener );
   }
 

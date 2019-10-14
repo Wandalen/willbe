@@ -1030,7 +1030,7 @@ function commandEach( e )
   function handleBegin( it )
   {
 
-    debugger;
+    // debugger;
     _.assert( will.currentOpener === null );
     _.assert( will.currentPath === null );
     // _.assert( will.mainModule === null );
@@ -1057,7 +1057,7 @@ function commandEach( e )
   function handleEnd( it )
   {
 
-    debugger;
+    // debugger;
     logger.up();
     levelUp = 1;
 
@@ -1075,7 +1075,7 @@ function commandEach( e )
       logger.down();
       levelUp = 0;
 
-      debugger;
+      // debugger;
       _.assert( will.currentOpener === it.currentOpener || will.currentOpener === null );
       // _.assert( will.currentOpener === it.currentOpener ); // xxx
       // _.assert( will.mainModule === will.currentOpener.openedModule );

@@ -292,7 +292,10 @@ function _performPrepare2()
     {
       let peerModule = submodule.opener.openedModule.peerModule;
       if( !peerModule || !peerModule.isValid() )
-      throw _.errBrief( 'Exporting is impossible because found no out-willfile of ' + submodule.decoratedAbsoluteName + '! Please re-export it, first.' );
+      {
+        debugger;
+        throw _.errBrief( 'Exporting is impossible because found no out-willfile of ' + submodule.decoratedAbsoluteName + '! Please re-export it, first.' );
+      }
     }
 
   }

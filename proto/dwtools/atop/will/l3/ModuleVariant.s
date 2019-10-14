@@ -100,42 +100,137 @@ function reform()
     return false;
   }
 
+  if( variant.module )
+  {
+    let variant2 = mergeTry( variant.module );
+    if( variant2 )
+    return variant2;
+  }
+
+  if( variant.opener )
+  {
+    let variant2 = mergeTry( variant.opener );
+    if( variant2 )
+    return variant2;
+  }
+
+  if( variant.relation )
+  {
+    let variant2 = mergeTry( variant.relation );
+    if( variant2 )
+    return variant2;
+  }
+
   associationsAdd();
 
   let localPath, remotePath;
   objectFind();
   [ localPath, remotePath ] = variant.PathsOf( variant.object );
 
-  if( variant.localPath && localPath && variant.localPath !== localPath )
+  if( variant.object )
   {
-    /*
-    update of local path
-    */
-
-    let variant2 = will.variantMap[ localPath ];
-    if( variant2 && variant2 !== variant )
-    {
-      debugger;
-      if( variant.mergeIn( variant2 ) )
-      return variant2;
-    }
-
-    _.assert( variant2 === undefined || variant2 === variant );
-    delete will.variantMap[ localPath ];
-    variant.localPath = localPath;
+    let variant2 = mergeTry( variant.object );
+    if( variant2 )
+    return variant2;
   }
 
-  _.assert( variant.localPath === null || localPath === null || variant.localPath === localPath );
+  // // if( variant.id === 760 )
+  // // debugger;
+  //
+  // // if( variant.localPath && localPath && variant.localPath !== localPath )
+  // if( localPath )
+  // {
+  //
+  //   let variant2 = will.variantMap[ localPath ];
+  //   if( variant2 && variant2 !== variant )
+  //   {
+  //     // debugger;
+  //     if( variant.mergeIn( variant2 ) )
+  //     return variant2;
+  //   }
+  //
+  // }
+  //
+  // if( remotePath )
+  // {
+  //
+  //   let variant2 = will.variantMap[ remotePath ];
+  //   if( variant2 && variant2 !== variant )
+  //   {
+  //     // debugger;
+  //     if( variant.mergeIn( variant2 ) )
+  //     return variant2;
+  //   }
+  //
+  // }
+
+  // _.assert( variant.localPath === null || localPath === null || variant.localPath === localPath );
   variant.localPath = localPath;
-  _.assert( variant.remotePath === null || remotePath === null || variant.remotePath === remotePath );
+  // _.assert( variant.remotePath === null || remotePath === null || variant.remotePath === remotePath );
   variant.remotePath = remotePath;
 
   verify();
   register();
   peerForm();
 
+  // let paths = variant.PathsOf( variant.object );
+  // _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
+
+  // if( Config.debug )
+  // variant.VariantOf( will, variant.object );
+  // will.objectToVariantHash.get( o.object )
+
   variant.formed = 1;
   return variant;
+
+  /* */
+
+  function mergeTry( object )
+  {
+    let localPath, remotePath;
+
+    [ localPath, remotePath ] = variant.PathsOf( object );
+
+    // if( variant.id === 760 )
+    // debugger;
+
+    // if( variant.localPath && localPath && variant.localPath !== localPath )
+    if( localPath )
+    {
+
+      let variant2 = will.variantMap[ localPath ];
+      if( variant2 && variant2 !== variant )
+      {
+        // debugger;
+        if( variant.mergeIn( variant2 ) )
+        return variant2;
+      }
+
+    }
+
+    if( remotePath )
+    {
+
+      let variant2 = will.variantMap[ remotePath ];
+      if( variant2 && variant2 !== variant )
+      {
+        // debugger;
+        if( variant.mergeIn( variant2 ) )
+        return variant2;
+      }
+
+    }
+
+  }
+
+  /* */
+
+  function localPathAdd( object )
+  {
+    let localPath, remotePath;
+    [ localPath, remotePath ] = variant.PathsOf( object );
+    _.arrayAppendOnce( variant.localPaths, localPath );
+  }
 
   /* */
 
@@ -294,8 +389,8 @@ function mergeIn( variant2 )
   function move( object )
   {
     let localPath, remotePath;
-    [ localPath, remotePath ] = variant.PathsOf( object );
-    if( ( localPath && localPath === variant2.localPath ) || ( remotePath && remotePath === variant2.remotePath ) )
+    // [ localPath, remotePath ] = variant.PathsOf( object );
+    // if( ( localPath && localPath === variant2.localPath ) || ( remotePath && remotePath === variant2.remotePath ) )
     {
       variant._remove( object );
       variant2._add( object );
@@ -339,7 +434,6 @@ function From( o )
     variant = will.objectToVariantHash.get( o.object );
   }
 
-  // if( Config.debug )
   if( variant )
   {
     let localPath, remotePath;
@@ -354,8 +448,8 @@ function From( o )
     _.assert( remotePath === null || variant.remotePath === null || variant.remotePath === remotePath );
   }
 
-  if( o.object && o.object.id === 475 )
-  debugger;
+  // if( o.object && o.object.id === 475 )
+  // debugger;
 
   if( !variant )
   variantWithPath();
@@ -399,12 +493,16 @@ function From( o )
   {
 
     if( o.object && o.object !== variant )
+    if( !variant.has( o.object ) )
     changed = variant._add( o.object ) || changed;
     if( o.module )
+    if( !variant.has( o.module ) )
     changed = variant._add( o.module ) || changed;
     if( o.opener )
+    if( !variant.has( o.opener ) )
     changed = variant._add( o.opener ) || changed;
     if( o.relation )
+    if( !variant.has( o.relation ) )
     changed = variant._add( o.relation ) || changed;
 
     delete o.object;
@@ -430,32 +528,6 @@ function From( o )
   function variantWithPath()
   {
     let localPath, remotePath;
-
-    // if( o.object instanceof _.Will.OpenedModule )
-    // {
-    //   // localPath = o.object.localPath || o.object.commonPath;
-    //   // remotePath = o.object.remotePath
-    //   o.module = o.object;
-    // }
-    // else if( o.object instanceof _.Will.ModuleOpener )
-    // {
-    //   // localPath = o.object.localPath || o.object.commonPath;
-    //   // remotePath = o.object.remotePath;
-    //   o.opener = o.object;
-    // }
-    // else if( o.object instanceof _.Will.ModulesRelation )
-    // {
-    //   /* xxx : use localPath / remotePath after introducing it */
-    //   // localPath = o.object.localPath;
-    //   // remotePath = o.object.remotePath;
-    //   // debugger;
-    //   o.relation = o.object;
-    //   // if( localPath )
-    //   // localPath = path.join( o.object.module.inPath, localPath );
-    //   // if( remotePath )
-    //   // remotePath = path.join( o.object.module.inPath, localPath );
-    // }
-    // else _.assert( 0, `Not clear how to get graph variant from ${_.strShort( o.object )}` );
 
     [ localPath, remotePath ] = cls.PathsOf( o.object );
 
@@ -504,10 +576,6 @@ function PathsOf( object )
     let path = object.module.will.fileProvider.path;
     let localPath = object.localPath;
     let remotePath = object.remotePath;
-    // if( localPath )
-    // localPath = path.join( object.module.inPath, localPath );
-    // if( remotePath )
-    // remotePath = path.join( object.module.inPath, remotePath );
     result.push( localPath );
     result.push( remotePath );
   }
@@ -544,10 +612,6 @@ function PathsOfAsMap( object )
     let path = object.module.will.fileProvider.path;
     result.localPath = object.localPath;
     result.remotePath = object.remotePath;
-    // if( result.localPath )
-    // result.localPath = path.join( object.module.inPath, result.localPath );
-    // if( remotePath )
-    // result.remotePath = path.join( object.module.inPath, result.remotePath );
   }
   else _.assert( 0 );
 
@@ -600,6 +664,7 @@ function VariantOf( will, object )
   let variant = will.objectToVariantHash.get( object );
 
   if( Config.debug )
+  if( variant )
   {
     let paths = cls.PathsOf( object );
     let variant2 = _.any( paths, ( path ) => will.variantMap[ path ] ) || null;
@@ -623,16 +688,6 @@ function VariantsOf( will, varaints )
   return cls.VariantOf( will, variant );
 }
 
-// //
-//
-// function peerModuleGet()
-// {
-//   let variant = this;
-//   if( variant.object )
-//   return variant.object.peerModule;
-//   return null;
-// }
-
 //
 
 function _relationAdd( relation )
@@ -655,6 +710,9 @@ function _relationAdd( relation )
   _.assert( variant2 === variant || variant2 === undefined );
   will.objectToVariantHash.set( relation, variant );
 
+  let paths = variant.PathsOf( relation );
+  _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
+
   return changed;
 }
 
@@ -666,6 +724,7 @@ function relationRemove( relation )
   let will = variant.will;
   let changed = false;
 
+  _.assert( !!relation.enabled );
   _.assert( relation instanceof _.Will.ModulesRelation );
   _.arrayRemoveOnce( variant.relations, relation );
 
@@ -691,8 +750,10 @@ function _openerAdd( opener )
   let will = variant.will;
   let changed = false;
 
-  // if( opener.id === 210 )
-  // debugger;
+  if( opener.superRelation )
+  {
+    _.assert( !!opener.superRelation.enabled );
+  }
 
   _.assert( opener instanceof _.Will.ModuleOpener );
 
@@ -708,6 +769,9 @@ function _openerAdd( opener )
   _.assert( variant2 === variant || variant2 === undefined );
   will.objectToVariantHash.set( opener, variant );
 
+  let paths = variant.PathsOf( opener );
+  _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
+
   return changed;
 }
 
@@ -718,9 +782,6 @@ function openerRemove( opener )
   let variant = this;
   let will = variant.will;
   let changed = false;
-
-  // if( variant.id === 210 )
-  // debugger;
 
   _.assert( opener instanceof _.Will.ModuleOpener );
   _.arrayRemoveOnceStrictly( variant.openers, opener );
@@ -762,9 +823,8 @@ function _moduleAdd( module )
   _.assert( variant2 === variant || variant2 === undefined, 'Module can belong only to one variant' );
   will.objectToVariantHash.set( module, variant );
 
-  // if( changed )
-  // if( variant.id === 2 )
-  // debugger;
+  let paths = variant.PathsOf( module );
+  _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
 
   return changed;
 }
@@ -776,9 +836,6 @@ function moduleRemove( module )
   let variant = this;
   let will = variant.will;
   let changed = false;
-
-  // if( variant.id === 2 )
-  // debugger;
 
   _.assert( module instanceof _.Will.OpenedModule );
   _.assert( variant.module === module );
@@ -864,6 +921,28 @@ function remove( object )
   return variant.reform();
 }
 
+//
+
+function has( object )
+{
+  let variant = this;
+
+  if( object instanceof _.Will.OpenedModule )
+  {
+    return _.arrayHas( variant.modules, object );
+  }
+  else if( object instanceof _.Will.ModuleOpener )
+  {
+    return _.arrayHas( variant.openers, object );
+  }
+  else if( object instanceof _.Will.ModulesRelation )
+  {
+    return _.arrayHas( variant.relations, object );
+  }
+  else _.assert( 0 );
+
+}
+
 // --
 // export
 // --
@@ -916,9 +995,6 @@ let moduleSymbol = Symbol.for( 'module' );
 let Composes =
 {
 
-  localPath : null,
-  remotePath : null,
-
 }
 
 let Aggregates =
@@ -947,6 +1023,10 @@ let Restricts =
 
   id : null,
   formed : 0,
+
+  localPath : null,
+  localPaths : _.define.own([]),
+  remotePath : null,
 
   module : null,
   modules : _.define.own([]),
@@ -980,8 +1060,6 @@ let Forbids =
 
 let Accessors =
 {
-  // module : { setter : moduleSet },
-  // peerModule : { getter : peerModuleGet, readOnly : 1 },
 }
 
 // --
@@ -1017,6 +1095,7 @@ let Extend =
   add,
   _remove,
   remove,
+  has,
 
   // export
 

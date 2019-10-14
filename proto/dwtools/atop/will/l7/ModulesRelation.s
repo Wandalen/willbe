@@ -82,7 +82,8 @@ function unform()
   if( relation.formed )
   {
     let variant = will.variantOf( relation );
-    _.assert( !!variant );
+    _.assert( !!variant || !relation.enabled ); 
+    if( variant )
     variant.remove( relation );
   }
 
@@ -127,8 +128,7 @@ function form1()
 
   _.assert( relation.opener.formed >= 2 );
 
-  if( relation.id === 310 )
-  debugger;
+  if( relation.enabled ) /* ttt */
   will.variantFrom( relation );
 
   /* end */

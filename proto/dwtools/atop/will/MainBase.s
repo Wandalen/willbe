@@ -1132,7 +1132,7 @@ function modulesOnlyRoots( modules, o )
 
   /* then add in-roots of trees */
 
-  debugger;
+  // debugger;
 
   _.each( modules, ( module ) =>
   {
@@ -1149,7 +1149,7 @@ function modulesOnlyRoots( modules, o )
     });
   });
 
-  debugger;
+  // debugger;
 
   /* add roots of what left */
 
@@ -1169,7 +1169,7 @@ function modulesOnlyRoots( modules, o )
     });
   });
 
-  debugger;
+  // debugger;
 
   /* add what left */
 
@@ -1994,7 +1994,12 @@ function graphGroupMake( o )
     if( variant.module )
     for( let s in variant.module.submoduleMap )
     {
-      let variant2 = variantFromRelation( variant.module.submoduleMap[ s ] );
+      let relation = variant.module.submoduleMap[ s ];
+
+      if( !relation.enabled ) /* ttt */
+      continue;
+
+      let variant2 = variantFromRelation( relation );
 
       result.push( variant2 );
 
@@ -2119,7 +2124,7 @@ function graphInfoExportAsTree( modules, o )
 
   function variantUp( variant, it )
   {
-    debugger;
+    // debugger;
     let module = variant.module || variant.opener;
     if( module )
     if( module.isOut && it.level !== 0 )

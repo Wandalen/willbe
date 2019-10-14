@@ -2300,123 +2300,11 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-//   shell({ execPath : '.with * .modules.tree' })
-//
-//   .then( ( got ) =>
-//   {
-//     test.case = '.with * .modules.tree';
-//     test.identical( got.exitCode, 0 );
-//
-//     let exp =
-// `
-//  +-- module::z
-//    +-- module::a
-//    | +-- module::Tools
-//    | +-- module::PathTools
-//    | +-- module::a0
-//    |   +-- module::PathTools
-//    |   +-- module::PathBasic
-//    +-- module::b
-//    | +-- module::PathTools
-//    | +-- module::Proto
-//    +-- module::c
-//    | +-- module::a0
-//    | | +-- module::PathTools
-//    | | +-- module::PathBasic
-//    | +-- module::UriBasic
-//    +-- module::PathTools
-// `
-//     test.identical( _.strCount( got.output, exp ), 1 );
-//     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-//     test.identical( _.strCount( got.output, 'module::z' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::a' ), 3 );
-//     test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-//     test.identical( _.strCount( got.output, 'module::b' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::c' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
-//     test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
-//     test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   shell({ execPath : '.with * .modules.tree withRemotePath:1' })
-//
-//   .then( ( got ) =>
-//   {
-//     test.case = '.with * .modules.tree withRemotePath:1';
-//     test.identical( got.exitCode, 0 );
-//
-//     let exp =
-// `
-//  +-- module::z
-//    +-- module::a
-//    | +-- module::Tools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
-//    | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    | +-- module::a0
-//    |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-//    +-- module::b
-//    | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
-//    | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
-//    +-- module::c
-//    | +-- module::a0
-//    | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-//    | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
-//    +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-// `
-//     test.identical( _.strCount( got.output, exp ), 1 );
-//     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-//     test.identical( _.strCount( got.output, 'module::z' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::a' ), 3 );
-//     test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-//     test.identical( _.strCount( got.output, 'module::b' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::c' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
-//     test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
-//     test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   shell({ execPath : '.with * .modules.tree withLocalPath:1' })
-//
-//   .then( ( got ) =>
-//   {
-//     test.case = '.with * .modules.tree withLocalPath:1';
-//     test.identical( got.exitCode, 0 );
-//
-//     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-//     test.identical( _.strCount( got.output, 'module::z' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::a' ), 3 );
-//     test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-//     test.identical( _.strCount( got.output, 'module::b' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::c' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
-//     test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
-//     test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
-//
-//     return null;
-//   })
-
-  /* - */
-
-  shell({ execPath : '.with ** .modules.tree' })
+  shell({ execPath : '.with * .modules.tree' })
 
   .then( ( got ) =>
   {
-    test.case = '.with ** .modules.tree';
+    test.case = '.with * .modules.tree';
     test.identical( got.exitCode, 0 );
 
     let exp =
@@ -2453,113 +2341,6 @@ function modulesTreeHierarchyRemote( test )
 
     return null;
   })
-
-// xxx
-//   /* - */
-//
-//   shell({ execPath : '.with ** .modules.tree withRemotePath:1' })
-//
-//   .then( ( got ) =>
-//   {
-//     test.case = '.with ** .modules.tree withRemotePath:1';
-//     test.identical( got.exitCode, 0 );
-//
-//     let exp =
-// `
-//  +-- module::z
-//    +-- module::a
-//    | +-- module::Tools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
-//    | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    | +-- module::a0
-//    |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-//    +-- module::b
-//    | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
-//    | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
-//    +-- module::c
-//    | +-- module::a0
-//    | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-//    | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-//    | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
-//    +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-// `
-//     test.identical( _.strCount( got.output, exp ), 1 );
-//     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-//     test.identical( _.strCount( got.output, 'module::z' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::a' ), 3 );
-//     test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-//     test.identical( _.strCount( got.output, 'module::b' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::c' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
-//     test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
-//     test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
-//
-//     return null;
-//   })
-//
-//   /* - */
-//
-//   shell({ execPath : '.with ** .modules.tree withLocalPath:1' })
-//
-//   .then( ( got ) =>
-//   {
-//     test.case = '.with ** .modules.tree withLocalPath:1';
-//     test.identical( got.exitCode, 0 );
-//
-//     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-//     test.identical( _.strCount( got.output, 'module::z' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::a' ), 3 );
-//     test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-//     test.identical( _.strCount( got.output, 'module::b' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::c' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
-//     test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
-//     test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
-//     test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
-//
-//     return null;
-//   })
-
-  /* - */
-
-  return ready;
-} /* end of function modulesTreeHierarchyRemote */
-
-modulesTreeHierarchyRemote.timeOut = 300000;
-
-//
-
-function modulesTreeHierarchyRemoteDownloaded( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
-  let routinePath = _.path.join( self.suitePath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
-  let ready = new _.Consequence().take( null );
-
-  let shell = _.process.starter
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  _.fileProvider.filesDelete( submodulesPath );
-
-  /* - */
-
-  shell({ execPath : '.with * .submodules.download recursive:2' })
-  shell({ execPath : '.with * .modules.tree' })
 
   /* - */
 
@@ -2607,10 +2388,311 @@ function modulesTreeHierarchyRemoteDownloaded( test )
 
   /* - */
 
+  shell({ execPath : '.with * .modules.tree withLocalPath:1' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with * .modules.tree withLocalPath:1';
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ execPath : '.with ** .modules.tree' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with ** .modules.tree';
+    test.identical( got.exitCode, 0 );
+
+    let exp =
+`
+ +-- module::z
+   +-- module::a
+   | +-- module::Tools
+   | +-- module::PathTools
+   | +-- module::a0
+   |   +-- module::PathTools
+   |   +-- module::PathBasic
+   +-- module::b
+   | +-- module::PathTools
+   | +-- module::Proto
+   +-- module::c
+   | +-- module::a0
+   | | +-- module::PathTools
+   | | +-- module::PathBasic
+   | +-- module::UriBasic
+   +-- module::PathTools
+`
+    test.identical( _.strCount( got.output, exp ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ execPath : '.with ** .modules.tree withRemotePath:1' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with ** .modules.tree withRemotePath:1';
+    test.identical( got.exitCode, 0 );
+
+    let exp =
+`
+ +-- module::z
+   +-- module::a
+   | +-- module::Tools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
+   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::a0
+   |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   +-- module::b
+   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
+   | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+   +-- module::c
+   | +-- module::a0
+   | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
+   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+`
+    test.identical( _.strCount( got.output, exp ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ execPath : '.with ** .modules.tree withLocalPath:1' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with ** .modules.tree withLocalPath:1';
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function modulesTreeHierarchyRemote */
+
+modulesTreeHierarchyRemote.timeOut = 300000;
+
+//
+
+function modulesTreeHierarchyRemoteDownloaded( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( submodulesPath );
+
+  /* - */
+
+  shell({ execPath : '.with * .submodules.clean recursive:2' })
+  shell({ execPath : '.with * .submodules.download recursive:2' })
+
+  /* - */
+
+  shell({ execPath : '.with * .modules.tree withRemotePath:1' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with * .modules.tree withRemotePath:1';
+    test.identical( got.exitCode, 0 );
+
+    let exp =
+`
+ +-- module::z
+   +-- module::a
+   | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
+   | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::a0
+   |   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   |   +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   +-- module::b
+   | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::wProto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+   +-- module::c
+   | +-- module::a0
+   | | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   | +-- module::wUriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/
+   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+`
+    test.identical( _.strCount( got.output, exp ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::wTools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::wPathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::wPathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::wUriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::wProto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
   return ready;
 } /* end of function modulesTreeHierarchyRemoteDownloaded */
 
 modulesTreeHierarchyRemoteDownloaded.timeOut = 300000;
+
+//
+
+/*
+cls && local-will .with group1/group10/a0 .clean recursive:2 && local-will .with group1/group10/a0 .export && local-debug-will .with group1/a .export
+*/
+
+function modulesTreeHierarchyRemotePartiallyDownloaded( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesDelete( submodulesPath );
+
+  /* - */
+
+  shell({ execPath : '.with group1/group10/a0 .export' })
+  shell({ execPath : '.with group1/a .export' })
+  shell({ execPath : '.with * .modules.tree withRemotePath:1' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with * .modules.tree withRemotePath:1';
+    test.identical( got.exitCode, 0 );
+
+    let exp =
+`
+ +-- module::z
+   +-- module::a
+   | +-- module::Tools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
+   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::a0
+   |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   +-- module::b
+   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
+   | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+   +-- module::c
+   | +-- module::a0
+   | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
+   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+`
+    test.identical( _.strCount( got.output, exp ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, 'module::z' ), 1 );
+    test.identical( _.strCount( got.output, 'module::a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
+    test.identical( _.strCount( got.output, 'module::b' ), 1 );
+    test.identical( _.strCount( got.output, 'module::c' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function modulesTreeHierarchyRemotePartiallyDownloaded */
+
+modulesTreeHierarchyRemotePartiallyDownloaded.timeOut = 300000;
 
 //
 
@@ -14194,6 +14276,7 @@ var Self =
     modulesTreeDotless,
     modulesTreeHierarchyRemote,
     modulesTreeHierarchyRemoteDownloaded,
+    // modulesTreeHierarchyRemotePartiallyDownloaded, // xxx : later
 
     help,
     listSingleModule,
