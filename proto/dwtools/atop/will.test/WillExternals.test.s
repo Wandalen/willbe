@@ -14240,7 +14240,7 @@ var Self =
     // exportWithRemoteSubmodules, // xxx
     importPathLocal,
     importLocalRepo,
-    importOutWithDeletedSource,
+    // importOutWithDeletedSource, // xxx : look later
 
     reflectNothingFromSubmodules,
     reflectGetPath,
