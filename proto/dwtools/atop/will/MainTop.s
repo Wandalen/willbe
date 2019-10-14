@@ -1639,7 +1639,7 @@ function commandSubmodulesVersionsAgree( e )
 
   function handleEach( it )
   {
-    return it.opener.openedModule.versionsAgree( _.mapExtend( null, e.propertiesMap ) );
+    return it.opener.openedModule.subModulesAgree( _.mapExtend( null, e.propertiesMap ) );
   }
 
 }
