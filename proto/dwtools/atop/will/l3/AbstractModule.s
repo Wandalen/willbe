@@ -742,7 +742,7 @@ function remoteIsUpToDateUpdate()
   let result = remoteProvider.isUpToDate
   ({
     remotePath : module.remotePath,
-    downloadPath : module.downloadPath,
+    localPath : module.downloadPath,
     verbosity : will.verbosity - 3,
   });
 
