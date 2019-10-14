@@ -3745,10 +3745,10 @@ function cleanBroken2( test )
     // test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     var files = self.find( outDebugPath );
-    test.identical( files.length, 2 );
+    test.identical( files.length, 0 );
 
     var files = _.fileProvider.dirRead( outPath );
-    test.identical( files, [ 'debug' ] );
+    test.identical( files, null );
 
     return null;
   })
