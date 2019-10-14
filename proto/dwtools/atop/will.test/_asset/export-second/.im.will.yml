@@ -5,15 +5,15 @@ path :
   temp : 'out'
   out : 'out'
   out.debug :
-    path : './out/debug'
+    path : './out/debug/*'
     criterion :
       debug : 1
   out.release :
-    path : './out/release'
+    path : './out/release/*'
     criterion :
       debug : 0
-  proto : './proto'
-  doc : './doc'
+  proto : './proto/*'
+  doc : './doc/*'
 
 reflector :
 

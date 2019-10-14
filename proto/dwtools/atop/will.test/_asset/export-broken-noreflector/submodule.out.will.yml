@@ -68,16 +68,6 @@ module:
           basePath: proto
           prefixPath: ''
         mandatory: 1
-      exported.export:
-        src:
-          filePath:
-            .: ''
-          basePath: ..
-          prefixPath: module/proto/File2.s
-        mandatory: 1
-        criterion:
-          default: 1
-          export: 1
       exported.files.export:
         src:
           filePath:
@@ -185,16 +175,6 @@ module:
             proto/File2.s: null
           basePath: proto
         mandatory: 1
-      exported.export:
-        src:
-          filePath:
-            .: ''
-          basePath: ..
-          prefixPath: proto/File2.s
-        mandatory: 1
-        criterion:
-          default: 1
-          export: 1
       exported.files.export:
         src:
           filePath:
