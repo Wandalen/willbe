@@ -290,7 +290,8 @@ function _pathChanged( o )
   o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
 
   // if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
-  // if( _.strIs( o.val ) && o.val )
+  // if( o.object.id === 122 )
+  // // if( _.strIs( o.val ) && o.val )
   // {
   //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
   //   debugger;
@@ -1132,7 +1133,7 @@ function modulesOnlyRoots( modules, o )
 
   /* then add in-roots of trees */
 
-  // debugger;
+  debugger;
 
   _.each( modules, ( module ) =>
   {
@@ -1149,7 +1150,7 @@ function modulesOnlyRoots( modules, o )
     });
   });
 
-  // debugger;
+  debugger;
 
   /* add roots of what left */
 
@@ -1169,7 +1170,7 @@ function modulesOnlyRoots( modules, o )
     });
   });
 
-  // debugger;
+  debugger;
 
   /* add what left */
 
@@ -1195,16 +1196,17 @@ function modulesOnlyRoots( modules, o )
 
     if( module && !module.isOut && it.level === 0 && !visitedContainer.has( r ) )
     {
+      debugger;
       result.append( r );
       visitedContainer.appendOnce( r );
-      if( r.peerModule )
-      visitedContainer.appendOnce( o.nodesGroup.nodeFrom( r.peerModule ) );
+      if( r.peer )
+      visitedContainer.appendOnce( r.peer );
     }
     else if( it.level !== 0 )
     {
       visitedContainer.appendOnce( r );
-      if( r.peerModule )
-      visitedContainer.appendOnce( o.nodesGroup.nodeFrom( r.peerModule ) );
+      if( r.peer )
+      visitedContainer.appendOnce( r.peer );
     }
     else
     {

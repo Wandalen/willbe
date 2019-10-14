@@ -5151,7 +5151,8 @@ function exportInformal( test )
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
     test.identical( outfile.path.download.path, '../.module/Proto' );
-    test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wProto.git' );
+    test.identical( outfile.path.remote.path, undefined );
+    // test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wProto.git' );
     // logger.log( _.toJson( outfile.path ) );
 
     return null;
@@ -5228,7 +5229,8 @@ function exportInformal( test )
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
     test.identical( outfile.path.download.path, '../.module/Proto' );
-    test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wProto.git' );
+    test.identical( outfile.path.remote.path, undefined );
+    // test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wProto.git' );
     // logger.log( _.toJson( outfile.path ) );
 
     return null;
@@ -5306,7 +5308,8 @@ function exportInformal( test )
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
     test.identical( outfile.path.download.path, '../.module/UriBasic' );
-    test.identical( outfile.path.remote.path, 'npm:///wuribasic' );
+    test.identical( outfile.path.remote.path, undefined );
+    // test.identical( outfile.path.remote.path, 'npm:///wuribasic' );
     // logger.log( _.toJson( outfile.path ) );
 
     return null;
