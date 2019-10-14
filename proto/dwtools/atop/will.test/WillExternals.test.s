@@ -6977,7 +6977,7 @@ function exportImport( test )
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
-  let outPath = _.path.join( routinePath, 'out' );
+  let outPath = _.path.join( routinePath, 'super.out' );
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -7002,15 +7002,15 @@ function exportImport( test )
     return null;
   })
 
-  shell({ execPath : '.export debug:0' })
-  shell({ execPath : '.export debug:1' })
+  shell({ execPath : '.with super .export debug:0' })
+  shell({ execPath : '.with super .export debug:1' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
     var files = _.fileProvider.dirRead( outPath );
-    test.identical( files, [ 'debug', 'release', 'submodule.out.will.yml' ] );
+    test.identical( files, [ 'debug', 'release', 'supermodule.out.will.yml' ] );
 
     return null;
   })
