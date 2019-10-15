@@ -1583,8 +1583,13 @@ function _modulesDownload_body( o )
 
     if( o.dry )
     {
-      _.arrayAppendOnceStrictly( o.downloadedContainer, variant.opener.remotePath );
-      return null;
+      return variant.opener._remoteIsUpToDate({ mode : o.mode })
+      .then( ( downloading ) =>
+      {
+        if( downloading )
+        _.arrayAppendOnceStrictly( o.downloadedContainer, variant.opener.remotePath );
+        return null;
+      })
     }
     else
     {

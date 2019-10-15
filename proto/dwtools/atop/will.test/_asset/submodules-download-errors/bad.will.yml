@@ -1,0 +1,5 @@
+about :
+  name : submodules-download-errors-bad
+
+submodule :
+  PathBasic : git+https:///githu.com/Wandalen/wPathBasic.git
