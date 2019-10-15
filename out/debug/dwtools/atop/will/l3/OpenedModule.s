@@ -2438,7 +2438,10 @@ function modulesBuild_body( o )
 
   function handleEach( record, op )
   {
+    debugger;
     let o3 = _.mapOnly( o, module.moduleBuild.defaults );
+    if( !record.module )
+    throw _.err( `${record.object.absoluteName} at ${record.object.localPath || record.object.remotePath} is not opened or invalid` );
     return record.module.moduleBuild( o3 );
   }
 

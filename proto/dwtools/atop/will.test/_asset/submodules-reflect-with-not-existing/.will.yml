@@ -5,8 +5,12 @@ about :
 
 submodule :
 
-  moduleA : module/moduleA
-  moduleB : module/moduleB
+  moduleA : module/moduleA/
+  moduleB : module/moduleB/
+
+path :
+
+  temp : out
 
 reflector :
 

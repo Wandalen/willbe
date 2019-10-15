@@ -6252,7 +6252,6 @@ function exportMultiple( test )
 
     outfile = outfile.module[ 'submodule.out' ];
 
-    debugger
     var exported =
     {
       'export.debug' :
@@ -6370,7 +6369,7 @@ function exportMultiple( test )
       },
       "exported.dir.export.debug" :
       {
-        "path" : "./debug",
+        "path" : "debug",
         "criterion" :
         {
           "default" : 1,
@@ -6392,7 +6391,7 @@ function exportMultiple( test )
       },
       "archiveFile.export.debug" :
       {
-        "path" : "./submodule.debug.out.tgs",
+        "path" : "submodule.debug.out.tgs",
         "criterion" :
         {
           "default" : 1,
@@ -6627,7 +6626,7 @@ function exportMultiple( test )
       },
       "exported.dir.export.debug" :
       {
-        "path" : "./debug",
+        "path" : "debug",
         "criterion" :
         {
           "default" : 1,
@@ -6649,7 +6648,7 @@ function exportMultiple( test )
       },
       "archiveFile.export.debug" :
       {
-        "path" : "./submodule.debug.out.tgs",
+        "path" : "submodule.debug.out.tgs",
         "criterion" :
         {
           "default" : 1,
@@ -6660,7 +6659,7 @@ function exportMultiple( test )
       },
       "exported.dir.export." :
       {
-        "path" : "./release",
+        "path" : "release",
         "criterion" :
         {
           "default" : 1,
@@ -6682,7 +6681,7 @@ function exportMultiple( test )
       },
       "archiveFile.export." :
       {
-        "path" : "./submodule.out.tgs",
+        "path" : "submodule.out.tgs",
         "criterion" :
         {
           "default" : 1,
@@ -10073,6 +10072,21 @@ function relfectSubmodulesWithNotExistingFile( test )
   })
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.assert( _.fileProvider.fileExists( abs( routinePath, 'module/moduleB/proto/amid/File.txt' ) ) );
+  _.fileProvider.fileDelete( abs( routinePath, 'module/moduleB/proto/amid/File.txt' ) );
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = 'setup';
+    return null;
+  })
+
+  shell({ execPath : '.clean recursive:2' })
+  shell({ execPath : '.with module/moduleA/ .export' })
+  shell({ execPath : '.with module/moduleB/ .export' })
 
   /* - */
 
@@ -10080,10 +10094,57 @@ function relfectSubmodulesWithNotExistingFile( test )
   .then( () =>
   {
     test.case = 'reflect submodules'
+
+    let exp =
+    [
+      '.',
+      './.will.yml',
+      './module',
+      './module/moduleA.out.will.yml',
+      './module/moduleB.out.will.yml',
+      './module/moduleA',
+      './module/moduleA/.will.yml',
+      './module/moduleA/out',
+      './module/moduleA/out/debug',
+      './module/moduleA/out/debug/amid',
+      './module/moduleA/out/debug/amid/Tools.s',
+      './module/moduleA/proto',
+      './module/moduleA/proto/amid',
+      './module/moduleA/proto/amid/Tools.s',
+      './module/moduleB',
+      './module/moduleB/.will.yml',
+      './module/moduleB/out',
+      './module/moduleB/out/debug',
+      './module/moduleB/out/debug/amid',
+      './module/moduleB/proto',
+      './module/moduleB/proto/amid'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
     return null;
   })
 
+  ready
+  .finally( ( err, arg ) =>
+  {
+    test.is( err === undefined );
+    if( err )
+    logger.log( err );
+    return arg || null;
+  })
+
   shell({ execPath : '.build' })
+
+  ready
+  .finally( ( err, arg ) =>
+  {
+    test.is( _.errIs( err ) );
+    logger.log( err );
+    if( err )
+    throw err;
+    return arg;
+  })
 
   return test.shouldThrowErrorAsync( ready );
 }
@@ -10460,9 +10521,30 @@ function reflectComplexInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::files.all reflected 11 file(s) .*\/.* : .*out\/ab\/files.* <- proto in' ) );
+    test.is( _.strHas( got.output, '+ reflector::files.all reflected 21 file(s)' ) );
+    var exp =
+    [
+      '.',
+      './module-a.out.will.yml',
+      './module-b.out.will.yml',
+      './ab',
+      './ab/files',
+      './ab/files/a',
+      './ab/files/a/File.js',
+      './ab/files/b',
+      './ab/files/b/-Excluded.js',
+      './ab/files/b/File.js',
+      './ab/files/b/File.test.js',
+      './ab/files/b/File1.debug.js',
+      './ab/files/b/File1.release.js',
+      './ab/files/b/File2.debug.js',
+      './ab/files/b/File2.release.js',
+      './ab/files/dir3.test',
+      './ab/files/dir3.test/File.js',
+      './ab/files/dir3.test/File.test.js'
+    ]
     var files = self.find( outPath );
-    test.identical( files, [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './ab', './ab/files', './ab/files/a', './ab/files/a/File.js', './ab/files/b', './ab/files/b/-Excluded.js', './ab/files/b/File.js', './ab/files/b/File.test.js', './ab/files/b/File1.debug.js', './ab/files/b/File1.release.js', './ab/files/b/File2.debug.js', './ab/files/b/File2.release.js', './ab/files/dir3.test' ] );
+    test.identical( files, exp );
     return null;
   })
 
@@ -10485,16 +10567,44 @@ function reflectComplexInherit( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, ' + reflector::files\.all.* reflected 13 file(s) .*\/.* : .*out\/abac\/files <- proto in' ) );
+    test.is( _.strHas( got.output, '+ reflector::files.all reflected 24 file(s)' ) );
+    var exp =
+    [
+      '.',
+      './module-a.out.will.yml',
+      './module-b.out.will.yml',
+      './module-c.out.will.yml',
+      './ab',
+      './ab/module-ab.out.will.yml',
+      './abac',
+      './abac/files',
+      './abac/files/a',
+      './abac/files/a/File.js',
+      './abac/files/b',
+      './abac/files/b/-Excluded.js',
+      './abac/files/b/File.js',
+      './abac/files/b/File.test.js',
+      './abac/files/b/File1.debug.js',
+      './abac/files/b/File1.release.js',
+      './abac/files/b/File2.debug.js',
+      './abac/files/b/File2.release.js',
+      './abac/files/c',
+      './abac/files/c/File.js',
+      './abac/files/dir3.test',
+      './abac/files/dir3.test/File.js',
+      './abac/files/dir3.test/File.test.js'
+    ]
     var files = self.find( outPath );
-    test.identical( files, [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './module-c.out.will.yml', './ab', './ab/module-ab.out.will.yml', './abac', './abac/files', './abac/files/a', './abac/files/a/File.js', './abac/files/b', './abac/files/b/-Excluded.js', './abac/files/b/File.js', './abac/files/b/File.test.js', './abac/files/b/File1.debug.js', './abac/files/b/File1.release.js', './abac/files/b/File2.debug.js', './abac/files/b/File2.release.js', './abac/files/c', './abac/files/c/File.js', './abac/files/dir3.test' ] );
+    test.identical( files, exp );
     return null;
   })
 
   /* - */
 
   return ready;
-}
+} /* end of function reflectComplexInherit */
+
+reflectComplexInherit.timeOut = 300000;
 
 //
 
@@ -14983,10 +15093,10 @@ var Self =
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
     reflectSubmodulesWithPluralCriterionAutoExport,
-    // relfectSubmodulesWithNotExistingFile, // xxx
+    // relfectSubmodulesWithNotExistingFile, // xxx : uncomment after final transition to willbe
     reflectInherit,
     reflectInheritSubmodules,
-    // reflectComplexInherit, // xxx
+    reflectComplexInherit,
     reflectorMasks,
 
     shellWithCriterion,
@@ -15016,7 +15126,7 @@ var Self =
     fixateDetached,
 
     versionsVerify,
-    versionsAgree
+    versionsAgree,
 
     // runWillbe, // qqq : help to fix, please
 

@@ -6,8 +6,9 @@ path :
   in : '.'
   out : '..'
   proto : 'proto'
-  
-reflector : 
+  temp : out
+
+reflector :
 
   reflect.proto :
     src : path::proto
