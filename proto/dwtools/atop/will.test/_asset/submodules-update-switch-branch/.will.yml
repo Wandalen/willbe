@@ -3,4 +3,4 @@ about :
 
 submodule :
 
-  willbe-experiment : git+https:///github.com/volodymyrmigdal/willbe-experiment.git/out/willbe-experiment#master
+  willbe-experiment : git+hd://./experiment?out=out/experiment.out.will#master

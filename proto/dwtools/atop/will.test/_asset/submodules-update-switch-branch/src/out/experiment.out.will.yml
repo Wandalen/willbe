@@ -1,72 +1,71 @@
 format: outwillfile-2.0
 root:
-  - A.out
+  - experiment.out
 consistency:
-  A.will.yml: &ref_0
-    hash: d7f845ff90531270f501a5ddda68c0e3
-    size: 238
+  ../.will.yml: &ref_0
+    hash: 3d8f2ec3b12297d1fa237c41b933fc68
+    size: 200
 module:
-  A.out:
+  experiment.out:
     about:
-      name: A
+      name: experiment
       enabled: 1
-      version: 0.1.0
+      version: 0.0.0
     path:
       module.willfiles:
         criterion:
           predefined: 1
-        path: A.out.will.yml
+        path: experiment.out.will.yml
       module.common:
         criterion:
           predefined: 1
-        path: A.out
+        path: experiment.out
       in:
-        criterion:
-          predefined: 0
-        path: .
-      out:
         criterion:
           predefined: 0
         path: .
       module.original.willfiles:
         criterion:
           predefined: 1
-        path: A.will.yml
+        path: ../.will.yml
       module.peer.willfiles:
         criterion:
           predefined: 1
-        path: A.will.yml
+        path: ../.will.yml
       module.download:
         criterion:
           predefined: 1
       remote:
         criterion:
           predefined: 1
-      download:
-        path: ./A/**
+      out:
+        criterion:
+          predefined: 0
+        path: .
       exported.dir.export:
         criterion:
-          default: 1
           export: 1
-        path: ./A
+          default: 1
+        path: ..
       exported.files.export:
         criterion:
-          default: 1
           export: 1
+          default: 1
         path:
-          - A
-          - A/A.js
+          - ..
+          - ../.will.yml
+          - ../File.js
     submodule: {}
     reflector:
       exported.export:
         src:
           filePath:
             '**': ''
-          prefixPath: A
+          prefixPath: ..
         mandatory: 1
         criterion:
-          default: 1
           export: 1
+          default: 1
       exported.files.export:
         src:
           filePath:
@@ -77,25 +76,24 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
-          default: 1
           export: 1
+          default: 1
     step:
-      export.A:
+      export:
         opts:
-          export: 'path::download'
+          export: '**'
           tar: 0
         inherit:
           - module.export
     build:
       export:
-        steps:
-          - 'step::export.A'
+        steps: export
         criterion:
-          default: 1
           export: 1
+          default: 1
     exported:
       export:
-        version: 0.1.0
+        version: 0.0.0
         recursive: 0
         withIntegrated: 2
         tar: 0
@@ -104,71 +102,70 @@ module:
         exportedDirPath: 'path::exported.dir.export'
         exportedFilesPath: 'path::exported.files.export'
         criterion:
-          default: 1
           export: 1
+          default: 1
     consistency:
-      A.will.yml: *ref_0
-  A:
+      ../.will.yml: *ref_0
+  ../:
     about:
-      name: A
+      name: experiment
       enabled: 1
-      version: 0.1.0
+      version: 0.0.0
     path:
       in:
-        criterion:
-          predefined: 0
-        path: .
-      out:
         criterion:
           predefined: 0
         path: .
       module.willfiles:
         criterion:
           predefined: 1
-        path: A.will.yml
+        path: .will.yml
       module.original.willfiles:
         criterion:
           predefined: 1
-        path: A.will.yml
+        path: .will.yml
       module.peer.willfiles:
         criterion:
           predefined: 1
-        path: A.out.will.yml
+        path: out/experiment.out.will.yml
       module.common:
         criterion:
           predefined: 1
-        path: A
+        path: ./
       module.download:
         criterion:
           predefined: 1
       remote:
         criterion:
           predefined: 1
-      download:
-        path: ./A/**
+      out:
+        criterion:
+          predefined: 0
+        path: out
       exported.dir.export:
         criterion:
-          default: 1
           export: 1
-        path: ./A
+          default: 1
+        path: .
       exported.files.export:
         criterion:
-          default: 1
           export: 1
+          default: 1
         path:
-          - A
-          - A/A.js
+          - .
+          - .will.yml
+          - File.js
     submodule: {}
     reflector:
       exported.export:
         src:
           filePath:
             '**': ''
-          prefixPath: A
+          prefixPath: .
         mandatory: 1
         criterion:
-          default: 1
           export: 1
+          default: 1
       exported.files.export:
         src:
           filePath:
@@ -179,25 +176,24 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
-          default: 1
           export: 1
+          default: 1
     step:
-      export.A:
+      export:
         opts:
-          export: 'path::download'
+          export: '**'
           tar: 0
         inherit:
           - module.export
     build:
       export:
-        steps:
-          - 'step::export.A'
+        steps: export
         criterion:
-          default: 1
           export: 1
+          default: 1
     exported:
       export:
-        version: 0.1.0
+        version: 0.0.0
         recursive: 0
         withIntegrated: 2
         tar: 0
@@ -206,9 +202,9 @@ module:
         exportedDirPath: 'path::exported.dir.export'
         exportedFilesPath: 'path::exported.files.export'
         criterion:
-          default: 1
           export: 1
+          default: 1
     consistency:
-      A.will.yml:
-        hash: d7f845ff90531270f501a5ddda68c0e3
-        size: 238
+      ../.will.yml:
+        hash: 3d8f2ec3b12297d1fa237c41b933fc68
+        size: 200
