@@ -1,0 +1,210 @@
+format: outwillfile-2.0
+root:
+  - experiment.out
+consistency:
+  ../.will.yml: &ref_0
+    hash: 3d8f2ec3b12297d1fa237c41b933fc68
+    size: 200
+module:
+  experiment.out:
+    about:
+      name: experiment
+      enabled: 1
+      version: 0.0.0
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: experiment.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: experiment.out
+      in:
+        criterion:
+          predefined: 0
+        path: .
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path: ../.will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: ../.will.yml
+      module.download:
+        criterion:
+          predefined: 1
+      remote:
+        criterion:
+          predefined: 1
+      out:
+        criterion:
+          predefined: 0
+        path: .
+      exported.dir.export:
+        criterion:
+          export: 1
+          default: 1
+        path: ..
+      exported.files.export:
+        criterion:
+          export: 1
+          default: 1
+        path:
+          - ..
+          - ../.will.yml
+          - ../File.js
+    submodule: {}
+    reflector:
+      exported.export:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: ..
+        mandatory: 1
+        criterion:
+          export: 1
+          default: 1
+      exported.files.export:
+        src:
+          filePath:
+            'path::exported.files.export': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          export: 1
+          default: 1
+    step:
+      export:
+        opts:
+          export: '**'
+          tar: 0
+        inherit:
+          - module.export
+    build:
+      export:
+        steps: export
+        criterion:
+          export: 1
+          default: 1
+    exported:
+      export:
+        version: 0.0.0
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.export'
+        exportedFilesReflector: 'reflector::exported.files.export'
+        exportedDirPath: 'path::exported.dir.export'
+        exportedFilesPath: 'path::exported.files.export'
+        criterion:
+          export: 1
+          default: 1
+    consistency:
+      ../.will.yml: *ref_0
+  ../:
+    about:
+      name: experiment
+      enabled: 1
+      version: 0.0.0
+    path:
+      in:
+        criterion:
+          predefined: 0
+        path: .
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: .will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path: .will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: out/experiment.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: ./
+      module.download:
+        criterion:
+          predefined: 1
+      remote:
+        criterion:
+          predefined: 1
+      out:
+        criterion:
+          predefined: 0
+        path: out
+      exported.dir.export:
+        criterion:
+          export: 1
+          default: 1
+        path: .
+      exported.files.export:
+        criterion:
+          export: 1
+          default: 1
+        path:
+          - .
+          - .will.yml
+          - File.js
+    submodule: {}
+    reflector:
+      exported.export:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: .
+        mandatory: 1
+        criterion:
+          export: 1
+          default: 1
+      exported.files.export:
+        src:
+          filePath:
+            'path::exported.files.export': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          export: 1
+          default: 1
+    step:
+      export:
+        opts:
+          export: '**'
+          tar: 0
+        inherit:
+          - module.export
+    build:
+      export:
+        steps: export
+        criterion:
+          export: 1
+          default: 1
+    exported:
+      export:
+        version: 0.0.0
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.export'
+        exportedFilesReflector: 'reflector::exported.files.export'
+        exportedDirPath: 'path::exported.dir.export'
+        exportedFilesPath: 'path::exported.files.export'
+        criterion:
+          export: 1
+          default: 1
+    consistency:
+      ../.will.yml:
+        hash: 3d8f2ec3b12297d1fa237c41b933fc68
+        size: 200

@@ -11401,6 +11401,42 @@ function submodulesDownloadSwitchBranch( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
 
   ready
+
+  .then( () =>
+  {
+    test.case = 'setup repo';
+
+    let con = new _.Consequence().take( null );
+    let repoPath = _.path.join( routinePath, 'experiment' );
+    let repoSrcFiles = _.path.join( routinePath, 'src' );
+    let clonePath = _.path.join( routinePath, 'cloned' );
+    _.fileProvider.dirMake( repoPath );
+
+    let shell = _.process.starter
+    ({
+      currentPath : routinePath,
+      outputCollecting : 1,
+      ready : con,
+    })
+
+    shell( 'git -C experiment init --bare' )
+    shell( 'git clone experiment cloned' )
+
+    .then( () =>
+    {
+      return _.fileProvider.filesReflect({ reflectMap : { [ repoSrcFiles ] : clonePath } })
+    })
+
+    shell( 'git -C cloned add -fA .' )
+    shell( 'git -C cloned commit -m init' )
+    shell( 'git -C cloned push' )
+    shell( 'git -C cloned checkout -b dev' )
+    shell( 'git -C cloned commit --allow-empty -m test' )
+    shell( 'git -C cloned push origin dev' )
+
+    return con;
+  })
+
   .then( () =>
   {
     test.case = 'download master branch';
