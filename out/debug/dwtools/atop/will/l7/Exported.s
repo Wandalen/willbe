@@ -2,7 +2,7 @@
 
 'use strict';
 
-if( typeof module !== 'undefined' )
+if( typeof inModule !== 'undefined' )
 {
 
   require( '../IncludeBase.s' );
@@ -66,24 +66,146 @@ function init( o )
 
 //
 
+function form1()
+{
+  let resource = this;
+
+  Parent.prototype.form1.apply( resource, arguments );
+
+  if( !resource.inModule )
+  resource.inModule = resource.outModule.peerModule;
+  if( !resource.outModule )
+  resource.outModule = resource.inModule.peerModule;
+
+  _.assert( !resource.inModule || !resource.inModule.isOut );
+  _.assert( resource.outModule && resource.outModule.isOut );
+
+  return resource;
+}
+
+//
+
+function form2()
+{
+  let resource = this;
+
+  // debugger;
+  if( resource.formed >= 2 )
+  return resource;
+
+  Parent.prototype.form2.apply( resource, arguments );
+
+  let fieldNames =
+  {
+    exportedReflector : null,
+    exportedFilesReflector : null,
+    exportedDirPath : null,
+    exportedFilesPath : null,
+    archiveFilePath : null,
+  }
+
+  for( let f in fieldNames )
+  {
+    let field = resource[ f ];
+    if( _.strIs( field ) || _.arrayIs( field ) )
+    resource[ f ] = resource.resolve
+    ({
+      selector : field,
+      pathUnwrapping : 0,
+    });
+  }
+
+  return resource;
+}
+
+// --
+// etc
+// --
+
+function inModuleSet( src )
+{
+  let exported = this;
+  _.assert( !src || !src.isOut );
+  exported[ inModuleSymbol ] = src;
+  return src;
+}
+
+//
+
+function inModuleGet()
+{
+  let exported = this;
+  return exported[ inModuleSymbol ];
+}
+
+//
+
+function outModuleSet( src )
+{
+  let exported = this;
+  _.assert( !src || src.isOut );
+  exported[ moduleSymbol ] = src;
+  return src;
+}
+
+//
+
+function outModuleGet()
+{
+  let exported = this;
+  return exported[ moduleSymbol ];
+}
+
+//
+
+function moduleSet( src )
+{
+  let exported = this;
+
+  if( src && !src.isOut )
+  {
+    exported.inModule = src;
+    return src;
+  }
+
+  _.assert( !src || src.isOut );
+  exported[ moduleSymbol ] = src;
+  return src;
+}
+
+//
+
+function moduleGet()
+{
+  let exported = this;
+  return exported[ moduleSymbol ];
+}
+
+// --
+//
+// --
+
 function _verify()
 {
   let exported = this;
-  let module = exported.module;
-  let will = module.will;
-  let build = module.buildMap[ exported.name ];
+  let inModule = exported.inModule;
+  let will = inModule.will;
+  let build = inModule.buildMap[ exported.name ];
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
   let logger = will.logger;
 
+  _.assert( exported.inModule && !exported.inModule.isOut );
+  _.assert( exported.outModule && exported.outModule.isOut );
+
   _.assert( arguments.length === 0 );
-  _.assert( !!module );
+  _.assert( !!inModule );
   _.assert( !!will );
   _.assert( !!hd );
   _.assert( !!logger );
   _.assert( !!build );
-  _.assert( module.preformed > 0 );
+  _.assert( inModule.preformed > 0 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( build instanceof will.Build );
@@ -92,13 +214,14 @@ function _verify()
   _.assert( exported.withIntegrated === 0 || exported.withIntegrated === 1 || exported.withIntegrated === 2 );
   _.assert( _.boolLike( exported.tar ), 'Expects bool-like {- exported.tar -}' );
 
-  _.sure( _.strDefined( module.dirPath ), 'Expects directory path of the module' );
+  _.sure( _.strDefined( inModule.dirPath ), 'Expects directory path of the inModule' );
   _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
   _.sure( _.strDefined( build.name ), 'Expects name of export' );
-  _.sure( _.objectIs( module.willfileWithRoleMap.import ) || _.objectIs( module.willfileWithRoleMap.single ), 'Expects import-willfile' );
-  _.sure( _.objectIs( module.willfileWithRoleMap.export ) || _.objectIs( module.willfileWithRoleMap.single ), 'Expects export-willfile' );
-  _.sure( _.strDefined( module.about.name ), 'Expects defined name of the module as astring' );
-  _.sure( _.strDefined( module.about.version ), 'Expects defined version of the module as string' );
+  // _.sure( _.objectIs( inModule.willfileWithRoleMap.export ) || _.objectIs( inModule.willfileWithRoleMap.import ) || _.objectIs( inModule.willfileWithRoleMap.single ), 'Module does not have a willfile' );
+  _.sure( _.objectIs( inModule.willfileWithRoleMap.import ) || _.objectIs( inModule.willfileWithRoleMap.single ), 'Expects import-willfile' );
+  _.sure( _.objectIs( inModule.willfileWithRoleMap.export ) || _.objectIs( inModule.willfileWithRoleMap.single ), 'Expects export-willfile' );
+  _.sure( _.strDefined( inModule.about.name ), 'Expects defined name of the inModule as astring' );
+  _.sure( _.strDefined( inModule.about.version ), 'Expects defined version of the inModule as string' );
 
 }
 
@@ -107,9 +230,9 @@ function _verify()
 function _performPrepare1( frame )
 {
   let exported = this;
-  let module = exported.module;
-  let will = module.will;
-  let build = module.buildMap[ exported.name ];
+  let inModule = exported.inModule;
+  let will = inModule.will;
+  let build = inModule.buildMap[ exported.name ];
   let run = frame.run;
   let opts = frame.resource.opts;
   let hub = will.fileProvider;
@@ -127,11 +250,11 @@ function _performPrepare1( frame )
   exported.step = step;
   exported.build = build;
   exported.criterion = _.mapExtend( null, build.criterion );
-  exported.version = module.about.version;
+  exported.version = inModule.about.version;
 
-  if( exported.recursive === null )
+  if( exported.recursive === null ) /* xxx : remove maybe */
   exported.recursive = run.recursive;
-  if( exported.withIntegrated === null )
+  if( exported.withIntegrated === null ) /* xxx : remove maybe */
   exported.withIntegrated = run.withIntegrated;
 
   exported.exportPath = opts.export;
@@ -143,12 +266,39 @@ function _performPrepare1( frame )
 
 //
 
+function _performOutModule()
+{
+  let exported = this;
+  let inModule = exported.inModule;
+  let will = inModule.will;
+  let build = inModule.buildMap[ exported.name ];
+  let hub = will.fileProvider;
+  let hd = hub.providersWithProtocolMap.file;
+  let path = hub.path;
+  let logger = will.logger;
+  let outFilePath = inModule.outfilePathGet();
+
+  if( exported.outModule )
+  {
+    _.assert( exported.outModule.isValid() );
+    return null;
+  }
+
+  debugger;
+  exported.outModule = inModule.outModuleMake({ willfilesPath : outFilePath });
+  // exported.outModule = inModule.outModuleMake();
+  // debugger;
+  return null;
+}
+
+//
+
 function _performReform()
 {
   let exported = this;
-  let module = exported.module;
-  let will = module.will;
-  return module.upform({ all : 1, resourcesFormed : 0 });
+  let inModule = exported.inModule;
+  let will = inModule.will;
+  return inModule.upform({ all : 1, resourcesFormed : 0 });
 }
 
 //
@@ -156,12 +306,12 @@ function _performReform()
 function _performSubmodulesPeersOpen()
 {
   let exported = this;
-  let module = exported.module;
-  let will = module.will;
+  let outModule = exported.outModule;
+  let will = outModule.will;
 
   _.assert( exported.recursive === 0 || exported.recursive === 1 || exported.recursive === 2 );
 
-  return module.submodulesPeersOpen({ throwing : 0, recursive : Math.max( exported.recursive, 1 ) })
+  return outModule.submodulesPeersOpen({ throwing : 0, recursive : Math.max( exported.recursive, 1 ) })
   .finally( ( err, arg ) =>
   {
     if( err )
@@ -176,8 +326,8 @@ function _performSubmodulesPeersOpen()
 function _performRecursive()
 {
   let exported = this;
-  let module = exported.module;
-  let will = module.will;
+  let outModule = exported.outModule;
+  let will = outModule.will;
 
   _.assert( exported.recursive === 0 || exported.recursive === 1 || exported.recursive === 2 );
   _.assert( exported.withIntegrated === 0 || exported.withIntegrated === 1 || exported.withIntegrated === 2 );
@@ -190,7 +340,7 @@ function _performRecursive()
   {
     let con = new _.Consequence().take( null );
 
-    let modules = module.modulesEach
+    let modules = outModule.modulesEach
     ({
       recursive : exported.recursive,
       withPeers : 1,
@@ -247,14 +397,21 @@ function _performRecursive()
 function _performPrepare2()
 {
   let exported = this;
-  let module = exported.module;
-  let will = module.will;
+  let inModule = exported.inModule;
+  let outModule = exported.outModule;
+  let will = outModule.will;
   let logger = will.logger;
 
   _.assert
   (
-      module.isFull({ all : { resourcesFormed : 0 } }) && module.isValid()
-    , `${module.decoratedQualifiedName} is not fully formed to be exported`
+      inModule.isFull({ only : { resourcesFormed : 0 } }) && inModule.isValid()
+    , `${inModule.decoratedQualifiedName} is not fully formed to be exported`
+  );
+
+  _.assert
+  (
+      outModule.isValid()
+    , `${outModule.decoratedQualifiedName} is not fully formed to be exported`
   );
 
   /* */
@@ -262,7 +419,7 @@ function _performPrepare2()
   if( exported.exportPath === null )
   {
 
-    let exportFiles = module.pathOrReflectorResolve( 'export' );
+    let exportFiles = outModule.pathOrReflectorResolve( 'export' );
     if( exportFiles )
     exported.exportPath = exportFiles.qualifiedName;
 
@@ -276,10 +433,10 @@ function _performPrepare2()
     exported.step.decoratedQualifiedName + ' should have defined path or reflector to export. Alternatively module could have defined path::export or reflecotr::export.'
   );
 
-  for( let s in module.submoduleMap )
+  for( let s in outModule.submoduleMap )
   {
 
-    let submodule = module.submoduleMap[ s ];
+    let submodule = outModule.submoduleMap[ s ];
     if( !submodule.opener || !submodule.opener.isOpened() || !submodule.opener.isValid() )
     if( submodule.isMandatory() )
     {
@@ -303,122 +460,129 @@ function _performPrepare2()
   return null;
 }
 
+// //
 //
-
-function _performReadExported()
-{
-  let exported = this;
-  let module = exported.module;
-  let will = module.will;
-  let build = module.buildMap[ exported.name ];
-  let hub = will.fileProvider;
-  let hd = hub.providersWithProtocolMap.file;
-  let path = hub.path;
-  let logger = will.logger;
-  let outFilePath = module.outfilePathGet();
-
-  let o2 =
-  {
-    willfilesPath : outFilePath,
-    original : module,
-    rootModule : module.rootModule,
-    searching : 'exact',
-    reason : 'export',
-  }
-
-  let opener2 = will._openerMake({ opener : o2 })
-
-  opener2.preform();
-  opener2.find({ throwing : 0 });
-
-  return opener2.open({ throwing : 1, all : 0 })
-  .then( ( module2 ) =>
-  {
-
-    _.assert( !!will.formed );
-
-    if( !opener2.openedModule.isValid() )
-    {
-      logger.log( _.errBrief( `Module ${opener2.absoluteName} was not valid` ) );
-      return module2;
-    }
-
-    if( !opener2.openedModule.isConsistent() )
-    {
-      logger.log( _.errBrief( `Module ${opener2.absoluteName} was not consistent, please export it` ) );
-      return module2;
-    }
-
-    let willfile = opener2.openedModule.willfilesArray[ 0 ];
-    let structure = willfile.structureOf( opener2.openedModule );
-    _.assert( willfile && opener2.openedModule.willfilesArray.length === 1 );
-    _.assert( opener2.openedModule.isValid() );
-    _.assert( opener2.openedModule.isOut );
-    _.assert( _.mapIs( structure ) );
-    _.assert( _.mapIs( structure.exported ) );
-
-    for( let exportedName in structure.exported )
-    {
-      if( exportedName === exported.name )
-      continue;
-      let exported2 = opener2.openedModule.exportedMap[ exportedName ];
-      _.assert( exported2 instanceof Self );
-      module.resourceImport({ srcResource : exported2 });
-    }
-
-    return module2;
-  })
-  .finally( ( err, module2 ) =>
-  {
-
-    err = err || opener2.error;
-
-    if( err )
-    {
-      err = _.err( err, `\nFailed to read exported out-willfile ${opener2.willfilesPath} to extend it` );
-      let requireVerbosity = 5;
-      if( _.strIs( err.originalMessage ) )
-      if( !_.strHas( err.originalMessage, 'Found no willfile at' ) )
-      if( !_.strHas( err.originalMessage, 'Found no out-willfile' ) )
-      if( !_.strHas( err.originalMessage, 'Out-willfile is inconsistent with its in-willfiles' ) )
-      requireVerbosity = 3;
-      if( requireVerbosity <= will.verbosity )
-      {
-        if( !_.errIsLogged( err ) )
-        {
-          logger.up( 2 );
-          logger.log( err );
-          logger.down( 2 );
-        }
-      }
-    }
-
-    try
-    {
-      opener2.finit();
-    }
-    catch( err2 )
-    {
-      debugger;
-      err2 = _.err( err2 );
-      logger.log( _.errOnce( err2 ) );
-      throw err2;
-    }
-
-    if( err )
-    _.errAttend( err );
-    return module2 || null;
-  })
-
-}
+// function _performReadExported()
+// {
+//   let exported = this;
+//   let inModule = exported.inModule;
+//   let will = inModule.will;
+//   let build = inModule.buildMap[ exported.name ];
+//   let hub = will.fileProvider;
+//   let hd = hub.providersWithProtocolMap.file;
+//   let path = hub.path;
+//   let logger = will.logger;
+//   let outFilePath = inModule.outfilePathGet();
+//
+//   _.assert( exported.outModule === null );
+//
+//   let o2 =
+//   {
+//     willfilesPath : outFilePath,
+//     original : inModule,
+//     rootModule : inModule.rootModule,
+//     searching : 'exact',
+//     reason : 'export',
+//   }
+//
+//   let opener2 = will._openerMake({ opener : o2 })
+//
+//   opener2.preform();
+//   opener2.find({ throwing : 0 });
+//
+//   return opener2.open({ throwing : 1, all : 0 })
+//   .then( ( module2 ) =>
+//   {
+//
+//     _.assert( !!will.formed );
+//
+//     if( !opener2.openedModule.isValid() )
+//     {
+//       logger.log( _.errBrief( `Module ${opener2.absoluteName} was not valid` ) );
+//       return module2;
+//     }
+//
+//     if( !opener2.openedModule.isConsistent() )
+//     {
+//       logger.log( _.errBrief( `Module ${opener2.absoluteName} was not consistent, please export it` ) );
+//       return module2;
+//     }
+//
+//     let willfile = opener2.openedModule.willfilesArray[ 0 ];
+//     let structure = willfile.structureOf( opener2.openedModule );
+//     _.assert( willfile && opener2.openedModule.willfilesArray.length === 1 );
+//     _.assert( opener2.openedModule.isValid() );
+//     _.assert( opener2.openedModule.isOut );
+//     _.assert( _.mapIs( structure ) );
+//     _.assert( _.mapIs( structure.exported ) );
+//
+//     for( let exportedName in structure.exported )
+//     {
+//       if( exportedName === exported.name )
+//       continue;
+//       let exported2 = opener2.openedModule.exportedMap[ exportedName ];
+//       _.assert( exported2 instanceof Self );
+//       inModule.resourceImport({ srcResource : exported2 });
+//     }
+//
+//     return module2;
+//   })
+//   .finally( ( err, module2 ) =>
+//   {
+//
+//     err = err || opener2.error;
+//
+//     if( opener2 && !opener2.error && module2 )
+//     exported.outModule = module2;
+//
+//     if( err )
+//     {
+//       err = _.err( err, `\nFailed to read exported out-willfile ${opener2.willfilesPath} to extend it` );
+//       let requireVerbosity = 5;
+//       if( _.strIs( err.originalMessage ) )
+//       if( !_.strHas( err.originalMessage, 'Found no willfile at' ) )
+//       if( !_.strHas( err.originalMessage, 'Found no out-willfile' ) )
+//       if( !_.strHas( err.originalMessage, 'Out-willfile is inconsistent with its in-willfiles' ) )
+//       requireVerbosity = 3;
+//       if( requireVerbosity <= will.verbosity )
+//       {
+//         if( !_.errIsLogged( err ) )
+//         {
+//           logger.up( 2 );
+//           logger.log( err );
+//           logger.down( 2 );
+//         }
+//       }
+//     }
+//
+//     if( err )
+//     try
+//     {
+//       opener2.finit();
+//     }
+//     catch( err2 )
+//     {
+//       debugger;
+//       err2 = _.err( err2 );
+//       logger.log( _.errOnce( err2 ) );
+//       throw err2;
+//     }
+//
+//     if( err )
+//     _.errAttend( err );
+//     return module2 || null;
+//   })
+//
+// }
 
 //
 
 function _performExportedReflectors()
 {
   let exported = this;
-  let module = exported.module;
-  let will = module.will;
+  let inModule = exported.inModule;
+  let outModule = exported.outModule;
+  let will = outModule.will;
   let build = exported.build;
   let step = exported.step;
   let hub = will.fileProvider;
@@ -427,12 +591,13 @@ function _performExportedReflectors()
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  _.assert( !!module );
+  _.assert( !!outModule );
   _.assert( !!will );
   _.assert( !!hd );
   _.assert( !!logger );
   _.assert( !!build );
-  _.assert( module.preformed > 0 );
+  _.assert( outModule.preformed > 0 );
+  _.assert( inModule.preformed > 0 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( _.objectIs( exported.criterion ) );
@@ -445,12 +610,14 @@ function _performExportedReflectors()
   let exp;
   let recursive = null;
 
-  exp = module.pathResolve
+  // debugger;
+  exp = inModule.pathResolve
   ({
     selector : exported.exportPath,
     currentContext : step,
     pathResolving : 'in',
   });
+  // debugger;
 
   /* */
 
@@ -463,10 +630,11 @@ function _performExportedReflectors()
     _.assert( exp.src.formed === 1 );
     _.sure( !!exp.filePath, () => exp.qualifiedName + ' should have filePath' );
 
+    debugger;
     exportedReflector = exp.cloneExtending
     ({
-      name : module.resourceNameAllocate( 'reflector', 'exported.' + exported.name ),
-      module : module,
+      name : inModule.resourceNameAllocate( 'reflector', 'exported.' + exported.name ),
+      module : outModule,
     });
 
     _.assert( exportedReflector.original === exp.original );
@@ -481,6 +649,9 @@ function _performExportedReflectors()
 
     exportedReflector.src.and( filter2 ).pathsSupplementJoining( filter2 );
     exportedReflector.src.filePath = exportedReflector.filePath;
+    _.assert( !exportedReflector.src.prefixPath, 'not tested' );
+    if( !exportedReflector.src.prefixPath )
+    exportedReflector.src.prefixPath = inModule.inPath;
 
   }
   else if( _.arrayIs( exp ) )
@@ -488,8 +659,8 @@ function _performExportedReflectors()
 
     let commonPath = path.common.apply( path, exp );
     if( path.isAbsolute( commonPath ) )
-    commonPath = path.relative( module.inPath, commonPath );
-    exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
+    commonPath = path.relative( inModule.inPath, commonPath );
+    exportedReflector = outModule.resourceAllocate( 'reflector', 'exported.' + exported.name );
     exportedReflector.src.filePath = Object.create( null );
     for( let p = 0 ; p < exp.length ; p++ )
     {
@@ -497,6 +668,7 @@ function _performExportedReflectors()
       exportedReflector.src.filePath[ exp[ p ] ] = '';
     }
     exportedReflector.src.basePath = commonPath;
+    exportedReflector.src.prefixPath = inModule.inPath;
 
   }
   else if( _.strIs( exp ) )
@@ -505,8 +677,9 @@ function _performExportedReflectors()
     if( !path.isGlob( exp ) )
     throw _.errBrief( `Expects glob path to export in export step. ${exported.exportPath} is not glob\n${exp}` );
     _.assert( !_.strHas( exp, '::' ) );
-    exportedReflector = module.resourceAllocate( 'reflector', 'exported.' + exported.name );
+    exportedReflector = outModule.resourceAllocate( 'reflector', 'exported.' + exported.name );
     exportedReflector.src.filePath = exp;
+    exportedReflector.src.prefixPath = inModule.inPath;
 
   }
   else _.assert( 0 );
@@ -520,7 +693,7 @@ function _performExportedReflectors()
   exported.exportedReflector = exportedReflector;
 
   _.assert( exportedReflector.original === null );
-  _.assert( module.reflectorMap[ exportedReflector.name ] === exportedReflector );
+  _.assert( outModule.reflectorMap[ exportedReflector.name ] === exportedReflector );
   _.assert( _.mapIs( exportedReflector.criterion ) );
   _.assert( exportedReflector.dst.prefixPath === null );
   _.assert( exportedReflector.dst.basePath === null );
@@ -547,9 +720,9 @@ function _performExportedReflectors()
   if( hd.isTerminal( exportedDirPath ) )
   exportedDirPath = path.dir( exportedDirPath );
 
-  exported.exportedDirPath = module.resourceAllocate( 'path', 'exported.dir.' + exported.name );
+  exported.exportedDirPath = outModule.resourceAllocate( 'path', 'exported.dir.' + exported.name );
   exported.exportedDirPath.generated = 1;
-  exported.exportedDirPath.path = path.dot( path.relative( module.inPath, exportedDirPath ) );
+  exported.exportedDirPath.path = path.dot( path.relative( outModule.inPath, exportedDirPath ) );
   exported.exportedDirPath.criterion = _.mapExtend( null, exported.criterion );
   exported.exportedDirPath.form();
 
@@ -561,15 +734,15 @@ function _performExportedReflectors()
 function _performExportedFilesReflector()
 {
   let exported = this;
-  let module = exported.module;
-  let will = module.will;
+  let outModule = exported.outModule;
+  let will = outModule.will;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
 
   /* exportedFilesPath */
 
-  exported.exportedFilesPath = module.resourceAllocate( 'path', 'exported.files.' + exported.name );
+  exported.exportedFilesPath = outModule.resourceAllocate( 'path', 'exported.files.' + exported.name );
   exported.exportedFilesPath.generated = 1;
   exported.exportedFilesPath.criterion = _.mapExtend( null, exported.criterion );
 
@@ -599,14 +772,17 @@ function _performExportedFilesReflector()
 
   exportedFilesPath = _.filter( exportedFilesPath, ( r ) => r.absolute );
 
-  exported.exportedFilesPath.path = path.s.relative( module.inPath, exportedFilesPath );
+  exported.exportedFilesPath.path = path.s.relative( outModule.inPath, exportedFilesPath );
 
   if( exported.exportedFilesPath.path.length === 0 )
-  throw _.errBrief
-  (
-    'No file found at ' + path.commonTextualReport( exported.srcFilter.filePath )
-    + ', cant export ' + exported.build.name,
-  );
+  {
+    debugger;
+    throw _.errBrief
+    (
+      'No file found at ' + path.commonTextualReport( exported.srcFilter.filePath )
+      + ', cant export ' + exported.build.name,
+    );
+  }
 
   exported.exportedFilesPath.form();
 
@@ -614,7 +790,7 @@ function _performExportedFilesReflector()
 
   _.assert( !exported.exportedFilesReflector );
 
-  let exportedFilesReflector = exported.exportedFilesReflector = module.resourceAllocate( 'reflector', 'exported.files.' + exported.name );
+  let exportedFilesReflector = exported.exportedFilesReflector = outModule.resourceAllocate( 'reflector', 'exported.files.' + exported.name );
   exportedFilesReflector.generated = 1;
   _.mapExtend( exportedFilesReflector.criterion, exported.exportedReflector.criterion );
   exportedFilesReflector.recursive = 0;
@@ -639,22 +815,34 @@ function _performExportedFilesReflector()
 function _performPaths()
 {
   let exported = this;
-  let module = exported.module;
-  let will = module.will;
+  let inModule = exported.inModule;
+  let outModule = exported.outModule;
+  let will = outModule.will;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
   let logger = will.logger;
-  let build = module.buildMap[ exported.name ];
+  let build = outModule.buildMap[ exported.name ];
 
-  let originalWillFilesPath = module.resourceObtain( 'path', 'module.original.willfiles' );
-  originalWillFilesPath.path = path.s.relative( module.inPath, _.entityMake( module.willfilesPath ) );
-  originalWillFilesPath.criterion.predefined = 1;
+  // debugger;
+  let originalWillFilesPath = outModule.resourceObtain( 'path', 'module.original.willfiles' );
+  // originalWillFilesPath.path = path.s.relative( outModule.inPath, _.entityMake( outModule.willfilesPath ) );
+  // originalWillFilesPath.criterion.predefined = 1;
 
   _.assert( !originalWillFilesPath.writable );
   _.assert( !!originalWillFilesPath.exportable );
   _.assert( !originalWillFilesPath.importableFromIn );
   _.assert( !!originalWillFilesPath.importableFromOut );
+
+  _.assert( !inModule.isOut );
+  _.assert( _.entityIdentical( inModule.pathMap[ 'module.original.willfiles' ], inModule.pathMap[ 'module.willfiles' ] ) );
+  _.assert( !_.entityIdentical( inModule.pathMap[ 'module.original.willfiles' ], inModule.pathMap[ 'module.peer.willfiles' ] ) );
+  _.assert( !_.entityIdentical( inModule.pathMap[ 'module.willfiles' ], inModule.pathMap[ 'module.peer.willfiles' ] ) );
+
+  _.assert( !!outModule.isOut );
+  _.assert( !_.entityIdentical( outModule.pathMap[ 'module.original.willfiles' ], outModule.pathMap[ 'module.willfiles' ] ) );
+  _.assert( _.entityIdentical( outModule.pathMap[ 'module.original.willfiles' ], outModule.pathMap[ 'module.peer.willfiles' ] ) );
+  _.assert( !_.entityIdentical( outModule.pathMap[ 'module.willfiles' ], outModule.pathMap[ 'module.peer.willfiles' ] ) );
 
   return null;
 }
@@ -664,13 +852,14 @@ function _performPaths()
 function _performArchive()
 {
   let exported = this;
-  let module = exported.module;
-  let will = module.will;
+  let outModule = exported.outModule;
+  let inModule = exported.inModule;
+  let will = outModule.will;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
   let logger = will.logger;
-  let build = module.buildMap[ exported.name ];
+  let build = inModule.buildMap[ exported.name ];
 
   _.assert( exported.archiveFilePath === null );
   _.assert( arguments.length === 0 );
@@ -684,9 +873,11 @@ function _performArchive()
     return null;
   }
 
+  // debugger;
   let archiveFilePath = build.archiveFilePathFor();
-  exported.archiveFilePath = module.resourceAllocate( 'path', 'archiveFile.' + exported.name );
-  exported.archiveFilePath.path = path.dot( path.relative( module.inPath, archiveFilePath ) );
+  // debugger;
+  exported.archiveFilePath = outModule.resourceAllocate( 'path', 'archiveFile.' + exported.name );
+  exported.archiveFilePath.path = path.dot( path.relative( outModule.inPath, archiveFilePath ) );
   exported.archiveFilePath.criterion = _.mapExtend( null, exported.criterion );
   exported.archiveFilePath.form();
 
@@ -695,7 +886,8 @@ function _performArchive()
   if( !Tar )
   Tar = require( 'tar' );
 
-  let exportedDirPath = path.s.resolve( module.inPath, exported.exportedDirPath.path );
+  // debugger;
+  let exportedDirPath = path.s.resolve( outModule.inPath, exported.exportedDirPath.path );
 
   hd.dirMake( path.dir( archiveFilePath ) );
 
@@ -721,25 +913,29 @@ function _performArchive()
 function _performWriteOutFile()
 {
   let exported = this;
-  let module = exported.module;
-  let will = module.will;
+  let inModule = exported.inModule;
+  let outModule = exported.outModule;
+  let will = outModule.will;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
   let path = hub.path;
   let logger = will.logger;
-  let build = module.buildMap[ exported.name ];
+  let build = outModule.buildMap[ exported.name ];
 
   /* */
 
-  let outFilePath = module.outfilePathGet();
-  let data = module.structureExportForModuleExport({ willfilesPath : outFilePath });
+  let outFilePath = outModule.outfilePathGet();
+  // debugger;
+  // let data = inModule.structureExportForModuleExport({ willfilesPath : outFilePath });
+  _.assert( outModule.isOut );
+  let structure = outModule.structureExportOut();
 
   /* */
 
   hd.fileWrite
   ({
     filePath : outFilePath,
-    data : data,
+    data : structure,
     encoding : 'yaml',
   });
 
@@ -753,37 +949,101 @@ function _performWriteOutFile()
 
 //
 
+function _performAttachOutFile()
+{
+  let exported = this;
+  let inModule = exported.inModule;
+  let outModule = exported.outModule;
+  let will = outModule.will;
+  let hub = will.fileProvider;
+  let hd = hub.providersWithProtocolMap.file;
+  let path = hub.path;
+  let logger = will.logger;
+  let build = outModule.buildMap[ exported.name ];
+  let outFilePath = outModule.outfilePathGet();
+
+  /* */
+
+  let willf = outModule.willfileAttach( outFilePath );
+
+  willf.reopen({ forModule : outModule });
+
+  return null;
+}
+
+//
+
+function _performReloadOutFile()
+{
+  let exported = this;
+  let inModule = exported.inModule;
+  let outModule = exported.outModule;
+  let will = outModule.will;
+  let hub = will.fileProvider;
+  let hd = hub.providersWithProtocolMap.file;
+  let path = hub.path;
+  let logger = will.logger;
+  let build = outModule.buildMap[ exported.name ];
+
+  /* */
+
+  let name = outModule.absoluteName;
+  // debugger;
+  return outModule.reopen()
+  .finally( ( err, outModule2 ) =>
+  {
+    if( err )
+    debugger;
+    if( err )
+    throw _.err( err, `\nFailed to reopen ${name} after exporting it` );
+    _.assert( outModule2 instanceof _.Will.OpenedModule );
+    // debugger;
+    // exported.outModule = outModule2;
+    return outModule2;
+  });
+
+}
+
+//
+
 function perform( frame )
 {
   let time = _.timeNow();
   let exported = this;
-  let module = exported.module;
-  let will = module.will;
+  let inModule = exported.inModule;
+  let will = inModule.will;
   let con = new _.Consequence().take( null );
   let logger = will.logger;
 
   _.assert( arguments.length === 1 );
 
   con.then( () => exported._performPrepare1( frame ) );
+  // con.then( () => exported._performReadExported() );
+  con.then( () => exported._performOutModule() );
   con.then( () => exported._performReform() );
   con.then( () => exported._performSubmodulesPeersOpen() );
   con.then( () => exported._performRecursive() );
-  con.then( () => exported._performReadExported() );
+  // con.then( () => exported._performReadExported() );
   con.then( () => exported._performPrepare2() );
   con.then( () => exported._performExportedReflectors() );
   con.then( () => exported._performExportedFilesReflector() );
   con.then( () => exported._performPaths() );
   con.then( () => exported._performArchive() );
   con.then( () => exported._performWriteOutFile() );
+  con.then( () => exported._performAttachOutFile() );
+  // con.then( () => exported._performReloadOutFile() );
 
   /* log */
 
-  con.finally( ( err, arg ) =>
+  con.finally( ( err, outModule2 ) =>
   {
     if( err )
     throw _.err( err, `\nFailed to export ${exported.decoratedAbsoluteName}` );
     frame.run.exported = exported;
-    return arg;
+    // debugger;
+    // frame.run.exported = outModule2.exportedMap[ exported.name ];
+    // frame.run.exported.form();
+    return outModule2;
   });
 
   return con;
@@ -792,6 +1052,9 @@ function perform( frame )
 // --
 // relations
 // --
+
+let moduleSymbol = Symbol.for( 'module' );
+let inModuleSymbol = Symbol.for( 'inModule' );
 
 let Composes =
 {
@@ -819,6 +1082,8 @@ let Associates =
 {
   step : null,
   build : null,
+  outModule : null,
+  inModule : null,
 }
 
 let Restricts =
@@ -846,6 +1111,9 @@ let Forbids =
 
 let Accessors =
 {
+  inModule : { getter : inModuleGet, setter : inModuleSet },
+  outModule : { getter : outModuleGet, setter : outModuleSet },
+  module : { getter : moduleGet, setter : moduleSet, combining : 'rewrite' },
 }
 
 // --
@@ -857,21 +1125,35 @@ let Extend =
 
   finit,
   init,
+  form1,
+  form2,
+
+  // etc
+
+  inModuleGet,
+  inModuleSet,
+  outModuleGet,
+  outModuleSet,
+  moduleGet,
+  moduleSet,
 
   // inter
 
   _verify,
   _performPrepare1,
+  _performOutModule,
   _performReform,
   _performSubmodulesPeersOpen,
   _performRecursive,
   _performPrepare2,
-  _performReadExported,
+  // _performReadExported,
   _performExportedReflectors,
   _performExportedFilesReflector,
   _performPaths,
   _performArchive,
   _performWriteOutFile,
+  _performAttachOutFile,
+  _performReloadOutFile,
 
   perform,
 
@@ -901,8 +1183,8 @@ _.Copyable.mixin( Self );
 
 //
 
-if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ] = _global_.wTools;
+if( typeof inModule !== 'undefined' && inModule !== null )
+inModule[ 'exports' ] = _global_.wTools;
 
 _.staticDeclare
 ({

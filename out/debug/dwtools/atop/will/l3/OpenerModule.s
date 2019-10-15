@@ -517,13 +517,10 @@ function find( o )
       {
         if( o2[ f ] !== null && openedModule[ f ] === null )
         {
-          if( f !== 'peerModule' )
-          debugger;
           openedModule[ f ] = o2[ f ];
         }
       }
 
-      // _.assert( openedModule.rootModule === opener.rootModule || opener.rootModule === null );
       _.assert( opener.openedModule === openedModule || opener.openedModule === null );
       opener.openedModule = openedModule;
 
@@ -722,6 +719,36 @@ open.defaults =
 
 //
 
+function reopen()
+{
+  let opener = this;
+  let will = opener.will;
+  let module = opener.openedModule;
+
+  // if( opener.openedModule )
+  // debugger;
+
+  // debugger;
+  let willfilesPath = _.make( opener.willfilesPath );
+  let willf = opener.willfilesArray[ 0 ];
+  opener.close();
+  debugger;
+  opener.willfilesPath = willfilesPath;
+  _.assert( opener.error === null );
+  _.assert( opener.searching !== 'exact' || _.entityIdentical( opener.willfilesPath, willfilesPath ) );
+  _.assert( !_.arrayHas( will.willfilesArray, willf ) );
+  // _.assert( will.willfilesArray.length === 0 );
+  // debugger;
+  opener.find();
+  // debugger;
+
+  _.assert( opener.openedModule !== module );
+
+  return opener.open();
+}
+
+//
+
 function isOpened()
 {
   let opener = this;
@@ -837,20 +864,17 @@ function _willfilesFindAct( o )
 
   if( opener.searching === 'exact' )
   {
-    // debugger;
     o.willfilesPath = _.arrayAs( o.willfilesPath );
     records = o.willfilesPath.map( ( willfilePath ) => fileProvider.record( willfilePath ) );
-    // records = fileProvider.record({ filePath : o.willfilesPath });
-    // records = _.arrayAs( records );
-    // debugger;
   }
   else
   {
-    records = will.willfilesList
+    records = will.willfilesFind
     ({
       dirPath : o.willfilesPath,
       includingInFiles : o.includingInFiles,
       includingOutFiles : o.includingOutFiles,
+      exact : !!opener.superRelation,
     });
   }
 
@@ -1423,17 +1447,17 @@ function _remoteDownload( o )
 
   function moduleOpen()
   {
+    let ready = new _.Consequence().take( null );
 
-    if( opener.openedModule )
-    debugger;
+    let variant = will.variantFrom( opener );
+    variant.openers.forEach( ( opener2 ) =>
+    {
+      // if( opener2.openedModule )
+      // debugger;
+      ready.then( () => opener2.reopen() );
+    });
 
-    let willf = opener.willfilesArray[ 0 ]; // xxx : check
-    opener.close();
-    _.assert( opener.error === null );
-    _.assert( !_.arrayHas( will.willfilesArray, willf ) );
-    opener.find();
-
-    return opener.open();
+    return ready;
   }
 
   /* */
@@ -2080,6 +2104,7 @@ let Extend =
   close,
   find,
   open,
+  reopen,
 
   isOpened,
   isValid,

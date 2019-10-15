@@ -82,7 +82,7 @@ function unform()
   if( relation.formed )
   {
     let variant = will.variantOf( relation );
-    _.assert( !!variant || !relation.enabled ); 
+    _.assert( !!variant || !relation.enabled );
     if( variant )
     variant.remove( relation );
   }
@@ -620,8 +620,9 @@ function errorNotFound( err )
   if( !relation.module.rootModule || relation.module.rootModule === relation.module )
   logger.error
   (
-    ' ' + '!' + ' Failed to read ' + relation.decoratedQualifiedName
-    + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading'
+    ' ' + '!' + ' Failed to open ' + relation.decoratedQualifiedName
+    + ` at ${_.color.strFormat( relation.localPath, 'path' )}`
+    // + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading'
     // + '\n' + err.originalMessage
   );
 

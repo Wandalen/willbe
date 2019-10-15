@@ -271,10 +271,21 @@ function _inPathsForm()
     willf.filePath = path.join( willf.dirPath, will.AbstractModule.PrefixPathForRole( willf.role, willf.isOut ) );
   }
 
+  // if( willf.id === 96 )
+  // debugger;
+
   if( _.arrayIs( willf.filePath ) )
-  formFor( willf.filePath[ 0 ] );
+  {
+    formFor( willf.filePath[ 0 ] );
+    if( willf.role === null )
+    willf.role = will.AbstractModule.PathToRole( willf.filePath );
+  }
   else
-  formFor( willf.filePath );
+  {
+    formFor( willf.filePath );
+    if( willf.role === null )
+    willf.role = will.AbstractModule.PathToRole( willf.filePath );
+  }
 
   willf.formed = 2;
 
@@ -287,17 +298,6 @@ function _inPathsForm()
 
     if( willf.isOut === null )
     willf.isOut = _.strHas( filePath, /\.out\.\w+\.\w+$/ );
-
-    if( willf.role === null )
-    {
-      willf.role = will.AbstractModule.PathToRole( filePath );
-      // if( _.strHas( filePath, /\.im\.will(\.|$)/ ) )
-      // willf.role = 'import';
-      // else if( _.strHas( filePath, /\.ex\.will(\.|$)/ ) )
-      // willf.role = 'export';
-      // else
-      // willf.role = 'single';
-    }
 
     if( willf.storagePath === null )
     willf.storagePath = filePath;
@@ -544,6 +544,51 @@ function _open()
 
 //
 
+function reopen( o )
+{
+  let willf = this;
+  let will = willf.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  o = _.routineOptions( reopen, arguments );
+
+  if( o.forModule )
+  {
+    // debugger;
+    if( willf.openedModule !== o.forModule )
+    {
+      debugger;
+      throw _.err( 'Willfiles reopening is not impemented' );
+    }
+  }
+
+  willf.preform();
+  _.assert( willf.formed >= 2 );
+
+  willf.formed = 2;
+  willf.data = null;
+  willf.structure = null;
+
+  willf._read();
+
+  _.assert( willf.formed === 3 )
+
+  willf._open();
+
+  _.assert( willf.formed === 4 )
+
+  return willf;
+}
+
+reopen.defaults =
+{
+  forModule : null,
+}
+
+//
+
 function _readLog( reading, failed )
 {
   let willf = this;
@@ -660,6 +705,7 @@ function _importToModule()
 
     /* */
 
+    if( willf.isOut ) /* xxx */
     willf._resourcesImport( will.Exported, mstructure.exported );
     willf._resourcesImport( will.ModulesRelation, mstructure.submodule );
     willf._resourcesImport( will.PathResource, mstructure.path );
@@ -1050,7 +1096,10 @@ function isConsistentWith( willf2, opening )
     let hash2 = willf.HashFullFromDescriptor( descriptor );
 
     if( !hash1 )
-    throw _.err( `${willf.filePath} does not have ${filePath}` );
+    {
+      debugger;
+      throw _.err( `${willf.filePath} does not have hash for ${filePath}` );
+    }
 
     return hash1 === hash2;
   }
@@ -1492,6 +1541,7 @@ let Extend =
   _inPathsForm,
   _read,
   _open,
+  reopen,
   _readLog,
   _importToModule,
   _resourcesImport,

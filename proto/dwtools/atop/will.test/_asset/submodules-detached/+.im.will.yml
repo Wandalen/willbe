@@ -2,7 +2,7 @@
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master
-  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will#5411ecf142da5795f1b3e7daae86ad6d29e5871c
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will#dfe6933ebc47edb94dd68ebb9791cd8872cd07d3
   # Color : npm:///wColor/out/wColor.out.will#0.3.121
   UriBasic : out/UriBasic.informal.out
   Proto : out/Proto.informal.out

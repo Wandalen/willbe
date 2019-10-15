@@ -289,9 +289,9 @@ function _pathChanged( o )
   if( o.isIdential === null )
   o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
 
-  // if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
-  // if( o.object.id === 122 )
-  // // if( _.strIs( o.val ) && o.val )
+  // if( o.fieldName === 'module.original.willfiles' )
+  // if( o.object.isOut )
+  // if( o.val )
   // {
   //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
   //   debugger;
@@ -1583,8 +1583,13 @@ function _modulesDownload_body( o )
 
     if( o.dry )
     {
-      _.arrayAppendOnceStrictly( o.downloadedContainer, variant.opener.remotePath );
-      return null;
+      return variant.opener._remoteIsUpToDate({ mode : o.mode })
+      .then( ( downloading ) =>
+      {
+        if( downloading )
+        _.arrayAppendOnceStrictly( o.downloadedContainer, variant.opener.remotePath );
+        return null;
+      })
     }
     else
     {
@@ -1788,7 +1793,7 @@ function modulesDownload_body( o )
     if( !o.downloadedContainer.length && !o.loggingNoChanges )
     return;
 
-    let total = ( o.remoteContainer.length + o.localContainer.length ); debugger;
+    let total = ( o.remoteContainer.length + o.localContainer.length );
     logger.rbegin({ verbosity : -2 });
     let phrase = '';
     if( o.mode === 'update' )
@@ -2700,7 +2705,6 @@ function willfileFor( o )
     r.new = false;
     if( o.combining === 'supplement' )
     return r;
-    debugger;
     _.assert( !o.willf.data );
     _.assert( !o.willf.structure );
     _.arrayAs( willf ).forEach( ( willf ) =>
@@ -2714,7 +2718,7 @@ function willfileFor( o )
   {
     willf = new will.Willfile( o.willf ).preform();
     r.willf = willf;
-    r.new = false;
+    r.new = true;
   }
 
   return r;
