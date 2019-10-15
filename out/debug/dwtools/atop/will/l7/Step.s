@@ -32,6 +32,9 @@ function init( o )
 
   Parent.prototype.init.call( step );
 
+  // if( step.id === 179 || step.id === 181 )
+  // debugger;
+
   if( o )
   {
     if( _.mapIs( o ) )

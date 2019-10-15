@@ -263,9 +263,20 @@ function PathToRole( filePath )
 {
   let role = null;
 
-  if( _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ ) )
+  if( _.arrayLike( filePath ) )
+  return _.map( filePath, ( filePath ) => this.PathToRole( filePath ) );
+
+  let isImport = _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ );
+  let isExport = _.strHas( filePath, /(^|\.|\/)ex\.will(\.|$)/ );
+
+  // debugger;
+  // if( isImport && isExport )
+  // role = [ 'import', 'export' ];
+  // else
+
+  if( isImport )
   role = 'import';
-  else if( _.strHas( filePath, /(^|\.|\/)ex\.will(\.|$)/ ) )
+  else if( isExport )
   role = 'export';
   else
   role = 'single';
@@ -615,8 +626,11 @@ function willfileUnregister( willf )
 
   if( willf.role )
   {
-    _.assert( module.willfileWithRoleMap[ willf.role ] === willf )
-    delete module.willfileWithRoleMap[ willf.role ];
+    _.each( willf.role, ( role ) =>
+    {
+      _.assert( module.willfileWithRoleMap[ role ] === willf )
+      delete module.willfileWithRoleMap[ role ];
+    });
   }
 
   let willfilesPath = _.arrayFlatten( _.select( module.willfilesArray, '*/filePath' ) );
@@ -636,6 +650,9 @@ function willfileRegister( willf )
 
   _.assert( arguments.length === 1 );
 
+  // if( module.id === 238 )
+  // debugger;
+
   if( _.arrayIs( willf ) )
   {
     debugger;
@@ -647,8 +664,11 @@ function willfileRegister( willf )
 
   if( willf.role )
   {
-    _.assert( !module.willfileWithRoleMap[ willf.role ] || module.willfileWithRoleMap[ willf.role ] === willf, 'Module already has willfile with role', willf.role )
-    module.willfileWithRoleMap[ willf.role ] = willf;
+    _.each( willf.role, ( role ) =>
+    {
+      _.assert( !module.willfileWithRoleMap[ role ] || module.willfileWithRoleMap[ role ] === willf, 'Module already has willfile with role', role )
+      module.willfileWithRoleMap[ role ] = willf;
+    });
   }
 
   _.assert( !!module.willfilesArray.length );
@@ -658,6 +678,38 @@ function willfileRegister( willf )
 
   module.isOut = _.any( module.willfilesArray, ( wfile ) => wfile.isOut );
 
+}
+
+//
+
+function willfileAttach( filePath )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( filePath ) );
+
+  let o2 = Object.create( null );
+  o2.filePath = filePath;
+
+  // debugger;
+  let got = will.willfileFor({ willf : o2, combining : 'supplement' });
+  // debugger;
+
+  // got.willf._read();
+  // got.willf._open();
+
+  // _.assert( !!got.willf.data );
+  // _.assert( !!got.willf.structure );
+
+  module.willfileRegister( got.willf );
+
+  // debugger;
+  return got.willf;
 }
 
 //
@@ -954,6 +1006,7 @@ let Extend =
   willfileArraySet,
   willfileUnregister,
   willfileRegister,
+  willfileAttach,
 
   _willfilesRelease,
 
