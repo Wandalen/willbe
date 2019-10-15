@@ -3441,7 +3441,7 @@ function listComplexPaths( test )
 
   /* - */
 
-  shell({ execPath : '.each */* .export' })
+  shell({ execPath : '.with */* .export' })
   shell({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, got ) =>
   {
@@ -8334,10 +8334,6 @@ exportRewritesOutFile.timeOut = 30000;
 
 //
 
-/*
-  check there is no annoying information about lack of remote submodules of submodules
-*/
-
 function exportWithRemoteSubmodules( test )
 {
   let self = this;
@@ -8399,6 +8395,10 @@ function exportWithRemoteSubmodules( test )
 } /* end of function exportWithRemoteSubmodules */
 
 exportWithRemoteSubmodules.timeOut = 300000;
+exportWithRemoteSubmodules.description =
+`
+check there is no annoying information about lack of remote submodules of submodules
+`
 
 //
 
@@ -15023,7 +15023,7 @@ var Self =
     listWithSubmodulesSimple,
     listWithSubmodules,
     listSteps,
-    listComplexPaths, // xxx : later
+    // listComplexPaths, // xxx : later
 
     clean,
     cleanSingleModule,

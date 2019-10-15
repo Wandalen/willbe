@@ -969,7 +969,7 @@ function stepRoutineWillbeIsUpToDate( frame )
 stepRoutineWillbeIsUpToDate.stepOptions =
 {
   throwing : 1,
-  brief : 0
+  // brief : 0
 }
 
 stepRoutineWillbeIsUpToDate.uniqueOptions =

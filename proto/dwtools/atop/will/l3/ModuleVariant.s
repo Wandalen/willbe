@@ -420,8 +420,8 @@ function From( o )
   if( !o.object )
   o.object = o.module || o.opener || o.relation;
 
-  if( o.object && o.object.id === 128 )
-  debugger;
+  // if( o.object && o.object.id === 128 )
+  // debugger;
 
   if( o.object && o.object instanceof Self )
   {
@@ -642,12 +642,12 @@ function VariantFrom( will, object )
 
 //
 
-function VariantsFrom( will, varaints )
+function VariantsFrom( will, variants )
 {
   let cls = this;
   _.assert( arguments.length === 2 );
-  if( _.arrayLike( varaints ) )
-  return _.filter( varaints, ( variant ) => cls.VariantFrom( will, variant ) );
+  if( _.arrayLike( variants ) )
+  return _.filter( variants, ( variant ) => cls.VariantFrom( will, variant ) );
   else
   return will.VariantFrom( variant );
 }
@@ -681,12 +681,12 @@ function VariantOf( will, object )
 
 //
 
-function VariantsOf( will, varaints )
+function VariantsOf( will, variants )
 {
   let cls = this;
   _.assert( arguments.length === 2 );
-  if( _.arrayLike( varaints ) )
-  return _.filter( varaints, ( variant ) => cls.VariantOf( will, variant ) );
+  if( _.arrayLike( variants ) )
+  return _.filter( variants, ( variant ) => cls.VariantOf( will, variant ) );
   else
   return cls.VariantOf( will, variant );
 }
@@ -946,6 +946,82 @@ function has( object )
 
 }
 
+//
+
+function submodulesGet( o )
+{
+  let variant = this;
+  let will = variant.will;
+  let result = [];
+
+  o = _.routineOptions( submodulesGet, arguments );
+
+  append( variant );
+
+  if( !variant.peer )
+  if( variant.module && variant.module.peerModule )
+  {
+    debugger; xxx
+    variant.From({ module : variant2.module.peerModule, will : will });
+  }
+
+  // if( variant.peer )
+  // debugger;
+  if( o.withPeers )
+  if( variant.peer )
+  append( variant.peer );
+
+  // if( result.length )
+  // debugger;
+
+  return result;
+
+  /* */
+
+  function append( variant )
+  {
+
+    if( variant.module )
+    for( let s in variant.module.submoduleMap )
+    {
+      let relation = variant.module.submoduleMap[ s ];
+
+      if( !relation.enabled ) /* ttt */
+      continue;
+
+      // let variant2 = variantFromRelation( relation );
+
+      let variant2 = variant.From({ relation : relation, will : will });;
+
+      result.push( variant2 );
+
+      if( !variant2.peer )
+      if( variant2.module && variant2.module.peerModule )
+      {
+        debugger; xxx
+        variant2.From({ module : variant2.module.peerModule, will : will });
+      }
+
+      if( o.withPeers )
+      if( variant2.peer )
+      result.push( variant2.peer );
+
+      // if( variant2.module && variant2.module.peerModule )
+      // {
+      //   result.push( variantFromModule( variant2.module.peerModule ) );
+      // }
+
+    }
+
+  }
+
+}
+
+submodulesGet.defaults =
+{
+  withPeers : 1,
+}
+
 // --
 // export
 // --
@@ -1099,6 +1175,7 @@ let Extend =
   _remove,
   remove,
   has,
+  submodulesGet,
 
   // export
 

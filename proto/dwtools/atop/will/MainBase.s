@@ -405,10 +405,10 @@ function versionIsUpToDate( o )
         return false;
       }
 
-      if( o.brief )
+      // if( o.brief )
       throw _.errBrief( coloredMessage );
-      else
-      throw _.err( message );
+      // else
+      // throw _.err( message );
     }
     else
     {
@@ -424,7 +424,7 @@ function versionIsUpToDate( o )
 versionIsUpToDate.defaults =
 {
   throwing : 1,
-  brief : 1
+  // brief : 1
 }
 
 // --
@@ -1121,7 +1121,6 @@ function modulesOnlyRoots( modules, o )
   let will = this;
   let visitedContainer = _.containerAdapter.from( new Set );
   let result = _.containerAdapter.from( new Array );
-  // let variantMap = Object.create( null );
   let variantMap = will.variantMap;
 
   if( modules === null || modules === undefined )
@@ -1153,6 +1152,7 @@ function modulesOnlyRoots( modules, o )
   /* then add in-roots of trees */
 
   debugger;
+  // o.nodesGroup.sourcesFromNodes( _.mapVals( variantMap ) )
 
   _.each( modules, ( module ) =>
   {
@@ -1189,7 +1189,7 @@ function modulesOnlyRoots( modules, o )
     });
   });
 
-  debugger;
+  // debugger;
 
   /* add what left */
 
@@ -1203,7 +1203,7 @@ function modulesOnlyRoots( modules, o )
     }
   });
 
-  debugger;
+  // debugger;
 
   return result.original;
 
@@ -1215,7 +1215,7 @@ function modulesOnlyRoots( modules, o )
 
     if( module && !module.isOut && it.level === 0 && !visitedContainer.has( r ) )
     {
-      debugger;
+      // debugger;
       result.append( r );
       visitedContainer.appendOnce( r );
       if( r.peer )
@@ -2015,27 +2015,29 @@ function graphGroupMake( o )
 
   function variantSubmodules( variant )
   {
-    let result = [];
-
-    if( variant.module )
-    for( let s in variant.module.submoduleMap )
-    {
-      let relation = variant.module.submoduleMap[ s ];
-
-      if( !relation.enabled ) /* ttt */
-      continue;
-
-      let variant2 = variantFromRelation( relation );
-
-      result.push( variant2 );
-
-      if( o.withPeers && variant2.module && variant2.module.peerModule )
-      {
-        result.push( variantFromModule( variant2.module.peerModule ) );
-      }
-
-    }
-    return result;
+    // debugger;
+    return variant.submodulesGet({ withPeers : o.withPeers });
+    // let result = [];
+    //
+    // if( variant.module )
+    // for( let s in variant.module.submoduleMap )
+    // {
+    //   let relation = variant.module.submoduleMap[ s ];
+    //
+    //   if( !relation.enabled ) /* ttt */
+    //   continue;
+    //
+    //   let variant2 = variantFromRelation( relation );
+    //
+    //   result.push( variant2 );
+    //
+    //   if( o.withPeers && variant2.module && variant2.module.peerModule )
+    //   {
+    //     result.push( variantFromModule( variant2.module.peerModule ) );
+    //   }
+    //
+    // }
+    // return result;
   }
 
   /* */
@@ -2139,6 +2141,8 @@ function graphInfoExportAsTree( modules, o )
   modules = modules || will.modulesArray;
   modules = group.nodesFrom( modules );
 
+  // modules = modules.filter( ( module ) => module.object.name === 'module-abac' ); /* xxx */
+
   debugger;
   let o2 = _.mapOnly( o, group.rootsExportInfoTree.defaults );
   let info = group.rootsExportInfoTree( modules, o2 );
@@ -2152,12 +2156,12 @@ function graphInfoExportAsTree( modules, o )
   {
     // debugger;
     let module = variant.module || variant.opener;
-    if( module )
-    if( module.isOut && it.level !== 0 )
-    {
-      debugger;
-      it.continueNode = false;
-    }
+    // if( module )
+    // if( module.isOut && it.level !== 0 )
+    // {
+    //   debugger;
+    //   it.continueNode = false;
+    // }
     return variant;
   }
 
