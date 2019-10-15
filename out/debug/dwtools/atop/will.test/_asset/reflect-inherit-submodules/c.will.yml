@@ -1,7 +1,7 @@
 submodule :
 
-  submodule3 : submodule3
-  submodule4 : submodule4
+  submodule3 : submodule3.out
+  submodule4 : submodule4.out
 
 path :
 

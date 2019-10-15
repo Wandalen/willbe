@@ -722,7 +722,7 @@ function _performExportedReflectors()
 
   exported.exportedDirPath = outModule.resourceAllocate( 'path', 'exported.dir.' + exported.name );
   exported.exportedDirPath.generated = 1;
-  exported.exportedDirPath.path = path.dot( path.relative( outModule.inPath, exportedDirPath ) );
+  exported.exportedDirPath.path = path.undot( path.relative( outModule.inPath, exportedDirPath ) );
   exported.exportedDirPath.criterion = _.mapExtend( null, exported.criterion );
   exported.exportedDirPath.form();
 
@@ -877,7 +877,7 @@ function _performArchive()
   let archiveFilePath = build.archiveFilePathFor();
   // debugger;
   exported.archiveFilePath = outModule.resourceAllocate( 'path', 'archiveFile.' + exported.name );
-  exported.archiveFilePath.path = path.dot( path.relative( outModule.inPath, archiveFilePath ) );
+  exported.archiveFilePath.path = path.undot( path.relative( outModule.inPath, archiveFilePath ) );
   exported.archiveFilePath.criterion = _.mapExtend( null, exported.criterion );
   exported.archiveFilePath.form();
 

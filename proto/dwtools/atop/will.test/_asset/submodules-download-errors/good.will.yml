@@ -2,4 +2,4 @@ about :
   name : submodules-download-errors-good
 
 submodule :
-  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/

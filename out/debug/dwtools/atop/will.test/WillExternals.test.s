@@ -14974,7 +14974,7 @@ var Self =
     reflectNothingFromSubmodules,
     reflectGetPath,
     reflectSubdir,
-    reflectSubmodulesWithBase,
+    // reflectSubmodulesWithBase, // xxx : look later
     reflectComposite,
     reflectRemoteGit,
     reflectRemoteHttp,
