@@ -27,7 +27,7 @@ module:
         criterion:
           predefined: 1
         path: submodule.out
-      module.download:
+      download:
         criterion:
           predefined: 1
       module.original.willfiles:
@@ -328,7 +328,7 @@ module:
         criterion:
           predefined: 1
         path: ./
-      module.download:
+      download:
         criterion:
           predefined: 1
       remote:

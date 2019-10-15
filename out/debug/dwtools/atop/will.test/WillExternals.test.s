@@ -1071,13 +1071,13 @@ function eachMixed( test )
   ready
   .then( () =>
   {
-    test.case = '.each submodule::*/path::local .shell "git status"'
+    test.case = '.each submodule::*/path::download .shell "git status"'
     return null;
   })
 
   shell({ execPath : '.clean' })
   shell({ execPath : '.build' })
-  shell({ execPath : '.each submodule::*/path::local .shell "git status"' })
+  shell({ execPath : '.each submodule::*/path::download .shell "git status"' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1104,35 +1104,36 @@ function eachMixed( test )
 
   /* - */
 
-  ready
-  .then( () =>
-  {
-    test.case = '.each submodule:: .shell ls'
-    return null;
-  })
-
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.build' })
-  shell({ execPath : '.each submodule:: .shell ls -al' })
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    test.identical( _.strCount( got.output, 'ls -al' ), 5 );
-    test.identical( _.strCount( got.output, 'Module at' ), 4 );
-
-    test.identical( _.strCount( got.output, '.module/Tools/out/wTools.out.will.yml' ), 1 );
-    test.identical( _.strCount( got.output, '.module/PathBasic/out/wPathBasic.out.will.yml' ), 1 );
-    test.identical( _.strCount( got.output, 'out/UriBasic.informal.out.will.yml' ), 1 );
-    test.identical( _.strCount( got.output, 'out/Proto.informal.out.will.yml' ), 1 );
-
-    test.identical( _.strCount( got.output, '.module/Tools/out/wTools' ), 2 );
-    test.identical( _.strCount( got.output, '.module/PathBasic/out/wPathBasic' ), 2 );
-    test.identical( _.strCount( got.output, 'out/UriBasic.informal' ), 2 );
-    test.identical( _.strCount( got.output, 'out/Proto.informal' ), 2 );
-
-    return null;
-  })
+  // xxx
+  // ready
+  // .then( () =>
+  // {
+  //   test.case = '.each submodule:: .shell ls'
+  //   return null;
+  // })
+  //
+  // shell({ execPath : '.clean' })
+  // shell({ execPath : '.build' })
+  // shell({ execPath : '.each submodule:: .shell ls -al' })
+  // .then( ( got ) =>
+  // {
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   test.identical( _.strCount( got.output, 'ls -al' ), 5 );
+  //   test.identical( _.strCount( got.output, 'Module at' ), 4 );
+  //
+  //   test.identical( _.strCount( got.output, '.module/Tools/out/wTools.out.will.yml' ), 1 );
+  //   test.identical( _.strCount( got.output, '.module/PathBasic/out/wPathBasic.out.will.yml' ), 1 );
+  //   test.identical( _.strCount( got.output, 'out/UriBasic.informal.out.will.yml' ), 1 );
+  //   test.identical( _.strCount( got.output, 'out/Proto.informal.out.will.yml' ), 1 );
+  //
+  //   test.identical( _.strCount( got.output, '.module/Tools/out/wTools' ), 2 );
+  //   test.identical( _.strCount( got.output, '.module/PathBasic/out/wPathBasic' ), 2 );
+  //   test.identical( _.strCount( got.output, 'out/UriBasic.informal' ), 2 );
+  //   test.identical( _.strCount( got.output, 'out/Proto.informal' ), 2 );
+  //
+  //   return null;
+  // })
 
   /* - */
 
@@ -1407,20 +1408,19 @@ function eachBrokenIll( test )
     return null;
   })
 
-  // xxx
-  // /* - */
-  //
-  // shell({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
-  // .finally( ( err, got ) =>
-  // {
-  //   test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
-  //   test.is( !err );
-  //   test.notIdentical( got.exitCode, 0 );
-  //   test.identical( _.strCount( got.output, 'Failed to resolve' ), 1 );
-  //   test.identical( _.strCount( got.output, 'eachBrokenIll/' ), 4 );
-  //
-  //   return null;
-  // })
+  /* - */
+
+  shell({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
+    test.is( !err );
+    test.notIdentical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Failed to resolve' ), 1 );
+    test.identical( _.strCount( got.output, 'eachBrokenIll/' ), 4 );
+
+    return null;
+  })
 
   /* - */
 
@@ -3915,7 +3915,6 @@ function cleanBroken2( test )
     var files = _.fileProvider.dirRead( outPath );
     test.identical( files, null );
 
-    // xxx // xxx : add agree case
     return null;
   })
 
@@ -5169,7 +5168,7 @@ function exportInformal( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/Proto.informal.will.yml`
       },
-      "module.download" :
+      "download" :
       {
         "criterion" : { "predefined" : 1 }
       },
@@ -5247,7 +5246,7 @@ function exportInformal( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/Proto.informal.will.yml`
       },
-      "module.download" :
+      "download" :
       {
         "criterion" : { "predefined" : 1 }
       },
@@ -5326,7 +5325,7 @@ function exportInformal( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/UriBasic.informal.will.yml`
       },
-      "module.download" :
+      "download" :
       {
         "criterion" : { "predefined" : 1 }
       },
@@ -5583,7 +5582,7 @@ function exportMixed( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/Proto.informal.will.yml`
       },
-      "module.download" :
+      "download" :
       {
         "criterion" : { "predefined" : 1 }
       },
@@ -6332,7 +6331,7 @@ function exportMultiple( test )
         "path" : [ "../.ex.will.yml", "../.im.will.yml" ],
         "criterion" : { "predefined" : 1 }
       },
-      "module.download" :
+      "download" :
       {
         "criterion" : { "predefined" : 1 }
       },
@@ -6589,7 +6588,7 @@ function exportMultiple( test )
         "path" : [ "../.ex.will.yml", "../.im.will.yml" ],
         "criterion" : { "predefined" : 1 }
       },
-      "module.download" :
+      "download" :
       {
         "criterion" : { "predefined" : 1 }
       },
@@ -8584,7 +8583,7 @@ function importLocalRepo( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/Proto.will.yml`
       },
-      "module.download" :
+      "download" :
       {
         "criterion" : { "predefined" : 1 }
       },
@@ -10775,21 +10774,20 @@ function shellVerbosity( test )
 
   /* - */
 
-  // shell({ execPath : '.build verbosity.0' })
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.case = '.build verbosity.0';
-  //
-  //   test.identical( got.exitCode, 0 );
-  //   test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 0 );
-  //   test.identical( _.strCount( got.output, routinePath ), 1 );
-  //   test.identical( _.strCount( got.output, 'message from shell' ), 0 );
-  //   test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
-  //
-  //   return null;
-  // })
-  // xxx
+  shell({ execPath : '.build verbosity.0' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.build verbosity.0';
+
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 0 );
+    test.identical( _.strCount( got.output, routinePath ), 1 );
+    test.identical( _.strCount( got.output, 'message from shell' ), 0 );
+    test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
+
+    return null;
+  })
 
   /* - */
 
@@ -15010,7 +15008,7 @@ var Self =
     openWith,
     openEach,
     withMixed,
-    // eachMixed, // xxx : later
+    eachMixed, // xxx : later
     withList,
     // eachList, // xxx : later
     eachBrokenIll,

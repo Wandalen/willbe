@@ -8,14 +8,14 @@ path :
   in : ..
   out : out
   remote : 'git+https:///github.com/Wandalen/wUriBasic.git'
-  local : '.module/UriBasic'
+  download : '.module/UriBasic'
   export : '{path::local}/proto/**'
 
 reflector :
 
   download :
     src : path::remote
-    dst : path::local
+    dst : path::download
 
 step :
 
