@@ -952,12 +952,12 @@ function predefinedForm()
 
   path
   ({
-    name : 'module.download',
+    name : 'download',
     path : null,
     writable : 1,
     exportable : 1,
     importableFromIn : 1,
-    importableFromOut : 0,
+    importableFromOut : 1,
   })
 
   path
@@ -2445,7 +2445,7 @@ function modulesBuild_body( o )
 
   function handleEach( record, op )
   {
-    debugger;
+    // debugger;
     let o3 = _.mapOnly( o, module.moduleBuild.defaults );
     if( !record.module )
     throw _.err( `${record.object.absoluteName} at ${record.object.localPath || record.object.remotePath} is not opened or invalid` );
@@ -4156,7 +4156,7 @@ function pathsRebase( o )
     continue;
     if( p === 'module.dir' )
     continue;
-    if( p === 'module.download' )
+    if( p === 'download' )
     continue;
     // if( p === 'local' )
     // continue;
@@ -4600,7 +4600,7 @@ let willfilesPathGet = predefinedPathGet_functor( 'willfilesPath', 'module.willf
 let dirPathGet = predefinedPathGet_functor( 'dirPath', 'module.dir' );
 let commonPathGet = predefinedPathGet_functor( 'commonPath', 'module.common' );
 let localPathGet = predefinedPathGet_functor( 'localPath', 'local', 1 );
-let downloadPathGet = predefinedPathGet_functor( 'downloadPath', 'module.download', 1 );
+let downloadPathGet = predefinedPathGet_functor( 'downloadPath', 'download', 1 );
 let remotePathGet = predefinedPathGet_functor( 'remotePath', 'remote' );
 let currentRemotePathGet = predefinedPathGet_functor( 'currentRemotePath', 'current.remote' );
 let willPathGet = predefinedPathGet_functor( 'willPath', 'will' );
@@ -4626,7 +4626,7 @@ let _willfilesPathPut = predefinedPathPut_functor( 'willfilesPath', 'module.will
 let _dirPathPut = predefinedPathPut_functor( 'dirPath', 'module.dir', 0 );
 let _commonPathPut = predefinedPathPut_functor( 'commonPath', 'module.common', 0 );
 let _localPathPut = predefinedPathPut_functor( 'localPath', 'local', 0 );
-let _downloadPathPut = predefinedPathPut_functor( 'downloadPath', 'module.download', 0 );
+let _downloadPathPut = predefinedPathPut_functor( 'downloadPath', 'download', 0 );
 let _remotePathPut = predefinedPathPut_functor( 'remotePath', 'remote', 0 );
 let _originalWillfilesPathPut = predefinedPathPut_functor( 'originalWillfilesPath', 'module.original.willfiles', 0 );
 let _peerWillfilesPathPut = predefinedPathPut_functor( 'peerWillfilesPath', 'module.peer.willfiles', 0 );
@@ -4634,7 +4634,7 @@ let _peerWillfilesPathPut = predefinedPathPut_functor( 'peerWillfilesPath', 'mod
 let inPathSet = predefinedPathSet_functor( 'inPath', 'in' );
 let outPathSet = predefinedPathSet_functor( 'outPath', 'out' );
 let localPathSet = predefinedPathSet_functor( 'localPath', 'local' );
-let downloadPathSet = predefinedPathSet_functor( 'downloadPath', 'module.download' );
+let downloadPathSet = predefinedPathSet_functor( 'downloadPath', 'download' );
 
 // --
 // name

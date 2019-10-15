@@ -289,6 +289,14 @@ function _pathChanged( o )
   if( o.isIdential === null )
   o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
 
+  // if( o.val )
+  // if( o.fieldName === 'download' )
+  // // if( o.object.isOut && !o.object.isRemote )
+  // {
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   debugger;
+  // }
+
   // if( o.fieldName === 'module.original.willfiles' )
   // if( o.object.isOut )
   // if( o.val )
@@ -761,7 +769,7 @@ function modulesFindEachAt( o )
 
     let opener = o.currentOpener;
 
-    debugger;
+    // debugger;
     if( !opener )
     opener = will._openerMake
     ({
@@ -783,29 +791,40 @@ function modulesFindEachAt( o )
     {
       let con2 = new _.Consequence();
       let resolved = opener.openedModule.submodulesResolve({ selector : o.selector, preservingIteration : 1 });
+
+      if( !_.mapIs( resolved ) )
       resolved = _.arrayAs( resolved );
 
-      debugger;
-      for( let s = 0 ; s < resolved.length ; s++ ) con2.then( ( arg ) => /* !!! replace by concurrent, maybe */
+      // debugger;
+      // for( let s = 0 ; s < resolved.length ; s++ ) con2.then( ( arg ) => /* !!! replace by concurrent, maybe */
+      _.each( resolved, ( it1 ) => con2.then( ( arg ) =>
       {
-        let it1 = resolved[ s ];
-        let opener = it1.currentModule;
+        // let it1 = resolved[ s ];
+        // let opener = it1.currentModule;
+
+        // debugger;
+        let it2 = Object.create( null );
+        // it2.currentOpener = opener._openerMake(); // zzz
+        // it2.dst = element;
+
+        it2.currentModule = it1.currentModule;
+        _.assert( it2.currentModule instanceof _.Will.OpenedModule );
+        it2.currentOpener = it2.currentModule.userArray[ 0 ];
+        _.assert( it2.currentOpener instanceof _.Will.ModuleOpener );
 
         debugger;
-        let it2 = Object.create( null );
-        it2.currentOpener = opener._openerMake(); // zzz
-
         if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
         it2.currentPath = it1.dst;
         it2.options = o;
 
+        // debugger;
         if( o.onBegin )
         o.onBegin( it2 )
         if( o.onEnd )
         return o.onEnd( it2 );
 
         return null;
-      });
+      }));
       con2.take( null );
       return con2;
     });
@@ -846,7 +865,7 @@ function modulesFindEachAt( o )
       throw _.err( err );
     }
 
-    let filesMap = Object.create( null );
+    let filesMap = Object.create( null ); debugger;
     for( let f = 0 ; f < files.length ; f++ ) con
     .then( ( arg ) => /* !!! replace by concurrent, maybe */
     {

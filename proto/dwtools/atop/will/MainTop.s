@@ -74,127 +74,6 @@ function init( o )
 }
 
 //
-//
-// function _openersCurrentEach( o )
-// {
-//   let will = this.form();
-//   let fileProvider = will.fileProvider;
-//   let path = will.fileProvider.path;
-//   let logger = will.logger;
-//   let willfilesPath = fileProvider.path.trail( fileProvider.path.current() );
-//   let con = new _.Consequence();
-//
-//   _.assert( arguments.length === 1 );
-//   _.assert( _.routineIs( o.onReady ) );
-//   _.assert( will.currentOpener === null || will.currentOpeners === null );
-//   _.routineOptions( _openersCurrentEach, arguments );
-//
-//   // debugger;
-//   if( will.currentOpeners )
-//   {
-//
-//     will.currentOpeners.forEach( ( opener ) =>
-//     {
-//       con.then( ( arg ) =>
-//       {
-//         _.assert( will.currentOpener === null );
-//         _.assert( will.currentPath === null );
-//         // _.assert( will.mainModule === null );
-//         _.assert( will.mainOpener === null || will.mainOpener === opener );
-//         will.currentOpenerChange( opener );
-//         will.mainOpener = opener;
-//         return ready( opener );
-//       });
-//       con.then( ( arg ) =>
-//       {
-//         _.assert( will.currentOpener === opener );
-//         _.assert( will.currentPath === null );
-//         // _.assert( will.mainModule === null );
-//         _.assert( will.mainOpener === null || will.mainOpener === opener );
-//         will.currentOpenerChange( null );
-//         return arg;
-//       });
-//     });
-//
-//   }
-//   else
-//   {
-//
-//     let made = false;
-//     con.then( ( arg ) =>
-//     {
-//       let opener = will.currentOpener;
-//       if( !opener )
-//       {
-//         opener = will._openerMake
-//         ({
-//           willfilesPath : willfilesPath,
-//           isMain : 1,
-//         });
-//         _.assert( will.currentOpener === null );
-//         _.assert( will.currentPath === null );
-//         _.assert( will.mainOpener === opener );
-//         // _.assert( will.mainModule === opener.openedModule );
-//         will.currentOpenerChange( opener );
-//         made = true;
-//       }
-//       return ready( opener );
-//     });
-//     con.then( ( arg ) =>
-//     {
-//       if( made )
-//       {
-//         _.assert( will.currentPath === null );
-//         // _.assert( will.mainModule === will.currentOpener.openedModule );
-//         _.assert( will.mainOpener === will.currentOpener );
-//         will.currentOpenerChange( null );
-//       }
-//       return arg;
-//     });
-//
-//   }
-//
-//   con.take( null );
-//   con.finally( ( err, arg ) =>
-//   {
-//     if( err )
-//     throw err;
-//     return arg;
-//   });
-//
-//   return con;
-//
-//   /* */
-//
-//   function ready( opener )
-//   {
-//     // debugger;
-//     return opener.openedModule.ready.split()
-//     .then( function( arg )
-//     {
-//       let result = o.onReady( opener );
-//       _.assert( result !== undefined );
-//       return result;
-//     })
-//     .finally( ( err, arg ) =>
-//     {
-//       if( err )
-//       will.errEncounter( err );
-//       if( err )
-//       throw _.errLogOnce( err );
-//       return arg;
-//     })
-//     ;
-//   }
-//
-// }
-//
-// _openersCurrentEach.defaults =
-// {
-//   // onReady : null,
-// }
-
-//
 
 function _openersCurrentEach( o )
 {
@@ -242,144 +121,6 @@ _openersCurrentEach.defaults =
   onEach : null,
 }
 
-// //
-//
-// function _openersCurrentEach( o )
-// {
-//   let will = this.form();
-//   let fileProvider = will.fileProvider;
-//   let path = will.fileProvider.path;
-//   let logger = will.logger;
-//   let willfilesPath = fileProvider.path.trail( fileProvider.path.current() );
-//   // let con = new _.Consequence();
-//
-//   // _.assert( arguments.length === 1 );
-//   // _.assert( _.routineIs( o.onReady ) );
-//   _.assert( will.currentOpener === null || will.currentOpeners === null );
-//   _.assert( _.arrayIs( will.currentOpeners ) );
-//   _.routineOptions( _openersCurrentEach, arguments );
-//
-//   // debugger;
-//   if( will.currentOpeners )
-//   {
-//
-//     // debugger;
-//     will.currentOpeners.forEach( ( opener ) =>
-//     {
-//
-//       let it = Object.create( null );
-//       it.opener = opener;
-//
-//       o.onEach.call( will, it );
-//
-//     //   con.then( ( arg ) =>
-//     //   {
-//     //     _.assert( will.currentOpener === null );
-//     //     _.assert( will.currentPath === null );
-//     //     // _.assert( will.mainModule === null );
-//     //     _.assert( will.mainOpener === null || will.mainOpener === opener );
-//     //     will.currentOpenerChange( opener );
-//     //     will.mainOpener = opener;
-//     //     // return ready( opener );
-//     //     return will.mainOpener;
-//     //   });
-//     //   con.then( ( arg ) =>
-//     //   {
-//     //     _.assert( will.currentOpener === opener );
-//     //     _.assert( will.currentPath === null );
-//     //     // _.assert( will.mainModule === null );
-//     //     _.assert( will.mainOpener === null || will.mainOpener === opener );
-//     //     will.currentOpenerChange( null );
-//     //     return arg;
-//     //   });
-//     });
-//
-//   }
-//   else
-//   {
-//
-//     debugger; xxx
-//     let made = false;
-//     con.then( ( arg ) =>
-//     {
-//       let opener = will.currentOpener;
-//       if( !opener )
-//       {
-//         opener = will._openerMake
-//         ({
-//           willfilesPath : willfilesPath,
-//           isMain : 1,
-//         });
-//         _.assert( will.currentOpener === null );
-//         _.assert( will.currentPath === null );
-//         _.assert( will.mainOpener === opener );
-//         // _.assert( will.mainModule === opener.openedModule );
-//         will.currentOpenerChange( opener );
-//         made = true;
-//       }
-//       // return ready( opener );
-//       return will.mainOpener;
-//     });
-//
-//     // con.then( ( arg ) =>
-//     // {
-//     //   if( made )
-//     //   {
-//     //     _.assert( will.currentPath === null );
-//     //     // _.assert( will.mainModule === will.currentOpener.openedModule );
-//     //     _.assert( will.mainOpener === will.currentOpener );
-//     //     will.currentOpenerChange( null );
-//     //   }
-//     //   return arg;
-//     // });
-//
-//   }
-//
-//   // con.take( null );
-//   // con.finally( ( err, arg ) =>
-//   // {
-//   //   if( err )
-//   //   throw err;
-//   //   return arg;
-//   // });
-//   //
-//   // return con;
-//
-//   /* */
-//
-//   function ready( opener )
-//   {
-//     // debugger;
-//     return opener.openedModule.ready.split()
-//     .then( function( arg )
-//     {
-//       let result = o.onEach( opener );
-//       _.assert( result !== undefined );
-//       return result;
-//     })
-//     .finally( ( err, arg ) =>
-//     {
-//       if( err )
-//       will.errEncounter( err );
-//       if( err )
-//       {
-//         err = _.err( err );
-//         logger.log( _.errOnce( err ) );
-//         throw err;
-//         // throw _.errLogOnce( err );
-//       }
-//       return arg;
-//     })
-//     ;
-//   }
-//
-// }
-//
-// _openersCurrentEach.defaults =
-// {
-//   onEach : null,
-// }
-
 //
 
 function openersCurrentEach( onEach )
@@ -390,12 +131,10 @@ function openersCurrentEach( onEach )
   ({
     onEach,
   });
-  // return null; // xxx
 }
 
 //
 
-// function _commandListLike( e, act, resourceKind )
 function _commandListLike( o )
 {
   let will = this;
@@ -836,6 +575,9 @@ function currentOpenerChange( src )
   _.assert( src === null || src instanceof will.ModuleOpener );
   _.assert( arguments.length === 1 );
 
+  if( src && will[ currentOpenerSymbol ] === src )
+  return src;
+
   will[ currentOpenerSymbol ] = src;
   will.currentPath = null;
 
@@ -1036,6 +778,17 @@ function commandEach( e )
     // _.assert( will.mainModule === null );
     // _.assert( will.mainOpener === null ); // yyy
 
+    if( will.mainOpener )
+    will.mainOpener.isMain = false;
+    will.currentOpenerChange( it.currentOpener );
+    will.currentPath = it.currentPath || null;
+    it.currentOpener.isMain = true;
+    _.assert( will.mainOpener === it.currentOpener );
+    _.assert( will.currentOpener === it.currentOpener );
+    // will.mainOpener = it.currentOpener;
+    // will.mainModule = it.currentOpener.openedModule;
+    // will.mainOpener === it.currentOpener; // yyy
+
     if( will.verbosity > 1 )
     {
       logger.log( '' );
@@ -1043,11 +796,6 @@ function commandEach( e )
       if( will.currentPath )
       logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentPath, 'path' ) );
     }
-
-    will.currentOpenerChange( it.currentOpener );
-    will.currentPath = it.currentPath || null;
-    // will.mainModule = it.currentOpener.openedModule;
-    // will.mainOpener === it.currentOpener; // yyy
 
     return null;
   }
@@ -1061,6 +809,7 @@ function commandEach( e )
     logger.up();
     levelUp = 1;
 
+    // debugger;
     let r = ca.commandPerform
     ({
       command : isolated.secondCommand,
@@ -1080,8 +829,13 @@ function commandEach( e )
       // _.assert( will.currentOpener === it.currentOpener ); // xxx
       // _.assert( will.mainModule === will.currentOpener.openedModule );
       _.assert( will.mainOpener === it.currentOpener );
-      it.currentOpener.finit();
       will.currentOpenerChange( null );
+      it.currentOpener.isMain = false;
+      if( !it.currentOpener.isUsed() )
+      it.currentOpener.finit();
+      _.assert( will.mainOpener === null );
+      _.assert( will.currentOpener === null );
+      _.assert( will.currentPath === null );
       // will.mainModule = null;
       // will.mainOpener = null; // yyy
 
@@ -1669,6 +1423,7 @@ function commandShell( e )
   function handleEach( it )
   {
     let logger = will.logger;
+    debugger;
     return it.opener.openedModule.shell
     ({
       execPath : e.argument,

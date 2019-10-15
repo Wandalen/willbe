@@ -64,7 +64,7 @@ module:
         path:
           - ../.ex.will.yml
           - ../.im.will.yml
-      module.download:
+      download:
         criterion:
           predefined: 1
       remote:
@@ -922,7 +922,7 @@ module:
         criterion:
           predefined: 1
         path: ./
-      module.download:
+      download:
         criterion:
           predefined: 1
       remote:

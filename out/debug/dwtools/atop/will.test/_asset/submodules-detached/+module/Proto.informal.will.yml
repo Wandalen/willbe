@@ -8,14 +8,14 @@ path :
   in : ..
   out : out
   remote : 'git+https:///github.com/Wandalen/wProto.git#b2054cc5549d24c421f4c71875e6da41fa36ffe0'
-  local : '.module/{about::name}'
+  download : '.module/{about::name}'
   export : '{path::local}/proto/**'
 
 reflector :
 
   download :
     src : path::remote
-    dst : path::local
+    dst : path::download
 
 step :
 

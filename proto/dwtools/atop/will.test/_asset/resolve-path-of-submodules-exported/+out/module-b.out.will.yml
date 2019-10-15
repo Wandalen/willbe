@@ -33,7 +33,7 @@ module:
         criterion:
           predefined: 1
         path: ../b.will.yml
-      module.download:
+      download:
         criterion:
           predefined: 1
       remote:
@@ -166,7 +166,7 @@ module:
         criterion:
           predefined: 1
         path: b
-      module.download:
+      download:
         criterion:
           predefined: 1
       remote:

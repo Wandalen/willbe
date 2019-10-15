@@ -1071,13 +1071,13 @@ function eachMixed( test )
   ready
   .then( () =>
   {
-    test.case = '.each submodule::*/path::local .shell "git status"'
+    test.case = '.each submodule::*/path::download .shell "git status"'
     return null;
   })
 
   shell({ execPath : '.clean' })
   shell({ execPath : '.build' })
-  shell({ execPath : '.each submodule::*/path::local .shell "git status"' })
+  shell({ execPath : '.each submodule::*/path::download .shell "git status"' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1086,7 +1086,8 @@ function eachMixed( test )
     test.is( _.strHas( got.output, `Your branch is up to date with 'origin/master'.` ) );
     // no such string on older git
     */
-    test.identical( _.strCount( got.output, 'git status' ), 5 );
+    test.identical( _.strCount( got.output, 'git status' ), 1 );
+    test.identical( _.strCount( got.output, 'git "status"' ), 4 );
     test.identical( _.strCount( got.output, /nothing to commit, working .* clean/ ), 4 );
 
     test.is( _.strHas( got.output, /eachMixed\/\.module\/Tools\/out\/wTools\.out\.will\.yml[^d]/ ) );
@@ -1118,7 +1119,8 @@ function eachMixed( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, 'ls -al' ), 5 );
+    test.identical( _.strCount( got.output, 'ls -al' ), 1 );
+    test.identical( _.strCount( got.output, 'ls "-al"' ), 4 );
     test.identical( _.strCount( got.output, 'Module at' ), 4 );
 
     test.identical( _.strCount( got.output, '.module/Tools/out/wTools.out.will.yml' ), 1 );
@@ -1368,10 +1370,6 @@ eachList.timeOut = 300000;
 
 //
 
-/*
-if one or several willfiles are broken .each should go past and output error
-*/
-
 function eachBrokenIll( test )
 {
   let self = this;
@@ -1401,31 +1399,22 @@ function eachBrokenIll( test )
   {
     test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
     test.is( !err );
-    test.identical( got.exitCode, 0 );
+    test.notIdentical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'Failed to resolve' ), 0 );
-    test.identical( _.strCount( got.output, 'eachBrokenIll/' ), 5 );
+    test.identical( _.strCount( got.output, 'eachBrokenIll/' ), 6 );
+    test.identical( _.strCount( got.output, 'Failed to open willfile' ), 1 );
     return null;
   })
-
-  // xxx
-  // /* - */
-  //
-  // shell({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
-  // .finally( ( err, got ) =>
-  // {
-  //   test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
-  //   test.is( !err );
-  //   test.notIdentical( got.exitCode, 0 );
-  //   test.identical( _.strCount( got.output, 'Failed to resolve' ), 1 );
-  //   test.identical( _.strCount( got.output, 'eachBrokenIll/' ), 4 );
-  //
-  //   return null;
-  // })
 
   /* - */
 
   return ready;
 }
+
+eachBrokenIll.description =
+`
+if one or several willfiles are broken .each should pass it and output error
+`
 
 //
 
@@ -3915,7 +3904,6 @@ function cleanBroken2( test )
     var files = _.fileProvider.dirRead( outPath );
     test.identical( files, null );
 
-    // xxx // xxx : add agree case
     return null;
   })
 
@@ -5169,10 +5157,10 @@ function exportInformal( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/Proto.informal.will.yml`
       },
-      "module.download" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "download" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "in" :
       {
         "criterion" : { "predefined" : 0 },
@@ -5187,7 +5175,7 @@ function exportInformal( test )
       {
         "criterion" : { "predefined" : 1 }
       },
-      "download" : { "path" : `../.module/Proto` },
+      "download" : { "path" : `../.module/Proto`, "criterion" : { "predefined" : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
@@ -5247,10 +5235,10 @@ function exportInformal( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/Proto.informal.will.yml`
       },
-      "module.download" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "download" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "in" :
       {
         "criterion" : { "predefined" : 0 },
@@ -5265,7 +5253,7 @@ function exportInformal( test )
       {
         "criterion" : { "predefined" : 1 }
       },
-      "download" : { "path" : `../.module/Proto` },
+      "download" : { "path" : `../.module/Proto`, "criterion" : { "predefined" : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
@@ -5283,7 +5271,7 @@ function exportInformal( test )
     return null;
   })
 
-  // /* - */
+  /* - */
 
   ready
   .then( () =>
@@ -5326,10 +5314,10 @@ function exportInformal( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/UriBasic.informal.will.yml`
       },
-      "module.download" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "download" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "in" :
       {
         "criterion" : { "predefined" : 0 },
@@ -5344,7 +5332,7 @@ function exportInformal( test )
       {
         "criterion" : { "predefined" : 1 }
       },
-      "download" : { "path" : `../.module/UriBasic` },
+      "download" : { "path" : `../.module/UriBasic`, "criterion" : { "predefined" : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
@@ -5362,7 +5350,7 @@ function exportInformal( test )
     return null;
   })
 
-  // /* - */
+  /* - */
 
   return ready;
 }
@@ -5583,10 +5571,10 @@ function exportMixed( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/Proto.informal.will.yml`
       },
-      "module.download" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "download" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "in" :
       {
         "criterion" : { "predefined" : 0 },
@@ -5601,7 +5589,7 @@ function exportMixed( test )
       {
         "criterion" : { "predefined" : 1 }
       },
-      "download" : { "path" : `../.module/Proto` },
+      "download" : { "path" : `../.module/Proto`, "criterion" : { "predefined" : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
@@ -6332,7 +6320,7 @@ function exportMultiple( test )
         "path" : [ "../.ex.will.yml", "../.im.will.yml" ],
         "criterion" : { "predefined" : 1 }
       },
-      "module.download" :
+      "download" :
       {
         "criterion" : { "predefined" : 1 }
       },
@@ -6589,7 +6577,7 @@ function exportMultiple( test )
         "path" : [ "../.ex.will.yml", "../.im.will.yml" ],
         "criterion" : { "predefined" : 1 }
       },
-      "module.download" :
+      "download" :
       {
         "criterion" : { "predefined" : 1 }
       },
@@ -7210,6 +7198,11 @@ function exportBrokenNoreflector( test )
 
   return ready;
 } /* end of function exportBrokenNoreflector */
+
+exportBrokenNoreflector.description =
+`
+removed reflector::exported.export is not obstacle to list out file
+`
 
 //
 
@@ -8584,10 +8577,10 @@ function importLocalRepo( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/Proto.will.yml`
       },
-      "module.download" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "download" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "in" :
       {
         "criterion" : { "predefined" : 0 },
@@ -8602,7 +8595,7 @@ function importLocalRepo( test )
       {
         "criterion" : { "predefined" : 1 }
       },
-      "download" : { "path" : `Proto` },
+      "download" : { "path" : `Proto`, 'criterion' : { 'predefined' : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "temp" : { "path" : `../out` },
       "exported.dir.export" :
@@ -8700,8 +8693,9 @@ function importOutWithDeletedSource( test )
   {
     test.identical( got.exitCode, 0 );
 
+    var exp = [ '.', './module-a.out.will.yml', './module-ab-named.out.will.yml', './module-b.out.will.yml' ];
     var files = self.find( outPath );
-    test.identical( files, [ '.', './module-a.out.will.yml', './module-ab-named.out.will.yml', './module-b.out.will.yml' ] );
+    test.identical( files, exp );
 
     _.fileProvider.filesDelete( _.path.join( routinePath, 'a.will.yml' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'b.will.yml' ) );
@@ -8717,13 +8711,12 @@ function importOutWithDeletedSource( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( got.output, '. Read from cache .' ), 3 );
-    test.identical( _.strCount( got.output, 'module::module-ab-named' ), 3 );
-    test.identical( _.strCount( got.output, 'module::module-ab-named / module::module-a' ), 1 );
-    test.identical( _.strCount( got.output, 'module::module-ab-named / module::module-b' ), 1 );
-    test.identical( _.strCount( got.output, 'module::' ), 5 );
-    test.identical( _.strCount( got.output, 'module' ), 21 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 6 );
+    test.identical( _.strCount( got.output, ' from ' ), 5 );
+    test.identical( _.strCount( got.output, 'module::module-ab-named' ), 7 );
+    test.identical( _.strCount( got.output, 'module::module-ab-named / module::module-a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::module-ab-named / module::module-b' ), 2 );
+    test.identical( _.strCount( got.output, 'module::' ), 11 );
 
     return null;
   })
@@ -10775,21 +10768,20 @@ function shellVerbosity( test )
 
   /* - */
 
-  // shell({ execPath : '.build verbosity.0' })
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.case = '.build verbosity.0';
-  //
-  //   test.identical( got.exitCode, 0 );
-  //   test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 0 );
-  //   test.identical( _.strCount( got.output, routinePath ), 1 );
-  //   test.identical( _.strCount( got.output, 'message from shell' ), 0 );
-  //   test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
-  //
-  //   return null;
-  // })
-  // xxx
+  shell({ execPath : '.build verbosity.0' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.build verbosity.0';
+
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 0 );
+    test.identical( _.strCount( got.output, routinePath ), 1 );
+    test.identical( _.strCount( got.output, 'message from shell' ), 0 );
+    test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
+
+    return null;
+  })
 
   /* - */
 
@@ -15010,7 +15002,7 @@ var Self =
     openWith,
     openEach,
     withMixed,
-    // eachMixed, // xxx : later
+    eachMixed,
     withList,
     // eachList, // xxx : later
     eachBrokenIll,
@@ -15031,7 +15023,7 @@ var Self =
     listWithSubmodulesSimple,
     listWithSubmodules,
     listSteps,
-    // listComplexPaths, // xxx : later
+    listComplexPaths, // xxx : later
 
     clean,
     cleanSingleModule,
@@ -15079,7 +15071,7 @@ var Self =
     // exportWithRemoteSubmodules, // xxx
     importPathLocal, // qqq : help to fix, please. agree should work with corrupted downloaded submodule. auto download should throw no error( introduce option strict : 0 )
     importLocalRepo,
-    // importOutWithDeletedSource, // xxx : look later
+    importOutWithDeletedSource, // xxx : look later
 
     reflectNothingFromSubmodules,
     reflectGetPath,

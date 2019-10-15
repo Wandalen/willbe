@@ -24,7 +24,7 @@ module:
         criterion:
           predefined: 1
         path: sub.out.will.yml
-      module.download:
+      download:
         criterion:
           predefined: 1
       remote:
@@ -290,7 +290,7 @@ module:
       enabled: 1
       version: 0.0.1
     path:
-      module.download:
+      download:
         criterion:
           predefined: 1
       remote:
