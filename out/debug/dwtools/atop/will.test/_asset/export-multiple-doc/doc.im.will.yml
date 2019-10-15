@@ -2,7 +2,7 @@
 submodule :
 
   # Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master
-  MultipleExports : ./out/submodule
+  MultipleExports : ./out/submodule.out
 
 path :
 
