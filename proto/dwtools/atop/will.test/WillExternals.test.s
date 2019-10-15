@@ -11558,7 +11558,7 @@ function submodulesDownloadRecursive( test )
     var files = _.fileProvider.dirRead( submodulesPath );
     test.identical( files, exp )
 
-    test.identical( _.strCount( got.output, '! Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
     test.identical( _.strCount( got.output, '+ 5/10 submodule(s) were downloaded' ), 1 );
     test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
 
@@ -11603,7 +11603,7 @@ function submodulesDownloadRecursive( test )
     var files = _.fileProvider.dirRead( submodulesPath );
     test.identical( files, exp )
 
-    test.identical( _.strCount( got.output, '! Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
     test.identical( _.strCount( got.output, '+ 5/10 submodule(s) were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/5 submodule(s) were downloaded' ), 2 );
     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) were downloaded' ), 2 );
@@ -11654,7 +11654,7 @@ function submodulesDownloadRecursive( test )
     var files = _.fileProvider.dirRead( submodulesPath );
     test.identical( files, exp )
 
-    test.identical( _.strCount( got.output, '! Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
     test.identical( _.strCount( got.output, '+ 1/5 submodule(s) were downloaded' ), 1 );
     test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
 
@@ -11699,7 +11699,7 @@ function submodulesDownloadRecursive( test )
     var files = _.fileProvider.dirRead( submodulesPath );
     test.identical( files, exp )
 
-    test.identical( _.strCount( got.output, '! Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
     test.identical( _.strCount( got.output, '+ 1/5 submodule(s) were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 1/4 submodule(s) were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 1/3 submodule(s) were downloaded' ), 3 );
@@ -11746,7 +11746,7 @@ function submodulesDownloadRecursive( test )
     var files = _.fileProvider.dirRead( submodulesPath );
     test.identical( files, exp )
 
-    test.identical( _.strCount( got.output, '! Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/1 submodule(s) were downloaded' ), 1 );
     test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
 
@@ -11774,7 +11774,7 @@ function submodulesDownloadRecursive( test )
     var files = _.fileProvider.dirRead( submodulesPath );
     test.identical( files, exp )
 
-    test.identical( _.strCount( got.output, '! Failed to read' ), 1 );
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/1 submodule(s) were downloaded' ), 5 );
     test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 5 );
 
