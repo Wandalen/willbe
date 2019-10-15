@@ -2398,6 +2398,7 @@ function modulesBuild_body( o )
     if( o2.recursive === 0 )
     o2.recursive = 1;
     o2.recursive = 2; /* yyy */
+    o2.strict = 0;
     return will.modulesDownload( o2 );
   })
 

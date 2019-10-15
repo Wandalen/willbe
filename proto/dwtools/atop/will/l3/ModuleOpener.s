@@ -1291,7 +1291,7 @@ function _remoteDownload( o )
 
     if( o.mode === 'download' )
     {
-
+      if( o.strict )
       filesCheck();
 
     }
@@ -1508,6 +1508,7 @@ _remoteDownload.defaults =
   dry : 0,
   opening : 1,
   recursive : 0,
+  strict : 1
 }
 
 //

@@ -1670,6 +1670,7 @@ function _modulesDownload_body( o )
 var defaults = _modulesDownload_body.defaults = Object.create( null );
 
 defaults.mode = 'download';
+defaults.strict = 1;
 defaults.dry = 0;
 defaults.modules = null;
 
