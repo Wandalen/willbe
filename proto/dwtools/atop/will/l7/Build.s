@@ -312,6 +312,7 @@ function perform( o )
     if( logger.verbosity >= 1 )
     {
       let withFiles = '';
+      // debugger;
       if( o.run.exported )
       withFiles = 'with ' + o.run.exported.exportedFilesPath.path.length + ' file(s)';
       logger.log( ( isExport ? 'Exported' : 'Built' ), build.decoratedAbsoluteName, withFiles, 'in', _.timeSpent( time ) );
@@ -349,7 +350,10 @@ function archiveFilePathFor()
   let will = module.will;
   let hub = will.fileProvider;
   let hd = hub.providersWithProtocolMap.file;
-  let inExportFile = module.willfileWithRoleMap.export || module.willfileWithRoleMap.single || module.willfileWithRoleMap.import;
+  let inModule = module;
+  if( inModule.isOut )
+  inModule = inModule.peerModule;
+  let inExportFile = inModule.willfileWithRoleMap.export || inModule.willfileWithRoleMap.single || inModule.willfileWithRoleMap.import;
   // let inFileDirPath = hd.path.dir( inExportFile.filePath );
   let inFileDirPath = inExportFile.dirPath;
 

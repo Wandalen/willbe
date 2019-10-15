@@ -517,13 +517,10 @@ function find( o )
       {
         if( o2[ f ] !== null && openedModule[ f ] === null )
         {
-          if( f !== 'peerModule' )
-          debugger;
           openedModule[ f ] = o2[ f ];
         }
       }
 
-      // _.assert( openedModule.rootModule === opener.rootModule || opener.rootModule === null );
       _.assert( opener.openedModule === openedModule || opener.openedModule === null );
       opener.openedModule = openedModule;
 
@@ -718,6 +715,36 @@ open.defaults =
   resourcesFormed : null,
   all : null,
 
+}
+
+//
+
+function reopen()
+{
+  let opener = this;
+  let will = opener.will;
+  let module = opener.openedModule;
+
+  // if( opener.openedModule )
+  // debugger;
+
+  // debugger;
+  let willfilesPath = _.make( opener.willfilesPath );
+  let willf = opener.willfilesArray[ 0 ];
+  opener.close();
+  debugger;
+  opener.willfilesPath = willfilesPath;
+  _.assert( opener.error === null );
+  _.assert( opener.searching !== 'exact' || _.entityIdentical( opener.willfilesPath, willfilesPath ) );
+  _.assert( !_.arrayHas( will.willfilesArray, willf ) );
+  // _.assert( will.willfilesArray.length === 0 );
+  // debugger;
+  opener.find();
+  // debugger;
+
+  _.assert( opener.openedModule !== module );
+
+  return opener.open();
 }
 
 //
@@ -1425,17 +1452,9 @@ function _remoteDownload( o )
     let variant = will.variantFrom( opener );
     variant.openers.forEach( ( opener2 ) =>
     {
-
-      if( opener2.openedModule )
-      debugger;
-
-      let willf = opener2.willfilesArray[ 0 ]; // xxx : check
-      opener2.close();
-      _.assert( opener2.error === null );
-      _.assert( !_.arrayHas( will.willfilesArray, willf ) );
-      opener2.find();
-
-      ready.then( () => opener2.open() );
+      // if( opener2.openedModule )
+      // debugger;
+      ready.then( () => opener2.reopen() );
     });
 
     return ready;
@@ -2085,6 +2104,7 @@ let Extend =
   close,
   find,
   open,
+  reopen,
 
   isOpened,
   isValid,

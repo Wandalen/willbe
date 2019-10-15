@@ -103,6 +103,9 @@ function form1()
   if( resource.formed && resource === module[ resource.MapName ][ resource.name ] )
   return resource;
 
+  _.assert( arguments.length === 0 );
+  _.assert( resource.formed === 0 );
+
   if( !resource.original )
   _.sure( !module[ resource.MapName ][ resource.name ], () => 'Module ' + module.dirPath + ' already has ' + resource.qualifiedName );
 
@@ -132,6 +135,9 @@ function form2()
   let path = fileProvider.path;
   let logger = will.logger;
 
+  if( resource.formed >= 2 )
+  return resource;
+
   _.assert( arguments.length === 0 );
   _.assert( resource.formed === 1 );
 
@@ -152,6 +158,9 @@ function form3()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+
+  if( resource.formed >= 3 )
+  return resource;
 
   _.assert( arguments.length === 0 );
   _.assert( resource.formed === 2 );
