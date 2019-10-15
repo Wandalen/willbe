@@ -1086,7 +1086,8 @@ function eachMixed( test )
     test.is( _.strHas( got.output, `Your branch is up to date with 'origin/master'.` ) );
     // no such string on older git
     */
-    test.identical( _.strCount( got.output, 'git status' ), 5 );
+    test.identical( _.strCount( got.output, 'git status' ), 1 );
+    test.identical( _.strCount( got.output, 'git "status"' ), 4 );
     test.identical( _.strCount( got.output, /nothing to commit, working .* clean/ ), 4 );
 
     test.is( _.strHas( got.output, /eachMixed\/\.module\/Tools\/out\/wTools\.out\.will\.yml[^d]/ ) );
@@ -1104,36 +1105,35 @@ function eachMixed( test )
 
   /* - */
 
-  // xxx
-  // ready
-  // .then( () =>
-  // {
-  //   test.case = '.each submodule:: .shell ls'
-  //   return null;
-  // })
-  //
-  // shell({ execPath : '.clean' })
-  // shell({ execPath : '.build' })
-  // shell({ execPath : '.each submodule:: .shell ls -al' })
-  // .then( ( got ) =>
-  // {
-  //   test.identical( got.exitCode, 0 );
-  //
-  //   test.identical( _.strCount( got.output, 'ls -al' ), 5 );
-  //   test.identical( _.strCount( got.output, 'Module at' ), 4 );
-  //
-  //   test.identical( _.strCount( got.output, '.module/Tools/out/wTools.out.will.yml' ), 1 );
-  //   test.identical( _.strCount( got.output, '.module/PathBasic/out/wPathBasic.out.will.yml' ), 1 );
-  //   test.identical( _.strCount( got.output, 'out/UriBasic.informal.out.will.yml' ), 1 );
-  //   test.identical( _.strCount( got.output, 'out/Proto.informal.out.will.yml' ), 1 );
-  //
-  //   test.identical( _.strCount( got.output, '.module/Tools/out/wTools' ), 2 );
-  //   test.identical( _.strCount( got.output, '.module/PathBasic/out/wPathBasic' ), 2 );
-  //   test.identical( _.strCount( got.output, 'out/UriBasic.informal' ), 2 );
-  //   test.identical( _.strCount( got.output, 'out/Proto.informal' ), 2 );
-  //
-  //   return null;
-  // })
+  ready
+  .then( () =>
+  {
+    test.case = '.each submodule:: .shell ls'
+    return null;
+  })
+
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.build' })
+  shell({ execPath : '.each submodule:: .shell ls -al' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'ls -al' ), 5 );
+    test.identical( _.strCount( got.output, 'Module at' ), 4 );
+
+    test.identical( _.strCount( got.output, '.module/Tools/out/wTools.out.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, '.module/PathBasic/out/wPathBasic.out.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'out/UriBasic.informal.out.will.yml' ), 1 );
+    test.identical( _.strCount( got.output, 'out/Proto.informal.out.will.yml' ), 1 );
+
+    test.identical( _.strCount( got.output, '.module/Tools/out/wTools' ), 2 );
+    test.identical( _.strCount( got.output, '.module/PathBasic/out/wPathBasic' ), 2 );
+    test.identical( _.strCount( got.output, 'out/UriBasic.informal' ), 2 );
+    test.identical( _.strCount( got.output, 'out/Proto.informal' ), 2 );
+
+    return null;
+  })
 
   /* - */
 
