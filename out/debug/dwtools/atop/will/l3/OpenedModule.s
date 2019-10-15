@@ -3404,12 +3404,6 @@ function versionsVerify()
 
 //
 
-let versionsAgree = _.routineFromPreAndBody( _subModulesDownload_pre, _subModulesDownload_body, 'versionsAgree' );
-versionsAgree.defaults.updating = 1;
-versionsAgree.defaults.agree = 1;
-
-//
-
 function submodulesReload()
 {
   let module = this;
@@ -6589,7 +6583,6 @@ let Extend =
   moduleFixatePathFor,
 
   versionsVerify,
-  versionsAgree,
 
   submodulesReload,
   submodulesForm,

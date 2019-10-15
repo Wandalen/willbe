@@ -1,5 +1,5 @@
 submodule :
-  export-whole : module/export-whole
+  export-whole : module/export-whole.out
 
 about :
 
