@@ -1,7 +1,7 @@
 
 submodule :
 
-  Tools : git+https:///github.com/Wandalen/wTools.git#b2054cc5549d24c421f4c71875e6da41fa36ffe0
+  Tools : git+https:///github.com/Wandalen/wTools.git#14163d4223466b178fec3adf67dc85a9ece32ad5
   PathBasic : git+https:///github.com/Wandalen/wPathBasic.git#master
   UriBasic : git+https:///github.com/Wandalen/wUriBasic.git#382707a813d7b0a369aad2689f39c166930f9d87
 

@@ -12491,7 +12491,7 @@ function subModulesUpdate( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '+ module::wTools was updated to version be79afce8b9425b35514aa6b2055288dc0961d65 in' ) );
+    test.is( _.strHas( got.output, '+ module::wTools was updated to version 14163d4223466b178fec3adf67dc85a9ece32ad5 in' ) );
     test.is( _.strHas( got.output, '+ module::wPathBasic was updated to version master in' ) );
     test.is( _.strHas( got.output, '+ module::wUriBasic was updated to version 382707a813d7b0a369aad2689f39c166930f9d87 in' ) );
     test.is( _.strHas( got.output, '+ 3/4 submodule(s) were updated in' ) );
@@ -12525,7 +12525,7 @@ function subModulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch';
     var read = _.fileProvider.fileRead( _.path.join( routinePath, '.im.will.yml' ) );
-    read = _.strReplace( read, 'b2054cc5549d24c421f4c71875e6da41fa36ffe0', 'master' )
+    read = _.strReplace( read, '14163d4223466b178fec3adf67dc85a9ece32ad5', 'master' )
     _.fileProvider.fileWrite( _.path.join( routinePath, '.im.will.yml' ), read );
     return null;
   })
