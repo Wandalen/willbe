@@ -195,21 +195,6 @@ function init( o )
 
 }
 
-// //
-//
-// function _openerMake()
-// {
-//   let module = this;
-//   let will = module.will;
-//
-//   _.assert( arguments.length === 0 ); debugger; xxx
-//
-//   let o2 = module.optionsForOpenerExport();
-//   let opener = will._openerMake({ opener : o2 });
-//
-//   return opener;
-// }
-
 //
 
 function releasedBy( user )
@@ -275,6 +260,298 @@ function usersGet()
   let module = this;
   return [ ... module.userArray, ... ( module.peerModule ? module.peerModule.userArray : [] ) ];
 }
+
+//
+
+function outModuleMake( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  o = _.routineOptions( outModuleMake, arguments );
+
+  _.assert( module.original === null );
+  _.assert( !module.isOut );
+  _.assert( !!module.pathMap[ 'module.original.willfiles' ] );
+  _.assert( !!module.pathMap[ 'module.peer.willfiles' ] );
+  _.assert( !!module.pathMap[ 'module.willfiles' ] );
+  _.assert( module.pathMap[ 'module.peer.willfiles' ] !== module.pathMap[ 'module.willfiles' ] );
+
+  o.willfilesPath = o.willfilesPath || module.outfilePathGet();
+
+  let moduleWas = will.moduleWithCommonPathMap[ module.CommonPathFor( o.willfilesPath ) ];
+  if( moduleWas )
+  {
+    debugger; xxx
+    _.assert( moduleWas.peerModule === module );
+    _.assert( moduleWas === module.peerModule );
+    moduleWas.peerModule = null;
+    _.assert( moduleWas.peerModule === null );
+    _.assert( module.peerModule === null );
+    moduleWas.finit();
+    _.assert( moduleWas.finitedIs() );
+    _.assert( !module.finitedIs() );
+    moduleWas = null;
+  }
+
+  if( moduleWas )
+  {
+    _.assert( moduleWas.isValid() );
+  }
+
+  let opener2 = openerMake();
+
+  /* */
+
+  _.assert( opener2.original === null );
+
+  let o3 = opener2.optionsForModuleExport();
+  o3.original = null;
+  let rootModule = o3.rootModule = opener2.rootModule;
+  let module2 = module.cloneExtending( o3 );
+
+  _.assert( module2.original === null );
+  _.assert( rootModule === opener2.rootModule );
+  _.assert( rootModule === module2.rootModule );
+  opener2.moduleAdopt( module2 );
+  _.assert( rootModule === opener2.rootModule );
+  _.assert( rootModule === opener2.openedModule.rootModule );
+  _.assert( opener2.commonPath === opener2.localPath );
+  _.assert( module2.commonPath === module2.localPath );
+
+  /* */
+
+  // debugger;
+  module2.pathsRebase({ inPath : module.outPath, exInPath : module.inPath });
+  // debugger;
+
+  _.assert( module.outPath === module2.outPath );
+  _.assert( module2.inPath === module2.outPath );
+  _.assert( module2.dirPath === path.detrail( module.outPath ) );
+  _.assert( module2.commonPath === module2.localPath );
+  // _.assert( module2.original === module );
+  _.assert( module2.original === null );
+  _.assert( module2.rootModule === module.rootModule );
+  _.assert( module2.willfilesArray.length === 0 );
+  _.assert( module2.pathResourceMap.in.path === '.' );
+  _.assert( module2.peerModule === module );
+  _.assert( module.peerModule === module2 );
+  _.assert( opener2.peerModule === module );
+  _.assert( opener2.dirPath === path.detrail( module.outPath ) );
+  _.assert( opener2.superRelation === null );
+  _.assert( opener2.willfilesArray.length === 0 );
+
+  _.assert( !!module2.pathMap[ 'module.original.willfiles' ] );
+  _.assert( !!module2.pathMap[ 'module.peer.willfiles' ] );
+  _.assert( !!module2.pathMap[ 'module.willfiles' ] );
+  _.assert( _.entityIdentical( module2.pathMap[ 'module.original.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
+  _.assert( !_.entityIdentical( module2.pathMap[ 'module.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
+
+  // debugger;
+
+  module2.stager.stageStateSkipping( 'opened', 1 );
+  module2.stager.stageStatePausing( 'opened', 0 );
+  module2.stager.tick();
+
+  _.assert( !!module2.ready.resourcesCount() );
+
+  if( module2.ready.errorsCount() )
+  module2.ready.sync();
+
+  will.openersAdoptModule( module2 );
+
+  // debugger;
+  // if( !module2.isUsedManually() )
+  // debugger;
+  // if( !module2.isUsedManually() )
+  // module2.finit();
+
+  // if( module2.id === 238 )
+  // debugger;
+  return module2;
+
+  /* */
+
+  function openerMake()
+  {
+
+    let o2 = module.optionsForOpenerExport();
+    o2.willfilesPath = o.willfilesPath;
+    o2.willfilesArray = [];
+    o2.isOut = true;
+    o2.peerModule = module;
+    o2.searching = 'exact';
+    o2.reason = 'export';
+    o2.isAuto = 1;
+    o2.remotePath = null; // yyy
+
+    let opener2 = will._openerMake({ opener : o2 });
+    _.assert( opener2.isOut === true );
+    _.assert( opener2.superRelation === null );
+    _.assert( opener2.rootModule === null );
+    _.assert( opener2.openedModule === null );
+    _.assert( opener2.willfilesArray.length === 0 );
+    _.assert( opener2.peerModule === module );
+
+    opener2.rootModule = module.rootModule || module;
+    // opener2.original = module;
+    opener2.preform();
+
+    return opener2;
+  }
+
+  /* */
+
+}
+
+outModuleMake.defaults =
+{
+  willfilesPath : null,
+}
+
+//
+
+function outModuleOpen( o )
+{
+  let module = this;
+  let will = module.will;
+
+  // _.assert( exported.outModule === null );
+
+  o = _.routineOptions( outModuleOpen, arguments );
+  o.willfilesPath = o.willfilesPath || module.outfilePathGet();
+
+  let o2 =
+  {
+    willfilesPath : o.willfilesPath,
+    // original : inModule,
+    rootModule : module.rootModule,
+    searching : 'exact',
+    reason : 'export',
+  }
+
+  let opener2 = will._openerMake({ opener : o2 })
+
+  opener2.preform();
+  opener2.find({ throwing : 0 });
+
+  return opener2.open({ throwing : 1, all : 0 })
+  .then( ( module2 ) =>
+  {
+
+    _.assert( !!will.formed );
+
+    if( !opener2.openedModule.isValid() )
+    {
+      logger.log( _.errBrief( `Module ${opener2.absoluteName} was not valid` ) );
+      return module2;
+    }
+
+    if( !opener2.openedModule.isConsistent() )
+    {
+      logger.log( _.errBrief( `Module ${opener2.absoluteName} was not consistent, please export it` ) );
+      return module2;
+    }
+
+    // let willfile = opener2.openedModule.willfilesArray[ 0 ];
+    // let structure = willfile.structureOf( opener2.openedModule );
+    // _.assert( willfile && opener2.openedModule.willfilesArray.length === 1 );
+    // _.assert( opener2.openedModule.isValid() );
+    // _.assert( opener2.openedModule.isOut );
+    // _.assert( _.mapIs( structure ) );
+    // _.assert( _.mapIs( structure.exported ) );
+    //
+    // for( let exportedName in structure.exported )
+    // {
+    //   if( exportedName === exported.name )
+    //   continue;
+    //   let exported2 = opener2.openedModule.exportedMap[ exportedName ];
+    //   _.assert( exported2 instanceof Self );
+    //   inModule.resourceImport({ srcResource : exported2 });
+    // }
+    //
+    // return module2;
+  })
+  .finally( ( err, module2 ) =>
+  {
+
+    err = err || opener2.error;
+
+    // if( opener2 && !opener2.error && module2 )
+    // exported.outModule = module2;
+
+    if( err )
+    {
+      err = _.err( err, `\nFailed to read exported out-willfile ${opener2.willfilesPath} to extend it` );
+      let requireVerbosity = 5;
+      if( _.strIs( err.originalMessage ) )
+      if( !_.strHas( err.originalMessage, 'Found no willfile at' ) )
+      if( !_.strHas( err.originalMessage, 'Found no out-willfile' ) )
+      if( !_.strHas( err.originalMessage, 'Out-willfile is inconsistent with its in-willfiles' ) )
+      requireVerbosity = 3;
+      if( requireVerbosity <= will.verbosity )
+      {
+        if( !_.errIsLogged( err ) )
+        {
+          logger.up( 2 );
+          logger.log( err );
+          logger.down( 2 );
+        }
+      }
+    }
+
+    if( err )
+    try
+    {
+      opener2.finit();
+    }
+    catch( err2 )
+    {
+      debugger;
+      err2 = _.err( err2 );
+      logger.log( _.errOnce( err2 ) );
+      throw err2;
+    }
+
+    if( err )
+    _.errAttend( err );
+
+    return module2 || null;
+  })
+
+}
+
+outModuleOpen.defaults = _.mapExtend( null, outModuleMake.defaults );
+
+//
+
+function outModuleOpenOrMake( o )
+{
+  let module = this;
+  let will = module.will;
+
+  // _.assert( exported.outModule === null );
+
+  o = _.routineOptions( outModuleOpenOrMake, arguments );
+  o.willfilesPath = o.willfilesPath || module.outfilePathGet();
+
+  return module.outModuleOpen()
+  .then( ( outModule ) =>
+  {
+
+    _.assert( outModule === null || outModule.isOut );
+
+    if( !outModule )
+    return module.outModuleMake( o );
+
+    return outModule;
+  });
+
+}
+
+outModuleOpenOrMake.defaults = _.mapExtend( null, outModuleOpen.defaults );
 
 //
 
@@ -1230,19 +1507,19 @@ function isFull( o )
   return false;
 
   o = _.routineOptions( isFull, arguments );
-  o.all = o.all || Object.create( null );
-  o.all.all = 1;
-  o.all = module.optionsFormingForward( o.all );
+  o.only = o.only || Object.create( null );
+  o.only.all = 1;
+  o.only = module.optionsFormingForward( o.only );
 
   let states = module.stager.stagesState( 'performed' )
-  _.mapSupplement( o.all, _.map( states, () => true ) );
-  states = _.only( states, o.all ); /* xxx : review mapOnly / mapBut */
+  _.mapSupplement( o.only, _.map( states, () => true ) );
+  states = _.only( states, o.only ); /* xxx : review mapOnly / mapBut */
 
   return _.all( states );
 }
 
 var defaults = isFull.defaults = Object.create( null );
-defaults.all = null;
+defaults.only = null;
 
 //
 
@@ -1252,6 +1529,44 @@ function isPreformed()
   if( !module.stager )
   return false;
   return module.stager.stageStatePerformed( 'preformed' );
+}
+
+//
+
+function reopen()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let name = module.absoluteName;
+  let commonPath = module.commonPath;
+
+  _.assert( !module.finitedIs() );
+  _.assert( arguments.length === 0 );
+
+  let variant = will.variantFrom( module );
+  if( variant.openers.length !== 1 )
+  debugger;
+  variant.openers.forEach( ( opener2 ) =>
+  {
+    ready.then( () => opener2.reopen() );
+  });
+
+  ready.finally( ( err, module2 ) =>
+  {
+    debugger;
+    if( err )
+    throw _.err( err, `\nFailed to reopen ${name} at ${commonPath}` );
+    _.assert( module.finitedIs() );
+    _.assert( !module2.finitedIs() );
+    // module.finit();
+    return module2;
+  });
+
+  return ready;
 }
 
 //
@@ -1327,27 +1642,6 @@ function _formEnd()
 // --
 // willfiles
 // --
-
-// function _willfilesPicked()
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   _.assert( module.willfilesArray.length > 0 );
-//   // _.assert( !!module.mainOpener, 'Expects specified {- module.mainOpener -} at th point' );
-//
-//   // debugger;
-//   // let result = module._attachedModulesOpen();
-//   // debugger;
-//   // return result;
-//
-//   return null;
-// }
-
-//
 
 function willfilesOpen()
 {
@@ -1878,6 +2172,80 @@ let moduleBuild = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
 moduleBuild.defaults.kind = 'build';
 let moduleExport = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
 moduleExport.defaults.kind = 'export';
+
+//
+
+function exportedMake( o )
+{
+  let module = this;
+  let outModule = module;
+  let will = module.will;
+
+  o = _.routineOptions( exportedMake, arguments );
+  _.assert( o.build instanceof _.Will.Build );
+
+  if( !module.isOut )
+  {
+    _.assert( _.mapKeys( module.exportedMap ).length === 0 );
+    _.assert( !module.finitedIs() );
+
+    // debugger;
+    if( module.peerModule && !module.peerModule.isValid() )
+    {
+      let peerModule = module.peerModule;
+      module.peerModule = null;
+      _.assert( module.peerModule === null );
+      _.assert( peerModule.peerModule === null );
+      peerModule.finit();
+      _.assert( module.peerModule === null );
+      _.assert( peerModule.peerModule === null );
+    }
+
+    _.assert( !module.finitedIs() );
+
+    if( !module.peerModule )
+    {
+      return module.outModuleOpenOrMake().then( () => makeFromPeer() );
+    }
+
+    return new _.Consequence().take( makeFromPeer() );
+  }
+
+  debugger
+  return new _.Consequence().take( make() );
+
+  /* */
+
+  function make()
+  {
+
+    if( outModule.exportedMap[ o.build.name ] )
+    {
+      outModule.exportedMap[ o.build.name ].finit();
+      _.assert( outModule.exportedMap[ o.build.name ] === undefined );
+    }
+
+    let exported = new will.Exported({ outModule : outModule, name : o.build.name }).form1();
+
+    _.assert( outModule.exportedMap[ o.build.name ] === exported );
+
+    return exported;
+
+  }
+
+  function makeFromPeer()
+  {
+    _.assert( module.peerModule && module.peerModule.isValid() && module.peerModule.isOut );
+    outModule = module.peerModule;
+    return make();
+  }
+
+}
+
+exportedMake.defaults =
+{
+  build : null,
+}
 
 // --
 // batcher
@@ -3240,7 +3608,7 @@ function _peerChanged()
     let outfilePath = null;
     if( module.about.name )
     outfilePath = module.outfilePathGet();
-    module._originalWillfilesPathPut( null );
+    module._originalWillfilesPathPut( module.willfilesPath );
     module._peerWillfilesPathPut( outfilePath );
   }
 
@@ -3914,9 +4282,9 @@ function _filePathChanged2( o )
 
   for( let s in module.submoduleMap )
   {
-    debugger;
+    // debugger;
     let relation = module.submoduleMap[ s ];
-    if( relation.formed )
+    if( relation.formed && relation.enabled ) /* ttt */
     will.variantFrom( relation );
   }
 
@@ -5321,9 +5689,22 @@ function structureExport( o )
   o.dst.reflector = module.structureExportResources( module.reflectorMap, o2 );
   o.dst.step = module.structureExportResources( module.stepMap, o2 );
   o.dst.build = module.structureExportResources( module.buildMap, o2 );
+  if( o.module.isOut )
   o.dst.exported = module.structureExportResources( module.exportedMap, o2 );
   o.dst.consistency = module.structureExportConsistency( o2 );
 
+  _.assert( !!o.dst.path );
+  _.assert( !!o.dst.path[ 'module.original.willfiles' ] );
+  _.assert( !!o.dst.path[ 'module.original.willfiles' ].path );
+  _.assert( !!o.dst.path[ 'module.peer.willfiles' ] );
+  _.assert( !!o.dst.path[ 'module.peer.willfiles' ].path );
+  _.assert( !!o.dst.path[ 'module.willfiles' ] );
+  _.assert( !!o.dst.path[ 'module.willfiles' ].path );
+  _.assert( o.dst.path[ 'module.peer.willfiles' ].path !== o.dst.path[ 'module.willfiles' ].path );
+  _.assert( !module.isOut ^ _.entityIdentical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+  _.assert( !_.entityIdentical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+
+  // debugger;
   return o.dst;
 }
 
@@ -5385,8 +5766,22 @@ function structureExportOut( o )
     return variant.module;
   });
 
+  // debugger;
   _.assert( modules.length >= 2 );
   module.structureExportModules( modules, o );
+  // debugger;
+
+  let rootModuleStructure = o.dst.module[ module.fileName ];
+  _.assert( !!rootModuleStructure );
+  _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.original.willfiles' ] );
+  _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.peer.willfiles' ] );
+  _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.willfiles' ] );
+  _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'module.dir' ] );
+  _.assert( !rootModuleStructure.path || rootModuleStructure.path[ 'remote' ] !== undefined );
+  _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'current.remote' ] );
+  _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'will' ] );
+  _.assert( !rootModuleStructure.path.remote || !rootModuleStructure.path.remote.path );
+  // _.assert( !module.pathMap.remote ^ !!( rootModuleStructure.path.remote && rootModuleStructure.path.remote.path ) );
 
   return o.dst;
 }
@@ -5405,139 +5800,113 @@ function structureExportForModuleExport( o )
   o = _.routineOptions( structureExportForModuleExport, arguments );
   _.assert( module.original === null );
 
-  let moduleWas = will.moduleWithCommonPathMap[ module.CommonPathFor( o.willfilesPath ) ];
-  if( moduleWas )
-  {
-    _.assert( moduleWas.peerModule === module );
-    _.assert( moduleWas === module.peerModule );
-    moduleWas.peerModule = null;
-    _.assert( moduleWas.peerModule === null );
-    _.assert( module.peerModule === null );
-    moduleWas.finit();
-    _.assert( moduleWas.finitedIs() );
-    _.assert( !module.finitedIs() );
-    moduleWas = null;
-  }
-
-  let opener2 = openerMake();
-
-  /* */
-
-  // debugger;
-  // opener2.find();
-  //
-  // if( opener2.error || !opener2.openedModule || !module.stager.stageStatePerformed( 'formed' ) )
+  // let moduleWas = will.moduleWithCommonPathMap[ module.CommonPathFor( o.willfilesPath ) ];
+  // if( moduleWas )
   // {
-  //   try
-  //   {
-  //     let module = opener2.module;
-  //     opener2.module = null;
-  //     opener2.close();
-  //   }
-  //   catch( err )
-  //   {
-  //     logger.log( _.errOnce( err ) );
-  //   }
+  //   _.assert( moduleWas.peerModule === module );
+  //   _.assert( moduleWas === module.peerModule );
+  //   moduleWas.peerModule = null;
+  //   _.assert( moduleWas.peerModule === null );
+  //   _.assert( module.peerModule === null );
+  //   moduleWas.finit();
+  //   _.assert( moduleWas.finitedIs() );
+  //   _.assert( !module.finitedIs() );
+  //   moduleWas = null;
   // }
+  //
+  // let opener2 = openerMake();
+  //
+  // /* */
+  //
+  // let o3 = opener2.optionsForModuleExport();
+  // let rootModule = o3.rootModule = opener2.rootModule;
+  // let module2 = module.cloneExtending( o3 );
+  //
+  // _.assert( rootModule === opener2.rootModule );
+  // _.assert( rootModule === module2.rootModule );
+  // opener2.moduleAdopt( module2 );
+  // _.assert( rootModule === opener2.rootModule );
+  // _.assert( rootModule === opener2.openedModule.rootModule );
+  // _.assert( opener2.commonPath === opener2.localPath );
+  // _.assert( module2.commonPath === module2.localPath );
+  //
+  // /* */
+  //
+  // module2.pathsRebase({ inPath : module.outPath, exInPath : module.inPath });
+  //
+  // _.assert( module.outPath === module2.outPath );
+  // _.assert( module2.inPath === module2.outPath );
+  // _.assert( module2.dirPath === path.detrail( module.outPath ) );
+  // _.assert( module2.commonPath === module2.localPath );
+  // _.assert( module2.original === module );
+  // _.assert( module2.rootModule === module.rootModule );
+  // _.assert( module2.willfilesArray.length === 0 );
+  // _.assert( module2.pathResourceMap.in.path === '.' );
+  // _.assert( module2.peerModule === module );
+  // _.assert( module.peerModule === module2 );
+  // _.assert( opener2.peerModule === module );
+  // _.assert( opener2.dirPath === path.detrail( module.outPath ) );
+  // _.assert( opener2.original === module );
+  // _.assert( opener2.superRelation === null );
+  // _.assert( opener2.willfilesArray.length === 0 );
+  //
+  // module2.stager.stageStateSkipping( 'opened', 1 );
+  // module2.stager.stageStatePausing( 'opened', 0 );
+  // module2.stager.tick();
+  //
+  // _.assert( !!module2.ready.resourcesCount() );
+  //
+  // if( module2.ready.errorsCount() )
+  // module2.ready.sync();
 
-  let o3 = opener2.optionsForModuleExport();
-  let rootModule = o3.rootModule = opener2.rootModule;
-
-  let module2 = module.cloneExtending( o3 );
-
-  _.assert( rootModule === opener2.rootModule );
-  _.assert( rootModule === module2.rootModule );
-  opener2.moduleAdopt( module2 );
-  _.assert( rootModule === opener2.rootModule );
-  _.assert( rootModule === opener2.openedModule.rootModule );
-  _.assert( opener2.commonPath === opener2.localPath );
-  _.assert( module2.commonPath === module2.localPath );
-
-  /* */
-
-  module2.pathsRebase({ inPath : module.outPath, exInPath : module.inPath });
-
-  _.assert( module.outPath === module2.outPath );
-  _.assert( module2.inPath === module2.outPath );
-  _.assert( module2.dirPath === path.detrail( module.outPath ) );
-  _.assert( module2.commonPath === module2.localPath );
-  _.assert( module2.original === module );
-  _.assert( module2.rootModule === module.rootModule );
-  _.assert( module2.willfilesArray.length === 0 );
-  _.assert( module2.pathResourceMap.in.path === '.' );
-  _.assert( module2.peerModule === module );
-  _.assert( module.peerModule === module2 );
-  _.assert( opener2.peerModule === module );
-  _.assert( opener2.dirPath === path.detrail( module.outPath ) );
-  _.assert( opener2.original === module );
-  _.assert( opener2.superRelation === null );
-  _.assert( opener2.willfilesArray.length === 0 );
-
-  module2.stager.stageStateSkipping( 'opened', 1 );
-  module2.stager.stageStatePausing( 'opened', 0 );
-  module2.stager.tick();
-
-  _.assert( !!module2.ready.resourcesCount() );
-
-  if( module2.ready.errorsCount() )
-  module2.ready.sync();
-
+  let module2 = module.outModuleMake({ willfilesPath : o.willfilesPath });
   let structure = module2.structureExportOut();
-  let rootModuleStructure = structure.module[ module2.fileName ];
 
-  _.assert( !!rootModuleStructure );
-  _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.original.willfiles' ] );
-  _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.peer.willfiles' ] );
-  _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.willfiles' ] );
-  _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'module.dir' ] );
-  _.assert( !rootModuleStructure.path || rootModuleStructure.path[ 'remote' ] !== undefined );
-  _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'current.remote' ] );
-  _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'will' ] );
-  _.assert( !rootModuleStructure.path.remote || !rootModuleStructure.path.remote.path );
-  // _.assert( !module.pathMap.remote ^ !!( rootModuleStructure.path.remote && rootModuleStructure.path.remote.path ) );
+  // // opener2.openedModule = null; // yyy
+  // // opener2.finit();
+  // // _.assert( !module2.finitedIs() )
+  //
+  // will.openersAdoptModule( module2 );
 
-  // opener2.openedModule = null; // yyy
-  // opener2.finit();
-  // _.assert( !module2.finitedIs() )
-
-  will.openersAdoptModule( module2 );
-
+  debugger;
+  if( !module2.isUsedManually() )
+  debugger;
   if( !module2.isUsedManually() )
   module2.finit();
 
   return structure;
 
-  /* */
-
-  function openerMake()
-  {
-
-    let o2 = module.optionsForOpenerExport();
-    o2.willfilesPath = o.willfilesPath;
-    o2.willfilesArray = [];
-    o2.isOut = true;
-    o2.peerModule = module;
-    o2.searching = 'exact';
-    o2.reason = 'export';
-    o2.isAuto = 1;
-    o2.remotePath = null; // yyy
-
-    let opener2 = will._openerMake({ opener : o2 });
-    _.assert( opener2.isOut === true );
-    _.assert( opener2.superRelation === null );
-    _.assert( opener2.rootModule === null );
-    _.assert( opener2.openedModule === null );
-    _.assert( opener2.willfilesArray.length === 0 );
-    _.assert( opener2.peerModule === module );
-
-    opener2.rootModule = module.rootModule || module;
-    opener2.original = module;
-    opener2.preform();
-
-    return opener2;
-  }
-
-  /* */
+  // /* */
+  //
+  // function openerMake()
+  // {
+  //
+  //   let o2 = module.optionsForOpenerExport();
+  //   o2.willfilesPath = o.willfilesPath;
+  //   o2.willfilesArray = [];
+  //   o2.isOut = true;
+  //   o2.peerModule = module;
+  //   o2.searching = 'exact';
+  //   o2.reason = 'export';
+  //   o2.isAuto = 1;
+  //   o2.remotePath = null; // yyy
+  //
+  //   let opener2 = will._openerMake({ opener : o2 });
+  //   _.assert( opener2.isOut === true );
+  //   _.assert( opener2.superRelation === null );
+  //   _.assert( opener2.rootModule === null );
+  //   _.assert( opener2.openedModule === null );
+  //   _.assert( opener2.willfilesArray.length === 0 );
+  //   _.assert( opener2.peerModule === module );
+  //
+  //   opener2.rootModule = module.rootModule || module;
+  //   opener2.original = module;
+  //   opener2.preform();
+  //
+  //   return opener2;
+  // }
+  //
+  // /* */
 
 }
 
@@ -5660,7 +6029,9 @@ function structureExportConsistency( o2 )
   _.assert( arguments.length === 1 );
   _.routineOptions( structureExportConsistency, arguments );
 
+  // debugger;
   let willfiles = module.willfilesEach({ recursive : 0, withPeers : 1 });
+  // debugger;
 
   willfiles.forEach( ( willf ) =>
   {
@@ -5823,7 +6194,6 @@ function ResourceSetter_functor( op )
       if( resource.module !== null )
       resource = resource.clone();
       _.assert( resource.formed === 0 );
-      // _.assert( resource.module === null );
       resource.module = module;
       resource.form1();
       _.assert( !_.workpiece.isFinited( resource ) );
@@ -6120,12 +6490,15 @@ let Extend =
   finit,
   init,
 
-  // _openerMake,
   releasedBy,
   usedBy,
   isUsedBy,
   isUsed,
   usersGet,
+
+  outModuleMake,
+  outModuleOpen,
+  outModuleOpenOrMake,
 
   precopy1,
   precopy2,
@@ -6148,12 +6521,11 @@ let Extend =
   isConsistent,
   isFull,
   isPreformed,
+  reopen,
   close,
   _formEnd,
 
   // willfiles
-
-  // _willfilesPicked,
 
   willfilesOpen,
   _willfilesOpen,
@@ -6176,6 +6548,7 @@ let Extend =
   exportAuto,
   moduleBuild,
   moduleExport,
+  exportedMake,
 
   // batcher
 

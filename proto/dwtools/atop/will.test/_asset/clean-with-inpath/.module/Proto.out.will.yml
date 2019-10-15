@@ -24,12 +24,12 @@ path:
     path: 'git+hd://../_repo/Proto'
     criterion:
       predefined: 1
-  download:
+  local:
     path: .module/Proto
     criterion:
       predefined: 1
   export:
-    path: '{path::download}/proto'
+    path: '{path::local}/proto'
   temp:
     path: out
   exported.dir.export:
@@ -59,7 +59,7 @@ reflector:
     src:
       filePath: 'path::remote'
     dst:
-      filePath: 'path::download'
+      filePath: 'path::local'
     mandatory: 1
   exported.export:
     src:

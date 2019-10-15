@@ -918,17 +918,27 @@ function stepRoutineExport( frame )
 
   _.assert( arguments.length === 1 );
 
-  if( module.exportedMap[ build.name ] )
+  return module.exportedMake({ build })
+  .then( ( exported ) =>
   {
-    module.exportedMap[ build.name ].finit();
-    _.assert( module.exportedMap[ build.name ] === undefined );
-  }
+    // debugger;
+    _.assert( exported instanceof _.Will.Exported );
+    return exported.perform( frame );
+  });
 
-  let exported = new will.Exported({ module : module, name : build.name }).form1();
-
-  _.assert( module.exportedMap[ build.name ] === exported );
-
-  return exported.perform( frame );
+  // let exported = module.exportedMake({ build });
+  //
+  // // if( module.exportedMap[ build.name ] )
+  // // {
+  // //   module.exportedMap[ build.name ].finit();
+  // //   _.assert( module.exportedMap[ build.name ] === undefined );
+  // // }
+  // //
+  // // let exported = new will.Exported({ module : module, name : build.name }).form1();
+  // //
+  // // _.assert( module.exportedMap[ build.name ] === exported );
+  //
+  // return exported.perform( frame );
 }
 
 stepRoutineExport.stepOptions =

@@ -357,7 +357,7 @@ function openNamedFast( test )
       'module.dir' : abs( '.' ),
       'module.willfiles' : abs( [ './super.ex.will.yml', './super.im.will.yml' ] ),
       'module.peer.willfiles' : abs( 'super.out/supermodule.out.will.yml' ),
-      'module.original.willfiles' : null,
+      'module.original.willfiles' : abs( [ './super.ex.will.yml', './super.im.will.yml' ] ),
       'module.common' : abs( 'super' ),
       'module.download' : null,
 
@@ -437,7 +437,6 @@ function openNamedForming( test )
   test.case = 'skipping of stages of module';
   var stager = opener1.openedModule.stager;
   test.identical( stager.stageStateSkipping( 'preformed' ), false );
-  // test.identical( stager.stageStateSkipping( 'picked' ), false );
   test.identical( stager.stageStateSkipping( 'opened' ), false );
   test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
   test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
@@ -451,7 +450,6 @@ function openNamedForming( test )
   test.case = 'skipping of stages of module';
   var stager = opener1.openedModule.stager;
   test.identical( stager.stageStateSkipping( 'preformed' ), false );
-  // test.identical( stager.stageStateSkipping( 'picked' ), false );
   test.identical( stager.stageStateSkipping( 'opened' ), false );
   test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
   test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
@@ -514,7 +512,6 @@ function openNamedForming( test )
     test.case = 'stages';
     var stager = opener1.openedModule.stager;
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
-    // test.identical( stager.stageStatePerformed( 'picked' ), true );
     test.identical( stager.stageStatePerformed( 'opened' ), true );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), true );
@@ -583,7 +580,7 @@ function openNamedForming( test )
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : abs( '.' ),
       'module.willfiles' : abs( [ './super.ex.will.yml', './super.im.will.yml' ] ),
-      'module.original.willfiles' : null,
+      'module.original.willfiles' : abs( [ './super.ex.will.yml', './super.im.will.yml' ] ),
       'module.peer.willfiles' : abs( './super.out/supermodule.out.will.yml' ),
       'module.common' : abs( 'super' ),
       'module.download' : null,
@@ -721,7 +718,6 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
     test.case = 'skipping of stages of module';
     var stager = opener1.openedModule.stager;
     test.identical( stager.stageStateSkipping( 'preformed' ), false );
-    // test.identical( stager.stageStateSkipping( 'picked' ), false );
     test.identical( stager.stageStateSkipping( 'opened' ), false );
     test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), true );
@@ -859,7 +855,6 @@ function openSkippingSubButAttachedWillfiles( test )
     test.case = 'skipping of stages of module';
     var stager = opener1.openedModule.stager;
     test.identical( stager.stageStateSkipping( 'preformed' ), false );
-    // test.identical( stager.stageStateSkipping( 'picked' ), false );
     test.identical( stager.stageStateSkipping( 'opened' ), false );
     test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
@@ -867,7 +862,6 @@ function openSkippingSubButAttachedWillfiles( test )
     test.identical( stager.stageStateSkipping( 'resourcesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'formed' ), false );
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
-    // test.identical( stager.stageStatePerformed( 'picked' ), true );
     test.identical( stager.stageStatePerformed( 'opened' ), true );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), true );
@@ -878,7 +872,6 @@ function openSkippingSubButAttachedWillfiles( test )
     test.case = 'skipping of stages of module';
     var stager = will.moduleWithNameMap.Submodule.stager;
     test.identical( stager.stageStateSkipping( 'preformed' ), false );
-    // test.identical( stager.stageStateSkipping( 'picked' ), false );
     test.identical( stager.stageStateSkipping( 'opened' ), false );
     test.identical( stager.stageStateSkipping( 'attachedWillfilesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
@@ -887,7 +880,6 @@ function openSkippingSubButAttachedWillfiles( test )
     test.identical( stager.stageStateSkipping( 'formed' ), false );
 
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
-    // test.identical( stager.stageStatePerformed( 'picked' ), true );
     test.identical( stager.stageStatePerformed( 'opened' ), true );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), true );
@@ -1037,14 +1029,10 @@ function openAnon( test )
       'out' : './super.out',
       'out.debug' : './super.out/debug',
       'out.release' : './super.out/release',
-      'module.willfiles' :
-      [
-        abs( './.ex.will.yml' ),
-        abs( './.im.will.yml' ),
-      ],
+      'module.willfiles' : abs([ './.ex.will.yml', './.im.will.yml' ]),
       'module.dir' : abs( '.' ),
       'module.common' : abs( './' ),
-      'module.original.willfiles' : null,
+      'module.original.willfiles' : abs([ './.ex.will.yml', './.im.will.yml' ]),
       'module.peer.willfiles' : abs( './super.out/supermodule.out.will.yml' ),
       'module.download' : null,
     }
@@ -1182,9 +1170,9 @@ function openOutNamed( test )
       'out' : '.',
       'out.debug' : 'debug',
       'out.release' : 'release',
-      'exported.dir.export.' : 'release',
+      'exported.dir.export.' : './release',
       'exported.files.export.' : [ 'release', 'release/File.debug.js', 'release/File.release.js' ],
-      'exported.dir.export.debug' : 'debug',
+      'exported.dir.export.debug' : './debug',
       'exported.files.export.debug' : [ 'debug', 'debug/File.debug.js', 'debug/File.release.js' ],
       'module.willfiles' : abs( './super.out/supermodule.out.will.yml' ),
       'module.dir' : abs( './super.out' ),
@@ -1322,7 +1310,7 @@ function openCurruptedUnknownField( test )
       'module.dir' : abs( '.' ),
       'local' : abs( 'sub' ),
       'module.willfiles' : abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ),
-      'module.original.willfiles' : null,
+      'module.original.willfiles' : abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ),
       'module.peer.willfiles' : abs( 'sub.out.will.yml' ),
       'module.common' : abs( 'sub' ),
       'module.download' : null,
@@ -2324,7 +2312,6 @@ function exportSuper( test )
       'module.original.willfiles',
       'module.peer.willfiles',
       'module.download',
-      // 'local', // yyy
       'remote',
       'proto',
       'in',
@@ -2332,6 +2319,8 @@ function exportSuper( test )
       'out.debug',
       'out.release',
       'temp',
+      'exported.dir.export.debug',
+      'exported.files.export.debug',
       'exported.dir.export.',
       'exported.files.export.'
     ]
@@ -2593,7 +2582,7 @@ function exportSuperIn( test )
 
     test.is( _.errIs( err ) );
     test.identical( _.strCount( err.message, 'Exporting is impossible because found no out-willfile' ), 1 );
-    test.identical( _.strCount( err.message, 'module::supermodule / relation::Submodule' ), 1 );
+    test.identical( _.strCount( err.message, 'module::supermodule / exported::export.debug' ), 1 );
 
     test.description = 'files';
     var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
@@ -2662,7 +2651,7 @@ function exportSuperIn( test )
 
     test.is( _.errIs( err ) );
     test.identical( _.strCount( err.message, 'Exporting is impossible because found no out-willfile' ), 1 );
-    test.identical( _.strCount( err.message, 'module::supermodule / relation::Submodule' ), 1 );
+    test.identical( _.strCount( err.message, 'module::supermodule / exported::export.debug' ), 1 );
 
     test.description = 'files';
     var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
@@ -2781,7 +2770,7 @@ function exportSuperIn( test )
     test.identical( files, exp );
 
     test.description = 'two attempts to open out file';
-    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 2 );
+    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 1 );
     will.openersErrorsRemoveAll();
     test.identical( will.openersErrorsArray.length, 0 );
 
@@ -4526,13 +4515,6 @@ function exportCourruptedSubmodulesDisabled( test )
 
 //
 
-/*
-test
-  - no extra errors made
-  - corrupted outfile of submodule is not a problem
-  - recursive export works
-*/
-
 function exportCourrputedSubmoduleOutfileUnknownSection( test )
 {
   let self = this;
@@ -4674,7 +4656,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
     test.is( opener.finitedIs() );
 
     test.description = '2 attempts to open super.out, 2 attempts to open sub.out, but the same instance';
-    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 3 );
+    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 4 );
     will.openersErrorsRemoveAll();
     test.identical( will.openersErrorsArray.length, 0 );
 
@@ -4697,6 +4679,13 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
   return ready;
 
 } /* end of function exportCourrputedSubmoduleOutfileUnknownSection */
+
+exportCourrputedSubmoduleOutfileUnknownSection.description =
+`
+  - no extra errors made
+  - corrupted outfile of submodule is not a problem
+  - recursive export works
+`
 
 //
 
@@ -6063,7 +6052,8 @@ function pathsResolve( test )
     [
       'super.ex.will.yml',
       'super.im.will.yml',
-      null,
+      'super.ex.will.yml',
+      'super.im.will.yml',
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
@@ -6094,7 +6084,7 @@ function pathsResolve( test )
     var expected =
     [
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
-      null,
+      [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
@@ -6125,7 +6115,7 @@ function pathsResolve( test )
     var expected =
     [
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
-      null,
+      [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
@@ -6156,7 +6146,7 @@ function pathsResolve( test )
     var expected =
     [
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
-      null,
+      [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
@@ -6197,7 +6187,7 @@ function pathsResolve( test )
       'module.willfiles' : abs([ './super.ex.will.yml', './super.im.will.yml' ]),
       'module.peer.willfiles' : abs( './super.out/supermodule.out.will.yml' ),
       'module.common' : abs( './super' ),
-      'module.original.willfiles' : null,
+      'module.original.willfiles' : abs([ './super.ex.will.yml', './super.im.will.yml' ]),
       'local' : abs( './super' ),
       'module.download' : null,
       'remote' : null,
@@ -6230,7 +6220,7 @@ function pathsResolve( test )
       'module.dir' : '.',
       'module.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.common' : 'super',
-      'module.original.willfiles' : null,
+      'module.original.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
@@ -6251,7 +6241,7 @@ function pathsResolve( test )
     var expected =
     {
       'module.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
-      'module.original.willfiles' : null,
+      'module.original.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
       'module.dir' : '.',
       'module.common' : 'super',
@@ -6281,7 +6271,7 @@ function pathsResolve( test )
     var expected =
     {
       'module.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
-      'module.original.willfiles' : null,
+      'module.original.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
       'module.dir' : '.',
       'module.common' : 'super',
@@ -6311,7 +6301,7 @@ function pathsResolve( test )
     var expected =
     {
       'module.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
-      'module.original.willfiles' : null,
+      'module.original.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
       'module.dir' : '.',
       'module.common' : 'super',
@@ -6341,7 +6331,7 @@ function pathsResolve( test )
     var expected =
     {
       'module.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
-      'module.original.willfiles' : null,
+      'module.original.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
       'module.dir' : '.',
       'module.common' : 'super',
@@ -6371,7 +6361,7 @@ function pathsResolve( test )
     var expected =
     [
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
-      null,
+      [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
@@ -6401,7 +6391,7 @@ function pathsResolve( test )
     var expected =
     [
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
-      null,
+      [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
@@ -6431,7 +6421,7 @@ function pathsResolve( test )
     var expected =
     [
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
-      null,
+      [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'super.out/supermodule.out.will.yml',
       '.',
       'super',
