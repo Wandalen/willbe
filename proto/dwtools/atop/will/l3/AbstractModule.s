@@ -868,8 +868,9 @@ function remoteHasLocalChanges()
   _.assert( !!module.willfilesPath || !!module.dirPath );
   _.assert( arguments.length === 0 );
 
-  let remoteProvider = fileProvider.providerForPath( module.remotePath );
-  return remoteProvider.hasLocalChanges( module.downloadPath );
+  // let remoteProvider = fileProvider.providerForPath( module.remotePath );
+  // return remoteProvider.hasLocalChanges( module.downloadPath );
+  return _.git.hasLocalChanges( module.downloadPath );
 }
 
 // --
