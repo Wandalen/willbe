@@ -1392,6 +1392,10 @@ function _remoteDownload( o )
 
   function filesCheck()
   {
+    /* for update mode: if repo is downloaded then perform originCheck rather than filesCheck */
+    if( opener.isDownloaded && o.mode === 'update' )
+    return;
+
     if( fileProvider.fileExists( opener.downloadPath ) && !fileProvider.dirIsEmpty( opener.downloadPath ) )
     {
       debugger;
