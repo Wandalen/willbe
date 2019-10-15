@@ -14921,7 +14921,7 @@ var Self =
     listWithSubmodulesSimple,
     listWithSubmodules,
     listSteps,
-    // listComplexPaths, // xxx
+    // listComplexPaths, // xxx : later
 
     clean,
     cleanSingleModule,
@@ -14967,7 +14967,7 @@ var Self =
     exportTracing,
     exportRewritesOutFile,
     // exportWithRemoteSubmodules, // xxx
-    importPathLocal,
+    importPathLocal, // qqq : help to fix, please. agree should work with corrupted downloaded submodule. auto download should throw no error( introduce option strict : 0 )
     importLocalRepo,
     // importOutWithDeletedSource, // xxx : look later
 
