@@ -3915,7 +3915,41 @@ function cleanBroken2( test )
     var files = _.fileProvider.dirRead( outPath );
     test.identical( files, null );
 
-    xxx // xxx : add agree case
+    // xxx // xxx : add agree case
+    return null;
+  })
+
+  /* */
+
+  ready
+  .then( ( got ) =>
+  {
+
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+    return null;
+  });
+
+  shell({ execPath : '.submodules.versions.agree' })
+  shell({ execPath : '.export', throwingExitCode : 0 })
+  .then( ( got ) =>
+  {
+    test.case = '.export agree1';
+    test.will = 'update should not throw error because submodule was updated by agree';
+
+    test.identical( got.exitCode, 0 );
+
+    test.is( !_.strHas( got.output, /Module module::submodules \/ opener::PathBasic is not downloaded, but file at .*/ ) );
+    test.is( _.strHas( got.output, '0/2 submodule(s) were updated in' ) );
+    test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
+
+    var files = self.find( outDebugPath );
+    test.gt( files.length, 9 );
+
+    var files = _.fileProvider.dirRead( outPath );
+    test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
+
     return null;
   })
 
