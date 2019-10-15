@@ -822,7 +822,7 @@ function remoteIsUpToDateUpdate()
 
 //
 
-function remoteCurrentVersion()
+function remoteLocalVersion()
 {
   let module = this;
   let will = module.will;
@@ -1014,7 +1014,7 @@ let Extend =
 
   remoteIsUpdate,
   remoteIsUpToDateUpdate,
-  remoteCurrentVersion,
+  remoteLocalVersion,
   remoteLatestVersion,
   remoteHasLocalChanges,
 
