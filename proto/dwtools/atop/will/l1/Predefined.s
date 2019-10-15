@@ -764,6 +764,24 @@ stepRoutineSubmodulesUpdate.stepOptions =
 
 //
 
+function stepRoutineSubmodulesAgree( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+
+  _.assert( arguments.length === 1 );
+  _.assert( !!module );
+
+  return module.subModulesAgree();
+}
+
+stepRoutineSubmodulesAgree.stepOptions =
+{
+}
+
+//
+
 function stepRoutineSubmodulesAreUpdated( frame )
 {
   let step = this;
@@ -998,6 +1016,7 @@ let Extend =
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpdate,
+  stepRoutineSubmodulesAgree,
   stepRoutineSubmodulesAreUpdated,
   stepRoutineSubmodulesReload,
   stepRoutineSubmodulesClean,

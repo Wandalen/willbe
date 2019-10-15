@@ -1071,6 +1071,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'submodules.agree',
+    stepRoutine : Predefined.stepRoutineSubmodulesAgree,
+  })
+
+  step
+  ({
     name : 'submodules.are.updated',
     stepRoutine : Predefined.stepRoutineSubmodulesAreUpdated,
   })
