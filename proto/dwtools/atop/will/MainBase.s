@@ -865,7 +865,7 @@ function modulesFindEachAt( o )
       throw _.err( err );
     }
 
-    let filesMap = Object.create( null );
+    let filesMap = Object.create( null ); debugger;
     for( let f = 0 ; f < files.length ; f++ ) con
     .then( ( arg ) => /* !!! replace by concurrent, maybe */
     {

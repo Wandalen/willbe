@@ -866,6 +866,7 @@ function peerWillfilesOpen()
 
 function HashFullFromDescriptor( descriptor )
 {
+  _.assert( _.mapIs( descriptor ) );
   _.assert( _.strDefined( descriptor.hash ) );
   _.assert( _.numberDefined( descriptor.size ) || _.bigIntIs( descriptor.size ) );
   return descriptor.size + '-' + descriptor.hash;
@@ -1091,15 +1092,23 @@ function isConsistentWith( willf2, opening )
 
     _.assert( _.strIs( filePath ) );
 
-    let descriptor = willf.hashDescriptorOfFile( filePath );
     let hash1 = willf.hashFullFor( filePath );
-    let hash2 = willf.HashFullFromDescriptor( descriptor );
 
     if( !hash1 )
     {
       debugger;
       throw _.err( `${willf.filePath} does not have hash for ${filePath}` );
     }
+
+    let descriptor = willf.hashDescriptorOfFile( filePath ); debugger;
+    if( descriptor === null )
+    {
+      /*
+        return _.maybe if in-willfile does not exist
+      */
+      return _.maybe; /* yyy */
+    }
+    let hash2 = willf.HashFullFromDescriptor( descriptor );
 
     return hash1 === hash2;
   }

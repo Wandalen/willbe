@@ -20,10 +20,6 @@ module:
         criterion:
           predefined: 1
         path: submodule.out
-      download:
-        criterion:
-          predefined: 1
-        path: submodule.out
       in:
         criterion:
           predefined: 0
@@ -38,9 +34,6 @@ module:
           predefined: 1
         path:
           - module/submodule.will.yml
-      download:
-        criterion:
-          predefined: 1
       remote:
         criterion:
           predefined: 1
@@ -139,13 +132,6 @@ module:
           predefined: 1
         path: ../submodule.out.will.yml
       module.common:
-        criterion:
-          predefined: 1
-        path: submodule
-      download:
-        criterion:
-          predefined: 1
-      download:
         criterion:
           predefined: 1
         path: submodule
