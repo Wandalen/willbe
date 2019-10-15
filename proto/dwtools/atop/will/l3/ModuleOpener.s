@@ -1355,7 +1355,12 @@ function _remoteDownload( o )
     if local repo has any changes then throw error with invitation to commit changes first
     */
 
-    if( opener.isDownloaded )
+    if( !opener.isDownloaded )
+    return;
+
+    if( !opener.isGitRepository )
+    return;
+
     if( opener.remoteHasLocalChanges() )
     {
       throw _.errBrief
@@ -1373,14 +1378,17 @@ function _remoteDownload( o )
     if( !opener.isDownloaded )
     return;
 
+    if( !opener.isGitRepository && o.mode === 'agree' )
+    return;
+
     let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
-    debugger;
+
     let result = gitProvider.isDownloadedFromRemote
     ({
       localPath : opener.downloadPath,
       remotePath : opener.remotePath
     });
-    debugger;
+
     if( !result.downloadedFromRemote )
     throw _.err
     (
@@ -1393,8 +1401,11 @@ function _remoteDownload( o )
 
   function filesCheck()
   {
+    if( !opener.isDownloaded )
+    return;
+
     /* for update mode: if repo is downloaded then perform originCheck rather than filesCheck */
-    if( opener.isDownloaded && o.mode === 'update' )
+    if( opener.isGitRepository && o.mode === 'update' )
     return;
 
     if( fileProvider.fileExists( opener.downloadPath ) && !fileProvider.dirIsEmpty( opener.downloadPath ) )
@@ -1420,8 +1431,12 @@ function _remoteDownload( o )
     delete old remote opener if it has a critical error or downloaded files are corrupted
     */
 
+    let localProvider = will.fileProvider.providerForPath( opener.downloadPath );
+    let gitPath = localProvider.path.join( opener.downloadPath, '.git' );
+    let isGitRepo = localProvider.fileExists( gitPath );
+
     if( downloading )
-    if( !opener.isValid() || !opener.isDownloaded )
+    if( !opener.isValid() || !/* opener.isDownloaded */isGitRepo )
     {
       if( fileProvider.fileExists( opener.downloadPath ) )
       debugger;
@@ -1576,6 +1591,51 @@ function remoteIsDownloadedUpdate()
 
 //
 
+function remoteIsGitRepositoryUpdate()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( _.strDefined( module.downloadPath ) );
+  _.assert( !!module.willfilesPath );
+  _.assert( module.isRemote === true );
+
+  let remoteProvider = fileProvider.providerForPath( module.remotePath );
+  _.assert( !!remoteProvider.isVcs );
+
+  let result = remoteProvider.isGitRepository
+  ({
+    localPath : module.downloadPath,
+  });
+
+  _.assert( !_.consequenceIs( result ) );
+
+  if( !result )
+  return end( result );
+
+  return _.Consequence.From( result )
+  .finally( ( err, arg ) =>
+  {
+    end( arg );
+    if( err )
+    throw err;
+    return arg;
+  });
+
+  /* */
+
+  function end( result )
+  {
+    module.isGitRepository = !!result;
+    return result;
+  }
+
+}
+
+//
+
 function _remoteIsUpToDate( o )
 {
   let opener = this;
@@ -1587,9 +1647,9 @@ function _remoteIsUpToDate( o )
     if( o.mode === 'download' )
     return opener.remoteIsDownloadedUpdate();
     else if( o.mode === 'update' )
-    return opener.remoteIsUpToDateUpdate();
+    return isGitUpToDateUpdate();
     else if( o.mode === 'agree' )
-    return opener.remoteIsUpToDateUpdate();
+    return isGitUpToDateUpdate();
   })
   .then( function()
   {
@@ -1606,6 +1666,16 @@ function _remoteIsUpToDate( o )
 
     return !!downloading;
   });
+
+  /*  */
+
+  function isGitUpToDateUpdate()
+  {
+    let con = new _.Consequence().take( null );
+    con.then( () => opener.remoteIsGitRepositoryUpdate() )
+    con.then( () => opener.remoteIsUpToDateUpdate() )
+    return con;
+  }
 
   return ready;
 }
@@ -1941,10 +2011,12 @@ function accessorSet_functor( fieldName )
 
 let isRemoteGet = accessorGet_functor( 'isRemote' );
 let isUpToDateGet = accessorGet_functor( 'isUpToDate' );
+let isGitRepositoryGet = accessorGet_functor( 'isGitRepository' );
 let isOutGet = accessorGet_functor( 'isOut' );
 
 let isRemoteSet = accessorSet_functor( 'isRemote' );
 let isUpToDateSet = accessorSet_functor( 'isUpToDate' );
+let isGitRepositorySet = accessorGet_functor( 'isGitRepository' );
 let isOutSet = accessorSet_functor( 'isOut' );
 
 // --
@@ -1974,6 +2046,7 @@ let Composes =
 
   isRemote : null,
   isDownloaded : null,
+  isGitRepository : null,
   isUpToDate : null,
   isOut : null,
   isMain : null,
@@ -2142,6 +2215,7 @@ let Extend =
   remoteDownload,
   remoteUpgrade,
   remoteIsDownloadedUpdate,
+  remoteIsGitRepositoryUpdate,
   _remoteIsUpToDate,
 
   // path
@@ -2183,6 +2257,7 @@ let Extend =
   isMainSet,
   isRemoteGet,
   isUpToDateGet,
+  isGitRepositoryGet,
   isOutGet,
 
   isRemoteSet,
