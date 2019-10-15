@@ -2743,7 +2743,7 @@ function submodulesAllAreDownloaded( o )
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.modulesEach( o2 );
-  // debugger;
+  debugger;
 
   return relations.every( ( relation ) =>
   {

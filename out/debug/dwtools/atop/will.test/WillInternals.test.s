@@ -8614,8 +8614,8 @@ function modulesEach( test )
     [
       'module::supermodule',
       'module::supermodule / module::supermodule',
-      'module::supermodule / module::supermodule / relation::Submodule',
-      'module::supermodule / module::sub',
+      'module::supermodule / relation::Submodule',
+      'module::supermodule / module::sub'
     ]
     var got3 = _.index( got, ( e ) => e.relation ? e.relation.absoluteName : e.module.absoluteName );
     test.identical( rel( _.mapKeys( got3 ) ), exp );

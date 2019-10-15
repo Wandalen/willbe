@@ -1100,7 +1100,7 @@ function isConsistentWith( willf2, opening )
       throw _.err( `${willf.filePath} does not have hash for ${filePath}` );
     }
 
-    let descriptor = willf.hashDescriptorOfFile( filePath ); debugger;
+    let descriptor = willf.hashDescriptorOfFile( filePath );
     if( descriptor === null )
     {
       /*

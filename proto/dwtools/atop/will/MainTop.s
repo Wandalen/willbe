@@ -438,7 +438,7 @@ function _commandsMake()
     'help' :                            { e : _.routineJoin( will, will.commandHelp ),                        h : 'Get help.' },
     'imply' :                           { e : _.routineJoin( will, will.commandImply ),                       h : 'Change state or imply value of a variable' },
     'version' :                         { e : _.routineJoin( will, will.commandVersion ),                     h : 'Get current version.' },
-    'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                h : 'Check if current version is the latest.' },
+    'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                h : 'Check if current version of willbe is the latest.' },
 
     'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               h : 'List information about resources of the current module.' },
     'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
@@ -456,10 +456,10 @@ function _commandsMake()
     'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
     'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
 
-    'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),          h : 'Download each submodule if such was not downloaded so far.' },
-    'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),            h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
-    'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),          h : 'Download each submodule if such was not downloaded so far.' },
-    'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),            h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
+    'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  h : 'Download each submodule if such was not downloaded so far.' },
+    'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
+    'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  h : 'Download each submodule if such was not downloaded so far.' },
+    'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
     'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify ),    h : 'Check whether each submodule is on branch which is specified in willfile' },
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     h : 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.' },
 
@@ -471,8 +471,7 @@ function _commandsMake()
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
 
-    'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to preserve hardlinks during "git pull".' },
-    /* qqq : why not covered? */
+    'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks' },
 
   }
 
