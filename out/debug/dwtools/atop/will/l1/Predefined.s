@@ -966,11 +966,13 @@ function stepRoutineExport( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  let build = run.build;
+  // let build = run.build;
   let will = module.will;
   let logger = will.logger;
+  let build = frame.closesBuildGet();
 
   _.assert( arguments.length === 1 );
+  _.assert( build instanceof _.Will.Build );
 
   return module.exportedMake({ build })
   .then( ( exported ) =>

@@ -312,9 +312,12 @@ function perform( o )
     if( logger.verbosity >= 1 )
     {
       let withFiles = '';
-      // debugger;
-      if( o.run.exported )
-      withFiles = 'with ' + o.run.exported.exportedFilesPath.path.length + ' file(s)';
+      if( o.run.exported.length )
+      {
+        let total = o.run.exported.reduce( ( acc, exported ) => acc + exported.exportedFilesPath.path.length, 0 );
+        withFiles = 'with ' + total + ' file(s)';
+        // withFiles = 'with ' + o.run.exported.exportedFilesPath.path.length + ' file(s)';
+      }
       logger.log( ( isExport ? 'Exported' : 'Built' ), build.decoratedAbsoluteName, withFiles, 'in', _.timeSpent( time ) );
       if( logger.verbosity >= 2 )
       logger.log();

@@ -12,8 +12,8 @@ path :
     path : './out/release/*'
     criterion :
       debug : 0
-  proto : './proto/*'
-  doc : './doc/*'
+  proto : './proto/**'
+  doc : './doc/**'
 
 reflector :
 

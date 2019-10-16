@@ -5888,7 +5888,7 @@ function superResolve( test )
       pathUnwrapping : 0,
       missingAction : 'undefine',
     });
-    test.identical( resolved.length, 17 );
+    test.identical( resolved.length, 18 );
 
     test.case = '*::*a*/qualifiedName';
     var exp =

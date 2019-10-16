@@ -9,7 +9,7 @@ step :
 
   proto.export :
     inherit : module.export
-    export : '{path::proto}/**'
+    export : '{path::proto}'
     tar : 0
     criterion :
       debug : 1
@@ -30,7 +30,7 @@ build :
       proto : 1
       export : 1
     steps :
-      # - build::debug.raw
+      - build::debug.raw
       - step::proto.export
 
   doc.export :
@@ -38,7 +38,7 @@ build :
       doc : 1
       export : 1
     steps :
-      # - build::debug.raw
+      - build::debug.raw
       - step::doc.export
 
   export :
@@ -46,5 +46,5 @@ build :
       default : 1
       export : 1
     steps :
-      - build::proto.export
       - build::doc.export
+      - build::proto.export

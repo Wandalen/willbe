@@ -1043,7 +1043,8 @@ function perform( frame )
   {
     if( err )
     throw _.err( err, `\nFailed to export ${exported.decoratedAbsoluteName}` );
-    frame.run.exported = exported;
+    // debugger;
+    frame.run.exported.push( exported );
     // debugger;
     // frame.run.exported = outModule2.exportedMap[ exported.name ];
     // frame.run.exported.form();

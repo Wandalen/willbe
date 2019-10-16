@@ -3497,53 +3497,6 @@ function listSteps( test )
 
 //
 
-function listComplexPaths( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
-  let routinePath = _.path.join( self.suitePath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
-
-  /* - */
-
-  shell({ execPath : '.with */* .export' })
-  shell({ execPath : '.with ab/ .resources.list' })
-  .finally( ( err, got ) =>
-  {
-    test.case = '.with ab/ .resources.list';
-    test.is( !err );
-    test.identical( got.exitCode, 0 );
-
-    test.identical( _.strCount( got.output, 'About' ), 1 );
-    test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
-    test.identical( _.strCount( got.output, 'module::module-ab /' ), 43 );
-
-    return null;
-  })
-
-  /* - */
-
-  return ready;
-}
-
-//
-
 function clean( test )
 {
   let self = this;
@@ -5859,7 +5812,7 @@ function exportSecond( test )
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
 
     var files = self.find( _.path.join( routinePath, 'out' ) );
-    test.identical( files, [ '.', './ExportSecond.out.will.yml' ] );
+    test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
 
@@ -5883,40 +5836,61 @@ function exportSecond( test )
       {
         "src" :
         {
-          "filePath" : { "path::proto" : "path::out.*=1" },
-          "prefixPath" : ""
+          "filePath" : { "path::proto" : "path::out.*=1" }
         },
-        "dst" : { "prefixPath" : "" },
         "mandatory" : 1,
         "criterion" : { "debug" : 1 },
         "inherit" : [ "predefined.*" ]
       },
-      "exported.export" :
+      "exported.doc.export" :
       {
         "src" :
         {
-          "filePath" : { "*" : "" },
+          "filePath" : { "**" : "" },
           "prefixPath" : "../doc"
         },
         "mandatory" : 1,
-        "criterion" : { "default" : 1, "export" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1 }
       },
-      "exported.files.export" :
+      "exported.files.doc.export" :
       {
         "src" :
         {
-          "filePath" : { "path::exported.files.export" : "" },
+          "filePath" : { "path::exported.files.doc.export" : "" },
           "basePath" : ".",
-          "prefixPath" : "path::exported.dir.export",
+          "prefixPath" : "path::exported.dir.doc.export",
           "recursive" : 0
         },
         "recursive" : 0,
         "mandatory" : 1,
-        "criterion" : { "default" : 1, "export" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1 }
+      },
+      "exported.proto.export" :
+      {
+        "src" :
+        {
+          "filePath" : { "**" : "" },
+          "prefixPath" : "../proto"
+        },
+        "mandatory" : 1,
+        "criterion" : { "proto" : 1, "export" : 1 }
+      },
+      "exported.files.proto.export" :
+      {
+        "src" :
+        {
+          "filePath" : { "path::exported.files.proto.export" : "" },
+          "basePath" : ".",
+          "prefixPath" : "path::exported.dir.proto.export",
+          "recursive" : 0
+        },
+        "recursive" : 0,
+        "mandatory" : 1,
+        "criterion" : { "proto" : 1, "export" : 1 }
       }
     }
     test.identical( outfile.reflector, expected );
-    // logger.log( _.toJson( outfile.reflector ) );
+    // logger.log( _.toJson( outfile.reflector ) ); debugger;
 
     var expected =
     {
@@ -5969,31 +5943,31 @@ function exportSecond( test )
         "criterion" : { "debug" : 0 },
         "path" : "release/*"
       },
-      "proto" : { "path" : "../proto/*" },
-      "doc" : { "path" : "../doc/*" },
-      "exported.dir.proto.export" :
-      {
-        "path" : "../proto",
-        "criterion" : { "proto" : 1, "export" : 1 }
-      },
-      "exported.files.proto.export" :
-      {
-        "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ],
-        "criterion" : { "proto" : 1, "export" : 1 }
-      },
+      "proto" : { "path" : "../proto/**" },
+      "doc" : { "path" : "../doc/**" },
       "exported.dir.doc.export" :
       {
-        "path" : "../doc",
-        "criterion" : { "doc" : 1, "export" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1 },
+        "path" : "../doc"
       },
       "exported.files.doc.export" :
       {
-        "path" : [ "../doc", "../doc/File.md" ],
-        "criterion" : { "doc" : 1, "export" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1 },
+        "path" : [ "../doc", "../doc/File.md" ]
+      },
+      "exported.dir.proto.export" :
+      {
+        "criterion" : { "proto" : 1, "export" : 1 },
+        "path" : "../proto"
+      },
+      "exported.files.proto.export" :
+      {
+        "criterion" : { "proto" : 1, "export" : 1 },
+        "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ]
       }
     }
     test.identical( outfile.path, expected );
-    // logger.log( _.toJson( outfile.path ) );
+    // logger.log( _.toJson( outfile.path ) ); debugger;
 
     var expected =
     {
@@ -6029,6 +6003,14 @@ function exportSecond( test )
 
   /* - */
 
+  ready
+  .then( ( got ) =>
+  {
+    test.case = '.export';
+    return null;
+  })
+
+  shell({ execPath : '.clean' })
   shell({ execPath : '.export' })
 
   .then( ( got ) =>
@@ -6041,11 +6023,11 @@ function exportSecond( test )
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
 
     var files = self.find( _.path.join( routinePath, 'out' ) );
-    test.identical( files, [ '.', './ExportSecond.out.will.yml' ] );
+    test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
 
-    outfile = outfile.module[ 'ExportSecond.out' ];
+    outfile = outfile.module[ 'ExportSecond.out' ]
 
     var expected =
     {
@@ -6065,40 +6047,61 @@ function exportSecond( test )
       {
         "src" :
         {
-          "filePath" : { "path::proto" : "path::out.*=1" },
-          "prefixPath" : ""
+          "filePath" : { "path::proto" : "path::out.*=1" }
         },
-        "dst" : { "prefixPath" : "" },
         "mandatory" : 1,
         "criterion" : { "debug" : 1 },
         "inherit" : [ "predefined.*" ]
       },
-      "exported.export" :
+      "exported.doc.export" :
       {
         "src" :
         {
-          "filePath" : { "*" : "" },
+          "filePath" : { "**" : "" },
           "prefixPath" : "../doc"
         },
         "mandatory" : 1,
-        "criterion" : { "default" : 1, "export" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1 }
       },
-      "exported.files.export" :
+      "exported.files.doc.export" :
       {
         "src" :
         {
-          "filePath" : { "path::exported.files.export" : "" },
+          "filePath" : { "path::exported.files.doc.export" : "" },
           "basePath" : ".",
-          "prefixPath" : "path::exported.dir.export",
+          "prefixPath" : "path::exported.dir.doc.export",
           "recursive" : 0
         },
         "recursive" : 0,
         "mandatory" : 1,
-        "criterion" : { "default" : 1, "export" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1 }
+      },
+      "exported.proto.export" :
+      {
+        "src" :
+        {
+          "filePath" : { "**" : "" },
+          "prefixPath" : "../proto"
+        },
+        "mandatory" : 1,
+        "criterion" : { "proto" : 1, "export" : 1 }
+      },
+      "exported.files.proto.export" :
+      {
+        "src" :
+        {
+          "filePath" : { "path::exported.files.proto.export" : "" },
+          "basePath" : ".",
+          "prefixPath" : "path::exported.dir.proto.export",
+          "recursive" : 0
+        },
+        "recursive" : 0,
+        "mandatory" : 1,
+        "criterion" : { "proto" : 1, "export" : 1 }
       }
     }
     test.identical( outfile.reflector, expected );
-    // logger.log( _.toJson( outfile.reflector ) );
+    // logger.log( _.toJson( outfile.reflector ) ); debugger;
 
     var expected =
     {
@@ -6151,31 +6154,31 @@ function exportSecond( test )
         "criterion" : { "debug" : 0 },
         "path" : "release/*"
       },
-      "proto" : { "path" : "../proto/*" },
-      "doc" : { "path" : "../doc/*" },
-      "exported.dir.proto.export" :
-      {
-        "path" : "../proto",
-        "criterion" : { "proto" : 1, "export" : 1 }
-      },
-      "exported.files.proto.export" :
-      {
-        "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ],
-        "criterion" : { "proto" : 1, "export" : 1 }
-      },
+      "proto" : { "path" : "../proto/**" },
+      "doc" : { "path" : "../doc/**" },
       "exported.dir.doc.export" :
       {
-        "path" : "../doc",
-        "criterion" : { "doc" : 1, "export" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1 },
+        "path" : "../doc"
       },
       "exported.files.doc.export" :
       {
-        "path" : [ "../doc", "../doc/File.md" ],
-        "criterion" : { "doc" : 1, "export" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1 },
+        "path" : [ "../doc", "../doc/File.md" ]
+      },
+      "exported.dir.proto.export" :
+      {
+        "criterion" : { "proto" : 1, "export" : 1 },
+        "path" : "../proto"
+      },
+      "exported.files.proto.export" :
+      {
+        "criterion" : { "proto" : 1, "export" : 1 },
+        "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ]
       }
     }
     test.identical( outfile.path, expected );
-    // logger.log( _.toJson( outfile.path ) );
+    // logger.log( _.toJson( outfile.path ) ); debugger;
 
     var expected =
     {
@@ -7962,6 +7965,53 @@ function exportRecursiveUsingSubmodule( test )
 } /* end of function exportRecursiveUsingSubmodule */
 
 exportRecursiveUsingSubmodule.timeOut = 300000;
+
+//
+
+function exportRecursiveLocal( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  shell({ execPath : '.with */* .export' })
+  shell({ execPath : '.with ab/ .resources.list' })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.with ab/ .resources.list';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'About' ), 1 );
+    test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
+    test.identical( _.strCount( got.output, 'module::module-ab /' ), 43 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
 
 //
 
@@ -9962,6 +10012,42 @@ function reflectSubmodulesWithCriterion( test )
   })
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = 'setup'
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+
+  shell({ execPath : '.with module/A .export' })
+  shell({ execPath : '.with module/B .export' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( routinePath );
+    var expected =
+    [
+      '.',
+      './.ex.will.yml',
+      './.im.will.yml',
+      './module',
+      './module/A.out.will.yml',
+      './module/A.will.yml',
+      './module/B.out.will.yml',
+      './module/B.will.yml',
+      './module/A',
+      './module/A/A.js',
+      './module/B',
+      './module/B/B.js'
+    ]
+    test.identical( files, expected );
+    return null;
+  })
 
   /* - */
 
@@ -15275,14 +15361,13 @@ var Self =
     modulesTreeLocal,
     modulesTreeHierarchyRemote,
     modulesTreeHierarchyRemoteDownloaded,
-    modulesTreeHierarchyRemotePartiallyDownloaded, // xxx : later
+    modulesTreeHierarchyRemotePartiallyDownloaded,
 
     help,
     listSingleModule,
     listWithSubmodulesSimple,
     listWithSubmodules,
     listSteps,
-    // listComplexPaths, // xxx : later
 
     clean,
     cleanSingleModule,
@@ -15299,7 +15384,7 @@ var Self =
     buildSingleModule,
     buildSingleStep,
     buildSubmodules,
-    buildDetached, // qqq : help to fix, please aaa : fixed
+    buildDetached,
 
     exportSingle,
     exportItself,
@@ -15308,7 +15393,7 @@ var Self =
     exportWithReflector,
     exportToRoot,
     exportMixed,
-    exportSecond, // qqq : help to fix, please
+    exportSecond,
     exportSubmodules,
     exportMultiple,
     exportImportMultiple,
@@ -15323,6 +15408,7 @@ var Self =
     exportWholeModule,
     exportRecursive,
     exportRecursiveUsingSubmodule,
+    exportRecursiveLocal, // xxx : later
     exportDotless,
     exportDotlessSingle,
     exportTracing,
@@ -15330,7 +15416,7 @@ var Self =
     // exportWithRemoteSubmodules, // xxx
     importPathLocal, // qqq : help to fix, please. agree should work with corrupted downloaded submodule. auto download should throw no error( introduce option strict : 0 )
     importLocalRepo,
-    importOutWithDeletedSource, // xxx : look later
+    importOutWithDeletedSource,
 
     reflectNothingFromSubmodules,
     reflectGetPath,
@@ -15344,7 +15430,7 @@ var Self =
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
     reflectSubmodulesWithPluralCriterionAutoExport,
-    // relfectSubmodulesWithNotExistingFile, // xxx : uncomment after final transition to willbe
+    // relfectSubmodulesWithNotExistingFile, // zzz : uncomment after final transition to willbe
     reflectInherit,
     reflectInheritSubmodules,
     reflectComplexInherit,
