@@ -3,6 +3,7 @@
 'use strict';
 
 /*
+                                                              download update agree verify
   download directory is empty/not present ( isDownloaded )      d      d      d      -
   has files which are not repository( isGitRepository )         e      e      rd     -
   origin is different( originCheck() )                          -      e      rd     -
