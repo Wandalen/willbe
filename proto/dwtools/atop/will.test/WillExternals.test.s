@@ -14835,6 +14835,7 @@ function versionsAgree( test )
     currentPath : routinePath,
     outputCollecting : 1,
     throwingExitCode : 0,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -14842,6 +14843,7 @@ function versionsAgree( test )
   ({
     currentPath : localModulePathSrc,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -14849,6 +14851,7 @@ function versionsAgree( test )
   ({
     currentPath : localModulePathDst,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -14878,7 +14881,7 @@ function versionsAgree( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    test.is( _.strHas( got.output, /1\/2 submodule\(s\) were agreed in/ ) );
     return null;
   })
 
@@ -14895,7 +14898,7 @@ function versionsAgree( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    test.is( _.strHas( got.output, /0\/2 submodule\(s\) were agreed in/ ) );
     return null;
   })
 
@@ -14912,7 +14915,7 @@ function versionsAgree( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    test.is( _.strHas( got.output, /0\/2 submodule\(s\) were agreed in/ ) );
     return null;
   })
   shell3( 'git status' )
@@ -14937,7 +14940,7 @@ function versionsAgree( test )
   {
     test.notIdentical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, /Module .*submodule::local.* \/ .*module::local.* needs to be updated, but has local changes/ ) );
+    test.is( _.strHas( got.output, 'Module at module::submodules / opener::local needs to be updated, but has local changes' ) );
     return null;
   })
   shell3( 'git status' )
@@ -14963,7 +14966,7 @@ function versionsAgree( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    test.is( _.strHas( got.output, /1\/2 submodule\(s\) were agreed in/ ) );
     return null;
   })
   shell3( 'git status' )
