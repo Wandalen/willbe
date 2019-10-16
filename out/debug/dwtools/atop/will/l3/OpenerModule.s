@@ -1068,7 +1068,7 @@ function _remoteForm()
   _.assert( opener.formed >= 1 );
   _.assert( opener.formed <= 2 ); // ttt
 
-  opener.remoteIsUpdate();
+  opener.remoteIsReform();
 
   // if( opener.isRemote && !opener.superRelation )
   // {
@@ -1174,7 +1174,7 @@ function _remoteFormFormal()
     opener.peerModule.opener._.remotePath = path.join( opener.remotePath, path.relative( opener.localPath, opener.peerModule.localPath ) );
   }
 
-  opener.remoteIsDownloadedUpdate();
+  opener.remoteIsDownloadedReform();
 
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
 
@@ -1230,7 +1230,7 @@ function _remoteFormInformal()
     opener.peerModule.opener._.remotePath = path.join( opener.remotePath, path.relative( opener.localPath, opener.peerModule.localPath ) );
   }
 
-  opener.remoteIsDownloadedUpdate();
+  opener.remoteIsDownloadedReform();
 
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
 
@@ -1550,7 +1550,7 @@ function remoteUpgrade()
 
 //
 
-function remoteIsDownloadedUpdate()
+function remoteIsDownloadedReform()
 {
   let module = this;
   let will = module.will;
@@ -1595,7 +1595,7 @@ function remoteIsDownloadedUpdate()
 
 //
 
-function remoteIsGitRepositoryUpdate()
+function remoteIsGoodRepositoryReform()
 {
   let module = this;
   let will = module.will;
@@ -1649,11 +1649,11 @@ function _remoteIsUpToDate( o )
   .then( () =>
   {
     if( o.mode === 'download' )
-    return opener.remoteIsDownloadedUpdate();
+    return opener.remoteIsDownloadedReform();
     else if( o.mode === 'update' )
-    return isGitUpToDateUpdate();
+    return isRepositoryReform();
     else if( o.mode === 'agree' )
-    return isGitUpToDateUpdate();
+    return isRepositoryReform();
   })
   .then( function()
   {
@@ -1673,11 +1673,11 @@ function _remoteIsUpToDate( o )
 
   /*  */
 
-  function isGitUpToDateUpdate()
+  function isRepositoryReform()
   {
     let con = new _.Consequence().take( null );
-    con.then( () => opener.remoteIsGitRepositoryUpdate() )
-    con.then( () => opener.remoteIsUpToDateUpdate() )
+    con.then( () => opener.remoteIsGoodRepositoryReform() )
+    con.then( () => opener.remoteIsUpToDateReform() )
     return con;
   }
 
@@ -2218,8 +2218,8 @@ let Extend =
   _remoteDownload,
   remoteDownload,
   remoteUpgrade,
-  remoteIsDownloadedUpdate,
-  remoteIsGitRepositoryUpdate,
+  remoteIsDownloadedReform,
+  remoteIsGoodRepositoryReform,
   _remoteIsUpToDate,
 
   // path

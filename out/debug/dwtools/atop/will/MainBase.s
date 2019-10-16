@@ -284,10 +284,18 @@ function _pathChanged( o )
   if( !Config.debug )
   return;
 
-  o.ex = _.path.simplify( o.ex );
-  o.val = _.path.simplify( o.val );
-  if( o.isIdential === null )
-  o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
+  // o.ex = _.path.simplify( o.ex );
+  // o.val = _.path.simplify( o.val );
+  // if( o.isIdential === null )
+  // o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
+  //
+  // if( o.val )
+  // if( o.fieldName === 'remote' )
+  // if( o.object.id === 52 )
+  // {
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   debugger;
+  // }
 
   // if( o.val )
   // if( o.fieldName === 'download' )
@@ -1803,9 +1811,9 @@ function modulesDownload_body( o )
       o2.outputFormat = '/';
       o2.modules = modules;
       delete o2.nodesGroup;
-      debugger;
+      // debugger;
       modules = will.modulesEach( o2 );
-      debugger;
+      // debugger;
       downloadedLengthWas = o.downloadedContainer.length;
       let o3 = _.mapOnly( o, will._modulesDownload.defaults );
       o3.modules = modules;

@@ -861,9 +861,9 @@ function stepRoutineSubmodulesAreUpdated( frame )
     function update()
     {
       let con = new _.Consequence().take( null );
-      con.then( () => relation.opener.remoteIsDownloadedUpdate() )
-      con.then( () => relation.opener.remoteIsGitRepositoryUpdate() )
-      con.then( () => relation.opener.remoteIsUpToDateUpdate() )
+      con.then( () => relation.opener.remoteIsDownloadedReform() )
+      con.then( () => relation.opener.remoteIsGoodRepositoryReform() )
+      con.then( () => relation.opener.remoteIsUpToDateReform() )
       return con;
     }
   });

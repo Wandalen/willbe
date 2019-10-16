@@ -5891,6 +5891,27 @@ function superResolve( test )
     test.identical( resolved.length, 17 );
 
     test.case = '*::*a*/qualifiedName';
+    var exp =
+    [
+      'path::module.original.willfiles',
+      'path::download',
+      'path::local',
+      'path::out.release',
+      'reflector::predefined.release.v1',
+      'reflector::predefined.release.v2',
+      'step::timelapse.begin',
+      'step::timelapse.end',
+      'step::files.transpile',
+      'step::npm.generate',
+      'step::submodules.download',
+      'step::submodules.update',
+      'step::submodules.agree',
+      'step::submodules.are.updated',
+      'step::submodules.reload',
+      'step::submodules.clean',
+      'step::clean',
+      'build::release'
+    ]
     var resolved = opener.openedModule.resolve
     ({
       selector : '*::*a*/qualifiedName',
@@ -5899,7 +5920,7 @@ function superResolve( test )
       mapValsUnwrapping : 1,
       missingAction : 'undefine',
     });
-    test.setsAreIdentical( resolved, [ 'path::module.original.willfiles', 'path::download', 'path::local', 'path::out.release', 'reflector::predefined.release.v1', 'reflector::predefined.release.v2', 'step::timelapse.begin', 'step::timelapse.end', 'step::files.transpile', 'step::npm.generate', 'step::submodules.download', 'step::submodules.update', 'step::submodules.are.updated', 'step::submodules.reload', 'step::submodules.clean', 'step::clean', 'build::release' ] );
+    test.setsAreIdentical( resolved, exp );
 
     test.case = '*';
     var resolved = opener.openedModule.resolve
@@ -9184,7 +9205,8 @@ function resourcePathRemotePreserved( test )
     let informalOpened = informalOpener.openedModule;
     let informalPathRemoteResource = informalOpened.pathResourceMap[ 'remote' ];
 
-    test.identical( informalPathRemoteResource.path, 'git+https:///github.com/Wandalen/wUriBasic.git' )
+    test.identical( informalPathRemoteResource.path, null );
+    // test.identical( informalPathRemoteResource.path, 'git+https:///github.com/Wandalen/wUriBasic.git' );
 
     return null;
   })
