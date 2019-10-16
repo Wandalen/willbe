@@ -3497,53 +3497,6 @@ function listSteps( test )
 
 //
 
-function listComplexPaths( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
-  let routinePath = _.path.join( self.suitePath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
-
-  /* - */
-
-  shell({ execPath : '.with */* .export' })
-  shell({ execPath : '.with ab/ .resources.list' })
-  .finally( ( err, got ) =>
-  {
-    test.case = '.with ab/ .resources.list';
-    test.is( !err );
-    test.identical( got.exitCode, 0 );
-
-    test.identical( _.strCount( got.output, 'About' ), 1 );
-    test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
-    test.identical( _.strCount( got.output, 'module::module-ab /' ), 43 );
-
-    return null;
-  })
-
-  /* - */
-
-  return ready;
-}
-
-//
-
 function clean( test )
 {
   let self = this;
@@ -8012,6 +7965,53 @@ function exportRecursiveUsingSubmodule( test )
 } /* end of function exportRecursiveUsingSubmodule */
 
 exportRecursiveUsingSubmodule.timeOut = 300000;
+
+//
+
+function exportRecursiveLocal( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  shell({ execPath : '.with */* .export' })
+  shell({ execPath : '.with ab/ .resources.list' })
+  .finally( ( err, got ) =>
+  {
+    test.case = '.with ab/ .resources.list';
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'About' ), 1 );
+    test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
+    test.identical( _.strCount( got.output, 'module::module-ab /' ), 43 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
 
 //
 
@@ -15368,7 +15368,6 @@ var Self =
     listWithSubmodulesSimple,
     listWithSubmodules,
     listSteps,
-    listComplexPaths, // xxx : later
 
     clean,
     cleanSingleModule,
@@ -15409,6 +15408,7 @@ var Self =
     exportWholeModule,
     exportRecursive,
     exportRecursiveUsingSubmodule,
+    exportRecursiveLocal, // xxx : later
     exportDotless,
     exportDotlessSingle,
     exportTracing,
