@@ -71,10 +71,8 @@ function form()
   let frame = this;
   let run = frame.run;
   let module = run.module;
-  // let build = frame.build;
   let resource = frame.resource;
   let down = frame.down;
-  // let run = frame.run;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -85,59 +83,20 @@ function form()
   _.assert( !!will );
   _.assert( !!module );
   _.assert( module.preformed > 0  );
-  // _.assert( build instanceof will.Build );
   _.assert( !!resource );
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
   _.assert( down === null || down instanceof Self );
   _.assert( run instanceof will.BuildRun );
-  // _.assert( _.mapIs( run.opts ) );
   _.assert( module.preformed >= 1 );
 
-  /* begin */
-
-  // frame.opts = Object.create( null );
-
-  /* end */
+  /* */
 
   frame.formed = 1;
   Object.freeze( frame );
   return frame;
 }
-
-//
-//
-// function resourceFormAndPerform()
-// {
-//   let frame = this;
-//   let module = frame.module;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   // let build = frame.build;
-//   // let run = frame.run;
-//   // let build = run.build;
-//   let resource = frame.resource;
-//   // let steps = build.steps;
-//   let con = new _.Consequence().take( null );
-//
-//   _.assert( arguments.length === 0 );
-//   _.assert( frame.formed === 1 );
-//
-//   con.then( () => resource.form() );
-//
-//   con.then( ( arg ) =>
-//   {
-//     _.assert( resource.formed === 3 )
-//     return arg;
-//   });
-//
-//   con.then( () => resource.framePerform( frame ) );
-//
-//   return con;
-// }
 
 //
 
@@ -148,14 +107,10 @@ function frameUp( resource2 )
   let module = run.module;
   let will = module.will;
   let logger = will.logger;
-  // let build = frame.build;
   let resource = frame.resource;
 
   _.assert( arguments.length === 1 );
   _.assert( frame.formed === 1 );
-
-  // let build2 = resource2 instanceof will.Build ? resource2 : build;
-  // let frame2 = frame.cloneExtending({ resource : resource2, build : build2, down : frame });
 
   let frame2 = frame.cloneExtending
   ({
@@ -168,6 +123,25 @@ function frameUp( resource2 )
   frame2.form();
 
   return frame2;
+}
+
+//
+
+function closesBuildGet()
+{
+  let frame = this;
+  let run = frame.run;
+  let module = run.module;
+  let will = module.will;
+  let logger = will.logger;
+  let resource = frame.resource;
+
+  if( frame.resource instanceof _.Will.Build )
+  return frame.resource;
+
+  _.assert( frame.down && frame.down !== frame );
+
+  return frame.down.closesBuildGet();
 }
 
 // --
@@ -184,14 +158,9 @@ let Aggregates =
 
 let Associates =
 {
-  // module : null,
   down : null,
   resource : null,
   run : null,
-  // build : null,
-  // opts : null,
-  // context : null,
-  // exported : null,
 }
 
 let Restricts =
@@ -231,8 +200,8 @@ let Extend =
   unform,
   form,
 
-  // resourceFormAndPerform,
   frameUp,
+  closesBuildGet,
 
   // relation
 

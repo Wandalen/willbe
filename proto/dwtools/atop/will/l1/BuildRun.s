@@ -140,7 +140,7 @@ let Aggregates =
 
 let Associates =
 {
-  exported : null,
+  exported : _.define.own([]),
   build : null,
   module : null,
   will : null,

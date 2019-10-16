@@ -323,15 +323,12 @@ function outModuleMake( o )
 
   /* */
 
-  // debugger;
   module2.pathsRebase({ inPath : module.outPath, exInPath : module.inPath });
-  // debugger;
 
   _.assert( module.outPath === module2.outPath );
   _.assert( module2.inPath === module2.outPath );
   _.assert( module2.dirPath === path.detrail( module.outPath ) );
   _.assert( module2.commonPath === module2.localPath );
-  // _.assert( module2.original === module );
   _.assert( module2.original === null );
   _.assert( module2.rootModule === module.rootModule );
   _.assert( module2.willfilesArray.length === 0 );
@@ -349,8 +346,6 @@ function outModuleMake( o )
   _.assert( _.entityIdentical( module2.pathMap[ 'module.original.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
   _.assert( !_.entityIdentical( module2.pathMap[ 'module.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
 
-  // debugger;
-
   module2.stager.stageStateSkipping( 'opened', 1 );
   module2.stager.stageStatePausing( 'opened', 0 );
   module2.stager.tick();
@@ -362,14 +357,6 @@ function outModuleMake( o )
 
   will.openersAdoptModule( module2 );
 
-  // debugger;
-  // if( !module2.isUsedManually() )
-  // debugger;
-  // if( !module2.isUsedManually() )
-  // module2.finit();
-
-  // if( module2.id === 238 )
-  // debugger;
   return module2;
 
   /* */
@@ -396,7 +383,6 @@ function outModuleMake( o )
     _.assert( opener2.peerModule === module );
 
     opener2.rootModule = module.rootModule || module;
-    // opener2.original = module;
     opener2.preform();
 
     return opener2;
@@ -3734,8 +3720,8 @@ function _remoteChanged()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  if( module.id === 101 )
-  debugger;
+  // if( module.id === 101 )
+  // debugger;
 
   // if( !module.isPreformed() ) /* xxx */
   // return;
@@ -5702,7 +5688,7 @@ function structureExport( o )
   let o2 = _.mapExtend( null, o );
   delete o2.dst;
 
-  debugger;
+  // debugger;
 
   o.dst.about = module.about.structureExport();
   o.dst.path = module.structureExportResources( module.pathResourceMap, o2 );
