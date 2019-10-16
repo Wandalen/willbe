@@ -981,6 +981,10 @@ function sharedFieldSet_functor( fieldName )
 
     _.assert( src === null || src instanceof _.Will.OpenedModule );
 
+    if( opener.id === 304 )
+    if( fieldName === 'peerModule' && src )
+    debugger;
+
     opener[ symbol ] = src;
 
     if( openedModule && openedModule[ fieldName ] !== src )
