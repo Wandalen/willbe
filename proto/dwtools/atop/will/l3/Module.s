@@ -2,6 +2,27 @@
 
 'use strict';
 
+/*
+  download directory is empty/not present ( isDownloaded )      d      d      d      -
+  has files which are not repository( isGitRepository )         e      e      rd     -
+  origin is different( originCheck() )                          -      e      rd     -
+  module has local changes( localChangesCheck() )               -      e      e      .
+  module is not valid( isValid )                                e      e      rd     -
+  module is on different branch                                 -      c      c      -
+  module is not up to date( isUpToDate )                        -      u      u      .
+
+  d - downloads module
+  r - removes module
+  u - updates module
+  c - changes branch
+  e - error
+  . - nothing
+  - - false
+  + - true
+
+  Note: verify throws an error if result of check is false and throwing is enabled
+*/
+
 if( typeof module !== 'undefined' )
 {
 
