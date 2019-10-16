@@ -15361,14 +15361,14 @@ var Self =
     modulesTreeLocal,
     modulesTreeHierarchyRemote,
     modulesTreeHierarchyRemoteDownloaded,
-    modulesTreeHierarchyRemotePartiallyDownloaded, // xxx : later
+    modulesTreeHierarchyRemotePartiallyDownloaded,
 
     help,
     listSingleModule,
     listWithSubmodulesSimple,
     listWithSubmodules,
     listSteps,
-    // listComplexPaths, // xxx : later
+    listComplexPaths, // xxx : later
 
     clean,
     cleanSingleModule,
@@ -15385,7 +15385,7 @@ var Self =
     buildSingleModule,
     buildSingleStep,
     buildSubmodules,
-    buildDetached, // qqq : help to fix, please aaa : fixed
+    buildDetached,
 
     exportSingle,
     exportItself,
@@ -15394,7 +15394,7 @@ var Self =
     exportWithReflector,
     exportToRoot,
     exportMixed,
-    exportSecond, // qqq : help to fix, please
+    exportSecond,
     exportSubmodules,
     exportMultiple,
     exportImportMultiple,
@@ -15416,7 +15416,7 @@ var Self =
     // exportWithRemoteSubmodules, // xxx
     importPathLocal, // qqq : help to fix, please. agree should work with corrupted downloaded submodule. auto download should throw no error( introduce option strict : 0 )
     importLocalRepo,
-    importOutWithDeletedSource, // xxx : look later
+    importOutWithDeletedSource,
 
     reflectNothingFromSubmodules,
     reflectGetPath,
@@ -15430,7 +15430,7 @@ var Self =
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
     reflectSubmodulesWithPluralCriterionAutoExport,
-    // relfectSubmodulesWithNotExistingFile, // xxx : uncomment after final transition to willbe
+    // relfectSubmodulesWithNotExistingFile, // zzz : uncomment after final transition to willbe
     reflectInherit,
     reflectInheritSubmodules,
     reflectComplexInherit,
