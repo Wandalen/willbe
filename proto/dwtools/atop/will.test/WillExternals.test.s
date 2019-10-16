@@ -12248,7 +12248,7 @@ function submodulesUpdateErrors( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to download update' ) );
-    test.is( _.strHas( got.output, 'module::wPathBasic was updated version master in' ) );
+    test.is( _.strHas( got.output, 'module::wPathBasic was updated to version master in' ) );
     test.is( _.strHas( got.output, '1/2 submodule(s) were updated in' ) );
 
     let files = self.find( downloadPath );
@@ -12315,11 +12315,11 @@ function submodulesUpdateErrors( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /.+ opener::PathBasic is not downloaded, but file at .+ exits/ ) );
+    test.is( _.strHas( got.output, 'Module module::submodules-download-errors-good / opener::PathBasic is already downloaded, but has different origin' ) );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
-    test.identical( filesAfter, filesBefore );
+    test.identical( filesBefore.length, filesAfter.length - 1 ); // -1 because git created fetch file
 
     return null;
   })
@@ -12530,11 +12530,11 @@ function submodulesVersionsAgreeErrors( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /.+ opener::PathBasic is not downloaded, but file at .+ exits/ ) );
+    test.is( _.strHas( got.output, 'Module module::submodules-download-errors-good / opener::PathBasic is already downloaded, but has different origin url' ) );
     test.is( _.strHas( got.output, 'Failed to agree submodules' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
-    test.identical( filesAfter, filesBefore );
+    test.identical( filesAfter.length - 1, filesBefore.length );
 
     return null;
   })

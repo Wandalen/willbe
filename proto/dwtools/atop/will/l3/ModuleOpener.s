@@ -1286,7 +1286,7 @@ function _remoteDownload( o )
   .then( () => opener._remoteIsUpToDate({ mode : o.mode }) )
   .then( function( arg )
   {
-
+    debugger
     downloading = arg;
     _.assert( _.boolIs( downloading ) );
 
@@ -1658,7 +1658,7 @@ function _remoteIsUpToDate( o )
   .then( function()
   {
     let downloading = false;
-
+    debugger
     if( o.mode === 'download' )
     downloading = opener.isDownloaded;
     else if( o.mode === 'update' )
@@ -1669,7 +1669,24 @@ function _remoteIsUpToDate( o )
     downloading = !downloading;
 
     return !!downloading;
-  });
+  })
+  .then( ( downloading ) =>
+  {
+    if( !downloading )
+    if( o.mode === 'update' || o.mode === 'agree' )
+    {
+      let gitProvider = opener.will.fileProvider.providerForPath( opener.remotePath );
+      let result = gitProvider.isDownloadedFromRemote
+      ({
+        localPath : opener.downloadPath,
+        remotePath : opener.remotePath
+      });
+
+      downloading = !result.downloadedFromRemote;
+    }
+
+    return downloading;
+  })
 
   /*  */
 
