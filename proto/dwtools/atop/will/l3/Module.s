@@ -8,7 +8,7 @@
   origin is different( originCheck() )                          -      e      rd     -
   module has local changes( localChangesCheck() )               -      e      e      .
   module is not valid( isValid )                                e      e      rd     -
-  module is on different branch                                 -      c      c      -
+  module is on different branch( isUpToDate )                   -      c      c      -
   module is not up to date( isUpToDate )                        -      u      u      .
 
   d - downloads module
