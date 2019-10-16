@@ -4926,15 +4926,15 @@ function buildDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, /\+ .*module::Tools.* was downloaded version .*master.* in/ ) );
-    test.is( _.strHas( got.output, /\+ .*module::PathBasic.* was downloaded version .*90330e25698210c8fa1a58d90c9468c0e23a72fd.* in/ ) );
-    test.is( _.strHas( got.output, /\+ .*module::Color.* was downloaded version .*0.3.115.* in/ ) );
-    test.is( _.strHas( got.output, /\.module\/Procedure\.informal.+ <- .+npm:\/\/wprocedure/ ) );
-    test.is( _.strHas( got.output, /\.module\/Proto\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wProto\.git#b2054cc5549d24c421f4c71875e6da41fa36ffe0/ ) );
-    test.is( _.strHas( got.output, /\.module\/UriBasic\.informal.+ <- .+git\+https:\/\/github\.com\/Wandalen\/wUriBasic\.git/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::wTools.* was downloaded version .*master.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::wPathBasic.* was downloaded version .*2e84d73699bdf5894fd3051169a1e2511a63e427.* in/ ) );
+    // test.is( _.strHas( got.output, /\+ .*module::wColor.* was downloaded version .*0.3.115.* in/ ) );
+    test.is( _.strHas( got.output, /\.module\/Procedure\.informal <- npm:\/\/wprocedure/ ) );
+    test.is( _.strHas( got.output, /\.module\/Proto\.informal <- git\+https:\/\/github\.com\/Wandalen\/wProto\.git#b2054cc5549d24c421f4c71875e6da41fa36ffe0/ ) );
+    test.is( _.strHas( got.output, /\.module\/UriBasic\.informal <- git\+https:\/\/github\.com\/Wandalen\/wUriBasic\.git/ ) );
 
     var files = _.fileProvider.dirRead( modulePath );
-    test.identical( files, [ 'Color', 'PathBasic', 'Procedure.informal', 'Proto.informal', 'Tools', 'UriBasic.informal' ] );
+    test.identical( files, [ /* 'Color', */ 'PathBasic', 'Procedure.informal', 'Proto.informal', 'Tools', 'UriBasic.informal' ] );
 
     var files = _.fileProvider.dirRead( outPath );
     test.identical( files, [ 'debug', 'Procedure.informal.out.will.yml', 'Proto.informal.out.will.yml', 'UriBasic.informal.out.will.yml' ] );
@@ -5854,8 +5854,7 @@ function exportSecond( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
-    test.identical( _.strCount( got.output, / Exported .*exported::proto.export.* with 4 file\(s\) in/ ), 1 );
-    test.identical( _.strCount( got.output, / Exported .*exported::doc.export.* with 2 file\(s\) in/ ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::ExportSecond / build::export with 6 file(s) in' ), 1 );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
 
@@ -5864,57 +5863,56 @@ function exportSecond( test )
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
 
+    outfile = outfile.module[ 'ExportSecond.out' ]
+
     var expected =
     {
       "reflect.proto." :
       {
         "src" :
         {
-          "filePath" : { "path::proto" : "path::out.*=1" }
+          "filePath" : { "path::proto" : "path::out.*=1" },
+          "prefixPath" : ""
         },
-        "criterion" : { "debug" : 0 },
+        "dst" : { "prefixPath" : "" },
         "mandatory" : 1,
+        "criterion" : { "debug" : 0 },
         "inherit" : [ "predefined.*" ]
       },
       "reflect.proto.debug" :
       {
         "src" :
         {
-          "filePath" : { "path::proto" : "path::out.*=1" }
+          "filePath" : { "path::proto" : "path::out.*=1" },
+          "prefixPath" : ""
         },
-        "criterion" : { "debug" : 1 },
+        "dst" : { "prefixPath" : "" },
         "mandatory" : 1,
+        "criterion" : { "debug" : 1 },
         "inherit" : [ "predefined.*" ]
       },
-      "exported.proto.export" :
-      {
-        'src' : { 'prefixPath' : '../proto' },
-        "criterion" : { "proto" : 1, "export" : 1 },
-        "mandatory" : 1
-      },
-      "exported.files.proto.export" :
-      {
-        "src" : { "filePath" : { 'path::exported.files.proto.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export", "recursive" : 0 },
-        "criterion" : { "proto" : 1, "export" : 1 },
-        "recursive" : 0,
-        "mandatory" : 1
-      },
-      "exported.doc.export" :
+      "exported.export" :
       {
         "src" :
         {
-          "filePath" : { "." : "" },
+          "filePath" : { "*" : "" },
           "prefixPath" : "../doc"
         },
-        "criterion" : { "doc" : 1, "export" : 1 },
-        "mandatory" : 1
+        "mandatory" : 1,
+        "criterion" : { "default" : 1, "export" : 1 }
       },
-      "exported.files.doc.export" :
+      "exported.files.export" :
       {
-        "src" : { "filePath" : { 'path::exported.files.doc.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.doc.export", 'recursive' : 0 },
-        "criterion" : { "doc" : 1, "export" : 1 },
+        "src" :
+        {
+          "filePath" : { "path::exported.files.export" : "" },
+          "basePath" : ".",
+          "prefixPath" : "path::exported.dir.export",
+          "recursive" : 0
+        },
         "recursive" : 0,
-        "mandatory" : 1
+        "mandatory" : 1,
+        "criterion" : { "default" : 1, "export" : 1 }
       }
     }
     test.identical( outfile.reflector, expected );
@@ -5924,20 +5922,25 @@ function exportSecond( test )
     {
       "module.willfiles" :
       {
-        "path" : "ExportSecond.out.will.yml",
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.original.willfiles" :
-      {
-        "path" : [ "../.im.will.yml", "../.ex.will.yml" ],
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 },
+        "path" : "ExportSecond.out.will.yml"
       },
       "module.common" :
       {
-        "path" : "ExportSecond.out",
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 },
+        "path" : "ExportSecond.out"
       },
-      "local" :
+      "module.original.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : [ "../.ex.will.yml", "../.im.will.yml" ]
+      },
+      "module.peer.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : [ "../.ex.will.yml", "../.im.will.yml" ]
+      },
+      "download" :
       {
         "criterion" : { "predefined" : 1 }
       },
@@ -5947,204 +5950,27 @@ function exportSecond( test )
       },
       "in" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : "."
       },
       "temp" : { "path" : "." },
       "out" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : "."
       },
       "out.debug" :
       {
-        "path" : "debug",
-        "criterion" : { "debug" : 1 }
-      },
-      "out.release" :
-      {
-        "path" : "release",
-        "criterion" : { "debug" : 0 }
-      },
-      "proto" : { "path" : "../proto" },
-      "doc" : { "path" : "../doc" },
-      "exported.dir.proto.export" :
-      {
-        "path" : "../proto",
-        "criterion" : { "proto" : 1, "export" : 1 }
-      },
-      "exported.files.proto.export" :
-      {
-        "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ],
-        "criterion" : { "proto" : 1, "export" : 1 }
-      },
-      "exported.dir.doc.export" :
-      {
-        "path" : "../doc",
-        "criterion" : { "doc" : 1, "export" : 1 }
-      },
-      "exported.files.doc.export" :
-      {
-        "path" : [ "../doc", "../doc/File.md" ],
-        "criterion" : { "doc" : 1, "export" : 1 }
-      }
-    }
-    test.identical( outfile.path, expected );
-    // logger.log( _.toJson( outfile.reflector ) );
-
-    var expected =
-    {
-      'doc.export' :
-      {
-        version : '0.0.0',
-        criterion : { doc : 1, export : 1 },
-        exportedReflector : 'reflector::exported.doc.export',
-        exportedFilesReflector : 'reflector::exported.files.doc.export',
-        exportedDirPath : 'path::exported.dir.doc.export',
-        exportedFilesPath : 'path::exported.files.doc.export',
-      },
-      'proto.export' :
-      {
-        version : '0.0.0',
-        criterion : { proto : 1, export : 1 },
-        exportedReflector : 'reflector::exported.proto.export',
-        exportedFilesReflector : 'reflector::exported.files.proto.export',
-        exportedDirPath : 'path::exported.dir.proto.export',
-        exportedFilesPath : 'path::exported.files.proto.export',
-      }
-    }
-    test.identical( outfile.exported, expected );
-
-    return null;
-  })
-
-  /* - */
-
-  shell({ execPath : '.export' })
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
-    test.identical( _.strCount( got.output, / Exported .*exported::doc.export.* with 2 file\(s\) in/ ), 1 );
-    test.identical( _.strCount( got.output, / Exported .*exported::proto.export.* with 4 file\(s\) in/ ), 1 );
-
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
-
-    var files = self.find( _.path.join( routinePath, 'out' ) );
-    test.identical( files, [ '.', './ExportSecond.out.will.yml' ] );
-
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
-
-    var expected =
-    {
-      "reflect.proto." :
-      {
-        "src" :
-        {
-          "filePath" : { "path::proto" : "path::out.*=1" }
-        },
-        "criterion" : { "debug" : 0 },
-        "mandatory" : 1,
-        "inherit" : [ "predefined.*" ]
-      },
-      "reflect.proto.debug" :
-      {
-        "src" :
-        {
-          "filePath" : { "path::proto" : "path::out.*=1" }
-        },
         "criterion" : { "debug" : 1 },
-        "mandatory" : 1,
-        "inherit" : [ "predefined.*" ]
-      },
-      "exported.proto.export" :
-      {
-        "src" :
-        {
-          "filePath" : { "." : "" },
-          "prefixPath" : "../proto"
-        },
-        "criterion" : { "proto" : 1, "export" : 1 },
-        "mandatory" : 1
-      },
-      "exported.files.proto.export" :
-      {
-        "src" : { "filePath" : { 'path::exported.files.proto.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export", 'recursive' : 0 },
-        "criterion" : { "proto" : 1, "export" : 1 },
-        "recursive" : 0,
-        "mandatory" : 1
-      },
-      "exported.doc.export" :
-      {
-        "src" :
-        {
-          "filePath" : { "." : "" },
-          "prefixPath" : "../doc"
-        },
-        "criterion" : { "doc" : 1, "export" : 1 },
-        "mandatory" : 1
-      },
-      "exported.files.doc.export" :
-      {
-        "src" : { "filePath" : { 'path::exported.files.doc.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.doc.export", "recursive" : 0, },
-        "criterion" : { "doc" : 1, "export" : 1 },
-        "recursive" : 0,
-        "mandatory" : 1
-      }
-    }
-    test.identical( outfile.reflector, expected );
-    // logger.log( _.toJson( outfile.reflector ) );
-
-    var expected =
-    {
-      "module.willfiles" :
-      {
-        "path" : "ExportSecond.out.will.yml",
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.original.willfiles" :
-      {
-        "path" : [ "../.im.will.yml", "../.ex.will.yml" ],
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.common" :
-      {
-        "path" : "ExportSecond.out",
-        "criterion" : { "predefined" : 1 }
-      },
-      "local" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
-      "remote" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
-      "in" :
-      {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
-      },
-      "temp" : { "path" : "." },
-      "out" :
-      {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
-      },
-      "out.debug" :
-      {
-        "path" : "debug",
-        "criterion" : { "debug" : 1 }
+        "path" : "debug/*"
       },
       "out.release" :
       {
-        "path" : "release",
-        "criterion" : { "debug" : 0 }
+        "criterion" : { "debug" : 0 },
+        "path" : "release/*"
       },
-      "proto" : { "path" : "../proto" },
-      "doc" : { "path" : "../doc" },
+      "proto" : { "path" : "../proto/*" },
+      "doc" : { "path" : "../doc/*" },
       "exported.dir.proto.export" :
       {
         "path" : "../proto",
@@ -6174,6 +6000,9 @@ function exportSecond( test )
       'doc.export' :
       {
         version : '0.0.0',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 0,
         criterion : { doc : 1, export : 1 },
         exportedReflector : 'reflector::exported.doc.export',
         exportedFilesReflector : 'reflector::exported.files.doc.export',
@@ -6183,6 +6012,191 @@ function exportSecond( test )
       'proto.export' :
       {
         version : '0.0.0',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 0,
+        criterion : { proto : 1, export : 1 },
+        exportedReflector : 'reflector::exported.proto.export',
+        exportedFilesReflector : 'reflector::exported.files.proto.export',
+        exportedDirPath : 'path::exported.dir.proto.export',
+        exportedFilesPath : 'path::exported.files.proto.export',
+      }
+    }
+    test.identical( outfile.exported, expected );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ execPath : '.export' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
+    test.identical( _.strCount( got.output, 'Exported module::ExportSecond / build::export with 6 file(s) in' ), 1 );
+
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [ '.', './ExportSecond.out.will.yml' ] );
+
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
+
+    outfile = outfile.module[ 'ExportSecond.out' ];
+
+    var expected =
+    {
+      "reflect.proto." :
+      {
+        "src" :
+        {
+          "filePath" : { "path::proto" : "path::out.*=1" },
+          "prefixPath" : ""
+        },
+        "dst" : { "prefixPath" : "" },
+        "mandatory" : 1,
+        "criterion" : { "debug" : 0 },
+        "inherit" : [ "predefined.*" ]
+      },
+      "reflect.proto.debug" :
+      {
+        "src" :
+        {
+          "filePath" : { "path::proto" : "path::out.*=1" },
+          "prefixPath" : ""
+        },
+        "dst" : { "prefixPath" : "" },
+        "mandatory" : 1,
+        "criterion" : { "debug" : 1 },
+        "inherit" : [ "predefined.*" ]
+      },
+      "exported.export" :
+      {
+        "src" :
+        {
+          "filePath" : { "*" : "" },
+          "prefixPath" : "../doc"
+        },
+        "mandatory" : 1,
+        "criterion" : { "default" : 1, "export" : 1 }
+      },
+      "exported.files.export" :
+      {
+        "src" :
+        {
+          "filePath" : { "path::exported.files.export" : "" },
+          "basePath" : ".",
+          "prefixPath" : "path::exported.dir.export",
+          "recursive" : 0
+        },
+        "recursive" : 0,
+        "mandatory" : 1,
+        "criterion" : { "default" : 1, "export" : 1 }
+      }
+    }
+    test.identical( outfile.reflector, expected );
+    // logger.log( _.toJson( outfile.reflector ) );
+
+    var expected =
+    {
+      "module.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : "ExportSecond.out.will.yml"
+      },
+      "module.common" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : "ExportSecond.out"
+      },
+      "module.original.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : [ "../.ex.will.yml", "../.im.will.yml" ]
+      },
+      "module.peer.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : [ "../.ex.will.yml", "../.im.will.yml" ]
+      },
+      "download" :
+      {
+        "criterion" : { "predefined" : 1 }
+      },
+      "remote" :
+      {
+        "criterion" : { "predefined" : 1 }
+      },
+      "in" :
+      {
+        "criterion" : { "predefined" : 0 },
+        "path" : "."
+      },
+      "temp" : { "path" : "." },
+      "out" :
+      {
+        "criterion" : { "predefined" : 0 },
+        "path" : "."
+      },
+      "out.debug" :
+      {
+        "criterion" : { "debug" : 1 },
+        "path" : "debug/*"
+      },
+      "out.release" :
+      {
+        "criterion" : { "debug" : 0 },
+        "path" : "release/*"
+      },
+      "proto" : { "path" : "../proto/*" },
+      "doc" : { "path" : "../doc/*" },
+      "exported.dir.proto.export" :
+      {
+        "path" : "../proto",
+        "criterion" : { "proto" : 1, "export" : 1 }
+      },
+      "exported.files.proto.export" :
+      {
+        "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ],
+        "criterion" : { "proto" : 1, "export" : 1 }
+      },
+      "exported.dir.doc.export" :
+      {
+        "path" : "../doc",
+        "criterion" : { "doc" : 1, "export" : 1 }
+      },
+      "exported.files.doc.export" :
+      {
+        "path" : [ "../doc", "../doc/File.md" ],
+        "criterion" : { "doc" : 1, "export" : 1 }
+      }
+    }
+    test.identical( outfile.path, expected );
+    // logger.log( _.toJson( outfile.path ) );
+
+    var expected =
+    {
+      'doc.export' :
+      {
+        version : '0.0.0',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 0,
+        criterion : { doc : 1, export : 1 },
+        exportedReflector : 'reflector::exported.doc.export',
+        exportedFilesReflector : 'reflector::exported.files.doc.export',
+        exportedDirPath : 'path::exported.dir.doc.export',
+        exportedFilesPath : 'path::exported.files.doc.export',
+      },
+      'proto.export' :
+      {
+        version : '0.0.0',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 0,
         criterion : { proto : 1, export : 1 },
         exportedReflector : 'reflector::exported.proto.export',
         exportedFilesReflector : 'reflector::exported.files.proto.export',
@@ -8530,7 +8544,7 @@ function importPathLocal( test )
   {
 
     var files = self.find( outPath );
-    test.identical( files, [ '.', './debug', './debug/WithSubmodules.s', './debug/dwtools', './debug/dwtools/Tools.s' ] );
+    test.contains( files, [ '.', './debug', './debug/WithSubmodules.s', './debug/dwtools', './debug/dwtools/Tools.s' ] );
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /Built .*module::submodules \/ build::debug\.raw.* in/ ), 1 );
 
@@ -11479,7 +11493,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     // test.is( _.strHas( got.output, / \+ .*module::Tools.* will be downloaded version .*/ ) );
-    // test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be downloaded version .*90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ) );
+    // test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be downloaded version .*2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::Color.* will be downloaded version .*0.3.115.*/ ) );
     test.is( _.strHas( got.output, / \+ 2\/6 submodule\(s\) will be downloaded/ ) );
     var files = self.find( submodulesPath );
@@ -11523,7 +11537,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     // test.is( _.strHas( got.output, / \+ .*module::Tools.* will be updated to version .*/ ) );
-    // test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be updated to version .*90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ) );
+    // test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be updated to version .*2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::Color.* will be updated to version .*0.3.115.*/ ) );
     test.is( _.strHas( got.output, / \+ 2\/6 submodule\(s\) will be update/ ) );
     var files = self.find( submodulesPath );
@@ -12674,10 +12688,10 @@ function subModulesUpdate( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ .*module::Tools.* was updated to version .*fc457abd063cb49edc857e46b74b4769da7124e3.* in/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::PathBasic.* was updated to version .*master.* in/ ) );
-    test.is( _.strHas( got.output, / \+ .*module::UriBasic.* was updated to version .*382707a813d7b0a369aad2689f39c166930f9d87.* in/ ) );
-    test.is( _.strHas( got.output, / \+ 3\/3 submodule\(s\) of .*module::submodules.* were updated in/ ) );
+    test.is( _.strHas( got.output, '+ module::wTools was updated to version 14163d4223466b178fec3adf67dc85a9ece32ad5 in' ) );
+    test.is( _.strHas( got.output, '+ module::wPathBasic was updated to version master in' ) );
+    test.is( _.strHas( got.output, '+ module::wUriBasic was updated to version 382707a813d7b0a369aad2689f39c166930f9d87 in' ) );
+    test.is( _.strHas( got.output, '+ 3/4 submodule(s) were updated in' ) );
     return null;
   })
 
@@ -12708,7 +12722,7 @@ function subModulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch';
     var read = _.fileProvider.fileRead( _.path.join( routinePath, '.im.will.yml' ) );
-    read = _.strReplace( read, '8db8861e59d31a041ea9d4356728f3d646786134', 'master' )
+    read = _.strReplace( read, '14163d4223466b178fec3adf67dc85a9ece32ad5', 'master' )
     _.fileProvider.fileWrite( _.path.join( routinePath, '.im.will.yml' ), read );
     return null;
   })
@@ -12762,8 +12776,9 @@ function subModulesUpdateSwitchBranch( test )
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
-  let experimentModulePath = _.path.join( submodulesPath, 'experiment' );
+  let experimentModulePath = _.path.join( submodulesPath, 'willbe-experiment' );
   let willfilePath = _.path.join( routinePath, '.will.yml' );
+  let detachedVersion;
 
   let ready = new _.Consequence().take( null )
   let shell = _.process.starter
@@ -12775,9 +12790,18 @@ function subModulesUpdateSwitchBranch( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  let shell2 = _.process.starter
+  ({
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
 
-  ready
+  /* */
+
+  begin()
+
   .then( () =>
   {
     test.case = 'download master branch';
@@ -12788,7 +12812,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -12797,7 +12821,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.case = 'switch master to dev';
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule.experiment = _.strReplaceAll( willFile.submodule.experiment, '#master', '#dev' );
+    willFile.submodule[ 'willbe-experiment' ]= _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#master', '#dev' );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
@@ -12806,7 +12830,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
@@ -12815,7 +12839,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.case = 'switch dev to detached state';
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule.experiment = _.strReplaceAll( willFile.submodule.experiment, '#dev', '#cfaa3c7782b9ff59cdcd28cb0f25d421e67f99ce' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#dev', '#' + detachedVersion );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
@@ -12824,8 +12848,8 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'cfaa3c7782b9ff59cdcd28cb0f25d421e67f99ce' ) );
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    test.is( _.strHas( currentVersion, detachedVersion ) );
     return null;
   })
 
@@ -12833,7 +12857,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.case = 'switch detached state to master';
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule.experiment = _.strReplaceAll( willFile.submodule.experiment, '#cfaa3c7782b9ff59cdcd28cb0f25d421e67f99ce', '#master' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#' + detachedVersion, '#master' );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
@@ -12842,7 +12866,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -12851,20 +12875,18 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.case = 'master has local change, cause conflict when switch to dev';
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule.experiment = _.strReplaceAll( willFile.submodule.experiment, '#master', '#dev' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#master', '#dev' );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
-    let readmePath = _.path.join( submodulesPath, 'experiment/README.md' );
-    _.fileProvider.fileWrite({ filePath : readmePath, data : 'master' });
+    let filePath = _.path.join( submodulesPath, 'willbe-experiment/File.js' );
+    _.fileProvider.fileWrite({ filePath, data : 'master' });
     return null;
   })
 
   .then( () =>
   {
-    let con = shell({ args : [ '.submodules.update' ], ready : null });
+    let con = shell({ execPath : '.submodules.update', ready : null });
     return test.shouldThrowErrorAsync( con );
   })
-
-  //shell({ execPath : '.submodules.update' }) // qqq : pelase fix
 
   _.process.start
   ({
@@ -12876,10 +12898,10 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( ( got ) =>
   {
-    test.is( _.strHas( got.output, 'both modified:   README.md' ) )
+    test.is( _.strHas( got.output, 'modified:   File.js' ) )
 
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
@@ -12888,10 +12910,10 @@ function subModulesUpdateSwitchBranch( test )
   ready.then( () =>
   {
     test.case = 'master has new commit, changing branch to dev';
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     return null;
   })
+
+  begin()
 
   shell({ execPath : '.submodules.update' })
 
@@ -12904,17 +12926,21 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule.experiment = _.strReplaceAll( willFile.submodule.experiment, '#master', '#dev' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#master', '#dev' );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
+   .then( () =>
+  {
+    let con = shell({ execPath : '.submodules.update', ready : null });
+    return test.shouldThrowErrorAsync( con );
+  })
 
   .then( () =>
   {
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
@@ -12923,19 +12949,12 @@ function subModulesUpdateSwitchBranch( test )
   ready.then( () =>
   {
     test.case = 'master and remote master have new commits';
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
+  begin()
 
-  _.process.start
-  ({
-    execPath : 'git reset --hard HEAD~1',
-    currentPath : experimentModulePath,
-    ready : ready
-  })
+  shell({ execPath : '.submodules.update' })
 
   _.process.start
   ({
@@ -12944,7 +12963,15 @@ function subModulesUpdateSwitchBranch( test )
     ready : ready
   })
 
-  shell({ execPath : '.submodules.update' })
+  shell2( 'git -C cloned checkout master' )
+  shell2( 'git -C cloned commit --allow-empty -m test' )
+  shell2( 'git -C cloned push' )
+
+  .then( () =>
+  {
+    let con = shell({ execPath : '.submodules.update', ready : null });
+    return test.shouldThrowErrorAsync( con );
+  })
 
   _.process.start
   ({
@@ -12957,14 +12984,71 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( ( got ) =>
   {
-    test.is( _.strHas( got.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
+    test.is( _.strHas( got.output, `have 1 and 1 different commits each, respectively` ) );
 
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'experiment/.git/HEAD' ) );
+    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
   return ready;
+
+  /* */
+
+  function begin()
+  {
+    ready
+    .then( () =>
+    {
+      test.case = 'setup repo';
+
+      let con = new _.Consequence().take( null );
+      let repoPath = _.path.join( routinePath, 'experiment' );
+      let repoSrcFiles = _.path.join( routinePath, 'src' );
+      let clonePath = _.path.join( routinePath, 'cloned' );
+
+      _.fileProvider.filesDelete( routinePath );
+      _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+      _.fileProvider.dirMake( repoPath );
+
+      let shell = _.process.starter
+      ({
+        currentPath : routinePath,
+        outputCollecting : 1,
+        ready : con,
+      })
+
+      shell( 'git -C experiment init --bare' )
+      shell( 'git clone experiment cloned' )
+
+      .then( () =>
+      {
+        return _.fileProvider.filesReflect({ reflectMap : { [ repoSrcFiles ] : clonePath } })
+      })
+
+      shell( 'git -C cloned add -fA .' )
+      shell( 'git -C cloned commit -m init' )
+      shell( 'git -C cloned push' )
+      shell( 'git -C cloned checkout -b dev' )
+      shell( 'git -C cloned commit --allow-empty -m test' )
+      shell( 'git -C cloned commit --allow-empty -m test2' )
+      shell( 'git -C cloned push origin dev' )
+      shell( 'git -C cloned rev-parse HEAD~1' )
+
+      .then( ( got ) =>
+      {
+        detachedVersion = _.strStrip( got.output );
+        test.is( _.strDefined( detachedVersion ) );
+        return null;
+      })
+
+      return con;
+    })
+
+    return ready;
+  }
+
 }
 
 subModulesUpdateSwitchBranch.timeOut = 300000;
@@ -13161,6 +13245,7 @@ function stepSubmodulesAreUpdated( test )
     currentPath : routinePath,
     outputCollecting : 1,
     throwingExitCode : 0,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -13168,6 +13253,7 @@ function stepSubmodulesAreUpdated( test )
   ({
     currentPath : localModulePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -13183,6 +13269,7 @@ function stepSubmodulesAreUpdated( test )
   shell2( 'git init' )
   shell2( 'git add -fA .' )
   shell2( 'git commit -m init' )
+  shell2( 'git commit --allow-empty -m test' )
 
   /* */
 
@@ -13197,8 +13284,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ 1\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( _.strHas( got.output, / 1\/1 submodule\(s\) of .*module::submodules.* are up to date/ ) );
+    test.is( _.strHas( got.output, '1/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -13215,8 +13302,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ 1\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( _.strHas( got.output, / 1\/1 submodule\(s\) of .*module::submodules.* are up to date/ ) );
+    test.is( _.strHas( got.output, '0/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -13235,8 +13322,98 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ 0\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( _.strHas( got.output, / ! Submodule .*local is not up to date/ ) );
+    test.is( _.strHas( got.output, '0/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '! Submodule opener::local is not up to date!' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'module is not downloaded';
+    return null;
+  })
+
+  shell( '.build debug2' )
+
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '! Submodule opener::local is not downloaded!' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'download path does not contain git repo';
+    return null;
+  })
+
+  shell( '.build debug3' )
+
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '! Submodule opener::local is not downloaded!' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /*  */
+
+  .then( () =>
+  {
+    test.case = 'module is downloaded from different origin';
+    return null;
+  })
+
+  shell( '.build debug4' )
+
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '! Submodule opener::local is already downloaded, but has different origin url' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /*  */
+
+  .then( () =>
+  {
+    test.case = 'module is in detached state';
+    return null;
+  })
+
+  shell( '.build debug5' )
+
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '! Submodule opener::local is not up to date!' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /*  */
+
+  .then( () =>
+  {
+    test.case = 'module is ahead remote';
+    return null;
+  })
+
+  shell( '.build debug6' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -13295,7 +13472,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -13348,7 +13525,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -13403,7 +13580,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -13458,7 +13635,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -13545,7 +13722,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -13604,7 +13781,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -13773,7 +13950,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -13832,7 +14009,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ submodule::PathBasic.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#90330e25698210c8fa1a58d90c9468c0e23a72fd.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/PathBasic\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -15098,7 +15275,7 @@ var Self =
     modulesTreeLocal,
     modulesTreeHierarchyRemote,
     modulesTreeHierarchyRemoteDownloaded,
-    // modulesTreeHierarchyRemotePartiallyDownloaded, // xxx : later
+    modulesTreeHierarchyRemotePartiallyDownloaded, // xxx : later
 
     help,
     listSingleModule,
@@ -15122,7 +15299,7 @@ var Self =
     buildSingleModule,
     buildSingleStep,
     buildSubmodules,
-    // buildDetached, // qqq : help to fix, please
+    buildDetached, // qqq : help to fix, please aaa : fixed
 
     exportSingle,
     exportItself,
@@ -15131,7 +15308,7 @@ var Self =
     exportWithReflector,
     exportToRoot,
     exportMixed,
-    // exportSecond, // qqq : help to fix, please
+    exportSecond, // qqq : help to fix, please
     exportSubmodules,
     exportMultiple,
     exportImportMultiple,

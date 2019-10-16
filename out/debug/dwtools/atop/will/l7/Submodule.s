@@ -351,6 +351,17 @@ function isDownloadedGet()
   return relation.opener.isDownloaded;
 }
 
+function isGitRepositoryGet()
+{
+  let relation = this;
+  let module = relation.module;
+
+  if( !relation.opener )
+  return false;
+
+  return relation.opener.isGitRepository;
+}
+
 //
 
 function localPathGet()
@@ -726,6 +737,7 @@ let Accessors =
 {
   isAvailable : { getter : isAvailableGet, readOnly : 1 },
   isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
+  isGitRepository : { getter : isGitRepositoryGet, readOnly : 1 },
   localPath : { getter : localPathGet, readOnly : 1 },
   remotePath : { getter : remotePathGet, readOnly : 1 },
   opener : { setter : openerSet },
@@ -767,6 +779,7 @@ let Extend =
 
   isAvailableGet,
   isDownloadedGet,
+  isGitRepositoryGet,
   localPathGet,
   remotePathGet,
   openerSet,
