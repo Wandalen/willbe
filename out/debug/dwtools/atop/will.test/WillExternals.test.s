@@ -15098,7 +15098,7 @@ var Self =
     modulesTreeLocal,
     modulesTreeHierarchyRemote,
     modulesTreeHierarchyRemoteDownloaded,
-    // modulesTreeHierarchyRemotePartiallyDownloaded, // xxx : later
+    modulesTreeHierarchyRemotePartiallyDownloaded, // xxx : later
 
     help,
     listSingleModule,
