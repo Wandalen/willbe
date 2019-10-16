@@ -5773,8 +5773,7 @@ function exportSecond( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
-    test.identical( _.strCount( got.output, / Exported .*exported::proto.export.* with 4 file\(s\) in/ ), 1 );
-    test.identical( _.strCount( got.output, / Exported .*exported::doc.export.* with 2 file\(s\) in/ ), 1 );
+    test.identical( _.strCount( got.output, 'Exported module::ExportSecond / build::export with 6 file(s) in' ), 1 );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
 
@@ -5783,57 +5782,56 @@ function exportSecond( test )
 
     var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
 
+    outfile = outfile.module[ 'ExportSecond.out' ]
+
     var expected =
     {
       "reflect.proto." :
       {
         "src" :
         {
-          "filePath" : { "path::proto" : "path::out.*=1" }
+          "filePath" : { "path::proto" : "path::out.*=1" },
+          "prefixPath" : ""
         },
-        "criterion" : { "debug" : 0 },
+        "dst" : { "prefixPath" : "" },
         "mandatory" : 1,
+        "criterion" : { "debug" : 0 },
         "inherit" : [ "predefined.*" ]
       },
       "reflect.proto.debug" :
       {
         "src" :
         {
-          "filePath" : { "path::proto" : "path::out.*=1" }
+          "filePath" : { "path::proto" : "path::out.*=1" },
+          "prefixPath" : ""
         },
-        "criterion" : { "debug" : 1 },
+        "dst" : { "prefixPath" : "" },
         "mandatory" : 1,
+        "criterion" : { "debug" : 1 },
         "inherit" : [ "predefined.*" ]
       },
-      "exported.proto.export" :
-      {
-        'src' : { 'prefixPath' : '../proto' },
-        "criterion" : { "proto" : 1, "export" : 1 },
-        "mandatory" : 1
-      },
-      "exported.files.proto.export" :
-      {
-        "src" : { "filePath" : { 'path::exported.files.proto.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export", "recursive" : 0 },
-        "criterion" : { "proto" : 1, "export" : 1 },
-        "recursive" : 0,
-        "mandatory" : 1
-      },
-      "exported.doc.export" :
+      "exported.export" :
       {
         "src" :
         {
-          "filePath" : { "." : "" },
+          "filePath" : { "*" : "" },
           "prefixPath" : "../doc"
         },
-        "criterion" : { "doc" : 1, "export" : 1 },
-        "mandatory" : 1
+        "mandatory" : 1,
+        "criterion" : { "default" : 1, "export" : 1 }
       },
-      "exported.files.doc.export" :
+      "exported.files.export" :
       {
-        "src" : { "filePath" : { 'path::exported.files.doc.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.doc.export", 'recursive' : 0 },
-        "criterion" : { "doc" : 1, "export" : 1 },
+        "src" :
+        {
+          "filePath" : { "path::exported.files.export" : "" },
+          "basePath" : ".",
+          "prefixPath" : "path::exported.dir.export",
+          "recursive" : 0
+        },
         "recursive" : 0,
-        "mandatory" : 1
+        "mandatory" : 1,
+        "criterion" : { "default" : 1, "export" : 1 }
       }
     }
     test.identical( outfile.reflector, expected );
@@ -5843,20 +5841,25 @@ function exportSecond( test )
     {
       "module.willfiles" :
       {
-        "path" : "ExportSecond.out.will.yml",
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.original.willfiles" :
-      {
-        "path" : [ "../.im.will.yml", "../.ex.will.yml" ],
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 },
+        "path" : "ExportSecond.out.will.yml"
       },
       "module.common" :
       {
-        "path" : "ExportSecond.out",
-        "criterion" : { "predefined" : 1 }
+        "criterion" : { "predefined" : 1 },
+        "path" : "ExportSecond.out"
       },
-      "local" :
+      "module.original.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : [ "../.ex.will.yml", "../.im.will.yml" ]
+      },
+      "module.peer.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : [ "../.ex.will.yml", "../.im.will.yml" ]
+      },
+      "download" :
       {
         "criterion" : { "predefined" : 1 }
       },
@@ -5866,204 +5869,27 @@ function exportSecond( test )
       },
       "in" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : "."
       },
       "temp" : { "path" : "." },
       "out" :
       {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
+        "criterion" : { "predefined" : 0 },
+        "path" : "."
       },
       "out.debug" :
       {
-        "path" : "debug",
-        "criterion" : { "debug" : 1 }
-      },
-      "out.release" :
-      {
-        "path" : "release",
-        "criterion" : { "debug" : 0 }
-      },
-      "proto" : { "path" : "../proto" },
-      "doc" : { "path" : "../doc" },
-      "exported.dir.proto.export" :
-      {
-        "path" : "../proto",
-        "criterion" : { "proto" : 1, "export" : 1 }
-      },
-      "exported.files.proto.export" :
-      {
-        "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ],
-        "criterion" : { "proto" : 1, "export" : 1 }
-      },
-      "exported.dir.doc.export" :
-      {
-        "path" : "../doc",
-        "criterion" : { "doc" : 1, "export" : 1 }
-      },
-      "exported.files.doc.export" :
-      {
-        "path" : [ "../doc", "../doc/File.md" ],
-        "criterion" : { "doc" : 1, "export" : 1 }
-      }
-    }
-    test.identical( outfile.path, expected );
-    // logger.log( _.toJson( outfile.reflector ) );
-
-    var expected =
-    {
-      'doc.export' :
-      {
-        version : '0.0.0',
-        criterion : { doc : 1, export : 1 },
-        exportedReflector : 'reflector::exported.doc.export',
-        exportedFilesReflector : 'reflector::exported.files.doc.export',
-        exportedDirPath : 'path::exported.dir.doc.export',
-        exportedFilesPath : 'path::exported.files.doc.export',
-      },
-      'proto.export' :
-      {
-        version : '0.0.0',
-        criterion : { proto : 1, export : 1 },
-        exportedReflector : 'reflector::exported.proto.export',
-        exportedFilesReflector : 'reflector::exported.files.proto.export',
-        exportedDirPath : 'path::exported.dir.proto.export',
-        exportedFilesPath : 'path::exported.files.proto.export',
-      }
-    }
-    test.identical( outfile.exported, expected );
-
-    return null;
-  })
-
-  /* - */
-
-  shell({ execPath : '.export' })
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
-    test.identical( _.strCount( got.output, / Exported .*exported::doc.export.* with 2 file\(s\) in/ ), 1 );
-    test.identical( _.strCount( got.output, / Exported .*exported::proto.export.* with 4 file\(s\) in/ ), 1 );
-
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
-
-    var files = self.find( _.path.join( routinePath, 'out' ) );
-    test.identical( files, [ '.', './ExportSecond.out.will.yml' ] );
-
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
-
-    var expected =
-    {
-      "reflect.proto." :
-      {
-        "src" :
-        {
-          "filePath" : { "path::proto" : "path::out.*=1" }
-        },
-        "criterion" : { "debug" : 0 },
-        "mandatory" : 1,
-        "inherit" : [ "predefined.*" ]
-      },
-      "reflect.proto.debug" :
-      {
-        "src" :
-        {
-          "filePath" : { "path::proto" : "path::out.*=1" }
-        },
         "criterion" : { "debug" : 1 },
-        "mandatory" : 1,
-        "inherit" : [ "predefined.*" ]
-      },
-      "exported.proto.export" :
-      {
-        "src" :
-        {
-          "filePath" : { "." : "" },
-          "prefixPath" : "../proto"
-        },
-        "criterion" : { "proto" : 1, "export" : 1 },
-        "mandatory" : 1
-      },
-      "exported.files.proto.export" :
-      {
-        "src" : { "filePath" : { 'path::exported.files.proto.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export", 'recursive' : 0 },
-        "criterion" : { "proto" : 1, "export" : 1 },
-        "recursive" : 0,
-        "mandatory" : 1
-      },
-      "exported.doc.export" :
-      {
-        "src" :
-        {
-          "filePath" : { "." : "" },
-          "prefixPath" : "../doc"
-        },
-        "criterion" : { "doc" : 1, "export" : 1 },
-        "mandatory" : 1
-      },
-      "exported.files.doc.export" :
-      {
-        "src" : { "filePath" : { 'path::exported.files.doc.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.doc.export", "recursive" : 0, },
-        "criterion" : { "doc" : 1, "export" : 1 },
-        "recursive" : 0,
-        "mandatory" : 1
-      }
-    }
-    test.identical( outfile.reflector, expected );
-    // logger.log( _.toJson( outfile.reflector ) );
-
-    var expected =
-    {
-      "module.willfiles" :
-      {
-        "path" : "ExportSecond.out.will.yml",
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.original.willfiles" :
-      {
-        "path" : [ "../.im.will.yml", "../.ex.will.yml" ],
-        "criterion" : { "predefined" : 1 }
-      },
-      "module.common" :
-      {
-        "path" : "ExportSecond.out",
-        "criterion" : { "predefined" : 1 }
-      },
-      "local" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
-      "remote" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
-      "in" :
-      {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
-      },
-      "temp" : { "path" : "." },
-      "out" :
-      {
-        "path" : ".",
-        "criterion" : { "predefined" : 0 }
-      },
-      "out.debug" :
-      {
-        "path" : "debug",
-        "criterion" : { "debug" : 1 }
+        "path" : "debug/*"
       },
       "out.release" :
       {
-        "path" : "release",
-        "criterion" : { "debug" : 0 }
+        "criterion" : { "debug" : 0 },
+        "path" : "release/*"
       },
-      "proto" : { "path" : "../proto" },
-      "doc" : { "path" : "../doc" },
+      "proto" : { "path" : "../proto/*" },
+      "doc" : { "path" : "../doc/*" },
       "exported.dir.proto.export" :
       {
         "path" : "../proto",
@@ -6093,6 +5919,9 @@ function exportSecond( test )
       'doc.export' :
       {
         version : '0.0.0',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 0,
         criterion : { doc : 1, export : 1 },
         exportedReflector : 'reflector::exported.doc.export',
         exportedFilesReflector : 'reflector::exported.files.doc.export',
@@ -6102,6 +5931,191 @@ function exportSecond( test )
       'proto.export' :
       {
         version : '0.0.0',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 0,
+        criterion : { proto : 1, export : 1 },
+        exportedReflector : 'reflector::exported.proto.export',
+        exportedFilesReflector : 'reflector::exported.files.proto.export',
+        exportedDirPath : 'path::exported.dir.proto.export',
+        exportedFilesPath : 'path::exported.files.proto.export',
+      }
+    }
+    test.identical( outfile.exported, expected );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ execPath : '.export' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
+    test.identical( _.strCount( got.output, 'Exported module::ExportSecond / build::export with 6 file(s) in' ), 1 );
+
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
+
+    var files = self.find( _.path.join( routinePath, 'out' ) );
+    test.identical( files, [ '.', './ExportSecond.out.will.yml' ] );
+
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
+
+    outfile = outfile.module[ 'ExportSecond.out' ];
+
+    var expected =
+    {
+      "reflect.proto." :
+      {
+        "src" :
+        {
+          "filePath" : { "path::proto" : "path::out.*=1" },
+          "prefixPath" : ""
+        },
+        "dst" : { "prefixPath" : "" },
+        "mandatory" : 1,
+        "criterion" : { "debug" : 0 },
+        "inherit" : [ "predefined.*" ]
+      },
+      "reflect.proto.debug" :
+      {
+        "src" :
+        {
+          "filePath" : { "path::proto" : "path::out.*=1" },
+          "prefixPath" : ""
+        },
+        "dst" : { "prefixPath" : "" },
+        "mandatory" : 1,
+        "criterion" : { "debug" : 1 },
+        "inherit" : [ "predefined.*" ]
+      },
+      "exported.export" :
+      {
+        "src" :
+        {
+          "filePath" : { "*" : "" },
+          "prefixPath" : "../doc"
+        },
+        "mandatory" : 1,
+        "criterion" : { "default" : 1, "export" : 1 }
+      },
+      "exported.files.export" :
+      {
+        "src" :
+        {
+          "filePath" : { "path::exported.files.export" : "" },
+          "basePath" : ".",
+          "prefixPath" : "path::exported.dir.export",
+          "recursive" : 0
+        },
+        "recursive" : 0,
+        "mandatory" : 1,
+        "criterion" : { "default" : 1, "export" : 1 }
+      }
+    }
+    test.identical( outfile.reflector, expected );
+    // logger.log( _.toJson( outfile.reflector ) );
+
+    var expected =
+    {
+      "module.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : "ExportSecond.out.will.yml"
+      },
+      "module.common" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : "ExportSecond.out"
+      },
+      "module.original.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : [ "../.ex.will.yml", "../.im.will.yml" ]
+      },
+      "module.peer.willfiles" :
+      {
+        "criterion" : { "predefined" : 1 },
+        "path" : [ "../.ex.will.yml", "../.im.will.yml" ]
+      },
+      "download" :
+      {
+        "criterion" : { "predefined" : 1 }
+      },
+      "remote" :
+      {
+        "criterion" : { "predefined" : 1 }
+      },
+      "in" :
+      {
+        "criterion" : { "predefined" : 0 },
+        "path" : "."
+      },
+      "temp" : { "path" : "." },
+      "out" :
+      {
+        "criterion" : { "predefined" : 0 },
+        "path" : "."
+      },
+      "out.debug" :
+      {
+        "criterion" : { "debug" : 1 },
+        "path" : "debug/*"
+      },
+      "out.release" :
+      {
+        "criterion" : { "debug" : 0 },
+        "path" : "release/*"
+      },
+      "proto" : { "path" : "../proto/*" },
+      "doc" : { "path" : "../doc/*" },
+      "exported.dir.proto.export" :
+      {
+        "path" : "../proto",
+        "criterion" : { "proto" : 1, "export" : 1 }
+      },
+      "exported.files.proto.export" :
+      {
+        "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ],
+        "criterion" : { "proto" : 1, "export" : 1 }
+      },
+      "exported.dir.doc.export" :
+      {
+        "path" : "../doc",
+        "criterion" : { "doc" : 1, "export" : 1 }
+      },
+      "exported.files.doc.export" :
+      {
+        "path" : [ "../doc", "../doc/File.md" ],
+        "criterion" : { "doc" : 1, "export" : 1 }
+      }
+    }
+    test.identical( outfile.path, expected );
+    // logger.log( _.toJson( outfile.path ) );
+
+    var expected =
+    {
+      'doc.export' :
+      {
+        version : '0.0.0',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 0,
+        criterion : { doc : 1, export : 1 },
+        exportedReflector : 'reflector::exported.doc.export',
+        exportedFilesReflector : 'reflector::exported.files.doc.export',
+        exportedDirPath : 'path::exported.dir.doc.export',
+        exportedFilesPath : 'path::exported.files.doc.export',
+      },
+      'proto.export' :
+      {
+        version : '0.0.0',
+        recursive : 0,
+        withIntegrated : 2,
+        tar : 0,
         criterion : { proto : 1, export : 1 },
         exportedReflector : 'reflector::exported.proto.export',
         exportedFilesReflector : 'reflector::exported.files.proto.export',
@@ -15049,7 +15063,7 @@ var Self =
     exportWithReflector,
     exportToRoot,
     exportMixed,
-    // exportSecond, // qqq : help to fix, please
+    exportSecond, // qqq : help to fix, please
     exportSubmodules,
     exportMultiple,
     exportImportMultiple,
