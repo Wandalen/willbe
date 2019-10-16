@@ -1290,31 +1290,37 @@ function _remoteDownload( o )
     downloading = arg;
     _.assert( _.boolIs( downloading ) );
 
-    if( !downloading )
-    return downloading;
+    // if( !downloading )
+    // return downloading;
 
     if( o.mode === 'download' )
     {
       if( o.strict )
-      filesCheck();
-
+      {
+        filesCheck();
+        repositoryCheck();
+        moduleCheck();
+      }
     }
     else if( o.mode === 'update' )
     {
+      if( !downloading )
+      return downloading;
 
-      //Vova: qqq Should throw error if not downloaded but opener.downloadPath exists
       filesCheck();
+      repositoryCheck();
+      moduleCheck();
       originCheck();
       localChangesCheck();
 
     }
     else if( o.mode === 'agree' )
     {
+      if( !downloading )
+      return downloading;
 
-      originCheck();
       localChangesCheck();
       filesDelete();
-
     }
     else _.assert( 0 );
 
@@ -1352,6 +1358,29 @@ function _remoteDownload( o )
 
   /* */
 
+   function repositoryCheck()
+   {
+     if( opener.isDownloaded )
+     if( !opener.isGitRepository )
+     throw _.err
+     (
+       'Module', opener.decoratedAbsoluteName, 'is downloaded, but its not a git repository',
+       'Rename/remove path:', _.color.strFormat( opener.downloadPath, 'path' ), 'and try again.'
+     );
+   }
+
+  /* */
+
+  function moduleCheck()
+  {
+    if( !opener.isDownloaded )
+    return;
+    if( !opener.isValid() )
+    throw _.err( 'Module', opener.decoratedAbsoluteName, 'is downloaded, but its not valid. Reason:', opener.err );
+  }
+
+  /* */
+
   function localChangesCheck()
   {
 
@@ -1362,7 +1391,7 @@ function _remoteDownload( o )
     if( !opener.isDownloaded )
     return;
 
-    if( !opener.isGitRepository )
+    if( !opener.isGitRepository && o.mode === 'agree' )
     return;
 
     if( opener.remoteHasLocalChanges() )
@@ -1370,7 +1399,7 @@ function _remoteDownload( o )
       throw _.errBrief
       (
         'Module at', opener.decoratedAbsoluteName, 'needs to be updated, but has local changes.',
-        '\nPlease push your local changes to remote or stash them and merge manually after update.'
+        '\nPlease commit your local changes or stash them and merge manually after update.'
       );
     }
   }
@@ -1380,9 +1409,6 @@ function _remoteDownload( o )
   function originCheck()
   {
     if( !opener.isDownloaded )
-    return;
-
-    if( !opener.isGitRepository && o.mode === 'agree' )
     return;
 
     let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
@@ -1399,17 +1425,14 @@ function _remoteDownload( o )
       'Module', opener.decoratedAbsoluteName, 'is already downloaded, but has different origin url:',
       _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
     );
+
   }
 
   /* */
 
   function filesCheck()
   {
-    if( !opener.isDownloaded )
-    return;
-
-    /* for update mode: if repo is downloaded then perform originCheck rather than filesCheck */
-    if( opener.isGitRepository && o.mode === 'update' )
+    if( opener.isDownloaded )
     return;
 
     if( fileProvider.fileExists( opener.downloadPath ) && !fileProvider.dirIsEmpty( opener.downloadPath ) )
@@ -1421,7 +1444,6 @@ function _remoteDownload( o )
         'Rename/remove path:', _.color.strFormat( opener.downloadPath, 'path' ), 'and try again.'
       )
     }
-
   }
 
   /* */
@@ -1432,21 +1454,35 @@ function _remoteDownload( o )
     return null;
 
     /*
-    delete old remote opener if it has a critical error or downloaded files are corrupted
+      delete old remote opener if:
+      - it has a critical error or downloaded files are corrupted
+      - module origin is different
     */
 
-    let localProvider = will.fileProvider.providerForPath( opener.downloadPath );
-    let gitPath = localProvider.path.join( opener.downloadPath, '.git' );
-    let isGitRepo = localProvider.fileExists( gitPath );
+    if( !downloading )
+    return;
 
-    if( downloading )
-    if( !opener.isValid() || !/* opener.isDownloaded */isGitRepo )
+    _.assert( downloading === true );
+
+    let remove = !opener.isValid() || !opener.isGitRepository;
+
+    if( !remove )
+    {
+      let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
+      let result = gitProvider.isDownloadedFromRemote
+      ({
+        localPath : opener.downloadPath,
+        remotePath : opener.remotePath
+      });
+      remove = !result.downloadedFromRemote;
+    }
+
+    if( remove )
     {
       if( fileProvider.fileExists( opener.downloadPath ) )
       debugger;
       fileProvider.filesDelete({ filePath : opener.downloadPath, throwing : 0, sync : 1 });
     }
-
   }
 
   /* */
@@ -1649,11 +1685,11 @@ function _remoteIsUpToDate( o )
   .then( () =>
   {
     if( o.mode === 'download' )
-    return opener.remoteIsDownloadedReform();
+    return isDownloadedRepositoryReform();
     else if( o.mode === 'update' )
-    return isRepositoryReform();
+    return isUpdatedRepositoryReform();
     else if( o.mode === 'agree' )
-    return isRepositoryReform();
+    return isUpdatedRepositoryReform();
   })
   .then( function()
   {
@@ -1690,11 +1726,21 @@ function _remoteIsUpToDate( o )
 
   /*  */
 
-  function isRepositoryReform()
+  function isUpdatedRepositoryReform()
   {
     let con = new _.Consequence().take( null );
     con.then( () => opener.remoteIsGoodRepositoryReform() )
     con.then( () => opener.remoteIsUpToDateReform() )
+    return con;
+  }
+
+  /* */
+
+  function isDownloadedRepositoryReform()
+  {
+    let con = new _.Consequence().take( null );
+    con.then( () => opener.remoteIsDownloadedReform() )
+    con.then( () => opener.remoteIsGoodRepositoryReform() )
     return con;
   }
 
