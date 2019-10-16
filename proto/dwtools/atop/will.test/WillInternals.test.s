@@ -9131,7 +9131,7 @@ function customLogger( test )
 
 //
 
-function resourcePathRemoteProblem( test )
+function resourcePathRemotePreserved( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-informal' );
@@ -9192,8 +9192,6 @@ function resourcePathRemoteProblem( test )
 
   return ready;
 }
-
-resourcePathRemoteProblem.experimental = 1;
 
 // --
 // define class
@@ -9275,8 +9273,7 @@ var Self =
     submodulesDeleteAndDownload,
 
     customLogger,
-
-    resourcePathRemoteProblem,
+    resourcePathRemotePreserved,
 
   }
 
