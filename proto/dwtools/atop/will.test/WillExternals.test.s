@@ -12709,52 +12709,17 @@ function subModulesUpdateSwitchBranch( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-
-  ready
-  .then( () =>
-  {
-    test.case = 'setup repo';
-
-    let con = new _.Consequence().take( null );
-    let repoPath = _.path.join( routinePath, 'experiment' );
-    let repoSrcFiles = _.path.join( routinePath, 'src' );
-    let clonePath = _.path.join( routinePath, 'cloned' );
-    _.fileProvider.dirMake( repoPath );
-
-    let shell = _.process.starter
-    ({
-      currentPath : routinePath,
-      outputCollecting : 1,
-      ready : con,
-    })
-
-    shell( 'git -C experiment init --bare' )
-    shell( 'git clone experiment cloned' )
-
-    .then( () =>
-    {
-      return _.fileProvider.filesReflect({ reflectMap : { [ repoSrcFiles ] : clonePath } })
-    })
-
-    shell( 'git -C cloned add -fA .' )
-    shell( 'git -C cloned commit -m init' )
-    shell( 'git -C cloned push' )
-    shell( 'git -C cloned checkout -b dev' )
-    shell( 'git -C cloned commit --allow-empty -m test' )
-    shell( 'git -C cloned commit --allow-empty -m test2' )
-    shell( 'git -C cloned push origin dev' )
-    shell( 'git -C cloned rev-parse HEAD~1' )
-
-    .then( ( got ) =>
-    {
-      detachedVersion = _.strStrip( got.output );
-      test.is( _.strDefined( detachedVersion ) );
-      return null;
-    })
-
-    return con;
+  let shell2 = _.process.starter
+  ({
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : ready,
   })
+
+  /* */
+
+  begin()
 
   .then( () =>
   {
@@ -12831,18 +12796,16 @@ function subModulesUpdateSwitchBranch( test )
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#master', '#dev' );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
-    let readmePath = _.path.join( submodulesPath, 'willbe-experiment/File.js' );
-    _.fileProvider.fileWrite({ filePath : readmePath, data : 'master' });
+    let filePath = _.path.join( submodulesPath, 'willbe-experiment/File.js' );
+    _.fileProvider.fileWrite({ filePath, data : 'master' });
     return null;
   })
 
   .then( () =>
   {
-    let con = shell({ args : [ '.submodules.update' ], ready : null });
+    let con = shell({ execPath : '.submodules.update', ready : null });
     return test.shouldThrowErrorAsync( con );
   })
-
-  shell({ execPath : '.submodules.update' }) // qqq : pelase fix
 
   _.process.start
   ({
@@ -12854,10 +12817,10 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( ( got ) =>
   {
-    test.is( _.strHas( got.output, 'both modified:   File.js' ) )
+    test.is( _.strHas( got.output, 'modified:   File.js' ) )
 
     let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
+    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
@@ -12866,10 +12829,10 @@ function subModulesUpdateSwitchBranch( test )
   ready.then( () =>
   {
     test.case = 'master has new commit, changing branch to dev';
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     return null;
   })
+
+  begin()
 
   shell({ execPath : '.submodules.update' })
 
@@ -12887,12 +12850,16 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
+   .then( () =>
+  {
+    let con = shell({ execPath : '.submodules.update', ready : null });
+    return test.shouldThrowErrorAsync( con );
+  })
 
   .then( () =>
   {
     let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
+    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
 
@@ -12901,19 +12868,12 @@ function subModulesUpdateSwitchBranch( test )
   ready.then( () =>
   {
     test.case = 'master and remote master have new commits';
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
+  begin()
 
-  _.process.start
-  ({
-    execPath : 'git reset --hard HEAD~1',
-    currentPath : experimentModulePath,
-    ready : ready
-  })
+  shell({ execPath : '.submodules.update' })
 
   _.process.start
   ({
@@ -12922,7 +12882,15 @@ function subModulesUpdateSwitchBranch( test )
     ready : ready
   })
 
-  shell({ execPath : '.submodules.update' })
+  shell2( 'git -C cloned checkout master' )
+  shell2( 'git -C cloned commit --allow-empty -m test' )
+  shell2( 'git -C cloned push' )
+
+  .then( () =>
+  {
+    let con = shell({ execPath : '.submodules.update', ready : null });
+    return test.shouldThrowErrorAsync( con );
+  })
 
   _.process.start
   ({
@@ -12935,7 +12903,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( ( got ) =>
   {
-    test.is( _.strHas( got.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
+    test.is( _.strHas( got.output, `have 1 and 1 different commits each, respectively` ) );
 
     let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
@@ -12943,6 +12911,63 @@ function subModulesUpdateSwitchBranch( test )
   })
 
   return ready;
+
+  /* */
+
+  function begin()
+  {
+    ready
+    .then( () =>
+    {
+      test.case = 'setup repo';
+
+      let con = new _.Consequence().take( null );
+      let repoPath = _.path.join( routinePath, 'experiment' );
+      let repoSrcFiles = _.path.join( routinePath, 'src' );
+      let clonePath = _.path.join( routinePath, 'cloned' );
+
+      _.fileProvider.filesDelete( routinePath );
+      _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+      _.fileProvider.dirMake( repoPath );
+
+      let shell = _.process.starter
+      ({
+        currentPath : routinePath,
+        outputCollecting : 1,
+        ready : con,
+      })
+
+      shell( 'git -C experiment init --bare' )
+      shell( 'git clone experiment cloned' )
+
+      .then( () =>
+      {
+        return _.fileProvider.filesReflect({ reflectMap : { [ repoSrcFiles ] : clonePath } })
+      })
+
+      shell( 'git -C cloned add -fA .' )
+      shell( 'git -C cloned commit -m init' )
+      shell( 'git -C cloned push' )
+      shell( 'git -C cloned checkout -b dev' )
+      shell( 'git -C cloned commit --allow-empty -m test' )
+      shell( 'git -C cloned commit --allow-empty -m test2' )
+      shell( 'git -C cloned push origin dev' )
+      shell( 'git -C cloned rev-parse HEAD~1' )
+
+      .then( ( got ) =>
+      {
+        detachedVersion = _.strStrip( got.output );
+        test.is( _.strDefined( detachedVersion ) );
+        return null;
+      })
+
+      return con;
+    })
+
+    return ready;
+  }
+
 }
 
 subModulesUpdateSwitchBranch.timeOut = 300000;
