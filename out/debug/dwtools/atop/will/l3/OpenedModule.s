@@ -5702,6 +5702,8 @@ function structureExport( o )
   let o2 = _.mapExtend( null, o );
   delete o2.dst;
 
+  debugger;
+
   o.dst.about = module.about.structureExport();
   o.dst.path = module.structureExportResources( module.pathResourceMap, o2 );
   o.dst.submodule = module.structureExportResources( module.submoduleMap, o2 );
@@ -5819,73 +5821,8 @@ function structureExportForModuleExport( o )
   o = _.routineOptions( structureExportForModuleExport, arguments );
   _.assert( module.original === null );
 
-  // let moduleWas = will.moduleWithCommonPathMap[ module.CommonPathFor( o.willfilesPath ) ];
-  // if( moduleWas )
-  // {
-  //   _.assert( moduleWas.peerModule === module );
-  //   _.assert( moduleWas === module.peerModule );
-  //   moduleWas.peerModule = null;
-  //   _.assert( moduleWas.peerModule === null );
-  //   _.assert( module.peerModule === null );
-  //   moduleWas.finit();
-  //   _.assert( moduleWas.finitedIs() );
-  //   _.assert( !module.finitedIs() );
-  //   moduleWas = null;
-  // }
-  //
-  // let opener2 = openerMake();
-  //
-  // /* */
-  //
-  // let o3 = opener2.optionsForModuleExport();
-  // let rootModule = o3.rootModule = opener2.rootModule;
-  // let module2 = module.cloneExtending( o3 );
-  //
-  // _.assert( rootModule === opener2.rootModule );
-  // _.assert( rootModule === module2.rootModule );
-  // opener2.moduleAdopt( module2 );
-  // _.assert( rootModule === opener2.rootModule );
-  // _.assert( rootModule === opener2.openedModule.rootModule );
-  // _.assert( opener2.commonPath === opener2.localPath );
-  // _.assert( module2.commonPath === module2.localPath );
-  //
-  // /* */
-  //
-  // module2.pathsRebase({ inPath : module.outPath, exInPath : module.inPath });
-  //
-  // _.assert( module.outPath === module2.outPath );
-  // _.assert( module2.inPath === module2.outPath );
-  // _.assert( module2.dirPath === path.detrail( module.outPath ) );
-  // _.assert( module2.commonPath === module2.localPath );
-  // _.assert( module2.original === module );
-  // _.assert( module2.rootModule === module.rootModule );
-  // _.assert( module2.willfilesArray.length === 0 );
-  // _.assert( module2.pathResourceMap.in.path === '.' );
-  // _.assert( module2.peerModule === module );
-  // _.assert( module.peerModule === module2 );
-  // _.assert( opener2.peerModule === module );
-  // _.assert( opener2.dirPath === path.detrail( module.outPath ) );
-  // _.assert( opener2.original === module );
-  // _.assert( opener2.superRelation === null );
-  // _.assert( opener2.willfilesArray.length === 0 );
-  //
-  // module2.stager.stageStateSkipping( 'opened', 1 );
-  // module2.stager.stageStatePausing( 'opened', 0 );
-  // module2.stager.tick();
-  //
-  // _.assert( !!module2.ready.resourcesCount() );
-  //
-  // if( module2.ready.errorsCount() )
-  // module2.ready.sync();
-
   let module2 = module.outModuleMake({ willfilesPath : o.willfilesPath });
   let structure = module2.structureExportOut();
-
-  // // opener2.openedModule = null; // yyy
-  // // opener2.finit();
-  // // _.assert( !module2.finitedIs() )
-  //
-  // will.openersAdoptModule( module2 );
 
   debugger;
   if( !module2.isUsedManually() )
@@ -5894,38 +5831,6 @@ function structureExportForModuleExport( o )
   module2.finit();
 
   return structure;
-
-  // /* */
-  //
-  // function openerMake()
-  // {
-  //
-  //   let o2 = module.optionsForOpenerExport();
-  //   o2.willfilesPath = o.willfilesPath;
-  //   o2.willfilesArray = [];
-  //   o2.isOut = true;
-  //   o2.peerModule = module;
-  //   o2.searching = 'exact';
-  //   o2.reason = 'export';
-  //   o2.isAuto = 1;
-  //   o2.remotePath = null; // yyy
-  //
-  //   let opener2 = will._openerMake({ opener : o2 });
-  //   _.assert( opener2.isOut === true );
-  //   _.assert( opener2.superRelation === null );
-  //   _.assert( opener2.rootModule === null );
-  //   _.assert( opener2.openedModule === null );
-  //   _.assert( opener2.willfilesArray.length === 0 );
-  //   _.assert( opener2.peerModule === module );
-  //
-  //   opener2.rootModule = module.rootModule || module;
-  //   opener2.original = module;
-  //   opener2.preform();
-  //
-  //   return opener2;
-  // }
-  //
-  // /* */
 
 }
 

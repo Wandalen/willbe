@@ -747,7 +747,7 @@ function _willfilesRelease( willfilesArray )
 // remote
 // --
 
-function remoteIsUpdate()
+function remoteIsReform()
 {
   let module = this;
   let will = module.will;
@@ -756,10 +756,6 @@ function remoteIsUpdate()
 
   _.assert( !!module.willfilesPath || !!module.dirPath );
   _.assert( arguments.length === 0 );
-
-  // if( module.isRemote !== null )
-  // return end( module.isRemote );
-  // debugger;
 
   if( !module.superRelation )
   return end( false );
@@ -782,7 +778,7 @@ function remoteIsUpdate()
 
 //
 
-function remoteIsUpToDateUpdate()
+function remoteIsUpToDateReform()
 {
   let module = this;
   let will = module.will;
@@ -1022,8 +1018,8 @@ let Extend =
 
   // remote
 
-  remoteIsUpdate,
-  remoteIsUpToDateUpdate,
+  remoteIsReform,
+  remoteIsUpToDateReform,
   remoteLocalVersion,
   remoteLatestVersion,
   remoteHasLocalChanges,
