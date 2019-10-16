@@ -803,23 +803,43 @@ function stepRoutineSubmodulesAreUpdated( frame )
 
   _.each( relations, ( relation ) =>
   {
+    con.then( () => update() )
     con.then( () =>
     {
+      /* */
+
       if( !isDownloaded() )
       {
         logger.error( ' ! Submodule ' + relation.opener.decoratedQualifiedName + ' is not downloaded!'  );
         return false;
       }
 
-      return relation.opener.remoteIsUpToDateUpdate()
-      .then( ( arg ) =>
+      /* check if module is downloaded from correct remote */
+
+      let gitProvider = will.fileProvider.providerForPath( relation.opener.remotePath );
+      let result = gitProvider.isDownloadedFromRemote
+      ({
+        localPath : relation.opener.downloadPath,
+        remotePath : relation.opener.remotePath
+      });
+
+      if( !result.downloadedFromRemote )
       {
-        if( !relation.opener.isUpToDate )
-        logger.error( ' ! Submodule ' + relation.opener.decoratedQualifiedName + ' is not up to date!'  );
-        else
-        upToDateNumber += 1;
-        return arg;
-      })
+        logger.error
+        (
+          ' ! Submodule ' + relation.opener.decoratedQualifiedName, 'is already downloaded, but has different origin url:',
+          _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
+        );
+        return false;
+      }
+
+      /* */
+
+      if( !relation.opener.isUpToDate )
+      logger.error( ' ! Submodule ' + relation.opener.decoratedQualifiedName + ' is not up to date!'  );
+      else
+      upToDateNumber += 1;
+      return null;
     })
 
     function isDownloaded()
@@ -828,7 +848,23 @@ function stepRoutineSubmodulesAreUpdated( frame )
       return false;
 
       _.assert( _.boolLike( relation.opener.isDownloaded ) );
-      return relation.opener.isDownloaded;
+
+      if( !relation.opener.isDownloaded )
+      return false;
+
+      if( !relation.opener.isGitRepository )
+      return false;
+
+      return true;
+    }
+
+    function update()
+    {
+      let con = new _.Consequence().take( null );
+      con.then( () => relation.opener.remoteIsDownloadedUpdate() )
+      con.then( () => relation.opener.remoteIsGitRepositoryUpdate() )
+      con.then( () => relation.opener.remoteIsUpToDateUpdate() )
+      return con;
     }
   });
 

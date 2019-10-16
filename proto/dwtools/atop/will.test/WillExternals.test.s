@@ -13164,6 +13164,7 @@ function stepSubmodulesAreUpdated( test )
     currentPath : routinePath,
     outputCollecting : 1,
     throwingExitCode : 0,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -13171,6 +13172,7 @@ function stepSubmodulesAreUpdated( test )
   ({
     currentPath : localModulePath,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -13186,6 +13188,7 @@ function stepSubmodulesAreUpdated( test )
   shell2( 'git init' )
   shell2( 'git add -fA .' )
   shell2( 'git commit -m init' )
+  shell2( 'git commit --allow-empty -m test' )
 
   /* */
 
@@ -13200,8 +13203,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ 1\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( _.strHas( got.output, / 1\/1 submodule\(s\) of .*module::submodules.* are up to date/ ) );
+    test.is( _.strHas( got.output, '1/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -13218,8 +13221,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ 1\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( _.strHas( got.output, / 1\/1 submodule\(s\) of .*module::submodules.* are up to date/ ) );
+    test.is( _.strHas( got.output, '0/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -13238,8 +13241,98 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ 0\/1 submodule\(s\) of .*module::submodules.* were downloaded in/ ) );
-    test.is( _.strHas( got.output, / ! Submodule .*local is not up to date/ ) );
+    test.is( _.strHas( got.output, '0/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '! Submodule opener::local is not up to date!' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'module is not downloaded';
+    return null;
+  })
+
+  shell( '.build debug2' )
+
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '! Submodule opener::local is not downloaded!' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'download path does not contain git repo';
+    return null;
+  })
+
+  shell( '.build debug3' )
+
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '! Submodule opener::local is not downloaded!' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /*  */
+
+  .then( () =>
+  {
+    test.case = 'module is downloaded from different origin';
+    return null;
+  })
+
+  shell( '.build debug4' )
+
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '! Submodule opener::local is already downloaded, but has different origin url' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /*  */
+
+  .then( () =>
+  {
+    test.case = 'module is in detached state';
+    return null;
+  })
+
+  shell( '.build debug5' )
+
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '! Submodule opener::local is not up to date!' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    return null;
+  })
+
+  /*  */
+
+  .then( () =>
+  {
+    test.case = 'module is ahead remote';
+    return null;
+  })
+
+  shell( '.build debug6' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 

@@ -17,14 +17,83 @@ path :
     path : './out/release'
     criterion :
       debug : 0
+  git : .module/local/.git
+  remotePath : git+https:///github.com/Wandalen/wTools.git/
+  downloadPath : .module/local
+
+reflector :
+
+  download.remote :
+    src : path::remotePath
+    dst : path::downloadPath
+
+step :
+
+  clean.local :
+    inherit : files.delete
+    filePath : path::git
+
+  detach.local :
+    currentPath : path::downloadPath
+    shell : git reset --hard HEAD~1
+
+  commit.local :
+    currentPath : path::downloadPath
+    shell : git commit --allow-empty -m testmsg
 
 build :
 
-  debug.raw :
+  debug:
     criterion :
       default : 1
       debug : 1
       raw : 1
     steps :
       - submodules.download
+      - submodules.are.updated
+
+  debug2 :
+    criterion :
+      debug : 1
+      raw : 1
+    steps :
+      - submodules.clean
+      - submodules.are.updated
+
+  debug3 :
+    criterion :
+      debug : 1
+      raw : 1
+    steps :
+      - submodules.clean
+      - clean.local
+      - submodules.are.updated
+
+  debug4 :
+    criterion :
+      debug : 1
+      raw : 1
+    steps :
+      - submodules.clean
+      - download.remote
+      - submodules.are.updated
+
+  debug5 :
+    criterion :
+      debug : 1
+      raw : 1
+    steps :
+      - submodules.clean
+      - submodules.download
+      - detach.local
+      - submodules.are.updated
+
+  debug6 :
+    criterion :
+      debug : 1
+      raw : 1
+    steps :
+      - submodules.clean
+      - submodules.download
+      - commit.local
       - submodules.are.updated
