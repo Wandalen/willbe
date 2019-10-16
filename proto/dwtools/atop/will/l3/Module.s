@@ -1072,6 +1072,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'submodules.agree',
+    stepRoutine : Predefined.stepRoutineSubmodulesAgree,
+  })
+
+  step
+  ({
     name : 'submodules.are.updated',
     stepRoutine : Predefined.stepRoutineSubmodulesAreUpdated,
   })
@@ -2399,6 +2405,7 @@ function modulesBuild_body( o )
     if( o2.recursive === 0 )
     o2.recursive = 1;
     o2.recursive = 2; /* yyy */
+    o2.strict = 0;
     return will.modulesDownload( o2 );
   })
 
