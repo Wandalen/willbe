@@ -9128,6 +9128,72 @@ function customLogger( test )
   }
 }
 
+//
+
+function resourcePathRemoteProblem( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-informal' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let informalPath = abs( './module/' );
+  let supermodulePath = abs( './' );
+  let will = new _.Will({});
+  let ready = new _.Consequence().take( null )
+
+  let opener;
+
+  ready
+  .then( () =>
+  {
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    opener = will.openerMakeUser({ willfilesPath : informalPath });
+    return opener.open();
+  })
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve();
+    let build = builds[ 0 ];
+    will.readingEnd();
+    return build.perform()
+  })
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    test.description = 'finit';
+    module.finit();
+    test.is( module.finitedIs() );
+    test.is( opener.finitedIs() );
+
+    return null;
+  })
+
+  .then( () =>
+  {
+    opener = will.openerMakeUser({ willfilesPath : supermodulePath });
+    return opener.open();
+  })
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    let informalOpener =  module.submoduleMap[ 'UriBasic' ].opener;
+    let informalOpened = informalOpener.openedModule;
+    let informalPathRemoteResource = informalOpened.pathResourceMap[ 'remote' ];
+
+    test.identical( informalPathRemoteResource.path, 'git+https:///github.com/Wandalen/wUriBasic.git' )
+
+    return null;
+  })
+
+
+  return ready;
+}
+
+resourcePathRemoteProblem.experimental = 1;
+
 // --
 // define class
 // --
@@ -9208,6 +9274,8 @@ var Self =
     submodulesDeleteAndDownload,
 
     customLogger,
+
+    resourcePathRemoteProblem,
 
   }
 
