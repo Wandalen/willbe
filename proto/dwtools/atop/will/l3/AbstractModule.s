@@ -829,7 +829,7 @@ function remoteIsUpToDateUpdate()
 
 //
 
-function remoteCurrentVersion()
+function remoteLocalVersion()
 {
   let module = this;
   let will = module.will;
@@ -875,8 +875,9 @@ function remoteHasLocalChanges()
   _.assert( !!module.willfilesPath || !!module.dirPath );
   _.assert( arguments.length === 0 );
 
-  let remoteProvider = fileProvider.providerForPath( module.remotePath );
-  return remoteProvider.hasLocalChanges( module.downloadPath );
+  // let remoteProvider = fileProvider.providerForPath( module.remotePath );
+  // return remoteProvider.hasLocalChanges( module.downloadPath );
+  return _.git.hasLocalChanges( module.downloadPath );
 }
 
 // --
@@ -1023,7 +1024,7 @@ let Extend =
 
   remoteIsUpdate,
   remoteIsUpToDateUpdate,
-  remoteCurrentVersion,
+  remoteLocalVersion,
   remoteLatestVersion,
   remoteHasLocalChanges,
 

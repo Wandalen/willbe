@@ -1,0 +1,18 @@
+
+submodule :
+
+  UriBasic : out/UriBasic.informal.out
+
+path :
+
+  proto : './proto'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
