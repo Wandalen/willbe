@@ -3320,7 +3320,7 @@ defaults.upgrading = null;
 
 //
 
-function versionsVerify()
+function versionsVerify( o )
 {
   let module = this;
   let will = module.will;
@@ -3333,11 +3333,13 @@ function versionsVerify()
   let time = _.timeNow();
 
   _.assert( module.preformed > 0  );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 1 );
+
+  _.routineOptions( versionsVerify, o );
 
   logger.up();
 
-  let modules = module.modulesEach({ outputFormat : '/' });
+  let modules = module.modulesEach({ outputFormat : '/', recursive : o.recursive });
 
   modules.forEach( ( r ) =>
   {
@@ -3412,6 +3414,9 @@ function versionsVerify()
     return onSameVersion;
   }
 }
+
+var defaults  = versionsVerify.defaults = Object.create( null );
+defaults.recursive = 1;
 
 //
 
