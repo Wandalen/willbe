@@ -340,6 +340,7 @@ function _performRecursive()
   {
     let con = new _.Consequence().take( null );
 
+    debugger;
     let modules = outModule.modulesEach
     ({
       recursive : exported.recursive,
@@ -348,9 +349,12 @@ function _performRecursive()
       withOut : 0,
       withIn : 1,
     });
+    debugger;
 
     modules.forEach( ( module2 ) =>
     {
+
+      _.assert( module2 instanceof _.Will.OpenedModule );
 
       con.then( () =>
       {

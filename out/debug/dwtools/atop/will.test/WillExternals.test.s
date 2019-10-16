@@ -2263,6 +2263,87 @@ function modulesTreeDotless( test )
 
 //
 
+function modulesTreeLocal( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  // _.fileProvider.filesDelete( outSuperDirPath );
+  // _.fileProvider.filesDelete( outSubDirPath );
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = '.imply v:1 ; .with */* .modules.tree';
+    return null;
+  })
+
+  shell({ execPath : '.imply v:1 ; .with */* .modules.tree' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '-- module::' ), 19 );
+
+    let exp =
+`
+Command ".imply v:1 ; .with */* .modules.tree"
+ +-- module::module-x
+ |
+ +-- module::module-ab-named
+ | +-- module::module-a
+ | +-- module::module-b
+ |
+ +-- module::module-bc-named
+ | +-- module::module-b
+ | +-- module::module-c
+ |
+ +-- module::module-aabc
+ | +-- module::module-a
+ | +-- module::module-ab
+ | | +-- module::module-a
+ | | +-- module::module-b
+ | +-- module::module-c
+ |
+ +-- module::module-abac
+   +-- module::module-ab
+   | +-- module::module-a
+   | +-- module::module-b
+   +-- module::module-a
+   +-- module::module-c
+`
+
+    test.equivalent( got.output, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function modulesTreeLocal */
+
+//
+
 function modulesTreeHierarchyRemote( test )
 {
   let self = this;
@@ -4445,8 +4526,8 @@ function cleanRecursive( test )
 
     test.identical( _.strCount( got.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( got.output, '. Opened .' ), 25 );
-    test.identical( _.strCount( got.output, '+ 5/10 submodule(s) were downloaded' ), 1 ); /* xxx */
-    test.identical( _.strCount( got.output, '+ 0/8 submodule(s) were downloaded' ), 1 ); /* xxx */
+    test.identical( _.strCount( got.output, '+ 5/10 submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/5 submodule(s) were downloaded' ), 1 ); /* xxx */
 
     return null;
   })
@@ -15014,6 +15095,7 @@ var Self =
     verbosityStepDelete,
     verbosityStepPrintName,
     modulesTreeDotless,
+    modulesTreeLocal,
     modulesTreeHierarchyRemote,
     modulesTreeHierarchyRemoteDownloaded,
     // modulesTreeHierarchyRemotePartiallyDownloaded, // xxx : later

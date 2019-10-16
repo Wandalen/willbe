@@ -297,7 +297,8 @@ function _inPathsForm()
     willf.dirPath = path.detrail( path.dir( filePath ) );
 
     if( willf.isOut === null )
-    willf.isOut = _.strHas( filePath, /\.out\.\w+\.\w+$/ );
+    willf.isOut = _.Will.AbstractModule.PathIsOut( filePath );
+    // willf.isOut = _.strHas( filePath, /\.out\.\w+\.\w+$/ );
 
     if( willf.storagePath === null )
     willf.storagePath = filePath;

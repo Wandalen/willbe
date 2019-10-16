@@ -41,9 +41,12 @@ function finit()
 
   if( variant.peer )
   {
+    let peer = variant.peer;
     _.assert( variant.peer.peer === variant )
-    variant.peer.peer = null;
+    peer.peer = null;
     variant.peer = null;
+    if( !peer.isUsed() )
+    peer.finit();
   }
 
   for( let v in will.variantMap )
@@ -93,115 +96,136 @@ function reform()
 
   _.assert( !variant.finitedIs() );
 
+  // if( variant.id === 2 )
+  // {
+  //   logger.log( '>', variant.infoExport() );
+  //   debugger;
+  // }
+
+  // if( variant.id === 83 || variant.id === 259 )
+  // if( variant.id === 83 )
+  // if( variant.id === 83 || variant.id === 129 )
+  // if( variant.id === 209 || variant.id === 259 )
+  // if( variant.id === 209 )
+  // {
+  //   logger.log( '>', variant.infoExport() );
+  //   debugger;
+  // }
+
+  // if( !variant.opener && !variant.module && !variant.relation )
+  // debugger;
+
   // finitedRemove();
-  if( !variant.opener && !variant.module && !variant.relation )
+  // if( !variant.opener && !variant.module && !variant.relation )
+  if( !variant.isUsed() )
   {
     variant.finit();
     return false;
   }
 
-  if( variant.module )
   {
-    let variant2 = mergeTry( variant.module );
-    if( variant2 )
-    return variant2;
-  }
-
-  if( variant.opener )
-  {
-    let variant2 = mergeTry( variant.opener );
-    if( variant2 )
-    return variant2;
-  }
-
-  if( variant.relation )
-  {
-    let variant2 = mergeTry( variant.relation );
+    let variant2 = variantMergeTry( variant );
     if( variant2 )
     return variant2;
   }
 
   associationsAdd();
 
-  let localPath, remotePath;
+  // let localPath, remotePath;
   objectFind();
-  [ localPath, remotePath ] = variant.PathsOf( variant.object );
+  // [ localPath, remotePath ] = variant.PathsOf( variant.object );
 
-  if( variant.object )
   {
-    let variant2 = mergeTry( variant.object );
+    let variant2 = variantMergeTry( variant );
     if( variant2 )
     return variant2;
   }
 
-  // // if( variant.id === 760 )
-  // // debugger;
-  //
-  // // if( variant.localPath && localPath && variant.localPath !== localPath )
-  // if( localPath )
-  // {
-  //
-  //   let variant2 = will.variantMap[ localPath ];
-  //   if( variant2 && variant2 !== variant )
-  //   {
-  //     // debugger;
-  //     if( variant.mergeIn( variant2 ) )
-  //     return variant2;
-  //   }
-  //
-  // }
-  //
-  // if( remotePath )
-  // {
-  //
-  //   let variant2 = will.variantMap[ remotePath ];
-  //   if( variant2 && variant2 !== variant )
-  //   {
-  //     // debugger;
-  //     if( variant.mergeIn( variant2 ) )
-  //     return variant2;
-  //   }
-  //
-  // }
+  if( variant.id === 83 && !variant.ownSomething() )
+  debugger;
 
-  // _.assert( variant.localPath === null || localPath === null || variant.localPath === localPath );
-  variant.localPath = localPath;
-  // _.assert( variant.remotePath === null || remotePath === null || variant.remotePath === remotePath );
-  variant.remotePath = remotePath;
+  localPathsForm();
 
   verify();
+
+  // variant.localPath = variant.localPaths[ 0 ];
+  // variant.remotePath = remotePath;
+
   register();
   peerForm();
+  nameForm();
+  isOutForm();
 
-  // let paths = variant.PathsOf( variant.object );
-  // _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
+  // if( variant.id === 83 || variant.id === 259 )
+  // if( variant.id === 83 || variant.id === 129 )
+  // if( variant.id === 83 )
+  // if( variant.id === 209 || variant.id === 259 )
+  // if( variant.id === 209 )
+  // {
+  //   logger.log( '<', variant.infoExport() );
+  //   debugger;
+  // }
 
-  // if( Config.debug )
-  // variant.VariantOf( will, variant.object );
-  // will.objectToVariantHash.get( o.object )
+  // if( variant.id === 2 )
+  // {
+  //   logger.log( '<', variant.infoExport() );
+  //   debugger;
+  // }
 
   variant.formed = 1;
   return variant;
 
   /* */
 
-  function mergeTry( object )
+  function variantMergeTry( variant )
+  {
+    let variant2;
+
+    _.any( variant.modules, ( object ) =>
+    {
+      variant2 = objectMergeTry( object );
+      if( variant2 )
+      return variant2;
+    });
+
+    _.any( variant.openers, ( object ) =>
+    {
+      variant2 = objectMergeTry( object );
+      if( variant2 )
+      return variant2;
+    });
+
+    _.any( variant.openers, ( object ) =>
+    {
+      variant2 = objectMergeTry( object );
+      if( variant2 )
+      return variant2;
+    });
+
+    _.any( variant.relations, ( module ) =>
+    {
+      variant2 = objectMergeTry( module );
+      if( variant2 )
+      return variant2;
+    });
+
+    return variant2 || false;
+  }
+
+  /* */
+
+  function objectMergeTry( object )
   {
     let localPath, remotePath;
 
     [ localPath, remotePath ] = variant.PathsOf( object );
 
-    // if( variant.id === 760 )
-    // debugger;
-
-    // if( variant.localPath && localPath && variant.localPath !== localPath )
     if( localPath )
     {
 
       let variant2 = will.variantMap[ localPath ];
       if( variant2 && variant2 !== variant )
       {
-        // debugger;
         if( variant.mergeIn( variant2 ) )
         return variant2;
       }
@@ -214,7 +238,6 @@ function reform()
       let variant2 = will.variantMap[ remotePath ];
       if( variant2 && variant2 !== variant )
       {
-        // debugger;
         if( variant.mergeIn( variant2 ) )
         return variant2;
       }
@@ -225,11 +248,62 @@ function reform()
 
   /* */
 
-  function localPathAdd( object )
+  function pathAdd( object )
   {
     let localPath, remotePath;
     [ localPath, remotePath ] = variant.PathsOf( object );
+    if( localPath )
+    {
+      _.arrayAppendOnce( variant.localPaths, localPath );
+      if( variant.localPath === null )
+      variant.localPath = localPath;
+    }
+    if( variant.localPaths.length > 1 )
+    debugger;
+
+    if( remotePath )
+    {
+      _.assert( variant.remotePath === null || variant.remotePath === remotePath );
+      variant.remotePath = remotePath;
+    }
+
+  }
+
+  /* */
+
+  function pathFromPeerAdd( object )
+  {
+    let peerWillfilesPath = object.pathMap[ 'module.peer.willfiles' ];
+    if( !peerWillfilesPath )
+    return;
+    _.assert( !!peerWillfilesPath );
+    let localPath = _.Will.AbstractModule.CommonPathFor( peerWillfilesPath );
+    _.assert( !_.path.isGlobal( localPath ) );
     _.arrayAppendOnce( variant.localPaths, localPath );
+    if( variant.localPath === null )
+    variant.localPath = localPath;
+    if( variant.localPaths.length !== 1 )
+    debugger;
+  }
+
+  /* */
+
+  function localPathsForm()
+  {
+    variant.localPaths.splice( 0, variant.localPaths.length );
+    // variant.localPath = null;
+
+    variant.modules.forEach( ( object ) => pathAdd( object ) );
+    variant.openers.forEach( ( object ) => pathAdd( object ) );
+    variant.relations.forEach( ( object ) => pathAdd( object ) );
+
+    if( variant.peer )
+    variant.peer.modules.forEach( ( object ) => pathFromPeerAdd( object ) );
+
+    if( variant.localPaths.length && !_.arrayHas( variant.localPaths, variant.localPath ) )
+    variant.localPath = variant.localPaths[ 0 ];
+
+    _.assert( !variant.localPaths.length || _.arrayHas( variant.localPaths, variant.localPath ) );
   }
 
   /* */
@@ -255,18 +329,30 @@ function reform()
 
   function associationsAdd()
   {
-    if( variant.relation && variant.relation.opener && !variant.opener )
-    variant._openerAdd( variant.relation.opener );
-    if( variant.opener && variant.opener.openedModule )
-    variant._moduleAdd( variant.opener.openedModule );
-    if( variant.opener && variant.opener.superRelation )
-    variant._relationAdd( variant.opener.superRelation );
-    if( variant.module && !variant.opener )
-    _.each( variant.module.userArray, ( opener ) =>
+
+    variant.relations.forEach( ( relation ) =>
     {
-      if( opener instanceof _.Will.ModuleOpener )
-      variant._openerAdd( opener );
+      if( relation && relation.opener )
+      variant._openerAdd( relation.opener );
     });
+
+    variant.openers.forEach( ( opener ) =>
+    {
+      if( opener && opener.openedModule )
+      variant._moduleAdd( opener.openedModule );
+      if( opener && opener.superRelation )
+      variant._relationAdd( opener.superRelation );
+    });
+
+    variant.modules.forEach( ( module ) =>
+    {
+      _.each( module.userArray, ( opener ) =>
+      {
+        if( opener instanceof _.Will.ModuleOpener )
+        variant._openerAdd( opener );
+      });
+    });
+
   }
 
   /* */
@@ -299,12 +385,19 @@ function reform()
     if( variant.relation )
     _.assert( !variant.relation.finitedIs() );
 
-    _.assert( _.strDefined( localPath ) || _.strDefined( remotePath ), () => `${variant.object.absoluteName} does not have defined local path, neither remote path` );
+    // _.assert( localPath === null || localPath === variant.localPaths[ 0 ] );
+    // localPath = variant.localPaths[ 0 ];
+
+    _.assert
+    (
+      _.strDefined( variant.localPath ) || _.strDefined( variant.remotePath ),
+      () => `${variant.name} does not have defined local path, neither remote path`
+    );
     _.assert
     (
       !variant.opener || variant.opener.formed >= 2,
       () => `Opener should be formed to level 2 or higher, but ${variant.opener.absoluteName} is not`
-    )
+    );
 
   }
 
@@ -314,29 +407,35 @@ function reform()
   {
     if( will.variantMap )
     {
-      if( localPath )
+      if( variant.localPath )
       {
-        _.assert( will.variantMap[ localPath ] === undefined || will.variantMap[ localPath ] === variant );
-        _.assert( _.strDefined( localPath ) );
-        will.variantMap[ localPath ] = variant;
+        variant.localPaths.forEach( ( localPath ) =>
+        {
+          _.assert( will.variantMap[ localPath ] === undefined || will.variantMap[ localPath ] === variant );
+          _.assert( _.strDefined( localPath ) );
+          will.variantMap[ localPath ] = variant;
+        });
       }
-      if( remotePath )
+      if( variant.remotePath )
       {
-        _.assert( will.variantMap[ remotePath ] === undefined || will.variantMap[ remotePath ] === variant );
-        _.assert( _.strDefined( remotePath ) );
-        will.variantMap[ remotePath ] = variant;
+        _.assert( will.variantMap[ variant.remotePath ] === undefined || will.variantMap[ variant.remotePath ] === variant );
+        _.assert( _.strDefined( variant.remotePath ) );
+        will.variantMap[ variant.remotePath ] = variant;
       }
     }
   }
 
   /* */
 
-  function peerForm()
+  function peerFrom( object )
   {
-    let peerModule = variant.object.peerModule;
+    let peerModule = object.peerModule;
 
     if( !peerModule )
     return;
+
+    if( variant.id === 209 )
+    debugger;
 
     if( !peerModule.isPreformed() )
     return;
@@ -344,7 +443,17 @@ function reform()
     if( variant.peer )
     {
       _.assert( variant.peer.peer === variant );
+      if( !object.peerModule )
       return variant.peer;
+
+      let variant2 = variant.VariantOf( will, object.peerModule );
+      if( variant2 && variant2.peer === variant )
+      return variant.peer;
+      else
+      {
+        debugger;
+        _.assert( 0, 'not tested' );
+      }
     }
 
     _.assert( !variant.finitedIs() );
@@ -362,6 +471,42 @@ function reform()
     }
 
   }
+
+  /* */
+
+  function peerForm()
+  {
+
+    variant.openers.forEach( ( object ) => peerFrom( object ) );
+    variant.modules.forEach( ( object ) => peerFrom( object ) );
+
+  }
+
+  /* */
+
+  function nameForm()
+  {
+    if( variant.object )
+    variant.name = variant.object.absoluteName;
+    else if( variant.peer )
+    variant.name = variant.peer.name + ' / f::peer';
+    // else
+    // variant.name = null;
+  }
+
+  /* */
+
+  function isOutForm()
+  {
+    if( variant.object && _.boolLike( variant.object.isOut ) )
+    variant.isOut = !!variant.object.isOut;
+    else if( variant.peer && variant.peer.object && _.boolLike( variant.peer.object.isOut ) )
+    variant.isOut = !variant.peer.object.isOut;
+    else
+    variant.isOut = _.Will.AbstractModule.PathIsOut( variant.localPath || variant.remotePath );
+  }
+
+  /* */
 
 }
 
@@ -437,7 +582,7 @@ function From( o )
     variant = will.objectToVariantHash.get( o.object );
   }
 
-  if( variant )
+  if( variant && variant.object )
   {
     let localPath, remotePath;
     [ localPath, remotePath ] = variant.PathsOf( variant.object );
@@ -484,9 +629,10 @@ function From( o )
 
   // if( changed ) /* xxx : switch on the optimization */
   if( variant.formed !== -1 )
-  variant.reform();
+  variant = variant.reform();
 
-  _.assert( !!variant.object || variant.finitedIs() );
+  // _.assert( !!variant.object || variant.finitedIs() );
+  _.assert( !variant || !variant.finitedIs() );
 
   return variant;
 
@@ -701,6 +847,11 @@ function _relationAdd( relation )
 
   _.assert( relation instanceof _.Will.ModulesRelation );
 
+  if( !relation.enabled ) /* ttt */
+  {
+    return false;
+  }
+
   if( !variant.relation )
   {
     variant.relation = relation;
@@ -727,7 +878,7 @@ function relationRemove( relation )
   let will = variant.will;
   let changed = false;
 
-  _.assert( !!relation.enabled );
+  // _.assert( !!relation.enabled );
   _.assert( relation instanceof _.Will.ModulesRelation );
   _.arrayRemoveOnce( variant.relations, relation );
 
@@ -753,8 +904,10 @@ function _openerAdd( opener )
   let will = variant.will;
   let changed = false;
 
-  if( opener.superRelation )
+  if( opener.superRelation ) /* ttt */
   {
+    if( !opener.superRelation.enabled )
+    return false;
     _.assert( !!opener.superRelation.enabled );
   }
 
@@ -930,6 +1083,8 @@ function has( object )
 {
   let variant = this;
 
+  _.assert( arguments.length === 1 );
+
   if( object instanceof _.Will.OpenedModule )
   {
     return _.arrayHas( variant.modules, object );
@@ -948,6 +1103,42 @@ function has( object )
 
 //
 
+function ownSomething()
+{
+  let variant = this;
+
+  _.assert( arguments.length === 0 );
+
+  if( variant.modules.length )
+  return true;
+  if( variant.openers.length )
+  return true;
+  if( variant.relations.length )
+  return true;
+
+  return false;
+}
+
+//
+
+function isUsed()
+{
+  let variant = this;
+
+  _.assert( arguments.length === 0 );
+
+  if( variant.ownSomething() )
+  return true;
+
+  if( variant.peer )
+  if( variant.peer.ownSomething() )
+  return true;
+
+  return false;
+}
+
+//
+
 function submodulesGet( o )
 {
   let variant = this;
@@ -956,23 +1147,22 @@ function submodulesGet( o )
 
   o = _.routineOptions( submodulesGet, arguments );
 
+  // if( variant.id === 2 )
+  // debugger;
+
   append( variant );
 
   if( !variant.peer )
   if( variant.module && variant.module.peerModule )
   {
-    debugger; xxx
+    debugger;
+    _.assert( 0, 'not tested' );
     variant.From({ module : variant2.module.peerModule, will : will });
   }
 
-  // if( variant.peer )
-  // debugger;
   if( o.withPeers )
   if( variant.peer )
   append( variant.peer );
-
-  // if( result.length )
-  // debugger;
 
   return result;
 
@@ -986,40 +1176,63 @@ function submodulesGet( o )
     {
       let relation = variant.module.submoduleMap[ s ];
 
-      if( !relation.enabled ) /* ttt */
+      if( !o.withDisabled )
+      if( !relation.enabled )
       continue;
 
-      // let variant2 = variantFromRelation( relation );
+      if( !o.withEnabled )
+      if( relation.enabled )
+      continue;
 
       let variant2 = variant.From({ relation : relation, will : will });;
-
-      result.push( variant2 );
+      if( variant2 )
+      variantAppendMaybe( variant2 );
 
       if( !variant2.peer )
       if( variant2.module && variant2.module.peerModule )
       {
-        debugger; xxx
+        debugger;
+        _.assert( 0, 'not tested' );
         variant2.From({ module : variant2.module.peerModule, will : will });
       }
 
       if( o.withPeers )
       if( variant2.peer )
-      result.push( variant2.peer );
-
-      // if( variant2.module && variant2.module.peerModule )
-      // {
-      //   result.push( variantFromModule( variant2.module.peerModule ) );
-      // }
+      variantAppendMaybe( variant2.peer );
 
     }
 
   }
+
+  /* */
+
+  function variantAppendMaybe( variant )
+  {
+
+    if( !o.withOut )
+    if( variant.isOut )
+    return;
+
+    if( !o.withIn )
+    if( !variant.isOut )
+    return;
+
+    _.assert( variant instanceof _.Will.ModuleVariant );
+    _.arrayAppendOnce( result, variant );
+
+  }
+
+  /* */
 
 }
 
 submodulesGet.defaults =
 {
   withPeers : 1,
+  withOut : 1,
+  withIn : 1,
+  withEnabled : 1,
+  withDisabled : 0,
 }
 
 // --
@@ -1031,26 +1244,30 @@ function infoExport()
   let result = '';
   let variant = this;
 
-  result += `variant#${variant.id}\n`;
-  if( variant.module )
+  result += `variant:: : #${variant.id}\n`;
+
+  if( variant.localPath )
+  result += `  path::local : ${variant.localPath}\n`;
+  if( variant.remotePath )
+  result += `  path::remote : ${variant.remotePath}\n`;
+
+  if( variant.modules.length )
   {
-    result += variant.module.absoluteName + ' #' + variant.module.id + '\n';
+    result += '  ' + variant.module.absoluteName + ' #' + variant.modules.map( ( m ) => m.id ).join( ' #' ) + '\n';
   }
   if( variant.opener )
   {
-    result += variant.opener.absoluteName + ' #' + variant.opener.id + '\n';
+    result += '  ' + variant.opener.absoluteName + ' #' + variant.openers.map( ( m ) => m.id ).join( ' #' ) + '\n';
   }
   if( variant.relation )
   {
-    result += variant.relation.absoluteName + ' #' + variant.relation.id + '\n';
+    result += '  ' + variant.relation.absoluteName + ' #' + variant.relations.map( ( m ) => m.id ).join( ' #' ) + '\n';
+  }
+  if( variant.peer )
+  {
+    result += `  peer::variant : #${variant.peer.id}\n`;
   }
 
-  if( variant.localPath )
-  result += `path::local : ${variant.localPath}`;
-  if( variant.remotePath )
-  result += `path::remote : ${variant.remotePath}`;
-
-  debugger;
   return result;
 }
 
@@ -1073,7 +1290,6 @@ let moduleSymbol = Symbol.for( 'module' );
 
 let Composes =
 {
-
 }
 
 let Aggregates =
@@ -1100,7 +1316,9 @@ let Medials =
 let Restricts =
 {
 
+  name : null,
   id : null,
+  isOut : null,
   formed : 0,
 
   localPath : null,
@@ -1175,6 +1393,8 @@ let Extend =
   _remove,
   remove,
   has,
+  ownSomething,
+  isUsed,
   submodulesGet,
 
   // export

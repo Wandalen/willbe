@@ -186,6 +186,13 @@ function WillfilePathIs( filePath )
 
 //
 
+function PathIsOut( filePath )
+{
+  return _.strHas( filePath, /\.out\.\w+\.\w+$/ );
+}
+
+//
+
 function DirPathFromFilePaths( filePaths )
 {
   let module = this;
@@ -914,6 +921,7 @@ let Statics =
 {
 
   WillfilePathIs,
+  PathIsOut,
   DirPathFromFilePaths,
   PrefixPathForRole,
   PrefixPathForRoleMaybe,
@@ -983,6 +991,7 @@ let Extend =
   // path
 
   WillfilePathIs,
+  PathIsOut,
   DirPathFromFilePaths,
   PrefixPathForRole,
   PrefixPathForRoleMaybe,

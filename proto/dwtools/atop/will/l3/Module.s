@@ -837,8 +837,9 @@ function _preform()
 
   // debugger;
   will.moduleIdRegister( module );
-  module._pathRegister();
   module._remoteChanged();
+  module._peerChanged();
+  module._pathRegister();
   // debugger;
   // will.modulePathRegister( module );
   // will.variantFrom( module );
@@ -922,7 +923,7 @@ function predefinedForm()
 
   path
   ({
-    name : 'module.peer.willfiles',
+    name : 'module.peer.willfiles', /* xxx : introduce module.peer */
     path : null,
     writable : 0,
     exportable : 1,
@@ -2743,7 +2744,7 @@ function submodulesAllAreDownloaded( o )
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.modulesEach( o2 );
-  debugger;
+  // debugger;
 
   return relations.every( ( relation ) =>
   {
@@ -3502,6 +3503,12 @@ function peerModuleOpen( o )
 
   con.then( ( arg ) =>
   {
+
+    // if( module.rootModule === module && _.strEnds( module.commonPath, '/a' ) )
+    // debugger;
+    // if( module.rootModule === module && _.strEnds( module.commonPath, '/b' ) )
+    // debugger;
+
     if( module.peerModule )
     return module.peerModule;
     return open();
@@ -4316,6 +4323,8 @@ function _pathRegister()
 {
   let module = this;
   let will = module.will;
+
+  // _.assert( !!module.pathMap[ 'module.peer.willfiles' ], '_peerChanged should goes before' );
 
   will.modulePathRegister( module );
   will.variantFrom( module );
