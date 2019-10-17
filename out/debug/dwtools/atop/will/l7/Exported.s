@@ -701,7 +701,7 @@ function _performExportedReflectors()
   _.assert( _.mapIs( exportedReflector.criterion ) );
   _.assert( exportedReflector.dst.prefixPath === null );
   _.assert( exportedReflector.dst.basePath === null );
-  _.assert( path.isAbsolute( exportedReflector.src.prefixPath ) );
+  _.assert( exportedReflector.src.prefixPath === null || path.isAbsolute( exportedReflector.src.prefixPath ) );
   _.assert( exportedReflector instanceof will.Reflector );
 
   /* srcFilter */
