@@ -167,8 +167,6 @@ function form3()
   _.assert( _.strIs( relation.path ), 'not tested' );
   _.sure( _.strIs( relation.path ) || _.arrayIs( relation.path ), 'Path resource should have "path" field' );
 
-  /* begin */
-
   if( relation.enabled )
   result = relation._openAct();
   else
@@ -186,10 +184,11 @@ function form3()
       relation.errorNotFound( err );
     }
 
+    if( !err && relation.opener.openedModule )
+    relation._openEnd();
+
     return arg || null;
   });
-
-  /* end */
 
   return result;
 }
@@ -234,32 +233,6 @@ function _closeEnd()
   relation.formed = 2;
 
   return relation;
-}
-
-//
-
-function _moduleAdoptEnd()
-{
-  let relation = this;
-  let module = relation.module;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let rootModule = module.rootModule;
-
-  _.assert( relation.formed < 3 );
-  _.assert( !!relation.opener.openedModule );
-
-  if( relation.formed === 2 && relation._wantedOpened )
-  {
-    relation.formed = 3;
-  }
-  else
-  {
-    debugger;
-  }
-
 }
 
 //
@@ -312,6 +285,73 @@ function _openAct( o )
 _openAct.defaults =
 {
   longPath : null,
+}
+
+//
+
+function _openEnd()
+{
+  let relation = this;
+  let module = relation.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let rootModule = module.rootModule;
+
+  _.assert( relation.formed === 3 );
+  _.assert( !!relation.opener.openedModule );
+
+  if( module.id === 658 )
+  debugger;
+  if( relation.opener.openedModule.id === 151 )
+  debugger;
+
+  let modules2 = relation.opener.openedModule.modulesEach
+  ({
+    withPeers : 0,
+    withStem : 1,
+    recursive : 2,
+  })
+
+  modules2.forEach( ( module2 ) => module2 ? module2._nameRegister( rootModule ) : null );
+
+}
+
+//
+
+function _moduleAdoptEnd()
+{
+  let relation = this;
+  let module = relation.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let rootModule = module.rootModule;
+
+  // if( relation.formed >= 3 )
+  // {
+  //   if( relation.opener && !relation.opener.isValid() )
+  //   relation.close();
+  // }
+
+  // logger.log( '_moduleAdoptEnd', module.commonPath, relation.absoluteName );
+
+  _.assert( relation.formed < 3 );
+  _.assert( !!relation.opener.openedModule );
+
+  if( relation.formed === 2 && relation._wantedOpened )
+  {
+    relation.formed = 3;
+  }
+  else
+  {
+    debugger;
+  }
+
+  relation._openEnd();
+
 }
 
 // --
@@ -772,8 +812,9 @@ let Extend =
 
   close,
   _closeEnd,
-  _moduleAdoptEnd,
   _openAct,
+  _openEnd,
+  _moduleAdoptEnd,
 
   // accessor
 

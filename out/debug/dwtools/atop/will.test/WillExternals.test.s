@@ -1623,12 +1623,14 @@ function verbositySet( test )
     test.is( _.strHas( got.output, '.imply verbosity:3 ; .build' ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( _.strHas( got.output, 'Failed to open relation::Tools' ) ); debugger;
+    test.is( _.strHas( got.output, 'Failed to open relation::Tools' ) );
     test.is( _.strHas( got.output, 'Failed to open relation::PathBasic' ) );
-    test.is( _.strHas( got.output, '. Read 6 willfile(s) in' ) );
+    test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( got.output, / \+ 2\/3 submodule\(s\) were downloaded in/ ) );
+    test.is( _.strHas( got.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
+    test.is( _.strHas( got.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 2 );
     test.is( _.strHas( got.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
     test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, ' + reflector::reflect.submodules reflected' ) );
@@ -1652,10 +1654,12 @@ function verbositySet( test )
     test.is( !_.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
     test.is( !_.strHas( got.output, 'Failed to open relation::Tools' ) );
     test.is( !_.strHas( got.output, 'Failed to open relation::PathBasic' ) );
-    test.is( _.strHas( got.output, '. Read 6 willfile(s) in' ) );
+    test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( _.strHas( got.output, / \+ 2\/3 submodule\(s\) were downloaded in/ ) );
+    test.is( _.strHas( got.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
+    test.is( _.strHas( got.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 2 );
     test.is( _.strHas( got.output, / - .*step::delete.out.debug.* deleted 0 file\(s\)/ ) );
     test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, ' + reflector::reflect.submodules reflected' ) );
@@ -1682,7 +1686,9 @@ function verbositySet( test )
     test.is( !_.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( !_.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
-    test.is( !_.strHas( got.output, / \+ 2\/2 submodule\(s\) were downloaded in/ ) );
+    test.is( !_.strHas( got.output, ' + 2/2 submodule(s) of module::submodules were downloaded' ) );
+    test.is( !_.strHas( got.output, ' + 0/2 submodule(s) of module::submodules were downloaded' ) );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 0 );
     test.is( !_.strHas( got.output, ' - Deleted' ) );
     test.is( !_.strHas( got.output, ' + reflect.proto.debug reflected 2 file(s) ' ) );
     test.is( !_.strHas( got.output, ' + reflect.submodules reflected' ) );
@@ -7993,17 +7999,55 @@ function exportRecursiveLocal( test )
 
   /* - */
 
+  shell({ execPath : '.with */* .clean' })
   shell({ execPath : '.with */* .export' })
+
+  .finally( ( err, got ) =>
+  {
+    test.case = 'first';
+
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 9 );
+    return null;
+  })
+
   shell({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, got ) =>
   {
-    test.case = '.with ab/ .resources.list';
     test.is( !err );
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'About' ), 1 );
     test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
-    test.identical( _.strCount( got.output, 'module::module-ab /' ), 43 );
+    test.identical( _.strCount( got.output, 'module::module-ab /' ), 51 );
+
+    return null;
+  })
+
+  /* - */
+
+  shell({ execPath : '.with */* .export' })
+
+  .finally( ( err, got ) =>
+  {
+    test.case = 'second';
+
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 9 );
+    return null;
+  })
+
+  shell({ execPath : '.with ab/ .resources.list' })
+  .finally( ( err, got ) =>
+  {
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'About' ), 1 );
+    test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
+    test.identical( _.strCount( got.output, 'module::module-ab /' ), 51 );
 
     return null;
   })
@@ -8011,7 +8055,9 @@ function exportRecursiveLocal( test )
   /* - */
 
   return ready;
-}
+} /* end of function exportRecursiveLocal */
+
+exportRecursiveLocal.timeOut = 300000;
 
 //
 
@@ -11841,8 +11887,11 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '+ 5/10 submodule(s) were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded in' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
 
     return null;
   })
@@ -11858,8 +11907,11 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '+ 0/10 submodule(s) were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '. Read 19 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded in' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
 
     return null;
   })
@@ -11886,10 +11938,15 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '+ 5/10 submodule(s) were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/5 submodule(s) were downloaded' ), 2 );
-    test.identical( _.strCount( got.output, '+ 0/3 submodule(s) were downloaded' ), 2 );
-    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 5 );
+    test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( got.output, '+ 2/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z / module::c were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z / module::a were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 5 );
 
     return null;
   })
@@ -11905,12 +11962,20 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/1 submodule(s) were downloaded' ), 4 );
-    test.identical( _.strCount( got.output, '+ 0/3 submodule(s) were downloaded' ), 2 );
-    test.identical( _.strCount( got.output, '+ 0/5 submodule(s) were downloaded' ), 2 );
-    test.identical( _.strCount( got.output, '+ 0/10 submodule(s) were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 10 );
+    test.identical( _.strCount( got.output, '. Read 15 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathBasic / module::wPathBasic were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic / module::wUriBasic were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wProto / module::wProto were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wTools / module::wTools were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::c were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathTools / module::wPathTools were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::a were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/10 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
 
     return null;
   })
@@ -11937,8 +12002,11 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '+ 1/5 submodule(s) were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded in' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
 
     return null;
   })
@@ -11954,8 +12022,11 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '+ 0/5 submodule(s) were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '. Read 8 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded in' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
 
     return null;
   })
@@ -11982,10 +12053,19 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '+ 1/5 submodule(s) were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 1/3 submodule(s) were downloaded' ), 3 );
-    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 5 );
+    test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+
+    // test.identical( _.strCount( got.output, '+ 1/5 submodule(s) were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 1/4 submodule(s) were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 1/3 submodule(s) were downloaded' ), 3 );
+
+    test.identical( _.strCount( got.output, '+ 2/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 5 );
 
     return null;
   })
@@ -12001,8 +12081,22 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 10 );
+    test.identical( _.strCount( got.output, '. Read 15 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+
+    // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) were downloaded' ), 1 );
+
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathBasic / module::wPathBasic were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic / module::wUriBasic were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wProto / module::wProto were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wTools / module::wTools were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathTools / module::wPathTools were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
 
     return null;
   })
@@ -12029,8 +12123,11 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/1 submodule(s) were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
 
     return null;
   })
@@ -12057,8 +12154,11 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/1 submodule(s) were downloaded' ), 5 );
-    test.identical( _.strCount( got.output, 'submodule(s) were downloaded' ), 5 );
+    test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of' ), 5 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 5 );
 
     return null;
   })
@@ -15408,12 +15508,12 @@ var Self =
     exportWholeModule,
     exportRecursive,
     exportRecursiveUsingSubmodule,
-    exportRecursiveLocal, // xxx : later
+    exportRecursiveLocal,
     exportDotless,
     exportDotlessSingle,
     exportTracing,
     exportRewritesOutFile,
-    // exportWithRemoteSubmodules, // xxx
+    exportWithRemoteSubmodules, // xxx
     importPathLocal, // qqq : help to fix, please. agree should work with corrupted downloaded submodule. auto download should throw no error( introduce option strict : 0 )
     importLocalRepo,
     importOutWithDeletedSource,

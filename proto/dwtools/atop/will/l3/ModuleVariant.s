@@ -277,7 +277,7 @@ function reform()
     if( !peerWillfilesPath )
     return;
     _.assert( !!peerWillfilesPath );
-    let localPath = _.Will.AbstractModule.CommonPathFor( peerWillfilesPath );
+    let localPath = _.Will.CommonPathFor( peerWillfilesPath );
     _.assert( !_.path.isGlobal( localPath ) );
     _.arrayAppendOnce( variant.localPaths, localPath );
     if( variant.localPath === null )
@@ -503,7 +503,7 @@ function reform()
     else if( variant.peer && variant.peer.object && _.boolLike( variant.peer.object.isOut ) )
     variant.isOut = !variant.peer.object.isOut;
     else
-    variant.isOut = _.Will.AbstractModule.PathIsOut( variant.localPath || variant.remotePath );
+    variant.isOut = _.Will.PathIsOut( variant.localPath || variant.remotePath );
   }
 
   /* */

@@ -185,6 +185,239 @@ function formAssociates()
 }
 
 // --
+// path
+// --
+
+function WillfilePathIs( filePath )
+{
+  let fname = _.path.fullName( filePath );
+  let r = /\.will\.\w+/;
+  if( _.strHas( fname, r ) )
+  return true;
+  return false;
+}
+
+//
+
+function PathIsOut( filePath )
+{
+  return _.strHas( filePath, /\.out\.\w+\.\w+$/ );
+}
+
+//
+
+function DirPathFromFilePaths( filePaths )
+{
+  let module = this;
+
+  filePaths = _.arrayAs( filePaths );
+
+  _.assert( _.strsAreAll( filePaths ) );
+  _.assert( arguments.length === 1 );
+
+  filePaths = filePaths.map( ( filePath ) =>
+  {
+    filePath = _.path.normalize( filePath );
+
+    let r1 = /(.*)(?:\.will(?:\.|$))[^\/]*$/;
+    let parsed1 = r1.exec( filePath );
+    if( parsed1 )
+    filePath = parsed1[ 1 ];
+
+    let r2 = /(.*)(?:\.(?:im|ex)(?:\.|$))[^\/]*$/;
+    let parsed2 = r2.exec( filePath );
+    if( parsed2 )
+    filePath = parsed2[ 1 ];
+
+    // if( parsed1 || parsed2 )
+    // if( _.strEnds( filePath, '/' ) )
+    // filePath = filePath + '.';
+
+    return filePath;
+  });
+
+  let filePath = _.strCommonLeft.apply( _, _.arrayAs( filePaths ) );
+  _.assert( filePath.length > 0 );
+  return filePath;
+}
+
+//
+
+function PrefixPathForRole( role, isOut )
+{
+  let cls = this;
+  let result = cls.PrefixPathForRoleMaybe( role, isOut );
+
+  _.assert( arguments.length === 2 );
+  _.sure( _.strIs( result ), 'Unknown role', _.strQuote( role ) );
+
+  return result;
+}
+
+//
+
+function PrefixPathForRoleMaybe( role, isOut )
+{
+  let cls = this;
+  let result = '';
+
+  _.assert( arguments.length === 2 );
+
+  if( role === 'import' )
+  result += '.im';
+  else if( role === 'export' )
+  result += '.ex';
+  else if( role === 'single' )
+  result += '';
+  else return null;
+
+  result += isOut ? '.out' : '';
+  result += '.will';
+
+  return result;
+}
+
+//
+
+function PathToRole( filePath )
+{
+  let role = null;
+
+  if( _.arrayLike( filePath ) )
+  return _.map( filePath, ( filePath ) => this.PathToRole( filePath ) );
+
+  let isImport = _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ );
+  let isExport = _.strHas( filePath, /(^|\.|\/)ex\.will(\.|$)/ );
+
+  // debugger;
+  // if( isImport && isExport )
+  // role = [ 'import', 'export' ];
+  // else
+
+  if( isImport )
+  role = 'import';
+  else if( isExport )
+  role = 'export';
+  else
+  role = 'single';
+
+  return role;
+}
+
+//
+
+function CommonPathFor( willfilesPath )
+{
+
+  if( _.arrayIs( willfilesPath ) )
+  {
+    if( !willfilesPath.length )
+    return null;
+    willfilesPath = willfilesPath[ 0 ];
+  }
+
+  _.assert( arguments.length === 1 );
+
+  if( willfilesPath === null )
+  return null;
+
+  _.assert( _.strIs( willfilesPath ) );
+
+  // let common = willfilesPath.replace( /\.will(\.\w+)?$/, '' );
+  //
+  // common = common.replace( /(\.im|\.ex)$/, '' );
+
+  let common = willfilesPath;
+
+  // common = common.replace( /(\.)?((im|ex)\.)?(will\.)(out\.)?(\w+)?$/, '' );
+  // debugger;
+
+  let common2 = common.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.out)?(\.\w+)?$/, '' );
+  let removed = _.strRemoveBegin( common, common2 );
+  // debugger;
+  if( removed[ 0 ] === '/' )
+  common2 = common2 + '/';
+  common = common2;
+
+  if( _.strEnds( common, '/wTools.out.will' ) )
+  debugger;
+
+  // if( _.strEnds( common, [ '/im', '/ex' ] ) )
+  // {
+  //   common = _.uri.trail( _.uri.dir( common ) );
+  //   _.assert( _.uri.isTrailed( common ) );
+  // }
+
+  return common;
+}
+
+//
+
+function CloneDirPathFor( inPath )
+{
+  _.assert( arguments.length === 1 );
+  return _.path.join( inPath, '.module' );
+}
+
+//
+
+function OutfilePathFor( outPath, name )
+{
+  _.assert( arguments.length === 2 );
+  _.assert( _.path.isAbsolute( outPath ), 'Expects absolute path outPath' );
+  _.assert( _.strDefined( name ), 'Module should have name, declare about::name' );
+  name = _.strJoinPath( [ name, '.out.will.yml' ], '.' );
+  return _.path.join( outPath, name );
+}
+
+//
+
+function RemotePathAdjust( remotePath, relativePath )
+{
+
+  let remotePathParsed = _.uri.parseConsecutive( remotePath );
+
+  // debugger;
+  if( !remotePathParsed.query )
+  {
+    return _.uri.join( remotePath, relativePath );
+  }
+
+  remotePathParsed.query = _.strWebQueryParse( remotePathParsed.query );
+
+  if( !remotePathParsed.query.out )
+  {
+    debugger;
+    return _.uri.join( remotePath, relativePath );
+  }
+
+  remotePathParsed.query.out = _.path.join( remotePathParsed.query.out, relativePath );
+
+  return _.uri.str( remotePathParsed );
+  // src1 = _.uri.parseConsecutive( src1 );
+  // src2 = _.uri.parseConsecutive( src2 );
+  //
+  // let query1 = src1.query ? _.strWebQueryParse( src1.query ) || { out : '.' };
+  // let query2 = src2.query ? _.strWebQueryParse( src2.query ) || { out : '.' };
+  //
+  // query1.out = query1.out || '.';
+  // query2.out = query2.out || '.';
+  //
+  // debugger;
+  // let outPath = _.path.join( query1.out, query2.out );
+  // debugger;
+  //
+  // query1.out = outPath;
+  // delete query2.out;
+  //
+  // src1 = _.uri.str( src1 );
+  // src2 = _.uri.str( src2 );
+  //
+  // debugger;
+  // return _.uri.join( src1, src2 );
+}
+
+// --
 // etc
 // --
 
@@ -589,7 +822,7 @@ function moduleAt( willfilesPath )
 
   _.assert( arguments.length === 1 );
 
-  let commonPath = will.AbstractModule.CommonPathFor( willfilesPath );
+  let commonPath = _.Will.CommonPathFor( willfilesPath );
 
   return will.moduleWithCommonPathMap[ commonPath ];
 }
@@ -1040,8 +1273,6 @@ function modulesFindWithAt( o )
     let opener;
     try
     {
-      // if( visitedFilesHash.has( file ) )
-      // debugger;
       if( visitedFilesHash.has( file ) )
       return null;
 
@@ -1055,7 +1286,6 @@ function modulesFindWithAt( o )
       if( willfilesPath.length === 1 )
       willfilesPath = willfilesPath[ 0 ];
 
-      // debugger;
       let opener = will._openerMake
       ({
         opener :
@@ -1105,9 +1335,23 @@ function modulesFindWithAt( o )
 
   con.finally( ( err, arg ) =>
   {
-    it.sortedModules = will.graphTopologicalSort( will.modulesArray );
     if( err )
     throw err;
+    it.variants = will.variantsFrom( it.openers );
+    it.sortedVariants = will.graphTopSort( it.variants );
+    it.sortedVariants.reverse();
+    it.sortedOpeners = [];
+    it.sortedVariants = _.filter( it.sortedVariants, ( variant ) =>
+    {
+      let opener = _.arraySetIntersection( it.openers.slice(), variant.openers )[ 0 ];
+      if( !opener )
+      {
+        return;
+      }
+      _.assert( !opener.superRelation );
+      it.sortedOpeners.push( opener );
+      return variant;
+    });
     return it;
   });
 
@@ -1492,9 +1736,273 @@ delete defaults.onNode;
 
 let modulesFor = _.routineFromPreAndBody( modulesFor_pre, modulesFor_body );
 
+// //
+//
+// function _modulesDownload_pre( routine, args )
+// {
+//   let module = this;
+//
+//   _.assert( arguments.length === 2 );
+//   _.assert( args.length <= 2 );
+//
+//   let o = args[ 0 ];
+//
+//   o = _.routineOptions( routine, o );
+//
+//   _.assert( _.arrayHas( [ 'download', 'update', 'agree' ], o.mode ) );
+//
+//   return o;
+// }
+//
+// /* xxx : merge with modulesDownload maybe */
+// function _modulesDownload_body( o )
+// {
+//   let will = this;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let ready = new _.Consequence().take( null );
+//
+//   if( !o.downloadedContainer )
+//   o.downloadedContainer = [];
+//   if( !o.localContainer )
+//   o.localContainer = [];
+//   if( !o.doneContainer )
+//   o.doneContainer = [];
+//   if( !o.remoteContainer )
+//   o.remoteContainer = [];
+//
+//   _.assert( arguments.length === 1 );
+//   _.assertRoutineOptions( _modulesDownload_body, arguments );
+//   _.assert( _.each( o.modules, ( variant ) => variant instanceof _.Will.ModuleVariant ) );
+//
+//   ready.then( () => variantsDownload( o.modules ) );
+//
+//   ready.finally( ( err, arg ) =>
+//   {
+//     if( err )
+//     throw _.err( err );
+//     return o;
+//   });
+//
+//   return ready;
+//
+//   /* */
+//
+//   function variantsDownload( variants )
+//   {
+//     let ready2 = new _.Consequence().take( null );
+//
+//     _.assert( _.arrayIs( variants ) );
+//     variants.forEach( ( variant ) => /* xxx : make it parallel */
+//     {
+//
+//       _.assert
+//       (
+//         !!variant.object,
+//         () => 'No object for' + ( variant.relation ? variant.relation.qualifiedName : '' ) + ''
+//       );
+//
+//       if( _.arrayHas( o.doneContainer, variant.object.localPath ) )
+//       return null;
+//
+//       _.assert
+//       (
+//         !!variant.opener,
+//         () => 'Submodule' + ( variant.relation ? variant.relation.qualifiedName : variant.module.qualifiedName ) + ' was not opened or downloaded'
+//       );
+//
+//       _.assert
+//       (
+//         !!variant.opener && variant.opener.formed >= 2,
+//         () => 'Submodule' + ( variant.opener ? variant.opener.qualifiedName : n ) + ' was not preformed to download it'
+//       );
+//
+//       if( !variant.object.isRemote )
+//       return variantLocalMaybe( variant );
+//       if( variant.relation && !variant.relation.enabled )
+//       return variantLocalMaybe( variant );
+//
+//       ready2.then( () =>
+//       {
+//         return variantDownload( variant );
+//       });
+//
+//     });
+//
+//     return ready2;
+//   }
+//
+//   /* */
+//
+//   function variantDownload( variant )
+//   {
+//
+//     if( _.arrayHas( o.localContainer, variant.object.localPath ) || _.arrayHas( o.localContainer, variant.object.remotePath ) )
+//     {
+//       _.assert( 0, 'unexpected' );
+//     }
+//
+//     if( _.arrayHas( o.doneContainer, variant.opener.remotePath ) )
+//     return variantDone( variant );
+//
+//     if( variant.peer )
+//     {
+//       if( _.arrayHas( o.doneContainer, variant.peer.localPath ) )
+//       {
+//         debugger;
+//         return variantDone( variant );
+//       }
+//       if( _.arrayHas( o.doneContainer, variant.peer.remotePath ) )
+//       {
+//         debugger;
+//         return variantDone( variant );
+//       }
+//     }
+//
+//     variantRemote( variant );
+//     // _.arrayAppendOnceStrictly( o.remoteContainer, variant.opener.remotePath );
+//     variantDone( variant );
+//     if( variant.peer )
+//     {
+//       variantDone( variant.peer );
+//     }
+//
+//     if( o.dry )
+//     {
+//       return variant.opener._remoteIsUpToDate({ mode : o.mode })
+//       .then( ( downloading ) =>
+//       {
+//         if( downloading )
+//         variantDownloaded( variant );
+//         return null;
+//       })
+//     }
+//     else
+//     {
+//       let o2 = _.mapOnly( o, variant.opener._remoteDownload.defaults );
+//       let r = _.Consequence.From( variant.opener._remoteDownload( o2 ) );
+//       return r.then( ( downloaded ) =>
+//       {
+//         _.assert( _.boolIs( downloaded ) );
+//         _.assert( _.strIs( variant.opener.remotePath ) );
+//         if( downloaded )
+//         variantDownloaded( variant );
+//         return downloaded;
+//       });
+//     }
+//
+//   }
+//
+//   /* */
+//
+//   function variantDownloaded( variant )
+//   {
+//     _.arrayAppendOnceStrictly( o.downloadedContainer, variant.remotePath );
+//     // _.arrayAppendOnceStrictly( o.downloadedContainer, variant.opener.remotePath );
+//   }
+//
+//   /* */
+//
+//   function variantLocalMaybe( variant )
+//   {
+//
+//     if( variant.object.isRemote )
+//     return null;
+//     if( variant.peer && variant.peer.object && variant.peer.object.isRemote )
+//     return variantRemote( variant );
+//
+//     if( variant.object.root === variant.object )
+//     debugger;
+//     // if( variant.object.root === variant.object )
+//     // return null;
+//
+//     variantLocal( variant );
+//   }
+//
+//   /* */
+//
+//   function variantRemote( variant )
+//   {
+//
+//     if( o.rootModulePath && variant.localPath && o.rootModulePath === variant.localPath )
+//     {
+//       debugger;
+//       return null;
+//     }
+//
+//     _.assert( !!variant.remotePath );
+//     _.arrayAppendOnce( o.remoteContainer, variant.remotePath );
+//     _.assert( !_.arrayHas( o.localContainer, variant.remotePath ) );
+//     return null;
+//   }
+//
+//   /* */
+//
+//   function variantLocal( variant )
+//   {
+//
+//     if( variant.localPath && _.strHas( variant.localPath, '.module' ) )
+//     debugger;
+//
+//     if( o.rootModulePath && variant.localPath && o.rootModulePath === variant.localPath )
+//     return null;
+//
+//     if( variant.peer )
+//     {
+//       if( _.arrayHas( o.doneContainer, variant.peer.remotePath ) )
+//       return variantDone( variant );
+//       if( _.arrayHas( o.doneContainer, variant.peer.localPath ) )
+//       return variantDone( variant );
+//     }
+//
+//     if( _.arrayHas( o.doneContainer, variant.opener.remotePath ) )
+//     return null;
+//     if( _.arrayHas( o.doneContainer, variant.opener.localPath ) )
+//     return null;
+//
+//     _.assert( _.strIs( variant.localPath ) );
+//     _.arrayAppendOnce( o.localContainer, variant.localPath );
+//
+//     return null;
+//   }
+//
+//   /* */
+//
+//   function variantDone( variant )
+//   {
+//     if( o.rootModulePath && variant.localPath && o.rootModulePath === variant.localPath )
+//     return null;
+//
+//     if( variant.localPath )
+//     _.arrayAppendOnce( o.doneContainer, variant.localPath );
+//     if( variant.remotePath )
+//     _.arrayAppendOnce( o.doneContainer, variant.remotePath );
+//     return null;
+//   }
+//
+//   /* */
+//
+// }
+//
+// var defaults = _modulesDownload_body.defaults = Object.create( null );
+//
+// defaults.mode = 'download';
+// defaults.strict = 1;
+// defaults.dry = 0;
+// defaults.modules = null;
+// defaults.rootModulePath = null;
+//
+// defaults.downloadedContainer = null;
+// defaults.localContainer = null;
+// defaults.remoteContainer = null;
+// defaults.doneContainer = null;
+//
+// let _modulesDownload = _.routineFromPreAndBody( _modulesDownload_pre, _modulesDownload_body );
+
 //
 
-function _modulesDownload_pre( routine, args )
+function modulesDownload_pre( routine, args )
 {
   let module = this;
 
@@ -1504,45 +2012,139 @@ function _modulesDownload_pre( routine, args )
   let o = args[ 0 ];
 
   o = _.routineOptions( routine, o );
-
   _.assert( _.arrayHas( [ 'download', 'update', 'agree' ], o.mode ) );
 
   return o;
 }
 
-function _modulesDownload_body( o )
+function modulesDownload_body( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let time = _.timeNow();
+  let downloadedLengthWas = 0;
 
   if( !o.downloadedContainer )
   o.downloadedContainer = [];
   if( !o.localContainer )
   o.localContainer = [];
-  if( !o.doneContainer )
-  o.doneContainer = [];
   if( !o.remoteContainer )
   o.remoteContainer = [];
+  if( !o.doneContainer )
+  o.doneContainer = [];
+  if( !o.nodesGroup )
+  o.nodesGroup = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
 
   _.assert( arguments.length === 1 );
-  _.assertRoutineOptions( _modulesDownload_body, arguments );
-  _.assert( _.each( o.modules, ( variant ) => variant instanceof _.Will.ModuleVariant ) );
+  _.assertRoutineOptions( modulesDownload_body, arguments );
 
-  ready.then( () => variantsDownload( o.modules ) );
+  o.modules = _.arrayAs( o.nodesGroup.nodesAddOnce( o.modules ) );
+  _.assert( _.arrayIs( o.modules ) );
 
-  ready.finally( ( err, arg ) =>
+  let fitOpts = _.mapOnly( o, _.Will.prototype.moduleFit.defaults );
+  fitOpts.withOut = false;
+  o.modules = o.modules.filter( ( variant ) => will.moduleFit( variant, fitOpts ) );
+
+  if( !o.modules.length )
+  return _.Consequence().take( o );
+
+  let rootModule = o.modules.length === 1 ? o.modules[ 0 ].module : null;
+  let rootModulePath = rootModule ? rootModule.localPath : null;
+
+  if( rootModule && rootModule.id === 1516 )
+  debugger;
+
+  return download( o.modules )
+  .finally( ( err, arg ) =>
   {
     if( err )
-    throw _.err( err );
+    debugger;
+    if( err )
+    throw _.err( err, '\nFailed to', ( o.mode ), 'submodules' );
+
+    log();
+
     return o;
   });
 
-  return ready;
+  /* */
+
+  function download( variants )
+  {
+    let ready = new _.Consequence().take( null );
+
+    ready.then( () =>
+    {
+      return will.modulesUpform
+      ({
+        modules : variants,
+        recursive : o.recursive,
+        all : 0,
+        subModulesFormed : 1,
+        withPeers : 1,
+      });
+    });
+
+    ready.then( ( arg ) =>
+    {
+      let o2 = _.mapOnly( o, will.modulesEach.defaults );
+      o2.outputFormat = '/';
+      o2.modules = variants;
+      delete o2.nodesGroup;
+      variants = will.modulesEach( o2 );
+      downloadedLengthWas = o.downloadedContainer.length;
+
+      return variantsDownload( variants );
+      // let o3 = _.mapOnly( o, will._modulesDownload.defaults );
+      // o3.modules = modules;
+      // o3.rootModulePath = rootModule ? rootModule.localPath : null;
+      // return will._modulesDownload( o3 );
+    });
+
+    ready.then( () =>
+    {
+      let d = o.downloadedContainer.length - downloadedLengthWas;
+      if( d > 0 && o.recursive >= 2 )
+      return download( variants );
+      return o;
+    });
+
+    return ready;
+  }
 
   /* */
+
+  function log()
+  {
+    if( !o.downloadedContainer.length && !o.loggingNoChanges )
+    return;
+
+    let ofModule = rootModule ? ' of ' + rootModule.absoluteName : '';
+
+    let total = ( o.remoteContainer.length + o.localContainer.length ); debugger;
+    logger.rbegin({ verbosity : -2 });
+    let phrase = '';
+    if( o.mode === 'update' )
+    phrase = 'updated';
+    else if( o.mode === 'agree' )
+    phrase = 'agreed';
+    else if( o.mode === 'download' )
+    phrase = 'downloaded';
+    if( o.dry )
+    {
+      logger.log( ' + ' + o.downloadedContainer.length + '/' + total + ' submodule(s)' + ofModule + ' will be ' + phrase );
+    }
+    else
+    {
+      logger.log( ' + ' + o.downloadedContainer.length + '/' + total + ' submodule(s)' + ofModule + ' were ' + phrase + ' in ' + _.timeSpent( time ) );
+    }
+    logger.rend({ verbosity : -2 });
+
+  }
+
+  /* xxx */
 
   function variantsDownload( variants )
   {
@@ -1615,7 +2217,8 @@ function _modulesDownload_body( o )
       }
     }
 
-    _.arrayAppendOnceStrictly( o.remoteContainer, variant.opener.remotePath );
+    variantRemote( variant );
+    // _.arrayAppendOnceStrictly( o.remoteContainer, variant.opener.remotePath );
     variantDone( variant );
     if( variant.peer )
     {
@@ -1628,26 +2231,32 @@ function _modulesDownload_body( o )
       .then( ( downloading ) =>
       {
         if( downloading )
-        _.arrayAppendOnceStrictly( o.downloadedContainer, variant.opener.remotePath );
+        variantDownloaded( variant );
         return null;
       })
     }
     else
     {
       let o2 = _.mapOnly( o, variant.opener._remoteDownload.defaults );
-      // debugger;
       let r = _.Consequence.From( variant.opener._remoteDownload( o2 ) );
       return r.then( ( downloaded ) =>
       {
-        // debugger;
         _.assert( _.boolIs( downloaded ) );
         _.assert( _.strIs( variant.opener.remotePath ) );
         if( downloaded )
-        _.arrayAppendOnceStrictly( o.downloadedContainer, variant.opener.remotePath );
+        variantDownloaded( variant );
         return downloaded;
       });
     }
 
+  }
+
+  /* */
+
+  function variantDownloaded( variant )
+  {
+    _.arrayAppendOnceStrictly( o.downloadedContainer, variant.remotePath );
+    // _.arrayAppendOnceStrictly( o.downloadedContainer, variant.opener.remotePath );
   }
 
   /* */
@@ -1658,12 +2267,31 @@ function _modulesDownload_body( o )
     if( variant.object.isRemote )
     return null;
     if( variant.peer && variant.peer.object && variant.peer.object.isRemote )
-    return null;
-    if( variant.object.root === variant.object )
-    return null;
+    return variantRemote( variant );
 
-    // debugger;
+    if( variant.object.root === variant.object )
+    debugger;
+    // if( variant.object.root === variant.object )
+    // return null;
+
     variantLocal( variant );
+  }
+
+  /* */
+
+  function variantRemote( variant )
+  {
+
+    if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
+    {
+      debugger;
+      return null;
+    }
+
+    _.assert( !!variant.remotePath );
+    _.arrayAppendOnce( o.remoteContainer, variant.remotePath );
+    _.assert( !_.arrayHas( o.localContainer, variant.remotePath ) );
+    return null;
   }
 
   /* */
@@ -1673,6 +2301,9 @@ function _modulesDownload_body( o )
 
     if( variant.localPath && _.strHas( variant.localPath, '.module' ) )
     debugger;
+
+    if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
+    return null;
 
     if( variant.peer )
     {
@@ -1697,6 +2328,9 @@ function _modulesDownload_body( o )
 
   function variantDone( variant )
   {
+    if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
+    return null;
+
     if( variant.localPath )
     _.arrayAppendOnce( o.doneContainer, variant.localPath );
     if( variant.remotePath )
@@ -1704,172 +2338,26 @@ function _modulesDownload_body( o )
     return null;
   }
 
-  /* */
-
-}
-
-var defaults = _modulesDownload_body.defaults = Object.create( null );
-
-defaults.mode = 'download';
-defaults.strict = 1;
-defaults.dry = 0;
-defaults.modules = null;
-
-defaults.downloadedContainer = null;
-defaults.localContainer = null;
-defaults.remoteContainer = null;
-defaults.doneContainer = null;
-
-let _modulesDownload = _.routineFromPreAndBody( _modulesDownload_pre, _modulesDownload_body );
-
-//
-
-function modulesDownload_pre( routine, args )
-{
-  let module = this;
-
-  _.assert( arguments.length === 2 );
-  _.assert( args.length <= 2 );
-
-  let o = args[ 0 ];
-
-  o = _.routineOptions( routine, o );
-  _.assert( _.arrayHas( [ 'download', 'update', 'agree' ], o.mode ) );
-
-  return o;
-}
-
-function modulesDownload_body( o )
-{
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let time = _.timeNow();
-  let downloadedLengthWas = 0;
-
-  if( !o.downloadedContainer )
-  o.downloadedContainer = [];
-  if( !o.localContainer )
-  o.localContainer = [];
-  if( !o.remoteContainer )
-  o.remoteContainer = [];
-  if( !o.doneContainer )
-  o.doneContainer = [];
-  if( !o.nodesGroup )
-  o.nodesGroup = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
-
-  _.assert( arguments.length === 1 );
-  _.assertRoutineOptions( modulesDownload_body, arguments );
-
-  o.modules = _.arrayAs( o.nodesGroup.nodesAddOnce( o.modules ) );
-  _.assert( _.arrayIs( o.modules ) );
-
-  let fitOpts = _.mapOnly( o, _.Will.prototype.moduleFit.defaults );
-  fitOpts.withOut = false;
-  o.modules = o.modules.filter( ( variant ) => will.moduleFit( variant, fitOpts ) );
-
-  if( !o.modules.length )
-  return _.Consequence().take( o );
-
-  // logger.up();
-  return download( o.modules )
-  .finally( ( err, arg ) =>
-  {
-    // logger.down();
-    if( err )
-    debugger;
-    if( err )
-    throw _.err( err, '\nFailed to', ( o.mode ), 'submodules' );
-
-    log();
-
-    return o;
-  });
-
-  /* */
-
-  function download( modules )
-  {
-    let ready = new _.Consequence().take( null );
-
-    ready.then( () =>
-    {
-      return will.modulesUpform
-      ({
-        modules : modules,
-        recursive : o.recursive,
-        all : 0,
-        subModulesFormed : 1,
-        withPeers : 1,
-      });
-    });
-
-    ready.then( ( arg ) =>
-    {
-      let o2 = _.mapOnly( o, will.modulesEach.defaults );
-      o2.outputFormat = '/';
-      o2.modules = modules;
-      delete o2.nodesGroup;
-      // debugger;
-      modules = will.modulesEach( o2 );
-      // debugger;
-      downloadedLengthWas = o.downloadedContainer.length;
-      let o3 = _.mapOnly( o, will._modulesDownload.defaults );
-      o3.modules = modules;
-      return will._modulesDownload( o3 );
-    });
-
-    ready.then( ( o3 ) =>
-    {
-      let d = o.downloadedContainer.length - downloadedLengthWas;
-      if( d > 0 && o.recursive >= 2 )
-      return download( modules );
-      return o;
-    });
-
-    return ready;
-  }
-
-  /* */
-
-  function log()
-  {
-    if( !o.downloadedContainer.length && !o.loggingNoChanges )
-    return;
-
-    let total = ( o.remoteContainer.length + o.localContainer.length );
-    logger.rbegin({ verbosity : -2 });
-    let phrase = '';
-    if( o.mode === 'update' )
-    phrase = 'updated';
-    else if( o.mode === 'agree' )
-    phrase = 'agreed';
-    else if( o.mode === 'download' )
-    phrase = 'downloaded';
-    if( o.dry )
-    {
-      logger.log( ' + ' + o.downloadedContainer.length + '/' + total + ' submodule(s)' + ' will be ' + phrase );
-    }
-    else
-    {
-      logger.log( ' + ' + o.downloadedContainer.length + '/' + total + ' submodule(s)' + ' were ' + phrase + ' in ' + _.timeSpent( time ) );
-    }
-    logger.rend({ verbosity : -2 });
-
-  }
-
-  /* */
-
+  /* xxx */
 }
 
 var defaults = modulesDownload_body.defaults = _.mapExtend
 (
   null,
   _.graph.AbstractNodesGroup.prototype.each.defaults,
-  moduleFit.defaults,
-  _modulesDownload.defaults
+  moduleFit.defaults
+  // _modulesDownload.defaults
 );
+
+defaults.mode = 'download';
+defaults.strict = 1;
+defaults.dry = 0;
+defaults.modules = null;
+defaults.rootModulePath = null;
+defaults.downloadedContainer = null;
+defaults.localContainer = null;
+defaults.remoteContainer = null;
+defaults.doneContainer = null;
 
 defaults.loggingNoChanges = 1;
 defaults.recursive = 1;
@@ -2142,7 +2630,7 @@ graphGroupMake.defaults =
 
 //
 
-function graphTopologicalSort( modules )
+function graphTopSort( modules )
 {
   let will = this;
 
@@ -2653,14 +3141,21 @@ function willfilesFind( o )
       return { [ it.src ] : it.dst };
     });
 
-    // debugger;
     let files = fileProvider.filesFind( o2 );
-    // debugger;
-    //
-    // if( files.length && _.strHas( files[ 0 ].absolute, 'out/submodule' ) )
-    // debugger;
 
-    return files;
+    let files2 = [];
+    files.forEach( ( file ) =>
+    {
+      if( _.Will.PathIsOut( file.absolute ) )
+      files2.push( file );
+    });
+    files.forEach( ( file ) =>
+    {
+      if( !_.Will.PathIsOut( file.absolute ) )
+      files2.push( file );
+    });
+
+    return files2;
   }
 }
 
@@ -2691,12 +3186,12 @@ function willfilesSelectPaired( record, records )
 
   records.forEach( ( record ) =>
   {
-    let commonPath = will.AbstractModule.CommonPathFor( record.absolute );
+    let commonPath = _.Will.CommonPathFor( record.absolute );
     let array = commonPathMap[ commonPath ] = commonPathMap[ commonPath ] || [];
     _.arrayAppendOnce( array, record );
   });
 
-  let commonPath = will.AbstractModule.CommonPathFor( record.absolute );
+  let commonPath = _.Will.CommonPathFor( record.absolute );
   let array = commonPathMap[ commonPath ] = commonPathMap[ commonPath ] || [];
   _.arrayAppendOnce( array, record );
 
@@ -2708,7 +3203,7 @@ function willfilesSelectPaired( record, records )
 function willfileWithCommon( commonPath )
 {
   let will = this;
-  commonPath = will.AbstractModule.CommonPathFor( commonPath );
+  commonPath = _.Will.CommonPathFor( commonPath );
   let result = will.willfileWithCommonPathMap[ commonPath ];
   if( !result || !result.length )
   return null
@@ -2841,9 +3336,6 @@ function willfileRegister( willf )
 
   will.willfileWithCommonPathMap[ willf.commonPath ] = will.willfileWithCommonPathMap[ willf.commonPath ] || [];
   _.arrayAppendOnceStrictly( will.willfileWithCommonPathMap[ willf.commonPath ], willf );
-  // _.assert( will.willfileWithCommonPathMap[ willf.commonPath ] === undefined );
-  // will.willfileWithCommonPathMap[ willf.commonPath ] = willf;
-  // _.assert( _.arrayCountElement( _.mapVals( will.willfileWithCommonPathMap ), willf ) === 1 );
 
 }
 
@@ -2966,6 +3458,19 @@ let Statics =
   Defaults,
   UpformingDefaults,
 
+  // path
+
+  WillfilePathIs,
+  PathIsOut,
+  DirPathFromFilePaths,
+  PrefixPathForRole,
+  PrefixPathForRoleMaybe,
+  PathToRole,
+  CommonPathFor,
+  CloneDirPathFor,
+  OutfilePathFor,
+  RemotePathAdjust,
+
 }
 
 let Forbids =
@@ -2990,6 +3495,19 @@ let Extend =
   unform,
   form,
   formAssociates,
+
+  // path
+
+  WillfilePathIs,
+  PathIsOut,
+  DirPathFromFilePaths,
+  PrefixPathForRole,
+  PrefixPathForRoleMaybe,
+  PathToRole,
+  CommonPathFor,
+  CloneDirPathFor,
+  OutfilePathFor,
+  RemotePathAdjust,
 
   // etc
 
@@ -3022,7 +3540,7 @@ let Extend =
   modulesOnlyRoots,
   modulesEach,
   modulesFor,
-  _modulesDownload,
+  // _modulesDownload,
   modulesDownload,
   modulesUpform,
 
@@ -3036,7 +3554,7 @@ let Extend =
   // graph
 
   graphGroupMake,
-  graphTopologicalSort,
+  graphTopSort,
   graphInfoExportAsTree,
 
   // opener

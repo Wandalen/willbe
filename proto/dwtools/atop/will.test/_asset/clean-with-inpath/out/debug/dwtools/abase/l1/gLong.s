@@ -4656,11 +4656,10 @@ let Routines =
 
   // array set
 
-  arraySetDiff,
-
-  arraySetBut,
-  arraySetIntersection,
-  arraySetUnion,
+  arraySetDiff, /* qqq : ask how to improve, please */
+  arraySetBut, /* qqq : ask how to improve, please */
+  arraySetIntersection, /* qqq : ask how to improve, please */
+  arraySetUnion, /* qqq : ask how to improve, please */
 
   arraySetContainAll,
   arraySetContainAny,

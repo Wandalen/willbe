@@ -285,6 +285,7 @@ function _commandBuildLike( o )
 
     ready2.then( () =>
     {
+      will.readingEnd();
       let it2 = _.mapExtend( null, o, it );
       return o.onEach.call( will, it2 );
     });
@@ -685,7 +686,9 @@ function commandWith( e )
   .then( function( it )
   {
 
-    will.currentOpeners = it.openers;
+    // debugger;
+    // will.currentOpeners = it.openers;
+    will.currentOpeners = it.sortedOpeners;
 
     if( !will.currentOpeners.length )
     throw _.errBrief( 'Found no willfile at ' + _.strQuote( path.resolve( isolated.argument ) ) );
@@ -705,7 +708,6 @@ function commandWith( e )
       err = _.err( err );
       logger.log( _.errOnce( err ) );
       throw err;
-      // throw _.errLogOnce( err );
     }
     return arg;
   });
