@@ -15008,16 +15008,17 @@ function versionsAgree( test )
   shell( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
-    test.notIdentical( got.exitCode, 0 );
+    test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, 'Module at module::submodules / opener::local needs to be updated, but has local changes' ) );
+    test.is( _.strHas( got.output, 'module::local was agreed with version master in' ) );
+    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
     return null;
   })
   shell3( 'git status' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /Your branch and \'origin\/master\' have diverged/ ) );
+    test.is( _.strHas( got.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
     return null;
   })
 
