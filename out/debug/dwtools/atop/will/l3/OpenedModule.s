@@ -2,6 +2,28 @@
 
 'use strict';
 
+/*
+                                                              download update agree verify
+  download directory is empty/not present ( isDownloaded )      d      d      d      -
+  has files which are not repository( isGitRepository )         e      e      rd     -
+  origin is different( originCheck() )                          -      e      rd     -
+  module has local changes( localChangesCheck() )               -      e      e      .
+  module is not valid( isValid )                                e      e      rd     -
+  module is on different branch( isUpToDate )                   -      c      c      -
+  module is not up to date( isUpToDate )                        -      u      u      .
+
+  d - downloads module
+  r - removes module
+  u - updates module
+  c - changes branch
+  e - error
+  . - nothing
+  - - false
+  + - true
+
+  Note: verify throws an error if result of check is false and throwing is enabled
+*/
+
 if( typeof module !== 'undefined' )
 {
 
@@ -3306,7 +3328,7 @@ defaults.upgrading = null;
 
 //
 
-function versionsVerify()
+function versionsVerify( o )
 {
   let module = this;
   let will = module.will;
@@ -3319,11 +3341,13 @@ function versionsVerify()
   let time = _.timeNow();
 
   _.assert( module.preformed > 0  );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 1 );
+
+  _.routineOptions( versionsVerify, o );
 
   logger.up();
 
-  let modules = module.modulesEach({ outputFormat : '/' });
+  let modules = module.modulesEach({ outputFormat : '/', recursive : o.recursive });
 
   modules.forEach( ( r ) =>
   {
@@ -3347,7 +3371,8 @@ function versionsVerify()
   {
     if( !r.opener.isDownloaded )
     {
-      logger.error( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not downloaded' );
+      if( o.throwing )
+      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not downloaded' );
       return false;
     }
 
@@ -3357,47 +3382,75 @@ function versionsVerify()
       () => 'Submodule', ( r.opener ? r.opener.qualifiedName : n ), 'was not preformed to verify'
     );
 
+    /* isValid */
+
+    if( !r.opener.isValid() )
+    throw _.err( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not valid. Reason:', r.opener.err );
+
+
+    /* is remote / enabled */
+
     if( !r.opener.isRemote )
     return true;
     if( r.relation && !r.relation.enabled )
     return true;
 
-    let remoteProvider = fileProvider.providerForPath( r.opener.remotePath );
+    /* repository check */
+
+    if( !r.opener.isGitRepository )
+    {
+      if( o.throwing )
+      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is downloaded, but its not a git repository' );
+      return false;
+    }
+
+    let remoteProvider = will.fileProvider.providerForPath( r.opener.remotePath );
+
+    /* origin check */
+
+    let result = remoteProvider.isDownloadedFromRemote
+    ({
+      localPath : r.opener.downloadPath,
+      remotePath : r.opener.remotePath
+    });
+
+    if( !result.downloadedFromRemote )
+    {
+      if( o.throwing )
+      throw _.errBrief
+      (
+        '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has different origin url:',
+        _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
+      );
+
+      return false;
+    }
+
+    /* version check */
+
     let remoteParsed = remoteProvider.pathParse( r.opener.remotePath );
     let remoteVersion = remoteParsed.hash || 'master';
     let localVersion = remoteProvider.versionLocalRetrive( r.opener.downloadPath );
-
     let onSameVersion = remoteVersion === localVersion;
 
     if( onSameVersion )
-    {
-      logger.log( 'Submodule', r.opener.qualifiedName, 'has correct version:', localVersion );
-    }
-    else
-    {
-      if( remoteParsed.isFixated )
-      {
-        logger.error
-        (
-          '! Submodule', r.opener.qualifiedName, 'has version different from that is specified in will-file!',
-          '\nCurrent:', localVersion,
-          '\nExpected:', remoteVersion
-        );
-      }
-      else
-      {
-        logger.error
-        (
-          '! Submodule', r.opener.qualifiedName, 'is on branch different from that is specified in will-file!',
-          '\nCurrent:', localVersion,
-          '\nExpected:', remoteVersion
-        );
-      }
-    }
+    return true;
 
-    return onSameVersion;
+    if( o.throwing )
+    throw _.errBrief
+    (
+      '! Submodule', r.opener.qualifiedName, 'has version different from that is specified in will-file!',
+      '\nCurrent:', localVersion,
+      '\nExpected:', remoteVersion
+    );
+
+    return false;
   }
 }
+
+var defaults  = versionsVerify.defaults = Object.create( null );
+defaults.recursive = 1;
+defaults.throwing = 1;
 
 //
 
