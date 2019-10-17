@@ -30,9 +30,9 @@ function finit()
   let will = variant.will;
   _.assert( !variant.finitedIs() );
 
-  _.each( variant.modules, ( module ) => variant.moduleRemove( module ) );
-  _.each( variant.openers, ( opener ) => variant.moduleRemove( opener ) );
-  _.each( variant.relations, ( relation ) => variant.moduleRemove( relation ) );
+  _.each( variant.modules, ( module ) => variant._moduleRemove( module ) );
+  _.each( variant.openers, ( opener ) => variant._moduleRemove( opener ) );
+  _.each( variant.relations, ( relation ) => variant._moduleRemove( relation ) );
 
   _.assert( variant.module === null );
   _.assert( variant.opener === null );
@@ -330,28 +330,32 @@ function reform()
   function associationsAdd()
   {
 
-    variant.relations.forEach( ( relation ) =>
-    {
-      if( relation && relation.opener )
-      variant._openerAdd( relation.opener );
-    });
+    variant._add( variant.AssociationsOf( variant.relations ) );
+    variant._add( variant.AssociationsOf( variant.openers ) );
+    variant._add( variant.AssociationsOf( variant.modules ) );
 
-    variant.openers.forEach( ( opener ) =>
-    {
-      if( opener && opener.openedModule )
-      variant._moduleAdd( opener.openedModule );
-      if( opener && opener.superRelation )
-      variant._relationAdd( opener.superRelation );
-    });
-
-    variant.modules.forEach( ( module ) =>
-    {
-      _.each( module.userArray, ( opener ) =>
-      {
-        if( opener instanceof _.Will.ModuleOpener )
-        variant._openerAdd( opener );
-      });
-    });
+    // variant.relations.forEach( ( relation ) =>
+    // {
+    //   if( relation && relation.opener )
+    //   variant._openerAdd( relation.opener );
+    // });
+    //
+    // variant.openers.forEach( ( opener ) =>
+    // {
+    //   if( opener && opener.openedModule )
+    //   variant._moduleAdd( opener.openedModule );
+    //   if( opener && opener.superRelation )
+    //   variant._relationAdd( opener.superRelation );
+    // });
+    //
+    // variant.modules.forEach( ( module ) =>
+    // {
+    //   _.each( module.userArray, ( opener ) =>
+    //   {
+    //     if( opener instanceof _.Will.ModuleOpener )
+    //     variant._openerAdd( opener );
+    //   });
+    // });
 
   }
 
@@ -431,11 +435,11 @@ function reform()
   {
     let peerModule = object.peerModule;
 
+    if( variant.id === 415 )
+    debugger;
+
     if( !peerModule )
     return;
-
-    if( variant.id === 209 )
-    debugger;
 
     if( !peerModule.isPreformed() )
     return;
@@ -459,6 +463,19 @@ function reform()
     _.assert( !variant.finitedIs() );
     variant.peer = _.Will.ModuleVariant.From({ object : peerModule, will : will });
     _.assert( !variant.finitedIs() );
+    if( variant.peer.peer && variant.peer.peer !== variant )
+    {
+      if( !variant.peer.peer.ownSomething() )
+      {
+        debugger;
+        variant.peer.peer.finit();
+      }
+      else
+      {
+        debugger;
+        variant.peer.peer = null;
+      }
+    }
     _.assert( variant.peer.peer === variant || variant.peer.peer === null );
 
     if( variant.peer.finitedIs() )
@@ -839,6 +856,71 @@ function VariantsOf( will, variants )
 
 //
 
+function AssociationsOf( object )
+{
+  let cls = this;
+
+  // if( _.arrayIs( object ) )
+  // debugger;
+  if( _.arrayIs( object ) )
+  return _.longOnce( _.arrayFlatten( object.map( ( object ) => cls.AssociationsOf( object ) ) ) );
+
+  let result = [];
+  if( object instanceof _.Will.OpenedModule )
+  {
+    // debugger;
+    return _.each( object.userArray, ( opener ) =>
+    {
+      if( opener instanceof _.Will.ModuleOpener )
+      result.push( opener );
+    });
+  }
+  else if( object instanceof _.Will.ModuleOpener )
+  {
+    // debugger;
+    if( object.openedModule )
+    result.push( object.openedModule );
+    if( object.superRelation )
+    result.push( object.superRelation );
+  }
+  else if( object instanceof _.Will.ModulesRelation )
+  {
+    // debugger;
+    if( object.opener )
+    result.push( object.opener );
+    // return [ object.opener ];
+  }
+  else _.assert( 0 );
+
+  return result;
+
+  // variant.relations.forEach( ( relation ) =>
+  // {
+  //   if( relation && relation.opener )
+  //   variant._openerAdd( relation.opener );
+  // });
+
+  // variant.openers.forEach( ( opener ) =>
+  // {
+  //   if( opener && opener.openedModule )
+  //   variant._moduleAdd( opener.openedModule );
+  //   if( opener && opener.superRelation )
+  //   variant._relationAdd( opener.superRelation );
+  // });
+
+  // variant.modules.forEach( ( module ) =>
+  // {
+  //   _.each( module.userArray, ( opener ) =>
+  //   {
+  //     if( opener instanceof _.Will.ModuleOpener )
+  //     variant._openerAdd( opener );
+  //   });
+  // });
+
+}
+
+//
+
 function _relationAdd( relation )
 {
   let variant = this;
@@ -872,11 +954,10 @@ function _relationAdd( relation )
 
 //
 
-function relationRemove( relation )
+function _relationRemoveAct( relation )
 {
   let variant = this;
   let will = variant.will;
-  let changed = false;
 
   // _.assert( !!relation.enabled );
   _.assert( relation instanceof _.Will.ModulesRelation );
@@ -894,6 +975,23 @@ function relationRemove( relation )
   _.assert( variant2 === variant );
   will.objectToVariantHash.delete( relation );
 
+  return true;
+}
+
+//
+
+function _relationRemove( relation )
+{
+  let variant = this;
+  let will = variant.will;
+
+  if( !_.arrayHas( variant.relations, relation ) )
+  return false;
+
+  variant._relationRemoveAct( relation );
+
+  variant._remove( variant.AssociationsOf( relation ) );
+  return true;
 }
 
 //
@@ -933,15 +1031,13 @@ function _openerAdd( opener )
 
 //
 
-function openerRemove( opener )
+function _openerRemoveAct( opener )
 {
   let variant = this;
   let will = variant.will;
-  let changed = false;
 
   _.assert( opener instanceof _.Will.ModuleOpener );
   _.arrayRemoveOnceStrictly( variant.openers, opener );
-  _.assert( !variant.relation || variant.relation.opener !== opener );
 
   if( variant.opener === opener )
   variant.opener = null;
@@ -955,6 +1051,22 @@ function openerRemove( opener )
   _.assert( variant2 === variant );
   will.objectToVariantHash.delete( opener );
 
+}
+
+//
+
+function _openerRemove( opener )
+{
+  let variant = this;
+  let will = variant.will;
+
+  if( !_.arrayHas( variant.openers, opener ) )
+  return false;
+
+  variant._openerRemoveAct( opener );
+
+  variant._remove( variant.AssociationsOf( opener ) );
+  return true;
 }
 
 //
@@ -987,16 +1099,14 @@ function _moduleAdd( module )
 
 //
 
-function moduleRemove( module )
+function _moduleRemoveAct( module )
 {
   let variant = this;
   let will = variant.will;
-  let changed = false;
 
   _.assert( module instanceof _.Will.OpenedModule );
   _.assert( variant.module === module );
   _.arrayRemoveOnceStrictly( variant.modules, module );
-  _.assert( !variant.opener || variant.opener.openedModule !== module );
 
   if( variant.module === module )
   variant.module = null;
@@ -1014,10 +1124,29 @@ function moduleRemove( module )
 
 //
 
+function _moduleRemove( module )
+{
+  let variant = this;
+  let will = variant.will;
+
+  if( !_.arrayHas( variant.modules, module ) )
+  return false;
+
+  variant._moduleRemoveAct( module );
+
+  variant._remove( variant.AssociationsOf( module ) );
+  return true;
+}
+
+//
+
 function _add( object )
 {
   let variant = this;
   let result;
+
+  if( _.arrayIs( object ) )
+  return _.any( _.map( object, ( object ) => variant._add( object ) ) );
 
   if( object instanceof _.Will.ModulesRelation )
   {
@@ -1052,17 +1181,20 @@ function _remove( object )
 {
   let variant = this;
 
+  if( _.arrayIs( object ) )
+  return _.any( _.map( object, ( object ) => variant._remove( object ) ) );
+
   if( object instanceof _.Will.ModulesRelation )
   {
-    variant.relationRemove( object );
+    return variant._relationRemove( object );
   }
   else if( object instanceof _.Will.OpenedModule )
   {
-    variant.moduleRemove( object );
+    return variant._moduleRemove( object );
   }
   else if( object instanceof _.Will.ModuleOpener )
   {
-    variant.openerRemove( object );
+    return variant._openerRemove( object );
   }
   else _.assert( 0 );
 
@@ -1345,6 +1477,7 @@ let Statics =
   VariantsFrom,
   VariantOf,
   VariantsOf,
+  AssociationsOf,
 }
 
 let Forbids =
@@ -1380,13 +1513,17 @@ let Extend =
   VariantsFrom,
   VariantOf,
   VariantsOf,
+  AssociationsOf,
 
   _relationAdd,
-  relationRemove,
+  _relationRemoveAct,
+  _relationRemove,
   _openerAdd,
-  openerRemove,
+  _openerRemoveAct,
+  _openerRemove,
   _moduleAdd,
-  moduleRemove,
+  _moduleRemoveAct,
+  _moduleRemove,
 
   _add,
   add,

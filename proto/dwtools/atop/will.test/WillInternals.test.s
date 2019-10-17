@@ -1651,11 +1651,8 @@ function moduleClone( test )
     var opener2 = opener.clone();
     opener2.close();
 
-    debugger;
     var module2 = opener.openedModule.cloneExtending({ willfilesPath : abs( 'super2.out/super.out.will.yml' ), peerModule : null });
-    debugger;
     module2.preform();
-    debugger;
 
     mapsCheck( module, module2 )
 
@@ -1679,9 +1676,7 @@ function moduleClone( test )
     test.identical( rel( module2.remotePath ), null );
     test.identical( module2.willPath, path.join( __dirname, '../will/Exec' ) );
 
-    debugger;
     opener2.moduleAdopt( module2 );
-    debugger;
 
     test.description = 'instances';
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super2.out/super.out' ];
@@ -1746,9 +1741,7 @@ function moduleClone( test )
     test.identical( rel( opener2.localPath ), 'super2.out/super.out' );
     test.identical( rel( opener2.remotePath ), null );
 
-    debugger;
     opener2.close();
-    debugger;
 
     test.description = 'instances';
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
@@ -1803,7 +1796,9 @@ function moduleClone( test )
     test.identical( rel( opener2.localPath ), 'super2.out/super.out' );
     test.identical( rel( opener2.remotePath ), null );
 
+    debugger;
     opener2.finit();
+    debugger;
     opener.openedModule = null;
 
     test.description = 'instances';
@@ -1849,8 +1844,10 @@ function moduleClone( test )
     test.identical( rel( opener2.remotePath ), null );
 
     test.case = 'finit';
+    debugger;
     opener.finit();
     module.finit();
+    debugger;
     return null;
   })
 
