@@ -11465,7 +11465,7 @@ function submodulesDownloadUpdate( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /2\/3 submodule\(s\) were downloaded in/ ) );
+    test.is( _.strHas( got.output, '+ 2/2 submodule(s) of module::submodules were downloaded' ) );
 
     var files = self.find( submodulesPath );
 
@@ -11488,7 +11488,7 @@ function submodulesDownloadUpdate( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/3 submodule\(s\) were downloaded in/ ) );
+    test.is( _.strHas( got.output, '+ 0/2 submodule(s) of module::submodules were downloaded' ) );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
@@ -11515,7 +11515,7 @@ function submodulesDownloadUpdate( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /2\/3 submodule\(s\) were updated in/ ) );
+    test.is( _.strHas( got.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
@@ -11541,7 +11541,7 @@ function submodulesDownloadUpdate( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/3 submodule\(s\) were updated in/ ) );
+    test.is( _.strHas( got.output, '+ 0/2 submodule(s) of module::submodules were updated in' ) );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
