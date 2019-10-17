@@ -12727,6 +12727,78 @@ submodulesVersionsAgreeErrors.timeOut = 300000;
 
 //
 
+function submodulesVersionsAgreeExperiment( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+  let downloadPath = _.path.join( routinePath, '.module/PathBasic' );
+  let filePath = _.path.join( downloadPath, 'file' );
+  let filesBefore;
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  let shell2 = _.process.starter
+  ({
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = 'donwloaded repo has different origin, should be deleted and downloaded again';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    return null;
+  })
+
+  shell2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
+  shell({ execPath : '.with good .submodules.versions.agree' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
+    test.is( _.fileProvider.fileExists( downloadPath ) )
+    let files = self.find( downloadPath );
+    test.gt( files.length, 10 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+submodulesVersionsAgreeExperiment.timeOut = 300000;
+submodulesVersionsAgreeExperiment.experimental = 1;
+
+//
+
 /*
   Informal module has submodule willbe-experiment#master
   Supermodule has informal module and willbe-experiment#dev in submodules list
@@ -15538,6 +15610,7 @@ var Self =
     submodulesDownloadErrors,
     submodulesUpdateErrors,
     submodulesVersionsAgreeErrors,
+    submodulesVersionsAgreeExperiment,
     // submodulesDownloadedUpdate, // xxx : look later
     subModulesUpdate,
     subModulesUpdateSwitchBranch,
