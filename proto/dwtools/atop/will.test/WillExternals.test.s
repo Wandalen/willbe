@@ -12376,7 +12376,7 @@ function submodulesUpdateErrors( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /.+ opener::PathBasic is not downloaded, but file at .+ exits/ ) );
+    test.is( _.strHas( got.output, 'PathBasic is downloaded, but its not a git repository' ) );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( _.fileProvider.isTerminal( downloadPath ) )
     return null;
@@ -12601,26 +12601,20 @@ function submodulesVersionsAgreeErrors( test )
 
   .then( () =>
   {
-    test.case = 'error if download path exists and it has other git repo, repo should be preserved';
+    test.case = 'donwloaded repo has different origin, should be deleted and downloaded again';
     _.fileProvider.filesDelete( submodulesPath );
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
   shell2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
-  .then( () =>
-  {
-    filesBefore = self.find( downloadPath );
-    return null;
-  })
   shell({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
-    test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Module module::submodules-download-errors-good / opener::PathBasic is already downloaded, but has different origin url' ) );
-    test.is( _.strHas( got.output, 'Failed to agree submodules' ) );
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
-    let filesAfter = self.find( downloadPath );
-    test.identical( filesAfter.length - 1, filesBefore.length );
+    let files = self.find( downloadPath );
+    test.gt( files.length, 10 );
 
     return null;
   })
