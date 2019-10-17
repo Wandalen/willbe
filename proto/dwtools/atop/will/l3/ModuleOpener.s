@@ -1290,8 +1290,8 @@ function _remoteDownload( o )
     downloading = arg;
     _.assert( _.boolIs( downloading ) );
 
-    // if( !downloading )
-    // return downloading;
+    if( !downloading )
+    return downloading;
 
     if( o.mode === 'download' )
     {
@@ -1304,8 +1304,6 @@ function _remoteDownload( o )
     }
     else if( o.mode === 'update' )
     {
-      if( !downloading )
-      return downloading;
 
       filesCheck();
       repositoryCheck();
@@ -1316,8 +1314,6 @@ function _remoteDownload( o )
     }
     else if( o.mode === 'agree' )
     {
-      if( !downloading )
-      return downloading;
 
       localChangesCheck();
       filesDelete();
@@ -1696,7 +1692,7 @@ function _remoteIsUpToDate( o )
     let downloading = false;
     debugger
     if( o.mode === 'download' )
-    downloading = opener.isDownloaded;
+    downloading = !opener.isDownloaded || !opener.isGitRepository;
     else if( o.mode === 'update' )
     downloading = opener.isUpToDate;
     else if( o.mode === 'agree' )
