@@ -12356,7 +12356,7 @@ function submodulesDownloadFailed( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'xxx' ) );
+    test.is( _.strHas( got.output, 'is downloaded, but its not valid' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
     test.identical( filesAfter, filesBefore );
