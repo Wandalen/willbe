@@ -1441,11 +1441,11 @@ function _remoteDownload( o )
 
     hasGoodOriginReform();
 
-    if( origin.downloadedFromRemote )
+    if( !origin.downloadedFromRemote )
     throw _.err
     (
       'Module', opener.decoratedAbsoluteName, 'is already downloaded, but has different origin url:',
-      _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
+      _.color.strFormat( origin.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( origin.remoteVcsPath, 'path' )
     );
 
   }
