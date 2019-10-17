@@ -1383,7 +1383,7 @@ function _remoteDownload( o )
 
     // if( !opener.isValid() )
     if( !isValidReform() )
-    throw _.err( 'Module', opener.decoratedAbsoluteName, 'is downloaded, but its not valid. Reason:', opener.err );
+    throw _.err( 'Module', opener.decoratedAbsoluteName, 'is downloaded, but its not valid. Reason:', opener.error );
   }
 
   /* */
