@@ -1692,7 +1692,7 @@ function _remoteIsUpToDate( o )
     let downloading = false;
     debugger
     if( o.mode === 'download' )
-    downloading = !opener.isDownloaded || !opener.isGitRepository;
+    downloading = opener.isDownloaded && opener.isGitRepository;
     else if( o.mode === 'update' )
     downloading = opener.isUpToDate;
     else if( o.mode === 'agree' )
