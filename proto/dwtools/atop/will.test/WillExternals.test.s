@@ -12344,7 +12344,7 @@ submodulesDownloadFailed.timeOut = 300000;
 
 //
 
-function submodulesUpdateErrorsFailed( test )
+function submodulesUpdateFailed( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
@@ -12514,7 +12514,7 @@ function submodulesUpdateErrorsFailed( test )
   return ready;
 }
 
-submodulesUpdateErrorsFailed.timeOut = 300000;
+submodulesUpdateFailed.timeOut = 300000;
 
 //
 
@@ -15608,7 +15608,7 @@ var Self =
     submodulesDownloadSwitchBranch,
     submodulesDownloadRecursive,
     submodulesDownloadFailed,
-    submodulesUpdateErrorsFailed,
+    submodulesUpdateFailed,
     submodulesVersionsAgreeFailed,
     submodulesVersionsAgreeExperiment,
     // submodulesDownloadedUpdate, // xxx : look later
