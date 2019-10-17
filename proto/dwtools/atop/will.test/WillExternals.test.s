@@ -1488,6 +1488,7 @@ function eachBrokenCommand( test )
     outputCollecting : 1,
     outputGraying : 1,
     throwingExitCode : 0,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -1496,7 +1497,7 @@ function eachBrokenCommand( test )
 
   /* - */
 
-  shell( '.each */* .resource.list path::module.common' )
+  shell( `.each */* .resource.list path::module.common` )
   .finally( ( err, got ) =>
   {
     test.case = '.each */* .resource.list path::module.common';
