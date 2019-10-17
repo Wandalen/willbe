@@ -9087,7 +9087,8 @@ function reflectGetPath( test )
     outputGraying : 1,
     ready : ready
   })
-
+ 
+  _.fileProvider.filesDelete( repoPath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
   _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
 
@@ -13684,7 +13685,7 @@ function stepSubmodulesAreUpdated( test )
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
     test.is( _.strHas( got.output, '! Submodule opener::local is not up to date!' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -13701,8 +13702,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule opener::local is not downloaded!' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -13719,8 +13720,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule opener::local is not downloaded!' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -13737,8 +13738,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule opener::local is already downloaded, but has different origin url' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local has different origin url' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -13756,7 +13757,7 @@ function stepSubmodulesAreUpdated( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '! Submodule opener::local is not up to date!' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
