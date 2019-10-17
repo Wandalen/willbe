@@ -12921,8 +12921,8 @@ function submodulesDownloadedUpdate( test )
 
   _.process.start
   ({
-    execPath : 'git rev-parse --abbrev-ref HEAD',
-    currentPath : _.path.join( routinePath, '.module/willbe-experiment' ),
+    execPath : 'git -C .module/willbe-experiment rev-parse --abbrev-ref HEAD',
+    currentPath : routinePath,
     ready : ready,
     outputCollecting : 1,
     outputGraying : 1,
@@ -12930,8 +12930,26 @@ function submodulesDownloadedUpdate( test )
 
   .then( ( got ) =>
   {
+    test.will = 'submodule of supermodule should stay on dev';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'dev' ) );
+    return got;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git -C module/.module/willbe-experiment rev-parse --abbrev-ref HEAD',
+    currentPath : routinePath,
+    ready : ready,
+    outputCollecting : 1,
+    outputGraying : 1,
+  })
+
+  .then( ( got ) =>
+  {
+    test.will = 'submodule of informal submodule should stay on master';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'master' ) );
     return got;
   })
 
@@ -12947,8 +12965,8 @@ function submodulesDownloadedUpdate( test )
 
   _.process.start
   ({
-    execPath : 'git rev-parse --abbrev-ref HEAD',
-    currentPath : _.path.join( routinePath, '.module/willbe-experiment' ),
+    execPath : 'git -C .module/willbe-experiment rev-parse --abbrev-ref HEAD',
+    currentPath : routinePath,
     ready : ready,
     outputCollecting : 1,
     outputGraying : 1,
@@ -12956,8 +12974,26 @@ function submodulesDownloadedUpdate( test )
 
   .then( ( got ) =>
   {
+    test.will = 'submodule of supermodule should stay on dev';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'dev' ) );
+    return got;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git -C module/.module/willbe-experiment rev-parse --abbrev-ref HEAD',
+    currentPath : routinePath,
+    ready : ready,
+    outputCollecting : 1,
+    outputGraying : 1,
+  })
+
+  .then( ( got ) =>
+  {
+    test.will = 'submodule of informal submodule should stay on master';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'master' ) );
     return got;
   })
 
@@ -15674,7 +15710,7 @@ var Self =
     submodulesUpdateFailed,
     submodulesVersionsAgreeFailed,
     submodulesVersionsAgreeExperiment,
-    // submodulesDownloadedUpdate, // xxx : look later
+    submodulesDownloadedUpdate,
     subModulesUpdate,
     subModulesUpdateSwitchBranch,
     stepSubmodulesDownload,

@@ -3,7 +3,7 @@ about :
   version : 0.0.1
 
 submodule :
-  willbe-experiment : git+https:///github.com/volodymyrmigdal/willbe-experiment.git/out/willbe-experiment#master
+  willbe-experiment : git+https:///github.com/volodymyrmigdal/willbe-experiment.git#master
 
 path :
   in : '.'
@@ -12,7 +12,7 @@ path :
 step  :
   export.module :
     inherit : module.export
-    export : './'
+    export : './**'
     tar : 0
 
 build :
