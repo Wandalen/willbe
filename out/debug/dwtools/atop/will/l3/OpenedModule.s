@@ -3035,8 +3035,10 @@ function moduleFixate( o )
 
       if( !o.dry && fixatedPath )
       {
+        debugger;
         superModule.remotePath = fixatedPath;
         _.assert( superModule.remotePath === fixatedPath );
+        _.assert( superModule.currentRemotePath === fixatedPath );
         _.assert( remote.path === fixatedPath );
       }
 
@@ -3268,7 +3270,7 @@ function moduleFixateAct( o )
       }
       // if( !o.dry )
       // throw err;
-      if( will.verbosity >= 4 )
+      if( will.verbosity >= 3 )
       logger.log( _.errOnce( _.errBrief( err ) ) );
       // _.errLogOnce( _.errBrief( err ) );
       // if( will.verbosity >= 2 )
