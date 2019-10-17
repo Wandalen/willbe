@@ -12261,7 +12261,7 @@ function submodulesDownloadFailed( test )
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to download module' ) );
     test.is( _.strHas( got.output, 'module::wPathBasic was downloaded version master in' ) );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
 
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
@@ -12326,7 +12326,37 @@ function submodulesDownloadFailed( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '0/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
+    test.is( _.fileProvider.fileExists( downloadPath ) )
+    let filesAfter = self.find( downloadPath );
+    test.identical( filesAfter, filesBefore );
+
+    return null;
+  })
+
+  //
+  ready
+  .then( () =>
+  {
+    test.case = 'downloaded, but not valid, error expected';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    return null;
+  })
+  shell({ execPath : '.with good .submodules.download' })
+  .then( () =>
+  {
+    let outWillFilePath = _.path.join( downloadPath, 'out/wPathBasic.out.will.yml' );
+    let outWillFile = _.fileProvider.fileConfigRead( outWillFilePath );
+    outWillFile.section = { field : 'value' };
+    _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile,encoding : 'yml' });
+    return null;
+  })
+  shell({ execPath : '.with good .submodules.download' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'xxx' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
     test.identical( filesAfter, filesBefore );
@@ -12434,7 +12464,7 @@ function submodulesUpdateFailed( test )
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to download update' ) );
     test.is( _.strHas( got.output, 'module::wPathBasic was updated to version master in' ) );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were updated in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were updated in' ) );
 
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
@@ -12500,7 +12530,9 @@ function submodulesUpdateFailed( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Module module::submodules-download-errors-good / opener::PathBasic is already downloaded, but has different origin' ) );
+    test.is( _.strHas( got.output, /GIT repository at directory .+/ ) );
+    test.is( _.strHas( got.output, /Has origin .+/ ) );
+    test.is( _.strHas( got.output, /Should have .+/ ) );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
