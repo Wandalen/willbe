@@ -634,7 +634,7 @@ function _performExportedReflectors()
     _.assert( exp.src.formed === 1 );
     _.sure( !!exp.filePath, () => exp.qualifiedName + ' should have filePath' );
 
-    debugger;
+    // debugger;
     exportedReflector = exp.cloneExtending
     ({
       name : inModule.resourceNameAllocate( 'reflector', 'exported.' + exported.name ),
@@ -694,6 +694,13 @@ function _performExportedReflectors()
   exportedReflector.criterion = _.mapExtend( null, exported.criterion );
   exportedReflector.generated = 1;
   exportedReflector.form();
+
+  if( !exportedReflector.src.basePath )
+  {
+    debugger;
+    // exportedReflector.src.basePathFromFilePath();
+  }
+
   exported.exportedReflector = exportedReflector;
 
   _.assert( exportedReflector.original === null );
@@ -701,7 +708,8 @@ function _performExportedReflectors()
   _.assert( _.mapIs( exportedReflector.criterion ) );
   _.assert( exportedReflector.dst.prefixPath === null );
   _.assert( exportedReflector.dst.basePath === null );
-  _.assert( exportedReflector.src.prefixPath === null || path.isAbsolute( exportedReflector.src.prefixPath ) );
+  _.assert( path.isAbsolute( exportedReflector.src.prefixPath ) );
+  // _.assert( exportedReflector.src.prefixPath === null || path.isAbsolute( exportedReflector.src.prefixPath ) );
   _.assert( exportedReflector instanceof will.Reflector );
 
   /* srcFilter */

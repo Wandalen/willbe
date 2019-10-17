@@ -12167,7 +12167,7 @@ function submodulesDownloadRecursive( test )
   return ready;
 } /* end of function submodulesDownloadRecursive */
 
-submodulesDownloadRecursive.timeOut = 300000;
+submodulesDownloadRecursive.timeOut = 500000;
 
 //
 
@@ -13765,7 +13765,7 @@ function stepSubmodulesAreUpdated( test )
   return ready;
 }
 
-stepSubmodulesAreUpdated.timeOut = 60000;
+stepSubmodulesAreUpdated.timeOut = 300000;
 
 //
 
@@ -15732,7 +15732,7 @@ var Self =
     reflectNothingFromSubmodules,
     reflectGetPath,
     reflectSubdir,
-    reflectSubmodulesWithBase, // xxx : look later
+    reflectSubmodulesWithBase,
     reflectComposite,
     reflectRemoteGit,
     reflectRemoteHttp,
@@ -15766,6 +15766,7 @@ var Self =
     submodulesDownloadedUpdate,
     subModulesUpdate,
     subModulesUpdateSwitchBranch,
+
     stepSubmodulesDownload,
     stepWillbeVersionCheck,
     stepSubmodulesAreUpdated,
