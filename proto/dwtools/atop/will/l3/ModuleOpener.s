@@ -1175,6 +1175,7 @@ function _remoteFormFormal()
   }
 
   opener.remoteIsDownloadedReform();
+  opener.remoteIsGoodRepositoryReform();
 
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
 
@@ -1231,6 +1232,7 @@ function _remoteFormInformal()
   }
 
   opener.remoteIsDownloadedReform();
+  opener.remoteIsGoodRepositoryReform();
 
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
 

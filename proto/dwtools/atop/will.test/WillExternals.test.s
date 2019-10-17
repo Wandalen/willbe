@@ -14812,9 +14812,8 @@ function versionsVerify( test )
 
   .then( ( got ) =>
   {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /Submodule .*local.* is not downloaded/ ) );
-    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
     return null;
   })
 
@@ -14886,9 +14885,8 @@ function versionsVerify( test )
 
   .then( ( got ) =>
   {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /Submodule .*local.* is on branch different from that is specified in will-file/ ) );
-    test.is( _.strHas( got.output, /0\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Submodule opener::local has version different from that is specified in will-file' ) );
     return null;
   })
 
