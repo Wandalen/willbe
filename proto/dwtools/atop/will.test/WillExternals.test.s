@@ -1731,6 +1731,7 @@ function verbosityStepDelete( test )
     currentPath : routinePath,
     outputCollecting : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready
   })
 
