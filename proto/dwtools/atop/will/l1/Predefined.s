@@ -782,6 +782,114 @@ stepRoutineSubmodulesAgree.stepOptions =
 
 //
 
+// function stepRoutineSubmodulesAreUpdated( frame )
+// {
+//   let step = this;
+//   let run = frame.run;
+//   let module = run.module;
+//   let will = module.will;
+//   let logger = will.logger;
+
+//   _.assert( arguments.length === 1 );
+//   _.assert( !!module );
+
+//   let relations = module.modulesEach({ outputFormat : '*/relation' });
+//   let totalNumber = _.mapKeys( module.submoduleMap ).length;
+//   let upToDateNumber = 0;
+
+//   let con = new _.Consequence().take( null );
+
+//   logger.up();
+
+//   _.each( relations, ( relation ) =>
+//   {
+//     con.then( () => update() )
+//     con.then( () =>
+//     {
+//       /* */
+
+//       if( !isDownloaded() )
+//       {
+//         logger.error( ' ! Submodule ' + relation.opener.decoratedQualifiedName + ' is not downloaded!'  );
+//         return false;
+//       }
+
+//       /* check if module is downloaded from correct remote */
+
+//       let gitProvider = will.fileProvider.providerForPath( relation.opener.remotePath );
+//       let result = gitProvider.isDownloadedFromRemote
+//       ({
+//         localPath : relation.opener.downloadPath,
+//         remotePath : relation.opener.remotePath
+//       });
+
+//       if( !result.downloadedFromRemote )
+//       {
+//         logger.error
+//         (
+//           ' ! Submodule ' + relation.opener.decoratedQualifiedName, 'is already downloaded, but has different origin url:',
+//           _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
+//         );
+//         return false;
+//       }
+
+//       /* */
+
+//       if( !relation.opener.isUpToDate )
+//       logger.error( ' ! Submodule ' + relation.opener.decoratedQualifiedName + ' is not up to date!'  );
+//       else
+//       upToDateNumber += 1;
+//       return null;
+//     })
+
+//     function isDownloaded()
+//     {
+//       if( !relation.opener )
+//       return false;
+
+//       _.assert( _.boolLike( relation.opener.isDownloaded ) );
+
+//       if( !relation.opener.isDownloaded )
+//       return false;
+
+//       if( !relation.opener.isRepository )
+//       return false;
+
+//       return true;
+//     }
+
+//     function update()
+//     {
+//       let con = new _.Consequence().take( null );
+//       con.then( () => relation.opener.remoteIsDownloadedReform() )
+//       con.then( () => relation.opener.remoteIsGoodRepositoryReform() )
+//       con.then( () => relation.opener.remoteIsUpToDateReform() )
+//       return con;
+//     }
+//   });
+
+//   con.finally( ( err, got ) =>
+//   {
+//     if( err )
+//     throw _.err( err, '\nFailed to check if modules are up to date' );
+
+//     let message = upToDateNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' are up to date';
+
+//     let allAreUpToDate = upToDateNumber === totalNumber;
+
+//     if( !allAreUpToDate )
+//     throw _.errBrief( message );
+//     else
+//     logger.log( message );
+
+//     logger.down();
+
+//     return allAreUpToDate;
+//   })
+
+//   return con;
+// }
+
 function stepRoutineSubmodulesAreUpdated( frame )
 {
   let step = this;
@@ -792,102 +900,36 @@ function stepRoutineSubmodulesAreUpdated( frame )
 
   _.assert( arguments.length === 1 );
   _.assert( !!module );
-
-  let relations = module.modulesEach({ outputFormat : '*/relation' });
-  let totalNumber = _.mapKeys( module.submoduleMap ).length;
-  let upToDateNumber = 0;
-
-  let con = new _.Consequence().take( null );
-
-  logger.up();
-
-  _.each( relations, ( relation ) =>
-  {
-    con.then( () => update() )
-    con.then( () =>
-    {
-      /* */
-
-      if( !isDownloaded() )
-      {
-        logger.error( ' ! Submodule ' + relation.opener.decoratedQualifiedName + ' is not downloaded!'  );
-        return false;
-      }
-
-      /* check if module is downloaded from correct remote */
-
-      let gitProvider = will.fileProvider.providerForPath( relation.opener.remotePath );
-      let result = gitProvider.isDownloadedFromRemote
-      ({
-        localPath : relation.opener.downloadPath,
-        remotePath : relation.opener.remotePath
-      });
-
-      if( !result.downloadedFromRemote )
-      {
-        logger.error
-        (
-          ' ! Submodule ' + relation.opener.decoratedQualifiedName, 'is already downloaded, but has different origin url:',
-          _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
-        );
-        return false;
-      }
-
-      /* */
-
-      if( !relation.opener.isUpToDate )
-      logger.error( ' ! Submodule ' + relation.opener.decoratedQualifiedName + ' is not up to date!'  );
-      else
-      upToDateNumber += 1;
-      return null;
-    })
-
-    function isDownloaded()
-    {
-      if( !relation.opener )
-      return false;
-
-      _.assert( _.boolLike( relation.opener.isDownloaded ) );
-
-      if( !relation.opener.isDownloaded )
-      return false;
-
-      if( !relation.opener.isRepository )
-      return false;
-
-      return true;
-    }
-
-    function update()
-    {
-      let con = new _.Consequence().take( null );
-      con.then( () => relation.opener.remoteIsDownloadedReform() )
-      con.then( () => relation.opener.remoteIsGoodRepositoryReform() )
-      con.then( () => relation.opener.remoteIsUpToDateReform() )
-      return con;
-    }
-  });
-
-  con.finally( ( err, got ) =>
+  
+  return module.versionsVerify
+  ({
+    recursive : 1,
+    throwing : 1,
+    downloaded : 1,
+    repository : 1,
+    valid : 1,
+    downloadedFromRemote : 1,
+    upToDate : 1,
+    asMap : 1 
+  })
+  .finally( ( err, summary ) =>
   {
     if( err )
     throw _.err( err, '\nFailed to check if modules are up to date' );
 
-    let message = upToDateNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' are up to date';
-
-    let allAreUpToDate = upToDateNumber === totalNumber;
+    let message = summary.verifiedNumber + '/' + summary.totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' are up to date';
+    let allAreUpToDate = summary.verifiedNumber === summary.totalNumber;
 
     if( !allAreUpToDate )
     throw _.errBrief( message );
-    else
+    
     logger.log( message );
 
     logger.down();
 
     return allAreUpToDate;
   })
-
-  return con;
+  
 }
 
 stepRoutineSubmodulesAreUpdated.stepOptions =
