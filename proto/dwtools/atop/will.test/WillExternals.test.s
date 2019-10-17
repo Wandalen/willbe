@@ -11872,6 +11872,7 @@ function submodulesDownloadRecursive( test )
     outputCollecting : 1,
     outputGraying : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -12412,6 +12413,7 @@ function submodulesUpdateFailed( test )
     outputGraying : 1,
     outputGraying : 1,
     throwingExitCode : 0,
+    mode : 'spawn',
     ready : ready,
   })
 
