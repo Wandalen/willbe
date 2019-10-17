@@ -12674,7 +12674,7 @@ function submodulesVersionsAgreeFailed( test )
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
     test.is( _.strHas( got.output, 'module::wPathBasic was agreed with version master' ) );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
 
@@ -12717,7 +12717,7 @@ function submodulesVersionsAgreeFailed( test )
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
     test.is( _.strHas( got.output, 'module::wPathBasic was agreed with version master' ) );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
 
@@ -12757,7 +12757,7 @@ function submodulesVersionsAgreeFailed( test )
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
     test.is( _.strHas( got.output, 'module::wPathBasic was agreed with version master' ) );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed in' ) );
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
     return null;
@@ -12777,7 +12777,7 @@ function submodulesVersionsAgreeFailed( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );

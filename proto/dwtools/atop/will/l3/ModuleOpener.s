@@ -1310,8 +1310,9 @@ function _remoteDownload( o )
       if( !downloading )
       return downloading;
 
-      if( opener.isDownloaded && opener.isRepository )
-      originCheck();
+      // Vova: agree should delete module if origin is different, but not throw an error
+      // if( opener.isDownloaded && opener.isRepository )
+      // originCheck();
       if( opener.isDownloaded && opener.isRepository )
       localChangesCheck();
 
