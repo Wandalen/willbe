@@ -14390,6 +14390,56 @@ upgradeDetached.timeOut = 500000;
 
 //
 
+function upgradeDetachedExperiment( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached-single' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : ready,
+  });
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.submodules.upgrade dry:0 negative:1 -- after download';
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    return null;
+  })
+
+  shell({ execPath : '.submodules.download' })
+  shell({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* was upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 1 );
+
+    return null;
+  })
+
+  return ready;
+}
+
+upgradeDetachedExperiment.experimental = 1;
+
+//
+
 function fixateDryDetached( test )
 {
   let self = this;
@@ -15717,6 +15767,7 @@ var Self =
     stepSubmodulesAreUpdated,
     upgradeDryDetached,
     upgradeDetached,
+    upgradeDetachedExperiment,
     fixateDryDetached,
     fixateDetached,
 
