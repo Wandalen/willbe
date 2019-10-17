@@ -1274,25 +1274,35 @@ function _remoteDownload( o )
 
     _.assert( _.boolIs( downloading ) );
 
-    // debugger;
-    if( !downloading )
-    return downloading;
+    debugger;
+    // if( !downloading )
+    // return downloading;
 
     if( o.mode === 'download' )
     {
       if( o.strict )
       {
+        if( !opener.isDownloaded )
         filesCheck();
+        if( opener.isDownloaded )
         repositoryCheck();
+        if( opener.isDownloaded )
         moduleCheck();
       }
     }
     else if( o.mode === 'update' )
     {
 
+      if( !opener.isDownloaded )
       filesCheck();
+      if( opener.isDownloaded )
       repositoryCheck();
+      if( opener.isDownloaded )
       moduleCheck();
+
+      if( !downloading )
+      return downloading;
+
       if( opener.isDownloaded && opener.isRepository )
       originCheck();
       if( opener.isDownloaded && opener.isRepository )
@@ -1301,6 +1311,8 @@ function _remoteDownload( o )
     }
     else if( o.mode === 'agree' )
     {
+      if( !downloading )
+      return downloading;
 
       if( opener.isDownloaded && opener.isRepository )
       originCheck();
@@ -1349,7 +1361,8 @@ function _remoteDownload( o )
 
    function repositoryCheck()
    {
-     if( opener.isDownloaded )
+     _.assert( opener.isDownloaded === true );
+
      if( !opener.isRepository )
      throw _.err
      (
@@ -1437,11 +1450,11 @@ function _remoteDownload( o )
 
     hasGoodOriginReform();
 
-    if( origin.downloadedFromRemote )
+    if( !origin.downloadedFromRemote )
     throw _.err
     (
       'Module', opener.decoratedAbsoluteName, 'is already downloaded, but has different origin url:',
-      _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
+      _.color.strFormat( origin.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( origin.remoteVcsPath, 'path' )
     );
 
   }
@@ -1469,8 +1482,7 @@ function _remoteDownload( o )
 
   function filesCheck()
   {
-    if( opener.isDownloaded )
-    return;
+    _.assert( opener.isDownloaded === false );
 
     if( fileProvider.fileExists( opener.downloadPath ) && !fileProvider.dirIsEmpty( opener.downloadPath ) )
     {

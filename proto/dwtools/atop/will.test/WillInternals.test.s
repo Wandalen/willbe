@@ -9212,6 +9212,74 @@ function resourcePathRemotePreserved( test )
   return ready;
 }
 
+//
+
+function moduleIsValidExperiment( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let modulePath = abs( './good' );
+  let downloadPath = abs( './.module/PathBasic' );
+  let will = new _.Will();
+  let opener;
+  let ready = new  _.Consequence().take( null );
+
+  ready
+  .then( () =>
+  {
+    test.case = 'download submodule';
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    opener = will.openerMakeUser({ willfilesPath : modulePath });
+
+    will.prefer
+    ({
+      allOfSub : 1,
+    });
+
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  })
+
+  .then( () => opener.openedModule.subModulesDownload() )
+
+  .then( () =>
+  {
+    test.case = 'change out will-file';
+
+    opener.close();
+
+    let outWillFilePath = _.path.join( downloadPath, 'out/wPathBasic.out.will.yml' );
+    let outWillFile = _.fileProvider.fileConfigRead( outWillFilePath );
+    outWillFile.section = { field : 'value' };
+    _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
+
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = 'repopen module';
+    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  })
+
+  .then( () =>
+  {
+    test.case = 'check if module is valid';
+
+    var submodule = opener.openedModule.submodulesResolve({ selector : 'PathBasic' });
+    test.identical( submodule.opener.isValid(), false );
+    opener.close();
+    return null;
+  })
+
+  return ready;
+}
+
+moduleIsValidExperiment.experimental = 1;
+
 // --
 // define class
 // --
@@ -9293,6 +9361,8 @@ var Self =
 
     customLogger,
     resourcePathRemotePreserved,
+
+    moduleIsValidExperiment
 
   }
 
