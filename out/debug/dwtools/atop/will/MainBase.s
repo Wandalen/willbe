@@ -2053,9 +2053,6 @@ function modulesDownload_body( o )
   let rootModule = o.modules.length === 1 ? o.modules[ 0 ].module : null;
   let rootModulePath = rootModule ? rootModule.localPath : null;
 
-  if( rootModule && rootModule.id === 1516 )
-  debugger;
-
   return download( o.modules )
   .finally( ( err, arg ) =>
   {

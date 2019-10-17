@@ -391,7 +391,9 @@ function isDownloadedGet()
   return relation.opener.isDownloaded;
 }
 
-function isGitRepositoryGet()
+//
+
+function isRepositoryGet()
 {
   let relation = this;
   let module = relation.module;
@@ -399,7 +401,7 @@ function isGitRepositoryGet()
   if( !relation.opener )
   return false;
 
-  return relation.opener.isGitRepository;
+  return relation.opener.isRepository;
 }
 
 //
@@ -777,7 +779,7 @@ let Accessors =
 {
   isAvailable : { getter : isAvailableGet, readOnly : 1 },
   isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
-  isGitRepository : { getter : isGitRepositoryGet, readOnly : 1 },
+  isRepository : { getter : isGitRepositoryGet, readOnly : 1 },
   localPath : { getter : localPathGet, readOnly : 1 },
   remotePath : { getter : remotePathGet, readOnly : 1 },
   opener : { setter : openerSet },
@@ -790,6 +792,7 @@ let Forbids =
 {
   data : 'data',
   own : 'own',
+  isGitRepository : 'isGitRepository',
 }
 
 // --
