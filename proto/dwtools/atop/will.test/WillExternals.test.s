@@ -12505,7 +12505,7 @@ function submodulesUpdateFailed( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'PathBasic is downloaded, but its not a git repository' ) );
+    test.is( _.strHas( got.output, 'Module module::submodules-download-errors-good / opener::PathBasic is not downloaded, but file at' ) );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( _.fileProvider.isTerminal( downloadPath ) )
     return null;
