@@ -1997,6 +1997,7 @@ function exportSeveralExports( test )
 
     test.description = 'finit';
     module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
 
@@ -2058,6 +2059,7 @@ function exportSeveralExports( test )
 
     test.description = 'finit';
     module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
     test.identical( will.openersErrorsArray.length, 0 );
@@ -2114,7 +2116,7 @@ function exportSeveralExports( test )
     test.identical( files, exp )
 
     test.description = 'finit';
-    module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
     test.identical( will.openersErrorsArray.length, 0 );
@@ -2171,7 +2173,7 @@ function exportSeveralExports( test )
     test.identical( files, exp )
 
     test.description = 'finit';
-    module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
     test.identical( will.openersErrorsArray.length, 0 );
@@ -2353,7 +2355,7 @@ function exportSuper( test )
     ]
     test.identical( files, exp );
 
-    module.finit();
+    opener.finit();
     return null;
   });
 
@@ -2497,7 +2499,7 @@ function exportSuper( test )
     ]
     test.identical( files, exp );
 
-    module.finit();
+    opener.finit();
     return null;
   })
 
@@ -2606,7 +2608,7 @@ function exportSuperIn( test )
     will.openersErrorsRemoveAll();
     test.identical( will.openersErrorsArray.length, 0 );
 
-    module.finit();
+    opener.finit();
     return null;
   })
 
@@ -2675,7 +2677,7 @@ function exportSuperIn( test )
     will.openersErrorsRemoveAll();
     test.identical( will.openersErrorsArray.length, 0 );
 
-    module.finit();
+    opener.finit();
     return null;
   })
 
@@ -2772,7 +2774,7 @@ function exportSuperIn( test )
     will.openersErrorsRemoveAll();
     test.identical( will.openersErrorsArray.length, 0 );
 
-    module.finit();
+    opener.finit();
     return null;
   });
 
@@ -2797,7 +2799,7 @@ function exportSuperIn( test )
 
   .finally( ( err, arg ) =>
   {
-    var module = opener.openedModule; debugger;
+    var module = opener.openedModule;
     test.description = 'no error';
     test.is( !_.errIs( err ) );
 
@@ -2848,7 +2850,7 @@ function exportSuperIn( test )
     will.openersErrorsRemoveAll();
     test.identical( will.openersErrorsArray.length, 0 );
 
-    module.finit();
+    opener.finit();
     return null;
   })
 
@@ -2940,7 +2942,7 @@ function exportSuperIn( test )
     will.openersErrorsRemoveAll();
     test.identical( will.openersErrorsArray.length, 0 );
 
-    module.finit();
+    opener.finit();
     return null;
   })
 
@@ -3025,7 +3027,7 @@ function exportDefaultPath( test )
     var files = self.find( outDirPath );
     test.identical( files, exp )
 
-    module.finit();
+    opener.finit();
     return null;
   });
 
@@ -3064,7 +3066,7 @@ function exportDefaultPath( test )
     var files = self.find( outDirPath );
     test.identical( files, exp )
 
-    module.finit();
+    opener.finit();
     return null;
   });
 
@@ -3103,7 +3105,7 @@ function exportDefaultPath( test )
     var files = self.find( outDirPath );
     test.identical( files, exp )
 
-    module.finit();
+    opener.finit();
     return null;
   });
 
@@ -3141,7 +3143,7 @@ function exportDefaultPath( test )
     var files = self.find( outDirPath );
     test.identical( files, exp )
 
-    module.finit();
+    opener.finit();
     return null;
   });
 
@@ -3171,16 +3173,12 @@ function exportDefaultPath( test )
 
     test.is( err === undefined );
 
-    // test.is( _.errIs( err ) );
-    // test.is( _.strHas( String( err ), 'Failed to export module::nonglob / exported::export.debug' ) );
-    // test.is( _.strHas( String( err ), 'is not glob. Only glob allowed' ) );
-
     test.description = 'files';
     var exp = [ '.', './nonglob.out.will.yml' ];
     var files = self.find( outDirPath );
     test.identical( files, exp );
 
-    module.finit();
+    opener.finit();
     return null;
   });
 
@@ -3273,7 +3271,7 @@ function exportInconsistent( test )
     test.identical( files, exp )
 
     test.description = 'finit';
-    module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
 
@@ -3334,7 +3332,7 @@ function exportInconsistent( test )
     test.identical( files, exp )
 
     test.description = 'finit';
-    module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
 
@@ -3431,7 +3429,7 @@ function exportRecursive( test )
     test.identical( files, exp )
 
     test.description = 'no garbage left';
-    module.finit();
+    opener.finit();
     test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
     test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
     test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
@@ -4229,7 +4227,7 @@ function exportCourrputedOutfileUnknownSection( test )
     test.setsAreIdentical( outfile.root, exp );
 
     test.description = 'finit';
-    module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
 
@@ -4339,7 +4337,7 @@ function exportCourruptedOutfileSyntax( test )
     test.setsAreIdentical( outfile.root, exp );
 
     test.description = 'finit';
-    module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
 
@@ -4483,7 +4481,7 @@ function exportCourruptedSubmodulesDisabled( test )
     test.setsAreIdentical( outfile.root, exp );
 
     test.description = 'finit';
-    module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
 
@@ -4561,7 +4559,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
     test.identical( files, exp );
 
     test.description = 'finit';
-    module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
 
@@ -4649,7 +4647,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
     test.identical( files, exp );
 
     test.description = 'finit';
-    module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
 
@@ -4742,7 +4740,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
     test.identical( files, exp );
 
     test.description = 'finit';
-    module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
 
@@ -4830,7 +4828,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
     test.identical( files, exp );
 
     test.description = 'finit';
-    module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
 
@@ -4915,7 +4913,7 @@ function exportsResolve( test )
     var builds = module.exportsResolve({ criterion : { raw : 1 }, strictCriterion : 0 });
     test.setsAreIdentical( _.select( builds, '*/name' ), [ 'export.', 'export.debug' ] );
 
-    module.finit();
+    opener.finit();
     return null;
   })
 
@@ -5115,7 +5113,7 @@ function trivialResolve( test )
     throw err;
     test.is( err === undefined );
     var module = opener.openedModule;
-    module.finit();
+    opener.finit();
     return arg;
   })
 
@@ -9183,7 +9181,7 @@ function resourcePathRemotePreserved( test )
   {
     let module = opener.openedModule;
     test.description = 'finit';
-    module.finit();
+    opener.finit();
     test.is( module.finitedIs() );
     test.is( opener.finitedIs() );
 
@@ -9208,6 +9206,78 @@ function resourcePathRemotePreserved( test )
     return null;
   })
 
+
+  return ready;
+}
+
+//
+
+function moduleIsNotValid( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let modulePath = abs( './good' );
+  let downloadPath = abs( './.module/PathBasic' );
+  let will = new _.Will();
+  let opener;
+  let ready = new  _.Consequence().take( null );
+
+  ready
+  .then( () =>
+  {
+    test.case = 'download submodule';
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    opener = will.openerMakeUser({ willfilesPath : modulePath });
+
+    will.prefer
+    ({
+      allOfSub : 1,
+    });
+
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  })
+
+  .then( () => opener.openedModule.subModulesDownload() )
+
+  .then( () =>
+  {
+    test.case = 'change out will-file';
+
+    opener.close();
+
+    let outWillFilePath = _.path.join( downloadPath, 'out/wPathBasic.out.will.yml' );
+    let outWillFile = _.fileProvider.fileConfigRead( outWillFilePath );
+    outWillFile.section = { field : 'value' };
+    _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
+
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = 'repopen module';
+    let outWillFilePath = _.path.join( downloadPath, 'out/wPathBasic.out.will.yml' );
+    debugger;
+    opener = will.openerMakeUser({ willfilesPath : outWillFilePath });
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  })
+
+  .finally( ( err, arg ) =>
+  {
+    test.case = 'check if module is valid';
+    if( err )
+    _.errAttend( err );
+    debugger;
+    // var submodule = opener.openedModule.submodulesResolve({ selector : 'PathBasic' });
+    // test.identical( submodule.opener.isValid(), false );
+    test.identical( opener.isValid(), false );
+    test.identical( opener.openedModule.isValid(), false );
+    opener.close();
+    return null;
+  })
 
   return ready;
 }
@@ -9293,6 +9363,7 @@ var Self =
 
     customLogger,
     resourcePathRemotePreserved,
+    moduleIsNotValid
 
   }
 

@@ -1274,7 +1274,7 @@ function _remoteDownload( o )
 
     _.assert( _.boolIs( downloading ) );
 
-    debugger;
+    // debugger;
     // if( !downloading )
     // return downloading;
 
@@ -1595,7 +1595,7 @@ function _remoteDownload( o )
       ready.then( () => opener2.reopen() );
     });
 
-    debugger;
+    // debugger;
     return ready;
   }
 
