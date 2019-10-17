@@ -13590,7 +13590,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules were downloaded in' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -13608,7 +13608,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '0/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -13628,7 +13628,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '0/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
     test.is( _.strHas( got.output, '! Submodule opener::local is not up to date!' ) );
     test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
