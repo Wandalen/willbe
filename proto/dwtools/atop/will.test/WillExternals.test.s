@@ -15185,7 +15185,7 @@ function versionsAgree( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/2 submodule\(s\) were agreed in/ ) );
+    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
 
@@ -15202,7 +15202,7 @@ function versionsAgree( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/2 submodule\(s\) were agreed in/ ) );
+    test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
 
@@ -15219,7 +15219,7 @@ function versionsAgree( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/2 submodule\(s\) were agreed in/ ) );
+    test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
   shell3( 'git status' )
@@ -15245,7 +15245,7 @@ function versionsAgree( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, 'module::local was agreed with version master in' ) );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
+    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
   shell3( 'git status' )
@@ -15271,7 +15271,7 @@ function versionsAgree( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, /1\/2 submodule\(s\) were agreed in/ ) );
+    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
   shell3( 'git status' )
