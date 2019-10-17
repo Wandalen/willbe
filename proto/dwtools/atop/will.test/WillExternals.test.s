@@ -15769,11 +15769,12 @@ var Self =
     stepSubmodulesDownload,
     stepWillbeVersionCheck,
     stepSubmodulesAreUpdated,
-    upgradeDryDetached,
-    upgradeDetached,
-    upgradeDetachedExperiment,
-    fixateDryDetached,
-    fixateDetached,
+
+    // upgradeDryDetached, // xxx : look later
+    // upgradeDetached, // xxx : look later
+    // upgradeDetachedExperiment, // xxx : look later
+    // fixateDryDetached, // xxx : look later
+    // fixateDetached, // xxx : look later
 
     versionsVerify,
     versionsAgree,
