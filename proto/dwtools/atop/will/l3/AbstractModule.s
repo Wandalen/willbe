@@ -873,7 +873,7 @@ function remoteHasLocalChanges()
 
   // let remoteProvider = fileProvider.providerForPath( module.remotePath );
   // return remoteProvider.hasLocalChanges( module.downloadPath );
-  return _.git.hasLocalChanges( module.downloadPath );
+  return _.git.hasLocalChanges({ localPath : module.downloadPath, unpushed : 0 });
 }
 
 // --
