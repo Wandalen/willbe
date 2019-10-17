@@ -4485,8 +4485,8 @@ function cleanRecursive( test )
 
     test.identical( _.strCount( got.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( got.output, '. Opened .' ), 25 );
-    test.identical( _.strCount( got.output, '+ 5/10 submodule(s) were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/5 submodule(s) were downloaded' ), 1 ); /* xxx */
+    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
     return null;
   })

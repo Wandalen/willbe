@@ -735,22 +735,14 @@ function reopen()
   let will = opener.will;
   let module = opener.openedModule;
 
-  // if( opener.openedModule )
-  // debugger;
-
-  // debugger;
   let willfilesPath = _.make( opener.willfilesPath );
   let willf = opener.willfilesArray[ 0 ];
   opener.close();
-  // debugger;
   opener.willfilesPath = willfilesPath;
   _.assert( opener.error === null );
   _.assert( opener.searching !== 'exact' || _.entityIdentical( opener.willfilesPath, willfilesPath ) );
   _.assert( !_.arrayHas( will.willfilesArray, willf ) );
-  // _.assert( will.willfilesArray.length === 0 );
-  // debugger;
   opener.find();
-  // debugger;
 
   _.assert( opener.openedModule !== module );
 
@@ -1263,10 +1255,10 @@ function _remoteDownload( o )
   .then( () => opener._remoteIsUpToDate({ mode : o.mode }) )
   .then( function( arg )
   {
-    debugger
     downloading = arg;
     _.assert( _.boolIs( downloading ) );
 
+    debugger;
     if( !downloading )
     return downloading;
 
@@ -1334,7 +1326,7 @@ function _remoteDownload( o )
    function repositoryCheck()
    {
      if( opener.isDownloaded )
-     if( !opener.isGitRepository )
+     if( !opener.isRepository )
      throw _.err
      (
        'Module', opener.decoratedAbsoluteName, 'is downloaded, but its not a git repository.\n',
@@ -1364,7 +1356,9 @@ function _remoteDownload( o )
     if( !opener.isDownloaded )
     return;
 
-    if( !opener.isGitRepository && o.mode === 'agree' )
+    // qqq : check
+    // if( !opener.isRepository && o.mode === 'agree' )
+    if( !opener.isRepository )
     return;
 
     if( opener.remoteHasLocalChanges() )
@@ -1437,7 +1431,7 @@ function _remoteDownload( o )
 
     _.assert( downloading === true );
 
-    let remove = !opener.isValid() || !opener.isGitRepository;
+    let remove = !opener.isValid() || !opener.isRepository;
 
     if( !remove )
     {
@@ -1641,7 +1635,7 @@ function remoteIsGoodRepositoryReform()
 
   function end( result )
   {
-    module.isGitRepository = !!result;
+    module.isRepository = !!result;
     return result;
   }
 
@@ -1669,7 +1663,7 @@ function _remoteIsUpToDate( o )
     let downloading = false;
     debugger
     if( o.mode === 'download' )
-    downloading = opener.isDownloaded && opener.isGitRepository;
+    downloading = opener.isDownloaded && opener.isRepository;
     else if( o.mode === 'update' )
     downloading = opener.isUpToDate;
     else if( o.mode === 'agree' )
@@ -2051,12 +2045,12 @@ function accessorSet_functor( fieldName )
 
 let isRemoteGet = accessorGet_functor( 'isRemote' );
 let isUpToDateGet = accessorGet_functor( 'isUpToDate' );
-let isGitRepositoryGet = accessorGet_functor( 'isGitRepository' );
+let isRepositoryGet = accessorGet_functor( 'isRepository' );
 let isOutGet = accessorGet_functor( 'isOut' );
 
 let isRemoteSet = accessorSet_functor( 'isRemote' );
 let isUpToDateSet = accessorSet_functor( 'isUpToDate' );
-let isGitRepositorySet = accessorGet_functor( 'isGitRepository' );
+let isRepositorySet = accessorGet_functor( 'isRepository' );
 let isOutSet = accessorSet_functor( 'isOut' );
 
 // --
@@ -2078,22 +2072,18 @@ let Composes =
 {
 
   aliasName : null,
-
   willfilesPath : null,
-  // downloadPath : null,
-  // localPath : null,
-  // remotePath : null,
 
   isRemote : null,
   isDownloaded : null,
-  isGitRepository : null,
+  isRepository : null,
   isUpToDate : null,
   isOut : null,
   isMain : null,
   isAuto : null,
 
   reason : null,
-  searching : 'strict', // 'smart', 'strict', 'exact'
+  searching : 'strict', /* 'smart', 'strict', 'exact' */
 
 }
 
@@ -2297,7 +2287,7 @@ let Extend =
   isMainSet,
   isRemoteGet,
   isUpToDateGet,
-  isGitRepositoryGet,
+  isRepositoryGet,
   isOutGet,
 
   isRemoteSet,

@@ -852,7 +852,7 @@ function stepRoutineSubmodulesAreUpdated( frame )
       if( !relation.opener.isDownloaded )
       return false;
 
-      if( !relation.opener.isGitRepository )
+      if( !relation.opener.isRepository )
       return false;
 
       return true;

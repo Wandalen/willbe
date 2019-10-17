@@ -5,7 +5,7 @@
 /*
                                                               download update agree verify
   download directory is empty/not present ( isDownloaded )      d      d      d      -
-  has files which are not repository( isGitRepository )         e      e      rd     -
+  has files which are not repository( isRepository )            e      e      rd     -
   origin is different( originCheck() )                          -      e      rd     -
   module has local changes( localChangesCheck() )               -      e      e      .
   module is not valid( isValid )                                e      e      rd     -
@@ -3397,7 +3397,7 @@ function versionsVerify( o )
 
     /* repository check */
 
-    if( !r.opener.isGitRepository )
+    if( !r.opener.isRepository )
     {
       if( o.throwing )
       throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is downloaded, but its not a git repository' );

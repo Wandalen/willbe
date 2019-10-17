@@ -949,6 +949,7 @@ let Forbids =
   configName : 'configName',
   superModules : 'superModules',
   willfilePath : 'willfilePath',
+  isGitRepository : 'isGitRepository',
 
 }
 
