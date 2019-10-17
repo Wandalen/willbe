@@ -3353,27 +3353,29 @@ function versionsVerify( o )
   logger.up();
 
   let modules = module.modulesEach({ outputFormat : '/', recursive : o.recursive });
+  let ready = new _.Consequence().take( null );
 
-  modules.forEach( ( r ) =>
+  _.each( modules, ( r ) =>
   {
-    r.opener.preform(); debugger;
-    // r.opener.remoteForm();
-
-    let verified = onEach( r );
-    if( verified )
-    verifiedNumber += 1;
+    ready.then( () => reform( r ) )
+    ready.then( onEach );
+    ready.then( onEachEnd );
   })
 
-  logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.timeSpent( time ) );
+  ready.then( () =>
+  {
+    logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.timeSpent( time ) );
+    logger.down();
+    return verifiedNumber === totalNumber;
+  })
 
-  logger.down();
-
-  return verifiedNumber === totalNumber;
+  return ready;
 
   /* */
 
   function onEach( r )
   {
+    if( o.downloaded )
     if( !r.opener.isDownloaded )
     {
       if( o.throwing )
@@ -3389,6 +3391,7 @@ function versionsVerify( o )
 
     /* isValid */
 
+    if( o.valid )
     if( !r.opener.isValid() )
     throw _.err( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not valid. Reason:', r.opener.err );
 
@@ -3402,6 +3405,7 @@ function versionsVerify( o )
 
     /* repository check */
 
+    if( o.repository )
     if( !r.opener.isRepository )
     {
       if( o.throwing )
@@ -3413,49 +3417,86 @@ function versionsVerify( o )
 
     /* origin check */
 
-    let result = remoteProvider.isDownloadedFromRemote
-    ({
-      localPath : r.opener.downloadPath,
-      remotePath : r.opener.remotePath
-    });
-
-    if( !result.downloadedFromRemote )
+    if( o.downloadedFromRemote )
     {
-      if( o.throwing )
+      let result = remoteProvider.isDownloadedFromRemote
+      ({
+        localPath : r.opener.downloadPath,
+        remotePath : r.opener.remotePath
+      });
+
+      if( !result.downloadedFromRemote )
+      {
+        if( o.throwing )
+        throw _.errBrief
+        (
+          '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has different origin url:',
+          _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
+        );
+
+        return false;
+      }
+    }
+
+    /* version check */
+
+    if( o.upToDate )
+    {
+      if( r.opener.isUpToDate )
+      return true;
+
+      if( !o.throwing )
+      return false;
+
+      let remoteParsed = remoteProvider.pathParse( r.opener.remotePath );
+      let remoteVersion = remoteParsed.hash || 'master';
+      let localVersion = remoteProvider.versionLocalRetrive( r.opener.downloadPath );
+
       throw _.errBrief
       (
-        '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has different origin url:',
-        _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
+        '! Submodule', r.opener.qualifiedName, 'has version different from that is specified in will-file!',
+        '\nCurrent:', localVersion,
+        '\nExpected:', remoteVersion
       );
 
       return false;
     }
 
-    /* version check */
-
-    let remoteParsed = remoteProvider.pathParse( r.opener.remotePath );
-    let remoteVersion = remoteParsed.hash || 'master';
-    let localVersion = remoteProvider.versionLocalRetrive( r.opener.downloadPath );
-    let onSameVersion = remoteVersion === localVersion;
-
-    if( onSameVersion )
     return true;
 
-    if( o.throwing )
-    throw _.errBrief
-    (
-      '! Submodule', r.opener.qualifiedName, 'has version different from that is specified in will-file!',
-      '\nCurrent:', localVersion,
-      '\nExpected:', remoteVersion
-    );
+  }
 
-    return false;
+  /*  */
+
+  function onEachEnd( verified )
+  {
+    if( verified )
+    verifiedNumber += 1;
+    return verified;
+  }
+
+  /*  */
+
+  function reform( relation )
+  {
+    let con = new _.Consequence().take( null );
+    con.then( () => relation.opener.preform() )
+    con.then( () => relation.opener.remoteIsDownloadedReform() )
+    con.then( () => relation.opener.remoteIsGoodRepositoryReform() )
+    con.then( () => relation.opener.remoteIsUpToDateReform() )
+    con.then( () => relation )
+    return con;
   }
 }
 
 var defaults  = versionsVerify.defaults = Object.create( null );
 defaults.recursive = 1;
 defaults.throwing = 1;
+defaults.downloaded = 1;
+defaults.valid = 1;
+defaults.repository = 1;
+defaults.downloadedFromRemote = 1;
+defaults.upToDate = 1
 
 //
 
