@@ -12339,7 +12339,7 @@ function submodulesDownloadFailed( test )
   ready
   .then( () =>
   {
-    test.case = 'downloaded, but not valid, error expected';
+    test.case = 'downloaded, change in file to make module not valid, error expected';
     _.fileProvider.filesDelete( submodulesPath );
     _.fileProvider.dirMake( downloadPath );
     return null;
@@ -12347,21 +12347,24 @@ function submodulesDownloadFailed( test )
   shell({ execPath : '.with good .submodules.download' })
   .then( () =>
   {
-    let outWillFilePath = _.path.join( downloadPath, 'out/wPathBasic.out.will.yml' );
-    let outWillFile = _.fileProvider.fileConfigRead( outWillFilePath );
-    outWillFile.section = { field : 'value' };
-    _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile,encoding : 'yml' });
+    let inWillFilePath = _.path.join( downloadPath, '.im.will.yml' );
+    let inWillFile = _.fileProvider.fileConfigRead( inWillFilePath );
+    inWillFile.section = { field : 'value' };
+    _.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile,encoding : 'yml' });
+    return null;
+  })
+  .then( () =>
+  {
+    filesBefore = self.find( downloadPath );
     return null;
   })
   shell({ execPath : '.with good .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'is downloaded, but its not valid' ) );
-    test.is( _.fileProvider.fileExists( downloadPath ) )
+    test.is( _.strHas( got.output, 'Willfile should not have section(s) : "section"' ) );
     let filesAfter = self.find( downloadPath );
-    test.identical( filesAfter, filesBefore );
-
+    test.identical( filesAfter, filesBefore )
     return null;
   })
 
@@ -12530,9 +12533,7 @@ function submodulesUpdateFailed( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /GIT repository at directory .+/ ) );
-    test.is( _.strHas( got.output, /Has origin .+/ ) );
-    test.is( _.strHas( got.output, /Should have .+/ ) );
+    test.is( _.strHas( got.output, 'opener::PathBasic is already downloaded, but has different origin url') );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
@@ -12546,7 +12547,7 @@ function submodulesUpdateFailed( test )
   ready
   .then( () =>
   {
-    test.case = 'downloaded, but not valid, error expected';
+    test.case = 'downloaded, change in file to make module not valid, error expected';
     _.fileProvider.filesDelete( submodulesPath );
     _.fileProvider.dirMake( downloadPath );
     return null;
@@ -12554,21 +12555,24 @@ function submodulesUpdateFailed( test )
   shell({ execPath : '.with good .submodules.update' })
   .then( () =>
   {
-    let outWillFilePath = _.path.join( downloadPath, 'out/wPathBasic.out.will.yml' );
-    let outWillFile = _.fileProvider.fileConfigRead( outWillFilePath );
-    outWillFile.section = { field : 'value' };
-    _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile,encoding : 'yml' });
+    let inWillFilePath = _.path.join( downloadPath, '.im.will.yml' );
+    let inWillFile = _.fileProvider.fileConfigRead( inWillFilePath );
+    inWillFile.section = { field : 'value' };
+    _.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile,encoding : 'yml' });
+    return null;
+  })
+  .then( () =>
+  {
+    filesBefore = self.find( downloadPath );
     return null;
   })
   shell({ execPath : '.with good .submodules.update' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'is downloaded, but its not valid' ) );
-    test.is( _.fileProvider.fileExists( downloadPath ) )
+    test.is( _.strHas( got.output, 'Willfile should not have section(s) : "section"' ) );
     let filesAfter = self.find( downloadPath );
-    test.identical( filesAfter, filesBefore );
-
+    test.identical( filesAfter, filesBefore )
     return null;
   })
 
@@ -12670,7 +12674,7 @@ function submodulesVersionsAgreeFailed( test )
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
     test.is( _.strHas( got.output, 'module::wPathBasic was agreed with version master' ) );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
 
@@ -12713,7 +12717,7 @@ function submodulesVersionsAgreeFailed( test )
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
     test.is( _.strHas( got.output, 'module::wPathBasic was agreed with version master' ) );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
 
@@ -12753,7 +12757,7 @@ function submodulesVersionsAgreeFailed( test )
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
     test.is( _.strHas( got.output, 'module::wPathBasic was agreed with version master' ) );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed in' ) );
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
     return null;
@@ -12773,7 +12777,7 @@ function submodulesVersionsAgreeFailed( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
