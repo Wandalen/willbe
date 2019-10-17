@@ -3222,11 +3222,13 @@ function moduleFixateAct( o )
 
       if( !_.strHas( code, o.originalPath ) )
       {
-        throw _.err( 'Willfile', willfilePath, 'does not have path', o.remotePath );
+        debugger;
+        throw _.err( 'Willfile', willfilePath, 'does not have path', o.originalPath );
       }
 
       if( !_.strHas( code, o.replacer ) )
       {
+        debugger;
         throw _.err( 'Willfile', willfilePath, 'does not have path', o.originalPath );
       }
 

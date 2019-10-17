@@ -2120,7 +2120,7 @@ function modulesDownload_body( o )
 
     let ofModule = rootModule ? ' of ' + rootModule.absoluteName : '';
 
-    let total = ( o.remoteContainer.length + o.localContainer.length ); debugger;
+    let total = ( o.remoteContainer.length + o.localContainer.length );
     logger.rbegin({ verbosity : -2 });
     let phrase = '';
     if( o.mode === 'update' )

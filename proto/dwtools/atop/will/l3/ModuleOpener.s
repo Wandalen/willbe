@@ -745,15 +745,11 @@ function reopen()
   let willfilesPath = _.make( opener.willfilesPath );
   let willf = opener.willfilesArray[ 0 ];
 
-  debugger;
-
   opener.close();
   opener.willfilesPath = willfilesPath;
   _.assert( opener.error === null );
   _.assert( opener.searching !== 'exact' || _.entityIdentical( opener.willfilesPath, willfilesPath ) );
   _.assert( !_.arrayHas( will.willfilesArray, willf ) );
-
-  debugger;
 
   opener.find();
   _.assert( opener.openedModule !== module );
