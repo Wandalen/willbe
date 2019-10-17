@@ -4498,7 +4498,6 @@ function cleanRecursive( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, 'try to' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 25 );
 
     var exp =
@@ -8573,9 +8572,9 @@ function exportWithRemoteSubmodules( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, 'try to' ), 1 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 6 );
-    test.identical( _.strCount( got.output, /1\/4 submodule\(s\) of .*module::z.* were downloaded/ ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 25 );
+    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
     return null;
   })
@@ -15573,15 +15572,15 @@ var Self =
     exportDotlessSingle,
     exportTracing,
     exportRewritesOutFile,
-    exportWithRemoteSubmodules, // xxx
-    importPathLocal, // qqq : help to fix, please. agree should work with corrupted downloaded submodule. auto download should throw no error( introduce option strict : 0 )
+    exportWithRemoteSubmodules,
+    importPathLocal,
     importLocalRepo,
     importOutWithDeletedSource,
 
     reflectNothingFromSubmodules,
     reflectGetPath,
     reflectSubdir,
-    // reflectSubmodulesWithBase, // xxx : look later
+    reflectSubmodulesWithBase, // xxx : look later
     reflectComposite,
     reflectRemoteGit,
     reflectRemoteHttp,
