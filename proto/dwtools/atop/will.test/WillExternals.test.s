@@ -3930,7 +3930,7 @@ function cleanBroken2( test )
 
     test.notIdentical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
-    test.is( _.strHas( got.output, /Module module::submodules \/ opener::PathBasic is not downloaded, but file at .*/ ) );
+    test.is( _.strHas( got.output, 'Module module::submodules / opener::PathBasic is downloaded, but its not a git repository' ) );
 
     // var files = self.find( outDebugPath );
     // test.gt( files.length, 9 );
