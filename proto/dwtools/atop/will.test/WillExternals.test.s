@@ -2028,6 +2028,7 @@ function verbosityStepPrintName( test )
     currentPath : routinePath,
     outputCollecting : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -2210,6 +2211,7 @@ function modulesTreeDotless( test )
     outputCollecting : 1,
     outputGraying : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
