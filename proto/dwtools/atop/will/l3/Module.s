@@ -57,8 +57,8 @@ function finit()
   if( will.verosity >= 5 )
   logger.log( module.qualifiedName, 'finit.begin' );
 
-  if( module.id === 209 || module.id === 84 )
-  debugger;
+  // if( module.id === 209 || module.id === 84 )
+  // debugger;
 
   _.assert( !module.finitedIs() );
 

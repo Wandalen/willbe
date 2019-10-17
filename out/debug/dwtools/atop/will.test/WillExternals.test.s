@@ -3930,7 +3930,7 @@ function cleanBroken2( test )
 
     test.notIdentical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
-    test.is( _.strHas( got.output, /Module module::submodules \/ opener::PathBasic is not downloaded, but file at .*/ ) );
+    test.is( _.strHas( got.output, 'Module module::submodules / opener::PathBasic is downloaded, but its not a git repository' ) );
 
     // var files = self.find( outDebugPath );
     // test.gt( files.length, 9 );
@@ -11372,7 +11372,7 @@ function submodulesDownloadSingle( test )
   {
     test.case = '.submodules.download';
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/1 submodule\(s\) were downloaded in/ ) );
+    test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::single were downloaded in' ) );
     return null;
   })
 
@@ -11384,7 +11384,7 @@ function submodulesDownloadSingle( test )
   {
     test.case = '.submodules.download'
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/1 submodule\(s\) were downloaded in/ ) );
+    test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::single were downloaded in' ) );
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
     return null;
@@ -11398,7 +11398,7 @@ function submodulesDownloadSingle( test )
   {
     test.case = '.submodules.update'
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/1 submodule\(s\) were updated in/ ) );
+    test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::single were updated in' ) );
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
     return null;
@@ -11465,7 +11465,7 @@ function submodulesDownloadUpdate( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /2\/3 submodule\(s\) were downloaded in/ ) );
+    test.is( _.strHas( got.output, '+ 2/2 submodule(s) of module::submodules were downloaded' ) );
 
     var files = self.find( submodulesPath );
 
@@ -11488,7 +11488,7 @@ function submodulesDownloadUpdate( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/3 submodule\(s\) were downloaded in/ ) );
+    test.is( _.strHas( got.output, '+ 0/2 submodule(s) of module::submodules were downloaded' ) );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
@@ -11515,7 +11515,7 @@ function submodulesDownloadUpdate( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /2\/3 submodule\(s\) were updated in/ ) );
+    test.is( _.strHas( got.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
@@ -11541,7 +11541,7 @@ function submodulesDownloadUpdate( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/3 submodule\(s\) were updated in/ ) );
+    test.is( _.strHas( got.output, '+ 0/2 submodule(s) of module::submodules were updated in' ) );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
@@ -11626,7 +11626,7 @@ function submodulesDownloadUpdateDry( test )
     // test.is( _.strHas( got.output, / \+ .*module::Tools.* will be downloaded version .*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be downloaded version .*2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::Color.* will be downloaded version .*0.3.115.*/ ) );
-    test.is( _.strHas( got.output, / \+ 2\/6 submodule\(s\) will be downloaded/ ) );
+    test.is( _.strHas( got.output, '+ 2/5 submodule(s) of module::submodules-detached will be downloaded' ) );
     var files = self.find( submodulesPath );
     test.is( files.length === 0 );
     return null;
@@ -11647,7 +11647,7 @@ function submodulesDownloadUpdateDry( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ 0\/6 submodule\(s\) will be downloaded/ ) );
+    test.is( _.strHas( got.output, '0/5 submodule(s) of module::submodules-detached will be downloaded' ) );
     var files = self.find( submodulesPath );
     test.gt( files.length, 150 );
     return null;
@@ -11670,7 +11670,7 @@ function submodulesDownloadUpdateDry( test )
     // test.is( _.strHas( got.output, / \+ .*module::Tools.* will be updated to version .*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be updated to version .*2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::Color.* will be updated to version .*0.3.115.*/ ) );
-    test.is( _.strHas( got.output, / \+ 2\/6 submodule\(s\) will be update/ ) );
+    test.is( _.strHas( got.output, '+ 2/5 submodule(s) of module::submodules-detached will be updated' ) );
     var files = self.find( submodulesPath );
     test.is( files.length === 0 );
     return null;
@@ -11691,7 +11691,7 @@ function submodulesDownloadUpdateDry( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ 0\/6 submodule\(s\) will be updated/ ) );
+    test.is( _.strHas( got.output, '+ 0/5 submodule(s) of module::submodules-detached will be updated' ) );
     var files = self.find( submodulesPath );
     test.gt( files.length, 150 );
     return null;
@@ -12171,7 +12171,7 @@ submodulesDownloadRecursive.timeOut = 300000;
 
 //
 
-function submodulesDownloadErrors( test )
+function submodulesDownloadFailed( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
@@ -12261,7 +12261,7 @@ function submodulesDownloadErrors( test )
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to download module' ) );
     test.is( _.strHas( got.output, 'module::wPathBasic was downloaded version master in' ) );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
 
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
@@ -12326,7 +12326,7 @@ function submodulesDownloadErrors( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '0/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
     test.identical( filesAfter, filesBefore );
@@ -12334,17 +12334,47 @@ function submodulesDownloadErrors( test )
     return null;
   })
 
+  //
+
+  ready
+  .then( () =>
+  {
+    test.case = 'downloaded, but not valid, error expected';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    return null;
+  })
+  shell({ execPath : '.with good .submodules.download' })
+  .then( () =>
+  {
+    let outWillFilePath = _.path.join( downloadPath, 'out/wPathBasic.out.will.yml' );
+    let outWillFile = _.fileProvider.fileConfigRead( outWillFilePath );
+    outWillFile.section = { field : 'value' };
+    _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile,encoding : 'yml' });
+    return null;
+  })
+  shell({ execPath : '.with good .submodules.download' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'is downloaded, but its not valid' ) );
+    test.is( _.fileProvider.fileExists( downloadPath ) )
+    let filesAfter = self.find( downloadPath );
+    test.identical( filesAfter, filesBefore );
+
+    return null;
+  })
 
   /* - */
 
   return ready;
 }
 
-submodulesDownloadErrors.timeOut = 300000;
+submodulesDownloadFailed.timeOut = 300000;
 
 //
 
-function submodulesUpdateErrors( test )
+function submodulesUpdateFailed( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
@@ -12434,7 +12464,7 @@ function submodulesUpdateErrors( test )
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to download update' ) );
     test.is( _.strHas( got.output, 'module::wPathBasic was updated to version master in' ) );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were updated in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were updated in' ) );
 
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
@@ -12475,7 +12505,7 @@ function submodulesUpdateErrors( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'PathBasic is downloaded, but its not a git repository' ) );
+    test.is( _.strHas( got.output, 'Module module::submodules-download-errors-good / opener::PathBasic is not downloaded, but file at' ) );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( _.fileProvider.isTerminal( downloadPath ) )
     return null;
@@ -12500,11 +12530,44 @@ function submodulesUpdateErrors( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Module module::submodules-download-errors-good / opener::PathBasic is already downloaded, but has different origin' ) );
+    test.is( _.strHas( got.output, /GIT repository at directory .+/ ) );
+    test.is( _.strHas( got.output, /Has origin .+/ ) );
+    test.is( _.strHas( got.output, /Should have .+/ ) );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
     test.identical( filesBefore.length, filesAfter.length - 1 ); // -1 because git created fetch file
+
+    return null;
+  })
+
+  //
+
+  ready
+  .then( () =>
+  {
+    test.case = 'downloaded, but not valid, error expected';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    return null;
+  })
+  shell({ execPath : '.with good .submodules.update' })
+  .then( () =>
+  {
+    let outWillFilePath = _.path.join( downloadPath, 'out/wPathBasic.out.will.yml' );
+    let outWillFile = _.fileProvider.fileConfigRead( outWillFilePath );
+    outWillFile.section = { field : 'value' };
+    _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile,encoding : 'yml' });
+    return null;
+  })
+  shell({ execPath : '.with good .submodules.update' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'is downloaded, but its not valid' ) );
+    test.is( _.fileProvider.fileExists( downloadPath ) )
+    let filesAfter = self.find( downloadPath );
+    test.identical( filesAfter, filesBefore );
 
     return null;
   })
@@ -12514,11 +12577,11 @@ function submodulesUpdateErrors( test )
   return ready;
 }
 
-submodulesUpdateErrors.timeOut = 300000;
+submodulesUpdateFailed.timeOut = 300000;
 
 //
 
-function submodulesVersionsAgreeErrors( test )
+function submodulesVersionsAgreeFailed( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
@@ -12723,7 +12786,7 @@ function submodulesVersionsAgreeErrors( test )
   return ready;
 }
 
-submodulesVersionsAgreeErrors.timeOut = 300000;
+submodulesVersionsAgreeFailed.timeOut = 300000;
 
 //
 
@@ -12857,8 +12920,8 @@ function submodulesDownloadedUpdate( test )
 
   _.process.start
   ({
-    execPath : 'git rev-parse --abbrev-ref HEAD',
-    currentPath : _.path.join( routinePath, '.module/willbe-experiment' ),
+    execPath : 'git -C .module/willbe-experiment rev-parse --abbrev-ref HEAD',
+    currentPath : routinePath,
     ready : ready,
     outputCollecting : 1,
     outputGraying : 1,
@@ -12866,8 +12929,26 @@ function submodulesDownloadedUpdate( test )
 
   .then( ( got ) =>
   {
+    test.will = 'submodule of supermodule should stay on dev';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'dev' ) );
+    return got;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git -C module/.module/willbe-experiment rev-parse --abbrev-ref HEAD',
+    currentPath : routinePath,
+    ready : ready,
+    outputCollecting : 1,
+    outputGraying : 1,
+  })
+
+  .then( ( got ) =>
+  {
+    test.will = 'submodule of informal submodule should stay on master';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'master' ) );
     return got;
   })
 
@@ -12883,8 +12964,8 @@ function submodulesDownloadedUpdate( test )
 
   _.process.start
   ({
-    execPath : 'git rev-parse --abbrev-ref HEAD',
-    currentPath : _.path.join( routinePath, '.module/willbe-experiment' ),
+    execPath : 'git -C .module/willbe-experiment rev-parse --abbrev-ref HEAD',
+    currentPath : routinePath,
     ready : ready,
     outputCollecting : 1,
     outputGraying : 1,
@@ -12892,8 +12973,26 @@ function submodulesDownloadedUpdate( test )
 
   .then( ( got ) =>
   {
+    test.will = 'submodule of supermodule should stay on dev';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'dev' ) );
+    return got;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git -C module/.module/willbe-experiment rev-parse --abbrev-ref HEAD',
+    currentPath : routinePath,
+    ready : ready,
+    outputCollecting : 1,
+    outputGraying : 1,
+  })
+
+  .then( ( got ) =>
+  {
+    test.will = 'submodule of informal submodule should stay on master';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'master' ) );
     return got;
   })
 
@@ -12941,7 +13040,7 @@ function subModulesUpdate( test )
     test.is( _.strHas( got.output, '+ module::wTools was updated to version 14163d4223466b178fec3adf67dc85a9ece32ad5 in' ) );
     test.is( _.strHas( got.output, '+ module::wPathBasic was updated to version master in' ) );
     test.is( _.strHas( got.output, '+ module::wUriBasic was updated to version 382707a813d7b0a369aad2689f39c166930f9d87 in' ) );
-    test.is( _.strHas( got.output, '+ 3/4 submodule(s) were updated in' ) );
+    test.is( _.strHas( got.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
 
@@ -12961,7 +13060,7 @@ function subModulesUpdate( test )
     test.is( !_.strHas( got.output, /module::Tools/ ) );
     test.is( !_.strHas( got.output, /module::PathBasic/ ) );
     test.is( !_.strHas( got.output, /module::UriBasic/ ) );
-    test.is( _.strHas( got.output, / \+ 0\/4 submodule\(s\) were updated in/ ) );
+    test.is( _.strHas( got.output, '+ 0/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
 
@@ -12984,7 +13083,7 @@ function subModulesUpdate( test )
     // test.is( _.strHas( got.output, / \+ .*module::Tools.* was updated to version .*master.* in/ ) );
     test.is( !_.strHas( got.output, /module::PathBasic/ ) );
     test.is( !_.strHas( got.output, /module::UriBasic/ ) );
-    test.is( _.strHas( got.output, / \+ 1\/4 submodule\(s\) were updated in/ ) );
+    test.is( _.strHas( got.output, '+ 1/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
 
@@ -13004,7 +13103,7 @@ function subModulesUpdate( test )
     test.is( !_.strHas( got.output, /module::Tools/ ) );
     test.is( !_.strHas( got.output, /module::PathBasic/ ) );
     test.is( !_.strHas( got.output, /module::UriBasic/ ) );
-    test.is( _.strHas( got.output, / \+ 0\/4 submodule\(s\) were updated in/ ) );
+    test.is( _.strHas( got.output, '+ 0/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
 
@@ -13526,7 +13625,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules were downloaded in' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -13544,7 +13643,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '0/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -13564,7 +13663,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '0/2 submodule(s) were downloaded in' ) );
+    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
     test.is( _.strHas( got.output, '! Submodule opener::local is not up to date!' ) );
     test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
@@ -15121,7 +15220,7 @@ function versionsAgree( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/2 submodule\(s\) were agreed in/ ) );
+    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
 
@@ -15138,7 +15237,7 @@ function versionsAgree( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/2 submodule\(s\) were agreed in/ ) );
+    test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
 
@@ -15155,7 +15254,7 @@ function versionsAgree( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /0\/2 submodule\(s\) were agreed in/ ) );
+    test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
   shell3( 'git status' )
@@ -15181,7 +15280,7 @@ function versionsAgree( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, 'module::local was agreed with version master in' ) );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
+    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
   shell3( 'git status' )
@@ -15207,7 +15306,7 @@ function versionsAgree( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, /1\/2 submodule\(s\) were agreed in/ ) );
+    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
   shell3( 'git status' )
@@ -15606,11 +15705,11 @@ var Self =
     submodulesDownloadUpdateDry,
     submodulesDownloadSwitchBranch,
     submodulesDownloadRecursive,
-    submodulesDownloadErrors,
-    submodulesUpdateErrors,
-    submodulesVersionsAgreeErrors,
+    submodulesDownloadFailed,
+    submodulesUpdateFailed,
+    submodulesVersionsAgreeFailed,
     submodulesVersionsAgreeWrongOrigin,
-    // submodulesDownloadedUpdate, // xxx : look later
+    submodulesDownloadedUpdate,
     subModulesUpdate,
     subModulesUpdateSwitchBranch,
     stepSubmodulesDownload,
