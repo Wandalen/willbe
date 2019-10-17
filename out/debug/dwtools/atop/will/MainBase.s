@@ -2739,15 +2739,6 @@ function _openerMake_body( o )
   try
   {
 
-    // let isMain = o.opener.isMain;
-    // if( o.isMain === null )
-    // {
-    //   if( will.mainOpener )
-    //   o.isMain = will.mainOpener === o.opener;
-    //   else
-    //   o.isMain = true;
-    // }
-
     if( !o.opener )
     o.opener = o.opener || Object.create( null );
     o.opener.will = will;
@@ -2768,11 +2759,6 @@ function _openerMake_body( o )
     if( !o.opener.will )
     o.opener.will = will;
 
-    // if( o.isMain !== null )
-    // {
-    //   o.opener.isMain = !!o.isMain;
-    // }
-
     o.opener.preform()
 
     return o.opener;
@@ -2780,19 +2766,6 @@ function _openerMake_body( o )
   catch( err )
   {
     debugger;
-
-    // try
-    // {
-    //   if( madeOpener )
-    //   {
-    //     o.opener = null;
-    //     madeOpener.finit();
-    //   }
-    // }
-    // catch( err )
-    // {
-    //   throw _.err( `Failed to finit module\n`, err );
-    // }
 
     if( o.throwing )
     throw _.err( err, `\nFailed to make module ${o.willfilesPath}` );

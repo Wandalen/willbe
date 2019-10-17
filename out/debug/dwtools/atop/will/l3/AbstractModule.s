@@ -792,7 +792,6 @@ function remoteIsUpToDateReform()
 
   _.assert( !!remoteProvider.isVcs );
 
-  debugger;
   let result = remoteProvider.isUpToDate
   ({
     remotePath : module.remotePath,
@@ -800,8 +799,8 @@ function remoteIsUpToDateReform()
     verbosity : will.verbosity - 3,
   });
 
-  if( !result )
-  return end( result );
+  // if( !result )
+  // return end( result );
 
   return _.Consequence.From( result )
   .finally( ( err, arg ) =>
