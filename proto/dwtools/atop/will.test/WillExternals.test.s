@@ -12356,7 +12356,7 @@ function submodulesDownloadFailed( test )
   shell({ execPath : '.with good .submodules.download' })
   .then( ( got ) =>
   {
-    test.identical( got.exitCode, 0 );
+    test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'is downloaded, but its not valid' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
@@ -12563,7 +12563,7 @@ function submodulesUpdateFailed( test )
   shell({ execPath : '.with good .submodules.update' })
   .then( ( got ) =>
   {
-    test.identical( got.exitCode, 0 );
+    test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'is downloaded, but its not valid' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
