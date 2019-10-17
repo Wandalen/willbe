@@ -9215,6 +9215,52 @@ function resourcePathRemotePreserved( test )
   return ready;
 }
 
+//
+
+function moduleIsValidExperiment( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let modulePath = abs( './good' );
+  let submodulesPath = abs( '.module' );
+  let outDirPath = abs( 'out' );
+  let will = new _.Will();
+  let opener;
+  let ready = new  _.Consequence().take( null );
+
+  ready
+  .then( () =>
+  {
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesDelete( outDirPath );
+    opener = will.openerMakeUser({ willfilesPath : modulePath });
+
+    will.prefer
+    ({
+      allOfSub : 1,
+    });
+
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  })
+
+  .then( () => opener.openedModule.subModulesDownload() )
+
+  .then( () =>
+  {
+    var submodule = opener.openedModule.submodulesResolve({ selector : 'PathBasic' });
+    test.identical( submodule.opener.isValid(), false );
+    return null;
+  })
+
+  return ready;
+}
+
+moduleIsValidExperiment.experimental = 1;
+
 // --
 // define class
 // --
@@ -9296,6 +9342,8 @@ var Self =
 
     customLogger,
     resourcePathRemotePreserved,
+
+    moduleIsValidExperiment
 
   }
 
