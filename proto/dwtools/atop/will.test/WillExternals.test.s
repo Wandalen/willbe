@@ -13011,16 +13011,12 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-   .then( () =>
-  {
-    let con = shell({ execPath : '.submodules.update', ready : null });
-    return test.shouldThrowErrorAsync( con );
-  })
+  shell({ execPath : '.submodules.update' })
 
   .then( () =>
   {
     let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
-    test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
+    test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
 
@@ -13047,11 +13043,7 @@ function subModulesUpdateSwitchBranch( test )
   shell2( 'git -C cloned commit --allow-empty -m test' )
   shell2( 'git -C cloned push' )
 
-  .then( () =>
-  {
-    let con = shell({ execPath : '.submodules.update', ready : null });
-    return test.shouldThrowErrorAsync( con );
-  })
+  shell({ execPath : '.submodules.update' })
 
   _.process.start
   ({
@@ -13064,7 +13056,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( ( got ) =>
   {
-    test.is( _.strHas( got.output, `have 1 and 1 different commits each, respectively` ) );
+    test.is( _.strHas( got.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
 
     let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
