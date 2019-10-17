@@ -82,8 +82,8 @@ function unform()
   if( relation.formed )
   {
     let variant = will.variantOf( relation );
-    _.assert( !!variant || !relation.enabled );
-    if( variant )
+    // _.assert( !!variant || !relation.enabled );
+    if( variant && variant.has( relation ) )
     variant.remove( relation );
   }
 
@@ -232,6 +232,10 @@ function _closeEnd()
   if( relation.formed > 2 )
   relation.formed = 2;
 
+  // let variant = will.variantOf( relation );
+  // if( variant && variant.has( relation ) )
+  // variant.remove( relation );
+
   return relation;
 }
 
@@ -302,10 +306,13 @@ function _openEnd()
   _.assert( relation.formed === 3 );
   _.assert( !!relation.opener.openedModule );
 
-  if( module.id === 658 )
-  debugger;
-  if( relation.opener.openedModule.id === 151 )
-  debugger;
+  // if( module.id === 658 )
+  // debugger;
+  // if( relation.opener.openedModule.id === 151 )
+  // debugger;
+
+  if( relation.enabled ) /* ttt */
+  will.variantFrom( relation );
 
   let modules2 = relation.opener.openedModule.modulesEach
   ({

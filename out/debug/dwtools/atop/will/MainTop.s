@@ -307,6 +307,8 @@ function _commandBuildLike( o )
   {
     will._commandsEnd( o.commandRoutine );
     if( err )
+    debugger;
+    if( err )
     logger.log( _.errOnce( err ) );
     if( err )
     throw err;

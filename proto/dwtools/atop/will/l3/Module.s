@@ -3,6 +3,7 @@
 'use strict';
 
 /*
+
                                                               download update agree verify
   download directory is empty/not present ( isDownloaded )      d      d      d      -
   has files which are not repository( isRepository )            e      e      rd     -
@@ -56,7 +57,7 @@ function finit()
   if( will.verosity >= 5 )
   logger.log( module.qualifiedName, 'finit.begin' );
 
-  if( module.id === 336 )
+  if( module.id === 209 || module.id === 84 )
   debugger;
 
   _.assert( !module.finitedIs() );
@@ -83,7 +84,8 @@ function finit()
     _.assert( module.userArray.length === 0 );
     userArray.forEach( ( opener ) =>
     {
-      if( opener.isUsedManually() )
+      /* xxx */
+      if( opener.isUsedManually() || !opener.isAuto )
       opener.close();
       else
       opener.finit();
@@ -762,6 +764,7 @@ function unform()
     _.assert( _.strIs( module.commonPath ) );
     // _.assert( !!module.willfilesPath );
     will.moduleIdUnregister( module );
+    if( variant )
     variant.remove( module );
   }
 
@@ -3584,6 +3587,7 @@ function peerModuleOpen( o )
       opener : o2,
     })
 
+    _.assert( !!opener2 );
     _.assert( opener2.peerModule === module );
 
     // debugger;

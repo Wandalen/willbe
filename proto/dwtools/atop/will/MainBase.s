@@ -517,14 +517,14 @@ function _pathChanged( o )
   if( !Config.debug )
   return;
 
-  // o.ex = _.path.simplify( o.ex );
-  // o.val = _.path.simplify( o.val );
-  // if( o.isIdential === null )
-  // o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
-  //
+  o.ex = _.path.simplify( o.ex );
+  o.val = _.path.simplify( o.val );
+  if( o.isIdential === null )
+  o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
+
   // if( o.val )
-  // if( o.fieldName === 'remote' )
-  // if( o.object.id === 52 )
+  // if( o.fieldName === 'outPath' || o.fieldName === 'out' )
+  // if( o.object.id === 209 || o.object.id === 84 )
   // {
   //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
   //   debugger;
@@ -2239,7 +2239,7 @@ function modulesDownload_body( o )
       return r.then( ( downloaded ) =>
       {
         _.assert( _.boolIs( downloaded ) );
-        _.assert( _.strIs( variant.opener.remotePath ) );
+        // _.assert( _.strIs( variant.opener.remotePath ) );
         if( downloaded )
         variantDownloaded( variant );
         return downloaded;

@@ -3926,7 +3926,7 @@ function cleanBroken2( test )
   {
     test.case = '.export';
 
-    test.will = 'update should throw error if submodule is not downloaded but download path exists'
+    test.will = 'update should throw error if submodule is not downloaded but download path exists';
 
     test.notIdentical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
@@ -12790,7 +12790,7 @@ submodulesVersionsAgreeFailed.timeOut = 300000;
 
 //
 
-function submodulesVersionsAgreeExperiment( test )
+function submodulesVersionsAgreeWrongOrigin( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
@@ -12844,7 +12844,7 @@ function submodulesVersionsAgreeExperiment( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '1/2 submodule(s) were agreed in' ) );
+    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
@@ -12857,8 +12857,7 @@ function submodulesVersionsAgreeExperiment( test )
   return ready;
 }
 
-submodulesVersionsAgreeExperiment.timeOut = 300000;
-submodulesVersionsAgreeExperiment.experimental = 1;
+submodulesVersionsAgreeWrongOrigin.timeOut = 300000;
 
 //
 
@@ -15709,7 +15708,7 @@ var Self =
     submodulesDownloadFailed,
     submodulesUpdateFailed,
     submodulesVersionsAgreeFailed,
-    submodulesVersionsAgreeExperiment,
+    submodulesVersionsAgreeWrongOrigin,
     submodulesDownloadedUpdate,
     subModulesUpdate,
     subModulesUpdateSwitchBranch,

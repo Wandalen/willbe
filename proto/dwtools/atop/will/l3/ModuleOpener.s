@@ -101,7 +101,7 @@ function unform()
   }
 
   let variant = will.variantOf( opener );
-  if( variant ) /* ttt */
+  if( variant && variant.has( opener ) )
   variant.remove( opener );
 
   opener.formed = 0;
@@ -292,6 +292,8 @@ function moduleAdopt( module )
   _.assert( opener.openedModule === null );
   _.assert( arguments.length === 1 );
   _.assert( module instanceof _.Will.OpenedModule );
+  _.assert( !opener.finitedIs() );
+  _.assert( !module.finitedIs() );
 
   if( opener && !opener.isValid() )
   {
@@ -411,11 +413,16 @@ function close()
   _.assert( arguments.length === 0 );
   _.assert( opener.formed >= 0 );
 
+  // let variant = will.variantOf( opener );
+  // if( variant && variant.has( opener ) )
+  // variant.remove( opener );
+
   if( module )
   {
-    module.close();
-    _.assert( module.isUsedBy( opener ) );
-    opener.openedModule = null;
+    module.finit();
+    // module.close();
+    // _.assert( module.isUsedBy( opener ) );
+    // opener.openedModule = null;
     _.assert( opener.openedModule === null );
     _.assert( !module.isUsedBy( opener ) );
   }
@@ -434,10 +441,11 @@ function close()
     opener._remoteForm();
   }
 
-  if( module )
-  {
-    module.finit();
-  }
+  // if( module )
+  // {
+  //   module.finit();
+  // }
+
 }
 
 //
@@ -744,10 +752,11 @@ function reopen()
   _.assert( opener.error === null );
   _.assert( opener.searching !== 'exact' || _.entityIdentical( opener.willfilesPath, willfilesPath ) );
   _.assert( !_.arrayHas( will.willfilesArray, willf ) );
-  opener.find();
-  _.assert( opener.openedModule !== module );
 
   debugger;
+
+  opener.find();
+  _.assert( opener.openedModule !== module );
 
   return opener.open();
 }
@@ -1528,7 +1537,7 @@ function _remoteDownload( o )
       _.assert( _.boolIs( deleting ) );
       if( deleting )
       {
-        debugger;
+        // debugger;
         fileProvider.filesDelete({ filePath : opener.downloadPath, throwing : 0, sync : 1 });
       }
       return deleting;
@@ -1580,11 +1589,9 @@ function _remoteDownload( o )
   {
     let ready = new _.Consequence().take( null );
 
-    let variant = will.variantFrom( opener ); debugger;
+    let variant = will.variantFrom( opener );
     variant.openers.forEach( ( opener2 ) =>
     {
-      if( opener2.openedModule )
-      debugger;
       ready.then( () => opener2.reopen() );
     });
 

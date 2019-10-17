@@ -55,39 +55,16 @@ function init()
 // etc
 // --
 
-function isUsedManually( visited )
+function isUsedManually()
 {
   let module = this;
   let will = module.will;
 
-  _.assert( arguments.length === 0 || arguments.length === 1 );
-
-  // if( !visited )
-  // debugger;
-  //
-  // visited = visited || [];
-  //
-  // if( _.arrayHas( visited, module ) )
-  // return false;
-  //
-  // let users = module.usersGet();
-  // users = _.arraySetBut( users, visited );
-  //
-  // if( !users.length )
-  // return false;
-  //
-  // let visited2 = visited.slice();
-  // visited2.push( module );
-  // let result = users.some( ( module2 ) => module2.isUsedManually( visited2 ) );
-  //
-  // // if( !result )
-  // // debugger;
-  //
-  // return result;
-
   _.assert( arguments.length === 0 );
 
-  // return module.isUsed();
+  // xxx yyy
+  // if( !module.isAuto )
+  // return true;
 
   let found = [];
   let sys = new _.graph.AbstractGraphSystem
@@ -134,8 +111,6 @@ function isUsedManually( visited )
 
   function nodeOutNodes( node )
   {
-    // if( module instanceof _.Will.OpenedModule && node instanceof _.Will.OpenedModule )
-    // return [];
     if( !node.usersGet )
     return [];
     _.assert( _.routineIs( node.usersGet ) )
