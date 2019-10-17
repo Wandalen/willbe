@@ -1360,7 +1360,7 @@ function _remoteDownload( o )
      if( !opener.isGitRepository )
      throw _.err
      (
-       'Module', opener.decoratedAbsoluteName, 'is downloaded, but its not a git repository',
+       'Module', opener.decoratedAbsoluteName, 'is downloaded, but its not a git repository.\n',
        'Rename/remove path:', _.color.strFormat( opener.downloadPath, 'path' ), 'and try again.'
      );
    }
