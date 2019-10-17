@@ -92,6 +92,8 @@ function reform()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let remotePaths = [];
+
   variant.formed = -1;
 
   _.assert( !variant.finitedIs() );
@@ -263,8 +265,10 @@ function reform()
 
     if( remotePath )
     {
-      _.assert( variant.remotePath === null || variant.remotePath === remotePath );
+      // _.assert( variant.remotePath === null || variant.remotePath === remotePath );
+      _.arrayAppendOnce( remotePaths, remotePath );
       variant.remotePath = remotePath;
+      _.assert( remotePaths.length <= 1, 'Remote paths collision!' );
     }
 
   }
@@ -610,7 +614,7 @@ function From( o )
     changed = true;
 
     // _.assert( localPath === null || variant.localPath === null || variant.localPath === localPath );
-    _.assert( remotePath === null || variant.remotePath === null || variant.remotePath === remotePath );
+    // _.assert( remotePath === null || variant.remotePath === null || variant.remotePath === remotePath );
   }
 
   // if( o.object && o.object.id === 475 )

@@ -3037,6 +3037,7 @@ function moduleFixate( o )
       {
         debugger;
         superModule.remotePath = fixatedPath;
+        superModule._currentRemotePathPut( fixatedPath );
         _.assert( superModule.remotePath === fixatedPath );
         _.assert( superModule.currentRemotePath === fixatedPath );
         _.assert( remote.path === fixatedPath );
@@ -3068,9 +3069,17 @@ function moduleFixate( o )
 
     if( !o.dry && fixatedPath )
     {
+      let opened = submodule.formed >= 3;
+      if( opened )
+      debugger;
+      submodule.close();
       submodule.path = fixatedPath;
       if( submodule.opener )
       submodule.opener.remotePath = fixatedPath;
+      if( opened )
+      debugger;
+      if( opened )
+      submodule.form();
     }
 
   }
@@ -3224,13 +3233,13 @@ function moduleFixateAct( o )
 
       if( !_.strHas( code, o.originalPath ) )
       {
-        debugger;
+        // debugger;
         throw _.err( 'Willfile', willfilePath, 'does not have path', o.originalPath );
       }
 
       if( !_.strHas( code, o.replacer ) )
       {
-        debugger;
+        // debugger;
         throw _.err( 'Willfile', willfilePath, 'does not have path', o.originalPath );
       }
 
@@ -4674,6 +4683,7 @@ let _commonPathPut = predefinedPathPut_functor( 'commonPath', 'module.common', 0
 let _localPathPut = predefinedPathPut_functor( 'localPath', 'local', 0 );
 let _downloadPathPut = predefinedPathPut_functor( 'downloadPath', 'download', 0 );
 let _remotePathPut = predefinedPathPut_functor( 'remotePath', 'remote', 0 );
+let _currentRemotePathPut = predefinedPathPut_functor( 'currentRemotePath', 'current.remote', 0 );
 let _originalWillfilesPathPut = predefinedPathPut_functor( 'originalWillfilesPath', 'module.original.willfiles', 0 );
 let _peerWillfilesPathPut = predefinedPathPut_functor( 'peerWillfilesPath', 'module.peer.willfiles', 0 );
 
@@ -6622,6 +6632,7 @@ let Extend =
   _localPathPut,
   _downloadPathPut,
   _remotePathPut,
+  _currentRemotePathPut,
   _originalWillfilesPathPut,
   _peerWillfilesPathPut,
 
