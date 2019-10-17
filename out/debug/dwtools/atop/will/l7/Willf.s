@@ -268,7 +268,7 @@ function _inPathsForm()
   if( !willf.filePath )
   {
     _.assert( _.strIs( willf.dirPath ) );
-    willf.filePath = path.join( willf.dirPath, will.AbstractModule.PrefixPathForRole( willf.role, willf.isOut ) );
+    willf.filePath = path.join( willf.dirPath, _.Will.PrefixPathForRole( willf.role, willf.isOut ) );
   }
 
   // if( willf.id === 96 )
@@ -278,13 +278,13 @@ function _inPathsForm()
   {
     formFor( willf.filePath[ 0 ] );
     if( willf.role === null )
-    willf.role = will.AbstractModule.PathToRole( willf.filePath );
+    willf.role = _.Will.PathToRole( willf.filePath );
   }
   else
   {
     formFor( willf.filePath );
     if( willf.role === null )
-    willf.role = will.AbstractModule.PathToRole( willf.filePath );
+    willf.role = _.Will.PathToRole( willf.filePath );
   }
 
   willf.formed = 2;
@@ -297,7 +297,7 @@ function _inPathsForm()
     willf.dirPath = path.detrail( path.dir( filePath ) );
 
     if( willf.isOut === null )
-    willf.isOut = _.Will.AbstractModule.PathIsOut( filePath );
+    willf.isOut = _.Will.PathIsOut( filePath );
     // willf.isOut = _.strHas( filePath, /\.out\.\w+\.\w+$/ );
 
     if( willf.storagePath === null )
@@ -1249,7 +1249,7 @@ function commonPathGet()
   let path = fileProvider.path;
   let willfilesPath = willf.filePath ? willf.filePath : willf.dirPath;
 
-  let common = _.Will.AbstractModule.CommonPathFor( willfilesPath );
+  let common = _.Will.CommonPathFor( willfilesPath );
 
   return common;
 }

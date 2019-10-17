@@ -85,6 +85,11 @@ function unform()
   if( !opener.formed )
   return opener;
 
+  // if( opener.superRelation )
+  // debugger;
+  // if( opener.superRelation )
+  // opener.superRelation.close();
+
   _.assert( opener.superRelation === null );
 
   if( opener.openedModule )
@@ -288,12 +293,17 @@ function moduleAdopt( module )
   _.assert( arguments.length === 1 );
   _.assert( module instanceof _.Will.OpenedModule );
 
+  if( opener && !opener.isValid() )
+  {
+    // debugger;
+    _.assert( opener.openedModule === null, 'not tested' );
+    opener.close();
+  }
+
   let o2 = module.optionsForOpenerExport();
   opener.copy( o2 );
-  // _.mapExtend( opener, o2 );
 
   opener.preform();
-  // opener.remoteForm();
 
   opener.openedModule = module;
 
@@ -732,7 +742,7 @@ function reopen()
   let willfilesPath = _.make( opener.willfilesPath );
   let willf = opener.willfilesArray[ 0 ];
   opener.close();
-  debugger;
+  // debugger;
   opener.willfilesPath = willfilesPath;
   _.assert( opener.error === null );
   _.assert( opener.searching !== 'exact' || _.entityIdentical( opener.willfilesPath, willfilesPath ) );
@@ -860,7 +870,7 @@ function _willfilesFindAct( o )
   _.assert( opener.willfilesArray.length === 0, 'not tested' );
 
   if( opener.searching === 'smart' )
-  o.willfilesPath = opener.CommonPathFor( o.willfilesPath );
+  o.willfilesPath = _.Will.CommonPathFor( o.willfilesPath );
 
   if( opener.searching === 'exact' )
   {
@@ -1066,15 +1076,10 @@ function _remoteForm()
   let logger = will.logger;
 
   _.assert( opener.formed >= 1 );
-  _.assert( opener.formed <= 2 ); // ttt
+  _.assert( opener.formed <= 2 );
 
   opener.remoteIsReform();
 
-  // if( opener.isRemote && !opener.superRelation )
-  // {
-  //   opener._remoteFormInformal();
-  // }
-  // else
   if( opener.isRemote && opener.superRelation )
   {
     opener._remoteFormFormal();
@@ -1089,17 +1094,13 @@ function _remoteForm()
 
   if( opener.peerModule && opener.remotePath === null && opener.peerModule.remotePath && opener.peerModule.isRemote )
   {
-    // debugger;
     opener._.downloadPath = opener.peerModule.downloadPath;
-    opener._.remotePath = _.Will.OpenedModule.RemotePathAdjust( opener.peerModule.remotePath, path.relative( opener.peerModule.localPath, opener.localPath ) );
-    // opener._.remotePath = path.join( opener.peerModule.remotePath, path.relative( opener.peerModule.localPath, opener.localPath ) );
-    // debugger;
+    opener._.remotePath = _.Will.RemotePathAdjust( opener.peerModule.remotePath, path.relative( opener.peerModule.localPath, opener.localPath ) );
     /*
       xxx qqq :
         make it working for case when remote path is local
         for example : "git+hd:///module/_repo/Tools?out=out/wTools.out.will#master"
     */
-    // opener._.remotePath = _.Will.OpenedModule.GlobalPathJoin( opener.peerModule.remotePath, path.relative( opener.peerModule.localPath, opener.localPath ) );
   }
 
   if( opener.formed < 2 )
@@ -1114,22 +1115,6 @@ function _remoteForm()
 
   return opener;
 }
-
-// //
-//
-// function _remoteFormSignaling()
-// {
-//   let opener = this;
-//   let will = opener.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//
-//   opener._remoteFormInformal();
-//   opener._filePathSet( willfilesPath2 );
-//
-//   return opener;
-// }
 
 //
 
@@ -1159,7 +1144,7 @@ function _remoteFormFormal()
   opener._.downloadPath = path.resolve( submodulesDir, opener.aliasName );
 
   let willfilesPath2 = path.resolve( submodulesDir, opener.aliasName, parsed.localVcsPath );
-  opener._.localPath = opener.CommonPathFor( willfilesPath2 );
+  opener._.localPath = _.Will.CommonPathFor( willfilesPath2 );
   opener._filePathChanged2({ willfilesPath : willfilesPath2 });
 
   if( opener.peerModule )
@@ -1203,21 +1188,11 @@ function _remoteFormInformal()
 
   _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.qualifiedName + ' does not have version control system features' );
 
-  // let submodulesDir = opener.superRelation.module.cloneDirPathGet();
-  // let parsed = remoteProvider.pathParse( willfilesPath );
-
   if( !opener.downloadPath || !opener.remotePath )
   {
     debugger;
     throw _.err( 'Module should have both path::download, path:remote defined either none' );
   }
-
-  // opener._.remotePath = willfilesPath;
-  // opener._.downloadPath = path.resolve( submodulesDir, opener.aliasName );
-
-  // let willfilesPath2 = path.resolve( submodulesDir, opener.aliasName, parsed.localVcsPath );
-  // opener._.localPath = opener.CommonPathFor( willfilesPath2 );
-  // opener._filePathChanged2({ willfilesPath : willfilesPath2 });
 
   if( opener.peerModule )
   debugger;

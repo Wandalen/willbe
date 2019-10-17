@@ -170,241 +170,243 @@ function optionsFormingForward( o )
 }
 
 optionsFormingForward.defaults = _.mapExtend( null, _.Will.UpformingDefaults );
+//
+// // --
+// // path
+// // --
+//
+// function WillfilePathIs( filePath )
+// {
+//   let fname = _.path.fullName( filePath );
+//   let r = /\.will\.\w+/;
+//   if( _.strHas( fname, r ) )
+//   return true;
+//   return false;
+// }
+//
+// //
+//
+// function PathIsOut( filePath )
+// {
+//   return _.strHas( filePath, /\.out\.\w+\.\w+$/ );
+// }
+//
+// //
+//
+// function DirPathFromFilePaths( filePaths )
+// {
+//   let module = this;
+//
+//   filePaths = _.arrayAs( filePaths );
+//
+//   _.assert( _.strsAreAll( filePaths ) );
+//   _.assert( arguments.length === 1 );
+//
+//   filePaths = filePaths.map( ( filePath ) =>
+//   {
+//     filePath = _.path.normalize( filePath );
+//
+//     let r1 = /(.*)(?:\.will(?:\.|$))[^\/]*$/;
+//     let parsed1 = r1.exec( filePath );
+//     if( parsed1 )
+//     filePath = parsed1[ 1 ];
+//
+//     let r2 = /(.*)(?:\.(?:im|ex)(?:\.|$))[^\/]*$/;
+//     let parsed2 = r2.exec( filePath );
+//     if( parsed2 )
+//     filePath = parsed2[ 1 ];
+//
+//     // if( parsed1 || parsed2 )
+//     // if( _.strEnds( filePath, '/' ) )
+//     // filePath = filePath + '.';
+//
+//     return filePath;
+//   });
+//
+//   let filePath = _.strCommonLeft.apply( _, _.arrayAs( filePaths ) );
+//   _.assert( filePath.length > 0 );
+//   return filePath;
+// }
+//
+// //
+//
+// function PrefixPathForRole( role, isOut )
+// {
+//   let cls = this;
+//   let result = cls.PrefixPathForRoleMaybe( role, isOut );
+//
+//   _.assert( arguments.length === 2 );
+//   _.sure( _.strIs( result ), 'Unknown role', _.strQuote( role ) );
+//
+//   return result;
+// }
+//
+// //
+//
+// function PrefixPathForRoleMaybe( role, isOut )
+// {
+//   let cls = this;
+//   let result = '';
+//
+//   _.assert( arguments.length === 2 );
+//
+//   if( role === 'import' )
+//   result += '.im';
+//   else if( role === 'export' )
+//   result += '.ex';
+//   else if( role === 'single' )
+//   result += '';
+//   else return null;
+//
+//   result += isOut ? '.out' : '';
+//   result += '.will';
+//
+//   return result;
+// }
+//
+// //
+//
+// function PathToRole( filePath )
+// {
+//   let role = null;
+//
+//   if( _.arrayLike( filePath ) )
+//   return _.map( filePath, ( filePath ) => this.PathToRole( filePath ) );
+//
+//   let isImport = _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ );
+//   let isExport = _.strHas( filePath, /(^|\.|\/)ex\.will(\.|$)/ );
+//
+//   // debugger;
+//   // if( isImport && isExport )
+//   // role = [ 'import', 'export' ];
+//   // else
+//
+//   if( isImport )
+//   role = 'import';
+//   else if( isExport )
+//   role = 'export';
+//   else
+//   role = 'single';
+//
+//   return role;
+// }
+//
+// //
+//
+// function CommonPathFor( willfilesPath )
+// {
+//
+//   if( _.arrayIs( willfilesPath ) )
+//   {
+//     if( !willfilesPath.length )
+//     return null;
+//     willfilesPath = willfilesPath[ 0 ];
+//   }
+//
+//   _.assert( arguments.length === 1 );
+//
+//   if( willfilesPath === null )
+//   return null;
+//
+//   _.assert( _.strIs( willfilesPath ) );
+//
+//   // let common = willfilesPath.replace( /\.will(\.\w+)?$/, '' );
+//   //
+//   // common = common.replace( /(\.im|\.ex)$/, '' );
+//
+//   let common = willfilesPath;
+//
+//   // common = common.replace( /(\.)?((im|ex)\.)?(will\.)(out\.)?(\w+)?$/, '' );
+//   // debugger;
+//
+//   let common2 = common.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.out)?(\.\w+)?$/, '' );
+//   let removed = _.strRemoveBegin( common, common2 );
+//   // debugger;
+//   if( removed[ 0 ] === '/' )
+//   common2 = common2 + '/';
+//   common = common2;
+//
+//   if( _.strEnds( common, '/wTools.out.will' ) )
+//   debugger;
+//
+//   // if( _.strEnds( common, [ '/im', '/ex' ] ) )
+//   // {
+//   //   common = _.uri.trail( _.uri.dir( common ) );
+//   //   _.assert( _.uri.isTrailed( common ) );
+//   // }
+//
+//   return common;
+// }
+//
+// //
+//
+// function CloneDirPathFor( inPath )
+// {
+//   _.assert( arguments.length === 1 );
+//   return _.path.join( inPath, '.module' );
+// }
+//
+// //
+//
+// function OutfilePathFor( outPath, name )
+// {
+//   _.assert( arguments.length === 2 );
+//   _.assert( _.path.isAbsolute( outPath ), 'Expects absolute path outPath' );
+//   _.assert( _.strDefined( name ), 'Module should have name, declare about::name' );
+//   name = _.strJoinPath( [ name, '.out.will.yml' ], '.' );
+//   return _.path.join( outPath, name );
+// }
+//
+// //
+//
+// function RemotePathAdjust( remotePath, relativePath )
+// {
+//
+//   let remotePathParsed = _.uri.parseConsecutive( remotePath );
+//
+//   // debugger;
+//   if( !remotePathParsed.query )
+//   {
+//     return _.uri.join( remotePath, relativePath );
+//   }
+//
+//   remotePathParsed.query = _.strWebQueryParse( remotePathParsed.query );
+//
+//   if( !remotePathParsed.query.out )
+//   {
+//     debugger;
+//     return _.uri.join( remotePath, relativePath );
+//   }
+//
+//   remotePathParsed.query.out = _.path.join( remotePathParsed.query.out, relativePath );
+//
+//   return _.uri.str( remotePathParsed );
+//   // src1 = _.uri.parseConsecutive( src1 );
+//   // src2 = _.uri.parseConsecutive( src2 );
+//   //
+//   // let query1 = src1.query ? _.strWebQueryParse( src1.query ) || { out : '.' };
+//   // let query2 = src2.query ? _.strWebQueryParse( src2.query ) || { out : '.' };
+//   //
+//   // query1.out = query1.out || '.';
+//   // query2.out = query2.out || '.';
+//   //
+//   // debugger;
+//   // let outPath = _.path.join( query1.out, query2.out );
+//   // debugger;
+//   //
+//   // query1.out = outPath;
+//   // delete query2.out;
+//   //
+//   // src1 = _.uri.str( src1 );
+//   // src2 = _.uri.str( src2 );
+//   //
+//   // debugger;
+//   // return _.uri.join( src1, src2 );
+// }
 
 // --
 // path
 // --
-
-function WillfilePathIs( filePath )
-{
-  let fname = _.path.fullName( filePath );
-  let r = /\.will\.\w+/;
-  if( _.strHas( fname, r ) )
-  return true;
-  return false;
-}
-
-//
-
-function PathIsOut( filePath )
-{
-  return _.strHas( filePath, /\.out\.\w+\.\w+$/ );
-}
-
-//
-
-function DirPathFromFilePaths( filePaths )
-{
-  let module = this;
-
-  filePaths = _.arrayAs( filePaths );
-
-  _.assert( _.strsAreAll( filePaths ) );
-  _.assert( arguments.length === 1 );
-
-  filePaths = filePaths.map( ( filePath ) =>
-  {
-    filePath = _.path.normalize( filePath );
-
-    let r1 = /(.*)(?:\.will(?:\.|$))[^\/]*$/;
-    let parsed1 = r1.exec( filePath );
-    if( parsed1 )
-    filePath = parsed1[ 1 ];
-
-    let r2 = /(.*)(?:\.(?:im|ex)(?:\.|$))[^\/]*$/;
-    let parsed2 = r2.exec( filePath );
-    if( parsed2 )
-    filePath = parsed2[ 1 ];
-
-    // if( parsed1 || parsed2 )
-    // if( _.strEnds( filePath, '/' ) )
-    // filePath = filePath + '.';
-
-    return filePath;
-  });
-
-  let filePath = _.strCommonLeft.apply( _, _.arrayAs( filePaths ) );
-  _.assert( filePath.length > 0 );
-  return filePath;
-}
-
-//
-
-function PrefixPathForRole( role, isOut )
-{
-  let cls = this;
-  let result = cls.PrefixPathForRoleMaybe( role, isOut );
-
-  _.assert( arguments.length === 2 );
-  _.sure( _.strIs( result ), 'Unknown role', _.strQuote( role ) );
-
-  return result;
-}
-
-//
-
-function PrefixPathForRoleMaybe( role, isOut )
-{
-  let cls = this;
-  let result = '';
-
-  _.assert( arguments.length === 2 );
-
-  if( role === 'import' )
-  result += '.im';
-  else if( role === 'export' )
-  result += '.ex';
-  else if( role === 'single' )
-  result += '';
-  else return null;
-
-  result += isOut ? '.out' : '';
-  result += '.will';
-
-  return result;
-}
-
-//
-
-function PathToRole( filePath )
-{
-  let role = null;
-
-  if( _.arrayLike( filePath ) )
-  return _.map( filePath, ( filePath ) => this.PathToRole( filePath ) );
-
-  let isImport = _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ );
-  let isExport = _.strHas( filePath, /(^|\.|\/)ex\.will(\.|$)/ );
-
-  // debugger;
-  // if( isImport && isExport )
-  // role = [ 'import', 'export' ];
-  // else
-
-  if( isImport )
-  role = 'import';
-  else if( isExport )
-  role = 'export';
-  else
-  role = 'single';
-
-  return role;
-}
-
-//
-
-function CommonPathFor( willfilesPath )
-{
-
-  if( _.arrayIs( willfilesPath ) )
-  {
-    if( !willfilesPath.length )
-    return null;
-    willfilesPath = willfilesPath[ 0 ];
-  }
-
-  _.assert( arguments.length === 1 );
-
-  if( willfilesPath === null )
-  return null;
-
-  _.assert( _.strIs( willfilesPath ) );
-
-  // let common = willfilesPath.replace( /\.will(\.\w+)?$/, '' );
-  //
-  // common = common.replace( /(\.im|\.ex)$/, '' );
-
-  let common = willfilesPath;
-
-  // common = common.replace( /(\.)?((im|ex)\.)?(will\.)(out\.)?(\w+)?$/, '' );
-  // debugger;
-
-  let common2 = common.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.out)?(\.\w+)?$/, '' );
-  let removed = _.strRemoveBegin( common, common2 );
-  // debugger;
-  if( removed[ 0 ] === '/' )
-  common2 = common2 + '/';
-  common = common2;
-
-  if( _.strEnds( common, '/wTools.out.will' ) )
-  debugger;
-
-  // if( _.strEnds( common, [ '/im', '/ex' ] ) )
-  // {
-  //   common = _.uri.trail( _.uri.dir( common ) );
-  //   _.assert( _.uri.isTrailed( common ) );
-  // }
-
-  return common;
-}
-
-//
-
-function CloneDirPathFor( inPath )
-{
-  _.assert( arguments.length === 1 );
-  return _.path.join( inPath, '.module' );
-}
-
-//
-
-function OutfilePathFor( outPath, name )
-{
-  _.assert( arguments.length === 2 );
-  _.assert( _.path.isAbsolute( outPath ), 'Expects absolute path outPath' );
-  _.assert( _.strDefined( name ), 'Module should have name, declare about::name' );
-  name = _.strJoinPath( [ name, '.out.will.yml' ], '.' );
-  return _.path.join( outPath, name );
-}
-
-//
-
-function RemotePathAdjust( remotePath, relativePath )
-{
-
-  let remotePathParsed = _.uri.parseConsecutive( remotePath );
-
-  // debugger;
-  if( !remotePathParsed.query )
-  {
-    return _.uri.join( remotePath, relativePath );
-  }
-
-  remotePathParsed.query = _.strWebQueryParse( remotePathParsed.query );
-
-  if( !remotePathParsed.query.out )
-  {
-    debugger;
-    return _.uri.join( remotePath, relativePath );
-  }
-
-  remotePathParsed.query.out = _.path.join( remotePathParsed.query.out, relativePath );
-
-  return _.uri.str( remotePathParsed );
-  // src1 = _.uri.parseConsecutive( src1 );
-  // src2 = _.uri.parseConsecutive( src2 );
-  //
-  // let query1 = src1.query ? _.strWebQueryParse( src1.query ) || { out : '.' };
-  // let query2 = src2.query ? _.strWebQueryParse( src2.query ) || { out : '.' };
-  //
-  // query1.out = query1.out || '.';
-  // query2.out = query2.out || '.';
-  //
-  // debugger;
-  // let outPath = _.path.join( query1.out, query2.out );
-  // debugger;
-  //
-  // query1.out = outPath;
-  // delete query2.out;
-  //
-  // src1 = _.uri.str( src1 );
-  // src2 = _.uri.str( src2 );
-  //
-  // debugger;
-  // return _.uri.join( src1, src2 );
-}
-
-//
 
 function _filePathSet( willfilesPath )
 {
@@ -483,11 +485,8 @@ function _filePathChanged2( o )
   if( o.isIdentical === undefined || o.isIdentical === null )
   o.isIdentical = o.willfilesPath === this.willfilesPath || _.entityIdentical( path.simplify( o.willfilesPath ), path.simplify( this.willfilesPath ) );
 
-  // if( o.dirPath && _.strHas( o.dirPath, '/sub' ) )
-  // debugger;
-
   if( o.willfilesPath && o.willfilesPath.length )
-  o.commonPath = module.CommonPathFor( o.willfilesPath );
+  o.commonPath = _.Will.CommonPathFor( o.willfilesPath );
   else
   o.commonPath = module.commonPath;
   o.localPath = o.commonPath;
@@ -916,17 +915,16 @@ let Restricts =
 let Statics =
 {
 
-  WillfilePathIs,
-  PathIsOut,
-  DirPathFromFilePaths,
-  PrefixPathForRole,
-  PrefixPathForRoleMaybe,
-  PathToRole,
-
-  CommonPathFor,
-  CloneDirPathFor,
-  OutfilePathFor,
-  RemotePathAdjust,
+  // WillfilePathIs,
+  // PathIsOut,
+  // DirPathFromFilePaths,
+  // PrefixPathForRole,
+  // PrefixPathForRoleMaybe,
+  // PathToRole,
+  // CommonPathFor,
+  // CloneDirPathFor,
+  // OutfilePathFor,
+  // RemotePathAdjust,
 
 }
 
@@ -986,16 +984,16 @@ let Extend =
 
   // path
 
-  WillfilePathIs,
-  PathIsOut,
-  DirPathFromFilePaths,
-  PrefixPathForRole,
-  PrefixPathForRoleMaybe,
-
-  CommonPathFor,
-  CloneDirPathFor,
-  OutfilePathFor,
-  RemotePathAdjust,
+  // WillfilePathIs,
+  // PathIsOut,
+  // DirPathFromFilePaths,
+  // PrefixPathForRole,
+  // PrefixPathForRoleMaybe,
+  // PathToRole,
+  // CommonPathFor,
+  // CloneDirPathFor,
+  // OutfilePathFor,
+  // RemotePathAdjust,
 
   _filePathSet,
   _filePathChanged1,

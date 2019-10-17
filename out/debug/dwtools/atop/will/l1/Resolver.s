@@ -178,8 +178,6 @@ function _statusPreUpdate()
   if( it.down && it.down.src && it.down.src instanceof will.ModulesRelation )
   {
     _.assert( it.src instanceof will.OpenedModule )
-    // let valid = it.down.src.module.submodulesAreValid();
-    // if( !_.all( valid ) )
     let valid = it.src.isValid();
     if( !valid )
     throw _.errBrief
@@ -197,7 +195,6 @@ function _statusPreUpdate()
   {
     _.sure( !!it.src.opener, `${it.src.decoratedAbsoluteName} is not formed` );
     _.sure( !it.selector || !!it.src.opener.openedModule, `${it.src.decoratedAbsoluteName} is not opened` );
-    // _.sure( !!it.src.opener.openedModule.isValid(), `${it.src.decoratedAbsoluteName} is not valid` );
 
     let opener = it.src.opener;
     let module2;
@@ -221,12 +218,7 @@ function _statusPreUpdate()
       module2 = it.currentModule;
     }
 
-    // if( !module2.stager.stageStatePerformed( 'resourcesFormed' ) )
-    // {
-    // throw _.err( `${module2.decoratedAbsoluteName} at ${module2.decoratedCommonPath} is not formed to be used for resolving` );
-    // }
     it.currentModule = module2;
-
   }
   else if( it.src instanceof will.Exported )
   {
@@ -291,7 +283,6 @@ function _resourceMapSelect()
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-  // let sop = it.selectOptions;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
@@ -343,7 +334,6 @@ function _resourceMapSelect()
     it.srcChanged();
   }
 
-  // it.srcChanged();
 }
 
 //

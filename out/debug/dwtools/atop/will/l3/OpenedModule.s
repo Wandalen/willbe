@@ -184,8 +184,8 @@ function init( o )
   if( o )
   module.copy( o );
 
-  // if( module.willfilesPath === null ) // xxx
-  // module.willfilesPath = _.select( module.willfilesArray, '*/filePath' );
+  if( module.willfilesPath === null )
+  module.willfilesPath = _.select( module.willfilesArray, '*/filePath' );
 
   // module._filePathChanged2(); /* xxx */
   module._nameChanged();
@@ -281,7 +281,7 @@ function outModuleMake( o )
 
   o.willfilesPath = o.willfilesPath || module.outfilePathGet();
 
-  let moduleWas = will.moduleWithCommonPathMap[ module.CommonPathFor( o.willfilesPath ) ];
+  let moduleWas = will.moduleWithCommonPathMap[ _.Will.CommonPathFor( o.willfilesPath ) ];
   if( moduleWas )
   {
     debugger; xxx
@@ -3692,10 +3692,13 @@ function submodulesPeersOpen_body( o )
 
   let o2 = _.mapExtend( null, o );
   delete o2.throwing;
+  // debugger;
   let modules = module.modulesEach.body.call( module, o2 );
+  // debugger;
 
   modules.forEach( ( module2 ) =>
   {
+    if( module2 !== null )
     ready.then( () => module2.peerModuleOpen({ throwing : o.throwing }) );
   });
 
@@ -3897,19 +3900,6 @@ function resourceMapForKind( resourceKind )
   let result;
 
   _.assert( module.rootModule instanceof will.OpenedModule );
-
-  // logger.log( 'resourceMapForKind', resourceKind );
-  // if( resourceKind === 'submodule' )
-  // {
-  //   let valid = module.submodulesAreValid();
-  //   if( !_.all( valid ) )
-  //   throw _.errBrief
-  //   (
-  //       `Cant do select in non-valid submodules.`
-  //     , `\nOne or several submodules of ${module.absoluteName} are not opened or invalid :`
-  //     , '\n  ' + _.mapKeys( _.but( valid ) ).join( '\n  ' )
-  //   );
-  // }
 
   if( resourceKind === 'export' )
   result = module.buildMap;
@@ -4367,7 +4357,7 @@ function outfilePathGet()
   let module = this;
   let will = module.will;
   _.assert( arguments.length === 0 );
-  return module.OutfilePathFor( module.outPath, module.about.name );
+  return _.Will.OutfilePathFor( module.outPath, module.about.name );
 }
 
 //
@@ -4379,7 +4369,7 @@ function cloneDirPathGet( rootModule )
   rootModule = rootModule || module.rootModule;
   let inPath = rootModule.inPath;
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  return module.CloneDirPathFor( inPath );
+  return _.Will.CloneDirPathFor( inPath );
 }
 
 //
@@ -4686,11 +4676,12 @@ function _nameChanged()
 
 //
 
-function _nameUnregister()
+function _nameUnregister( rootModule )
 {
   let module = this;
   let will = module.will;
-  let rootModule = module.rootModule;
+
+  rootModule = rootModule || module.rootModule;
 
   /* remove from root */
 
@@ -4713,16 +4704,16 @@ function _nameUnregister()
 
 //
 
-function _nameRegister()
+function _nameRegister( rootModule )
 {
   let module = this;
   let will = module.will;
-
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let name = null;
-  let rootModule = module.rootModule;
   let c = 0;
+
+  rootModule = rootModule || module.rootModule;
 
   let aliasNames = module.aliasNames;
   if( aliasNames )
