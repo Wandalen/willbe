@@ -13005,7 +13005,7 @@ function subModulesUpdate( test )
     test.is( _.strHas( got.output, '+ module::wTools was updated to version 14163d4223466b178fec3adf67dc85a9ece32ad5 in' ) );
     test.is( _.strHas( got.output, '+ module::wPathBasic was updated to version master in' ) );
     test.is( _.strHas( got.output, '+ module::wUriBasic was updated to version 382707a813d7b0a369aad2689f39c166930f9d87 in' ) );
-    test.is( _.strHas( got.output, '+ 3/4 submodule(s) were updated in' ) );
+    test.is( _.strHas( got.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
 
@@ -13025,7 +13025,7 @@ function subModulesUpdate( test )
     test.is( !_.strHas( got.output, /module::Tools/ ) );
     test.is( !_.strHas( got.output, /module::PathBasic/ ) );
     test.is( !_.strHas( got.output, /module::UriBasic/ ) );
-    test.is( _.strHas( got.output, / \+ 0\/4 submodule\(s\) were updated in/ ) );
+    test.is( _.strHas( got.output, '+ 0/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
 
@@ -13048,7 +13048,7 @@ function subModulesUpdate( test )
     // test.is( _.strHas( got.output, / \+ .*module::Tools.* was updated to version .*master.* in/ ) );
     test.is( !_.strHas( got.output, /module::PathBasic/ ) );
     test.is( !_.strHas( got.output, /module::UriBasic/ ) );
-    test.is( _.strHas( got.output, / \+ 1\/4 submodule\(s\) were updated in/ ) );
+    test.is( _.strHas( got.output, '+ 1/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
 
@@ -13068,7 +13068,7 @@ function subModulesUpdate( test )
     test.is( !_.strHas( got.output, /module::Tools/ ) );
     test.is( !_.strHas( got.output, /module::PathBasic/ ) );
     test.is( !_.strHas( got.output, /module::UriBasic/ ) );
-    test.is( _.strHas( got.output, / \+ 0\/4 submodule\(s\) were updated in/ ) );
+    test.is( _.strHas( got.output, '+ 0/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
 
