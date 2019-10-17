@@ -511,7 +511,7 @@ let wMathConcepts =
 
 let wStarter =
 {
-  includeAny : includeAny( 'atop/starter/MainTop.s', 'wstartermaker' ),
+  includeAny : includeAny( 'atop/starter/MainTop.s', 'wstarter' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StarterMaker },
 }
 

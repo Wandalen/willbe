@@ -229,10 +229,7 @@ function form2( o )
   _.assert( reflector.src === reflector.dst.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
-  // if( reflector.qualifiedName === 'reflector::exported.export' )
-  // debugger;
-
-  if( reflector.src.hasAnyPath() ) // yyy
+  if( reflector.src.hasAnyPath() )
   {
     reflector.src.prefixPath = _.filter( reflector.src.prefixPath, ( prefixPath ) =>
     {
@@ -266,16 +263,10 @@ function form3()
   if( reflector.formed === 3 )
   return reflector;
 
-  // if( reflector.qualifiedName === 'reflector::exported.export' )
-  // debugger;
-
   _.assert( arguments.length === 0 );
   _.assert( reflector.formed === 2 );
 
   /* begin */
-
-  // if( reflector.qualifiedName === 'reflector::exported.export' )
-  // debugger;
 
   reflector.pathsResolve();
   if( reflector.src.hasAnyPath() )
@@ -335,8 +326,14 @@ function _inheritMultiple( o )
   _.assert( reflector.src === reflector.dst.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
+  // if( reflector.qualifiedName === "reflector::exported.export" )
+  // debugger;
+
   reflector._inheritPrefixes({ visited : o.visited });
   reflector._inheritPathMap({ visited : o.visited });
+
+  // if( reflector.qualifiedName === "reflector::exported.export" )
+  // debugger;
 
   Parent.prototype._inheritMultiple.call( reflector, o );
 
@@ -349,7 +346,7 @@ function _inheritMultiple( o )
   reflector.prefixesApply();
   reflector._accumulator.prefixesApply();
 
-  // if( reflector.qualifiedName === 'reflector::exported.export' )
+  // if( reflector.qualifiedName === "reflector::exported.export" )
   // debugger;
 
   reflector.src.and( reflector._accumulator.src ).pathsSupplementJoining( reflector._accumulator.src );
@@ -357,6 +354,9 @@ function _inheritMultiple( o )
 
   reflector.dst.and( reflector._accumulator.dst ).pathsSupplementJoining( reflector._accumulator.dst );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
+
+  // if( reflector.qualifiedName === "reflector::exported.export" )
+  // debugger;
 
   return reflector;
 }
@@ -558,6 +558,10 @@ function _inheritPathMapAct1( o )
             _.strQuote( reflector.filePath[ resolvedSrc ] ) + ' <> ' +
             _.strQuote( dst )
     );
+
+    // if( reflector.qualifiedName === "reflector::exported.export" )
+    // debugger;
+
     if( resolvedSrc === '' )
     path.mapExtend( reflector.filePath, { '' : dst } );
     else
