@@ -1488,6 +1488,7 @@ function eachBrokenCommand( test )
     outputCollecting : 1,
     outputGraying : 1,
     throwingExitCode : 0,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -1496,7 +1497,7 @@ function eachBrokenCommand( test )
 
   /* - */
 
-  shell( '.each */* .resource.list path::module.common' )
+  shell( `.each */* .resource.list path::module.common` )
   .finally( ( err, got ) =>
   {
     test.case = '.each */* .resource.list path::module.common';
@@ -1603,6 +1604,7 @@ function verbositySet( test )
     currentPath : routinePath,
     outputCollecting : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -1729,6 +1731,7 @@ function verbosityStepDelete( test )
     currentPath : routinePath,
     outputCollecting : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready
   })
 
@@ -2025,6 +2028,7 @@ function verbosityStepPrintName( test )
     currentPath : routinePath,
     outputCollecting : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -2207,6 +2211,7 @@ function modulesTreeDotless( test )
     outputCollecting : 1,
     outputGraying : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -2286,6 +2291,7 @@ function modulesTreeLocal( test )
     outputCollecting : 1,
     outputGraying : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -2368,6 +2374,7 @@ function modulesTreeHierarchyRemote( test )
     outputCollecting : 1,
     outputGraying : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -2625,6 +2632,7 @@ function modulesTreeHierarchyRemoteDownloaded( test )
     outputCollecting : 1,
     outputGraying : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -2711,6 +2719,7 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
     outputCollecting : 1,
     outputGraying : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -2898,6 +2907,7 @@ function listSingleModule( test )
     currentPath : routinePath,
     outputCollecting : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready
   })
 
@@ -3417,6 +3427,7 @@ function listSteps( test )
     currentPath : routinePath,
     outputCollecting : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -7991,6 +8002,7 @@ function exportRecursiveLocal( test )
     currentPath : routinePath,
     outputCollecting : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -11261,7 +11273,8 @@ function functionPlatform( test )
     platform = 'osx'
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /\+ reflector::copy reflected 2 file\(s\) .+functionPlatform.* : \.\/out\/dir.windows <- \.\/proto in .*/), 1 );
+    test.identical( _.strCount( got.output, '+ reflector::copy reflected 2 file(s)' ), 1 );
+    test.identical( _.strCount( got.output, `./out/dir.${platform} <- ./proto in` ), 1 );
 
     var files = self.find( outPath );
 
@@ -11859,6 +11872,7 @@ function submodulesDownloadRecursive( test )
     outputCollecting : 1,
     outputGraying : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
@@ -12399,6 +12413,7 @@ function submodulesUpdateFailed( test )
     outputGraying : 1,
     outputGraying : 1,
     throwingExitCode : 0,
+    mode : 'spawn',
     ready : ready,
   })
 
