@@ -9223,10 +9223,8 @@ function moduleIsValidExperiment( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
   let modulePath = abs( './good' );
-  let submodulesPath = abs( '.module' );
-  let outDirPath = abs( 'out' );
+  let downloadPath = abs( './.module/PathBasic' );
   let will = new _.Will();
   let opener;
   let ready = new  _.Consequence().take( null );
@@ -9234,9 +9232,9 @@ function moduleIsValidExperiment( test )
   ready
   .then( () =>
   {
+    test.case = 'download submodule';
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    _.fileProvider.filesDelete( outDirPath );
     opener = will.openerMakeUser({ willfilesPath : modulePath });
 
     will.prefer
@@ -9251,8 +9249,32 @@ function moduleIsValidExperiment( test )
 
   .then( () =>
   {
+    test.case = 'change out will-file';
+
+    opener.close();
+
+    let outWillFilePath = _.path.join( downloadPath, 'out/wPathBasic.out.will.yml' );
+    let outWillFile = _.fileProvider.fileConfigRead( outWillFilePath );
+    outWillFile.section = { field : 'value' };
+    _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
+
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = 'repopen module';
+    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  })
+
+  .then( () =>
+  {
+    test.case = 'check if module is valid';
+
     var submodule = opener.openedModule.submodulesResolve({ selector : 'PathBasic' });
     test.identical( submodule.opener.isValid(), false );
+    opener.close();
     return null;
   })
 
