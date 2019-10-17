@@ -779,7 +779,7 @@ let Accessors =
 {
   isAvailable : { getter : isAvailableGet, readOnly : 1 },
   isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
-  isRepository : { getter : isGitRepositoryGet, readOnly : 1 },
+  isRepository : { getter : isRepositoryGet, readOnly : 1 },
   localPath : { getter : localPathGet, readOnly : 1 },
   remotePath : { getter : remotePathGet, readOnly : 1 },
   opener : { setter : openerSet },
@@ -823,7 +823,7 @@ let Extend =
 
   isAvailableGet,
   isDownloadedGet,
-  isGitRepositoryGet,
+  isRepositoryGet,
   localPathGet,
   remotePathGet,
   openerSet,
