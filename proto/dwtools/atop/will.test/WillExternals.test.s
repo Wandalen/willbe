@@ -12335,6 +12335,7 @@ function submodulesDownloadFailed( test )
   })
 
   //
+
   ready
   .then( () =>
   {
@@ -12363,7 +12364,6 @@ function submodulesDownloadFailed( test )
 
     return null;
   })
-
 
   /* - */
 
@@ -12537,6 +12537,37 @@ function submodulesUpdateFailed( test )
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
     test.identical( filesBefore.length, filesAfter.length - 1 ); // -1 because git created fetch file
+
+    return null;
+  })
+
+  //
+
+  ready
+  .then( () =>
+  {
+    test.case = 'downloaded, but not valid, error expected';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    return null;
+  })
+  shell({ execPath : '.with good .submodules.update' })
+  .then( () =>
+  {
+    let outWillFilePath = _.path.join( downloadPath, 'out/wPathBasic.out.will.yml' );
+    let outWillFile = _.fileProvider.fileConfigRead( outWillFilePath );
+    outWillFile.section = { field : 'value' };
+    _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile,encoding : 'yml' });
+    return null;
+  })
+  shell({ execPath : '.with good .submodules.update' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'is downloaded, but its not valid' ) );
+    test.is( _.fileProvider.fileExists( downloadPath ) )
+    let filesAfter = self.find( downloadPath );
+    test.identical( filesAfter, filesBefore );
 
     return null;
   })
