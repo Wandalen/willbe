@@ -1640,10 +1640,10 @@ function remoteIsGoodRepositoryReform()
   _.assert( !!module.willfilesPath );
   _.assert( module.isRemote === true );
 
-  let remoteProvider = fileProvider.providerForPath( module.remotePath );
-  _.assert( !!remoteProvider.isVcs );
+  // let remoteProvider = fileProvider.providerForPath( module.remotePath );
+  // _.assert( !!remoteProvider.isVcs );
 
-  let result = remoteProvider.isGitRepository
+  let result = _.git.isRepository
   ({
     localPath : module.downloadPath,
   });
