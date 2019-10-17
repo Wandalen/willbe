@@ -2291,6 +2291,7 @@ function modulesTreeLocal( test )
     outputCollecting : 1,
     outputGraying : 1,
     outputGraying : 1,
+    mode : 'spawn',
     ready : ready,
   })
 
