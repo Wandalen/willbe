@@ -11647,7 +11647,7 @@ function submodulesDownloadUpdateDry( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ 0\/6 submodule\(s\) will be downloaded/ ) );
+    test.is( _.strHas( got.output, '0/5 submodule(s) of module::submodules-detached will be downloaded' ) );
     var files = self.find( submodulesPath );
     test.gt( files.length, 150 );
     return null;
@@ -11670,7 +11670,7 @@ function submodulesDownloadUpdateDry( test )
     // test.is( _.strHas( got.output, / \+ .*module::Tools.* will be updated to version .*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be updated to version .*2e84d73699bdf5894fd3051169a1e2511a63e427.*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::Color.* will be updated to version .*0.3.115.*/ ) );
-    test.is( _.strHas( got.output, / \+ 2\/6 submodule\(s\) will be update/ ) );
+    test.is( _.strHas( got.output, '+ 2/5 submodule(s) of module::submodules-detached will be updated' ) );
     var files = self.find( submodulesPath );
     test.is( files.length === 0 );
     return null;
@@ -11691,7 +11691,7 @@ function submodulesDownloadUpdateDry( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, / \+ 0\/6 submodule\(s\) will be updated/ ) );
+    test.is( _.strHas( got.output, '+ 0/5 submodule(s) of module::submodules-detached will be updated' ) );
     var files = self.find( submodulesPath );
     test.gt( files.length, 150 );
     return null;
