@@ -9969,7 +9969,7 @@ function reflectRemoteGit( test )
     var files = self.find( local2Path );
     test.ge( files.length, 35 );
     var files = self.find( local3Path );
-    test.ge( files.length, 40 );
+    test.ge( files.length, 34 );
 
     return null;
   }
