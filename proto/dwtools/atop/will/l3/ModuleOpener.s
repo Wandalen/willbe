@@ -882,8 +882,8 @@ function _willfilesFindAct( o )
     records = will.willfilesFind
     ({
       dirPath : o.willfilesPath,
-      includingInFiles : o.includingInFiles,
-      includingOutFiles : o.includingOutFiles,
+      withIn : o.withIn,
+      withOut : o.withOut,
       exact : !!opener.superRelation,
     });
   }
@@ -907,8 +907,8 @@ function _willfilesFindAct( o )
 _willfilesFindAct.defaults =
 {
   willfilesPath : null,
-  includingInFiles : 1,
-  includingOutFiles : 1,
+  withIn : 1,
+  withOut : 1,
 }
 
 //
@@ -2070,7 +2070,14 @@ function errorSet( err )
   // if( will && err )
   // debugger;
   if( will && err )
-  will.openersErrorsArray.push({ err : err, opener : opener });
+  {
+    let r = Object.create( null );
+    r.err = err;
+    r.opener = opener;
+    r.localPath = opener.localPath;
+    will.openersErrorsArray.push( r );
+    will.openersErrorsMap[ r.localPath ] = r;
+  }
 
   return err;
 }

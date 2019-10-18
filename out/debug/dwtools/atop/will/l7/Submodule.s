@@ -176,7 +176,7 @@ function form3()
 
   result.finally( ( err, arg ) =>
   {
-    relation.formed = 3; debugger;
+    relation.formed = 3;
 
     if( err )
     {

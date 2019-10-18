@@ -93,8 +93,7 @@ function _openersCurrentEach( o )
     _.assert( will.currentOpener instanceof will.ModuleOpener );
 
     let opener = will.currentOpener;
-    let it = Object.create( null );
-    it.opener = opener;
+    let it = itFrom( opener );
     ready.then( () => o.onEach.call( will, it ) );
 
   }
@@ -106,14 +105,24 @@ function _openersCurrentEach( o )
 
     will.currentOpeners.forEach( ( opener ) =>
     {
-      let it = Object.create( null );
-      it.opener = opener;
+      let it = itFrom( opener );
       ready.then( () => o.onEach.call( will, it ) );
     });
 
   }
 
   return ready;
+
+  function itFrom( opener )
+  {
+    let it = Object.create( null );
+    it.opener = opener;
+    it.module = opener.openedModule;
+    it.openers = will.currentOpeners;
+    it.will = will;
+    return it;
+  }
+
 }
 
 _openersCurrentEach.defaults =
@@ -266,6 +275,27 @@ function _commandBuildLike( o )
   if( will.currentOpeners === null && will.currentOpener === null )
   ready.then( () => will.openersFind() );
 
+  // if( !will.currentOpeners )
+  // {
+  //   debugger;
+  //   will.currentOpeners = [ will.currentOpener ];
+  // }
+
+  if( will.currentOpeners )
+  {
+    let filter =
+    {
+      withIn : o.withIn,
+      withOut : o.withOut,
+    }
+    // debugger;
+    let openers2 = will.modulesFilter( will.currentOpeners, filter );
+    if( openers2.length !== will.currentOpeners.length )
+    debugger;
+    if( openers2.length )
+    will.currentOpeners = openers2;
+  }
+
   ready
   .then( () => will.openersCurrentEach( forSingle ) )
   .finally( end );
@@ -321,8 +351,11 @@ _commandBuildLike.defaults =
 {
   event : null,
   onEach : null,
+  // onAll : null,
   commandRoutine : null,
   name : null,
+  withIn : 1,
+  withOut : 1,
 }
 
 //
@@ -466,7 +499,8 @@ function _commandsMake()
     'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify ),    h : 'Check whether each submodule is on branch which is specified in willfile' },
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     h : 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.' },
 
-    'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       h : 'Execute shell command on the module.' },
+    'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       h : 'Run shell command on the module.' },
+    'do' :                              { e : _.routineJoin( will, will.commandDo ),                          h : 'Run JS script on the module.' },
     'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
     'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
     'export' :                          { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
@@ -616,6 +650,8 @@ function commandImply( e )
     v : 'verbosity',
     verbosity : 'verbosity',
     beeping : 'beeping',
+    withOut : 'withOut',
+    withIn : 'withIn',
   }
 
   let request = will.Resolver.strRequestParse( e.argument );
@@ -679,7 +715,9 @@ function commandWith( e )
 
   will._commandsBegin( commandWith );
 
+  // debugger;
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+  // debugger;
 
   if( !isolated )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
@@ -1438,6 +1476,37 @@ function commandShell( e )
 
 //
 
+function commandDo( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'do',
+    onEach : handleEach,
+    commandRoutine : commandDo,
+    withOut : 0,
+  });
+
+  function handleEach( it )
+  {
+    let logger = will.logger;
+    it.tools = wTools;
+    return it.opener.openedModule.doJs
+    ({
+      execPath : e.argument,
+      currentPath : will.currentPath || _.path.current(),
+      args : [ it ],
+    });
+  }
+
+}
+
+//
+
 function commandClean( e )
 {
   let will = this;
@@ -1669,6 +1738,7 @@ let Extend =
   commandSubmodulesVersionsAgree,
 
   commandShell,
+  commandDo,
   commandClean,
   // commandCleanRecursive,
   commandBuild,

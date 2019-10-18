@@ -1707,9 +1707,9 @@ function withDo( test )
   {
     test.case = '.imply withIn:0 ; .with ** .do .do/Info.js';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 9 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 4 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 3 );
     return null;
   })
 

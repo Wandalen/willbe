@@ -903,18 +903,18 @@ function modulesFilter( variants, o )
   _.assert( _.arrayIs( variants ) );
   o = _.routineOptions( modulesFilter, o );
 
-  debugger;
+  // debugger;
   variants.forEach( ( module ) =>
   {
     let variant = module;
-    if( !( variant instanceof _.Will.ModuleVariant ) )
-    debugger;
+    // if( !( variant instanceof _.Will.ModuleVariant ) )
+    // debugger;
     if( !( variant instanceof _.Will.ModuleVariant ) )
     variant = will.variantFrom( module );
     if( will.moduleFit.body.call( will, variant, o ) )
     result.push( module );
   });
-  debugger;
+  // debugger;
 
   return result;
 }
@@ -1135,7 +1135,7 @@ function modulesFindEachAt( o )
       throw _.err( err );
     }
 
-    let filesMap = Object.create( null ); debugger;
+    let filesMap = Object.create( null );
     for( let f = 0 ; f < files.length ; f++ ) con
     .then( ( arg ) => /* !!! replace by concurrent, maybe */
     {
@@ -1376,7 +1376,7 @@ function modulesFindWithAt( o )
       }
       // if( will.withIn && will.withOut )
       // filter.withOut = false;
-      debugger;
+      // debugger;
       let variants2 = will.modulesFilter( op.variants, filter );
       if( variants2.length )
       op.variants = variants2;
