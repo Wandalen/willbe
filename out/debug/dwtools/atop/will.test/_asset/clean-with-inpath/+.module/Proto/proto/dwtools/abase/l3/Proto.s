@@ -2317,8 +2317,10 @@ class wCallableObject extends Function
     // });
     return routine;
   }
-  static shortName = 'CallableObject';
+  // static shortName = 'CallableObject';
 }
+
+wCallableObject.shortName = 'CallableObject';
 
 // class wCallableObject2 extends Function
 // {

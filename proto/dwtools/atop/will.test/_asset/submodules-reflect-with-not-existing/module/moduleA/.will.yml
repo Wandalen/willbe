@@ -1,0 +1,30 @@
+about :
+  name : moduleA
+  version : 0.0.1
+
+path :
+  in : '.'
+  out : '..'
+  proto : 'proto'
+  temp : out
+
+reflector :
+
+  reflect.proto :
+    src : path::proto
+    dst : out/debug
+
+step  :
+  export.single :
+    inherit : module.export
+    export : '{path::proto}/**'
+    tar : 0
+
+build :
+  export.single :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - reflect.proto
+      - export.single

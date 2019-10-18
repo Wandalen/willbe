@@ -1606,6 +1606,142 @@ function openExportClean( test )
 
 //
 
+function withDo( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'many-few' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  // xxx
+  // shell( '.clean' )
+  // shell( '.export' )
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'setup';
+  //   _.fileProvider.fileAppend( _.path.join( routinePath, '.im.will.yml' ), '\n' );
+  //
+  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/proto' ) ) );
+  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/many.out.will.yml' ) ) );
+  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathBasic' ) ) );
+  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathTools' ) ) );
+  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/Tools' ) ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // shell( '.do .do/Info.js' )
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.do .do/Info.js';
+  //   test.identical( got.exitCode, 0 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+  //   test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+  //   test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // shell( '.with . .do .do/Info.js' )
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.with . .do .do/Info.js';
+  //   test.identical( got.exitCode, 0 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+  //   test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+  //   test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // shell( '.with * .do .do/Info.js' )
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.with . .do .do/Info.js';
+  //   test.identical( got.exitCode, 0 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+  //   test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+  //   test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // shell( '.with ** .do .do/Info.js' )
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.with . .do .do/Info.js';
+  //   test.identical( got.exitCode, 0 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+  //   test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+  //   test.identical( _.strCount( got.output, 'localPath :' ), 4 );
+  //   return null;
+  // })
+
+  /* - */
+
+  shell( '.imply withIn:0 ; .with ** .do .do/Info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.imply withIn:0 ; .with ** .do .do/Info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 4 );
+    return null;
+  })
+
+  /* - */
+
+  shell( '.imply withOut:0 ; .with ** .do .do/Info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.imply withOut:0 ; .with ** .do .do/Info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 4 );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function withDo */
+
+withDo.timeOut = 300000;
+withDo.description =
+`
+- do execute js script
+- filtering option withIn works
+- filtering option withOut works
+- only one attempt to open outdate outfile
+`
+
+//
+
 function verbositySet( test )
 {
   let self = this;
@@ -12392,6 +12528,7 @@ function submodulesDownloadThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wPathBasic.git/` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
     test.is( !_.fileProvider.fileExists( downloadPath ) )
     return null;
@@ -12410,6 +12547,7 @@ function submodulesDownloadThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wPathBasic.git/` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [] );
@@ -12453,6 +12591,7 @@ function submodulesDownloadThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::PathBasic is downloaded, but it's not a git repository` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [ 'file' ] );
@@ -12472,6 +12611,7 @@ function submodulesDownloadThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::PathBasic is not downloaded, but file at` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
     test.is( _.fileProvider.isTerminal( downloadPath ) )
     return null;
@@ -12599,7 +12739,9 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wPathBasic.git/` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
+
     test.is( !_.fileProvider.fileExists( downloadPath ) )
     return null;
   })
@@ -12617,6 +12759,7 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wPathBasic.git/` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [] );
@@ -12660,7 +12803,8 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Failed to update module' ) ); /* qqq : must check explanantions */
+    test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::PathBasic is downloaded, but it's not a git repository` ) );
+    test.is( _.strHas( got.output, 'Failed to update module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [ 'file' ] );
     return null;
@@ -13705,7 +13849,7 @@ function versionsVerify( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Submodule opener::local has version different from that is specified in will-file' ) );
+    test.is( _.strHas( got.output, 'Submodule relation::local has version different from that is specified in will-file' ) );
     return null;
   })
 
@@ -14146,8 +14290,8 @@ function stepSubmodulesAreUpdated( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
-    test.is( _.strHas( got.output, '! Submodule opener::local is not up to date!' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local is not up to date' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -14164,8 +14308,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule opener::local is not downloaded!' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -14182,8 +14326,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule opener::local is not downloaded!' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -14200,8 +14344,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule opener::local is already downloaded, but has different origin url' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local has different origin url' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -14218,8 +14362,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule opener::local is not up to date!' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local is not up to date' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -15834,6 +15978,8 @@ var Self =
     eachBrokenNon,
     eachBrokenCommand,
     openExportClean,
+
+    withDo,
 
     verbositySet,
     verbosityStepDelete,

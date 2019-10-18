@@ -843,8 +843,6 @@ function moduleFit_pre( routine, args )
 
 function moduleFit_body( variant, opts )
 {
-  // let module = this;
-  // let will = module.will;
   let will = this;
   let logger = will.logger;
 
@@ -890,6 +888,38 @@ defaults.withEnabled = 1;
 defaults.withDisabled = 0;
 
 let moduleFit = _.routineFromPreAndBody( moduleFit_pre, moduleFit_body );
+
+//
+
+function modulesFilter( variants, o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let result = [];
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.arrayIs( variants ) );
+  o = _.routineOptions( modulesFilter, o );
+
+  debugger;
+  variants.forEach( ( module ) =>
+  {
+    let variant = module;
+    if( !( variant instanceof _.Will.ModuleVariant ) )
+    debugger;
+    if( !( variant instanceof _.Will.ModuleVariant ) )
+    variant = will.variantFrom( module );
+    if( will.moduleFit.body.call( will, variant, o ) )
+    result.push( module );
+  });
+  debugger;
+
+  return result;
+}
+
+modulesFilter.defaults = _.mapExtend( null, moduleFit.defaults );
 
 //
 
@@ -1076,7 +1106,6 @@ function modulesFindEachAt( o )
   else
   {
 
-    // o.selector = path.resolve( o.selector );
     con = new _.Consequence().take( null );
 
     if( !path.isGlob( o.selector ) )
@@ -1097,8 +1126,8 @@ function modulesFindEachAt( o )
       files = will.willfilesFind
       ({
         dirPath : o.selector,
-        includingInFiles : 1,
-        includingOutFiles : 1,
+        withIn : 1,
+        withOut : 1,
       });
     }
     catch( err )
@@ -1117,17 +1146,9 @@ function modulesFindEachAt( o )
         return true;
       }
 
-      // debugger;
-      // let opener = will._openerMake
-      // ({
-      //   willfilesPath : file.absolute,
-      //   searching : 'smart',
-      // });
-
       let selectedFiles = will.willfilesSelectPaired( file, files );
       let willfilesPath = selectedFiles.map( ( file ) =>
       {
-        // visitedFilesHash.set( file, true );
         filesMap[ file.absolute ] = true;
         return file.absolute;
       });
@@ -1135,7 +1156,6 @@ function modulesFindEachAt( o )
       if( willfilesPath.length === 1 )
       willfilesPath = willfilesPath[ 0 ];
 
-      // debugger;
       let opener = will._openerMake
       ({
         opener :
@@ -1147,11 +1167,6 @@ function modulesFindEachAt( o )
       });
 
       opener.find();
-
-      // let opener = will._openerMake({ willfilesPath : file.absolute });
-      // opener.find();
-      // let opener = will.ModuleOpener({ will : will, willfilesPath : file.absolute }).preform();
-      // opener.find();
 
       let it = Object.create( null );
       it.currentOpener = opener;
@@ -1246,12 +1261,12 @@ function modulesFindWithAt( o )
   will._willfilesReadBegin();
   con = new _.Consequence().take( null );
 
-  let it = Object.create( null );
-  it.options = o;
-  it.errs = [];
-  it.openers = [];
+  let op = Object.create( null );
+  op.options = o;
+  op.errs = [];
+  op.openers = [];
 
-  let visitedFilesHash = new Map();
+  let visitedFilesSet = new Set();
   let files;
   try
   {
@@ -1259,8 +1274,8 @@ function modulesFindWithAt( o )
     ({
       dirPath : o.selector,
       tracing : o.tracing,
-      includingInFiles : 1,
-      includingOutFiles : 1,
+      withIn : will.withIn,
+      withOut : will.withOut,
     });
   }
   catch( err )
@@ -1268,96 +1283,144 @@ function modulesFindWithAt( o )
     throw _.err( err );
   }
 
-  files.forEach( ( file ) => con.then( ( arg ) => /* !!! replace by concurrent, maybe */
+  /* !!! replace by concurrent, maybe */
+  files.forEach( ( file ) =>
   {
-    let opener;
-    try
-    {
-      if( visitedFilesHash.has( file ) )
-      return null;
-
-      let selectedFiles = will.willfilesSelectPaired( file, files );
-      let willfilesPath = selectedFiles.map( ( file ) =>
-      {
-        visitedFilesHash.set( file, true );
-        return file.absolute;
-      });
-
-      if( willfilesPath.length === 1 )
-      willfilesPath = willfilesPath[ 0 ];
-
-      let opener = will._openerMake
-      ({
-        opener :
-        {
-          willfilesPath : willfilesPath,
-          searching : 'exact',
-          reason : 'with',
-        }
-      });
-
-      opener.find();
-      opener.open();
-
-      return opener.openedModule.ready.split()
-      .then( function( arg )
-      {
-        _.assert( opener.willfilesArray.length > 0 );
-        let l = it.openers.length;
-        _.arrayAppendOnce( it.openers, opener, ( e ) => e.openedModule );
-        _.assert( l < it.openers.length );
-        if( l === it.openers.length )
-        opener.finit();
-        _.assert( !_.arrayHas( it.openers, null ) )
-        return arg;
-      })
-      .catch( function( err )
-      {
-        debugger;
-        err = _.err( err );
-        it.errs.push( err );
-        opener.finit();
-        throw err;
-      });
-    }
-    catch( err )
-    {
-      debugger;
-      err = _.err( err );
-      it.errs.push( err );
-      if( opener )
-      opener.finit();
-      throw err;
-    }
-  }));
-
-  /* */
-
-  con.finally( ( err, arg ) =>
-  {
-    if( err )
-    throw err;
-    it.variants = will.variantsFrom( it.openers );
-    it.sortedVariants = will.graphTopSort( it.variants );
-    it.sortedVariants.reverse();
-    it.sortedOpeners = [];
-    it.sortedVariants = _.filter( it.sortedVariants, ( variant ) =>
-    {
-      let opener = _.arraySetIntersection( it.openers.slice(), variant.openers )[ 0 ];
-      if( !opener )
-      {
-        return;
-      }
-      _.assert( !opener.superRelation );
-      it.sortedOpeners.push( opener );
-      return variant;
-    });
-    return it;
+    let it = Object.create( null );
+    it.file = file;
+    it.opener = null;
+    con
+    .then( ( arg ) => moduleOpen( it ) )
+    .finally( ( err, arg ) => moduleEnd( it, err, arg ) )
   });
 
-  /* */
+  con.finally( ( err, arg ) => end( err, arg ) );
 
   return con;
+
+  /* */
+
+  function moduleOpen( it )
+  {
+    if( visitedFilesSet.has( it.file ) )
+    return null;
+
+    let selectedFiles = will.willfilesSelectPaired( it.file, files );
+    let willfilesPath = selectedFiles.map( ( file ) =>
+    {
+      visitedFilesSet.add( file );
+      return file.absolute;
+    });
+
+    it.opener = will._openerMake
+    ({
+      opener :
+      {
+        willfilesPath : willfilesPath,
+        searching : 'exact',
+        reason : 'with',
+      }
+    });
+
+    it.opener.find();
+    it.opener.open();
+
+    return it.opener.openedModule.ready.split()
+    .then( function( arg )
+    {
+      _.assert( it.opener.willfilesArray.length > 0 );
+      let l = op.openers.length;
+      _.arrayAppendOnce( op.openers, it.opener, ( e ) => e.openedModule );
+      _.assert( l < op.openers.length );
+      _.assert( !_.arrayHas( op.openers, null ) )
+      return arg;
+    })
+  }
+
+  /* */
+
+  function moduleEnd( it, err, arg )
+  {
+    if( err )
+    {
+      err = _.err( err );
+      op.errs.push( err );
+      if( it.opener )
+      it.opener.finit();
+      logger.log( _.errOnce( err ) );
+      return null;
+    }
+    return arg;
+  }
+
+  /* */
+
+  function end( err, arg )
+  {
+    if( !op.openers.length )
+    if( !err )
+    err = op.errs[ 0 ];
+    if( err )
+    {
+      _.arrayAppendonce( op.errs, err );
+      throw err;
+    }
+
+    op.variants = will.variantsFrom( op.openers );
+
+    {
+      let filter =
+      {
+        withIn : will.withIn,
+        withOut : will.withOut,
+      }
+      // if( will.withIn && will.withOut )
+      // filter.withOut = false;
+      debugger;
+      let variants2 = will.modulesFilter( op.variants, filter );
+      if( variants2.length )
+      op.variants = variants2;
+    }
+
+    let fitOpeners = new Set();
+    _.each( op.variants, ( variant ) =>
+    {
+      variant.openers.forEach( ( opener ) => fitOpeners.add( opener ) );
+    });
+    op.openers = op.openers.filter( ( opener ) => fitOpeners.has( opener ) );
+
+    op.sortedVariants = will.graphTopSort( op.variants );
+    op.sortedVariants.reverse();
+    op.sortedOpeners = [];
+    op.sortedVariants = _.filter( op.sortedVariants, ( variant ) =>
+    {
+      let opener = _.arraySetIntersection( op.openers.slice(), variant.openers )[ 0 ];
+      if( !opener )
+      return;
+      _.assert( !opener.superRelation );
+      op.sortedOpeners.push( opener );
+      return variant;
+    });
+    return op;
+  }
+
+  /* */
+
+  function openersOf( dst, src )
+  {
+    dst = _.filter( dst, ( variant ) =>
+    {
+      let opener = _.arraySetIntersection( op.openers.slice(), variant.openers )[ 0 ];
+      if( !opener )
+      return;
+      _.assert( !opener.superRelation );
+      op.sortedOpeners.push( opener );
+      return variant;
+    });
+  }
+
+  /* */
+
 }
 
 modulesFindWithAt.defaults =
@@ -1736,270 +1799,6 @@ delete defaults.onNode;
 
 let modulesFor = _.routineFromPreAndBody( modulesFor_pre, modulesFor_body );
 
-// //
-//
-// function _modulesDownload_pre( routine, args )
-// {
-//   let module = this;
-//
-//   _.assert( arguments.length === 2 );
-//   _.assert( args.length <= 2 );
-//
-//   let o = args[ 0 ];
-//
-//   o = _.routineOptions( routine, o );
-//
-//   _.assert( _.arrayHas( [ 'download', 'update', 'agree' ], o.mode ) );
-//
-//   return o;
-// }
-//
-// /* xxx : merge with modulesDownload maybe */
-// function _modulesDownload_body( o )
-// {
-//   let will = this;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   let ready = new _.Consequence().take( null );
-//
-//   if( !o.downloadedContainer )
-//   o.downloadedContainer = [];
-//   if( !o.localContainer )
-//   o.localContainer = [];
-//   if( !o.doneContainer )
-//   o.doneContainer = [];
-//   if( !o.remoteContainer )
-//   o.remoteContainer = [];
-//
-//   _.assert( arguments.length === 1 );
-//   _.assertRoutineOptions( _modulesDownload_body, arguments );
-//   _.assert( _.each( o.modules, ( variant ) => variant instanceof _.Will.ModuleVariant ) );
-//
-//   ready.then( () => variantsDownload( o.modules ) );
-//
-//   ready.finally( ( err, arg ) =>
-//   {
-//     if( err )
-//     throw _.err( err );
-//     return o;
-//   });
-//
-//   return ready;
-//
-//   /* */
-//
-//   function variantsDownload( variants )
-//   {
-//     let ready2 = new _.Consequence().take( null );
-//
-//     _.assert( _.arrayIs( variants ) );
-//     variants.forEach( ( variant ) => /* xxx : make it parallel */
-//     {
-//
-//       _.assert
-//       (
-//         !!variant.object,
-//         () => 'No object for' + ( variant.relation ? variant.relation.qualifiedName : '' ) + ''
-//       );
-//
-//       if( _.arrayHas( o.doneContainer, variant.object.localPath ) )
-//       return null;
-//
-//       _.assert
-//       (
-//         !!variant.opener,
-//         () => 'Submodule' + ( variant.relation ? variant.relation.qualifiedName : variant.module.qualifiedName ) + ' was not opened or downloaded'
-//       );
-//
-//       _.assert
-//       (
-//         !!variant.opener && variant.opener.formed >= 2,
-//         () => 'Submodule' + ( variant.opener ? variant.opener.qualifiedName : n ) + ' was not preformed to download it'
-//       );
-//
-//       if( !variant.object.isRemote )
-//       return variantLocalMaybe( variant );
-//       if( variant.relation && !variant.relation.enabled )
-//       return variantLocalMaybe( variant );
-//
-//       ready2.then( () =>
-//       {
-//         return variantDownload( variant );
-//       });
-//
-//     });
-//
-//     return ready2;
-//   }
-//
-//   /* */
-//
-//   function variantDownload( variant )
-//   {
-//
-//     if( _.arrayHas( o.localContainer, variant.object.localPath ) || _.arrayHas( o.localContainer, variant.object.remotePath ) )
-//     {
-//       _.assert( 0, 'unexpected' );
-//     }
-//
-//     if( _.arrayHas( o.doneContainer, variant.opener.remotePath ) )
-//     return variantDone( variant );
-//
-//     if( variant.peer )
-//     {
-//       if( _.arrayHas( o.doneContainer, variant.peer.localPath ) )
-//       {
-//         debugger;
-//         return variantDone( variant );
-//       }
-//       if( _.arrayHas( o.doneContainer, variant.peer.remotePath ) )
-//       {
-//         debugger;
-//         return variantDone( variant );
-//       }
-//     }
-//
-//     variantRemote( variant );
-//     // _.arrayAppendOnceStrictly( o.remoteContainer, variant.opener.remotePath );
-//     variantDone( variant );
-//     if( variant.peer )
-//     {
-//       variantDone( variant.peer );
-//     }
-//
-//     if( o.dry )
-//     {
-//       return variant.opener._remoteIsUpToDate({ mode : o.mode })
-//       .then( ( downloading ) =>
-//       {
-//         if( downloading )
-//         variantDownloaded( variant );
-//         return null;
-//       })
-//     }
-//     else
-//     {
-//       let o2 = _.mapOnly( o, variant.opener._remoteDownload.defaults );
-//       let r = _.Consequence.From( variant.opener._remoteDownload( o2 ) );
-//       return r.then( ( downloaded ) =>
-//       {
-//         _.assert( _.boolIs( downloaded ) );
-//         _.assert( _.strIs( variant.opener.remotePath ) );
-//         if( downloaded )
-//         variantDownloaded( variant );
-//         return downloaded;
-//       });
-//     }
-//
-//   }
-//
-//   /* */
-//
-//   function variantDownloaded( variant )
-//   {
-//     _.arrayAppendOnceStrictly( o.downloadedContainer, variant.remotePath );
-//     // _.arrayAppendOnceStrictly( o.downloadedContainer, variant.opener.remotePath );
-//   }
-//
-//   /* */
-//
-//   function variantLocalMaybe( variant )
-//   {
-//
-//     if( variant.object.isRemote )
-//     return null;
-//     if( variant.peer && variant.peer.object && variant.peer.object.isRemote )
-//     return variantRemote( variant );
-//
-//     if( variant.object.root === variant.object )
-//     debugger;
-//     // if( variant.object.root === variant.object )
-//     // return null;
-//
-//     variantLocal( variant );
-//   }
-//
-//   /* */
-//
-//   function variantRemote( variant )
-//   {
-//
-//     if( o.rootModulePath && variant.localPath && o.rootModulePath === variant.localPath )
-//     {
-//       debugger;
-//       return null;
-//     }
-//
-//     _.assert( !!variant.remotePath );
-//     _.arrayAppendOnce( o.remoteContainer, variant.remotePath );
-//     _.assert( !_.arrayHas( o.localContainer, variant.remotePath ) );
-//     return null;
-//   }
-//
-//   /* */
-//
-//   function variantLocal( variant )
-//   {
-//
-//     if( variant.localPath && _.strHas( variant.localPath, '.module' ) )
-//     debugger;
-//
-//     if( o.rootModulePath && variant.localPath && o.rootModulePath === variant.localPath )
-//     return null;
-//
-//     if( variant.peer )
-//     {
-//       if( _.arrayHas( o.doneContainer, variant.peer.remotePath ) )
-//       return variantDone( variant );
-//       if( _.arrayHas( o.doneContainer, variant.peer.localPath ) )
-//       return variantDone( variant );
-//     }
-//
-//     if( _.arrayHas( o.doneContainer, variant.opener.remotePath ) )
-//     return null;
-//     if( _.arrayHas( o.doneContainer, variant.opener.localPath ) )
-//     return null;
-//
-//     _.assert( _.strIs( variant.localPath ) );
-//     _.arrayAppendOnce( o.localContainer, variant.localPath );
-//
-//     return null;
-//   }
-//
-//   /* */
-//
-//   function variantDone( variant )
-//   {
-//     if( o.rootModulePath && variant.localPath && o.rootModulePath === variant.localPath )
-//     return null;
-//
-//     if( variant.localPath )
-//     _.arrayAppendOnce( o.doneContainer, variant.localPath );
-//     if( variant.remotePath )
-//     _.arrayAppendOnce( o.doneContainer, variant.remotePath );
-//     return null;
-//   }
-//
-//   /* */
-//
-// }
-//
-// var defaults = _modulesDownload_body.defaults = Object.create( null );
-//
-// defaults.mode = 'download';
-// defaults.strict = 1;
-// defaults.dry = 0;
-// defaults.modules = null;
-// defaults.rootModulePath = null;
-//
-// defaults.downloadedContainer = null;
-// defaults.localContainer = null;
-// defaults.remoteContainer = null;
-// defaults.doneContainer = null;
-//
-// let _modulesDownload = _.routineFromPreAndBody( _modulesDownload_pre, _modulesDownload_body );
-
 //
 
 function modulesDownload_pre( routine, args )
@@ -2094,10 +1893,6 @@ function modulesDownload_body( o )
       downloadedLengthWas = o.downloadedContainer.length;
 
       return variantsDownload( variants );
-      // let o3 = _.mapOnly( o, will._modulesDownload.defaults );
-      // o3.modules = modules;
-      // o3.rootModulePath = rootModule ? rootModule.localPath : null;
-      // return will._modulesDownload( o3 );
     });
 
     ready.then( () =>
@@ -2141,7 +1936,7 @@ function modulesDownload_body( o )
 
   }
 
-  /* xxx */
+  /* */
 
   function variantsDownload( variants )
   {
@@ -2335,7 +2130,7 @@ function modulesDownload_body( o )
     return null;
   }
 
-  /* xxx */
+  /* */
 }
 
 var defaults = modulesDownload_body.defaults = _.mapExtend
@@ -2343,7 +2138,6 @@ var defaults = modulesDownload_body.defaults = _.mapExtend
   null,
   _.graph.AbstractNodesGroup.prototype.each.defaults,
   moduleFit.defaults
-  // _modulesDownload.defaults
 );
 
 defaults.mode = 'download';
@@ -2482,9 +2276,6 @@ function graphGroupMake( o )
 
   o = _.routineOptions( graphGroupMake, arguments );
 
-  // if( !o.variantMap )
-  // o.variantMap = Object.create( null );
-
   let sys = new _.graph.AbstractGraphSystem
   ({
     onNodeIs : variantIs,
@@ -2501,10 +2292,6 @@ function graphGroupMake( o )
   function variantName( variant )
   {
     return variant.name;
-    // if( variant.module )
-    // return variant.module.qualifiedName;
-    // _.assert( !!variant.relation );
-    // return variant.relation.qualifiedName;
   }
 
   /* */
@@ -2527,7 +2314,6 @@ function graphGroupMake( o )
 
   function variantSubmodules( variant )
   {
-    // debugger;
     return variant.submodulesGet
     ({
       withPeers : o.withPeers,
@@ -2536,71 +2322,7 @@ function graphGroupMake( o )
       withEnabled : o.withEnabled,
       withDisabled : o.withDisabled,
     });
-    // let result = [];
-    //
-    // if( variant.module )
-    // for( let s in variant.module.submoduleMap )
-    // {
-    //   let relation = variant.module.submoduleMap[ s ];
-    //
-    //   if( !relation.enabled ) /* ttt */
-    //   continue;
-    //
-    //   let variant2 = variantFromRelation( relation );
-    //
-    //   result.push( variant2 );
-    //
-    //   if( o.withPeers && variant2.module && variant2.module.peerModule )
-    //   {
-    //     result.push( variantFromModule( variant2.module.peerModule ) );
-    //   }
-    //
-    // }
-    // return result;
   }
-
-  // /* */
-  //
-  // function variantFromRelation( relation )
-  // {
-  //   let variant;
-  //
-  //   if( relation.opener )
-  //   {
-  //     variant = will.variantMap[ relation.opener.commonPath ];
-  //     // variant = o.variantMap[ relation.opener.commonPath ];
-  //   }
-  //   else
-  //   {
-  //     debugger;
-  //   }
-  //
-  //   if( !variant )
-  //   variant = variantFrom( relation );
-  //
-  //   if( relation.opener )
-  //   variant.opener = relation.opener;
-  //
-  //   variant.relation = relation;
-  //   return variant;
-  // }
-  //
-  // /* */
-  //
-  // function variantFromModule( module )
-  // {
-  //   let variant;
-  //
-  //   // variant = o.variantMap[ module.commonPath ];
-  //   variant = will.variantMap[ module.commonPath ];
-  //
-  //   if( !variant )
-  //   variant = variantFrom( module );
-  //
-  //   _.assert( !variant.module || variant.module === module );
-  //   variant.module = module;
-  //   return variant;
-  // }
 
   /* */
 
@@ -2664,12 +2386,8 @@ function graphInfoExportAsTree( modules, o )
   modules = modules || will.modulesArray;
   modules = group.nodesFrom( modules );
 
-  // modules = modules.filter( ( module ) => module.object.name === 'module-abac' ); /* xxx */
-
-  // debugger;
   let o2 = _.mapOnly( o, group.rootsExportInfoTree.defaults );
   let info = group.rootsExportInfoTree( modules, o2 );
-  // debugger;
 
   return info;
 
@@ -2677,14 +2395,6 @@ function graphInfoExportAsTree( modules, o )
 
   function variantUp( variant, it )
   {
-    // debugger;
-    let module = variant.module || variant.opener;
-    // if( module )
-    // if( module.isOut && it.level !== 0 )
-    // {
-    //   debugger;
-    //   it.continueNode = false;
-    // }
     return variant;
   }
 
@@ -2779,10 +2489,6 @@ _openerMake_body.defaults =
 
   opener : null,
   throwing : 1,
-
-  // willfilesPath : null,
-  // isMain : null, // xxx : remove later
-  // searching : null, // xxx : remove later
 
 }
 
@@ -2881,7 +2587,11 @@ function openersErrorsRemoveOf( opener )
   will.openersErrorsArray = will.openersErrorsArray.filter( ( r ) =>
   {
     if( r.opener === opener )
-    return false;
+    {
+      debugger;
+      delete will.openersErrorsMap[ r.localPath ];
+      return false;
+    }
   });
 
   return will;
@@ -2894,6 +2604,8 @@ function openersErrorsRemoveAll()
   let will = this;
   _.assert( arguments.length === 0 );
   will.openersErrorsArray.splice( 0, will.openersErrorsArray.length );
+  debugger;
+  _.mapDelete( will.openersErrorsMap );
 }
 
 // --
@@ -2987,8 +2699,13 @@ function _willfilesReadLog()
 
   if( will.verbosity >= 2 )
   {
+    let total = 0;
+    will.willfilesArray.forEach( ( willf ) =>
+    {
+      total += _.arrayIs( willf.filePath ) ? willf.filePath.length : 1
+    });
     let spent = _.timeSpentFormat( will.willfilesReadEndTime - will.willfilesReadBeginTime );
-    logger.log( ' . Read', will.willfilesArray.length, 'willfile(s) in', spent, '\n' );
+    logger.log( ' . Read', total, 'willfile(s) in', spent, '\n' );
   }
 
 }
@@ -3052,9 +2769,9 @@ function willfilesFind( o )
       }
     };
 
-    if( !o.includingInFiles )
+    if( !o.withIn )
     filter.maskTerminal.includeAll.push( /(^|\.|\/)out(\.)/ )
-    if( !o.includingOutFiles )
+    if( !o.withOut )
     filter.maskTerminal.excludeAny.push( /(^|\.|\/)out(\.)/ )
 
     if( !path.isGlob( dirPath ) )
@@ -3088,15 +2805,15 @@ function willfilesFind( o )
       {
         postfix += '?(im.|ex.)';
         if( !o.exact )
-        if( o.includingOutFiles && o.includingInFiles )
+        if( o.withOut && o.withIn )
         {
           postfix += '?(out.)';
         }
-        else if( o.includingInFiles )
+        else if( o.withIn )
         {
           postfix += '';
         }
-        else if( o.includingOutFiles )
+        else if( o.withOut )
         {
           postfix += 'out.';
         }
@@ -3111,7 +2828,9 @@ function willfilesFind( o )
       return { [ it.src ] : it.dst };
     });
 
+    // debugger;
     let files = fileProvider.filesFind( o2 );
+    // debugger;
 
     let files2 = [];
     files.forEach( ( file ) =>
@@ -3132,8 +2851,8 @@ function willfilesFind( o )
 willfilesFind.defaults =
 {
   dirPath : null,
-  includingInFiles : 1,
-  includingOutFiles : 1,
+  withIn : 1,
+  withOut : 1,
   exact : 0,
   recursive : false,
   tracing : false,
@@ -3265,10 +2984,6 @@ function willfileUnregister( willf )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // _.assert( will.willfileWithCommonPathMap[ willf.commonPath ] === willf );
-  // delete will.willfileWithCommonPathMap[ willf.commonPath ];
-  // _.assert( _.arrayCountElement( _.mapVals( will.willfileWithCommonPathMap ), willf ) === 0 );
-
   _.arrayRemoveOnceStrictly( will.willfileWithCommonPathMap[ willf.commonPath ], willf );
   if( !will.willfileWithCommonPathMap[ willf.commonPath ].length )
   delete will.willfileWithCommonPathMap[ willf.commonPath ];
@@ -3364,8 +3079,13 @@ let Defaults =
 
 let Composes =
 {
+
   verbosity : 3,
   verboseStaging : 0,
+
+  withOut : 1,
+  withIn : 1,
+
 }
 
 let Aggregates =
@@ -3411,6 +3131,7 @@ let Restricts =
   openersArray : _.define.own([]),
   openerModuleWithIdMap : _.define.own({}),
   openersErrorsArray : _.define.own([]),
+  openersErrorsMap : _.define.own({}),
 
   willfilesArray : _.define.own([]),
   willfileWithCommonPathMap : _.define.own({}),
@@ -3500,6 +3221,7 @@ let Extend =
 
   moduleAt,
   moduleFit,
+  modulesFilter,
   moduleIdUnregister,
   moduleIdRegister,
   modulePathUnregister,
@@ -3510,7 +3232,6 @@ let Extend =
   modulesOnlyRoots,
   modulesEach,
   modulesFor,
-  // _modulesDownload,
   modulesDownload,
   modulesUpform,
 

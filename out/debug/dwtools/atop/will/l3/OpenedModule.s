@@ -3375,10 +3375,10 @@ function versionsVerify( o )
   })
 
   ready.then( () =>
-  { 
+  {
     if( o.asMap )
     return { verifiedNumber, totalNumber };
-    
+
     logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.timeSpent( time ) );
     logger.down();
     return verifiedNumber === totalNumber;
@@ -3408,8 +3408,7 @@ function versionsVerify( o )
 
     if( o.valid )
     if( !r.opener.isValid() )
-    throw _.err( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not valid. Reason:', r.opener.err );
-
+    throw _.err( opener.error, '\n! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is downloaded, but it\'s not valid.' );
 
     /* is remote / enabled */
 
@@ -3466,13 +3465,13 @@ function versionsVerify( o )
       let remoteParsed = remoteProvider.pathParse( r.opener.remotePath );
       let remoteVersion = remoteParsed.hash || 'master';
       let localVersion = remoteProvider.versionLocalRetrive( r.opener.downloadPath );
-      
+
       if( remoteVersion === localVersion )
-      throw _.errBrief( '! Submodule', r.opener.qualifiedName, 'is not up to date!' );
+      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not up to date!' );
 
       throw _.errBrief
       (
-        '! Submodule', r.opener.qualifiedName, 'has version different from that is specified in will-file!',
+        '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has version different from that is specified in will-file!',
         '\nCurrent:', localVersion,
         '\nExpected:', remoteVersion
       );
@@ -3607,12 +3606,6 @@ function peerModuleOpen( o )
 
   con.then( ( arg ) =>
   {
-
-    // if( module.rootModule === module && _.strEnds( module.commonPath, '/a' ) )
-    // debugger;
-    // if( module.rootModule === module && _.strEnds( module.commonPath, '/b' ) )
-    // debugger;
-
     if( module.peerModule )
     return module.peerModule;
     return open();
@@ -3632,6 +3625,25 @@ function peerModuleOpen( o )
   function open()
   {
     let peerWillfilesPath = module.peerWillfilesPathFromWillfiles();
+    let localPath = _.Will.CommonPathFor( peerWillfilesPath );
+
+    /*
+    to avoid second attempt of opening of bad module during stage of opening modules
+    */
+    if( !will.willfilesReadEndTime && will.openersErrorsMap[ localPath ] )
+    {
+      return null;
+    }
+
+    // if( module.isOut && !will.withIn )
+    // {
+    //   return null;
+    // }
+    //
+    // if( !module.isOut && !will.withOut )
+    // {
+    //   return null;
+    // }
 
     let o2 =
     {
@@ -4178,37 +4190,62 @@ function resourceNameAllocate( resourceKind, resourceName )
 // path
 // --
 
-function pathsRelative( basePath, filePath )
+// function pathsRelative( basePath, filePath )
+function pathsRelative( o )
 {
   let module = this;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  if( _.mapIs( filePath ) )
+  if( arguments.length === 2 )
+  o = { basePath : arguments[ 0 ], filePath : arguments[ 1 ] }
+
+  if( _.mapIs( o.filePath ) )
   {
-    for( let f in filePath )
-    filePath[ f ] = module.pathsRelative( basePath, filePath[ f ] );
-    return filePath;
+    for( let f in o.filePath )
+    o.filePath[ f ] = module.pathsRelative
+    ({
+      basePath : o.basePath,
+      filePath : o.filePath[ f ],
+      onlyLocal : o.onlyLocal,
+    });
+    return o.filePath;
   }
 
-  _.assert( path.isAbsolute( basePath ) );
+  o = _.routineOptions( pathsRelative, o );
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+  _.assert( path.isAbsolute( o.basePath ) );
 
-  if( !filePath )
-  return filePath;
+  if( !o.filePath )
+  return o.filePath;
 
-  if( !path.s.anyAreAbsolute( filePath ) )
-  return filePath;
+  if( !path.s.anyAreAbsolute( o.filePath ) )
+  return o.filePath;
 
-  filePath = path.filter( filePath, ( filePath ) =>
+  o.filePath = path.filter( o.filePath, ( filePath ) =>
   {
-    if( filePath )
+    if( !filePath )
+    return filePath;
+
+    if( o.onlyLocal )
+    if( path.isGlobal( filePath ) )
+    return filePath
+
     if( path.isAbsolute( filePath ) )
-    return path.s.relative( basePath, filePath );
+    return path.s.relative( o.basePath, filePath );
+
     return filePath;
   });
 
-  return filePath;
+  return o.filePath;
+}
+
+pathsRelative.defaults =
+{
+  basePath : null,
+  filePath : null,
+  onlyLocal : 0,
 }
 
 //
@@ -5660,16 +5697,18 @@ function infoExport( o )
   if( o.verbosity >= 3 )
   result += module.about.infoExport();
 
+  debugger;
+
   if( o.verbosity >= 2 )
   {
     let fields = Object.create( null );
     fields.commonPath = module.commonPath;
-    fields.willfilesPath = module.willfilesPath;
+    // fields.willfilesPath = module.willfilesPath;
     fields.remotePath = module.remotePath;
     fields.localPath = module.localPath;
     fields.downloadPath = module.downloadPath;
 
-    fields = module.pathsRelative( module.dirPath, fields );
+    // fields = module.pathsRelative({ basePath : module.dirPath, filePath : fields, onlyLocal : 1 });
 
     result += '\n' + _.toStrNice( fields );
     // result += '\n' + _.toStrNice( fields ) + '\n';
@@ -5678,7 +5717,7 @@ function infoExport( o )
   if( o.verbosity >= 4 )
   {
     result += '\n';
-    result += module.infoExportPaths( module.dirPath, module.pathMap );
+    result += module.infoExportPaths( module.pathMap );
     result += module.infoExportResource( module.submoduleMap );
     result += module.infoExportResource( module.reflectorMap );
     result += module.infoExportResource( module.stepMap );
@@ -5708,7 +5747,7 @@ function infoExportPaths( paths )
 
   let result = _.color.strFormat( 'Paths', 'highlighted' );
 
-  paths = module.pathsRelative( module.dirPath, paths )
+  // paths = module.pathsRelative({ basePath : module.dirPath, filePath : paths, onlyLocal : 1 });
 
   result += '\n' + _.toStrNice( paths ) + '';
 
@@ -6294,6 +6333,82 @@ shell.defaults =
 
 //
 
+function doJs( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  if( !_.mapIs( arguments[ 0 ] ) )
+  o = { execPath : arguments[ 0 ] }
+
+  o = _.routineOptions( doJs, o );
+  _.assert( _.strIs( o.execPath ) );
+  _.assert( arguments.length === 1 );
+
+  /* */
+
+  if( o.currentPath )
+  o.currentPath = module.pathResolve({ selector : o.currentPath, prefixlessAction : 'resolved', currentContext : o.currentContext });
+  _.sure( o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath ), 'Current path should be string if defined' );
+
+  if( o.currentPath )
+  o.currentPath = path.s.join( module.inPath, o.currentPath );
+
+  /* */
+
+  o.execPath = module.resolve
+  ({
+    selector : o.execPath,
+    prefixlessAction : 'resolved',
+    currentThis : o.currentThis,
+    currentContext : o.currentContext,
+    pathNativizing : 1,
+    arrayFlattening : 0, /* required for f::this and feature make */
+  });
+
+  o.execPath = path.s.join( o.currentPath, o.execPath );
+
+  /* */
+
+  let ready = new _.Consequence().take( null );
+
+  ready
+  .then( () =>
+  {
+    return require( _.fileProvider.path.nativize( o.execPath ) );
+  })
+  .then( ( routine ) =>
+  {
+    if( !_.routineIs( routine ) )
+    throw _.errBrief( `Script file should export routine or consequence, but exports ${_.strType( routine )}` );
+    let result = routine.apply( module, o.args ? o.args : [] );
+    if( result === undefined )
+    result = null;
+    return result;
+  })
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    debugger;
+    if( err )
+    throw _.err( err, `\nFailed to ${o.execPath}` );
+    return arg;
+  })
+
+  return ready;
+}
+
+doJs.defaults =
+{
+  execPath : null,
+  currentPath : null,
+  args : null,
+}
+
+//
+
 function errTooMany( builds, what )
 {
   let module = this;
@@ -6747,6 +6862,7 @@ let Extend =
   // etc
 
   shell,
+  doJs,
   errTooMany,
 
   // relation

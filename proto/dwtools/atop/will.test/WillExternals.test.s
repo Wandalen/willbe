@@ -1606,6 +1606,142 @@ function openExportClean( test )
 
 //
 
+function withDo( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'many-few' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  // xxx
+  // shell( '.clean' )
+  // shell( '.export' )
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'setup';
+  //   _.fileProvider.fileAppend( _.path.join( routinePath, '.im.will.yml' ), '\n' );
+  //
+  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/proto' ) ) );
+  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/many.out.will.yml' ) ) );
+  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathBasic' ) ) );
+  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathTools' ) ) );
+  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/Tools' ) ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // shell( '.do .do/Info.js' )
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.do .do/Info.js';
+  //   test.identical( got.exitCode, 0 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+  //   test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+  //   test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // shell( '.with . .do .do/Info.js' )
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.with . .do .do/Info.js';
+  //   test.identical( got.exitCode, 0 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+  //   test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+  //   test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // shell( '.with * .do .do/Info.js' )
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.with . .do .do/Info.js';
+  //   test.identical( got.exitCode, 0 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+  //   test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+  //   test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // shell( '.with ** .do .do/Info.js' )
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.with . .do .do/Info.js';
+  //   test.identical( got.exitCode, 0 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+  //   test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+  //   test.identical( _.strCount( got.output, 'localPath :' ), 4 );
+  //   return null;
+  // })
+
+  /* - */
+
+  shell( '.imply withIn:0 ; .with ** .do .do/Info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.imply withIn:0 ; .with ** .do .do/Info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 4 );
+    return null;
+  })
+
+  /* - */
+
+  shell( '.imply withOut:0 ; .with ** .do .do/Info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.imply withOut:0 ; .with ** .do .do/Info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 4 );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function withDo */
+
+withDo.timeOut = 300000;
+withDo.description =
+`
+- do execute js script
+- filtering option withIn works
+- filtering option withOut works
+- only one attempt to open outdate outfile
+`
+
+//
+
 function verbositySet( test )
 {
   let self = this;
@@ -15842,6 +15978,8 @@ var Self =
     eachBrokenNon,
     eachBrokenCommand,
     openExportClean,
+
+    withDo,
 
     verbositySet,
     verbosityStepDelete,
