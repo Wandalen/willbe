@@ -3467,11 +3467,11 @@ function versionsVerify( o )
       let localVersion = remoteProvider.versionLocalRetrive( r.opener.downloadPath );
 
       if( remoteVersion === localVersion )
-      throw _.errBrief( '! Submodule', r.opener.qualifiedName, 'is not up to date!' );
+      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not up to date!' );
 
       throw _.errBrief
       (
-        '! Submodule', r.opener.qualifiedName, 'has version different from that is specified in will-file!',
+        '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has version different from that is specified in will-file!',
         '\nCurrent:', localVersion,
         '\nExpected:', remoteVersion
       );
