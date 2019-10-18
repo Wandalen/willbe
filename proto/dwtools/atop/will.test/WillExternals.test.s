@@ -9241,6 +9241,7 @@ function reflectGetPath( test )
     ready : ready
   })
 
+  _.fileProvider.filesDelete( repoPath );
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
   _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
 
@@ -13570,6 +13571,8 @@ subModulesUpdateSwitchBranch.timeOut = 300000;
 
 //
 
+//
+
 function versionsVerify( test )
 {
   let self = this;
@@ -13708,8 +13711,6 @@ function versionsVerify( test )
 
   return ready;
 }
-
-versionsVerify.timeOut = 60000;
 
 //
 
@@ -13874,8 +13875,6 @@ function versionsAgree( test )
 
   return ready;
 }
-
-versionsAgree.timeOut = 60000;
 
 //
 

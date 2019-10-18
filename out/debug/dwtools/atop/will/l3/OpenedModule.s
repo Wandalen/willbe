@@ -3375,7 +3375,10 @@ function versionsVerify( o )
   })
 
   ready.then( () =>
-  {
+  { 
+    if( o.asMap )
+    return { verifiedNumber, totalNumber };
+    
     logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.timeSpent( time ) );
     logger.down();
     return verifiedNumber === totalNumber;
@@ -3463,6 +3466,9 @@ function versionsVerify( o )
       let remoteParsed = remoteProvider.pathParse( r.opener.remotePath );
       let remoteVersion = remoteParsed.hash || 'master';
       let localVersion = remoteProvider.versionLocalRetrive( r.opener.downloadPath );
+      
+      if( remoteVersion === localVersion )
+      throw _.errBrief( '! Submodule', r.opener.qualifiedName, 'is not up to date!' );
 
       throw _.errBrief
       (
@@ -3509,6 +3515,7 @@ defaults.valid = 1;
 defaults.repository = 1;
 defaults.downloadedFromRemote = 1;
 defaults.upToDate = 1
+defaults.asMap = 0;
 
 //
 
