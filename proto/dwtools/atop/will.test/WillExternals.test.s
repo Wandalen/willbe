@@ -12392,6 +12392,7 @@ function submodulesDownloadThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wPathBasic.git/` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
     test.is( !_.fileProvider.fileExists( downloadPath ) )
     return null;
@@ -12410,6 +12411,7 @@ function submodulesDownloadThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wPathBasic.git/` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [] );
@@ -12453,6 +12455,7 @@ function submodulesDownloadThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::PathBasic is downloaded, but it's not a git repository` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [ 'file' ] );
@@ -12472,6 +12475,7 @@ function submodulesDownloadThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::PathBasic is not downloaded, but file at` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
     test.is( _.fileProvider.isTerminal( downloadPath ) )
     return null;
@@ -12599,7 +12603,9 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wPathBasic.git/` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
+
     test.is( !_.fileProvider.fileExists( downloadPath ) )
     return null;
   })
@@ -12617,6 +12623,7 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wPathBasic.git/` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [] );
@@ -12660,7 +12667,8 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Failed to update module' ) ); /* qqq : must check explanantions */
+    test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::PathBasic is downloaded, but it's not a git repository` ) );
+    test.is( _.strHas( got.output, 'Failed to update module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [ 'file' ] );
     return null;
@@ -13705,7 +13713,7 @@ function versionsVerify( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Submodule opener::local has version different from that is specified in will-file' ) );
+    test.is( _.strHas( got.output, 'Submodule relation::local has version different from that is specified in will-file' ) );
     return null;
   })
 
@@ -14146,8 +14154,8 @@ function stepSubmodulesAreUpdated( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
-    test.is( _.strHas( got.output, '! Submodule opener::local is not up to date!' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local is not up to date' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -14164,8 +14172,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule opener::local is not downloaded!' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -14182,8 +14190,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule opener::local is not downloaded!' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -14200,8 +14208,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule opener::local is already downloaded, but has different origin url' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local has different origin url' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
@@ -14218,8 +14226,8 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule opener::local is not up to date!' ) );
-    test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local is not up to date' ) );
+    // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
 
