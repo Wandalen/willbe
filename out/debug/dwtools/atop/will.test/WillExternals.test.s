@@ -3961,7 +3961,7 @@ function cleanBroken2( test )
 
     test.notIdentical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
-    test.is( _.strHas( got.output, 'Module module::submodules / opener::PathBasic is downloaded, but its not a git repository' ) );
+    test.is( _.strHas( got.output, `Module module::submodules / opener::PathBasic is downloaded, but it's not a git repository` ) );
 
     // var files = self.find( outDebugPath );
     // test.gt( files.length, 9 );
@@ -12443,7 +12443,7 @@ function submodulesDownloadThrowing( test )
 
   .then( () =>
   {
-    test.case = 'error if download path exists and its not a empty dir';
+    test.case = 'error if download path exists and it is not a empty dir';
     _.fileProvider.filesDelete( submodulesPath );
     _.fileProvider.dirMake( downloadPath );
     _.fileProvider.fileWrite( filePath,filePath );
@@ -12650,7 +12650,7 @@ function submodulesUpdateThrowing( test )
 
   .then( () =>
   {
-    test.case = 'error if download path exists and its not a empty dir';
+    test.case = 'error if download path exists and it is not a empty dir';
     _.fileProvider.filesDelete( submodulesPath );
     _.fileProvider.dirMake( downloadPath );
     _.fileProvider.fileWrite( filePath,filePath );
