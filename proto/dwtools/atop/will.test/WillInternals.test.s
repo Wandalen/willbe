@@ -31,15 +31,31 @@ function onSuiteBegin()
   self.suitePath = _.path.pathDirTempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
   self.assetDirPath = _.path.join( __dirname, '_asset' );
   self.repoDirPath = _.path.join( self.assetDirPath, '_repo' );
+
   self.find = _.fileProvider.filesFinder
   ({
+    withTerminals : 1,
+    withDirs : 1,
+    withStem : 1,
+    allowingMissed : 1,
+    maskPreset : 0,
+    outputFormat : 'relative',
     filter :
     {
       recursive : 2,
+      maskAll :
+      {
+        excludeAny : [ /(^|\/)\.git($|\/)/ ],
+      }
     },
+  });
+
+  self.findAll = _.fileProvider.filesFinder
+  ({
     withTerminals : 1,
     withDirs : 1,
-    withTransient/*maybe withStem*/ : 1,
+    withStem : 1,
+    withTransient : 1,
     allowingMissed : 1,
     maskPreset : 0,
     outputFormat : 'relative',
@@ -9302,6 +9318,7 @@ var Self =
     assetDirPath : null,
     repoDirPath : null,
     find : null,
+    findAll : null,
     abs_functor,
     rel_functor
   },

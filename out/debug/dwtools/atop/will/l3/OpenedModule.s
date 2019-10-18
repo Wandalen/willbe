@@ -2417,11 +2417,13 @@ function modulesBuild_body( o )
     o2.recursive = 1;
     o2.recursive = 2; /* yyy */
     o2.strict = 0;
+    debugger;
     return will.modulesDownload( o2 );
   })
 
   ready.then( () =>
   {
+    debugger;
     if( !o.upforming || o.downloading )
     return null;
     let o2 = _.mapOnly( o, will.modulesUpform.defaults );
@@ -2434,7 +2436,6 @@ function modulesBuild_body( o )
 
   ready.then( () =>
   {
-    // debugger;
     let o2 = _.mapOnly( o, will.modulesFor.defaults );
     o2.onEach = handleEach;
     o2.modules = [ module ];
@@ -3420,7 +3421,7 @@ function versionsVerify( o )
     if( !r.opener.isRepository )
     {
       if( o.throwing )
-      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is downloaded, but its not a git repository' );
+      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), `is downloaded, but it's not a git repository` );
       return false;
     }
 

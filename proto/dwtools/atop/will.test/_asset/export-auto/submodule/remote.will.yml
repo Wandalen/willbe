@@ -1,0 +1,34 @@
+about :
+
+  name : RemoteModule.manual
+  version : 0.0.0
+
+path :
+
+  in : ../.module
+  out : .
+  remote : 'git+https:///github.com/Wandalen/ForTesting'
+  download : 'RemoteModule.manual'
+
+reflector :
+
+  export :
+    src :
+      recursive : 2
+      filePath :
+        '{path::download}/**' : ''
+        '**/.git/**' : 0
+
+  download :
+    src : path::remote
+    dst : path::download
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::download
+      - step::module.export

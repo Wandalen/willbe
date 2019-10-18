@@ -30,7 +30,27 @@ function onSuiteBegin()
   ({
     withTerminals : 1,
     withDirs : 1,
-    withTransient/*maybe withStem*/ : 1,
+    withStem : 1,
+    // withTransient : 1,
+    allowingMissed : 1,
+    maskPreset : 0,
+    outputFormat : 'relative',
+    filter :
+    {
+      recursive : 2,
+      maskAll :
+      {
+        excludeAny : [ /(^|\/)\.git($|\/)/ ],
+      },
+    },
+  });
+
+  self.findAll = _.fileProvider.filesFinder
+  ({
+    withTerminals : 1,
+    withDirs : 1,
+    withStem : 1,
+    withTransient : 1,
     allowingMissed : 1,
     maskPreset : 0,
     outputFormat : 'relative',
@@ -3548,7 +3568,7 @@ function clean( test )
   ready
   .then( () =>
   {
-    files = self.find( submodulesPath );
+    files = self.findAll( submodulesPath );
     test.is( files.length > 350 );
     return files;
   })
@@ -4211,12 +4231,10 @@ function cleanDry( test )
   {
     test.case = '.clean dry:1';
 
-    debugger;
-    var files = self.find( outPath );
+    var files = self.findAll( outPath );
     test.gt( files.length, 20 );
-    var files = wasFiles = self.find( submodulesPath );
+    var files = wasFiles = self.findAll( submodulesPath );
     test.gt( files.length, 100 );
-    debugger;
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) + ' at ' ) );
@@ -4286,7 +4304,7 @@ function cleanSubmodules( test )
   ready
   .then( () =>
   {
-    files = self.find( submodulesPath );
+    files = self.findAll( submodulesPath );
     return null;
   })
 
@@ -5069,7 +5087,7 @@ function exportItself( test )
     test.identical( got.exitCode, 0 );
 
     var files = self.find( routinePath );
-    test.gt( files.length, 450 );
+    test.gt( files.length, 375 );
 
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported module::experiment \/ build::export with .* file\(s\) in/ ) );
@@ -8604,6 +8622,141 @@ check there is no annoying information about lack of remote submodules of submod
 
 //
 
+function exportAuto( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'export-auto' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = 'export'
+    return null;
+  })
+
+  shell( '.clean' )
+  shell( '.with submodule/* .export' )
+  shell( '.with manual .export' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp =
+    [
+      '.',
+      './auto.will.yml',
+      './manual.will.yml',
+      './will.yml',
+      './.module',
+      './.module/LocalModule.manual.out.will.yml',
+      './.module/RemoteModule.manual.out.will.yml',
+      './.module/RemoteModule.manual',
+      './.module/RemoteModule.manual/README.md',
+      './.module/RemoteModule.manual/dir',
+      './.module/RemoteModule.manual/dir/SecondFile.md',
+      './local',
+      './local/LocalFile.txt',
+      './out',
+      './out/manual.out.will.yml',
+      './out/files',
+      './out/files/LocalFile.txt',
+      './out/files/README.md',
+      './out/files/dir',
+      './out/files/dir/SecondFile.md',
+      './submodule',
+      './submodule/local.will.yml',
+      './submodule/remote.will.yml'
+    ]
+    var files = self.find( routinePath );
+    test.contains( files, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = 'export'
+    return null;
+  })
+
+  shell( '.clean' )
+  shell( '.with auto .export.recursive' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp =
+    [
+      '.',
+      './auto.will.yml',
+      './manual.will.yml',
+      './will.yml',
+      './.module',
+      './.module/LocalModule.manual.out.will.yml',
+      './.module/RemoteModule.manual.out.will.yml',
+      './.module/RemoteModule.manual',
+      './.module/RemoteModule.manual/README.md',
+      './.module/RemoteModule.manual/dir',
+      './.module/RemoteModule.manual/dir/SecondFile.md',
+      './local',
+      './local/LocalFile.txt',
+      './out',
+      './out/manual.out.will.yml',
+      './out/files',
+      './out/files/LocalFile.txt',
+      './out/files/README.md',
+      './out/files/dir',
+      './out/files/dir/SecondFile.md',
+      './submodule',
+      './submodule/local.will.yml',
+      './submodule/remote.will.yml'
+    ]
+    var files = self.find( routinePath );
+    test.contains( files, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function exportAuto */
+
+exportAuto.timeOut = 300000;
+exportAuto.description =
+`
+- auto export works similar to manual export
+`
+
+//
+
 /*
 Import out file with non-importable path local.
 Test importing of non-valid out files.
@@ -9708,7 +9861,7 @@ function reflectRemoteGit( test )
   shell({ execPath : '.build download.* variant:1' })
   .then( ( arg ) => validate1( arg ) )
 
-  //
+  /* */
 
   .then( () =>
   {
@@ -9720,7 +9873,7 @@ function reflectRemoteGit( test )
   shell({ execPath : '.build download.* variant:2' })
   .then( ( arg ) => validate1( arg ) )
 
-  //
+  /* */
 
   .then( () =>
   {
@@ -9732,7 +9885,7 @@ function reflectRemoteGit( test )
   shell({ execPath : '.build download.* variant:3' })
   .then( ( arg ) => validate1( arg ) )
 
-  //
+  /* */
 
   .then( () =>
   {
@@ -9744,7 +9897,7 @@ function reflectRemoteGit( test )
   shell({ execPath : '.build download.* variant:4' })
   .then( ( arg ) => validate1( arg ) )
 
-  //
+  /* */
 
   .then( () =>
   {
@@ -9756,7 +9909,7 @@ function reflectRemoteGit( test )
   shell({ execPath : '.build download.* variant:5' })
   .then( ( arg ) => validate1( arg ) )
 
-  //
+  /* */
 
   .then( () =>
   {
@@ -9768,7 +9921,7 @@ function reflectRemoteGit( test )
   shell({ execPath : '.build download.* variant:6' })
   .then( ( arg ) => validate1( arg ) )
 
-  //
+  /* */
 
   .then( () =>
   {
@@ -9780,7 +9933,7 @@ function reflectRemoteGit( test )
   shell({ execPath : '.build download.* variant:7' })
   .then( ( arg ) => validate2( arg ) )
 
-  //
+  /* */
 
   .then( () =>
   {
@@ -9790,6 +9943,8 @@ function reflectRemoteGit( test )
     return null;
   })
 
+  /* */
+
   return ready;
 
   /* */
@@ -9798,7 +9953,7 @@ function reflectRemoteGit( test )
   {
     test.identical( arg.exitCode, 0 );
     var files = self.find( local1Path );
-    test.ge( files.length, 73 );
+    test.ge( files.length, 30 );
     return null;
   }
 
@@ -9809,11 +9964,11 @@ function reflectRemoteGit( test )
     test.identical( arg.exitCode, 0 );
 
     var files = self.find( local1Path );
-    test.ge( files.length, 73 );
+    test.ge( files.length, 30 );
     var files = self.find( local2Path );
-    test.ge( files.length, 70 );
+    test.ge( files.length, 35 );
     var files = self.find( local3Path );
-    test.ge( files.length, 75 );
+    test.ge( files.length, 40 );
 
     return null;
   }
@@ -11576,7 +11731,7 @@ function submodulesDownloadUpdate( test )
   .then( () =>
   {
     test.case = '.submodules.clean';
-    files = self.find( submodulesPath );
+    files = self.findAll( submodulesPath );
     return files;
   })
 
@@ -12185,7 +12340,7 @@ submodulesDownloadRecursive.timeOut = 500000;
 
 //
 
-function submodulesDownloadFailed( test )
+function submodulesDownloadThrowing( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
@@ -12387,11 +12542,11 @@ function submodulesDownloadFailed( test )
   return ready;
 }
 
-submodulesDownloadFailed.timeOut = 300000;
+submodulesDownloadThrowing.timeOut = 300000;
 
 //
 
-function submodulesUpdateFailed( test )
+function submodulesUpdateThrowing( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
@@ -12504,7 +12659,7 @@ function submodulesUpdateFailed( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Failed to update module' ) );
+    test.is( _.strHas( got.output, 'Failed to update module' ) ); /* qqq : must check explanantions */
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [ 'file' ] );
     return null;
@@ -12552,7 +12707,7 @@ function submodulesUpdateFailed( test )
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
-    test.identical( filesBefore.length, filesAfter.length - 1 ); // -1 because git created fetch file
+    test.identical( filesBefore.length, filesAfter.length );
 
     return null;
   })
@@ -12596,11 +12751,11 @@ function submodulesUpdateFailed( test )
   return ready;
 }
 
-submodulesUpdateFailed.timeOut = 300000;
+submodulesUpdateThrowing.timeOut = 300000;
 
 //
 
-function submodulesVersionsAgreeFailed( test )
+function submodulesAgreeThrowing( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
@@ -12805,7 +12960,7 @@ function submodulesVersionsAgreeFailed( test )
   return ready;
 }
 
-submodulesVersionsAgreeFailed.timeOut = 300000;
+submodulesAgreeThrowing.timeOut = 300000;
 
 //
 
@@ -13412,6 +13567,315 @@ function subModulesUpdateSwitchBranch( test )
 }
 
 subModulesUpdateSwitchBranch.timeOut = 300000;
+
+//
+
+function versionsVerify( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'command-versions-verify' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let localModulePathSrc = _.path.join( routinePath, 'module' );
+  let localModulePathDst = _.path.join( routinePath, '.module/local' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  let shell2 = _.process.starter
+  ({
+    currentPath : localModulePathSrc,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  let shell3 = _.process.starter
+  ({
+    currentPath : localModulePathDst,
+    outputCollecting : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  ready.then( () =>
+  {
+    test.case = 'setup';
+    return null;
+  })
+
+  shell( '.with ./module/ .export' )
+  shell2( 'git init' )
+  shell2( 'git add -fA .' )
+  shell2( 'git commit -m init' )
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'verify not downloaded';
+    return null;
+  })
+
+  shell( '.submodules.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'first verify after download';
+    return null;
+  })
+
+  shell( '.submodules.download' )
+  shell( '.submodules.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'second verify';
+    return null;
+  })
+
+  shell( '.submodules.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'new commit on local copy, try to verify';
+    return null;
+  })
+
+  shell3( 'git commit --allow-empty -m test' )
+
+  shell( '.submodules.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'change branch';
+    return null;
+  })
+
+  shell3( 'git checkout -b testbranch' )
+
+  shell( '.submodules.versions.verify' )
+
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Submodule opener::local has version different from that is specified in will-file' ) );
+    return null;
+  })
+
+  return ready;
+}
+
+versionsVerify.timeOut = 60000;
+
+//
+
+function versionsAgree( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'command-versions-agree' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let localModulePathSrc = _.path.join( routinePath, 'module' );
+  let localModulePathDst = _.path.join( routinePath, '.module/local' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  let shell2 = _.process.starter
+  ({
+    currentPath : localModulePathSrc,
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  let shell3 = _.process.starter
+  ({
+    currentPath : localModulePathDst,
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  ready.then( () =>
+  {
+    test.case = 'setup';
+    return null;
+  })
+
+  shell( '.with ./module/ .export' )
+  shell2( 'git init' )
+  shell2( 'git add -fA .' )
+  shell2( 'git commit -m init' )
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'agree not downloaded';
+    return null;
+  })
+
+  shell( '.submodules.versions.agree' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'agree after download';
+    return null;
+  })
+
+  shell( '.submodules.versions.agree' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'local is up to date with remote but has local commit';
+    return null;
+  })
+
+  shell3( 'git commit --allow-empty -m test' )
+  shell( '.submodules.versions.agree' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
+    return null;
+  })
+  shell3( 'git status' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Your branch is ahead of \'origin\/master\' by 1 commit/ ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'local is not up to date with remote but has local commit';
+    return null;
+  })
+
+  shell2( 'git commit --allow-empty -m test' )
+  shell( '.submodules.versions.agree' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, 'module::local was agreed with version master in' ) );
+    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
+    return null;
+  })
+  shell3( 'git status' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    test.case = 'local is not up to date with remote, no local changes';
+    return null;
+  })
+
+  shell3( 'git reset --hard origin' )
+  shell2( 'git commit --allow-empty -m test2' )
+  shell( '.submodules.versions.agree' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
+    return null;
+  })
+  shell3( 'git status' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Your branch is up to date/ ) );
+    return null;
+  })
+
+  return ready;
+}
+
+versionsAgree.timeOut = 60000;
 
 //
 
@@ -15084,315 +15548,6 @@ fixateDetached.timeOut = 500000;
 
 //
 
-function versionsVerify( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'command-versions-verify' );
-  let routinePath = _.path.join( self.suitePath, test.name );
-  let localModulePathSrc = _.path.join( routinePath, 'module' );
-  let localModulePathDst = _.path.join( routinePath, '.module/local' );
-  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
-  let ready = new _.Consequence().take( null );
-
-  let shell = _.process.starter
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  })
-
-  let shell2 = _.process.starter
-  ({
-    currentPath : localModulePathSrc,
-    outputCollecting : 1,
-    ready : ready,
-  })
-
-  let shell3 = _.process.starter
-  ({
-    currentPath : localModulePathDst,
-    outputCollecting : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
-
-  ready.then( () =>
-  {
-    test.case = 'setup';
-    return null;
-  })
-
-  shell( '.with ./module/ .export' )
-  shell2( 'git init' )
-  shell2( 'git add -fA .' )
-  shell2( 'git commit -m init' )
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'verify not downloaded';
-    return null;
-  })
-
-  shell( '.submodules.versions.verify' )
-
-  .then( ( got ) =>
-  {
-    test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'first verify after download';
-    return null;
-  })
-
-  shell( '.submodules.download' )
-  shell( '.submodules.versions.verify' )
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'second verify';
-    return null;
-  })
-
-  shell( '.submodules.versions.verify' )
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'new commit on local copy, try to verify';
-    return null;
-  })
-
-  shell3( 'git commit --allow-empty -m test' )
-
-  shell( '.submodules.versions.verify' )
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'change branch';
-    return null;
-  })
-
-  shell3( 'git checkout -b testbranch' )
-
-  shell( '.submodules.versions.verify' )
-
-  .then( ( got ) =>
-  {
-    test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Submodule opener::local has version different from that is specified in will-file' ) );
-    return null;
-  })
-
-  return ready;
-}
-
-versionsVerify.timeOut = 60000;
-
-//
-
-function versionsAgree( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'command-versions-agree' );
-  let routinePath = _.path.join( self.suitePath, test.name );
-  let localModulePathSrc = _.path.join( routinePath, 'module' );
-  let localModulePathDst = _.path.join( routinePath, '.module/local' );
-  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
-  let ready = new _.Consequence().take( null );
-
-  let shell = _.process.starter
-  ({
-    execPath : 'node ' + execPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    throwingExitCode : 0,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  let shell2 = _.process.starter
-  ({
-    currentPath : localModulePathSrc,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  let shell3 = _.process.starter
-  ({
-    currentPath : localModulePathDst,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
-
-  ready.then( () =>
-  {
-    test.case = 'setup';
-    return null;
-  })
-
-  shell( '.with ./module/ .export' )
-  shell2( 'git init' )
-  shell2( 'git add -fA .' )
-  shell2( 'git commit -m init' )
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'agree not downloaded';
-    return null;
-  })
-
-  shell( '.submodules.versions.agree' )
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'agree after download';
-    return null;
-  })
-
-  shell( '.submodules.versions.agree' )
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'local is up to date with remote but has local commit';
-    return null;
-  })
-
-  shell3( 'git commit --allow-empty -m test' )
-  shell( '.submodules.versions.agree' )
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
-    return null;
-  })
-  shell3( 'git status' )
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /Your branch is ahead of \'origin\/master\' by 1 commit/ ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'local is not up to date with remote but has local commit';
-    return null;
-  })
-
-  shell2( 'git commit --allow-empty -m test' )
-  shell( '.submodules.versions.agree' )
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, 'module::local was agreed with version master in' ) );
-    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
-    return null;
-  })
-  shell3( 'git status' )
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
-    return null;
-  })
-
-  /* */
-
-  .then( () =>
-  {
-    test.case = 'local is not up to date with remote, no local changes';
-    return null;
-  })
-
-  shell3( 'git reset --hard origin' )
-  shell2( 'git commit --allow-empty -m test2' )
-  shell( '.submodules.versions.agree' )
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
-    return null;
-  })
-  shell3( 'git status' )
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /Your branch is up to date/ ) );
-    return null;
-  })
-
-  return ready;
-}
-
-versionsAgree.timeOut = 60000;
-
-//
-
 /*
   runWillbe checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script
 */
@@ -15657,6 +15812,7 @@ var Self =
     assetDirPath : null,
     repoDirPath : null,
     find : null,
+    findAll : null,
     abs_functor,
     rel_functor
   },
@@ -15740,6 +15896,8 @@ var Self =
     exportTracing,
     exportRewritesOutFile,
     exportWithRemoteSubmodules,
+    exportAuto,
+
     importPathLocal,
     importLocalRepo,
     importOutWithDeletedSource,
@@ -15774,13 +15932,15 @@ var Self =
     submodulesDownloadUpdateDry,
     submodulesDownloadSwitchBranch,
     submodulesDownloadRecursive,
-    submodulesDownloadFailed,
-    submodulesUpdateFailed,
-    submodulesVersionsAgreeFailed,
+    submodulesDownloadThrowing,
+    submodulesUpdateThrowing,
+    submodulesAgreeThrowing,
     submodulesVersionsAgreeWrongOrigin,
     submodulesDownloadedUpdate,
     subModulesUpdate,
     subModulesUpdateSwitchBranch,
+    versionsVerify,
+    versionsAgree,
 
     stepSubmodulesDownload,
     stepWillbeVersionCheck,
@@ -15791,9 +15951,6 @@ var Self =
     // upgradeDetachedExperiment, // xxx : look later
     // fixateDryDetached, // xxx : look later
     // fixateDetached, // xxx : look later
-
-    versionsVerify,
-    versionsAgree,
 
     // runWillbe, // qqq : help to fix, please
 

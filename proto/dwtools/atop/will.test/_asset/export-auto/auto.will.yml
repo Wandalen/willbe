@@ -1,0 +1,34 @@
+
+about :
+
+  name : manual
+  version : '0.0.0'
+
+submodule :
+
+  Remote : 'git+https:///github.com/Wandalen/ForTesting/'
+  # Local : 'local/'
+
+path :
+
+  in : '.'
+  out : 'out'
+  export.files : '{path::out}/files'
+  export : '{path::export.files}/**'
+  temp : out
+
+reflector :
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    dst : path::export.files
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::reflect.submodules
+      - step::module.export

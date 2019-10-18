@@ -176,7 +176,7 @@ function form3()
 
   result.finally( ( err, arg ) =>
   {
-    relation.formed = 3;
+    relation.formed = 3; debugger;
 
     if( err )
     {
@@ -272,7 +272,6 @@ function _openAct( o )
   }
 
   _.assert( relation.opener.localPath === o.longPath || relation.opener.remotePath === o.longPath );
-  // relation.opener.willfilesPath = o.longPath;
 
   if( !relation.enabled )
   return relation.opener;
@@ -280,6 +279,8 @@ function _openAct( o )
   return relation.opener.open({ throwing : 1 })
   .finally( ( err, arg ) =>
   {
+    if( err )
+    debugger;
     if( err )
     throw _.err( err, '\n', 'Failed to open', relation.absoluteName );
     return arg;

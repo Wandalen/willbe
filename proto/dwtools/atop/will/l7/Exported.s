@@ -695,11 +695,12 @@ function _performExportedReflectors()
   exportedReflector.generated = 1;
   exportedReflector.form();
 
-  if( !exportedReflector.src.basePath )
-  {
-    debugger;
-    // exportedReflector.src.basePathFromFilePath();
-  }
+  // debugger;
+  // if( !exportedReflector.src.basePath )
+  // {
+  //   debugger;
+  //   // exportedReflector.src.basePathFromFilePath();
+  // }
 
   exported.exportedReflector = exportedReflector;
 

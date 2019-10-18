@@ -945,8 +945,9 @@ function _willfilesFind()
   if( opener.willfilesArray.length === 0 )
   {
     let err;
+    debugger;
     if( opener.superRelation )
-    err = _.errBrief( 'Found no out-willfile file for',  opener.superRelation.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
+    err = _.errBrief( 'Found no out-willfile for',  opener.superRelation.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
     else
     err = _.errBrief( 'Found no willfile at', _.strQuote( opener.commonPath ) );
     opener.error = opener.error || err;
@@ -1342,7 +1343,7 @@ function _remoteDownload( o )
     }
 
     if( o.opening && !o.dry && downloading )
-    moduleReopen();
+    return moduleReopen();
 
     return null;
   })
@@ -1363,7 +1364,7 @@ function _remoteDownload( o )
      if( !opener.isRepository )
      throw _.err
      (
-       'Module', opener.decoratedAbsoluteName, 'is downloaded, but its not a git repository.\n',
+       `Module ${opener.decoratedAbsoluteName} is downloaded, but it's not a git repository.\n`,
        'Rename/remove path:', _.color.strFormat( opener.downloadPath, 'path' ), 'and try again.'
      );
    }
@@ -1380,7 +1381,7 @@ function _remoteDownload( o )
 
     // if( !opener.isValid() )
     if( !isValidReform() )
-    throw _.err( 'Module', opener.decoratedAbsoluteName, 'is downloaded, but its not valid. Reason:', opener.error );
+    throw _.err( opener.error, `\nModule ${opener.decoratedAbsoluteName} is downloaded, but it's not valid. Reason:` );
   }
 
   /* */
@@ -1592,7 +1593,6 @@ function _remoteDownload( o )
       ready.then( () => opener2.reopen() );
     });
 
-    // debugger;
     return ready;
   }
 
@@ -1676,6 +1676,7 @@ function remoteIsDownloadedReform()
   let remoteProvider = fileProvider.providerForPath( module.remotePath );
   _.assert( !!remoteProvider.isVcs );
 
+  // debugger;
   let result = remoteProvider.isDownloaded
   ({
     localPath : module.downloadPath,
@@ -1683,7 +1684,7 @@ function remoteIsDownloadedReform()
 
   _.assert( !_.consequenceIs( result ) );
 
-  if( !result )
+  if( _.boolLike( result ) )
   return end( result );
 
   return _.Consequence.From( result )
@@ -1699,7 +1700,10 @@ function remoteIsDownloadedReform()
 
   function end( result )
   {
-    module.isDownloaded = !!result;
+    // debugger;
+    _.assert( _.boolLike( result ) );
+    result = !!result;
+    module.isDownloaded = result;
     return result;
   }
 

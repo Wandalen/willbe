@@ -1,0 +1,28 @@
+about :
+
+  name : LocalModule.manual
+  version : 0.0.0
+
+path :
+
+  in : ../.module
+  out : .
+  download : ../local
+
+reflector :
+
+  export :
+    src :
+      recursive : 2
+      filePath :
+        '{path::download}/**' : ''
+        '**/.git/**' : 0
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::module.export
