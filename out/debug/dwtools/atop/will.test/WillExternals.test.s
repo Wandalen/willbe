@@ -15895,7 +15895,7 @@ var Self =
     exportTracing,
     exportRewritesOutFile,
     exportWithRemoteSubmodules,
-    exportAuto,
+    // exportAuto, // xxx : later
 
     importPathLocal,
     importLocalRepo,
