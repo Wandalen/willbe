@@ -3375,10 +3375,10 @@ function versionsVerify( o )
   })
 
   ready.then( () =>
-  { 
+  {
     if( o.asMap )
     return { verifiedNumber, totalNumber };
-    
+
     logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.timeSpent( time ) );
     logger.down();
     return verifiedNumber === totalNumber;
@@ -3408,8 +3408,7 @@ function versionsVerify( o )
 
     if( o.valid )
     if( !r.opener.isValid() )
-    throw _.err( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not valid. Reason:', r.opener.err );
-
+    throw _.err( opener.error, '\n! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is downloaded, but it\'s not valid.' );
 
     /* is remote / enabled */
 
@@ -3466,7 +3465,7 @@ function versionsVerify( o )
       let remoteParsed = remoteProvider.pathParse( r.opener.remotePath );
       let remoteVersion = remoteParsed.hash || 'master';
       let localVersion = remoteProvider.versionLocalRetrive( r.opener.downloadPath );
-      
+
       if( remoteVersion === localVersion )
       throw _.errBrief( '! Submodule', r.opener.qualifiedName, 'is not up to date!' );
 
