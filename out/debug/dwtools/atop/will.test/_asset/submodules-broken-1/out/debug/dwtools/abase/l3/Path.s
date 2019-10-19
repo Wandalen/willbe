@@ -1837,11 +1837,12 @@ function _relative( o )
   // let basePath = this.from( o.basePath );
   // let filePath = this.from( o.filePath );
 
+  o.basePath = this.from( o.basePath );
+  o.filePath = this.from( o.filePath );
+
   _.assert( _.strIs( o.basePath ),'Expects string {-o.basePath-}, but got', _.strType( o.basePath ) );
   _.assert( _.strIs( o.filePath ) || _.arrayIs( o.filePath ) );
   _.assertRoutineOptions( _relative, arguments );
-  o.basePath = this.from( o.basePath );
-  o.filePath = this.from( o.filePath );
 
   if( o.resolving )
   {

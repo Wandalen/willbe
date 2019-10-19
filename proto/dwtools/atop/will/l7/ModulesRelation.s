@@ -128,7 +128,7 @@ function form1()
 
   _.assert( relation.opener.formed >= 2 );
 
-  if( relation.enabled ) /* ttt */
+  // if( relation.enabled ) /* ttt */
   will.variantFrom( relation );
 
   /* end */
@@ -279,8 +279,8 @@ function _openAct( o )
   return relation.opener.open({ throwing : 1 })
   .finally( ( err, arg ) =>
   {
-    if( err )
-    debugger;
+    // if( err )
+    // debugger;
     if( err )
     throw _.err( err, '\n', 'Failed to open', relation.absoluteName );
     return arg;
@@ -307,12 +307,7 @@ function _openEnd()
   _.assert( relation.formed === 3 );
   _.assert( !!relation.opener.openedModule );
 
-  // if( module.id === 658 )
-  // debugger;
-  // if( relation.opener.openedModule.id === 151 )
-  // debugger;
-
-  if( relation.enabled ) /* ttt */
+  // if( relation.enabled ) /* ttt */
   will.variantFrom( relation );
 
   let modules2 = relation.opener.openedModule.modulesEach
@@ -338,14 +333,6 @@ function _moduleAdoptEnd()
   let logger = will.logger;
   let rootModule = module.rootModule;
 
-  // if( relation.formed >= 3 )
-  // {
-  //   if( relation.opener && !relation.opener.isValid() )
-  //   relation.close();
-  // }
-
-  // logger.log( '_moduleAdoptEnd', module.commonPath, relation.absoluteName );
-
   _.assert( relation.formed < 3 );
   _.assert( !!relation.opener.openedModule );
 
@@ -365,6 +352,19 @@ function _moduleAdoptEnd()
 // --
 // accessor
 // --
+
+function isValid()
+{
+  let relation = this;
+  let module = relation.module;
+
+  if( !relation.opener )
+  return false;
+
+  return relation.opener.isValid();
+}
+
+//
 
 function isAvailableGet()
 {
@@ -681,7 +681,7 @@ function errorNotFound( err )
   if( !relation.module.rootModule || relation.module.rootModule === relation.module )
   logger.error
   (
-    ' ' + '!' + ' Failed to open ' + relation.decoratedQualifiedName
+    ' ' + '!' + ' Failed to open ' + relation.decoratedAbsoluteName
     + ` at ${_.color.strFormat( relation.localPath, 'path' )}`
     // + ', try to download it with ' + _.color.strFormat( '.submodules.download', 'code' ) + ' or even ' + _.color.strFormat( '.clean', 'code' ) + ' it before downloading'
     // + '\n' + err.originalMessage
@@ -829,6 +829,7 @@ let Extend =
 
   // accessor
 
+  isValid,
   isAvailableGet,
   isDownloadedGet,
   isRepositoryGet,

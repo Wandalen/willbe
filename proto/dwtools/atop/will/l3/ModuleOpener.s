@@ -133,12 +133,10 @@ function preform()
 
   /* */
 
-  // debugger;
   if( !will.mainOpener )
   opener.isMain = true;
   _.assert( will.mainOpener instanceof _.Will.ModuleOpener );
 
-  // opener._filePathChanged1(); // ttt
   will.openerRegister( opener );
   will._willfilesReadBegin();
 
@@ -192,9 +190,6 @@ function optionsForModuleExport()
   }
 
   let result = _.mapOnly( opener, Import );
-
-  // if( opener.superRelation )
-  // result.superRelations = [ opener.superRelation ]; // xxx
 
   result.willfilesArray = _.entityMake( result.willfilesArray );
 
@@ -472,7 +467,7 @@ function find( o )
     opener.formed = 3;
 
     /*
-      xxx : check
+      xxx qqq : check
         import module
         import module.out
         import module.out.will
@@ -945,7 +940,7 @@ function _willfilesFind()
   if( opener.willfilesArray.length === 0 )
   {
     let err;
-    debugger;
+    // debugger;
     if( opener.superRelation )
     err = _.errBrief( 'Found no out-willfile for',  opener.superRelation.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
     else
@@ -1016,6 +1011,7 @@ let rootModuleGet = sharedFieldGet_functor( 'rootModule' );
 function rootModuleSet( src )
 {
   let opener = this;
+  let will = opener.will;
   let openedModule = opener.openedModule;
 
   _.assert( src === null || src instanceof _.Will.OpenedModule );
@@ -1025,6 +1021,13 @@ function rootModuleSet( src )
 
   if( openedModule && openedModule[ fieldName ] !== src )
   openedModule[ fieldName ] = src;
+
+  if( will )
+  {
+    let variant = will.variantOf( opener );
+    if( variant )
+    variant.reform();
+  }
 
   return src;
 }
@@ -1111,7 +1114,7 @@ function _remoteForm()
     should goes after setting formed
   */
 
-  if( !opener.superRelation || opener.superRelation.enabled ) /* ttt */
+  // if( !opener.superRelation || opener.superRelation.enabled ) /* ttt */
   will.variantFrom( opener );
 
   return opener;
@@ -1847,15 +1850,11 @@ function _filePathChanged1( o )
   if( !this.will )
   return o;
 
-  _.assert( o.willfilesPath !== undefined ); // ttt
-  // if( o.willfilesPath === opener.willfilesPath )
-  // return;
-
+  _.assert( o.willfilesPath !== undefined );
   o = opener._filePathChanged2( o );
 
   if( !o.isIdentical )
-  if( opener.formed && opener.formed < 3 ) // ttt
-  // if( opener.formed )
+  if( opener.formed && opener.formed < 3 )
   {
     opener._remoteForm();
   }
@@ -1900,7 +1899,7 @@ function _filePathChanged2( o )
   if( !o.isIdentical )
   if( opener.willfilesPath && opener.commonPath && opener.formed >= 2 )
   {
-    if( !opener.superRelation || opener.superRelation.enabled ) /* ttt */
+    // if( !opener.superRelation || opener.superRelation.enabled ) /* ttt */
     will.variantFrom( opener );
   }
 
