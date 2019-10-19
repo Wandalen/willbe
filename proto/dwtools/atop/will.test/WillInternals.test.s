@@ -130,42 +130,16 @@ function preCloneRepos( test )
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
-  ({
-    currentPath : self.repoDirPath,
-    outputCollecting : 1,
-    ready : ready,
-  })
+  let reposDownload = require( './ReposDownload.s' );
 
-  _.fileProvider.dirMake( self.repoDirPath );
-
-  /* - */
-
-  clone( 'Color', '01d8e996b03401c131a0deb2ad8201b23e89397b' );
-  clone( 'PathBasic', '2e84d73699bdf5894fd3051169a1e2511a63e427' );
-  clone( 'Procedure', '78d6af643b132a959675b7f0489ace2e9a6c4e60' );
-  clone( 'Proto', 'b2054cc5549d24c421f4c71875e6da41fa36ffe0' );
-  clone( 'Tools', '14163d4223466b178fec3adf67dc85a9ece32ad5' );
-  clone( 'UriBasic', '382707a813d7b0a369aad2689f39c166930f9d87' );
-
-  ready
-  .then( () =>
+  ready.then( () => reposDownload() )
+  ready.then( () =>
   {
     test.is( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'Tools' ) ) );
     return null;
   })
 
   return ready;
-
-  function clone( name, version )
-  {
-
-    if( !_.fileProvider.isDir( _.path.join( self.repoDirPath, name ) ) )
-    shell( 'git clone https://github.com/Wandalen/w' + name + '.git ' + name );
-    shell({ execPath : 'git checkout ' + version, currentPath : _.path.join( self.repoDirPath, name ) });
-
-  }
-
 }
 
 //
@@ -373,6 +347,7 @@ function openNamedFast( test )
       'module.dir' : abs( '.' ),
       'module.willfiles' : abs( [ './super.ex.will.yml', './super.im.will.yml' ] ),
       'module.peer.willfiles' : abs( 'super.out/supermodule.out.will.yml' ),
+      'module.peer.in' : abs( 'super.out' ),
       'module.original.willfiles' : abs( [ './super.ex.will.yml', './super.im.will.yml' ] ),
       'module.common' : abs( 'super' ),
       'download' : null,
@@ -598,6 +573,7 @@ function openNamedForming( test )
       'module.willfiles' : abs( [ './super.ex.will.yml', './super.im.will.yml' ] ),
       'module.original.willfiles' : abs( [ './super.ex.will.yml', './super.im.will.yml' ] ),
       'module.peer.willfiles' : abs( './super.out/supermodule.out.will.yml' ),
+      'module.peer.in' : abs( 'super.out' ),
       'module.common' : abs( 'super' ),
       'download' : null,
 
@@ -1050,6 +1026,7 @@ function openAnon( test )
       'module.common' : abs( './' ),
       'module.original.willfiles' : abs([ './.ex.will.yml', './.im.will.yml' ]),
       'module.peer.willfiles' : abs( './super.out/supermodule.out.will.yml' ),
+      'module.peer.in' : abs( 'super.out' ),
       'download' : null,
     }
 
@@ -1186,14 +1163,15 @@ function openOutNamed( test )
       'out' : '.',
       'out.debug' : 'debug',
       'out.release' : 'release',
-      'exported.dir.export.' : './release',
+      'exported.dir.export.' : 'release',
       'exported.files.export.' : [ 'release', 'release/File.debug.js', 'release/File.release.js' ],
-      'exported.dir.export.debug' : './debug',
+      'exported.dir.export.debug' : 'debug',
       'exported.files.export.debug' : [ 'debug', 'debug/File.debug.js', 'debug/File.release.js' ],
       'module.willfiles' : abs( './super.out/supermodule.out.will.yml' ),
       'module.dir' : abs( './super.out' ),
       'module.common' : abs( './super.out/supermodule.out' ),
       'download' : null,
+      'module.peer.in' : abs( '.' ),
       'module.peer.willfiles' :
       [
         abs( './super.ex.will.yml' ),
@@ -1211,7 +1189,7 @@ function openOutNamed( test )
     test.identical( opener.aliasName, null );
 
     test.identical( opener.openedModule.qualifiedName, 'module::supermodule' );
-    test.identical( opener.openedModule.absoluteName, 'module::supermodule' );
+    test.identical( opener.openedModule.absoluteName, 'module::supermodule / module::supermodule' );
     test.identical( opener.openedModule.dirPath, abs( './super.out' ) );
     test.identical( opener.openedModule.localPath, abs( './super.out/supermodule.out' ) );
     test.identical( opener.openedModule.willfilesPath, abs( './super.out/supermodule.out.will.yml' ) );
@@ -1328,6 +1306,7 @@ function openCurruptedUnknownField( test )
       'module.willfiles' : abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ),
       'module.original.willfiles' : abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ),
       'module.peer.willfiles' : abs( 'sub.out.will.yml' ),
+      'module.peer.in' : abs( '.' ),
       'module.common' : abs( 'sub' ),
       'download' : null,
 
@@ -2327,6 +2306,7 @@ function exportSuper( test )
       'module.common',
       'module.original.willfiles',
       'module.peer.willfiles',
+      'module.peer.in',
       'download',
       'remote',
       'proto',
@@ -4444,32 +4424,32 @@ function exportCourruptedSubmodulesDisabled( test )
 
     test.case = 'modulesEach, withDisabled';
     var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabled : 1 });
-    var exp = [];
-    // var exp = // xxx
-    // [
-    //   '.module/Submodule1/',
-    //   '.module/Submodule2/',
-    //   '.module/Submodule3/',
-    // ];
+    // var exp = [];
+    var exp =
+    [
+      '.module/Submodule1/',
+      '.module/Submodule2/',
+      '.module/Submodule3/',
+    ];
     var localPath = _.filter( got, ( e ) => e.localPath );
     test.identical( localPath, abs( exp ) );
     var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabled : 1 });
-    var exp = [];
-    // var exp =
-    // [
-    //   '.module/Submodule1',
-    //   '.module/Submodule2',
-    //   '.module/Submodule3',
-    // ];
+    // var exp = [];
+    var exp =
+    [
+      '.module/Submodule1',
+      '.module/Submodule2',
+      '.module/Submodule3',
+    ];
     var localPath = _.filter( got, ( e ) => e.opener.downloadPath );
     test.identical( localPath, abs( exp ) );
-    var exp = [];
-    // var exp =
-    // [
-    //   'git+https:///github.com/X1/X1.git#master',
-    //   'git+https:///github.com/X2/X2.git#master',
-    //   'git+https:///github.com/X3/X3.git#master',
-    // ];
+    // var exp = [];
+    var exp =
+    [
+      'git+https:///github.com/X1/X1.git#master',
+      'git+https:///github.com/X2/X2.git#master',
+      'git+https:///github.com/X3/X3.git#master',
+    ];
     var remotePath = _.filter( got, ( e ) => e.remotePath );
     test.identical( remotePath, exp );
 
@@ -6088,6 +6068,7 @@ function pathsResolve( test )
       'super.ex.will.yml',
       'super.im.will.yml',
       'super.out/supermodule.out.will.yml',
+      'super.out',
       '.',
       'super',
       null,
@@ -6119,6 +6100,7 @@ function pathsResolve( test )
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'super.out/supermodule.out.will.yml',
+      'super.out',
       '.',
       'super',
       null,
@@ -6150,6 +6132,7 @@ function pathsResolve( test )
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'super.out/supermodule.out.will.yml',
+      'super.out',
       '.',
       'super',
       null,
@@ -6181,6 +6164,7 @@ function pathsResolve( test )
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'super.out/supermodule.out.will.yml',
+      'super.out',
       '.',
       'super',
       null,
@@ -6220,6 +6204,7 @@ function pathsResolve( test )
       'module.willfiles' : abs([ './super.ex.will.yml', './super.im.will.yml' ]),
       'module.peer.willfiles' : abs( './super.out/supermodule.out.will.yml' ),
       'module.common' : abs( './super' ),
+      'module.peer.in' : abs( './super.out' ),
       'module.original.willfiles' : abs([ './super.ex.will.yml', './super.im.will.yml' ]),
       'local' : abs( './super' ),
       'download' : null,
@@ -6259,6 +6244,7 @@ function pathsResolve( test )
       'current.remote' : null,
       'download' : null,
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
+      'module.peer.in' : 'super.out',
     }
     var got = _.select( resolved, '*/path' );
     test.identical( rel( got ), expected );
@@ -6276,6 +6262,7 @@ function pathsResolve( test )
       'module.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.original.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
+      'module.peer.in' : 'super.out',
       'module.dir' : '.',
       'module.common' : 'super',
       'local' : 'super',
@@ -6306,6 +6293,7 @@ function pathsResolve( test )
       'module.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.original.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
+      'module.peer.in' : 'super.out',
       'module.dir' : '.',
       'module.common' : 'super',
       'download' : null,
@@ -6336,6 +6324,7 @@ function pathsResolve( test )
       'module.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.original.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
+      'module.peer.in' : 'super.out',
       'module.dir' : '.',
       'module.common' : 'super',
       'download' : null,
@@ -6366,6 +6355,7 @@ function pathsResolve( test )
       'module.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.original.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.peer.willfiles' : 'super.out/supermodule.out.will.yml',
+      'module.peer.in' : 'super.out',
       'module.dir' : '.',
       'module.common' : 'super',
       'download' : null,
@@ -6396,6 +6386,7 @@ function pathsResolve( test )
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'super.out/supermodule.out.will.yml',
+      'super.out',
       '.',
       'super',
       null,
@@ -6426,6 +6417,7 @@ function pathsResolve( test )
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'super.out/supermodule.out.will.yml',
+      'super.out',
       '.',
       'super',
       null,
@@ -6456,6 +6448,7 @@ function pathsResolve( test )
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
       [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'super.out/supermodule.out.will.yml',
+      'super.out',
       '.',
       'super',
       null,
@@ -8895,7 +8888,7 @@ function submodulesDeleteAndDownload( test )
       var files = self.find( submodulesPath );
       test.is( _.arrayHas( files, './Tools' ) );
       test.is( _.arrayHas( files, './PathBasic' ) );
-      test.gt( files.length, 280 );
+      test.gt( files.length, 250 );
       return arg;
     })
 
@@ -8906,7 +8899,7 @@ function submodulesDeleteAndDownload( test )
       var files = self.find( submodulesPath );
       test.is( _.arrayHas( files, './Tools' ) );
       test.is( _.arrayHas( files, './PathBasic' ) );
-      test.gt( files.length, 280 );
+      test.gt( files.length, 250 );
       return arg;
     })
 
@@ -8949,112 +8942,113 @@ function submodulesDeleteAndDownload( test )
       var exp = [ './', '.module/Tools/out/wTools.out', '.module/Tools/', '.module/PathBasic/out/wPathBasic.out', '.module/PathBasic/' ]
       test.identical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
 
-      var exp =
-      [
-        './',
-        './.module/Tools/out/wTools.out',
-        './.module/PathBasic/out/wPathBasic.out',
-        './.module/wFiles',
-        './.module/wCloner',
-        './.module/wStringer',
-        './.module/wTesting',
-        './.module/wSelector',
-        'hd://./.module/Tools',
-        './.module/Tools/',
-        './.module/wFiles',
-        './.module/wCloner',
-        './.module/wStringer',
-        './.module/wTesting',
-        './.module/wSelector',
-        'hd://./.module/Tools',
-        './.module/PathBasic/'
-      ]
-      test.setsAreIdentical( _.select( will.openersArray, '*/commonPath' ), abs( exp ) );
-
-      var exp =
-      [
-        './',
-        './.module/Tools/out/wTools.out',
-        './.module/PathBasic/out/wPathBasic.out',
-        './.module/wFiles',
-        './.module/wCloner',
-        './.module/wStringer',
-        './.module/wTesting',
-        './.module/wSelector',
-        'hd://./.module/Tools',
-        './.module/Tools/',
-        './.module/wFiles',
-        './.module/wCloner',
-        './.module/wStringer',
-        './.module/wTesting',
-        './.module/wSelector',
-        'hd://./.module/Tools',
-        './.module/PathBasic/'
-      ]
-      test.setsAreIdentical( _.select( will.openersArray, '*/localPath' ), abs( exp ) );
-
-      var exp =
-      [
-        null,
-        'git+hd://../_repo/Tools?out=out/wTools.out.will#master',
-        'git+hd://../_repo/PathBasic?out=out/wPathBasic.out.will#master',
-        'npm:///wFiles',
-        'npm:///wcloner',
-        'npm:///wstringer',
-        'npm:///wTesting',
-        'npm:///wselector',
-        null, /* xxx : should be not null */
-        'git+hd://../_repo/Tools?out:./#master',
-        'npm:///wFiles',
-        'npm:///wcloner',
-        'npm:///wstringer',
-        'npm:///wTesting',
-        'npm:///wselector',
-        null, /* xxx : should be not null */
-        'git+hd://../_repo/PathBasic?out:./#master'
-      ]
-      var remotePath = _.select( will.openersArray, '*/remotePath' );
-      // test.is( _.strHas( remotePath[ 1 ], '/_repo/Tools?out=out/wTools.out.will#master' ) );
-      // test.is( _.strHas( remotePath[ 2 ], '/_repo/PathBasic?out=out/wPathBasic.out.will#master' ) );
-      exp[ 1 ] = remotePath[ 1 ];
-      exp[ 2 ] = remotePath[ 2 ];
-      test.setsAreIdentical( remotePath, abs( exp ) );
-      debugger;
-
-      will.openersArray.map( ( opener ) =>
-      {
-        logger.log( opener.absoluteName, '#' + opener.id, ' - ', opener.localPath, ' - ', opener.remotePath );
-      });
-
-      test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
-      var expected =
-      [
-        './.will.yml',
-        './.module/Tools/out/wTools.out.will.yml',
-        './.module/PathBasic/out/wPathBasic.out.will.yml',
-        './.module/wFiles',
-        './.module/wCloner',
-        './.module/wStringer',
-        './.module/wTesting',
-        './.module/wSelector',
-        'hd://./.module/Tools',
-        [
-          './.module/Tools/.ex.will.yml',
-          './.module/Tools/.im.will.yml'
-        ],
-        './.module/wFiles',
-        './.module/wCloner',
-        './.module/wStringer',
-        './.module/wTesting',
-        './.module/wSelector',
-        'hd://./.module/Tools',
-        [
-          './.module/PathBasic/.ex.will.yml',
-          './.module/PathBasic/.im.will.yml'
-        ]
-      ]
-      var got = _.select( will.openersArray, '*/willfilesPath' )
-      test.identical( got, abs( expected ) );
+      // var exp =
+      // [
+      //   './',
+      //   './.module/Tools/out/wTools.out',
+      //   './.module/PathBasic/out/wPathBasic.out',
+      //   './.module/wFiles',
+      //   './.module/wCloner',
+      //   './.module/wStringer',
+      //   './.module/wTesting',
+      //   './.module/wSelector',
+      //   'hd://./.module/Tools',
+      //   './.module/Tools/',
+      //   './.module/wFiles',
+      //   './.module/wCloner',
+      //   './.module/wStringer',
+      //   './.module/wTesting',
+      //   './.module/wSelector',
+      //   'hd://./.module/Tools',
+      //   './.module/PathBasic/'
+      // ]
+      // test.setsAreIdentical( _.select( will.openersArray, '*/commonPath' ), abs( exp ) );
+      //
+      // var exp =
+      // [
+      //   './',
+      //   './.module/Tools/out/wTools.out',
+      //   './.module/PathBasic/out/wPathBasic.out',
+      //   './.module/wFiles',
+      //   './.module/wCloner',
+      //   './.module/wStringer',
+      //   './.module/wTesting',
+      //   './.module/wSelector',
+      //   'hd://./.module/Tools',
+      //   './.module/Tools/',
+      //   './.module/wFiles',
+      //   './.module/wCloner',
+      //   './.module/wStringer',
+      //   './.module/wTesting',
+      //   './.module/wSelector',
+      //   'hd://./.module/Tools',
+      //   './.module/PathBasic/'
+      // ]
+      // test.setsAreIdentical( _.select( will.openersArray, '*/localPath' ), abs( exp ) );
+      //
+      // var exp =
+      // [
+      //   null,
+      //   'git+hd://../_repo/Tools?out=out/wTools.out.will#master',
+      //   'git+hd://../_repo/PathBasic?out=out/wPathBasic.out.will#master',
+      //   'npm:///wFiles',
+      //   'npm:///wcloner',
+      //   'npm:///wstringer',
+      //   'npm:///wTesting',
+      //   'npm:///wselector',
+      //   null, /* xxx : should be not null */
+      //   'git+hd://../_repo/Tools?out:./#master',
+      //   'npm:///wFiles',
+      //   'npm:///wcloner',
+      //   'npm:///wstringer',
+      //   'npm:///wTesting',
+      //   'npm:///wselector',
+      //   null, /* xxx : should be not null */
+      //   'git+hd://../_repo/PathBasic?out:./#master'
+      // ]
+      // var remotePath = _.select( will.openersArray, '*/remotePath' );
+      // // test.is( _.strHas( remotePath[ 1 ], '/_repo/Tools?out=out/wTools.out.will#master' ) );
+      // // test.is( _.strHas( remotePath[ 2 ], '/_repo/PathBasic?out=out/wPathBasic.out.will#master' ) );
+      // exp[ 1 ] = remotePath[ 1 ];
+      // exp[ 2 ] = remotePath[ 2 ];
+      // test.setsAreIdentical( remotePath, abs( exp ) );
+      // debugger;
+      //
+      // will.openersArray.map( ( opener ) =>
+      // {
+      //   logger.log( opener.absoluteName, '#' + opener.id, ' - ', opener.localPath, ' - ', opener.remotePath );
+      // });
+      //
+      // test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
+      // var expected =
+      // [
+      //   './.will.yml',
+      //   './.module/Tools/out/wTools.out.will.yml',
+      //   './.module/PathBasic/out/wPathBasic.out.will.yml',
+      //   './.module/wFiles',
+      //   './.module/wCloner',
+      //   './.module/wStringer',
+      //   './.module/wTesting',
+      //   './.module/wSelector',
+      //   'hd://./.module/Tools',
+      //   [
+      //     './.module/Tools/.ex.will.yml',
+      //     './.module/Tools/.im.will.yml'
+      //   ],
+      //   './.module/wFiles',
+      //   './.module/wCloner',
+      //   './.module/wStringer',
+      //   './.module/wTesting',
+      //   './.module/wSelector',
+      //   'hd://./.module/Tools',
+      //   [
+      //     './.module/PathBasic/.ex.will.yml',
+      //     './.module/PathBasic/.im.will.yml'
+      //   ]
+      // ]
+      // var got = _.select( will.openersArray, '*/willfilesPath' )
+      // test.identical( got, abs( expected ) );
+      // xxx
 
       opener.finit();
 

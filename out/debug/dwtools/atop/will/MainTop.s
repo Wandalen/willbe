@@ -119,6 +119,7 @@ function _openersCurrentEach( o )
     it.opener = opener;
     it.module = opener.openedModule;
     it.openers = will.currentOpeners;
+    it.variant = will.variantOf( opener );
     it.will = will;
     return it;
   }
@@ -287,6 +288,7 @@ function _commandBuildLike( o )
     {
       withIn : o.withIn,
       withOut : o.withOut,
+      withBroken : o.withBroken,
     }
     // debugger;
     let openers2 = will.modulesFilter( will.currentOpeners, filter );
@@ -351,11 +353,11 @@ _commandBuildLike.defaults =
 {
   event : null,
   onEach : null,
-  // onAll : null,
   commandRoutine : null,
   name : null,
   withIn : 1,
   withOut : 1,
+  withBroken : 0,
 }
 
 //
@@ -384,8 +386,9 @@ function _commandTreeLike( o )
 
     will.currentOpeners.forEach( ( opener ) => ready2.then( () =>
     {
-      // opener.open({ all : 1, resourcesFormed : 0 });
       _.assert( !!opener.openedModule );
+      if( !opener.openedModule.isValid() )
+      return null;
       return opener.openedModule.modulesUpform({ recursive : 2, all : 1, resourcesFormed : 0 });
     }));
 
@@ -393,7 +396,6 @@ function _commandTreeLike( o )
     {
       will.readingEnd();
       let it2 = _.mapExtend( null, o );
-      // it2.modules = will.modulesArray;
       it2.modules = will.modulesOnlyRoots();
       return o.onAll.call( will, it2 );
     });
@@ -1479,6 +1481,8 @@ function commandShell( e )
 function commandDo( e )
 {
   let will = this;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
@@ -1489,16 +1493,33 @@ function commandDo( e )
     onEach : handleEach,
     commandRoutine : commandDo,
     withOut : 0,
+    withBroken : 1,
   });
 
   function handleEach( it )
   {
-    let logger = will.logger;
+    let currentPath = will.currentPath || _.path.current();
     it.tools = wTools;
+    it.path = path;
+    it.fileProvider = fileProvider;
+    it.ready = new _.Consequence().take( null );
+    it.currentPath = currentPath;
+    it.dirPath = path.dirFirst( it.variant.localPath );
+    it.logger = logger;
+    it.start = _.process.starter
+    ({
+      currentPath : it.dirPath,
+      outputCollecting : 1,
+      outputGraying : 1,
+      outputPiping : 1,
+      inputMirroring : 1,
+      mode : 'spawn',
+      ready : it.ready
+    });
     return it.opener.openedModule.doJs
     ({
       execPath : e.argument,
-      currentPath : will.currentPath || _.path.current(),
+      currentPath : currentPath,
       args : [ it ],
     });
   }
@@ -1740,7 +1761,6 @@ let Extend =
   commandShell,
   commandDo,
   commandClean,
-  // commandCleanRecursive,
   commandBuild,
   commandExport,
   commandExportRecursive,

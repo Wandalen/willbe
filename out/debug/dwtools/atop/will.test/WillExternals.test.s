@@ -31,7 +31,6 @@ function onSuiteBegin()
     withTerminals : 1,
     withDirs : 1,
     withStem : 1,
-    // withTransient : 1,
     allowingMissed : 1,
     maskPreset : 0,
     outputFormat : 'relative',
@@ -65,7 +64,6 @@ function onSuiteEnd()
   let self = this;
   _.assert( _.strHas( self.suitePath, '/willbe-' ) )
   _.path.pathDirTempClose( self.suitePath );
-  // _.fileProvider.filesDelete( self.suitePath );
 }
 
 //
@@ -105,7 +103,9 @@ function rel_functor( routinePath )
   }
 }
 
-//
+// --
+// tests
+// --
 
 function preCloneRepos( test )
 {
@@ -113,48 +113,19 @@ function preCloneRepos( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
-  ({
-    currentPath : self.repoDirPath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  let reposDownload = require( './ReposDownload.s' );
 
-  _.fileProvider.dirMake( self.repoDirPath );
-
-  /* - */
-
-  clone( 'Color', '01d8e996b03401c131a0deb2ad8201b23e89397b' );
-  clone( 'PathBasic', '2e84d73699bdf5894fd3051169a1e2511a63e427' );
-  clone( 'Procedure', '78d6af643b132a959675b7f0489ace2e9a6c4e60' );
-  clone( 'Proto', 'b2054cc5549d24c421f4c71875e6da41fa36ffe0' );
-  clone( 'Tools', '14163d4223466b178fec3adf67dc85a9ece32ad5' );
-  clone( 'UriBasic', '382707a813d7b0a369aad2689f39c166930f9d87' );
-
-  ready
-  .then( () =>
+  ready.then( () => reposDownload() )
+  ready.then( () =>
   {
     test.is( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'Tools' ) ) );
     return null;
   })
 
   return ready;
-
-  function clone( name, version )
-  {
-
-    if( !_.fileProvider.isDir( _.path.join( self.repoDirPath, name ) ) )
-    shell( 'git clone https://github.com/Wandalen/w' + name + '.git ' + name );
-    debugger;
-    shell({ execPath : 'git checkout ' + version, currentPath : _.path.join( self.repoDirPath, name ) });
-    debugger;
-
-  }
-
 }
 
 //
@@ -1606,7 +1577,7 @@ function openExportClean( test )
 
 //
 
-function withDo( test )
+function withDoInfo( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'many-few' );
@@ -1631,85 +1602,75 @@ function withDo( test )
 
   /* - */
 
-  // xxx
-  // shell( '.clean' )
-  // shell( '.export' )
-  // .then( ( got ) =>
-  // {
-  //   test.case = 'setup';
-  //   _.fileProvider.fileAppend( _.path.join( routinePath, '.im.will.yml' ), '\n' );
-  //
-  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/proto' ) ) );
-  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/many.out.will.yml' ) ) );
-  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathBasic' ) ) );
-  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathTools' ) ) );
-  //   test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/Tools' ) ) );
-  //
-  //   return null;
-  // })
-  //
-  // /* - */
-  //
-  // shell( '.do .do/Info.js' )
-  // .then( ( got ) =>
-  // {
-  //   test.case = '.do .do/Info.js';
-  //   test.identical( got.exitCode, 0 );
-  //   test.identical( _.strCount( got.output, '. Opened .' ), 11 );
-  //   test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
-  //   test.identical( _.strCount( got.output, 'localPath :' ), 1 );
-  //   return null;
-  // })
-  //
-  // /* - */
-  //
-  // shell( '.with . .do .do/Info.js' )
-  // .then( ( got ) =>
-  // {
-  //   test.case = '.with . .do .do/Info.js';
-  //   test.identical( got.exitCode, 0 );
-  //   test.identical( _.strCount( got.output, '. Opened .' ), 11 );
-  //   test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
-  //   test.identical( _.strCount( got.output, 'localPath :' ), 1 );
-  //   return null;
-  // })
-  //
-  // /* - */
-  //
-  // shell( '.with * .do .do/Info.js' )
-  // .then( ( got ) =>
-  // {
-  //   test.case = '.with . .do .do/Info.js';
-  //   test.identical( got.exitCode, 0 );
-  //   test.identical( _.strCount( got.output, '. Opened .' ), 11 );
-  //   test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
-  //   test.identical( _.strCount( got.output, 'localPath :' ), 1 );
-  //   return null;
-  // })
-  //
-  // /* - */
-  //
-  // shell( '.with ** .do .do/Info.js' )
-  // .then( ( got ) =>
-  // {
-  //   test.case = '.with . .do .do/Info.js';
-  //   test.identical( got.exitCode, 0 );
-  //   test.identical( _.strCount( got.output, '. Opened .' ), 11 );
-  //   test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
-  //   test.identical( _.strCount( got.output, 'localPath :' ), 4 );
-  //   return null;
-  // })
+  shell( '.clean' )
+  shell( '.export' )
+  .then( ( got ) =>
+  {
+    test.case = 'setup';
+    _.fileProvider.fileAppend( _.path.join( routinePath, '.im.will.yml' ), '\n' );
+
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/many.out.will.yml' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathBasic' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathTools' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/Tools' ) ) );
+
+    return null;
+  })
 
   /* - */
 
-  shell( '.imply withIn:0 ; .with ** .do .do/Info.js' )
+  shell( '.do .do/Info.js' )
   .then( ( got ) =>
   {
-    test.case = '.imply withIn:0 ; .with ** .do .do/Info.js';
+    test.case = '.do .do/Info.js';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 9 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 3 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  shell( '.with . .do .do/Info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.with . .do .do/Info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  shell( '.with * .do .do/Info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.with . .do .do/Info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  shell( '.with ** .do .do/Info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.with . .do .do/Info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 5 );
     return null;
   })
 
@@ -1720,8 +1681,23 @@ function withDo( test )
   {
     test.case = '.imply withOut:0 ; .with ** .do .do/Info.js';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 5 );
+    return null;
+  })
+
+  /* - */
+
+  shell( '.imply withIn:0 ; .with ** .do .do/Info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.imply withIn:0 ; .with ** .do .do/Info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 3 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 4 );
     return null;
   })
@@ -1729,15 +1705,108 @@ function withDo( test )
   /* - */
 
   return ready;
-} /* end of function withDo */
+} /* end of function withDoInfo */
 
-withDo.timeOut = 300000;
-withDo.description =
+withDoInfo.timeOut = 300000;
+withDoInfo.description =
 `
 - do execute js script
 - filtering option withIn works
 - filtering option withOut works
 - only one attempt to open outdate outfile
+- action info works properly
+`
+
+//
+
+function withDoStatus( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'many-few' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  shell( '.clean' )
+  shell( '.export' )
+  .then( ( got ) =>
+  {
+    test.case = 'setup';
+
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/many.out.will.yml' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathBasic' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathTools' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/Tools' ) ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell( '.with ** .do .do/Status.js' )
+  .then( ( got ) =>
+  {
+    test.case = 'no changes';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 12 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  .then( ( got ) =>
+  {
+    test.case = 'changs';
+    _.fileProvider.fileAppend( _.path.join( routinePath, '.module/Tools/README.md' ), '\n' );
+    _.fileProvider.fileAppend( _.path.join( routinePath, '.module/PathTools/README.md' ), '\nx' );
+    _.fileProvider.fileAppend( _.path.join( routinePath, '.module/PathTools/LICENSE' ), '\n' );
+    return null;
+  })
+
+  shell( '.with ** .do .do/Status.js' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 12 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
+    test.identical( _.strCount( got.output, ' at ' ), 3 );
+    test.identical( _.strCount( got.output, 'modified:' ), 3 );
+    test.identical( _.strCount( got.output, 'no changes added to commit' ), 2 );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function withDoStatus */
+
+withDoStatus.timeOut = 300000;
+withDoStatus.description =
+`
+- it.start exposed for action
+- it.start has proper current path
+- errorors are brief
 `
 
 //
@@ -1781,8 +1850,8 @@ function verbositySet( test )
     test.is( _.strHas( got.output, '.imply verbosity:3 ; .build' ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( _.strHas( got.output, 'Failed to open relation::Tools' ) );
-    test.is( _.strHas( got.output, 'Failed to open relation::PathBasic' ) );
+    test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::Tools' ) );
+    test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::PathBasic' ) );
     test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
@@ -2567,16 +2636,16 @@ function modulesTreeHierarchyRemote( test )
 `
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-    test.identical( _.strCount( got.output, 'module::z' ), 1 );
-    test.identical( _.strCount( got.output, 'module::a' ), 3 );
-    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-    test.identical( _.strCount( got.output, 'module::b' ), 1 );
-    test.identical( _.strCount( got.output, 'module::c' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::z' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::a' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
 
     return null;
   })
@@ -2611,16 +2680,16 @@ function modulesTreeHierarchyRemote( test )
 `
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-    test.identical( _.strCount( got.output, 'module::z' ), 1 );
-    test.identical( _.strCount( got.output, 'module::a' ), 3 );
-    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-    test.identical( _.strCount( got.output, 'module::b' ), 1 );
-    test.identical( _.strCount( got.output, 'module::c' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::z' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::a' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
 
     return null;
   })
@@ -2635,16 +2704,16 @@ function modulesTreeHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-    test.identical( _.strCount( got.output, 'module::z' ), 1 );
-    test.identical( _.strCount( got.output, 'module::a' ), 3 );
-    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-    test.identical( _.strCount( got.output, 'module::b' ), 1 );
-    test.identical( _.strCount( got.output, 'module::c' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::z' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::a' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
 
     return null;
   })
@@ -2679,16 +2748,16 @@ function modulesTreeHierarchyRemote( test )
 `
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-    test.identical( _.strCount( got.output, 'module::z' ), 1 );
-    test.identical( _.strCount( got.output, 'module::a' ), 3 );
-    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-    test.identical( _.strCount( got.output, 'module::b' ), 1 );
-    test.identical( _.strCount( got.output, 'module::c' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::z' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::a' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
 
     return null;
   })
@@ -2723,16 +2792,16 @@ function modulesTreeHierarchyRemote( test )
 `
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-    test.identical( _.strCount( got.output, 'module::z' ), 1 );
-    test.identical( _.strCount( got.output, 'module::a' ), 3 );
-    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-    test.identical( _.strCount( got.output, 'module::b' ), 1 );
-    test.identical( _.strCount( got.output, 'module::c' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::z' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::a' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
 
     return null;
   })
@@ -2747,16 +2816,16 @@ function modulesTreeHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-    test.identical( _.strCount( got.output, 'module::z' ), 1 );
-    test.identical( _.strCount( got.output, 'module::a' ), 3 );
-    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-    test.identical( _.strCount( got.output, 'module::b' ), 1 );
-    test.identical( _.strCount( got.output, 'module::c' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::z' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::a' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
 
     return null;
   })
@@ -2814,32 +2883,84 @@ function modulesTreeHierarchyRemoteDownloaded( test )
  +-- module::z
    +-- module::a
    | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
+   | | +-- module::wFiles - path::remote:=npm:///wFiles
+   | | +-- module::wCloner - path::remote:=npm:///wcloner
+   | | +-- module::wStringer - path::remote:=npm:///wstringer
+   | | +-- module::wTesting - path::remote:=npm:///wTesting
+   | | +-- module::wSelector - path::remote:=npm:///wselector
+   | | +-- module::wTools
    | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::wTools - path::remote:=npm:///wTools
+   | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+   | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
+   | | +-- module::wPathTools
+   | | +-- module::wFiles - path::remote:=npm:///wFiles
+   | | +-- module::wTesting - path::remote:=npm:///wTesting
    | +-- module::a0
    |   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   |   | +-- module::wTools - path::remote:=npm:///wTools
+   |   | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+   |   | +-- module::wArraySorted - path::remote:=npm:///warraysorted
+   |   | +-- module::wPathTools
+   |   | +-- module::wFiles - path::remote:=npm:///wFiles
+   |   | +-- module::wTesting - path::remote:=npm:///wTesting
    |   +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   |     +-- module::wTools - path::remote:=npm:///wTools
+   |     +-- module::wFiles - path::remote:=npm:///wFiles
+   |     +-- module::wTesting - path::remote:=npm:///wTesting
    +-- module::b
    | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::wTools - path::remote:=npm:///wTools
+   | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+   | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
+   | | +-- module::wPathTools
+   | | +-- module::wFiles - path::remote:=npm:///wFiles
+   | | +-- module::wTesting - path::remote:=npm:///wTesting
    | +-- module::wProto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+   |   +-- module::wTools - path::remote:=npm:///wTools
+   |   +-- module::Self
+   |   +-- module::wEqualer - path::remote:=npm:///wequaler
+   |   +-- module::wTesting - path::remote:=npm:///wTesting
    +-- module::c
    | +-- module::a0
    | | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | | +-- module::wTools - path::remote:=npm:///wTools
+   | | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+   | | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
+   | | | +-- module::wPathTools
+   | | | +-- module::wFiles - path::remote:=npm:///wFiles
+   | | | +-- module::wTesting - path::remote:=npm:///wTesting
    | | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   | |   +-- module::wTools - path::remote:=npm:///wTools
+   | |   +-- module::wFiles - path::remote:=npm:///wFiles
+   | |   +-- module::wTesting - path::remote:=npm:///wTesting
    | +-- module::wUriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/
+   |   +-- module::wTools - path::remote:=npm:///wTools
+   |   +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+   |   +-- module::wUriBasic
+   |   +-- module::wFiles - path::remote:=npm:///wFiles
+   |   +-- module::wTesting - path::remote:=npm:///wTesting
    +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+     +-- module::wTools - path::remote:=npm:///wTools
+     +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+     +-- module::wArraySorted - path::remote:=npm:///warraysorted
+     +-- module::wPathTools
+     +-- module::wFiles - path::remote:=npm:///wFiles
+     +-- module::wTesting - path::remote:=npm:///wTesting
 `
+
     test.identical( _.strCount( got.output, exp ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-    test.identical( _.strCount( got.output, 'module::z' ), 1 );
-    test.identical( _.strCount( got.output, 'module::a' ), 3 );
-    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-    test.identical( _.strCount( got.output, 'module::b' ), 1 );
-    test.identical( _.strCount( got.output, 'module::c' ), 1 );
-    test.identical( _.strCount( got.output, 'module::wTools' ), 1 );
-    test.identical( _.strCount( got.output, 'module::wPathTools' ), 5 );
-    test.identical( _.strCount( got.output, 'module::wPathBasic' ), 2 );
-    test.identical( _.strCount( got.output, 'module::wUriBasic' ), 1 );
-    test.identical( _.strCount( got.output, 'module::wProto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 67 );
+    test.identical( _.strCount( got.output, '+-- module::z' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::a' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::wTools' ), 11 );
+    test.identical( _.strCount( got.output, '+-- module::wPathTools' ), 10 );
+    test.identical( _.strCount( got.output, '+-- module::wPathBasic' ), 8 );
+    test.identical( _.strCount( got.output, '+-- module::wUriBasic' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::wProto' ), 1 );
 
     return null;
   })
@@ -2914,16 +3035,16 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 `
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
-    test.identical( _.strCount( got.output, 'module::z' ), 1 );
-    test.identical( _.strCount( got.output, 'module::a' ), 3 );
-    test.identical( _.strCount( got.output, 'module::a0' ), 2 );
-    test.identical( _.strCount( got.output, 'module::b' ), 1 );
-    test.identical( _.strCount( got.output, 'module::c' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, 'module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, 'module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, 'module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, 'module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::z' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::a' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
 
     return null;
   })
@@ -2934,6 +3055,80 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 } /* end of function modulesTreeHierarchyRemotePartiallyDownloaded */
 
 modulesTreeHierarchyRemotePartiallyDownloaded.timeOut = 300000;
+
+//
+
+function modulesTreeDisabledAndCorrupted( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'many-few' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    mode : 'spawn',
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* - */
+
+  shell({ execPath : '.clean' })
+  shell({ execPath : '.submodules.download' })
+  shell({ execPath : '.with ** .modules.tree withRemotePath:1' })
+
+  .then( ( got ) =>
+  {
+    test.case = '.with * .modules.tree withRemotePath:1';
+    test.identical( got.exitCode, 0 );
+
+    let exp =
+
+`+-- module::many
+ | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git#master
+ | | +-- module::wFiles - path::remote:=npm:///wFiles
+ | | +-- module::wCloner - path::remote:=npm:///wcloner
+ | | +-- module::wStringer - path::remote:=npm:///wstringer
+ | | +-- module::wTesting - path::remote:=npm:///wTesting
+ | | +-- module::wSelector - path::remote:=npm:///wselector
+ | | +-- module::wTools
+ | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git#master
+ | | +-- module::wTools - path::remote:=npm:///wTools
+ | | +-- module::wFiles - path::remote:=npm:///wFiles
+ | | +-- module::wTesting - path::remote:=npm:///wTesting
+ | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git#master
+ |   +-- module::wTools - path::remote:=npm:///wTools
+ |   +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+ |   +-- module::wArraySorted - path::remote:=npm:///warraysorted
+ |   +-- module::wPathTools
+ |   +-- module::wFiles - path::remote:=npm:///wFiles
+ |   +-- module::wTesting - path::remote:=npm:///wTesting
+ |
+ +-- module::corrupted`
+
+    test.identical( _.strStripCount( got.output, exp ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 20 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function modulesTreeDisabledAndCorrupted */
+
+modulesTreeDisabledAndCorrupted.timeOut = 300000;
 
 //
 
@@ -2952,6 +3147,7 @@ function help( test )
     throwingExitCode : 0,
   })
 
+  // xxx
   // let self = this;
   // let originalDirPath = _.path.join( self.assetDirPath, 'single' );
   // let routinePath = _.path.join( self.suitePath, test.name );
@@ -3133,16 +3329,16 @@ function listSingleModule( test )
 
     test.is( _.strHas( got.output, `module.willfiles :` ) );
     test.is( _.strHas( got.output, `module.peer.willfiles :` ) );
-    test.is( _.strHas( got.output, `module.dir : .` ) );
-    test.is( _.strHas( got.output, `module.common : ./` ) );
-    test.is( _.strHas( got.output, `local : .` ) );
+    test.is( _.strHas( got.output, `module.dir : /` ) );
+    test.is( _.strHas( got.output, `module.common : /` ) );
+    test.is( _.strHas( got.output, `local : /` ) );
     test.is( _.strHas( got.output, `will :` ) );
     test.is( !_.strHas( got.output, `proto : ./proto` ) );
     test.is( !_.strHas( got.output, `in : .` ) );
     test.is( !_.strHas( got.output, `out : out` ) );
     test.is( !_.strHas( got.output, `out.debug : ./out/debug` ) );
     test.is( !_.strHas( got.output, `out.release : ./out/release` ) );
-    test.identical( _.strCount( got.output, ':' ), 11 );
+    test.identical( _.strCount( got.output, ':' ), 12 );
 
     return null;
   })
@@ -3705,7 +3901,7 @@ function clean( test )
   .then( () =>
   {
     files = self.findAll( submodulesPath );
-    test.is( files.length > 350 );
+    test.gt( files.length, 300 );
     return files;
   })
 
@@ -4791,6 +4987,7 @@ function buildSingleModule( test )
 
   /* - */
 
+  ready
   .then( () =>
   {
     test.case = '.build wrong'
@@ -4803,10 +5000,9 @@ function buildSingleModule( test )
       args : [ '.build wrong' ],
       ready : null,
     }
-    return test.shouldThrowErrorOfAnyKind( shell( o ) )
+    return test.shouldThrowErrorOfAnyKind( () => shell( o ) )
     .then( ( got ) =>
     {
-      debugger;
       test.is( o.exitCode !== 0 );
       test.is( o.output.length );
       test.is( !_.fileProvider.fileExists( buildOutDebugPath ) )
@@ -5223,7 +5419,7 @@ function exportItself( test )
     test.identical( got.exitCode, 0 );
 
     var files = self.find( routinePath );
-    test.gt( files.length, 375 );
+    test.gt( files.length, 250 );
 
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported module::experiment \/ build::export with .* file\(s\) in/ ) );
@@ -5773,12 +5969,13 @@ function exportMixed( test )
       "module.peer.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `../module/Proto.informal.will.yml`
+        "path" : `../module/Proto.informal.will.yml`,
       },
-      // "download" :
-      // {
-      //   "criterion" : { "predefined" : 1 }
-      // },
+      'module.peer.in' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : '..',
+      },
       "in" :
       {
         "criterion" : { "predefined" : 0 },
@@ -5904,10 +6101,7 @@ function exportMixed( test )
     test.is( _.strHas( got.output, ' + reflector::reflect.proto.debug reflected' ) );
     test.is( _.strHas( got.output, ' + reflector::reflect.submodules reflected' ) );
 
-    test.is( _.strHas( got.output, ' ! Failed to open relation::Tools' ) );
-    test.is( _.strHas( got.output, ' ! Failed to open relation::PathBasic' ) );
-    test.is( _.strHas( got.output, ' ! Failed to open relation::UriBasic' ) );
-    test.is( _.strHas( got.output, ' ! Failed to open relation::Proto' ) );
+    test.identical( _.strCount( got.output, ' ! Failed to open' ), 4 );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) ) );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/UriBasic.informal.out.will.yml' ) ) );
@@ -6134,6 +6328,11 @@ function exportSecond( test )
       {
         "criterion" : { "proto" : 1, "export" : 1 },
         "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ]
+      },
+      'module.peer.in' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : '..'
       }
     }
     test.identical( outfile.path, expected );
@@ -6345,6 +6544,11 @@ function exportSecond( test )
       {
         "criterion" : { "proto" : 1, "export" : 1 },
         "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ]
+      },
+      'module.peer.in' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : '..'
       }
     }
     test.identical( outfile.path, expected );
@@ -9094,6 +9298,11 @@ function importLocalRepo( test )
         "criterion" : { "default" : 1, "export" : 1 },
         "path" : `Proto/proto`
       },
+      "module.peer.in" :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : '..'
+      },
       "exported.files.export" :
       {
         "criterion" : { "default" : 1, "export" : 1 },
@@ -9204,10 +9413,10 @@ function importOutWithDeletedSource( test )
 
     test.identical( _.strCount( got.output, '. Opened .' ), 6 );
     test.identical( _.strCount( got.output, ' from ' ), 5 );
-    test.identical( _.strCount( got.output, 'module::module-ab-named' ), 7 );
-    test.identical( _.strCount( got.output, 'module::module-ab-named / module::module-a' ), 3 );
+    test.identical( _.strCount( got.output, 'module::module-ab-named' ), 5 );
+    test.identical( _.strCount( got.output, 'module::module-ab-named / module::module-a' ), 2 );
     test.identical( _.strCount( got.output, 'module::module-ab-named / module::module-b' ), 2 );
-    test.identical( _.strCount( got.output, 'module::' ), 11 );
+    test.identical( _.strCount( got.output, 'module::' ), 9 );
 
     return null;
   })
@@ -10105,7 +10314,7 @@ function reflectRemoteGit( test )
     var files = self.find( local2Path );
     test.ge( files.length, 35 );
     var files = self.find( local3Path );
-    test.ge( files.length, 40 );
+    test.ge( files.length, 30 );
 
     return null;
   }
@@ -12212,7 +12421,7 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Read 19 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, '. Read 20 willfile(s) in' ), 1 );
     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
 
     test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded in' ), 1 );
@@ -12267,7 +12476,7 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Read 15 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, '. Read 20 willfile(s) in' ), 1 );
     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
 
     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathBasic / module::wPathBasic were downloaded' ), 1 );
@@ -12386,10 +12595,8 @@ function submodulesDownloadRecursive( test )
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Read 15 willfile(s) in' ), 1 );
+    test.identical( _.strCount( got.output, '. Read 20 willfile(s) in' ), 1 );
     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
-
-    // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) were downloaded' ), 1 );
 
     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathBasic / module::wPathBasic were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic / module::wUriBasic were downloaded' ), 1 );
@@ -15979,7 +16186,8 @@ var Self =
     eachBrokenCommand,
     openExportClean,
 
-    withDo,
+    withDoInfo,
+    withDoStatus,
 
     verbositySet,
     verbosityStepDelete,
@@ -15989,6 +16197,7 @@ var Self =
     modulesTreeHierarchyRemote,
     modulesTreeHierarchyRemoteDownloaded,
     modulesTreeHierarchyRemotePartiallyDownloaded,
+    modulesTreeDisabledAndCorrupted,
 
     help,
     listSingleModule,

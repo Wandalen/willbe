@@ -94,6 +94,9 @@ function reform()
   let logger = will.logger;
   let remotePaths = [];
 
+  if( variant.formed === -1 )
+  return;
+
   variant.formed = -1;
 
   _.assert( !variant.finitedIs() );
@@ -111,31 +114,48 @@ function reform()
   // if( !variant.opener && !variant.module && !variant.relation )
   // debugger;
 
+  if( variant.finitedIs() )
+  return;
+
+  // if( variant.module && variant.opener && variant.peer )
+  // if( variant.id === 583 )
+  // debugger;
+
+  // if( variant.id === 282 )
+  // {
+  //   logger.log( variant.infoExport() );
+  //   debugger;
+  // }
+
+  variant.mergeMaybe();
+
+  _.assert( !variant.finitedIs() );
+
   if( !variant.isUsed() )
   {
     variant.finit();
     return false;
   }
 
-  {
-    let variant2 = variantMergeTry( variant );
-    if( variant2 )
-    return variant2;
-  }
+  // {
+  //   let variant2 = variant.mergeMaybe();
+  //   if( variant2 )
+  //   return variant2;
+  // }
 
   associationsAdd();
   objectFind();
 
-  {
-    let variant2 = variantMergeTry( variant );
-    if( variant2 )
-    return variant2;
-  }
+  // {
+  //   let variant2 = variant.mergeMaybe();
+  //   if( variant2 )
+  //   return variant2;
+  // }
 
   if( variant.id === 83 && !variant.ownSomething() )
   debugger;
 
-  localPathsForm();
+  pathsForm();
 
   verify();
   register();
@@ -145,77 +165,6 @@ function reform()
 
   variant.formed = 1;
   return variant;
-
-  /* */
-
-  function variantMergeTry( variant )
-  {
-    let variant2;
-
-    _.any( variant.modules, ( object ) =>
-    {
-      variant2 = objectMergeTry( object );
-      if( variant2 )
-      return variant2;
-    });
-
-    _.any( variant.openers, ( object ) =>
-    {
-      variant2 = objectMergeTry( object );
-      if( variant2 )
-      return variant2;
-    });
-
-    _.any( variant.openers, ( object ) =>
-    {
-      variant2 = objectMergeTry( object );
-      if( variant2 )
-      return variant2;
-    });
-
-    _.any( variant.relations, ( module ) =>
-    {
-      variant2 = objectMergeTry( module );
-      if( variant2 )
-      return variant2;
-    });
-
-    return variant2 || false;
-  }
-
-  /* */
-
-  function objectMergeTry( object )
-  {
-    let localPath, remotePath;
-
-    [ localPath, remotePath ] = variant.PathsOf( object );
-
-    if( localPath )
-    {
-
-      let variant2 = will.variantMap[ localPath ];
-      if( variant2 && variant2 !== variant )
-      {
-        if( variant.mergeIn( variant2 ) )
-        return variant2;
-      }
-
-    }
-
-    if( remotePath )
-    {
-
-      let variant2 = will.variantMap[ remotePath ];
-      if( variant2 && variant2 !== variant )
-      {
-        if( variant.mergeIn( variant2 ) )
-        return variant2;
-      }
-
-    }
-
-  }
 
   /* */
 
@@ -229,14 +178,15 @@ function reform()
       if( variant.localPath === null )
       variant.localPath = localPath;
     }
-    if( variant.localPaths.length > 1 )
-    debugger;
+
+    // if( variant.localPaths.length > 1 )
+    // debugger;
 
     if( remotePath )
     {
       _.arrayAppendOnce( remotePaths, remotePath );
       variant.remotePath = remotePath;
-      _.assert( remotePaths.length <= 1, 'Remote paths collision!' );
+      _.assert( remotePaths.length <= 1, `Remote paths collision: ${remotePaths.join( ' ' )}` );
     }
 
   }
@@ -245,22 +195,25 @@ function reform()
 
   function pathFromPeerAdd( object )
   {
-    let peerWillfilesPath = object.pathMap[ 'module.peer.willfiles' ];
-    if( !peerWillfilesPath )
+    // let peerWillfilesPath = object.pathMap[ 'module.peer.willfiles' ];
+    // if( !peerWillfilesPath )
+    // return;
+    // _.assert( !!peerWillfilesPath );
+    // let localPath = _.Will.CommonPathFor( peerWillfilesPath );
+    // _.assert( !_.path.isGlobal( localPath ) );
+    let localPath = object.peerLocalPathGet();
+    if( !localPath )
     return;
-    _.assert( !!peerWillfilesPath );
-    let localPath = _.Will.CommonPathFor( peerWillfilesPath );
-    _.assert( !_.path.isGlobal( localPath ) );
     _.arrayAppendOnce( variant.localPaths, localPath );
     if( variant.localPath === null )
     variant.localPath = localPath;
-    if( variant.localPaths.length !== 1 )
-    debugger;
+    // if( variant.localPaths.length !== 1 )
+    // debugger;
   }
 
   /* */
 
-  function localPathsForm()
+  function pathsForm()
   {
     variant.localPaths.splice( 0, variant.localPaths.length );
 
@@ -381,11 +334,15 @@ function reform()
     _.assert( module instanceof _.Will.OpenedModule );
     _.assert( !module.peerModule );
 
-    let peerWillfilesPath = module.pathMap[ 'module.peer.willfiles' ];
-    if( !peerWillfilesPath )
+    // let peerWillfilesPath = module.pathMap[ 'module.peer.willfiles' ];
+    // if( !peerWillfilesPath )
+    // return;
+    // _.assert( !!peerWillfilesPath );
+    // let localPath = _.Will.CommonPathFor( peerWillfilesPath );
+
+    let localPath = module.peerLocalPathGet();
+    if( !localPath )
     return;
-    _.assert( !!peerWillfilesPath );
-    let localPath = _.Will.CommonPathFor( peerWillfilesPath );
 
     if( will.variantMap[ localPath ] )
     {
@@ -560,6 +517,7 @@ function mergeIn( variant2 )
 
   _.assert( !variant.finitedIs() );
   _.assert( !variant2.finitedIs() );
+  _.assert( arguments.length === 1 );
 
   variant.relations.slice().forEach( ( object ) => move( object ) );
   variant.openers.slice().forEach( ( object ) => move( object ) );
@@ -579,6 +537,118 @@ function mergeIn( variant2 )
     variant2._add( object );
     return object;
   }
+}
+
+//
+
+function mergeMaybe()
+{
+  let variant = this;
+  let will = variant.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let variant2;
+  let reset;
+
+  _.assert( arguments.length === 0 );
+
+  merge();
+
+  if( reset )
+  merge();
+
+  _.assert( !reset );
+
+  return variant2 || false;
+
+  /* */
+
+  function merge()
+  {
+    reset = false;
+
+    if( objectsMergeMaybe( variant.modules ) )
+    return variant2;
+
+    if( objectsMergeMaybe( variant.openers ) )
+    return variant2;
+
+    if( objectsMergeMaybe( variant.relations ) )
+    return variant2;
+
+    if( objectsMergeMaybe( variant.AssociationsOf( variant.modules ) ) )
+    return variant2;
+
+    if( objectsMergeMaybe( variant.AssociationsOf( variant.openers ) ) )
+    return variant2;
+
+    if( objectsMergeMaybe( variant.AssociationsOf( variant.relations ) ) )
+    return variant2;
+
+    return false;
+  }
+
+
+  /* */
+
+  function objectsMergeMaybe( objects )
+  {
+    _.any( objects, ( object ) =>
+    {
+      variant2 = objectMergeMaybe( object );
+      if( variant2 )
+      return variant2;
+    });
+    return variant2;
+  }
+
+  /* */
+
+  function objectMergeMaybe( object )
+  {
+    let localPath, remotePath;
+
+    [ localPath, remotePath ] = variant.PathsOf( object );
+
+    if( localPath )
+    {
+
+      let variant2 = will.variantMap[ localPath ];
+      if( variant2 && variant2 !== variant )
+      {
+        if( variant.mergeIn( variant2 ) )
+        return variant2;
+        return variant2;
+      }
+
+    }
+
+    if( remotePath )
+    {
+
+      let variant2 = will.variantMap[ remotePath ];
+      if( variant2 && variant2 !== variant )
+      {
+        if( variant.mergeIn( variant2 ) )
+        return variant2;
+        return variant2;
+      }
+
+    }
+
+    {
+      let variant3 = will.objectToVariantHash.get( object );
+      if( variant3 && variant3 !== variant )
+      {
+        reset = 1;
+        variant3.mergeIn( variant );
+        return variant3;
+      }
+    }
+
+  }
+
 }
 
 //
@@ -749,6 +819,10 @@ function PathsOf( object )
   }
   else _.assert( 0 );
 
+  /* xxx */
+  if( result[ 1 ] && _.strHas( result[ 1 ], 'hd://.' ) )
+  result[ 1 ] = null;
+
   return result;
 }
 
@@ -835,10 +909,10 @@ function VariantOf( will, object )
   if( variant )
   {
     let paths = cls.PathsOf( object );
-    let variant2 = _.any( paths, ( path ) => will.variantMap[ path ] ) || null;
+    let variant2 = _.any( paths, ( path ) => will.variantMap[ path ] );
     if( variant2 )
     _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant2 ) );
-    _.assert( variant === variant2 );
+    _.assert( variant === variant2 || !variant2 );
   }
 
   return variant;
@@ -901,10 +975,10 @@ function _relationAdd( relation )
 
   _.assert( relation instanceof _.Will.ModulesRelation );
 
-  if( !relation.enabled ) /* ttt */
-  {
-    return false;
-  }
+  // if( !relation.enabled ) /* ttt */
+  // {
+  //   return false;
+  // }
 
   if( !variant.relation )
   {
@@ -918,8 +992,7 @@ function _relationAdd( relation )
   _.assert( variant2 === variant || variant2 === undefined );
   will.objectToVariantHash.set( relation, variant );
 
-  let paths = variant.PathsOf( relation );
-  _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
+  _.assert( changed || _.all( variant.PathsOf( relation ), ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
 
   return changed;
 }
@@ -973,12 +1046,12 @@ function _openerAdd( opener )
   let will = variant.will;
   let changed = false;
 
-  if( opener.superRelation ) /* ttt */
-  {
-    if( !opener.superRelation.enabled )
-    return false;
-    _.assert( !!opener.superRelation.enabled );
-  }
+  // if( opener.superRelation ) /* ttt */
+  // {
+  //   if( !opener.superRelation.enabled )
+  //   return false;
+  //   _.assert( !!opener.superRelation.enabled );
+  // }
 
   _.assert( opener instanceof _.Will.ModuleOpener );
 
@@ -994,8 +1067,7 @@ function _openerAdd( opener )
   _.assert( variant2 === variant || variant2 === undefined );
   will.objectToVariantHash.set( opener, variant );
 
-  let paths = variant.PathsOf( opener );
-  _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
+  _.assert( changed || _.all( variant.PathsOf( opener ), ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
 
   return changed;
 }
@@ -1062,8 +1134,7 @@ function _moduleAdd( module )
   _.assert( variant2 === variant || variant2 === undefined, 'Module can belong only to one variant' );
   will.objectToVariantHash.set( module, variant );
 
-  let paths = variant.PathsOf( module );
-  _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
+  _.assert( changed || _.all( variant.PathsOf( module ), ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
 
   return changed;
 }
@@ -1256,8 +1327,9 @@ function submodulesGet( o )
   if( variant.module && variant.module.peerModule )
   {
     debugger;
-    _.assert( 0, 'not tested' );
-    variant.From({ module : variant2.module.peerModule, will : will });
+    // _.assert( 0, 'not tested' );
+    variant.From({ module : variant.module.peerModule, will : will });
+    _.assert( _.arrayHas( variant.peer.modules, variant.module.peerModule ) );
   }
 
   if( o.withPeers )
@@ -1346,10 +1418,17 @@ function infoExport()
 
   result += `variant:: : #${variant.id}\n`;
 
+  let lpl = '';
+  if( variant.localPaths.length > 1 )
+  lpl = `( ${variant.localPaths.length} )`;
   if( variant.localPath )
-  result += `  path::local : ${variant.localPath}\n`;
+  result += `  path::local ${lpl} : ${variant.localPath}\n`;
+
+  let rpl = '';
+  if( variant.remotePaths.length > 1 )
+  rpl = `( ${variant.remotePaths.length} )`;
   if( variant.remotePath )
-  result += `  path::remote : ${variant.remotePath}\n`;
+  result += `  path::remote ${rpl} : ${variant.remotePath}\n`;
 
   if( variant.modules.length )
   {
@@ -1368,6 +1447,17 @@ function infoExport()
     result += `  peer::variant : #${variant.peer.id}\n`;
   }
 
+  return result;
+}
+
+//
+
+function locationExport()
+{
+  let variant = this;
+  let name = _.color.strFormat( variant.object.qualifiedName || variant.name, 'entity' );
+  let localPath = _.color.strFormat( variant.localPath, 'path' );
+  let result = `${name} at ${localPath}`;
   return result;
 }
 
@@ -1424,6 +1514,7 @@ let Restricts =
   localPath : null,
   localPaths : _.define.own([]),
   remotePath : null,
+  remotePaths : _.define.own([]),
 
   module : null,
   modules : _.define.own([]),
@@ -1473,6 +1564,7 @@ let Extend =
   init,
   reform,
   mergeIn,
+  mergeMaybe,
 
   From,
   PathsOf,
@@ -1505,6 +1597,7 @@ let Extend =
   // export
 
   infoExport,
+  locationExport,
 
   // etc
 

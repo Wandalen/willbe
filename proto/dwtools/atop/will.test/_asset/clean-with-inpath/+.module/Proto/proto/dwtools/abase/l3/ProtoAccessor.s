@@ -1770,8 +1770,6 @@ function toStructureGet_functor( o )
           return end();
         }
 
-        debugger;
-
         let symbol = Symbol.for( fieldName );
         if( Object.hasOwnProperty.call( original, symbol ) )
         {

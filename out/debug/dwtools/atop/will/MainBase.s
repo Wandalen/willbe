@@ -229,10 +229,6 @@ function DirPathFromFilePaths( filePaths )
     if( parsed2 )
     filePath = parsed2[ 1 ];
 
-    // if( parsed1 || parsed2 )
-    // if( _.strEnds( filePath, '/' ) )
-    // filePath = filePath + '.';
-
     return filePath;
   });
 
@@ -289,11 +285,6 @@ function PathToRole( filePath )
   let isImport = _.strHas( filePath, /(^|\.|\/)im\.will(\.|$)/ );
   let isExport = _.strHas( filePath, /(^|\.|\/)ex\.will(\.|$)/ );
 
-  // debugger;
-  // if( isImport && isExport )
-  // role = [ 'import', 'export' ];
-  // else
-
   if( isImport )
   role = 'import';
   else if( isExport )
@@ -323,30 +314,12 @@ function CommonPathFor( willfilesPath )
 
   _.assert( _.strIs( willfilesPath ) );
 
-  // let common = willfilesPath.replace( /\.will(\.\w+)?$/, '' );
-  //
-  // common = common.replace( /(\.im|\.ex)$/, '' );
-
   let common = willfilesPath;
-
-  // common = common.replace( /(\.)?((im|ex)\.)?(will\.)(out\.)?(\w+)?$/, '' );
-  // debugger;
-
   let common2 = common.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.out)?(\.\w+)?$/, '' );
   let removed = _.strRemoveBegin( common, common2 );
-  // debugger;
   if( removed[ 0 ] === '/' )
   common2 = common2 + '/';
   common = common2;
-
-  if( _.strEnds( common, '/wTools.out.will' ) )
-  debugger;
-
-  // if( _.strEnds( common, [ '/im', '/ex' ] ) )
-  // {
-  //   common = _.uri.trail( _.uri.dir( common ) );
-  //   _.assert( _.uri.isTrailed( common ) );
-  // }
 
   return common;
 }
@@ -374,10 +347,8 @@ function OutfilePathFor( outPath, name )
 
 function RemotePathAdjust( remotePath, relativePath )
 {
-
   let remotePathParsed = _.uri.parseConsecutive( remotePath );
 
-  // debugger;
   if( !remotePathParsed.query )
   {
     return _.uri.join( remotePath, relativePath );
@@ -394,27 +365,6 @@ function RemotePathAdjust( remotePath, relativePath )
   remotePathParsed.query.out = _.path.join( remotePathParsed.query.out, relativePath );
 
   return _.uri.str( remotePathParsed );
-  // src1 = _.uri.parseConsecutive( src1 );
-  // src2 = _.uri.parseConsecutive( src2 );
-  //
-  // let query1 = src1.query ? _.strWebQueryParse( src1.query ) || { out : '.' };
-  // let query2 = src2.query ? _.strWebQueryParse( src2.query ) || { out : '.' };
-  //
-  // query1.out = query1.out || '.';
-  // query2.out = query2.out || '.';
-  //
-  // debugger;
-  // let outPath = _.path.join( query1.out, query2.out );
-  // debugger;
-  //
-  // query1.out = outPath;
-  // delete query2.out;
-  //
-  // src1 = _.uri.str( src1 );
-  // src2 = _.uri.str( src2 );
-  //
-  // debugger;
-  // return _.uri.join( src1, src2 );
 }
 
 // --
@@ -505,6 +455,14 @@ function resourcesInfoExport( o )
 resourcesInfoExport.defaults =
 {
   stringing : 1,
+}
+
+//
+
+function variantsInfoExport()
+{
+  let will = this;
+  return _.map( _.longOnce( _.mapVals( will.variantMap ) ), ( variant ) => variant.infoExport() ).join( '\n' );
 }
 
 //
@@ -671,6 +629,27 @@ versionIsUpToDate.defaults =
 // --
 // defaults
 // --
+
+function filterDefaults( o )
+{
+  let will = this.form();
+  let names =
+  {
+    withIn : null,
+    withOut : null,
+    withBroken : null,
+  }
+
+  for( let n in names )
+  {
+    if( o[ n ] === null && will[ n ] !== undefined && will[ n ] !== null )
+    o[ n ] = will[ n ];
+  }
+
+  return o;
+}
+
+//
 
 function instanceDefaultsApply( o )
 {
@@ -849,6 +828,13 @@ function moduleFit_body( variant, opts )
   _.assert( arguments.length === 2 );
   _.assert( variant instanceof _.Will.ModuleVariant )
 
+  if( !opts.withBroken && variant.object )
+  if( !variant.object.isValid() )
+  {
+    debugger;
+    return false;
+  }
+
   if( !opts.withOut && variant.module )
   if( variant.module.isOut )
   return false;
@@ -886,6 +872,7 @@ defaults.withOptional = 1;
 defaults.withMandatory = 1;
 defaults.withEnabled = 1;
 defaults.withDisabled = 0;
+defaults.withBroken = 1;
 
 let moduleFit = _.routineFromPreAndBody( moduleFit_pre, moduleFit_body );
 
@@ -1030,6 +1017,8 @@ function modulesFindEachAt( o )
   _.sure( _.strDefined( o.selector ), 'Expects string' );
   _.assert( arguments.length === 1 );
 
+  will.readingBegin();
+
   if( _.strEnds( o.selector, '::' ) )
   o.selector = o.selector + '*';
 
@@ -1039,8 +1028,6 @@ function modulesFindEachAt( o )
   {
 
     let opener = o.currentOpener;
-
-    // debugger;
     if( !opener )
     opener = will._openerMake
     ({
@@ -1053,10 +1040,6 @@ function modulesFindEachAt( o )
     });
     opener.find();
 
-    // if( !o.currentOpener )
-    // opener = o.currentOpener = will.ModuleOpener({ will : will, willfilesPath : path.trail( path.current() ) }).preform();
-    // opener.find();
-
     con = opener.openedModule.ready.split();
     con.then( () =>
     {
@@ -1066,14 +1049,8 @@ function modulesFindEachAt( o )
       if( !_.mapIs( resolved ) )
       resolved = _.arrayAs( resolved );
 
-      // debugger;
-      // for( let s = 0 ; s < resolved.length ; s++ ) con2.then( ( arg ) => /* !!! replace by concurrent, maybe */
       _.each( resolved, ( it1 ) => con2.then( ( arg ) =>
       {
-        // let it1 = resolved[ s ];
-        // let opener = it1.currentModule;
-
-        // debugger;
         let it2 = Object.create( null );
         // it2.currentOpener = opener._openerMake(); // zzz
         // it2.dst = element;
@@ -1088,7 +1065,6 @@ function modulesFindEachAt( o )
         it2.currentPath = it1.dst;
         it2.options = o;
 
-        // debugger;
         if( o.onBegin )
         o.onBegin( it2 )
         if( o.onEnd )
@@ -1128,6 +1104,7 @@ function modulesFindEachAt( o )
         dirPath : o.selector,
         withIn : 1,
         withOut : 1,
+        excludingUnderscore : 1,
       });
     }
     catch( err )
@@ -1253,12 +1230,15 @@ function modulesFindWithAt( o )
   let logger = will.logger;
   let con;
 
+  o = _.routineOptions( modulesFindWithAt, arguments );
   _.sure( _.strDefined( o.selector ), 'Expects string' );
   _.assert( arguments.length === 1 );
 
+  will.filterDefaults( o );
+
   /* */
 
-  will._willfilesReadBegin();
+  will.readingBegin();
   con = new _.Consequence().take( null );
 
   let op = Object.create( null );
@@ -1276,6 +1256,7 @@ function modulesFindWithAt( o )
       tracing : o.tracing,
       withIn : will.withIn,
       withOut : will.withOut,
+      excludingUnderscore : 1,
     });
   }
   catch( err )
@@ -1345,8 +1326,14 @@ function modulesFindWithAt( o )
     {
       err = _.err( err );
       op.errs.push( err );
-      if( it.opener )
-      it.opener.finit();
+      if( o.withBroken && it.opener && it.opener.openedModule )
+      {
+        _.arrayAppendOnce( op.openers, it.opener );
+      }
+      else if( it.opener )
+      {
+        it.opener.finit();
+      }
       logger.log( _.errOnce( err ) );
       return null;
     }
@@ -1360,34 +1347,44 @@ function modulesFindWithAt( o )
     if( !op.openers.length )
     if( !err )
     err = op.errs[ 0 ];
+
     if( err )
     {
       _.arrayAppendonce( op.errs, err );
       throw err;
     }
 
-    op.variants = will.variantsFrom( op.openers );
-
     {
       let filter =
       {
-        withIn : will.withIn,
-        withOut : will.withOut,
+        withIn : o.withIn,
+        withOut : o.withOut,
+        withBroken : o.withBroken,
       }
-      // if( will.withIn && will.withOut )
-      // filter.withOut = false;
-      // debugger;
-      let variants2 = will.modulesFilter( op.variants, filter );
-      if( variants2.length )
-      op.variants = variants2;
+      let openers2 = will.modulesFilter( op.openers, filter );
+      if( openers2.length )
+      op.openers = openers2;
     }
 
-    let fitOpeners = new Set();
-    _.each( op.variants, ( variant ) =>
-    {
-      variant.openers.forEach( ( opener ) => fitOpeners.add( opener ) );
-    });
-    op.openers = op.openers.filter( ( opener ) => fitOpeners.has( opener ) );
+    op.variants = will.variantsFrom( op.openers );
+
+    // {
+    //   let filter =
+    //   {
+    //     withIn : will.withIn,
+    //     withOut : will.withOut,
+    //   }
+    //   let variants2 = will.modulesFilter( op.variants, filter );
+    //   if( variants2.length )
+    //   op.variants = variants2;
+    // }
+    //
+    // let fitOpeners = new Set();
+    // _.each( op.variants, ( variant ) =>
+    // {
+    //   variant.openers.forEach( ( opener ) => fitOpeners.add( opener ) );
+    // });
+    // op.openers = op.openers.filter( ( opener ) => fitOpeners.has( opener ) );
 
     op.sortedVariants = will.graphTopSort( op.variants );
     op.sortedVariants.reverse();
@@ -1406,18 +1403,18 @@ function modulesFindWithAt( o )
 
   /* */
 
-  function openersOf( dst, src )
-  {
-    dst = _.filter( dst, ( variant ) =>
-    {
-      let opener = _.arraySetIntersection( op.openers.slice(), variant.openers )[ 0 ];
-      if( !opener )
-      return;
-      _.assert( !opener.superRelation );
-      op.sortedOpeners.push( opener );
-      return variant;
-    });
-  }
+  // function openersOf( dst, src )
+  // {
+  //   dst = _.filter( dst, ( variant ) =>
+  //   {
+  //     let opener = _.arraySetIntersection( op.openers.slice(), variant.openers )[ 0 ];
+  //     if( !opener )
+  //     return;
+  //     _.assert( !opener.superRelation );
+  //     op.sortedOpeners.push( opener );
+  //     return variant;
+  //   });
+  // }
 
   /* */
 
@@ -1425,50 +1422,54 @@ function modulesFindWithAt( o )
 
 modulesFindWithAt.defaults =
 {
+  withIn : null,
+  withOut : null,
+  withBroken : null,
   selector : null,
   tracing : 0,
 }
 
 //
 
-function modulesOnlyRoots( modules, o )
+function modulesOnlyRoots( modules )
 {
   let will = this;
   let visitedContainer = _.containerAdapter.from( new Set );
-  // let result = _.containerAdapter.from( new Array );
   let variantMap = will.variantMap;
 
   if( modules === null || modules === undefined )
   modules = will.modulesArray;
 
   _.assert( _.longIs( modules ) );
-  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
-  o = _.routineOptions( modulesOnlyRoots, o );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  if( !o.nodesGroup )
-  o.nodesGroup = will.graphGroupMake({ withPeers : 1 });
+  let filter =
+  {
+    withStem : 1,
+    withPeers : 1,
+    withDisabled : 1,
+    withEnabled : 1,
+    withBroken : 1,
+  }
+
+  let nodesGroup = will.graphGroupMake( _.mapOnly( filter, will.graphGroupMake.defaults ) );
 
   /* first make variants for each module */
 
-  _.each( modules, ( module ) =>
+  let o2 =
   {
-    // if( !module.isOut )
-    module.modulesEach
-    ({
-      withStem : 1,
-      withPeers : 1,
-      revisiting : 0,
-      recursive : 2,
-      outputFormat : '/',
-      nodesGroup : o.nodesGroup,
-    });
-  });
+    modules : modules,
+    revisiting : 0,
+    recursive : 2,
+    outputFormat : '/',
+    nodesGroup : nodesGroup,
+  }
+  _.mapExtend( o2, filter );
+  let variants = will.modulesEach( o2 );
 
   /* then add in-roots of trees */
 
-  // debugger;
-  let sources = o.nodesGroup.sourcesFromNodes( _.mapVals( variantMap ) )
-  // debugger;
+  let sources = nodesGroup.sourcesFromNodes( variants );
   sources = sources.filter( ( variant ) =>
   {
     if( !variant.object )
@@ -1479,119 +1480,13 @@ function modulesOnlyRoots( modules, o )
     return false;
     return true;
   });
-  // debugger;
 
   return sources;
-
-  // _.each( modules, ( module ) =>
-  // {
-  //   if( !module.isOut )
-  //   module.modulesEach
-  //   ({
-  //     withStem : 1,
-  //     withPeers : 1,
-  //     revisiting : 0,
-  //     recursive : 2,
-  //     outputFormat : '/',
-  //     onUp : onUp1,
-  //     nodesGroup : o.nodesGroup,
-  //   });
-  // });
-  //
-  // debugger;
-  //
-  // /* add roots of what left */
-  //
-  // _.each( modules, ( module ) =>
-  // {
-  //   if( module.isOut )
-  //   module.modulesEach
-  //   ({
-  //     withStem : 1,
-  //     withPeers : 1,
-  //     revisiting : 0,
-  //     recursive : 2,
-  //     outputFormat : '/',
-  //     onUp : onUp2,
-  //     nodesGroup : o.nodesGroup,
-  //     visitedContainer,
-  //   });
-  // });
-  //
-  // // debugger;
-  //
-  // /* add what left */
-  //
-  // _.each( variantMap, ( variant ) =>
-  // {
-  //   if( !visitedContainer.has( variant ) )
-  //   {
-  //     debugger;
-  //     result.append( variant );
-  //     visitedContainer.append( variant );
-  //   }
-  // });
-  //
-  // // debugger;
-  //
-  // return result.original;
-
-  /* */
-
-  function onUp1( r, it )
-  {
-    let module = r.module || r.opener;
-
-    if( module && !module.isOut && it.level === 0 && !visitedContainer.has( r ) )
-    {
-      // debugger;
-      result.append( r );
-      visitedContainer.appendOnce( r );
-      if( r.peer )
-      visitedContainer.appendOnce( r.peer );
-    }
-    else if( it.level !== 0 )
-    {
-      visitedContainer.appendOnce( r );
-      if( r.peer )
-      visitedContainer.appendOnce( r.peer );
-    }
-    else
-    {
-      it.continueUp = false;
-    }
-  }
-
-  /* */
-
-  function onUp2( r, it )
-  {
-    debugger;
-    if( it.level === 0 )
-    {
-      result.append( r );
-      debugger;
-      if( r.peerModule )
-      visitedContainer.appendOnce( group.nodeFrom( r.peerModule ) );
-    }
-    else if( it.level !== 0 )
-    {
-      if( r.peerModule )
-      debugger;
-      if( r.peerModule )
-      visitedContainer.appendOnce( group.nodeFrom( r.peerModule ) );
-    }
-    else
-    {
-      it.continueUp = false;
-    }
-  }
-
 }
 
 modulesOnlyRoots.defaults =
 {
-  nodesGroup : null,
+  // nodesGroup : null,
 }
 
 //
@@ -1624,18 +1519,18 @@ function modulesEach_body( o )
 
   if( o.withPeers )
   {
-    let nodes2 = [];
+    let nodes2 = nodes.slice();
     nodes.forEach( ( node ) =>
     {
-      nodes2.push( node );
       if( node.object && node.object.peerModule )
-      nodes2.push( o.nodesGroup.nodeFrom( node.object.peerModule ) );
+      _.arrayAppendOnce( nodes2, o.nodesGroup.nodeFrom( node.object.peerModule ) );
     });
     nodes = nodes2;
   }
 
-  let fitOpts = _.mapOnly( o, _.Will.prototype.moduleFit.defaults );
+  let filter = _.mapOnly( o, _.Will.prototype.moduleFit.defaults );
 
+  will.assertGraphGroup( o.nodesGroup, o );
   let o2 = _.mapOnly( o, o.nodesGroup.each.defaults );
   o2.roots = nodes;
   o2.onUp = handleUp;
@@ -1653,7 +1548,7 @@ function modulesEach_body( o )
   function handleUp( variant, it )
   {
 
-    it.continueNode = will.moduleFit( variant, fitOpts );
+    it.continueNode = will.moduleFit( variant, filter );
     if( o.onUp )
     o.onUp( outputFrom( variant ), it );
 
@@ -1842,9 +1737,9 @@ function modulesDownload_body( o )
   o.modules = _.arrayAs( o.nodesGroup.nodesAddOnce( o.modules ) );
   _.assert( _.arrayIs( o.modules ) );
 
-  let fitOpts = _.mapOnly( o, _.Will.prototype.moduleFit.defaults );
-  fitOpts.withOut = false;
-  o.modules = o.modules.filter( ( variant ) => will.moduleFit( variant, fitOpts ) );
+  let filter = _.mapOnly( o, _.Will.prototype.moduleFit.defaults );
+  filter.withOut = false;
+  o.modules = o.modules.filter( ( variant ) => will.moduleFit( variant, filter ) );
 
   if( !o.modules.length )
   return _.Consequence().take( o );
@@ -2266,15 +2161,36 @@ function variantsOf( varaints )
   return _.Will.ModuleVariant.VariantsOf( will, object );
 }
 
+//
+
+function variantWithId( id )
+{
+  let will = this;
+  _.assert( arguments.length === 1 );
+  return _.any( will.variantMap, ( variant ) => variant.id === id ? variant : undefined );
+}
+
 // --
 // graph
 // --
+
+function assertGraphGroup( group, opts )
+{
+  if( !Config.debug )
+  return true;
+  for( let c in group.context )
+  _.assert( group.context[ c ] === opts[ c ] || opts[ c ] === undefined );
+  return true;
+}
+
+//
 
 function graphGroupMake( o )
 {
   let will = this;
 
   o = _.routineOptions( graphGroupMake, arguments );
+  o.will = will;
 
   let sys = new _.graph.AbstractGraphSystem
   ({
@@ -2284,6 +2200,8 @@ function graphGroupMake( o )
     onOutNodesGet : variantSubmodules,
   });
   let group = sys.nodesGroup();
+
+  group.context = o;
 
   return group;
 
@@ -2307,7 +2225,11 @@ function graphGroupMake( o )
 
   function variantFrom( object )
   {
-    return will.variantFrom( object );
+    let variant = will.variantOf( object );
+    if( variant )
+    return variant;
+    variant = will.variantFrom( object );
+    return variant;
   }
 
   /* */
@@ -2344,7 +2266,7 @@ graphGroupMake.defaults =
   withIn : 1,
   withEnabled : 1,
   withDisabled : 0,
-  variantMap : null,
+  // variantMap : null,
 }
 
 //
@@ -2374,14 +2296,17 @@ function graphInfoExportAsTree( modules, o )
 {
   let will = this;
 
-  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 )
   o = _.routineOptions( graphInfoExportAsTree, o );
+  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 )
+
+  o = _.routineOptions( graphInfoExportAsTree, o );
+
   if( o.onNodeName === null )
   o.onNodeName = variantNameAndPath;
   if( o.onUp === null )
   o.onUp = variantUp;
 
-  let group = will.graphGroupMake({ withOut : 0 });
+  let group = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
 
   modules = modules || will.modulesArray;
   modules = group.nodesFrom( modules );
@@ -2414,6 +2339,11 @@ var defaults = graphInfoExportAsTree.defaults = _.mapExtend( null, _.graph.Abstr
 
 defaults.withLocalPath = 0;
 defaults.withRemotePath = 0;
+
+defaults.withIn = 1;
+defaults.withOut = 0;
+defaults.withEnabled = 1;
+defaults.withDisabled = 1;
 
 // --
 // opener
@@ -2478,7 +2408,7 @@ function _openerMake_body( o )
     debugger;
 
     if( o.throwing )
-    throw _.err( err, `\nFailed to make module ${o.willfilesPath}` );
+    throw _.err( err, `\nFailed to make module at ${o.opener.willfilesPath}` );
 
     return null;
   }
@@ -2612,7 +2542,7 @@ function openersErrorsRemoveAll()
 // willfile
 // --
 
-function readingBegin()
+function readingReset()
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -2623,6 +2553,25 @@ function readingBegin()
 
   will.willfilesReadBeginTime = null;
   will.willfilesReadEndTime = null;
+
+  return will;
+}
+
+//
+
+function readingBegin()
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 0 );
+
+  if( will.willfilesReadBeginTime )
+  return will;
+
+  will._willfilesReadBegin();
 
   return will;
 }
@@ -2654,7 +2603,6 @@ function _willfilesReadBegin()
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  // _.assert( will.mainModule === null || will.mainModule instanceof will.OpenedModule );
   _.assert( will.mainOpener === null || will.mainOpener instanceof will.ModuleOpener );
 
   will.willfilesReadBeginTime = will.willfilesReadBeginTime || _.timeNow();
@@ -2719,6 +2667,8 @@ function willfilesFind( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
+  will.readingBegin();
+
   if( _.strIs( o ) )
   o = { dirPath : o }
 
@@ -2757,6 +2707,12 @@ function willfilesFind( o )
     let filter =
     {
       filePath : dirPath,
+      maskTransientDirectory :
+      {
+      },
+      maskDirectory :
+      {
+      },
       maskTerminal :
       {
         includeAny : /(\.|((^|\.|\/)will(\.[^.]*)?))$/,
@@ -2768,6 +2724,12 @@ function willfilesFind( o )
         includeAll : []
       }
     };
+
+    if( o.excludingUnderscore && path.isGlob( dirPath ) )
+    {
+      filter.maskDirectory.excludeAny = [ /(^|\/)_/ ];
+      filter.maskTransientDirectory.excludeAny = [ /(^|\/)_/ ];
+    }
 
     if( !o.withIn )
     filter.maskTerminal.includeAll.push( /(^|\.|\/)out(\.)/ )
@@ -2855,7 +2817,8 @@ willfilesFind.defaults =
   withOut : 1,
   exact : 0,
   recursive : false,
-  tracing : false,
+  tracing : 0,
+  excludingUnderscore : 0,
 }
 
 //
@@ -3085,6 +3048,7 @@ let Composes =
 
   withOut : 1,
   withIn : 1,
+  withBroken : 1,
 
 }
 
@@ -3205,12 +3169,14 @@ let Extend =
   _verbosityChange,
   vcsFor,
   resourcesInfoExport,
+  variantsInfoExport,
   _pathChanged,
   versionGet,
   versionIsUpToDate,
 
   // defaults
 
+  filterDefaults,
   instanceDefaultsApply,
   instanceDefaultsSupplement,
   instanceDefaultsExtend,
@@ -3241,9 +3207,11 @@ let Extend =
   variantsFrom,
   variantOf,
   variantsOf,
+  variantWithId,
 
   // graph
 
+  assertGraphGroup,
   graphGroupMake,
   graphTopSort,
   graphInfoExportAsTree,
@@ -3260,6 +3228,7 @@ let Extend =
 
   // willfile
 
+  readingReset,
   readingBegin,
   readingEnd,
 

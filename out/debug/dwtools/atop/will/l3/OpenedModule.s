@@ -211,7 +211,6 @@ function init( o )
   if( module.willfilesPath === null )
   module.willfilesPath = _.select( module.willfilesArray, '*/filePath' );
 
-  // module._filePathChanged2(); /* xxx */
   module._nameChanged();
 
   if( will.verosity >= 5 )
@@ -300,6 +299,7 @@ function outModuleMake( o )
   _.assert( !module.isOut );
   _.assert( !!module.pathMap[ 'module.original.willfiles' ] );
   _.assert( !!module.pathMap[ 'module.peer.willfiles' ] );
+  _.assert( !!module.pathMap[ 'module.peer.in' ] );
   _.assert( !!module.pathMap[ 'module.willfiles' ] );
   _.assert( module.pathMap[ 'module.peer.willfiles' ] !== module.pathMap[ 'module.willfiles' ] );
 
@@ -308,7 +308,8 @@ function outModuleMake( o )
   let moduleWas = will.moduleWithCommonPathMap[ _.Will.CommonPathFor( o.willfilesPath ) ];
   if( moduleWas )
   {
-    debugger; xxx
+    debugger;
+    _.assert( 0, 'not tested' );
     _.assert( moduleWas.peerModule === module );
     _.assert( moduleWas === module.peerModule );
     moduleWas.peerModule = null;
@@ -366,6 +367,7 @@ function outModuleMake( o )
 
   _.assert( !!module2.pathMap[ 'module.original.willfiles' ] );
   _.assert( !!module2.pathMap[ 'module.peer.willfiles' ] );
+  _.assert( !!module2.pathMap[ 'module.peer.in' ] );
   _.assert( !!module2.pathMap[ 'module.willfiles' ] );
   _.assert( _.entityIdentical( module2.pathMap[ 'module.original.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
   _.assert( !_.entityIdentical( module2.pathMap[ 'module.willfiles' ], module2.pathMap[ 'module.peer.willfiles' ] ) );
@@ -806,10 +808,8 @@ function preform()
   _.assert( !module.preformed );
   _.assert( !module.stager.stageStateEnded( 'preformed' ) );
 
-  // debugger;
   module.stager.stageStatePausing( 'preformed', 0 );
   module.stager.tick();
-  // debugger;
 
   _.assert( module.stager.stageStateEnded( 'preformed' ) );
 
@@ -846,14 +846,10 @@ function _preform()
 
   /* */
 
-  // debugger;
   will.moduleIdRegister( module );
   module._remoteChanged();
   module._peerChanged();
   module._pathRegister();
-  // debugger;
-  // will.modulePathRegister( module );
-  // will.variantFrom( module );
 
   /* */
 
@@ -935,6 +931,16 @@ function predefinedForm()
   path
   ({
     name : 'module.peer.willfiles', /* xxx : introduce module.peer */
+    path : null,
+    writable : 0,
+    exportable : 1,
+    importableFromIn : 0,
+    importableFromOut : 1,
+  })
+
+  path
+  ({
+    name : 'module.peer.in',
     path : null,
     writable : 0,
     exportable : 1,
@@ -2417,13 +2423,13 @@ function modulesBuild_body( o )
     o2.recursive = 1;
     o2.recursive = 2; /* yyy */
     o2.strict = 0;
-    debugger;
+    // debugger;
     return will.modulesDownload( o2 );
   })
 
   ready.then( () =>
   {
-    debugger;
+    // debugger;
     if( !o.upforming || o.downloading )
     return null;
     let o2 = _.mapOnly( o, will.modulesUpform.defaults );
@@ -2533,6 +2539,46 @@ function rootModuleSet( src )
 {
   let module = this;
   let will = module.will;
+  let oldRootModule = module.rootModule;
+
+  if( oldRootModule === src )
+  return src;
+
+  module.rootModuleSetAct( src );
+
+  _.each( module.userArray, ( opener ) =>
+  {
+    if( opener instanceof _.Will.ModuleOpener )
+    opener._.rootModule = src;
+    // opener[ rootModuleSymbol ] = src;
+  });
+
+  if( oldRootModule && src )
+  {
+    let modules = module.modulesEach({ outputFormat : '/', withPeers : 1, withDisabled : 1, recursive : 2 });
+    modules.forEach( ( record ) =>
+    {
+      let module2 = record.module || record.opener;
+      if( module2 === null )
+      return;
+      // _.assert( module2.rootModule === oldRootModule || module2.rootModule === null ); // yyy xxx
+      _.assert( module2.rootModule !== undefined );
+      if( module2.rootModuleSetAct )
+      module2.rootModuleSetAct( src );
+      else
+      module2.rootModule = src;
+    });
+  }
+
+  return src;
+}
+
+//
+
+function rootModuleSetAct( src )
+{
+  let module = this;
+  let will = module.will;
 
   _.assert( src === null || src instanceof _.Will.OpenedModule );
   _.assert( src === null || src.rootModule === src || src.rootModule === null );
@@ -2542,25 +2588,18 @@ function rootModuleSet( src )
   if( oldRootModule === src )
   return src;
 
+  // if( src && module[ rootModuleSymbol ] !== src )
+  // {
+  //   logger.log( `${module.absoluteName} got root ${src.absoluteName}` );
+  // }
+
   module[ rootModuleSymbol ] = src;
 
-  _.each( module.userArray, ( opener ) =>
+  if( will )
   {
-    if( opener instanceof _.Will.ModuleOpener )
-    opener[ rootModuleSymbol ] = src;
-  });
-
-  if( oldRootModule && src )
-  {
-    let modules = module.modulesEach({ outputFormat : '/' });
-    modules.forEach( ( record ) =>
-    {
-      let module2 = record.module || record.opener;
-      if( module2 === null )
-      return;
-      _.assert( module2.rootModule === oldRootModule || module2.rootModule === null );
-      module2.rootModule = src;
-    });
+    let variant = will.variantOf( module );
+    if( variant )
+    variant.reform();
   }
 
   return src;
@@ -2613,9 +2652,6 @@ function superRelationsRemove( src )
 {
   let module = this;
 
-  // if( module.id === 60 )
-  // debugger;
-
   if( _.arrayIs( src ) )
   {
     return _.map( src, ( src ) => module.superRelationsRemove( src ) );
@@ -2631,78 +2667,6 @@ function superRelationsRemove( src )
 
 //
 
-// function subModuleRegister( record )
-// {
-//   let module = this;
-//   let will = module.will;
-//
-//   if( _.mapIs( record ) )
-//   {
-//     record.will = will;
-//     record = will.ModuleVariant.From( record );
-//   }
-//
-//   _.assert( record instanceof will.ModuleVariant );
-//   _.assert( module.allSubModuleMap[ record.commonPath ] === record || module.allSubModuleMap[ record.commonPath ] === null );
-//   module.allSubModuleMap[ record.commonPath ] = record;
-//
-// }
-//
-// //
-//
-// function subModuleUnregister( record )
-// {
-//   let module = this;
-//   let will = module.will;
-//
-//   if( _.mapIs( record ) )
-//   {
-//     record.will = will;
-//     record = will.ModuleVariant.From( record );
-//   }
-//
-//   _.assert( record instanceof will.ModuleVariant );
-//   _.assert( module.allSubModuleMap[ record.commonPath ] === record );
-//   delete module.allSubModuleMap[ record.commonPath ];
-//
-// }
-//
-// //
-//
-// function superModuleRegister( record )
-// {
-//   let module = this;
-//   let will = module.will;
-//
-//   if( _.mapIs( record ) )
-//   {
-//     record.will = will;
-//     record = will.ModuleVariant.From( record );
-//   }
-//
-//   _.assert( record instanceof will.ModuleVariant );
-//   _.assert( module.allSuperModuleMap[ record.commonPath ] === record || module.allSuperModuleMap[ record.commonPath ] === null );
-//   module.allSuperModuleMap[ record.commonPath ] = record;
-//
-// }
-//
-// //
-//
-// function superModuleUnregister( record )
-// {
-//   let module = this;
-//   let will = module.will;
-//
-//   _.assert( _.mapIs( record ) ); /* xxx : check class */
-//
-//   _.assert( record instanceof will.ModuleVariant );
-//   _.assert( module.allSuperModuleMap[ record.commonPath ] === record );
-//   delete module.allSuperModuleMap[ record.commonPath ];
-//
-// }
-
-//
-
 function submodulesAreDownloaded( o )
 {
   let module = this;
@@ -2712,15 +2676,12 @@ function submodulesAreDownloaded( o )
   let result = Object.create( null );
 
   o = _.routineOptions( submodulesAreDownloaded, arguments );
-  // _.assert( module === module.rootModule );
   _.assert( arguments.length === 0 );
 
-  debugger;
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.modulesEach( o2 );
   relations = _.index( relations, '*/commonPath' );
-  debugger;
 
   return _.map( relations, ( relation ) =>
   {
@@ -3630,20 +3591,21 @@ function peerModuleOpen( o )
     /*
     to avoid second attempt of opening of bad module during stage of opening modules
     */
+
     if( !will.willfilesReadEndTime && will.openersErrorsMap[ localPath ] )
     {
       return null;
     }
 
-    // if( module.isOut && !will.withIn )
-    // {
-    //   return null;
-    // }
-    //
-    // if( !module.isOut && !will.withOut )
-    // {
-    //   return null;
-    // }
+    if( module.isOut && !will.withIn )
+    {
+      return null;
+    }
+
+    if( !module.isOut && !will.withOut )
+    {
+      return null;
+    }
 
     let o2 =
     {
@@ -3655,6 +3617,12 @@ function peerModuleOpen( o )
       reason : 'peer',
     }
 
+    if( module.isOut && module.rootModule === module )
+    {
+      // debugger;
+      delete o2.rootModule;
+    }
+
     let opener2 = will._openerMake
     ({
       throwing : 0,
@@ -3664,12 +3632,10 @@ function peerModuleOpen( o )
     _.assert( !!opener2 );
     _.assert( opener2.peerModule === module );
 
-    // debugger;
     return opener2.open({ throwing : 1 })
     .finally( ( err, peerModule ) =>
     {
 
-      // debugger;
       peerModule = peerModule || opener2.openedModule || null;
       _.assert( peerModule === null || peerModule.peerModule === module );
 
@@ -3691,6 +3657,14 @@ function peerModuleOpen( o )
           _.errAttend( err );
         }
         return null;
+      }
+      else
+      {
+        if( module.isOut && module.rootModule === module )
+        {
+          // debugger;
+          module.rootModule = peerModule.rootModule;
+        }
       }
 
       module.peerModule = peerModule;
@@ -3736,6 +3710,8 @@ function _peerChanged()
   {
     let originalWillfilesPath = module.originalWillfilesPath;
     module._peerWillfilesPathPut( originalWillfilesPath );
+    if( module.peerModule )
+    module._peerInPathPut( module.peerModule.inPath );
   }
   else
   {
@@ -3744,6 +3720,7 @@ function _peerChanged()
     outfilePath = module.outfilePathGet();
     module._originalWillfilesPathPut( module.willfilesPath );
     module._peerWillfilesPathPut( outfilePath );
+    module._peerInPathPut( module.outPath );
   }
 
 }
@@ -3854,21 +3831,12 @@ function _remoteChanged()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // if( module.id === 101 )
-  // debugger;
-
-  // if( !module.isPreformed() ) /* xxx */
-  // return;
-
   _.assert( !!module.pathResourceMap[ 'current.remote' ] );
-
-  // logger.log( module.absoluteName, '_remoteChanged' ); debugger;
 
   _.assert( module.commonPath === module.localPath );
 
   /* */
 
-  // if( module.isDownloaded && module.remotePath )
   if( module.remotePath && module.downloadPath )
   {
     let remoteProvider = fileProvider.providerForPath( module.remotePath );
@@ -4266,12 +4234,6 @@ function pathsRebase( o )
   if( inPathResource.path === null )
   inPathResource.path = '.';
 
-  // let localPathResource = module.resourceObtain( 'path', 'local' );
-  // if( localPathResource.path === null )
-  // localPathResource.path = '.'; /* xxx : warkaround */
-
-  // let inPath = path.canonize( o.inPath );
-  // let exInPath = module.inPath;
   o.inPath = path.canonize( o.inPath )
   if( !o.exInPath )
   o.exInPath = module.inPath;
@@ -4297,8 +4259,6 @@ function pathsRebase( o )
     continue;
     if( p === 'download' )
     continue;
-    // if( p === 'local' )
-    // continue;
 
     resource.pathsRebase
     ({
@@ -4359,9 +4319,7 @@ function _filePathChanged1( o )
 {
   let module = this;
 
-  _.assert( o.willfilesPath !== undefined ); // ttt
-  // if( o.willfilesPath === module.willfilesPath )
-  // return;
+  _.assert( o.willfilesPath !== undefined );
 
   o = module._filePathChanged2( o );
 
@@ -4392,10 +4350,6 @@ function _filePathChanged2( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  // ttt
-  // if( module.willfilesPath )
-  // will.modulePathUnregister( module );
-
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
   o = Parent.prototype._filePathChanged2.call( module, o );
@@ -4419,21 +4373,13 @@ function _filePathChanged2( o )
 
   module._peerChanged();
 
-  // ttt
-  // if( module.isPreformed() )
-  // if( !o.isIdentical )
-  // if( module.commonPath )
-  // {
-  //   module._pathRegister();
-  // }
-
   module._willfilesPathPut( o.willfilesPath );
 
   for( let s in module.submoduleMap )
   {
-    // debugger;
     let relation = module.submoduleMap[ s ];
-    if( relation.formed && relation.enabled ) /* ttt */
+    // if( relation.formed && relation.enabled ) /* ttt */
+    if( relation.formed )
     will.variantFrom( relation );
   }
 
@@ -4456,16 +4402,12 @@ function _pathRegister()
   let module = this;
   let will = module.will;
 
-  // _.assert( !!module.pathMap[ 'module.peer.willfiles' ], '_peerChanged should goes before' );
-
   will.modulePathRegister( module );
   will.variantFrom( module );
-  // debugger;
+
   let variants = module.modulesEach({ withPeers : 0, outputFormat : '/' });
   variants.forEach( ( variant ) =>
   {
-    // if( variant.relations.length )
-    // debugger;
     will.variantsFrom( variant.relations );
   });
 
@@ -4522,10 +4464,72 @@ function cloneDirPathGet( rootModule )
 {
   let module = this;
   let will = module.will;
+
   rootModule = rootModule || module.rootModule;
-  let inPath = rootModule.inPath;
+
   _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  if( rootModule.isOut )
+  {
+    debugger;
+    let inPath = rootModule.peerInPathGet();
+    if( inPath )
+    return _.Will.CloneDirPathFor( inPath );
+  }
+
+  let inPath = rootModule.inPath;
   return _.Will.CloneDirPathFor( inPath );
+}
+
+//
+
+function peerLocalPathGet()
+{
+  let module = this;
+  let will = module.will;
+
+  let peerWillfilesPath = module.pathMap[ 'module.peer.willfiles' ];
+  if( !peerWillfilesPath )
+  return null;
+
+  _.assert( !!peerWillfilesPath );
+  let localPath = _.Will.CommonPathFor( peerWillfilesPath );
+  _.assert( !_.path.isGlobal( localPath ) );
+
+  return localPath;
+}
+
+//
+
+function peerInPathGet()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  let result = module.pathMap[ 'module.peer.in' ];
+  if( result )
+  result = path.join( module.inPath, result );
+
+  if( !result )
+  {
+    let localPath = module.peerLocalPathGet();
+    if( localPath )
+    {
+      result = path.join( module.inPath, path.dirFirst( localPath ) );
+    }
+  }
+
+  if( !result && module.peerModule )
+  {
+    result = module.peerModule.inPath;
+  }
+
+  if( result )
+  _.assert( !_.path.isGlobal( result ) );
+
+  return result || null;
 }
 
 //
@@ -4572,8 +4576,8 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
 
     let ex = module[ fieldName ];
     let isIdentical = false;
-    // if( fieldName === 'willfilesPath' )
     isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
+    /* xxx : optimize? */
 
     if( !module.pathResourceMap[ resourceName ] )
     {
@@ -4592,11 +4596,6 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
       if( filePath && basePath )
       filePath = module.pathsRelative( basePath, filePath );
     }
-
-    // if( fieldName === 'willfilesPath' )
-    // if( !isIdentical )
-    // filePath = module._filePathSet( filePath );
-    // module.pathResourceMap[ resourceName ].path = filePath;
 
     if( fieldName === 'localPath' || fieldName === 'remotePath' )
     {
@@ -4747,6 +4746,7 @@ let currentRemotePathGet = predefinedPathGet_functor( 'currentRemotePath', 'curr
 let willPathGet = predefinedPathGet_functor( 'willPath', 'will' );
 let originalWillfilesPathGet = predefinedPathGet_functor( 'originalWillfilesPath', 'module.original.willfiles' );
 let peerWillfilesPathGet = predefinedPathGet_functor( 'peerWillfilesPath', 'module.peer.willfiles' );
+// let peerInPathGet = predefinedPathGet_functor( 'peerInPath', 'module.peer.in' );
 
 let decoratedWillfilesPathGet = decoratedPathGet_functor( 'willfilesPath' );
 let decoratedInPathGet = decoratedPathGet_functor( 'inPath' );
@@ -4760,6 +4760,7 @@ let decoratedCurrentRemotePathGet = decoratedPathGet_functor( 'currentRemotePath
 let decoratedWillPathGet = decoratedPathGet_functor( 'willPath' );
 let decoratedOriginalWillfilesPathGet = decoratedPathGet_functor( 'originalWillfilesPath' );
 let decoratedPeerWillfilesPathGet = decoratedPathGet_functor( 'peerWillfilesPath' );
+let decoratedPeerInPathGet = decoratedPathGet_functor( 'peerInPath' );
 
 let _inPathPut = predefinedPathPut_functor( 'inPath', 'in', 'dirPath', 0 );
 let _outPathPut = predefinedPathPut_functor( 'outPath', 'out', 'inPath', 0 );
@@ -4772,6 +4773,7 @@ let _remotePathPut = predefinedPathPut_functor( 'remotePath', 'remote', 0 );
 let _currentRemotePathPut = predefinedPathPut_functor( 'currentRemotePath', 'current.remote', 0 );
 let _originalWillfilesPathPut = predefinedPathPut_functor( 'originalWillfilesPath', 'module.original.willfiles', 0 );
 let _peerWillfilesPathPut = predefinedPathPut_functor( 'peerWillfilesPath', 'module.peer.willfiles', 0 );
+let _peerInPathPut = predefinedPathPut_functor( 'peerInPath', 'module.peer.in', 0 );
 
 let inPathSet = predefinedPathSet_functor( 'inPath', 'in' );
 let outPathSet = predefinedPathSet_functor( 'outPath', 'out' );
@@ -4821,9 +4823,6 @@ function _nameChanged()
   let name = null;
 
   /* */
-
-  // let _originalWillfilesPathPut = predefinedPathPut_functor( 'originalWillfilesPath', 'module.original.willfiles', 0 );
-  // let _peerWillfilesPathPut = predefinedPathPut_functor( 'peerWillfilesPath', 'module.peer.willfiles', 0 );
 
   module._nameUnregister();
   module._nameRegister();
@@ -5702,7 +5701,7 @@ function infoExport( o )
   if( o.verbosity >= 2 )
   {
     let fields = Object.create( null );
-    fields.commonPath = module.commonPath;
+    // fields.commonPath = module.commonPath;
     // fields.willfilesPath = module.willfilesPath;
     fields.remotePath = module.remotePath;
     fields.localPath = module.localPath;
@@ -5838,8 +5837,6 @@ function structureExport( o )
   let o2 = _.mapExtend( null, o );
   delete o2.dst;
 
-  // debugger;
-
   o.dst.about = module.about.structureExport();
   o.dst.path = module.structureExportResources( module.pathResourceMap, o2 );
   o.dst.submodule = module.structureExportResources( module.submoduleMap, o2 );
@@ -5855,13 +5852,14 @@ function structureExport( o )
   _.assert( !!o.dst.path[ 'module.original.willfiles' ].path );
   _.assert( !!o.dst.path[ 'module.peer.willfiles' ] );
   _.assert( !!o.dst.path[ 'module.peer.willfiles' ].path );
+  _.assert( !!o.dst.path[ 'module.peer.in' ] );
+  _.assert( !!o.dst.path[ 'module.peer.in' ].path );
   _.assert( !!o.dst.path[ 'module.willfiles' ] );
   _.assert( !!o.dst.path[ 'module.willfiles' ].path );
   _.assert( o.dst.path[ 'module.peer.willfiles' ].path !== o.dst.path[ 'module.willfiles' ].path );
   _.assert( !module.isOut ^ _.entityIdentical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
   _.assert( !_.entityIdentical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
 
-  // debugger;
   return o.dst;
 }
 
@@ -5923,22 +5921,20 @@ function structureExportOut( o )
     return variant.module;
   });
 
-  // debugger;
   _.assert( modules.length >= 2 );
   module.structureExportModules( modules, o );
-  // debugger;
 
   let rootModuleStructure = o.dst.module[ module.fileName ];
   _.assert( !!rootModuleStructure );
   _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.original.willfiles' ] );
   _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.peer.willfiles' ] );
+  _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.peer.in' ] );
   _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.willfiles' ] );
   _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'module.dir' ] );
   _.assert( !rootModuleStructure.path || rootModuleStructure.path[ 'remote' ] !== undefined );
   _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'current.remote' ] );
   _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'will' ] );
   _.assert( !rootModuleStructure.path.remote || !rootModuleStructure.path.remote.path );
-  // _.assert( !module.pathMap.remote ^ !!( rootModuleStructure.path.remote && rootModuleStructure.path.remote.path ) );
 
   return o.dst;
 }
@@ -6598,6 +6594,7 @@ let Accessors =
   willPath : { getter : willPathGet, readOnly : 1 },
   originalWillfilesPath : { getter : originalWillfilesPathGet, readOnly : 1 },
   peerWillfilesPath : { getter : peerWillfilesPathGet, readOnly : 1 },
+  peerInPath : { getter : peerInPathGet, readOnly : 1 },
 
   decoratedWillfilesPath : { getter : decoratedWillfilesPathGet, readOnly : 1, },
   decoratedInPath : { getter : decoratedInPathGet, readOnly : 1, },
@@ -6611,6 +6608,7 @@ let Accessors =
   decoratedWillPath : { getter : decoratedWillPathGet, readOnly : 1 },
   decoratedOriginalWillfilesPath : { getter : decoratedOriginalWillfilesPathGet, readOnly : 1 },
   decoratedPeerWillfilesPath : { getter : decoratedPeerWillfilesPathGet, readOnly : 1 },
+  decoratedPeerInPath : { getter : decoratedPeerInPathGet, readOnly : 1 },
 
 }
 
@@ -6698,6 +6696,7 @@ let Extend =
 
   rootModuleGet,
   rootModuleSet,
+  rootModuleSetAct,
   superRelationsSet,
   superRelationsAppend,
   superRelationsRemove,
@@ -6765,6 +6764,8 @@ let Extend =
   outPathGet,
   outfilePathGet,
   cloneDirPathGet,
+  peerLocalPathGet,
+  peerInPathGet,
 
   willfilesPathGet,
   dirPathGet,
@@ -6775,6 +6776,7 @@ let Extend =
   willPathGet,
   originalWillfilesPathGet,
   peerWillfilesPathGet,
+  peerInPathGet,
 
   decoratedWillfilesPathGet,
   decoratedInPathGet,
@@ -6787,6 +6789,7 @@ let Extend =
   decoratedWillPathGet,
   decoratedOriginalWillfilesPathGet,
   decoratedPeerWillfilesPathGet,
+  decoratedPeerInPathGet,
 
   _inPathPut,
   _outPathPut,
@@ -6799,6 +6802,7 @@ let Extend =
   _currentRemotePathPut,
   _originalWillfilesPathPut,
   _peerWillfilesPathPut,
+  _peerInPathPut,
 
   inPathSet,
   outPathSet,
