@@ -1,0 +1,42 @@
+
+submodule :
+
+  Tools : git+https:///github.com/Wandalen/wTools.git/#master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/#master
+  PathTools : git+https:///github.com/Wandalen/wPathTools.git/#master
+  # Proto : git+https:///github.com/Wandalen/wProto.git/#master
+  # UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/#master
+  # Procedure : git+https:///github.com/Wandalen/wProcedure.git/#master
+  # Color : git+https:///github.com/Wandalen/wColor.git/#master
+
+path :
+
+  proto : './proto'
+  temp : 'out'
+  in : '.'
+  out : 'out'
+  out.proto : '{path::out}/proto'
+
+reflector :
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    dst :
+      prefixPath : 'path::out.proto'
+    criterion :
+      content: proto
+
+step :
+
+  clean.out :
+    inherit : files.delete
+    filePath : path::out
+
+build :
+
+  build :
+    criterion :
+      default : 1
+    steps :
+      - clean.out
+      - reflect.submodules

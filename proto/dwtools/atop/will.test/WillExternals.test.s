@@ -1580,7 +1580,7 @@ function openExportClean( test )
 function withDoInfo( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'many-few' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -1670,7 +1670,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 11 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 5 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 6 );
     return null;
   })
 
@@ -1684,7 +1684,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 8 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 5 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 6 );
     return null;
   })
 
@@ -1722,7 +1722,7 @@ withDoInfo.description =
 function withDoStatus( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'many-few' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -1790,7 +1790,9 @@ function withDoStatus( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 12 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, ' at ' ), 3 );
+    test.identical( _.strCount( got.output, /module::\w+ at / ), 2 );
+    test.identical( _.strCount( got.output, 'module at' ), 2 );
+
     test.identical( _.strCount( got.output, 'modified:' ), 3 );
     test.identical( _.strCount( got.output, 'no changes added to commit' ), 2 );
     return null;
@@ -1807,6 +1809,83 @@ withDoStatus.description =
 - it.start exposed for action
 - it.start has proper current path
 - errorors are brief
+`
+
+//
+
+function withDoCommentOut( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 1,
+    ready : ready,
+  })
+
+  /* - */
+
+  ready
+  .then( ( got ) =>
+  {
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'execution_section/will.yml' ) );
+    test.is( !!outfile.execution );
+    return null;
+  })
+  shell( '.with ** .do .do/CommentOut.js execution' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Comment out "execution" in module::execution_section at' ), 1 );
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'execution_section/will.yml' ) );
+    test.is( !outfile.execution );
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( ( got ) =>
+  {
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'execution_section/will.yml' ) );
+    test.is( !!outfile.execution );
+    return null;
+  })
+  shell( '.with ** .do .do/CommentOut.js execution dry:1' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Comment out "execution" in module::execution_section at' ), 1 );
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'execution_section/will.yml' ) );
+    test.is( !!outfile.execution );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function withDoCommentOut */
+
+withDoCommentOut.timeOut = 300000;
+withDoCommentOut.description =
+`
+- commenting out works
+- arguments passing to action works
 `
 
 //
@@ -5581,7 +5660,12 @@ function exportInformal( test )
       {
         "criterion" : { "default" : 1, "export" : 1 },
         "path" : `../.module/Proto/proto`
-      }
+      },
+      'module.peer.in' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : '..'
+      },
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
@@ -5659,7 +5743,12 @@ function exportInformal( test )
       {
         "criterion" : { "default" : 1, "export" : 1 },
         "path" : `../.module/Proto/proto`
-      }
+      },
+      'module.peer.in' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : '..'
+      },
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
@@ -5739,6 +5828,11 @@ function exportInformal( test )
         "criterion" : { "default" : 1, "export" : 1 },
         "path" : `../.module/UriBasic/proto`
       },
+      'module.peer.in' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : '..'
+      }
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
@@ -6859,6 +6953,11 @@ function exportMultiple( test )
           "raw" : 1,
           "export" : 1
         }
+      },
+      'module.peer.in' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : '..'
       }
     }
     test.identical( outfile.path, outfilePath );
@@ -7149,7 +7248,12 @@ function exportMultiple( test )
           "raw" : 1,
           "export" : 1
         }
-      }
+      },
+      'module.peer.in' :
+      {
+        'criterion' : { 'predefined' : 1 },
+        'path' : '..'
+      },
     }
     test.identical( outfile.path, outfilePath );
     // logger.log( _.toJson( outfile.path ) );
@@ -7793,7 +7897,7 @@ function exportCourruptedOutfileSyntax( test )
     test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
     test.identical( _.strCount( got.output, '! Failed to open .' ), 2 );
     test.identical( _.strCount( got.output, 'Failed to open willfile' ), 1 );
-    test.identical( _.strCount( got.output, 'Failed to format "string" by encoder yaml-string->structure' ), 1 );
+    test.identical( _.strCount( got.output, 'Failed to convert from "string" to "structure" by encoder yaml-string->structure' ), 1 );
     test.identical( _.strCount( got.output, /Exported .*module::sub \/ build::export.debug.*/ ), 1 );
 
     return null;
@@ -8389,7 +8493,7 @@ function exportRecursiveLocal( test )
 
     test.identical( _.strCount( got.output, 'About' ), 1 );
     test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
-    test.identical( _.strCount( got.output, 'module::module-ab /' ), 51 );
+    test.identical( _.strCount( got.output, 'module::module-ab /' ), 52 );
 
     return null;
   })
@@ -8416,7 +8520,7 @@ function exportRecursiveLocal( test )
 
     test.identical( _.strCount( got.output, 'About' ), 1 );
     test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
-    test.identical( _.strCount( got.output, 'module::module-ab /' ), 51 );
+    test.identical( _.strCount( got.output, 'module::module-ab /' ), 52 );
 
     return null;
   })
@@ -12479,17 +12583,29 @@ function submodulesDownloadRecursive( test )
     test.identical( _.strCount( got.output, '. Read 20 willfile(s) in' ), 1 );
     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
 
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathBasic / module::wPathBasic were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic / module::wUriBasic were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wProto / module::wProto were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathBasic were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wProto were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wTools / module::wTools were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wTools were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::c were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathTools / module::wPathTools were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathTools were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::a were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/10 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
+
+    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathBasic / module::wPathBasic were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic / module::wUriBasic were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wProto / module::wProto were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wTools / module::wTools were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::c were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathTools / module::wPathTools were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::a were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/10 submodule(s) of module::z were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
 
     return null;
   })
@@ -12570,10 +12686,6 @@ function submodulesDownloadRecursive( test )
     test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
 
-    // test.identical( _.strCount( got.output, '+ 1/5 submodule(s) were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 1/4 submodule(s) were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 1/3 submodule(s) were downloaded' ), 3 );
-
     test.identical( _.strCount( got.output, '+ 2/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
@@ -12598,17 +12710,29 @@ function submodulesDownloadRecursive( test )
     test.identical( _.strCount( got.output, '. Read 20 willfile(s) in' ), 1 );
     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
 
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathBasic / module::wPathBasic were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic / module::wUriBasic were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wProto / module::wProto were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathBasic were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wProto were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wTools / module::wTools were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wTools were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathTools / module::wPathTools were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathTools were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
+
+    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathBasic / module::wPathBasic were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic / module::wUriBasic were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wProto / module::wProto were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wTools / module::wTools were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathTools / module::wPathTools were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+    // test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
 
     return null;
   })
@@ -16188,6 +16312,7 @@ var Self =
 
     withDoInfo,
     withDoStatus,
+    withDoCommentOut,
 
     verbositySet,
     verbosityStepDelete,

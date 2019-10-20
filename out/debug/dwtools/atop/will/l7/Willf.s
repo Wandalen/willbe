@@ -469,7 +469,15 @@ function _open()
         ext : willf._found[ 0 ].ext,
       })[ 0 ];
       _.assert( !!encoder, `No encoder for ${willf.filePath}` );
-      willf.structure = encoder.encode({ data : _.bufferToStr( willf.data ) }).data;
+
+      try
+      {
+        willf.structure = encoder.encode({ data : _.bufferToStr( willf.data ) }).data;
+      }
+      catch( err )
+      {
+        throw _.errBrief( err, '\nSyntax error' );
+      }
 
     }
 
@@ -706,10 +714,10 @@ function _importToModule()
 
     /* */
 
+    willf._resourcesImport( will.PathResource, mstructure.path );
     if( willf.isOut ) /* xxx */
     willf._resourcesImport( will.Exported, mstructure.exported );
     willf._resourcesImport( will.ModulesRelation, mstructure.submodule );
-    willf._resourcesImport( will.PathResource, mstructure.path );
     willf._resourcesImport( will.Step, mstructure.step );
     willf._resourcesImport( will.Reflector, mstructure.reflector );
     willf._resourcesImport( will.Build, mstructure.build );

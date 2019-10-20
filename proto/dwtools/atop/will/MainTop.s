@@ -276,12 +276,6 @@ function _commandBuildLike( o )
   if( will.currentOpeners === null && will.currentOpener === null )
   ready.then( () => will.openersFind() );
 
-  // if( !will.currentOpeners )
-  // {
-  //   debugger;
-  //   will.currentOpeners = [ will.currentOpener ];
-  // }
-
   if( will.currentOpeners )
   {
     let filter =
@@ -290,10 +284,7 @@ function _commandBuildLike( o )
       withOut : o.withOut,
       withBroken : o.withBroken,
     }
-    // debugger;
     let openers2 = will.modulesFilter( will.currentOpeners, filter );
-    if( openers2.length !== will.currentOpeners.length )
-    debugger;
     if( openers2.length )
     will.currentOpeners = openers2;
   }
@@ -1486,6 +1477,13 @@ function commandDo( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
+  debugger;
+  let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
+  let execPath, delimeter, request;
+  [ execPath, delimeter, request ] = _.strIsolateLeftOrAll( e.argument, /\s+/ );
+  request = _.strRequestParse( request );
+  debugger;
+
   return will._commandBuildLike
   ({
     event : e,
@@ -1506,6 +1504,7 @@ function commandDo( e )
     it.currentPath = currentPath;
     it.dirPath = path.dirFirst( it.variant.localPath );
     it.logger = logger;
+    it.request = request;
     it.start = _.process.starter
     ({
       currentPath : it.dirPath,
@@ -1518,7 +1517,7 @@ function commandDo( e )
     });
     return it.opener.openedModule.doJs
     ({
-      execPath : e.argument,
+      execPath : execPath,
       currentPath : currentPath,
       args : [ it ],
     });

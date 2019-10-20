@@ -4471,7 +4471,6 @@ function cloneDirPathGet( rootModule )
 
   if( rootModule.isOut )
   {
-    debugger;
     let inPath = rootModule.peerInPathGet();
     if( inPath )
     return _.Will.CloneDirPathFor( inPath );
@@ -6354,6 +6353,7 @@ function doJs( o )
 
   /* */
 
+  debugger;
   o.execPath = module.resolve
   ({
     selector : o.execPath,

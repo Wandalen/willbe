@@ -1,5 +1,5 @@
 
-function status( it )
+function onEach( it )
 {
   let _ = it.tools;
   let logger = it.logger;
@@ -19,4 +19,4 @@ function status( it )
 
 }
 
-module.exports = status;
+module.exports = onEach;
