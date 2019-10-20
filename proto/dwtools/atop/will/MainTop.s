@@ -1480,8 +1480,10 @@ function commandDo( e )
 
   let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
   let execPath, delimeter, request;
+  // debugger;
   [ execPath, delimeter, request ] = _.strIsolateLeftOrAll( e.argument, /\s+/ );
   request = _.strRequestParse( request );
+  // debugger;
 
   return will._commandBuildLike
   ({

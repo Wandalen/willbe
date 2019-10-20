@@ -1853,7 +1853,7 @@ function withDoCommentOut( test )
     test.is( !!outfile.execution );
     return null;
   })
-  shell( '.with ** .do .do/CommentOut.js execution' )
+  shell( '.with ** .do .do/WillfCommentOut.js execution' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1874,7 +1874,7 @@ function withDoCommentOut( test )
     test.is( !!outfile.execution );
     return null;
   })
-  shell( '.with ** .do .do/CommentOut.js execution dry:1' )
+  shell( '.with ** .do .do/WillfCommentOut.js execution dry:1' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );

@@ -34,13 +34,16 @@ about :
 path :
 
   repository : git+https:///github.com/Wandalen/willbe.git
+  remotes :
+   - git+https:///github.com/Wandalen/willbe.git
+   - npm:///willbe
   bugtracker : https:///github.com/Wandalen/willbe/issues
 
 step :
 
   proto.export :
     inherit : module.export
-    export : path::proto
+    export : path::export
     tar : 0
     criterion :
       content : 'proto'

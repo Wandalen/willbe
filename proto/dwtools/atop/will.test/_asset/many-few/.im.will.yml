@@ -13,6 +13,7 @@ path :
 
   proto : './proto'
   temp : 'out'
+  export : '{path::proto}/**'
   in : '.'
   out : 'out'
   out.proto : '{path::out}/proto'
