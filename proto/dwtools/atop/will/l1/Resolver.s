@@ -1007,7 +1007,7 @@ function filesFromResource_body( o )
   {
     let o2 = _.mapOnly( o, module.resolve.defaults );
     resources = module.resolve( o2 );
-    debugger; xxx
+    debugger;
   }
 
   if( _.arrayIs( resources ) )

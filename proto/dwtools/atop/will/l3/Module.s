@@ -57,9 +57,6 @@ function finit()
   if( will.verosity >= 5 )
   logger.log( module.qualifiedName, 'finit.begin' );
 
-  // if( module.id === 209 || module.id === 84 )
-  // debugger;
-
   _.assert( !module.finitedIs() );
 
   try
@@ -93,15 +90,6 @@ function finit()
 
     module.unform();
 
-    // module.superRelations.slice().forEach( ( relation ) =>
-    // {
-    //   debugger;
-    //   _.assert( !relation.finitedIs() );
-    //   module.superRelationsRemove( relation )
-    // });
-    // // module.superRelations.splice( 0, module.superRelations.length ); xxx
-    // _.assert( module.superRelations.length === 0 );
-
   }
   catch( err )
   {
@@ -121,20 +109,6 @@ function finit()
     module.stager.cancel();
     module.stager.stagesState( 'skipping', true );
     module.stager.stageError( 'formed', finited );
-
-    // let userArray = module.userArray.slice();
-    // userArray.forEach( ( opener ) =>
-    // {
-    //   opener.openedModule = null;
-    // });
-    // _.assert( module.userArray.length === 0 );
-    // userArray.forEach( ( opener ) =>
-    // {
-    //   if( opener.isUsedManually() )
-    //   opener.close();
-    //   else
-    //   opener.finit();
-    // });
 
     if( module.peerModule )
     {
@@ -430,15 +404,12 @@ function outModuleOpen( o )
   let module = this;
   let will = module.will;
 
-  // _.assert( exported.outModule === null );
-
   o = _.routineOptions( outModuleOpen, arguments );
   o.willfilesPath = o.willfilesPath || module.outfilePathGet();
 
   let o2 =
   {
     willfilesPath : o.willfilesPath,
-    // original : inModule,
     rootModule : module.rootModule,
     searching : 'exact',
     reason : 'export',
@@ -467,32 +438,11 @@ function outModuleOpen( o )
       return module2;
     }
 
-    // let willfile = opener2.openedModule.willfilesArray[ 0 ];
-    // let structure = willfile.structureOf( opener2.openedModule );
-    // _.assert( willfile && opener2.openedModule.willfilesArray.length === 1 );
-    // _.assert( opener2.openedModule.isValid() );
-    // _.assert( opener2.openedModule.isOut );
-    // _.assert( _.mapIs( structure ) );
-    // _.assert( _.mapIs( structure.exported ) );
-    //
-    // for( let exportedName in structure.exported )
-    // {
-    //   if( exportedName === exported.name )
-    //   continue;
-    //   let exported2 = opener2.openedModule.exportedMap[ exportedName ];
-    //   _.assert( exported2 instanceof Self );
-    //   inModule.resourceImport({ srcResource : exported2 });
-    // }
-    //
-    // return module2;
   })
   .finally( ( err, module2 ) =>
   {
 
     err = err || opener2.error;
-
-    // if( opener2 && !opener2.error && module2 )
-    // exported.outModule = module2;
 
     if( err )
     {
@@ -543,8 +493,6 @@ function outModuleOpenOrMake( o )
 {
   let module = this;
   let will = module.will;
-
-  // _.assert( exported.outModule === null );
 
   o = _.routineOptions( outModuleOpenOrMake, arguments );
   o.willfilesPath = o.willfilesPath || module.outfilePathGet();
@@ -597,12 +545,6 @@ function precopy2( o )
 
   if( o.will !== undefined )
   module.will = o.will;
-  // if( o.superRelations !== undefined )
-  // module.superRelations = o.superRelations;
-  // if( o.original !== undefined )
-  // module.original = o.original;
-  // if( o.rootModule !== undefined )
-  // module.rootModule = o.rootModule;
 
   if( o.isRemote !== undefined )
   module.isRemote = o.isRemote;
@@ -630,9 +572,6 @@ function precopy2( o )
 
   o = _.mapExtend( null, o );
 
-  // delete o.superRelations;
-  // delete o.original;
-  // delete o.rootModule;
   delete o.isRemote;
   delete o.isOut;
   delete o.inPath;
@@ -665,14 +604,8 @@ function postcopy( o )
 {
   let module = this;
 
-  let names = /* yyy */
+  let names =
   {
-    // willfilesPath : null,
-    // inPath : null,
-    // outPath : null,
-    // localPath : null,
-    // downloadPath : null,
-    // remotePath : null,
   }
 
   for( let n in names )
@@ -694,18 +627,10 @@ function copy( o )
 
   o = module.precopy( o );
 
-  // let o2 = o;
-  // if( o.willfilesPath )
-  // {
-  //   o2 = _.mapExtend( null, o );
-  //   delete o2.willfilesPath;
-  // }
-
   let result = _.Copyable.prototype.copy.apply( module, [ o ] );
 
   module.postcopy( o );
 
-  // _.assert( result.currentRemotePath === module.currentRemotePath );
   return result;
 }
 
@@ -762,9 +687,8 @@ function unform()
 
   if( module.stager.stageStatePerformed( 'preformed' ) )
   {
-    module.stager.cancel(); // yyy
+    module.stager.cancel();
     _.assert( _.strIs( module.commonPath ) );
-    // _.assert( !!module.willfilesPath );
     will.moduleIdUnregister( module );
     if( variant )
     variant.remove( module );
