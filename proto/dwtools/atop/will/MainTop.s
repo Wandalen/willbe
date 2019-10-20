@@ -1478,12 +1478,10 @@ function commandDo( e )
   let ready = new _.Consequence().take( null );
   let time = _.timeNow();
 
-  debugger;
   let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
   let execPath, delimeter, request;
   [ execPath, delimeter, request ] = _.strIsolateLeftOrAll( e.argument, /\s+/ );
   request = _.strRequestParse( request );
-  debugger;
 
   return will._commandBuildLike
   ({
@@ -1522,12 +1520,16 @@ function commandDo( e )
       mode : 'spawn',
       ready : it.ready
     });
-    return it.opener.openedModule.doJs
+    let r = it.opener.openedModule.doJs
     ({
       execPath : execPath,
       currentPath : currentPath,
       args : [ it ],
+      ready : it.ready,
     });
+    if( _.consequenceIs( r ) || _.promiseLike( r ) )
+    return r;
+    return it.ready;
   }
 
 }

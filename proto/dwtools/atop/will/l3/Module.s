@@ -6351,7 +6351,6 @@ function doJs( o )
 
   /* */
 
-  debugger;
   o.execPath = module.resolve
   ({
     selector : o.execPath,
@@ -6377,10 +6376,10 @@ function doJs( o )
   {
     if( !_.routineIs( routine ) )
     throw _.errBrief( `Script file should export routine or consequence, but exports ${_.strType( routine )}` );
-    let result = routine.apply( module, o.args ? o.args : [] );
-    if( result === undefined )
-    result = null;
-    return result;
+    let r = routine.apply( module, o.args ? o.args : [] );
+    if( _.consequenceIs( r ) || _.promiseLike( r ) )
+    return r;
+    return o.ready || null;
   })
   .finally( ( err, arg ) =>
   {
@@ -6399,6 +6398,7 @@ doJs.defaults =
   execPath : null,
   currentPath : null,
   args : null,
+  ready : null,
 }
 
 //
