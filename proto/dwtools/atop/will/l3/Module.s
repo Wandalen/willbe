@@ -1693,7 +1693,6 @@ function _willfilesOpen()
   let path = fileProvider.path;
   let logger = will.logger;
   let con = new _.Consequence().take( null );
-  let time = _.timeNow();
 
   _.assert( arguments.length === 0 );
   _.assert( _.boolLike( module.isOut ), 'Expects defined {- module.isOut -}' );
@@ -3315,7 +3314,6 @@ function versionsVerify( o )
   let logger = will.logger;
   let totalNumber = _.mapKeys( module.submoduleMap ).length;
   let verifiedNumber = 0;
-
   let time = _.timeNow();
 
   _.assert( module.preformed > 0  );

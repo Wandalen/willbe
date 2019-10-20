@@ -1629,6 +1629,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
     return null;
   })
 
@@ -1643,6 +1644,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
     return null;
   })
 
@@ -1657,6 +1659,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
     return null;
   })
 
@@ -1671,6 +1674,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( got.output, 'localPath :' ), 6 );
+    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
     return null;
   })
 
@@ -1685,6 +1689,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( got.output, 'localPath :' ), 6 );
+    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
     return null;
   })
 
@@ -1699,6 +1704,8 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 4 );
+    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
+
     return null;
   })
 
@@ -1715,6 +1722,7 @@ withDoInfo.description =
 - filtering option withOut works
 - only one attempt to open outdate outfile
 - action info works properly
+- message with time printed afterwards
 `
 
 //

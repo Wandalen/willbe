@@ -224,6 +224,8 @@ function MakeForEachCriterion( o )
       let cirterion = '';
       if( o.resource.criterion )
       cirterion += '\nCriterions\n' + _.toStr( o.resource.criterion );
+      if( err.message && _.strHas( err.message, 'Options map for' ) )
+      err = _.errBrief( err );
       throw _.err( err, `\nFailed to make resource ${Cls.KindName}::${o.resource.name}`, cirterion );
     }
 

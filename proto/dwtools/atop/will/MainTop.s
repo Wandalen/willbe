@@ -300,6 +300,7 @@ function _commandBuildLike( o )
   function forSingle( it )
   {
     let ready2 = new _.Consequence().take( null );
+    let it2 = _.mapExtend( null, o, it );
 
     ready2.then( () =>
     {
@@ -309,7 +310,6 @@ function _commandBuildLike( o )
     ready2.then( () =>
     {
       will.readingEnd();
-      let it2 = _.mapExtend( null, o, it );
       return o.onEach.call( will, it2 );
     });
 
@@ -1476,6 +1476,7 @@ function commandDo( e )
   let path = will.fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
+  let time = _.timeNow();
 
   debugger;
   let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
@@ -1492,6 +1493,12 @@ function commandDo( e )
     commandRoutine : commandDo,
     withOut : 0,
     withBroken : 1,
+  })
+  .then( ( arg ) =>
+  {
+    if( will.verbosity >= 2 )
+    logger.log( `Done ${_.color.strFormat( e.argument, 'code' )} in ${_.timeSpent( time )}` );
+    return arg;
   });
 
   function handleEach( it )
