@@ -34,7 +34,7 @@ about :
 path :
 
   repository : git+https:///github.com/Wandalen/willbe.git
-  remotes :
+  origins :
    - git+https:///github.com/Wandalen/willbe.git
    - npm:///willbe
   bugtracker : https:///github.com/Wandalen/willbe/issues
