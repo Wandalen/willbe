@@ -4,9 +4,19 @@ function onEach( it )
   let _ = it.tools;
   let logger = it.logger;
 
-  _.fileProvider.filesDelete( _.path.join( it.opener.inPath, '.module' ) );
-  _.fileProvider.filesDelete( _.path.join( it.opener.inPath, 'out' ) );
-  _.fileProvider.filesDelete( _.path.join( it.opener.inPath, 'node_modules' ) );
+  del( '.module' );
+  del( 'out' );
+  del( 'node_modules' );
+
+  function del( filePath )
+  {
+    _.fileProvider.filesDelete
+    ({
+      filePath : _.path.join( it.module ? it.module.inPath : it.opener.dirPath, filePath ),
+      writing : !it.request.map.dry,
+      verbosity : 1,
+    });
+  }
 
 }
 

@@ -5,3 +5,20 @@ about :
 
 duplicate : x
 duplicate : y
+
+path :
+
+  in : '.'
+  out : 'out'
+  temp : 'path::out'
+  proto : './proto'
+  doc : './doc'
+
+step :
+
+  proto.export :
+    inherit : module.export
+    export : path::proto
+    tar : 0
+    criterion :
+      content : 'proto'

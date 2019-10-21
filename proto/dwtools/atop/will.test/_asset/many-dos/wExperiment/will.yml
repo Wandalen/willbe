@@ -1,0 +1,97 @@
+
+about :
+
+  name : wExperiment
+
+path :
+
+  export : '**'
+
+submodule :
+
+  wTools :
+    path : npm:///wTools
+    enabled : 0 # submodule
+  wCopyable :
+    path : npm:///wCopyable
+    enabled : 0 # submodule
+  wLogger :
+    path : npm:///wLogger
+    enabled : 0 # submodule
+  wVerbal :
+    path : npm:///wverbal
+    enabled : 0 # submodule
+  wTemplateTreeEnvironment :
+    path : npm:///wtemplatetreeenvironment
+    enabled : 0 # submodule
+  wAppBasic :
+    path : npm:///wappbasic
+    enabled : 0 # submodule
+  wGraphBasic :
+    path : npm:///wgraphbasic
+    enabled : 0 # submodule
+  wGraphBase:
+    path : npm:///wgraphbasic
+    enabled : 0 # submodule
+  wFiles :
+    path : npm:///wFiles
+    enabled : 0 # submodule
+  wFilesArchive :
+    path : npm:///wfilesarchive
+    enabled : 0 # submodule
+  wGitTools :
+    path : npm:///wgittools
+    enabled : 0 # submodule
+  wFilesEncoders :
+    path : npm:///wfilesencoders
+    enabled : 0 # submodule
+  wStateStorage :
+    path : npm:///wstatestorage
+    enabled : 0 # submodule
+  wStateSession :
+    path : npm:///wstatesession
+    enabled : 0 # submodule
+  wStager :
+    path : npm:///wstager
+    enabled : 0 # submodule
+  wSelector :
+    path : npm:///wselector
+    enabled : 0 # submodule
+  wResolver :
+    path : npm:///wresolver
+    enabled : 0 # submodule
+  wCommandsAggregator :
+    path : npm:///wcommandsaggregator
+    enabled : 0 # submodule
+  wCommandsConfig :
+    path : npm:///wcommandsconfig
+    enabled : 0 # submodule
+  wNameMapper :
+    path : npm:///wnamemapper
+    enabled : 0 # submodule
+  wTranspilationStrategy :
+    path : npm:///wtranspilationstrategy
+    enabled : 0 # submodule
+  tar :
+    path : npm:///tar
+    enabled : 0 # submodule
+  gitconfiglocal :
+    path : npm:///gitconfiglocal
+    enabled : 0 # submodule
+  open :
+    path : npm:///open
+    enabled : 0 # submodule
+  wTesting :
+    path : npm:///wTesting
+    enabled : 0 # submodule
+    criterion :
+      development : 1
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      module.export

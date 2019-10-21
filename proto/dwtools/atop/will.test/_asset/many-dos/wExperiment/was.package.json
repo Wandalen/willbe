@@ -1,0 +1,31 @@
+{
+  "name" : "wexperiment", 
+  "version" : "0.0.26", 
+  "dependencies" : 
+  {
+    "wTools" : "", 
+    "wCopyable" : "", 
+    "wLogger" : "", 
+    "wverbal" : "", 
+    "wtemplatetreeenvironment" : "", 
+    "wappbasic" : "", 
+    "wgraphbasic" : "", 
+    "wFiles" : "", 
+    "wfilesarchive" : "", 
+    "wfilesencoders" : "", 
+    "wstatestorage" : "", 
+    "wstatesession" : "", 
+    "wstager" : "", 
+    "wgraphbase" : "", 
+    "wselector" : "", 
+    "wresolver" : "", 
+    "wcommandsaggregator" : "", 
+    "wcommandsconfig" : "", 
+    "wnamemapper" : "", 
+    "wtranspilationstrategy" : "", 
+    "tar" : "", 
+    "gitconfiglocal" : "", 
+    "open" : ""
+  }, 
+  "devDependencies" : { "wTesting" : "" }
+}

@@ -1,5 +1,9 @@
+about :
+
+  name : dos
 
 submodule :
+
 
   Tools : git+https:///github.com/Wandalen/wTools.git/#master
   PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/#master
@@ -12,10 +16,27 @@ submodule :
 path :
 
   proto : './proto'
-  temp : 'out'
+  export : '{path::proto}/**'
   in : '.'
   out : 'out'
   out.proto : '{path::out}/proto'
+  temp :
+    - out
+    - wExperiment/out
+
+step :
+
+  export.out :
+    inherit : module.export
+    export : '{path::out.proto}/**'
+    tar : 0
+    criterion :
+      debug : 1
+      content: proto
+
+  clean.out :
+    inherit : files.delete
+    filePath : path::out
 
 reflector :
 
@@ -26,12 +47,6 @@ reflector :
     criterion :
       content: proto
 
-step :
-
-  clean.out :
-    inherit : files.delete
-    filePath : path::out
-
 build :
 
   build :
@@ -40,3 +55,12 @@ build :
     steps :
       - clean.out
       - reflect.submodules
+
+  proto.export :
+    criterion :
+      default : 1
+      export : 1
+      content: proto
+    steps :
+      - build::build
+      - step::export.out
