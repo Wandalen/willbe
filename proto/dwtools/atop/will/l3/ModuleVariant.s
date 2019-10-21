@@ -1472,6 +1472,19 @@ function moduleSet( module )
   return module;
 }
 
+//
+
+function dirPathGet()
+{
+  let variant = this;
+  if( !variant.localPath )
+  return null;
+  let will = variant.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  return path.detrail( path.dirFirst( variant.localPath ) );
+}
+
 // --
 // relations
 // --
@@ -1549,6 +1562,7 @@ let Forbids =
 
 let Accessors =
 {
+  dirPath : { getter : dirPathGet, readOnly : 1 }
 }
 
 // --
@@ -1602,6 +1616,7 @@ let Extend =
   // etc
 
   moduleSet,
+  dirPathGet,
 
   // relation
 

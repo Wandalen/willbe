@@ -10,7 +10,6 @@ if( typeof module !== 'undefined' )
   require( './l1/About.s' );
   require( './l1/BuildFrame.s' );
   require( './l1/BuildRun.s' );
-  require( './l1/Execution.s' );
   require( './l1/Predefined.s' );
   require( './l1/Resolver.s' );
 
@@ -29,7 +28,6 @@ if( typeof module !== 'undefined' )
   require( './l7/Step.s' );
   require( './l7/ModulesRelation.s' );
 
-  // require( './l7/GitHooks.s' );
 }
 
 })();

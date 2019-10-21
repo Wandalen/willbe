@@ -89,7 +89,6 @@ function form2()
 {
   let resource = this;
 
-  // debugger;
   if( resource.formed >= 2 )
   return resource;
 
@@ -182,7 +181,7 @@ function moduleGet()
 }
 
 // --
-//
+// perform
 // --
 
 function _verify()
@@ -217,11 +216,10 @@ function _verify()
   _.sure( _.strDefined( inModule.dirPath ), 'Expects directory path of the inModule' );
   _.sure( _.objectIs( build.criterion ), 'Expects criterion of export' );
   _.sure( _.strDefined( build.name ), 'Expects name of export' );
-  // _.sure( _.objectIs( inModule.willfileWithRoleMap.export ) || _.objectIs( inModule.willfileWithRoleMap.import ) || _.objectIs( inModule.willfileWithRoleMap.single ), 'Module does not have a willfile' );
   _.sure( _.objectIs( inModule.willfileWithRoleMap.import ) || _.objectIs( inModule.willfileWithRoleMap.single ), 'Expects import-willfile' );
   _.sure( _.objectIs( inModule.willfileWithRoleMap.export ) || _.objectIs( inModule.willfileWithRoleMap.single ), 'Expects export-willfile' );
   _.sure( _.strDefined( inModule.about.name ), 'Expects defined name of the inModule as astring' );
-  _.sure( _.strDefined( inModule.about.version ), 'Expects defined version of the inModule as string' );
+  // _.sure( _.strDefined( inModule.about.version ), 'Expects defined version of the inModule as string' );
 
 }
 
@@ -250,7 +248,7 @@ function _performPrepare1( frame )
   exported.step = step;
   exported.build = build;
   exported.criterion = _.mapExtend( null, build.criterion );
-  exported.version = inModule.about.version;
+  exported.version = inModule.about.version || '0.0.0';
 
   if( exported.recursive === null ) /* xxx : remove maybe */
   exported.recursive = run.recursive;

@@ -73,11 +73,6 @@ submodule :
   open :
     path : npm:///open
     enabled : 0 # submodule
-  willbe :
-    path : hd://.
-    enabled : 0 # submodule
-    criterion :
-      development : 1
   wTesting :
     path : npm:///wTesting
     enabled : 0 # submodule

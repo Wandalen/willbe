@@ -1483,6 +1483,10 @@ function commandDo( e )
   // debugger;
   [ execPath, delimeter, request ] = _.strIsolateLeftOrAll( e.argument, /\s+/ );
   request = _.strRequestParse( request );
+  if( request.map.v !== undefined )
+  request.map.verbosity = request.map.v;
+  if( request.map.verbosity === undefined )
+  request.map.verbosity = 1;
   // debugger;
 
   return will._commandBuildLike
@@ -1509,17 +1513,17 @@ function commandDo( e )
     it.fileProvider = fileProvider;
     it.ready = new _.Consequence().take( null );
     it.currentPath = currentPath;
-    it.dirPath = path.dirFirst( it.variant.localPath );
+    // it.variant.dirPath = path.dirFirst( it.variant.localPath );
     it.logger = logger;
     it.request = request;
     it.start = _.process.starter
     ({
-      currentPath : it.dirPath,
+      currentPath : it.variant.dirPath,
       outputCollecting : 1,
       outputGraying : 1,
       outputPiping : 1,
       inputMirroring : 1,
-      mode : 'spawn',
+      mode : 'shell',
       ready : it.ready
     });
     let r = it.opener.openedModule.doJs
