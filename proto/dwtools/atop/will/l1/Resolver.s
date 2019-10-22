@@ -819,6 +819,7 @@ function _resolveAct( o )
   let module = o.baseModule;
   let will = module.will;
   let currentContext = o.currentContext;
+  let result;
 
   if( !( o.currentContext instanceof will.AbstractModule ) )
   if( o.criterion === null && o.currentContext && o.currentContext.criterion )
@@ -832,7 +833,15 @@ function _resolveAct( o )
   o.iterationPreserve.currentModule = o.baseModule;
   o.iterationPreserve.selectorIsPath = 0;
 
-  let result = Parent._resolveAct.call( resolver, o );
+  try
+  {
+    result = Parent._resolveAct.call( resolver, o );
+  }
+  catch( err )
+  {
+    debugger;
+    throw _.err( err );
+  }
 
   return result;
 }
@@ -840,27 +849,6 @@ function _resolveAct( o )
 var defaults = _resolveAct.defaults = Object.create( resolve.defaults )
 
 defaults.visited = null;
-
-// --
-// special
-// --
-
-// function _onResolveBegin( o )
-// {
-//
-//   let module = o.baseModule;
-//   let will = module.will;
-//   let currentContext = o.currentContext;
-//
-//   if( !( o.currentContext instanceof will.AbstractModule ) )
-//   if( o.criterion === null && o.currentContext && o.currentContext.criterion )
-//   o.criterion = o.currentContext.criterion;
-//
-//   _.assert( o.criterion === null || _.mapIs( o.criterion ) );
-//   _.assert( o.baseModule instanceof will.AbstractModule );
-//   _.assert( Self === will.Resolver );
-//
-// }
 
 // --
 // wraps
@@ -904,11 +892,6 @@ function pathOrReflectorResolve_body( o )
   let will = module.will;
   let resource;
 
-  // debugger;
-  // if( _.strIs( o ) )
-  // o = { selector : arguments[ 0 ] }
-  // _.assert( _.strIs( o.selector ) );
-  // _.routineOptions( pathOrReflectorResolve, o );
   _.assertRoutineOptions( pathOrReflectorResolve_body, arguments );
   _.assert( !resolver.selectorIs( o.selector ) );
   _.assert( o.pathResolving === 'in' );
@@ -935,12 +918,6 @@ var defaults = pathOrReflectorResolve_body.defaults = Object.create( resolve_bod
 defaults.pathResolving = 'in';
 defaults.missingAction = 'undefine';
 defaults.pathUnwrapping = 0;
-
-// {
-//   selector : null,
-//   baseModule : null,
-//   Resolver : null,
-// }
 
 let pathOrReflectorResolve = _.routineFromPreAndBody( resolve_pre, pathOrReflectorResolve_body );
 

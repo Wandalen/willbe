@@ -56,8 +56,6 @@ function init( o )
   _.assert( opener.dirPath === null );
   _.assert( opener._.dirPath === null );
 
-  // debugger;
-
   if( o )
   opener.precopy( o );
 
@@ -2271,7 +2269,7 @@ _.assert( _.arrayHas( _.accessor.getter.toStructure.rubrics, 'functor' ) );
 let Accessors =
 {
 
-  _ : { getter : _.accessor.getter.toStructure },
+  _ : { getter : _.accessor.getter.toStructure, readOnly : 1, },
 
   willfilesPath : { getter : willfilesPathGet, setter : willfilesPathSet },
   dirPath : { getter : dirPathGet, readOnly : 1 },

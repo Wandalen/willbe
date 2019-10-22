@@ -1771,7 +1771,7 @@ function toStructureGet_functor( o )
         }
 
         let symbol = Symbol.for( fieldName );
-        if( Object.hasOwnProperty.call( original, symbol ) )
+        if( original.hasField( fieldName ) || Object.hasOwnProperty.call( original, symbol ) )
         {
           method = methods[ fieldName ] = function put( value )
           {

@@ -121,8 +121,12 @@ function form()
 
   will.formAssociates();
 
+  if( !will.environmentPath )
+  will.environmentPath = will.environmentPathDetermine( will.fileProvider.path.current() );
+
   _.assert( arguments.length === 0 );
   _.assert( !will.formed );
+  _.assert( _.path.is( will.environmentPath ) );
 
   /* begin */
 
@@ -163,8 +167,8 @@ function formAssociates()
 
   }
 
-  if( !will.filesGraph )
-  will.filesGraph = _.FilesGraphOld({ fileProvider : will.fileProvider });
+  // if( !will.filesGraph )
+  // will.filesGraph = _.FilesGraphOld({ fileProvider : will.fileProvider });
 
   let logger2 = new _.Logger({ output : logger, name : 'will.providers' });
 
@@ -187,6 +191,13 @@ function formAssociates()
 // --
 // path
 // --
+
+function WillPathGet()
+{
+  return _.path.join( __dirname, 'Exec' );
+}
+
+//
 
 function WillfilePathIs( filePath )
 {
@@ -365,6 +376,77 @@ function RemotePathAdjust( remotePath, relativePath )
   remotePathParsed.query.out = _.path.join( remotePathParsed.query.out, relativePath );
 
   return _.uri.str( remotePathParsed );
+}
+
+//
+
+function HooksPathGet( environmentPath )
+{
+  return _.path.join( environmentPath, '.will/hook' );
+}
+
+//
+
+function hooksPathGet()
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  return will.HooksPathGet( will.environmentPath );
+}
+
+//
+
+function environmentPathSet( src )
+{
+  let will = this;
+
+  _.assert( src === null || _.strDefined( src ) );
+
+  if( !src )
+  {
+    will._.environmentPath = src;
+    return src;
+  }
+
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  src = path.canonize( src );
+
+  _.assert( !path.isTrailed( src ) );
+  _.assert( path.isAbsolute( src ) );
+
+  will._.environmentPath = src;
+  return src;
+}
+
+//
+
+function environmentPathDetermine( dirPath )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  dirPath = path.canonize( dirPath );
+
+  if( check( dirPath ) )
+  return dirPath;
+
+  let paths = path.traceToRoot( dirPath );
+  for( var i = paths.length - 1; i >= 0; i-- )
+  if( check( paths[ i ] ) )
+  return paths[ i ];
+
+  return dirPath;
+
+  function check( dirPath )
+  {
+    if( !fileProvider.isDir( path.join( dirPath, '.will' ) ) )
+    return false
+    return true;
+  }
 }
 
 // --
@@ -657,7 +739,7 @@ function instanceDefaultsApply( o )
 
   _.assert( arguments.length === 1 );
 
-  for( let d in will.Defaults )
+  for( let d in will.OpeningDefaults )
   {
     if( o[ d ] === null )
     o[ d ] = will[ d ];
@@ -674,7 +756,7 @@ function instanceDefaultsSupplement( o )
 
   _.assert( arguments.length === 1 );
 
-  for( let d in will.Defaults )
+  for( let d in will.OpeningDefaults )
   {
     if( o[ d ] !== null && o[ d ] !== undefined )
     if( will[ d ] === null )
@@ -692,7 +774,7 @@ function instanceDefaultsExtend( o )
 
   _.assert( arguments.length === 1 );
 
-  for( let d in will.Defaults )
+  for( let d in will.OpeningDefaults )
   {
     if( o[ d ] !== null && o[ d ] !== undefined )
     will[ d ] = o[ d ];
@@ -710,7 +792,7 @@ function instanceDefaultsReset()
 
   _.assert( arguments.length === 0 );
 
-  for( let d in will.Defaults )
+  for( let d in will.OpeningDefaults )
   {
     _.assert( FieldsOfTightGroups[ d ] !== undefined );
     _.assert( _.primitiveIs( FieldsOfTightGroups[ d ] ) );
@@ -2266,7 +2348,6 @@ graphGroupMake.defaults =
   withIn : 1,
   withEnabled : 1,
   withDisabled : 0,
-  // variantMap : null,
 }
 
 //
@@ -2988,6 +3069,353 @@ function willfileRegister( willf )
 }
 
 // --
+// hooks
+// --
+
+function hooksReload()
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let hooks = will._.hooks = will._.hooks || Object.create( null );
+
+  _.assert( arguments.length === 0 );
+  _.assert( path.is( will.environmentPath ) );
+
+  debugger;
+  let hooksFiles = fileProvider.filesFind({ filePath : will.hooksPath + '/*', withDirs : 0 });
+  debugger;
+
+  hooksFiles.forEach( ( hookFile ) =>
+  {
+    let hook = Object.create( null );
+    hook.name = path.name( hookFile.absoluteName );
+    hook.file = hookFile;
+    hook.exec = function exec( it )
+    {
+      it = will.hookItFrom( it );
+      return will.hookCall( it );
+    }
+    _.assert( !hooks[ hook.name ], () => `Redefinition of hook::${name}` );
+    hooks[ hook.name ] = hook;
+  });
+
+  debugger;
+}
+
+//
+
+function hookItFrom( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let currentPath = will.currentPath || _.path.current();
+
+  o = _.routineOptions( hookItFrom, arguments );
+
+  if( o.opener && !o.module )
+  o.module = o.opener.openedModule;
+  o.openers = will.currentOpeners;
+  if( !o.variant )
+  o.variant = will.variantOf( opener );
+  if( !o.variant )
+  o.variant = will.variantFrom( opener );
+  if( !o.opener )
+  o.opener = o.variant.opener;
+  if( !o.module )
+  o.module = o.variant.module;
+
+  _.assert( o.variant instanceof _.Will.ModuleVariant );
+
+  let relativeLocalPath = _.path.relative( o.variant.dirPath, o.variant.localPath );
+
+  if( !o.will )
+  o.will = will;
+  if( !o.tools )
+  o.tools = wTools;
+  if( !o.path )
+  o.path = path;
+  if( !o.fileProvider )
+  o.fileProvider = fileProvider;
+  if( !o.ready )
+  o.ready = new _.Consequence().take( null );
+  if( !o.currentPath )
+  o.currentPath = currentPath;
+  if( !o.logger )
+  o.logger = logger;
+
+  let delimeter;
+  if( o.request === null )
+  [ o.execPath, delimeter, o.request ] = _.strIsolateLeftOrAll( o.execPath, /\s+/ );
+  if( o.request === null )
+  o.request = '';
+  if( _.strIs( o.request ) )
+  o.request = _.strRequestParse( o.request );
+  _.assert( !!o.request.map );
+  if( o.request.map.v !== undefined )
+  o.request.map.verbosity = o.request.map.v;
+  if( o.request.map.verbosity === undefined )
+  o.request.map.verbosity = 1;
+
+  // if( !o.interpreterName )
+  // {
+  //   if( _.arrayHasAny( [ 'js', 'ss', 's' ], path.exts( o.execPath ) ) )
+  //   o.interpreterName = 'js';
+  //   else
+  //   o.interpreterName = 'os';
+  // }
+
+  if( !o.start )
+  o.start = _.process.starter
+  ({
+    currentPath : o.variant.dirPath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputPiping : 1,
+    inputMirroring : 1,
+    briefExitCode : 1,
+    mode : 'shell',
+    ready : o.ready
+  });
+
+  if( !o.startWill )
+  o.startWill = _.process.starter
+  ({
+    currentPath : o.variant.dirPath,
+    execPath : `${will.WillPathGet()} .with ${relativeLocalPath} `,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputPiping : 1,
+    inputMirroring : 1,
+    briefExitCode : 1,
+    mode : 'fork',
+    ready : o.ready,
+  });
+
+  _.assert( _.strIs( o.currentPath ) );
+  _.assert( _.strIs( o.execPath ) );
+  _.assert( _.arrayIs( o.openers ) );
+  _.assert( o.will === will );
+
+  return o;
+}
+
+hookItFrom.defaults =
+{
+
+  will : null,
+  variant : null,
+  module : null,
+  opener : null,
+  openers : null,
+
+  tools : null,
+  path : null,
+  fileProvider : null,
+  ready : null,
+  logger : null,
+
+  currentPath : null,
+  execPath : null,
+  request : null,
+  interpreterName : null,
+
+  start : null,
+  startWill : null,
+
+}
+
+//
+
+function hookCall( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  o = _.routineOptions( hookCall, arguments );
+  _.assert( o.will === will );
+  _.assert( !!o.variant );
+
+  /* */
+
+  if( o.module && o.currentPath && will.Resolver.selectorIs( o.currentPath ) )
+  o.currentPath = o.module.pathResolve
+  ({
+    selector : o.currentPath,
+    prefixlessAction : 'resolved',
+  });
+  _.sure
+  (
+      o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath )
+    , 'Current path should be string if defined'
+  );
+
+  if( o.module && o.currentPath )
+  o.currentPath = path.s.join( o.module.inPath, o.currentPath );
+  else
+  o.currentPath = path.s.join( o.will.inPath, o.currentPath );
+
+  /* */
+
+  if( o.module && will.Resolver.selectorIs( o.execPath ) )
+  o.execPath = o.module.resolve
+  ({
+    selector : o.execPath,
+    prefixlessAction : 'resolved',
+  });
+
+  o.execPath = path.s.join( o.currentPath, o.execPath );
+  o.execPath = will.hookFindAt( o.execPath );
+
+  /* */
+
+  if( !o.interpreterName )
+  {
+    if( _.arrayHasAny( [ 'js', 'ss', 's' ], path.exts( o.execPath ) ) )
+    o.interpreterName = 'js';
+    else
+    o.interpreterName = 'os';
+  }
+
+  /* */
+
+  _.assert( path.isAbsolute( o.execPath ) );
+  _.assert( _.strDefined( o.interpreterName ) );
+
+  if( o.interpreterName === 'js' )
+  return jsCall();
+  else if( o.interpreterName === 'os' )
+  return exeCall();
+  else _.assert( 0, `Unknown interpreter of hook ${o.interpreterName}` );
+
+  /* */
+
+  function jsCall()
+  {
+    let ready = new _.Consequence().take( null );
+
+    ready
+    .then( () =>
+    {
+      return require( _.fileProvider.path.nativize( o.execPath ) );
+    })
+    .then( ( routine ) =>
+    {
+      if( !_.routineIs( routine ) )
+      throw _.errBrief( `Script file should export routine or consequence, but exports ${_.strType( routine )}` );
+      verifyDefaults( routine );
+      let r = routine.call( will, o );
+      if( _.consequenceIs( r ) || _.promiseLike( r ) )
+      return r;
+      return o.ready || null;
+    })
+    .finally( ( err, arg ) =>
+    {
+      if( err )
+      debugger;
+      if( err )
+      throw _.err( err, `\nFailed to ${o.execPath}` );
+      return arg;
+    })
+
+    return ready;
+  }
+
+  /* */
+
+  function verifyDefaults( routine )
+  {
+    if( routine.defaults )
+    _.routineOptions( routine, o.request.map );
+  }
+
+  /* */
+
+  function exeCall()
+  {
+    _.assert( 0, 'not tested' );
+    o.execPath = `${o.execPath} ${_.strRequestStr( o.request )} localPath:${o.variant.localPath}`;
+    return _.process.start
+    ({
+      currentPath : o.currentPath,
+      execPath : o.execPath,
+      outputCollecting : 1,
+      outputGraying : 1,
+      outputPiping : 1,
+      inputMirroring : 1,
+      mode : 'shell',
+    });
+  }
+
+  /* */
+
+}
+
+hookCall.defaults = _.mapExtend( null, hookItFrom.defaults );
+
+//
+
+function hookFindAt( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  if( !_.mapIs( o ) )
+  o = { execPath : o }
+  _.routineOptions( hookFindAt, o );
+  _.assert( arguments.length === 1 );
+
+  if( fileProvider.fileExists( o.execPath ) )
+  return end( o.execPath );
+
+  let filePath = `${o.execPath}.(${will.KnownHookExts.join( '|' )})`;
+  let found = fileProvider.filesFind({ filePath, outputFormat : 'absolute' });
+  return end( found );
+
+  function end( found )
+  {
+    if( !o.single )
+    return _.arrayAs( found );
+    if( _.strIs( found ) )
+    return found;
+    _.assert( _.arrayIs( found ) );
+    if( found.length )
+    return found[ 0 ];
+    if( !found.length )
+    throw _.errBrief( `Found none hook file at ${o.execPath}` );
+    else
+    throw _.errBrief( `Found several ( ${found.length} ) hook file at ${o.execPath}, not clear which to use\n${found.join( '\n' )}` );
+    return found
+  }
+
+}
+
+hookFindAt.defaults =
+{
+  execPath : null,
+  single : 1,
+}
+
+//
+
+function hooksGet()
+{
+  let will = this;
+
+  if( !will._.hooks )
+  will.hooksReload();
+
+  return will._.hooks;
+}
+
+// --
 // relations
 // --
 
@@ -3021,7 +3449,19 @@ let ResourceKindToMapName = new _.NameMapper({ leftName : 'resource kind', right
 
 let ResourceKinds = [ 'submodule', 'step', 'path', 'reflector', 'build', 'about', 'execution', 'exported' ];
 
-let Defaults =
+let KnownHookExts =
+[
+  'js',
+  's',
+  'ss',
+  'exe',
+  'bat',
+  'cmd',
+  'sh',
+  'bash',
+]
+
+let OpeningDefaults =
 {
 
   attachedWillfilesFormedOfMain : null,
@@ -3050,6 +3490,8 @@ let Composes =
   withIn : 1,
   withBroken : 1,
 
+  environmentPath : null,
+
 }
 
 let Aggregates =
@@ -3073,7 +3515,7 @@ let Associates =
 {
 
   fileProvider : null,
-  filesGraph : null,
+  // filesGraph : null,
   logger : null,
   mainOpener : null,
 
@@ -3110,11 +3552,13 @@ let Statics =
   ResourceKindToClassName,
   ResourceKindToMapName,
   ResourceKinds,
-  Defaults,
+  KnownHookExts,
+  OpeningDefaults,
   UpformingDefaults,
 
   // path
 
+  WillPathGet,
   WillfilePathIs,
   PathIsOut,
   DirPathFromFilePaths,
@@ -3125,6 +3569,7 @@ let Statics =
   CloneDirPathFor,
   OutfilePathFor,
   RemotePathAdjust,
+  HooksPathGet,
 
 }
 
@@ -3134,6 +3579,18 @@ let Forbids =
   recursiveExport : 'recursiveExport',
   graphGroup : 'graphGroup',
   graphSystem : 'graphSystem',
+  filesGraph : 'filesGraph',
+}
+
+
+let Accessors =
+{
+
+  _ : { getter : _.accessor.getter.toStructure, readOnly : 1, },
+  hooks : { getter : hooksGet, readOnly : 1, },
+  environmentPath : { setter : environmentPathSet },
+  hooksPath : { getter : hooksPathGet, readOnly : 1, },
+
 }
 
 // --
@@ -3153,6 +3610,7 @@ let Extend =
 
   // path
 
+  WillPathGet,
   WillfilePathIs,
   PathIsOut,
   DirPathFromFilePaths,
@@ -3163,6 +3621,11 @@ let Extend =
   CloneDirPathFor,
   OutfilePathFor,
   RemotePathAdjust,
+  HooksPathGet,
+
+  hooksPathGet,
+  environmentPathSet,
+  environmentPathDetermine,
 
   // etc
 
@@ -3245,6 +3708,14 @@ let Extend =
   willfileUnregister,
   willfileRegister,
 
+  // hooks
+
+  hooksReload,
+  hookItFrom,
+  hookCall,
+  hookFindAt,
+  hooksGet,
+
   // relation
 
   Composes,
@@ -3253,6 +3724,7 @@ let Extend =
   Restricts,
   Statics,
   Forbids,
+  Accessors,
 
 }
 

@@ -15,7 +15,7 @@ function onEach( it )
 
   logger.log( it.variant.locationExport() );
 
-  it.start( 'git ' + it.request.original );
+  it.start( `git ${it.request.original}` );
 
 }
 

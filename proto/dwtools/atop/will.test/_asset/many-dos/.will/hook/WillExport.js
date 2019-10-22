@@ -14,6 +14,13 @@ function onEach( it )
   return;
   if( it.opener.isRemote )
   return;
+  if( !it.module.about.enabled )
+  return;
+
+  let npmConfigPath = _.path.join( it.variant.dirPath, 'package.json' );
+  if( _.fileProvider.fileExists( npmConfigPath ) )
+  if( !isEnabled( it.variant.dirPath ) )
+  return;
 
   if( it.request.map.verbosity )
   logger.log( `Exporting ${it.variant.locationExport()}` );
@@ -21,10 +28,7 @@ function onEach( it )
   if( it.request.map.dry )
   return;
 
-  // if( !isEnabled( wasconfigPath ) )
-  // return;
-
-  it.start( 'local-will .export' );
+  it.startWill( `.export ${it.request.original}` );
 
 }
 

@@ -1,6 +1,7 @@
 about :
 
   name : dos
+  enabled : 0
 
 submodule :
 

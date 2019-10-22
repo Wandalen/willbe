@@ -6248,82 +6248,96 @@ shell.defaults =
   verbosity : null,
 }
 
+// //
 //
-
-function doJs( o )
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  if( !_.mapIs( arguments[ 0 ] ) )
-  o = { execPath : arguments[ 0 ] }
-
-  o = _.routineOptions( doJs, o );
-  _.assert( _.strIs( o.execPath ) );
-  _.assert( arguments.length === 1 );
-
-  /* */
-
-  if( o.currentPath )
-  o.currentPath = module.pathResolve({ selector : o.currentPath, prefixlessAction : 'resolved', currentContext : o.currentContext });
-  _.sure( o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath ), 'Current path should be string if defined' );
-
-  if( o.currentPath )
-  o.currentPath = path.s.join( module.inPath, o.currentPath );
-
-  /* */
-
-  o.execPath = module.resolve
-  ({
-    selector : o.execPath,
-    prefixlessAction : 'resolved',
-    currentThis : o.currentThis,
-    currentContext : o.currentContext,
-    pathNativizing : 1,
-    arrayFlattening : 0, /* required for f::this and feature make */
-  });
-
-  o.execPath = path.s.join( o.currentPath, o.execPath );
-
-  /* */
-
-  let ready = new _.Consequence().take( null );
-
-  ready
-  .then( () =>
-  {
-    return require( _.fileProvider.path.nativize( o.execPath ) );
-  })
-  .then( ( routine ) =>
-  {
-    if( !_.routineIs( routine ) )
-    throw _.errBrief( `Script file should export routine or consequence, but exports ${_.strType( routine )}` );
-    let r = routine.apply( module, o.args ? o.args : [] );
-    if( _.consequenceIs( r ) || _.promiseLike( r ) )
-    return r;
-    return o.ready || null;
-  })
-  .finally( ( err, arg ) =>
-  {
-    if( err )
-    debugger;
-    if( err )
-    throw _.err( err, `\nFailed to ${o.execPath}` );
-    return arg;
-  })
-
-  return ready;
-}
-
-doJs.defaults =
-{
-  execPath : null,
-  currentPath : null,
-  args : null,
-  ready : null,
-}
+// function doJs( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//
+//   if( !_.mapIs( arguments[ 0 ] ) )
+//   o = { execPath : arguments[ 0 ] }
+//
+//   o = _.routineOptions( doJs, o );
+//   _.assert( _.strIs( o.execPath ) );
+//   _.assert( arguments.length === 1 );
+//
+//   /* */
+//
+//   if( o.currentPath && will.Resolver.selectorIs( e.request.subject ) )
+//   o.currentPath = module.pathResolve
+//   ({
+//     selector : o.currentPath,
+//     prefixlessAction : 'resolved',
+//     // currentContext : o.currentContext
+//   });
+//   _.sure
+//   (
+//       o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath )
+//     , 'Current path should be string if defined'
+//   );
+//
+//   if( o.currentPath )
+//   o.currentPath = path.s.join( module.inPath, o.currentPath );
+//
+//   /* */
+//
+//   if( will.Resolver.selectorIs( e.request.subject ) )
+//   o.execPath = module.resolve
+//   ({
+//     selector : o.execPath,
+//     prefixlessAction : 'resolved',
+//     // currentThis : o.currentThis,
+//     // currentContext : o.currentContext,
+//     pathNativizing : 1,
+//     arrayFlattening : 0, /* required for f::this and feature make */
+//   });
+//
+//   o.execPath = path.s.join( o.currentPath, o.execPath );
+//
+//   /* */
+//
+//   return will.hookCall( o.it );
+//
+//   // let ready = new _.Consequence().take( null );
+//   // ready
+//   // .then( () =>
+//   // {
+//   //   return require( _.fileProvider.path.nativize( o.execPath ) );
+//   // })
+//   // .then( ( routine ) =>
+//   // {
+//   //   if( !_.routineIs( routine ) )
+//   //   throw _.errBrief( `Script file should export routine or consequence, but exports ${_.strType( routine )}` );
+//   //   let r = routine.apply( will, o.args ? o.args : [] );
+//   //   if( _.consequenceIs( r ) || _.promiseLike( r ) )
+//   //   return r;
+//   //   return o.ready || null;
+//   // })
+//   // .finally( ( err, arg ) =>
+//   // {
+//   //   if( err )
+//   //   debugger;
+//   //   if( err )
+//   //   throw _.err( err, `\nFailed to ${o.execPath}` );
+//   //   return arg;
+//   // })
+//
+//   return ready;
+// }
+//
+// doJs.defaults = _.mapExtend( null, _.Will.prototype.hookItFrom.defaults );
+//
+// // doJs.defaults =
+// // {
+// //   execPath : null,
+// //   currentPath : null,
+// //   // args : null,
+// //   it : null,
+// //   ready : null,
+// // }
 
 //
 
@@ -6788,7 +6802,6 @@ let Extend =
   // etc
 
   shell,
-  doJs,
   errTooMany,
 
   // relation

@@ -11,11 +11,39 @@ function onEach( it )
     // pathExportUse( it, willfPath );
     // pathRemotesAdd( it, willfPath );
     // pathRemotesToOrigins( it, willfPath );
+    pathExportExportReplace( it, willfPath );
   });
 
 }
 
 module.exports = onEach;
+
+//
+
+function pathExportExportReplace( it, willfPath )
+{
+  let _ = it.tools;
+  let logger = it.logger;
+  let read = _.fileProvider.fileRead( willfPath );
+
+  if( !_.strHas( read, `export : '{path::export}` ) )
+  return;
+
+  logger.log( `Replacing "export : {path::export}" in ${it.variant.locationExport()}` );
+
+  let splits = _.strSplitFast( read, `export : '{path::export}` ); debugger;
+  _.assert( splits.length === 3 );
+  splits[ 1 ] = `export : '{path::proto}`;
+  let write = splits.join( '' );
+
+  if( it.request.map.verbosity >= 2 )
+  logger.log( write );
+
+  if( it.request.map.dry )
+  return;
+
+  _.fileProvider.fileWrite( willfPath, write );
+}
 
 //
 
@@ -42,7 +70,8 @@ function pathExportAdd( it, willfPath )
   splits.splice( 2, 0, `${pre}export : '{path::proto}/**'\n` );
   let write = splits.join( '' );
 
-  // logger.log( write );
+  if( it.request.map.verbosity >= 2 )
+  logger.log( write );
 
   if( it.request.map.dry )
   return;
@@ -64,7 +93,8 @@ function pathExportUse( it, willfPath )
   let write = _.strReplace( read, 'export : path::proto', 'export : path::export' );
   logger.log( `Using path::export in ${it.variant.locationExport()}` );
 
-  // logger.log( write );
+  if( it.request.map.verbosity >= 2 )
+  logger.log( write );
 
   if( it.request.map.dry )
   return;
@@ -102,7 +132,8 @@ ${line.pre} - ${remotesPath[ 1 ]}`
 
   let write = [ line.before, '\n', line.line, '\n', ins, '\n', line.after ].join( '' );
 
-  // logger.log( write );
+  if( it.request.map.verbosity >= 2 )
+  logger.log( write );
 
   if( it.request.map.dry )
   return;
@@ -124,7 +155,8 @@ function pathRemotesToOrigins( it, willfPath )
   let write = _.strReplace( read, ' remotes :', ' origins :' );
   logger.log( `Replacing path::origins <- path::remotes ${it.variant.locationExport()}` );
 
-  // logger.log( write );
+  if( it.request.map.verbosity >= 2 )
+  logger.log( write );
 
   if( it.request.map.dry )
   return;

@@ -120,6 +120,8 @@ function _openersCurrentEach( o )
     it.module = opener.openedModule;
     it.openers = will.currentOpeners;
     it.variant = will.variantOf( opener );
+    if( !it.variant )
+    it.variant = will.variantFrom( opener );
     it.will = will;
     return it;
   }
@@ -317,7 +319,7 @@ function _commandBuildLike( o )
     {
       will.currentOpenerChange( null );
       if( err )
-      throw _.err( err, `\nFailed to ${o.name} ${it.opener ? it.opener.commonPath : ''}` );
+      throw _.err( err, `\nFailed to ${o.name} for ${it.opener ? it.opener.commonPath : ''}` );
       return arg;
     });
 
@@ -494,6 +496,7 @@ function _commandsMake()
 
     'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       h : 'Run shell command on the module.' },
     'do' :                              { e : _.routineJoin( will, will.commandDo ),                          h : 'Run JS script on the module.' },
+    'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
     'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
     'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
     'export' :                          { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
@@ -1477,17 +1480,8 @@ function commandDo( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let time = _.timeNow();
-
   let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
-  let execPath, delimeter, request;
-  // debugger;
-  [ execPath, delimeter, request ] = _.strIsolateLeftOrAll( e.argument, /\s+/ );
-  request = _.strRequestParse( request );
-  if( request.map.v !== undefined )
-  request.map.verbosity = request.map.v;
-  if( request.map.verbosity === undefined )
-  request.map.verbosity = 1;
-  // debugger;
+  let execPath = e.argument;
 
   return will._commandBuildLike
   ({
@@ -1507,35 +1501,49 @@ function commandDo( e )
 
   function handleEach( it )
   {
-    let currentPath = will.currentPath || _.path.current();
-    it.tools = wTools;
-    it.path = path;
-    it.fileProvider = fileProvider;
-    it.ready = new _.Consequence().take( null );
-    it.currentPath = currentPath;
-    // it.variant.dirPath = path.dirFirst( it.variant.localPath );
-    it.logger = logger;
-    it.request = request;
-    it.start = _.process.starter
-    ({
-      currentPath : it.variant.dirPath,
-      outputCollecting : 1,
-      outputGraying : 1,
-      outputPiping : 1,
-      inputMirroring : 1,
-      mode : 'shell',
-      ready : it.ready
-    });
-    let r = it.opener.openedModule.doJs
-    ({
-      execPath : execPath,
-      currentPath : currentPath,
-      args : [ it ],
-      ready : it.ready,
-    });
-    if( _.consequenceIs( r ) || _.promiseLike( r ) )
-    return r;
-    return it.ready;
+    let it2 = _.mapOnly( it, will.hookItFrom.defaults );
+    it2.execPath = execPath;
+    it2 = will.hookItFrom( it2 );
+    return will.hookCall( it2 );
+  }
+
+}
+
+//
+
+function commandHookCall( e )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let time = _.timeNow();
+  let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
+  let execPath = e.argument;
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'hook call',
+    onEach : handleEach,
+    commandRoutine : commandHookCall,
+    withOut : 0,
+    withBroken : 1,
+  })
+  .then( ( arg ) =>
+  {
+    if( will.verbosity >= 2 )
+    logger.log( `Done ${_.color.strFormat( 'hook::' + e.argument, 'entity' )} in ${_.timeSpent( time )}` );
+    return arg;
+  });
+
+  function handleEach( it )
+  {
+    let it2 = _.mapOnly( it, will.hookItFrom.defaults );
+    it2.execPath = path.join( will.hooksPath, execPath );
+    it2 = will.hookItFrom( it2 );
+    return will.hookCall( it2 );
   }
 
 }
@@ -1774,6 +1782,7 @@ let Extend =
 
   commandShell,
   commandDo,
+  commandHookCall,
   commandClean,
   commandBuild,
   commandExport,
