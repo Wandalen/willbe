@@ -15,11 +15,21 @@ var _global = _global_;
 var _ = _global_.wTools;
 
 // --
-//
+// tests
 // --
 
 function fromGlob( test )
 {
+
+  test.case = 'trailed';
+  var expected = '/a/b/';
+  var got = _.path.fromGlob( '/a/b/' );
+  test.identical( got, expected );
+
+  test.case = 'doted';
+  var expected = './a/b';
+  var got = _.path.fromGlob( './a/b' );
+  test.identical( got, expected );
 
   var expected = '/a/b';
   var got = _.path.fromGlob( '/a/b/**' );

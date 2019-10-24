@@ -1711,18 +1711,17 @@ toElementGet_functor.defaults =
 
 //
 
-function toStructureGet_functor( o )
+function withSymbolGet_functor( o )
 {
 
-  // _.assert( 0, 'not tested' );
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.routineOptions( toStructureGet_functor, o );
+  _.routineOptions( withSymbolGet_functor, o );
   _.assert( _.strDefined( o.fieldName ) );
 
   let fieldName = o.fieldName;
-  let methods = Object.create( null );
+  let setter = Object.create( null );
+  let getter = Object.create( null );
   let symbol = Symbol.for( fieldName );
-  // let helper;
 
   return function toStructure()
   {
@@ -1742,47 +1741,33 @@ function toStructureGet_functor( o )
     {
       get( original, fieldName, proxy )
       {
-        return original[ fieldName ];
-      },
-      set( original, fieldName, value, proxy )
-      {
-        let method = methods[ fieldName ];
+        let method = getter[ fieldName ];
         if( method )
         return end();
 
-        let putName1 = '_' + fieldName + 'Put';
-        if( original[ putName1 ] )
+        let symbol = Symbol.for( fieldName );
+        method = getter[ fieldName ] = function get( value )
         {
-          method = methods[ fieldName ] = function put( value )
-          {
-            return this[ putName1 ]( value );
-          }
-          return end();
+          return this[ symbol ];
+        }
+        return end();
+
+        function end()
+        {
+          return method.call( original );
         }
 
-        let putName2 = fieldName + 'Put';
-        if( original[ putName2 ] )
-        {
-          method = methods[ fieldName ] = function put( value )
-          {
-            return this[ putName2 ]( value );
-          }
-          return end();
-        }
+      },
+      set( original, fieldName, value, proxy )
+      {
+        let method = setter[ fieldName ];
+        if( method )
+        return end();
 
         let symbol = Symbol.for( fieldName );
-        if( original.hasField( fieldName ) || Object.hasOwnProperty.call( original, symbol ) )
+        method = setter[ fieldName ] = function put( value )
         {
-          method = methods[ fieldName ] = function put( value )
-          {
-            this[ symbol ] = value;
-          }
-          return end();
-        }
-
-        method = methods[ fieldName ] = function put( value )
-        {
-          this[ fieldName ] = value;
+          this[ symbol ] = value;
         }
         return end();
 
@@ -1796,13 +1781,128 @@ function toStructureGet_functor( o )
 
     let proxy = new Proxy( original, handlers );
 
-    // Object.defineProperty( proxy, 'original',
-    // {
-    //   original,
-    //   enumerable : false,
-    //   writable : false,
-    //   configurable : false,
-    // });
+    return proxy;
+  }
+
+}
+
+withSymbolGet_functor.defaults =
+{
+  fieldName : null,
+}
+
+withSymbolGet_functor.rubrics = [ 'accessor', 'getter', 'functor' ];
+
+//
+
+function toStructureGet_functor( o )
+{
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.routineOptions( toStructureGet_functor, o );
+  _.assert( _.strDefined( o.fieldName ) );
+
+  let fieldName = o.fieldName;
+  let setter = Object.create( null );
+  let getter = Object.create( null );
+  let symbol = Symbol.for( fieldName );
+
+  return function toStructure()
+  {
+    let helper = this[ symbol ];
+    if( !helper )
+    {
+      helper = this[ symbol ] = proxyMake( this );
+    }
+    return helper;
+  }
+
+  /* */
+
+  function proxyMake( original )
+  {
+    let handlers =
+    {
+      get( original, fieldName, proxy )
+      {
+        let method = getter[ fieldName ];
+        if( method )
+        return end();
+
+        if( original.hasField( fieldName ) || Object.hasOwnProperty.call( original, symbol ) )
+        {
+          let symbol = Symbol.for( fieldName );
+          method = getter[ fieldName ] = function get( value )
+          {
+            return this[ symbol ];
+          }
+          return end();
+        }
+
+        method = getter[ fieldName ] = function get( value )
+        {
+          return this[ fieldName ];
+        }
+        return end();
+
+        function end()
+        {
+          return method.call( original );
+        }
+
+      },
+      set( original, fieldName, value, proxy )
+      {
+        let method = setter[ fieldName ];
+        if( method )
+        return end();
+
+        let putName1 = '_' + fieldName + 'Put';
+        if( original[ putName1 ] )
+        {
+          method = setter[ fieldName ] = function put( value )
+          {
+            return this[ putName1 ]( value );
+          }
+          return end();
+        }
+
+        let putName2 = fieldName + 'Put';
+        if( original[ putName2 ] )
+        {
+          method = setter[ fieldName ] = function put( value )
+          {
+            return this[ putName2 ]( value );
+          }
+          return end();
+        }
+
+        if( original.hasField( fieldName ) || Object.hasOwnProperty.call( original, symbol ) )
+        {
+          let symbol = Symbol.for( fieldName );
+          method = setter[ fieldName ] = function put( value )
+          {
+            this[ symbol ] = value;
+          }
+          return end();
+        }
+
+        method = setter[ fieldName ] = function put( value )
+        {
+          this[ fieldName ] = value;
+        }
+
+        return end();
+
+        function end()
+        {
+          method.call( original, value );
+          return true;
+        }
+      },
+    };
+
+    let proxy = new Proxy( original, handlers );
 
     return proxy;
   }
@@ -1816,63 +1916,9 @@ toStructureGet_functor.defaults =
 
 toStructureGet_functor.rubrics = [ 'accessor', 'getter', 'functor' ];
 
-// let GetterFunctor = _.complex
-// ({
-//   functor : null,
-//   '__call__' : _.define.OnCall( 'functor' ),
-// });
-//
-// let toStructureGet_functor = _.complex.instance( GetterFunctor );
-// toStructureGet_functor.functor = toStructureGet_functor;
-// _.assert( _.prototypeHasPrototype( toStructureGet_functor, GetterFunctor ) );
-// _.assert( _.routineIs( toStructureGet_functor ) );
-// _.assert( _.mapKeys( toStructureGet_functor ).length === 1 );
-
 //
 
 let toElementSuite = suiteMakerFrom_functor( toElementGet_functor, toElementSet_functor );
-
-// function toElement( o )
-// {
-//   let r = Object.create( null );
-//
-//   _.assert( 0, 'not tested' );
-//   _.assert( arguments.length === 1, 'Expects single argument' );
-//   _.assert( _.objectIs( o.names ) );
-//   _.assert( _.strIs( o.name ) );
-//   _.assert( _.strIs( o.storageName ) );
-//   _.assert( _.numberIs( o.index ) );
-//   _.routineOptions( toElement, o );
-//
-//   debugger; xxx
-//
-//   let index = o.index;
-//   let storageName = o.storageName;
-//   let name = o.name;
-//   let aname = _.accessor._propertyGetterSetterNames( name );
-//
-//   _.assert( _.numberIs( index ) );
-//   _.assert( index >= 0 );
-//
-//   r[ aname.setName ] = function accessorToElementSet( src )
-//   {
-//     this[ storageName ][ index ] = src;
-//   }
-//
-//   r[ aname.getName ] = function accessorToElementGet()
-//   {
-//     return this[ storageName ][ index ];
-//   }
-//
-//   return r;
-// }
-//
-// toElement.defaults =
-// {
-//   name : null,
-//   index : null,
-//   storageName : null,
-// }
 
 //
 
@@ -2065,6 +2111,7 @@ let Getter =
   alias : aliasGet_functor_body,
   toElement : toElementGet_functor,
   toStructure : toStructureGet_functor,
+  withSymbol : withSymbolGet_functor,
 
 }
 

@@ -1,6 +1,7 @@
 
-function onEach( it )
+function onModule( it )
 {
+  let o = it.request.map;
   let _ = it.tools;
   let logger = it.logger;
   let willfPath = _.arrayAs( it.opener.willfilesPath );
@@ -8,15 +9,16 @@ function onEach( it )
   willfPath.forEach( ( willfPath ) =>
   {
     let read = _.fileProvider.fileRead( willfPath );
-    let write1 = _.encode.yamlCommentOut( read, it.request.subject );
+    let write1 = _.yaml.commentOut( read, it.request.subject );
     if( write1 )
     {
+      if( o.verbosity )
       logger.log( `Comment out "${it.request.subject}" in ${it.variant.locationExport()}` );
-      if( !it.request.map.dry )
+      if( !o.dry )
       _.fileProvider.fileWrite( willfPath, write1 );
     }
   });
 
 }
 
-module.exports = onEach;
+module.exports = onModule;

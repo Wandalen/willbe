@@ -2172,8 +2172,8 @@ function strSplitsDropDelimeters_body( o )
 
   /* stripping */
 
-  if( o.delimeter.some( ( d ) => _.regexpIs( d ) ) )
-  debugger;
+  // if( o.delimeter.some( ( d ) => _.regexpIs( d ) ) )
+  // debugger;
 
   for( let s = o.splits.length-1 ; s >= 0 ; s-- )
   {

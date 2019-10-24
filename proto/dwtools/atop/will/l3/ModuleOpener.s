@@ -361,17 +361,12 @@ function moduleUsePaths( module )
 
   opener._.dirPath = module.dirPath;
   opener._.commonPath = module.commonPath;
-  // opener[ dirPathSymbol ] = module.dirPath;
-  // opener[ commonPathSymbol ] = module.commonPath;
 
   opener.willfilesPath = module.willfilesPath;
-  // opener.downloadPath = module.downloadPath;
-  // opener.localPath = module.localPath;
-  // opener.remotePath = module.remotePath;
 
-opener._.downloadPath = module.downloadPath;
-opener._.localPath = module.localPath;
-opener._.remotePath = module.remotePath;
+  opener._.downloadPath = module.downloadPath;
+  opener._.localPath = module.localPath;
+  opener._.remotePath = module.remotePath;
 
 }
 
@@ -874,7 +869,7 @@ function _willfilesFindAct( o )
   {
     records = will.willfilesFind
     ({
-      dirPath : o.willfilesPath,
+      commonPath : o.willfilesPath,
       withIn : o.withIn,
       withOut : o.withOut,
       exact : !!opener.superRelation,
@@ -888,7 +883,6 @@ function _willfilesFindAct( o )
     let willfOptions =
     {
       filePath : record.absolute,
-      // dirPath : opener.dirPath,
     }
     let got = will.willfileFor({ willf : willfOptions, combining : 'supplement' });
     opener.willfileRegister( got.willf );

@@ -393,6 +393,12 @@ let wTemplateTreeResolver =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.TemplateTreeResolver },
 }
 
+let wTemplateTreeResolver2 =
+{
+  includeAny : includeAny( 'amid/l5_mapper/TemplateTreeResolver2.s', 'wtemplatetreeresolver2' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.TemplateTreeResolver2 },
+}
+
 let wTemplateTreeEnvironment =
 {
   includeAny : includeAny( 'amid/l5_mapper/TemplateTreeEnvironment.s', 'wtemplatetreeenvironment' ),
@@ -421,6 +427,18 @@ let wGitTools =
 {
   includeAny : includeAny( 'amid/l3/git/IncludeMid.s', 'wgittools' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.git },
+}
+
+let wNpmTools =
+{
+  includeAny : includeAny( 'amid/l3/npm/IncludeMid.s', 'wnpmtools' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.npm },
+}
+
+let wYamlTools =
+{
+  includeAny : includeAny( 'amid/l3/yaml/IncludeMid.s', 'wyamltools' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.yaml },
 }
 
 // let wGraphLive =
@@ -648,6 +666,7 @@ let Extend =
   wPathTranslator,
   wNameMapper,
   wTemplateTreeResolver,
+  wTemplateTreeResolver2,
   wTemplateTreeEnvironment,
   wTemplateFileWriter,
 
@@ -658,6 +677,8 @@ let Extend =
   wGraphTools,
 
   wGitTools,
+  wNpmTools,
+  wYamlTools,
 
   wSchema,
   wScriptLauncher,

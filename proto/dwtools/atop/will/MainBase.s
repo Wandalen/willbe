@@ -83,6 +83,8 @@ function init( o )
 
   let logger = will.logger = new _.Logger({ output : _global_.logger, name : 'will' });
 
+  will._.hooks = null;
+
   _.workpiece.initFields( will );
   Object.preventExtensions( will );
 
@@ -123,14 +125,12 @@ function form()
 
   if( !will.environmentPath )
   will.environmentPath = will.environmentPathDetermine( will.fileProvider.path.current() );
+  if( !will.withPath )
+  will.withPath = will.fileProvider.path.join( will.fileProvider.path.current(), './' );
 
   _.assert( arguments.length === 0 );
   _.assert( !will.formed );
   _.assert( _.path.is( will.environmentPath ) );
-
-  /* begin */
-
-  /* end */
 
   will.formed = 1;
   return will;
@@ -195,17 +195,6 @@ function formAssociates()
 function WillPathGet()
 {
   return _.path.join( __dirname, 'Exec' );
-}
-
-//
-
-function WillfilePathIs( filePath )
-{
-  let fname = _.path.fullName( filePath );
-  let r = /\.will\.\w+/;
-  if( _.strHas( fname, r ) )
-  return true;
-  return false;
 }
 
 //
@@ -387,6 +376,14 @@ function HooksPathGet( environmentPath )
 
 //
 
+function IsModuleAt( filePath )
+{
+  let cls = this;
+  return cls.WillfilesFind( filePath ).length > 0;
+}
+
+//
+
 function hooksPathGet()
 {
   let will = this;
@@ -500,6 +497,23 @@ function vcsFor( o )
 vcsFor.defaults =
 {
   filePath : null,
+}
+
+//
+
+function resourceWrap( o )
+{
+  let will = this;
+
+  if( o && !_.mapIs( o ) )
+  if( o instanceof _.Will.OpenedModule )
+  o = { module : o }
+  else if( o instanceof _.Will.ModuleOpener )
+  o = { opener : o }
+  else if( o instanceof _.Will.ModuleVariant )
+  o = { variant : o }
+
+  return o;
 }
 
 //
@@ -1087,6 +1101,92 @@ function modulePathRegister( openedModule )
 
 //
 
+function moduleNew( o )
+{
+  let will = this.form();
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+
+  o = _.routineOptions( moduleNew, arguments );
+
+  if( o.localPath )
+  o.localPath = path.join( path.current(), o.localPath );
+  else
+  o.localPath = path.join( path.current(), './' );
+
+  if( !o.name )
+  o.name = path.name( o.localPath );
+
+  _.assert( _.strDefined( o.name ) );
+  _.assert( _.arrayHas( [ 'throw', 'ignore' ], o.collision ) );
+
+  let code =
+`
+about :
+
+  name : ${o.name}
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      step::module.export
+`
+
+  if( fileCheck( '.im.will.yml' ) )
+  return o.localPath;
+  if( fileCheck( '.ex.will.yml' ) )
+  return o.localPath;
+  if( fileCheck( '.will.yml' ) )
+  return o.localPath;
+  if( path.isTrailed( o.localPath ) )
+  {
+    if( fileCheck( 'im.will.yml' ) )
+    return o.localPath;
+    if( fileCheck( 'ex.will.yml' ) )
+    return o.localPath;
+    if( fileCheck( 'will.yml' ) )
+    return o.localPath;
+  }
+
+  let filePath = path.isTrailed( o.localPath ) ? o.localPath + 'will.yml' : o.localPath + '.will.yml';
+
+  _.assert( !fileProvider.fileExists( filePath ) );
+  fileProvider.fileWrite( filePath, code );
+
+  if( o.verbosity )
+  logger.log( `Create module::${o.name} at ${o.localPath}` );
+
+  return o.localPath;
+
+  function fileCheck( postfix )
+  {
+    let filePath = o.localPath + postfix;
+    if( fileProvider.fileExists( filePath ) )
+    {
+      if( o.collision === 'throw' )
+      throw _.errBrief( `Cant make a new module::${o.name} at ${o.localPath}\nWillfile at ${filePath} already exists!` );
+      else if( o.collision === 'ignore' )
+      return o.localPath;
+    }
+  }
+
+}
+
+moduleNew.defaults =
+{
+  localPath : null,
+  name : null,
+  verbosity : 0,
+  collision : 'throw', /* 'throw', 'ignore' */
+}
+
+//
+
 function modulesFindEachAt( o )
 {
   let will = this.form();
@@ -1144,7 +1244,7 @@ function modulesFindEachAt( o )
 
         debugger;
         if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
-        it2.currentPath = it1.dst;
+        it2.currentOpenerPath = it1.dst;
         it2.options = o;
 
         if( o.onBegin )
@@ -1183,7 +1283,7 @@ function modulesFindEachAt( o )
     {
       files = will.willfilesFind
       ({
-        dirPath : o.selector,
+        commonPath : o.selector,
         withIn : 1,
         withOut : 1,
         excludingUnderscore : 1,
@@ -1334,7 +1434,7 @@ function modulesFindWithAt( o )
   {
     files = will.willfilesFind
     ({
-      dirPath : o.selector,
+      commonPath : o.selector,
       tracing : o.tracing,
       withIn : will.withIn,
       withOut : will.withOut,
@@ -1432,7 +1532,8 @@ function modulesFindWithAt( o )
 
     if( err )
     {
-      _.arrayAppendonce( op.errs, err );
+      debugger;
+      _.arrayAppendOnce( op.errs, err );
       throw err;
     }
 
@@ -2741,53 +2842,75 @@ function _willfilesReadLog()
 
 //
 
-function willfilesFind( o )
+function WillfilePathIs( filePath )
 {
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
+  let fname = _.path.fullName( filePath );
+  let r = /\.will\.\w+/;
+  if( _.strHas( fname, r ) )
+  return true;
+  return false;
+}
 
-  will.readingBegin();
+//
+
+function WillfilesFind( o )
+{
 
   if( _.strIs( o ) )
-  o = { dirPath : o }
+  o = { commonPath : o }
 
-  if( o.dirPath === '.' )
-  o.dirPath = './';
+  _.routineOptions( WillfilesFind, o );
 
-  o.dirPath = path.normalize( o.dirPath );
-  o.dirPath = _.strRemoveEnd( o.dirPath, '.' );
-  o.dirPath = path.resolve( o.dirPath );
+  if( !o.fileProvider )
+  o.fileProvider = _.fileProvider;
+  if( !o.logger )
+  o.logger = _global_.logger;
 
-  _.routineOptions( willfilesFind, o );
+  let fileProvider = o.fileProvider;
+  let path = fileProvider.path;
+  let logger = o.logger;
+
+  if( o.commonPath === '.' )
+  o.commonPath = './';
+  o.commonPath = path.normalize( o.commonPath );
+  o.commonPath = _.strRemoveEnd( o.commonPath, '.' );
+  o.commonPath = path.resolve( o.commonPath );
+
   _.assert( arguments.length === 1 );
-  _.assert( !!will.formed );
   _.assert( _.boolIs( o.recursive ) );
-  _.assert( !path.isGlobal( path.fromGlob( o.dirPath ) ), 'Expects local path' );
+  _.assert( o.recursive === false );
+  _.assert( !path.isGlobal( path.fromGlob( o.commonPath ) ), 'Expects local path' );
 
   if( !o.tracing )
-  return findFor( o.dirPath );
+  return findFor( o.commonPath );
 
-  let dirPaths = path.traceToRoot( o.dirPath );
-  for( let d = dirPaths.length-1 ; d >= 0 ; d-- )
+  let commonPaths = path.traceToRoot( o.commonPath );
+
   {
-    let dirPath = dirPaths[ d ];
-    if( !path.isSafe( dirPath, 2 ) )
-    continue;
-    let result = findFor( path.trail( dirPath ) );
+    let result = findFor( commonPaths[ commonPaths.length-1 ] );
+    if( result.length )
+    return result;
+  }
+
+  for( let d = commonPaths.length-1 ; d >= 0 ; d-- )
+  {
+    let commonPath = commonPaths[ d ];
+    let result = findFor( path.trail( commonPath ) );
     if( result.length )
     return result;
   }
 
   return [];
 
-  function findFor( dirPath )
+  function findFor( commonPath )
   {
+
+    if( !path.isSafe( commonPath, 2 ) )
+    return [];
 
     let filter =
     {
-      filePath : dirPath,
+      filePath : commonPath,
       maskTransientDirectory :
       {
       },
@@ -2806,10 +2929,10 @@ function willfilesFind( o )
       }
     };
 
-    if( o.excludingUnderscore && path.isGlob( dirPath ) )
+    if( o.excludingUnderscore && path.isGlob( commonPath ) )
     {
-      filter.maskDirectory.excludeAny = [ /(^|\/)_/ ];
-      filter.maskTransientDirectory.excludeAny = [ /(^|\/)_/ ];
+      filter.maskDirectory.excludeAny = [ /(^|\/)_/, /(^|\/)-/, /(^|\/)\.will($|\/)/ ];
+      filter.maskTransientDirectory.excludeAny = [ /(^|\/)_/, /(^|\/)-/, /(^|\/)\.will($|\/)/ ];
     }
 
     if( !o.withIn )
@@ -2817,7 +2940,7 @@ function willfilesFind( o )
     if( !o.withOut )
     filter.maskTerminal.excludeAny.push( /(^|\.|\/)out(\.)/ )
 
-    if( !path.isGlob( dirPath ) )
+    if( !path.isGlob( commonPath ) )
     filter.recursive = o.recursive ? 2 : 1;
 
     let o2 =
@@ -2828,7 +2951,7 @@ function willfilesFind( o )
       mode : 'distinct',
     }
 
-    if( _.strHas( o.dirPath, 'out/submodule' ) )
+    if( _.strHas( o.commonPath, 'out/submodule' ) )
     debugger;
 
     filter.filePath = path.mapExtend( filter.filePath );
@@ -2871,9 +2994,7 @@ function willfilesFind( o )
       return { [ it.src ] : it.dst };
     });
 
-    // debugger;
     let files = fileProvider.filesFind( o2 );
-    // debugger;
 
     let files2 = [];
     files.forEach( ( file ) =>
@@ -2891,16 +3012,40 @@ function willfilesFind( o )
   }
 }
 
-willfilesFind.defaults =
+WillfilesFind.defaults =
 {
-  dirPath : null,
+  commonPath : null,
   withIn : 1,
   withOut : 1,
   exact : 0,
   recursive : false,
   tracing : 0,
   excludingUnderscore : 0,
+  fileProvider : null,
+  logger : null,
 }
+
+//
+
+function willfilesFind( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  will.readingBegin();
+
+  o.logger = logger;
+  o.fileProvider = fileProvider;
+
+  return will.WillfilesFind( o );
+}
+
+willfilesFind.defaults = _.mapExtend( null, WillfilesFind.defaults );
+
+delete willfilesFind.defaults.logger;
+delete willfilesFind.defaults.fileProvider;
 
 //
 
@@ -3083,25 +3228,64 @@ function hooksReload()
   _.assert( arguments.length === 0 );
   _.assert( path.is( will.environmentPath ) );
 
-  debugger;
-  let hooksFiles = fileProvider.filesFind({ filePath : will.hooksPath + '/*', withDirs : 0 });
-  debugger;
+  let hooksFiles = fileProvider.filesFind
+  ({
+    filePath : will.hooksPath + '/*',
+    withDirs : 0,
+  });
 
   hooksFiles.forEach( ( hookFile ) =>
   {
     let hook = Object.create( null );
-    hook.name = path.name( hookFile.absoluteName );
+    hook.name = path.name( hookFile.absolute );
     hook.file = hookFile;
-    hook.exec = function exec( it )
+    hook.call = function call( it )
     {
-      it = will.hookItFrom( it );
-      return will.hookCall( it );
+      _.assert( arguments.length === 1 );
+      it = will.resourceWrap( it );
+      let it2 = will.hookItNew( it );
+      it2.execPath = hook.file.absolute;
+      it2 = will.hookItFrom( it2 );
+      return will.hookCall( it2 );
     }
     _.assert( !hooks[ hook.name ], () => `Redefinition of hook::${name}` );
     hooks[ hook.name ] = hook;
   });
 
-  debugger;
+}
+
+//
+
+function hookItNew( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  /* xxx : use recursive clone here */
+
+  let o2 = _.mapExtend( null, o );
+  delete o2.execPath;
+  delete o2.interpreterName;
+
+  if( o2.request )
+  o2.request = clone( o2.request );
+  if( o2.request.map )
+  o2.request.map = clone( o2.request.map );
+
+  _.assert( !o2.request || o2.request !== o.request );
+  _.assert( !o2.request || !o2.request.map || o2.request.map !== o.request.map );
+
+  return o2;
+
+  function clone( src )
+  {
+    if( _.mapIs( src ) )
+    return _.mapExtend( null, src );
+    return src;
+  }
+
 }
 
 //
@@ -3112,9 +3296,12 @@ function hookItFrom( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let currentPath = will.currentPath || _.path.current();
+  let withPath = path.join( _.path.current(), will.withPath || './' );
 
-  o = _.routineOptions( hookItFrom, arguments );
+  o = will.resourceWrap( o );
+
+  o = _.routineOptions( hookItFrom, o );
+  _.assert( arguments.length === 1 );
 
   if( o.opener && !o.module )
   o.module = o.opener.openedModule;
@@ -3142,8 +3329,8 @@ function hookItFrom( o )
   o.fileProvider = fileProvider;
   if( !o.ready )
   o.ready = new _.Consequence().take( null );
-  if( !o.currentPath )
-  o.currentPath = currentPath;
+  if( !o.withPath )
+  o.withPath = withPath;
   if( !o.logger )
   o.logger = logger;
 
@@ -3155,18 +3342,13 @@ function hookItFrom( o )
   if( _.strIs( o.request ) )
   o.request = _.strRequestParse( o.request );
   _.assert( !!o.request.map );
-  if( o.request.map.v !== undefined )
-  o.request.map.verbosity = o.request.map.v;
-  if( o.request.map.verbosity === undefined )
-  o.request.map.verbosity = 1;
-
-  // if( !o.interpreterName )
+  // if( o.request.map.v !== undefined )
   // {
-  //   if( _.arrayHasAny( [ 'js', 'ss', 's' ], path.exts( o.execPath ) ) )
-  //   o.interpreterName = 'js';
-  //   else
-  //   o.interpreterName = 'os';
+  //   o.request.map.verbosity = o.request.map.v;
+  //   delete o.request.map.v;
   // }
+  // if( o.request.map.verbosity === undefined )
+  // o.request.map.verbosity = 1;
 
   if( !o.start )
   o.start = _.process.starter
@@ -3195,7 +3377,7 @@ function hookItFrom( o )
     ready : o.ready,
   });
 
-  _.assert( _.strIs( o.currentPath ) );
+  _.assert( _.strIs( o.withPath ) );
   _.assert( _.strIs( o.execPath ) );
   _.assert( _.arrayIs( o.openers ) );
   _.assert( o.will === will );
@@ -3218,7 +3400,7 @@ hookItFrom.defaults =
   ready : null,
   logger : null,
 
-  currentPath : null,
+  withPath : null,
   execPath : null,
   request : null,
   interpreterName : null,
@@ -3243,22 +3425,23 @@ function hookCall( o )
 
   /* */
 
-  if( o.module && o.currentPath && will.Resolver.selectorIs( o.currentPath ) )
-  o.currentPath = o.module.pathResolve
+  if( o.module && o.withPath && will.Resolver.selectorIs( o.withPath ) )
+  o.withPath = o.module.pathResolve
   ({
-    selector : o.currentPath,
+    selector : o.withPath,
     prefixlessAction : 'resolved',
   });
+
   _.sure
   (
-      o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath )
+      o.withPath === null || _.strIs( o.withPath ) || _.strsAreAll( o.withPath )
     , 'Current path should be string if defined'
   );
 
-  if( o.module && o.currentPath )
-  o.currentPath = path.s.join( o.module.inPath, o.currentPath );
+  if( o.module && o.withPath )
+  o.withPath = path.s.join( o.module.inPath, o.withPath );
   else
-  o.currentPath = path.s.join( o.will.inPath, o.currentPath );
+  o.withPath = path.s.join( o.will.withPath, o.withPath );
 
   /* */
 
@@ -3269,7 +3452,7 @@ function hookCall( o )
     prefixlessAction : 'resolved',
   });
 
-  o.execPath = path.s.join( o.currentPath, o.execPath );
+  o.execPath = path.s.join( o.withPath, o.execPath );
   o.execPath = will.hookFindAt( o.execPath );
 
   /* */
@@ -3297,7 +3480,7 @@ function hookCall( o )
 
   function jsCall()
   {
-    let ready = new _.Consequence().take( null );
+    let ready = o.ready;
 
     ready
     .then( () =>
@@ -3308,11 +3491,13 @@ function hookCall( o )
     {
       if( !_.routineIs( routine ) )
       throw _.errBrief( `Script file should export routine or consequence, but exports ${_.strType( routine )}` );
-      verifyDefaults( routine );
+      defaultsApply( routine );
       let r = routine.call( will, o );
+      if( r === ready )
+      return null;
       if( _.consequenceIs( r ) || _.promiseLike( r ) )
       return r;
-      return o.ready || null;
+      return null;
     })
     .finally( ( err, arg ) =>
     {
@@ -3323,15 +3508,27 @@ function hookCall( o )
       return arg;
     })
 
-    return ready;
+    return ready.split();
   }
 
   /* */
 
-  function verifyDefaults( routine )
+  function defaultsApply( routine )
   {
     if( routine.defaults )
-    _.routineOptions( routine, o.request.map );
+    {
+      _.routineOptions( routine, o.request.map );
+    }
+    else
+    {
+      if( o.request.map.v !== undefined )
+      {
+        o.request.map.verbosity = o.request.map.v;
+        delete o.request.map.v;
+      }
+      if( o.request.map.verbosity === undefined )
+      o.request.map.verbosity = 1;
+    }
   }
 
   /* */
@@ -3342,7 +3539,8 @@ function hookCall( o )
     o.execPath = `${o.execPath} ${_.strRequestStr( o.request )} localPath:${o.variant.localPath}`;
     return _.process.start
     ({
-      currentPath : o.currentPath,
+      ready : o.ready,
+      currentPath : o.withPath,
       execPath : o.execPath,
       outputCollecting : 1,
       outputGraying : 1,
@@ -3372,11 +3570,11 @@ function hookFindAt( o )
   _.routineOptions( hookFindAt, o );
   _.assert( arguments.length === 1 );
 
-  if( fileProvider.fileExists( o.execPath ) )
+  if( fileProvider.isTerminal( o.execPath ) )
   return end( o.execPath );
 
   let filePath = `${o.execPath}.(${will.KnownHookExts.join( '|' )})`;
-  let found = fileProvider.filesFind({ filePath, outputFormat : 'absolute' });
+  let found = fileProvider.filesFind({ filePath, outputFormat : 'absolute', withDirs : 0 });
   return end( found );
 
   function end( found )
@@ -3491,6 +3689,7 @@ let Composes =
   withBroken : 1,
 
   environmentPath : null,
+  withPath : null,
 
 }
 
@@ -3515,7 +3714,6 @@ let Associates =
 {
 
   fileProvider : null,
-  // filesGraph : null,
   logger : null,
   mainOpener : null,
 
@@ -3570,6 +3768,8 @@ let Statics =
   OutfilePathFor,
   RemotePathAdjust,
   HooksPathGet,
+  IsModuleAt,
+  WillfilesFind,
 
 }
 
@@ -3586,7 +3786,7 @@ let Forbids =
 let Accessors =
 {
 
-  _ : { getter : _.accessor.getter.toStructure, readOnly : 1, },
+  _ : { getter : _.accessor.getter.withSymbol, readOnly : 1, },
   hooks : { getter : hooksGet, readOnly : 1, },
   environmentPath : { setter : environmentPathSet },
   hooksPath : { getter : hooksPathGet, readOnly : 1, },
@@ -3611,7 +3811,6 @@ let Extend =
   // path
 
   WillPathGet,
-  WillfilePathIs,
   PathIsOut,
   DirPathFromFilePaths,
   PrefixPathForRole,
@@ -3622,6 +3821,7 @@ let Extend =
   OutfilePathFor,
   RemotePathAdjust,
   HooksPathGet,
+  IsModuleAt,
 
   hooksPathGet,
   environmentPathSet,
@@ -3631,6 +3831,7 @@ let Extend =
 
   _verbosityChange,
   vcsFor,
+  resourceWrap,
   resourcesInfoExport,
   variantsInfoExport,
   _pathChanged,
@@ -3655,6 +3856,7 @@ let Extend =
   moduleIdRegister,
   modulePathUnregister,
   modulePathRegister,
+  moduleNew,
 
   modulesFindEachAt,
   modulesFindWithAt,
@@ -3699,6 +3901,8 @@ let Extend =
   _willfilesReadEnd,
   _willfilesReadLog,
 
+  WillfilePathIs,
+  WillfilesFind,
   willfilesFind,
   willfilesSelectPaired,
   willfileWithCommon,
@@ -3711,6 +3915,7 @@ let Extend =
   // hooks
 
   hooksReload,
+  hookItNew,
   hookItFrom,
   hookCall,
   hookFindAt,

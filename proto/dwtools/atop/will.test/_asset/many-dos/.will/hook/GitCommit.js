@@ -1,13 +1,9 @@
 
-function onEach( it )
+function onModule( it )
 {
+  let o = it.request.map;
   let _ = it.tools;
   let logger = it.logger;
-  if( !it.module )
-  {
-    logger.log( it.variant.locationExport() );
-    logger.error( `${it.variant.object.absoluteName} is not opened!` );
-  }
 
   _.fileProvider.filesFind( it.variant.dirPath + '**' );
 
@@ -24,17 +20,15 @@ function onEach( it )
   if( !status.hasLocalChanges )
   return null;
 
-  logger.log( it.variant.locationExport() );
+  if( o.verbosity )
+  logger.log( `Committing ${it.variant.locationExport()}` );
 
-  // let willfPath = _.arrayAs( it.opener.willfilesPath );
-  // willfPath.forEach( ( willfPath ) =>
-  // {
-  //   it.start({ execPath : `git checkout ${_.path.nativize( willfPath )}`, throwingExitCode : 0 });
-  // });
+  if( o.dry )
+  return;
 
   it.start( `git add --all` );
   it.start( `git commit ${it.request.original}` );
 
 }
 
-module.exports = onEach;
+module.exports = onModule;

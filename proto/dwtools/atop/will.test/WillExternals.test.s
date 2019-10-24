@@ -42,7 +42,11 @@ function onSuiteBegin()
       recursive : 2,
       maskAll :
       {
-        excludeAny : [ /(^|\/)\.git($|\/)/ ],
+        excludeAny : [ /(^|\/)\.git($|\/)/, /(^|\/)\+/ ],
+      },
+      maskTransientAll :
+      {
+        excludeAny : [ /(^|\/)\.git($|\/)/, /(^|\/)\+/ ],
       },
     },
   });
@@ -141,7 +145,7 @@ function singleModuleWithSpaceTrivial( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -184,7 +188,7 @@ function make( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, '.' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -330,7 +334,7 @@ function transpile( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
@@ -478,6 +482,890 @@ transpile.timeOut = 200000;
 
 //
 
+function moduleNewDotless( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-exported' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + self.willPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new' })
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './ex.will.yml',
+      './im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/ex.will.yml',
+      './sub/im.will.yml'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new module::moduleNewDotless at' ), 1 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 1 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new some'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new some' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './ex.will.yml',
+      './im.will.yml',
+      './some.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/ex.will.yml',
+      './sub/im.will.yml'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with some .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new some/'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new some/' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './ex.will.yml',
+      './im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './some',
+      './some/will.yml',
+      './sub',
+      './sub/ex.will.yml',
+      './sub/im.will.yml'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with some/ .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new ../dir1/dir2/some/'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new ../dir1/dir2/some/' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './ex.will.yml',
+      './im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/ex.will.yml',
+      './sub/im.will.yml'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    var exp = [ '.', './dir2', './dir2/some', './dir2/some/will.yml' ]
+    var files = self.find( routinePath + '/../dir1' );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with ../dir1/dir2/some/ .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
+
+    _.fileProvider.filesDelete( routinePath + '/../dir1' );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+moduleNewDotless.timeOut = 200000;
+
+//
+
+function moduleNewDotlessSingle( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + self.willPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new' })
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    var exp = [ '.', './will.yml', './proto', './proto/File.debug.js', './proto/File.release.js', './sub', './sub/will.yml' ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new module::moduleNewDotlessSingle at' ), 1 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 1 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new some'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new some' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './some.will.yml',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/will.yml'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with some .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new some/'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new some/' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './some',
+      './some/will.yml',
+      './sub',
+      './sub/will.yml'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with some/ .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new ../dir1/dir2/some/'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new ../dir1/dir2/some/' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp = [ '.', './will.yml', './proto', './proto/File.debug.js', './proto/File.release.js', './sub', './sub/will.yml' ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    var exp = [ '.', './dir2', './dir2/some', './dir2/some/will.yml' ]
+    var files = self.find( routinePath + '/../dir1' );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with ../dir1/dir2/some/ .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
+
+    _.fileProvider.filesDelete( routinePath + '/../dir1' );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+moduleNewDotlessSingle.timeOut = 200000;
+
+//
+
+function moduleNewNamed( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let ready = new _.Consequence().take( null );
+
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + self.willPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new super'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new super' })
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new module::super at' ), 1 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 1 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.with some .module.new'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.with some .module.new' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './some.will.yml',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with some .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.with some/ .module.new'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.with some/ .module.new' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './some',
+      './some/will.yml'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with some/ .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.with some .module.new some2'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.with some .module.new some2' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './some',
+      './some/some2.will.yml'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::some2 at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with some/some2 .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'some2'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::moduleNewNamed at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with . .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'moduleNewNamed'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new super/'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new super/' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './super',
+      './super/will.yml'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::super at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with super/ .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'super'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new some'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new some' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './some.will.yml',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with some .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new some/'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new some/' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './some',
+      './some/will.yml'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with some/ .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = '.module.new ../dir1/dir2/some/'
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    return null;
+  })
+  shell({ execPath : '.module.new ../dir1/dir2/some/' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js'
+    ]
+    var files = self.find( routinePath );
+    test.identical( files, exp );
+
+    var exp = [ '.', './dir2', './dir2/some', './dir2/some/will.yml' ]
+    var files = self.find( routinePath + '/../dir1' );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
+    test.identical( _.strCount( got.output, 'already exists!' ), 0 );
+    test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
+
+    return null;
+  })
+  shell({ execPath : '.with ../dir1/dir2/some/ .about.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
+
+    _.fileProvider.filesDelete( routinePath + '/../dir1' );
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+}
+
+moduleNewNamed.timeOut = 200000;
+
+//
+
 function openWith( test )
 {
   let self = this;
@@ -486,7 +1374,7 @@ function openWith( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -889,7 +1777,7 @@ function openEach( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -978,7 +1866,7 @@ function withMixed( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, 'file' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -1045,8 +1933,6 @@ function eachMixed( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  let filePath = _.path.join( routinePath, 'file' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -1146,7 +2032,7 @@ function withList( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
@@ -1213,7 +2099,7 @@ function eachList( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
@@ -1371,7 +2257,7 @@ function eachBrokenIll( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
@@ -1423,7 +2309,7 @@ function eachBrokenNon( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
@@ -1471,7 +2357,7 @@ function eachBrokenCommand( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
@@ -1522,7 +2408,7 @@ function openExportClean( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
@@ -1580,155 +2466,6 @@ function openExportClean( test )
 
 //
 
-function withHookCallInfo( test )
-{
-  let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
-  let routinePath = _.path.join( self.suitePath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
-
-  /* - */
-
-  shell( '.clean' )
-  shell( '.export' )
-  .then( ( got ) =>
-  {
-    test.case = 'setup';
-    _.fileProvider.fileAppend( _.path.join( routinePath, '.im.will.yml' ), '\n' );
-
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/proto' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/many.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathBasic' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathTools' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/Tools' ) ) );
-
-    return null;
-  })
-
-  /* - */
-
-  shell( '.hook.call Info.js' )
-  .then( ( got ) =>
-  {
-    test.case = '.hook.call Info.js';
-    test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
-    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
-    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
-    return null;
-  })
-
-  /* - */
-
-  shell( '.with . .hook.call Info.js' )
-  .then( ( got ) =>
-  {
-    test.case = '.with . .hook.call Info.js';
-    test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
-    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
-    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
-    return null;
-  })
-
-  /* - */
-
-  shell( '.with * .hook.call Info.js' )
-  .then( ( got ) =>
-  {
-    test.case = '.with . .hook.call Info.js';
-    test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
-    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
-    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
-    return null;
-  })
-
-  /* - */
-
-  shell( '.with ** .hook.call Info.js' )
-  .then( ( got ) =>
-  {
-    test.case = '.with . .hook.call Info.js';
-    test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
-    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 6 );
-    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
-    return null;
-  })
-
-  /* - */
-
-  shell( '.imply withOut:0 ; .with ** .hook.call Info.js' )
-  .then( ( got ) =>
-  {
-    test.case = '.imply withOut:0 ; .with ** .hook.call Info.js';
-    test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 8 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
-    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 6 );
-    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
-    return null;
-  })
-
-  /* - */
-
-  shell( '.imply withIn:0 ; .with ** .hook.call Info.js' )
-  .then( ( got ) =>
-  {
-    test.case = '.imply withIn:0 ; .with ** .hook.call Info.js';
-    test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 3 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
-    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 4 );
-    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  return ready;
-} /* end of function withHookCallInfo */
-
-withHookCallInfo.timeOut = 300000;
-withHookCallInfo.description =
-`
-- do execute js script
-- filtering option withIn works
-- filtering option withOut works
-- only one attempt to open outdate outfile
-- action info works properly
-- message with time printed afterwards
-`
-
-//
-
 function withDoInfo( test )
 {
   let self = this;
@@ -1758,10 +2495,10 @@ function withDoInfo( test )
   .then( ( got ) =>
   {
     test.case = 'setup';
-    _.fileProvider.fileAppend( _.path.join( routinePath, '.im.will.yml' ), '\n' );
+    _.fileProvider.fileAppend( _.path.join( routinePath, 'will.yml' ), '\n' );
 
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/proto' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/many.out.will.yml' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/dos.out.will.yml' ) ) );
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathBasic' ) ) );
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathTools' ) ) );
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/Tools' ) ) );
@@ -1771,91 +2508,91 @@ function withDoInfo( test )
 
   /* - */
 
-  shell( '.hook.call Info.js' )
+  shell( '.hook.call info.js' )
   .then( ( got ) =>
   {
-    test.case = '.hook.call Info.js';
+    test.case = '.hook.call info.js';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 10 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 1 );
-    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
+    test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
 
   /* - */
 
-  shell( '.with . .hook.call Info.js' )
+  shell( '.with . .hook.call info.js' )
   .then( ( got ) =>
   {
-    test.case = '.with . .hook.call Info.js';
+    test.case = '.with . .hook.call info.js';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 10 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 1 );
-    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
+    test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
 
   /* - */
 
-  shell( '.with * .hook.call Info.js' )
+  shell( '.with * .hook.call info.js' )
   .then( ( got ) =>
   {
-    test.case = '.with . .hook.call Info.js';
+    test.case = '.with . .hook.call info.js';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 10 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 1 );
-    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
+    test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
 
   /* - */
 
-  shell( '.with ** .hook.call Info.js' )
+  shell( '.with ** .hook.call info.js' )
   .then( ( got ) =>
   {
-    test.case = '.with . .hook.call Info.js';
+    test.case = '.with . .hook.call info.js';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 11 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 12 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 6 );
-    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 7 );
+    test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
 
   /* - */
 
-  shell( '.imply withOut:0 ; .with ** .hook.call Info.js' )
+  shell( '.imply withOut:0 ; .with ** .hook.call info.js' )
   .then( ( got ) =>
   {
-    test.case = '.imply withOut:0 ; .with ** .hook.call Info.js';
+    test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 8 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 6 );
-    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 7 );
+    test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
 
   /* - */
 
-  shell( '.imply withIn:0 ; .with ** .hook.call Info.js' )
+  shell( '.imply withIn:0 ; .with ** .hook.call info.js' )
   .then( ( got ) =>
   {
-    test.case = '.imply withIn:0 ; .with ** .hook.call Info.js';
+    test.case = '.imply withIn:0 ; .with ** .hook.call info.js';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 4 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 4 );
-    test.identical( _.strCount( got.output, 'Done .do/Info.js in' ), 1 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 5 );
+    test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
 
     return null;
   })
@@ -1863,6 +2600,7 @@ function withDoInfo( test )
   /* - */
 
   return ready;
+
 } /* end of function withDoInfo */
 
 withDoInfo.timeOut = 300000;
@@ -1885,7 +2623,7 @@ function withDoStatus( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
@@ -1979,7 +2717,6 @@ function withDoCommentOut( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
@@ -2049,6 +2786,403 @@ withDoCommentOut.description =
 
 //
 
+function hookCallInfo( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let outPath = _.path.join( routinePath, 'out' );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + self.willPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  /* - */
+
+  shell( '.clean' )
+  shell( '.export' )
+  .then( ( got ) =>
+  {
+    test.case = 'setup';
+    _.fileProvider.fileAppend( _.path.join( routinePath, 'will.yml' ), '\n' );
+
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/dos.out.will.yml' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathBasic' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathTools' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/Tools' ) ) );
+
+    return null;
+  })
+
+  /* - */
+
+  shell( '.hook.call info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.hook.call info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  shell( '.with . .hook.call info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.with . .hook.call info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  shell( '.with * .hook.call info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.with . .hook.call info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 10 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  shell( '.with ** .hook.call info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.with . .hook.call info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 12 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 7 );
+    test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  shell( '.imply withOut:0 ; .with ** .hook.call info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 7 );
+    test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  shell( '.imply withIn:0 ; .with ** .hook.call info.js' )
+  .then( ( got ) =>
+  {
+    test.case = '.imply withIn:0 ; .with ** .hook.call info.js';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 5 );
+    test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+} /* end of function hookCallInfo */
+
+hookCallInfo.timeOut = 300000;
+hookCallInfo.description =
+`
+- do execute js script
+- filtering option withIn works
+- filtering option withOut works
+- only one attempt to open outdate outfile
+- action info works properly
+- message with time printed afterwards
+`
+
+//
+
+function hookGitMake( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + self.willPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  test.is( true );
+
+  let config = _.fileProvider.fileConfigUserRead();
+  let user = config.about.user;
+  if( !config || !config.about || !config.about[ 'github.token' ] )
+  return null;
+
+  /* - */
+
+  shell({ execPath : '.module.new New2/' })
+
+  .then( ( got ) =>
+  {
+    var exp = [ '.', './will.yml' ];
+    var files = self.find( _.path.join( routinePath, 'New2' ) );
+    test.identical( files, exp );
+
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token : config.about[ 'github.token' ],
+    });
+  })
+
+  shell({ execPath : '.with New2/ .hook.call GitMake v:3' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, `Making repository for module::New2 at` ), 1 );
+    test.identical( _.strCount( got.output, `localPath :` ), 1 );
+    test.identical( _.strCount( got.output, `remotePath : https://github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( got.output, `Making remote repository git+https:///github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( got.output, `Making a new local repository at` ), 1 );
+    test.identical( _.strCount( got.output, `git init .` ), 1 );
+    test.identical( _.strCount( got.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( got.output, `> ` ), 2 );
+
+    var exp = [ '.', './will.yml' ];
+    var files = self.find( _.path.join( routinePath, 'New2' ) );
+    test.identical( files, exp );
+
+    return null;
+  })
+
+  .then( ( got ) =>
+  {
+    debugger;
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+
+} /* end of function hookGitMake */
+
+hookGitMake.timeOut = 300000;
+
+//
+
+function hookPrepare( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+
+  let ready = new _.Consequence().take( null );
+  let shell = _.process.starter
+  ({
+    execPath : 'node ' + self.willPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 1,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+
+  test.is( true );
+
+  let config = _.fileProvider.fileConfigUserRead();
+  let user = config.about.user;
+  if( !config || !config.about || !config.about[ 'github.token' ] )
+  return null;
+
+  /* - */
+
+  ready
+  .then( ( got ) =>
+  {
+    var exp = [];
+    var files = self.find( _.path.join( routinePath, 'New2' ) );
+    test.identical( files, exp );
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token : config.about[ 'github.token' ],
+    });
+  })
+
+  shell({ execPath : '.with New2/ .module.new.with prepare v:3' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, `Making repository for module::New2 at` ), 1 );
+    test.identical( _.strCount( got.output, `localPath :` ), 1 );
+    test.identical( _.strCount( got.output, `remotePath : https://github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( got.output, `Making remote repository git+https:///github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( got.output, `Making a new local repository at` ), 1 );
+    test.identical( _.strCount( got.output, `git init .` ), 1 );
+    test.identical( _.strCount( got.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( got.output, `git push -u origin --all --follow-tags` ), 1 );
+    test.identical( _.strCount( got.output, `> ` ), 10 );
+
+    var exp =
+    [
+      '.',
+      './-will.yml',
+      './.ex.will.yml',
+      './.gitattributes',
+      './.gitignore',
+      './.im.will.yml',
+      './.travis.yml',
+      './LICENSE',
+      './README.md',
+      './was.package.json',
+      './proto',
+      './proto/dwtools',
+      './proto/dwtools/Tools.s',
+      './proto/dwtools/abase',
+      './proto/dwtools/amid',
+      './proto/dwtools/atop',
+      './sample',
+      './sample/Sample.html',
+      './sample/Sample.js'
+    ]
+    var files = self.find( _.path.join( routinePath, 'New2' ) );
+    test.identical( files, exp );
+
+    return null;
+  })
+
+  .then( ( got ) =>
+  {
+    debugger;
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( ( got ) =>
+  {
+    var exp = [];
+    var files = self.find( _.path.join( routinePath, 'New3/New4' ) );
+    test.identical( files, exp );
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New4`,
+      token : config.about[ 'github.token' ],
+    });
+  })
+
+  shell({ execPath : '.with New3/New4 .module.new.with prepare v:3' })
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, `Making repository for module::New4 at` ), 1 );
+    test.identical( _.strCount( got.output, `localPath :` ), 1 );
+    test.identical( _.strCount( got.output, `remotePath : https://github.com/${user}/New4.git` ), 1 );
+    test.identical( _.strCount( got.output, `Making remote repository git+https:///github.com/${user}/New4.git` ), 1 );
+    test.identical( _.strCount( got.output, `Making a new local repository at` ), 1 );
+    test.identical( _.strCount( got.output, `git init .` ), 1 );
+    test.identical( _.strCount( got.output, `git remote add origin https://github.com/${user}/New4.git` ), 1 );
+    test.identical( _.strCount( got.output, `git push -u origin --all --follow-tags` ), 1 );
+    test.identical( _.strCount( got.output, `> ` ), 10 );
+
+    var exp =
+    [
+      '.',
+      './-New4.will.yml',
+      './.ex.will.yml',
+      './.gitattributes',
+      './.gitignore',
+      './.im.will.yml',
+      './.travis.yml',
+      './LICENSE',
+      './README.md',
+      './was.package.json',
+      './proto',
+      './proto/dwtools',
+      './proto/dwtools/Tools.s',
+      './proto/dwtools/abase',
+      './proto/dwtools/amid',
+      './proto/dwtools/atop',
+      './sample',
+      './sample/Sample.html',
+      './sample/Sample.js'
+    ]
+    var files = self.find( _.path.join( routinePath, 'New3' ) );
+    test.identical( files, exp );
+
+    return null;
+  })
+
+  .then( ( got ) =>
+  {
+    debugger;
+    return null;
+  })
+
+  /* - */
+
+  return ready;
+
+} /* end of function hookPrepare */
+
+hookPrepare.timeOut = 300000;
+
+//
+
 function verbositySet( test )
 {
   let self = this;
@@ -2057,7 +3191,7 @@ function verbositySet( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
@@ -2185,7 +3319,7 @@ function verbosityStepDelete( test )
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, 'module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -2482,7 +3616,7 @@ function verbosityStepPrintName( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
@@ -2659,7 +3793,7 @@ function modulesTreeDotless( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let inPath = abs( './' );
   let outSuperDirPath = abs( 'super.out' );
   let outSubDirPath = abs( 'sub.out' );
@@ -2744,7 +3878,6 @@ function modulesTreeLocal( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -2827,7 +3960,7 @@ function modulesTreeHierarchyRemote( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -3085,7 +4218,7 @@ function modulesTreeHierarchyRemoteDownloaded( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -3224,7 +4357,7 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -3304,7 +4437,7 @@ function modulesTreeDisabledAndCorrupted( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -3373,7 +4506,7 @@ modulesTreeDisabledAndCorrupted.timeOut = 300000;
 function help( test )
 {
   let self = this;
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -3488,7 +4621,7 @@ function listSingleModule( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -3823,7 +4956,7 @@ function listWithSubmodulesSimple( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -3865,7 +4998,7 @@ function listWithSubmodules( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -4007,7 +5140,7 @@ function listSteps( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
@@ -4113,7 +5246,7 @@ function clean( test )
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
@@ -4222,7 +5355,7 @@ function cleanSingleModule( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
@@ -4284,7 +5417,7 @@ function cleanBroken1( test )
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   test.description = 'should handle currputed willfile properly';
 
@@ -4421,7 +5554,7 @@ function cleanBroken2( test )
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   test.description = 'should handle currputed willfile properly';
 
@@ -4600,7 +5733,7 @@ function cleanBrokenSubmodules( test )
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
@@ -4689,7 +5822,7 @@ function cleanNoBuild( test )
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
@@ -4754,7 +5887,7 @@ function cleanDry( test )
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
@@ -4834,7 +5967,7 @@ function cleanSubmodules( test )
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
@@ -4909,7 +6042,7 @@ function cleanMixed( test )
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, 'module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -4968,7 +6101,7 @@ function cleanWithInPath( test )
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -5006,10 +6139,6 @@ function cleanWithInPath( test )
       '.',
       './module',
       './module/Proto.will.yml',
-      './module/+.module',
-      './module/+.module/ForGit.txt',
-      './module/+out',
-      './module/+out/ForGit.txt',
       './module/.module',
       './module/.module/ForGit.txt',
       './module/out',
@@ -5047,7 +6176,7 @@ function cleanRecursive( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
@@ -5133,7 +6262,7 @@ function buildSingleModule( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let ready = new _.Consequence().take( null )
 
@@ -5267,7 +6396,7 @@ function buildSingleStep( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -5340,7 +6469,7 @@ function buildSubmodules( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
@@ -5454,7 +6583,7 @@ function buildDetached( test )
   let filePath = _.path.join( routinePath, 'file' );
   let modulePath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -5515,7 +6644,7 @@ function exportSingle( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let outPath = _.path.join( routinePath, 'out' );
   let outWillPath = _.path.join( routinePath, 'out/single.out.will.yml' );
@@ -5626,7 +6755,7 @@ function exportItself( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -5683,7 +6812,7 @@ function exportNonExportable( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -5738,7 +6867,7 @@ function exportInformal( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -6019,7 +7148,7 @@ function exportWithReflector( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let outPath = _.path.join( routinePath, 'out' );
   let outWillPath = _.path.join( routinePath, 'out/export-with-reflector.out.will.yml' );
@@ -6079,7 +7208,7 @@ function exportToRoot( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -6124,7 +7253,7 @@ function exportMixed( test )
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, 'module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -6393,7 +7522,7 @@ function exportSecond( test )
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, 'module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -6856,7 +7985,7 @@ function exportSubmodules( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let outPath = _.path.join( routinePath, 'out' );
 
@@ -6920,7 +8049,7 @@ function exportMultiple( test )
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
   ({
@@ -7440,7 +8569,7 @@ function exportImportMultiple( test )
   let outPath = _.path.join( routinePath, 'out' );
   let out2Path = _.path.join( routinePath, 'super.out' );
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -7640,7 +8769,7 @@ function exportBroken( test )
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
   ({
@@ -7766,7 +8895,7 @@ function exportDoc( test )
   let submodulesPath = _.path.join( routinePath, '.module' );
   let subOutPath = _.path.join( routinePath, 'out' );
   let supOutPath = _.path.join( routinePath, 'doc.out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -7828,7 +8957,7 @@ function exportImport( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'super.out' );
   let ready = new _.Consequence().take( null );
 
@@ -7882,7 +9011,7 @@ function exportBrokenNoreflector( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
@@ -7948,7 +9077,7 @@ function exportCourrputedOutfileUnknownSection( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'sub.out' );
   let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
   let ready = new _.Consequence().take( null );
@@ -8012,7 +9141,7 @@ function exportCourruptedOutfileSyntax( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'sub.out' );
   let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
   let ready = new _.Consequence().take( null );
@@ -8076,7 +9205,7 @@ function exportCourruptedSubmodulesDisabled( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'super.out' );
   let outFilePath = _.path.join( routinePath, 'super.out/supermodule.out.will.yml' );
   let ready = new _.Consequence().take( null );
@@ -8137,7 +9266,7 @@ function exportInconsistent( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'sub.out' );
   let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
   let ready = new _.Consequence().take( null );
@@ -8233,7 +9362,7 @@ function exportWholeModule( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
@@ -8284,7 +9413,7 @@ function exportRecursive( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let inPath = abs( 'ab/' );
   let outTerminalPath = abs( 'out/ab/module-ab.out.will.yml' );
   let outDirPath = abs( 'out' );
@@ -8374,7 +9503,7 @@ function exportRecursiveUsingSubmodule( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let inPath = abs( 'super' );
   let outSuperDirPath = abs( 'super.out' );
   let outSubDirPath = abs( 'sub.out' );
@@ -8613,7 +9742,7 @@ function exportRecursiveLocal( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
@@ -8701,7 +9830,7 @@ function exportDotless( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let inPath = abs( './' );
   let outSuperDirPath = abs( 'super.out' );
   let outSubDirPath = abs( 'sub.out' );
@@ -8835,7 +9964,7 @@ function exportDotlessSingle( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let inPath = abs( './' );
   let outSuperDirPath = abs( 'super.out' );
   let outSubDirPath = abs( 'sub.out' );
@@ -8965,7 +10094,7 @@ function exportTracing( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let inPath = abs( './' );
   let outSuperDirPath = abs( 'super.out' );
   let outSubDirPath = abs( 'sub.out' );
@@ -9066,7 +10195,7 @@ function exportRewritesOutFile( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'export-rewrites-out-file' );
   let routinePath = _.path.join( self.suitePath, test.name );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
   let outFilePath = _.path.join( routinePath, 'out/export-rewrites-out-file.out.will.yml' );
   let willFilePath = _.path.join( routinePath, '.will.yml' );
@@ -9165,7 +10294,7 @@ function exportWithRemoteSubmodules( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
@@ -9232,7 +10361,7 @@ function exportAuto( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let ready = new _.Consequence().take( null );
@@ -9375,7 +10504,7 @@ function importPathLocal( test )
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -9433,7 +10562,7 @@ function importLocalRepo( test )
   let repoPath = _.path.join( self.suitePath, '_repo' );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -9622,7 +10751,7 @@ function importOutWithDeletedSource( test )
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
   let modulePath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -9700,7 +10829,7 @@ function reflectNothingFromSubmodules( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let outPath = _.path.join( routinePath, 'out' );
   let outWillPath = _.path.join( routinePath, 'out/reflect-nothing-from-submodules.out.will.yml' );
@@ -9836,7 +10965,7 @@ function reflectGetPath( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
@@ -9941,7 +11070,7 @@ function reflectSubdir( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
@@ -10106,7 +11235,7 @@ function reflectSubmodulesWithBase( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let submodule1OutFilePath = _.path.join( routinePath, 'submodule1.out.will.yml' );
   let submodule2OutFilePath = _.path.join( routinePath, 'submodule2.out.will.yml' );
@@ -10211,7 +11340,7 @@ function reflectComposite( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -10443,7 +11572,7 @@ function reflectRemoteGit( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
   let local1Path = _.path.join( routinePath, 'PathBasic' );
   let local2Path = _.path.join( routinePath, 'Looker' );
@@ -10596,7 +11725,7 @@ function reflectRemoteHttp( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, 'module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
   let outPath = _.path.join( routinePath, 'out' );
   let localFilePath = _.path.join( routinePath, 'out/Tools.s' );
@@ -10645,7 +11774,7 @@ function reflectWithOptions( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, 'file' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
@@ -10740,7 +11869,7 @@ function reflectWithSelectorInDstFilter( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let filePath = _.path.join( routinePath, 'file' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
@@ -10820,7 +11949,7 @@ function reflectSubmodulesWithCriterion( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out/debug' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -10925,7 +12054,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -10976,7 +12105,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -11154,7 +12283,7 @@ function reflectInherit( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -11380,7 +12509,7 @@ function reflectInheritSubmodules( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -11487,7 +12616,7 @@ function reflectComplexInherit( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -11611,7 +12740,7 @@ function reflectorMasks( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   test.description = 'should handle correct files';
 
@@ -11683,7 +12812,7 @@ function shellWithCriterion( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   /* Checks if shell step supports plural criterion and which path is selected using current value of criterion */
 
@@ -11751,7 +12880,7 @@ function shellVerbosity( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
@@ -11867,7 +12996,7 @@ function functionStringsJoin( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
@@ -12001,7 +13130,7 @@ function functionPlatform( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
@@ -12066,7 +13195,7 @@ function fucntionThisCriterion( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null );
   let shell = _.process.starter
@@ -12127,7 +13256,7 @@ function submodulesDownloadSingle( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -12211,7 +13340,7 @@ function submodulesDownloadUpdate( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null )
   let shell = _.process.starter
@@ -12372,7 +13501,7 @@ function submodulesDownloadUpdateDry( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null )
   let shell = _.process.starter
@@ -12489,7 +13618,7 @@ function submodulesDownloadSwitchBranch( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-update-switch-branch' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let experimentModulePath = _.path.join( submodulesPath, 'experiment' );
   let willfilePath = _.path.join( routinePath, '.will.yml' );
 
@@ -12626,7 +13755,7 @@ function submodulesDownloadRecursive( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -12975,7 +14104,7 @@ function submodulesDownloadThrowing( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
   let downloadPath = _.path.join( routinePath, '.module/PathBasic' );
   let filePath = _.path.join( downloadPath, 'file' );
@@ -13185,7 +14314,7 @@ function submodulesUpdateThrowing( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
   let downloadPath = _.path.join( routinePath, '.module/PathBasic' );
   let filePath = _.path.join( downloadPath, 'file' );
@@ -13398,7 +14527,7 @@ function submodulesAgreeThrowing( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
   let downloadPath = _.path.join( routinePath, '.module/PathBasic' );
   let filePath = _.path.join( downloadPath, 'file' );
@@ -13607,7 +14736,7 @@ function submodulesVersionsAgreeWrongOrigin( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
   let downloadPath = _.path.join( routinePath, '.module/PathBasic' );
   let filePath = _.path.join( downloadPath, 'file' );
@@ -13686,7 +14815,7 @@ function submodulesDownloadedUpdate( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null )
   let shell = _.process.starter
@@ -13818,7 +14947,7 @@ function subModulesUpdate( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
 
   let ready = new _.Consequence().take( null )
   let shell = _.process.starter
@@ -13933,7 +15062,7 @@ function subModulesUpdateSwitchBranch( test )
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let experimentModulePath = _.path.join( submodulesPath, 'willbe-experiment' );
   let willfilePath = _.path.join( routinePath, '.will.yml' );
   let detachedVersion;
@@ -14214,7 +15343,7 @@ function versionsVerify( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let localModulePathSrc = _.path.join( routinePath, 'module' );
   let localModulePathDst = _.path.join( routinePath, '.module/local' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -14355,7 +15484,7 @@ function versionsAgree( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let localModulePathSrc = _.path.join( routinePath, 'module' );
   let localModulePathDst = _.path.join( routinePath, '.module/local' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -14524,7 +15653,7 @@ function stepSubmodulesDownload( test )
   _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
   _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
 
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null )
 
   let shell = _.process.starter
@@ -14693,7 +15822,7 @@ function stepSubmodulesAreUpdated( test )
   let originalDirPath = _.path.join( self.assetDirPath, 'step-submodules-are-updated' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let localModulePath = _.path.join( routinePath, 'module' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -14891,7 +16020,7 @@ function upgradeDryDetached( test )
   let filePath = _.path.join( routinePath, 'file' );
   let modulePath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -15142,7 +16271,7 @@ function upgradeDetached( test )
   let filePath = _.path.join( routinePath, 'file' );
   let modulePath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -15511,7 +16640,7 @@ function upgradeDetachedExperiment( test )
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached-single' );
   let routinePath = _.path.join( self.suitePath, test.name );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -15566,7 +16695,7 @@ function fixateDryDetached( test )
   let filePath = _.path.join( routinePath, 'file' );
   let modulePath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -15817,7 +16946,7 @@ function fixateDetached( test )
   let filePath = _.path.join( routinePath, 'file' );
   let modulePath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let ready = new _.Consequence().take( null );
 
   let shell = _.process.starter
@@ -16197,7 +17326,7 @@ function runWillbe( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
   let ready = new _.Consequence().take( null );
 
@@ -16330,7 +17459,7 @@ function resourcesFormReflectorsExperiment( test )
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
+
   let moduleOldPath = _.path.join( routinePath, './old-out-file/' );
   let moduleNewPath = _.path.join( routinePath, './new-out-file/' );
 
@@ -16458,6 +17587,9 @@ var Self =
     singleModuleWithSpaceTrivial,
     make,
     transpile,
+    moduleNewDotless,
+    moduleNewDotlessSingle,
+    moduleNewNamed,
 
     openWith,
     openEach,
@@ -16470,10 +17602,13 @@ var Self =
     eachBrokenCommand,
     openExportClean,
 
-    withHookCallInfo,
     withDoInfo,
     withDoStatus,
     withDoCommentOut,
+
+    hookCallInfo,
+    hookGitMake,
+    hookPrepare,
 
     verbositySet,
     verbosityStepDelete,

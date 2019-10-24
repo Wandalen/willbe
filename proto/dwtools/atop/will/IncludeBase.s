@@ -18,6 +18,8 @@ if( typeof module !== 'undefined' )
   _.include( 'wStager' );
   _.include( 'wGraphBasic' );
   _.include( 'wGitTools' );
+  _.include( 'wNpmTools' );
+  _.include( 'wYamlTools' );
 
   _.include( 'wFiles' );
   _.include( 'wFilesArchive' );
@@ -28,6 +30,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wCommandsAggregator' );
   _.include( 'wCommandsConfig' );
   _.include( 'wNameMapper' );
+  _.include( 'wTemplateFileWriter' );
 
 }
 

@@ -167,7 +167,6 @@ function _commandListLike( o )
   if( will.currentOpeners === null && will.currentOpener === null )
   ready.then( () => will.openersFind() );
 
-  // debugger;
   ready
   .then( () => will.openersCurrentEach( function( it )
   {
@@ -319,7 +318,7 @@ function _commandBuildLike( o )
     {
       will.currentOpenerChange( null );
       if( err )
-      throw _.err( err, `\nFailed to ${o.name} for ${it.opener ? it.opener.commonPath : ''}` );
+      throw _.err( err, `\nFailed to ${o.name} at ${it.opener ? it.opener.commonPath : ''}` );
       return arg;
     });
 
@@ -343,6 +342,90 @@ function _commandBuildLike( o )
 }
 
 _commandBuildLike.defaults =
+{
+  event : null,
+  onEach : null,
+  commandRoutine : null,
+  name : null,
+  withIn : 1,
+  withOut : 1,
+  withBroken : 0,
+}
+
+//
+
+function _commandNewLike( o )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  _.routineOptions( _commandNewLike, arguments );
+  _.assert( _.routineIs( o.commandRoutine ) );
+  _.assert( _.routineIs( o.onEach ) );
+  _.assert( _.strIs( o.name ) );
+  _.assert( _.objectIs( o.event ) );
+
+  will._commandsBegin( o.commandRoutine );
+
+  if( will.currentOpeners !== null || will.currentOpener !== null )
+  throw _.errBrief( 'Cant call command new for module which already exists!' );
+
+  let localPath = will.moduleNew({ collision : 'ignore', localPath : will.withPath });
+
+  ready.then( () => will.openersFind({ localPath, tracing : 0 }) );
+  ready.then( () => will.openersCurrentEach( forSingle ) );
+  ready.finally( end );
+
+  return ready;
+
+  /* */
+
+  function forSingle( it )
+  {
+    let ready2 = new _.Consequence().take( null );
+    let it2 = _.mapExtend( null, o, it );
+
+    ready2.then( () =>
+    {
+      return will.currentOpenerChange( it.opener );
+    });
+
+    ready2.then( () =>
+    {
+      will.readingEnd();
+      _.assert( it2.opener.localPath === will.withPath );
+      return o.onEach.call( will, it2 );
+    });
+
+    ready2.finally( ( err, arg ) =>
+    {
+      will.currentOpenerChange( null );
+      if( err )
+      throw _.err( err, `\nFailed to ${o.name} at ${it.opener ? it.opener.commonPath : ''}` );
+      return arg;
+    });
+
+    return ready2;
+  }
+
+  /* */
+
+  function end( err, arg )
+  {
+    will._commandsEnd( o.commandRoutine );
+    if( err )
+    debugger;
+    if( err )
+    logger.log( _.errOnce( err ) );
+    if( err )
+    throw err;
+    return arg;
+  }
+
+}
+
+_commandNewLike.defaults =
 {
   event : null,
   onEach : null,
@@ -420,18 +503,23 @@ _commandTreeLike.defaults =
 
 //
 
-function openersFind()
+function openersFind( o )
 {
   let will = this;
   let logger = will.logger;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
+  o = _.routineOptions( openersFind, arguments );
   _.assert( will.currentOpener === null );
   _.assert( will.currentOpeners === null );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  return will.modulesFindWithAt({ selector : './', tracing : 1 })
+  return will.modulesFindWithAt
+  ({
+    selector : o.localPath,
+    tracing : o.tracing,
+  })
   .finally( function( err, it )
   {
 
@@ -444,11 +532,17 @@ function openersFind()
     if( !will.currentOpeners.length )
     debugger;
     if( !will.currentOpeners.length )
-    throw _.errBrief( `Found no willfile at ${path.resolve( './' )}` );
+    throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
 
     return will.currentOpeners;
   })
 
+}
+
+openersFind.defaults =
+{
+  localPath : './',
+  tracing : 1,
 }
 
 //
@@ -482,6 +576,7 @@ function _commandsMake()
     'builds list' :                     { e : _.routineJoin( will, will.commandBuildsList ),                  h : 'List avaialable builds the current module.' },
     'exports list' :                    { e : _.routineJoin( will, will.commandExportsList ),                 h : 'List avaialable exports the current module.' },
     'about list' :                      { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
+    'about' :                           { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
 
     'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean ),             h : 'Delete all downloaded submodules.' },
     'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
@@ -497,12 +592,16 @@ function _commandsMake()
     'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       h : 'Run shell command on the module.' },
     'do' :                              { e : _.routineJoin( will, will.commandDo ),                          h : 'Run JS script on the module.' },
     'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
+    'call' :                            { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
     'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
     'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
     'export' :                          { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
     'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
+
+    'module new' :                      { e : _.routineJoin( will, will.commandModuleNew ),                   h : 'Create a new module.' },
+    'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               h : 'Make a new module in the current directory and call a specified hook for the module to prepare it.' },
 
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks' },
 
@@ -611,7 +710,7 @@ function currentOpenerChange( src )
   return src;
 
   will[ currentOpenerSymbol ] = src;
-  will.currentPath = null;
+  will.currentOpenerPath = null;
 
   return src;
 }
@@ -711,19 +810,24 @@ function commandWith( e )
 
   will._commandsBegin( commandWith );
 
-  // debugger;
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
-  // debugger;
-
   if( !isolated )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
+
+  debugger;
+  will.withPath = path.join( path.current(), will.withPath, path.fromGlob( isolated.argument ) );
+  if( _.strBegins( isolated.secondSubject, '.module.new' ) )
+  {
+    return ca.commandPerform
+    ({
+      command : isolated.secondCommand,
+    });
+  }
 
   return will.modulesFindWithAt({ selector : isolated.argument })
   .then( function( it )
   {
 
-    // debugger;
-    // will.currentOpeners = it.openers;
     will.currentOpeners = it.sortedOpeners;
 
     if( !will.currentOpeners.length )
@@ -811,14 +915,14 @@ function commandEach( e )
 
     // debugger;
     _.assert( will.currentOpener === null );
-    _.assert( will.currentPath === null );
+    _.assert( will.currentOpenerPath === null );
     // _.assert( will.mainModule === null );
     // _.assert( will.mainOpener === null ); // yyy
 
     if( will.mainOpener )
     will.mainOpener.isMain = false;
     will.currentOpenerChange( it.currentOpener );
-    will.currentPath = it.currentPath || null;
+    will.currentOpenerPath = it.currentOpenerPath || null;
     it.currentOpener.isMain = true;
     _.assert( will.mainOpener === it.currentOpener );
     _.assert( will.currentOpener === it.currentOpener );
@@ -830,8 +934,8 @@ function commandEach( e )
     {
       logger.log( '' );
       logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.currentOpener.commonPath, 'path' ) );
-      if( will.currentPath )
-      logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentPath, 'path' ) );
+      if( will.currentOpenerPath )
+      logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentOpenerPath, 'path' ) );
     }
 
     return null;
@@ -872,7 +976,7 @@ function commandEach( e )
       it.currentOpener.finit();
       _.assert( will.mainOpener === null );
       _.assert( will.currentOpener === null );
-      _.assert( will.currentPath === null );
+      _.assert( will.currentOpenerPath === null );
       // will.mainModule = null;
       // will.mainOpener = null; // yyy
 
@@ -1443,6 +1547,78 @@ commandSubmodulesVersionsVerify.commandProperties =
 
 //
 
+function commandModuleNew( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let ready = new _.Consequence().take( null );
+  let request = will.Resolver.strRequestParse( e.argument );
+
+  debugger;
+
+  if( request.subject )
+  request.map.localPath = request.subject;
+  if( request.map.v !== undefined )
+  {
+    request.map.verbosity = request.map.v;
+    delete request.map.v;
+  }
+
+  if( request.map.verbosity === undefined )
+  request.map.verbosity = 1;
+
+  if( will.withPath )
+  if( request.map.localPath )
+  request.map.localPath = path.join( will.withPath, request.map.localPath );
+  else
+  request.map.localPath = will.withPath;
+
+  return will.moduleNew( request.map );
+}
+
+//
+
+function commandModuleNewWith( e )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let time = _.timeNow();
+  let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
+  let execPath = e.argument;
+
+  return will._commandNewLike
+  ({
+    event : e,
+    name : 'make a new module and call a hook',
+    onEach : handleEach,
+    commandRoutine : commandModuleNewWith,
+    withOut : 0,
+    withBroken : 1,
+  })
+  .then( ( arg ) =>
+  {
+    if( will.verbosity >= 2 )
+    logger.log( `Done ${_.color.strFormat( 'hook::' + e.argument, 'entity' )} in ${_.timeSpent( time )}` );
+    return arg;
+  });
+
+  function handleEach( it )
+  {
+    let it2 = _.mapOnly( it, will.hookItFrom.defaults );
+    it2.execPath = path.join( will.hooksPath, execPath );
+    it2 = will.hookItFrom( it2 );
+    return will.hookCall( it2 );
+  }
+
+}
+
+//
+
 function commandShell( e )
 {
   let will = this;
@@ -1464,7 +1640,7 @@ function commandShell( e )
     return it.opener.openedModule.shell
     ({
       execPath : e.argument,
-      currentPath : will.currentPath || it.opener.openedModule.dirPath,
+      currentPath : will.currentOpenerPath || it.opener.openedModule.dirPath,
     });
   }
 
@@ -1525,7 +1701,7 @@ function commandHookCall( e )
   return will._commandBuildLike
   ({
     event : e,
-    name : 'hook call',
+    name : 'call a hook',
     onEach : handleEach,
     commandRoutine : commandHookCall,
     withOut : 0,
@@ -1702,7 +1878,7 @@ let Aggregates =
 let Associates =
 {
   currentOpeners : null,
-  currentPath : null,
+  currentOpenerPath : null,
 }
 
 let Restricts =
@@ -1717,6 +1893,7 @@ let Statics =
 
 let Forbids =
 {
+  currentPath : 'currentPath',
 }
 
 let Accessors =
@@ -1742,6 +1919,7 @@ let Extend =
 
   _commandListLike,
   _commandBuildLike,
+  _commandNewLike,
   _commandTreeLike,
 
   openersFind,
@@ -1779,6 +1957,9 @@ let Extend =
   commandSubmodulesVersionsUpdate,
   commandSubmodulesVersionsVerify,
   commandSubmodulesVersionsAgree,
+
+  commandModuleNew,
+  commandModuleNewWith,
 
   commandShell,
   commandDo,

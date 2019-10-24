@@ -1,35 +1,38 @@
 
-function onEach( it )
+function onModule( it )
 {
+  let o = it.request.map;
   let _ = it.tools;
   let logger = it.logger;
-  if( !it.module )
-  {
-    logger.log( it.variant.locationExport() );
-    logger.error( `${it.variant.object.absoluteName} is not opened!` );
-  }
 
   _.fileProvider.filesFind( it.variant.dirPath + '**' );
 
+  debugger;
   let status = _.git.infoStatus
   ({
     insidePath : it.variant.dirPath,
-    checkingUnpushedLocalChanges : 0,
-    checkingPrs : 0,
+    checkingLocalChanges : 0,
+    checkingUncommittedLocalChanges : 0,
+    checkingUnpushedLocalChanges : 1,
     checkingRemoteChanges : 0,
+    checkingPrs : 0,
   });
 
   if( !status.isRepository )
   return null;
-  // if( !status.hasLocalChanges )
-  // return null;
+  if( !status.hasLocalChanges )
+  return null;
 
-  logger.log( it.variant.locationExport() );
+  if( o.verbosity )
+  logger.log( `Pushing ${it.variant.locationExport()}` );
 
-  it.start( `git status` );
-  it.start( `git push --tags` );
+  // it.start( `git status` );
+  // it.start( `git push --tags` );
   // it.start( `git push --follow-tags` );
+  it.start( `git push -u origin --all --follow-tags` );
+
+  /* xxx qqq : teach to push light tags if any */
 
 }
 
-module.exports = onEach;
+module.exports = onModule;

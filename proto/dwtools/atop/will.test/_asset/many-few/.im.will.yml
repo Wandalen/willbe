@@ -1,10 +1,5 @@
-about :
-
-  name : dos
-  enabled : 0
 
 submodule :
-
 
   Tools : git+https:///github.com/Wandalen/wTools.git/#master
   PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/#master
@@ -27,14 +22,6 @@ path :
 
 step :
 
-  export.out :
-    inherit : module.export
-    export : '{path::out.proto}/**'
-    tar : 0
-    criterion :
-      debug : 1
-      content: proto
-
   clean.out :
     inherit : files.delete
     filePath : path::out
@@ -56,12 +43,3 @@ build :
     steps :
       - clean.out
       - reflect.submodules
-
-  proto.export :
-    criterion :
-      default : 1
-      export : 1
-      content: proto
-    steps :
-      - build::build
-      - step::export.out

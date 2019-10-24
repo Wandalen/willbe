@@ -1,6 +1,7 @@
 
-function onEach( it )
+function onModule( it )
 {
+  let o = it.request.map;
   let _ = it.tools;
   let logger = it.logger;
   let willfPath = _.arrayAs( it.opener.willfilesPath );
@@ -16,7 +17,7 @@ function onEach( it )
 
 }
 
-module.exports = onEach;
+module.exports = onModule;
 
 //
 
@@ -29,6 +30,7 @@ function pathExportExportReplace( it, willfPath )
   if( !_.strHas( read, `export : '{path::export}` ) )
   return;
 
+  if( o.verbosity )
   logger.log( `Replacing "export : {path::export}" in ${it.variant.locationExport()}` );
 
   let splits = _.strSplitFast( read, `export : '{path::export}` ); debugger;
@@ -36,10 +38,10 @@ function pathExportExportReplace( it, willfPath )
   splits[ 1 ] = `export : '{path::proto}`;
   let write = splits.join( '' );
 
-  if( it.request.map.verbosity >= 2 )
+  if( o.verbosity >= 2 )
   logger.log( write );
 
-  if( it.request.map.dry )
+  if( o.dry )
   return;
 
   _.fileProvider.fileWrite( willfPath, write );
@@ -65,15 +67,16 @@ function pathExportAdd( it, willfPath )
   if( _.strHas( read, ` export : '` ) )
   return;
 
+  if( o.verbosity )
   logger.log( `Adding path::export to ${it.variant.locationExport()}` );
 
   splits.splice( 2, 0, `${pre}export : '{path::proto}/**'\n` );
   let write = splits.join( '' );
 
-  if( it.request.map.verbosity >= 2 )
+  if( o.verbosity >= 2 )
   logger.log( write );
 
-  if( it.request.map.dry )
+  if( o.dry )
   return;
 
   _.fileProvider.fileWrite( willfPath, write );
@@ -91,12 +94,14 @@ function pathExportUse( it, willfPath )
   return;
 
   let write = _.strReplace( read, 'export : path::proto', 'export : path::export' );
+
+  if( o.verbosity )
   logger.log( `Using path::export in ${it.variant.locationExport()}` );
 
-  if( it.request.map.verbosity >= 2 )
+  if( o.verbosity >= 2 )
   logger.log( write );
 
-  if( it.request.map.dry )
+  if( o.dry )
   return;
 
   _.fileProvider.fileWrite( willfPath, write );
@@ -113,11 +118,12 @@ function pathRemotesAdd( it, willfPath )
   if( !it.module || !it.module.about.name )
   return;
 
-  let line = _.encode.yamlLineFind( read, `repository : git+` );
+  let line = _.yaml.lineFind( read, `repository : git+` );
 
   if( !line )
   return;
 
+  if( o.verbosity )
   logger.log( `Adding path::remotes to ${it.variant.locationExport()}` );
 
   let remotesPath =
@@ -132,10 +138,10 @@ ${line.pre} - ${remotesPath[ 1 ]}`
 
   let write = [ line.before, '\n', line.line, '\n', ins, '\n', line.after ].join( '' );
 
-  if( it.request.map.verbosity >= 2 )
+  if( o.verbosity >= 2 )
   logger.log( write );
 
-  if( it.request.map.dry )
+  if( o.dry )
   return;
 
   _.fileProvider.fileWrite( willfPath, write );
@@ -153,12 +159,14 @@ function pathRemotesToOrigins( it, willfPath )
   return;
 
   let write = _.strReplace( read, ' remotes :', ' origins :' );
+
+  if( o.verbosity )
   logger.log( `Replacing path::origins <- path::remotes ${it.variant.locationExport()}` );
 
-  if( it.request.map.verbosity >= 2 )
+  if( o.verbosity >= 2 )
   logger.log( write );
 
-  if( it.request.map.dry )
+  if( o.dry )
   return;
 
   _.fileProvider.fileWrite( willfPath, write );

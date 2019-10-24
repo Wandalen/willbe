@@ -11,33 +11,31 @@ function onModule( it )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  // debugger;
-  let got = _.git.infoStatus
+  let status = _.git.infoStatus
   ({
     insidePath : it.variant.dirPath,
-    local : o.local,
-    uncommitted : o.uncommitted,
-    unpushed : o.unpushed,
-    remote : o.remote,
-    prs : o.prs,
+    checkingLocalChanges : o.local,
+    checkingUncommittedLocalChanges : o.uncommitted,
+    checkingUnpushedLocalChanges : o.unpushed,
+    checkingRemoteChanges : o.remote,
+    checkingPrs : o.prs,
   });
-  debugger;
 
-  if( !got.status )
+  if( !status.info )
   return null;
 
   logger.log( it.variant.locationExport() );
-  logger.log( got.status );
+  logger.log( status.info );
 
 }
 
 onModule.defaults =
 {
-  local : 1,
-  unpushed : null,
-  uncommitted : null,
-  remote : 1,
-  prs : 1,
+  local : 0,
+  unpushed : 0,
+  uncommitted : 1,
+  remote : 0,
+  prs : 0,
   v : null,
   verbosity : 1,
 }

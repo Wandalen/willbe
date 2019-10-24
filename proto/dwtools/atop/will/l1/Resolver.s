@@ -286,7 +286,7 @@ function _resourceMapSelect()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  if( !it.selector )
+  if( it.selector === undefined || it.selector === null )
   return;
 
   let kind = it.parsedSelector.kind;

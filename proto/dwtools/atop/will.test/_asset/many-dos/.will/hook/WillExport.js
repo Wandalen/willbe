@@ -1,15 +1,13 @@
 
 let _;
-function onEach( it )
+function onModule( it )
 {
+  let o = it.request.map;
   _ = it.tools;
   let logger = it.logger;
-  if( !it.module )
-  {
-    logger.log( it.variant.locationExport() );
-    logger.error( `${it.variant.object.absoluteName} is not opened!` );
-  }
 
+  if( !it.module )
+  return;
   if( !it.opener.isValid() )
   return;
   if( it.opener.isRemote )
@@ -17,22 +15,33 @@ function onEach( it )
   if( !it.module.about.enabled )
   return;
 
-  let npmConfigPath = _.path.join( it.variant.dirPath, 'package.json' );
-  if( _.fileProvider.fileExists( npmConfigPath ) )
-  if( !isEnabled( it.variant.dirPath ) )
+  if( !npmConfigIsEnabled( it, 'package.json' ) )
+  return;
+  if( !npmConfigIsEnabled( it, 'was.package.json' ) )
   return;
 
-  if( it.request.map.verbosity )
+  if( o.verbosity )
   logger.log( `Exporting ${it.variant.locationExport()}` );
 
-  if( it.request.map.dry )
+  if( o.dry )
   return;
 
   it.startWill( `.export ${it.request.original}` );
 
 }
 
-module.exports = onEach;
+module.exports = onModule;
+
+//
+
+function npmConfigIsEnabled( it, fileName )
+{
+  let npmConfigPath = _.path.join( it.variant.dirPath, fileName );
+  if( _.fileProvider.fileExists( npmConfigPath ) )
+  if( !isEnabled( npmConfigPath ) )
+  return false;
+  return true;
+}
 
 //
 

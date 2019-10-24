@@ -45,8 +45,12 @@ function onSuiteBegin()
       recursive : 2,
       maskAll :
       {
-        excludeAny : [ /(^|\/)\.git($|\/)/ ],
-      }
+        excludeAny : [ /(^|\/)\.git($|\/)/, /(^|\/)\+/ ],
+      },
+      maskTransientAll :
+      {
+        excludeAny : [ /(^|\/)\.git($|\/)/, /(^|\/)\+/ ],
+      },
     },
   });
 
@@ -1296,7 +1300,8 @@ function openCurruptedUnknownField( test )
     {
 
       'in' : '.',
-      'out' : '.',
+      'out' : 'sub.out',
+      'temp' : [ 'sub.out' ],
 
       'remote' : null,
       'current.remote' : null,
@@ -1330,11 +1335,14 @@ function openCurruptedUnknownField( test )
     test.identical( opener.openedModule.remotePath, null );
     test.identical( opener.openedModule.currentRemotePath, null );
     test.identical( opener.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
-    test.identical( opener.openedModule.outPath, abs( '.' ) );
+    test.identical( opener.openedModule.outPath, abs( 'sub.out' ) );
     test.identical( opener.openedModule.commonPath, abs( 'sub' ) );
     test.identical( opener.openedModule.willfilesPath, abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ) );
     test.identical( opener.openedModule.willfilesArray.length, 2 );
     test.setsAreIdentical( _.mapKeys( opener.openedModule.willfileWithRoleMap ), [ 'import', 'export' ] );
+
+    test.is( !opener.isValid() );
+    test.is( !opener.openedModule.isValid() );
 
     test.is( !!opener.openedModule.about );
     test.identical( opener.openedModule.about.name, 'sub' );
@@ -9280,9 +9288,8 @@ function moduleIsNotValid( test )
     test.case = 'check if module is valid';
     if( err )
     _.errAttend( err );
+    test.is( _.errIs( err ) );
     debugger;
-    // var submodule = opener.openedModule.submodulesResolve({ selector : 'PathBasic' });
-    // test.identical( submodule.opener.isValid(), false );
     test.identical( opener.isValid(), false );
     test.identical( opener.openedModule.isValid(), false );
     opener.close();
