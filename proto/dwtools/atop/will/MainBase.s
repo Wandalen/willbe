@@ -3323,6 +3323,20 @@ function hookItFrom( o )
     ready : o.ready
   });
 
+  if( !o.startNonThrowing )
+  o.startNonThrowing = _.process.starter
+  ({
+    currentPath : o.variant.dirPath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputPiping : 1,
+    inputMirroring : 1,
+    briefExitCode : 1,
+    throwingExitCode : 0,
+    mode : 'shell',
+    ready : o.ready
+  });
+
   if( !o.startWill )
   o.startWill = _.process.starter
   ({
@@ -3366,6 +3380,7 @@ hookItFrom.defaults =
   interpreterName : null,
 
   start : null,
+  startNonThrowing : null,
   startWill : null,
 
 }

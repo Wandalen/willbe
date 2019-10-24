@@ -551,6 +551,8 @@ function structureExport( o )
   let module = relation.module;
   let willf = relation.willf;
   let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
   let rootModule = module.rootModule;
 
   let result = Parent.prototype.structureExport.apply( this, arguments );

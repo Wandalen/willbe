@@ -2648,7 +2648,7 @@ function withDoStatus( test )
     test.case = 'setup';
 
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/proto' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/many.out.will.yml' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/dos.out.will.yml' ) ) );
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathBasic' ) ) );
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathTools' ) ) );
     test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/Tools' ) ) );
@@ -2663,7 +2663,7 @@ function withDoStatus( test )
   {
     test.case = 'no changes';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 12 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 13 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
     return null;
@@ -2684,14 +2684,14 @@ function withDoStatus( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 12 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 13 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( got.output, /module::\w+ at / ), 2 );
     test.identical( _.strCount( got.output, 'module at' ), 2 );
 
-    test.identical( _.strCount( got.output, 'modified:' ), 3 );
-    test.identical( _.strCount( got.output, 'no changes added to commit' ), 2 );
+    test.identical( _.strCount( got.output, 'M ' ), 3 );
+    // test.identical( _.strCount( got.output, 'no changes added to commit' ), 2 );
     return null;
   })
 

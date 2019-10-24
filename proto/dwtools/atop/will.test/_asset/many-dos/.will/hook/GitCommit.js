@@ -10,15 +10,15 @@ function onModule( it )
   let status = _.git.infoStatus
   ({
     insidePath : it.variant.dirPath,
-    checkingUnpushedLocalChanges : 0,
-    checkingPrs : 0,
-    checkingRemoteChanges : 0,
+    unpushed : 0,
+    prs : 0,
+    remote : 0,
   });
 
   if( !status.isRepository )
   return null;
-  if( !status.hasLocalChanges )
-  return null;
+  // if( !status.hasLocalChanges )
+  // return null;
 
   if( o.verbosity )
   logger.log( `Committing ${it.variant.nameWithLocationGet()}` );
@@ -26,8 +26,11 @@ function onModule( it )
   if( o.dry )
   return;
 
-  it.start( `git add --all` );
-  it.start( `git commit ${it.request.original}` );
+  // it.start( `git add --all` );
+  // it.start( `git commit ${it.request.original}` );
+
+  it.startNotThowing( `git add --all` );
+  it.startNotThowing( `git commit ${it.request.original}` );
 
 }
 

@@ -14,11 +14,11 @@ function onModule( it )
   let status = _.git.infoStatus
   ({
     insidePath : it.variant.dirPath,
-    checkingLocalChanges : o.local,
-    checkingUncommittedLocalChanges : o.uncommitted,
-    checkingUnpushedLocalChanges : o.unpushed,
-    checkingRemoteChanges : o.remote,
-    checkingPrs : o.prs,
+    local : o.local,
+    uncommitted : o.uncommitted,
+    unpushed : o.unpushed,
+    remote : o.remote,
+    prs : o.prs,
   });
 
   if( !status.info )

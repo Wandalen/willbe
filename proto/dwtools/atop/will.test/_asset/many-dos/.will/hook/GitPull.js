@@ -8,9 +8,9 @@ function onModule( it )
   // let status = _.git.infoStatus
   // ({
   //   insidePath : it.variant.dirPath,
-  //   checkingUnpushedLocalChanges : 0,
-  //   checkingPrs : 0,
-  //   checkingRemoteChanges : 0,
+  //   unpushed : 0,
+  //   prs : 0,
+  //   remote : 0,
   // });
   // if( !status.isRepository )
   // return null;
