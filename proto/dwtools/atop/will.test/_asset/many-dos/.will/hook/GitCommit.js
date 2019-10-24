@@ -21,7 +21,7 @@ function onModule( it )
   return null;
 
   if( o.verbosity )
-  logger.log( `Committing ${it.variant.locationExport()}` );
+  logger.log( `Committing ${it.variant.nameWithLocationGet()}` );
 
   if( o.dry )
   return;

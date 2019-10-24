@@ -1551,24 +1551,6 @@ function modulesFindWithAt( o )
 
     op.variants = will.variantsFrom( op.openers );
 
-    // {
-    //   let filter =
-    //   {
-    //     withIn : will.withIn,
-    //     withOut : will.withOut,
-    //   }
-    //   let variants2 = will.modulesFilter( op.variants, filter );
-    //   if( variants2.length )
-    //   op.variants = variants2;
-    // }
-    //
-    // let fitOpeners = new Set();
-    // _.each( op.variants, ( variant ) =>
-    // {
-    //   variant.openers.forEach( ( opener ) => fitOpeners.add( opener ) );
-    // });
-    // op.openers = op.openers.filter( ( opener ) => fitOpeners.has( opener ) );
-
     op.sortedVariants = will.graphTopSort( op.variants );
     op.sortedVariants.reverse();
     op.sortedOpeners = [];
@@ -1583,21 +1565,6 @@ function modulesFindWithAt( o )
     });
     return op;
   }
-
-  /* */
-
-  // function openersOf( dst, src )
-  // {
-  //   dst = _.filter( dst, ( variant ) =>
-  //   {
-  //     let opener = _.arraySetIntersection( op.openers.slice(), variant.openers )[ 0 ];
-  //     if( !opener )
-  //     return;
-  //     _.assert( !opener.superRelation );
-  //     op.sortedOpeners.push( opener );
-  //     return variant;
-  //   });
-  // }
 
   /* */
 
@@ -3342,13 +3309,6 @@ function hookItFrom( o )
   if( _.strIs( o.request ) )
   o.request = _.strRequestParse( o.request );
   _.assert( !!o.request.map );
-  // if( o.request.map.v !== undefined )
-  // {
-  //   o.request.map.verbosity = o.request.map.v;
-  //   delete o.request.map.v;
-  // }
-  // if( o.request.map.verbosity === undefined )
-  // o.request.map.verbosity = 1;
 
   if( !o.start )
   o.start = _.process.starter

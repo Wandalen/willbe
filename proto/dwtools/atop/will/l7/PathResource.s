@@ -42,6 +42,9 @@ function OnInstanceExists( o )
 
   _.routineOptions( OnInstanceExists, arguments );
 
+  // if( o.resource.name === 'download' )
+  // debugger;
+
   o.resource.criterion = o.resource.criterion || Object.create( null );
   _.mapSupplement( o.resource.criterion, o.instance.criterion );
   o.resource.exportable = o.instance.exportable;
@@ -62,6 +65,9 @@ OnInstanceExists.defaults.instance = null;
 function init( o )
 {
   let resource = this;
+
+  // if( o && o.name === 'download' )
+  // debugger;
 
   Parent.prototype.init.apply( resource, arguments );
 
@@ -202,23 +208,35 @@ function structureExport()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
+  let o = _.routineOptions( structureExport, arguments );
 
-  let result = Parent.prototype.structureExport.apply( resource, arguments );
+  let result = Parent.prototype.structureExport.apply( resource, [ o ] );
 
-  if( result )
+  if( !result )
+  return result;
+
+  if( o.exportModule && !o.exportModule.isOut )
+  if( result.path === null || result.path === undefined )
   {
+    // _.assert( 0, 'not tested' );
+    return;
+  }
 
-    if( result.path && path.s.anyAreAbsolute( result.path ) )
+  if( o.exportModule && !o.exportModule.isOut )
+  if( result.path === '.' )
+  {
+    return;
+  }
+
+  if( result.path && path.s.anyAreAbsolute( result.path ) )
+  {
+    result.path = _.filter( result.path, ( p ) =>
     {
-      result.path = _.filter( result.path, ( p ) =>
-      {
-        let protocols = path.parse( p ).protocols;
-        if( !protocols.length )
-        return path.relative( module.inPath, p );
-        return p;
-      });
-    }
-
+      let protocols = path.parse( p ).protocols;
+      if( !protocols.length )
+      return path.relative( module.inPath, p );
+      return p;
+    });
   }
 
   return result;

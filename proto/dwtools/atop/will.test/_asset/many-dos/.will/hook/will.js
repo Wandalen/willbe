@@ -13,7 +13,7 @@ function onModule( it )
   // return null;
 
   if( o.verbosity )
-  logger.log( `${it.variant.locationExport()}` );
+  logger.log( `${it.variant.nameWithLocationGet()}` );
 
   it.startWill( `${it.request.original}` );
 

@@ -558,6 +558,39 @@ function structureExport( o )
   if( result === undefined )
   return result;
 
+  if( result.path && path.s.anyAreAbsolute( result.path ) )
+  {
+    result.path = _.filter( result.path, ( p ) =>
+    {
+      let protocols = path.parse( p ).protocols;
+      if( !protocols.length )
+      return path.relative( module.inPath, p );
+      return p;
+    });
+  }
+
+  if( result.localPath && path.s.anyAreAbsolute( result.localPath ) )
+  {
+    result.localPath = _.filter( result.localPath, ( p ) =>
+    {
+      let protocols = path.parse( p ).protocols;
+      if( !protocols.length )
+      return path.relative( module.inPath, p );
+      return p;
+    });
+  }
+
+  if( result.remotePath && path.s.anyAreAbsolute( result.remotePath ) )
+  {
+    result.remotePath = _.filter( result.remotePath, ( p ) =>
+    {
+      let protocols = path.parse( p ).protocols;
+      if( !protocols.length )
+      return path.relative( module.inPath, p );
+      return p;
+    });
+  }
+
   return result;
 }
 

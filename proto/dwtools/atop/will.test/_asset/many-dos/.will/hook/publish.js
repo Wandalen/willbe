@@ -14,7 +14,7 @@ function onModule( it )
   return;
 
   if( o.verbosity )
-  logger.log( `Publishing ${it.variant.locationExport()}` );
+  logger.log( `Publishing ${it.variant.nameWithLocationGet()}` );
 
   if( o.dry )
   return;
@@ -38,36 +38,46 @@ function onModule( it )
     activeconfigPath = configPath;
   }
 
-  _.nom.fixate
+  _.npm.fixate
   ({
     dry : o.dry,
     localPath : it.variant.dirPath,
     configPath : activeconfigPath,
     tag : o.tag,
-    onDependencyFilter,
+    onDependency,
     verbosity : o.verbosity - 2,
   });
 
   it.start( 'local-will .export' );
 
-  _.npm.publish
-  ({
-    localPath : it.variant.dirPath,
-    tag : o.tag,
-    ready : it.ready,
-    verbosity : o.verbosity - 1,
-  })
+  // _.npm.publish
+  // ({
+  //   localPath : it.variant.dirPath,
+  //   tag : o.tag,
+  //   ready : it.ready,
+  //   verbosity : o.verbosity - 1,
+  // })
 
-  function onDependencyFilter( dep )
+  function onDependency( dep )
   {
-    if( !_.strBegins( dep.name, 'w' ) )
-    return false;
-    return true;
+    let about = aboutCache[ dep.name ];
+    if( !about )
+    about = aboutCache[ dep.name ] = _.npm.aboutFromRemote( dep.name );
+    if( about && about.author && _.strIs( about.author.name ) && _.strHas( about.author.name, 'Kostiantyn Wandalen' ) )
+    {
+      dep.version = o.tag;
+      return;
+    }
+    if( about && about.version )
+    {
+      dep.version = about.version;
+    }
   }
 
 }
 
 module.exports = onModule;
+let aboutCache = new Object.create( null );
 
 //
 

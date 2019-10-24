@@ -954,16 +954,21 @@ function structureExport()
   if( !o.copyingNonWritable && !resource.writable )
   return;
 
-  let o2 = _.mapExtend( null, o );
-  delete o2.copyingNonWritable;
-  delete o2.copyingPredefined;
-  delete o2.copyingNonExportable;
-  delete o2.module;
-  delete o2.rootModule;
-  delete o2.formed;
-  delete o2.strict;
-  delete o2.exportModule;
+  if( o.willf )
+  if( resource.willf && o.willf !== resource.willf )
+  {
+    debugger;
+    _.assert( 0, 'not tested' );
+    return;
+  }
 
+  if( o.exportModule && !o.exportModule.isOut )
+  if( !resource.importableFromIn )
+  {
+    return;
+  }
+
+  let o2 = _.mapOnly( o, resource.cloneData.defaults );
   let fields = resource.cloneData( o2 );
 
   delete fields.name;
@@ -977,7 +982,7 @@ structureExport.defaults = Object.create( _.Will.OpenedModule.prototype.structur
 function extraExport()
 {
   let resource = this;
-  let o = _.routineOptions( structureExport, arguments );
+  let o = _.routineOptions( extraExport, arguments );
 
   o.dst = o.dst || Object.create( null );
 

@@ -26,7 +26,7 @@ function onModule( it )
   }
 
   if( o.verbosity )
-  logger.log( `Preparing ${it.variant.locationExport()}` );
+  logger.log( `Preparing ${it.variant.nameWithLocationGet()}` );
 
   it.will.hooks.TemplateStandard.call( it );
 

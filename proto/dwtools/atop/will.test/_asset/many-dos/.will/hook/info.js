@@ -6,7 +6,7 @@ function onModule( it )
   if( it.module )
   logger.log( it.module.infoExport({ verbosity : 2 }) );
   else
-  logger.log( `Info for ${it.variant.locationExport()}` );
+  logger.log( `Info for ${it.variant.nameWithLocationGet()}` );
 
 }
 module.exports = onModule;

@@ -24,7 +24,7 @@ function onModule( it )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pushing ${it.variant.locationExport()}` );
+  logger.log( `Pushing ${it.variant.nameWithLocationGet()}` );
 
   // it.start( `git status` );
   // it.start( `git push --tags` );

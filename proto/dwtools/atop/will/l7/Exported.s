@@ -936,8 +936,6 @@ function _performWriteOutFile()
   /* */
 
   let outFilePath = outModule.outfilePathGet();
-  // debugger;
-  // let data = inModule.structureExportForModuleExport({ willfilesPath : outFilePath });
   _.assert( outModule.isOut );
   let structure = outModule.structureExportOut();
 

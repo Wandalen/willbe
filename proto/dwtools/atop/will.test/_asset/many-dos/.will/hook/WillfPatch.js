@@ -31,7 +31,7 @@ function pathExportExportReplace( it, willfPath )
   return;
 
   if( o.verbosity )
-  logger.log( `Replacing "export : {path::export}" in ${it.variant.locationExport()}` );
+  logger.log( `Replacing "export : {path::export}" in ${it.variant.nameWithLocationGet()}` );
 
   let splits = _.strSplitFast( read, `export : '{path::export}` ); debugger;
   _.assert( splits.length === 3 );
@@ -68,7 +68,7 @@ function pathExportAdd( it, willfPath )
   return;
 
   if( o.verbosity )
-  logger.log( `Adding path::export to ${it.variant.locationExport()}` );
+  logger.log( `Adding path::export to ${it.variant.nameWithLocationGet()}` );
 
   splits.splice( 2, 0, `${pre}export : '{path::proto}/**'\n` );
   let write = splits.join( '' );
@@ -96,7 +96,7 @@ function pathExportUse( it, willfPath )
   let write = _.strReplace( read, 'export : path::proto', 'export : path::export' );
 
   if( o.verbosity )
-  logger.log( `Using path::export in ${it.variant.locationExport()}` );
+  logger.log( `Using path::export in ${it.variant.nameWithLocationGet()}` );
 
   if( o.verbosity >= 2 )
   logger.log( write );
@@ -124,7 +124,7 @@ function pathRemotesAdd( it, willfPath )
   return;
 
   if( o.verbosity )
-  logger.log( `Adding path::remotes to ${it.variant.locationExport()}` );
+  logger.log( `Adding path::remotes to ${it.variant.nameWithLocationGet()}` );
 
   let remotesPath =
   [
@@ -161,7 +161,7 @@ function pathRemotesToOrigins( it, willfPath )
   let write = _.strReplace( read, ' remotes :', ' origins :' );
 
   if( o.verbosity )
-  logger.log( `Replacing path::origins <- path::remotes ${it.variant.locationExport()}` );
+  logger.log( `Replacing path::origins <- path::remotes ${it.variant.nameWithLocationGet()}` );
 
   if( o.verbosity >= 2 )
   logger.log( write );

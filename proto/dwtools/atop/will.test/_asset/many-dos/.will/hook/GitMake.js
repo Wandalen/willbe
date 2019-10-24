@@ -38,7 +38,7 @@ function onModule( it )
     _.assert( !_.strEnds( it.variant.localPath, 'git/trunk/' ), 'guard' );
 
     if( o.verbosity )
-    logger.log( `Making repository for ${it.variant.locationExport()}` );
+    logger.log( `Making repository for ${it.variant.nameWithLocationGet()}` );
     if( o.verbosity >= 2 )
     logger.log( `localPath : ${_.color.strFormat( String( localPath ), 'path' )}` );
     if( o.verbosity >= 2 )
@@ -61,7 +61,7 @@ function onModule( it )
     err = _.err
     (
         err
-      , `\nFailed to make an repository for ${it.variant.locationExport()}`
+      , `\nFailed to make an repository for ${it.variant.nameWithLocationGet()}`
       , `\nlocalPath : ${localPath}`
       , `\nremotePath : ${remotePath}`
     );

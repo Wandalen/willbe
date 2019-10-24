@@ -16,11 +16,11 @@ function onModule( it )
   // return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${it.variant.locationExport()}` );
+  logger.log( `Pulling ${it.variant.nameWithLocationGet()}` );
 
   // if( status.hasLocalChanges )
   // {
-  //   logger.log( _.errBrief( `${it.variant.locationExport()} has local changes!` ) );
+  //   logger.log( _.errBrief( `${it.variant.nameWithLocationGet()} has local changes!` ) );
   //   return null;
   // }
 

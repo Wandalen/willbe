@@ -1430,6 +1430,64 @@ function errorSet( err )
   return err;
 }
 
+//
+
+function save( o )
+{
+  let willf = this;
+  let will = willf.will;
+  let hub = will.fileProvider;
+  let hd = hub.providersWithProtocolMap.file;
+  let path = hub.path;
+  let logger = will.logger;
+
+  o = _.routineOptions( save, arguments );
+
+  let o2 = _.mapOnly( o, willf.structureExport.defaults );
+  let structure = willf.structureExport( o2 );
+
+  _.assert( _.strIs( willf.filePath ) );
+
+  if( will.verbosity >= 2 )
+  logger.log( `Saving ${_.color.strFormat( willf.filePath, 'path' )}` );
+
+  debugger;
+  hd.fileWrite
+  ({
+    filePath : willf.filePath,
+    data : structure,
+    encoding : 'yaml',
+  });
+  debugger;
+
+}
+
+save.defaults =
+{
+}
+
+//
+
+function structureExport( o )
+{
+  let willf = this;
+  let will = willf.will;
+  let module = willf.openedModule;
+  o = _.routineOptions( structureExport, arguments );
+  debugger;
+
+  let o2 = _.mapOnly( o, module.structureExport.defaults );
+  o2.willf = willf
+  let structure = module.structureExport( o2 );
+
+  debugger;
+  return structure
+}
+
+structureExport.defaults =
+{
+}
+
 // --
 // relations
 // --
@@ -1596,6 +1654,9 @@ let Extend =
   elementGet,
   elementFromStructureGet,
   errorSet,
+
+  save,
+  structureExport,
 
   // relation
 

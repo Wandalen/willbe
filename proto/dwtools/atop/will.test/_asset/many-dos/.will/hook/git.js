@@ -5,12 +5,11 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
-  let status = _.git.infoStatus({ insidePath : it.variant.dirPath, checkingPrs : 0, checkingRemoteChanges : 0 });
-  if( !status.isRepository )
+  if( !_.git.insideRepository( it.variant.dirPath ) )
   return null;
 
   if( o.verbosity )
-  logger.log( `${it.variant.locationExport()}` );
+  logger.log( `${it.variant.nameWithLocationGet()}` );
 
   it.start( `git ${it.request.original}` );
 

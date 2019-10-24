@@ -12,7 +12,7 @@ function onModule( it )
   return;
 
   if( o.verbosity )
-  logger.log( `Applying template::Standard to ${it.variant.locationExport()}` );
+  logger.log( `Applying template::Standard to ${it.variant.nameWithLocationGet()}` );
 
   if( o.dry )
   return;

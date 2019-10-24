@@ -24,7 +24,7 @@ function onModule( it )
   if( !status.info )
   return null;
 
-  logger.log( it.variant.locationExport() );
+  logger.log( it.variant.nameWithLocationGet() );
   logger.log( status.info );
 
 }

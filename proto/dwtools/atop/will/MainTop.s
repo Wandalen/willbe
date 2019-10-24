@@ -579,6 +579,7 @@ function _commandsMake()
     'about' :                           { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
 
     'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean ),             h : 'Delete all downloaded submodules.' },
+    'submodules add' :                  { e : _.routineJoin( will, will.commandSubmodulesAdd ),               h : 'Add submodules.' },
     'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
     'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
 
@@ -1347,6 +1348,59 @@ function commandSubmodulesClean( e )
 
 //
 
+function commandSubmodulesAdd( e )
+{
+  let will = this;
+  // debugger;
+  // let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'clean submodules',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesClean,
+  });
+
+  function handleEach( it )
+  {
+
+    let module = it.opener.openedModule;
+    let filePath = module.pathResolve
+    ({
+      selector : e.argument,
+      prefixlessAction : 'resolved',
+    });
+
+    let found = will.modulesFindWithAt
+    ({
+      selector : filePath,
+      tracing : 0,
+    });
+
+    found.then( ( it ) =>
+    {
+      let variants = will.variantsFrom( it.sortedOpeners );
+      return module.submodulesAdd({ modules : variants });
+    })
+
+    found.finally( ( err, added ) =>
+    {
+      debugger;
+      if( err )
+      throw _.err( err, `\nFaield to add submodules from ${filePath}` );
+      if( will.verbosity >= 2 )
+      logger.log( `Added ${added} submodules to ${module.nameWithLocationGet()}` )
+      return added;
+    })
+
+    return found;
+  }
+
+}
+
+//
+
 function commandSubmodulesFixate( e )
 {
   let will = this;
@@ -1951,8 +2005,10 @@ let Extend =
   commandModulesTree,
 
   commandSubmodulesClean,
+  commandSubmodulesAdd,
   commandSubmodulesFixate,
   commandSubmodulesUpgrade,
+
   commandSubmodulesVersionsDownload,
   commandSubmodulesVersionsUpdate,
   commandSubmodulesVersionsVerify,

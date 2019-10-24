@@ -42,6 +42,7 @@ function init( o )
   about.values = Object.create( null );
   about.values.enabled = 1;
   about.values.name = null;
+  about.values.org = 'org';
 
   _.workpiece.initFields( about );
   Object.preventExtensions( about );
@@ -96,6 +97,19 @@ let nameGetterSetter =
   }
 }
 
+let _orgGetterSetter = _.accessor.suite.alias({ containerName : 'values', originalName : 'org' });
+let orgGetterSetter =
+{
+  get : _orgGetterSetter.get,
+  set : function()
+  {
+    let result = _orgGetterSetter.set.apply( this, arguments );
+    if( this.module )
+    this.module._nameChanged();
+    return result;
+  }
+}
+
 //
 
 function infoExport()
@@ -133,6 +147,7 @@ let Composes =
 {
 
   name : null,
+  org : 'org',
   description : null,
   enabled : 1,
   version : null,
@@ -169,6 +184,7 @@ let Forbids =
 let Accessors =
 {
   name : { getterSetter : nameGetterSetter },
+  org : { getterSetter : orgGetterSetter },
   enabled : { getterSetter : _.accessor.suite.alias({ containerName : 'values', originalName : 'enabled' }) },
 }
 

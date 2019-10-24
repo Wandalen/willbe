@@ -13,7 +13,7 @@ function onModule( it )
     if( write1 )
     {
       if( o.verbosity )
-      logger.log( `Comment out "${it.request.subject}" in ${it.variant.locationExport()}` );
+      logger.log( `Comment out "${it.request.subject}" in ${it.variant.nameWithLocationGet()}` );
       if( !o.dry )
       _.fileProvider.fileWrite( willfPath, write1 );
     }

@@ -888,7 +888,7 @@ function VariantsFrom( will, variants )
   if( _.arrayLike( variants ) )
   return _.filter( variants, ( variant ) => cls.VariantFrom( will, variant ) );
   else
-  return will.VariantFrom( variant );
+  return will.VariantFrom( variants );
 }
 
 //
@@ -1452,7 +1452,7 @@ function infoExport()
 
 //
 
-function locationExport()
+function nameWithLocationGet()
 {
   let variant = this;
   let name = _.color.strFormat( variant.object.qualifiedName || variant.name, 'entity' );
@@ -1611,7 +1611,7 @@ let Extend =
   // export
 
   infoExport,
-  locationExport,
+  nameWithLocationGet,
 
   // etc
 

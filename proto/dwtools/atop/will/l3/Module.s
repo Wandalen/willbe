@@ -812,10 +812,11 @@ function predefinedForm()
     exportable : 1,
     importableFromIn : 1,
     importableFromOut : 1,
-    criterion :
-    {
-      predefined : 0,
-    },
+    predefined : 0,
+    // criterion :
+    // {
+    //   predefined : 0,
+    // },
   })
 
   path
@@ -826,10 +827,11 @@ function predefinedForm()
     exportable : 1,
     importableFromIn : 1,
     importableFromOut : 1,
-    criterion :
-    {
-      predefined : 0,
-    },
+    predefined : 0,
+    // criterion :
+    // {
+    //   predefined : 0,
+    // },
   })
 
   path
@@ -1175,6 +1177,24 @@ function predefinedForm()
   function prepare( defaults, o )
   {
 
+    let commonDefaults =
+    {
+      module : module,
+      writable : 0,
+      exportable : 0,
+      importableFromIn : 0,
+      importableFromOut : 0,
+      predefined : 1,
+      // criterion :
+      // {
+      //   predefined : 1,
+      // }
+    }
+
+    if( defaults === null )
+    defaults = Object.create( null );
+    _.mapSupplement( defaults, commonDefaults );
+
     o.criterion = o.criterion || Object.create( null );
 
     if( o.importable !== undefined && o.importable !== null )
@@ -1185,10 +1205,16 @@ function predefinedForm()
       o.importableFromOut = o.importable;
     }
 
-    delete o.importable;
-
     _.mapSupplement( o, defaults );
     _.mapSupplement( o.criterion, defaults.criterion );
+
+    if( o.predefined )
+    {
+      o.criterion.predefined = 1;
+    }
+
+    delete o.predefined;
+    delete o.importable;
 
     _.assert( o.criterion !== defaults.criterion );
     _.assert( arguments.length === 2 );
@@ -1203,16 +1229,19 @@ function predefinedForm()
 
     let defaults =
     {
-      module : module,
-      writable : 0,
-      exportable : 0,
+      // module : module,
+      // writable : 0,
+      // exportable : 0,
       importableFromIn : 1,
       importableFromOut : 1,
-      criterion :
-      {
-        predefined : 1,
-      }
+      // criterion :
+      // {
+      //   predefined : 1,
+      // }
     }
+
+    // if( o.name === 'download' )
+    // debugger;
 
     o = prepare( defaults, o );
 
@@ -1245,27 +1274,20 @@ function predefinedForm()
     if( module.stepMap[ o.name ] )
     return module.stepMap[ o.name ].form1();
 
-    let defaults =
-    {
-      module : module,
-      writable : 0,
-      exportable : 0,
-      importableFromIn : 0,
-      importableFromOut : 0,
-      criterion :
-      {
-        predefined : 1,
-      }
-    }
+    // let defaults =
+    // {
+    //   module : module,
+    //   writable : 0,
+    //   exportable : 0,
+    //   importableFromIn : 0,
+    //   importableFromOut : 0,
+    //   // criterion :
+    //   // {
+    //   //   predefined : 1,
+    //   // }
+    // }
 
-    // o.criterion = o.criterion || Object.create( null );
-    //
-    // _.mapSupplement( o, defaults );
-    // _.mapSupplement( o.criterion, defaults.criterion );
-    //
-    // _.assert( o.criterion !== defaults.criterion );
-
-    o = prepare( defaults, o );
+    o = prepare( null, o );
 
     _.assert( arguments.length === 1 );
 
@@ -1281,28 +1303,23 @@ function predefinedForm()
     if( module.reflectorMap[ o.name ] )
     return module.reflectorMap[ o.name ].form1();
 
-    let defaults =
-    {
-      module : module,
-      writable : 0,
-      exportable : 0,
-      importableFromIn : 0,
-      importableFromOut : 0,
-      criterion :
-      {
-        predefined : 1,
-      }
-    }
+    // let defaults =
+    // {
+    //   module : module,
+    //   writable : 0,
+    //   exportable : 0,
+    //   importableFromIn : 0,
+    //   importableFromOut : 0,
+    //   criterion :
+    //   {
+    //     predefined : 1,
+    //   }
+    // }
 
     let o2 = Object.create( null );
     o2.resource = o;
-    // o2.resource = _.mapExtend( null, defaults, o );
-    // o2.resource.criterion = _.mapExtend( null, defaults.criterion, o.criterion || {} );
 
-    // _.mapSupplement( o, defaults );
-    // _.mapSupplement( o.criterion, defaults.criterion );
-
-    o = prepare( defaults, o2.resource );
+    o = prepare( null, o2.resource );
 
     _.assert( !!o2.resource.criterion );
     _.assert( arguments.length === 1 );
@@ -1794,26 +1811,6 @@ function willfilesEach( o )
 
   return result;
 
-  // for( let w = 0 ; w < module.willfilesArray.length ; w++ )
-  // {
-  //   let willfile = module.willfilesArray[ w ];
-  //   onEach( willfile )
-  // }
-  //
-  // for( let s in module.submoduleMap )
-  // {
-  //   let submodule = module.submoduleMap[ s ];
-  //   if( !submodule.opener )
-  //   continue;
-  //
-  //   for( let w = 0 ; w < submodule.opener.willfilesArray.length ; w++ )
-  //   {
-  //     let willfile = submodule.opener.willfilesArray[ w ];
-  //     onEach( willfile )
-  //   }
-  //
-  // }
-
   function handleUp( module2 )
   {
 
@@ -1835,6 +1832,27 @@ willfilesEach.defaults =
   withStem : 1,
   withPeers : 0,
   onUp : null,
+}
+
+//
+
+function willfilesSave()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( !module.isOut );
+  _.assert( module.willfilesArray.length === 1, 'not implemented' );
+
+  module.willfilesArray.forEach( ( willf ) =>
+  {
+    willf.save();
+  });
+
+  return null;
 }
 
 //
@@ -3401,6 +3419,69 @@ defaults.asMap = 0;
 
 //
 
+function submodulesAdd( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let counter = 0;
+
+  o = _.routineOptions( submodulesAdd, arguments );
+
+  let variants = will.variantsFrom( o.modules );
+
+  variants.forEach( ( variant ) =>
+  {
+    if( !variant.module )
+    return;
+    if( !variant.module.about.name )
+    return;
+    if( variant.module === module )
+    return;
+
+    if( _.any( module.submoduleMap, ( relation ) => will.variantFrom( relation ) === variant ) )
+    {
+      debugger;
+      return;
+    }
+
+    let o2 = Object.create( null );
+    o2.module = module;
+    o2.path = variant.remotePath || variant.localPath;
+    o2.name = variant.module.originDirNameGet();
+    let relation = new _.Will.ModulesRelation( o2 );
+    ready.then( () => relation.form() );
+    ready.then( () => counter += 1 );
+
+  });
+
+  ready.then( ( arg ) =>
+  {
+    return module.willfilesSave();
+  });
+
+  ready.finally( ( err, arg ) =>
+  {
+    debugger;
+    if( err )
+    throw _.err( err, `\nFaield add new submodules to ${module.nameWithLocationGet()}` );
+    return counter;
+  });
+
+  debugger;
+  return ready;
+}
+
+submodulesAdd.defaults =
+{
+  modules : null,
+}
+
+//
+
 function submodulesReload()
 {
   let module = this;
@@ -4705,6 +4786,45 @@ let downloadPathSet = predefinedPathSet_functor( 'downloadPath', 'download' );
 // name
 // --
 
+function originGet()
+{
+  let module = this;
+  let will = module.will;
+  return 'wmodule:///' + module.originShortGet();
+}
+
+//
+
+function originShortGet()
+{
+  let module = this;
+  let will = module.will;
+  return ( module.about.org || 'sole' ) + '/' + ( module.about.name || '' );
+}
+
+//
+
+function originDirNameGet()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let origin = module.originGet();
+  let parsed = _.uri.parse( origin );
+  let result = parsed.longPath;
+
+  if( path.isAbsolute( result ) )
+  result = path.relative( '/', result );
+
+  result = _.strReplace( result, '/', '_' )
+  result = _.strFilenameFor( result );
+
+  return result;
+}
+
+//
+
 function nameGet()
 {
   let module = this;
@@ -4899,6 +5019,17 @@ function shortNameArrayGet()
   return [ module.name ];
   let result = rootModule.shortNameArrayGet();
   result.push( module.name );
+  return result;
+}
+
+//
+
+function nameWithLocationGet()
+{
+  let module = this;
+  let name = _.color.strFormat( module.qualifiedName, 'entity' );
+  let localPath = _.color.strFormat( module.localPath, 'path' );
+  let result = `${name} at ${localPath}`;
   return result;
 }
 
@@ -5753,8 +5884,6 @@ function structureExport( o )
   if( !o.exportModule )
   o.exportModule = module;
 
-  _.assert( o.exportModule.isOut );
-
   let o2 = _.mapExtend( null, o );
   delete o2.dst;
 
@@ -5766,20 +5895,33 @@ function structureExport( o )
   o.dst.build = module.structureExportResources( module.buildMap, o2 );
   if( o.module.isOut )
   o.dst.exported = module.structureExportResources( module.exportedMap, o2 );
+  if( o.exportModule.isOut )
   o.dst.consistency = module.structureExportConsistency( o2 );
 
-  _.assert( !!o.dst.path );
-  _.assert( !!o.dst.path[ 'module.original.willfiles' ] );
-  _.assert( !!o.dst.path[ 'module.original.willfiles' ].path );
-  _.assert( !!o.dst.path[ 'module.peer.willfiles' ] );
-  _.assert( !!o.dst.path[ 'module.peer.willfiles' ].path );
-  _.assert( !!o.dst.path[ 'module.peer.in' ] );
-  _.assert( !!o.dst.path[ 'module.peer.in' ].path );
-  _.assert( !!o.dst.path[ 'module.willfiles' ] );
-  _.assert( !!o.dst.path[ 'module.willfiles' ].path );
-  _.assert( o.dst.path[ 'module.peer.willfiles' ].path !== o.dst.path[ 'module.willfiles' ].path );
-  _.assert( !module.isOut ^ _.entityIdentical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
-  _.assert( !_.entityIdentical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+  if( !o.exportModule.isOut )
+  {
+    for( let f in o.dst )
+    {
+      if( _.mapIsEmpty( o.dst[ f ] ) )
+      delete o.dst[ f ]
+    }
+  }
+
+  if( o.exportModule.isOut )
+  {
+    _.assert( !!o.dst.path );
+    _.assert( !!o.dst.path[ 'module.original.willfiles' ] );
+    _.assert( !!o.dst.path[ 'module.original.willfiles' ].path );
+    _.assert( !!o.dst.path[ 'module.peer.willfiles' ] );
+    _.assert( !!o.dst.path[ 'module.peer.willfiles' ].path );
+    _.assert( !!o.dst.path[ 'module.peer.in' ] );
+    _.assert( !!o.dst.path[ 'module.peer.in' ].path );
+    _.assert( !!o.dst.path[ 'module.willfiles' ] );
+    _.assert( !!o.dst.path[ 'module.willfiles' ].path );
+    _.assert( o.dst.path[ 'module.peer.willfiles' ].path !== o.dst.path[ 'module.willfiles' ].path );
+    _.assert( !module.isOut ^ _.entityIdentical( o.dst.path[ 'module.original.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+    _.assert( !_.entityIdentical( o.dst.path[ 'module.willfiles' ].path, o.dst.path[ 'module.peer.willfiles' ].path ) );
+  }
 
   return o.dst;
 }
@@ -5796,6 +5938,7 @@ structureExport.defaults =
   strict : 1,
   module : null,
   exportModule : null,
+  willf : null,
 }
 
 //
@@ -5995,7 +6138,7 @@ function structureExportModules( modules, op )
 
 //
 
-function structureExportConsistency( o2 )
+function structureExportConsistency( o )
 {
   let module = this;
   let will = module.will;
@@ -6003,12 +6146,11 @@ function structureExportConsistency( o2 )
   let path = fileProvider.path;
   let result = Object.create( null );
 
-  _.assert( arguments.length === 1 );
   _.routineOptions( structureExportConsistency, arguments );
+  _.assert( arguments.length === 1 );
+  _.assert( o.exportModule.isOut );
 
-  // debugger;
   let willfiles = module.willfilesEach({ recursive : 0, withPeers : 1 });
-  // debugger;
 
   willfiles.forEach( ( willf ) =>
   {
@@ -6016,7 +6158,7 @@ function structureExportConsistency( o2 )
     _.arrayAs( willf.filePath ).forEach( ( filePath ) =>
     {
       let r = willf.hashDescriptorGet( filePath );
-      let relativePath = path.relative( o2.exportModule.inPath, filePath );
+      let relativePath = path.relative( o.exportModule.inPath, filePath );
       _.assert( result[ relativePath ] === undefined );
       result[ relativePath ] = r;
     });
@@ -6618,6 +6760,8 @@ let Extend =
   _willfilesExport,
   willfilesEach,
 
+  willfilesSave,
+
   _attachedWillfilesForm,
   _attachedWillfilesOpenFromData,
   _attachedWillfileOpenFromData,
@@ -6664,6 +6808,7 @@ let Extend =
 
   versionsVerify,
 
+  submodulesAdd,
   submodulesReload,
   submodulesForm,
   _subModulesForm,
@@ -6757,12 +6902,16 @@ let Extend =
 
   // name
 
+  originGet,
+  originShortGet,
+  originDirNameGet,
   nameGet,
   _nameChanged,
   _nameUnregister,
   _nameRegister,
   absoluteNameGet,
   shortNameArrayGet,
+  nameWithLocationGet,
 
   // clean
 
