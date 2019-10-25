@@ -71,7 +71,7 @@ onModule.defaults =
 {
   v : null,
   verbosity : 2,
-  dry : 1,
+  dry : 0,
   beeping : 1,
 }
 

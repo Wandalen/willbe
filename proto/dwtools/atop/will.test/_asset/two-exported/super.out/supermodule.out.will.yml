@@ -3,8 +3,8 @@ root:
   - supermodule.out
 consistency:
   supermodule.out.will.yml: &ref_0
-    hash: 15e81647fd4866945a915805b26099fd
-    size: 19635
+    hash: 9533e44b1f72beec70bc08b88157b86a
+    size: 15953
   ../super.ex.will.yml: &ref_1
     hash: e420f15a7f0fa0a402272845d56fd05b
     size: 357
@@ -24,6 +24,7 @@ module:
   supermodule.out:
     about:
       name: supermodule
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -65,12 +66,8 @@ module:
           - .
           - ../sub.out
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: .
       out.debug:
         criterion:
@@ -80,23 +77,6 @@ module:
         criterion:
           debug: 0
         path: release
-      exported.dir.export.:
-        criterion:
-          default: 1
-          debug: 0
-          raw: 1
-          export: 1
-        path: release
-      exported.files.export.:
-        criterion:
-          default: 1
-          debug: 0
-          raw: 1
-          export: 1
-        path:
-          - release
-          - release/File.debug.js
-          - release/File.release.js
       exported.dir.export.debug:
         criterion:
           default: 1
@@ -114,6 +94,23 @@ module:
           - debug
           - debug/File.debug.js
           - debug/File.release.js
+      exported.dir.export.:
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+        path: release
+      exported.files.export.:
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+        path:
+          - release
+          - release/File.debug.js
+          - release/File.release.js
     submodule:
       Submodule:
         path: ../sub.out/sub.out
@@ -140,31 +137,6 @@ module:
         mandatory: 1
         criterion:
           debug: 1
-      exported.export.:
-        src:
-          filePath:
-            '**': ''
-          prefixPath: release
-        mandatory: 1
-        criterion:
-          default: 1
-          debug: 0
-          raw: 1
-          export: 1
-      exported.files.export.:
-        src:
-          filePath:
-            'path::exported.files.export.': ''
-          basePath: .
-          prefixPath: 'path::exported.dir.export.'
-          recursive: 0
-        recursive: 0
-        mandatory: 1
-        criterion:
-          default: 1
-          debug: 0
-          raw: 1
-          export: 1
       exported.export.debug:
         src:
           filePath:
@@ -190,6 +162,31 @@ module:
           debug: 1
           raw: 1
           export: 1
+      exported.export.:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: release
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+      exported.files.export.:
+        src:
+          filePath:
+            'path::exported.files.export.': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export.'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
     step:
       export.:
         opts:
@@ -197,18 +194,17 @@ module:
           tar: 0
         criterion:
           debug: 0
-        inherit:
-          - module.export
       export.debug:
         opts:
           export: '{path::out.*=1}/**'
           tar: 0
         criterion:
           debug: 1
+        inherit:
+          - module.export
       reflect.submodules.:
         opts:
           reflector: 'reflector::reflect.submodules*=1'
-          verbosity: null
         criterion:
           debug: 0
         inherit:
@@ -216,26 +212,27 @@ module:
       reflect.submodules.debug:
         opts:
           reflector: 'reflector::reflect.submodules*=1'
+          verbosity: null
         criterion:
           debug: 1
         inherit:
           - files.reflect
-      exported.export.:
+      exported.export.debug:
         opts:
-          reflector: 'reflector::exported.export.*'
+          reflector: 'reflector::exported.export.debug*'
         criterion:
           default: 1
-          debug: 0
+          debug: 1
           raw: 1
           export: 1
         inherit:
           - files.reflect
-      exported.files.export.:
+      exported.files.export.debug:
         opts:
-          reflector: 'reflector::exported.files.export.*'
+          reflector: 'reflector::exported.files.export.debug*'
         criterion:
           default: 1
-          debug: 0
+          debug: 1
           raw: 1
           export: 1
         inherit:
@@ -273,20 +270,6 @@ module:
         criterion:
           debug: 0
     exported:
-      export.:
-        version: 0.0.1
-        recursive: 0
-        withIntegrated: 2
-        tar: 0
-        exportedReflector: 'reflector::exported.export.'
-        exportedFilesReflector: 'reflector::exported.files.export.'
-        exportedDirPath: 'path::exported.dir.export.'
-        exportedFilesPath: 'path::exported.files.export.'
-        criterion:
-          default: 1
-          debug: 0
-          raw: 1
-          export: 1
       export.debug:
         version: 0.0.1
         recursive: 0
@@ -301,6 +284,20 @@ module:
           debug: 1
           raw: 1
           export: 1
+      export.:
+        version: 0.0.1
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.export.'
+        exportedFilesReflector: 'reflector::exported.files.export.'
+        exportedDirPath: 'path::exported.dir.export.'
+        exportedFilesPath: 'path::exported.files.export.'
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
     consistency:
       supermodule.out.will.yml: *ref_0
       ../super.ex.will.yml: *ref_1
@@ -308,6 +305,7 @@ module:
   ../super:
     about:
       name: supermodule
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -349,12 +347,8 @@ module:
           - ./super.out
           - ./sub.out
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: ./super.out
       out.debug:
         criterion:
@@ -397,17 +391,18 @@ module:
           tar: 0
         criterion:
           debug: 0
+        inherit:
+          - module.export
       export.debug:
         opts:
           export: '{path::out.*=1}/**'
           tar: 0
         criterion:
           debug: 1
-        inherit:
-          - module.export
       reflect.submodules.:
         opts:
           reflector: 'reflector::reflect.submodules*=1'
+          verbosity: null
         criterion:
           debug: 0
         inherit:
@@ -415,7 +410,6 @@ module:
       reflect.submodules.debug:
         opts:
           reflector: 'reflector::reflect.submodules*=1'
-          verbosity: null
         criterion:
           debug: 1
         inherit:
@@ -459,12 +453,11 @@ module:
       ../super.im.will.yml:
         hash: a325f69b8a30ad02f91c7cb6e022b4d5
         size: 883
-      supermodule.out.will.yml:
-        hash: 15e81647fd4866945a915805b26099fd
-        size: 19635
+      supermodule.out.will.yml: *ref_0
   ../sub.out/sub.out:
     about:
       name: sub
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -784,6 +777,7 @@ module:
   ../sub:
     about:
       name: sub
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -821,12 +815,8 @@ module:
       proto:
         path: .
       in:
-        criterion:
-          predefined: 0
         path: ./proto
       out:
-        criterion:
-          predefined: 0
         path: ../sub.out
       out.debug:
         criterion:
@@ -903,7 +893,6 @@ module:
       reflect.proto.debug.raw:
         opts:
           reflector: 'reflector::reflect.proto.*=1'
-          verbosity: null
         criterion:
           debug: 1
           raw: 1

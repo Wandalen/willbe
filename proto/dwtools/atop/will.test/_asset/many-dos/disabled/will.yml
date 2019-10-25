@@ -1,0 +1,22 @@
+
+about :
+
+  name : Disabled
+  enabled : 0
+
+path :
+
+  in : '.'
+  out : 'out'
+  temp : 'path::out'
+  proto : './proto'
+  doc : './doc'
+
+step :
+
+  proto.export :
+    inherit : module.export
+    export : '{path::export}/**'
+    tar : 0
+    criterion :
+      content : 'proto'
