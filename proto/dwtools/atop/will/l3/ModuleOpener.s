@@ -11,7 +11,7 @@ if( typeof opener !== 'undefined' )
 
 //
 
-let _ = wTools;
+let _ = _global_.wTools;
 let Parent = _.Will.AbstractModule;
 let Self = function wWillModuleOpener( o )
 {

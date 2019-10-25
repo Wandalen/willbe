@@ -10,7 +10,7 @@ if( typeof module !== 'undefined' )
 }
 
 let Tar, Open;
-let _ = wTools;
+let _ = _global_.wTools;
 let Self = Object.create( null );
 
 // --

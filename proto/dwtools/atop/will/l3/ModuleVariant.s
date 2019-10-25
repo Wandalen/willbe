@@ -11,7 +11,7 @@ if( typeof variant !== 'undefined' )
 
 //
 
-let _ = wTools;
+let _ = _global_.wTools;
 let Parent = null;
 let Self = function wWillModuleVariant( o )
 {
@@ -1321,9 +1321,6 @@ function submodulesGet( o )
 
   o = _.routineOptions( submodulesGet, arguments );
 
-  if( _global_.EXPORTING )
-  debugger;
-
   append( variant );
 
   if( !variant.peer )
@@ -1337,9 +1334,6 @@ function submodulesGet( o )
   if( o.withPeers )
   if( variant.peer )
   append( variant.peer );
-
-  if( _global_.EXPORTING )
-  debugger;
 
   return result;
 

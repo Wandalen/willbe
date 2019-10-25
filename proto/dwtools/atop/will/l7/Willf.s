@@ -11,7 +11,7 @@ if( typeof module !== 'undefined' )
 
 //
 
-let _ = wTools;
+let _ = _global_.wTools;
 let Crypto;
 let Parent = null;
 let Self = function wWillfile( o )

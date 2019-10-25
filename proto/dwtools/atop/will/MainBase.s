@@ -46,7 +46,7 @@ if( typeof module !== 'undefined' )
 // relations
 // --
 
-let _ = wTools;
+let _ = _global_.wTools;
 let Parent = null;
 let Self = function wWill( o )
 {
@@ -1084,9 +1084,6 @@ function relationFit_body( variant, opts )
   _.assert( arguments.length === 2 );
   _.assert( variant instanceof _.Will.ModuleVariant )
 
-  if( _global_.EXPORTING )
-  debugger;
-
   let result = will.moduleFit.body.call( will, variant, _.mapOnly( opts, will.moduleFit.defaults ) );
   if( !result )
   return result;
@@ -1852,11 +1849,7 @@ function modulesEach_body( o )
   o2.onDown = handleDown;
   _.assert( _.boolLike( o2.left ) );
 
-  if( _global_.EXPORTING )
-  debugger;
   let result = o.nodesGroup.each( o2 );
-  if( _global_.EXPORTING )
-  debugger;
 
   if( o.outputFormat !== '/' )
   return result.map( ( variant ) => outputFrom( variant ) );
@@ -1868,8 +1861,6 @@ function modulesEach_body( o )
   function handleUp( variant, it )
   {
 
-    if( _global_.EXPORTING )
-    debugger;
     it.continueNode = will.relationFit( variant, filter );
     if( o.onUp )
     o.onUp( outputFrom( variant ), it );
@@ -2409,11 +2400,9 @@ function modulesUpform( o )
 
   let o2 = _.mapOnly( o, will.modulesFor.defaults );
   o2.onEach = handleEach;
-  debugger;
   return will.modulesFor( o2 )
   .finally( ( err, arg ) =>
   {
-    debugger;
     if( err )
     throw _.err( err, `\nFailed to upform modules` );
     return arg;
@@ -2429,7 +2418,6 @@ function modulesUpform( o )
     if( visitedSet.has( variant ) )
     return null;
 
-    debugger;
     variant.reform();
 
     if( !variant.module && o.allowingMissing )
@@ -2444,7 +2432,6 @@ function modulesUpform( o )
     );
 
     visitedSet.add( variant );
-    debugger;
     let o3 = _.mapOnly( o, variant.module.upform.defaults );
     return variant.module.upform( o3 );
   }
@@ -2578,17 +2565,7 @@ function graphGroupMake( o )
 
   function variantSubmodules( variant )
   {
-    // if( _global_.EXPORTING )
-    // if( variant.id === 2 || variant.id === 62 )
-    // debugger;
     return variant.submodulesGet( _.mapOnly( o, variant.submodulesGet.defaults ) );
-    // ({
-    //   withPeers : o.withPeers,
-    //   withOut : o.withOut,
-    //   withIn : o.withIn,
-    //   withEnabled : o.withEnabled,
-    //   withDisabled : o.withDisabled,
-    // });
   }
 
   /* */

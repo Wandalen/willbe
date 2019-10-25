@@ -13,7 +13,7 @@ let Tar;
 
 //
 
-let _ = wTools;
+let _ = _global_.wTools;
 let Parent = _.Will.Resource;
 let Self = function wWillExported( o )
 {
@@ -338,8 +338,6 @@ function _performRecursive()
   {
     let con = new _.Consequence().take( null );
 
-    _global_.EXPORTING = 1;
-    debugger;
     let modules = outModule.modulesEach
     ({
       recursive : exported.recursive,
@@ -349,7 +347,6 @@ function _performRecursive()
       withIn : 1,
 
     });
-    debugger;
 
     modules.forEach( ( module2 ) =>
     {

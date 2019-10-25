@@ -34,7 +34,7 @@ if( typeof module !== 'undefined' )
 
 //
 
-let _ = wTools;
+let _ = _global_.wTools;
 let Parent = _.Will.AbstractModule;
 let Self = function wWillOpenedModule( o )
 {
@@ -5975,8 +5975,6 @@ function structureExportOut( o )
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
-  // debugger;
-  // _global_.EXPORTING = 1;
   let variants = module.modulesEach
   ({
     withPeers : 1,
@@ -5986,7 +5984,6 @@ function structureExportOut( o )
     recursive : 2,
     outputFormat : '/',
   });
-  // debugger;
 
   let modules = variants.map( ( variant ) =>
   {

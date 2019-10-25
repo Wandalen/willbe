@@ -9,7 +9,7 @@ require( 'wProto' );
 // constructor
 // --
 
-var _ = wTools;
+var _ = _global_.wTools;
 var Parent = null;
 var Self = function BaseClass()
 {

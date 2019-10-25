@@ -1,4 +1,5 @@
 
+let aboutCache = Object.create( null );
 function onModule( it )
 {
   let o = it.request.map;
@@ -6,6 +7,10 @@ function onModule( it )
   let logger = it.logger;
   let configPath = _.path.join( it.variant.dirPath, 'package.json' );
   let wasconfigPath = _.path.join( it.variant.dirPath, 'was.package.json' );
+
+  if( o.v !== null && o.v !== undefined )
+  o.verbosity = o.v;
+  _.routineOptions( onModule, o );
 
   if( !o.tag )
   throw _.errBrief( 'Expects option tag' );
@@ -55,7 +60,7 @@ function onModule( it )
     localPath : it.variant.dirPath,
     tag : o.tag,
     ready : it.ready,
-    verbosity : o.verbosity - 1,
+    verbosity : o.verbosity === 2 ? 2 : o.verbosity -1,
   })
 
   function onDependency( dep )
@@ -76,8 +81,14 @@ function onModule( it )
 
 }
 
+var defaults = onModule.defaults = Object.create( null );
+
+defaults.tag = null;
+defaults.v = null;
+defaults.dry = 0;
+defaults.verbosity = 2;
+
 module.exports = onModule;
-let aboutCache = new Object.create( null );
 
 //
 

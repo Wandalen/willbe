@@ -2,40 +2,44 @@ format: outwillfile-2.0
 root:
   - willbe.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  willbe.out.will.yml: &ref_0
+    hash: bf7222dd3668e470e7a7eb19f63ec4f1
+    size: 244132
+  ../.ex.will.yml: &ref_1
     hash: 046b16d5fda9a4efda9bf329afc39376
     size: 2260
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: 78f0721db667874f3e918ced96f4a88a
     size: 6476
 module:
   willbe.out:
     about:
       name: willbe
+      org: noorg
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters: &ref_2
+      interpreters:
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors: &ref_4
+      contributors:
         - Kostiantyn Wandalen <wanalen@willbe.so>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts: &ref_5
+      npm.scripts:
         test: 'wtest .run proto/** v:5'
         docgen: wdocgen .build proto
         single-process-will: node proto/dwtools/atop/will/Exec
         debug-will: node proto/dwtools/atop/will/ExecDebug
         unrestricted-will: node proto/dwtools/atop/will/ExecUnrestricted
         will: node proto/dwtools/atop/will/ExecUnrestricted
-      npm.bin: &ref_6
+      npm.bin:
         single-process-will: proto/dwtools/atop/will/Exec
         debug-will: proto/dwtools/atop/will/ExecDebug
         unrestricted-will: proto/dwtools/atop/will/ExecUnrestricted
@@ -261,9 +265,9 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/objects/info
           - ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/objects/pack
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/objects/pack/pack-1ce4f09973ce431212d2929a83f9158aecd4e039.idx
+            ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/objects/pack/pack-262f9d1947dc52037a7daa3e50664f6eacba9865.idx
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/objects/pack/pack-1ce4f09973ce431212d2929a83f9158aecd4e039.pack
+            ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/objects/pack/pack-262f9d1947dc52037a7daa3e50664f6eacba9865.pack
           - ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/refs
           - ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/refs/heads
           - >-
@@ -376,9 +380,9 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/objects/pack
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/objects/pack/pack-a9035fa5fb3cfcd88f7c5e7bb7b3b951f159acea.idx
+            ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/objects/pack/pack-a29bd83f47502d088fdbb685f4f30cd066738f8b.idx
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/objects/pack/pack-a9035fa5fb3cfcd88f7c5e7bb7b3b951f159acea.pack
+            ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/objects/pack/pack-a29bd83f47502d088fdbb685f4f30cd066738f8b.pack
           - ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/refs
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/refs/heads
@@ -500,9 +504,9 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/objects/pack
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/objects/pack/pack-6e97e99ed3e082eda5be8bdf53b68b13643eb4e1.idx
+            ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/objects/pack/pack-a9a923453a945c6b1188ad129e0ab8c54d5fa1af.idx
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/objects/pack/pack-6e97e99ed3e082eda5be8bdf53b68b13643eb4e1.pack
+            ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/objects/pack/pack-a9a923453a945c6b1188ad129e0ab8c54d5fa1af.pack
           - ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/refs
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/refs/heads
@@ -602,9 +606,9 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/objects/info
           - ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/objects/pack
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/objects/pack/pack-3c13bf3158e6cf3518e4c283e5d32c47b6f97640.idx
+            ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/objects/pack/pack-fbaaeef03ab44711f62b72671dd402d5f058b1c1.idx
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/objects/pack/pack-3c13bf3158e6cf3518e4c283e5d32c47b6f97640.pack
+            ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/objects/pack/pack-fbaaeef03ab44711f62b72671dd402d5f058b1c1.pack
           - ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/refs
           - ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/refs/heads
           - >-
@@ -740,9 +744,9 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/objects/info
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/objects/pack
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/objects/pack/pack-265698e24e856985eb3dda7d4e6656f56d3b9c1a.idx
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/objects/pack/pack-63002457eed28eac570669f125231b7e75acac7a.idx
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/objects/pack/pack-265698e24e856985eb3dda7d4e6656f56d3b9c1a.pack
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/objects/pack/pack-63002457eed28eac570669f125231b7e75acac7a.pack
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/refs
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/refs/heads
           - >-
@@ -1465,9 +1469,9 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/objects/pack
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/objects/pack/pack-8578863b839073e0172ba8251e60e32d3f370dcc.idx
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/objects/pack/pack-f30590cbb140f71f715800338280f3a1e57c1513.idx
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/objects/pack/pack-8578863b839073e0172ba8251e60e32d3f370dcc.pack
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/objects/pack/pack-f30590cbb140f71f715800338280f3a1e57c1513.pack
           - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/refs
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/refs/heads
@@ -2527,18 +2531,27 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/many-dos/will.yml
           - ../proto/dwtools/atop/will.test/_asset/many-dos/.will
           - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/Clean.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/Export.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/Git.js
+          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/clean.js
+          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/export.js
+          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/git.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitCommit.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitMake.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitPull.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitPush.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitStatus.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/Info.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitSync.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitUncommitted.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitUnpushed.js
+          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/info.js
+          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/link.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/ModuleInit.js
           - >-
@@ -2546,19 +2559,28 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/NpmConfigRemove.js
           - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/Publish.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/Status.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/Will.js
+            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/prepare.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/publish.js
+          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/status.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/TemplateStandard.js
+          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/will.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/WillExport.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/WillfCommentOut.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/WillfPatch.js
+          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/template
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/template/Standard.js
           - ../proto/dwtools/atop/will.test/_asset/many-dos/_hidden
           - ../proto/dwtools/atop/will.test/_asset/many-dos/_hidden/will.yml
           - ../proto/dwtools/atop/will.test/_asset/many-dos/corrupted
           - ../proto/dwtools/atop/will.test/_asset/many-dos/corrupted/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/many-dos/disabled
+          - ../proto/dwtools/atop/will.test/_asset/many-dos/disabled/will.yml
           - ../proto/dwtools/atop/will.test/_asset/many-dos/execution_section
           - >-
             ../proto/dwtools/atop/will.test/_asset/many-dos/execution_section/will.yml
@@ -2571,8 +2593,6 @@ module:
             ../proto/dwtools/atop/will.test/_asset/many-dos/wExperiment/README.md
           - >-
             ../proto/dwtools/atop/will.test/_asset/many-dos/wExperiment/was.package.json
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/wExperiment/wExperiment.out.will.yml
           - ../proto/dwtools/atop/will.test/_asset/many-dos/wExperiment/will.yml
           - ../proto/dwtools/atop/will.test/_asset/many-few
           - ../proto/dwtools/atop/will.test/_asset/many-few/.ex.will.yml
@@ -4188,6 +4208,22 @@ module:
           content: prime
         inherit:
           - files.transpile
+      exported.proto.export:
+        opts:
+          reflector: 'reflector::exported.proto.export*'
+        criterion:
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          reflector: 'reflector::exported.files.proto.export*'
+        criterion:
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -4276,22 +4312,41 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      willbe.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: willbe
+      org: noorg
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - njs >= 8.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors: *ref_4
+      contributors:
+        - Kostiantyn Wandalen <wanalen@willbe.so>
+        - Volodymyr M. <volodymyr.migdal@gmail.com>
+        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts: *ref_5
-      npm.bin: *ref_6
+      npm.scripts:
+        test: 'wtest .run proto/** v:5'
+        docgen: wdocgen .build proto
+        single-process-will: node proto/dwtools/atop/will/Exec
+        debug-will: node proto/dwtools/atop/will/ExecDebug
+        unrestricted-will: node proto/dwtools/atop/will/ExecUnrestricted
+        will: node proto/dwtools/atop/will/ExecUnrestricted
+      npm.bin:
+        single-process-will: proto/dwtools/atop/will/Exec
+        debug-will: proto/dwtools/atop/will/ExecDebug
+        unrestricted-will: proto/dwtools/atop/will/ExecUnrestricted
+        will: proto/dwtools/atop/will/ExecUnrestricted
     path:
       module.willfiles:
         criterion:
@@ -4332,12 +4387,8 @@ module:
       bugtracker:
         path: 'https:///github.com/Wandalen/willbe/issues'
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: out
       temp:
         path: 'path::out'
@@ -5052,3 +5103,4 @@ module:
       ../.im.will.yml:
         hash: 78f0721db667874f3e918ced96f4a88a
         size: 6476
+      willbe.out.will.yml: *ref_0

@@ -11,7 +11,7 @@ if( typeof module !== 'undefined' )
 
 //
 
-let _ = wTools;
+let _ = _global_.wTools;
 let Parent = null;
 let Self = function wWillParagraphAbout( o )
 {

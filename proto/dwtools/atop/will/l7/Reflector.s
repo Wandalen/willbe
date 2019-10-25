@@ -11,7 +11,7 @@ if( typeof module !== 'undefined' )
 
 //
 
-let _ = wTools;
+let _ = _global_.wTools;
 let Parent = _.Will.Resource;
 let Self = function wWillReflector( o )
 {

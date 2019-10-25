@@ -8,7 +8,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wTesting' );
 }
 
-var _ = wTools;
+var _ = _global_.wTools;
 
 //--
 // arguments array
