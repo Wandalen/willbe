@@ -15,6 +15,7 @@ module:
   sub.out:
     about:
       name: sub
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -245,6 +246,26 @@ module:
           export: 1
         inherit:
           - files.reflect
+      exported.export.debug:
+        opts:
+          reflector: 'reflector::exported.export.debug*'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.export.debug:
+        opts:
+          reflector: 'reflector::exported.files.export.debug*'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        inherit:
+          - files.reflect
     build:
       export.:
         steps:
@@ -314,6 +335,7 @@ module:
   ../sub:
     about:
       name: sub
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -351,12 +373,8 @@ module:
       proto:
         path: .
       in:
-        criterion:
-          predefined: 0
         path: ./proto
       out:
-        criterion:
-          predefined: 0
         path: ../sub.out
       out.debug:
         criterion:
@@ -479,6 +497,4 @@ module:
       ../sub.im.will.yml:
         hash: c6233389a466d4e36531c056e1b59784
         size: 810
-      sub.out.will.yml:
-        hash: 6644f0fff430bdbe46629eaba22139c5
-        size: 8850
+      sub.out.will.yml: *ref_0

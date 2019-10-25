@@ -42,7 +42,7 @@ function init( o )
   about.values = Object.create( null );
   about.values.enabled = 1;
   about.values.name = null;
-  about.values.org = 'org';
+  about.values.org = 'noorg';
 
   _.workpiece.initFields( about );
   Object.preventExtensions( about );
@@ -147,7 +147,7 @@ let Composes =
 {
 
   name : null,
-  org : 'org',
+  org : 'noorg',
   description : null,
   enabled : 1,
   version : null,

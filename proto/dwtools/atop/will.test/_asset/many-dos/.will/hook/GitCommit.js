@@ -5,9 +5,11 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
+  debugger;
+
   _.fileProvider.filesFind( it.variant.dirPath + '**' );
 
-  let status = _.git.infoStatus
+  let status = _.git.statusFull
   ({
     insidePath : it.variant.dirPath,
     unpushed : 0,
@@ -17,8 +19,8 @@ function onModule( it )
 
   if( !status.isRepository )
   return null;
-  // if( !status.hasLocalChanges )
-  // return null;
+  if( !status.status )
+  return null;
 
   if( o.verbosity )
   logger.log( `Committing ${it.variant.nameWithLocationGet()}` );
@@ -26,11 +28,13 @@ function onModule( it )
   if( o.dry )
   return;
 
-  // it.start( `git add --all` );
-  // it.start( `git commit ${it.request.original}` );
+  debugger;
 
-  it.startNotThowing( `git add --all` );
-  it.startNotThowing( `git commit ${it.request.original}` );
+  it.start( `git add --all` );
+  it.start( `git commit ${it.request.original}` );
+
+  // it.startNonThrowing( `git add --all` );
+  // it.startNonThrowing( `git commit ${it.request.original}` );
 
 }
 

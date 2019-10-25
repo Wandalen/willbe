@@ -8,7 +8,7 @@ function onModule( it )
   if( !it.module )
   return;
 
-  // let status = _.git.infoStatus({ insidePath : it.variant.dirPath, checkingPrs : 0, checkingRemoteChanges : 0 });
+  // let status = _.git.statusFull({ insidePath : it.variant.dirPath, checkingPrs : 0, checkingRemoteChanges : 0 });
   // if( !status.isRepository )
   // return null;
 

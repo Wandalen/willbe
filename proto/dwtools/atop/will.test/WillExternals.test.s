@@ -148,7 +148,7 @@ function singleModuleWithSpaceTrivial( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : _.path.dir( routinePath ),
@@ -159,7 +159,7 @@ function singleModuleWithSpaceTrivial( test )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
-  shell({ execPath : '.with "single with space/" .resources.list' })
+  start({ execPath : '.with "single with space/" .resources.list' })
 
   .then( ( got ) =>
   {
@@ -191,7 +191,7 @@ function make( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -213,7 +213,7 @@ function make( test )
     return null;
   })
 
-  shell({ execPath : '.with v1 .build' })
+  start({ execPath : '.with v1 .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -236,7 +236,7 @@ function make( test )
     return null;
   })
 
-  shell({ execPath : '.with v1 .build' })
+  start({ execPath : '.with v1 .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -270,7 +270,7 @@ function make( test )
     return null;
   })
 
-  shell({ execPath : '.with v2 .build' })
+  start({ execPath : '.with v2 .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -293,7 +293,7 @@ function make( test )
     return null;
   })
 
-  shell({ execPath : '.with v2 .build' })
+  start({ execPath : '.with v2 .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -338,7 +338,7 @@ function transpile( test )
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -358,7 +358,7 @@ function transpile( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  shell({ execPath : '.build debug' })
+  start({ execPath : '.build debug' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -377,7 +377,7 @@ function transpile( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  shell({ execPath : '.build compiled.debug' })
+  start({ execPath : '.build compiled.debug' })
   .then( ( got ) =>
   {
 
@@ -417,7 +417,7 @@ function transpile( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  shell({ execPath : '.build raw.release' })
+  start({ execPath : '.build raw.release' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -436,7 +436,7 @@ function transpile( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  shell({ execPath : '.build release' })
+  start({ execPath : '.build release' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -464,7 +464,7 @@ function transpile( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  shell({ execPath : '.build all' })
+  start({ execPath : '.build all' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -491,7 +491,7 @@ function moduleNewDotless( test )
   let rel = self.rel_functor( routinePath );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -513,7 +513,7 @@ function moduleNewDotless( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new' })
+  start({ execPath : '.module.new' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -552,7 +552,7 @@ function moduleNewDotless( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new some' })
+  start({ execPath : '.module.new some' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -579,7 +579,7 @@ function moduleNewDotless( test )
 
     return null;
   })
-  shell({ execPath : '.with some .about.list' })
+  start({ execPath : '.with some .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -602,7 +602,7 @@ function moduleNewDotless( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new some/' })
+  start({ execPath : '.module.new some/' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -630,7 +630,7 @@ function moduleNewDotless( test )
 
     return null;
   })
-  shell({ execPath : '.with some/ .about.list' })
+  start({ execPath : '.with some/ .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -653,7 +653,7 @@ function moduleNewDotless( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new ../dir1/dir2/some/' })
+  start({ execPath : '.module.new ../dir1/dir2/some/' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -683,7 +683,7 @@ function moduleNewDotless( test )
 
     return null;
   })
-  shell({ execPath : '.with ../dir1/dir2/some/ .about.list' })
+  start({ execPath : '.with ../dir1/dir2/some/ .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -713,7 +713,7 @@ function moduleNewDotlessSingle( test )
   let rel = self.rel_functor( routinePath );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -735,7 +735,7 @@ function moduleNewDotlessSingle( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new' })
+  start({ execPath : '.module.new' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -763,7 +763,7 @@ function moduleNewDotlessSingle( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new some' })
+  start({ execPath : '.module.new some' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -788,7 +788,7 @@ function moduleNewDotlessSingle( test )
 
     return null;
   })
-  shell({ execPath : '.with some .about.list' })
+  start({ execPath : '.with some .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -811,7 +811,7 @@ function moduleNewDotlessSingle( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new some/' })
+  start({ execPath : '.module.new some/' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -837,7 +837,7 @@ function moduleNewDotlessSingle( test )
 
     return null;
   })
-  shell({ execPath : '.with some/ .about.list' })
+  start({ execPath : '.with some/ .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -860,7 +860,7 @@ function moduleNewDotlessSingle( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new ../dir1/dir2/some/' })
+  start({ execPath : '.module.new ../dir1/dir2/some/' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -879,7 +879,7 @@ function moduleNewDotlessSingle( test )
 
     return null;
   })
-  shell({ execPath : '.with ../dir1/dir2/some/ .about.list' })
+  start({ execPath : '.with ../dir1/dir2/some/ .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -909,7 +909,7 @@ function moduleNewNamed( test )
   let rel = self.rel_functor( routinePath );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -931,7 +931,7 @@ function moduleNewNamed( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new super' })
+  start({ execPath : '.module.new super' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -969,7 +969,7 @@ function moduleNewNamed( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.with some .module.new' })
+  start({ execPath : '.with some .module.new' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -995,7 +995,7 @@ function moduleNewNamed( test )
 
     return null;
   })
-  shell({ execPath : '.with some .about.list' })
+  start({ execPath : '.with some .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1018,7 +1018,7 @@ function moduleNewNamed( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.with some/ .module.new' })
+  start({ execPath : '.with some/ .module.new' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1045,7 +1045,7 @@ function moduleNewNamed( test )
 
     return null;
   })
-  shell({ execPath : '.with some/ .about.list' })
+  start({ execPath : '.with some/ .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1068,7 +1068,7 @@ function moduleNewNamed( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.with some .module.new some2' })
+  start({ execPath : '.with some .module.new some2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1095,7 +1095,7 @@ function moduleNewNamed( test )
 
     return null;
   })
-  shell({ execPath : '.with some/some2 .about.list' })
+  start({ execPath : '.with some/some2 .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1118,7 +1118,7 @@ function moduleNewNamed( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new' })
+  start({ execPath : '.module.new' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1144,7 +1144,7 @@ function moduleNewNamed( test )
 
     return null;
   })
-  shell({ execPath : '.with . .about.list' })
+  start({ execPath : '.with . .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1167,7 +1167,7 @@ function moduleNewNamed( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new super/' })
+  start({ execPath : '.module.new super/' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1194,7 +1194,7 @@ function moduleNewNamed( test )
 
     return null;
   })
-  shell({ execPath : '.with super/ .about.list' })
+  start({ execPath : '.with super/ .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1217,7 +1217,7 @@ function moduleNewNamed( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new some' })
+  start({ execPath : '.module.new some' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1243,7 +1243,7 @@ function moduleNewNamed( test )
 
     return null;
   })
-  shell({ execPath : '.with some .about.list' })
+  start({ execPath : '.with some .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1266,7 +1266,7 @@ function moduleNewNamed( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new some/' })
+  start({ execPath : '.module.new some/' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1293,7 +1293,7 @@ function moduleNewNamed( test )
 
     return null;
   })
-  shell({ execPath : '.with some/ .about.list' })
+  start({ execPath : '.with some/ .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1316,7 +1316,7 @@ function moduleNewNamed( test )
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
   })
-  shell({ execPath : '.module.new ../dir1/dir2/some/' })
+  start({ execPath : '.module.new ../dir1/dir2/some/' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1345,7 +1345,7 @@ function moduleNewNamed( test )
 
     return null;
   })
-  shell({ execPath : '.with ../dir1/dir2/some/ .about.list' })
+  start({ execPath : '.with ../dir1/dir2/some/ .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1377,7 +1377,7 @@ function openWith( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -1398,8 +1398,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -1427,8 +1427,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.with . .export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.with . .export' })
 
   .then( ( got ) =>
   {
@@ -1456,8 +1456,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.with doc .export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.with doc .export' })
 
   .then( ( got ) =>
   {
@@ -1489,7 +1489,7 @@ function openWith( test )
     return null;
   })
 
-  shell({ args : [ '.with doc .export' ], throwingExitCode : 0 })
+  start({ args : [ '.with doc .export' ], throwingExitCode : 0 })
 
   .then( ( got ) =>
   {
@@ -1520,8 +1520,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.with doc. .export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.with doc. .export' })
 
   .then( ( got ) =>
   {
@@ -1549,8 +1549,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.with doc/. .export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.with doc/. .export' })
 
   .then( ( got ) =>
   {
@@ -1578,8 +1578,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ args : [ '.with do .export' ], throwingExitCode : 0 })
+  start({ execPath : '.clean' })
+  start({ args : [ '.with do .export' ], throwingExitCode : 0 })
 
   .then( ( got ) =>
   {
@@ -1610,8 +1610,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ args : [ '.with docx .export' ], throwingExitCode : 0 })
+  start({ execPath : '.clean' })
+  start({ args : [ '.with docx .export' ], throwingExitCode : 0 })
 
   .then( ( got ) =>
   {
@@ -1642,8 +1642,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.with doc/ .export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.with doc/ .export' })
 
   .then( ( got ) =>
   {
@@ -1677,8 +1677,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ args : [ '.with doc/ .export' ], throwingExitCode : 0 })
+  start({ execPath : '.clean' })
+  start({ args : [ '.with doc/ .export' ], throwingExitCode : 0 })
 
   .then( ( got ) =>
   {
@@ -1712,8 +1712,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.with doc/doc .export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.with doc/doc .export' })
 
   .then( ( got ) =>
   {
@@ -1741,8 +1741,8 @@ function openWith( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.with doc/doc. .export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.with doc/doc. .export' })
 
   .then( ( got ) =>
   {
@@ -1780,7 +1780,7 @@ function openEach( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -1801,8 +1801,8 @@ function openEach( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.each . .export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.each . .export' })
 
   .then( ( got ) =>
   {
@@ -1830,8 +1830,8 @@ function openEach( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.each doc/. .export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.each doc/. .export' })
 
   .then( ( got ) =>
   {
@@ -1869,7 +1869,7 @@ function withMixed( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -1890,7 +1890,7 @@ function withMixed( test )
     return null;
   })
 
-  shell({ execPath : '.with module .build' })
+  start({ execPath : '.with module .build' })
   .then( ( got ) =>
   {
     test.is( got.exitCode !== 0 );
@@ -1909,7 +1909,7 @@ function withMixed( test )
     return null;
   })
 
-  shell({ execPath : '.with . .export' })
+  start({ execPath : '.with . .export' })
   .then( ( got ) =>
   {
     test.is( got.exitCode === 0 );
@@ -1935,7 +1935,7 @@ function eachMixed( test )
   let rel = self.rel_functor( routinePath );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -1951,13 +1951,13 @@ function eachMixed( test )
   ready
   .then( () =>
   {
-    test.case = '.each submodule::*/path::download .shell "git status"'
+    test.case = '.each submodule::*/path::download .start "git status"'
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.build' })
-  shell({ execPath : '.each submodule::*/path::download .shell "git status"' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.build' })
+  start({ execPath : '.each submodule::*/path::download .start "git status"' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1988,13 +1988,13 @@ function eachMixed( test )
   ready
   .then( () =>
   {
-    test.case = '.each submodule:: .shell ls'
+    test.case = '.each submodule:: .start ls'
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.build' })
-  shell({ execPath : '.each submodule:: .shell ls -al' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.build' })
+  start({ execPath : '.each submodule:: .start ls -al' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -2035,7 +2035,7 @@ function withList( test )
 
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -2048,7 +2048,7 @@ function withList( test )
 
   /* - */
 
-  shell({ args : '.with . .resources.list about::name' })
+  start({ args : '.with . .resources.list about::name' })
   .finally( ( err, got ) =>
   {
     test.case = '.with . .resources.list about::name';
@@ -2061,7 +2061,7 @@ function withList( test )
 
   /* - */
 
-  shell({ args : '.with . .resources.list about::description' })
+  start({ args : '.with . .resources.list about::description' })
   .finally( ( err, got ) =>
   {
     test.case = '.with . .resources.list about::description';
@@ -2074,7 +2074,7 @@ function withList( test )
 
   /* - */
 
-  shell({ args : '.with . .resources.list path::module.dir' })
+  start({ args : '.with . .resources.list path::module.dir' })
   .finally( ( err, got ) =>
   {
     test.case = '.with . .resources.list path::module.dir';
@@ -2102,7 +2102,7 @@ function eachList( test )
 
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -2115,11 +2115,11 @@ function eachList( test )
 
   /* - */
 
-  shell({ args : '.clean' })
+  start({ args : '.clean' })
 
   /* - */
 
-  shell({ args : '.each . .resources.list about::name' })
+  start({ args : '.each . .resources.list about::name' })
   .finally( ( err, got ) =>
   {
     test.case = '.each . .resources.list about::name';
@@ -2146,7 +2146,7 @@ function eachList( test )
 
   /* - */
 
-  shell({ args : '.imply v:1 ; .each . .resources.list about::name' })
+  start({ args : '.imply v:1 ; .each . .resources.list about::name' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply v:1 ; .each . .resources.list about::name';
@@ -2174,7 +2174,7 @@ function eachList( test )
 
   /* - */
 
-  shell({ args : '.imply v:1 ; .each . .resources.list path::module.common' })
+  start({ args : '.imply v:1 ; .each . .resources.list path::module.common' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply v:1 ; .each . .resources.list path::module.common';
@@ -2196,7 +2196,7 @@ function eachList( test )
 
   /* - */
 
-  shell({ args : '.imply v:1 ; .each * .resources.list path::module.common' })
+  start({ args : '.imply v:1 ; .each * .resources.list path::module.common' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply v:1 ; .each * .resources.list path::module.common';
@@ -2218,7 +2218,7 @@ function eachList( test )
 
   /* - */
 
-  shell({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
+  start({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
@@ -2260,7 +2260,7 @@ function eachBrokenIll( test )
 
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -2274,7 +2274,7 @@ function eachBrokenIll( test )
 
   /* - */
 
-  shell({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
+  start({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
@@ -2312,7 +2312,7 @@ function eachBrokenNon( test )
 
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -2326,7 +2326,7 @@ function eachBrokenNon( test )
 
   /* - */
 
-  shell({ args : '.each */* .paths.list' })
+  start({ args : '.each */* .paths.list' })
   .finally( ( err, got ) =>
   {
     test.case = '.each */* .paths.list';
@@ -2361,7 +2361,7 @@ function eachBrokenCommand( test )
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -2377,7 +2377,7 @@ function eachBrokenCommand( test )
 
   /* - */
 
-  shell( `.each */* .resource.list path::module.common` )
+  start( `.each */* .resource.list path::module.common` )
   .finally( ( err, got ) =>
   {
     test.case = '.each */* .resource.list path::module.common';
@@ -2412,7 +2412,7 @@ function openExportClean( test )
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -2427,7 +2427,7 @@ function openExportClean( test )
 
   /* - */
 
-  shell( '".with . .export ; .clean"' )
+  start( '".with . .export ; .clean"' )
   .then( ( got ) =>
   {
     test.case = '.with . .export ; .clean';
@@ -2476,7 +2476,7 @@ function withDoInfo( test )
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -2490,8 +2490,8 @@ function withDoInfo( test )
 
   /* - */
 
-  shell( '.clean' )
-  shell( '.export' )
+  start( '.clean' )
+  start( '.export' )
   .then( ( got ) =>
   {
     test.case = 'setup';
@@ -2508,7 +2508,7 @@ function withDoInfo( test )
 
   /* - */
 
-  shell( '.hook.call info.js' )
+  start( '.hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.hook.call info.js';
@@ -2523,7 +2523,7 @@ function withDoInfo( test )
 
   /* - */
 
-  shell( '.with . .hook.call info.js' )
+  start( '.with . .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.with . .hook.call info.js';
@@ -2538,7 +2538,7 @@ function withDoInfo( test )
 
   /* - */
 
-  shell( '.with * .hook.call info.js' )
+  start( '.with * .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.with . .hook.call info.js';
@@ -2553,7 +2553,7 @@ function withDoInfo( test )
 
   /* - */
 
-  shell( '.with ** .hook.call info.js' )
+  start( '.with ** .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.with . .hook.call info.js';
@@ -2568,7 +2568,7 @@ function withDoInfo( test )
 
   /* - */
 
-  shell( '.imply withOut:0 ; .with ** .hook.call info.js' )
+  start( '.imply withOut:0 ; .with ** .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
@@ -2583,7 +2583,7 @@ function withDoInfo( test )
 
   /* - */
 
-  shell( '.imply withIn:0 ; .with ** .hook.call info.js' )
+  start( '.imply withIn:0 ; .with ** .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.imply withIn:0 ; .with ** .hook.call info.js';
@@ -2625,9 +2625,8 @@ function withDoStatus( test )
   let rel = self.rel_functor( routinePath );
 
   let outPath = _.path.join( routinePath, 'out' );
-
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let startWill = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -2636,13 +2635,32 @@ function withDoStatus( test )
     throwingExitCode : 1,
     ready : ready,
   })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  let start = _.process.starter
+  ({
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 1,
+    ready : ready,
+  })
 
   /* - */
 
-  shell( '.clean' )
-  shell( '.export' )
+  ready
+  .then( ( got ) =>
+  {
+    test.case = 'setup';
+
+    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    start({ execPath : 'git init', currentPath : _.path.join( routinePath, 'disabled' ) });
+
+    return null;
+  })
+
+  /* - */
+
+  startWill( '.clean' )
+  startWill( '.export' )
   .then( ( got ) =>
   {
     test.case = 'setup';
@@ -2658,7 +2676,7 @@ function withDoStatus( test )
 
   /* - */
 
-  shell( '.with ** .do .will/hook/Status.js' )
+  startWill( '.with ** .do .will/hook/Status.js' )
   .then( ( got ) =>
   {
     test.case = 'no changes';
@@ -2680,7 +2698,7 @@ function withDoStatus( test )
     return null;
   })
 
-  shell( '.with ** .do .will/hook/Status.js' )
+  startWill( '.with ** .do .will/hook/Status.js' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -2720,7 +2738,7 @@ function withDoCommentOut( test )
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -2741,7 +2759,7 @@ function withDoCommentOut( test )
     test.is( !!outfile.execution );
     return null;
   })
-  shell( '.with ** .do .will/hook/WillfCommentOut.js execution' )
+  start( '.with ** .do .will/hook/WillfCommentOut.js execution' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -2762,7 +2780,7 @@ function withDoCommentOut( test )
     test.is( !!outfile.execution );
     return null;
   })
-  shell( '.with ** .do .will/hook/WillfCommentOut.js execution dry:1' )
+  start( '.with ** .do .will/hook/WillfCommentOut.js execution dry:1' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -2796,7 +2814,7 @@ function hookCallInfo( test )
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -2810,8 +2828,8 @@ function hookCallInfo( test )
 
   /* - */
 
-  shell( '.clean' )
-  shell( '.export' )
+  start( '.clean' )
+  start( '.export' )
   .then( ( got ) =>
   {
     test.case = 'setup';
@@ -2828,7 +2846,7 @@ function hookCallInfo( test )
 
   /* - */
 
-  shell( '.hook.call info.js' )
+  start( '.hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.hook.call info.js';
@@ -2843,7 +2861,7 @@ function hookCallInfo( test )
 
   /* - */
 
-  shell( '.with . .hook.call info.js' )
+  start( '.with . .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.with . .hook.call info.js';
@@ -2858,7 +2876,7 @@ function hookCallInfo( test )
 
   /* - */
 
-  shell( '.with * .hook.call info.js' )
+  start( '.with * .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.with . .hook.call info.js';
@@ -2873,7 +2891,7 @@ function hookCallInfo( test )
 
   /* - */
 
-  shell( '.with ** .hook.call info.js' )
+  start( '.with ** .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.with . .hook.call info.js';
@@ -2881,37 +2899,37 @@ function hookCallInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 12 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 7 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 6 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
 
   /* - */
 
-  shell( '.imply withOut:0 ; .with ** .hook.call info.js' )
+  start( '.imply withOut:0 ; .with ** .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 9 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 7 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 6 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
 
   /* - */
 
-  shell( '.imply withIn:0 ; .with ** .hook.call info.js' )
+  start( '.imply withIn:0 ; .with ** .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.imply withIn:0 ; .with ** .hook.call info.js';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 3 );
     test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 5 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 4 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
 
     return null;
@@ -2944,7 +2962,7 @@ function hookGitMake( test )
   let rel = self.rel_functor( routinePath );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -2965,7 +2983,7 @@ function hookGitMake( test )
 
   /* - */
 
-  shell({ execPath : '.module.new New2/' })
+  start({ execPath : '.module.new New2/' })
 
   .then( ( got ) =>
   {
@@ -2980,7 +2998,7 @@ function hookGitMake( test )
     });
   })
 
-  shell({ execPath : '.with New2/ .hook.call GitMake v:3' })
+  start({ execPath : '.with New2/ .hook.call GitMake v:3' })
 
   .then( ( got ) =>
   {
@@ -3026,7 +3044,7 @@ function hookPrepare( test )
   let rel = self.rel_functor( routinePath );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -3060,7 +3078,7 @@ function hookPrepare( test )
     });
   })
 
-  shell({ execPath : '.with New2/ .module.new.with prepare v:3' })
+  start({ execPath : '.with New2/ .module.new.with prepare v:3' })
 
   .then( ( got ) =>
   {
@@ -3124,7 +3142,7 @@ function hookPrepare( test )
     });
   })
 
-  shell({ execPath : '.with New3/New4 .module.new.with prepare v:3' })
+  start({ execPath : '.with New3/New4 .module.new.with prepare v:3' })
 
   .then( ( got ) =>
   {
@@ -3195,7 +3213,7 @@ function verbositySet( test )
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -3211,8 +3229,8 @@ function verbositySet( test )
 
   /* - */
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.imply verbosity:3 ; .build' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.imply verbosity:3 ; .build' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply verbosity:3 ; .build';
@@ -3240,8 +3258,8 @@ function verbositySet( test )
 
   /* - */
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.imply verbosity:2 ; .build' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.imply verbosity:2 ; .build' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply verbosity:2 ; .build';
@@ -3269,8 +3287,8 @@ function verbositySet( test )
 
   /* - */
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.imply verbosity:1 ; .build' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.imply verbosity:1 ; .build' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply verbosity:1 ; .build';
@@ -3322,7 +3340,7 @@ function verbosityStepDelete( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -3342,7 +3360,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ execPath : '.build files.delete.vd' })
+  start({ execPath : '.build files.delete.vd' })
 
   .then( ( got ) =>
   {
@@ -3371,7 +3389,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ execPath : '.build files.delete.v0' })
+  start({ execPath : '.build files.delete.v0' })
 
   .then( ( got ) =>
   {
@@ -3401,7 +3419,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ execPath : '.build files.delete.v1' })
+  start({ execPath : '.build files.delete.v1' })
 
   .then( ( got ) =>
   {
@@ -3430,7 +3448,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ execPath : '.build files.delete.v3' })
+  start({ execPath : '.build files.delete.v3' })
 
   .then( ( got ) =>
   {
@@ -3459,7 +3477,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ execPath : '.imply v:0 ; .build files.delete.vd' })
+  start({ execPath : '.imply v:0 ; .build files.delete.vd' })
 
   .then( ( got ) =>
   {
@@ -3489,7 +3507,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ execPath : '.imply v:8 ; .build files.delete.v0' })
+  start({ execPath : '.imply v:8 ; .build files.delete.v0' })
 
   .then( ( got ) =>
   {
@@ -3518,7 +3536,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ execPath : '.imply v:9 ; .build files.delete.v0' })
+  start({ execPath : '.imply v:9 ; .build files.delete.v0' })
 
   .then( ( got ) =>
   {
@@ -3547,7 +3565,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ execPath : '.imply v:1 ; .build files.delete.v3' })
+  start({ execPath : '.imply v:1 ; .build files.delete.v3' })
 
   .then( ( got ) =>
   {
@@ -3576,7 +3594,7 @@ function verbosityStepDelete( test )
     return null;
   })
 
-  shell({ execPath : '.imply v:2 ; .build files.delete.v3' })
+  start({ execPath : '.imply v:2 ; .build files.delete.v3' })
 
   .then( ( got ) =>
   {
@@ -3619,7 +3637,7 @@ function verbosityStepPrintName( test )
 
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -3639,7 +3657,7 @@ function verbosityStepPrintName( test )
     return arg;
   })
 
-  shell({ execPath : '.imply v:4 ; .build' })
+  start({ execPath : '.imply v:4 ; .build' })
 
   .then( ( got ) =>
   {
@@ -3651,9 +3669,9 @@ function verbosityStepPrintName( test )
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 1 );
     test.identical( _.strCount( got.output, '+ reflector::reflect.file reflected 1 file(s)' ), 1 );
     test.identical( _.strCount( got.output, '/verbosityStepPrintName/ : ./out <- ./file in' ), 1 );
-    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
+    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'start.step' \)"/ ), 1 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 3 );
-    test.identical( _.strCount( got.output, 'shell.step' ), 2 );
+    test.identical( _.strCount( got.output, 'start.step' ), 2 );
     test.identical( _.strCount( got.output, /: .*step::delete.step.*/ ), 1 );
     test.identical( _.strCount( got.output, /1 at .*\/out/ ), 1 );
     test.identical( _.strCount( got.output, /1 at \./ ), 1 );
@@ -3673,7 +3691,7 @@ function verbosityStepPrintName( test )
     return arg;
   })
 
-  shell({ execPath : '.imply v:3 ; .build' })
+  start({ execPath : '.imply v:3 ; .build' })
 
   .then( ( got ) =>
   {
@@ -3685,9 +3703,9 @@ function verbosityStepPrintName( test )
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
     test.identical( _.strCount( got.output, '+ reflector::reflect.file reflected 1 file(s)' ), 1 );
     test.identical( _.strCount( got.output, '/verbosityStepPrintName/ : ./out <- ./file' ), 1 );
-    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
+    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'start.step' \)"/ ), 1 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 1 );
-    test.identical( _.strCount( got.output, 'shell.step' ), 2 );
+    test.identical( _.strCount( got.output, 'start.step' ), 2 );
     test.identical( _.strCount( got.output, /: .*step::delete.step.*/ ), 0 );
     test.identical( _.strCount( got.output, /1 at .*\/out/ ), 0 );
     test.identical( _.strCount( got.output, /1 at \./ ), 0 );
@@ -3707,7 +3725,7 @@ function verbosityStepPrintName( test )
     return arg;
   })
 
-  shell({ execPath : '.imply v:2 ; .build' })
+  start({ execPath : '.imply v:2 ; .build' })
 
   .then( ( got ) =>
   {
@@ -3719,9 +3737,9 @@ function verbosityStepPrintName( test )
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
     test.identical( _.strCount( got.output, ' + reflector::reflect.file reflected 1 file(s)' ), 1 );
     test.identical( _.strCount( got.output, '/verbosityStepPrintName/ : ./out <- ./file in' ), 1 );
-    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
+    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'start.step' \)"/ ), 1 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 1 );
-    test.identical( _.strCount( got.output, 'shell.step' ), 1 );
+    test.identical( _.strCount( got.output, 'start.step' ), 1 );
     test.identical( _.strCount( got.output, /: .*step::delete.step.*/ ), 0 );
     test.identical( _.strCount( got.output, /1 at .*\/out/ ), 0 );
     test.identical( _.strCount( got.output, /1 at \./ ), 0 );
@@ -3741,7 +3759,7 @@ function verbosityStepPrintName( test )
     return arg;
   })
 
-  shell({ execPath : '.imply v:1 ; .build' })
+  start({ execPath : '.imply v:1 ; .build' })
 
   .then( ( got ) =>
   {
@@ -3752,9 +3770,9 @@ function verbosityStepPrintName( test )
     test.identical( _.strCount( got.output, /Building .*module::verbosityStepPrintName \/ build::debug/ ), 0 );
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
     test.identical( _.strCount( got.output, ' + reflector::reflect.file.* reflected 1 file(s) .* : .*out.* <- .*file.* in ' ), 0 );
-    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 0 );
+    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'start.step' \)"/ ), 0 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 0 );
-    test.identical( _.strCount( got.output, 'shell.step' ), 0 );
+    test.identical( _.strCount( got.output, 'start.step' ), 0 );
     test.identical( _.strCount( got.output, /: .*step::delete.step.*/ ), 0 );
     test.identical( _.strCount( got.output, /1 at .*\/out/ ), 0 );
     test.identical( _.strCount( got.output, /1 at \./ ), 0 );
@@ -3770,9 +3788,9 @@ function verbosityStepPrintName( test )
   Building module::verbosity-step-print-name / build::debug
    : reflector::reflect.file
    + reflector::reflect.file reflected 1 file(s) /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name/ : out <- file in 0.290s
- > node -e "console.log( 'shell.step' )"
+ > node -e "console.log( 'start.step' )"
    at /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name
-shell.step
+start.step
    : step::delete.step
      1 at /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name/out
      1 at .
@@ -3801,7 +3819,7 @@ function modulesTreeDotless( test )
   let outSubTerminalPath = abs( 'sub.out/sub.out.will.yml' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -3826,7 +3844,7 @@ function modulesTreeDotless( test )
     return null;
   })
 
-  shell({ execPath : '.imply v:1 ; .modules.tree withLocalPath:1' })
+  start({ execPath : '.imply v:1 ; .modules.tree withLocalPath:1' })
 
   .then( ( got ) =>
   {
@@ -3851,7 +3869,7 @@ function modulesTreeDotless( test )
     return null;
   })
 
-  shell({ execPath : '.modules.tree withLocalPath:1' })
+  start({ execPath : '.modules.tree withLocalPath:1' })
 
   .then( ( got ) =>
   {
@@ -3880,7 +3898,7 @@ function modulesTreeLocal( test )
   let rel = self.rel_functor( routinePath );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -3905,7 +3923,7 @@ function modulesTreeLocal( test )
     return null;
   })
 
-  shell({ execPath : '.imply v:1 ; .with */* .modules.tree' })
+  start({ execPath : '.imply v:1 ; .with */* .modules.tree' })
 
   .then( ( got ) =>
   {
@@ -3963,7 +3981,7 @@ function modulesTreeHierarchyRemote( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -3979,7 +3997,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  shell({ execPath : '.with * .modules.tree' })
+  start({ execPath : '.with * .modules.tree' })
 
   .then( ( got ) =>
   {
@@ -4023,7 +4041,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  shell({ execPath : '.with * .modules.tree withRemotePath:1' })
+  start({ execPath : '.with * .modules.tree withRemotePath:1' })
 
   .then( ( got ) =>
   {
@@ -4067,7 +4085,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  shell({ execPath : '.with * .modules.tree withLocalPath:1' })
+  start({ execPath : '.with * .modules.tree withLocalPath:1' })
 
   .then( ( got ) =>
   {
@@ -4091,7 +4109,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  shell({ execPath : '.with ** .modules.tree' })
+  start({ execPath : '.with ** .modules.tree' })
 
   .then( ( got ) =>
   {
@@ -4135,7 +4153,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  shell({ execPath : '.with ** .modules.tree withRemotePath:1' })
+  start({ execPath : '.with ** .modules.tree withRemotePath:1' })
 
   .then( ( got ) =>
   {
@@ -4179,7 +4197,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  shell({ execPath : '.with ** .modules.tree withLocalPath:1' })
+  start({ execPath : '.with ** .modules.tree withLocalPath:1' })
 
   .then( ( got ) =>
   {
@@ -4221,7 +4239,7 @@ function modulesTreeHierarchyRemoteDownloaded( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -4237,12 +4255,12 @@ function modulesTreeHierarchyRemoteDownloaded( test )
 
   /* - */
 
-  shell({ execPath : '.with * .submodules.clean recursive:2' })
-  shell({ execPath : '.with * .submodules.download recursive:2' })
+  start({ execPath : '.with * .submodules.clean recursive:2' })
+  start({ execPath : '.with * .submodules.download recursive:2' })
 
   /* - */
 
-  shell({ execPath : '.with * .modules.tree withRemotePath:1' })
+  start({ execPath : '.with * .modules.tree withRemotePath:1' })
 
   .then( ( got ) =>
   {
@@ -4360,7 +4378,7 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -4376,9 +4394,9 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 
   /* - */
 
-  shell({ execPath : '.with group1/group10/a0 .export' })
-  shell({ execPath : '.with group1/a .export' })
-  shell({ execPath : '.with * .modules.tree withRemotePath:1' })
+  start({ execPath : '.with group1/group10/a0 .export' })
+  start({ execPath : '.with group1/a .export' })
+  start({ execPath : '.with * .modules.tree withRemotePath:1' })
 
   .then( ( got ) =>
   {
@@ -4440,7 +4458,7 @@ function modulesTreeDisabledAndCorrupted( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -4455,9 +4473,9 @@ function modulesTreeDisabledAndCorrupted( test )
 
   /* - */
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.submodules.download' })
-  shell({ execPath : '.with ** .modules.tree withRemotePath:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.submodules.download' })
+  start({ execPath : '.with ** .modules.tree withRemotePath:1' })
 
   .then( ( got ) =>
   {
@@ -4509,7 +4527,7 @@ function help( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     outputCollecting : 1,
@@ -4525,7 +4543,7 @@ function help( test )
   // // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   // let ready = new _.Consequence().take( null )
   //
-  // let shell = _.process.starter
+  // let start = _.process.starter
   // ({
   //   execPath : 'node ' + self.willPath,
   //   currentPath : routinePath,
@@ -4548,7 +4566,7 @@ function help( test )
     return null;
   })
 
-  shell( '' )
+  start( '' )
 
   .then( ( got ) =>
   {
@@ -4569,7 +4587,7 @@ function help( test )
     return null;
   })
 
-  shell( '.' )
+  start( '.' )
 
   .then( ( got ) =>
   {
@@ -4581,7 +4599,7 @@ function help( test )
 
   /* */
 
-  shell({ execPath : '.help' })
+  start({ execPath : '.help' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -4591,7 +4609,7 @@ function help( test )
 
   /* */
 
-  shell({ execPath : '.' })
+  start({ execPath : '.' })
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -4601,7 +4619,7 @@ function help( test )
 
   /* */
 
-  shell({ args : [] })
+  start({ args : [] })
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -4624,7 +4642,7 @@ function listSingleModule( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -4638,7 +4656,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ execPath : '.resources.list' })
+  start({ execPath : '.resources.list' })
   .then( ( got ) =>
   {
     test.case = 'list';
@@ -4651,7 +4669,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ execPath : '.about.list' })
+  start({ execPath : '.about.list' })
   .then( ( got ) =>
   {
     test.case = '.about.list'
@@ -4675,7 +4693,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ execPath : '.paths.list' })
+  start({ execPath : '.paths.list' })
   .then( ( got ) =>
   {
     test.case = '.paths.list';
@@ -4692,7 +4710,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ execPath : '.paths.list predefined:1' })
+  start({ execPath : '.paths.list predefined:1' })
   .then( ( got ) =>
   {
     test.case = '.paths.list predefined:1';
@@ -4716,7 +4734,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ execPath : '.paths.list predefined:0' })
+  start({ execPath : '.paths.list predefined:0' })
   .then( ( got ) =>
   {
     test.case = '.paths.list predefined:0';
@@ -4740,7 +4758,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ execPath : '.submodules.list' })
+  start({ execPath : '.submodules.list' })
   .then( ( got ) =>
   {
     test.case = 'submodules list'
@@ -4751,7 +4769,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ execPath : '.reflectors.list' })
+  start({ execPath : '.reflectors.list' })
   .then( ( got ) =>
   {
     test.case = 'reflectors.list'
@@ -4774,7 +4792,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ execPath : '.steps.list' })
+  start({ execPath : '.steps.list' })
   .then( ( got ) =>
   {
     test.case = 'steps.list'
@@ -4790,7 +4808,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ execPath : '.builds.list' })
+  start({ execPath : '.builds.list' })
   .then( ( got ) =>
   {
     test.case = '.builds.list'
@@ -4806,7 +4824,7 @@ function listSingleModule( test )
 
   /* - */
 
-  shell({ execPath : '.exports.list' })
+  start({ execPath : '.exports.list' })
   .then( ( got ) =>
   {
     test.case = '.exports.list'
@@ -4821,7 +4839,7 @@ function listSingleModule( test )
 
   /* - */ /* To test output by command with glob and criterion args*/
 
-  shell({ execPath : '.resources.list *a* predefined:0' })
+  start({ execPath : '.resources.list *a* predefined:0' })
   .then( ( got ) =>
   {
     test.case = 'resources list globs negative';
@@ -4838,7 +4856,7 @@ function listSingleModule( test )
     return null;
   })
 
-  shell({ execPath : '.resources.list *p* debug:1' })
+  start({ execPath : '.resources.list *p* debug:1' })
   .then( ( got ) =>
   {
     test.case = 'resources list globs negative';
@@ -4857,7 +4875,7 @@ function listSingleModule( test )
   })
 
   /* Glob using positive test */
-  shell({ execPath : '.resources.list *proto*' })
+  start({ execPath : '.resources.list *proto*' })
   .then( ( got ) =>
   {
     test.case = '.resources.list *proto*';
@@ -4876,7 +4894,7 @@ function listSingleModule( test )
   })
 
   /* Glob and criterion using negative test */
-  shell({ execPath : '.resources.list *proto* debug:0' })
+  start({ execPath : '.resources.list *proto* debug:0' })
   .then( ( got ) =>
   {
     test.case = 'globs and criterions negative';
@@ -4890,7 +4908,7 @@ function listSingleModule( test )
   })
 
   /* Glob and criterion using positive test */
-  shell({ execPath : '.resources.list *proto* debug:0 predefined:0' })
+  start({ execPath : '.resources.list *proto* debug:0 predefined:0' })
   .then( ( got ) =>
   {
     test.case = 'globs and criterions positive';
@@ -4910,7 +4928,7 @@ function listSingleModule( test )
   })
 
   /* Glob and two criterions using negative test */
-  shell({ execPath : '.resources.list * debug:1 raw:0 predefined:0' })
+  start({ execPath : '.resources.list * debug:1 raw:0 predefined:0' })
   .then( ( got ) =>
   {
     test.case = '.resources.list * debug:1 raw:0 predefined:0';
@@ -4928,7 +4946,7 @@ function listSingleModule( test )
   })
 
   /* Glob and two criterion using positive test */
-  shell({ execPath : '.resources.list * debug:0 raw:1' })
+  start({ execPath : '.resources.list * debug:0 raw:1' })
   .then( ( got ) =>
   {
     test.case = '.resources.list * debug:0 raw:1';
@@ -4959,7 +4977,7 @@ function listWithSubmodulesSimple( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -4970,7 +4988,7 @@ function listWithSubmodulesSimple( test )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
-  shell({ execPath : '.resources.list' })
+  start({ execPath : '.resources.list' })
 
   .then( ( got ) =>
   {
@@ -5001,7 +5019,7 @@ function listWithSubmodules( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -5014,7 +5032,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  shell({ execPath : '.submodules.list' })
+  start({ execPath : '.submodules.list' })
 
   .then( ( got ) =>
   {
@@ -5027,7 +5045,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  shell({ execPath : '.reflectors.list' })
+  start({ execPath : '.reflectors.list' })
 
   .then( ( got ) =>
   {
@@ -5040,7 +5058,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  shell({ execPath : '.steps.list' })
+  start({ execPath : '.steps.list' })
 
   .then( ( got ) =>
   {
@@ -5058,7 +5076,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  shell({ execPath : '.builds.list' })
+  start({ execPath : '.builds.list' })
 
   .then( ( got ) =>
   {
@@ -5074,7 +5092,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  shell({ execPath : '.exports.list' })
+  start({ execPath : '.exports.list' })
 
   .then( ( got ) =>
   {
@@ -5090,7 +5108,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  shell({ execPath : '.about.list' })
+  start({ execPath : '.about.list' })
 
   .then( ( got ) =>
   {
@@ -5115,7 +5133,7 @@ function listWithSubmodules( test )
 
   // /* - */
   //
-  // shell({ execPath : '.execution.list' })
+  // start({ execPath : '.execution.list' })
   //
   // .then( ( got ) =>
   // {
@@ -5144,7 +5162,7 @@ function listSteps( test )
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -5160,7 +5178,7 @@ function listSteps( test )
 
   /* - */
 
-  shell({ execPath : '.steps.list' })
+  start({ execPath : '.steps.list' })
   .finally( ( err, got ) =>
   {
     test.case = '.steps.list';
@@ -5178,7 +5196,7 @@ function listSteps( test )
 
   /* - */
 
-  shell({ execPath : '.steps.list *' })
+  start({ execPath : '.steps.list *' })
   .finally( ( err, got ) =>
   {
     test.case = '.steps.list';
@@ -5196,7 +5214,7 @@ function listSteps( test )
 
   /* - */
 
-  shell({ execPath : '.steps.list *proto*' })
+  start({ execPath : '.steps.list *proto*' })
   .finally( ( err, got ) =>
   {
     test.case = '.steps.list';
@@ -5214,7 +5232,7 @@ function listSteps( test )
 
   /* - */
 
-  shell({ execPath : '.steps.list *proto* debug:1' })
+  start({ execPath : '.steps.list *proto* debug:1' })
   .finally( ( err, got ) =>
   {
     test.case = '.steps.list';
@@ -5249,7 +5267,7 @@ function clean( test )
 
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath + '',
     currentPath : routinePath,
@@ -5262,7 +5280,7 @@ function clean( test )
 
   /* - */
 
-  shell
+  start
   ({
     args : [ '.with NoTemp .build' ]
   })
@@ -5276,7 +5294,7 @@ function clean( test )
     return files;
   })
 
-  shell({ execPath : '.with NoTemp .clean' })
+  start({ execPath : '.with NoTemp .clean' })
   .then( ( got ) =>
   {
     test.case = '.clean';
@@ -5286,7 +5304,7 @@ function clean( test )
     return null;
   })
 
-  shell({ execPath : '.with NoTemp .clean' })
+  start({ execPath : '.with NoTemp .clean' })
   .then( ( got ) =>
   {
     test.case = '.with NoTemp .clean -- second';
@@ -5306,7 +5324,7 @@ function clean( test )
     return null;
   })
 
-  shell({ execPath : '.with NoBuild .clean' })
+  start({ execPath : '.with NoBuild .clean' })
   .then( ( got ) =>
   {
     test.case = '.with NoBuild .clean';
@@ -5327,8 +5345,8 @@ function clean( test )
     return null;
   })
 
-  shell({ execPath : '.with Build .build' })
-  shell({ execPath : '.with Vector .clean' })
+  start({ execPath : '.with Build .build' })
+  start({ execPath : '.with Vector .clean' })
   .then( ( got ) =>
   {
     test.case = '.with NoBuild .clean';
@@ -5360,7 +5378,7 @@ function cleanSingleModule( test )
 
   _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -5371,7 +5389,7 @@ function cleanSingleModule( test )
 
   /* - */
 
-  shell({ execPath : [ '.build', '.clean' ] })
+  start({ execPath : [ '.build', '.clean' ] })
 
   .then( ( got ) =>
   {
@@ -5387,7 +5405,7 @@ function cleanSingleModule( test )
 
   /* - */
 
-  shell({ execPath : [ '.build', '.clean dry:1' ] })
+  start({ execPath : [ '.build', '.clean dry:1' ] })
 
   .then( ( got ) =>
   {
@@ -5422,7 +5440,7 @@ function cleanBroken1( test )
   test.description = 'should handle currputed willfile properly';
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -5452,7 +5470,7 @@ function cleanBroken1( test )
 
   /* - */
 
-  shell({ execPath : '.clean dry:1' })
+  start({ execPath : '.clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -5473,7 +5491,7 @@ function cleanBroken1( test )
 
   /* - */
 
-  shell({ execPath : '.clean' })
+  start({ execPath : '.clean' })
 
   .then( ( got ) =>
   {
@@ -5487,7 +5505,7 @@ function cleanBroken1( test )
 
   /* */
 
-  shell({ execPath : '.export' })
+  start({ execPath : '.export' })
   .then( ( got ) =>
   {
     test.case = '.export';
@@ -5518,7 +5536,7 @@ function cleanBroken1( test )
 
   /* */
 
-  shell({ execPath : '.export' })
+  start({ execPath : '.export' })
   .then( ( got ) =>
   {
     test.case = '.export';
@@ -5559,7 +5577,7 @@ function cleanBroken2( test )
   test.description = 'should handle currputed willfile properly';
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -5590,7 +5608,7 @@ function cleanBroken2( test )
 
   /* - */
 
-  shell({ execPath : '.clean dry:1' })
+  start({ execPath : '.clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -5610,7 +5628,7 @@ function cleanBroken2( test )
 
   /* - */
 
-  shell({ execPath : '.clean' })
+  start({ execPath : '.clean' })
 
   .then( ( got ) =>
   {
@@ -5624,7 +5642,7 @@ function cleanBroken2( test )
 
   /* */
 
-  shell({ execPath : '.export' })
+  start({ execPath : '.export' })
   .then( ( got ) =>
   {
     test.case = '.export';
@@ -5655,7 +5673,7 @@ function cleanBroken2( test )
 
   /* */
 
-  shell({ execPath : '.export', throwingExitCode : 0 })
+  start({ execPath : '.export', throwingExitCode : 0 })
   .then( ( got ) =>
   {
     test.case = '.export';
@@ -5693,8 +5711,8 @@ function cleanBroken2( test )
     return null;
   });
 
-  shell({ execPath : '.submodules.versions.agree' })
-  shell({ execPath : '.export', throwingExitCode : 0 })
+  start({ execPath : '.submodules.versions.agree' })
+  start({ execPath : '.export', throwingExitCode : 0 })
   .then( ( got ) =>
   {
     test.case = '.export agree1';
@@ -5736,7 +5754,7 @@ function cleanBrokenSubmodules( test )
 
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -5768,7 +5786,7 @@ function cleanBrokenSubmodules( test )
 
   /* - */
 
-  shell({ execPath : '.clean dry:1' })
+  start({ execPath : '.clean dry:1' })
   .then( ( got ) =>
   {
     test.case = '.clean dry:1';
@@ -5787,7 +5805,7 @@ function cleanBrokenSubmodules( test )
 
   /* - */
 
-  shell({ execPath : '.clean' })
+  start({ execPath : '.clean' })
   .then( ( got ) =>
   {
     test.case = '.clean';
@@ -5825,7 +5843,7 @@ function cleanNoBuild( test )
 
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath + ' .with NoBuild',
     currentPath : routinePath,
@@ -5839,7 +5857,7 @@ function cleanNoBuild( test )
 
   /* - */
 
-  shell({ execPath : '.clean' })
+  start({ execPath : '.clean' })
   .then( ( got ) =>
   {
     test.case = '.clean -- second';
@@ -5849,7 +5867,7 @@ function cleanNoBuild( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
+  start({ execPath : '.clean' })
   .then( ( got ) =>
   {
     test.case = '.clean';
@@ -5860,7 +5878,7 @@ function cleanNoBuild( test )
 
   /* - */
 
-  shell({ execPath : '.clean -- badarg' })
+  start({ execPath : '.clean -- badarg' })
   .then( ( got ) =>
   {
     test.case = '.clean -- badarg';
@@ -5890,7 +5908,7 @@ function cleanDry( test )
 
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath + ' .with NoTemp',
     currentPath : routinePath,
@@ -5903,7 +5921,7 @@ function cleanDry( test )
 
   /* - */
 
-  shell
+  start
   ({
     args : [ '.submodules.update' ],
   })
@@ -5916,7 +5934,7 @@ function cleanDry( test )
     return null;
   })
 
-  shell
+  start
   ({
     args : [ '.build' ],
   })
@@ -5928,7 +5946,7 @@ function cleanDry( test )
 
   var wasFiles;
 
-  shell({ execPath : '.clean dry:1' })
+  start({ execPath : '.clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -5970,7 +5988,7 @@ function cleanSubmodules( test )
 
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath + ' .with NoTemp',
     currentPath : routinePath,
@@ -5983,7 +6001,7 @@ function cleanSubmodules( test )
 
   /* */
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.case = '.submodules.update'
@@ -6013,7 +6031,7 @@ function cleanSubmodules( test )
 
   /* */
 
-  shell({ execPath : '.submodules.clean' })
+  start({ execPath : '.submodules.clean' })
   .then( ( got ) =>
   {
     test.case = '.submodules.clean';
@@ -6045,7 +6063,7 @@ function cleanMixed( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -6065,8 +6083,8 @@ function cleanMixed( test )
     return null;
   })
 
-  shell({ execPath : '.build' })
-  shell({ execPath : '.clean' })
+  start({ execPath : '.build' })
+  start({ execPath : '.clean' })
 
   .then( ( got ) =>
   {
@@ -6104,7 +6122,7 @@ function cleanWithInPath( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -6129,7 +6147,7 @@ function cleanWithInPath( test )
   })
 
 
-  shell({ execPath : '.with module/Proto .clean' })
+  start({ execPath : '.with module/Proto .clean' })
 
   .then( ( got ) =>
   {
@@ -6180,7 +6198,7 @@ function cleanRecursive( test )
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -6201,11 +6219,11 @@ function cleanRecursive( test )
     return null;
   })
 
-  shell( '.with group1/group10/a0 .export' )
-  shell( '.with group1/a .export' )
-  shell( '.with group1/b .export' )
-  shell( '.with group2/c .export' )
-  shell( '.with z .export' )
+  start( '.with group1/group10/a0 .export' )
+  start( '.with group1/a .export' )
+  start( '.with group1/b .export' )
+  start( '.with group2/c .export' )
+  start( '.with z .export' )
 
   .then( ( got ) =>
   {
@@ -6219,7 +6237,7 @@ function cleanRecursive( test )
     return null;
   })
 
-  shell( '.with z .clean recursive:2' )
+  start( '.with z .clean recursive:2' )
 
   .then( ( got ) =>
   {
@@ -6266,7 +6284,7 @@ function buildSingleModule( test )
   let outDebugPath = _.path.join( routinePath, 'out/debug' );
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -6286,7 +6304,7 @@ function buildSingleModule( test )
     return null;
   })
 
-  shell({ execPath : '.build' })
+  start({ execPath : '.build' })
 
   .then( ( got ) =>
   {
@@ -6312,7 +6330,7 @@ function buildSingleModule( test )
     return null;
   })
 
-  shell({ execPath : '.build debug.raw' })
+  start({ execPath : '.build debug.raw' })
 
   .then( ( got ) =>
   {
@@ -6337,7 +6355,7 @@ function buildSingleModule( test )
     return null;
   })
 
-  shell({ execPath : '.build release.raw' })
+  start({ execPath : '.build release.raw' })
 
   .then( ( got ) =>
   {
@@ -6367,7 +6385,7 @@ function buildSingleModule( test )
       args : [ '.build wrong' ],
       ready : null,
     }
-    return test.shouldThrowErrorOfAnyKind( () => shell( o ) )
+    return test.shouldThrowErrorOfAnyKind( () => start( o ) )
     .then( ( got ) =>
     {
       test.is( o.exitCode !== 0 );
@@ -6391,7 +6409,7 @@ buildSingleModule.timeOut = 200000;
 function buildSingleStep( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-start' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6399,7 +6417,7 @@ function buildSingleStep( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -6424,7 +6442,7 @@ function buildSingleStep( test )
     return null;
   })
 
-  shell({ execPath : '.build debug1' })
+  start({ execPath : '.build debug1' })
 
   .then( ( got ) =>
   {
@@ -6446,7 +6464,7 @@ function buildSingleStep( test )
     return null;
   })
 
-  shell({ execPath : '.build debug2' })
+  start({ execPath : '.build debug2' })
 
   .then( ( got ) =>
   {
@@ -6473,7 +6491,7 @@ function buildSubmodules( test )
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -6495,7 +6513,7 @@ function buildSubmodules( test )
     return null;
   })
 
-  shell({ execPath : '.build' })
+  start({ execPath : '.build' })
   .finally( ( err, got ) =>
   {
     test.is( !err );
@@ -6506,7 +6524,7 @@ function buildSubmodules( test )
 
   /* - */
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
   .then( () =>
   {
     test.case = '.build'
@@ -6514,7 +6532,7 @@ function buildSubmodules( test )
     return null;
   })
 
-  shell({ execPath : '.build' })
+  start({ execPath : '.build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -6586,7 +6604,7 @@ function buildDetached( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -6606,8 +6624,8 @@ function buildDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.build' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -6650,7 +6668,7 @@ function exportSingle( test )
   let outWillPath = _.path.join( routinePath, 'out/single.out.will.yml' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -6672,7 +6690,7 @@ function exportSingle( test )
     return null;
   })
 
-  shell({ execPath : '.export' })
+  start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -6710,7 +6728,7 @@ function exportSingle( test )
     return null;
   })
 
-  shell({ execPath : '.export proto.export' })
+  start({ execPath : '.export proto.export' })
 
   .then( ( got ) =>
   {
@@ -6758,7 +6776,7 @@ function exportItself( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -6777,9 +6795,9 @@ function exportItself( test )
     return null;
   })
 
-  shell( '.with v1 .clean' )
-  shell( '.with v1 .submodules.download' )
-  shell( '.with v1 .export' )
+  start( '.with v1 .clean' )
+  start( '.with v1 .submodules.download' )
+  start( '.with v1 .export' )
 
   .then( ( got ) =>
   {
@@ -6815,7 +6833,7 @@ function exportNonExportable( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -6830,8 +6848,8 @@ function exportNonExportable( test )
 
   /* - */
 
-  shell({ execPath : '.with super .clean' })
-  shell({ args : [ '.with super .export debug:1' ], throwingExitCode : 0 })
+  start({ execPath : '.with super .clean' })
+  start({ args : [ '.with super .export debug:1' ], throwingExitCode : 0 })
 
   .then( ( got ) =>
   {
@@ -6870,7 +6888,7 @@ function exportInformal( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -6890,8 +6908,8 @@ function exportInformal( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.with module/Proto.informal .export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.with module/Proto.informal .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -6974,7 +6992,7 @@ function exportInformal( test )
     return null;
   })
 
-  shell({ execPath : '.with module/Proto.informal .export' })
+  start({ execPath : '.with module/Proto.informal .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7057,8 +7075,8 @@ function exportInformal( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.with module/UriBasic.informal .export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.with module/UriBasic.informal .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -7154,7 +7172,7 @@ function exportWithReflector( test )
   let outWillPath = _.path.join( routinePath, 'out/export-with-reflector.out.will.yml' );
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -7176,7 +7194,7 @@ function exportWithReflector( test )
     return null;
   })
 
-  shell({ execPath : '.export' })
+  start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -7211,7 +7229,7 @@ function exportToRoot( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -7224,7 +7242,7 @@ function exportToRoot( test )
 
   /* - */
 
-  shell({ execPath : '.export' })
+  start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -7256,7 +7274,7 @@ function exportMixed( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -7276,7 +7294,7 @@ function exportMixed( test )
     return null;
   })
 
-  shell({ execPath : '.each module .export' })
+  start({ execPath : '.each module .export' })
 
   .then( ( got ) =>
   {
@@ -7464,8 +7482,8 @@ function exportMixed( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.build' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.build' })
 
   .then( ( got ) =>
   {
@@ -7525,7 +7543,7 @@ function exportSecond( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -7545,8 +7563,8 @@ function exportSecond( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -7761,8 +7779,8 @@ function exportSecond( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.export' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -7990,7 +8008,7 @@ function exportSubmodules( test )
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -8012,7 +8030,7 @@ function exportSubmodules( test )
     return null;
   })
 
-  return shell({ execPath : '.export' })
+  return start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -8051,7 +8069,7 @@ function exportMultiple( test )
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -8074,7 +8092,7 @@ function exportMultiple( test )
     return null;
   })
 
-  shell({ execPath : '.export debug:1' })
+  start({ execPath : '.export debug:1' })
 
   .then( ( got ) =>
   {
@@ -8268,9 +8286,9 @@ function exportMultiple( test )
     return null;
   })
 
-  shell({ execPath : '.export debug:1' })
-  shell({ execPath : '.export debug:0' })
-  shell({ execPath : '.export debug:0' })
+  start({ execPath : '.export debug:1' })
+  start({ execPath : '.export debug:0' })
+  start({ execPath : '.export debug:0' })
 
   .then( ( got ) =>
   {
@@ -8572,7 +8590,7 @@ function exportImportMultiple( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -8595,8 +8613,8 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ execPath : '.with . .export debug:0' })
-  shell({ execPath : '.with . .export debug:1' })
+  start({ execPath : '.with . .export debug:0' })
+  start({ execPath : '.with . .export debug:1' })
 
   .then( ( got ) =>
   {
@@ -8621,7 +8639,7 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ execPath : '.with super .export debug:0' })
+  start({ execPath : '.with super .export debug:0' })
 
   .then( ( got ) =>
   {
@@ -8643,7 +8661,7 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ execPath : '.with super .clean dry:1' })
+  start({ execPath : '.with super .clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -8666,7 +8684,7 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ execPath : '.with super .clean' })
+  start({ execPath : '.with super .clean' })
 
   .then( ( got ) =>
   {
@@ -8691,8 +8709,8 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ execPath : '.with super .export debug:0' })
-  shell({ execPath : '.with super .export debug:1' })
+  start({ execPath : '.with super .export debug:0' })
+  start({ execPath : '.with super .export debug:1' })
 
   .then( ( got ) =>
   {
@@ -8714,7 +8732,7 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ execPath : '.with super .clean dry:1' })
+  start({ execPath : '.with super .clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -8737,7 +8755,7 @@ function exportImportMultiple( test )
     return null;
   })
 
-  shell({ execPath : '.with super .clean' })
+  start({ execPath : '.with super .clean' })
 
   .then( ( got ) =>
   {
@@ -8771,7 +8789,7 @@ function exportBroken( test )
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -8794,7 +8812,7 @@ function exportBroken( test )
   })
 
   debugger;
-  shell({ execPath : '.export debug:1' })
+  start({ execPath : '.export debug:1' })
 
   .then( ( got ) =>
   {
@@ -8898,7 +8916,7 @@ function exportDoc( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -8922,10 +8940,10 @@ function exportDoc( test )
     return null;
   })
 
-  shell({ execPath : '.with . .export export.doc' })
-  shell({ execPath : '.with . .export export.debug' })
-  shell({ execPath : '.with . .export export.' })
-  shell({ execPath : '.with doc .build doc:1' })
+  start({ execPath : '.with . .export export.doc' })
+  start({ execPath : '.with . .export export.debug' })
+  start({ execPath : '.with . .export export.' })
+  start({ execPath : '.with doc .build doc:1' })
 
   .then( ( got ) =>
   {
@@ -8961,7 +8979,7 @@ function exportImport( test )
   let outPath = _.path.join( routinePath, 'super.out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -8983,8 +9001,8 @@ function exportImport( test )
     return null;
   })
 
-  shell({ execPath : '.with super .export debug:0' })
-  shell({ execPath : '.with super .export debug:1' })
+  start({ execPath : '.with super .export debug:0' })
+  start({ execPath : '.with super .export debug:1' })
 
   .then( ( got ) =>
   {
@@ -9015,7 +9033,7 @@ function exportBrokenNoreflector( test )
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -9036,7 +9054,7 @@ function exportBrokenNoreflector( test )
     return null;
   })
 
-  shell({ execPath : '.with submodule .reflectors.list predefined:0' })
+  start({ execPath : '.with submodule .reflectors.list predefined:0' })
 
   .then( ( got ) =>
   {
@@ -9047,8 +9065,8 @@ function exportBrokenNoreflector( test )
     return null;
   })
 
-  shell({ execPath : '.with module/submodule .export' })
-  shell({ execPath : '.with submodule .reflectors.list predefined:0' })
+  start({ execPath : '.with module/submodule .export' })
+  start({ execPath : '.with submodule .reflectors.list predefined:0' })
 
   .then( ( got ) =>
   {
@@ -9082,7 +9100,7 @@ function exportCourrputedOutfileUnknownSection( test )
   let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -9103,7 +9121,7 @@ function exportCourrputedOutfileUnknownSection( test )
     return null;
   })
 
-  shell( '.with sub .export debug:1' )
+  start( '.with sub .export debug:1' )
 
   .then( ( got ) =>
   {
@@ -9146,7 +9164,7 @@ function exportCourruptedOutfileSyntax( test )
   let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -9167,7 +9185,7 @@ function exportCourruptedOutfileSyntax( test )
     return null;
   })
 
-  shell( '.with sub .export debug:1' )
+  start( '.with sub .export debug:1' )
 
   .then( ( got ) =>
   {
@@ -9210,7 +9228,7 @@ function exportCourruptedSubmodulesDisabled( test )
   let outFilePath = _.path.join( routinePath, 'super.out/supermodule.out.will.yml' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -9232,7 +9250,7 @@ function exportCourruptedSubmodulesDisabled( test )
     return null;
   })
 
-  shell( '.with super .export debug:1' )
+  start( '.with super .export debug:1' )
 
   .then( ( got ) =>
   {
@@ -9271,7 +9289,7 @@ function exportInconsistent( test )
   let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -9292,7 +9310,7 @@ function exportInconsistent( test )
     return null;
   })
 
-  shell( '.with sub .export debug:1' )
+  start( '.with sub .export debug:1' )
 
   .then( ( got ) =>
   {
@@ -9323,7 +9341,7 @@ function exportInconsistent( test )
     return null;
   })
 
-  shell( '.with sub .export debug:0' )
+  start( '.with sub .export debug:0' )
 
   .then( ( got ) =>
   {
@@ -9366,7 +9384,7 @@ function exportWholeModule( test )
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -9387,8 +9405,8 @@ function exportWholeModule( test )
     return null;
   })
 
-  shell({ execPath : '.with module/ .export' })
-  shell({ execPath : '.build' })
+  start({ execPath : '.with module/ .export' })
+  start({ execPath : '.build' })
 
   .then( ( got ) =>
   {
@@ -9419,7 +9437,7 @@ function exportRecursive( test )
   let outDirPath = abs( 'out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -9442,7 +9460,7 @@ function exportRecursive( test )
     return null;
   })
 
-  shell({ execPath : '.with ab/ .export.recursive' })
+  start({ execPath : '.with ab/ .export.recursive' })
 
   .then( ( got ) =>
   {
@@ -9470,7 +9488,7 @@ function exportRecursive( test )
     return null;
   })
 
-  shell({ execPath : '.with ab/ .export.recursive' })
+  start({ execPath : '.with ab/ .export.recursive' })
 
   .then( ( got ) =>
   {
@@ -9511,7 +9529,7 @@ function exportRecursiveUsingSubmodule( test )
   let outSubTerminalPath = abs( 'sub.out/submodule.out.will.yml' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -9535,7 +9553,7 @@ function exportRecursiveUsingSubmodule( test )
     return null;
   })
 
-  shell({ execPath : '.with super .export.recursive debug:1' })
+  start({ execPath : '.with super .export.recursive debug:1' })
 
   .then( ( got ) =>
   {
@@ -9582,7 +9600,7 @@ function exportRecursiveUsingSubmodule( test )
     return null;
   })
 
-  shell({ execPath : '.with super .export.recursive debug:1' })
+  start({ execPath : '.with super .export.recursive debug:1' })
 
   .then( ( got ) =>
   {
@@ -9629,7 +9647,7 @@ function exportRecursiveUsingSubmodule( test )
     return null;
   })
 
-  shell({ execPath : '.with super .export.recursive debug:0' })
+  start({ execPath : '.with super .export.recursive debug:0' })
 
   .then( ( got ) =>
   {
@@ -9682,7 +9700,7 @@ function exportRecursiveUsingSubmodule( test )
     return null;
   })
 
-  shell({ execPath : '.with super .export.recursive debug:0' })
+  start({ execPath : '.with super .export.recursive debug:0' })
 
   .then( ( got ) =>
   {
@@ -9746,7 +9764,7 @@ function exportRecursiveLocal( test )
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -9760,8 +9778,8 @@ function exportRecursiveLocal( test )
 
   /* - */
 
-  shell({ execPath : '.with */* .clean' })
-  shell({ execPath : '.with */* .export' })
+  start({ execPath : '.with */* .clean' })
+  start({ execPath : '.with */* .export' })
 
   .finally( ( err, got ) =>
   {
@@ -9773,7 +9791,7 @@ function exportRecursiveLocal( test )
     return null;
   })
 
-  shell({ execPath : '.with ab/ .resources.list' })
+  start({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, got ) =>
   {
     test.is( !err );
@@ -9788,7 +9806,7 @@ function exportRecursiveLocal( test )
 
   /* - */
 
-  shell({ execPath : '.with */* .export' })
+  start({ execPath : '.with */* .export' })
 
   .finally( ( err, got ) =>
   {
@@ -9800,7 +9818,7 @@ function exportRecursiveLocal( test )
     return null;
   })
 
-  shell({ execPath : '.with ab/ .resources.list' })
+  start({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, got ) =>
   {
     test.is( !err );
@@ -9838,7 +9856,7 @@ function exportDotless( test )
   let outSubTerminalPath = abs( 'sub.out/sub.out.will.yml' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -9862,7 +9880,7 @@ function exportDotless( test )
     return null;
   })
 
-  shell({ execPath : '.export.recursive debug:1' })
+  start({ execPath : '.export.recursive debug:1' })
 
   .then( ( got ) =>
   {
@@ -9905,7 +9923,7 @@ function exportDotless( test )
     return null;
   })
 
-  shell({ execPath : '.with . .export.recursive debug:0' })
+  start({ execPath : '.with . .export.recursive debug:0' })
 
   .then( ( got ) =>
   {
@@ -9972,7 +9990,7 @@ function exportDotlessSingle( test )
   let outSubTerminalPath = abs( 'sub.out/sub.out.will.yml' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -9996,7 +10014,7 @@ function exportDotlessSingle( test )
     return null;
   })
 
-  shell({ execPath : '.export.recursive debug:1' })
+  start({ execPath : '.export.recursive debug:1' })
 
   .then( ( got ) =>
   {
@@ -10037,7 +10055,7 @@ function exportDotlessSingle( test )
     return null;
   })
 
-  shell({ execPath : '.with . .export.recursive debug:0' })
+  start({ execPath : '.with . .export.recursive debug:0' })
 
   .then( ( got ) =>
   {
@@ -10102,7 +10120,7 @@ function exportTracing( test )
   let outSubTerminalPath = abs( 'sub.out/sub.out.will.yml' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath + '/proto',
@@ -10126,7 +10144,7 @@ function exportTracing( test )
     return null;
   })
 
-  shell({ execPath : '.export.recursive debug:1' })
+  start({ execPath : '.export.recursive debug:1' })
 
   .then( ( got ) =>
   {
@@ -10171,7 +10189,7 @@ function exportTracing( test )
     return null;
   })
 
-  shell({ execPath : '.with . .export.recursive debug:1' })
+  start({ execPath : '.with . .export.recursive debug:1' })
 
   .finally( ( err, op ) =>
   {
@@ -10202,7 +10220,7 @@ function exportRewritesOutFile( test )
   let willSingleExportFilePath = _.path.join( routinePath, '.will.single-export.yml' );
   let willCopyFilePath = _.path.join( routinePath, 'copy.will.yml' );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -10223,7 +10241,7 @@ function exportRewritesOutFile( test )
     return null;
   })
 
-  shell({ execPath : '.export export1' })
+  start({ execPath : '.export export1' })
 
   .then( ( got ) =>
   {
@@ -10244,7 +10262,7 @@ function exportRewritesOutFile( test )
     return null;
   })
 
-  shell({ execPath : '.export export1' })
+  start({ execPath : '.export export1' })
 
   .then( ( got ) =>
   {
@@ -10265,7 +10283,7 @@ function exportRewritesOutFile( test )
     return null;
   })
 
-  shell({ execPath : '.export export1' })
+  start({ execPath : '.export export1' })
 
   .then( ( got ) =>
   {
@@ -10298,7 +10316,7 @@ function exportWithRemoteSubmodules( test )
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -10319,15 +10337,15 @@ function exportWithRemoteSubmodules( test )
     return null;
   })
 
-  shell( '.with group1/group10/a0 .clean' )
-  shell( '.with group1/a .clean' )
-  shell( '.with group1/b .clean' )
-  shell( '.with group2/c .clean' )
-  shell( '.with group1/group10/a0 .export' )
-  shell( '.with group1/a .export' )
-  shell( '.with group1/b .export' )
-  shell( '.with group2/c .export' )
-  shell( '.with z .export' )
+  start( '.with group1/group10/a0 .clean' )
+  start( '.with group1/a .clean' )
+  start( '.with group1/b .clean' )
+  start( '.with group2/c .clean' )
+  start( '.with group1/group10/a0 .export' )
+  start( '.with group1/a .export' )
+  start( '.with group1/b .export' )
+  start( '.with group2/c .export' )
+  start( '.with z .export' )
 
   .then( ( got ) =>
   {
@@ -10366,7 +10384,7 @@ function exportAuto( test )
   let submodulesPath = _.path.join( routinePath, '.module' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -10387,9 +10405,9 @@ function exportAuto( test )
     return null;
   })
 
-  shell( '.clean' )
-  shell( '.with submodule/* .export' )
-  shell( '.with manual .export' )
+  start( '.clean' )
+  start( '.with submodule/* .export' )
+  start( '.with manual .export' )
 
   .then( ( got ) =>
   {
@@ -10437,8 +10455,8 @@ function exportAuto( test )
     return null;
   })
 
-  shell( '.clean' )
-  shell( '.with auto .export.recursive' )
+  start( '.clean' )
+  start( '.with auto .export.recursive' )
 
   .then( ( got ) =>
   {
@@ -10507,7 +10525,7 @@ function importPathLocal( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -10530,7 +10548,7 @@ function importPathLocal( test )
     return null;
   })
 
-  shell({ execPath : '.build' })
+  start({ execPath : '.build' })
 
   .then( ( got ) =>
   {
@@ -10565,7 +10583,7 @@ function importLocalRepo( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -10588,8 +10606,8 @@ function importLocalRepo( test )
     return null;
   })
 
-  shell({ execPath : '.with module/Proto .clean' })
-  shell({ execPath : '.with module/Proto .export' })
+  start({ execPath : '.with module/Proto .clean' })
+  start({ execPath : '.with module/Proto .export' })
 
   .then( ( got ) =>
   {
@@ -10754,7 +10772,7 @@ function importOutWithDeletedSource( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -10776,10 +10794,10 @@ function importOutWithDeletedSource( test )
     return null;
   })
 
-  shell({ args : '.clean' })
-  shell({ args : '.with a .export' })
-  shell({ args : '.with b .export' })
-  shell({ args : '.with ab-named .export' })
+  start({ args : '.clean' })
+  start({ args : '.with a .export' })
+  start({ args : '.with b .export' })
+  start({ args : '.with ab-named .export' })
 
   .then( ( got ) =>
   {
@@ -10797,7 +10815,7 @@ function importOutWithDeletedSource( test )
     return null;
   })
 
-  shell({ args : '.with out/module-ab-named .modules.list' })
+  start({ args : '.with out/module-ab-named .modules.list' })
 
   .then( ( got ) =>
   {
@@ -10835,7 +10853,7 @@ function reflectNothingFromSubmodules( test )
   let outWillPath = _.path.join( routinePath, 'out/reflect-nothing-from-submodules.out.will.yml' );
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -10862,7 +10880,7 @@ function reflectNothingFromSubmodules( test )
     Throws error if none submodule is defined
   */
 
-  shell({ execPath : '.export' })
+  start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -10969,7 +10987,7 @@ function reflectGetPath( test )
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -10991,7 +11009,7 @@ function reflectGetPath( test )
     return null;
   })
 
-  shell({ execPath : '.build debug1' })
+  start({ execPath : '.build debug1' })
   .then( ( arg ) => validate( arg ) )
 
   /* - */
@@ -11003,7 +11021,7 @@ function reflectGetPath( test )
     return null;
   })
 
-  shell({ execPath : '.build debug2' })
+  start({ execPath : '.build debug2' })
   .then( ( arg ) => validate( arg ) )
 
   /* - */
@@ -11015,7 +11033,7 @@ function reflectGetPath( test )
     return null;
   })
 
-  shell({ execPath : '.build debug3' })
+  start({ execPath : '.build debug3' })
   .then( ( arg ) => validate( arg ) )
 
   /* - */
@@ -11074,7 +11092,7 @@ function reflectSubdir( test )
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -11092,7 +11110,7 @@ function reflectSubdir( test )
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
     return null;
   })
-  shell({ execPath : '.each module .export' })
+  start({ execPath : '.each module .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -11109,7 +11127,7 @@ function reflectSubdir( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   });
-  shell({ execPath : '.build variant:1' })
+  start({ execPath : '.build variant:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -11149,7 +11167,7 @@ function reflectSubdir( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   });
-  shell({ execPath : '.build variant:2' })
+  start({ execPath : '.build variant:2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -11189,7 +11207,7 @@ function reflectSubdir( test )
     _.fileProvider.filesDelete( outPath );
     return null;
   });
-  shell({ execPath : '.build variant:3' })
+  start({ execPath : '.build variant:3' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -11241,7 +11259,7 @@ function reflectSubmodulesWithBase( test )
   let submodule2OutFilePath = _.path.join( routinePath, 'submodule2.out.will.yml' );
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -11260,7 +11278,7 @@ function reflectSubmodulesWithBase( test )
 
   /* */
 
-  shell({ execPath : '.each module .export' })
+  start({ execPath : '.each module .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -11278,7 +11296,7 @@ function reflectSubmodulesWithBase( test )
     return null;
   });
 
-  shell({ execPath : '.build variant:0' })
+  start({ execPath : '.build variant:0' })
 
   .then( ( got ) =>
   {
@@ -11308,7 +11326,7 @@ function reflectSubmodulesWithBase( test )
     return null;
   });
 
-  shell({ execPath : '.build variant:1' })
+  start({ execPath : '.build variant:1' })
 
   .then( ( got ) =>
   {
@@ -11343,7 +11361,7 @@ function reflectComposite( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -11363,7 +11381,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ execPath : '.build out* variant:0' })
+  start({ execPath : '.build out* variant:0' })
   .then( ( arg ) =>
   {
     var expected =
@@ -11394,7 +11412,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ execPath : '.build out* variant:1' })
+  start({ execPath : '.build out* variant:1' })
   .then( ( arg ) =>
   {
     var expected =
@@ -11425,7 +11443,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ execPath : '.build out* variant:2' })
+  start({ execPath : '.build out* variant:2' })
   .then( ( arg ) =>
   {
     var expected =
@@ -11456,7 +11474,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ execPath : '.build out* variant:3' })
+  start({ execPath : '.build out* variant:3' })
   .then( ( arg ) =>
   {
     var expected =
@@ -11487,7 +11505,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ execPath : '.build out* variant:4' })
+  start({ execPath : '.build out* variant:4' })
   .then( ( arg ) =>
   {
     var expected =
@@ -11508,7 +11526,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ execPath : '.build out* variant:5' })
+  start({ execPath : '.build out* variant:5' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ];
@@ -11528,7 +11546,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ execPath : '.build out* variant:6' })
+  start({ execPath : '.build out* variant:6' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ];
@@ -11547,7 +11565,7 @@ function reflectComposite( test )
     return null;
   })
 
-  shell({ execPath : '.build out* variant:7' })
+  start({ execPath : '.build out* variant:7' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ]
@@ -11578,7 +11596,7 @@ function reflectRemoteGit( test )
   let local2Path = _.path.join( routinePath, 'Looker' );
   let local3Path = _.path.join( routinePath, 'Proto' );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -11596,7 +11614,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ execPath : '.build download.* variant:1' })
+  start({ execPath : '.build download.* variant:1' })
   .then( ( arg ) => validate1( arg ) )
 
   /* */
@@ -11608,7 +11626,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ execPath : '.build download.* variant:2' })
+  start({ execPath : '.build download.* variant:2' })
   .then( ( arg ) => validate1( arg ) )
 
   /* */
@@ -11620,7 +11638,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ execPath : '.build download.* variant:3' })
+  start({ execPath : '.build download.* variant:3' })
   .then( ( arg ) => validate1( arg ) )
 
   /* */
@@ -11632,7 +11650,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ execPath : '.build download.* variant:4' })
+  start({ execPath : '.build download.* variant:4' })
   .then( ( arg ) => validate1( arg ) )
 
   /* */
@@ -11644,7 +11662,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ execPath : '.build download.* variant:5' })
+  start({ execPath : '.build download.* variant:5' })
   .then( ( arg ) => validate1( arg ) )
 
   /* */
@@ -11656,7 +11674,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ execPath : '.build download.* variant:6' })
+  start({ execPath : '.build download.* variant:6' })
   .then( ( arg ) => validate1( arg ) )
 
   /* */
@@ -11668,7 +11686,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  shell({ execPath : '.build download.* variant:7' })
+  start({ execPath : '.build download.* variant:7' })
   .then( ( arg ) => validate2( arg ) )
 
   /* */
@@ -11730,7 +11748,7 @@ function reflectRemoteHttp( test )
   let outPath = _.path.join( routinePath, 'out' );
   let localFilePath = _.path.join( routinePath, 'out/Tools.s' );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -11749,8 +11767,8 @@ function reflectRemoteHttp( test )
   })
 
   // debugger;
-  // shell({ execPath : '.builds.list' })
-  shell({ execPath : '.build download' })
+  // start({ execPath : '.builds.list' })
+  start({ execPath : '.build download' })
   .then( ( arg ) =>
   {
     debugger;
@@ -11778,7 +11796,7 @@ function reflectWithOptions( test )
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -11799,8 +11817,8 @@ function reflectWithOptions( test )
     return null;
   })
 
-  shell({ execPath : '.with mandatory .clean' })
-  shell({ execPath : '.with mandatory .build variant1' })
+  start({ execPath : '.with mandatory .clean' })
+  start({ execPath : '.with mandatory .build variant1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -11819,8 +11837,8 @@ function reflectWithOptions( test )
     return null;
   })
 
-  shell({ execPath : '.with mandatory .clean' })
-  shell({ execPath : '.with mandatory .build variant2' })
+  start({ execPath : '.with mandatory .clean' })
+  start({ execPath : '.with mandatory .build variant2' })
   .finally( ( err, got ) =>
   {
     test.is( !err );
@@ -11843,8 +11861,8 @@ function reflectWithOptions( test )
     return null;
   })
 
-  shell({ execPath : '.with mandatory .clean' })
-  shell({ execPath : '.with mandatory .build variant3' })
+  start({ execPath : '.with mandatory .clean' })
+  start({ execPath : '.with mandatory .build variant3' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -11873,7 +11891,7 @@ function reflectWithSelectorInDstFilter( test )
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -11906,7 +11924,7 @@ function reflectWithSelectorInDstFilter( test )
     return null;
   })
 
-  shell({ execPath : '.build debug' })
+  start({ execPath : '.build debug' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -11925,7 +11943,7 @@ function reflectWithSelectorInDstFilter( test )
     return null;
   })
 
-  shell({ execPath : '.build release' })
+  start({ execPath : '.build release' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -11952,7 +11970,7 @@ function reflectSubmodulesWithCriterion( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -11973,8 +11991,8 @@ function reflectSubmodulesWithCriterion( test )
     return null;
   })
 
-  shell({ execPath : '.with module/A .export' })
-  shell({ execPath : '.with module/B .export' })
+  start({ execPath : '.with module/A .export' })
+  start({ execPath : '.with module/B .export' })
 
   .then( ( got ) =>
   {
@@ -12009,7 +12027,7 @@ function reflectSubmodulesWithCriterion( test )
     return null;
   })
 
-  shell({ execPath : '.build A' })
+  start({ execPath : '.build A' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12029,7 +12047,7 @@ function reflectSubmodulesWithCriterion( test )
     return null;
   })
 
-  shell({ execPath : '.build B' })
+  start({ execPath : '.build B' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12057,7 +12075,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -12078,11 +12096,11 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
     return null;
   })
 
-  shell({ execPath : '.each module .export' })
+  start({ execPath : '.each module .export' })
 
   // fails with error on first run
 
-  shell({ execPath : '.build variant1' })
+  start({ execPath : '.build variant1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12108,7 +12126,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -12131,7 +12149,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
 
   //first run works
 
-  shell({ execPath : '.build variant2' })
+  start({ execPath : '.build variant2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12143,7 +12161,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
 
   //second run fails
 
-  shell({ execPath : '.build variant2' })
+  start({ execPath : '.build variant2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12186,7 +12204,7 @@ function relfectSubmodulesWithNotExistingFile( test )
   // let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -12208,9 +12226,9 @@ function relfectSubmodulesWithNotExistingFile( test )
     return null;
   })
 
-  shell({ execPath : '.clean recursive:2' })
-  shell({ execPath : '.with module/moduleA/ .export' })
-  shell({ execPath : '.with module/moduleB/ .export' })
+  start({ execPath : '.clean recursive:2' })
+  start({ execPath : '.with module/moduleA/ .export' })
+  start({ execPath : '.with module/moduleB/ .export' })
 
   /* - */
 
@@ -12258,7 +12276,7 @@ function relfectSubmodulesWithNotExistingFile( test )
     return arg || null;
   })
 
-  shell({ execPath : '.build' })
+  start({ execPath : '.build' })
 
   ready
   .finally( ( err, arg ) =>
@@ -12286,7 +12304,7 @@ function reflectInherit( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -12307,7 +12325,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ execPath : '.build reflect.proto1' })
+  start({ execPath : '.build reflect.proto1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12328,7 +12346,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ execPath : '.build reflect.proto2' })
+  start({ execPath : '.build reflect.proto2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12349,7 +12367,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ execPath : '.build reflect.proto3' })
+  start({ execPath : '.build reflect.proto3' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12370,7 +12388,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ execPath : '.build reflect.proto4' })
+  start({ execPath : '.build reflect.proto4' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12391,7 +12409,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ execPath : '.build reflect.proto5' })
+  start({ execPath : '.build reflect.proto5' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12412,7 +12430,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ execPath : '.build not1' })
+  start({ execPath : '.build not1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12433,7 +12451,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ execPath : '.build reflect.files1' })
+  start({ execPath : '.build reflect.files1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12454,7 +12472,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ execPath : '.build reflect.files2' })
+  start({ execPath : '.build reflect.files2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12475,7 +12493,7 @@ function reflectInherit( test )
     return null;
   })
 
-  shell({ execPath : '.build reflect.files3' })
+  start({ execPath : '.build reflect.files3' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12512,7 +12530,7 @@ function reflectInheritSubmodules( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -12533,7 +12551,7 @@ function reflectInheritSubmodules( test )
     return null;
   })
 
-  shell({ execPath : '.each module .export' })
+  start({ execPath : '.each module .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12552,7 +12570,7 @@ function reflectInheritSubmodules( test )
     return null;
   })
 
-  shell({ execPath : '.with a .build' })
+  start({ execPath : '.with a .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12573,7 +12591,7 @@ function reflectInheritSubmodules( test )
     return null;
   })
 
-  shell({ execPath : '.with b .build' })
+  start({ execPath : '.with b .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12592,7 +12610,7 @@ function reflectInheritSubmodules( test )
     return null;
   })
 
-  shell({ execPath : '.with c .build' })
+  start({ execPath : '.with c .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12619,7 +12637,7 @@ function reflectComplexInherit( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -12639,9 +12657,9 @@ function reflectComplexInherit( test )
     return null;
   })
 
-  shell({ execPath : '.with a .export' })
-  shell({ execPath : '.with b .export' })
-  shell({ execPath : '.with ab/ .build' })
+  start({ execPath : '.with a .export' })
+  start({ execPath : '.with b .export' })
+  start({ execPath : '.with ab/ .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12683,11 +12701,11 @@ function reflectComplexInherit( test )
     return null;
   })
 
-  shell({ execPath : '.with a .export' })
-  shell({ execPath : '.with b .export' })
-  shell({ execPath : '.with c .export' })
-  shell({ execPath : '.with ab/ .export' })
-  shell({ execPath : '.with abac/ .build' })
+  start({ execPath : '.with a .export' })
+  start({ execPath : '.with b .export' })
+  start({ execPath : '.with c .export' })
+  start({ execPath : '.with ab/ .export' })
+  start({ execPath : '.with abac/ .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -12745,7 +12763,7 @@ function reflectorMasks( test )
   test.description = 'should handle correct files';
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -12761,8 +12779,8 @@ function reflectorMasks( test )
 
   /* - */
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.build copy.' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.build copy.' })
 
   .then( ( got ) =>
   {
@@ -12779,8 +12797,8 @@ function reflectorMasks( test )
 
   /* - */
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.build copy.debug' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.build copy.debug' })
 
   .then( ( got ) =>
   {
@@ -12807,17 +12825,17 @@ reflectorMasks.timeOut = 200000;
 function shellWithCriterion( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-with-criterion' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-start-with-criterion' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
 
 
-  /* Checks if shell step supports plural criterion and which path is selected using current value of criterion */
+  /* Checks if start step supports plural criterion and which path is selected using current value of criterion */
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -12833,7 +12851,7 @@ function shellWithCriterion( test )
 
   /* - */
 
-  shell({ execPath : '.build A' })
+  start({ execPath : '.build A' })
 
   .then( ( got ) =>
   {
@@ -12847,7 +12865,7 @@ function shellWithCriterion( test )
 
   /* - */
 
-  shell({ execPath : '.build B' })
+  start({ execPath : '.build B' })
 
   .then( ( got ) =>
   {
@@ -12869,13 +12887,13 @@ shellWithCriterion.timeOut = 200000;
 //
 
 /*
-  Checks amount of output from shell step depending on value of verbosity option
+  Checks amount of output from start step depending on value of verbosity option
 */
 
 function shellVerbosity( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-verbosity' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-start-verbosity' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -12883,7 +12901,7 @@ function shellVerbosity( test )
 
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -12899,16 +12917,16 @@ function shellVerbosity( test )
 
   /* - */
 
-  shell({ execPath : '.build verbosity.0' })
+  start({ execPath : '.build verbosity.0' })
 
   .then( ( got ) =>
   {
     test.case = '.build verbosity.0';
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 0 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from start\' )"' ), 0 );
     test.identical( _.strCount( got.output, routinePath ), 1 );
-    test.identical( _.strCount( got.output, 'message from shell' ), 0 );
+    test.identical( _.strCount( got.output, 'message from start' ), 0 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
     return null;
@@ -12916,16 +12934,16 @@ function shellVerbosity( test )
 
   /* - */
 
-  shell({ execPath : '.build verbosity.1' })
+  start({ execPath : '.build verbosity.1' })
 
   .then( ( got ) =>
   {
     test.case = '.build verbosity.1';
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from start\' )"' ), 1 );
     test.identical( _.strCount( got.output, routinePath ), 1 );
-    test.identical( _.strCount( got.output, 'message from shell' ), 1 );
+    test.identical( _.strCount( got.output, 'message from start' ), 1 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
     return null;
@@ -12933,16 +12951,16 @@ function shellVerbosity( test )
 
   /* - */
 
-  shell({ execPath : '.build verbosity.2' })
+  start({ execPath : '.build verbosity.2' })
 
   .then( ( got ) =>
   {
     test.case = '.build verbosity.2';
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from start\' )"' ), 1 );
     test.identical( _.strCount( got.output, routinePath ), 1 );
-    test.identical( _.strCount( got.output, 'message from shell' ), 2 );
+    test.identical( _.strCount( got.output, 'message from start' ), 2 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
     return null;
@@ -12950,16 +12968,16 @@ function shellVerbosity( test )
 
   /* - */
 
-  shell({ execPath : '.build verbosity.3' })
+  start({ execPath : '.build verbosity.3' })
 
   .then( ( got ) =>
   {
     test.case = '.build verbosity.3';
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from start\' )"' ), 1 );
     test.identical( _.strCount( got.output, routinePath ), 2 );
-    test.identical( _.strCount( got.output, 'message from shell' ), 2 );
+    test.identical( _.strCount( got.output, 'message from start' ), 2 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
     return null;
@@ -12967,16 +12985,16 @@ function shellVerbosity( test )
 
   /* - */
 
-  shell({ execPath : '.build verbosity.5' })
+  start({ execPath : '.build verbosity.5' })
 
   .then( ( got ) =>
   {
     test.case = 'verbosity:5';
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from start\' )"' ), 1 );
     test.identical( _.strCount( got.output, routinePath ), 2 );
-    test.identical( _.strCount( got.output, 'message from shell' ), 2 );
+    test.identical( _.strCount( got.output, 'message from start' ), 2 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 1 );
 
     return null;
@@ -13000,7 +13018,7 @@ function functionStringsJoin( test )
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -13019,8 +13037,8 @@ function functionStringsJoin( test )
     test.case = '.build strings.join'
     return null;
   })
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.build strings.join' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.build strings.join' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -13050,8 +13068,8 @@ console.log( 'File1.js' );
     test.case = '.build multiply'
     return null;
   })
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.build multiply' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.build multiply' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -13080,8 +13098,8 @@ console.log( 'File1.js' );
     test.case = '.build echo1'
     return null;
   })
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.build echo1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.build echo1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -13103,8 +13121,8 @@ console.log( 'File1.js' );
     test.case = '.build echo2'
     return null;
   })
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.build echo2' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.build echo2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -13134,7 +13152,7 @@ function functionPlatform( test )
   let outPath = _.path.join( routinePath, 'out' );
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -13153,8 +13171,8 @@ function functionPlatform( test )
     test.case = '.build'
     return null;
   })
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.build' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.build' })
   .then( ( got ) =>
   {
     var Os = require( 'os' );
@@ -13190,7 +13208,7 @@ function functionPlatform( test )
 function fucntionThisCriterion( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-shell-using-criterion-value' );
+  let originalDirPath = _.path.join( self.assetDirPath, 'step-start-using-criterion-value' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -13198,7 +13216,7 @@ function fucntionThisCriterion( test )
 
 
   let ready = new _.Consequence().take( null );
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -13214,7 +13232,7 @@ function fucntionThisCriterion( test )
 
   /* - */
 
-  shell({ execPath : '.build debug' })
+  start({ execPath : '.build debug' })
 
   .then( ( got ) =>
   {
@@ -13228,7 +13246,7 @@ function fucntionThisCriterion( test )
 
   /* - */
 
-  shell({ execPath : '.build release' })
+  start({ execPath : '.build release' })
 
   .then( ( got ) =>
   {
@@ -13259,7 +13277,7 @@ function submodulesDownloadSingle( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -13272,7 +13290,7 @@ function submodulesDownloadSingle( test )
 
   /* - */
 
-  shell({ execPath : '.submodules.download' })
+  start({ execPath : '.submodules.download' })
 
   .then( ( got ) =>
   {
@@ -13284,7 +13302,7 @@ function submodulesDownloadSingle( test )
 
   /* - */
 
-  shell({ execPath : '.submodules.download' })
+  start({ execPath : '.submodules.download' })
 
   .then( ( got ) =>
   {
@@ -13298,7 +13316,7 @@ function submodulesDownloadSingle( test )
 
   /* - */
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
 
   .then( ( got ) =>
   {
@@ -13312,7 +13330,7 @@ function submodulesDownloadSingle( test )
 
   /* - */
 
-  shell({ execPath : '.submodules.clean' })
+  start({ execPath : '.submodules.clean' })
 
   .then( ( got ) =>
   {
@@ -13343,7 +13361,7 @@ function submodulesDownloadUpdate( test )
 
 
   let ready = new _.Consequence().take( null )
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -13367,7 +13385,7 @@ function submodulesDownloadUpdate( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.download' })
+  start({ execPath : '.submodules.download' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -13389,7 +13407,7 @@ function submodulesDownloadUpdate( test )
     test.case = '.submodules.download - again';
     return null;
   })
-  shell({ execPath : '.submodules.download' })
+  start({ execPath : '.submodules.download' })
   .then( ( got ) =>
   {
 
@@ -13416,7 +13434,7 @@ function submodulesDownloadUpdate( test )
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
 
@@ -13442,7 +13460,7 @@ function submodulesDownloadUpdate( test )
     test.case = '.submodules.update - again';
     return null;
   })
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
 
@@ -13473,7 +13491,7 @@ function submodulesDownloadUpdate( test )
     return files;
   })
 
-  shell({ execPath : '.submodules.clean' })
+  start({ execPath : '.submodules.clean' })
   .then( ( got ) =>
   {
 
@@ -13504,7 +13522,7 @@ function submodulesDownloadUpdateDry( test )
 
 
   let ready = new _.Consequence().take( null )
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -13525,7 +13543,7 @@ function submodulesDownloadUpdateDry( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.download dry:1' })
+  start({ execPath : '.submodules.download dry:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -13548,8 +13566,8 @@ function submodulesDownloadUpdateDry( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.download' })
-  shell({ execPath : '.submodules.download dry:1' })
+  start({ execPath : '.submodules.download' })
+  start({ execPath : '.submodules.download dry:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -13569,7 +13587,7 @@ function submodulesDownloadUpdateDry( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.update dry:1' })
+  start({ execPath : '.submodules.update dry:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -13592,8 +13610,8 @@ function submodulesDownloadUpdateDry( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
-  shell({ execPath : '.submodules.update dry:1' })
+  start({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update dry:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -13623,7 +13641,7 @@ function submodulesDownloadSwitchBranch( test )
   let willfilePath = _.path.join( routinePath, '.will.yml' );
 
   let ready = new _.Consequence().take( null )
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -13645,27 +13663,27 @@ function submodulesDownloadSwitchBranch( test )
     let clonePath = _.path.join( routinePath, 'cloned' );
     _.fileProvider.dirMake( repoPath );
 
-    let shell = _.process.starter
+    let start = _.process.starter
     ({
       currentPath : routinePath,
       outputCollecting : 1,
       ready : con,
     })
 
-    shell( 'git -C experiment init --bare' )
-    shell( 'git clone experiment cloned' )
+    start( 'git -C experiment init --bare' )
+    start( 'git clone experiment cloned' )
 
     .then( () =>
     {
       return _.fileProvider.filesReflect({ reflectMap : { [ repoSrcFiles ] : clonePath } })
     })
 
-    shell( 'git -C cloned add -fA .' )
-    shell( 'git -C cloned commit -m init' )
-    shell( 'git -C cloned push' )
-    shell( 'git -C cloned checkout -b dev' )
-    shell( 'git -C cloned commit --allow-empty -m test' )
-    shell( 'git -C cloned push origin dev' )
+    start( 'git -C cloned add -fA .' )
+    start( 'git -C cloned commit -m init' )
+    start( 'git -C cloned push' )
+    start( 'git -C cloned checkout -b dev' )
+    start( 'git -C cloned commit --allow-empty -m test' )
+    start( 'git -C cloned push origin dev' )
 
     return con;
   })
@@ -13676,7 +13694,7 @@ function submodulesDownloadSwitchBranch( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.download' })
+  start({ execPath : '.submodules.download' })
 
   .then( () =>
   {
@@ -13695,7 +13713,7 @@ function submodulesDownloadSwitchBranch( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.download' })
+  start({ execPath : '.submodules.download' })
 
   .then( () =>
   {
@@ -13713,7 +13731,7 @@ function submodulesDownloadSwitchBranch( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.download' })
+  start({ execPath : '.submodules.download' })
 
   .then( () =>
   {
@@ -13731,7 +13749,7 @@ function submodulesDownloadSwitchBranch( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.download' })
+  start({ execPath : '.submodules.download' })
 
   .then( () =>
   {
@@ -13758,7 +13776,7 @@ function submodulesDownloadRecursive( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -13782,7 +13800,7 @@ function submodulesDownloadRecursive( test )
     return null;
   })
 
-  shell({ execPath : '.with * .submodules.download recursive:2' })
+  start({ execPath : '.with * .submodules.download recursive:2' })
 
   .then( ( got ) =>
   {
@@ -13802,7 +13820,7 @@ function submodulesDownloadRecursive( test )
     return null;
   })
 
-  shell({ execPath : '.with * .submodules.download recursive:2' })
+  start({ execPath : '.with * .submodules.download recursive:2' })
 
   .then( ( got ) =>
   {
@@ -13833,7 +13851,7 @@ function submodulesDownloadRecursive( test )
     return null;
   })
 
-  shell({ execPath : '.with ** .submodules.download recursive:2' })
+  start({ execPath : '.with ** .submodules.download recursive:2' })
 
   .then( ( got ) =>
   {
@@ -13857,7 +13875,7 @@ function submodulesDownloadRecursive( test )
     return null;
   })
 
-  shell({ execPath : '.with ** .submodules.download recursive:2' })
+  start({ execPath : '.with ** .submodules.download recursive:2' })
 
   .then( ( got ) =>
   {
@@ -13909,7 +13927,7 @@ function submodulesDownloadRecursive( test )
     return null;
   })
 
-  shell({ execPath : '.with * .submodules.download recursive:1' })
+  start({ execPath : '.with * .submodules.download recursive:1' })
 
   .then( ( got ) =>
   {
@@ -13929,7 +13947,7 @@ function submodulesDownloadRecursive( test )
     return null;
   })
 
-  shell({ execPath : '.with * .submodules.download recursive:1' })
+  start({ execPath : '.with * .submodules.download recursive:1' })
 
   .then( ( got ) =>
   {
@@ -13960,7 +13978,7 @@ function submodulesDownloadRecursive( test )
     return null;
   })
 
-  shell({ execPath : '.with ** .submodules.download recursive:1' })
+  start({ execPath : '.with ** .submodules.download recursive:1' })
 
   .then( ( got ) =>
   {
@@ -13984,7 +14002,7 @@ function submodulesDownloadRecursive( test )
     return null;
   })
 
-  shell({ execPath : '.with ** .submodules.download recursive:1' })
+  start({ execPath : '.with ** .submodules.download recursive:1' })
 
   .then( ( got ) =>
   {
@@ -14036,7 +14054,7 @@ function submodulesDownloadRecursive( test )
     return null;
   })
 
-  shell({ execPath : '.with * .submodules.download recursive:0' })
+  start({ execPath : '.with * .submodules.download recursive:0' })
 
   .then( ( got ) =>
   {
@@ -14067,7 +14085,7 @@ function submodulesDownloadRecursive( test )
     return null;
   })
 
-  shell({ execPath : '.with ** .submodules.download recursive:0' })
+  start({ execPath : '.with ** .submodules.download recursive:0' })
 
   .then( ( got ) =>
   {
@@ -14110,7 +14128,7 @@ function submodulesDownloadThrowing( test )
   let filePath = _.path.join( downloadPath, 'file' );
   let filesBefore;
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -14143,7 +14161,7 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
-  shell({ execPath : '.with bad .submodules.download' })
+  start({ execPath : '.with bad .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14162,7 +14180,7 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  shell({ execPath : '.with bad .submodules.download' })
+  start({ execPath : '.with bad .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14182,7 +14200,7 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.download' })
+  start({ execPath : '.with good .submodules.download' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14206,7 +14224,7 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.fileWrite( filePath,filePath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.download' })
+  start({ execPath : '.with good .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14226,7 +14244,7 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.fileWrite( downloadPath,downloadPath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.download' })
+  start({ execPath : '.with good .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14251,7 +14269,7 @@ function submodulesDownloadThrowing( test )
     filesBefore = self.find( downloadPath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.download' })
+  start({ execPath : '.with good .submodules.download' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14273,7 +14291,7 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.download' })
+  start({ execPath : '.with good .submodules.download' })
   .then( () =>
   {
     let inWillFilePath = _.path.join( downloadPath, '.im.will.yml' );
@@ -14287,7 +14305,7 @@ function submodulesDownloadThrowing( test )
     filesBefore = self.find( downloadPath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.download' })
+  start({ execPath : '.with good .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14320,7 +14338,7 @@ function submodulesUpdateThrowing( test )
   let filePath = _.path.join( downloadPath, 'file' );
   let filesBefore;
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -14354,7 +14372,7 @@ function submodulesUpdateThrowing( test )
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
-  shell({ execPath : '.with bad .submodules.update' })
+  start({ execPath : '.with bad .submodules.update' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14374,7 +14392,7 @@ function submodulesUpdateThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  shell({ execPath : '.with bad .submodules.update' })
+  start({ execPath : '.with bad .submodules.update' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14394,7 +14412,7 @@ function submodulesUpdateThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.update' })
+  start({ execPath : '.with good .submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14418,7 +14436,7 @@ function submodulesUpdateThrowing( test )
     _.fileProvider.fileWrite( filePath,filePath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.update' })
+  start({ execPath : '.with good .submodules.update' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14438,7 +14456,7 @@ function submodulesUpdateThrowing( test )
     _.fileProvider.fileWrite( downloadPath,downloadPath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.update' })
+  start({ execPath : '.with good .submodules.update' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14463,7 +14481,7 @@ function submodulesUpdateThrowing( test )
     filesBefore = self.find( downloadPath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.update' })
+  start({ execPath : '.with good .submodules.update' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14486,7 +14504,7 @@ function submodulesUpdateThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.update' })
+  start({ execPath : '.with good .submodules.update' })
   .then( () =>
   {
     let inWillFilePath = _.path.join( downloadPath, '.im.will.yml' );
@@ -14500,7 +14518,7 @@ function submodulesUpdateThrowing( test )
     filesBefore = self.find( downloadPath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.update' })
+  start({ execPath : '.with good .submodules.update' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14533,7 +14551,7 @@ function submodulesAgreeThrowing( test )
   let filePath = _.path.join( downloadPath, 'file' );
   let filesBefore;
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -14566,7 +14584,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
-  shell({ execPath : '.with bad .submodules.versions.agree' })
+  start({ execPath : '.with bad .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14584,7 +14602,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  shell({ execPath : '.with bad .submodules.versions.agree' })
+  start({ execPath : '.with bad .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14602,7 +14620,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.versions.agree' })
+  start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14625,7 +14643,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.fileWrite( filePath,filePath );
     return null;
   })
-  shell({ execPath : '.with bad .submodules.versions.agree' })
+  start({ execPath : '.with bad .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14645,7 +14663,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.fileWrite( filePath,filePath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.versions.agree' })
+  start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14667,7 +14685,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.fileWrite( downloadPath,downloadPath );
     return null;
   })
-  shell({ execPath : '.with bad .submodules.versions.agree' })
+  start({ execPath : '.with bad .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -14685,7 +14703,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.fileWrite( downloadPath,downloadPath );
     return null;
   })
-  shell({ execPath : '.with good .submodules.versions.agree' })
+  start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14707,7 +14725,7 @@ function submodulesAgreeThrowing( test )
     return null;
   })
   shell2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
-  shell({ execPath : '.with good .submodules.versions.agree' })
+  start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14742,7 +14760,7 @@ function submodulesVersionsAgreeWrongOrigin( test )
   let filePath = _.path.join( downloadPath, 'file' );
   let filesBefore;
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -14777,7 +14795,7 @@ function submodulesVersionsAgreeWrongOrigin( test )
   })
 
   shell2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
-  shell({ execPath : '.with good .submodules.versions.agree' })
+  start({ execPath : '.with good .submodules.versions.agree' })
 
   .then( ( got ) =>
   {
@@ -14818,7 +14836,7 @@ function submodulesDownloadedUpdate( test )
 
 
   let ready = new _.Consequence().take( null )
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -14838,8 +14856,8 @@ function submodulesDownloadedUpdate( test )
     return null;
   })
 
-  shell({ execPath : '.each module .export' })
-  shell({ execPath : '.submodules.download' })
+  start({ execPath : '.each module .export' })
+  start({ execPath : '.submodules.download' })
 
   .then( ( got ) =>
   {
@@ -14898,7 +14916,7 @@ function submodulesDownloadedUpdate( test )
     return got;
   })
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
 
   _.process.start
   ({
@@ -14950,7 +14968,7 @@ function subModulesUpdate( test )
 
 
   let ready = new _.Consequence().take( null )
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -14970,8 +14988,8 @@ function subModulesUpdate( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14991,7 +15009,7 @@ function subModulesUpdate( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15014,7 +15032,7 @@ function subModulesUpdate( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15034,7 +15052,7 @@ function subModulesUpdate( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15068,7 +15086,7 @@ function subModulesUpdateSwitchBranch( test )
   let detachedVersion;
 
   let ready = new _.Consequence().take( null )
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -15095,7 +15113,7 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -15113,7 +15131,7 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -15131,7 +15149,7 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -15149,7 +15167,7 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -15171,7 +15189,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let con = shell({ execPath : '.submodules.update', ready : null });
+    let con = start({ execPath : '.submodules.update', ready : null });
     return test.shouldThrowErrorAsync( con );
   })
 
@@ -15202,7 +15220,7 @@ function subModulesUpdateSwitchBranch( test )
 
   begin()
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
 
   _.process.start
   ({
@@ -15218,7 +15236,7 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -15237,7 +15255,7 @@ function subModulesUpdateSwitchBranch( test )
 
   begin()
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
 
   _.process.start
   ({
@@ -15250,7 +15268,7 @@ function subModulesUpdateSwitchBranch( test )
   shell2( 'git -C cloned commit --allow-empty -m test' )
   shell2( 'git -C cloned push' )
 
-  shell({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.update' })
 
   _.process.start
   ({
@@ -15291,29 +15309,29 @@ function subModulesUpdateSwitchBranch( test )
 
       _.fileProvider.dirMake( repoPath );
 
-      let shell = _.process.starter
+      let start = _.process.starter
       ({
         currentPath : routinePath,
         outputCollecting : 1,
         ready : con,
       })
 
-      shell( 'git -C experiment init --bare' )
-      shell( 'git clone experiment cloned' )
+      start( 'git -C experiment init --bare' )
+      start( 'git clone experiment cloned' )
 
       .then( () =>
       {
         return _.fileProvider.filesReflect({ reflectMap : { [ repoSrcFiles ] : clonePath } })
       })
 
-      shell( 'git -C cloned add -fA .' )
-      shell( 'git -C cloned commit -m init' )
-      shell( 'git -C cloned push' )
-      shell( 'git -C cloned checkout -b dev' )
-      shell( 'git -C cloned commit --allow-empty -m test' )
-      shell( 'git -C cloned commit --allow-empty -m test2' )
-      shell( 'git -C cloned push origin dev' )
-      shell( 'git -C cloned rev-parse HEAD~1' )
+      start( 'git -C cloned add -fA .' )
+      start( 'git -C cloned commit -m init' )
+      start( 'git -C cloned push' )
+      start( 'git -C cloned checkout -b dev' )
+      start( 'git -C cloned commit --allow-empty -m test' )
+      start( 'git -C cloned commit --allow-empty -m test2' )
+      start( 'git -C cloned push origin dev' )
+      start( 'git -C cloned rev-parse HEAD~1' )
 
       .then( ( got ) =>
       {
@@ -15346,7 +15364,7 @@ function versionsVerify( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -15377,7 +15395,7 @@ function versionsVerify( test )
     return null;
   })
 
-  shell( '.with ./module/ .export' )
+  start( '.with ./module/ .export' )
   shell2( 'git init' )
   shell2( 'git add -fA .' )
   shell2( 'git commit -m init' )
@@ -15390,7 +15408,7 @@ function versionsVerify( test )
     return null;
   })
 
-  shell( '.submodules.versions.verify' )
+  start( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -15407,8 +15425,8 @@ function versionsVerify( test )
     return null;
   })
 
-  shell( '.submodules.download' )
-  shell( '.submodules.versions.verify' )
+  start( '.submodules.download' )
+  start( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -15425,7 +15443,7 @@ function versionsVerify( test )
     return null;
   })
 
-  shell( '.submodules.versions.verify' )
+  start( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -15444,7 +15462,7 @@ function versionsVerify( test )
 
   shell3( 'git commit --allow-empty -m test' )
 
-  shell( '.submodules.versions.verify' )
+  start( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -15463,7 +15481,7 @@ function versionsVerify( test )
 
   shell3( 'git checkout -b testbranch' )
 
-  shell( '.submodules.versions.verify' )
+  start( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -15487,7 +15505,7 @@ function versionsAgree( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -15521,7 +15539,7 @@ function versionsAgree( test )
     return null;
   })
 
-  shell( '.with ./module/ .export' )
+  start( '.with ./module/ .export' )
   shell2( 'git init' )
   shell2( 'git add -fA .' )
   shell2( 'git commit -m init' )
@@ -15534,7 +15552,7 @@ function versionsAgree( test )
     return null;
   })
 
-  shell( '.submodules.versions.agree' )
+  start( '.submodules.versions.agree' )
 
   .then( ( got ) =>
   {
@@ -15551,7 +15569,7 @@ function versionsAgree( test )
     return null;
   })
 
-  shell( '.submodules.versions.agree' )
+  start( '.submodules.versions.agree' )
 
   .then( ( got ) =>
   {
@@ -15569,7 +15587,7 @@ function versionsAgree( test )
   })
 
   shell3( 'git commit --allow-empty -m test' )
-  shell( '.submodules.versions.agree' )
+  start( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15593,7 +15611,7 @@ function versionsAgree( test )
   })
 
   shell2( 'git commit --allow-empty -m test' )
-  shell( '.submodules.versions.agree' )
+  start( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15620,7 +15638,7 @@ function versionsAgree( test )
 
   shell3( 'git reset --hard origin' )
   shell2( 'git commit --allow-empty -m test2' )
-  shell( '.submodules.versions.agree' )
+  start( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15656,7 +15674,7 @@ function stepSubmodulesDownload( test )
 
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -15668,7 +15686,7 @@ function stepSubmodulesDownload( test )
 
   // /* - */
   //
-  // shell()
+  // start()
   //
   // .then( ( got ) =>
   // {
@@ -15680,7 +15698,7 @@ function stepSubmodulesDownload( test )
 
   /* - */
 
-  shell({ execPath : '.resources.list' })
+  start({ execPath : '.resources.list' })
 
   .then( ( got ) =>
   {
@@ -15700,7 +15718,7 @@ function stepSubmodulesDownload( test )
     return null;
   })
 
-  shell({ execPath : '.build' })
+  start({ execPath : '.build' })
 
   .then( ( got ) =>
   {
@@ -15721,7 +15739,7 @@ function stepSubmodulesDownload( test )
     return null;
   })
 
-  shell({ execPath : '.export' })
+  start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -15771,7 +15789,7 @@ function stepWillbeVersionCheck( test )
   // let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : assetDstPath,
@@ -15783,7 +15801,7 @@ function stepWillbeVersionCheck( test )
 
   /* */
 
-  shell( '.build' )
+  start( '.build' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15800,7 +15818,7 @@ function stepWillbeVersionCheck( test )
     return null;
   })
 
-  shell( '.build' )
+  start( '.build' )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -15825,7 +15843,7 @@ function stepSubmodulesAreUpdated( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -15851,7 +15869,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  shell( '.with ./module/ .export' )
+  start( '.with ./module/ .export' )
   shell2( 'git init' )
   shell2( 'git add -fA .' )
   shell2( 'git commit -m init' )
@@ -15865,7 +15883,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  shell( '.build' )
+  start( '.build' )
 
   .then( ( got ) =>
   {
@@ -15883,7 +15901,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  shell( '.build' )
+  start( '.build' )
 
   .then( ( got ) =>
   {
@@ -15903,7 +15921,7 @@ function stepSubmodulesAreUpdated( test )
 
   shell2( 'git commit --allow-empty -m test' )
 
-  shell( '.build' )
+  start( '.build' )
 
   .then( ( got ) =>
   {
@@ -15922,7 +15940,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  shell( '.build debug2' )
+  start( '.build debug2' )
 
   .then( ( got ) =>
   {
@@ -15940,7 +15958,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  shell( '.build debug3' )
+  start( '.build debug3' )
 
   .then( ( got ) =>
   {
@@ -15958,7 +15976,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  shell( '.build debug4' )
+  start( '.build debug4' )
 
   .then( ( got ) =>
   {
@@ -15976,7 +15994,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  shell( '.build debug5' )
+  start( '.build debug5' )
 
   .then( ( got ) =>
   {
@@ -15994,7 +16012,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  shell( '.build debug6' )
+  start( '.build debug6' )
 
   .then( ( got ) =>
   {
@@ -16023,7 +16041,7 @@ function upgradeDryDetached( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -16043,9 +16061,9 @@ function upgradeDryDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.export' })
-  shell({ execPath : '.submodules.upgrade dry:1 negative:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.export' })
+  start({ execPath : '.submodules.upgrade dry:1 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16098,7 +16116,7 @@ function upgradeDryDetached( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.upgrade dry:1 negative:0' })
+  start({ execPath : '.submodules.upgrade dry:1 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16151,9 +16169,9 @@ function upgradeDryDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.each module .export' })
-  shell({ execPath : '.submodules.upgrade dry:1 negative:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.each module .export' })
+  start({ execPath : '.submodules.upgrade dry:1 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16206,9 +16224,9 @@ function upgradeDryDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.submodules.update' })
-  shell({ execPath : '.submodules.upgrade dry:1 negative:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.upgrade dry:1 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16274,7 +16292,7 @@ function upgradeDetached( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -16293,9 +16311,9 @@ function upgradeDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.export' })
-  shell({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.export' })
+  start({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16352,9 +16370,9 @@ function upgradeDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.export' })
-  shell({ execPath : '.submodules.upgrade dry:0 negative:0' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.export' })
+  start({ execPath : '.submodules.upgrade dry:0 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16407,7 +16425,7 @@ function upgradeDetached( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  start({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16460,7 +16478,7 @@ function upgradeDetached( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.upgrade dry:0 negative:0' })
+  start({ execPath : '.submodules.upgrade dry:0 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16521,9 +16539,9 @@ function upgradeDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.each module .export' })
-  shell({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.each module .export' })
+  start({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16580,9 +16598,9 @@ function upgradeDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.submodules.update' })
-  shell({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16643,7 +16661,7 @@ function upgradeDetachedExperiment( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -16662,8 +16680,8 @@ function upgradeDetachedExperiment( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.download' })
-  shell({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  start({ execPath : '.submodules.download' })
+  start({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16698,7 +16716,7 @@ function fixateDryDetached( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -16718,9 +16736,9 @@ function fixateDryDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.export' })
-  shell({ execPath : '.submodules.fixate dry:1 negative:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.export' })
+  start({ execPath : '.submodules.fixate dry:1 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16773,7 +16791,7 @@ function fixateDryDetached( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.fixate dry:1 negative:0' })
+  start({ execPath : '.submodules.fixate dry:1 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16826,9 +16844,9 @@ function fixateDryDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.each module .export' })
-  shell({ execPath : '.submodules.fixate dry:1 negative:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.each module .export' })
+  start({ execPath : '.submodules.fixate dry:1 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16881,9 +16899,9 @@ function fixateDryDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.submodules.update' })
-  shell({ execPath : '.submodules.fixate dry:1 negative:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.fixate dry:1 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -16949,7 +16967,7 @@ function fixateDetached( test )
 
   let ready = new _.Consequence().take( null );
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
@@ -16968,9 +16986,9 @@ function fixateDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.export' })
-  shell({ execPath : '.submodules.fixate dry:0 negative:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.export' })
+  start({ execPath : '.submodules.fixate dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17027,9 +17045,9 @@ function fixateDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.export' })
-  shell({ execPath : '.submodules.fixate dry:0 negative:0' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.export' })
+  start({ execPath : '.submodules.fixate dry:0 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17082,7 +17100,7 @@ function fixateDetached( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.fixate dry:0 negative:1' })
+  start({ execPath : '.submodules.fixate dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17135,7 +17153,7 @@ function fixateDetached( test )
     return null;
   })
 
-  shell({ execPath : '.submodules.fixate dry:0 negative:0' })
+  start({ execPath : '.submodules.fixate dry:0 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17196,9 +17214,9 @@ function fixateDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.each module .export' })
-  shell({ execPath : '.submodules.fixate dry:0 negative:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.each module .export' })
+  start({ execPath : '.submodules.fixate dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17255,9 +17273,9 @@ function fixateDetached( test )
     return null;
   })
 
-  shell({ execPath : '.clean' })
-  shell({ execPath : '.submodules.update' })
-  shell({ execPath : '.submodules.fixate dry:0 negative:1' })
+  start({ execPath : '.clean' })
+  start({ execPath : '.submodules.update' })
+  start({ execPath : '.submodules.fixate dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17340,7 +17358,7 @@ function runWillbe( test )
     mode : 'fork',
   });
 
-  let shell = _.process.starter
+  let start = _.process.starter
   ({
     currentPath : routinePath,
     outputCollecting : 1,
@@ -17403,7 +17421,7 @@ function runWillbe( test )
   {
     test.case = 'Exec: terminate utility during heavy load of will files, should fail'
     let o = { execPath : 'node', args : [ execPath, '.submodules.list' ], ready : null };
-    let con = shell( o );
+    let con = start( o );
 
     o.process.stdout.on( 'data', ( data ) =>
     {

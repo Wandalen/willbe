@@ -5,7 +5,7 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
-  // let status = _.git.infoStatus
+  // let status = _.git.statusFull
   // ({
   //   insidePath : it.variant.dirPath,
   //   unpushed : 0,
@@ -18,7 +18,7 @@ function onModule( it )
   if( o.verbosity )
   logger.log( `Pulling ${it.variant.nameWithLocationGet()}` );
 
-  // if( status.hasLocalChanges )
+  // if( status.local )
   // {
   //   logger.log( _.errBrief( `${it.variant.nameWithLocationGet()} has local changes!` ) );
   //   return null;

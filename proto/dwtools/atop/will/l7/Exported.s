@@ -338,6 +338,7 @@ function _performRecursive()
   {
     let con = new _.Consequence().take( null );
 
+    _global_.EXPORTING = 1;
     debugger;
     let modules = outModule.modulesEach
     ({
@@ -346,6 +347,7 @@ function _performRecursive()
       withStem : 0,
       withOut : 0,
       withIn : 1,
+
     });
     debugger;
 
@@ -444,6 +446,7 @@ function _performPrepare2()
     {
       if( submodule.opener && submodule.opener.error )
       logger.log( submodule.opener.error );
+      debugger;
       throw _.errBrief( 'Exporting is impossible because ' + submodule.decoratedAbsoluteName + ' is not downloaded or not valid!' );
     }
 

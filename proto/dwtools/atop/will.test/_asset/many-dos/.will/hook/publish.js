@@ -24,6 +24,8 @@ function onModule( it )
 
   _.assert( _.path.isTrailed( it.variant.localPath ), 'not tested' );
 
+  it.start( 'local-will .export' );
+
   _.npm.bump
   ({
     dry : o.dry,
@@ -48,15 +50,13 @@ function onModule( it )
     verbosity : o.verbosity - 2,
   });
 
-  it.start( 'local-will .export' );
-
-  // _.npm.publish
-  // ({
-  //   localPath : it.variant.dirPath,
-  //   tag : o.tag,
-  //   ready : it.ready,
-  //   verbosity : o.verbosity - 1,
-  // })
+  _.npm.publish
+  ({
+    localPath : it.variant.dirPath,
+    tag : o.tag,
+    ready : it.ready,
+    verbosity : o.verbosity - 1,
+  })
 
   function onDependency( dep )
   {

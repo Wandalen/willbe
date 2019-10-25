@@ -1321,13 +1321,15 @@ function submodulesGet( o )
 
   o = _.routineOptions( submodulesGet, arguments );
 
+  if( _global_.EXPORTING )
+  debugger;
+
   append( variant );
 
   if( !variant.peer )
   if( variant.module && variant.module.peerModule )
   {
     debugger;
-    // _.assert( 0, 'not tested' );
     variant.From({ module : variant.module.peerModule, will : will });
     _.assert( _.arrayHas( variant.peer.modules, variant.module.peerModule ) );
   }
@@ -1335,6 +1337,9 @@ function submodulesGet( o )
   if( o.withPeers )
   if( variant.peer )
   append( variant.peer );
+
+  if( _global_.EXPORTING )
+  debugger;
 
   return result;
 
@@ -1348,16 +1353,22 @@ function submodulesGet( o )
     {
       let relation = variant.module.submoduleMap[ s ];
 
-      if( !o.withDisabled )
-      if( !relation.enabled )
-      continue;
+      // if( !o.withDisabled )
+      // if( !relation.enabled )
+      // continue;
+      //
+      // if( !o.withEnabled )
+      // if( relation.enabled )
+      // continue;
 
-      if( !o.withEnabled )
-      if( relation.enabled )
-      continue;
+      let variant2 = variant.VariantOf( will, relation );
+      if( !variant2 )
+      variant2 = variant.From({ relation : relation, will : will });
+      _.assert( !!variant2 );
 
-      let variant2 = variant.From({ relation : relation, will : will });;
-      if( variant2 )
+      // if( !will.relationFit( variant2, o ) )
+      // continue;
+
       variantAppendMaybe( variant2 );
 
       if( !variant2.peer )
@@ -1381,12 +1392,15 @@ function submodulesGet( o )
   function variantAppendMaybe( variant )
   {
 
-    if( !o.withOut )
-    if( variant.isOut )
-    return;
+    // if( !o.withOut )
+    // if( variant.isOut )
+    // return;
+    //
+    // if( !o.withIn )
+    // if( !variant.isOut )
+    // return;
 
-    if( !o.withIn )
-    if( !variant.isOut )
+    if( !will.relationFit( variant, o ) )
     return;
 
     _.assert( variant instanceof _.Will.ModuleVariant );
@@ -1400,12 +1414,19 @@ function submodulesGet( o )
 
 submodulesGet.defaults =
 {
+
   withPeers : 1,
-  withOut : 1,
-  withIn : 1,
-  withEnabled : 1,
-  withDisabled : 0,
+  ... _.Will.RelationFilterDefaults,
+
 }
+
+// {
+//   withPeers : 1,
+//   withOut : 1,
+//   withIn : 1,
+//   withEnabled : 1,
+//   withDisabled : 0,
+// }
 
 // --
 // export
@@ -1485,6 +1506,16 @@ function dirPathGet()
   return path.detrail( path.dirFirst( variant.localPath ) );
 }
 
+//
+
+function enabledGet()
+{
+  let variant = this;
+  if( !variant.module )
+  return null;
+  return variant.module.about.enabled;
+}
+
 // --
 // relations
 // --
@@ -1562,7 +1593,8 @@ let Forbids =
 
 let Accessors =
 {
-  dirPath : { getter : dirPathGet, readOnly : 1 }
+  dirPath : { getter : dirPathGet, readOnly : 1 },
+  enabled : { getter : enabledGet, readOnly : 1 },
 }
 
 // --
@@ -1617,6 +1649,7 @@ let Extend =
 
   moduleSet,
   dirPathGet,
+  enabledGet,
 
   // relation
 

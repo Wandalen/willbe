@@ -2242,7 +2242,15 @@ function modulesEach_body( o )
   return will.modulesEach.body.call( will, o2 );
 }
 
-var defaults = modulesEach_body.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults, _.Will.prototype.moduleFit.defaults );
+var defaults = modulesEach_body.defaults = _.mapExtend
+(
+  null,
+  _.graph.AbstractNodesGroup.prototype.each.defaults,
+  _.Will.prototype.relationFit.defaults
+);
+
+defaults.withDisabledSubmodules = 0;
+defaults.withDisabledModules = 0;
 
 defaults.outputFormat = '*/module'; /* / | * / module | * / relation */
 defaults.onUp = null;
@@ -2364,13 +2372,11 @@ function modulesBuild_body( o )
     o2.recursive = 1;
     o2.recursive = 2; /* yyy */
     o2.strict = 0;
-    // debugger;
     return will.modulesDownload( o2 );
   })
 
   ready.then( () =>
   {
-    // debugger;
     if( !o.upforming || o.downloading )
     return null;
     let o2 = _.mapOnly( o, will.modulesUpform.defaults );
@@ -2387,6 +2393,7 @@ function modulesBuild_body( o )
     o2.onEach = handleEach;
     o2.modules = [ module ];
     o2.left = 0;
+    debugger;
     return will.modulesFor( o2 );
   })
 
@@ -2405,8 +2412,8 @@ function modulesBuild_body( o )
 
   function handleEach( record, op )
   {
-    // debugger;
     let o3 = _.mapOnly( o, module.moduleBuild.defaults );
+    debugger;
     if( !record.module )
     throw _.err( `${record.object.absoluteName} at ${record.object.localPath || record.object.remotePath} is not opened or invalid` );
     return record.module.moduleBuild( o3 );
@@ -2496,7 +2503,14 @@ function rootModuleSet( src )
 
   if( oldRootModule && src )
   {
-    let modules = module.modulesEach({ outputFormat : '/', withPeers : 1, withDisabled : 1, recursive : 2 });
+    let modules = module.modulesEach
+    ({
+      outputFormat : '/',
+      recursive : 2,
+      // withPeers : 1,
+      // withDisabled : 1,
+      ... _.Will.ModuleFilterOn,
+    });
     modules.forEach( ( record ) =>
     {
       let module2 = record.module || record.opener;
@@ -2651,20 +2665,18 @@ function submodulesAllAreDownloaded( o )
   let result = Object.create( null );
 
   o = _.routineOptions( submodulesAllAreDownloaded, arguments );
-  // _.assert( module === module.rootModule );
   _.assert( arguments.length === 0 );
 
-  // debugger;
+  debugger;
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.modulesEach( o2 );
-  // debugger;
+  debugger;
 
   return relations.every( ( relation ) =>
   {
     if( !relation.opener )
     return false;
-    // debugger;
     _.assert( _.boolLike( relation.opener.isDownloaded ) );
     return relation.opener.isDownloaded;
   });
@@ -5963,13 +5975,18 @@ function structureExportOut( o )
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
+  // debugger;
+  // _global_.EXPORTING = 1;
   let variants = module.modulesEach
   ({
     withPeers : 1,
     withStem : 1,
+    // withDisabled : 0,
+    withDisabledSubmodules : 0,
     recursive : 2,
     outputFormat : '/',
   });
+  // debugger;
 
   let modules = variants.map( ( variant ) =>
   {
@@ -6647,6 +6664,7 @@ let Forbids =
   picked : 'picked',
   pickedReady : 'pickedReady',
   superRelation : 'superRelation',
+  enabled : 'enabled',
 
 }
 

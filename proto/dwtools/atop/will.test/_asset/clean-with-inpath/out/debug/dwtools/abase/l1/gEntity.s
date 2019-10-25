@@ -88,15 +88,15 @@ function uncountableSize( src )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  if( _.primitiveIs( src ) )
-  return 8;
-
   if( _.strIs( src ) )
   {
     if( src.length )
     return _.bufferBytesFrom( src ).byteLength;
     return src.length;
   }
+
+  if( _.primitiveIs( src ) )
+  return 8;
 
   if( _.numberIs( src.byteLength ) )
   return src.byteLength;

@@ -317,7 +317,7 @@ function constructorJoin( test )
   var got = _.constructorJoin( Array, new U8x( [ 1, 2, 3, 4 ] ) );
   var expected = new got();
   test.is( _.routineIs( got ) );
-  test.identical( expected, [ 1, 2, 3, 4] );
+  test.identical( expected, [ 1, 2, 3, 4 ] );
   test.is( _.arrayIs( expected ) );
 
   if( !Config.debug )

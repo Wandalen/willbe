@@ -383,11 +383,6 @@ function entitySize( test )
   var expected = 3 ;
   test.identical( got, expected );
 
-// wrong because routine has this code
-// if( _.numberIs( src ) )
-// return 8;
-// so, expected should be 8
-
   test.case = 'atomic type';
   var got = _.entitySize( 6 );
   var expected = 8;
@@ -398,49 +393,15 @@ function entitySize( test )
   var expected = 10;
   test.identical( got, expected );
 
-// wrong because routine has code
-// if( _.longIs( src ) )
-// {
-//   let result = 0;
-//   for( let i = 0; i < src.length; i++ )
-//   {
-//     result += _.entitySize( src[ i ] );
-//     if( isNaN( result ) )
-//     break;
-//   }
-//   return result;
-// }
-// so, expected should be 3 * 8 = 24
-
   test.case = 'arraylike';
   var got = _.entitySize( [ 1, 2, 3 ] );
   var expected = 24;
   test.identical( got, expected );
 
-  // wrong because routine has code
-  // if( _.mapIs( src ) )
-  // {
-  //   let result = 0;
-  //   for( let k in src )
-  //   {
-  //     result += _.entitySize( k );
-  //     result += _.entitySize( src[ k ] );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
-  // so, expected should be 1 + 8 + 1 + 8 = 18
-
   test.case = 'object';
   var got = _.entitySize( { a : 1, b : 2 } );
   var expected = 18;
   test.identical( got, expected );
-
-  // wrong because routine has code
-  // if( !_.definedIs( src ) )
-  // return 8;
-  // so, expected should be 8
 
   test.case = 'empty call';
   var got = _.entitySize( undefined );

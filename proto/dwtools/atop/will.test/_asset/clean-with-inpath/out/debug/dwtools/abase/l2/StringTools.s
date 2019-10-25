@@ -3591,7 +3591,74 @@ function strJoinPath( srcs, joiner )
 
 //
 
-/* qqq : cover routine strConcat and extend it. ask how to */
+/**
+ * The routine strConcat() provides the concatenation of array elements
+ * into a string. Returned string can be formatted by using options in options map.
+ *
+ * @param { ArrayLike|* } srcs - ArrayLike container with elements or single element to make string.
+ * If {-srcs-} is not ArrayLike, routine converts to string provided value.
+ * @param { Object } o - Options map.
+ * @param { String } o.lineDelimter - The line delimeter. Default value is new line symbol '\n'.
+ * If string element of array has not delimeter in the end or next element has not delimeter in the begin, routine insert one space between this elements.
+ * @param { String } o.linePrefix - The prefix that adds to every line. Default value is empty string.
+ * @param { String } o.linePostfix - The postfix that adds to every line. Default value is empty string.
+ * @param { Object } o.optionsForToStr - The options for routine _.toStr that uses for convertion to string. Default value is null.
+ * @param { Routine } o.onToStr - The callback, which uses for convertion to string. Default value is null.
+ *
+ * @example
+ * _.strConcat( 'str' );
+ * // returns 'str '
+ *
+ * @example
+ * _.strConcat( 11 );
+ * // returns '11 '
+ *
+ * @example
+ * _.strConcat( { a : 'a' } );
+ * // returns '[object Object] '
+ *
+ * @example
+ * _.strConcat( [ 1, 2, 'str', [ 3, 4 ] ] );
+ * // returns '1 2 str 3,4 '
+ *
+ * @example
+ * let options =
+ * {
+ *   linePrefix : '** ',
+ *   linePostfix : ' **'
+ * };
+ * _.strConcat( [ 1, 2, 'str', [ 3, 4 ] ], options );
+ * // returns '** 1 2 str 3,4 **'
+ *
+ * @example
+ * let options =
+ * {
+ *   linePrefix : '** ',
+ *   linePostfix : ' **'
+ * };
+ * _.strConcat( [ 'a\n', 'b\n', 'c\n', 'd\n' ], options );
+ * // returns '** a **
+ *             ** b **
+ *             ** c **
+ *             ** d **'
+ *
+ * @example
+ * let onToStr = ( src ) => String( src ) + '*';
+ * let options = { onToStr : onToStr };
+ * _.strConcat( [ 'a', 'b', 'c', 'd' ], options );
+ * // returns 'a* b* c* d* '
+ *
+ * @returns { String } - Returns string, which is concatenated from {-srcs-}.
+ * @function strConcat
+ * @throws { Error } If arguments.length is less then one or more than two arguments.
+ * @throws { Error } If routine strConcat does not belong module Tools.
+ * @memberof wTools
+ */
+
+/*
+qqq : cover routine strConcat and extend it. ask how to
+Dmytro : routine covered and documented, not extended
+*/
 
 /*
   qqq : does not work properly, remove indentation, but should not
@@ -3603,6 +3670,8 @@ function strJoinPath( srcs, joiner )
   module::module-a
 `
 ]
+
+Dmytro : fixed, all comments below
 */
 
 function strConcat( srcs, o )
@@ -3615,7 +3684,7 @@ function strConcat( srcs, o )
   if( o.onToStr === null )
   o.onToStr = function onToStr( src, op )
   {
-    return _.toStr( src, op.optionsForToStr );
+    return _.toStr( src, op.optionsForToStr ); /* Dmytro : now optionsForToStr is not used in routine toStr */
   }
 
   let defaultOptionsForToStr =
@@ -3643,19 +3712,25 @@ function strConcat( srcs, o )
 
     src = o.onToStr( src, o );
 
-    result = result.replace( /\s*$/m, '' );
+    result = result.replace( /[^\S\n]\s*$/, '' ); /* Dmytro : this regExp remove not \n symbol in the end of string, only spaces */
+    // result = result.replace( /\s*$/m, '' );
 
     if( !result )
     {
       result = src;
     }
+    // else if( _.strEnds( result, o.lineDelimter ) || _.strBegins( src, o.lineDelimter ) )
+    // {
+    //   result = result + o.lineDelimter + src; /* Dmytro : if delimeter exists, it's not need  */
+    // }
     else if( _.strEnds( result, o.lineDelimter ) || _.strBegins( src, o.lineDelimter ) )
     {
-      result = result + o.lineDelimter + src;
+      result = result + src;
     }
     else
     {
-      result = result + ' ' + src.replace( /^\s+/m, '' );
+      result = result + ' ' + src.replace( /^\s+/, '' );
+      // result = result + ' ' + src.replace( /^\s+/m, '' ); /* Dmytro : flag 'm' - multiline, but no global, so routine replace first inclusion */
     }
 
   }

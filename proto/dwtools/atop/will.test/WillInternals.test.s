@@ -2224,7 +2224,7 @@ function exportSuper( test )
   ready
   .then( () =>
   {
-    test.case = 'export sub, first';
+    test.case = 'setup';
 
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
@@ -2232,7 +2232,7 @@ function exportSuper( test )
     _.fileProvider.filesDelete( abs( 'sub.out' ) );
 
     test.description = 'files';
-    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    var files = self.find( { filePath : { [ routinePath ] : '' } });
     var exp =
     [
       '.',
@@ -2245,6 +2245,16 @@ function exportSuper( test )
       './proto/File.release.js',
     ]
     test.identical( files, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = 'export sub, first';
 
     opener = will.openerMakeUser({ willfilesPath : subInPath });
 
@@ -4431,7 +4441,7 @@ function exportCourruptedSubmodulesDisabled( test )
     test.identical( commonPath, exp );
 
     test.case = 'modulesEach, withDisabled';
-    var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabled : 1 });
+    var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabledSubmodules : 1 });
     // var exp = [];
     var exp =
     [
@@ -4441,7 +4451,7 @@ function exportCourruptedSubmodulesDisabled( test )
     ];
     var localPath = _.filter( got, ( e ) => e.localPath );
     test.identical( localPath, abs( exp ) );
-    var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabled : 1 });
+    var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabledSubmodules : 1 });
     // var exp = [];
     var exp =
     [

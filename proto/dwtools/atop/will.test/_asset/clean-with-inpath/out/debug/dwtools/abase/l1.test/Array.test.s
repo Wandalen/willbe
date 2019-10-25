@@ -1,4 +1,4 @@
-( function _Long_test_s_( ) {
+( function _Long_test_s_() {
 
 'use strict';
 
@@ -2006,6 +2006,435 @@ function longButInplace( test )
 
 //
 
+function longBut_( test )
+{
+  var array = ( src ) => _.arrayMake( src );
+  var unroll = ( src ) => _.unrollMake( src );
+  var argumentsArray = ( src ) => _.argumentsArrayMake( src );
+
+  /* - */
+
+  var list =
+  [
+    array,
+    unroll,
+    argumentsArray
+  ];
+
+  /* - */
+
+  for( let i = 0; i < list.length; i++ )
+  {
+    test.open( list[ i ].name );
+    run( list[ i ] );
+    test.close( list[ i ].name );
+  }
+
+  /* - */
+
+  function run( make )
+  {
+    test.open( 'not inplace' );
+
+    test.case = 'range = number, not src';
+    var dst = make( [ 1, 2, 3, 4 ] );
+    var got = _.longBut_( dst, 2 );
+    var expected = [ 1, 2, 4 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range = negative number, not src';
+    var dst = make( [ 1, 2, 3, 4 ] );
+    var got = _.longBut_( dst, -1 );
+    var expected = [ 1, 2, 3, 4 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range = number, src';
+    var dst = make( [ 1, 2, 3, 4 ] );
+    var got = _.longBut_( dst, 0, [ 0 ] );
+    var expected = [ 0, 2, 3, 4 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range = number, empty src';
+    var dst = make( [ 1, 2, 3, 4 ] );
+    var src = [];
+    var got = _.longBut_( dst, 0, src );
+    var expected = [ 2, 3, 4 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range, empty src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [];
+    var got = _.longBut_( dst, [ 1, 3 ], src );
+    var expected = [ 1, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range, not src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longBut_( dst, [ 1, 3 ] );
+    var expected = [ 1, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range, src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_( dst, [ 1, 3 ], src );
+    var expected = [ 1, 11, 22, 33, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] == range[ 1 ], src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_( dst, [ 1, 1 ], src );
+    var expected = [ 1, 11, 22, 33, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] < 0, src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_( dst, [ -10, 2 ], src );
+    var expected = [ 11, 22, 33, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 1 ] > dst.length, src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_( dst, [ 3, 10 ], src );
+    var expected = [ 1, 2, 3, 11, 22, 33 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] < 0, range[ 1 ] > dst.length, src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_( dst, [ -10, 10 ], src );
+    var expected = [ 11, 22, 33 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] < 0, range[ 1 ] < 0, src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_( dst, [ -1, -1 ], src );
+    var expected = [ 11, 22, 33, 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] > range[ 1 ], src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var but = _.longBut_( dst, [ 9, 0 ], src );
+    var expected = [ 1, 2, 3, 4, 5, 11, 22, 33 ];
+    test.identical( but, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.close( 'not inplace' );
+
+    /* */
+
+    test.open( 'inplace' );
+
+    test.case = 'range = number, not src';
+    var dst = make( [ 1, 2, 3, 4 ] );
+    var got = _.longBut_( dst, dst, 2 );
+    var expected = [ 1, 2, 4 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'range = negative number, not src';
+    var dst = make( [ 1, 2, 3, 4 ] );
+    var got = _.longBut_( dst, dst, -1 );
+    var expected = make( [ 1, 2, 3, 4 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range = number, src';
+    var dst = make( [ 1, 2, 3, 4 ] );
+    var got = _.longBut_( dst, dst, 0, [ 0 ] );
+    var expected = [ 0, 2, 3, 4 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'range = number, empty src';
+    var dst = make( [ 1, 2, 3, 4 ] );
+    var src = [];
+    var got = _.longBut_( dst, dst, 0, src );
+    var expected = [ 2, 3, 4 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+    test.is( got !== src );
+
+    test.case = 'range, empty src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [];
+    var got = _.longBut_( dst, dst, [ 1, 3 ], src );
+    var expected = [ 1, 4, 5 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+    test.is( got !== src );
+
+    test.case = 'range, not src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longBut_( dst, dst, [ 1, 3 ] );
+    var expected = [ 1, 4, 5 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'range, src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_( dst, dst, [ 1, 3 ], src );
+    var expected = [ 1, 11, 22, 33, 4, 5 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] == range[ 1 ], src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_( dst, dst, [ 1, 1 ], src );
+    var expected = [ 1, 11, 22, 33, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] < 0, src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_( dst, dst, [ -10, 2 ], src );
+    var expected = [ 11, 22, 33, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 1 ] > dst.length, src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_(dst, dst, [ 3, 10 ], src );
+    var expected = [ 1, 2, 3, 11, 22, 33 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] < 0, range[ 1 ] > dst.length, src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_( dst, dst, [ -10, 10 ], src );
+    var expected = [ 11, 22, 33 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] < 0, range[ 1 ] < 0, src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_( dst, dst, [ -1, -1 ], src );
+    var expected = [ 11, 22, 33, 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] > range[ 1 ], src';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 11, 22, 33 ];
+    var got = _.longBut_( dst, dst, [ 9, 0 ], src );
+    var expected = [ 1, 2, 3, 4, 5, 11, 22, 33 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.close( 'inplace' );
+  }
+
+  /* Buffers */
+
+  var list =
+  [
+    I8x,
+    // U8x,
+    // U8ClampedX,
+    // I16x,
+    U16x,
+    // I32x,
+    // U32x,
+    F32x,
+    F64x,
+  ];
+
+
+  for( var i = 0; i < list.length; i++ )
+  {
+    test.open( list[ i ].name );
+    run2( list[ i ] );
+    test.close( list[ i ].name );
+  }
+
+  function run2( list )
+  {
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var src = [ 6, 7 ]
+
+    test.open( 'not inplace' );
+
+    test.case = 'range = number, not src';
+    var got = _.longBut_( dst, 0 );
+    var expected = _.longMake( list, [ 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range = number, src';
+    var got = _.longBut_( dst, 4, src );
+    var expected = _.longMake( list, [ 1, 2, 3, 4, 6, 7 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range = number, range > dst.length, src';
+    var got = _.longBut_( dst, 10, src );
+    var expected = _.longMake( list, [ 1, 2, 3, 4, 5, 6, 7 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] > 0, range[ 1 ] < dst.length';
+    var got = _.longBut_( dst, [ 2, 5 ] );
+    var expected = _.longMake( list, [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range[ 0 ] > 0, range[ 1 ] < dst.length, src';
+    var got = _.longBut_( dst, [ 4, 5 ], src );
+    var expected = _.longMake( list, [ 1, 2, 3, 4, 6, 7 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] = 0, range[ 1 ] < 0, not src';
+    var got = _.longBut_( dst, [ 0, -1 ] );
+    var expected = _.longMake( list, [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range[ 0 ] < 0, range[ 1 ] < 0, not src';
+    var got = _.longBut_( dst, [ -1, -1 ] );
+    var expected = _.longMake( list, [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range[ 0 ] === range[ 1 ], src';
+    var got = _.longBut_( dst, [ 0, 0 ], src );
+    var expected = _.longMake( list, [ 6, 7, 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] = 0, range[ 1 ] > dst.length, not src';
+    var got = _.longBut_( dst, [ 0, 99 ] );
+    var expected = _.longMake( list, [] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range[ 0 ] = 0, range[ 1 ] > dst.length, src';
+    var got = _.longBut_( dst, [ 0, 99 ], src );
+    var expected = _.longMake( list, [ 6, 7 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] > range[ 1 ], src';
+    var got = _.longBut_( dst, [ 10, 0 ], src );
+    var expected = _.longMake( list, [ 1, 2, 3, 4, 5, 6, 7 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src );
+
+    /* */
+
+    test.case = 'range[ 0 ] = 0, range[ 1 ] > dst.length, not src';
+    var src1 = new U8x( [ 1, 2 ] );
+    var got = _.longBut_( src1, dst, [ 0, 99 ] );
+    var expected = new U8x();
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src1 );
+
+    test.case = 'range[ 0 ] > range[ 1 ], src';
+    var src1 = new U8x( [ 1, 2 ] );
+    var got = _.longBut_( src1, dst, [ 10, 0 ], src );
+    var expected = new U8x( [ 1, 2, 3, 4, 5, 6, 7 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got !== src1 );
+
+    test.case = 'range[ 0 ] = 0, range[ 1 ] > dst.length, src';
+    var src1 = [ 1, 2 ];
+    var got = _.longBut_( src1, dst, [ 0, 99 ], src );
+    var expected = [ 6, 7 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got === src1 );
+
+    test.close( 'not inplace' );
+
+    /* - */
+
+    test.open( 'inplace' );
+
+    test.case = 'range[ 0 ] = 0, range[ 1 ] < 0, not src';
+    var got = _.longBut_( dst, dst, [ 0, -1 ] );
+    var expected = _.longMake( list, [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range[ 0 ] < 0, range[ 1 ] < 0, not src';
+    var got = _.longBut_( dst, dst, [ -1, -1 ] );
+    var expected = _.longMake( list, [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.close( 'inplace' );
+  }
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.longBut_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.longBut_( [ 1, 'a', 'b', 'c', 5 ], [ 2, 3, 4 ], 1, 3, 'redundant argument' ) );
+
+  test.case = 'wrong type of arguments';
+  test.shouldThrowErrorSync( () => _.longBut_( 'wrong argument', 'wrong argument', 'wrong argument' ) );
+  test.shouldThrowErrorSync( () => _.longBut_( [], 2, '3' ) );
+
+  test.case = 'wrong range';
+  test.shouldThrowErrorSync( () => _.longBut_( [ 1, 2, 3, 4 ], [ 1 ], [ 5 ] ) );
+  test.shouldThrowErrorSync( () => _.longBut_( [ 1, 2, 3, 4 ], [ undefined, 1 ], [ 5 ] ) );
+  test.shouldThrowErrorSync( () => _.longBut_( [ 1, 2, 3, 4 ], [], [] ) );
+
+}
+
+//
+
 function longSelect( test )
 {
   /* resizable longs */
@@ -2584,6 +3013,342 @@ function longSelectInplace( test )
   test.shouldThrowErrorSync( () => _.longSelectInplace( [ 1 ], [ 1 ] ) );
   test.shouldThrowErrorSync( () => _.longSelectInplace( [ 1 ], 'str' ) );
 
+}
+
+//
+
+function longSelect_( test )
+{
+  /* resizable longs */
+
+  var array = ( src ) => _.arrayMake( src );
+  var unroll = ( src ) => _.unrollMake( src );
+  var argumentsArray = ( src ) => _.argumentsArrayMake( src );
+
+  /* list */
+
+  var list =
+  [
+    array,
+    unroll,
+    argumentsArray
+  ];
+
+  /* tests */
+
+  for( let i = 0; i < list.length; i++ )
+  {
+    test.open( list[ i ].name );
+    run( list[ i ] );
+    test.close( list[ i ].name );
+  }
+
+  /* - */
+
+  function run( make )
+  {
+    test.open( 'not inplace' );
+
+    test.case = 'only dst';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ 0, dst.length + 2 ] );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ 0, dst.length + 2 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ dst.length - 1, dst.length * 2 ], 0 );
+    var expected = [ 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range < dst.length';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ 0, 3 ] );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range < dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ 0, 3 ], 0 );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    got = _.longSelect_( dst, [ -1, 3 ] );
+    expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'l < 0, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ 0, -1 ] );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ -1, 3 ], 0 );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.close( 'not inplace' );
+
+    /* - */
+
+    test.open( 'inplace' );
+
+    test.case = 'only dst';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, dst );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range > dst.length, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, dst, [ 0, dst.length + 2 ] );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, dst, [ 0, dst.length + 2 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, dst, [ dst.length - 1, dst.length * 2 ], 0 );
+    var expected = [ 5 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'range < dst.length';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, dst, [ 0, 3 ] );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'range < dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, dst, [ 0, 3 ], 0 );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'f < 0, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    got = _.longSelect_( dst, dst, [ -1, 3 ] );
+    expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'l < 0, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, dst, [ 0, -1 ] );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'f < 0, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, dst, [ -1, 3 ], 0 );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.close( 'inplace' );
+  }
+
+  /* - */
+
+  var list =
+  [
+    I8x,
+    // U8x,
+    // U8ClampedX,
+    // I16x,
+    U16x,
+    // I32x,
+    // U32x,
+    F32x,
+    F64x,
+  ];
+
+  for( var i = 0; i < list.length; i++ )
+  {
+    test.open( list[ i ].name );
+    run2( list[ i ] );
+    test.close( list[ i ].name );
+  }
+
+  function run2( list )
+  {
+    test.open( 'not inplace' );
+
+    test.case = 'only dst';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ 0, dst.length + 2 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ 0, dst.length + 2 ], 0 );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ dst.length - 1, dst.length * 2 ], 0 );
+    var expected = new list( [ 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range < dst.length';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ 0, 3 ] );
+    var expected = new list( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range < dst.length, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ 0, 3 ], 0 );
+    var expected = new list( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    got = _.longSelect_( dst, [ -1, 3 ] );
+    expected = new list( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'l < 0, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ 0, -1 ] );
+    var expected = new list();
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, [ -1, 3 ], 0 );
+    var expected = new list( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    /* */
+
+    test.case = 'f < 0, not a val';
+    var src = [];
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    got = _.longSelect_( src, dst, [ -1, 3 ] );
+    expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got === src );
+
+    test.case = 'l < 0, not a val';
+    var src = [ 1, 2, 3 ];
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( src, dst, [ 0, -1 ] );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got === src );
+
+    test.case = 'f < 0, val = number';
+    var src = [ { a : 1 } ];
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( src, dst, [ -1, 3 ], 0 );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got === src );
+
+    test.close( 'not inplace' );
+
+    /* - */
+
+    test.open( 'inplace' );
+
+    test.case = 'only dst';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, dst );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range > dst.length, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, dst, [ 0, dst.length + 2 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longSelect_( dst, dst, [ 0, dst.length + 2 ], 0 );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.close( 'inplace' );
+  }
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.longSelect_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.longSelect_( [ 1 ], [ 1, 4 ], '5', 1 ) );
+
+  test.case = 'array is not long';
+  test.shouldThrowErrorSync( () => _.longSelect_( 1, [ 0, 1 ] ) );
+  test.shouldThrowErrorSync( () => _.longSelect_( new ArrayBuffer( 4 ), [ 0, 5 ] ) );
+
+  test.case = 'not a range';
+  test.shouldThrowErrorSync( () => _.longSelect_( [ 1 ], 'str' ) );
 }
 
 //
@@ -3167,6 +3932,363 @@ function longGrowInplace( test )
 
 //
 
+function longGrow_( test )
+{
+  var array = ( src ) => _.arrayMake( src );
+  var unroll = ( src ) => _.unrollMake( src );
+  var argumentsArray = ( src ) => _.argumentsArrayMake( src );
+
+  /* list */
+
+  var list =
+  [
+    array,
+    unroll,
+    argumentsArray
+  ];
+
+  /* - */
+
+  for( let i = 0; i < list.length; i++ )
+  {
+    test.open( list[ i ].name );
+    run( list[ i ] );
+    test.close( list[ i ].name );
+  }
+
+  /* - */
+
+  function run( make )
+  {
+    test.open( 'not inplace' );
+
+    test.case = 'only dst';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ 0, 7 ] );
+    var expected = [ 1, 2, 3, 4, 5, undefined, undefined ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ 0, 7 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5, 0, 0 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ 4, 10 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5, 0, 0, 0, 0, 0 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range < dst.length';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ 0, 3 ] );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range < dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ 0, 3 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ -1, 3 ] );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'l < 0, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ 0, -1 ] );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ -1, 3 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.close( 'not inplace' );
+
+    /* - */
+
+    test.open( 'inplace' );
+
+    test.case = 'only dst';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range > dst.length, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ 0, dst.length + 2 ] );
+    var expected = [ 1, 2, 3, 4, 5, undefined, undefined ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ 0, dst.length + 2 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5, 0, 0 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ dst.length - 1, dst.length * 2 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5, 0, 0, 0, 0, 0 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'range < dst.length';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ 0, 3 ] );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range < dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ 0, 3 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'f < 0, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ -1, 3 ] );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'l < 0, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ 0, -1 ] );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'f < 0, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ -1, 3 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.close( 'inplace' );
+  }
+
+  /* - */
+
+  var list =
+  [
+    I8x,
+    // U8x,
+    // U8ClampedX,
+    // I16x,
+    U16x,
+    // I32x,
+    // U32x,
+    F32x,
+    F64x,
+  ];
+
+  for( var i = 0; i < list.length; i++ )
+  {
+    test.open( list[ i ].name );
+    run2( list[ i ] );
+    test.close( list[ i ].name );
+  }
+
+  function run2( list )
+  {
+    test.open( 'not inplace' );
+
+    test.case = 'only dst';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ 0, dst.length + 2 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5, 0, 0 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ 0, dst.length + 2 ], 0 );
+    var expected = new list( [ 1, 2, 3, 4, 5, 0, 0 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ dst.length - 1, dst.length * 2 ], 0 );
+    var expected = new list( [ 1, 2, 3, 4, 5, 0, 0, 0, 0, 0 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range < dst.length';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ 0, 3 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range < dst.length, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ 0, 3 ], 0 );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ -1, 3 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'l < 0, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ 0, -1 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, [ -1, 3 ], 0 );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    /* */
+
+    test.case = 'f < 0, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( null, dst, [ -1, 3 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'l < 0, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( null, dst, [ 0, -1 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( null, dst, [ -1, 3 ], 0 );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.close( 'not inplace' );
+
+    /* - */
+
+    test.open( 'inplace' );
+
+    test.case = 'only dst';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range[ 1 ] === dst.length, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ 0, dst.length ] );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range < dst.length';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ 0, 3 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range < dst.length, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ 0, 3 ], 0 );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range[ 0 ] < 0, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ -1, 3 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range[ 1 ] < 0, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ 0, -1 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range[ 0 ] < 0, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longGrow_( dst, dst, [ -1, 3 ], 0 );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.close( 'inplace' );
+  }
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.longGrow_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.longGrow_( [ 1 ], [ 1, 4 ], '5', 1 ) );
+
+  test.case = 'array is not long';
+  test.shouldThrowErrorSync( () => _.longGrow_( 1, [ 0, 1 ] ) );
+  test.shouldThrowErrorSync( () => _.longGrow_( new ArrayBuffer( 4 ), [ 0, 5 ] ) );
+
+  test.case = 'not a range';
+  test.shouldThrowErrorSync( () => _.longGrow_( [ 1 ], 'str' ) );
+
+}
+
+//
+
 function longRelength( test )
 {
   var array = ( src ) => _.arrayMake( src );
@@ -3337,19 +4459,14 @@ function longRelength( test )
   var list =
   [
     I8x,
-    U16x,
-    F32x,
-    F64x,
-
-    // I8x,
     // U8x,
     // U8ClampedX,
     // I16x,
-    // U16x,
+    U16x,
     // I32x,
     // U32x,
-    // F32x,
-    // F64x,
+    F32x,
+    F64x,
   ];
 
   for( var i = 0; i < list.length; i++ )
@@ -3744,6 +4861,348 @@ function longRelengthInplace( test )
   test.case = 'not a range';
   test.shouldThrowErrorSync( () => _.longRelengthInplace( [ 1 ], [ 1 ] ) );
   test.shouldThrowErrorSync( () => _.longRelengthInplace( [ 1 ], 'str' ) );
+
+}
+
+//
+
+function longRelength_( test )
+{
+  var array = ( src ) => _.arrayMake( src );
+  var unroll = ( src ) => _.unrollMake( src );
+  var argumentsArray = ( src ) => _.argumentsArrayMake( src );
+
+  /* list */
+
+  var list =
+  [
+    array,
+    unroll,
+    argumentsArray
+  ]
+
+  /* - */
+
+  for( let i = 0; i < list.length; i++ )
+  {
+    test.open( list[ i ].name );
+    run( list[ i ] );
+    test.close( list[ i ].name );
+  }
+
+  /* - */
+
+  function run( make )
+  {
+    test.open( 'not inplace' );
+
+    test.case = 'only dst';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ 0, dst.length + 2 ] );
+    var expected = [ 1, 2, 3, 4, 5, undefined, undefined ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ 0, dst.length + 2 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5, 0, 0 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ dst.length - 1, dst.length * 2 ], 0 );
+    var expected = [ 5, 0, 0, 0, 0, 0 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range < dst.length';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ 0, 3 ] );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range < dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ 0, 3 ], 0 );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ -1, 3 ] );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'l < 0, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ 0, -1 ] );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ -1, 3 ], 0 );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.close( 'not inplace' );
+
+    /* - */
+
+    test.open( 'inplace' );
+
+    test.case = 'only dst';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, dst );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range > dst.length, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, dst, [ 0, dst.length + 2 ] );
+    var expected = [ 1, 2, 3, 4, 5, undefined, undefined ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, dst, [ 0, dst.length + 2 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5, 0, 0 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, dst, [ dst.length - 1, dst.length * 2 ], 0 );
+    var expected = [ 5, 0, 0, 0, 0, 0 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'range < dst.length';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, dst, [ 0, 3 ] );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'range < dst.length, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, dst, [ 0, 3 ], 0 );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'f < 0, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, dst, [ -1, 3 ] );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'l < 0, not a val';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, dst, [ 0, -1 ] );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.case = 'f < 0, val = number';
+    var dst = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, dst, [ -1, 3 ], 0 );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( _.argumentsArrayIs( dst ) ? got !== dst : got === dst );
+
+    test.close( 'inplace' );
+  }
+
+  /* - */
+
+  var list =
+  [
+    I8x,
+    // U8x,
+    // U8ClampedX,
+    // I16x,
+    U16x,
+    // I32x,
+    // U32x,
+    F32x,
+    F64x,
+  ];
+
+  for( var i = 0; i < list.length; i++ )
+  {
+    test.open( list[ i ].name );
+    run2( list[ i ] );
+    test.close( list[ i ].name );
+  }
+
+  function run2( list )
+  {
+    test.open( 'not inplace' );
+
+    test.case = 'only dst';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ 0, dst.length + 2 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5, 0, 0 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ 0, dst.length + 2 ], 0 );
+    var expected = new list( [ 1, 2, 3, 4, 5, 0, 0 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range > dst.length, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ dst.length - 1, dst.length * 2 ], 0 );
+    var expected = new list( [ 5, 0, 0, 0, 0, 0 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range < dst.length';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ 0, 3 ] );
+    var expected = new list( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'range < dst.length, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ 0, 3 ], 0 );
+    var expected = new list( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ -1, 3 ] );
+    var expected = new list( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'l < 0, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ 0, -1 ] );
+    var expected = new list();
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, [ -1, 3 ], 0 );
+    var expected = new list( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    /* */
+
+    test.case = 'range < dst.length, val = number';
+    var src = [ 0, 0, 0, 0 ];
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( src, dst, [ 0, 3 ], 0 );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got === src );
+
+    test.case = 'f < 0, not a val';
+    var src = [ 0, 1, 0, 1 ];
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( src, dst, [ -1, 3 ] );
+    var expected = [ 1, 2, 3 ];
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got === src );
+
+    test.case = 'l < 0, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( null, dst, [ 0, -1 ] );
+    var expected = new list();
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, val = number';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( null, dst, [ -1, 3 ], 0 );
+    var expected = new list( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'f < 0, val = number';
+    var src = new U8x( [ 0, 1, 0, 1, 0 ] );
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( src, dst, [ 0, 5 ], 0 );
+    var expected = new U8x( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== dst );
+    test.is( got === src );
+
+    test.close( 'not inplace' );
+
+    /* - */
+
+    test.open( 'inplace' );
+
+    test.case = 'only dst';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, dst );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'range === dst.length, not a val';
+    var dst = new list( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longRelength_( dst, dst, [ 0, 5 ] );
+    var expected = new list( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.close( 'inplace' );
+  }
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.longRelength_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.longRelength_( [ 1 ], [ 1, 4 ], '5', 1 ) );
+
+  test.case = 'array is not long';
+  test.shouldThrowErrorSync( () => _.longRelength_( 1, [ 0, 1 ] ) );
+  test.shouldThrowErrorSync( () => _.longRelength_( new ArrayBuffer( 4 ), [ 0, 5 ] ) );
+
+  test.case = 'not a range';
+  test.shouldThrowErrorSync( () => _.longRelength_( [ 1 ], 'str' ) );
 
 }
 
@@ -4859,203 +6318,138 @@ function longPut( test )
 
 function longFill( test )
 {
-  /* Array */
+  /* constructors */
 
-  test.case = 'dst = empty array';
-  var got = _.longFill( [] );
-  var expected = [];
-  test.identical( got, expected );
+  var array = ( src ) => _.arrayMake( src );
+  var unroll = ( src ) => _.unrollMake( src );
+  var argumentsArray = ( src ) => src === null ? _.argumentsArrayMake( [] ) : _.argumentsArrayMake( src );
+  var bufferTyped = function( buf )
+  {
+    let name = buf.name;
+    return { [ name ] : function( src ){ return new buf( src ) } } [ name ];
+  };
 
-  test.case = 'dst = empty array, value = number';
-  var got = _.longFill( [], 1 );
-  var expected = [];
-  test.identical( got, expected );
+  /* lists */
 
-  test.case = 'dst = empty array, value = number, range';
-  var got = _.longFill( [], 1, [ 0, 3 ] );
-  var expected = [ 1, 1, 1 ];
-  test.identical( got, expected );
+  var listTyped =
+  [
+    I8x,
+    // U8x,
+    // U8ClampedX,
+    // I16x,
+    U16x,
+    // I32x,
+    // U32x,
+    F32x,
+    F64x,
+  ];
+  var listDst =
+  [
+    array,
+    unroll,
+    argumentsArray,
+  ];
 
-  test.case = 'dst = empty array, value = number, left range < 0';
-  var got = _.longFill( [], 1, [ -2, 3 ] );
-  var expected = [ 1, 1, 1, 1, 1 ];
-  test.identical( got, expected );
+  for( let i in listTyped )
+  listDst.push( bufferTyped( listTyped[ i ] ) );
 
-  test.case = 'dst = array';
-  var got = _.longFill( [ 1, 1, 1 ] );
-  var expected = [ 0, 0, 0 ];
-  test.identical( got, expected );
+  /* dstLong - null */
 
-  test.case = 'dst = array, value = string';
-  var got = _.longFill( [ 1, 1, 1 ], '5' );
-  var expected = [ '5', '5', '5' ];
-  test.identical( got, expected );
+  for( let d in listDst )
+  {
+    test.open( '' + listDst[ d ].name );
+    run( listDst[ d ] );
+    test.close( '' + listDst[ d ].name );
+  }
 
-  test.case = 'dst = array, value = string, range';
-  var got = _.longFill( [ 1, 1, 1 ], '5', [ 0, 2 ] );
-  var expected = [ '5', '5', 1 ];
-  test.identical( got, expected );
+  /* - */
+  function run( makeDst )
+  {
+    var sameIs = ( got, dst ) => _.arrayIs( dst ) ? got === dst : got !== dst;
+    test.case = 'empty container, no value, no range';
+    var dst = makeDst( [] );
+    var got = _.longFill( dst );
+    var expected = makeDst( [] );
+    test.is( got === dst );
+    test.identical( got, expected );
 
-  test.case = 'dst = array, value = string, range';
-  var got = _.longFill( [ 1, 1, 1 ], '5', [ -2, 2 ] );
-  var expected = [ '5', '5', '5', '5' ];
-  test.identical( got, expected );
+    test.case = 'dst - empty container, value';
+    var dst = makeDst( [] );
+    var got = _.longFill( dst, 1 );
+    var expected = makeDst( [] );
+    test.is( got === dst );
+    test.identical( got, expected );
 
-  test.case = 'dst = array by constructor, value = map';
-  var dst = new Array( 3 );
-  var got = _.longFill( dst, { a : 1 } );
-  var expected = [ { a : 1 }, { a : 1 }, { a : 1 } ];
-  test.identical( got, expected );
+    test.case = 'dst = empty container, value, range[ 1 ] > dst.length';
+    var dst = makeDst( [] );
+    var got = _.longFill( dst, 1, [ 0, 3 ] );
+    var expected = _.argumentsArrayIs( dst ) ? [ 1, 1, 1 ] : makeDst( [ 1, 1, 1 ] );
+    test.is( sameIs( got, dst ) );
+    test.identical( got, expected );
 
-  /* Unroll */
+    test.case = 'dst = empty container, value, range[ 0 ] < 0, range[ 1 ] > dst.length';
+    var dst = makeDst( [] );
+    var got = _.longFill( dst, 1, [ -2, 3 ] );
+    var expected = _.argumentsArrayIs( dst ) ? [ 1, 1, 1, 1, 1 ] : makeDst( [ 1, 1, 1, 1, 1 ] );
+    test.is( sameIs( got, dst ) );
+    test.identical( got, expected );
 
-  test.case = 'dst = empty unroll';
-  var got = _.longFill( _.unrollMake( [] ) );
-  var expected = [];
-  test.identical( got, expected );
-  test.is( _.unrollIs( got ) );
+    test.case = 'dst = empty container, value, range[ 1 ] < range[ 0 ]';
+    var dst = makeDst( [] );
+    var got = _.longFill( dst, 1, [ 0, -2 ] );
+    var expected = makeDst( [] );
+    test.is( got === dst );
+    test.identical( got, expected );
 
-  test.case = 'dst = empty unroll, value = number';
-  var got = _.longFill( _.unrollMake( [] ), 1 );
-  var expected = [];
-  test.identical( got, expected );
-  test.is( _.unrollIs( got ) );
+    test.case = 'dst = not empty container, no value, no range';
+    var dst = makeDst( [ 1, 1, 1 ] );
+    var got = _.longFill( dst );
+    var expected = makeDst( [ 0, 0, 0 ] );
+    test.is( got === dst );
+    test.identical( got, expected );
 
-  test.case = 'dst = empty unroll, value = number, range';
-  var got = _.longFill( _.unrollMake( [] ), 1, [ 0, 3 ] );
-  var expected = [ 1, 1, 1 ];
-  test.identical( got, expected );
-  test.is( _.unrollIs( got ) );
+    test.case = 'dst = not empty container, value';
+    var dst = makeDst( [ 1, 1, 1 ] );
+    var got = _.longFill( dst, 3 );
+    var expected = makeDst( [ 3, 3, 3 ] );
+    test.is( got === dst );
+    test.identical( got, expected );
 
-  test.case = 'dst = empty unroll, value = number, left range < 0';
-  var got = _.longFill( _.unrollMake( [] ), 1, [ -2, 3 ] );
-  var expected = [ 1, 1, 1, 1, 1 ];
-  test.identical( got, expected );
-  test.is( _.unrollIs( got ) );
+    test.case = 'dst - not empty container, value, range - number';
+    var dst = makeDst( [ 1, 1, 1 ] );
+    var got = _.longFill( dst, 2, 4 );
+    var expected = _.argumentsArrayIs( dst ) ? [ 2, 2, 2, 2 ] : makeDst( [ 2, 2, 2, 2 ] );
+    test.is( sameIs( got, dst ) );
+    test.identical( got, expected );
 
-  test.case = 'dst = unroll';
-  var got = _.longFill( _.unrollMake( [ 1, 2, 'str' ] ) );
-  var expected = [ 0, 0, 0 ];
-  test.identical( got, expected );
-  test.is( _.unrollIs( got ) );
+    test.case = 'dst = not empty container, value, range';
+    var dst = makeDst( [ 1, 1, 1 ] );
+    var got = _.longFill( dst, 4, [ 1, 2 ] );
+    var expected = makeDst( [ 1, 4, 1 ] );
+    test.is( got === dst );
+    test.identical( got, expected );
 
-  test.case = 'dst = unroll, value = string';
-  var got = _.longFill( _.unrollMake( [ 1, 1, 1 ] ), '5' );
-  var expected = [ '5', '5', '5' ];
-  test.identical( got, expected );
-  test.is( _.unrollIs( got ) );
+    test.case = 'dst - not empty container, value, range[ 0 ] < 0';
+    var dst = makeDst( [ 1, 1, 1 ] );
+    var got = _.longFill( dst, 2, [ -2, 2 ] );
+    var expected = _.argumentsArrayIs( dst ) ? [ 2, 2, 2, 2 ] : makeDst( [ 2, 2, 2, 2 ] );
+    test.is( sameIs( got, dst ) );
+    test.identical( got, expected );
 
-  test.case = 'dst = unroll, value = string, range';
-  var got = _.longFill( _.unrollMake( [ 1, 1, 1 ] ), '5', [ 0, 2 ] );
-  var expected = [ '5', '5', 1 ];
-  test.identical( got, expected );
-  test.is( _.unrollIs( got ) );
+    test.case = 'dst - not empty container, value, range[ 1 ] > dst.length';
+    var dst = makeDst( [ 1, 1, 1 ] );
+    var got = _.longFill( dst, 2, [ 0, 4 ] );
+    var expected = _.argumentsArrayIs( dst ) ? [ 2, 2, 2, 2 ] : makeDst( [ 2, 2, 2, 2 ] );
+    test.is( sameIs( got, dst ) );
+    test.identical( got, expected );
 
-  test.case = 'dst = unroll, value = string, range';
-  var got = _.longFill( _.unrollMake( [ 1, 1, 1 ] ), '5', [ -2, 2 ] );
-  var expected = [ '5', '5', '5', '5' ];
-  test.identical( got, expected );
-  test.is( _.unrollIs( got ) );
-
-  /* ArgumentsArray */
-
-  test.case = 'dst = empty argumentsArray';
-  var got = _.longFill( _.argumentsArrayMake( [] ) );
-  var expected = [];
-  test.equivalent( got, expected );
-  test.is( _.argumentsArrayIs( got ) );
-
-  test.case = 'dst = empty argumentsArray, value = number';
-  var got = _.longFill( _.argumentsArrayMake( [] ), 1 );
-  var expected = [];
-  test.equivalent( got, expected );
-  test.is( _.argumentsArrayIs( got ) );
-
-  test.case = 'dst = empty argumentsArray, value = number, range';
-  var got = _.longFill( _.argumentsArrayMake( [] ), 1, [ 0, 3 ] );
-  var expected = [ 1, 1, 1 ];
-  test.equivalent( got, expected );
-  test.is( !_.argumentsArrayIs( got ) );
-
-  test.case = 'dst = empty argumentsArray, value = number, left range < 0';
-  var got = _.longFill( _.argumentsArrayMake( [] ), 1, [ -2, 3 ] );
-  var expected = [ 1, 1, 1, 1, 1 ];
-  test.equivalent( got, expected );
-  test.is( !_.argumentsArrayIs( got ) );
-
-  test.case = 'dst = argumentsArray';
-  var got = _.longFill( _.argumentsArrayMake( [ 1, 2, 'str' ] ) );
-  var expected = [ 0, 0, 0 ];
-  test.equivalent( got, expected );
-  test.is( _.argumentsArrayIs( got ) );
-
-  test.case = 'dst = argumentsArray, value = string';
-  var got = _.longFill( _.argumentsArrayMake( [ 1, 1, 1 ] ), '5' );
-  var expected = [ '5', '5', '5' ];
-  test.equivalent( got, expected );
-  test.is( _.argumentsArrayIs( got ) );
-
-  test.case = 'dst = argumentsArray, value = string, range';
-  var got = _.longFill( _.argumentsArrayMake( [ 1, 1, 1 ] ), '5', [ 0, 2 ] );
-  var expected = [ '5', '5', 1 ];
-  test.equivalent( got, expected );
-  test.is( _.argumentsArrayIs( got ) );
-
-  test.case = 'dst = argumentsArray, value = string, range';
-  var got = _.longFill( _.argumentsArrayMake( [ 1, 1, 1 ] ), '5', [ -2, 2 ] );
-  var expected = [ '5', '5', '5', '5' ];
-  test.equivalent( got, expected );
-  test.is( !_.argumentsArrayIs( got ) );
-
-  /* BufferTyped */
-
-  test.case = 'dst = empty typedArray';
-  var got = _.longFill( new U8x( [] ) );
-  var expected = new U8x();
-  test.identical( got, expected );
-  test.is( _.bufferTypedIs( got ) );
-
-  test.case = 'dst = empty typedArray, value = number';
-  var got = _.longFill( new I16x( [] ), 1 );
-  var expected = new I16x();
-  test.identical( got, expected );
-  test.is( _.bufferTypedIs( got ) );
-
-  test.case = 'dst = empty typedArray, value = number, range';
-  var got = _.longFill( new F32x( [] ), 1, [ 0, 3 ] );
-  var expected = new F32x( [ 1, 1, 1 ] );
-  test.identical( got, expected );
-  test.is( _.bufferTypedIs( got ) );
-
-  test.case = 'dst = empty typedArray, value = number, left range < 0';
-  var got = _.longFill( new F64x( [] ), 1, [ -2, 3 ] );
-  var expected = new F64x( [ 1, 1, 1, 1, 1 ] );
-  test.identical( got, expected );
-  test.is( _.bufferTypedIs( got ) );
-
-  test.case = 'dst = typedArray';
-  var got = _.longFill( new I8x( [ 1, 2, 3 ] ) );
-  var expected = new I8x( 3 );
-  test.identical( got, expected );
-  test.is( _.bufferTypedIs( got ) );
-
-  test.case = 'dst = typedArray, value = string';
-  var got = _.longFill( new U16x( [ 1, 1, 1 ] ), 5 );
-  var expected = new U16x( [ 5, 5, 5 ] );
-  test.identical( got, expected );
-  test.is( _.bufferTypedIs( got ) );
-
-  test.case = 'dst = typedArray, value = string, range';
-  var got = _.longFill( new U32x( [ 1, 1, 1 ] ), 5, [ 0, 2 ] );
-  var expected = new U32x( [ 5, 5, 1 ] );
-  test.identical( got, expected );
-  test.is( _.bufferTypedIs( got ) );
-
-  test.case = 'dst = typedArray, value = string, range';
-  var got = _.longFill( new Fx( [ 1, 1, 1 ] ), 5, [ -2, 2 ] );
-  var expected = new Fx( [ 5, 5, 5, 5 ] );
-  test.identical( got, expected );
-  test.is( _.bufferTypedIs( got ) );
+    test.case = 'dst - not empty container, value, range[ 1 ] < range[ 0 ]';
+    var dst = makeDst( [ 1, 1, 1 ] );
+    var got = _.longFill( dst, 2, [ 2, 1 ] );
+    var expected = makeDst( [ 1, 1, 1 ] );
+    test.is( got === dst );
+    test.identical( got, expected );
+  }
 
   /* - */
 
@@ -5074,8 +6468,7 @@ function longFill( test )
   test.case = 'wrong argument type';
   test.shouldThrowErrorSync( () => _.longFill( new BufferRaw(), 1 ) );
   test.shouldThrowErrorSync( () => _.longFill( BufferNode.alloc( 10 ), 1 ) );
-
-};
+}
 
 //
 
@@ -5181,6 +6574,163 @@ function longExtendScreening( test )
   });
 
 };
+
+//
+
+function longSort( test )
+{
+  /* constructors */
+
+  var array = ( src ) => _.arrayMake( src );
+  var unroll = ( src ) => _.unrollMake( src );
+  var argumentsArray = ( src ) => src === null ? _.argumentsArrayMake( [] ) : _.argumentsArrayMake( src );
+  var bufferTyped = function( buf )
+  {
+    let name = buf.name;
+    return { [ name ] : function( src ){ return new buf( src ) } } [ name ];
+  };
+
+  /* lists */
+
+  var listTyped =
+  [
+    I8x,
+    // U8x,
+    // U8ClampedX,
+    // I16x,
+    U16x,
+    // I32x,
+    // U32x,
+    F32x,
+    F64x,
+  ];
+  var listDst =
+  [
+    array,
+    unroll,
+    argumentsArray,
+  ];
+
+  for( let i in listTyped )
+  listDst.push( bufferTyped( listTyped[ i ] ) );
+
+  /* dstLong - null */
+
+  for( let d in listDst )
+  {
+    test.open( 'dstLong - null, srcLong - ' + listDst[ d ].name );
+    dstLongNull( listDst[ d ] );
+    test.close( 'dstLong - null, srcLong - ' + listDst[ d ].name );
+  }
+
+  /* sort dstLong */
+
+  for( let d in listDst )
+  {
+    if( listDst[ d ].name === 'argumentsArray' )
+    continue;
+
+    test.open( 'dstLong - ' + listDst[ d ].name );
+    sortDst( listDst[ d ] );
+    test.close( 'dstLong - ' + listDst[ d ].name );
+  }
+
+  /* test routines */
+
+  function dstLongNull( makeSrc )
+  {
+    test.case = 'empty container';
+    var dst = null;
+    var src = makeSrc( [] );
+    var got = _.longSort( dst, src );
+    test.identical( got, [] );
+
+    test.case = 'not empty container';
+    if( makeSrc.name !== 'Uint8ClampedArray' && makeSrc.name !== 'Uint8Array' && makeSrc.name !== 'Uint16Array' && makeSrc.name !== 'Uint32Array' )
+    {
+      var dst = null;
+      var src = makeSrc( [ 1, 5, 14, 4, 3, 0, -2, 10, -12 ] );
+      var got = _.longSort( dst, src );
+      test.identical( got, [ -12, -2, 0, 1, 10, 14, 3, 4, 5 ] );
+    }
+
+    test.case = 'not empty container, onEvaluate - comparator';
+    var dst = null;
+    var src = makeSrc( [ 1, 5, 14, 4, 3, 0, 0, 10, 10 ] );
+    var got = _.longSort( dst, src, ( a, b ) => a > b );
+    test.identical( got, [ 0, 0, 1, 3, 4, 5, 10, 10, 14 ] );
+
+    test.case = 'not empty container, onEvaluate - evaluator';
+    var dst = null;
+    var src = makeSrc( [ 1, 5, 14, 4, 3, 0, 0, 10, 10 ] );
+    var got = _.longSort( dst, src, ( a ) => a );
+    test.identical( got, [ 0, 0, 1, 3, 4, 5, 10, 10, 14 ] );
+  }
+
+  /* */
+
+  function sortDst( makeDst )
+  {
+    test.case = 'not empty container, onEvaluate - evaluator, negative numbers';
+    if( makeDst.name !== 'Uint8ClampedArray' && makeDst.name !== 'Uint8Array' && makeDst.name !== 'Uint16Array' && makeDst.name !== 'Uint32Array' )
+    {
+      var dst = makeDst( [ 1, 5, 14, 4, 3, 0, -2, 10, -12 ] );
+      var got = _.longSort( dst, ( e ) => e );
+      test.is( got === dst );
+      test.identical( got, makeDst( [ -12, -2, 0, 1, 3, 4, 5, 10, 14 ] ) );
+    }
+
+    test.case = 'not empty container, onEvaluate - comparator';
+    var dst = makeDst( [ 1, 5, 14, 4, 3, 0, 0, 10, 10 ] );
+    var got = _.longSort( dst, ( a, b ) => a > b );
+    test.is( got === dst );
+    test.identical( got, makeDst( [ 0, 0, 1, 3, 4, 5, 10, 10, 14 ] ) );
+
+    test.case = 'not empty container, srcLong - array, onEvaluate - comparator';
+    var dst = makeDst( [ 1, 5, 14, 4, 3, 0, 0, 10, 10 ] );
+    var src = [ 1, 5, 14 ];
+    var got = _.longSort( dst, src, ( a, b ) => a > b );
+    test.is( got === dst );
+    test.identical( got, makeDst( [ 0, 0, 1, 3, 4, 5, 10, 10, 14 ] ) );
+
+    test.case = 'not empty container, onEvaluate - evaluator';
+    var dst = makeDst( [ 1, 5, 14, 4, 3, 0, 0, 10, 10 ] );
+    var got = _.longSort( dst, ( a ) => a );
+    test.is( got === dst );
+    test.identical( got, makeDst( [ 0, 0, 1, 3, 4, 5, 10, 10, 14 ] ) );
+
+    test.case = 'not empty container, srcLong - empty array, onEvaluate - evaluator';
+    var dst = makeDst( [ 1, 5, 14, 4, 3, 0, 0, 10, 10 ] );
+    var src = [];
+    var got = _.longSort( dst, src, ( a ) => a );
+    test.is( got === dst );
+    test.identical( got, makeDst( [ 0, 0, 1, 3, 4, 5, 10, 10, 14 ] ) );
+  }
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.longSort() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.longSort( [ 1, 2 ], [ null, 1 ], ( e ) => e, 'extra' ) );
+
+  test.case = 'wrong type of onEvaluate';
+  test.shouldThrowErrorSync( () => _.longSort( [ 1, 2 ], [ null, 1 ], 'wrong' ) );
+
+  test.case = 'wrong type of dstLong';
+  test.shouldThrowErrorSync( () => _.longSort( 'wrong', [ 1, 2 ] ) );
+
+  test.case = 'wrong type of srcLong';
+  test.shouldThrowErrorSync( () => _.longSort( [ 1, 2 ], 'wrong' ) );
+
+  test.case = 'wrong length of onEvaluate';
+  test.shouldThrowErrorSync( () => _.longSort( [ 1, 2 ], [ null, 1 ], () => 1 ) );
+  test.shouldThrowErrorSync( () => _.longSort( [ 1, 2 ], [ null, 1 ], ( a, b, c ) => a + b > c ) );
+}
 
 //
 
@@ -6310,34 +7860,184 @@ function arrayFromCoercing( test )
 
 function arrayRandom( test )
 {
+  test.case = 'length - number';
+  var got = _.arrayRandom( 5 );
+  test.identical( got.length, 5 );
+  test.is( got[ 0 ] >= 0 && got[ 0 ] <= 1 );
+  test.is( got[ 1 ] >= 0 && got[ 1 ] <= 1 );
 
-  test.case = 'an empty object';
-  var got = _.arrayRandom( {  } );
+  test.case = 'length - range';
+  var got = _.arrayRandom( [ 2, 5 ] );
+  test.is( got.length >= 2 && got.length <= 5 );
+  test.is( got[ 0 ] >= 0 && got[ 0 ] <= 1 );
+  test.is( got[ 1 ] >= 0 && got[ 1 ] <= 1 );
+
+  test.case = 'dst, range, length === dst.length';
+  var dst = [ 2, 2, 2 ];
+  var got = _.arrayRandom( dst, [ 0, 1 ], 3 );
+  test.is( got === dst );
+  test.is( got[ 0 ] !== 2 && got[ 0 ] >= 0 && got[ 0 ] <= 1 );
+  test.is( got[ 1 ] !== 2 && got[ 1 ] >= 0 && got[ 1 ] <= 1 );
+  test.is( got[ 2 ] !== 2 && got[ 2 ] >= 0 && got[ 2 ] <= 1 );
+
+  test.case = 'dst, range - number, length === dst.length';
+  var dst = [ 2, 2, 2 ];
+  var got = _.arrayRandom( dst, 5, 3 );
+  test.is( got === dst );
+  test.identical( got[ 0 ], 5 );
+  test.identical( got[ 1 ], 5 );
+  test.identical( got[ 2 ], 5 );
+
+  test.case = 'dst, range, length === null';
+  var dst = [ 2, 2, 2 ];
+  var got = _.arrayRandom( dst, [ 0, 1 ], null );
+  test.is( got === dst );
+  test.is( got[ 0 ] !== 2 && got[ 0 ] >= 0 && got[ 0 ] <= 1 );
+  test.is( got[ 1 ] !== 2 && got[ 1 ] >= 0 && got[ 1 ] <= 1 );
+  test.is( got[ 2 ] !== 2 && got[ 2 ] >= 0 && got[ 2 ] <= 1 );
+
+  test.case = 'dst - unroll, range, length === null';
+  var dst = _.unrollMake( [ 2, 2, 2 ] );
+  var got = _.arrayRandom( dst, [ 0, 1 ], null );
+  test.is( got === dst );
+  test.is( _.unrollIs( got ) );
+  test.is( got[ 0 ] !== 2 && got[ 0 ] >= 0 && got[ 0 ] <= 1 );
+  test.is( got[ 1 ] !== 2 && got[ 1 ] >= 0 && got[ 1 ] <= 1 );
+  test.is( got[ 2 ] !== 2 && got[ 2 ] >= 0 && got[ 2 ] <= 1 );
+
+  test.case = 'dst, range, length !== dst.length';
+  var dst = [ 2, 2, 2 ];
+  var got = _.arrayRandom( dst, [ 0, 1 ], 4 );
+  test.identical( dst, [ 2, 2, 2 ] );
+  test.is( got !== dst );
+  test.is( got[ 0 ] !== 2 && got[ 0 ] >= 0 && got[ 0 ] <= 1 );
+  test.is( got[ 1 ] !== 2 && got[ 1 ] >= 0 && got[ 1 ] <= 1 );
+  test.is( got[ 2 ] !== 2 && got[ 2 ] >= 0 && got[ 2 ] <= 1 );
+  test.is( got[ 3 ] !== 2 && got[ 3 ] >= 0 && got[ 3 ] <= 1 );
+
+  test.case = 'dst - unroll, range, length !== dst.length';
+  var dst = _.unrollMake( [ 2, 2, 2 ] );
+  var got = _.arrayRandom( dst, [ 0, 1 ], 4 );
+  test.identical( dst, [ 2, 2, 2 ] );
+  test.is( _.unrollIs( dst ) );
+  test.is( _.unrollIs( got ) );
+  test.is( got !== dst );
+  test.is( got[ 0 ] !== 2 && got[ 0 ] >= 0 && got[ 0 ] <= 1 );
+  test.is( got[ 1 ] !== 2 && got[ 1 ] >= 0 && got[ 1 ] <= 1 );
+  test.is( got[ 2 ] !== 2 && got[ 2 ] >= 0 && got[ 2 ] <= 1 );
+  test.is( got[ 3 ] !== 2 && got[ 3 ] >= 0 && got[ 3 ] <= 1 );
+
+  /* */
+
+  test.case = 'an empty object is provides';
+  var got = _.arrayRandom( {} );
   test.identical( got.length, 1 );
   test.is( got[ 0 ] >= 0 && got[ 0 ]<= 1 );
 
-  test.case = 'a number';
-  var got = _.arrayRandom( 5 );
-  var expected = got;
-  test.identical( got.length, 5 );
+  test.case = 'only length - number';
+  var got = _.arrayRandom( { length : 3 } );
+  test.identical( got.length, 3 );
+  test.is( got[ 0 ] >= 0 && got[ 0 ] <= 1 );
+  test.is( got[ 1 ] >= 0 && got[ 1 ] <= 1 );
+  test.is( got[ 2 ] >= 0 && got[ 2 ] <= 1 );
 
-  test.case = 'onEach';
+  test.case = 'only length - range';
+  var got = _.arrayRandom( { length : [ 2, 5 ] } );
+  test.is( got.length >= 2 && got.length <= 5 );
+  test.is( got[ 0 ] >= 0 && got[ 0 ] <= 1 );
+  test.is( got[ 1 ] >= 0 && got[ 1 ] <= 1 );
+
+  test.case = 'without dst, length, range, onEach';
   var got = _.arrayRandom
   ({
     length : 3,
     range : [ 1, 9 ],
     onEach : ( range ) => _.intRandom( range ),
   });
-  var expected = got;
   test.identical( got.length, 3 );
-  test.is( _.intIs( got[ 0 ] ) );
-  test.is( _.intIs( got[ 1 ] ) );
-  test.is( _.intIs( got[ 2 ] ) );
-  test.is( _.rangeIn( [ 1, 9 ], got[ 0 ] ) );
-  test.is( _.rangeIn( [ 1, 9 ], got[ 1 ] ) );
-  test.is( _.rangeIn( [ 1, 9 ], got[ 2 ] ) );
+  test.is( _.intIs( got[ 0 ] ) && got[ 0 ] >= 1 && got[ 0 ] <= 9 );
+  test.is( _.intIs( got[ 1 ] ) && got[ 1 ] >= 1 && got[ 1 ] <= 9 );
+  test.is( _.intIs( got[ 2 ] ) && got[ 2 ] >= 1 && got[ 2 ] <= 9 );
 
-  test.case = 'without length';
+  test.case = 'without dst, length, range - number, onEach';
+  var got = _.arrayRandom
+  ({
+    length : 3,
+    range : 5,
+    onEach : ( range ) => _.intRandom( range ),
+  });
+  test.identical( got.length, 3 );
+  test.identical( got[ 0 ], 5 );
+  test.identical( got[ 1 ], 5 );
+  test.identical( got[ 2 ], 5 );
+
+  test.case = 'dst, range, onEach, length > dst.length';
+  var dst = [ 0, 0 ];
+  var got = _.arrayRandom
+  ({
+    dst : dst,
+    length : 4,
+    range : [ 1, 9 ],
+    onEach : ( range ) => _.intRandom( range ),
+  });
+  test.is( got !== dst );
+  test.identical( got.length, 4 );
+  test.is( _.intIs( got[ 0 ] ) && got[ 0 ] >= 1 && got[ 0 ] <= 9 );
+  test.is( _.intIs( got[ 1 ] ) && got[ 1 ] >= 1 && got[ 1 ] <= 9 );
+  test.is( _.intIs( got[ 2 ] ) && got[ 2 ] >= 1 && got[ 2 ] <= 9 );
+  test.is( _.intIs( got[ 3 ] ) && got[ 3 ] >= 1 && got[ 3 ] <= 9 );
+
+  test.case = 'dst - unroll, range, onEach, length < dst.length';
+  var dst = _.unrollMake( [ 0, 0 ] );
+  var got = _.arrayRandom
+  ({
+    dst : dst,
+    length : 4,
+    range : [ 1, 9 ],
+    onEach : ( range ) => _.intRandom( range ),
+  });
+  test.is( got !== dst );
+  test.is( _.unrollIs( got ) );
+  test.identical( got.length, 4 );
+  test.is( _.intIs( got[ 0 ] ) && got[ 0 ] >= 1 && got[ 0 ] <= 9 );
+  test.is( _.intIs( got[ 1 ] ) && got[ 1 ] >= 1 && got[ 1 ] <= 9 );
+  test.is( _.intIs( got[ 2 ] ) && got[ 2 ] >= 1 && got[ 2 ] <= 9 );
+  test.is( _.intIs( got[ 3 ] ) && got[ 3 ] >= 1 && got[ 3 ] <= 9 );
+
+  test.case = 'dst, range, onEach, length < dst.length';
+  var dst = [ 0, 0, 0, 0 ];
+  var got = _.arrayRandom
+  ({
+    dst : dst,
+    length : 2,
+    range : [ 1, 9 ],
+    onEach : ( range ) => _.intRandom( range ),
+  });
+  test.is( got === dst );
+  test.identical( got.length, 4 );
+  test.is( _.intIs( got[ 0 ] ) && got[ 0 ] >= 1 && got[ 0 ] <= 9 );
+  test.is( _.intIs( got[ 1 ] ) && got[ 1 ] >= 1 && got[ 1 ] <= 9 );
+  test.identical( got[ 2 ], 0 );
+  test.identical( got[ 3 ], 0 );
+
+  test.case = 'dst - unroll, range, onEach, length < dst.length';
+  var dst = _.unrollMake( [ 0, 0, 0, 0 ] );
+  var got = _.arrayRandom
+  ({
+    dst : dst,
+    length : 2,
+    range : [ 1, 9 ],
+    onEach : ( range ) => _.intRandom( range ),
+  });
+  test.is( got === dst );
+  test.is( _.unrollIs( got ) );
+  test.identical( got.length, 4 );
+  test.is( _.intIs( got[ 0 ] ) && got[ 0 ] >= 1 && got[ 0 ] <= 9 );
+  test.is( _.intIs( got[ 1 ] ) && got[ 1 ] >= 1 && got[ 1 ] <= 9 );
+  test.identical( got[ 2 ], 0 );
+  test.identical( got[ 3 ], 0 );
+
+  test.case = 'dst, range, onEach, without length';
   var dst = [ 0, 0, 0 ];
   var got = _.arrayRandom
   ({
@@ -6347,39 +8047,42 @@ function arrayRandom( test )
   });
   test.is( got === dst );
   test.identical( got.length, 3 );
-  test.is( _.intIs( got[ 0 ] ) );
-  test.is( _.intIs( got[ 1 ] ) );
-  test.is( _.intIs( got[ 2 ] ) );
-  test.is( _.rangeIn( [ 1, 9 ], got[ 0 ] ) );
-  test.is( _.rangeIn( [ 1, 9 ], got[ 1 ] ) );
-  test.is( _.rangeIn( [ 1, 9 ], got[ 2 ] ) );
+  test.is( _.intIs( got[ 0 ] ) && got[ 0 ] >= 1 && got[ 0 ] <= 9 );
+  test.is( _.intIs( got[ 1 ] ) && got[ 1 ] >= 1 && got[ 1 ] <= 9 );
+  test.is( _.intIs( got[ 2 ] ) && got[ 2 ] >= 1 && got[ 2 ] <= 9 );
 
-  /* */
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'no arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayRandom();
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayRandom() );
 
-  test.case = 'wrong argument';
-  test.shouldThrowErrorSync( function()
-  {
-    _.arrayRandom( 'wrong argument' );
-  });
+  test.case = 'two arguments';
+  test.shouldThrowErrorSync( () => _.arrayRandom( 3, 3 ) );
+
+  test.case = 'wrong type of length';
+  test.shouldThrowErrorSync( () => _.arrayRandom( 'wrong' ) );
 
   test.case = 'negative length';
-  test.shouldThrowErrorSync( function()
-  {
-    var got = _.arrayRandom( -1 );
-    var expected = [];
-    test.identical( got, expected );
-  });
+  test.shouldThrowErrorSync( () => _.arrayRandom( -1 ) );
 
-};
+  test.case = 'wrong type of dst';
+  test.shouldThrowErrorSync( () => _.arrayRandom( 'wrong', [ 1, 2 ], 2 ) );
+  test.shouldThrowErrorSync( () => _.arrayRandom( { dst : 2 } ) );
+
+  test.case = 'wrong type of range';
+  test.shouldThrowErrorSync( () => _.arrayRandom( [], 'wrong', 2 ) );
+  test.shouldThrowErrorSync( () => _.arrayRandom( { length : 2, range : 'wrong' } ) );
+
+  test.case = 'wrong type of length';
+  test.shouldThrowErrorSync( () => _.arrayRandom( [], 2, 'wrong' ) );
+  test.shouldThrowErrorSync( () => _.arrayRandom( { length : 'wrong' } ) );
+
+  test.case = 'wrong type of onEach';
+  test.shouldThrowErrorSync( () => _.arrayRandom( { onEach : 'wrong' } ) );
+}
 
 //
 
@@ -6531,6 +8234,7 @@ function arrayToMap( test )
   });
 
 };
+
 
 //
 
@@ -7771,6 +9475,335 @@ function arrayButInplace( test )
 
 //
 
+function arrayBut_( test )
+{
+  var array = ( src ) => _.arrayMake( src );
+  var unroll = ( src ) => _.unrollMake( src );
+
+  /* - */
+
+  test.open( 'array' );
+  run( array );
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'unroll' );
+  run( unroll );
+  test.close( 'unroll' );
+
+  /* - */
+
+  function run( make )
+  {
+    test.open( 'not inplace' );
+
+    test.case = 'range = undefined, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    /* range = number */
+
+    test.case = 'range = number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, 1 );
+    var expected = [ 1, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = negative number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, -5 );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, 0, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ { a : 1 }, 2, [ 10 ], 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = negative number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, -5, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ { a : 1 }, 2, [ 10 ], 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = undefined, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    /* range = number */
+
+    test.case = 'range = number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, 1 );
+    var expected = [ 1, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = negative number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, -5 );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, 0, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ { a : 1 }, 2, [ 10 ], 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = negative number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, -5, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ { a : 1 }, 2, [ 10 ], 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    /* range = array range */
+
+    test.case = 'range = array range, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, [ 0, 2 ] );
+    var expected = [ 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = array range, range[ 0 ] < 0, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, [ -5, 2 ] );
+    var expected = [ 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = array range, range[ 1 ] < 0, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, [ 0, -5 ] );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = array range, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, [ 0, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ { a : 1 }, 2, [ 10 ], 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = array range, range[ 0 ] < 0, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, [ -5, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ { a : 1 }, 2, [ 10 ], 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = array range, range[ 1 ] < 0, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, [ 0, -5 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ { a : 1 }, 2, [ 10 ], 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] > range[ 1 ]';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, [ 3, 0 ] );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    /* - */
+
+    test.open( 'inplace is not src' );
+
+    test.case = 'range = number, ins';
+    var dst = [ 1 ];
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( dst, src, 0, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ { a : 1 }, 2, [ 10 ], 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( got === dst );
+
+    test.case = 'range = negative number, ins';
+    var dst = [ 1, 2, 3, 'str' ];
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( dst, src, -5, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ { a : 1 }, 2, [ 10 ], 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( got === dst );
+
+    /* range = array range */
+
+    test.case = 'range = array range, ins';
+    var dst = [];
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( dst, src, [ 0, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ { a : 1 }, 2, [ 10 ], 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( got === dst );
+
+    test.case = 'range = array range, range[ 0 ] < 0, ins';
+    var dst = [ { a : 2 }, 1, 2 ];
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( dst, src, [ -5, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ { a : 1 }, 2, [ 10 ], 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( got === dst );
+
+    test.case = 'range = array range, range[ 1 ] < 0, ins';
+    var dst = [ null, undefined, 1, 0 ];
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( dst, src, [ 0, -5 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ { a : 1 }, 2, [ 10 ], 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( got === dst );
+
+    test.close( 'inplace is not src' );
+
+    test.close( 'not inplace' );
+
+    /* - */
+
+    test.open( 'inplace' );
+
+    test.case = 'range = undefined, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, src );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    /* range = number */
+
+    test.case = 'range = number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, src, 1 );
+    var expected = make( [ 1, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = negative number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, src, -5 );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, src, 0, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ { a : 1 }, 2, [ 10 ], 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = negative number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, src, -5, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ { a : 1 }, 2, [ 10 ], 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    /* range = array range */
+
+    test.case = 'range = array range, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, src, [ 0, 2 ] );
+    var expected = ( [ 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = array range, range[ 0 ] < 0, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, src, [ -5, 2 ] );
+    var expected = make( [ 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = array range, range[ 1 ] < 0, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, src, [ 0, -5 ] );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = array range, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, src, [ 0, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ { a : 1 }, 2, [ 10 ], 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = array range, range[ 0 ] < 0, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, src, [ -5, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ { a : 1 }, 2, [ 10 ], 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = array range, range[ 1 ] < 0, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, src, [ 0, -5 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ { a : 1 }, 2, [ 10 ], 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range[ 0 ] > range[ 1 ]';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayBut_( src, src, [ 3, 0 ] );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.close( 'inplace' );
+  }
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayBut_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arrayBut_( [ 1, 2 ], 0, [ 4 ], 4 ) );
+
+  test.case = 'src is not array';
+  test.shouldThrowErrorSync( () => _.arrayBut_( 'str', 0, [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayBut_( { a : 1 }, 0, [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayBut_( new Fx(), 0, [ 4 ] ) );
+
+  test.case = 'not range';
+  test.shouldThrowErrorSync( () => _.arrayBut_( [ 1, 2 ], 'str', [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayBut_( [ 1, 2 ], [], [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayBut_( [ 1, 2 ], [ 'str' ], [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayBut_( [ 1, 2 ], [ 1, 2, 3 ], [ 4 ] ) );
+
+  test.case = 'ins is not long';
+  test.shouldThrowErrorSync( () => _.arrayBut_( [ 1, 2 ], 0, 4 ) );
+  test.shouldThrowErrorSync( () => _.arrayBut_( [ 1, 2 ], 0, { a : 1 } ) );
+  test.shouldThrowErrorSync( () => _.arrayBut_( [ 1, 2 ], 0, new BufferRaw( 2 ) ) );
+
+}
+
+//
+
 function arraySelect( test )
 {
   var array = ( src ) => _.arrayMake( src );
@@ -8024,6 +10057,281 @@ function arraySelectInplace( test )
   test.shouldThrowErrorSync( () => _.arraySelectInplace( [ 1, 2 ], [], [ 4 ] ) );
   test.shouldThrowErrorSync( () => _.arraySelectInplace( [ 1, 2 ], [ 'str' ], [ 4 ] ) );
   test.shouldThrowErrorSync( () => _.arraySelectInplace( [ 1, 2 ], [ 1, 2, 3 ], [ 4 ] ) );
+
+}
+
+//
+
+function arraySelect_( test )
+{
+  var array = ( src ) => _.arrayMake( src );
+  var unroll = ( src ) => _.unrollMake( src );
+
+  /* - */
+
+  test.open( 'array' );
+  run( array );
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'unroll' );
+  run( unroll );
+  test.close( 'unroll' );
+
+  /* - */
+
+  function run( make )
+  {
+    test.open( 'not inplace' );
+
+    /* range = number */
+
+    test.case = 'range = number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, 1 );
+    var expected = [ 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = negative number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, -5 );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, 0, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = negative number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, -5, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    /* range = array range */
+
+    test.case = 'range = array range, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, [ 0, 2 ] );
+    var expected = [ 1, 2 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = array range, range[ 0 ] < 0, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, [ -5, 2 ] );
+    var expected = [ 1, 2 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = array range, range[ 1 ] < 0, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, [ 0, -5 ] );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = array range, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, [ 0, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ 1, 2 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = array range, range[ 0 ] < 0, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, [ -5, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ 1, 2 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = array range, range[ 1 ] < 0, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, [ 0, -5 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] > range[ 1 ]';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, [ 3, 0 ] );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    /* - */
+
+    test.open( 'inplace is not src' );
+
+    /* range = number */
+
+    test.case = 'range = number, ins';
+    var dst = [ 1, 2 ];
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( dst, src, 0, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( got === dst );
+
+    test.case = 'range = negative number, ins';
+    var dst = [ undefined, [ 1 ] ];
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( dst, src, -5, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( got === dst );
+
+    /* range = array range */
+
+    test.case = 'range = array range, ins';
+    var dst = [ [ 0 ], [ 1 ] ];
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( dst, src, [ 0, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( got === dst );
+
+    test.case = 'range = array range, range[ 0 ] < 0, ins';
+    var dst = [ 1, 2, 3 ];
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( dst, src, [ -5, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( got === dst );
+
+    test.case = 'range = array range, range[ 1 ] < 0, ins';
+    var dst = [ 1, 2, 3 ]
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( dst, src, [ 0, -5 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( got === dst );
+
+    test.close( 'inplace is not src' );
+
+    test.close( 'not inplace' );
+
+    /* - */
+
+    test.open( 'inplace' );
+
+    /* range = number */
+
+    test.case = 'range = number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, src, 1 );
+    var expected = make( [ 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = negative number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, src, -5 );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, src, 0, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = negative number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, src, -5, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    /* range = array range */
+
+    test.case = 'range = array range, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, src, [ 0, 2 ] );
+    var expected = make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = array range, range[ 0 ] < 0, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, src, [ -5, 2 ] );
+    var expected = make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = array range, range[ 1 ] < 0, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, src, [ 0, -5 ] );
+    var expected = make( [] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = array range, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, src, [ 0, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = array range, range[ 0 ] < 0, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, src, [ -5, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = array range, range[ 1 ] < 0, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, src, [ 0, -5 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range[ 0 ] > range[ 1 ]';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arraySelect_( src, src, [ 3, 0 ] );
+    var expected = make( [] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.close( 'inplace' );
+  }
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arraySelect_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arraySelect_( [ 1, 2 ], 0, [ 4 ], 4 ) );
+
+  test.case = 'src is not array';
+  test.shouldThrowErrorSync( () => _.arraySelect_( 'str', 0, [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arraySelect_( { a : 1 }, 0, [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arraySelect_( new Fx(), 0, [ 4 ] ) );
+
+  test.case = 'not range';
+  test.shouldThrowErrorSync( () => _.arraySelect_( [ 1, 2 ], 'str', [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arraySelect_( [ 1, 2 ], [], [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arraySelect_( [ 1, 2 ], [ 'str' ], [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arraySelect_( [ 1, 2 ], [ 1, 2, 3 ], [ 4 ] ) );
 
 }
 
@@ -8337,6 +10645,344 @@ function arrayGrowInplace( test )
 
 //
 
+function arrayGrow_( test )
+{
+  var array = ( src ) => _.arrayMake( src );
+  var unroll = ( src ) => _.unrollMake( src );
+
+  /* - */
+
+  test.open( 'array' );
+  run( array );
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'unroll' );
+  run( unroll );
+  test.close( 'unroll' );
+
+  /* - */
+
+  function run( make )
+  {
+    test.open( 'not inplace' );
+
+    /* range = number */
+
+    test.case = 'range = number, number < src length, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayGrow_( src, 1 );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = negative number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayGrow_( src, -5 );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = number, range > src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayGrow_( src, 6, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ 1, 2, 3, 'str', [ 1 ], [ { a : 1 }, 2, [ 10 ] ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = negative number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayGrow_( src, -5, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    /* range = array range */
+
+    test.case = 'only src';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range > src.length, not a ins';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, [ 0, src.length + 2 ] );
+    var expected = src.length + 2;
+    test.identical( got, [ 1, 2, 3, 4, 5, undefined, undefined ] );
+    test.identical( got.length, expected );
+    test.is( got !== src );
+
+    test.case = 'range > src.length, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, [ 0, src.length + 2 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5, 0, 0 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range > src.length, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, [ src.length - 1, src.length * 2 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5, 0, 0, 0, 0, 0 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range < src.length';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, [ 0, 3 ] );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range < src.length, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, [ 0, 3 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'f < 0, not a ins';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    got = _.arrayGrow_( src, [ -1, 3 ] );
+    expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'l < 0, not a ins';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, [ 0, -1 ] );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'f < 0, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, [ -1, 3 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'f < 0, l < 0, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, [ -1, -1 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'f > l, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, [ 6, 3 ], 0 );
+    var expected = [ 1, 2, 3, 4, 5, 0 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    /* - */
+
+    test.open( 'inplace is not src' );
+
+    test.case = 'range = number, range > src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayGrow_( [ 1 ], src, 6, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ], [ { a : 1 }, 2, [ 10 ] ] ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = negative number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayGrow_( [ 1 ], src, -5, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    /* range = array range */
+
+    test.case = 'range > src.length, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( [ 1 ], src, [ 0, src.length + 2 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5, 0, 0 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range > src.length, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( [ 1 ], src, [ src.length - 1, src.length * 2 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5, 0, 0, 0, 0, 0 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range < src.length, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( [ 1 ], src, [ 0, 3 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'f < 0, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( [ 1 ], src, [ -1, 3 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'f < 0, l < 0, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( [ 1 ], src, [ -1, -1 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'f > l, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( [ 1 ], src, [ 6, 3 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5, 0 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.close( 'inplace is not src' );
+
+    test.close( 'not inplace' );
+
+    /* - */
+
+    test.open( 'inplace' );
+
+    /* range = number */
+
+    test.case = 'range = number, number < src length, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayGrow_( src, src, 1 );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = negative number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayGrow_( src, src, -5 );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = number, range > src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayGrow_( src, src, 6, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ], [ { a : 1 }, 2, [ 10 ] ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = negative number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayGrow_( src, src, -5, [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    /* range = array range */
+
+    test.case = 'only src';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, src );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range > src.length, not a ins';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, src, [ 0, src.length + 2 ] );
+    var expected = make( [ 1, 2, 3, 4, 5, undefined, undefined ] );
+    test.identical( got, expected );
+    test.identical( got.length, 7 );
+    test.is( got === src );
+
+    test.case = 'range > src.length, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, src, [ 0, src.length + 2 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5, 0, 0 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range > src.length, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, src, [ src.length - 1, src.length * 2 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5, 0, 0, 0, 0, 0 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range < src.length';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, src, [ 0, 3 ] );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range < src.length, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, src, [ 0, 3 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'f < 0, not a ins';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    got = _.arrayGrow_( src, src, [ -1, 3 ] );
+    expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'l < 0, not a ins';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, src, [ 0, -1 ] );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'f < 0, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, src, [ -1, 3 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'f < 0, l < 0, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, src, [ -1, -1 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'f > l, ins = number';
+    var src = make( [ 1, 2, 3, 4, 5 ] );
+    var got = _.arrayGrow_( src, src, [ 6, 3 ], 0 );
+    var expected = make( [ 1, 2, 3, 4, 5, 0 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.close( 'inplace' );
+  }
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayGrow_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arrayGrow_( [ 1 ], [ 1, 4 ], '5', 1 ) );
+
+  test.case = 'src is not long';
+  test.shouldThrowErrorSync( () => _.arrayGrow_( 1, [ 0, 1 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayGrow_( new ArrayBuffer( 4 ), [ 0, 5 ] ) );
+
+  test.case = 'not a range';
+  test.shouldThrowErrorSync( () => _.arrayGrow_( [ 1 ], 'str' ) );
+
+}
+
+//
+
 function arrayRelength( test )
 {
   var array = ( src ) => _.arrayMake( src );
@@ -8633,6 +11279,317 @@ function arrayRelengthInplace( test )
   test.shouldThrowErrorSync( () => _.arrayRelengthInplace( [ 1, 2 ], [ 'str' ], [ 4 ] ) );
   test.shouldThrowErrorSync( () => _.arrayRelengthInplace( [ 1, 2 ], [ 1, 2, 3 ], [ 4 ] ) );
 
+}
+
+//
+
+function arrayRelength_( test )
+{
+  var array = ( src ) => _.arrayMake( src );
+  var unroll = ( src ) => _.unrollMake( src );
+
+  /* - */
+
+  test.open( 'array' );
+  run( array );
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'unroll' );
+  run( unroll );
+  test.close( 'unroll' );
+
+  /* - */
+
+  function run( make )
+  {
+    test.open( 'not inplace' );
+
+    /* range = number */
+
+    test.case = 'range = number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, 1 );
+    var expected = [ 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = negative number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, -5 );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = number, range > src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, 6, 'abc' );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = negative number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, -5, 'abc' );
+    var expected = [ 1, 2, 3, 'str', [ 1 ] ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    /* range = array range */
+
+    test.case = 'range = array range, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, [ 0, 2 ] );
+    var expected = [ 1, 2 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = array range, range[ 0 ] < 0, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, [ -5, 2 ] );
+    var expected = [ 1, 2 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = array range, range[ 1 ] < 0, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, [ 0, -5 ] );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range[ 1 ] < src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, [ 0, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ 1, 2 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] < 0, range[ 1 ] < src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, [ -5, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [ 1, 2 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] = 0, range[ 1 ] < 0, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, [ 0, -5 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] > range[ 1 ], range[ 0 ] > src.length';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, [ 8, 0 ] );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] > range[ 1 ], range[ 0 ] < src.length';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, [ 3, 1 ] );
+    var expected = [];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] > 0, [ 1 ] > src.length, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, [ 3, 6 ] );
+    var expected = [ 'str', [ 1 ], undefined ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] > 0, [ 1 ] > src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, [ 3, 7 ], 7 );
+    var expected = [ 'str', [ 1 ], 7, 7 ];
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    /* - */
+
+    test.open( 'inplace is not src' );
+
+    test.case = 'range = number, range > src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( [ 1 ], src, 6, 'abc' );
+    var expected = make( [] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range = negative number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( [ 1 ], src, -5, 'abc' );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    /* range = array range */
+
+    test.case = 'range[ 1 ] < src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( [ 1 ], src, [ 0, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] < 0, range[ 1 ] < src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( [ 1 ], src, [ -5, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] = 0, range[ 1 ] < 0, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( [ 1 ], src, [ 0, -5 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'range[ 0 ] > 0, [ 1 ] > src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( [ 1 ], src, [ 3, 7 ], 7 );
+    var expected = make( [ 'str', [ 1 ], 7, 7 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.close( 'inplace is not src' );
+
+    test.close( 'not inplace' );
+
+    /* - */
+
+    test.open( 'inplace' );
+
+    /* range = number */
+
+    test.case = 'range = number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, 1 );
+    var expected = make( [ 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = negative number, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, -5 );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = number, range > src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, 6, 'abc' );
+    var expected = make( [] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = negative number, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, -5, 'abc' );
+    var expected = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    /* range = array range */
+
+    test.case = 'range = array range, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, [ 0, 2 ] );
+    var expected = make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = array range, range[ 0 ] < 0, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, [ -5, 2 ] );
+    var expected = make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range = array range, range[ 1 ] < 0, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, [ 0, -5 ] );
+    var expected = make( [] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range[ 1 ] < src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, [ 0, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range[ 0 ] < 0, range[ 1 ] < src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, [ -5, 2 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range[ 0 ] = 0, range[ 1 ] < 0, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, [ 0, -5 ], [ { a : 1 }, 2, [ 10 ] ] );
+    var expected = make( [] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range[ 0 ] > range[ 1 ], range[ 0 ] > src.length';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, [ 8, 0 ] );
+    var expected = make( [] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range[ 0 ] > range[ 1 ], range[ 0 ] < src.length';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, [ 3, 1 ] );
+    var expected = make( [] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range[ 0 ] > 0, [ 1 ] > src.length, not ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, [ 3, 6 ] );
+    var expected = make( [ 'str', [ 1 ], undefined ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.case = 'range[ 0 ] > 0, [ 1 ] > src.length, ins';
+    var src = make( [ 1, 2, 3, 'str', [ 1 ] ] );
+    var got = _.arrayRelength_( src, src, [ 3, 7 ], 7 );
+    var expected = make( [ 'str', [ 1 ], 7, 7 ] );
+    test.identical( got, expected );
+    test.is( got === src );
+
+    test.close( 'inplace' );
+  }
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayRelength_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arrayRelength_( [ 1, 2 ], 0, [ 4 ], 4 ) );
+
+  test.case = 'src is not array';
+  test.shouldThrowErrorSync( () => _.arrayRelength_( 'str', 0, [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayRelength_( { a : 1 }, 0, [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayRelength_( new Fx(), 0, [ 4 ] ) );
+
+  test.case = 'not range';
+  test.shouldThrowErrorSync( () => _.arrayRelength_( [ 1, 2 ], 'str', [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayRelength_( [ 1, 2 ], [], [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayRelength_( [ 1, 2 ], [ 'str' ], [ 4 ] ) );
+  test.shouldThrowErrorSync( () => _.arrayRelength_( [ 1, 2 ], [ 1, 2, 3 ], [ 4 ] ) );
 }
 
 //
@@ -19900,7 +22857,7 @@ function arrayFlattened( test )
 
   test.case = 'dst - empty array, src - array from arrays level 5';
   var src = [ [ [ [ [ 0 ] ] ] ] ];
-  var dst =[];
+  var dst = [];
   var got = _.arrayFlattened( dst, [ src, src, src, src ] );
   var expected = [ 0, 0, 0, 0 ];
   test.identical( dst, expected );
@@ -21598,7 +24555,7 @@ function arrayFlattenDefined( test )
 
   test.case = 'dst - empty array, src - array from arrays level 5';
   var src = [ [ [ [ [ undefined ] ] ] ] ];
-  var dst =[];
+  var dst = [];
   var got = _.arrayFlattenDefined( dst, [ src, src, src, src ] );
   test.identical( dst, [] );
   test.identical( got, [] );
@@ -23411,7 +26368,7 @@ function arrayFlattenedDefined( test )
 
   test.case = 'dst - empty array, src - array from arrays level 5';
   var src = [ [ [ [ [ undefined ] ] ] ] ];
-  var dst =[];
+  var dst = [];
   var got = _.arrayFlattenedDefined( dst, [ src, src, src, src ] );
   var expected = [];
   test.identical( dst, expected );
@@ -28948,13 +31905,10 @@ function arrayReplacedArraysOnceStrictly( test )
 //   });
 //
 //   test.case = 'first arg is not longIs';
-//   debugger;
 //   test.shouldThrowErrorSync( function()
 //   {
-//     debugger;
 //     _.arrayReplacedAll( 1, 1, 1 );
 //   });
-//   debugger;
 //
 //   test.case = 'fourth argument is not a routine';
 //   test.shouldThrowErrorSync( function()
@@ -29158,6 +32112,590 @@ function arraySetDiff( test )
     _.arraySetDiff( undefined, undefined );
   });
 
+}
+
+//
+
+function arraySetDiff_( test )
+{
+  test.open( 'array' );
+
+  test.case = 'empty arrays';
+  var src1 = [];
+  var src2 = [];
+  var got = _.arraySetDiff_( src1, src2 );
+  var exp = [];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'src2 - empty array';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [];
+  var got = _.arraySetDiff_( src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'src1 - empty array';
+  var src1 = [];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetDiff_( src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'src1 and src2 is not empty array, without duplicates';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetDiff_( src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'src1 and src2 is not empty array, duplicates';
+  var src1 = [ 1, 1, 2, 3, 3 ];
+  var src2 = [ 3, 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( src1, src2 );
+  var exp = [ 1, 1, 2, 4, 5, 5 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'all of the elements is present in both arrays';
+  var src1 = [ 3, 3, 3 ];
+  var src2 = [ 3, 3, 3, 3 ];
+  var got = _.arraySetDiff_( src1, src2 );
+  var exp = [];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'one evaluator';
+  var src1 = [ [ 1 ], 1, 2, [ 3 ], 3 ];
+  var src2 = [ [ 3 ], 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( src1, src2, ( e ) => e[ 0 ] );
+  var exp = [ [ 1 ] ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'two evaluators';
+  var src1 = [ 1, 1, 2, [ 3 ], 3 ];
+  var src2 = [ 3, 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( src1, src2, ( e ) => e[ 0 ], ( ins ) => ins );
+  var exp = [ 1, 1, 2, [ 3 ], 3, 4, 5, 5 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'equalizer';
+  var src1 = [ 1, 1, 2, [ 3 ], 3 ];
+  var src2 = [ 3, 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( src1, src2, ( e, ins ) => e[ 0 ] === ins );
+  var exp = [ 1, 1, 2, [ 3 ], 3, 4, 5, 5 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst - not empty, src1 and src2 - empty arrays';
+  var dst = [ 1, 2 ];
+  var src1 = [];
+  var src2 = [];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1, 2 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst, src2 - empty array';
+  var dst = [ 1 ];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1, 1, 2, 3 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1 - empty array';
+  var dst = [ 2 ];
+  var src1 = [];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 2, 1, 2, 3 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1 and src2 is not empty array, without duplicates';
+  var dst = [];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1 and src2 is not empty array, duplicates';
+  var dst = new Set( [ 0 ] );
+  var src1 = [ 1, 1, 2, 3, 3 ];
+  var src2 = [ 3, 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 0, 1, 2, 4, 5 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, all of the elements is present in both arrays';
+  var dst = [ 1 ];
+  var src1 = [ 3, 3, 3 ];
+  var src2 = [ 3, 3, 3, 3 ];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'one evaluator';
+  var dst = [ 1 ];
+  var src1 = [ [ 1 ], 1, 2, [ 3 ], 3 ];
+  var src2 = [ [ 3 ], 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( dst, src1, src2, ( e ) => e[ 0 ] );
+  var exp = [ 1, [ 1 ] ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'two evaluators';
+  var dst = [];
+  var src1 = [ 1, 1, 2, [ 3 ], 3 ];
+  var src2 = [ 3, 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( dst, src1, src2, ( e ) => e[ 0 ], ( ins ) => ins );
+  var exp = [ 1, 1, 2, [ 3 ], 3, 4, 5, 5 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'equalizer';
+  var dst = [];
+  var src1 = [ 1, 1, 2, [ 3 ], 3 ];
+  var src2 = [ 3, 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( dst, src1, src2, ( e, ins ) => e[ 0 ] === ins );
+  var exp = [ 1, 1, 2, [ 3 ], 3, 4, 5, 5 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst - src1, src1 and src2 - empty arrays';
+  var dst = [];
+  var src1 = dst;
+  var src2 = [];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [];
+  test.is( got === src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst - src2, src2 - empty array';
+  var dst = [];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = dst;
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got === src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst - src1, src1 - empty array';
+  var dst = [];
+  var src1 = dst;
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst - src2, src1 and src2 is not empty array, without duplicates';
+  var dst = [ 4, 5, 6 ];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = dst;
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 4, 5, 6, 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got === src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst - src1, src1 and src2 is not empty array, duplicates';
+  var dst = [ 1, 1, 2, 3, 3 ];
+  var src1 = dst;
+  var src2 = [ 3, 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1, 1, 2, 3, 3, 4, 5, 5 ];
+  test.is( got === src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst - src2, all of the elements is present in both arrays';
+  var dst = [ 3, 3, 3, 3 ];
+  var src1 = [ 3, 3, 3 ];
+  var src2 = dst;
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 3, 3, 3, 3 ];
+  test.is( got !== src1 );
+  test.is( got === src2 );
+  test.identical( got, exp );
+
+  test.case = 'one evaluator';
+  var dst = [ [ 1 ], 1, 2, [ 3 ], 3 ];
+  var src1 = dst;
+  var src2 = [ [ 3 ], 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( dst, src1, src2, ( e ) => e[ 0 ] );
+  var exp = [ [ 1 ], 1, 2, [ 3 ], 3 ];
+  test.is( got === src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'two evaluators';
+  var dst = [ 1, 1, 2, [ 3 ], 3 ];
+  var src1 = dst;
+  var src2 = [ 3, 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( dst, src1, src2, ( e ) => e[ 0 ], ( ins ) => ins );
+  var exp = [ 1, 1, 2, [ 3 ], 3, 4, 5, 5 ];
+  test.is( got === src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'equalizer';
+  var dst = [ 1, 1, 2, [ 3 ], 3 ];
+  var src1 = dst;
+  var src2 = [ 3, 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( dst, src1, src2, ( e, ins ) => e[ 0 ] === ins );
+  var exp = [ 1, 1, 2, [ 3 ], 3, 4, 5, 5 ];
+  test.is( got === src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'Set' );
+
+  test.case = 'empty Sets';
+  var src1 = new Set();
+  var src2 = new Set();
+  var got = _.arraySetDiff_( src1, src2 );
+  var exp = [];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'src2 - empty Set';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set();
+  var got = _.arraySetDiff_( src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'src1 - empty Set';
+  var src1 = new Set();
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetDiff_( src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( _.setIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'src1 and src2 is not empty containers, without duplicates';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetDiff_( src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'src1 and src2 is not empty Sets, duplicates';
+  var src1 = new Set( [ 1, 1, 2, 3, 3 ] );
+  var src2 = new Set( [ 3, 3, 4, 5, 5 ] );
+  var got = _.arraySetDiff_( src1, src2 );
+  var exp = [ 1, 2, 4, 5 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'all of the elements is present in both arrays';
+  var src1 = new Set( [ 3, 3, 3 ] );
+  var src2 = new Set( [ 3, 3, 3, 3 ] );
+  var got = _.arraySetDiff_( src1, src2 );
+  var exp = [];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'one evaluator';
+  var src1 = new Set( [ [ 1 ], 1, 2, [ 3 ], 3 ] );
+  var src2 = new Set( [ [ 3 ], 3, 4, 5, 5 ] );
+  var got = _.arraySetDiff_( src1, src2, ( e ) => e[ 0 ] );
+  var exp = [ [ 1 ] ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'two evaluators';
+  var src1 = new Set( [ 1, 1, 2, [ 3 ], 3 ] );
+  var src2 = new Set( [ 3, 3, 4, 5, 5 ] );
+  var got = _.arraySetDiff_( src1, src2, ( e ) => e[ 0 ], ( ins ) => ins );
+  var exp = [ 1, 2, [ 3 ], 3, 4, 5 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'equalizer';
+  var src1 = new Set( [ 1, 1, 2, [ 3 ], 3 ] );
+  var src2 = new Set( [ 3, 3, 4, 5, 5 ] );
+  var got = _.arraySetDiff_( src1, src2, ( e, ins ) => e[ 0 ] === ins );
+  var exp = [ 1, 2, [ 3 ], 3, 4, 5 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst - not empty, src1 and src2 - empty arrays';
+  var dst = new Set( [ 1, 2 ] );
+  var src1 = [];
+  var src2 = [];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1, 2 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src2 - empty array';
+  var dst = new Set( [ 1 ] );
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1 - empty array';
+  var dst = new Set( [ 2 ] );
+  var src1 = [];
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 2, 1, 3 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1 and src2 is not empty Sets, without duplicates';
+  var dst = new Set();
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 4, 5, 6 ] );
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1 and src2 is not empty Sets, duplicates';
+  var dst = [ 0 ];
+  var src1 = new Set( [ 1, 1, 2, 3, 3 ] );
+  var src2 = new Set( [ 3, 3, 4, 5, 5 ] );
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 0, 1, 2, 4, 5 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst, all of the elements is present in both containers';
+  var dst = new Set( [ 1 ] );
+  var src1 = new Set( [ 3, 3, 3 ] );
+  var src2 = [ 3, 3, 3, 3 ];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'one evaluator';
+  var dst = new Set( [ 1 ] );
+  var src1 = new Set( [ [ 1 ], 1, 2, [ 3 ], 3 ] );
+  var src2 = new Set( [ [ 3 ], 3, 4, 5, 5 ] );
+  var got = _.arraySetDiff_( dst, src1, src2, ( e ) => e[ 0 ] );
+  var exp = [ 1, [ 1 ] ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'two evaluators';
+  var dst = new Set();
+  var src1 = new Set( [ 1, 1, 2, [ 3 ], 3 ] );
+  var src2 = new Set( [ 3, 3, 4, 5, 5 ] );
+  var got = _.arraySetDiff_( dst, src1, src2, ( e ) => e[ 0 ], ( ins ) => ins );
+  var exp = [ 1, 2, [ 3 ], 3, 4, 5 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'equalizer';
+  var dst = new Set();
+  var src1 = new Set( [ 1, 1, 2, [ 3 ], 3 ] );
+  var src2 = new Set( [ 3, 3, 4, 5, 5 ] );
+  var got = _.arraySetDiff_( dst, src1, src2, ( e, ins ) => e[ 0 ] === ins );
+  var exp = [ 1, 2, [ 3 ], 3, 4, 5 ];
+  test.is( got === dst );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst - src1, src1 and src2 - empty arrays';
+  var dst = new Set();
+  var src1 = dst;
+  var src2 = [];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [];
+  test.is( got === src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst - src2, src2 - empty array';
+  var dst = new Set();
+  var src1 = [ 1, 2, 3 ];
+  var src2 = dst;
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got === src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst - src1, src1 - empty array';
+  var dst = new Set();
+  var src1 = dst;
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst - src2, src1 and src2 is not empty array, without duplicates';
+  var dst = new Set( [ 4, 5, 6 ] );
+  var src1 = [ 1, 2, 3 ];
+  var src2 = dst;
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 4, 5, 6, 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got === src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst - src1, src1 and src2 is not empty array, duplicates';
+  var dst = new Set( [ 1, 1, 2, 3, 3 ] );
+  var src1 = dst;
+  var src2 = [ 3, 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5 ];
+  test.is( got === src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst - src2, all of the elements is present in both arrays';
+  var dst = new Set( [ 3, 3, 3, 3 ] );
+  var src1 = [ 3, 3, 3 ];
+  var src2 = dst;
+  var got = _.arraySetDiff_( dst, src1, src2 );
+  var exp = [ 3 ];
+  test.is( got !== src1 );
+  test.is( got === src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'one evaluator';
+  var dst = new Set( [ [ 1 ], 1, 2, [ 3 ], 3 ] );
+  var src1 = dst;
+  var src2 = [ [ 3 ], 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( dst, src1, src2, ( e ) => e[ 0 ] );
+  var exp = [ [ 1 ], 1, 2, [ 3 ], 3 ];
+  test.is( got === src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'two evaluators';
+  var dst = new Set( [ 1, 1, 2, [ 3 ], 3 ] );
+  var src1 = dst;
+  var src2 = [ 3, 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( dst, src1, src2, ( e ) => e[ 0 ], ( ins ) => ins );
+  var exp = [ 1, 2, [ 3 ], 3, 4, 5 ];
+  test.is( got === src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'equalizer';
+  var dst = new Set( [ 1, 1, 2, [ 3 ], 3 ] );
+  var src1 = dst;
+  var src2 = [ 3, 3, 4, 5, 5 ];
+  var got = _.arraySetDiff_( dst, src1, src2, ( e, ins ) => e[ 0 ] === ins );
+  var exp = [ 1, 2, [ 3 ], 3, 4, 5 ];
+  test.is( got === src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.close( 'Set' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arraySetDiff_() );
+
+  test.case = 'not enough arguments';
+  test.shouldThrowErrorSync( () => _.arraySetDiff_( [ 1, 2 ] ) );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arraySetDiff_( [ 1, 2 ], [ 5, 7 ], [ 13 ], ( e ) => e, ( ins ) => ins, 'extra' ) );
+
+  test.case = 'wrong type of arguments';
+  test.shouldThrowErrorSync( () => _.arraySetDiff_( 10, [ 15, 10 ] ) );
+  test.shouldThrowErrorSync( () => _.arraySetDiff_( [ 10, 12 ], 'wrong' ) );
+  test.shouldThrowErrorSync( () => _.arraySetDiff_( { a : 1 }, { b : 3, c : 8 } ) );
+  test.shouldThrowErrorSync( () => _.arraySetDiff_( [], [ 1 ], [ 2 ], [] ) );
 }
 
 //
@@ -29518,6 +33056,388 @@ function arraySetBut( test )
 
 //
 
+function arraySetBut_( test )
+{
+  test.case = 'one argument, null';
+  var got = _.arraySetBut_( null );
+  var exp = [];
+  test.identical( got, exp );
+
+  /* - */
+
+  test.open( 'array' );
+
+  test.case = 'one argument, empty array';
+  var src1 = [];
+  var got = _.arraySetBut_( src1 );
+  var exp = [];
+  test.is( got !== src1 );
+  test.identical( got, exp );
+
+  test.case = 'one argument, not empty array';
+  var src1 = [ 1, 2, 3 ];
+  var got = _.arraySetBut_( src1 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst - null, src1 - array, src2 - routine';
+  var dst = null;
+  var src1 = [ 1, 2, 'str' ];
+  var got = _.arraySetBut_( dst, src1, ( e ) => e );
+  var exp = [ 1, 2, 'str' ];
+  test.is( got !== src1 );
+  test.identical( got, exp );
+
+  test.case = 'dst - null, src1 - array, src2 - undefined';
+  var dst = null;
+  var src1 = [ 1, 2, 'str' ];
+  var got = _.arraySetBut_( dst, src1 );
+  var exp = [ 1, 2, 'str' ];
+  test.is( got !== src1 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'src1, src2, without entries';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetBut_( src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst === src2, src1, entries';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 2, 3, 6 ];
+  var got = _.arraySetBut_( src1, src2 );
+  var exp = [ 1 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'src1, src2, entries, one evaluator';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetBut_( src1, src2, ( e ) => e );
+  var exp = [];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries, two evaluators';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetBut_( src1, src2, ( e ) => e, ( ins ) => ins + 1 );
+  var exp = [ 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries, equalizer';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetBut_( src1, src2, ( e, ins ) => e === ins + 1 );
+  var exp = [ 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst === src1, src2, without entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = dst;
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetBut_( dst, src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst === src1, src2, entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = dst;
+  var src2 = [ 2, 3, 6 ];
+  var got = _.arraySetBut_( dst, src1, src2 );
+  var exp = [ 1 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst === src2, src1, without entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = [ 4, 5, 6 ];
+  var src2 = dst;
+  var got = _.arraySetBut_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst === src2, src1, entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = [ 2, 3, 6 ];
+  var src2 = dst;
+  var got = _.arraySetBut_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 6 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst, src1, src2, without entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetBut_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries';
+  var dst = [];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 2, 3, 6 ];
+  var got = _.arraySetBut_( dst, src1, src2 );
+  var exp = [ 1 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst, src1, src2, entries, one evaluator';
+  var dst = [];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetBut_( dst, src1, src2, ( e ) => e );
+  var exp = [];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries, two evaluators';
+  var dst = [];
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetBut_( dst, src1, src2, ( e ) => e, ( ins ) => ins + 1 );
+  var exp = [ 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries, equalizer';
+  var dst = [];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetBut_( dst, src1, src2, ( e, ins ) => e === ins + 1 );
+  var exp = [ 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'Set' );
+
+  test.case = 'one argument, empty array';
+  var src1 = new Set();
+  var got = _.arraySetBut_( src1 );
+  var exp = [];
+  test.is( got !== src1 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'one argument, not empty array';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetBut_( src1 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst - null, src1 - array, src2 - routine';
+  var dst = null;
+  var src1 = new Set( [ 1, 2, 'str' ] );
+  var got = _.arraySetBut_( dst, src1, ( e ) => e );
+  var exp = [ 1, 2, 'str' ];
+  test.is( _.setIs( got ) );
+  test.is( got !== src1 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst - null, src1 - array, src2 - undefined';
+  var dst = null;
+  var src1 = new Set( [ 1, 2, 'str' ] );
+  var got = _.arraySetBut_( dst, src1 );
+  var exp = [ 1, 2, 'str' ];
+  test.is( _.setIs( got ) );
+  test.is( got !== src1 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'src1, src2, without entries';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 4, 5, 6 ] );
+  var got = _.arraySetBut_( src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst === src2, src1, entries';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 2, 3, 6 ] );
+  var got = _.arraySetBut_( src1, src2 );
+  var exp = [ 1 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'src1, src2, entries, one evaluator';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetBut_( src1, src2, ( e ) => e );
+  var exp = [];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries, two evaluators';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetBut_( src1, src2, ( e ) => e, ( ins ) => ins + 1 );
+  var exp = [ 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries, equalizer';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetBut_( src1, src2, ( e, ins ) => e === ins + 1 );
+  var exp = [ 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst === src1, src2, without entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = dst;
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetBut_( dst, src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst === src1, src2, entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = dst;
+  var src2 = new Set( [ 2, 3, 6 ] );
+  var got = _.arraySetBut_( dst, src1, src2 );
+  var exp = [ 1 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst === src2, src1, without entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = new Set( [ 4, 5, 6 ] );
+  var src2 = dst;
+  var got = _.arraySetBut_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst === src2, src1, entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = new Set( [ 2, 3, 6 ] );
+  var src2 = dst;
+  var got = _.arraySetBut_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 6 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst, src1, src2, without entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = [ 1, 2, 3, 7 ];
+  var src2 = new Set( [ 4, 5, 6 ] );
+  var got = _.arraySetBut_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 7 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries';
+  var dst = new Set();
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 2, 3, 6 ];
+  var got = _.arraySetBut_( dst, src1, src2 );
+  var exp = [ 1 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst, src1, src2, entries, one evaluator';
+  var dst = new Set();
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetBut_( dst, src1, src2, ( e ) => e );
+  var exp = [];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries, two evaluators';
+  var dst = new Set();
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetBut_( dst, src1, src2, ( e ) => e, ( ins ) => ins + 1 );
+  var exp = [ 3 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries, equalizer';
+  var dst = new Set();
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetBut_( dst, src1, src2, ( e, ins ) => e === ins + 1 );
+  var exp = [ 3 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.close( 'Set' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arraySetBut_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arraySetBut_( [], [ 1, 2 ], [ 1 ], ( e ) => e, ( ins ) => ins, 'extra' ) );
+
+  test.case = 'one argument, wrong type of src1';
+  test.shouldThrowErrorSync( () => _.arraySetBut_( '3' ) );
+
+  test.case = 'two arguments, wrong type of src1 or src2';
+  test.shouldThrowErrorSync( () => _.arraySetBut_( 'wrong', [ 1, 2 ] ) );
+  test.shouldThrowErrorSync( () => _.arraySetBut_( [ 1, 2 ], 'wrong' ) );
+}
+
+//
+
 function arraySetIntersection( test )
 {
 
@@ -29742,6 +33662,388 @@ function arraySetIntersection( test )
 
 //
 
+function arraySetIntersection_( test )
+{
+  test.case = 'one argument, null';
+  var got = _.arraySetIntersection_( null );
+  var exp = [];
+  test.identical( got, exp );
+
+  /* - */
+
+  test.open( 'array' );
+
+  test.case = 'one argument, empty array';
+  var src1 = [];
+  var got = _.arraySetIntersection_( src1 );
+  var exp = [];
+  test.is( got !== src1 );
+  test.identical( got, exp );
+
+  test.case = 'one argument, not empty array';
+  var src1 = [ 1, 2, 3 ];
+  var got = _.arraySetIntersection_( src1 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst - null, src1 - array, src2 - routine';
+  var dst = null;
+  var src1 = [ 1, 2, 'str' ];
+  var got = _.arraySetIntersection_( dst, src1, ( e ) => e );
+  var exp = [ 1, 2, 'str' ];
+  test.is( got !== src1 );
+  test.identical( got, exp );
+
+  test.case = 'dst - null, src1 - array, src2 - undefined';
+  var dst = null;
+  var src1 = [ 1, 2, 'str' ];
+  var got = _.arraySetIntersection_( dst, src1 );
+  var exp = [ 1, 2, 'str' ];
+  test.is( got !== src1 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'src1, src2, without entries';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetIntersection_( src1, src2 );
+  var exp = [];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst === src2, src1, entries';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 2, 3, 6 ];
+  var got = _.arraySetIntersection_( src1, src2 );
+  var exp = [ 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'src1, src2, entries, one evaluator';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetIntersection_( src1, src2, ( e ) => e );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries, two evaluators';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetIntersection_( src1, src2, ( e ) => e, ( ins ) => ins + 1 );
+  var exp = [ 1, 2 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries, equalizer';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetIntersection_( src1, src2, ( e, ins ) => e === ins + 1 );
+  var exp = [ 1, 2 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst === src1, src2, without entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = dst;
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetIntersection_( dst, src1, src2 );
+  var exp = [];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst === src1, src2, entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = dst;
+  var src2 = [ 2, 3, 6 ];
+  var got = _.arraySetIntersection_( dst, src1, src2 );
+  var exp = [ 2, 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst === src2, src1, without entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = [ 4, 5, 6 ];
+  var src2 = dst;
+  var got = _.arraySetIntersection_( dst, src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst === src2, src1, entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = [ 2, 3, 6 ];
+  var src2 = dst;
+  var got = _.arraySetIntersection_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 2, 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst, src1, src2, without entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetIntersection_( dst, src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries';
+  var dst = [];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 2, 3, 6 ];
+  var got = _.arraySetIntersection_( dst, src1, src2 );
+  var exp = [ 2, 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst, src1, src2, entries, one evaluator';
+  var dst = [];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetIntersection_( dst, src1, src2, ( e ) => e );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries, two evaluators';
+  var dst = [];
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetIntersection_( dst, src1, src2, ( e ) => e, ( ins ) => ins + 1 );
+  var exp = [ 1, 2 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries, equalizer';
+  var dst = [];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetIntersection_( dst, src1, src2, ( e, ins ) => e === ins + 1 );
+  var exp = [ 1, 2 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'Set' );
+
+  test.case = 'one argument, empty array';
+  var src1 = new Set();
+  var got = _.arraySetIntersection_( src1 );
+  var exp = [];
+  test.is( got !== src1 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'one argument, not empty array';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetIntersection_( src1 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst - null, src1 - array, src2 - routine';
+  var dst = null;
+  var src1 = new Set( [ 1, 2, 'str' ] );
+  var got = _.arraySetIntersection_( dst, src1, ( e ) => e );
+  var exp = [ 1, 2, 'str' ];
+  test.is( _.setIs( got ) );
+  test.is( got !== src1 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst - null, src1 - array, src2 - undefined';
+  var dst = null;
+  var src1 = new Set( [ 1, 2, 'str' ] );
+  var got = _.arraySetIntersection_( dst, src1 );
+  var exp = [ 1, 2, 'str' ];
+  test.is( _.setIs( got ) );
+  test.is( got !== src1 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'src1, src2, without entries';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 4, 5, 6 ] );
+  var got = _.arraySetIntersection_( src1, src2 );
+  var exp = [];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst === src2, src1, entries';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 2, 3, 6 ] );
+  var got = _.arraySetIntersection_( src1, src2 );
+  var exp = [ 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'src1, src2, entries, one evaluator';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetIntersection_( src1, src2, ( e ) => e );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries, two evaluators';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetIntersection_( src1, src2, ( e ) => e, ( ins ) => ins + 1 );
+  var exp = [ 1, 2 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries, equalizer';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetIntersection_( src1, src2, ( e, ins ) => e === ins + 1 );
+  var exp = [ 1, 2 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst === src1, src2, without entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = dst;
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetIntersection_( dst, src1, src2 );
+  var exp = [];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst === src1, src2, entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = dst;
+  var src2 = new Set( [ 2, 3, 6 ] );
+  var got = _.arraySetIntersection_( dst, src1, src2 );
+  var exp = [ 2, 3 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst === src2, src1, without entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = new Set( [ 4, 5, 6 ] );
+  var src2 = dst;
+  var got = _.arraySetIntersection_( dst, src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst === src2, src1, entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = new Set( [ 2, 3, 6 ] );
+  var src2 = dst;
+  var got = _.arraySetIntersection_( dst, src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst, src1, src2, without entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = [ 1, 2, 3, 7 ];
+  var src2 = new Set( [ 4, 5, 6 ] );
+  var got = _.arraySetIntersection_( dst, src1, src2 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries';
+  var dst = new Set();
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 2, 3, 6 ];
+  var got = _.arraySetIntersection_( dst, src1, src2 );
+  var exp = [ 2, 3 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst, src1, src2, entries, one evaluator';
+  var dst = new Set();
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetIntersection_( dst, src1, src2, ( e ) => e );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries, two evaluators';
+  var dst = new Set();
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetIntersection_( dst, src1, src2, ( e ) => e, ( ins ) => ins + 1 );
+  var exp = [ 1, 2 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries, equalizer';
+  var dst = new Set();
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetIntersection_( dst, src1, src2, ( e, ins ) => e === ins + 1 );
+  var exp = [ 1, 2 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.close( 'Set' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arraySetIntersection_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arraySetIntersection_( [], [ 1, 2 ], [ 1 ], ( e ) => e, ( ins ) => ins, 'extra' ) );
+
+  test.case = 'one argument, wrong type of src1';
+  test.shouldThrowErrorSync( () => _.arraySetIntersection_( '3' ) );
+
+  test.case = 'two arguments, wrong type of src1 or src2';
+  test.shouldThrowErrorSync( () => _.arraySetIntersection_( 'wrong', [ 1, 2 ] ) );
+  test.shouldThrowErrorSync( () => _.arraySetIntersection_( [ 1, 2 ], 'wrong' ) );
+}
+
+//
+
 function arraySetUnion( test )
 {
 
@@ -29938,6 +34240,388 @@ function arraySetUnion( test )
     _.arraySetUnion( undefined, undefined );
   });
 
+}
+
+//
+
+function arraySetUnion_( test )
+{
+  test.case = 'one argument, null';
+  var got = _.arraySetUnion_( null );
+  var exp = [];
+  test.identical( got, exp );
+
+  /* - */
+
+  test.open( 'array' );
+
+  test.case = 'one argument, empty array';
+  var src1 = [];
+  var got = _.arraySetUnion_( src1 );
+  var exp = [];
+  test.is( got !== src1 );
+  test.identical( got, exp );
+
+  test.case = 'one argument, not empty array';
+  var src1 = [ 1, 2, 3 ];
+  var got = _.arraySetUnion_( src1 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst - null, src1 - array, src2 - routine';
+  var dst = null;
+  var src1 = [ 1, 2, 'str' ];
+  var got = _.arraySetUnion_( dst, src1, ( e ) => e );
+  var exp = [ 1, 2, 'str' ];
+  test.is( got !== src1 );
+  test.identical( got, exp );
+
+  test.case = 'dst - null, src1 - array, src2 - undefined';
+  var dst = null;
+  var src1 = [ 1, 2, 'str' ];
+  var got = _.arraySetUnion_( dst, src1 );
+  var exp = [ 1, 2, 'str' ];
+  test.is( got !== src1 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'src1, src2, without entries';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetUnion_( src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst === src2, src1, entries';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 2, 3, 6 ];
+  var got = _.arraySetUnion_( src1, src2 );
+  var exp = [ 1, 2, 3, 6 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'src1, src2, entries, one evaluator';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetUnion_( src1, src2, ( e ) => e );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries, two evaluators';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetUnion_( src1, src2, ( e ) => e, ( ins ) => ins + 1 );
+  var exp = [ 1, 2, 3, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries, equalizer';
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetUnion_( src1, src2, ( e, ins ) => e === ins + 1 );
+  var exp = [ 1, 2, 3, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst === src1, src2, without entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = dst;
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetUnion_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst === src1, src2, entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = dst;
+  var src2 = [ 2, 3, 6 ];
+  var got = _.arraySetUnion_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 6 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst === src2, src1, without entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = [ 4, 5, 6 ];
+  var src2 = dst;
+  var got = _.arraySetUnion_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst === src2, src1, entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = [ 2, 3, 6 ];
+  var src2 = dst;
+  var got = _.arraySetUnion_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 6 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst, src1, src2, without entries';
+  var dst = [ 1, 2, 3 ];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetUnion_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries';
+  var dst = [];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 2, 3, 6 ];
+  var got = _.arraySetUnion_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 6 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'dst, src1, src2, entries, one evaluator';
+  var dst = [];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetUnion_( dst, src1, src2, ( e ) => e );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries, two evaluators';
+  var dst = [];
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetUnion_( dst, src1, src2, ( e ) => e, ( ins ) => ins + 1 );
+  var exp = [ 1, 2, 3, 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.case = 'dst, src1, src2, entries, equalizer';
+  var dst = [];
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetUnion_( dst, src1, src2, ( e, ins ) => e === ins + 1 );
+  var exp = [ 1, 2, 3, 3 ];
+  test.is( got === dst );
+  test.identical( got, exp );
+
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'Set' );
+
+  test.case = 'one argument, empty array';
+  var src1 = new Set();
+  var got = _.arraySetUnion_( src1 );
+  var exp = [];
+  test.is( got !== src1 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'one argument, not empty array';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetUnion_( src1 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst - null, src1 - array, src2 - routine';
+  var dst = null;
+  var src1 = new Set( [ 1, 2, 'str' ] );
+  var got = _.arraySetUnion_( dst, src1, ( e ) => e );
+  var exp = [ 1, 2, 'str' ];
+  test.is( _.setIs( got ) );
+  test.is( got !== src1 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst - null, src1 - array, src2 - undefined';
+  var dst = null;
+  var src1 = new Set( [ 1, 2, 'str' ] );
+  var got = _.arraySetUnion_( dst, src1 );
+  var exp = [ 1, 2, 'str' ];
+  test.is( _.setIs( got ) );
+  test.is( got !== src1 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'src1, src2, without entries';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 4, 5, 6 ] );
+  var got = _.arraySetUnion_( src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst === src2, src1, entries';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 2, 3, 6 ] );
+  var got = _.arraySetUnion_( src1, src2 );
+  var exp = [ 1, 2, 3, 6 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'src1, src2, entries, one evaluator';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetUnion_( src1, src2, ( e ) => e );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries, two evaluators';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetUnion_( src1, src2, ( e ) => e, ( ins ) => ins + 1 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries, equalizer';
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetUnion_( src1, src2, ( e, ins ) => e === ins + 1 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst === src1, src2, without entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = dst;
+  var src2 = [ 4, 5, 6 ];
+  var got = _.arraySetUnion_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst === src1, src2, entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = dst;
+  var src2 = new Set( [ 2, 3, 6 ] );
+  var got = _.arraySetUnion_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 6 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst === src2, src1, without entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = new Set( [ 4, 5, 6 ] );
+  var src2 = dst;
+  var got = _.arraySetUnion_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 4, 5, 6 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst === src2, src1, entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = new Set( [ 2, 3, 6 ] );
+  var src2 = dst;
+  var got = _.arraySetUnion_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 6 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst, src1, src2, without entries';
+  var dst = new Set( [ 1, 2, 3 ] );
+  var src1 = [ 1, 2, 3, 7 ];
+  var src2 = new Set( [ 4, 5, 6 ] );
+  var got = _.arraySetUnion_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 7, 4, 5, 6 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries';
+  var dst = new Set();
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 2, 3, 6 ];
+  var got = _.arraySetUnion_( dst, src1, src2 );
+  var exp = [ 1, 2, 3, 6 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  /* */
+
+  test.case = 'dst, src1, src2, entries, one evaluator';
+  var dst = new Set();
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetUnion_( dst, src1, src2, ( e ) => e );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries, two evaluators';
+  var dst = new Set();
+  var src1 = new Set( [ 1, 2, 3 ] );
+  var src2 = new Set( [ 1, 2, 3 ] );
+  var got = _.arraySetUnion_( dst, src1, src2, ( e ) => e, ( ins ) => ins + 1 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.case = 'dst, src1, src2, entries, equalizer';
+  var dst = new Set();
+  var src1 = [ 1, 2, 3 ];
+  var src2 = [ 1, 2, 3 ];
+  var got = _.arraySetUnion_( dst, src1, src2, ( e, ins ) => e === ins + 1 );
+  var exp = [ 1, 2, 3 ];
+  test.is( got === dst );
+  test.identical( [ ... got ], exp );
+
+  test.close( 'Set' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arraySetUnion_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arraySetUnion_( [], [ 1, 2 ], [ 1 ], ( e ) => e, ( ins ) => ins, 'extra' ) );
+
+  test.case = 'one argument, wrong type of src1';
+  test.shouldThrowErrorSync( () => _.arraySetUnion_( '3' ) );
+
+  test.case = 'two arguments, wrong type of src1 or src2';
+  test.shouldThrowErrorSync( () => _.arraySetUnion_( 'wrong', [ 1, 2 ] ) );
+  test.shouldThrowErrorSync( () => _.arraySetUnion_( [ 1, 2 ], 'wrong' ) );
 }
 
 //
@@ -30633,12 +35317,16 @@ var Self =
     longSlice,
     longBut,
     longButInplace,
+    longBut_,
     longSelect,
     longSelectInplace,
+    longSelect_,
     longGrow,
     longGrowInplace,
+    longGrow_,
     longRelength,
     longRelengthInplace,
+    longRelength_,
 
     longRepresent,
     // longResize, // Dmytro : uncomment when it will be reimplemented
@@ -30666,6 +35354,8 @@ var Self =
 
     longSupplement,
     longExtendScreening,
+
+    longSort,
 
     // type test
 
@@ -30701,12 +35391,16 @@ var Self =
     arraySlice,
     arrayBut,
     arrayButInplace,
+    arrayBut_,
     arraySelect,
     arraySelectInplace,
+    arraySelect_,
     arrayGrow,
     arrayGrowInplace,
+    arrayGrow_,
     arrayRelength,
     arrayRelengthInplace,
+    arrayRelength_,
 
     // array sequential search
 
@@ -30903,10 +35597,13 @@ var Self =
     // array set
 
     arraySetDiff,
-
+    arraySetDiff_,
     arraySetBut,
+    arraySetBut_,
     arraySetIntersection,
+    arraySetIntersection_,
     arraySetUnion,
+    arraySetUnion_,
 
     arraySetContainAll,
     arraySetContainAny,

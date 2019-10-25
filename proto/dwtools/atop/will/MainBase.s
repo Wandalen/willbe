@@ -42,7 +42,9 @@ if( typeof module !== 'undefined' )
 
 }
 
-//
+// --
+// relations
+// --
 
 let _ = wTools;
 let Parent = null;
@@ -53,6 +55,8 @@ let Self = function wWill( o )
 
 Self.shortName = 'Will';
 
+//
+
 let UpformingDefaults =
 {
   all : null,
@@ -60,6 +64,82 @@ let UpformingDefaults =
   peerModulesFormed : null,
   subModulesFormed : null,
   resourcesFormed : null,
+}
+
+let ModuleFilterNulls =
+{
+  withOut : null,
+  withIn : null,
+  withEnabledModules : null,
+  withDisabledModules : null,
+  withValid : null,
+  withInvalid : null,
+  withKnown : null,
+  withUnknown : null,
+}
+
+let ModuleFilterDefaults =
+{
+  withOut : 1,
+  withIn : 1,
+  withEnabledModules : 1,
+  withDisabledModules : 1,
+  withValid : 1,
+  withInvalid : 1,
+  withKnown : 1,
+  withUnknown : 0,
+}
+
+let ModuleFilterOff =
+{
+  withOut : 0,
+  withIn : 0,
+  withEnabledModules : 0,
+  withDisabledModules : 0,
+  withValid : 0,
+  withInvalid : 0,
+  withKnown : 0,
+  withUnknown : 0,
+}
+
+let ModuleFilterOn =
+{
+  withOut : 1,
+  withIn : 1,
+  withEnabledModules : 1,
+  withDisabledModules : 1,
+  withValid : 1,
+  withInvalid : 1,
+  withKnown : 1,
+  withUnknown : 1,
+}
+
+let RelationFilterNulls =
+{
+  ... ModuleFilterNulls,
+  withEnabledSubmodules : null,
+  withDisabledSubmodules : null,
+}
+
+let RelationFilterDefaults =
+{
+  ... ModuleFilterDefaults,
+  withEnabledSubmodules : 1,
+  withDisabledSubmodules : 1,
+}
+
+let RelationFilterOff =
+{
+  ... ModuleFilterOff,
+  withEnabledSubmodules : 0,
+  withDisabledSubmodules : 0,
+}
+
+let RelationFilterOn =
+{
+  ... ModuleFilterOn,
+  withEnabledSubmodules : 1,
+  withDisabledSubmodules : 1,
 }
 
 // --
@@ -555,10 +635,12 @@ resourcesInfoExport.defaults =
 
 //
 
-function variantsInfoExport()
+function variantsInfoExport( variants )
 {
   let will = this;
-  return _.map( _.longOnce( _.mapVals( will.variantMap ) ), ( variant ) => variant.infoExport() ).join( '\n' );
+  if( !variants )
+  variants = _.longOnce( _.mapVals( will.variantMap ) );
+  return _.map( variants, ( variant ) => variant.infoExport() ).join( '\n' );
 }
 
 //
@@ -729,18 +811,22 @@ versionIsUpToDate.defaults =
 function filterDefaults( o )
 {
   let will = this.form();
-  let names =
-  {
-    withIn : null,
-    withOut : null,
-    withBroken : null,
-  }
 
-  for( let n in names )
+  for( let n in _.Will.RelationFilterDefaults )
   {
     if( o[ n ] === null && will[ n ] !== undefined && will[ n ] !== null )
     o[ n ] = will[ n ];
   }
+
+  if( o.withEnabledSubmodules === null && will.withEnabled !== undefined && will.withEnabled !== null )
+  o.withEnabledSubmodules = will.withEnabled;
+  if( o.withDisabledSubmodules === null && will.withDisabled !== undefined && will.withDisabled !== null )
+  o.withDisabledSubmodules = will.withDisabled;
+
+  if( o.withEnabledModules === null && will.withEnabled !== undefined && will.withEnabled !== null )
+  o.withEnabledModules = will.withEnabled;
+  if( o.withDisabledModules === null && will.withDisabled !== undefined && will.withDisabled !== null )
+  o.withDisabledModules = will.withDisabled;
 
   return o;
 }
@@ -924,7 +1010,20 @@ function moduleFit_body( variant, opts )
   _.assert( arguments.length === 2 );
   _.assert( variant instanceof _.Will.ModuleVariant )
 
-  if( !opts.withBroken && variant.object )
+  if( !opts.withKnown && variant.object )
+  return false;
+
+  if( !opts.withUnknown && !variant.object )
+  return false;
+
+  if( !opts.withValid && variant.object )
+  if( variant.object.isValid() )
+  {
+    debugger;
+    return false;
+  }
+
+  if( !opts.withInvalid && variant.object )
   if( !variant.object.isValid() )
   {
     debugger;
@@ -939,38 +1038,86 @@ function moduleFit_body( variant, opts )
   if( !variant.module.isOut )
   return false;
 
-  if( !opts.withOptional )
+  if( !opts.withEnabledModules && variant.module )
+  if( variant.module.about.enabled )
+  return false;
+
+  if( !opts.withDisabledModules && variant.module )
+  if( !variant.module.about.enabled )
+  return false;
+
+  // if( !opts.withOptionalSubmodules )
+  // if( !variant.relation || variant.relation.isOptional() )
+  // return false;
+  //
+  // if( !opts.withMandatorySubmodules && variant.relation )
+  // if( !variant.relation.isOptional() )
+  // return false;
+
+  return true;
+}
+
+var defaults = moduleFit_body.defaults = _.mapExtend( null, ModuleFilterDefaults );
+
+defaults.withStem = 0;
+defaults.withPeers = 0;
+
+// defaults.withOptionalSubmodules = 1;
+// defaults.withMandatorySubmodules = 1;
+//
+// defaults.withOut = 1;
+// defaults.withIn = 1;
+// defaults.withEnabled = 1;
+// defaults.withDisabled = 0;
+// defaults.withValid = 1;
+// defaults.withInvalid = 1;
+
+let moduleFit = _.routineFromPreAndBody( moduleFit_pre, moduleFit_body );
+
+//
+
+function relationFit_body( variant, opts )
+{
+  let will = this;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 2 );
+  _.assert( variant instanceof _.Will.ModuleVariant )
+
+  if( _global_.EXPORTING )
+  debugger;
+
+  let result = will.moduleFit.body.call( will, variant, _.mapOnly( opts, will.moduleFit.defaults ) );
+  if( !result )
+  return result;
+
+  if( !opts.withOptionalSubmodules )
   if( !variant.relation || variant.relation.isOptional() )
   return false;
 
-  if( !opts.withMandatory && variant.relation )
+  if( !opts.withMandatorySubmodules && variant.relation )
   if( !variant.relation.isOptional() )
   return false;
 
-  if( !opts.withEnabled && variant.relation )
+  if( !opts.withEnabledSubmodules && variant.relation )
   if( variant.relation.enabled )
   return false;
 
-  if( !opts.withDisabled && variant.relation )
+  if( !opts.withDisabledSubmodules && variant.relation )
   if( !variant.relation.enabled )
   return false;
 
   return true;
 }
 
-var defaults = moduleFit_body.defaults = Object.create( null );
+var defaults = relationFit_body.defaults = _.mapExtend( null, moduleFit.defaults );
 
-defaults.withStem = 0;
-defaults.withPeers = 0;
-defaults.withOut = 1;
-defaults.withIn = 1;
-defaults.withOptional = 1;
-defaults.withMandatory = 1;
-defaults.withEnabled = 1;
-defaults.withDisabled = 0;
-defaults.withBroken = 1;
+defaults.withOptionalSubmodules = 1;
+defaults.withMandatorySubmodules = 1;
+defaults.withEnabledSubmodules = 1;
+defaults.withDisabledSubmodules = 1;
 
-let moduleFit = _.routineFromPreAndBody( moduleFit_pre, moduleFit_body );
+let relationFit = _.routineFromPreAndBody( moduleFit_pre, relationFit_body );
 
 //
 
@@ -986,23 +1133,47 @@ function modulesFilter( variants, o )
   _.assert( _.arrayIs( variants ) );
   o = _.routineOptions( modulesFilter, o );
 
-  // debugger;
   variants.forEach( ( module ) =>
   {
     let variant = module;
-    // if( !( variant instanceof _.Will.ModuleVariant ) )
-    // debugger;
     if( !( variant instanceof _.Will.ModuleVariant ) )
     variant = will.variantFrom( module );
     if( will.moduleFit.body.call( will, variant, o ) )
     result.push( module );
   });
-  // debugger;
 
   return result;
 }
 
 modulesFilter.defaults = _.mapExtend( null, moduleFit.defaults );
+
+//
+
+function relationsFilter( variants, o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let result = [];
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.arrayIs( variants ) );
+  o = _.routineOptions( relationsFilter, o );
+
+  variants.forEach( ( module ) =>
+  {
+    let variant = module;
+    if( !( variant instanceof _.Will.ModuleVariant ) )
+    variant = will.variantFrom( module );
+    if( will.relationFit.body.call( will, variant, o ) )
+    result.push( module );
+  });
+
+  return result;
+}
+
+relationsFilter.defaults = _.mapExtend( null, relationFit.defaults );
 
 //
 
@@ -1436,8 +1607,10 @@ function modulesFindWithAt( o )
     ({
       commonPath : o.selector,
       tracing : o.tracing,
-      withIn : will.withIn,
-      withOut : will.withOut,
+      withIn : o.withIn,
+      withOut : o.withOut,
+      // withIn : will.withIn,
+      // withOut : will.withOut,
       excludingUnderscore : 1,
     });
   }
@@ -1508,7 +1681,7 @@ function modulesFindWithAt( o )
     {
       err = _.err( err );
       op.errs.push( err );
-      if( o.withBroken && it.opener && it.opener.openedModule )
+      if( o.withInvalid && it.opener && it.opener.openedModule )
       {
         _.arrayAppendOnce( op.openers, it.opener );
       }
@@ -1538,12 +1711,7 @@ function modulesFindWithAt( o )
     }
 
     {
-      let filter =
-      {
-        withIn : o.withIn,
-        withOut : o.withOut,
-        withBroken : o.withBroken,
-      }
+      let filter = _.mapOnly( o, will.modulesFilter.defaults );
       let openers2 = will.modulesFilter( op.openers, filter );
       if( openers2.length )
       op.openers = openers2;
@@ -1570,14 +1738,21 @@ function modulesFindWithAt( o )
 
 }
 
-modulesFindWithAt.defaults =
-{
-  withIn : null,
-  withOut : null,
-  withBroken : null,
-  selector : null,
-  tracing : 0,
-}
+var defaults = modulesFindWithAt.defaults = _.mapExtend( null, ModuleFilterNulls );
+
+defaults.selector = null;
+defaults.tracing = null;
+
+// {
+//   // withIn : null,
+//   // withOut : null,
+//   // withInvalid : null,
+//   // withValid : null,
+//   // withEnabled : null,
+//   // withDisabled : null,
+//   selector : null,
+//   tracing : 0,
+// }
 
 //
 
@@ -1593,16 +1768,7 @@ function modulesOnlyRoots( modules )
   _.assert( _.longIs( modules ) );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  let filter =
-  {
-    withStem : 1,
-    withPeers : 1,
-    withDisabled : 1,
-    withEnabled : 1,
-    withBroken : 1,
-  }
-
-  let nodesGroup = will.graphGroupMake( _.mapOnly( filter, will.graphGroupMake.defaults ) );
+  let nodesGroup = will.graphGroupMake( _.mapOnly( _.Will.ModuleFilterOn, will.graphGroupMake.defaults ) ); xxx
 
   /* first make variants for each module */
 
@@ -1636,7 +1802,6 @@ function modulesOnlyRoots( modules )
 
 modulesOnlyRoots.defaults =
 {
-  // nodesGroup : null,
 }
 
 //
@@ -1678,7 +1843,7 @@ function modulesEach_body( o )
     nodes = nodes2;
   }
 
-  let filter = _.mapOnly( o, _.Will.prototype.moduleFit.defaults );
+  let filter = _.mapOnly( o, _.Will.prototype.relationFit.defaults );
 
   will.assertGraphGroup( o.nodesGroup, o );
   let o2 = _.mapOnly( o, o.nodesGroup.each.defaults );
@@ -1686,7 +1851,12 @@ function modulesEach_body( o )
   o2.onUp = handleUp;
   o2.onDown = handleDown;
   _.assert( _.boolLike( o2.left ) );
+
+  if( _global_.EXPORTING )
+  debugger;
   let result = o.nodesGroup.each( o2 );
+  if( _global_.EXPORTING )
+  debugger;
 
   if( o.outputFormat !== '/' )
   return result.map( ( variant ) => outputFrom( variant ) );
@@ -1698,7 +1868,9 @@ function modulesEach_body( o )
   function handleUp( variant, it )
   {
 
-    it.continueNode = will.moduleFit( variant, filter );
+    if( _global_.EXPORTING )
+    debugger;
+    it.continueNode = will.relationFit( variant, filter );
     if( o.onUp )
     o.onUp( outputFrom( variant ), it );
 
@@ -1728,7 +1900,15 @@ function modulesEach_body( o )
 
 }
 
-var defaults = modulesEach_body.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults, moduleFit.defaults );
+var defaults = modulesEach_body.defaults = _.mapExtend
+(
+  null,
+  _.graph.AbstractNodesGroup.prototype.each.defaults,
+  relationFit.defaults
+);
+
+defaults.withDisabledSubmodules = 0;
+defaults.withDisabledModules = 0;
 
 defaults.modules = null;
 defaults.outputFormat = '*/module'; /* / | * / module | * / relation */
@@ -1813,7 +1993,10 @@ function modulesFor_body( o )
     let o2 = _.mapOnly( o, will.modulesEach.defaults );
     o2.outputFormat = '/';
     o2.modules = variants;
-    return will.modulesEach( o2 );
+    debugger;
+    let result = will.modulesEach( o2 );
+    debugger;
+    return result;
   }
 
   function variantAction( variant )
@@ -1828,7 +2011,7 @@ function modulesFor_body( o )
 
 }
 
-var defaults = modulesFor_body.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults, moduleFit.defaults );
+var defaults = modulesFor_body.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults, relationFit.defaults );
 
 defaults.recursive = 1;
 defaults.withPeers = 1;
@@ -1887,9 +2070,9 @@ function modulesDownload_body( o )
   o.modules = _.arrayAs( o.nodesGroup.nodesAddOnce( o.modules ) );
   _.assert( _.arrayIs( o.modules ) );
 
-  let filter = _.mapOnly( o, _.Will.prototype.moduleFit.defaults );
+  let filter = _.mapOnly( o, _.Will.prototype.relationFit.defaults );
   filter.withOut = false;
-  o.modules = o.modules.filter( ( variant ) => will.moduleFit( variant, filter ) );
+  o.modules = o.modules.filter( ( variant ) => will.relationFit( variant, filter ) );
 
   if( !o.modules.length )
   return _.Consequence().take( o );
@@ -1933,6 +2116,7 @@ function modulesDownload_body( o )
       let o2 = _.mapOnly( o, will.modulesEach.defaults );
       o2.outputFormat = '/';
       o2.modules = variants;
+      o2.withPeers = 1; /* yyy */
       delete o2.nodesGroup;
       variants = will.modulesEach( o2 );
       downloadedLengthWas = o.downloadedContainer.length;
@@ -1991,10 +2175,13 @@ function modulesDownload_body( o )
     variants.forEach( ( variant ) => /* xxx : make it parallel */
     {
 
+      if( !variant.object )
+      return;
+
       _.assert
       (
         !!variant.object,
-        () => 'No object for' + ( variant.relation ? variant.relation.qualifiedName : '' ) + ''
+        () => `No object for ${variant.localPath}`
       );
 
       if( _.arrayHas( o.doneContainer, variant.object.localPath ) )
@@ -2136,8 +2323,8 @@ function modulesDownload_body( o )
   function variantLocal( variant )
   {
 
-    if( variant.localPath && _.strHas( variant.localPath, '.module' ) )
-    debugger;
+    // if( variant.localPath && _.strHas( variant.localPath, '.module' ) )
+    // debugger;
 
     if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
     return null;
@@ -2182,7 +2369,7 @@ var defaults = modulesDownload_body.defaults = _.mapExtend
 (
   null,
   _.graph.AbstractNodesGroup.prototype.each.defaults,
-  moduleFit.defaults
+  relationFit.defaults
 );
 
 defaults.mode = 'download';
@@ -2222,9 +2409,11 @@ function modulesUpform( o )
 
   let o2 = _.mapOnly( o, will.modulesFor.defaults );
   o2.onEach = handleEach;
+  debugger;
   return will.modulesFor( o2 )
   .finally( ( err, arg ) =>
   {
+    debugger;
     if( err )
     throw _.err( err, `\nFailed to upform modules` );
     return arg;
@@ -2236,8 +2425,11 @@ function modulesUpform( o )
   {
 
     if( visitedSet.has( variant ) )
+    debugger;
+    if( visitedSet.has( variant ) )
     return null;
 
+    debugger;
     variant.reform();
 
     if( !variant.module && o.allowingMissing )
@@ -2252,7 +2444,7 @@ function modulesUpform( o )
     );
 
     visitedSet.add( variant );
-
+    debugger;
     let o3 = _.mapOnly( o, variant.module.upform.defaults );
     return variant.module.upform( o3 );
   }
@@ -2386,14 +2578,17 @@ function graphGroupMake( o )
 
   function variantSubmodules( variant )
   {
-    return variant.submodulesGet
-    ({
-      withPeers : o.withPeers,
-      withOut : o.withOut,
-      withIn : o.withIn,
-      withEnabled : o.withEnabled,
-      withDisabled : o.withDisabled,
-    });
+    // if( _global_.EXPORTING )
+    // if( variant.id === 2 || variant.id === 62 )
+    // debugger;
+    return variant.submodulesGet( _.mapOnly( o, variant.submodulesGet.defaults ) );
+    // ({
+    //   withPeers : o.withPeers,
+    //   withOut : o.withOut,
+    //   withIn : o.withIn,
+    //   withEnabled : o.withEnabled,
+    //   withDisabled : o.withDisabled,
+    // });
   }
 
   /* */
@@ -2409,14 +2604,17 @@ function graphGroupMake( o )
 
 }
 
-graphGroupMake.defaults =
-{
-  withPeers : 1,
-  withOut : 1,
-  withIn : 1,
-  withEnabled : 1,
-  withDisabled : 0,
-}
+var defaults = graphGroupMake.defaults = _.mapExtend( null, RelationFilterDefaults );
+
+defaults.withPeers = 1;
+
+// {
+//   withPeers : 1,
+//   withOut : 1,
+//   withIn : 1,
+//   withEnabled : 1,
+//   withDisabled : 0,
+// }
 
 //
 
@@ -2484,15 +2682,20 @@ function graphInfoExportAsTree( modules, o )
 
 }
 
-var defaults = graphInfoExportAsTree.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.rootsExportInfoTree.defaults );
+var defaults = graphInfoExportAsTree.defaults = _.mapExtend
+(
+  null,
+  _.graph.AbstractNodesGroup.prototype.rootsExportInfoTree.defaults,
+  RelationFilterDefaults
+);
 
 defaults.withLocalPath = 0;
 defaults.withRemotePath = 0;
 
-defaults.withIn = 1;
-defaults.withOut = 0;
-defaults.withEnabled = 1;
-defaults.withDisabled = 1;
+// defaults.withIn = 1;
+// defaults.withOut = 0;
+// defaults.withEnabled = 1;
+// defaults.withDisabled = 1;
 
 // --
 // opener
@@ -3319,6 +3522,8 @@ function hookItFrom( o )
     outputPiping : 1,
     inputMirroring : 1,
     briefExitCode : 1,
+    sync : 0,
+    deasync : 1,
     mode : 'shell',
     ready : o.ready
   });
@@ -3333,6 +3538,8 @@ function hookItFrom( o )
     inputMirroring : 1,
     briefExitCode : 1,
     throwingExitCode : 0,
+    sync : 0,
+    deasync : 1,
     mode : 'shell',
     ready : o.ready
   });
@@ -3347,6 +3554,8 @@ function hookItFrom( o )
     outputPiping : 1,
     inputMirroring : 1,
     briefExitCode : 1,
+    sync : 0,
+    deasync : 1,
     mode : 'fork',
     ready : o.ready,
   });
@@ -3378,6 +3587,7 @@ hookItFrom.defaults =
   execPath : null,
   request : null,
   interpreterName : null,
+  sync : 1,
 
   start : null,
   startNonThrowing : null,
@@ -3455,7 +3665,8 @@ function hookCall( o )
 
   function jsCall()
   {
-    let ready = o.ready;
+    // let ready = o.ready;
+    let ready = new _.Consequence().take( null );
 
     ready
     .then( () =>
@@ -3482,6 +3693,9 @@ function hookCall( o )
       throw _.err( err, `\nFailed to ${o.execPath}` );
       return arg;
     })
+
+    if( o.sync )
+    ready.deasync();
 
     return ready.split();
   }
@@ -3620,7 +3834,17 @@ let ResourceKindToMapName = new _.NameMapper({ leftName : 'resource kind', right
 
 });
 
-let ResourceKinds = [ 'submodule', 'step', 'path', 'reflector', 'build', 'about', 'execution', 'exported' ];
+let ResourceKinds =
+[
+  'submodule',
+  'step',
+  'path',
+  'reflector',
+  'build',
+  'about',
+  'execution',
+  'exported',
+];
 
 let KnownHookExts =
 [
@@ -3659,12 +3883,12 @@ let Composes =
   verbosity : 3,
   verboseStaging : 0,
 
-  withOut : 1,
-  withIn : 1,
-  withBroken : 1,
-
   environmentPath : null,
   withPath : null,
+
+  withEnabled : 1,
+  withDisabled : 0,
+  ... ModuleFilterDefaults,
 
 }
 
@@ -3728,6 +3952,14 @@ let Statics =
   KnownHookExts,
   OpeningDefaults,
   UpformingDefaults,
+  ModuleFilterNulls,
+  ModuleFilterDefaults,
+  ModuleFilterOn,
+  ModuleFilterOff,
+  RelationFilterNulls,
+  RelationFilterDefaults,
+  RelationFilterOn,
+  RelationFilterOff,
 
   // path
 
@@ -3826,7 +4058,9 @@ let Extend =
 
   moduleAt,
   moduleFit,
+  relationFit,
   modulesFilter,
+  relationsFilter,
   moduleIdUnregister,
   moduleIdRegister,
   modulePathUnregister,

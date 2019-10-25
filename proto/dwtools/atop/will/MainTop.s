@@ -277,24 +277,25 @@ function _commandBuildLike( o )
   if( will.currentOpeners === null && will.currentOpener === null )
   ready.then( () => will.openersFind() );
 
-  if( will.currentOpeners )
-  {
-    let filter =
-    {
-      withIn : o.withIn,
-      withOut : o.withOut,
-      withBroken : o.withBroken,
-    }
-    let openers2 = will.modulesFilter( will.currentOpeners, filter );
-    if( openers2.length )
-    will.currentOpeners = openers2;
-  }
-
   ready
+  .then( () => filter() )
   .then( () => will.openersCurrentEach( forSingle ) )
   .finally( end );
 
   return ready;
+
+  /* */
+
+  function filter()
+  {
+    if( will.currentOpeners )
+    {
+      let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly( o, will.modulesFilter.defaults ) );
+      if( openers2.length )
+      will.currentOpeners = openers2;
+    }
+    return null;
+  }
 
   /* */
 
@@ -341,16 +342,13 @@ function _commandBuildLike( o )
 
 }
 
-_commandBuildLike.defaults =
-{
-  event : null,
-  onEach : null,
-  commandRoutine : null,
-  name : null,
-  withIn : 1,
-  withOut : 1,
-  withBroken : 0,
-}
+var defaults = _commandBuildLike.defaults = _.mapExtend( null, _.Will.ModuleFilterDefaults );
+
+defaults.event = null;
+defaults.onEach = null;
+defaults.commandRoutine = null;
+defaults.name = null;
+defaults.withDisabledModules = 0;
 
 //
 
@@ -433,7 +431,7 @@ _commandNewLike.defaults =
   name : null,
   withIn : 1,
   withOut : 1,
-  withBroken : 0,
+  withInvalid : 0,
 }
 
 //
@@ -517,6 +515,8 @@ function openersFind( o )
 
   return will.modulesFindWithAt
   ({
+    withIn : 1,
+    withOut : 1,
     selector : o.localPath,
     tracing : o.tracing,
   })
@@ -815,7 +815,6 @@ function commandWith( e )
   if( !isolated )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
 
-  debugger;
   will.withPath = path.join( path.current(), will.withPath, path.fromGlob( isolated.argument ) );
   if( _.strBegins( isolated.secondSubject, '.module.new' ) )
   {
@@ -828,7 +827,6 @@ function commandWith( e )
   return will.modulesFindWithAt({ selector : isolated.argument })
   .then( function( it )
   {
-
     will.currentOpeners = it.sortedOpeners;
 
     if( !will.currentOpeners.length )
@@ -1351,8 +1349,6 @@ function commandSubmodulesClean( e )
 function commandSubmodulesAdd( e )
 {
   let will = this;
-  // debugger;
-  // let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
 
   return will._commandBuildLike
   ({
@@ -1652,7 +1648,8 @@ function commandModuleNewWith( e )
     onEach : handleEach,
     commandRoutine : commandModuleNewWith,
     withOut : 0,
-    withBroken : 1,
+    withDisabledModules : 0,
+    withInvalid : 1,
   })
   .then( ( arg ) =>
   {
@@ -1720,7 +1717,8 @@ function commandDo( e )
     onEach : handleEach,
     commandRoutine : commandDo,
     withOut : 0,
-    withBroken : 1,
+    withDisabledModules : 0,
+    withInvalid : 1,
   })
   .then( ( arg ) =>
   {
@@ -1759,7 +1757,8 @@ function commandHookCall( e )
     onEach : handleEach,
     commandRoutine : commandHookCall,
     withOut : 0,
-    withBroken : 1,
+    withDisabledModules : 0,
+    withInvalid : 1,
   })
   .then( ( arg ) =>
   {
@@ -1791,10 +1790,9 @@ function commandClean( e )
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
   e.propertiesMap.dry = !!e.propertiesMap.dry;;
   let dry = e.propertiesMap.dry;
-  // delete e.propertiesMap.dry;
   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
   e.propertiesMap.fast = !dry;
-  e.propertiesMap.fast = 0;
+  e.propertiesMap.fast = 0; /* xxx */
 
   return will._commandBuildLike
   ({
@@ -1806,9 +1804,6 @@ function commandClean( e )
 
   function handleEach( it )
   {
-    // if( dry )
-    // return it.opener.openedModule.cleanWhatReport( _.mapExtend( null, e.propertiesMap ) );
-    // else
     return it.opener.openedModule.clean( _.mapExtend( null, e.propertiesMap ) );
   }
 
