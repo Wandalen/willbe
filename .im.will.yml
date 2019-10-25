@@ -16,6 +16,9 @@ submodule :
   wTemplateTreeEnvironment :
     path : npm:///wtemplatetreeenvironment
     enabled : 0 # submodule
+  wTemplateFileWriter :
+    path : npm:///wtemplatefilewriter
+    enabled : 0 # submodule
   wAppBasic :
     path : npm:///wappbasic
     enabled : 0 # submodule
@@ -33,6 +36,12 @@ submodule :
     enabled : 0 # submodule
   wGitTools :
     path : npm:///wgittools
+    enabled : 0 # submodule
+  wNpmTools :
+    path : npm:///wnpmtools
+    enabled : 0 # submodule
+  wYamlTools :
+    path : npm:///wyamltools
     enabled : 0 # submodule
   wFilesEncoders :
     path : npm:///wfilesencoders

@@ -52,6 +52,7 @@
     "wLogger": "beta",
     "wverbal": "beta",
     "wtemplatetreeenvironment": "beta",
+    "wtemplatefilewriter": "beta",
     "wappbasic": "beta",
     "wgraphbasic": "beta",
     "wFiles": "beta",
@@ -67,6 +68,8 @@
     "wcommandsconfig": "beta",
     "wnamemapper": "beta",
     "wtranspilationstrategy": "beta",
+    "wnpmtools": "beta",
+    "wyamltools": "beta",
     "tar": "5.0.5",
     "gitconfiglocal": "2.1.0",
     "open": "7.0.0"
