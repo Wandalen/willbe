@@ -25,6 +25,9 @@ submodule :
   wGraphBasic :
     path : npm:///wgraphbasic
     enabled : 0 # submodule
+  wGraphBase:
+    path : npm:///wgraphbasic
+    enabled : 0 # submodule
   wFiles :
     path : npm:///wFiles
     enabled : 0 # submodule

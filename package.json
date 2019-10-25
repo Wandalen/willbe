@@ -61,6 +61,7 @@
     "wstatestorage": "beta",
     "wstatesession": "beta",
     "wstager": "beta",
+    "wgraphbase": "beta",
     "wselector": "beta",
     "wresolver": "beta",
     "wcommandsaggregator": "beta",
