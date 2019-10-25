@@ -2514,7 +2514,7 @@ function withDoInfo( test )
     test.case = '.hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 10 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 1 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
@@ -2529,7 +2529,7 @@ function withDoInfo( test )
     test.case = '.with . .hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 10 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 1 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
@@ -2544,7 +2544,7 @@ function withDoInfo( test )
     test.case = '.with . .hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 10 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 1 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
@@ -2559,7 +2559,7 @@ function withDoInfo( test )
     test.case = '.with . .hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 12 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( got.output, 'localPath :' ), 7 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
@@ -2574,7 +2574,7 @@ function withDoInfo( test )
     test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 8 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( got.output, 'localPath :' ), 7 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
@@ -2589,7 +2589,7 @@ function withDoInfo( test )
     test.case = '.imply withIn:0 ; .with ** .hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 5 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
@@ -2682,7 +2682,7 @@ function withDoStatus( test )
     test.case = 'no changes';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 13 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
     return null;
   })
@@ -2703,7 +2703,7 @@ function withDoStatus( test )
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 13 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( got.output, /module::\w+ at / ), 2 );
     test.identical( _.strCount( got.output, 'module at' ), 2 );
@@ -2852,7 +2852,7 @@ function hookCallInfo( test )
     test.case = '.hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 10 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 1 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
@@ -2867,7 +2867,7 @@ function hookCallInfo( test )
     test.case = '.with . .hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 10 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 1 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
@@ -2882,7 +2882,7 @@ function hookCallInfo( test )
     test.case = '.with . .hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 10 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 1 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
@@ -2897,7 +2897,7 @@ function hookCallInfo( test )
     test.case = '.with . .hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 12 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( got.output, 'localPath :' ), 6 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
@@ -2912,7 +2912,7 @@ function hookCallInfo( test )
     test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 9 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 0 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( got.output, 'localPath :' ), 6 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
@@ -2927,7 +2927,7 @@ function hookCallInfo( test )
     test.case = '.imply withIn:0 ; .with ** .hook.call info.js';
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 3 );
-    test.identical( _.strCount( got.output, '! Inconsistent' ), 1 );
+    test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
     test.identical( _.strCount( got.output, 'localPath :' ), 4 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
@@ -9277,7 +9277,7 @@ function exportCourruptedSubmodulesDisabled( test )
 
 //
 
-function exportInconsistent( test )
+function exportOutdated( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'inconsistent-outfile' );
@@ -9357,7 +9357,7 @@ function exportInconsistent( test )
     test.setsAreIdentical( exported, exp );
 
     test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, '! Inconsistent .' ), 2 );
+    test.identical( _.strCount( got.output, '! Outdated .' ), 2 );
     test.identical( _.strCount( got.output, 'Failed to open willfile' ), 0 );
     test.identical( _.strCount( got.output, 'Out-willfile is inconsistent with its in-willfiles' ), 0 );
     test.identical( _.strCount( got.output, /Exported .*module::sub \/ build::export.*/ ), 1 );
@@ -9368,7 +9368,7 @@ function exportInconsistent( test )
   /* - */
 
   return ready;
-} /* end of function exportInconsistent */
+} /* end of function exportOutdated */
 
 //
 
@@ -17679,7 +17679,7 @@ var Self =
     exportCourrputedOutfileUnknownSection,
     exportCourruptedOutfileSyntax,
     exportCourruptedSubmodulesDisabled,
-    exportInconsistent,
+    exportOutdated,
     exportWholeModule,
     exportRecursive,
     exportRecursiveUsingSubmodule,

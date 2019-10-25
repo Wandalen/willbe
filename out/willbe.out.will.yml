@@ -2,15 +2,12 @@ format: outwillfile-2.0
 root:
   - willbe.out
 consistency:
-  willbe.out.will.yml: &ref_0
-    hash: bf7222dd3668e470e7a7eb19f63ec4f1
-    size: 244132
-  ../.ex.will.yml: &ref_1
+  ../.ex.will.yml: &ref_0
     hash: 046b16d5fda9a4efda9bf329afc39376
     size: 2260
-  ../.im.will.yml: &ref_2
-    hash: 78f0721db667874f3e918ced96f4a88a
-    size: 6476
+  ../.im.will.yml: &ref_1
+    hash: bc8000dbea3d86811c33a9614157e358
+    size: 6708
 module:
   willbe.out:
     about:
@@ -19,27 +16,27 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@willbe.so>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts:
+      npm.scripts: &ref_5
         test: 'wtest .run proto/** v:5'
         docgen: wdocgen .build proto
         single-process-will: node proto/dwtools/atop/will/Exec
         debug-will: node proto/dwtools/atop/will/ExecDebug
         unrestricted-will: node proto/dwtools/atop/will/ExecUnrestricted
         will: node proto/dwtools/atop/will/ExecUnrestricted
-      npm.bin:
+      npm.bin: &ref_6
         single-process-will: proto/dwtools/atop/will/Exec
         debug-will: proto/dwtools/atop/will/ExecDebug
         unrestricted-will: proto/dwtools/atop/will/ExecUnrestricted
@@ -84,12 +81,8 @@ module:
       bugtracker:
         path: 'https:///github.com/Wandalen/willbe/issues'
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: .
       temp:
         path: 'path::out'
@@ -3613,6 +3606,10 @@ module:
         path: 'npm:///wtemplatetreeenvironment'
         autoExporting: 0
         enabled: 0
+      wTemplateFileWriter:
+        path: 'npm:///wtemplatefilewriter'
+        autoExporting: 0
+        enabled: 0
       wAppBasic:
         path: 'npm:///wappbasic'
         autoExporting: 0
@@ -3635,6 +3632,14 @@ module:
         enabled: 0
       wGitTools:
         path: 'npm:///wgittools'
+        autoExporting: 0
+        enabled: 0
+      wNpmTools:
+        path: 'npm:///wnpmtools'
+        autoExporting: 0
+        enabled: 0
+      wYamlTools:
+        path: 'npm:///wyamltools'
         autoExporting: 0
         enabled: 0
       wFilesEncoders:
@@ -4208,22 +4213,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          reflector: 'reflector::exported.proto.export*'
-        criterion:
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          reflector: 'reflector::exported.files.proto.export*'
-        criterion:
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -4312,9 +4301,8 @@ module:
           content: proto
           export: 1
     consistency:
-      willbe.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: willbe
@@ -4322,31 +4310,14 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters:
-        - njs >= 8.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - wTools
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@willbe.so>
-        - Volodymyr M. <volodymyr.migdal@gmail.com>
-        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
+      contributors: *ref_4
       npm.name: willbe
-      npm.scripts:
-        test: 'wtest .run proto/** v:5'
-        docgen: wdocgen .build proto
-        single-process-will: node proto/dwtools/atop/will/Exec
-        debug-will: node proto/dwtools/atop/will/ExecDebug
-        unrestricted-will: node proto/dwtools/atop/will/ExecUnrestricted
-        will: node proto/dwtools/atop/will/ExecUnrestricted
-      npm.bin:
-        single-process-will: proto/dwtools/atop/will/Exec
-        debug-will: proto/dwtools/atop/will/ExecDebug
-        unrestricted-will: proto/dwtools/atop/will/ExecUnrestricted
-        will: proto/dwtools/atop/will/ExecUnrestricted
+      npm.scripts: *ref_5
+      npm.bin: *ref_6
     path:
       module.willfiles:
         criterion:
@@ -4475,6 +4446,10 @@ module:
         path: 'npm:///wtemplatetreeenvironment'
         autoExporting: 0
         enabled: 0
+      wTemplateFileWriter:
+        path: 'npm:///wtemplatefilewriter'
+        autoExporting: 0
+        enabled: 0
       wAppBasic:
         path: 'npm:///wappbasic'
         autoExporting: 0
@@ -4497,6 +4472,14 @@ module:
         enabled: 0
       wGitTools:
         path: 'npm:///wgittools'
+        autoExporting: 0
+        enabled: 0
+      wNpmTools:
+        path: 'npm:///wnpmtools'
+        autoExporting: 0
+        enabled: 0
+      wYamlTools:
+        path: 'npm:///wyamltools'
         autoExporting: 0
         enabled: 0
       wFilesEncoders:
@@ -5101,6 +5084,5 @@ module:
         hash: 046b16d5fda9a4efda9bf329afc39376
         size: 2260
       ../.im.will.yml:
-        hash: 78f0721db667874f3e918ced96f4a88a
-        size: 6476
-      willbe.out.will.yml: *ref_0
+        hash: bc8000dbea3d86811c33a9614157e358
+        size: 6708

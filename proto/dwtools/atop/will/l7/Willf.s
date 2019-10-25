@@ -634,7 +634,7 @@ function _readLog( reading, failed )
       // if( failed )
       // debugger;
       if( failed === 2 )
-      logger.log( ` ! Inconsistent . ${filePath[ f ]} from ${storagePath[ f ]}` );
+      logger.log( ` ! Outdated . ${filePath[ f ]} from ${storagePath[ f ]}` );
       else if( failed )
       logger.log( ` ! Failed to ${read} . ${filePath[ f ]} from ${storagePath[ f ]}` );
       else
@@ -648,7 +648,7 @@ function _readLog( reading, failed )
       // if( failed )
       // debugger;
       if( failed === 2 )
-      logger.log( ` ! Inconsistent . ${filePath[ f ]}` );
+      logger.log( ` ! Outdated . ${filePath[ f ]}` );
       else if( failed )
       logger.log( ` ! Failed to ${read} . ${filePath[ f ]}` );
       else

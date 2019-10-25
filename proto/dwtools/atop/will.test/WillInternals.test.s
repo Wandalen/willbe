@@ -3230,7 +3230,7 @@ test
   - outdate outfile should not used to preserve its content
 */
 
-function exportInconsistent( test )
+function exportOutdated( test )
 {
   let self = this;
   let originalDirPath = _.path.join( self.assetDirPath, 'inconsistent-outfile' );
@@ -3373,7 +3373,7 @@ function exportInconsistent( test )
 
   return ready;
 
-} /* end of function exportInconsistent */
+} /* end of function exportOutdated */
 
 //
 
@@ -9354,7 +9354,7 @@ var Self =
     exportSuper,
     exportSuperIn,
     exportDefaultPath,
-    exportInconsistent,
+    exportOutdated,
     exportRecursive,
     exportDotless,
     exportDotlessSingle,
