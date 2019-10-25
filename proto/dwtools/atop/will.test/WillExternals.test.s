@@ -1951,13 +1951,13 @@ function eachMixed( test )
   ready
   .then( () =>
   {
-    test.case = '.each submodule::*/path::download .start "git status"'
+    test.case = '.each submodule::*/path::download .shell "git status"'
     return null;
   })
 
   start({ execPath : '.clean' })
   start({ execPath : '.build' })
-  start({ execPath : '.each submodule::*/path::download .start "git status"' })
+  start({ execPath : '.each submodule::*/path::download .shell "git status"' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -1988,13 +1988,13 @@ function eachMixed( test )
   ready
   .then( () =>
   {
-    test.case = '.each submodule:: .start ls'
+    test.case = '.each submodule:: .shell ls'
     return null;
   })
 
   start({ execPath : '.clean' })
   start({ execPath : '.build' })
-  start({ execPath : '.each submodule:: .start ls -al' })
+  start({ execPath : '.each submodule:: .shell ls -al' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -2721,8 +2721,8 @@ function withDoStatus( test )
 withDoStatus.timeOut = 300000;
 withDoStatus.description =
 `
-- it.start exposed for action
-- it.start has proper current path
+- it.shell exposed for action
+- it.shell has proper current path
 - errorors are brief
 `
 
