@@ -1,0 +1,28 @@
+submodule :
+  Tools : git+https:///github.com/Wandalen/wTools.git/#master
+  Proto : git+https:///github.com/Wandalen/wProto.git/#master
+
+about :
+
+  name : submodule
+  version : 0.1.0
+
+path :
+
+  in : .
+  out : out
+
+step :
+
+  export.common :
+    export : '{path::in}/**'
+    tar : 0
+
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::export.common

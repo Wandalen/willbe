@@ -14324,6 +14324,94 @@ submodulesDownloadThrowing.timeOut = 300000;
 
 //
 
+function submodulesDownloadStepAndCommand( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let localRepoPath = _.path.join( routinePath, 'module' );
+  let ready = new _.Consequence().take( null );
+  let downloadPath = _.path.join( routinePath, '.module/PathBasic' );
+
+  let start = _.process.starter
+  ({
+    execPath : 'node ' + self.willPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  let shell2 = _.process.starter
+  ({
+    currentPath : localRepoPath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* submodules.download step downloads submodules recursively, but should not */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = 'download using step::submodules.download'
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+  shell2( 'git init' )
+  shell2( 'git add .' )
+  shell2( 'git commit -m init' )
+  start({ execPath : '.build' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    let files = self.find( submodulesPath );
+    test.is( !_.arrayHas( files, './Tools' ) )
+    test.is( !_.arrayHas( files, './Proto' ) )
+    test.is( _.arrayHas( files, './submodule' ) )
+    return null;
+  })
+
+  /* submodules.download command downloads only own submodule, as expected */
+
+  .then( () =>
+  {
+    test.case = 'download using command submodules.download'
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+  shell2( 'git init' )
+  shell2( 'git add .' )
+  shell2( 'git commit -m init' )
+  start({ execPath : '.submodules.download' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    let files = self.find( submodulesPath );
+    test.is( !_.arrayHas( files, './Tools' ) )
+    test.is( !_.arrayHas( files, './Proto' ) )
+    test.is( _.arrayHas( files, './submodule' ) )
+    return null;
+  })
+
+  /*  */
+
+  return ready;
+}
+
+//
+
 function submodulesUpdateThrowing( test )
 {
   let self = this;
@@ -17726,6 +17814,7 @@ var Self =
     submodulesDownloadSwitchBranch,
     submodulesDownloadRecursive,
     submodulesDownloadThrowing,
+    submodulesDownloadStepAndCommand,
     submodulesUpdateThrowing,
     submodulesAgreeThrowing,
     submodulesVersionsAgreeWrongOrigin,
