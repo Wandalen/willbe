@@ -42,9 +42,6 @@ function OnInstanceExists( o )
 
   _.routineOptions( OnInstanceExists, arguments );
 
-  // if( o.resource.name === 'download' )
-  // debugger;
-
   o.resource.criterion = o.resource.criterion || Object.create( null );
   _.mapSupplement( o.resource.criterion, o.instance.criterion );
   o.resource.exportable = o.instance.exportable;
@@ -66,9 +63,6 @@ function init( o )
 {
   let resource = this;
 
-  // if( o && o.name === 'download' )
-  // debugger;
-
   Parent.prototype.init.apply( resource, arguments );
 
   return resource;
@@ -82,10 +76,10 @@ function unform()
   let module = resource.module;
   let willf = resource.willf;
 
-  if( resource.original )
-  _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
-  else
-  _.assert( module[ resource.MapName ][ resource.name ] === resource );
+  // if( resource.original )
+  // _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
+  // else
+  // _.assert( module[ resource.MapName ][ resource.name ] === resource );
 
   Parent.prototype.unform.apply( resource, arguments )
 
@@ -117,12 +111,17 @@ function form1()
 
   Parent.prototype.form1.apply( resource, arguments )
 
-  if( !resource.original )
+  // if( !resource.original )
+  // {
+  //   if( resource.original )
+  //   _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
+  //   else
+  //   _.assert( module[ resource.MapName ][ resource.name ] === resource );
+  //   module.pathMap[ resource.name ] = resource.path;
+  // }
+
+  if( !resource.original && !resource.phantom )
   {
-    if( resource.original )
-    _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
-    else
-    _.assert( module[ resource.MapName ][ resource.name ] === resource );
     module.pathMap[ resource.name ] = resource.path;
   }
 
@@ -325,6 +324,11 @@ function _pathSet( src )
   if( _.arrayLike( src ) )
   src = _.arraySlice( src );
 
+  if( src !== null )
+  {
+    src = _.uri.s.undot( src );
+  }
+
   if( module && resource.name && !resource.original && src )
   if( resource.name !== 'in' )
   if( resource.criterion.predefined && !resource.writable )
@@ -343,7 +347,7 @@ function _pathSet( src )
 
   resource[ pathSymbol ] = src;
 
-  if( module && resource.name && !resource.original )
+  if( module && resource.name && !resource.original && !resource.phantom )
   {
     _.assert( module.pathMap[ resource.name ] === undefined );
     module.pathMap[ resource.name ] = resource.path;

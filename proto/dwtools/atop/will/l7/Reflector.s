@@ -50,7 +50,6 @@ function MakeFor_body( o )
   let o3 = Object.create( null );
   o3.resource = Object.create( null );
   o3.resource.criterion = _.mapExtend( null, o.resource.criterion || {} );
-  // debugger;
   o3.resource.shell = o.resource.shell;
   o3.Importing = 1;
   o3.module = module;
@@ -162,6 +161,9 @@ function form1()
 
   /* begin */
 
+  // if( reflector.name === "exported.files.proto.export" )
+  // debugger;
+
   reflector.src = reflector.src || Object.create( null );
   if( reflector.src )
   {
@@ -207,7 +209,7 @@ function form2( o )
   _.assert( reflector.formed === 1 );
   o = _.routineOptions( form2, arguments );
 
-  if( !reflector.unformedResource && !reflector.generated )
+  if( !reflector.unformedResource && !reflector.criterion.generated )
   {
 
     if( reflector.original )
@@ -283,6 +285,9 @@ function form3()
   reflector.dst.basePath = reflector.dst.basePathSimplest();
   reflector.sureRelativeOrGlobal();
 
+  // if( reflector.name === 'reflect.submodules.debug' )
+  // debugger;
+
   _.assert
   (
     reflector.src.prefixPath === null || path.s.allAreAbsolute( reflector.src.prefixPath ),
@@ -295,6 +300,9 @@ function form3()
   );
 
   /* end */
+
+  // if( reflector.name === "exported.files.proto.export" )
+  // debugger;
 
   reflector.formed = 3;
   return reflector;
@@ -326,16 +334,20 @@ function _inheritMultiple( o )
   _.assert( reflector.src === reflector.dst.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
-  // if( reflector.qualifiedName === "reflector::exported.export" )
+  reflector._inheritPrefixes({ visited : o.visited });
+
+  // if( reflector.name === "exported.files.proto.export" )
   // debugger;
 
-  reflector._inheritPrefixes({ visited : o.visited });
   reflector._inheritPathMap({ visited : o.visited });
 
-  // if( reflector.qualifiedName === "reflector::exported.export" )
+  // if( reflector.name === "reflect.submodules" )
   // debugger;
 
   Parent.prototype._inheritMultiple.call( reflector, o );
+
+  // if( reflector.name === "reflect.submodules" )
+  // debugger;
 
   _.assert( reflector.src.dst === reflector.dst );
   _.assert( reflector.src === reflector.dst.src );
@@ -346,16 +358,13 @@ function _inheritMultiple( o )
   reflector.prefixesApply();
   reflector._accumulator.prefixesApply();
 
-  // if( reflector.qualifiedName === "reflector::exported.export" )
-  // debugger;
-
   reflector.src.and( reflector._accumulator.src ).pathsSupplementJoining( reflector._accumulator.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
   reflector.dst.and( reflector._accumulator.dst ).pathsSupplementJoining( reflector._accumulator.dst );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
-  // if( reflector.qualifiedName === "reflector::exported.export" )
+  // if( reflector.name === 'reflect.submodules.debug' )
   // debugger;
 
   return reflector;
@@ -421,6 +430,9 @@ function _inheritSingle( o )
 
   reflector.copy( extend );
   reflector.criterionInherit( reflector2.criterion );
+
+  // if( reflector.name === "reflect.submodules" )
+  // debugger;
 
   reflector2 = reflector2.cloneDerivative();
   reflector2.pathsResolve();
@@ -590,11 +602,15 @@ function _inheritPathMapAct2( o )
 
   _.assertRoutineOptions( _inheritPathMapAct2, arguments );
 
+  // if( reflector.name === 'reflect.submodules.debug' )
+  // debugger;
+
   let resolvedSrc = module.pathResolve
   ({
     selector : o.src,
     visited : o.visited,
     currentContext : reflector,
+    pathResolving : 'in', /* yyy */
   });
   let resolvedDst = module.pathResolve
   ({
@@ -602,6 +618,7 @@ function _inheritPathMapAct2( o )
     visited : o.visited,
     currentContext : reflector,
     pathUnwrapping : 1,
+    pathResolving : 'in', /* yyy */
   });
 
   if( !_.errIs( resolvedSrc ) && !_.strIs( resolvedSrc ) && !_.arrayIs( resolvedSrc ) && !( resolvedSrc instanceof will.Reflector ) )
@@ -778,11 +795,15 @@ function _inheritPrefixes( o )
   function inherit( prefixPath, isDst )
   {
 
+    // if( reflector.name === 'reflect.submodules.debug' )
+    // debugger;
+
     let resolvedPrefixPath = module.pathResolve
     ({
       selector : prefixPath,
       visited : o.visited,
       currentContext : reflector,
+      pathResolving : 'in', /* yyy */
     });
 
     if( !( resolvedPrefixPath instanceof Self ) )
@@ -952,11 +973,11 @@ function pathsResolve( o )
   if( reflector.src.dst === reflector.dst && reflector.src.filePath === reflector.dst.filePath )
   paired = true;
 
+  // if( reflector.name === 'reflect.submodules.debug' )
+  // debugger;
+
   if( _.mapIs( reflector.src.filePath ) )
   reflector.src.filePathNullizeMaybe();
-
-  // if( reflector.qualifiedName === "reflector::reflect.files2" )
-  // debugger;
 
   /* yyy */
   if( !reflector.src.prefixPath )
@@ -970,8 +991,8 @@ function pathsResolve( o )
   if( reflector.src.filePath )
   {
 
-    // let r = resolve( reflector.src.filePath, 1, 'src' ); // yyy
-    let r = resolve( reflector.src.filePath, 1 );
+    // let r = resolve( reflector.src.filePath, 1 );
+    let r = resolve( reflector.src.filePath, 0 );
 
     reflector.src.filePath = null;
 
@@ -988,18 +1009,6 @@ function pathsResolve( o )
       reflector.src.filePath = r;
     }
   }
-
-  // if( reflector.src.prefixPath || reflector.src.hasAnyPath() ) // yyy
-  // {
-  //   reflector.src.prefixPath = _.filter( reflector.src.prefixPath, ( prefixPath ) =>
-  //   {
-  //     if( will.Resolver.selectorIs( prefixPath ) )
-  //     return prefixPath;
-  //     let r = reflector.src.prefixPath = resolve( prefixPath || '.', 'in' );
-  //     r = path.s.join( reflector.module.inPath, r || '.' );
-  //     return r;
-  //   });
-  // }
 
   if( reflector.src.prefixPath || reflector.src.hasAnyPath() )
   reflector.src.prefixPath = resolve( reflector.src.prefixPath || '.', 'in' );
@@ -1050,12 +1059,28 @@ function pathsResolve( o )
       if( !will.Resolver.selectorIs( filePath ) && !pathResolving )
       return filePath;
 
+      // if( reflector.name === 'reflect.submodules.debug' )
+      // debugger;
+
+      // if( reflector.name === "reflect.submodules" )
+      // {
+      //   debugger;
+      //   // _global_.debugger = 1;
+      // }
+
       let r = module.pathResolve
       ({
         selector : filePath,
         currentContext : reflector,
-        pathResolving : 'in',
+        // pathResolving : 'in', /* yyy */
+        // pathResolving : false,
+        pathResolving : pathResolving || false,
       });
+
+      if( r && r instanceof will.PathResource )
+      {
+        debugger;
+      }
 
       if( r instanceof will.Reflector )
       {

@@ -1,4 +1,4 @@
-( function _IncludeTop_s_( ) {
+( function _IncludeMid_s_( ) {
 
 'use strict';
 
@@ -11,6 +11,7 @@ if( typeof module !== 'undefined' )
   require( './l1/BuildFrame.s' );
   require( './l1/BuildRun.s' );
   require( './l1/Predefined.s' );
+  require( './l1/Repository.s' );
   require( './l1/Resolver.s' );
 
   require( './l3/AbstractModule.s' );

@@ -345,7 +345,6 @@ function _performRecursive()
       withStem : 0,
       withOut : 0,
       withIn : 1,
-
     });
 
     modules.forEach( ( module2 ) =>
@@ -612,14 +611,12 @@ function _performExportedReflectors()
   let exp;
   let recursive = null;
 
-  // debugger;
   exp = inModule.pathResolve
   ({
     selector : exported.exportPath,
     currentContext : step,
     pathResolving : 'in',
   });
-  // debugger;
 
   /* */
 
@@ -632,12 +629,12 @@ function _performExportedReflectors()
     _.assert( exp.src.formed === 1 );
     _.sure( !!exp.filePath, () => exp.qualifiedName + ' should have filePath' );
 
-    // debugger;
     exportedReflector = exp.cloneExtending
     ({
-      name : inModule.resourceNameAllocate( 'reflector', 'exported.' + exported.name ),
+      name : inModule.resourceNameGenerate( 'reflector', 'exported.' + exported.name ),
       module : outModule,
     });
+    exportedReflector.criterion.generated = 1;
 
     _.assert( exportedReflector.original === exp.original );
     _.assert( exportedReflector.src !== exp.src );
@@ -662,7 +659,7 @@ function _performExportedReflectors()
     let commonPath = path.common.apply( path, exp );
     if( path.isAbsolute( commonPath ) )
     commonPath = path.relative( inModule.inPath, commonPath );
-    exportedReflector = outModule.resourceAllocate( 'reflector', 'exported.' + exported.name );
+    exportedReflector = outModule.resourceGenerate( 'reflector', 'exported.' + exported.name );
     exportedReflector.src.filePath = Object.create( null );
     for( let p = 0 ; p < exp.length ; p++ )
     {
@@ -679,7 +676,7 @@ function _performExportedReflectors()
     if( !path.isGlob( exp ) )
     throw _.errBrief( `Expects glob path to export in export step. ${exported.exportPath} is not glob\n${exp}` );
     _.assert( !_.strHas( exp, '::' ) );
-    exportedReflector = outModule.resourceAllocate( 'reflector', 'exported.' + exported.name );
+    exportedReflector = outModule.resourceGenerate( 'reflector', 'exported.' + exported.name );
     exportedReflector.src.filePath = exp;
     exportedReflector.src.prefixPath = inModule.inPath;
 
@@ -688,27 +685,18 @@ function _performExportedReflectors()
 
   if( recursive !== null )
   exportedReflector.src.recursive = recursive;
-
-  exportedReflector.criterion = _.mapExtend( null, exported.criterion );
-  exportedReflector.generated = 1;
+  exportedReflector.criterion = _.mapExtend( exportedReflector.criterion, exported.criterion );
+  // exportedReflector.generated = 1;
   exportedReflector.form();
-
-  // debugger;
-  // if( !exportedReflector.src.basePath )
-  // {
-  //   debugger;
-  //   // exportedReflector.src.basePathFromFilePath();
-  // }
-
   exported.exportedReflector = exportedReflector;
 
+  _.assert( !!exportedReflector.criterion.generated );
   _.assert( exportedReflector.original === null );
   _.assert( outModule.reflectorMap[ exportedReflector.name ] === exportedReflector );
   _.assert( _.mapIs( exportedReflector.criterion ) );
   _.assert( exportedReflector.dst.prefixPath === null );
   _.assert( exportedReflector.dst.basePath === null );
   _.assert( path.isAbsolute( exportedReflector.src.prefixPath ) );
-  // _.assert( exportedReflector.src.prefixPath === null || path.isAbsolute( exportedReflector.src.prefixPath ) );
   _.assert( exportedReflector instanceof will.Reflector );
 
   /* srcFilter */
@@ -731,11 +719,14 @@ function _performExportedReflectors()
   if( hd.isTerminal( exportedDirPath ) )
   exportedDirPath = path.dir( exportedDirPath );
 
-  exported.exportedDirPath = outModule.resourceAllocate( 'path', 'exported.dir.' + exported.name );
-  exported.exportedDirPath.generated = 1;
+  // debugger;
+  exported.exportedDirPath = outModule.resourceGenerate( 'path', 'exported.dir.' + exported.name );
+  // exported.exportedDirPath.generated = 1;
   exported.exportedDirPath.path = path.undot( path.relative( outModule.inPath, exportedDirPath ) );
-  exported.exportedDirPath.criterion = _.mapExtend( null, exported.criterion );
+  exported.exportedDirPath.criterion = _.mapExtend( exported.exportedDirPath.criterion, exported.criterion );
+  // exported.exportedDirPath.criterion.generated = 1;
   exported.exportedDirPath.form();
+  _.assert( !!exported.exportedDirPath.criterion.generated );
 
   return null;
 }
@@ -753,9 +744,11 @@ function _performExportedFilesReflector()
 
   /* exportedFilesPath */
 
-  exported.exportedFilesPath = outModule.resourceAllocate( 'path', 'exported.files.' + exported.name );
-  exported.exportedFilesPath.generated = 1;
-  exported.exportedFilesPath.criterion = _.mapExtend( null, exported.criterion );
+  exported.exportedFilesPath = outModule.resourceGenerate( 'path', 'exported.files.' + exported.name );
+  // exported.exportedFilesPath.generated = 1;
+  exported.exportedFilesPath.criterion = _.mapExtend( exported.exportedFilesPath.criterion, exported.criterion );
+  // exported.exportedFilesPath.criterion.generated = 1;
+  _.assert( !!exported.exportedFilesPath.criterion.generated );
 
   /* */
 
@@ -765,7 +758,6 @@ function _performExportedFilesReflector()
 
     exportedFilesPath = hd.filesFind
     ({
-      // recursive : 2,
       withDirs : 1,
       withTerminals : 1,
       mandatory : 0,
@@ -801,8 +793,8 @@ function _performExportedFilesReflector()
 
   _.assert( !exported.exportedFilesReflector );
 
-  let exportedFilesReflector = exported.exportedFilesReflector = outModule.resourceAllocate( 'reflector', 'exported.files.' + exported.name );
-  exportedFilesReflector.generated = 1;
+  let exportedFilesReflector = exported.exportedFilesReflector = outModule.resourceGenerate( 'reflector', 'exported.files.' + exported.name );
+  // exportedFilesReflector.generated = 1;
   _.mapExtend( exportedFilesReflector.criterion, exported.exportedReflector.criterion );
   exportedFilesReflector.recursive = 0;
   exportedFilesReflector.src.pairWithDst( exportedFilesReflector.dst );
@@ -812,6 +804,7 @@ function _performExportedFilesReflector()
   exportedFilesReflector.src.filePath = exported.exportedFilesPath.qualifiedName;
   exportedFilesReflector.form1();
 
+  _.assert( !!exportedFilesReflector.criterion.generated );
   _.assert( exportedFilesReflector.dst.prefixPath === null );
   _.assert( exportedFilesReflector.dst.basePath === null );
   _.assert( _.objectIs( exportedFilesReflector.criterion ) );
@@ -884,20 +877,19 @@ function _performArchive()
     return null;
   }
 
-  // debugger;
   let archiveFilePath = build.archiveFilePathFor();
-  // debugger;
-  exported.archiveFilePath = outModule.resourceAllocate( 'path', 'archiveFile.' + exported.name );
+  exported.archiveFilePath = outModule.resourceGenerate( 'path', 'archiveFile.' + exported.name );
   exported.archiveFilePath.path = path.undot( path.relative( outModule.inPath, archiveFilePath ) );
-  exported.archiveFilePath.criterion = _.mapExtend( null, exported.criterion );
+  exported.archiveFilePath.criterion = _.mapExtend( exported.archiveFilePath.criterion, exported.criterion );
+  // exported.archiveFilePath.criterion.generated = 1;
   exported.archiveFilePath.form();
+  _.assert( !!exported.archiveFilePath.criterion.generated );
 
   /* */
 
   if( !Tar )
   Tar = require( 'tar' );
 
-  // debugger;
   let exportedDirPath = path.s.resolve( outModule.inPath, exported.exportedDirPath.path );
 
   hd.dirMake( path.dir( archiveFilePath ) );

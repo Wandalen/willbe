@@ -8,11 +8,12 @@ function onModule( it )
 
   willfPath.forEach( ( willfPath ) =>
   {
+    pathTmpRelace( it, willfPath );
+    // pathExportExportReplace( it, willfPath );
     // pathExportAdd( it, willfPath );
     // pathExportUse( it, willfPath );
     // pathRemotesAdd( it, willfPath );
     // pathRemotesToOrigins( it, willfPath );
-    pathExportExportReplace( it, willfPath );
   });
 
 }
@@ -21,8 +22,44 @@ module.exports = onModule;
 
 //
 
+function pathTmpRelace( it, willfPath )
+{
+  let o = it.request.map;
+  let _ = it.tools;
+  let logger = it.logger;
+  let read = _.fileProvider.fileRead( willfPath );
+
+  let ins = `temp : 'path::out'`;
+  let sub =
+`
+  temp :
+    - 'path::out'
+    - 'package-lock.json'
+    - 'package.json'
+    - 'node_modules'
+`
+  if( !_.strHas( read, ins ) )
+  return;
+
+  let write = read.replace( ins, sub.trim() );
+
+  if( o.verbosity )
+  logger.log( `Replacing tmp in ${it.variant.nameWithLocationGet()}` );
+
+  if( o.verbosity >= 2 )
+  logger.log( write );
+
+  if( o.dry )
+  return;
+
+  _.fileProvider.fileWrite( willfPath, write );
+}
+
+//
+
 function pathExportExportReplace( it, willfPath )
 {
+  let o = it.request.map;
   let _ = it.tools;
   let logger = it.logger;
   let read = _.fileProvider.fileRead( willfPath );
@@ -30,13 +67,13 @@ function pathExportExportReplace( it, willfPath )
   if( !_.strHas( read, `export : '{path::export}` ) )
   return;
 
-  if( o.verbosity )
-  logger.log( `Replacing "export : {path::export}" in ${it.variant.nameWithLocationGet()}` );
-
   let splits = _.strSplitFast( read, `export : '{path::export}` ); debugger;
   _.assert( splits.length === 3 );
   splits[ 1 ] = `export : '{path::proto}`;
   let write = splits.join( '' );
+
+  if( o.verbosity )
+  logger.log( `Replacing "export : {path::export}" in ${it.variant.nameWithLocationGet()}` );
 
   if( o.verbosity >= 2 )
   logger.log( write );
@@ -51,6 +88,7 @@ function pathExportExportReplace( it, willfPath )
 
 function pathExportAdd( it, willfPath )
 {
+  let o = it.request.map;
   let _ = it.tools;
   let logger = it.logger;
   let read = _.fileProvider.fileRead( willfPath );
@@ -86,6 +124,7 @@ function pathExportAdd( it, willfPath )
 
 function pathExportUse( it, willfPath )
 {
+  let o = it.request.map;
   let _ = it.tools;
   let logger = it.logger;
   let read = _.fileProvider.fileRead( willfPath );
@@ -111,6 +150,7 @@ function pathExportUse( it, willfPath )
 
 function pathRemotesAdd( it, willfPath )
 {
+  let o = it.request.map;
   let _ = it.tools;
   let logger = it.logger;
   let read = _.fileProvider.fileRead( willfPath );
@@ -151,6 +191,7 @@ ${line.pre} - ${remotesPath[ 1 ]}`
 
 function pathRemotesToOrigins( it, willfPath )
 {
+  let o = it.request.map;
   let _ = it.tools;
   let logger = it.logger;
   let read = _.fileProvider.fileRead( willfPath );
@@ -171,3 +212,5 @@ function pathRemotesToOrigins( it, willfPath )
 
   _.fileProvider.fileWrite( willfPath, write );
 }
+
+//
