@@ -14,6 +14,34 @@ if( typeof module !== 'undefined' )
 
 }
 
+/* Desirable :
+
+- Test check line is short. Use variables to reach that.
+
+    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var exp = [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ];
+    var got = _.mapKeys( outfile.module );
+    test.setsAreIdentical( got, exp );
+
+- Name return of _.process.start "op".
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    return op;
+  })
+
+- Use routine assetFor to setup environment for a test routine.
+
+function exportCourruptedSubmodulesDisabled( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'corrupted-submodules-disabled' );
+  let outPath = a.abs( 'super.out' );
+  ...
+
+*/
+
 var _global = _global_;
 var _ = _global_.wTools;
 
@@ -71,6 +99,65 @@ function onSuiteEnd()
   let self = this;
   _.assert( _.strHas( self.suitePath, '/willbe-' ) )
   _.path.pathDirTempClose( self.suitePath );
+}
+
+//
+
+function assetFor( test, name )
+{
+  let self = this;
+  let a = Object.create( null );
+
+  a.test = test;
+  a.name = name;
+  a.originalAssetPath = _.path.join( self.assetDirPath, name );
+  a.routinePath = _.path.join( self.suitePath, test.name );
+  a.abs = self.abs_functor( a.routinePath );
+  a.rel = self.rel_functor( a.routinePath );
+  a.will = new _.Will;
+  a.fileProvider = _.fileProvider;
+  a.path = _.fileProvider.path;
+  a.ready = _.Consequence().take( null );
+
+  a.reflect = function reflect()
+  {
+    _.fileProvider.filesDelete( a.routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+  }
+
+  a.shell = _.process.starter
+  ({
+    currentPath : a.routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  a.start = _.process.starter
+  ({
+    execPath : self.willPath,
+    currentPath : a.routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'fork',
+  })
+
+  a.startNonThrowing = _.process.starter
+  ({
+    execPath : self.willPath,
+    currentPath : a.routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : a.ready,
+    mode : 'fork',
+  })
+
+  _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
+
+  return a;
 }
 
 //
@@ -140,7 +227,7 @@ function preCloneRepos( test )
 function singleModuleWithSpaceTrivial( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'single with space' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'single with space' );
   let routinePath = _.path.join( self.suitePath, test.name, 'single with space' );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -157,7 +244,7 @@ function singleModuleWithSpaceTrivial( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   start({ execPath : '.with "single with space/" .resources.list' })
 
@@ -183,7 +270,7 @@ singleModuleWithSpaceTrivial.timeOut = 200000;
 function make( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'make' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'make' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -200,7 +287,7 @@ function make( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -330,7 +417,7 @@ Test transpilation of JS files.
 function transpile( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'transpile' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'transpile' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -347,7 +434,7 @@ function transpile( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -485,7 +572,7 @@ transpile.timeOut = 200000;
 function moduleNewDotless( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-dotless-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -508,7 +595,7 @@ function moduleNewDotless( test )
   {
     test.case = '.module.new'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -547,7 +634,7 @@ function moduleNewDotless( test )
   {
     test.case = '.module.new some'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -597,7 +684,7 @@ function moduleNewDotless( test )
   {
     test.case = '.module.new some/'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -648,7 +735,7 @@ function moduleNewDotless( test )
   {
     test.case = '.module.new ../dir1/dir2/some/'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -707,7 +794,7 @@ moduleNewDotless.timeOut = 200000;
 function moduleNewDotlessSingle( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -730,7 +817,7 @@ function moduleNewDotlessSingle( test )
   {
     test.case = '.module.new'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -758,7 +845,7 @@ function moduleNewDotlessSingle( test )
   {
     test.case = '.module.new some'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -806,7 +893,7 @@ function moduleNewDotlessSingle( test )
   {
     test.case = '.module.new some/'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -855,7 +942,7 @@ function moduleNewDotlessSingle( test )
   {
     test.case = '.module.new ../dir1/dir2/some/'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -903,7 +990,7 @@ moduleNewDotlessSingle.timeOut = 200000;
 function moduleNewNamed( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -926,7 +1013,7 @@ function moduleNewNamed( test )
   {
     test.case = '.module.new super'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -964,7 +1051,7 @@ function moduleNewNamed( test )
   {
     test.case = '.with some .module.new'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -1013,7 +1100,7 @@ function moduleNewNamed( test )
   {
     test.case = '.with some/ .module.new'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -1063,7 +1150,7 @@ function moduleNewNamed( test )
   {
     test.case = '.with some .module.new some2'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -1113,7 +1200,7 @@ function moduleNewNamed( test )
   {
     test.case = '.module.new'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -1162,7 +1249,7 @@ function moduleNewNamed( test )
   {
     test.case = '.module.new super/'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -1212,7 +1299,7 @@ function moduleNewNamed( test )
   {
     test.case = '.module.new some'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -1261,7 +1348,7 @@ function moduleNewNamed( test )
   {
     test.case = '.module.new some/'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -1311,7 +1398,7 @@ function moduleNewNamed( test )
   {
     test.case = '.module.new ../dir1/dir2/some/'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
     return null;
@@ -1369,7 +1456,7 @@ moduleNewNamed.timeOut = 200000;
 function openWith( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'open' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'open' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -1386,7 +1473,7 @@ function openWith( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -1483,7 +1570,7 @@ function openWith( test )
   {
     test.case = '.with doc .export -- deleted doc.will.yml'
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.fileDelete( _.path.join( routinePath, 'doc.ex.will.yml' ) );
     _.fileProvider.fileDelete( _.path.join( routinePath, 'doc.im.will.yml' ) );
     return null;
@@ -1505,7 +1592,7 @@ function openWith( test )
     test.identical( files, [] );
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
     return null;
   })
@@ -1670,7 +1757,7 @@ function openWith( test )
     test.case = '.with doc/ .export -- deleted doc/.will.yml'
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.fileDelete( _.path.join( routinePath, 'doc/.ex.will.yml' ) );
     _.fileProvider.fileDelete( _.path.join( routinePath, 'doc/.im.will.yml' ) );
 
@@ -1697,7 +1784,7 @@ function openWith( test )
     test.identical( files, [] );
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
     return null;
   })
@@ -1772,7 +1859,7 @@ openWith.timeOut = 300000;
 function openEach( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'open' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'open' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -1789,7 +1876,7 @@ function openEach( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -1861,7 +1948,7 @@ openEach.timeOut = 300000;
 function withMixed( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -1879,7 +1966,7 @@ function withMixed( test )
     ready : ready,
   });
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -1894,7 +1981,7 @@ function withMixed( test )
   .then( ( got ) =>
   {
     test.is( got.exitCode !== 0 );
-    test.is( _.strHas( got.output, 'Found no willfile' ) );
+    test.is( _.strHas( got.output, 'No module sattisfy criteria.' ) );
     test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
     return null;
@@ -1929,7 +2016,7 @@ withMixed.timeOut = 300000;
 function eachMixed( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-git' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-git' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -1944,7 +2031,7 @@ function eachMixed( test )
     ready : ready,
   });
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -2028,7 +2115,7 @@ eachMixed.timeOut = 300000;
 function withList( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2044,7 +2131,7 @@ function withList( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -2095,7 +2182,7 @@ function withList( test )
 function eachList( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'each-list' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'each-list' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2111,7 +2198,7 @@ function eachList( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -2253,7 +2340,7 @@ eachList.timeOut = 300000;
 function eachBrokenIll( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'each-broken' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'each-broken' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2270,7 +2357,7 @@ function eachBrokenIll( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -2305,7 +2392,7 @@ utility should not try to open non-willfiles
 function eachBrokenNon( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'open-non-willfile' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'open-non-willfile' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2322,7 +2409,7 @@ function eachBrokenNon( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -2353,7 +2440,7 @@ tab should not be accumulated in the output
 function eachBrokenCommand( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules-few' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-with-submodules-few' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2372,7 +2459,7 @@ function eachBrokenCommand( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
   _.fileProvider.filesDelete({ filePath : outPath })
 
   /* - */
@@ -2404,7 +2491,7 @@ function eachBrokenCommand( test )
 function openExportClean( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'open' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'open' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2422,7 +2509,7 @@ function openExportClean( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
   _.fileProvider.filesDelete({ filePath : outPath })
 
   /* - */
@@ -2469,7 +2556,7 @@ function openExportClean( test )
 function withDoInfo( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'many-dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2486,7 +2573,7 @@ function withDoInfo( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -2573,7 +2660,7 @@ function withDoInfo( test )
   {
     test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 9 );
     test.identical( _.strCount( got.output, '! Outdated' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
     test.identical( _.strCount( got.output, 'localPath :' ), 7 );
@@ -2588,10 +2675,10 @@ function withDoInfo( test )
   {
     test.case = '.imply withIn:0 ; .with ** .hook.call info.js';
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 3 );
     test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 5 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 4 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
 
     return null;
@@ -2619,7 +2706,7 @@ withDoInfo.description =
 function withDoStatus( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'many-dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2651,7 +2738,7 @@ function withDoStatus( test )
   {
     test.case = 'setup';
 
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     start({ execPath : 'git init', currentPath : _.path.join( routinePath, 'disabled' ) });
 
     return null;
@@ -2731,7 +2818,7 @@ withDoStatus.description =
 function withDoCommentOut( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'many-dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2754,7 +2841,7 @@ function withDoCommentOut( test )
   .then( ( got ) =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'execution_section/will.yml' ) );
     test.is( !!outfile.execution );
     return null;
@@ -2775,7 +2862,7 @@ function withDoCommentOut( test )
   .then( ( got ) =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'execution_section/will.yml' ) );
     test.is( !!outfile.execution );
     return null;
@@ -2807,7 +2894,7 @@ withDoCommentOut.description =
 function hookCallInfo( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'many-dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2824,7 +2911,7 @@ function hookCallInfo( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -2899,7 +2986,7 @@ function hookCallInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 12 );
     test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 6 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 7 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -2914,7 +3001,7 @@ function hookCallInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 9 );
     test.identical( _.strCount( got.output, '! Outdated' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 6 );
+    test.identical( _.strCount( got.output, 'localPath :' ), 7 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -2956,7 +3043,7 @@ hookCallInfo.description =
 function hookGitMake( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'many-dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2972,7 +3059,7 @@ function hookGitMake( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   test.is( true );
 
@@ -3038,7 +3125,7 @@ hookGitMake.timeOut = 300000;
 function hookPrepare( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'many-dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3054,7 +3141,7 @@ function hookPrepare( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   test.is( true );
 
@@ -3204,12 +3291,11 @@ hookPrepare.timeOut = 300000;
 function verbositySet( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
-
   let outPath = _.path.join( routinePath, 'out' );
 
   let ready = new _.Consequence().take( null );
@@ -3223,7 +3309,7 @@ function verbositySet( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   ready
 
@@ -3331,7 +3417,7 @@ verbositySet.timeOut = 300000;
 function verbosityStepDelete( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'verbosity-step-delete' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'verbosity-step-delete' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3356,7 +3442,7 @@ function verbosityStepDelete( test )
   .then( ( got ) =>
   {
     test.case = '.build files.delete.vd';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return null;
   })
 
@@ -3385,7 +3471,7 @@ function verbosityStepDelete( test )
   .then( ( got ) =>
   {
     test.case = '.build files.delete.v0';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return null;
   })
 
@@ -3415,7 +3501,7 @@ function verbosityStepDelete( test )
   .then( ( got ) =>
   {
     test.case = '.build files.delete.v1';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return null;
   })
 
@@ -3444,7 +3530,7 @@ function verbosityStepDelete( test )
   .then( ( got ) =>
   {
     test.case = '.build files.delete.v3';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return null;
   })
 
@@ -3473,7 +3559,7 @@ function verbosityStepDelete( test )
   .then( ( got ) =>
   {
     test.case = '.imply v:0 ; .build files.delete.vd';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return null;
   })
 
@@ -3503,7 +3589,7 @@ function verbosityStepDelete( test )
   .then( ( got ) =>
   {
     test.case = '.imply v:8 ; .build files.delete.v0';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return null;
   })
 
@@ -3532,7 +3618,7 @@ function verbosityStepDelete( test )
   .then( ( got ) =>
   {
     test.case = '.imply v:9 ; .build files.delete.v0';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return null;
   })
 
@@ -3561,7 +3647,7 @@ function verbosityStepDelete( test )
   .then( ( got ) =>
   {
     test.case = '.imply v:1 ; .build files.delete.v3';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return null;
   })
 
@@ -3590,7 +3676,7 @@ function verbosityStepDelete( test )
   .then( ( got ) =>
   {
     test.case = '.imply v:2 ; .build files.delete.v3';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return null;
   })
 
@@ -3629,7 +3715,7 @@ verbosityStepDelete.timeOut = 200000;
 function verbosityStepPrintName( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'verbosity-step-print-name' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'verbosity-step-print-name' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3653,7 +3739,7 @@ function verbosityStepPrintName( test )
   .then( ( arg ) =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return arg;
   })
 
@@ -3669,9 +3755,9 @@ function verbosityStepPrintName( test )
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 1 );
     test.identical( _.strCount( got.output, '+ reflector::reflect.file reflected 1 file(s)' ), 1 );
     test.identical( _.strCount( got.output, '/verbosityStepPrintName/ : ./out <- ./file in' ), 1 );
-    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'start.step' \)"/ ), 1 );
+    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 3 );
-    test.identical( _.strCount( got.output, 'start.step' ), 2 );
+    test.identical( _.strCount( got.output, 'shell.step' ), 2 );
     test.identical( _.strCount( got.output, /: .*step::delete.step.*/ ), 1 );
     test.identical( _.strCount( got.output, /1 at .*\/out/ ), 1 );
     test.identical( _.strCount( got.output, /1 at \./ ), 1 );
@@ -3687,7 +3773,7 @@ function verbosityStepPrintName( test )
   .then( ( arg ) =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return arg;
   })
 
@@ -3703,9 +3789,9 @@ function verbosityStepPrintName( test )
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
     test.identical( _.strCount( got.output, '+ reflector::reflect.file reflected 1 file(s)' ), 1 );
     test.identical( _.strCount( got.output, '/verbosityStepPrintName/ : ./out <- ./file' ), 1 );
-    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'start.step' \)"/ ), 1 );
+    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 1 );
-    test.identical( _.strCount( got.output, 'start.step' ), 2 );
+    test.identical( _.strCount( got.output, 'shell.step' ), 2 );
     test.identical( _.strCount( got.output, /: .*step::delete.step.*/ ), 0 );
     test.identical( _.strCount( got.output, /1 at .*\/out/ ), 0 );
     test.identical( _.strCount( got.output, /1 at \./ ), 0 );
@@ -3721,7 +3807,7 @@ function verbosityStepPrintName( test )
   .then( ( arg ) =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return arg;
   })
 
@@ -3737,9 +3823,9 @@ function verbosityStepPrintName( test )
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
     test.identical( _.strCount( got.output, ' + reflector::reflect.file reflected 1 file(s)' ), 1 );
     test.identical( _.strCount( got.output, '/verbosityStepPrintName/ : ./out <- ./file in' ), 1 );
-    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'start.step' \)"/ ), 1 );
+    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 1 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 1 );
-    test.identical( _.strCount( got.output, 'start.step' ), 1 );
+    test.identical( _.strCount( got.output, 'shell.step' ), 1 );
     test.identical( _.strCount( got.output, /: .*step::delete.step.*/ ), 0 );
     test.identical( _.strCount( got.output, /1 at .*\/out/ ), 0 );
     test.identical( _.strCount( got.output, /1 at \./ ), 0 );
@@ -3755,7 +3841,7 @@ function verbosityStepPrintName( test )
   .then( ( arg ) =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     return arg;
   })
 
@@ -3770,9 +3856,9 @@ function verbosityStepPrintName( test )
     test.identical( _.strCount( got.output, /Building .*module::verbosityStepPrintName \/ build::debug/ ), 0 );
     test.identical( _.strCount( got.output, /: .*reflector::reflect.file.*/ ), 0 );
     test.identical( _.strCount( got.output, ' + reflector::reflect.file.* reflected 1 file(s) .* : .*out.* <- .*file.* in ' ), 0 );
-    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'start.step' \)"/ ), 0 );
+    test.identical( _.strCount( got.output, /.*>.*node -e "console.log\( 'shell.step' \)"/ ), 0 );
     test.identical( _.strCount( got.output, /at.* .*verbosityStepPrintName/ ), 0 );
-    test.identical( _.strCount( got.output, 'start.step' ), 0 );
+    test.identical( _.strCount( got.output, 'shell.step' ), 0 );
     test.identical( _.strCount( got.output, /: .*step::delete.step.*/ ), 0 );
     test.identical( _.strCount( got.output, /1 at .*\/out/ ), 0 );
     test.identical( _.strCount( got.output, /1 at \./ ), 0 );
@@ -3788,9 +3874,9 @@ function verbosityStepPrintName( test )
   Building module::verbosity-step-print-name / build::debug
    : reflector::reflect.file
    + reflector::reflect.file reflected 1 file(s) /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name/ : out <- file in 0.290s
- > node -e "console.log( 'start.step' )"
+ > node -e "console.log( 'shell.step' )"
    at /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name
-start.step
+shell.step
    : step::delete.step
      1 at /C/pro/web/Dave/git/trunk/builder/include/dwtools/atop/will.test/asset/verbosity-step-print-name/out
      1 at .
@@ -3806,7 +3892,7 @@ start.step
 function modulesTreeDotless( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3830,7 +3916,7 @@ function modulesTreeDotless( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   // _.fileProvider.filesDelete( outSuperDirPath );
   // _.fileProvider.filesDelete( outSubDirPath );
 
@@ -3892,7 +3978,7 @@ function modulesTreeDotless( test )
 function modulesTreeLocal( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3909,7 +3995,7 @@ function modulesTreeLocal( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   // _.fileProvider.filesDelete( outSuperDirPath );
   // _.fileProvider.filesDelete( outSubDirPath );
 
@@ -3973,7 +4059,7 @@ Command ".imply v:1 ; .with */* .modules.tree"
 function modulesTreeHierarchyRemote( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3992,7 +4078,7 @@ function modulesTreeHierarchyRemote( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( submodulesPath );
 
   /* - */
@@ -4231,7 +4317,7 @@ modulesTreeHierarchyRemote.timeOut = 300000;
 function modulesTreeHierarchyRemoteDownloaded( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4250,7 +4336,7 @@ function modulesTreeHierarchyRemoteDownloaded( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( submodulesPath );
 
   /* - */
@@ -4370,7 +4456,7 @@ cls && local-will .with group1/group10/a0 .clean recursive:2 && local-will .with
 function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4389,7 +4475,7 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( submodulesPath );
 
   /* - */
@@ -4450,7 +4536,7 @@ modulesTreeHierarchyRemotePartiallyDownloaded.timeOut = 300000;
 function modulesTreeDisabledAndCorrupted( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'many-few' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'many-few' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4469,7 +4555,7 @@ function modulesTreeDisabledAndCorrupted( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -4538,7 +4624,7 @@ function help( test )
 
   // xxx
   // let self = this;
-  // let originalDirPath = _.path.join( self.assetDirPath, 'single' );
+  // let originalAssetPath = _.path.join( self.assetDirPath, 'single' );
   // let routinePath = _.path.join( self.suitePath, test.name );
   // // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
   // let ready = new _.Consequence().take( null )
@@ -4553,7 +4639,7 @@ function help( test )
   //   ready : ready,
   // })
   //
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* */
 
@@ -4635,7 +4721,7 @@ function help( test )
 function listSingleModule( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'single' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4652,7 +4738,7 @@ function listSingleModule( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -4699,11 +4785,11 @@ function listSingleModule( test )
     test.case = '.paths.list';
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, `proto : ./proto` ) );
+    test.is( _.strHas( got.output, `proto : proto` ) );
     test.is( _.strHas( got.output, `in : .` ) );
     test.is( _.strHas( got.output, `out : out` ) );
-    test.is( _.strHas( got.output, `out.debug : ./out/debug` ) );
-    test.is( _.strHas( got.output, `out.release : ./out/release` ) );
+    test.is( _.strHas( got.output, `out.debug : out/debug` ) );
+    test.is( _.strHas( got.output, `out.release : out/release` ) );
 
     return null;
   })
@@ -4722,11 +4808,11 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, `module.common : /` ) );
     test.is( _.strHas( got.output, `local : /` ) );
     test.is( _.strHas( got.output, `will :` ) );
-    test.is( !_.strHas( got.output, `proto : ./proto` ) );
+    test.is( !_.strHas( got.output, `proto : proto` ) );
     test.is( !_.strHas( got.output, `in : .` ) );
     test.is( !_.strHas( got.output, `out : out` ) );
-    test.is( !_.strHas( got.output, `out.debug : ./out/debug` ) );
-    test.is( !_.strHas( got.output, `out.release : ./out/release` ) );
+    test.is( !_.strHas( got.output, `out.debug : out/debug` ) );
+    test.is( !_.strHas( got.output, `out.release : out/release` ) );
     test.identical( _.strCount( got.output, ':' ), 12 );
 
     return null;
@@ -4746,11 +4832,11 @@ function listSingleModule( test )
     test.is( !_.strHas( got.output, `module.common : ./` ) );
     test.is( !_.strHas( got.output, `local : .` ) );
     test.is( !_.strHas( got.output, `will :` ) );
-    test.is( _.strHas( got.output, `proto : ./proto` ) );
+    test.is( _.strHas( got.output, `proto : proto` ) );
     test.is( _.strHas( got.output, `in : .` ) );
     test.is( _.strHas( got.output, `out : out` ) );
-    test.is( _.strHas( got.output, `out.debug : ./out/debug` ) );
-    test.is( _.strHas( got.output, `out.release : ./out/release` ) );
+    test.is( _.strHas( got.output, `out.debug : out/debug` ) );
+    test.is( _.strHas( got.output, `out.release : out/release` ) );
     test.identical( _.strCount( got.output, ':' ), 6 );
 
     return null;
@@ -4969,7 +5055,7 @@ listSingleModule.timeOut = 200000;
 function listWithSubmodulesSimple( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4986,7 +5072,7 @@ function listWithSubmodulesSimple( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   start({ execPath : '.resources.list' })
 
@@ -5011,7 +5097,7 @@ listWithSubmodulesSimple.timeOut = 200000;
 function listWithSubmodules( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5028,7 +5114,7 @@ function listWithSubmodules( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -5153,7 +5239,7 @@ listWithSubmodules.timeOut = 200000;
 function listSteps( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5172,7 +5258,7 @@ function listSteps( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   ready
 
@@ -5258,7 +5344,7 @@ function listSteps( test )
 function clean( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'clean' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'clean' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5276,7 +5362,7 @@ function clean( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -5369,14 +5455,14 @@ clean.timeOut = 300000;
 function cleanSingleModule( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'single' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
 
   let ready = new _.Consequence().take( null )
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   let start = _.process.starter
   ({
@@ -5428,7 +5514,7 @@ cleanSingleModule.timeOut = 200000;
 function cleanBroken1( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-broken-1' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-broken-1' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5452,7 +5538,7 @@ function cleanBroken1( test )
   /* - */
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   ready
 
@@ -5529,7 +5615,7 @@ function cleanBroken1( test )
   {
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
     return null;
   });
@@ -5565,7 +5651,7 @@ cleanBroken1.timeOut = 200000;
 function cleanBroken2( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-broken-2' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-broken-2' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5589,7 +5675,7 @@ function cleanBroken2( test )
   /* - */
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   ready
 
@@ -5666,7 +5752,7 @@ function cleanBroken2( test )
   {
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
     return null;
   });
@@ -5706,7 +5792,7 @@ function cleanBroken2( test )
   {
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
     return null;
   });
@@ -5745,7 +5831,7 @@ cleanBroken2.timeOut = 200000;
 function cleanBrokenSubmodules( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'clean-broken-submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'clean-broken-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5774,7 +5860,7 @@ function cleanBrokenSubmodules( test )
     test.case = 'setup';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
     var files = self.find( submodulesPath );
     test.identical( files.length, 4 );
@@ -5834,7 +5920,7 @@ cleanBrokenSubmodules.timeOut = 200000;
 function cleanNoBuild( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'clean' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'clean' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5853,7 +5939,7 @@ function cleanNoBuild( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -5899,7 +5985,7 @@ cleanNoBuild.timeOut = 200000;
 function cleanDry( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'clean' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'clean' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5917,7 +6003,7 @@ function cleanDry( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -5979,7 +6065,7 @@ cleanDry.timeOut = 300000;
 function cleanSubmodules( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'clean' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'clean' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5997,7 +6083,7 @@ function cleanSubmodules( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* */
 
@@ -6054,7 +6140,7 @@ cleanSubmodules.timeOut = 300000;
 function cleanMixed( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6072,7 +6158,7 @@ function cleanMixed( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -6113,7 +6199,7 @@ cleanMixed.timeOut = 200000;
 function cleanWithInPath( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'clean-with-inpath' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'clean-with-inpath' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6140,7 +6226,7 @@ function cleanWithInPath( test )
     test.case = '.with module/Proto .clean';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     hadFiles = self.find( routinePath + '/out' ).length + self.find( routinePath + '/.module' ).length;
 
     return null;
@@ -6189,7 +6275,7 @@ cleanWithInPath.timeOut = 200000;
 function cleanRecursive( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6207,7 +6293,7 @@ function cleanRecursive( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -6219,6 +6305,7 @@ function cleanRecursive( test )
     return null;
   })
 
+  start( '.with ** .clean' )
   start( '.with group1/group10/a0 .export' )
   start( '.with group1/a .export' )
   start( '.with group1/b .export' )
@@ -6244,7 +6331,7 @@ function cleanRecursive( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 25 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 33 );
 
     var exp =
     [
@@ -6273,10 +6360,188 @@ cleanRecursive.timeOut = 300000;
 
 //
 
+function cleanDisabledModule( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'export-disabled-module' );
+  let willfPath = a.abs( './' );
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.clean';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ '.module', 'out', 'will.yml' ];
+    var files = _.fileProvider.dirRead( a.routinePath );
+    test.identical( files, exp );
+    test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
+
+    return null;
+  })
+
+  a.start( '.clean' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'will.yml' ];
+    var files = _.fileProvider.dirRead( a.routinePath );
+    test.identical( files, exp );
+    test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with . .clean';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ '.module', 'out', 'will.yml' ];
+    var files = _.fileProvider.dirRead( a.routinePath );
+    test.identical( files, exp );
+    test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
+
+    return null;
+  })
+
+  a.start( '.with . .clean' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'will.yml' ];
+    var files = _.fileProvider.dirRead( a.routinePath );
+    test.identical( files, exp );
+    test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .clean';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ '.module', 'out', 'will.yml' ];
+    var files = _.fileProvider.dirRead( a.routinePath );
+    test.identical( files, exp );
+    test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
+
+    return null;
+  })
+
+  a.startNonThrowing( '.with * .clean' )
+
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+
+    var exp = [ '.module', 'out', 'will.yml' ];
+    var files = _.fileProvider.dirRead( a.routinePath );
+    test.identical( files, exp );
+    test.identical( _.strCount( op.output, '- Clean deleted' ), 0 );
+    test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withDisabled:1 ; .with * .clean';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ '.module', 'out', 'will.yml' ];
+    var files = _.fileProvider.dirRead( a.routinePath );
+    test.identical( files, exp );
+    test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
+
+    return null;
+  })
+
+  a.start( '.imply withDisabled:1 ; .with * .clean' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ 'will.yml' ];
+    var files = _.fileProvider.dirRead( a.routinePath );
+    test.identical( files, exp );
+    test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function cleanDisabledModule */
+
+cleanDisabledModule.timeOut = 300000;
+cleanDisabledModule.description =
+`
+- disabled module should be cleaned if picked explicitly
+- disabled module should not be cleaned if picked with glob
+`
+
+//
+
 function buildSingleModule( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'single' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6293,7 +6558,7 @@ function buildSingleModule( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -6409,7 +6674,7 @@ buildSingleModule.timeOut = 200000;
 function buildSingleStep( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-start' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'step-shell' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6426,7 +6691,7 @@ function buildSingleStep( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -6482,7 +6747,7 @@ function buildSingleStep( test )
 function buildSubmodules( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6500,7 +6765,7 @@ function buildSubmodules( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   ready
 
@@ -6594,7 +6859,7 @@ buildSubmodules.timeOut = 300000;
 function buildDetached( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-detached' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6613,7 +6878,7 @@ function buildDetached( test )
     ready : ready,
   });
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -6658,7 +6923,7 @@ buildDetached.timeOut = 300000;
 function exportSingle( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'single' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6677,7 +6942,7 @@ function exportSingle( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( outDebugPath );
 
   /* - */
@@ -6769,7 +7034,7 @@ exportSingle.timeOut = 200000;
 function exportItself( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-itself' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-itself' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6785,7 +7050,7 @@ function exportItself( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -6826,7 +7091,7 @@ function exportItself( test )
 function exportNonExportable( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6842,7 +7107,7 @@ function exportNonExportable( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
   _.fileProvider.filesDelete( _.path.join( routinePath, 'out' ) );
   _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
 
@@ -6872,20 +7137,14 @@ function exportNonExportable( test )
 
 //
 
-/*
-- local path and remote path of exported informal module should be preserved and in proper form
-- second export should work properly
-*/
-
 function exportInformal( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outPath = _.path.join( routinePath, 'out' );
-
   let ready = new _.Consequence().take( null );
 
   let start = _.process.starter
@@ -6897,7 +7156,7 @@ function exportInformal( test )
     ready : ready,
   });
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -6942,29 +7201,23 @@ function exportInformal( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/Proto.informal.will.yml`
       },
-      // "download" :
-      // {
-      //   "criterion" : { "predefined" : 1 }
-      // },
       "in" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : `.`
       },
       "out" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : `.`
       },
-      "remote" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "remote" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "download" : { "path" : `../.module/Proto`, "criterion" : { "predefined" : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
-        "criterion" : { "default" : 1, "export" : 1 },
+        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "path" : `../.module/Proto/proto`
       },
       'module.peer.in' :
@@ -7025,29 +7278,23 @@ function exportInformal( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/Proto.informal.will.yml`
       },
-      // "download" :
-      // {
-      //   "criterion" : { "predefined" : 1 }
-      // },
       "in" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : `.`
       },
       "out" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : `.`
       },
-      "remote" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "remote" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "download" : { "path" : `../.module/Proto`, "criterion" : { "predefined" : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
-        "criterion" : { "default" : 1, "export" : 1 },
+        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "path" : `../.module/Proto/proto`
       },
       'module.peer.in' :
@@ -7109,29 +7356,23 @@ function exportInformal( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/UriBasic.informal.will.yml`
       },
-      // "download" :
-      // {
-      //   "criterion" : { "predefined" : 1 }
-      // },
       "in" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : `.`
       },
       "out" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : `.`
       },
-      "remote" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "remote" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "download" : { "path" : `../.module/UriBasic`, "criterion" : { "predefined" : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
-        "criterion" : { "default" : 1, "export" : 1 },
+        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "path" : `../.module/UriBasic/proto`
       },
       'module.peer.in' :
@@ -7156,13 +7397,18 @@ function exportInformal( test )
 }
 
 exportInformal.timeOut = 300000;
+exportInformal.description =
+`
+- local path and remote path of exported informal module should be preserved and in proper form
+- second export should work properly
+`
 
 //
 
 function exportWithReflector( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-reflector' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-with-reflector' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -7181,7 +7427,7 @@ function exportWithReflector( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
   _.fileProvider.filesDelete( outDebugPath );
 
   /* - */
@@ -7222,7 +7468,7 @@ exportWithReflector.timeOut = 200000;
 function exportToRoot( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-to-root' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-to-root' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -7238,7 +7484,7 @@ function exportToRoot( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -7265,7 +7511,7 @@ exportToRoot.timeOut = 200000;
 function exportMixed( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-mixed' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -7283,7 +7529,7 @@ function exportMixed( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -7335,7 +7581,7 @@ function exportMixed( test )
           'filePath' : { '**' : '' },
           'prefixPath' : '../.module/Proto/proto'
         },
-        'criterion' : { 'export' : 1, 'default' : 1 },
+        'criterion' : { 'export' : 1, 'default' : 1, 'generated' : 1 },
         'mandatory' : 1,
       },
       'exported.files.export' :
@@ -7343,7 +7589,7 @@ function exportMixed( test )
         'recursive' : 0,
         'mandatory' : 1,
         'src' : { 'filePath' : { 'path::exported.files.export' : '' }, 'basePath' : '.', 'prefixPath' : 'path::exported.dir.export', 'recursive' : 0 },
-        'criterion' : { 'default' : 1, 'export' : 1 }
+        'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 }
       }
     }
     test.identical( outfile.reflector, expected );
@@ -7378,28 +7624,26 @@ function exportMixed( test )
       },
       "in" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : `.`
       },
       "out" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : `.`
       },
-      "remote" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "remote" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "download" : { "path" : `../.module/Proto`, "criterion" : { "predefined" : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
-        "criterion" : { "default" : 1, "export" : 1 },
+        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "path" : `../.module/Proto/proto`
       },
       "exported.files.export" :
       {
-        "criterion" : { "default" : 1, "export" : 1 },
+        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "path" :
         [
           `../.module/Proto/proto`,
@@ -7534,7 +7778,7 @@ exportMixed.timeOut = 300000;
 function exportSecond( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-second' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-second' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -7552,7 +7796,7 @@ function exportSecond( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -7682,19 +7926,17 @@ function exportSecond( test )
       {
         "criterion" : { "predefined" : 1 }
       },
-      "remote" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "remote" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "in" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : "."
       },
       "temp" : { "path" : "." },
       "out" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : "."
       },
       "out.debug" :
@@ -7898,19 +8140,17 @@ function exportSecond( test )
       {
         "criterion" : { "predefined" : 1 }
       },
-      "remote" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "remote" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "in" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : "."
       },
       "temp" : { "path" : "." },
       "out" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : "."
       },
       "out.debug" :
@@ -7998,7 +8238,7 @@ exportSecond.timeOut = 300000;
 function exportSubmodules( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -8017,7 +8257,7 @@ function exportSubmodules( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -8060,7 +8300,7 @@ exportSubmodules.timeOut = 200000;
 function exportMultiple( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -8086,7 +8326,7 @@ function exportMultiple( test )
     test.case = '.export debug:1';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outPath );
 
     return null;
@@ -8147,7 +8387,8 @@ function exportMultiple( test )
         default : 1,
         debug : 1,
         raw : 1,
-        export : 1
+        export : 1,
+        generated : 1,
       }
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
@@ -8169,7 +8410,8 @@ function exportMultiple( test )
         default : 1,
         debug : 1,
         raw : 1,
-        export : 1
+        export : 1,
+        generated : 1,
       }
     }
 
@@ -8201,21 +8443,19 @@ function exportMultiple( test )
         "path" : "submodule.out",
         "criterion" : { "predefined" : 1 }
       },
-      "remote" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "remote" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "proto" : { "path" : "../proto" },
       "temp" : { "path" : "." },
       "in" :
       {
         "path" : ".",
-        "criterion" : { "predefined" : 0 }
       },
       "out" :
       {
         "path" : ".",
-        "criterion" : { "predefined" : 0 }
       },
       "out.debug" :
       {
@@ -8235,7 +8475,8 @@ function exportMultiple( test )
           "default" : 1,
           "debug" : 1,
           "raw" : 1,
-          "export" : 1
+          "export" : 1,
+          "generated" : 1,
         }
       },
       "exported.files.export.debug" :
@@ -8246,7 +8487,8 @@ function exportMultiple( test )
           "default" : 1,
           "debug" : 1,
           "raw" : 1,
-          "export" : 1
+          "export" : 1,
+          'generated' : 1,
         }
       },
       "archiveFile.export.debug" :
@@ -8257,7 +8499,8 @@ function exportMultiple( test )
           "default" : 1,
           "debug" : 1,
           "raw" : 1,
-          "export" : 1
+          "export" : 1,
+          "generated" : 1,
         }
       },
       'module.peer.in' :
@@ -8280,7 +8523,7 @@ function exportMultiple( test )
     test.case = '.export debug:1';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outPath );
 
     return null;
@@ -8367,7 +8610,8 @@ function exportMultiple( test )
         default : 1,
         debug : 1,
         raw : 1,
-        export : 1
+        export : 1,
+        generated : 1,
       }
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
@@ -8387,7 +8631,8 @@ function exportMultiple( test )
         default : 1,
         debug : 0,
         raw : 1,
-        export : 1
+        export : 1,
+        generated : 1,
       }
     }
     // logger.log( _.toJson( outfile.reflector[ 'exported.export.' ] ) );
@@ -8409,7 +8654,8 @@ function exportMultiple( test )
         default : 1,
         debug : 1,
         raw : 1,
-        export : 1
+        export : 1,
+        generated : 1,
       }
     }
 
@@ -8431,7 +8677,8 @@ function exportMultiple( test )
         default : 1,
         debug : 0,
         raw : 1,
-        export : 1
+        export : 1,
+        generated : 1,
       }
     }
 
@@ -8463,21 +8710,19 @@ function exportMultiple( test )
         "path" : "submodule.out",
         "criterion" : { "predefined" : 1 }
       },
-      "remote" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "remote" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "proto" : { "path" : "../proto" },
       "temp" : { "path" : "." },
       "in" :
       {
         "path" : ".",
-        "criterion" : { "predefined" : 0 }
       },
       "out" :
       {
         "path" : ".",
-        "criterion" : { "predefined" : 0 }
       },
       "out.debug" :
       {
@@ -8497,7 +8742,8 @@ function exportMultiple( test )
           "default" : 1,
           "debug" : 1,
           "raw" : 1,
-          "export" : 1
+          "export" : 1,
+          "generated" : 1,
         }
       },
       "exported.files.export.debug" :
@@ -8508,7 +8754,8 @@ function exportMultiple( test )
           "default" : 1,
           "debug" : 1,
           "raw" : 1,
-          "export" : 1
+          "export" : 1,
+          "generated" : 1,
         }
       },
       "archiveFile.export.debug" :
@@ -8519,7 +8766,8 @@ function exportMultiple( test )
           "default" : 1,
           "debug" : 1,
           "raw" : 1,
-          "export" : 1
+          "export" : 1,
+          "generated" : 1,
         }
       },
       "exported.dir.export." :
@@ -8530,7 +8778,8 @@ function exportMultiple( test )
           "default" : 1,
           "debug" : 0,
           "raw" : 1,
-          "export" : 1
+          "export" : 1,
+          "generated" : 1,
         }
       },
       "exported.files.export." :
@@ -8541,7 +8790,8 @@ function exportMultiple( test )
           "default" : 1,
           "debug" : 0,
           "raw" : 1,
-          "export" : 1
+          "export" : 1,
+          "generated" : 1,
         }
       },
       "archiveFile.export." :
@@ -8552,7 +8802,8 @@ function exportMultiple( test )
           "default" : 1,
           "debug" : 0,
           "raw" : 1,
-          "export" : 1
+          "export" : 1,
+          "generated" : 1,
         }
       },
       'module.peer.in' :
@@ -8579,7 +8830,7 @@ exportMultiple.timeOut = 200000;
 function exportImportMultiple( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -8607,7 +8858,7 @@ function exportImportMultiple( test )
     test.case = 'export submodule';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outPath );
 
     return null;
@@ -8780,7 +9031,7 @@ exportImportMultiple.timeOut = 200000;
 function exportBroken( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-broken' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple-broken' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -8806,7 +9057,7 @@ function exportBroken( test )
     test.case = '.export debug:1';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
     return null;
   })
@@ -8906,7 +9157,7 @@ function exportBroken( test )
 function exportDoc( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-doc' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple-doc' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -8933,7 +9184,7 @@ function exportDoc( test )
     test.case = 'export submodule';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( subOutPath );
     _.fileProvider.filesDelete( supOutPath );
 
@@ -8970,7 +9221,7 @@ exportDoc.timeOut = 200000;
 function exportImport( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -8988,7 +9239,7 @@ function exportImport( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -9024,7 +9275,7 @@ exportImport.timeOut = 200000;
 function exportBrokenNoreflector( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-broken-noreflector' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-broken-noreflector' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -9042,7 +9293,7 @@ function exportBrokenNoreflector( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -9091,7 +9342,7 @@ removed reflector::exported.export is not obstacle to list out file
 function exportCourrputedOutfileUnknownSection( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-outfile-unknown-section' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-outfile-unknown-section' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -9109,7 +9360,7 @@ function exportCourrputedOutfileUnknownSection( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -9155,7 +9406,7 @@ function exportCourrputedOutfileUnknownSection( test )
 function exportCourruptedOutfileSyntax( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-outfile-syntax' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-outfile-syntax' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -9173,7 +9424,7 @@ function exportCourruptedOutfileSyntax( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -9219,30 +9470,15 @@ function exportCourruptedOutfileSyntax( test )
 function exportCourruptedSubmodulesDisabled( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-submodules-disabled' );
-  let routinePath = _.path.join( self.suitePath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
+  let a = self.assetFor( test, 'corrupted-submodules-disabled' );
+  let outPath = a.abs( 'super.out' );
+  let outFilePath = a.abs( 'super.out/supermodule.out.will.yml' );
 
-  let outPath = _.path.join( routinePath, 'super.out' );
-  let outFilePath = _.path.join( routinePath, 'super.out/supermodule.out.will.yml' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -9250,7 +9486,7 @@ function exportCourruptedSubmodulesDisabled( test )
     return null;
   })
 
-  start( '.with super .export debug:1' )
+  a.start( '.with super .export debug:1' )
 
   .then( ( got ) =>
   {
@@ -9272,15 +9508,157 @@ function exportCourruptedSubmodulesDisabled( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
+
 } /* end of function exportCourruptedSubmodulesDisabled */
+
+//
+
+function exportDisabledModule( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'export-disabled-module' );
+  let willfPath = a.abs( './' );
+  let outFilePath = a.abs( 'out/disabled.out.will.yml' );
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.export';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ '.module', 'out', 'will.yml' ];
+    var files = _.fileProvider.dirRead( a.routinePath );
+    test.identical( files, exp );
+
+    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var exp = [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ];
+    var got = _.mapKeys( outfile.module );
+    test.setsAreIdentical( got, exp );
+
+    test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with . .export';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with . .export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ '.module', 'out', 'will.yml' ];
+    var files = _.fileProvider.dirRead( a.routinePath );
+    test.identical( files, exp );
+
+    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var exp = [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ];
+    var got = _.mapKeys( outfile.module );
+    test.setsAreIdentical( got, exp );
+
+    test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .export';
+    a.reflect();
+    return null;
+  })
+
+  a.startNonThrowing( '.with * .export' )
+
+  .then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+
+    var exp = [ 'will.yml' ];
+    var files = _.fileProvider.dirRead( a.routinePath );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( op.output, 'No module sattisfy' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withDisabled:1; .with * .export';
+    a.reflect();
+    return null;
+  })
+
+  a.startNonThrowing( '.imply withDisabled:1; .with * .export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+
+    var exp = [ '.module', 'out', 'will.yml' ];
+    var files = _.fileProvider.dirRead( a.routinePath );
+    test.identical( files, exp );
+
+    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var exp = [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ];
+    var got = _.mapKeys( outfile.module );
+    test.setsAreIdentical( got, exp );
+
+    test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function exportDisabledModule */
+
+exportDisabledModule.timeOut = 300000;
+exportDisabledModule.description =
+`
+- disabled module should be exported if picked explicitly
+- disabled module should not be exported if picked with glob
+`
 
 //
 
 function exportOutdated( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'inconsistent-outfile' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'inconsistent-outfile' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -9298,7 +9676,7 @@ function exportOutdated( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -9375,7 +9753,7 @@ function exportOutdated( test )
 function exportWholeModule( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-whole' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-whole' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -9393,7 +9771,7 @@ function exportWholeModule( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -9426,7 +9804,7 @@ function exportWholeModule( test )
 function exportRecursive( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -9447,7 +9825,7 @@ function exportRecursive( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( outDirPath );
 
   /* - */
@@ -9516,7 +9894,7 @@ function exportRecursive( test )
 function exportRecursiveUsingSubmodule( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -9539,7 +9917,7 @@ function exportRecursiveUsingSubmodule( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( outSuperDirPath );
   _.fileProvider.filesDelete( outSubDirPath );
 
@@ -9755,31 +10133,34 @@ exportRecursiveUsingSubmodule.timeOut = 300000;
 function exportRecursiveLocal( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
-  let routinePath = _.path.join( self.suitePath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
+  let a = self.assetFor( test, 'export-with-submodules' );
 
-  let outPath = _.path.join( routinePath, 'out' );
+  // let originalAssetPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
+  // let routinePath = _.path.join( self.suitePath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // let submodulesPath = _.path.join( routinePath, '.module' );
+  // let outPath = _.path.join( routinePath, 'out' );
+  //
+  // let ready = new _.Consequence().take( null );
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   mode : 'spawn',
+  //   ready : ready,
+  // })
+  //
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  a.reflect();
 
   /* - */
 
-  start({ execPath : '.with */* .clean' })
-  start({ execPath : '.with */* .export' })
+  a.start({ execPath : '.with */* .clean' })
+  a.start({ execPath : '.with */* .export' })
 
   .finally( ( err, got ) =>
   {
@@ -9791,7 +10172,7 @@ function exportRecursiveLocal( test )
     return null;
   })
 
-  start({ execPath : '.with ab/ .resources.list' })
+  a.start({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, got ) =>
   {
     test.is( !err );
@@ -9806,19 +10187,17 @@ function exportRecursiveLocal( test )
 
   /* - */
 
-  start({ execPath : '.with */* .export' })
-
+  a.start({ execPath : '.with */* .export' })
   .finally( ( err, got ) =>
   {
     test.case = 'second';
-
     test.is( !err );
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'Exported module::' ), 9 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 15 );
     return null;
   })
 
-  start({ execPath : '.with ab/ .resources.list' })
+  a.start({ execPath : '.with ab/ .resources.list' })
   .finally( ( err, got ) =>
   {
     test.is( !err );
@@ -9833,17 +10212,61 @@ function exportRecursiveLocal( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function exportRecursiveLocal */
 
 exportRecursiveLocal.timeOut = 300000;
 
 //
 
+function exportRecursiveRemote( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'export-in-out' );
+
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.with c .clean recursive:2' })
+  a.start({ execPath : '.with c .export.recursive' })
+
+  .finally( ( err, got ) =>
+  {
+    test.case = 'first';
+
+    test.is( !err );
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 6 );
+
+    var files = _.fileProvider.dirRead( a.abs( '.' ) );
+    test.identical( files, [ '.module', 'a', 'c.will.yml', 'out' ] );
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) );
+    test.identical( files, [ 'PathTools', 'UriBasic' ] );
+    var files = _.fileProvider.dirRead( a.abs( 'out' ) );
+    test.identical( files, [ 'c.out.will.yml', 'debug' ] );
+
+    var files = _.fileProvider.dirRead( a.abs( 'a' ) );
+    test.identical( files, [ '.module', 'out', 'will.yml' ] );
+    var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
+    test.identical( files, [ 'Proto', 'Tools' ] );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+} /* end of function exportRecursiveRemote */
+
+exportRecursiveRemote.timeOut = 300000;
+
+//
+
 function exportDotless( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-dotless-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -9866,7 +10289,7 @@ function exportDotless( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( outSuperDirPath );
   _.fileProvider.filesDelete( outSubDirPath );
 
@@ -9977,7 +10400,7 @@ exportDotless.timeOut = 300000;
 function exportDotlessSingle( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -10000,7 +10423,7 @@ function exportDotlessSingle( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( outSuperDirPath );
   _.fileProvider.filesDelete( outSubDirPath );
 
@@ -10107,7 +10530,7 @@ exportDotlessSingle.timeOut = 300000;
 function exportTracing( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -10130,7 +10553,7 @@ function exportTracing( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( outSuperDirPath );
   _.fileProvider.filesDelete( outSubDirPath );
 
@@ -10194,7 +10617,7 @@ function exportTracing( test )
   .finally( ( err, op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'Found no willfile at' ), 1 );
+    test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
     _.errAttend( err );
     return null;
   })
@@ -10211,7 +10634,7 @@ exportTracing.timeOut = 300000;
 function exportRewritesOutFile( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-rewrites-out-file' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-rewrites-out-file' );
   let routinePath = _.path.join( self.suitePath, test.name );
 
   let ready = new _.Consequence().take( null );
@@ -10228,7 +10651,7 @@ function exportRewritesOutFile( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
   _.fileProvider.fileCopy( willCopyFilePath, willFilePath );
 
   /* - */
@@ -10307,7 +10730,7 @@ exportRewritesOutFile.timeOut = 30000;
 function exportWithRemoteSubmodules( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -10325,7 +10748,7 @@ function exportWithRemoteSubmodules( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -10375,7 +10798,7 @@ check there is no annoying information about lack of remote submodules of submod
 function exportAuto( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-auto' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-auto' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -10393,7 +10816,7 @@ function exportAuto( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -10516,7 +10939,7 @@ Test redownloading of currupted remote submodules.
 function importPathLocal( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'import-path-local' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'import-path-local' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -10542,7 +10965,7 @@ function importPathLocal( test )
     test.case = 'export submodule';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outPath );
 
     return null;
@@ -10573,7 +10996,7 @@ importPathLocal.timeOut = 200000;
 function importLocalRepo( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'import-auto' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'import-auto' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -10600,7 +11023,7 @@ function importLocalRepo( test )
     test.case = '.with module/Proto .export';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
 
     return null;
@@ -10642,7 +11065,7 @@ function importLocalRepo( test )
           "prefixPath" : `Proto/proto`
         },
         "mandatory" : 1,
-        "criterion" : { "default" : 1, "export" : 1 }
+        "criterion" : { "default" : 1, "export" : 1, 'generated' : 1 }
       },
       "exported.files.export" :
       {
@@ -10655,7 +11078,7 @@ function importLocalRepo( test )
         },
         "recursive" : 0,
         "mandatory" : 1,
-        "criterion" : { "default" : 1, "export" : 1 }
+        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 }
       }
     }
     test.identical( outfile.reflector, expectedReflector );
@@ -10682,30 +11105,24 @@ function importLocalRepo( test )
         "criterion" : { "predefined" : 1 },
         "path" : `../module/Proto.will.yml`
       },
-      // "download" :
-      // {
-      //   "criterion" : { "predefined" : 1 }
-      // },
       "in" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : `.`
       },
       "out" :
       {
-        "criterion" : { "predefined" : 0 },
         "path" : `.`
       },
-      "remote" :
-      {
-        "criterion" : { "predefined" : 1 }
-      },
+      // "remote" :
+      // {
+      //   "criterion" : { "predefined" : 1 }
+      // },
       "download" : { "path" : `Proto`, 'criterion' : { 'predefined' : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "temp" : { "path" : `../out` },
       "exported.dir.export" :
       {
-        "criterion" : { "default" : 1, "export" : 1 },
+        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "path" : `Proto/proto`
       },
       "module.peer.in" :
@@ -10715,7 +11132,7 @@ function importLocalRepo( test )
       },
       "exported.files.export" :
       {
-        "criterion" : { "default" : 1, "export" : 1 },
+        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "path" :
         [
           `Proto/proto`,
@@ -10763,7 +11180,7 @@ importLocalRepo.timeOut = 200000;
 function importOutWithDeletedSource( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -10789,7 +11206,7 @@ function importOutWithDeletedSource( test )
     test.case = 'export first';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
     return null;
   })
@@ -10843,7 +11260,7 @@ importOutWithDeletedSource.timeOut = 200000;
 function reflectNothingFromSubmodules( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-nothing-from-submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-nothing-from-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -10862,7 +11279,7 @@ function reflectNothingFromSubmodules( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
   _.fileProvider.filesDelete( outDebugPath );
 
   /* - */
@@ -10977,7 +11394,7 @@ reflectNothingFromSubmodules.timeOut = 200000;
 function reflectGetPath( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-get-path' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-get-path' );
   let repoPath = _.path.join( self.suitePath, '_repo' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
@@ -10997,7 +11414,7 @@ function reflectGetPath( test )
   })
 
   _.fileProvider.filesDelete( repoPath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
   _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
 
   /* - */
@@ -11084,7 +11501,7 @@ reflectGetPath.timeOut = 200000;
 function reflectSubdir( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-subdir' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-subdir' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -11107,7 +11524,7 @@ function reflectSubdir( test )
   .then( () =>
   {
     test.case = 'setup'
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     return null;
   })
   start({ execPath : '.each module .export' })
@@ -11249,7 +11666,7 @@ reflectSubdir.timeOut = 200000;
 function reflectSubmodulesWithBase( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-base' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-base' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -11272,7 +11689,7 @@ function reflectSubmodulesWithBase( test )
   .then( () =>
   {
     test.case = 'setup'
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     return null;
   })
 
@@ -11353,7 +11770,7 @@ reflectSubmodulesWithBase.timeOut = 150000;
 function reflectComposite( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'composite-reflector' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'composite-reflector' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -11370,7 +11787,7 @@ function reflectComposite( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* */
 
@@ -11585,7 +12002,7 @@ reflectComposite.timeOut = 200000;
 function reflectRemoteGit( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-remote-git' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-remote-git' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -11605,7 +12022,7 @@ function reflectRemoteGit( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   ready.then( () =>
   {
@@ -11722,7 +12139,7 @@ function reflectRemoteGit( test )
     var files = self.find( local1Path );
     test.ge( files.length, 30 );
     var files = self.find( local2Path );
-    test.ge( files.length, 35 );
+    test.ge( files.length, 30 );
     var files = self.find( local3Path );
     test.ge( files.length, 30 );
 
@@ -11738,7 +12155,7 @@ reflectRemoteGit.timeOut = 200000;
 function reflectRemoteHttp( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-remote-http' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-remote-http' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -11757,7 +12174,7 @@ function reflectRemoteHttp( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   ready.then( () =>
   {
@@ -11787,7 +12204,7 @@ reflectRemoteHttp.timeOut = 200000;
 function reflectWithOptions( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-with-options' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-with-options' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -11806,7 +12223,7 @@ function reflectWithOptions( test )
     ready : ready,
   });
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -11882,7 +12299,7 @@ function reflectWithOptions( test )
 function reflectWithSelectorInDstFilter( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-selecting-dst' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-selecting-dst' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -11900,7 +12317,7 @@ function reflectWithSelectorInDstFilter( test )
     ready : ready,
   });
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /*
     reflect.proto:
@@ -11962,7 +12379,7 @@ function reflectWithSelectorInDstFilter( test )
 function reflectSubmodulesWithCriterion( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-with-criterion' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-with-criterion' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -11979,7 +12396,7 @@ function reflectSubmodulesWithCriterion( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -12067,7 +12484,7 @@ function reflectSubmodulesWithCriterion( test )
 function reflectSubmodulesWithPluralCriterionManualExport( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-plural-criterion' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-plural-criterion' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -12084,7 +12501,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -12118,7 +12535,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
 function reflectSubmodulesWithPluralCriterionAutoExport( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-plural-criterion' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-plural-criterion' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -12135,7 +12552,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -12196,7 +12613,7 @@ reflectSubmodulesWithPluralCriterionAutoExport.timeOut = 300000;
 function relfectSubmodulesWithNotExistingFile( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-reflect-with-not-existing' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-reflect-with-not-existing' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -12213,7 +12630,7 @@ function relfectSubmodulesWithNotExistingFile( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.assert( _.fileProvider.fileExists( abs( routinePath, 'module/moduleB/proto/amid/File.txt' ) ) );
   _.fileProvider.fileDelete( abs( routinePath, 'module/moduleB/proto/amid/File.txt' ) );
 
@@ -12296,7 +12713,7 @@ function relfectSubmodulesWithNotExistingFile( test )
 function reflectInherit( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-inherit' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-inherit' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -12313,7 +12730,7 @@ function reflectInherit( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -12522,7 +12939,7 @@ reflectInherit.timeOut = 300000;
 function reflectInheritSubmodules( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-inherit-submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-inherit-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -12539,7 +12956,7 @@ function reflectInheritSubmodules( test )
     ready : ready,
   });
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -12629,7 +13046,7 @@ function reflectInheritSubmodules( test )
 function reflectComplexInherit( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -12652,7 +13069,7 @@ function reflectComplexInherit( test )
   .then( () =>
   {
     test.case = '.with ab/ .build';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outPath );
     return null;
   })
@@ -12696,7 +13113,7 @@ function reflectComplexInherit( test )
   .then( () =>
   {
     test.case = '.with abac/ .build';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outPath );
     return null;
   })
@@ -12753,7 +13170,7 @@ reflectComplexInherit.timeOut = 300000;
 function reflectorMasks( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflector-masks' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflector-masks' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -12775,7 +13192,7 @@ function reflectorMasks( test )
   /* - */
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -12825,7 +13242,7 @@ reflectorMasks.timeOut = 200000;
 function shellWithCriterion( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-start-with-criterion' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'step-shell-with-criterion' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -12847,7 +13264,7 @@ function shellWithCriterion( test )
   /* - */
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -12893,7 +13310,7 @@ shellWithCriterion.timeOut = 200000;
 function shellVerbosity( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-start-verbosity' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'step-shell-verbosity' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -12913,7 +13330,7 @@ function shellVerbosity( test )
   /* - */
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -13010,7 +13427,7 @@ function shellVerbosity( test )
 function functionStringsJoin( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'function-strings-join' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'function-strings-join' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -13027,7 +13444,7 @@ function functionStringsJoin( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -13144,7 +13561,7 @@ console.log( 'File1.js' );
 function functionPlatform( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'function-platform' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'function-platform' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -13161,7 +13578,7 @@ function functionPlatform( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -13205,10 +13622,10 @@ function functionPlatform( test )
   Checks resolving selector with criterion.
 */
 
-function fucntionThisCriterion( test )
+function functionThisCriterion( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-start-using-criterion-value' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'step-shell-using-criterion-value' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -13228,7 +13645,7 @@ function fucntionThisCriterion( test )
   /* - */
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -13263,14 +13680,14 @@ function fucntionThisCriterion( test )
   return ready;
 }
 
-fucntionThisCriterion.timeOut = 200000;
+functionThisCriterion.timeOut = 200000;
 
 //
 
 function submodulesDownloadSingle( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'single' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'single' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -13286,7 +13703,7 @@ function submodulesDownloadSingle( test )
     ready : ready
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -13353,7 +13770,7 @@ submodulesDownloadSingle.timeOut = 200000;
 function submodulesDownloadUpdate( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -13370,7 +13787,7 @@ function submodulesDownloadUpdate( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* */
 
@@ -13514,7 +13931,7 @@ submodulesDownloadUpdate.timeOut = 300000;
 function submodulesDownloadUpdateDry( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-detached' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -13531,7 +13948,7 @@ function submodulesDownloadUpdateDry( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* */
 
@@ -13633,7 +14050,7 @@ submodulesDownloadUpdateDry.timeOut = 300000;
 function submodulesDownloadSwitchBranch( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-update-switch-branch' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-update-switch-branch' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let submodulesPath = _.path.join( routinePath, '.module' );
 
@@ -13649,7 +14066,7 @@ function submodulesDownloadSwitchBranch( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   ready
 
@@ -13768,7 +14185,7 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 function submodulesDownloadRecursive( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -13787,7 +14204,7 @@ function submodulesDownloadRecursive( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -13898,20 +14315,8 @@ function submodulesDownloadRecursive( test )
     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathTools were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::a were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/10 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
-
-    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathBasic / module::wPathBasic were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic / module::wUriBasic were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wProto / module::wProto were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wTools / module::wTools were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::c were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathTools / module::wPathTools were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::a were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/10 submodule(s) of module::z were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
 
     return null;
   })
@@ -14117,7 +14522,7 @@ submodulesDownloadRecursive.timeOut = 500000;
 function submodulesDownloadThrowing( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -14149,7 +14554,7 @@ function submodulesDownloadThrowing( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -14415,7 +14820,7 @@ function submodulesDownloadStepAndCommand( test )
 function submodulesUpdateThrowing( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -14448,7 +14853,7 @@ function submodulesUpdateThrowing( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -14628,7 +15033,7 @@ submodulesUpdateThrowing.timeOut = 300000;
 function submodulesAgreeThrowing( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -14660,7 +15065,7 @@ function submodulesAgreeThrowing( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -14837,7 +15242,7 @@ submodulesAgreeThrowing.timeOut = 300000;
 function submodulesVersionsAgreeWrongOrigin( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -14869,7 +15274,7 @@ function submodulesVersionsAgreeWrongOrigin( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -14916,7 +15321,7 @@ submodulesVersionsAgreeWrongOrigin.timeOut = 300000;
 function submodulesDownloadedUpdate( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-downloaded-update' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-downloaded-update' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -14933,7 +15338,7 @@ function submodulesDownloadedUpdate( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* */
 
@@ -15048,7 +15453,7 @@ function submodulesDownloadedUpdate( test )
 function subModulesUpdate( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-update' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-update' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -15065,7 +15470,7 @@ function subModulesUpdate( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* */
 
@@ -15163,7 +15568,7 @@ subModulesUpdate.timeOut = 300000;
 function subModulesUpdateSwitchBranch( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-update-switch-branch' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-update-switch-branch' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -15393,7 +15798,7 @@ function subModulesUpdateSwitchBranch( test )
       let clonePath = _.path.join( routinePath, 'cloned' );
 
       _.fileProvider.filesDelete( routinePath );
-      _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+      _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
       _.fileProvider.dirMake( repoPath );
 
@@ -15442,10 +15847,10 @@ subModulesUpdateSwitchBranch.timeOut = 300000;
 
 //
 
-function versionsVerify( test )
+function submodulesVerify( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'command-versions-verify' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'command-versions-verify' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let localModulePathSrc = _.path.join( routinePath, 'module' );
   let localModulePathDst = _.path.join( routinePath, '.module/local' );
@@ -15475,7 +15880,7 @@ function versionsVerify( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   ready.then( () =>
   {
@@ -15586,7 +15991,7 @@ function versionsVerify( test )
 function versionsAgree( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'command-versions-agree' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'command-versions-agree' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let localModulePathSrc = _.path.join( routinePath, 'module' );
   let localModulePathDst = _.path.join( routinePath, '.module/local' );
@@ -15619,7 +16024,7 @@ function versionsAgree( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   ready.then( () =>
   {
@@ -15750,12 +16155,12 @@ function versionsAgree( test )
 function stepSubmodulesDownload( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-submodules-download' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'step-submodules-download' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
   _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
   _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
 
@@ -15850,7 +16255,7 @@ stepSubmodulesDownload.timeOut = 300000;
 function stepWillbeVersionCheck( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-willbe-version-check' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'step-willbe-version-check' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let willbeRootPath = _.path.join( __dirname, '../../../..' );
 
@@ -15871,7 +16276,7 @@ function stepWillbeVersionCheck( test )
     src : { prefixPath : willbeRootPath },
     dst : { prefixPath : willbeDstPath },
   })
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : assetDstPath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : assetDstPath } })
   _.fileProvider.softLink( nodeModulesDstPath, nodeModulesSrcPath );
 
   // let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/Exec' ) );
@@ -15925,7 +16330,7 @@ stepWillbeVersionCheck.timeOut = 15000;
 function stepSubmodulesAreUpdated( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'step-submodules-are-updated' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'step-submodules-are-updated' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let localModulePath = _.path.join( routinePath, 'module' );
 
@@ -15949,7 +16354,7 @@ function stepSubmodulesAreUpdated( test )
     ready : ready,
   })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   ready.then( () =>
   {
@@ -16119,7 +16524,7 @@ stepSubmodulesAreUpdated.timeOut = 300000;
 function upgradeDryDetached( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-detached' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -16138,7 +16543,7 @@ function upgradeDryDetached( test )
     ready : ready,
   });
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -16370,7 +16775,7 @@ upgradeDryDetached.timeOut = 500000;
 function upgradeDetached( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-detached' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -16395,7 +16800,7 @@ function upgradeDetached( test )
   .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after full update';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     return null;
   })
 
@@ -16453,7 +16858,7 @@ function upgradeDetached( test )
     test.case = '.submodules.upgrade dry:0 negative:0 -- after full update';
 
     _.fileProvider.filesDelete({ filePath : routinePath })
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
@@ -16622,7 +17027,7 @@ function upgradeDetached( test )
     test.case = '.submodules.upgrade dry:0 negative:1 -- after informal update';
 
     _.fileProvider.filesDelete({ filePath : routinePath })
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
@@ -16681,7 +17086,7 @@ function upgradeDetached( test )
     test.case = '.submodules.upgrade dry:0 negative:1 -- after formal update';
 
     _.fileProvider.filesDelete({ filePath : routinePath })
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
@@ -16744,7 +17149,7 @@ upgradeDetached.timeOut = 500000;
 function upgradeDetachedExperiment( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached-single' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-detached-single' );
   let routinePath = _.path.join( self.suitePath, test.name );
 
   let ready = new _.Consequence().take( null );
@@ -16764,7 +17169,7 @@ function upgradeDetachedExperiment( test )
   .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after download';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     return null;
   })
 
@@ -16794,7 +17199,7 @@ upgradeDetachedExperiment.experimental = 1;
 function fixateDryDetached( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-detached' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -16813,7 +17218,7 @@ function fixateDryDetached( test )
     ready : ready,
   });
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -17045,7 +17450,7 @@ fixateDryDetached.timeOut = 500000;
 function fixateDetached( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-detached' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-detached' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -17070,7 +17475,7 @@ function fixateDetached( test )
   .then( () =>
   {
     test.case = '.submodules.fixate dry:0 negative:1 -- after full update';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     return null;
   })
 
@@ -17128,7 +17533,7 @@ function fixateDetached( test )
     test.case = '.submodules.fixate dry:0 negative:0 -- after full update';
 
     _.fileProvider.filesDelete({ filePath : routinePath })
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
@@ -17297,7 +17702,7 @@ function fixateDetached( test )
     test.case = '.submodules.fixate dry:0 negative:1 -- after informal update';
 
     _.fileProvider.filesDelete({ filePath : routinePath })
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
@@ -17356,7 +17761,7 @@ function fixateDetached( test )
     test.case = '.submodules.fixate dry:0 negative:1 -- after formal update';
 
     _.fileProvider.filesDelete({ filePath : routinePath })
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
@@ -17428,7 +17833,7 @@ function runWillbe( test )
 {
 
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'run-willbe' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'run-willbe' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -17459,7 +17864,7 @@ function runWillbe( test )
   ready
   .then( () =>
   {
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } })
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     return null;
   })
 
@@ -17561,7 +17966,7 @@ Disappeared as mystically as appeared.
 function resourcesFormReflectorsExperiment( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'performance2' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'performance2' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -17570,7 +17975,7 @@ function resourcesFormReflectorsExperiment( test )
   let moduleNewPath = _.path.join( routinePath, './new-out-file/' );
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   let ready = new _.Consequence().take( null )
 
@@ -17682,6 +18087,7 @@ var Self =
     willPath : null,
     find : null,
     findAll : null,
+    assetFor,
     abs_functor,
     rel_functor
   },
@@ -17743,6 +18149,7 @@ var Self =
     cleanMixed,
     cleanWithInPath,
     cleanRecursive,
+    cleanDisabledModule,
 
     buildSingleModule,
     buildSingleStep,
@@ -17767,11 +18174,13 @@ var Self =
     exportCourrputedOutfileUnknownSection,
     exportCourruptedOutfileSyntax,
     exportCourruptedSubmodulesDisabled,
+    exportDisabledModule,
     exportOutdated,
     exportWholeModule,
     exportRecursive,
     exportRecursiveUsingSubmodule,
     exportRecursiveLocal,
+    exportRecursiveRemote,
     exportDotless,
     exportDotlessSingle,
     exportTracing,
@@ -17806,7 +18215,7 @@ var Self =
 
     functionStringsJoin,
     functionPlatform,
-    fucntionThisCriterion,
+    functionThisCriterion,
 
     submodulesDownloadSingle,
     submodulesDownloadUpdate,
@@ -17821,7 +18230,7 @@ var Self =
     submodulesDownloadedUpdate,
     subModulesUpdate,
     subModulesUpdateSwitchBranch,
-    versionsVerify,
+    submodulesVerify,
     versionsAgree,
 
     stepSubmodulesDownload,

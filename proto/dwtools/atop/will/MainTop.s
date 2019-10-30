@@ -370,8 +370,27 @@ function _commandNewLike( o )
   throw _.errBrief( 'Cant call command new for module which already exists!' );
 
   let localPath = will.moduleNew({ collision : 'ignore', localPath : will.withPath });
+  let o2 = _.mapExtend( null, o );
+  o2.localPath = localPath;
+  o2.tracing = 0;
 
-  ready.then( () => will.openersFind({ localPath, tracing : 0 }) );
+  ready.then( () => will.openersFind( _.mapOnly( o2, will.openersFind.defaults ) ) );
+
+  // ready.then( () => will.openersFind({ localPath, tracing : 0 }) );
+
+  // ready.then( () =>
+  // {
+  //   return will.modulesFindWithAt
+  //   ({
+  //     withIn : o.withIn,
+  //     withOut : o.withOut,
+  //     withInvalid : o.withInvalid,
+  //     withDisabledModules : o.withDisabledModules,
+  //     selector : localPath,
+  //     tracing : 0,
+  //   })
+  // })
+
   ready.then( () => will.openersCurrentEach( forSingle ) );
   ready.finally( end );
 
@@ -432,6 +451,7 @@ _commandNewLike.defaults =
   withIn : 1,
   withOut : 1,
   withInvalid : 0,
+  withDisabledModules : 0,
 }
 
 //
@@ -513,13 +533,10 @@ function openersFind( o )
   _.assert( will.currentOpeners === null );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  return will.modulesFindWithAt
-  ({
-    withIn : 1,
-    withOut : 1,
-    selector : o.localPath,
-    tracing : o.tracing,
-  })
+  let o2 = _.mapExtend( null, o );
+  o2.selector = o.localPath;
+  delete o2.localPath;
+  return will.modulesFindWithAt( o2 )
   .finally( function( err, it )
   {
 
@@ -541,8 +558,12 @@ function openersFind( o )
 
 openersFind.defaults =
 {
+
+  ... _.mapExtend( null, _.Will.prototype.modulesFindWithAt.defaults ),
+
   localPath : './',
   tracing : 1,
+
 }
 
 //
@@ -743,11 +764,18 @@ function commandImply( e )
 
   let namesMap =
   {
+
     v : 'verbosity',
     verbosity : 'verbosity',
     beeping : 'beeping',
+
     withOut : 'withOut',
     withIn : 'withIn',
+    withEnabled : 'withEnabled',
+    withDisabled : 'withDisabled',
+    withValid : 'withValid',
+    withInvalid : 'withInvalid',
+
   }
 
   let request = will.Resolver.strRequestParse( e.argument );
@@ -759,6 +787,19 @@ function commandImply( e )
     namesMap : namesMap,
   });
 
+}
+
+commandImply.commandProperties =
+{
+  v : 'Set verbosity. Default is 3.',
+  verbosity : 'Set verbosity. Default is 3.',
+  beeping : 'Make noise when it\'s done. Default is 0.',
+  withOut : 'Include out modules. Default is 1.',
+  withIn : 'Include in modules. Default is 1.',
+  withEnabled : 'Include enabled modules. Default is 1.',
+  withDisabled : 'Include disabled modules. Default is 0.',
+  withValid : 'Include valid modules. Default is 1.',
+  withInvalid : 'Include invalid modules. Default is 1.',
 }
 
 //
@@ -824,13 +865,20 @@ function commandWith( e )
     });
   }
 
-  return will.modulesFindWithAt({ selector : isolated.argument })
+  return will.modulesFindWithAt({ selector : isolated.argument, atLeastOne : !path.isGlob( isolated.argument ) })
   .then( function( it )
   {
     will.currentOpeners = it.sortedOpeners;
 
     if( !will.currentOpeners.length )
-    throw _.errBrief( 'Found no willfile at ' + _.strQuote( path.resolve( isolated.argument ) ) );
+    throw _.errBrief
+    (
+        `No module sattisfy criteria.`
+      , `\nLooked at ${_.strQuote( path.resolve( isolated.argument ) )}`
+    );
+
+    // if( !will.currentOpeners.length )
+    // throw _.errBrief( 'Found no willfile at ' + _.strQuote( path.resolve( isolated.argument ) ) );
 
     return ca.commandPerform
     ({
@@ -921,7 +969,7 @@ function commandEach( e )
     if( will.mainOpener )
     will.mainOpener.isMain = false;
     will.currentOpenerChange( it.currentOpener );
-    will.currentOpenerPath = it.currentOpenerPath || null;
+    will.currentOpenerPath = it.currentOpenerPath || null; debugger;
     it.currentOpener.isMain = true;
     _.assert( will.mainOpener === it.currentOpener );
     _.assert( will.currentOpener === it.currentOpener );
@@ -1313,6 +1361,10 @@ function commandModulesTree( e )
   function handleAll( it )
   {
     let modules = it.modules;
+    /*
+    filtering was done earlier
+    */
+    propertiesMap.onlyRoots = 0;
     logger.log( will.graphInfoExportAsTree( modules, propertiesMap ) );
     return null;
   }
@@ -1371,6 +1423,9 @@ function commandSubmodulesAdd( e )
     let found = will.modulesFindWithAt
     ({
       selector : filePath,
+      withDisabledModules : 1,
+      withDisabledSubmodules : 1,
+      withInvalid : 1,
       tracing : 0,
     });
 
@@ -1555,7 +1610,7 @@ function commandSubmodulesVersionsVerify( e )
 
   function handleEach( it )
   {
-    return it.opener.openedModule.versionsVerify( _.mapExtend( null, e.propertiesMap ) );
+    return it.opener.openedModule.submodulesVerify( _.mapExtend( null, e.propertiesMap ) );
   }
 }
 

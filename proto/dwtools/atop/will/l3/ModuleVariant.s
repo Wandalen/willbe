@@ -92,7 +92,7 @@ function reform()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let remotePaths = [];
+  // let remotePaths = [];
 
   if( variant.formed === -1 )
   return;
@@ -172,6 +172,7 @@ function reform()
   {
     let localPath, remotePath;
     [ localPath, remotePath ] = variant.PathsOf( object );
+
     if( localPath )
     {
       _.arrayAppendOnce( variant.localPaths, localPath );
@@ -179,14 +180,11 @@ function reform()
       variant.localPath = localPath;
     }
 
-    // if( variant.localPaths.length > 1 )
-    // debugger;
-
     if( remotePath )
     {
-      _.arrayAppendOnce( remotePaths, remotePath );
+      _.arrayAppendOnce( variant.remotePaths, remotePath );
       variant.remotePath = remotePath;
-      _.assert( remotePaths.length <= 1, `Remote paths collision: ${remotePaths.join( ' ' )}` );
+      // _.assert( variant.remotePaths.length <= 1, `Remote paths collision: ${variant.remotePaths.join( ' ' )}` );
     }
 
   }
@@ -195,20 +193,21 @@ function reform()
 
   function pathFromPeerAdd( object )
   {
-    // let peerWillfilesPath = object.pathMap[ 'module.peer.willfiles' ];
-    // if( !peerWillfilesPath )
-    // return;
-    // _.assert( !!peerWillfilesPath );
-    // let localPath = _.Will.CommonPathFor( peerWillfilesPath );
-    // _.assert( !_.path.isGlobal( localPath ) );
+
     let localPath = object.peerLocalPathGet();
-    if( !localPath )
-    return;
+    if( localPath )
     _.arrayAppendOnce( variant.localPaths, localPath );
     if( variant.localPath === null )
     variant.localPath = localPath;
-    // if( variant.localPaths.length !== 1 )
-    // debugger;
+    _.assert( localPath === null || _.strIs( localPath ) );
+
+    let remotePath = object.peerRemotePathGet();
+    if( remotePath )
+    _.arrayAppendOnce( variant.remotePaths, remotePath );
+    if( variant.remotePath === null )
+    variant.remotePath = remotePath;
+    _.assert( remotePath === null || _.strIs( remotePath ) );
+
   }
 
   /* */
@@ -216,6 +215,7 @@ function reform()
   function pathsForm()
   {
     variant.localPaths.splice( 0, variant.localPaths.length );
+    variant.remotePaths.splice( 0, variant.remotePaths.length );
 
     variant.modules.forEach( ( object ) => pathAdd( object ) );
     variant.openers.forEach( ( object ) => pathAdd( object ) );
@@ -226,8 +226,11 @@ function reform()
 
     if( variant.localPaths.length && !_.arrayHas( variant.localPaths, variant.localPath ) )
     variant.localPath = variant.localPaths[ 0 ];
+    if( variant.remotePaths.length && !_.arrayHas( variant.remotePaths, variant.remotePath ) )
+    variant.remotePath = variant.remotePaths[ 0 ];
 
     _.assert( !variant.localPaths.length || _.arrayHas( variant.localPaths, variant.localPath ) );
+    _.assert( !variant.remotePaths.length || _.arrayHas( variant.remotePaths, variant.remotePath ) );
   }
 
   /* */
@@ -384,14 +387,15 @@ function reform()
       let variant2 = variant.VariantOf( will, object.peerModule );
       if( variant2 && variant2.peer === variant )
       return variant.peer;
-      else
-      {
-        debugger;
-        _.assert( 0, 'not tested' );
-      }
+      // else
+      // {
+      //   debugger;
+      //   // _.assert( 0, 'not tested' );
+      // }
     }
 
-    let variant2 = _.Will.ModuleVariant.From({ object : peerModule, will : will });
+    // let variant2 = _.Will.ModuleVariant.From({ object : peerModule, will : will }); // yyy
+    let variant2 = _.Will.ModuleVariant.VariantOf( will, peerModule );
     peerAssign( variant, variant2 );
 
     // _.assert( !variant.finitedIs() );
@@ -430,8 +434,8 @@ function reform()
   {
     _.assert( !variant.finitedIs() );
 
-    if( variant2.peer === variant || variant2.peer === null )
-    assign();
+    // if( variant2.peer === variant || variant2.peer === null )
+    // assign();
 
     if( variant2.peer && variant2.peer !== variant )
     {
@@ -443,7 +447,24 @@ function reform()
       else
       {
         debugger;
-        variant2.peer = null;
+        // variant2.peer = null;
+        variant2.peer.mergeIn( variant );
+      }
+    }
+
+    if( variant.peer && variant.peer !== variant2 )
+    {
+      if( !variant.peer.ownSomething() )
+      {
+        debugger;
+        variant.peer.finit();
+      }
+      else
+      {
+        // debugger;
+        // variant.peer = null;
+        variant2.mergeIn( variant.peer );
+        return;
       }
     }
 
@@ -514,29 +535,42 @@ function reform()
 function mergeIn( variant2 )
 {
   let variant = this;
+  let will = variant.will;
+  let objects = [];
 
   _.assert( !variant.finitedIs() );
   _.assert( !variant2.finitedIs() );
   _.assert( arguments.length === 1 );
 
-  variant.relations.slice().forEach( ( object ) => move( object ) );
-  variant.openers.slice().forEach( ( object ) => move( object ) );
-  variant.modules.slice().forEach( ( object ) => move( object ) );
+  variant.relations.slice().forEach( ( object ) => objects.push( object ) );
+  variant.openers.slice().forEach( ( object ) => objects.push( object ) );
+  variant.modules.slice().forEach( ( object ) => objects.push( object ) );
+
+  // variant.relations.slice().forEach( ( object ) => variant._remove( object ) );
+  // variant.openers.slice().forEach( ( object ) => variant._remove( object ) );
+  // variant.modules.slice().forEach( ( object ) => variant._remove( object ) );
+
+  objects.forEach( ( object ) => variant._remove( object ) );
+  objects.forEach( ( object ) => variant2._add( object ) );
 
   _.assert( !variant.finitedIs() );
   _.assert( !variant2.finitedIs() );
 
   variant.reform();
+  variant2.reform(); /* yyy */
+
+  _.assert( !variant2.finitedIs() );
+
   if( variant.finitedIs() )
   return true;
   return false;
 
-  function move( object )
-  {
-    variant._remove( object );
-    variant2._add( object );
-    return object;
-  }
+  // function move( object )
+  // {
+  //   variant._remove( object );
+  //   variant2._add( object );
+  //   return object;
+  // }
 }
 
 //
@@ -999,7 +1033,7 @@ function _relationAdd( relation )
 
 //
 
-function _relationRemoveAct( relation )
+function _relationRemoveSingle( relation )
 {
   let variant = this;
   let will = variant.will;
@@ -1032,7 +1066,7 @@ function _relationRemove( relation )
   if( !_.arrayHas( variant.relations, relation ) )
   return false;
 
-  variant._relationRemoveAct( relation );
+  variant._relationRemoveSingle( relation );
 
   variant._remove( variant.AssociationsOf( relation ) );
   return true;
@@ -1074,7 +1108,7 @@ function _openerAdd( opener )
 
 //
 
-function _openerRemoveAct( opener )
+function _openerRemoveSingle( opener )
 {
   let variant = this;
   let will = variant.will;
@@ -1106,7 +1140,7 @@ function _openerRemove( opener )
   if( !_.arrayHas( variant.openers, opener ) )
   return false;
 
-  variant._openerRemoveAct( opener );
+  variant._openerRemoveSingle( opener );
 
   variant._remove( variant.AssociationsOf( opener ) );
   return true;
@@ -1141,13 +1175,13 @@ function _moduleAdd( module )
 
 //
 
-function _moduleRemoveAct( module )
+function _moduleRemoveSingle( module )
 {
   let variant = this;
   let will = variant.will;
 
   _.assert( module instanceof _.Will.OpenedModule );
-  _.assert( variant.module === module );
+  // _.assert( variant.module === module );
   _.arrayRemoveOnceStrictly( variant.modules, module );
 
   if( variant.module === module )
@@ -1174,7 +1208,7 @@ function _moduleRemove( module )
   if( !_.arrayHas( variant.modules, module ) )
   return false;
 
-  variant._moduleRemoveAct( module );
+  variant._moduleRemoveSingle( module );
 
   variant._remove( variant.AssociationsOf( module ) );
   return true;
@@ -1321,7 +1355,12 @@ function submodulesGet( o )
 
   o = _.routineOptions( submodulesGet, arguments );
 
-  append( variant );
+  let filter = _.mapOnly( o, will.relationFit.defaults );
+
+  if( _global_.debugger === 1 )
+  debugger;
+
+  variantLook( variant );
 
   if( !variant.peer )
   if( variant.module && variant.module.peerModule )
@@ -1333,13 +1372,25 @@ function submodulesGet( o )
 
   if( o.withPeers )
   if( variant.peer )
-  append( variant.peer );
+  variantLook( variant.peer );
+
+  // if( _global_.debugger === 1 )
+  // debugger;
+
+  if( o.withoutDuplicates )
+  result = result.filter( ( variant ) =>
+  {
+    return !variant.isOut || !_.arrayHas( result, variant.peer );
+  });
+
+  if( _global_.debugger === 1 )
+  debugger;
 
   return result;
 
   /* */
 
-  function append( variant )
+  function variantLook( variant )
   {
 
     if( variant.module )
@@ -1347,21 +1398,10 @@ function submodulesGet( o )
     {
       let relation = variant.module.submoduleMap[ s ];
 
-      // if( !o.withDisabled )
-      // if( !relation.enabled )
-      // continue;
-      //
-      // if( !o.withEnabled )
-      // if( relation.enabled )
-      // continue;
-
       let variant2 = variant.VariantOf( will, relation );
       if( !variant2 )
       variant2 = variant.From({ relation : relation, will : will });
       _.assert( !!variant2 );
-
-      // if( !will.relationFit( variant2, o ) )
-      // continue;
 
       variantAppendMaybe( variant2 );
 
@@ -1386,15 +1426,7 @@ function submodulesGet( o )
   function variantAppendMaybe( variant )
   {
 
-    // if( !o.withOut )
-    // if( variant.isOut )
-    // return;
-    //
-    // if( !o.withIn )
-    // if( !variant.isOut )
-    // return;
-
-    if( !will.relationFit( variant, o ) )
+    if( !will.relationFit( variant, filter ) )
     return;
 
     _.assert( variant instanceof _.Will.ModuleVariant );
@@ -1410,6 +1442,7 @@ submodulesGet.defaults =
 {
 
   withPeers : 1,
+  withoutDuplicates : 0,
   ... _.Will.RelationFilterDefaults,
 
 }
@@ -1433,17 +1466,17 @@ function infoExport()
 
   result += `variant:: : #${variant.id}\n`;
 
-  let lpl = '';
+  let lpl = ' ';
   if( variant.localPaths.length > 1 )
-  lpl = `( ${variant.localPaths.length} )`;
+  lpl = ` ( ${variant.localPaths.length} ) `;
   if( variant.localPath )
-  result += `  path::local ${lpl} : ${variant.localPath}\n`;
+  result += `  path::local${lpl}: ${variant.localPath}\n`;
 
-  let rpl = '';
+  let rpl = ' ';
   if( variant.remotePaths.length > 1 )
-  rpl = `( ${variant.remotePaths.length} )`;
+  rpl = ` ( ${variant.remotePaths.length} ) `;
   if( variant.remotePath )
-  result += `  path::remote ${rpl} : ${variant.remotePath}\n`;
+  result += `  path::remote${rpl}: ${variant.remotePath}\n`;
 
   if( variant.modules.length )
   {
@@ -1505,9 +1538,35 @@ function dirPathGet()
 function enabledGet()
 {
   let variant = this;
-  if( !variant.module )
-  return null;
-  return variant.module.about.enabled;
+  let result = null;
+
+  if( variant.module )
+  result = variant.module.about.enabled;
+  else if( variant.peer && variant.peer.module )
+  result = variant.peer.module.enabled;
+
+  _.assert( result === null || _.boolIs( result ) );
+  return result;
+}
+
+//
+
+function isRemoteGet()
+{
+  let variant = this;
+  let result = null;
+
+  if( variant.module && variant.module.repo )
+  result = variant.module.repo.isRemote;
+  else if( variant.opener && variant.opener.repo )
+  result = variant.opener.repo.isRemote;
+  else if( variant.peer && variant.peer.module && variant.peer.module.repo )
+  result = variant.peer.module.repo.isRemote;
+  else if( variant.peer && variant.peer.opener && variant.peer.opener.repo )
+  result = variant.peer.opener.repo.isRemote;
+
+  _.assert( result === null || _.boolIs( result ) );
+  return result;
 }
 
 // --
@@ -1589,6 +1648,7 @@ let Accessors =
 {
   dirPath : { getter : dirPathGet, readOnly : 1 },
   enabled : { getter : enabledGet, readOnly : 1 },
+  isRemote : { getter : isRemoteGet, readOnly : 1 },
 }
 
 // --
@@ -1616,13 +1676,13 @@ let Extend =
   AssociationsOf,
 
   _relationAdd,
-  _relationRemoveAct,
+  _relationRemoveSingle,
   _relationRemove,
   _openerAdd,
-  _openerRemoveAct,
+  _openerRemoveSingle,
   _openerRemove,
   _moduleAdd,
-  _moduleRemoveAct,
+  _moduleRemoveSingle,
   _moduleRemove,
 
   _add,
@@ -1644,6 +1704,7 @@ let Extend =
   moduleSet,
   dirPathGet,
   enabledGet,
+  isRemoteGet,
 
   // relation
 

@@ -138,6 +138,9 @@ function preform()
   will.openerRegister( opener );
   will._willfilesReadBegin();
 
+  if( opener.isOut === null && opener.willfilesPath )
+  opener.isOut = will.PathIsOut( opener.willfilesPath );
+
   /* */
 
   _.assert( arguments.length === 0 );
@@ -145,6 +148,7 @@ function preform()
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
   _.assert( opener.dirPath === null || _.strDefined( opener.dirPath ) );
   _.assert( !!opener.willfilesPath || !!opener.dirPath );
+  _.assert( _.boolLike( opener.isOut ) );
 
   /* */
 
@@ -155,7 +159,7 @@ function preform()
 
   function end()
   {
-    opener._remoteForm();
+    opener._repoForm();
     _.assert( opener.formed >= 2 );
     return opener;
   }
@@ -173,6 +177,7 @@ function optionsForModuleExport()
     will : null,
     rootModule : null,
     peerModule : null,
+    repo : null,
     willfilesArray : null,
 
     willfilesPath : null,
@@ -181,8 +186,7 @@ function optionsForModuleExport()
     downloadPath : null,
     remotePath : null,
 
-    isRemote : null,
-    isUpToDate : null,
+    // isRemote : null,
     isOut : null,
 
   }
@@ -320,23 +324,11 @@ function openedModuleSet( module )
   _.assert( arguments.length === 1 );
   _.assert( module === null || module instanceof _.Will.OpenedModule )
 
-  // if( opener.id === 397 )
-  // debugger;
-
   if( opener.openedModule === module )
   return module ;
 
-  // if( opener.id === 128 )
-  // debugger;
-
-  // if( opener.superRelation && opener.openedModule )
-  // opener.openedModule.superRelationsRemove( opener.superRelation );
-
   if( opener.openedModule )
   opener.openedModule.releasedBy( opener );
-
-  // if( opener.superRelation && module )
-  // module.superRelationsAppend( opener.superRelation );
 
   if( module )
   {
@@ -401,16 +393,12 @@ function close()
   _.assert( arguments.length === 0 );
   _.assert( opener.formed >= 0 );
 
-  // let variant = will.variantOf( opener );
-  // if( variant && variant.has( opener ) )
-  // variant.remove( opener );
-
   if( module )
   {
+    _.assert( _.arrayHas( module.userArray, opener ) );
+    opener.openedModule = null;
+    _.assert( !_.arrayHas( module.userArray, opener ) );
     module.finit();
-    // module.close();
-    // _.assert( module.isUsedBy( opener ) );
-    // opener.openedModule = null;
     _.assert( opener.openedModule === null );
     _.assert( !module.isUsedBy( opener ) );
   }
@@ -426,13 +414,8 @@ function close()
   if( opener.formed > 1 )
   {
     opener.formed = 1;
-    opener._remoteForm();
+    opener._repoForm();
   }
-
-  // if( module )
-  // {
-  //   module.finit();
-  // }
 
 }
 
@@ -733,7 +716,9 @@ function reopen()
   let willfilesPath = _.make( opener.willfilesPath );
   let willf = opener.willfilesArray[ 0 ];
 
+  _.assert( !opener.finitedIs() );
   opener.close();
+  _.assert( !opener.finitedIs() );
   opener.willfilesPath = willfilesPath;
   _.assert( opener.error === null );
   _.assert( opener.searching !== 'exact' || _.entityIdentical( opener.willfilesPath, willfilesPath ) );
@@ -857,6 +842,9 @@ function _willfilesFindAct( o )
 
   _.assert( opener.willfilesArray.length === 0, 'not tested' );
 
+  // if( opener.id === 54 || opener.id === 145 )
+  // debugger;
+
   if( opener.searching === 'smart' )
   o.willfilesPath = _.Will.CommonPathFor( o.willfilesPath );
 
@@ -911,8 +899,6 @@ function _willfilesFind()
 
   _.assert( arguments.length === 0 );
 
-  /* */
-
   try
   {
 
@@ -932,7 +918,6 @@ function _willfilesFind()
   if( opener.willfilesArray.length === 0 )
   {
     let err;
-    // debugger;
     if( opener.superRelation )
     err = _.errBrief( 'Found no out-willfile for',  opener.superRelation.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
     else
@@ -1049,7 +1034,7 @@ function superRelationSet( src )
   }
 
   opener[ superRelationSymbol ] = src;
-  // opener._.superRelation = src;
+  // opener._.superRelation = src; /* xxx */
 
   if( opener.openedModule && opener.superRelation )
   {
@@ -1063,7 +1048,7 @@ function superRelationSet( src )
 // remote
 // --
 
-function _remoteForm()
+function _repoForm()
 {
   let opener = this;
   let will = opener.will;
@@ -1073,31 +1058,57 @@ function _remoteForm()
 
   _.assert( opener.formed >= 1 );
   _.assert( opener.formed <= 2 );
+  _.assert( opener.openedModule === null );
 
-  opener.remoteIsReform();
+  let downloadPath, remotePath;
 
-  if( opener.isRemote && opener.superRelation )
+  // opener.isRemote = opener.repoIsRemote();
+  let isRemote = opener.repoIsRemote();
+
+  if( opener.peerModule && opener.remotePath === null && opener.peerModule.remotePath )
   {
-    opener._remoteFormFormal();
-  }
-  else
-  {
+    if( !opener._.localPath )
     opener._.localPath = opener.commonPath;
-    opener.isDownloaded = true;
-  }
-
-  _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
-
-  if( opener.peerModule && opener.remotePath === null && opener.peerModule.remotePath && opener.peerModule.isRemote )
-  {
-    opener._.downloadPath = opener.peerModule.downloadPath;
-    opener._.remotePath = _.Will.RemotePathAdjust( opener.peerModule.remotePath, path.relative( opener.peerModule.localPath, opener.localPath ) );
+    downloadPath = opener._.downloadPath = opener.peerModule.downloadPath;
+    remotePath = opener._.remotePath = opener.peerModule.peerRemotePathGet();
+    // opener.isRemote = opener.repoIsRemote();
+    isRemote = opener.repoIsRemote();
+    _.assert( isRemote === true );
     /*
       xxx qqq :
         make it working for case when remote path is local
         for example : "git+hd:///module/_repo/Tools?out=out/wTools.out.will#master"
     */
   }
+
+  // if( opener.isRemote && opener.superRelation )
+  if( isRemote && opener.superRelation )
+  {
+    opener._repoFormFormal();
+  }
+  else
+  {
+    opener._.localPath = opener.commonPath;
+    // _.assert( opener.repo === null );
+    if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
+    // opener.repo = new _.Will.Repository
+    opener.repo = will.repoFrom
+    ({
+      // will : will,
+      isRemote : isRemote,
+      downloadPath : opener.downloadPath,
+      remotePath : opener.remotePath,
+    });
+    // opener._repoStatusPut( 'hasFiles', true );
+    // opener._repoStatusPut( 'isRepository', true );
+    // opener.__.hasFiles = true;
+    // opener.__.isRepository = true;
+  }
+
+  _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
+  _.assert( downloadPath === undefined || downloadPath === opener._.downloadPath );
+  _.assert( remotePath === undefined || remotePath === opener._.remotePath );
+  _.assert( opener.repo instanceof _.Will.Repository );
 
   if( opener.formed < 2 )
   opener.formed = 2;
@@ -1106,7 +1117,6 @@ function _remoteForm()
     should goes after setting formed
   */
 
-  // if( !opener.superRelation || opener.superRelation.enabled ) /* ttt */
   will.variantFrom( opener );
 
   return opener;
@@ -1114,7 +1124,7 @@ function _remoteForm()
 
 //
 
-function _remoteFormFormal()
+function _repoFormFormal()
 {
   let opener = this;
   let will = opener.will;
@@ -1152,58 +1162,30 @@ function _remoteFormFormal()
     _.assert( !!opener.peerModule.localPath );
     _.assert( !!opener.peerModule.opener );
     opener.peerModule.opener._.downloadPath = opener.downloadPath;
-    opener.peerModule.opener._.remotePath = path.join( opener.remotePath, path.relative( opener.localPath, opener.peerModule.localPath ) );
+    opener.peerModule.opener._.remotePath = _.Will.RemotePathAdjust( opener.remotePath, path.relative( opener.localPath, opener.peerModule.localPath ) );
+    // opener.peerModule.opener._.remotePath = path.join( opener.remotePath, path.relative( opener.localPath, opener.peerModule.localPath ) );
   }
 
-  opener.remoteIsDownloadedReform();
-  opener.remoteIsGoodRepositoryReform();
+  // _.assert( opener.repo === null );
+  // debugger;
 
-  _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
+  if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
+  // opener.repo = new _.Will.Repository
+  opener.repo = will.repoFrom
+  ({
+    // will : will,
+    isRemote : true,
+    remotePath : opener._.remotePath,
+    downloadPath : opener._.downloadPath,
+  });
+  // debugger;
 
-  return opener;
-}
+  // opener.repoHasFilesReform();
+  // opener.repoIsGoodReform();
 
-//
+  // opener.status({ all : 0, reset : 1, hasFiles : 1, isRepository : 1 });
 
-function _remoteFormInformal()
-{
-  let opener = this;
-  let will = opener.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let willfilesPath = opener.remotePath || opener.willfilesPath;
-
-  _.assert( opener.aliasName === null );
-  _.assert( opener.superRelation === null );
-  _.assert( _.strIs( willfilesPath ) );
-  _.assert( opener.formed <= 2 );
-  _.assert( opener.openedModule === null );
-
-  let remoteProvider = fileProvider.providerForPath( opener.remotePath || opener.commonPath );
-
-  _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.qualifiedName + ' does not have version control system features' );
-
-  if( !opener.downloadPath || !opener.remotePath )
-  {
-    debugger;
-    throw _.err( 'Module should have both path::download, path:remote defined either none' );
-  }
-
-  if( opener.peerModule )
-  debugger;
-  if( opener.peerModule && opener.peerModule.remotePath === null )
-  {
-    debugger;
-    _.assert( 0, 'not tested' );
-    _.assert( !!opener.peerModule.localPath );
-    _.assert( !!opener.peerModule.opener );
-    opener.peerModule.opener._.downloadPath = opener.downloadPath;
-    opener.peerModule.opener._.remotePath = path.join( opener.remotePath, path.relative( opener.localPath, opener.peerModule.localPath ) );
-  }
-
-  opener.remoteIsDownloadedReform();
-  opener.remoteIsGoodRepositoryReform();
+  opener.repo.status({ all : 0, reset : 1, hasFiles : 1, isRepository : 1 });
 
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
 
@@ -1233,7 +1215,7 @@ qqq : investigate please, fix and cover here and in wFiles
 
 */
 
-function _remoteDownload( o )
+function _repoDownload( o )
 {
   let opener = this;
   let will = opener.will;
@@ -1245,9 +1227,12 @@ function _remoteDownload( o )
   let origin = null;
   let hasLocalChanges = null;
   let isValid = null;
+  let reopened = [];
+  let dirStatusMap = Object.create( null );
+  let status;
   let ready = _.Consequence().take( null );
 
-  _.routineOptions( _remoteDownload, o );
+  _.routineOptions( _repoDownload, o );
   _.assert( arguments.length === 1 );
   _.assert( opener.formed >= 2 );
   _.assert( !!opener.willfilesPath );
@@ -1258,12 +1243,25 @@ function _remoteDownload( o )
   _.assert( !!opener.superRelation );
   _.assert( _.arrayHas( [ 'download', 'update', 'agree' ], o.mode ) );
 
+  debugger;
+
   return ready
-  .then( () => opener._remoteIsUpToDate({ mode : o.mode }) )
+  // .then( () => opener._repoIsFresh({ mode : o.mode }) )
+  .then( () => opener.repo.status({ all : 1, reset : 1 }) )
   .then( function( arg )
   {
-    downloading = arg;
+    status = arg;
 
+    if( o.mode === 'download' )
+    downloading = status.downloadRequired;
+    else if( o.mode === 'update' )
+    downloading = status.updateRequired;
+    else if( o.mode === 'agree' )
+    downloading = status.agreeRequired;
+
+    // downloading = !arg;
+
+    _.assert( _.mapIs( status ) );
     _.assert( _.boolIs( downloading ) );
 
     // debugger;
@@ -1274,30 +1272,30 @@ function _remoteDownload( o )
     {
       if( o.strict )
       {
-        if( !opener.isDownloaded )
+        if( !opener.repo.hasFiles )
         filesCheck();
-        if( opener.isDownloaded )
+        if( opener.repo.hasFiles )
         repositoryCheck();
-        if( opener.isDownloaded )
+        if( opener.repo.hasFiles )
         moduleCheck();
       }
     }
     else if( o.mode === 'update' )
     {
 
-      if( !opener.isDownloaded )
+      if( !opener.repo.hasFiles )
       filesCheck();
-      if( opener.isDownloaded )
+      if( opener.repo.hasFiles )
       repositoryCheck();
-      if( opener.isDownloaded )
+      if( opener.repo.hasFiles )
       moduleCheck();
 
       if( !downloading )
       return downloading;
 
-      if( opener.isDownloaded && opener.isRepository )
+      if( opener.repo.hasFiles && opener.repo.isRepository )
       originCheck();
-      if( opener.isDownloaded && opener.isRepository )
+      if( opener.repo.hasFiles && opener.repo.isRepository )
       localChangesCheck();
 
     }
@@ -1307,9 +1305,9 @@ function _remoteDownload( o )
       return downloading;
 
       // Vova: agree should delete module if origin is different, but not throw an error
-      // if( opener.isDownloaded && opener.isRepository )
+      // if( opener.repo.hasFiles && opener.repo.isRepository )
       // originCheck();
-      if( opener.isDownloaded && opener.isRepository )
+      if( opener.repo.hasFiles && opener.repo.isRepository )
       localChangesCheck();
 
       filesDeleteMaybe();
@@ -1331,15 +1329,37 @@ function _remoteDownload( o )
   .then( function( arg )
   {
 
-    if( downloading && !o.dry )
-    {
-      opener.isDownloaded = true;
-      opener.isUpToDate = true;
-    }
+    // if( downloading && !o.dry ) // yyy
+    // openersReform();
+
+    /*
+      first reopen modules with the same local path
+    */
 
     if( o.opening && !o.dry && downloading )
-    return moduleReopen();
+    return modulesReopen( 1 );
+    return null;
+  })
+  .then( function( arg )
+  {
 
+    /*
+      then copy files for modules with the different local paths
+    */
+
+    if( downloading && !o.dry )
+    return modulesCopy()
+    return null;
+  })
+  .then( function( arg )
+  {
+
+    /*
+      then reopen modules with the different local paths
+    */
+
+    if( o.opening && !o.dry && downloading )
+    return modulesReopen( 0 );
     return null;
   })
   .finally( function( err, arg )
@@ -1354,9 +1374,8 @@ function _remoteDownload( o )
 
    function repositoryCheck()
    {
-     _.assert( opener.isDownloaded === true );
-
-     if( !opener.isRepository )
+     _.assert( opener.repo.hasFiles === true );
+     if( !opener.repo.isRepository )
      throw _.err
      (
        `Module ${opener.decoratedAbsoluteName} is downloaded, but it's not a git repository.\n`,
@@ -1368,13 +1387,7 @@ function _remoteDownload( o )
 
   function moduleCheck()
   {
-    // qqq : should not be here
-    // if( !opener.isDownloaded )
-    // return;
-
-    _.assert( opener.isDownloaded );
-
-    // if( !opener.isValid() )
+    _.assert( opener.repo.hasFiles );
     if( !isValidReform() )
     throw _.err( opener.error, `\nModule ${opener.decoratedAbsoluteName} is downloaded, but it's not valid` );
   }
@@ -1398,17 +1411,9 @@ function _remoteDownload( o )
     if local repo has any changes then throw error with invitation to commit changes first
     */
 
-    // if( !opener.isDownloaded )
-    // return;
-    //
-    // // qqq : check
-    // // if( !opener.isRepository && o.mode === 'agree' )
-    // if( !opener.isRepository )
-    // return;
-
     _.assert( downloading === true );
-    _.assert( opener.isDownloaded === true );
-    _.assert( opener.isRepository === true );
+    _.assert( opener.repo.hasFiles === true );
+    _.assert( opener.repo.isRepository === true );
 
     if( hasLocalChangesReform() )
     throw _.errBrief
@@ -1425,7 +1430,9 @@ function _remoteDownload( o )
   {
     if( hasLocalChanges !== null )
     return hasLocalChanges;
-    hasLocalChanges = opener.remoteHasLocalChanges();
+    // hasLocalChanges = opener.repoHasLocalChanges();
+    hasLocalChanges = opener.hasLocalChanges;
+    _.assert( _.boolIs( hasLocalChanges ) );
     return hasLocalChanges;
   }
 
@@ -1434,16 +1441,13 @@ function _remoteDownload( o )
   function originCheck()
   {
 
-    // if( !opener.isDownloaded )
-    // return;
-
     _.assert( downloading === true );
-    _.assert( opener.isDownloaded === true );
-    _.assert( opener.isRepository === true );
+    _.assert( opener.repo.hasFiles === true );
+    _.assert( opener.repo.isRepository === true );
 
-    hasGoodOriginReform();
+    remoteIsValidReform();
 
-    if( !origin.downloadedFromRemote )
+    if( !origin.remoteIsValid )
     throw _.err
     (
       'Module', opener.decoratedAbsoluteName, 'is already downloaded, but has different origin url:',
@@ -1454,28 +1458,28 @@ function _remoteDownload( o )
 
   /* */
 
-  function hasGoodOriginReform()
+  function remoteIsValidReform()
   {
 
-    if( origin !== null )
-    return origin;
+    if( remoteIsValid !== null )
+    return remoteIsValid;
 
     let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
 
-    origin = gitProvider.isDownloadedFromRemote
+    remoteIsValid = gitProvider.hasRemote
     ({
       localPath : opener.downloadPath,
       remotePath : opener.remotePath
     });
 
-    return origin;
+    return remoteIsValid;
   }
 
   /* */
 
   function filesCheck()
   {
-    _.assert( opener.isDownloaded === false );
+    _.assert( opener.repo.hasFiles === false );
 
     if( fileProvider.fileExists( opener.downloadPath ) && !fileProvider.dirIsEmpty( opener.downloadPath ) )
     {
@@ -1502,13 +1506,9 @@ function _remoteDownload( o )
       - module origin is different
     */
 
-    // qqq : check
-    // if( !downloading )
-    // return;
-
     _.assert( downloading === true );
 
-    let isRepository = opener.isRepository;
+    let isRepository = opener.repo.isRepository;
     _.assert( _.boolIs( isRepository ) );
     if( !isRepository )
     return end( true );
@@ -1518,9 +1518,9 @@ function _remoteDownload( o )
     if( !isValid )
     return end( true );
 
-    hasGoodOriginReform();
-    _.assert( _.boolIs( origin.downloadedFromRemote ) );
-    if( !origin.downloadedFromRemote )
+    remoteIsValidReform();
+    _.assert( _.boolIs( origin.remoteIsValid ) );
+    if( !origin.remoteIsValid )
     return end( true );
 
     return end( false );
@@ -1530,31 +1530,10 @@ function _remoteDownload( o )
       _.assert( _.boolIs( deleting ) );
       if( deleting )
       {
-        // debugger;
         fileProvider.filesDelete({ filePath : opener.downloadPath, throwing : 0, sync : 1 });
       }
       return deleting;
     }
-
-    // let remove = !opener.isValid() || !opener.isRepository;
-    //
-    // if( !remove )
-    // {
-    //   let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
-    //   let result = gitProvider.isDownloadedFromRemote
-    //   ({
-    //     localPath : opener.downloadPath,
-    //     remotePath : opener.remotePath
-    //   });
-    //   remove = !result.downloadedFromRemote;
-    // }
-    //
-    // if( remove )
-    // {
-    //   if( fileProvider.fileExists( opener.downloadPath ) )
-    //   debugger;
-    //   fileProvider.filesDelete({ filePath : opener.downloadPath, throwing : 0, sync : 1 });
-    // }
 
   }
 
@@ -1578,14 +1557,213 @@ function _remoteDownload( o )
 
   /* */
 
-  function moduleReopen()
+  function openersReform()
   {
-    let ready = new _.Consequence().take( null );
-
     let variant = will.variantFrom( opener );
     variant.openers.forEach( ( opener2 ) =>
     {
-      ready.then( () => opener2.reopen() );
+      if( downloading && !o.dry )
+      {
+        opener.repo._.hasFiles = true;
+        // opener.repo._.isUpToDate = true;
+      }
+    });
+    return null;
+  }
+
+  /* */
+
+  function modulesCopy()
+  {
+    let ready = new _.Consequence().take( null );
+    let variant = will.variantFrom( opener );
+
+    variant.openers.forEach( ( opener2 ) =>
+    {
+      ready.also( moduleCopy( opener2 ) );
+    });
+
+    if( variant.peer )
+    variant.peer.openers.forEach( ( opener2 ) =>
+    {
+      ready.also( moduleCopy( opener2 ) );
+    });
+
+    ready.finally( ( err, arg ) =>
+    {
+      if( err )
+      throw err;
+      return arg;
+    });
+
+    return ready;
+  }
+
+  /* */
+
+  function moduleCopy( opener2 )
+  {
+
+    _.assert( _.strIs( opener.downloadPath ) );
+    _.assert( _.strIs( opener2.downloadPath ) );
+
+    if( opener2.downloadPath === opener.downloadPath )
+    return null;
+
+    return dirStatus( opener2 ).then( ( status ) =>
+    {
+      // debugger;
+      _.assert( _.boolIs( status.required ) );
+      _.assert( _.boolIs( status.safeToDelete ) );
+      if( !status.required )
+      return null;
+      if( !status.safeToDelete )
+      throw _.err
+      (
+          `Cant ${o.mode} ${module.qualifiedName} at ${module.localPath}, because it has local changes.`
+        , ` Please commit changes or delete it manually.`
+      );
+      if( will.verbosity >= 3 )
+      logger.log( ` + Reflected ${path.moveTextualReport( opener2.downloadPath, opener.downloadPath )}` );
+      let filter = { filePath : { [ opener.downloadPath ] : opener2.downloadPath } }
+      // debugger;
+      return fileProvider.filesReflect({ filter, dstRewritingOnlyPreserving : 1, linking : 'hardLink' });
+    });
+  }
+
+  /* */
+
+  function modulesReopen( same )
+  {
+    let ready = new _.Consequence().take( null );
+    let variant = will.variantFrom( opener );
+    _.assert( !variant.finitedIs() );
+
+    variant.reform();
+
+    variant.openers.forEach( ( opener2 ) =>
+    {
+      ready.then( () => moduleReopenMaybe( opener2, same ) );
+    });
+
+    if( variant.peer )
+    variant.peer.openers.forEach( ( opener2 ) =>
+    {
+      ready.then( () => moduleReopenMaybe( opener2, same ) );
+    });
+
+    return ready;
+  }
+
+  /* */
+
+  function moduleReopenMaybe( opener2, same )
+  {
+
+    if( ( opener2.downloadPath === opener.downloadPath ) ^ same )
+    return null;
+
+    if( _.arrayHas( reopened, opener2 ) )
+    return null;
+
+    if( same )
+    // return opener2.reopen();
+    return moduleReopen( opener2 );
+    else
+    return dirStatus( opener2 ).then( ( status ) =>
+    {
+      // debugger;
+      _.assert( _.boolIs( status.required ) )
+      if( !status.required )
+      return null;
+      // if( !status.isFresh )
+      return moduleReopen( opener2 );
+      return null;
+    });
+
+  }
+
+  /* */
+
+  function moduleReopen( opener2 )
+  {
+    return opener2.reopen().then( ( arg ) =>
+    {
+      _.arrayAppendOnce( reopened, opener2 );
+      opener2.openedModule.userArray.forEach( ( opener3 ) =>
+      {
+        _.arrayAppendOnce( reopened, opener3 );
+      });
+      if( opener2.openedModule.peerModule )
+      opener2.openedModule.peerModule.userArray.forEach( ( opener3 ) =>
+      {
+        _.arrayAppendOnce( reopened, opener3 );
+      });
+      return arg;
+    })
+  }
+
+  /* */
+
+  function dirStatus( opener2 )
+  {
+
+    _.assert( _.strIs( opener2.downloadPath ) );
+
+    if( dirStatusMap[ opener2.downloadPath ] )
+    return new _.Consequence().take( dirStatusMap[ opener2.downloadPath ] );
+
+    let ready = new _.Consequence().take( null );
+    // let result = Object.create( null );
+    // result.isRepo = null;
+    // result.hasLocalChanges = null;
+    // result.isFresh = null;
+
+    ready.then( ( arg ) =>
+    {
+      // return opener2.repoIsGoodReform();
+      return opener2.repo.status({ all : 1, reset : 1, isRepository : 1 });
+    });
+    // ready.then( ( arg ) =>
+    // {
+    //   result.isRepo = arg;
+    //   debugger;
+    //   if( !result.isRepo )
+    //   {
+    //     if( fileProvider.fileExists( opener2.downloadPath ) && !fileProvider.dirIsEmpty( opener2.downloadPath ) )
+    //     return true;
+    //     return false;
+    //   }
+    //
+    //   hasLocalChanges = opener2.hasLocalChanges;
+    //   _.assert( _.boolIs( hasLocalChanges ) );
+    //
+    //   return hasLocalChanges;
+    //   // return opener2.repoHasLocalChanges();
+    // });
+    // ready.then( ( arg ) =>
+    // {
+    //   debugger;
+    //   result.hasLocalChanges = arg;
+    //   if( result.isRepo )
+    //   return opener2._repoIsFresh({ mode : o.mode });
+    //   return null;
+    // });
+    ready.then( ( status ) =>
+    {
+      // debugger; xxx
+      // result.isFresh = isFresh;
+
+      if( o.mode === 'download' )
+      status.required = status.downloadRequired;
+      else if( o.mode === 'update' )
+      status.required = status.updateRequired;
+      else if( o.mode === 'agree' )
+      status.required = status.agreeRequired;
+      status.downloadPath = opener2.downloadPath;
+
+      dirStatusMap[ opener2.downloadPath ] = status;
+      return status;
     });
 
     return ready;
@@ -1604,10 +1782,13 @@ function _remoteDownload( o )
         let version = remoteProvider.versionRemoteCurrentRetrive( opener.remotePath );
         let phrase = '';
         if( o.mode === 'update' )
-        phrase = ' to';
+        phrase = 'updated to';
         else if( o.mode === 'agree' )
-        phrase = ' with';
-        logger.log( ' + ' + module.decoratedQualifiedName + ' will be ' + ( o.mode + phrase ) + ' version ' + _.color.strFormat( version, 'path' ) );
+        phrase = 'agreed with';
+        else if( o.mode === 'download' )
+        phrase = 'downloaded';
+        logger.log( ` + ${module.decoratedQualifiedName} will be ${phrase} ${_.color.strFormat( version, 'path' )} in ${_.timeSpent( time )}` );
+        // logger.log( ' + ' + module.decoratedQualifiedName + ' will be ' + ( o.mode + phrase ) + ' version ' + _.color.strFormat( version, 'path' ) );
       }
       else
       {
@@ -1615,12 +1796,12 @@ function _remoteDownload( o )
         let version = remoteProvider.versionLocalRetrive( opener.downloadPath );
         let phrase = '';
         if( o.mode === 'update' )
-        phrase = ' was updated to version ';
+        phrase = 'was updated to version';
         else if( o.mode === 'agree' )
-        phrase = ' was agreed with version ';
+        phrase = 'was agreed with version';
         else if( o.mode === 'download' )
-        phrase = ' was downloaded version ';
-        logger.log( ' + ' + module.decoratedQualifiedName + phrase + _.color.strFormat( version, 'path' ) + ' in ' + _.timeSpent( time ) );
+        phrase = 'was downloaded version';
+        logger.log( ` + ${module.decoratedQualifiedName} ${phrase} ${_.color.strFormat( version, 'path' )} in ${_.timeSpent( time )}` );
       }
     }
   }
@@ -1628,7 +1809,7 @@ function _remoteDownload( o )
   /* */
 }
 
-_remoteDownload.defaults =
+_repoDownload.defaults =
 {
   mode : 'download',
   dry : 0,
@@ -1639,197 +1820,34 @@ _remoteDownload.defaults =
 
 //
 
-function remoteDownload()
+function repoDownload()
 {
   let opener = this;
   let will = opener.will;
-  return opener._remoteDownload({ updating : 0 });
+  return opener._repoDownload({ updating : 0 });
 }
 
 //
 
-function remoteUpgrade()
+function repoUpdate()
 {
   let opener = this;
   let will = opener.will;
-  return opener._remoteDownload({ updating : 1 });
+  return opener._repoDownload({ updating : 1 });
 }
 
 //
 
-function remoteIsDownloadedReform()
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( _.strDefined( module.downloadPath ) );
-  _.assert( !!module.willfilesPath );
-  _.assert( module.isRemote === true );
-
-  let remoteProvider = fileProvider.providerForPath( module.remotePath );
-  _.assert( !!remoteProvider.isVcs );
-
-  // debugger;
-  let result = remoteProvider.isDownloaded
-  ({
-    localPath : module.downloadPath,
-  });
-
-  _.assert( !_.consequenceIs( result ) );
-
-  if( _.boolLike( result ) )
-  return end( result );
-
-  return _.Consequence.From( result )
-  .finally( ( err, arg ) =>
-  {
-    end( arg );
-    if( err )
-    throw err;
-    return arg;
-  });
-
-  /* */
-
-  function end( result )
-  {
-    // debugger;
-    _.assert( _.boolLike( result ) );
-    result = !!result;
-    module.isDownloaded = result;
-    return result;
-  }
-
-}
-
+// function _repoStatusPut( fieldName, src )
+// {
+//   let opener = this;
 //
-
-function remoteIsGoodRepositoryReform()
-{
-  let module = this;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  _.assert( _.strDefined( module.downloadPath ) );
-  _.assert( !!module.willfilesPath );
-  _.assert( module.isRemote === true );
-
-  // let remoteProvider = fileProvider.providerForPath( module.remotePath );
-  // _.assert( !!remoteProvider.isVcs );
-
-  let result = _.git.isRepository
-  ({
-    localPath : module.downloadPath,
-  });
-
-  _.assert( !_.consequenceIs( result ) );
-
-  // if( !result )
-  // return end( result );
-
-  return _.Consequence.From( result )
-  .finally( ( err, arg ) =>
-  {
-    end( arg );
-    if( err )
-    throw err;
-    return arg;
-  });
-
-  /* */
-
-  function end( result )
-  {
-    module.isRepository = !!result;
-    return result;
-  }
-
-}
-
+//   opener.__[ fieldName ] = src;
+//   if( opener.openedModule )
+//   opener.openedModule.__[ fieldName ] = src;
 //
-
-function _remoteIsUpToDate( o )
-{
-  let opener = this;
-  let ready = _.Consequence().take( null );
-
-  ready
-  .then( () =>
-  {
-    if( o.mode === 'download' )
-    return isDownloadedRepositoryReform();
-    else if( o.mode === 'update' )
-    return isUpdatedRepositoryReform();
-    else if( o.mode === 'agree' )
-    return isUpdatedRepositoryReform();
-  })
-  .then( function()
-  {
-    let downloading = false;
-    // debugger
-    /* qqq : check */
-    if( o.mode === 'download' )
-    downloading = !opener.isDownloaded;
-    // downloading = opener.isDownloaded && opener.isRepository;
-    else if( o.mode === 'update' )
-    downloading = !opener.isUpToDate || !opener.isRepository;
-    // downloading = opener.isUpToDate;
-    else if( o.mode === 'agree' )
-    downloading = !opener.isUpToDate || !opener.isRepository;
-    // downloading = opener.isUpToDate;
-    _.assert( _.boolLike( downloading ) );
-    /* qqq */
-    return !!downloading;
-  })
-  .then( ( downloading ) =>
-  {
-    if( !downloading )
-    if( o.mode === 'update' || o.mode === 'agree' )
-    {
-      let gitProvider = opener.will.fileProvider.providerForPath( opener.remotePath );
-      let result = gitProvider.isDownloadedFromRemote
-      ({
-        localPath : opener.downloadPath,
-        remotePath : opener.remotePath
-      });
-
-      downloading = !result.downloadedFromRemote;
-    }
-
-    return downloading;
-  })
-
-  /*  */
-
-  function isUpdatedRepositoryReform()
-  {
-    let con = new _.Consequence().take( null );
-    con.then( () => opener.remoteIsGoodRepositoryReform() )
-    con.then( () => opener.remoteIsUpToDateReform() )
-    return con;
-  }
-
-  /* */
-
-  function isDownloadedRepositoryReform()
-  {
-    let con = new _.Consequence().take( null );
-    con.then( () => opener.remoteIsDownloadedReform() )
-    /* qqq : check */
-    // con.then( () => opener.remoteIsGoodRepositoryReform() )
-    return con;
-  }
-
-  return ready;
-}
-
-_remoteIsUpToDate.defaults =
-{
-  mode : 'download',
-}
+//   return src;
+// }
 
 // --
 // path
@@ -1848,7 +1866,7 @@ function _filePathChanged1( o )
   if( !o.isIdentical )
   if( opener.formed && opener.formed < 3 )
   {
-    opener._remoteForm();
+    opener._repoForm();
   }
 
   if( opener.openedModule && !o.isIdentical )
@@ -1884,8 +1902,21 @@ function _filePathChanged2( o )
   if( o.commonPath )
   {
     opener._.commonPath = o.commonPath;
-    if( opener.isRemote === false )
-    opener._.localPath = o.commonPath;
+    // if( opener.isRemote === false ) /* yyy */
+    // debugger;
+
+    if( o.localPath )
+    {
+      _.assert( _.strIs( o.localPath ) && !path.isGlobal( o.localPath ) );
+      opener._.localPath = o.localPath;
+    }
+
+    // if( opener.repo )
+    // debugger;
+    // if( opener.repo && opener.repo.isRemote === false )
+    // debugger;
+    // if( opener.repo && opener.repo.isRemote === false )
+    // opener._.localPath = o.commonPath;
   }
 
   if( !o.isIdentical )
@@ -2158,14 +2189,14 @@ function accessorSet_functor( fieldName )
 
 }
 
-let isRemoteGet = accessorGet_functor( 'isRemote' );
-let isUpToDateGet = accessorGet_functor( 'isUpToDate' );
-let isRepositoryGet = accessorGet_functor( 'isRepository' );
+// let isRemoteGet = accessorGet_functor( 'isRemote' );
+// let isUpToDateGet = accessorGet_functor( 'isUpToDate' );
+// let isRepositoryGet = accessorGet_functor( 'isRepository' );
 let isOutGet = accessorGet_functor( 'isOut' );
 
-let isRemoteSet = accessorSet_functor( 'isRemote' );
-let isUpToDateSet = accessorSet_functor( 'isUpToDate' );
-let isRepositorySet = accessorGet_functor( 'isRepository' );
+// let isRemoteSet = accessorSet_functor( 'isRemote' );
+// let isUpToDateSet = accessorSet_functor( 'isUpToDate' );
+// let isRepositorySet = accessorGet_functor( 'isRepository' );
 let isOutSet = accessorSet_functor( 'isOut' );
 
 // --
@@ -2184,11 +2215,12 @@ let Composes =
   aliasName : null,
   willfilesPath : null,
 
-  isRemote : null,
-  isDownloaded : null,
-  isRepository : null,
-  isUpToDate : null,
-  isOut : null,
+  // isRemote : null,
+  // isDownloaded : null,
+  // isRepository : null,
+  // isUpToDate : null,
+
+  // isOut : null,
   isMain : null,
   isAuto : null,
 
@@ -2263,7 +2295,7 @@ _.assert( _.arrayHas( _.accessor.getter.toStructure.rubrics, 'functor' ) );
 let Accessors =
 {
 
-  _ : { getter : _.accessor.getter.toStructure, readOnly : 1, },
+  _ : { getter : _.accessor.getter.toStructure, readOnly : 1, strict : 0 },
 
   willfilesPath : { getter : willfilesPathGet, setter : willfilesPathSet },
   dirPath : { getter : dirPathGet, readOnly : 1 },
@@ -2277,8 +2309,8 @@ let Accessors =
   absoluteName : { getter : absoluteNameGet, readOnly : 1 },
   qualifiedName : { getter : qualifiedNameGet, combining : 'rewrite', readOnly : 1 },
 
-  isRemote : { getter : isRemoteGet, setter : isRemoteSet },
-  isUpToDate : { getter : isUpToDateGet, setter : isUpToDateSet },
+  // isRemote : { getter : isRemoteGet, setter : isRemoteSet },
+  // isUpToDate : { getter : isUpToDateGet, setter : isUpToDateSet },
   isOut : { getter : isOutGet, setter : isOutSet },
   isMain : { getter : isMainGet, setter : isMainSet },
 
@@ -2346,17 +2378,14 @@ let Extend =
   superRelationGet,
   superRelationSet,
 
-  // remote
+  // repo
 
-  _remoteForm,
-  _remoteFormFormal,
-  _remoteFormInformal,
-  _remoteDownload,
-  remoteDownload,
-  remoteUpgrade,
-  remoteIsDownloadedReform,
-  remoteIsGoodRepositoryReform,
-  _remoteIsUpToDate,
+  _repoForm,
+  _repoFormFormal,
+  _repoDownload,
+  repoDownload,
+  repoUpdate,
+  // _repoStatusPut,
 
   // path
 
@@ -2395,13 +2424,13 @@ let Extend =
   isPreformed,
   isMainGet,
   isMainSet,
-  isRemoteGet,
-  isUpToDateGet,
-  isRepositoryGet,
+  // isRemoteGet,
+  // isUpToDateGet,
+  // isRepositoryGet,
   isOutGet,
 
-  isRemoteSet,
-  isUpToDateSet,
+  // isRemoteSet,
+  // isUpToDateSet,
   isOutSet,
 
   // relation

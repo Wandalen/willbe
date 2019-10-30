@@ -17,12 +17,52 @@ let Self = Object.create( Parent );
 // handler
 // --
 
+function _onSelector( selector )
+{
+  let it = this;
+  let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
+  let will = rop.baseModule.will;
+
+  let result = Parent._onSelector.call( it, selector );
+
+  if( resolver._selectorIs( selector ) )
+  return result;
+
+  if( rop.prefixlessAction === 'default' && !it.composite )
+  {
+    return selector;
+  }
+  else if( rop.prefixlessAction === 'resolved' || rop.prefixlessAction === 'default' )
+  {
+    if( rop.pathResolving )
+    if( rop.defaultResourceKind === 'path' || rop.selectorIsPath )
+    if( _.strIs( selector ) || _.arrayIs( selector ) )
+    if( !resolver.selectorIs( selector ) )
+    if( !it.composite )
+    {
+      if( _global_.debugger )
+      debugger;
+      selector = new _.Will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : selector });
+      selector.form1();
+      it.src = selector;
+    }
+  }
+
+  return result;
+}
+
+//
+
 function _onSelectorDown()
 {
   let it = this;
   let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
+
+  if( _global_.debugger )
+  debugger;
 
   if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.select.composite )
   {
@@ -37,12 +77,37 @@ function _onSelectorDown()
 
     it.dst = _.strJoin( it.dst );
 
+    if( rop.defaultResourceKind === 'path' || rop.selectorIsPath )
+    {
+      it.dst = new _.Will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : it.dst });
+      it.dst.form1();
+    }
+
     it.src.composite = null;
-    resolver._pathsNativize.call( it );
+    // resolver._pathsNativize.call( it );
 
   }
 
-  Parent._onSelectorDown.call( it );
+  if( !it.dstWritingDown )
+  return end();
+
+  if( rop.pathResolving || it.isFunction )
+  resolver._pathsResolve.call( it );
+
+  resolver._pathsNormalize.call( it );
+
+  if( rop.pathNativizing || it.isFunction )
+  resolver._pathsNativize.call( it );
+
+  resolver._pathsUnwrap.call( it );
+
+  return end();
+
+  function end()
+  {
+    return Parent._onSelectorDown.call( it );
+  }
+
 }
 
 //
@@ -87,21 +152,20 @@ function _onUpEnd()
   if( !it.dstWritingDown )
   return;
 
-  // if( it.dstWritingDown ) // xxx
   resolver._pathsCompositeResolve.call( it );
 
-  if( !it.dstWritingDown )
-  return;
-
-  // if( it.dstWritingDown ) // xxx
-  if( rop.pathResolving || it.isFunction )
-  resolver._pathsResolve.call( it );
-
-  if( !it.dstWritingDown )
-  return;
-
-  if( rop.pathUnwrapping )
-  resolver._pathsUnwrap.call( it );
+  // yyy
+  // if( !it.dstWritingDown )
+  // return;
+  //
+  // if( rop.pathResolving || it.isFunction )
+  // resolver._pathsResolve.call( it );
+  //
+  // if( !it.dstWritingDown )
+  // return;
+  //
+  // if( rop.pathUnwrapping )
+  // resolver._pathsUnwrap.call( it );
 
 }
 
@@ -116,8 +180,8 @@ function _onDownEnd()
   if( !it.dstWritingDown )
   return;
 
-  if( rop.pathNativizing || it.isFunction )
-  resolver._pathsNativize.call( it );
+  // if( rop.pathNativizing || it.isFunction ) // yyy
+  // resolver._pathsNativize.call( it );
 
   return Parent._onDownEnd.call( it );
 }
@@ -155,6 +219,8 @@ function _onQuantitativeFail( err )
     err = _.err( err, '\n', 'Found : ' + result.join( ', ' ) );
     else
     err = _.err( err, '\n', 'Found nothing' );
+
+    err = _.errBrief( err );
   }
 
   throw err;
@@ -247,6 +313,7 @@ function _statusPostUpdate()
 
     if( kind === 'path' )
     it.selectorIsPath = 1;
+
   }
 
 }
@@ -376,6 +443,138 @@ function _currentExclude()
 // path
 // --
 
+function _pathsTransform( onPath, onStr )
+{
+  let it = this;
+  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
+  let will = rop.baseModule.will;
+  let resource = it.dst;
+  let transform = rop.preservingIteration ? wrapTransform : elementTransform;
+
+  it.dst = transform( it.dst );
+
+  /* */
+
+  function wrapTransform( resource )
+  {
+    if( _.isPrototypeOf( _.Looker, resource ) )
+    {
+      resource.dst = elementTransform( resource.dst );
+    }
+    return elementTransform( resource );
+  }
+
+  /* */
+
+  function elementTransform( resource )
+  {
+    if( !resource )
+    return resource;
+    if( _.strIs( resource ) && onStr )
+    return onStr.call( it, resource );
+    if( resource instanceof will.PathResource )
+    return resourceTransform( resource );
+    if( _.arrayIs( resource ) || _.mapIs( resource ) )
+    return resourcesTransform( resource );
+    return resource;
+  }
+
+  /* */
+
+  function resourcesTransform( resources )
+  {
+    resources = _.map( resources, ( resource ) => transform( resource ) );
+    return resources;
+  }
+
+  /* */
+
+  function resourceTransform( resource )
+  {
+    resource = resource.cloneDerivative();
+    _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
+    return onPath.call( it, resource.path, resource );
+    return resource;
+  }
+
+  /* */
+
+}
+
+//
+
+function _pathsNormalize()
+{
+  let it = this;
+  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
+  let will = rop.baseModule.will;
+  let resource = it.dst;
+
+  resolver._pathsTransform.call( it, ( filePath, resource ) =>
+  {
+    resource.path = resolver._pathNormalize.call( it, filePath, resource )
+    return resource;
+  });
+
+  // if( it.dst instanceof will.PathResource )
+  // return resourceNormalize( resource );
+  //
+  // if( _.arrayIs( it.dst ) || _.mapIs( it.dst ) )
+  // it.dst = _.map( it.dst, ( resource ) =>
+  // {
+  //   if( resource instanceof will.PathResource )
+  //   return resourceNormalize( resource );
+  //   return resource;
+  // });
+  //
+  // function resourceNormalize( resource )
+  // {
+  //   resource = resource.cloneDerivative();
+  //   _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
+  //   if( resource.path )
+  //   resource.path = resolver._pathNormalize.call( it, resource.path );
+  //   return resource;
+  // }
+
+}
+
+//
+
+function _pathNormalize( filePath, resource )
+{
+  let it = this;
+  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
+  let will = rop.baseModule.will;
+  let currentModule = it.currentModule;
+  let path = will.fileProvider.providersWithProtocolMap.file.path;
+  let result = filePath;
+
+  if( filePath === null || filePath === '' )
+  return result;
+
+  _.assert( _.strIs( result ) || _.strsAreAll( result ) );
+
+  if( _.arrayIs( filePath ) )
+  {
+    return filePath.map( ( e ) => normalize( e ) );
+  }
+  else
+  {
+    return normalize( filePath );
+  }
+
+  function normalize( filePath )
+  {
+    return path.undot( filePath );
+  }
+
+}
+
+//
+
 function _pathsNativize()
 {
   let it = this;
@@ -387,40 +586,74 @@ function _pathsNativize()
   if( !rop.pathNativizing )
   return;
 
-  if( it.selectMultipleOptions )
+  resolver._pathsTransform.call( it, handleResource, handleStr );
+
+  // resolver._pathsTransform.call( it, resolver._pathNativize, handleStr );
+
+  function handleResource( filePath, resource )
   {
-    if( !rop.selectorIsPath )
-    return;
-  }
-  else
-  {
-    if( !it.selectorIsPath )
-    return;
-    if( it.down && it.down.selectorIsPath )
-    return;
+    resource.path = resolver._pathNativize.call( it, filePath, resource )
+    return resource;
   }
 
-  if( it.dst )
-  it.dst = _.map( it.dst, ( resource ) =>
+  function handleStr( str )
   {
-    if( _.strIs( resource ) )
-    return _pathNativize.call( it, resource );
-    if( resource instanceof will.PathResource )
-    {
-      resource = resource.cloneDerivative();
-      _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
-      if( resource.path )
-      resource.path = _pathNativize.call( it, resource.path );
-    }
-    else debugger;
-    return resource;
-  });
+    // debugger;
+    return str;
+  }
+
+  // // if( it.selectMultipleOptions )
+  // // {
+  // //   if( !rop.selectorIsPath )
+  // //   return;
+  // // }
+  // // else
+  // // {
+  // //   if( !it.selectorIsPath )
+  // //   return;
+  // //   if( it.down && it.down.selectorIsPath )
+  // //   return;
+  // // }
+  //
+  // if( it.dst instanceof will.PathResource )
+  // return resourceNativize( resource );
+  //
+  // if( _.arrayIs( it.dst ) || _.mapIs( it.dst ) )
+  // it.dst = _.map( it.dst, ( resource ) =>
+  // {
+  //   if( _.strIs( resource ) )
+  //   {
+  //     debugger;
+  //   }
+  //   // if( _.strIs( resource ) )
+  //   // return _pathNativize.call( it, resource );
+  //   if( resource instanceof will.PathResource )
+  //   return resourceNativize( resource );
+  //   // {
+  //   //   resource = resource.cloneDerivative();
+  //   //   _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
+  //   //   if( resource.path )
+  //   //   resource.path = _pathNativize.call( it, resource.path );
+  //   // }
+  //   // else debugger;
+  //   // return resource;
+  //   return resource
+  // });
+  //
+  // function resourceNativize( resource )
+  // {
+  //   resource = resource.cloneDerivative();
+  //   _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
+  //   if( resource.path )
+  //   resource.path = resolver._pathNativize.call( it, resource.path );
+  //   return resource;
+  // }
 
 }
 
 //
 
-function _pathNativize( filePath )
+function _pathNativize( filePath, resource )
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
@@ -429,6 +662,9 @@ function _pathNativize( filePath )
   let currentModule = it.currentModule;
   let path = will.fileProvider.providersWithProtocolMap.file.path;
   let result = filePath;
+
+  if( filePath === null || filePath === '' )
+  return result;
 
   _.assert( _.strIs( result ) || _.strsAreAll( result ) );
 
@@ -518,16 +754,29 @@ function _pathsCompositeResolve()
 
 //
 
-function _pathResolve( filePath, resourceName )
+// function _pathResolve( filePath, resourceName )
+function _pathResolve( filePath, resource )
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-  let currentModule = it.currentModule;
+  let currentModule = it.currentModule || rop.iterationExtension.currentModule || rop.baseModule;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let resourceName = resource.name;
+  // let filePath = resource.path;
   let result = filePath;
+
+  if( filePath === null || filePath === '' )
+  return result;
+
+  // if( _global_.debugger )
+  // debugger;
+
+  _.assert( rit.composite !== undefined );
+  _.assert( !!currentModule );
 
   if( _.arrayIs( filePath ) )
   filePath = _.arrayFlattenOnce( filePath );
@@ -551,26 +800,38 @@ function _pathResolve( filePath, resourceName )
 
   _.assert( _.strIs( filePath ) || _.strsAreAll( filePath ) );
 
-  if( it.replicateIteration.composite )
-  if( it.replicateIteration.compositeRoot !== it.replicateIteration )
-  if( it.replicateIteration.compositeRoot === it.replicateIteration.down )
+  if( rit.composite )
+  if( rit.compositeRoot !== rit )
+  if( rit.compositeRoot === rit.down )
   {
-    if( it.replicateIteration.key !== 0 )
+    if( rit.key !== 0 )
     return result;
   }
 
+  currentModule = resource.module;
+
   let prefixPath = '.';
-  if( rop.pathResolving === 'in' && resourceName !== 'in' )
-  prefixPath = currentModule.inPath || '.';
-  else if( rop.pathResolving === 'out' && resourceName !== 'out' )
-  prefixPath = currentModule.outPath || '.';
+  if( rop.pathResolving === 'in' )
+  {
+    if( resourceName !== 'in' )
+    prefixPath = currentModule.inPath || '.';
+    else
+    prefixPath = currentModule.dirPath;
+  }
+  else if( rop.pathResolving === 'out' )
+  {
+    if( resourceName !== 'out' )
+    prefixPath = currentModule.outPath || '.';
+    else
+    prefixPath = currentModule.dirPath;
+  }
 
   if( resolver.selectorIs( prefixPath ) )
   prefixPath = currentModule.pathResolve({ selector : prefixPath, currentContext : it.dst });
   if( resolver.selectorIs( result ) )
   result = currentModule.pathResolve({ selector : result, currentContext : it.dst });
 
-  result = path.s.join( currentModule.dirPath, prefixPath, result );
+  result = path.s.join( prefixPath, result );
 
   return result;
 }
@@ -586,13 +847,32 @@ function _pathsResolve()
   let currentModule = it.currentModule;
   let resource = it.dst;
 
-  if( it.dst instanceof will.PathResource )
+  // resolver._pathsTransform.call( it, resolver._pathResolve );
+
+  resolver._pathsTransform.call( it, ( filePath, resource ) =>
   {
-    resource = it.dst = resource.cloneDerivative();
-    _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
-    if( resource.path )
-    resource.path = _pathResolve.call( it, resource.path, resource.name )
-  }
+    resource.path = resolver._pathResolve.call( it, filePath, resource )
+    return resource;
+  });
+
+  // if( _.arrayIs( it.dst ) || _.mapIs( it.dst ) )
+  // it.dst = _.map( it.dst, ( resource ) => resourceResolve( resource ) );
+  // else
+  // it.dst = resourceResolve( resource )
+  //
+  // function resourceResolve( resource )
+  // {
+  //   if( !resource )
+  //   return resource;
+  //   if( !( resource instanceof will.PathResource ) )
+  //   return resource;
+  //   resource = resource.cloneDerivative();
+  //   _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
+  //   if( resource.path )
+  //   resource.path = resolver._pathResolve.call( it, resource );
+  //   // resource.path = resolver._pathResolve.call( it, resource.path, resource.name );
+  //   return resource;
+  // }
 
 }
 
@@ -606,8 +886,31 @@ function _pathsUnwrap()
   let will = rop.baseModule.will;
   let currentModule = it.currentModule;
 
-  if( it.dst instanceof will.PathResource )
-  it.dst = it.dst.path;
+  // if( _.arrayIs( it.dst ) || _.mapIs( it.dst ) )
+  // it.dst = _.filter( it.dst, ( e ) => unwrap( e ) );
+  // else
+  // it.dst = unwrap( it.dst );
+
+  resolver._pathsTransform.call( it, unwrap );
+
+  function unwrap( filePath, resource )
+  {
+    let result = resource;
+
+    if( !rop.pathUnwrapping && !resource.phantom )
+    return result;
+
+    result = result.path;
+
+    if( resource.phantom )
+    {
+      if( resource.original )
+      resource.original.finit();
+      resource.finit();
+    }
+
+    return result;
+  }
 
 }
 
@@ -1128,6 +1431,7 @@ let Extend =
 
   // handler
 
+  _onSelector,
   _onSelectorDown,
   _onUpBegin,
   _onUpEnd,
@@ -1146,6 +1450,9 @@ let Extend =
 
   // path
 
+  _pathsTransform,
+  _pathsNormalize,
+  _pathNormalize,
   _pathsNativize,
   _pathNativize,
   _pathCompositeResolve,

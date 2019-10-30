@@ -5,13 +5,13 @@
 /*
 
                                                               download update agree verify
-  download directory is empty/not present ( isDownloaded )      d      d      d      -
-  has files which are not repository( isRepository )            e      e      rd     -
-  origin is different( originCheck() )                          -      e      rd     -
-  module has local changes( localChangesCheck() )               -      e      e      .
-  module is not valid( isValid )                                e      e      rd     -
-  module is on different branch( isUpToDate )                   -      c      c      -
-  module is not up to date( isUpToDate )                        -      u      u      .
+  download directory is empty/not present ( - hasFiles )        d        d      d      -
+  has files which are not repository( - isRepository )          e        e      rd     -
+  origin is different( - hasRemote )                            -        e      rd     -
+  module has local changes( - localChanges )                    -        e      e      .
+  module is not valid( - isValid )                              e        e      rd     -
+  module is on different branch( - isUpToDate )                 -        c      c      -
+  module is not up to date( - isUpToDate )                      -        u      u      .
 
   d - downloads module
   r - removes module
@@ -216,12 +216,22 @@ function usedBy( user )
   let module = this;
   let will = module.will;
 
+  // if( !module.userArray.length && user instanceof _.Will.ModuleOpener )
+  // {
+  //   debugger;
+  //   for( let f in module.LocalRepoDefaults )
+  //   {
+  //     module.__[ f ] = user.__[ f ];
+  //   }
+  // }
+
   _.arrayAppendOnceStrictly( module.userArray, user );
 
   if( user instanceof _.Will.ModuleOpener )
   {
     if( user.superRelation )
     module.superRelationsAppend( user.superRelation );
+    _.assert( user.repo === module.repo );
   }
 
   return module;
@@ -545,9 +555,11 @@ function precopy2( o )
 
   if( o.will !== undefined )
   module.will = o.will;
+  if( o.repo !== undefined )
+  module.repo = o.repo;
 
-  if( o.isRemote !== undefined )
-  module.isRemote = o.isRemote;
+  // if( o.isRemote !== undefined )
+  // module.isRemote = o.isRemote;
   if( o.isOut !== undefined )
   module.isOut = o.isOut;
 
@@ -751,6 +763,7 @@ function _preform()
 
   _.assert( arguments.length === 0 );
   _.assert( !!module.will );
+  _.assert( module.repo instanceof _.Will.Repository );
 
   module.ready.tap( ( err, arg ) =>
   {
@@ -908,9 +921,9 @@ function predefinedForm()
   ({
     name : 'local',
     path : null,
-    writable : 0, /* yyy */
+    writable : 0,
     exportable : 0,
-    importableFromIn : 0, /* yyy */
+    importableFromIn : 0,
     importableFromOut : 0,
   })
 
@@ -919,9 +932,9 @@ function predefinedForm()
     name : 'remote',
     path : null,
     writable : 1,
-    exportable : 1,
+    exportable : 0,
     importableFromIn : 1,
-    importableFromOut : 1, /* yyy */
+    importableFromOut : 1,
   })
 
   path
@@ -1022,7 +1035,7 @@ function predefinedForm()
   step
   ({
     name : 'submodules.are.updated',
-    stepRoutine : Predefined.stepRoutineSubmodulesAreUpdated,
+    stepRoutine : Predefined.stepRoutineSubmodulesVersionsVerify,
   })
 
   step
@@ -2088,13 +2101,6 @@ function moduleBuild_body( o )
     kind : o.kind,
   });
 
-  // if( logger.verbosity >= 2 && builds.length > 1 )
-  // {
-  //   logger.up();
-  //   logger.log( module.infoExportResource( builds ) );
-  //   logger.down();
-  // }
-
   if( builds.length !== 1 )
   throw module.errTooMany( builds, `${o.kind} scenario` );
 
@@ -2111,17 +2117,12 @@ function moduleBuild_body( o )
   .then( () =>
   {
     _.assert( !module.isOut );
-    // debugger;
     return module.modulesUpform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1, recursive : 1 });
-    // return module.upform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1 });
-    // return null;
   })
   .then( () => build.perform({ run }) )
   .then( () =>
   {
     _.assert( !module.peerModule || module.peerModule.isOut );
-    // debugger;
-    // return module.peerModule.upform({ all : 1, resourcesFormed : 0 });
     return null;
   });
 }
@@ -2245,102 +2246,15 @@ function modulesEach_body( o )
 var defaults = modulesEach_body.defaults = _.mapExtend
 (
   null,
-  _.graph.AbstractNodesGroup.prototype.each.defaults,
-  _.Will.prototype.relationFit.defaults
+  _.Will.prototype.modulesEach.defaults
 );
 
-defaults.withDisabledSubmodules = 0;
-defaults.withDisabledModules = 0;
+delete defaults.modules;
 
-defaults.outputFormat = '*/module'; /* / | * / module | * / relation */
-defaults.onUp = null;
-defaults.onDown = null;
-defaults.recursive = 1;
-defaults.nodesGroup = null;
+_.assert( defaults.withPeers === 0 );
 
 let modulesEach = _.routineFromPreAndBody( modulesEach_pre, modulesEach_body );
-
-// //
-//
-// function modulesEachDo( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   let modules;
-//   let con = new _.Consequence().take( null );
-//
-//   o = _.routineOptions( modulesEachDo, arguments );
-//
-//   // con.then( () =>
-//   // {
-//   //   if( !o.downloading )
-//   //   return null;
-//   //   return module.subModulesDownload({ recursive : o.recursive, loggingNoChanges : 0 });
-//   // });
-//   //
-//   // con.then( () =>
-//   // {
-//   //   if( !o.upforming )
-//   //   return null;
-//   //   return module.modulesUpform({ all : 0, subModulesFormed : 1, peerModulesFormed : 1 });
-//   // });
-//
-//   con.then( () =>
-//   {
-//     let o2 = _.mapOnly( o, module.modulesEach.defaults );
-//     o2.outputFormat = '/';
-//     modules = module.modulesEach( o2 );
-//     // debugger;
-//     return modules;
-//   });
-//
-//   con.then( () =>
-//   {
-//     let con2 = new _.Consequence().take( null );
-//     // debugger;
-//     for( let m = modules.length-1 ; m >= 0 ; m-- ) ( function( r )
-//     {
-//       con2
-//       .then( () =>
-//       {
-//         // if( !r.module )
-//         // debugger;
-//         if( !r.module && o.allowingMissing )
-//         return null;
-//         if( !r.module )
-//         throw _.err
-//         (
-//             `Cant ${o.actionName} ${module.absoluteName} because ${r.relation ? r.relation.absoluteName : r.opener.absoluteName} is not available.`
-//           , `\nLooked at ${r.opener ? r.opener.commonPath : r.relation.path}`
-//         );
-//         return o.onEach( r, o );
-//       })
-//     })( modules[ m ] );
-//
-//     return con2;
-//   });
-//
-//   return con;
-// }
-//
-// var defaults = modulesEachDo.defaults = _.mapExtend( null, modulesEach.defaults );
-//
-// defaults.recursive = 0;
-// defaults.withStem = 1;
-// defaults.withPeers = 1;
-// defaults.allowingMissing = 0;
-// defaults.downloading = 0;
-// defaults.upforming = 0;
-// defaults.onEach = null;
-// defaults.actionName = null;
-//
-// delete defaults.outputFormat;
-// delete defaults.onUp;
-// delete defaults.onDown;
-// delete defaults.onNode;
+let modulesEachAll = _.routineDefaults( null, modulesEach, _.Will.RelationFilterOn );
 
 //
 
@@ -2370,7 +2284,7 @@ function modulesBuild_body( o )
     o2.modules = [ module ];
     if( o2.recursive === 0 )
     o2.recursive = 1;
-    o2.recursive = 2; /* yyy */
+    // o2.recursive = 2; /* yyy */
     o2.strict = 0;
     return will.modulesDownload( o2 );
   })
@@ -2393,7 +2307,6 @@ function modulesBuild_body( o )
     o2.onEach = handleEach;
     o2.modules = [ module ];
     o2.left = 0;
-    debugger;
     return will.modulesFor( o2 );
   })
 
@@ -2413,7 +2326,6 @@ function modulesBuild_body( o )
   function handleEach( record, op )
   {
     let o3 = _.mapOnly( o, module.moduleBuild.defaults );
-    debugger;
     if( !record.module )
     throw _.err( `${record.object.absoluteName} at ${record.object.localPath || record.object.remotePath} is not opened or invalid` );
     return record.module.moduleBuild( o3 );
@@ -2421,18 +2333,20 @@ function modulesBuild_body( o )
 
 }
 
-// var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, modulesEachDo.defaults );
 var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, _.Will.prototype.modulesFor.defaults );
 
 defaults.recursive = 0;
 defaults.withStem = 1;
-defaults.withPeers = 0;
+defaults.withDisabledStem = 1;
+defaults.withPeers = 1;
 defaults.withOut = 0;
 defaults.withIn = 1;
 defaults.upforming = 1;
 defaults.downloading = 1;
 
 _.assert( defaults.outputFormat === undefined );
+_.assert( defaults.withDisabledSubmodules === 0 );
+_.assert( defaults.withDisabledModules === 0 );
 
 let modulesBuild = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
 modulesBuild.defaults.kind = 'build';
@@ -2461,6 +2375,7 @@ function modulesUpform( o )
 
 var defaults = modulesUpform.defaults = _.mapExtend( null, upform.defaults, modulesEach.defaults );
 
+defaults.withDisabledStem = 1;
 defaults.recursive = 2;
 defaults.withStem = 1;
 defaults.withPeers = 1;
@@ -2503,13 +2418,13 @@ function rootModuleSet( src )
 
   if( oldRootModule && src )
   {
-    let modules = module.modulesEach
+    let modules = module.modulesEachAll
     ({
       outputFormat : '/',
       recursive : 2,
-      // withPeers : 1,
+      withPeers : 1,
       // withDisabled : 1,
-      ... _.Will.ModuleFilterOn,
+      // ... _.Will.RelationFilterOn,
     });
     modules.forEach( ( record ) =>
     {
@@ -2640,14 +2555,19 @@ function submodulesAreDownloaded( o )
 
   return _.map( relations, ( relation ) =>
   {
+    if( relation === null )
+    return true;
     if( !relation.opener )
     return false;
-    _.assert( _.boolLike( relation.opener.isDownloaded ) );
-    return relation.opener.isDownloaded;
+    _.assert( _.boolLike( relation.opener.repo.isRepository ) );
+    return relation.opener.repo.isRepository;
   });
 }
 
 var defaults = submodulesAreDownloaded.defaults = _.mapExtend( null, modulesEach.defaults );
+
+defaults.withStem = 0;
+defaults.withPeers = 0;
 
 delete defaults.outputFormat;
 delete defaults.onUp;
@@ -2667,18 +2587,16 @@ function submodulesAllAreDownloaded( o )
   o = _.routineOptions( submodulesAllAreDownloaded, arguments );
   _.assert( arguments.length === 0 );
 
-  debugger;
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
   let relations = module.modulesEach( o2 );
-  debugger;
 
   return relations.every( ( relation ) =>
   {
     if( !relation.opener )
     return false;
-    _.assert( _.boolLike( relation.opener.isDownloaded ) );
-    return relation.opener.isDownloaded;
+    _.assert( _.boolLike( relation.opener.repo.isRepository ) );
+    return relation.opener.repo.isRepository;
   });
 }
 
@@ -2705,6 +2623,8 @@ function submodulesAreValid( o )
 
   return _.map( relations, ( relation ) =>
   {
+    if( relation === null )
+    return true;
     if( !relation.opener )
     return false;
     if( !relation.opener.openedModule )
@@ -2715,6 +2635,9 @@ function submodulesAreValid( o )
 }
 
 var defaults = submodulesAreValid.defaults = _.mapExtend( null, modulesEach.defaults );
+
+defaults.withStem = 0;
+defaults.withPeers = 0;
 
 delete defaults.outputFormat;
 delete defaults.onUp;
@@ -2807,6 +2730,7 @@ defaults.dry = 0;
 defaults.loggingNoChanges = 1;
 defaults.recursive = 1;
 defaults.withStem = 1;
+defaults.withDisabledStem = 1;
 
 delete defaults.withPeers;
 delete defaults.outputFormat;
@@ -3233,7 +3157,7 @@ function moduleFixatePathFor( o )
   if( _.arrayIs( o.originalPath ) && o.originalPath.length === 0 )
   return false;
 
-  let vcs = will.vcsFor( o.originalPath );
+  let vcs = will.vcsProviderFor( o.originalPath );
 
   if( !vcs )
   return false;
@@ -3259,7 +3183,10 @@ defaults.upgrading = null;
 
 //
 
-function versionsVerify( o )
+/* qqq : rewrite using method status */
+/* qqq : introduce module verify to ModuleAbstract and call it please */
+
+function submodulesVerify( o )
 {
   let module = this;
   let will = module.will;
@@ -3273,11 +3200,11 @@ function versionsVerify( o )
   _.assert( module.preformed > 0  );
   _.assert( arguments.length === 1 );
 
-  _.routineOptions( versionsVerify, o );
+  _.routineOptions( submodulesVerify, o );
 
   logger.up();
 
-  let modules = module.modulesEach({ outputFormat : '/', recursive : o.recursive });
+  let modules = module.modulesEach({ outputFormat : '/', recursive : o.recursive, withDisabledStem : 1 });
   let ready = new _.Consequence().take( null );
 
   _.each( modules, ( r ) =>
@@ -3303,11 +3230,11 @@ function versionsVerify( o )
 
   function onEach( r )
   {
-    if( o.downloaded )
-    if( !r.opener.isDownloaded )
+    if( o.hasFiles )
+    if( !r.opener.repo.isRepository )
     {
       if( o.throwing )
-      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not downloaded' );
+      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'does not have files' );
       return false;
     }
 
@@ -3319,7 +3246,7 @@ function versionsVerify( o )
 
     /* isValid */
 
-    if( o.valid )
+    if( o.isValid )
     if( !r.opener.isValid() )
     throw _.err( opener.error, '\n! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is downloaded, but it\'s not valid.' );
 
@@ -3332,11 +3259,11 @@ function versionsVerify( o )
 
     /* repository check */
 
-    if( o.repository )
+    if( o.isRepository )
     if( !r.opener.isRepository )
     {
       if( o.throwing )
-      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), `is downloaded, but it's not a git repository` );
+      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), `is downloaded, but it's not a repository` );
       return false;
     }
 
@@ -3344,15 +3271,15 @@ function versionsVerify( o )
 
     /* origin check */
 
-    if( o.downloadedFromRemote )
+    if( o.hasRemote )
     {
-      let result = remoteProvider.isDownloadedFromRemote
+      let result = remoteProvider.hasRemote
       ({
         localPath : r.opener.downloadPath,
         remotePath : r.opener.remotePath
       });
 
-      if( !result.downloadedFromRemote )
+      if( !result.hasRemote )
       {
         if( o.throwing )
         throw _.errBrief
@@ -3367,7 +3294,7 @@ function versionsVerify( o )
 
     /* version check */
 
-    if( o.upToDate )
+    if( o.isUpToDate )
     {
       if( r.opener.isUpToDate )
       return true;
@@ -3411,23 +3338,24 @@ function versionsVerify( o )
   {
     let con = new _.Consequence().take( null );
     con.then( () => relation.opener.preform() )
-    con.then( () => relation.opener.remoteIsDownloadedReform() )
-    con.then( () => relation.opener.remoteIsGoodRepositoryReform() )
-    con.then( () => relation.opener.remoteIsUpToDateReform() )
+    con.then( () => relation.opener.repoIsDownloadedReform() )
+    con.then( () => relation.opener.repoIsGoodReform() )
+    con.then( () => relation.opener.repoIsUpToDateReform() )
     con.then( () => relation )
     return con;
   }
 }
 
-var defaults  = versionsVerify.defaults = Object.create( null );
+var defaults  = submodulesVerify.defaults = Object.create( null );
 defaults.recursive = 1;
 defaults.throwing = 1;
-defaults.downloaded = 1;
-defaults.valid = 1;
-defaults.repository = 1;
-defaults.downloadedFromRemote = 1;
-defaults.upToDate = 1
 defaults.asMap = 0;
+
+defaults.hasFiles = 1;
+defaults.isValid = 1;
+defaults.isRepository = 1;
+defaults.hasRemote = 1;
+defaults.isUpToDate = 1
 
 //
 
@@ -3815,9 +3743,7 @@ function submodulesPeersOpen_body( o )
 
   let o2 = _.mapExtend( null, o );
   delete o2.throwing;
-  // debugger;
   let modules = module.modulesEach.body.call( module, o2 );
-  // debugger;
 
   modules.forEach( ( module2 ) =>
   {
@@ -3870,6 +3796,26 @@ function _remoteChanged()
   }
 
 }
+
+// //
+//
+// function _repoStatusPut( fieldName, src )
+// {
+//   let module = this;
+//
+//   module.__[ fieldName ] = src;
+//
+//   if( module.userArray )
+//   debugger;
+//   if( module.userArray )
+//   module.userArray.forEach( ( opener ) =>
+//   {
+//     if( opener instanceof _.Will.ModuleOpener )
+//     opener.__[ fieldName ] = src;
+//   });
+//
+//   return src;
+// }
 
 // --
 // resource
@@ -4121,53 +4067,126 @@ function resourceObtain( resourceKind, resourceName )
 
 //
 
-function resourceAllocate( resourceKind, resourceName )
+function resourceAllocate_pre( routine, args )
 {
   let module = this;
   let will = module.will;
 
-  _.assert( arguments.length === 2 );
-  _.assert( _.strIs( resourceName ) );
+  let o = args[ 0 ];
+  if( args.length === 2 )
+  o = { resourceKind : args[ 0 ], resourceName : args[ 1 ] }
 
-  let resourceName2 = module.resourceNameAllocate( resourceKind, resourceName );
-  let cls = module.resourceClassForKind( resourceKind );
+  o = _.routineOptions( routine, o );
+  _.assert( args.length === 1 || args.length === 2 );
+  _.assert( _.strIs( o.resourceName ) );
+
+  return o;
+}
+
+function resourceAllocate_body( o )
+{
+  let module = this;
+  let will = module.will;
+
+  o = _.assertRoutineOptions( resourceAllocate, o );
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( o.resourceName ) );
+
+  if( o.generating )
+  {
+    let map = module.resourceMapForKind( o.resourceKind );
+    let resource2 = map[ o.resourceName ];
+    if( resource2 && resource2.criterion.generated )
+    {
+      debugger;
+      return resource2;
+    }
+  }
+
+  let resourceName2 = module.resourceNameAllocate( o );
+  let cls = module.resourceClassForKind( o.resourceKind );
   let resource = new cls({ module : module, name : resourceName2 }).form1();
+
+  if( o.generating )
+  resource.criterion.generated = 1;
 
   return resource;
 }
 
+resourceAllocate_body.defaults =
+{
+  resourceKind : null,
+  resourceName : null,
+  generating : 0,
+}
+
+let resourceAllocate = _.routineFromPreAndBody( resourceAllocate_pre, resourceAllocate_body );
+let resourceGenerate = _.routineDefaults( null, resourceAllocate, { generating : 1 } );
+
 //
 
-function resourceNameAllocate( resourceKind, resourceName )
+function resourceNameAllocate_pre( routine, args )
 {
   let module = this;
   let will = module.will;
 
-  _.assert( arguments.length === 2 );
-  _.assert( _.strIs( resourceKind ) );
-  _.assert( _.strIs( resourceName ) );
+  let o = args[ 0 ];
+  if( args.length === 2 )
+  o = { resourceKind : args[ 0 ], resourceName : args[ 1 ] }
 
-  let map = module.resourceMapForKind( resourceKind );
+  o = _.routineOptions( routine, o );
+  _.assert( args.length === 1 || args.length === 2 );
+  _.assert( _.strIs( o.resourceName ) );
 
-  if( map[ resourceName ] === undefined )
-  return resourceName;
+  return o;
+}
+
+function resourceNameAllocate_body( o )
+{
+  let module = this;
+  let will = module.will;
+
+  o = _.assertRoutineOptions( resourceAllocate, o );
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( o.resourceName ) );
+
+  let map = module.resourceMapForKind( o.resourceKind );
+  let resource2 = map[ o.resourceName ];
+  if( resource2 === undefined )
+  return o.resourceName;
+  if( o.generating )
+  if( resource2.criterion.generated )
+  {
+    debugger;
+    return o.resourceName;
+  }
 
   let counter = 1;
   let resourceName2;
 
   let ends = /\.\d+$/;
-  if( ends.test( resourceName ) )
-  resourceName = resourceName.replace( ends, '' );
+  if( ends.test( o.resourceName ) )
+  o.resourceName = o.resourceName.replace( ends, '' );
 
   do
   {
-    resourceName2 = resourceName + '.' + counter;
+    resourceName2 = o.resourceName + '.' + counter;
     counter += 1;
   }
-  while( map[ resourceName2 ] !== undefined );
+  while( map[ resourceName2 ] !== undefined && !map[ resourceName2 ].criterion.generated );
 
   return resourceName2;
 }
+
+resourceNameAllocate_body.defaults =
+{
+  resourceKind : null,
+  resourceName : null,
+  generating : 0,
+}
+
+let resourceNameAllocate = _.routineFromPreAndBody( resourceNameAllocate_pre, resourceNameAllocate_body );
+let resourceNameGenerate = _.routineDefaults( null, resourceNameAllocate, { generating : 1 } );
 
 // --
 // path
@@ -4378,8 +4397,14 @@ function _filePathChanged2( o )
   if( o.willfilesPath !== null )
   {
     module._commonPathPut( o.commonPath );
-    if( module.isRemote === false ) /* xxx */
+    // if( module.isRemote === false ) /* xxx */
+    // if( module.repo && module.repo.isRemote === false ) /* xxx */
+    // _.assert( _.strIs( o.localPath ) && !path.isGlobal( o.localPath ) );
+
+    if( o.localPath )
+    // if( !path.isRemote( o.localPath ) )
     {
+      _.assert( _.strIs( o.localPath ) && !path.isGlobal( o.localPath ) );
       module._localPathPut( o.localPath );
       _.assert( module.localPath === o.localPath );
       _.assert( module.localPath === module.commonPath );
@@ -4420,7 +4445,22 @@ function _pathRegister()
   will.modulePathRegister( module );
   will.variantFrom( module );
 
-  let variants = module.modulesEach({ withPeers : 0, outputFormat : '/' });
+  let o2 =
+  {
+    withPeers : 0,
+    outputFormat : '/',
+  }
+  let variants = module.modulesEachAll( o2 );
+
+  _.assert( !!o2.withDisabledModules );
+  _.assert( !!o2.withDisabledSubmodules );
+
+  // ({
+  //   withPeers : 0,
+  //   outputFormat : '/',
+  //   // ... _.Will.RelationFilterOn,
+  // });
+
   variants.forEach( ( variant ) =>
   {
     will.variantsFrom( variant.relations );
@@ -4480,6 +4520,7 @@ function cloneDirPathGet( rootModule )
   let module = this;
   let will = module.will;
 
+  rootModule = module;
   rootModule = rootModule || module.rootModule;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
@@ -4490,6 +4531,8 @@ function cloneDirPathGet( rootModule )
     if( inPath )
     return _.Will.CloneDirPathFor( inPath );
   }
+
+  _.assert( !rootModule.isOut );
 
   let inPath = rootModule.inPath;
   return _.Will.CloneDirPathFor( inPath );
@@ -4511,6 +4554,23 @@ function peerLocalPathGet()
   _.assert( !_.path.isGlobal( localPath ) );
 
   return localPath;
+}
+
+//
+
+function peerRemotePathGet()
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  if( !module.remotePath )
+  return null;
+  let peerLocalPath = module.peerLocalPathGet();
+  if( !peerLocalPath )
+  return null;
+  return _.Will.RemotePathAdjust( module.remotePath, path.relative( module.localPath, peerLocalPath ) );
 }
 
 //
@@ -5240,6 +5300,7 @@ function cleanWhat( o )
   ({
     recursive : o.recursive,
     withStem : 1,
+    withDisabledStem : 1,
   });
 
   modules.forEach( ( module2 ) =>
@@ -5406,6 +5467,10 @@ function resolve_body( o )
   let will = module.will;
   _.assert( o.baseModule === module );
   let result = will.Resolver.resolve.body.call( will.Resolver, o );
+
+  if( o.pathUnwrapping )
+  _.assert( !result || !( result instanceof _.Will.PathResource ) );
+
   return result;
 }
 
@@ -5731,14 +5796,20 @@ function optionsForOpenerExport()
     downloadPath : null,
     remotePath : null,
 
-    isRemote : null,
-    isUpToDate : null,
+    repo : null,
+
+    // isRemote : null,
+    // isUpToDate : null,
 
   }
 
   let result = _.mapOnly( module, fields );
 
-  result.isDownloaded = true;
+  // debugger; xxx
+  // result.hasFiles = true;
+  // result.isRepository = true;
+  // result.repo = module.repo;
+
   result.willfilesArray = _.entityMake( result.willfilesArray );
 
   return result;
@@ -5971,6 +6042,7 @@ function structureExportOut( o )
 
   _.assert( o.exportModule === module )
   _.assert( o.exportModule.isOut );
+  _.assert( !!module.peerModule );
 
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
@@ -5979,11 +6051,28 @@ function structureExportOut( o )
   ({
     withPeers : 1,
     withStem : 1,
-    // withDisabled : 0,
+    withDisabledModules : 0,
     withDisabledSubmodules : 0,
+    withDisabledStem : 1,
     recursive : 2,
     outputFormat : '/',
   });
+
+  // if( variants.length < 2 )
+  // {
+  //   variants = module.modulesEach
+  //   ({
+  //     withPeers : 1,
+  //     withStem : 1,
+  //     withDisabledModules : 1,
+  //     withDisabledSubmodules : 0,
+  //     recursive : 2,
+  //     outputFormat : '/',
+  //   });
+  //   // _.arrayAppendOnce( variants, will.variant.from( module ) );
+  //   // if( module.peerModule )
+  //   // _.arrayAppendOnce( variants, will.variant.from( module.peerModule ) );
+  // }
 
   let modules = variants.map( ( variant ) =>
   {
@@ -5999,7 +6088,7 @@ function structureExportOut( o )
     return variant.module;
   });
 
-  _.assert( modules.length >= 2 );
+  _.assert( modules.length >= 2, 'No module to export' );
   module.structureExportModules( modules, o );
 
   let rootModuleStructure = o.dst.module[ module.fileName ];
@@ -6009,9 +6098,9 @@ function structureExportOut( o )
   _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.peer.in' ] );
   _.assert( !rootModuleStructure.path || !!rootModuleStructure.path[ 'module.willfiles' ] );
   _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'module.dir' ] );
-  _.assert( !rootModuleStructure.path || rootModuleStructure.path[ 'remote' ] !== undefined );
   _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'current.remote' ] );
   _.assert( !rootModuleStructure.path || !rootModuleStructure.path[ 'will' ] );
+  _.assert( !rootModuleStructure.path || rootModuleStructure.path[ 'remote' ] === undefined );
   _.assert( !rootModuleStructure.path.remote || !rootModuleStructure.path.remote.path );
 
   return o.dst;
@@ -6553,9 +6642,9 @@ let Composes =
   downloadPath : null,
   remotePath : null,
 
-  isRemote : null,
-  isUpToDate : null,
-  isOut : null,
+  // isRemote : null,
+  // isUpToDate : null,
+  // isOut : null,
 
   verbosity : 0,
 
@@ -6791,7 +6880,7 @@ let Extend =
   // batcher
 
   modulesEach,
-  // modulesEachDo,
+  modulesEachAll,
   modulesBuild,
   modulesExport,
   modulesUpform,
@@ -6821,7 +6910,7 @@ let Extend =
   moduleFixateAct,
   moduleFixatePathFor,
 
-  versionsVerify,
+  submodulesVerify,
 
   submodulesAdd,
   submodulesReload,
@@ -6840,6 +6929,7 @@ let Extend =
   // remote
 
   _remoteChanged,
+  // _repoStatusPut,
 
   // resource
 
@@ -6855,7 +6945,9 @@ let Extend =
   resourceGet,
   resourceObtain,
   resourceAllocate,
+  resourceGenerate,
   resourceNameAllocate,
+  resourceNameGenerate,
 
   // path
 
@@ -6870,6 +6962,7 @@ let Extend =
   outfilePathGet,
   cloneDirPathGet,
   peerLocalPathGet,
+  peerRemotePathGet,
   peerInPathGet,
 
   willfilesPathGet,

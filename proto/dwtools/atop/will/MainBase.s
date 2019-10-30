@@ -83,7 +83,7 @@ let ModuleFilterDefaults =
   withOut : 1,
   withIn : 1,
   withEnabledModules : 1,
-  withDisabledModules : 1,
+  withDisabledModules : 0,
   withValid : 1,
   withInvalid : 1,
   withKnown : 1,
@@ -119,13 +119,17 @@ let RelationFilterNulls =
   ... ModuleFilterNulls,
   withEnabledSubmodules : null,
   withDisabledSubmodules : null,
+  withOptionalSubmodules : null,
+  withMandatorySubmodules : null,
 }
 
 let RelationFilterDefaults =
 {
   ... ModuleFilterDefaults,
   withEnabledSubmodules : 1,
-  withDisabledSubmodules : 1,
+  withDisabledSubmodules : 0,
+  withOptionalSubmodules : 1,
+  withMandatorySubmodules : 1,
 }
 
 let RelationFilterOff =
@@ -133,6 +137,8 @@ let RelationFilterOff =
   ... ModuleFilterOff,
   withEnabledSubmodules : 0,
   withDisabledSubmodules : 0,
+  withOptionalSubmodules : 0,
+  withMandatorySubmodules : 0,
 }
 
 let RelationFilterOn =
@@ -140,6 +146,8 @@ let RelationFilterOn =
   ... ModuleFilterOn,
   withEnabledSubmodules : 1,
   withDisabledSubmodules : 1,
+  withOptionalSubmodules : 1,
+  withMandatorySubmodules : 1,
 }
 
 // --
@@ -281,7 +289,9 @@ function WillPathGet()
 
 function PathIsOut( filePath )
 {
-  return _.strHas( filePath, /\.out\.\w+\.\w+$/ );
+  if( _.arrayIs( filePath ) )
+  filePath = filePath[ 0 ];
+  return _.strHas( filePath, /\.out(\.\w+)?(\.\w+)?$/ );
 }
 
 //
@@ -395,7 +405,9 @@ function CommonPathFor( willfilesPath )
   _.assert( _.strIs( willfilesPath ) );
 
   let common = willfilesPath;
-  let common2 = common.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.out)?(\.\w+)?$/, '' );
+  // let common2 = common.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.out)?(\.\w+)?$/, '' );
+  // let common2 = common.replace( /((\.|\/|^)(im|ex))?(\.out)?((\.|\/|^)will)(\.\w+)?$/, '' );
+  let common2 = common.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.\w+)?$/, '' );
   let removed = _.strRemoveBegin( common, common2 );
   if( removed[ 0 ] === '/' )
   common2 = common2 + '/';
@@ -406,9 +418,28 @@ function CommonPathFor( willfilesPath )
 
 //
 
+function CommonPathNormalize( commonPath )
+{
+  let commonPath2 = commonPath;
+  commonPath2 = commonPath.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.\w+)?$/, '' );
+  if( commonPath !== commonPath2 )
+  debugger;
+  return commonPath2;
+}
+
+//
+
 function CloneDirPathFor( inPath )
 {
   _.assert( arguments.length === 1 );
+  _.assert( _.path.isAbsolute( inPath ) );
+
+  let splits = _.path.split( inPath );
+  let insideClone = _.arrayHas( splits, '.module' );
+
+  if( insideClone )
+  return inPath;
+
   return _.path.join( inPath, '.module' );
 }
 
@@ -544,7 +575,7 @@ function _verbosityChange()
 
 //
 
-function vcsFor( o )
+function vcsProviderFor( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -554,7 +585,7 @@ function vcsFor( o )
   o = { filePath : o }
 
   _.assert( arguments.length === 1 );
-  _.routineOptions( vcsFor, o );
+  _.routineOptions( vcsProviderFor, o );
   _.assert( !!will.formed );
 
   if( _.arrayIs( o.filePath ) && o.filePath.length === 0 )
@@ -574,9 +605,69 @@ function vcsFor( o )
   return result;
 }
 
-vcsFor.defaults =
+vcsProviderFor.defaults =
 {
   filePath : null,
+}
+
+//
+
+function vcsToolsFor( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  if( !_.mapIs( o ) )
+  o = { filePath : o }
+
+  _.assert( arguments.length === 1 );
+  _.routineOptions( vcsToolsFor, o );
+  _.assert( !!will.formed );
+
+  if( _.arrayIs( o.filePath ) && o.filePath.length === 0 )
+  return null;
+
+  if( !o.filePath )
+  return null;
+
+  _.assert( _.strIs( o.filePath ) );
+  _.assert( path.isGlobal( o.filePath ) );
+
+  let parsed = path.parse( o.filePath );
+
+  if( _.arrayHasAny( parsed.protocols, _.git.protocols ) )
+  return _.git;
+  if( _.arrayHasAny( parsed.protocols, _.npm.protocols ) )
+  return _.npm;
+
+  return null;
+}
+
+vcsToolsFor.defaults =
+{
+  filePath : null,
+}
+
+//
+
+function repoFrom( o )
+{
+  let will = this;
+
+  _.assert( _.mapIs( o ) );
+  _.assert( arguments.length === 1 );
+
+  o.will = will;
+
+  let hash = _.Will.Repository.Hash({ downloadPath : o.downloadPath, remotePath : o.remotePath });
+  let repo = will.repoMap[ hash ];
+  if( repo )
+  return repo;
+
+  repo = will.repoMap[ hash ] = new _.Will.Repository( o );
+
+  return repo;
 }
 
 //
@@ -635,11 +726,38 @@ resourcesInfoExport.defaults =
 
 //
 
+function variantsWithId( id )
+{
+  let will = this;
+
+  for( let v in will.variantMap )
+  {
+    let variant = will.variantMap[ v ];
+    if( variant.id === id )
+    return variant;
+  }
+
+  return null;
+}
+
+//
+
 function variantsInfoExport( variants )
 {
   let will = this;
   if( !variants )
-  variants = _.longOnce( _.mapVals( will.variantMap ) );
+  {
+    variants = _.longOnce( _.mapVals( will.variantMap ) );
+    variants = variants.filter( ( variant ) =>
+    {
+      if( variant.relation && !variant.relation.enabled )
+      return false;
+      if( variant.isRemote === false )
+      return false;
+      return variant;
+    });
+  }
+
   return _.map( variants, ( variant ) => variant.infoExport() ).join( '\n' );
 }
 
@@ -812,12 +930,6 @@ function filterDefaults( o )
 {
   let will = this.form();
 
-  for( let n in _.Will.RelationFilterDefaults )
-  {
-    if( o[ n ] === null && will[ n ] !== undefined && will[ n ] !== null )
-    o[ n ] = will[ n ];
-  }
-
   if( o.withEnabledSubmodules === null && will.withEnabled !== undefined && will.withEnabled !== null )
   o.withEnabledSubmodules = will.withEnabled;
   if( o.withDisabledSubmodules === null && will.withDisabled !== undefined && will.withDisabled !== null )
@@ -827,6 +939,12 @@ function filterDefaults( o )
   o.withEnabledModules = will.withEnabled;
   if( o.withDisabledModules === null && will.withDisabled !== undefined && will.withDisabled !== null )
   o.withDisabledModules = will.withDisabled;
+
+  for( let n in _.Will.RelationFilterDefaults )
+  {
+    if( o[ n ] === null && will[ n ] !== undefined && will[ n ] !== null )
+    o[ n ] = will[ n ];
+  }
 
   return o;
 }
@@ -1030,12 +1148,12 @@ function moduleFit_body( variant, opts )
     return false;
   }
 
-  if( !opts.withOut && variant.module )
-  if( variant.module.isOut )
+  if( !opts.withOut && variant.isOut !== null )
+  if( variant.isOut )
   return false;
 
-  if( !opts.withIn && variant.module )
-  if( !variant.module.isOut )
+  if( !opts.withIn && variant.isOut !== null )
+  if( !variant.isOut )
   return false;
 
   if( !opts.withEnabledModules && variant.module )
@@ -1107,12 +1225,20 @@ function relationFit_body( variant, opts )
   return true;
 }
 
-var defaults = relationFit_body.defaults = _.mapExtend( null, moduleFit.defaults );
+var defaults = relationFit_body.defaults =
+{
 
-defaults.withOptionalSubmodules = 1;
-defaults.withMandatorySubmodules = 1;
-defaults.withEnabledSubmodules = 1;
-defaults.withDisabledSubmodules = 1;
+  ... moduleFit.defaults,
+  ... RelationFilterDefaults,
+
+}
+
+// var defaults = relationFit_body.defaults = _.mapExtend( null, moduleFit.defaults );
+//
+// defaults.withOptionalSubmodules = 1;
+// defaults.withMandatorySubmodules = 1;
+// defaults.withEnabledSubmodules = 1;
+// defaults.withDisabledSubmodules = 1;
 
 let relationFit = _.routineFromPreAndBody( moduleFit_pre, relationFit_body );
 
@@ -1143,6 +1269,7 @@ function modulesFilter( variants, o )
 }
 
 modulesFilter.defaults = _.mapExtend( null, moduleFit.defaults );
+// modulesFilter.defaults.withDisabledStem = 0;
 
 //
 
@@ -1171,6 +1298,7 @@ function relationsFilter( variants, o )
 }
 
 relationsFilter.defaults = _.mapExtend( null, relationFit.defaults );
+// relationsFilter.defaults.withDisabledStem = 0;
 
 //
 
@@ -1394,7 +1522,15 @@ function modulesFindEachAt( o )
     con.then( () =>
     {
       let con2 = new _.Consequence();
-      let resolved = opener.openedModule.submodulesResolve({ selector : o.selector, preservingIteration : 1 });
+      // debugger;
+      // _global_.debugger = 1;
+      let resolved = opener.openedModule.submodulesResolve
+      ({
+        selector : o.selector,
+        preservingIteration : 1,
+        pathUnwrapping : 1,
+      });
+      // debugger;
 
       if( !_.mapIs( resolved ) )
       resolved = _.arrayAs( resolved );
@@ -1606,8 +1742,6 @@ function modulesFindWithAt( o )
       tracing : o.tracing,
       withIn : o.withIn,
       withOut : o.withOut,
-      // withIn : will.withIn,
-      // withOut : will.withOut,
       excludingUnderscore : 1,
     });
   }
@@ -1710,12 +1844,11 @@ function modulesFindWithAt( o )
     {
       let filter = _.mapOnly( o, will.modulesFilter.defaults );
       let openers2 = will.modulesFilter( op.openers, filter );
-      if( openers2.length )
+      if( !o.atLeastOne || openers2.length )
       op.openers = openers2;
     }
 
     op.variants = will.variantsFrom( op.openers );
-
     op.sortedVariants = will.graphTopSort( op.variants );
     op.sortedVariants.reverse();
     op.sortedOpeners = [];
@@ -1739,17 +1872,7 @@ var defaults = modulesFindWithAt.defaults = _.mapExtend( null, ModuleFilterNulls
 
 defaults.selector = null;
 defaults.tracing = null;
-
-// {
-//   // withIn : null,
-//   // withOut : null,
-//   // withInvalid : null,
-//   // withValid : null,
-//   // withEnabled : null,
-//   // withDisabled : null,
-//   selector : null,
-//   tracing : 0,
-// }
+defaults.atLeastOne = 1;
 
 //
 
@@ -1765,19 +1888,26 @@ function modulesOnlyRoots( modules )
   _.assert( _.longIs( modules ) );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  let nodesGroup = will.graphGroupMake( _.mapOnly( _.Will.ModuleFilterOn, will.graphGroupMake.defaults ) ); xxx
+  let filter =
+  {
+    withPeers : 1,
+    withStem : 1,
+    ... _.Will.RelationFilterOn,
+  }
+
+  let nodesGroup = will.graphGroupMake( _.mapOnly( filter, will.graphGroupMake.defaults ) );
 
   /* first make variants for each module */
 
   let o2 =
   {
+    ... filter,
     modules : modules,
     revisiting : 0,
     recursive : 2,
     outputFormat : '/',
     nodesGroup : nodesGroup,
   }
-  _.mapExtend( o2, filter );
   let variants = will.modulesEach( o2 );
 
   /* then add in-roots of trees */
@@ -1823,6 +1953,7 @@ function modulesEach_body( o )
   let logger = will.logger;
 
   _.assert( !o.visitedContainer || !!o.nodesGroup, 'Expects nodesGroup if visitedContainer provided' );
+  _.assertRoutineOptions( modulesEach_body, o );
 
   if( !o.nodesGroup )
   o.nodesGroup = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
@@ -1861,7 +1992,18 @@ function modulesEach_body( o )
   function handleUp( variant, it )
   {
 
-    it.continueNode = will.relationFit( variant, filter );
+    if( o.withDisabledStem && it.level === 0 )
+    {
+      let filter2 = _.mapExtend( null, filter );
+      filter2.withDisabledSubmodules = 1;
+      filter2.withDisabledModules = 1;
+      it.continueNode = will.relationFit( variant, filter2 );
+    }
+    else
+    {
+      it.continueNode = will.relationFit( variant, filter );
+    }
+
     if( o.onUp )
     o.onUp( outputFrom( variant ), it );
 
@@ -1891,24 +2033,58 @@ function modulesEach_body( o )
 
 }
 
-var defaults = modulesEach_body.defaults = _.mapExtend
-(
-  null,
-  _.graph.AbstractNodesGroup.prototype.each.defaults,
-  relationFit.defaults
-);
+var defaults = modulesEach_body.defaults =
+{
 
-defaults.withDisabledSubmodules = 0;
-defaults.withDisabledModules = 0;
+  ... _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults ),
+  ... _.mapExtend( null, relationFit.defaults ),
 
-defaults.modules = null;
-defaults.outputFormat = '*/module'; /* / | * / module | * / relation */
-defaults.onUp = null;
-defaults.onDown = null;
-defaults.recursive = 1;
-defaults.nodesGroup = null;
+  withPeers : 0,
+  withStem : 0,
+  withoutDuplicates : 0,
+  withDisabledStem : null,
+  // withDisabledSubmodules : 0,
+  // withDisabledModules : 0,
+
+  modules : null,
+  outputFormat : '*/module', /* / | * / module | * / relation */
+  onUp : null,
+  onDown : null,
+  recursive : 1,
+  nodesGroup : null,
+
+}
+
+_.assert( defaults.withStem === 0 );
+_.assert( defaults.withDisabledStem === null );
+_.assert( defaults.withDisabledSubmodules === 0 );
+_.assert( defaults.withDisabledModules === 0 );
+_.assert( defaults.withPeers === 0 );
+
+// _.mapExtend
+// (
+//   null,
+//   _.graph.AbstractNodesGroup.prototype.each.defaults,
+//   relationFit.defaults
+// );
+//
+// defaults.withPeers = 1;
+// defaults.withDisabledSubmodules = 0;
+// defaults.withDisabledModules = 0;
+// defaults.withDisabledStem = null;
+//
+// defaults.modules = null;
+// defaults.outputFormat = '*/module'; /* / | * / module | * / relation */
+// defaults.onUp = null;
+// defaults.onDown = null;
+// defaults.recursive = 1;
+// defaults.nodesGroup = null;
 
 let modulesEach = _.routineFromPreAndBody( modulesEach_pre, modulesEach_body );
+let modulesEachAll = _.routineDefaults( null, modulesEach, RelationFilterOn );
+
+// let modulesEachAll = _.routineFromPreAndBody( modulesEach_pre, modulesEach_body );
+// _.mapExtend( modulesEachAll.defaults, RelationFilterOn );
 
 //
 
@@ -1939,7 +2115,6 @@ function modulesFor_body( o )
 
   if( !o.nodesGroup )
   o.nodesGroup = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
-
   o.modules = _.arrayAs( o.nodesGroup.nodesAddOnce( o.modules ) );
   _.assert( _.arrayIs( o.modules ) );
 
@@ -1984,9 +2159,9 @@ function modulesFor_body( o )
     let o2 = _.mapOnly( o, will.modulesEach.defaults );
     o2.outputFormat = '/';
     o2.modules = variants;
-    debugger;
+    // debugger;
     let result = will.modulesEach( o2 );
-    debugger;
+    // debugger;
     return result;
   }
 
@@ -2002,7 +2177,12 @@ function modulesFor_body( o )
 
 }
 
-var defaults = modulesFor_body.defaults = _.mapExtend( null, _.graph.AbstractNodesGroup.prototype.each.defaults, relationFit.defaults );
+var defaults = modulesFor_body.defaults = _.mapExtend
+(
+  null,
+  modulesEach.defaults,
+  relationFit.defaults
+);
 
 defaults.recursive = 1;
 defaults.withPeers = 1;
@@ -2015,6 +2195,9 @@ delete defaults.outputFormat;
 delete defaults.onUp;
 delete defaults.onDown;
 delete defaults.onNode;
+
+_.assert( defaults.withDisabledSubmodules === 0 );
+_.assert( defaults.withDisabledModules === 0 );
 
 let modulesFor = _.routineFromPreAndBody( modulesFor_pre, modulesFor_body );
 
@@ -2061,15 +2244,21 @@ function modulesDownload_body( o )
   o.modules = _.arrayAs( o.nodesGroup.nodesAddOnce( o.modules ) );
   _.assert( _.arrayIs( o.modules ) );
 
-  let filter = _.mapOnly( o, _.Will.prototype.relationFit.defaults );
+  let filter = _.mapOnly( o, _.Will.prototype.relationsFilter.defaults );
   filter.withOut = false;
-  o.modules = o.modules.filter( ( variant ) => will.relationFit( variant, filter ) );
+  if( o.withDisabledStem )
+  {
+    filter.withDisabledSubmodules = 1;
+    filter.withDisabledModules = 1;
+  }
+  o.modules = will.relationsFilter( o.modules, filter );
 
   if( !o.modules.length )
   return _.Consequence().take( o );
 
   let rootModule = o.modules.length === 1 ? o.modules[ 0 ].module : null;
   let rootModulePath = rootModule ? rootModule.localPath : null;
+  let rootVariant = rootModule ? will.variantFrom( rootModule ) : null;
 
   return download( o.modules )
   .finally( ( err, arg ) =>
@@ -2108,10 +2297,11 @@ function modulesDownload_body( o )
       o2.outputFormat = '/';
       o2.modules = variants;
       o2.withPeers = 1; /* yyy */
+      o2.withIn = 1;
+      o2.withOut = 1;
       delete o2.nodesGroup;
       variants = will.modulesEach( o2 );
       downloadedLengthWas = o.downloadedContainer.length;
-
       return variantsDownload( variants );
     });
 
@@ -2133,9 +2323,19 @@ function modulesDownload_body( o )
     if( !o.downloadedContainer.length && !o.loggingNoChanges )
     return;
 
-    let ofModule = rootModule ? ' of ' + rootModule.absoluteName : '';
+    let remoteContainer = o.remoteContainer.filter( ( variant ) =>
+    {
+      return !variant.isOut || !_.arrayHas( o.remoteContainer, variant.peer );
+    });
+    let localContainer = o.localContainer.filter( ( variant ) =>
+    {
+      if( variant === rootVariant || variant.peer === rootVariant )
+      return;
+      return !variant.isOut || !_.arrayHas( o.localContainer, variant.peer );
+    });
 
-    let total = ( o.remoteContainer.length + o.localContainer.length );
+    let ofModule = rootModule ? ' of ' + rootModule.absoluteName : '';
+    let total = ( remoteContainer.length + localContainer.length );
     logger.rbegin({ verbosity : -2 });
     let phrase = '';
     if( o.mode === 'update' )
@@ -2175,7 +2375,7 @@ function modulesDownload_body( o )
         () => `No object for ${variant.localPath}`
       );
 
-      if( _.arrayHas( o.doneContainer, variant.object.localPath ) )
+      if( _.arrayHas( o.doneContainer, variant ) )
       return null;
 
       _.assert
@@ -2190,7 +2390,7 @@ function modulesDownload_body( o )
         () => 'Submodule' + ( variant.opener ? variant.opener.qualifiedName : n ) + ' was not preformed to download it'
       );
 
-      if( !variant.object.isRemote )
+      if( !variant.isRemote )
       return variantLocalMaybe( variant );
       if( variant.relation && !variant.relation.enabled )
       return variantLocalMaybe( variant );
@@ -2210,30 +2410,29 @@ function modulesDownload_body( o )
   function variantDownload( variant )
   {
 
-    if( _.arrayHas( o.localContainer, variant.object.localPath ) || _.arrayHas( o.localContainer, variant.object.remotePath ) )
+    if( _.arrayHas( o.localContainer, variant ) || _.arrayHas( o.localContainer, variant ) )
     {
       _.assert( 0, 'unexpected' );
     }
 
-    if( _.arrayHas( o.doneContainer, variant.opener.remotePath ) )
+    if( _.arrayHas( o.doneContainer, variant ) )
     return variantDone( variant );
 
     if( variant.peer )
     {
-      if( _.arrayHas( o.doneContainer, variant.peer.localPath ) )
+      if( _.arrayHas( o.doneContainer, variant.peer ) )
       {
-        debugger;
+        // debugger;
         return variantDone( variant );
       }
-      if( _.arrayHas( o.doneContainer, variant.peer.remotePath ) )
-      {
-        debugger;
-        return variantDone( variant );
-      }
+      // if( _.arrayHas( o.doneContainer, variant.peer ) )
+      // {
+      //   debugger;
+      //   return variantDone( variant );
+      // }
     }
 
     variantRemote( variant );
-    // _.arrayAppendOnceStrictly( o.remoteContainer, variant.opener.remotePath );
     variantDone( variant );
     if( variant.peer )
     {
@@ -2242,22 +2441,21 @@ function modulesDownload_body( o )
 
     if( o.dry )
     {
-      return variant.opener._remoteIsUpToDate({ mode : o.mode })
-      .then( ( downloading ) =>
+      return variant.opener._repoIsFresh({ mode : o.mode })
+      .then( ( isFreash ) =>
       {
-        if( downloading )
+        if( !isFreash )
         variantDownloaded( variant );
         return null;
       })
     }
     else
     {
-      let o2 = _.mapOnly( o, variant.opener._remoteDownload.defaults );
-      let r = _.Consequence.From( variant.opener._remoteDownload( o2 ) );
+      let o2 = _.mapOnly( o, variant.opener._repoDownload.defaults );
+      let r = _.Consequence.From( variant.opener._repoDownload( o2 ) );
       return r.then( ( downloaded ) =>
       {
         _.assert( _.boolIs( downloaded ) );
-        // _.assert( _.strIs( variant.opener.remotePath ) );
         if( downloaded )
         variantDownloaded( variant );
         return downloaded;
@@ -2270,8 +2468,7 @@ function modulesDownload_body( o )
 
   function variantDownloaded( variant )
   {
-    _.arrayAppendOnceStrictly( o.downloadedContainer, variant.remotePath );
-    // _.arrayAppendOnceStrictly( o.downloadedContainer, variant.opener.remotePath );
+    _.arrayAppendOnceStrictly( o.downloadedContainer, variant );
   }
 
   /* */
@@ -2279,15 +2476,14 @@ function modulesDownload_body( o )
   function variantLocalMaybe( variant )
   {
 
-    if( variant.object.isRemote )
-    return null;
-    if( variant.peer && variant.peer.object && variant.peer.object.isRemote )
+    if( variant.isRemote )
+    return variantRemote( variant );
+
+    if( variant.peer && variant.peer.object && variant.peer.isRemote )
     return variantRemote( variant );
 
     if( variant.object.root === variant.object )
     debugger;
-    // if( variant.object.root === variant.object )
-    // return null;
 
     variantLocal( variant );
   }
@@ -2304,8 +2500,8 @@ function modulesDownload_body( o )
     }
 
     _.assert( !!variant.remotePath );
-    _.arrayAppendOnce( o.remoteContainer, variant.remotePath );
-    _.assert( !_.arrayHas( o.localContainer, variant.remotePath ) );
+    _.arrayAppendOnce( o.remoteContainer, variant );
+    _.assert( !_.arrayHas( o.localContainer, variant ) );
     return null;
   }
 
@@ -2314,27 +2510,24 @@ function modulesDownload_body( o )
   function variantLocal( variant )
   {
 
-    // if( variant.localPath && _.strHas( variant.localPath, '.module' ) )
-    // debugger;
-
     if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
     return null;
 
     if( variant.peer )
     {
-      if( _.arrayHas( o.doneContainer, variant.peer.remotePath ) )
+      if( _.arrayHas( o.doneContainer, variant.peer ) )
       return variantDone( variant );
-      if( _.arrayHas( o.doneContainer, variant.peer.localPath ) )
-      return variantDone( variant );
+      // if( _.arrayHas( o.doneContainer, variant.peer ) )
+      // return variantDone( variant );
     }
 
-    if( _.arrayHas( o.doneContainer, variant.opener.remotePath ) )
+    if( _.arrayHas( o.doneContainer, variant ) )
     return null;
-    if( _.arrayHas( o.doneContainer, variant.opener.localPath ) )
-    return null;
+    // if( _.arrayHas( o.doneContainer, variant ) )
+    // return null;
 
     _.assert( _.strIs( variant.localPath ) );
-    _.arrayAppendOnce( o.localContainer, variant.localPath );
+    _.arrayAppendOnce( o.localContainer, variant );
 
     return null;
   }
@@ -2346,10 +2539,10 @@ function modulesDownload_body( o )
     if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
     return null;
 
-    if( variant.localPath )
-    _.arrayAppendOnce( o.doneContainer, variant.localPath );
-    if( variant.remotePath )
-    _.arrayAppendOnce( o.doneContainer, variant.remotePath );
+    // if( variant.localPath )
+    _.arrayAppendOnce( o.doneContainer, variant );
+    // if( variant.remotePath )
+    // _.arrayAppendOnce( o.doneContainer, variant.remotePath );
     return null;
   }
 
@@ -2359,7 +2552,8 @@ function modulesDownload_body( o )
 var defaults = modulesDownload_body.defaults = _.mapExtend
 (
   null,
-  _.graph.AbstractNodesGroup.prototype.each.defaults,
+  // _.graph.AbstractNodesGroup.prototype.each.defaults,
+  modulesEach.defaults,
   relationFit.defaults
 );
 
@@ -2376,6 +2570,9 @@ defaults.doneContainer = null;
 defaults.loggingNoChanges = 1;
 defaults.recursive = 1;
 defaults.withStem = 1;
+defaults.withOut = 1; // yyy
+defaults.withIn = 1;
+defaults.withPeers = 1;
 defaults.nodesGroup = null;
 
 delete defaults.withPeers;
@@ -2443,7 +2640,6 @@ var defaults = modulesUpform.defaults = _.mapExtend( null, UpformingDefaults, mo
 defaults.recursive = 2;
 defaults.withStem = 1;
 defaults.withPeers = 1;
-// defaults.downloading = 0;
 defaults.allowingMissing = 1;
 defaults.all = 1;
 
@@ -2460,6 +2656,12 @@ function variantFrom( object )
 {
   let will = this;
   _.assert( arguments.length === 1 );
+
+  // xxx : switch on optimization
+  // let result = will.variantOf( object );
+  // if( result )
+  // return result;
+
   return _.Will.ModuleVariant.VariantFrom( will, object );
 }
 
@@ -2584,14 +2786,7 @@ function graphGroupMake( o )
 var defaults = graphGroupMake.defaults = _.mapExtend( null, RelationFilterDefaults );
 
 defaults.withPeers = 1;
-
-// {
-//   withPeers : 1,
-//   withOut : 1,
-//   withIn : 1,
-//   withEnabled : 1,
-//   withDisabled : 0,
-// }
+defaults.withoutDuplicates = 0;
 
 //
 
@@ -2601,8 +2796,6 @@ function graphTopSort( modules )
 
   _.assert( arguments.length === 0 || arguments.length === 1 )
 
-  // let graph = will.graphGroupMake();
-  // let group = graph.nodesGroup();
   let group = will.graphGroupMake();
 
   modules = modules || will.modulesArray;
@@ -2635,6 +2828,9 @@ function graphInfoExportAsTree( modules, o )
   modules = modules || will.modulesArray;
   modules = group.nodesFrom( modules );
 
+  if( o.onlyRoots )
+  modules = will.modulesOnlyRoots( modules );
+
   let o2 = _.mapOnly( o, group.rootsExportInfoTree.defaults );
   let info = group.rootsExportInfoTree( modules, o2 );
 
@@ -2666,13 +2862,13 @@ var defaults = graphInfoExportAsTree.defaults = _.mapExtend
   RelationFilterDefaults
 );
 
+defaults.withDisabledModules = 1;
+defaults.withDisabledSubmodules = 1;
+defaults.withoutDuplicates = 1;
 defaults.withLocalPath = 0;
 defaults.withRemotePath = 0;
-
-// defaults.withIn = 1;
-// defaults.withOut = 0;
-// defaults.withEnabled = 1;
-// defaults.withDisabled = 1;
+defaults.withOut = 1;
+defaults.onlyRoots = 1;
 
 // --
 // opener
@@ -2755,11 +2951,11 @@ let _openerMake = _.routineFromPreAndBody( _openerMake_pre, _openerMake_body );
 
 //
 
-function openerMakeUser( o )
+function openerMakeManual( o )
 {
   let will = this;
 
-  o = _.routineOptions( openerMakeUser, arguments );
+  o = _.routineOptions( openerMakeManual, arguments );
   o.opener = o.opener || Object.create( null );
   o.opener.reason = o.opener.reason || 'user';
   if( o.willfilesPath )
@@ -2769,7 +2965,7 @@ function openerMakeUser( o )
   return will._openerMake( o );
 }
 
-var defaults = openerMakeUser.defaults = Object.create( _openerMake.defaults );
+var defaults = openerMakeManual.defaults = Object.create( _openerMake.defaults );
 
 defaults.willfilesPath = null;
 
@@ -3052,7 +3248,7 @@ function WillfilesFind( o )
   function findFor( commonPath )
   {
 
-    if( !path.isSafe( commonPath, 2 ) )
+    if( !path.isSafe( commonPath, 1 ) )
     return [];
 
     let filter =
@@ -3098,8 +3294,8 @@ function WillfilesFind( o )
       mode : 'distinct',
     }
 
-    if( _.strHas( o.commonPath, 'out/submodule' ) )
-    debugger;
+    // if( _.strHas( o.commonPath, 'out/submodule' ) )
+    // debugger;
 
     filter.filePath = path.mapExtend( filter.filePath );
     filter.filePath = path.filterPairs( filter.filePath, ( it ) =>
@@ -3865,9 +4061,11 @@ let Composes =
 
   withEnabled : 1,
   withDisabled : 0,
-  ... ModuleFilterDefaults,
+  ... _.mapBut( ModuleFilterDefaults, { withEnabledModules : null, withDisabledModules : null } ),
 
 }
+
+_.assert( Composes.withEnabledModules === undefined );
 
 let Aggregates =
 {
@@ -3902,6 +4100,7 @@ let Restricts =
   willfilesReadBeginTime : null,
   willfilesReadEndTime : null,
 
+  repoMap : _.define.own({}),
   variantMap : _.define.own({}),
   objectToVariantHash : _.define.own( new HashMap ),
   modulesArray : _.define.own([]),
@@ -3948,6 +4147,7 @@ let Statics =
   PrefixPathForRoleMaybe,
   PathToRole,
   CommonPathFor,
+  CommonPathNormalize,
   CloneDirPathFor,
   OutfilePathFor,
   RemotePathAdjust,
@@ -3965,7 +4165,6 @@ let Forbids =
   graphSystem : 'graphSystem',
   filesGraph : 'filesGraph',
 }
-
 
 let Accessors =
 {
@@ -4001,6 +4200,7 @@ let Extend =
   PrefixPathForRoleMaybe,
   PathToRole,
   CommonPathFor,
+  CommonPathNormalize,
   CloneDirPathFor,
   OutfilePathFor,
   RemotePathAdjust,
@@ -4014,9 +4214,14 @@ let Extend =
   // etc
 
   _verbosityChange,
-  vcsFor,
+
+  vcsProviderFor,
+  vcsToolsFor,
+  repoFrom,
+
   resourceWrap,
   resourcesInfoExport,
+  variantsWithId,
   variantsInfoExport,
   _pathChanged,
   versionGet,
@@ -4048,6 +4253,7 @@ let Extend =
   modulesFindWithAt,
   modulesOnlyRoots,
   modulesEach,
+  modulesEachAll,
   modulesFor,
   modulesDownload,
   modulesUpform,
@@ -4070,7 +4276,7 @@ let Extend =
   // opener
 
   _openerMake,
-  openerMakeUser,
+  openerMakeManual,
   openersAdoptModule,
   openerUnregister,
   openerRegister,

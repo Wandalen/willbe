@@ -344,14 +344,14 @@ function unform()
   _.assert( arguments.length === 0 );
   _.assert( resource.formed );
 
-  if( resource.original )
+  if( resource.original && !resource.phantom )
   _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
-  else
+  else if( !resource.phantom )
   _.assert( module[ resource.MapName ][ resource.name ] === resource );
 
   /* begin */
 
-  if( !resource.original )
+  if( !resource.original && !resource.phantom )
   {
     delete module[ resource.MapName ][ resource.name ];
   }
@@ -412,7 +412,7 @@ function form1()
   _.assert( !!logger );
   _.assert( !!will.formed );
   _.assert( !willf || !!willf.formed );
-  _.assert( _.strDefined( resource.name ) );
+  _.assert( resource.phantom || _.strDefined( resource.name ) );
 
   if( !resource.original )
   {
@@ -429,7 +429,12 @@ function form1()
     resource.criterion[ c ] = resource.criterion[ c ][ 0 ];
   }
 
-  if( !resource.original )
+  if( resource.original )
+  _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
+  else if( !resource.phantom )
+  _.assert( module[ resource.MapName ][ resource.name ] === undefined || module[ resource.MapName ][ resource.name ] === resource );
+
+  if( !resource.original && !resource.phantom )
   {
     module[ resource.MapName ][ resource.name ] = resource;
   }
@@ -1255,7 +1260,8 @@ let Aggregates =
   exportable : 1,
   importableFromIn : 1,
   importableFromOut : 1,
-  generated : 0,
+  // generated : 0,
+  phantom : 0,
 }
 
 let Associates =
@@ -1300,6 +1306,7 @@ let Forbids =
   default : 'default',
   predefined : 'predefined',
   importable : 'importable',
+  generated : 'generated',
 }
 
 let Accessors =

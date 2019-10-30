@@ -310,8 +310,9 @@ function _openEnd()
   // if( relation.enabled ) /* ttt */
   will.variantFrom( relation );
 
-  let modules2 = relation.opener.openedModule.modulesEach
+  let modules2 = relation.opener.openedModule.modulesEachAll
   ({
+    ... _.Will.RelationFilterOn,
     withPeers : 0,
     withStem : 1,
     recursive : 2,
@@ -374,7 +375,7 @@ function isAvailableGet()
   if( !relation.opener )
   return false;
 
-  if( !relation.opener.isDownloaded )
+  if( !relation.opener.hasFiles )
   return false;
 
   if( !relation.opener.isOpened() )
@@ -386,31 +387,31 @@ function isAvailableGet()
   return true;
 }
 
+// //
 //
-
-function isDownloadedGet()
-{
-  let relation = this;
-  let module = relation.module;
-
-  if( !relation.opener )
-  return false;
-
-  return relation.opener.isDownloaded;
-}
-
+// function isDownloadedGet()
+// {
+//   let relation = this;
+//   let module = relation.module;
 //
-
-function isRepositoryGet()
-{
-  let relation = this;
-  let module = relation.module;
-
-  if( !relation.opener )
-  return false;
-
-  return relation.opener.isRepository;
-}
+//   if( !relation.opener )
+//   return false;
+//
+//   return relation.opener.isDownloaded;
+// }
+//
+// //
+//
+// function isRepositoryGet()
+// {
+//   let relation = this;
+//   let module = relation.module;
+//
+//   if( !relation.opener )
+//   return false;
+//
+//   return relation.opener.isRepository;
+// }
 
 //
 
@@ -496,6 +497,9 @@ function pathSet( src )
   let module = relation.module;
 
   _.assert( !src || !relation.opener || relation.opener.formed < 3 );
+
+  if( src )
+  src = _.Will.CommonPathNormalize( src );
 
   relation[ pathSymbol ] = src;
 
@@ -622,7 +626,7 @@ function infoExport()
 
   }
 
-  resultMap.isDownloaded = relation.isDownloaded;
+  resultMap.hasFiles = relation.opener ? relation.opener.hasFiles : null;
   resultMap.isAvailable = relation.isAvailable;
 
   let result = relation._infoExport({ fields : resultMap });
@@ -821,8 +825,8 @@ let Statics =
 let Accessors =
 {
   isAvailable : { getter : isAvailableGet, readOnly : 1 },
-  isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
-  isRepository : { getter : isRepositoryGet, readOnly : 1 },
+  // isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
+  // isRepository : { getter : isRepositoryGet, readOnly : 1 },
   localPath : { getter : localPathGet, readOnly : 1 },
   remotePath : { getter : remotePathGet, readOnly : 1 },
   opener : { setter : openerSet },
@@ -836,6 +840,8 @@ let Forbids =
   data : 'data',
   own : 'own',
   isGitRepository : 'isGitRepository',
+  isDownloaded : 'isDownloaded',
+  isRepository : 'isRepository',
 }
 
 // --
@@ -866,8 +872,8 @@ let Extend =
 
   isValid,
   isAvailableGet,
-  isDownloadedGet,
-  isRepositoryGet,
+  // isDownloadedGet,
+  // isRepositoryGet,
   localPathGet,
   remotePathGet,
   openerSet,

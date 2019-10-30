@@ -74,7 +74,35 @@ function onSuiteEnd()
   let self = this;
   _.assert( _.strHas( self.suitePath, '/willbe-' ) )
   _.path.pathDirTempClose( self.suitePath );
-  // _.fileProvider.filesDelete( self.suitePath );
+}
+
+//
+
+function assetFor( test, name )
+{
+  let self = this;
+  let a = Object.create( null );
+
+  a.test = test;
+  a.name = name;
+  a.originalAssetPath = _.path.join( self.assetDirPath, name );
+  a.routinePath = _.path.join( self.suitePath, test.name );
+  a.abs = self.abs_functor( a.routinePath );
+  a.rel = self.rel_functor( a.routinePath );
+  a.will = new _.Will;
+  a.fileProvider = _.fileProvider;
+  a.path = _.fileProvider.path;
+  a.ready = _.Consequence().take( null );
+
+  a.reflect = function reflect()
+  {
+    _.fileProvider.filesDelete( a.routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+  }
+
+  _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
+
+  return a;
 }
 
 //
@@ -151,7 +179,7 @@ function preCloneRepos( test )
 function buildSimple( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'simple' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'simple' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -161,10 +189,10 @@ function buildSimple( test )
   let will = new _.Will;
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( outDirPath );
 
-  var opener = will.openerMakeUser({ willfilesPath : modulePath });
+  var opener = will.openerMakeManual({ willfilesPath : modulePath });
   opener.find();
 
   return opener.open().split().then( () =>
@@ -214,7 +242,7 @@ function openNamedFast( test )
 {
   let self = this;
   let assetName = 'two-exported/super';
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -225,7 +253,7 @@ function openNamedFast( test )
   let opener;
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   will.prefer
   ({
@@ -233,10 +261,10 @@ function openNamedFast( test )
     allOfSub : 0,
   });
 
-  var opener1 = will.openerMakeUser({ willfilesPath : modulePath });
+  var opener1 = will.openerMakeManual({ willfilesPath : modulePath });
   let ready1 = opener1.open();
 
-  var opener2 = will.openerMakeUser({ willfilesPath : modulePath });
+  var opener2 = will.openerMakeManual({ willfilesPath : modulePath });
   let ready2 = opener2.open();
 
   /* - */
@@ -337,22 +365,22 @@ function openNamedFast( test )
     let pathMap =
     {
 
-      'proto' : './proto',
-      'temp' : [ './super.out', './sub.out' ],
+      'proto' : 'proto',
+      'temp' : [ 'super.out', 'sub.out' ],
       'in' : '.',
-      'out' : './super.out',
-      'out.debug' : './super.out/debug',
-      'out.release' : './super.out/release',
+      'out' : 'super.out',
+      'out.debug' : 'super.out/debug',
+      'out.release' : 'super.out/release',
 
       'local' : abs( 'super' ),
       'remote' : null,
       'current.remote' : null,
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : abs( '.' ),
-      'module.willfiles' : abs( [ './super.ex.will.yml', './super.im.will.yml' ] ),
+      'module.willfiles' : abs( [ 'super.ex.will.yml', 'super.im.will.yml' ] ),
       'module.peer.willfiles' : abs( 'super.out/supermodule.out.will.yml' ),
       'module.peer.in' : abs( 'super.out' ),
-      'module.original.willfiles' : abs( [ './super.ex.will.yml', './super.im.will.yml' ] ),
+      'module.original.willfiles' : abs( [ 'super.ex.will.yml', 'super.im.will.yml' ] ),
       'module.common' : abs( 'super' ),
       'download' : null,
 
@@ -388,7 +416,8 @@ function openNamedFast( test )
     test.identical( opener.openedModule.about.name, 'supermodule' );
     test.identical( opener.openedModule.pathMap, pathMap );
     test.setsAreIdentical( _.mapKeys( opener.openedModule.submoduleMap ), [ 'Submodule' ] );
-    test.setsAreIdentical( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug' ] );
+    var got = _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e );
+    test.setsAreIdentical( got, [ 'reflect.submodules.', 'reflect.submodules.debug' ] );
 
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
     test.setsAreIdentical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
@@ -405,7 +434,7 @@ function openNamedForming( test )
 {
   let self = this;
   let assetName = 'two-exported/super';
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -416,7 +445,7 @@ function openNamedForming( test )
   let opener;
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   will.prefer
   ({
@@ -426,7 +455,7 @@ function openNamedForming( test )
     peerModulesFormedOfSub : 1,
   });
 
-  let opener1 = will.openerMakeUser({ willfilesPath : modulePath });
+  let opener1 = will.openerMakeManual({ willfilesPath : modulePath });
   let ready1 = opener1.open({ all : 1 });
 
   test.case = 'skipping of stages of module';
@@ -439,7 +468,7 @@ function openNamedForming( test )
   test.identical( stager.stageStateSkipping( 'resourcesFormed' ), false );
   test.identical( stager.stageStateSkipping( 'formed' ), false );
 
-  let opener2 = will.openerMakeUser({ willfilesPath : modulePath });
+  let opener2 = will.openerMakeManual({ willfilesPath : modulePath });
   let ready2 = opener2.open();
 
   test.case = 'skipping of stages of module';
@@ -562,21 +591,21 @@ function openNamedForming( test )
     let pathMap =
     {
 
-      'proto' : './proto',
-      'temp' : [ './super.out', './sub.out' ],
+      'proto' : 'proto',
+      'temp' : [ 'super.out', 'sub.out' ],
       'in' : '.',
-      'out' : './super.out',
-      'out.debug' : './super.out/debug',
-      'out.release' : './super.out/release',
+      'out' : 'super.out',
+      'out.debug' : 'super.out/debug',
+      'out.release' : 'super.out/release',
 
       'local' : abs( 'super' ),
       'remote' : null,
       'current.remote' : null,
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : abs( '.' ),
-      'module.willfiles' : abs( [ './super.ex.will.yml', './super.im.will.yml' ] ),
-      'module.original.willfiles' : abs( [ './super.ex.will.yml', './super.im.will.yml' ] ),
-      'module.peer.willfiles' : abs( './super.out/supermodule.out.will.yml' ),
+      'module.willfiles' : abs( [ 'super.ex.will.yml', 'super.im.will.yml' ] ),
+      'module.original.willfiles' : abs( [ 'super.ex.will.yml', 'super.im.will.yml' ] ),
+      'module.peer.willfiles' : abs( 'super.out/supermodule.out.will.yml' ),
       'module.peer.in' : abs( 'super.out' ),
       'module.common' : abs( 'super' ),
       'download' : null,
@@ -630,7 +659,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
 {
   let self = this;
   let assetName = 'two-exported/super';
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -651,7 +680,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
     test.description = 'first run';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
     will.prefer
     ({
@@ -661,9 +690,9 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
       // peerModulesFormedOfSub : 0,
     });
 
-    opener1 = will.openerMakeUser({ willfilesPath : modulePath })
+    opener1 = will.openerMakeManual({ willfilesPath : modulePath })
     ready1 = opener1.open();
-    opener2 = will.openerMakeUser({ willfilesPath : modulePath });
+    opener2 = will.openerMakeManual({ willfilesPath : modulePath });
     ready2 = opener2.open({});
 
     return _.Consequence.AndTake([ ready1, ready2 ])
@@ -678,7 +707,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
   {
     test.description = 'second run';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
     will.instanceDefaultsReset();
 
@@ -690,9 +719,9 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
       // peerModulesFormedOfSub : 0,
     });
 
-    opener1 = will.openerMakeUser({ willfilesPath : modulePath })
+    opener1 = will.openerMakeManual({ willfilesPath : modulePath })
     ready1 = opener1.open();
-    opener2 = will.openerMakeUser({ willfilesPath : modulePath });
+    opener2 = will.openerMakeManual({ willfilesPath : modulePath });
     ready2 = opener2.open({});
 
     return _.Consequence.AndTake([ ready1, ready2 ])
@@ -774,7 +803,7 @@ function openSkippingSubButAttachedWillfiles( test )
 {
   let self = this;
   let assetName = 'two-exported/super';
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -795,7 +824,7 @@ function openSkippingSubButAttachedWillfiles( test )
     test.description = 'first run';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
     will.prefer
     ({
@@ -804,9 +833,9 @@ function openSkippingSubButAttachedWillfiles( test )
       subModulesFormedOfSub : 0,
     });
 
-    opener1 = will.openerMakeUser({ willfilesPath : modulePath })
+    opener1 = will.openerMakeManual({ willfilesPath : modulePath })
     ready1 = opener1.open();
-    opener2 = will.openerMakeUser({ willfilesPath : modulePath });
+    opener2 = will.openerMakeManual({ willfilesPath : modulePath });
     ready2 = opener2.open();
 
     return _.Consequence.AndTake([ ready1, ready2 ])
@@ -828,9 +857,9 @@ function openSkippingSubButAttachedWillfiles( test )
       subModulesFormedOfSub : 0,
     });
 
-    opener1 = will.openerMakeUser({ willfilesPath : modulePath })
+    opener1 = will.openerMakeManual({ willfilesPath : modulePath })
     ready1 = opener1.open();
-    opener2 = will.openerMakeUser({ willfilesPath : modulePath });
+    opener2 = will.openerMakeManual({ willfilesPath : modulePath });
     ready2 = opener2.open();
 
     return _.Consequence.AndTake([ ready1, ready2 ])
@@ -939,7 +968,7 @@ function openAnon( test )
 {
   let self = this;
   let assetName = 'two-anon-exported/.';
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-anon-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-anon-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -951,10 +980,10 @@ function openAnon( test )
   /* */
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-  var opener1 = will.openerMakeUser({ willfilesPath : modulePath });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  var opener1 = will.openerMakeManual({ willfilesPath : modulePath });
   let ready1 = opener1.open();
-  var opener2 = will.openerMakeUser({ willfilesPath : modulePath + '/' });
+  var opener2 = will.openerMakeManual({ willfilesPath : modulePath + '/' });
   let ready2 = opener2.open();
 
   /* - */
@@ -1002,7 +1031,6 @@ function openAnon( test )
   return _.Consequence.AndTake([ ready1, ready2 ])
   .finally( ( err, arg ) =>
   {
-    debugger;
     if( err )
     throw err;
     return arg;
@@ -1019,17 +1047,17 @@ function openAnon( test )
       'will' : path.join( __dirname, '../will/Exec' ),
       'local' : abs( './' ),
       'remote' : null,
-      'proto' : './proto',
-      'temp' : [ './super.out', './sub.out' ],
+      'proto' : 'proto',
+      'temp' : [ 'super.out', 'sub.out' ],
       'in' : '.',
-      'out' : './super.out',
-      'out.debug' : './super.out/debug',
-      'out.release' : './super.out/release',
-      'module.willfiles' : abs([ './.ex.will.yml', './.im.will.yml' ]),
+      'out' : 'super.out',
+      'out.debug' : 'super.out/debug',
+      'out.release' : 'super.out/release',
+      'module.willfiles' : abs([ '.ex.will.yml', '.im.will.yml' ]),
       'module.dir' : abs( '.' ),
       'module.common' : abs( './' ),
-      'module.original.willfiles' : abs([ './.ex.will.yml', './.im.will.yml' ]),
-      'module.peer.willfiles' : abs( './super.out/supermodule.out.will.yml' ),
+      'module.original.willfiles' : abs([ '.ex.will.yml', '.im.will.yml' ]),
+      'module.peer.willfiles' : abs( 'super.out/supermodule.out.will.yml' ),
       'module.peer.in' : abs( 'super.out' ),
       'download' : null,
     }
@@ -1081,7 +1109,7 @@ function openOutNamed( test )
 {
   let self = this;
   let assetName = 'two-exported/super.out/supermodule';
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -1092,11 +1120,11 @@ function openOutNamed( test )
   let ready = _.Consequence().take( null );
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
-  var opener1 = will.openerMakeUser({ willfilesPath : moduleFilePath });
+  var opener1 = will.openerMakeManual({ willfilesPath : moduleFilePath });
   let ready1 = opener1.open();
-  var opener2 = will.openerMakeUser({ willfilesPath : moduleFilePath + '.out' });
+  var opener2 = will.openerMakeManual({ willfilesPath : moduleFilePath + '.out' });
   let ready2 = opener2.open();
 
   /* - */
@@ -1225,7 +1253,7 @@ function openCurruptedUnknownField( test )
 {
   let self = this;
   let assetName = 'corrupted-infile-unknown-field/sub';
-  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-infile-unknown-field' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-infile-unknown-field' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -1240,8 +1268,8 @@ function openCurruptedUnknownField( test )
   ready.then( ( arg ) =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open({ all : 1 });
   })
 
@@ -1364,7 +1392,7 @@ function openCurruptedUnknownField( test )
 function openerClone( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -1383,8 +1411,8 @@ function openerClone( test )
   {
     test.description = 'open';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open();
   })
 
@@ -1605,7 +1633,7 @@ openerClone.timeOut = 130000;
 function moduleClone( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -1624,8 +1652,8 @@ function moduleClone( test )
   {
     test.description = 'open';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open();
   })
 
@@ -1946,7 +1974,7 @@ test
 function exportSeveralExports( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'inconsistent-outfile' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'inconsistent-outfile' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -1965,9 +1993,9 @@ function exportSeveralExports( test )
   {
     test.case = 'export debug';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( subOutPath );
-    opener = will.openerMakeUser({ willfilesPath : subInPath });
+    opener = will.openerMakeManual({ willfilesPath : subInPath });
     return opener.open();
   })
 
@@ -2029,7 +2057,7 @@ function exportSeveralExports( test )
   .then( () =>
   {
     test.case = 'second export debug';
-    opener = will.openerMakeUser({ willfilesPath : subInPath });
+    opener = will.openerMakeManual({ willfilesPath : subInPath });
     return opener.open();
   })
 
@@ -2087,7 +2115,7 @@ function exportSeveralExports( test )
   .then( () =>
   {
     test.case = 'export release';
-    opener = will.openerMakeUser({ willfilesPath : subInPath });
+    opener = will.openerMakeManual({ willfilesPath : subInPath });
     return opener.open();
   })
 
@@ -2144,7 +2172,7 @@ function exportSeveralExports( test )
   .then( () =>
   {
     test.case = 'second export release';
-    opener = will.openerMakeUser({ willfilesPath : subInPath });
+    opener = will.openerMakeManual({ willfilesPath : subInPath });
     return opener.open();
   })
 
@@ -2206,7 +2234,7 @@ function exportSeveralExports( test )
 function exportSuper( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2227,7 +2255,7 @@ function exportSuper( test )
     test.case = 'setup';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( abs( 'super.out' ) );
     _.fileProvider.filesDelete( abs( 'sub.out' ) );
 
@@ -2256,7 +2284,7 @@ function exportSuper( test )
   {
     test.case = 'export sub, first';
 
-    opener = will.openerMakeUser({ willfilesPath : subInPath });
+    opener = will.openerMakeManual({ willfilesPath : subInPath });
 
     will.prefer
     ({
@@ -2326,7 +2354,6 @@ function exportSuper( test )
       'module.peer.willfiles',
       'module.peer.in',
       'download',
-      'remote',
       'proto',
       'in',
       'out',
@@ -2380,7 +2407,7 @@ function exportSuper( test )
   {
     test.case = 'export super debug';
 
-    opener = will.openerMakeUser({ willfilesPath : superInPath });
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
 
     will.prefer
     ({
@@ -2548,7 +2575,7 @@ function exportSuper( test )
 function exportSuperIn( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-in-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-in-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -2569,11 +2596,11 @@ function exportSuperIn( test )
     test.case = 'export super debug, without out, without recursion, without peers';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( abs( 'super.out' ) );
     _.fileProvider.filesDelete( abs( 'sub.out' ) );
 
-    opener = will.openerMakeUser({ willfilesPath : superInPath });
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
 
     will.prefer
     ({
@@ -2634,11 +2661,11 @@ function exportSuperIn( test )
     test.case = 'export super debug, without out, without recursion, with peers';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( abs( 'super.out' ) );
     _.fileProvider.filesDelete( abs( 'sub.out' ) );
 
-    opener = will.openerMakeUser({ willfilesPath : superInPath });
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
 
     will.prefer
     ({
@@ -2703,10 +2730,10 @@ function exportSuperIn( test )
     test.case = 'export sub, then super';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( abs( 'super.out' ) );
     _.fileProvider.filesDelete( abs( 'sub.out' ) );
-    opener = will.openerMakeUser({ willfilesPath : subInPath });
+    opener = will.openerMakeManual({ willfilesPath : subInPath });
 
     will.prefer
     ({
@@ -2795,7 +2822,7 @@ function exportSuperIn( test )
   ready
   .then( () =>
   {
-    opener = will.openerMakeUser({ willfilesPath : superInPath });
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
     will.prefer
     ({
       allOfMain : 0,
@@ -2876,10 +2903,10 @@ function exportSuperIn( test )
     test.case = 'export super debug, without out and without recursion';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( abs( 'super.out' ) );
     _.fileProvider.filesDelete( abs( 'sub.out' ) );
-    opener = will.openerMakeUser({ willfilesPath : superInPath });
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
 
     will.prefer
     ({
@@ -2995,7 +3022,7 @@ test
 function exportDefaultPath( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-default-path' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-default-path' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3012,8 +3039,8 @@ function exportDefaultPath( test )
   {
     test.case = 'export willfile with default path';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : abs( 'path' ) });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : abs( 'path' ) });
     return opener.open();
   })
 
@@ -3052,8 +3079,8 @@ function exportDefaultPath( test )
   {
     test.case = 'export willfile with default reflector';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : abs( 'reflector' ) });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : abs( 'reflector' ) });
     return opener.open();
   })
 
@@ -3091,8 +3118,8 @@ function exportDefaultPath( test )
   {
     test.case = 'export willfile with no default export path';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : abs( 'nopath' ) });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : abs( 'nopath' ) });
     return opener.open();
   })
 
@@ -3130,8 +3157,8 @@ function exportDefaultPath( test )
   {
     test.case = 'export willfile with default export path, no file found';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : abs( 'nofile' ) });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : abs( 'nofile' ) });
     return opener.open();
   })
 
@@ -3168,8 +3195,8 @@ function exportDefaultPath( test )
   {
     test.case = 'export willfile with default nonglob export path';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : abs( 'nonglob' ) });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : abs( 'nonglob' ) });
     return opener.open();
   })
 
@@ -3233,7 +3260,7 @@ test
 function exportOutdated( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'inconsistent-outfile' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'inconsistent-outfile' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3252,9 +3279,9 @@ function exportOutdated( test )
   {
     test.case = 'export debug';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( subOutPath );
-    opener = will.openerMakeUser({ willfilesPath : subInPath });
+    opener = will.openerMakeManual({ willfilesPath : subInPath });
     return opener.open();
   })
 
@@ -3315,7 +3342,7 @@ function exportOutdated( test )
   {
     test.case = 'export release, but input willfile is changed';
     _.fileProvider.fileAppend( abs( 'sub.ex.will.yml' ), '\n' );
-    opener = will.openerMakeUser({ willfilesPath : subInPath });
+    opener = will.openerMakeManual({ willfilesPath : subInPath });
     return opener.open();
   })
 
@@ -3385,7 +3412,7 @@ test
 function exportRecursive( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3404,9 +3431,9 @@ function exportRecursive( test )
   {
     test.case = 'export debug';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeUser({ willfilesPath : inPath });
+    opener = will.openerMakeManual({ willfilesPath : inPath });
     return opener.open();
   })
 
@@ -3473,7 +3500,7 @@ test
 function exportDotless( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-dotless-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3494,10 +3521,10 @@ function exportDotless( test )
   {
     test.case = 'export debug';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outSuperDirPath );
     _.fileProvider.filesDelete( outSubDirPath );
-    opener = will.openerMakeUser({ willfilesPath : inPath });
+    opener = will.openerMakeManual({ willfilesPath : inPath });
     return opener.open();
   })
 
@@ -3600,7 +3627,7 @@ test
 function exportDotlessSingle( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3621,10 +3648,10 @@ function exportDotlessSingle( test )
   {
     test.case = 'export debug';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outSuperDirPath );
     _.fileProvider.filesDelete( outSubDirPath );
-    opener = will.openerMakeUser({ willfilesPath : inPath });
+    opener = will.openerMakeManual({ willfilesPath : inPath });
     return opener.open();
   })
 
@@ -3725,7 +3752,7 @@ test
 function exportStepOpts( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-step-opts' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-step-opts' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3744,9 +3771,9 @@ function exportStepOpts( test )
   {
     test.case = 'export debug';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeUser({ willfilesPath : inPath });
+    opener = will.openerMakeManual({ willfilesPath : inPath });
     return opener.open();
   })
 
@@ -3826,7 +3853,7 @@ function exportStepOpts( test )
   .then( () =>
   {
     test.case = 'reopen';
-    opener = will.openerMakeUser({ willfilesPath : outTerminalPath });
+    opener = will.openerMakeManual({ willfilesPath : outTerminalPath });
     return opener.open({ all : 1 });
   })
 
@@ -3893,7 +3920,7 @@ test
 function exportRecursiveUsingSubmodule( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -3914,10 +3941,10 @@ function exportRecursiveUsingSubmodule( test )
   {
     test.case = 'export debug';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outSuperDirPath );
     _.fileProvider.filesDelete( outSubDirPath );
-    opener = will.openerMakeUser({ willfilesPath : inPath });
+    opener = will.openerMakeManual({ willfilesPath : inPath });
     return opener.open();
   })
 
@@ -4004,7 +4031,7 @@ function exportRecursiveUsingSubmodule( test )
 function exportSteps( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4025,10 +4052,10 @@ function exportSteps( test )
   {
     test.case = 'export debug';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outSuperDirPath );
     _.fileProvider.filesDelete( outSubDirPath );
-    opener = will.openerMakeUser({ willfilesPath : inPath });
+    opener = will.openerMakeManual({ willfilesPath : inPath });
     return opener.open();
   })
 
@@ -4171,7 +4198,7 @@ test
 function exportCourrputedOutfileUnknownSection( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-outfile-unknown-section' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-outfile-unknown-section' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4190,9 +4217,9 @@ function exportCourrputedOutfileUnknownSection( test )
     test.case = 'export sub';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
-    opener = will.openerMakeUser({ willfilesPath : subInPath });
+    opener = will.openerMakeManual({ willfilesPath : subInPath });
 
     will.prefer
     ({
@@ -4282,7 +4309,7 @@ test
 function exportCourruptedOutfileSyntax( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-outfile-syntax' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-outfile-syntax' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4301,9 +4328,9 @@ function exportCourruptedOutfileSyntax( test )
     test.case = 'export sub';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
-    opener = will.openerMakeUser({ willfilesPath : subInPath });
+    opener = will.openerMakeManual({ willfilesPath : subInPath });
 
     will.prefer
     ({
@@ -4391,7 +4418,7 @@ test
 function exportCourruptedSubmodulesDisabled( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-submodules-disabled' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-submodules-disabled' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4410,9 +4437,9 @@ function exportCourruptedSubmodulesDisabled( test )
     test.case = 'export super';
 
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
-    opener = will.openerMakeUser({ willfilesPath : superInPath });
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
 
     will.prefer
     ({
@@ -4528,7 +4555,7 @@ function exportCourruptedSubmodulesDisabled( test )
 function exportCourrputedSubmoduleOutfileUnknownSection( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-submodule-outfile-unknown-section' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-submodule-outfile-unknown-section' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4548,8 +4575,8 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
   {
     test.case = 'export super';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : superInPath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
     return opener.open();
   })
 
@@ -4603,8 +4630,8 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
   {
     test.case = 'export super, recursive : 2';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : superInPath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
     return opener.open();
   })
 
@@ -4709,7 +4736,7 @@ test
 function exportCourrputedSubmoduleOutfileFormatVersion( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-submodule-outfile-format-version' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-submodule-outfile-format-version' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4729,8 +4756,8 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
   {
     test.case = 'export super';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : superInPath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
     return opener.open();
   })
 
@@ -4784,8 +4811,8 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
   {
     test.case = 'export super, recursive : 2';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : superInPath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
     return opener.open();
   })
 
@@ -4883,7 +4910,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 function exportsResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'corrupted-submodule-outfile-unknown-section' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-submodule-outfile-unknown-section' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4902,8 +4929,8 @@ function exportsResolve( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : subInPath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : subInPath });
     return opener.open();
   })
 
@@ -4942,7 +4969,7 @@ function exportsResolve( test )
 function buildsResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4960,9 +4987,9 @@ function buildsResolve( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open();
   })
 
@@ -5073,7 +5100,7 @@ buildsResolve.timeOut = 130000;
 function trivialResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'make' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'make' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5100,8 +5127,8 @@ function trivialResolve( test )
   {
     test.case = 'export super';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open();
   })
 
@@ -5141,7 +5168,7 @@ function trivialResolve( test )
 function detailedResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5159,8 +5186,8 @@ function detailedResolve( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : inPath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : inPath });
     return opener.open({ all : 1 });
   })
 
@@ -5204,7 +5231,7 @@ function detailedResolve( test )
 function reflectorResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'composite-reflector' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'composite-reflector' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5227,10 +5254,10 @@ function reflectorResolve( test )
   }
 
   // _.fileProvider.filesDelete( routinePath );
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   // _.fileProvider.filesDelete( outDirPath );
   //
-  // var module = will.openerMakeUser({ willfilesPath : modulePath });
+  // var module = will.openerMakeManual({ willfilesPath : modulePath });
 
   /* - */
 
@@ -5238,9 +5265,9 @@ function reflectorResolve( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open();
   })
 
@@ -5613,7 +5640,7 @@ function reflectorResolve( test )
 function reflectorInheritedResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'reflect-inherit' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-inherit' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5641,9 +5668,9 @@ function reflectorInheritedResolve( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open();
   })
 
@@ -5858,7 +5885,7 @@ function reflectorInheritedResolve( test )
 function superResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-in-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-in-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5875,10 +5902,10 @@ function superResolve( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     // _.fileProvider.filesDelete( abs( 'super.out' ) );
     // _.fileProvider.filesDelete( abs( 'sub.out' ) );
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     debugger;
     return opener.open({ all : 1 });
   })
@@ -5986,7 +6013,7 @@ superResolve.timeOut = 130000;
 function pathsResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6019,9 +6046,9 @@ function pathsResolve( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open();
   })
 
@@ -6060,12 +6087,12 @@ function pathsResolve( test )
     test.identical( resolved, expected );
 
     test.case = '{path::in*=1}/proto, pathNativizing : 1';
-    var resolved = opener.openedModule.resolve({ selector : '{path::in*=1}/proto', pathNativizing : 1, selectorIsPath : 1 })
+    var resolved = opener.openedModule.resolve({ selector : '{path::in*=1}/proto', pathNativizing : 1, selectorIsPath : 1 });
     var expected = _.path.nativize( pin( 'proto' ) );
     test.identical( resolved, expected );
 
     test.case = '{path::in*=1}/proto, pathNativizing : 1';
-    var resolved = opener.openedModule.resolve({ selector : '{path::in*=1}/proto', pathNativizing : 1, selectorIsPath : 0 })
+    var resolved = opener.openedModule.resolve({ selector : '{path::in*=1}/proto', pathNativizing : 1, selectorIsPath : 0 });
     var expected = _.path.nativize( pin( '.' ) ) + '/proto';
     test.identical( resolved, expected );
 
@@ -6076,6 +6103,33 @@ function pathsResolve( test )
 
   ready.then( ( arg ) =>
   {
+
+    test.case = 'nativizing'; /* */
+    var resolved = opener.openedModule.resolve({ selector : 'path::*', pathNativizing : 1, selectorIsPath : 0 });
+    var expected =
+    [
+      'super.ex.will.yml',
+      'super.im.will.yml',
+      'super.ex.will.yml',
+      'super.im.will.yml',
+      'super.out/supermodule.out.will.yml',
+      'super.out',
+      '.',
+      'super',
+      null,
+      'super',
+      null,
+      null,
+      rel( execPath ),
+      'proto',
+      'super.out',
+      '.',
+      'super.out',
+      'super.out/debug',
+      'super.out/release'
+    ]
+    var got = resolved;
+    test.setsAreIdentical( got, _.filter( abs( expected ), ( p ) => p ? _.path.s.nativize( p ) : p ) );
 
     test.case = 'path::* - implicit'; /* */
     var resolved = opener.openedModule.resolve( 'path::*' );
@@ -6190,12 +6244,12 @@ function pathsResolve( test )
       null,
       null,
       rel( execPath ),
-      './proto',
-      './super.out',
+      'proto',
+      'super.out',
       '.',
-      './super.out',
-      './super.out/debug',
-      './super.out/release'
+      'super.out',
+      'super.out/debug',
+      'super.out/release'
     ]
     var got = resolved;
     test.identical( rel( got ), expected );
@@ -6211,29 +6265,30 @@ function pathsResolve( test )
     });
     var expected =
     {
-      'proto' : './proto',
-      'temp' : './super.out',
+      'proto' : 'proto',
+      'temp' : 'super.out',
       'in' : '.',
-      'out' : './super.out',
-      'out.debug' : './super.out/debug',
-      'out.release' : './super.out/release',
+      'out' : 'super.out',
+      'out.debug' : 'super.out/debug',
+      'out.release' : 'super.out/release',
       'will' : path.join( __dirname, '../will/Exec' ),
       'module.dir' : abs( '.' ),
-      'module.willfiles' : abs([ './super.ex.will.yml', './super.im.will.yml' ]),
-      'module.peer.willfiles' : abs( './super.out/supermodule.out.will.yml' ),
-      'module.common' : abs( './super' ),
-      'module.peer.in' : abs( './super.out' ),
-      'module.original.willfiles' : abs([ './super.ex.will.yml', './super.im.will.yml' ]),
-      'local' : abs( './super' ),
+      'module.willfiles' : abs([ 'super.ex.will.yml', 'super.im.will.yml' ]),
+      'module.peer.willfiles' : abs( 'super.out/supermodule.out.will.yml' ),
+      'module.common' : abs( 'super' ),
+      'module.peer.in' : abs( 'super.out' ),
+      'module.original.willfiles' : abs([ 'super.ex.will.yml', 'super.im.will.yml' ]),
+      'local' : abs( 'super' ),
       'download' : null,
       'remote' : null,
       'current.remote' : null,
     }
     var got = _.select( resolved, '*/path' );
     test.identical( got, expected );
-    _.any( resolved, ( e, k ) => test.is( e.identicalWith( opener.openedModule.pathResourceMap[ k ] ) ) );
+    // _.any( resolved, ( e, k ) => test.is( e.identicalWith( opener.openedModule.pathResourceMap[ k ] ) ) );
+    _.any( resolved, ( e, k ) => test.identical( e.path, opener.openedModule.pathResourceMap[ k ].path ) );
     _.any( resolved, ( e, k ) => test.is( e.module === module || e.module === opener.openedModule ) );
-    _.any( resolved, ( e, k ) => test.is( !e.original ) );
+    _.any( resolved, ( e, k ) => test.is( !!e.original ) );
     test.is( _.path.isAbsolute( got.will ) );
 
     test.case = 'path::* - pu:0 mvu:0 pr:in'; /* */
@@ -6319,12 +6374,12 @@ function pathsResolve( test )
       'remote' : null,
       'current.remote' : null,
       'will' : rel( execPath ),
-      'proto' : './proto',
-      'temp' : './super.out',
+      'proto' : 'proto',
+      'temp' : 'super.out',
       'in' : '.',
-      'out' : './super.out',
-      'out.debug' : './super.out/debug',
-      'out.release' : './super.out/release'
+      'out' : 'super.out',
+      'out.debug' : 'super.out/debug',
+      'out.release' : 'super.out/release'
     }
     var got = resolved;
     test.identical( rel( got ), expected );
@@ -6412,12 +6467,12 @@ function pathsResolve( test )
       null,
       null,
       rel( execPath ),
-      './proto',
-      './super.out',
+      'proto',
+      'super.out',
       '.',
-      './super.out',
-      './super.out/debug',
-      './super.out/release'
+      'super.out',
+      'super.out/debug',
+      'super.out/release'
     ]
     var got = _.select( resolved, '*/path' );
     test.identical( rel( got ), expected );
@@ -6508,7 +6563,7 @@ pathsResolve.timeOut = 130000;
 function pathsResolveImportIn( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -6539,8 +6594,8 @@ function pathsResolveImportIn( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open({ all : 1 });
   })
 
@@ -7251,7 +7306,7 @@ pathsResolveImportIn.timeOut = 130000;
 function pathsResolveOfSubmodules( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
   let repoPath = _.path.join( self.suitePath, '_repo' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
@@ -7270,10 +7325,10 @@ function pathsResolveOfSubmodules( test )
   {
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesDelete( repoPath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
     _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeUser({ willfilesPath : abs( './' ) });
+    opener = will.openerMakeManual({ willfilesPath : abs( './' ) });
     return opener.open({ all : 1 });
   })
 
@@ -7347,7 +7402,7 @@ pathsResolveOfSubmodules.timeOut = 130000;
 function pathsResolveOfSubmodulesAndOwn( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules-exported' );
   let repoPath = _.path.join( self.suitePath, '_repo' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
@@ -7369,8 +7424,8 @@ function pathsResolveOfSubmodulesAndOwn( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : abs( './ab/' ) });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : abs( './ab/' ) });
     return opener.open({ all : 1 });
   })
 
@@ -7378,7 +7433,6 @@ function pathsResolveOfSubmodulesAndOwn( test )
   {
 
     test.case = 'path::export';
-    debugger;
     let resolved = opener.openedModule.pathResolve
     ({
       selector : 'path::export',
@@ -7425,7 +7479,7 @@ pathsResolveOfSubmodulesAndOwn.timeOut = 300000;
 function pathsResolveOutFileOfExports( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -7460,8 +7514,8 @@ function pathsResolveOutFileOfExports( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open({ all : 1 });
   })
 
@@ -8229,7 +8283,7 @@ pathsResolveOutFileOfExports.timeOut = 130000;
 function pathsResolveComposite( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'composite-path' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'composite-path' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -8255,8 +8309,8 @@ function pathsResolveComposite( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open({ all : 1 });
   })
 
@@ -8346,7 +8400,7 @@ pathsResolveComposite.timeOut = 130000;
 function pathsResolveComposite2( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'path-composite' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'path-composite' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -8372,8 +8426,8 @@ function pathsResolveComposite2( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open({ all : 1 });
   })
 
@@ -8409,7 +8463,7 @@ pathsResolveComposite2.timeOut = 130000;
 function pathsResolveArray( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'make' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'make' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -8435,8 +8489,8 @@ function pathsResolveArray( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open({ all : 1 });
   })
 
@@ -8490,6 +8544,157 @@ function pathsResolveArray( test )
 
 //
 
+function pathsResolveResolvedPath( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'make' );
+  let modulePath = a.abs( 'v1' );
+  let opener;
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : modulePath });
+    return opener.open({ all : 1 });
+  })
+
+  a.ready.then( ( arg ) =>
+  {
+    let module = opener.openedModule;
+
+    var src = 'path::produced.txt';
+    test.case = src;
+    var exp = a.abs( 'file/Produced.txt2' );
+    var got = module.pathResolve
+    ({
+      selector : src,
+      prefixlessAction : 'resolved',
+      pathResolving : 'in',
+    });
+    test.identical( got, exp );
+
+    var src = 'path::file';
+    test.case = src;
+    var exp = a.abs( 'file' );
+    var got = module.pathResolve
+    ({
+      selector : src,
+      prefixlessAction : 'resolved',
+      pathResolving : 'in',
+    });
+    test.identical( got, exp );
+
+    var src = 'some';
+    test.case = src;
+    var exp = 'some';
+    var got = module.pathResolve
+    ({
+      selector : src,
+      prefixlessAction : 'resolved',
+      pathResolving : 'in',
+      selectorIsPath : 0,
+    });
+    test.identical( got, exp );
+
+    var src = 'some';
+    test.case = src;
+    var exp = 'some';
+    var got = module.resolve
+    ({
+      selector : src,
+      prefixlessAction : 'resolved',
+      pathResolving : 'in',
+    });
+    test.identical( got, exp );
+
+    var src = 'some';
+    test.case = src;
+    var exp = a.abs( 'some' );
+    var got = module.pathResolve
+    ({
+      selector : src,
+      prefixlessAction : 'resolved',
+      pathResolving : 'in',
+    });
+    test.identical( got, exp );
+
+    var src = 'some';
+    test.case = src;
+    var exp = a.abs( 'some' );
+    var got = module.pathResolve
+    ({
+      selector : src,
+      prefixlessAction : 'resolved',
+      pathResolving : 'in',
+      defaultResourceKind : 'path',
+    });
+    test.identical( got, exp );
+
+    var src = 'some';
+    test.case = src;
+    var exp = a.abs( 'some' );
+    var got = module.pathResolve
+    ({
+      selector : src,
+      prefixlessAction : 'resolved',
+      pathResolving : 'in',
+      selectorIsPath : 1,
+    });
+    test.identical( got, exp );
+
+    test.case = 'empty str';
+    var src = '';
+    var exp = '';
+    var got = module.pathResolve
+    ({
+      selector : src,
+      prefixlessAction : 'resolved',
+      pathResolving : 'in',
+      defaultResourceKind : 'path',
+      selectorIsPath : 1,
+    });
+    test.identical( got, exp );
+
+    test.case = 'null';
+    var src = null;
+    var exp = null;
+    var got = module.pathResolve
+    ({
+      selector : src,
+      prefixlessAction : 'resolved',
+      pathResolving : 'in',
+      defaultResourceKind : 'path',
+      selectorIsPath : 1,
+    });
+    test.identical( got, exp );
+
+    return null;
+  });
+
+  a.ready.finally( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.is( err === undefined );
+    opener.finit();
+    return arg;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+pathsResolveResolvedPath.description =
+`
+relative resolved path absolutized if pathResolving:1
+`
+
+//
+
 /*
   path::path::export cant be resolved
   so error should be throwen
@@ -8500,7 +8705,7 @@ function pathsResolveArray( test )
 function pathsResolveFailing( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -8527,9 +8732,9 @@ function pathsResolveFailing( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open({ all : 1 });
   })
 
@@ -8616,7 +8821,7 @@ function pathsResolveFailing( test )
 function modulesEach( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'two-in-exported' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'two-in-exported' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -8632,8 +8837,8 @@ function modulesEach( test )
   {
     test.case = 'all : 0';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
 
     will.prefer
     ({
@@ -8701,8 +8906,8 @@ function modulesEach( test )
   {
     test.case = 'all : 1';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
 
     will.prefer
     ({
@@ -8740,7 +8945,7 @@ function modulesEach( test )
 function submodulesResolve( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
   let repoPath = _.path.join( self.suitePath, '_repo' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
@@ -8759,10 +8964,10 @@ function submodulesResolve( test )
   {
   _.fileProvider.filesDelete( routinePath );
   _.fileProvider.filesDelete( repoPath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
   _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
 
     will.prefer
     ({
@@ -8789,8 +8994,8 @@ function submodulesResolve( test )
     test.identical( submodule.opener.commonPath, abs( '.module/Tools/out/wTools.out' ) );
     test.identical( submodule.opener.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will#master' ) );
 
-    test.is( !submodule.isDownloaded );
-    test.is( !submodule.opener.isDownloaded );
+    test.is( !submodule.hasFiles );
+    test.is( !submodule.opener.hasFiles );
     test.is( !submodule.opener.openedModule );
 
     test.close( 'not downloaded' );
@@ -8811,8 +9016,8 @@ function submodulesResolve( test )
     test.case = 'trivial';
     var submodule = opener.openedModule.submodulesResolve({ selector : 'Tools' });
     test.is( submodule instanceof will.ModulesRelation );
-    test.is( submodule.isDownloaded );
-    test.is( submodule.opener.isDownloaded );
+    test.is( submodule.hasFiles );
+    test.is( submodule.opener.hasFiles );
     test.is( !!submodule.opener );
     test.identical( submodule.name, 'Tools' );
 
@@ -8865,7 +9070,7 @@ submodulesResolve.timeOut = 300000;
 function submodulesDeleteAndDownload( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-del-download' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-del-download' );
   let repoPath = _.path.join( self.suitePath, '_repo' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
@@ -8884,10 +9089,10 @@ function submodulesDeleteAndDownload( test )
   {
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesDelete( repoPath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
     _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
     return opener.open();
   })
 
@@ -8943,7 +9148,7 @@ function submodulesDeleteAndDownload( test )
           '.module/PathBasic/.im.will.yml'
         ]
       ]
-      test.identical( _.select( will.willfilesArray, '*/filePath' ), abs( willfilesArray ) );
+      test.identical( _.select( will.willfilesArray, '*/filePath' ), abs( willfilesArray ) ); debugger;
 
       var exp =
       [
@@ -9101,7 +9306,7 @@ submodulesDeleteAndDownload.timeOut = 300000;
 function customLogger( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'simple' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'simple' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -9113,10 +9318,10 @@ function customLogger( test )
   let will = new _.Will({ logger });
 
   _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( outDirPath );
 
-  var opener = will.openerMakeUser({ willfilesPath : modulePath });
+  var opener = will.openerMakeManual({ willfilesPath : modulePath });
   opener.find();
 
   return opener.open().split().then( () =>
@@ -9178,7 +9383,7 @@ function customLogger( test )
 function resourcePathRemotePreserved( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'export-informal' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'export-informal' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -9193,8 +9398,8 @@ function resourcePathRemotePreserved( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : informalPath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : informalPath });
     return opener.open();
   })
   .then( () =>
@@ -9218,7 +9423,7 @@ function resourcePathRemotePreserved( test )
 
   .then( () =>
   {
-    opener = will.openerMakeUser({ willfilesPath : supermodulePath });
+    opener = will.openerMakeManual({ willfilesPath : supermodulePath });
     return opener.open();
   })
   .then( () =>
@@ -9243,7 +9448,7 @@ function resourcePathRemotePreserved( test )
 function moduleIsNotValid( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let modulePath = abs( './good' );
@@ -9257,8 +9462,8 @@ function moduleIsNotValid( test )
   {
     test.case = 'download submodule';
     _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
-    opener = will.openerMakeUser({ willfilesPath : modulePath });
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    opener = will.openerMakeManual({ willfilesPath : modulePath });
 
     will.prefer
     ({
@@ -9289,7 +9494,7 @@ function moduleIsNotValid( test )
     test.case = 'repopen module';
     let outWillFilePath = _.path.join( downloadPath, 'out/wPathBasic.out.will.yml' );
     debugger;
-    opener = will.openerMakeUser({ willfilesPath : outWillFilePath });
+    opener = will.openerMakeManual({ willfilesPath : outWillFilePath });
     return opener.open({ all : 1, resourcesFormed : 0 });
   })
 
@@ -9330,6 +9535,7 @@ var Self =
     repoDirPath : null,
     find : null,
     findAll : null,
+    assetFor,
     abs_functor,
     rel_functor
   },
@@ -9383,6 +9589,7 @@ var Self =
     pathsResolveComposite,
     pathsResolveComposite2,
     pathsResolveArray,
+    pathsResolveResolvedPath,
     pathsResolveFailing,
 
     modulesEach,
