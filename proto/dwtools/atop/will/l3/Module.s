@@ -185,6 +185,9 @@ function init( o )
   if( module.willfilesPath === null )
   module.willfilesPath = _.select( module.willfilesArray, '*/filePath' );
 
+  if( module.id === 1086 )
+  debugger;
+
   module._nameChanged();
 
   if( will.verosity >= 5 )

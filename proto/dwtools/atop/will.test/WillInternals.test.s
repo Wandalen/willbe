@@ -1457,7 +1457,7 @@ function openerClone( test )
     test.identical( rel( opener2.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
     test.identical( rel( opener2.dirPath ), '.' );
     test.identical( rel( opener2.commonPath ), 'super' );
-    test.identical( rel( opener2.localPath ), null );
+    test.identical( rel( opener2.localPath ), 'super' );
     test.identical( rel( opener2.remotePath ), null );
     test.identical( opener2.formed, 0 );
 
@@ -1480,7 +1480,7 @@ function openerClone( test )
     test.identical( rel( opener2.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
     test.identical( rel( opener2.dirPath ), '.' );
     test.identical( rel( opener2.commonPath ), 'super' );
-    test.identical( rel( opener2.localPath ), null );
+    test.identical( rel( opener2.localPath ), 'super' );
     test.identical( rel( opener2.remotePath ), null );
 
     opener2.find();
@@ -1538,10 +1538,11 @@ function openerClone( test )
     test.identical( rel( opener.remotePath ), null );
 
     test.description = 'paths of opener2';
+    test.identical( opener2.formed, 0 );
     test.identical( rel( opener2.willfilesPath ), 'sub' );
     test.identical( rel( opener2.dirPath ), '.' );
     test.identical( rel( opener2.commonPath ), 'sub' );
-    test.identical( rel( opener2.localPath ), null );
+    test.identical( rel( opener2.localPath ), 'sub' );
     test.identical( rel( opener2.downloadPath ), null );
     test.identical( rel( opener2.remotePath ), null );
 
@@ -8994,8 +8995,8 @@ function submodulesResolve( test )
     test.identical( submodule.opener.commonPath, abs( '.module/Tools/out/wTools.out' ) );
     test.identical( submodule.opener.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will#master' ) );
 
-    test.is( !submodule.hasFiles );
-    test.is( !submodule.opener.hasFiles );
+    // test.is( !submodule.hasFiles );
+    test.is( !submodule.opener.repo.hasFiles );
     test.is( !submodule.opener.openedModule );
 
     test.close( 'not downloaded' );
@@ -9016,8 +9017,9 @@ function submodulesResolve( test )
     test.case = 'trivial';
     var submodule = opener.openedModule.submodulesResolve({ selector : 'Tools' });
     test.is( submodule instanceof will.ModulesRelation );
-    test.is( submodule.hasFiles );
-    test.is( submodule.opener.hasFiles );
+    // test.is( submodule.hasFiles );
+    test.is( submodule.opener.repo.hasFiles );
+    test.is( submodule.opener.repo === submodule.opener.openedModule.repo ); 
     test.is( !!submodule.opener );
     test.identical( submodule.name, 'Tools' );
 

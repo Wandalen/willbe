@@ -311,6 +311,13 @@ function moduleAdopt( module )
 
   _.assert( opener.openedModule === module );
   _.assert( _.arrayHas( module.userArray, opener ) );
+  _.assert( opener.repo === module.repo );
+
+  // if( !opener.repo.hasFiles )
+  // {
+  //   debugger;
+  //   opener.repo.hasFiles = true;
+  // }
 
   return module;
 }
