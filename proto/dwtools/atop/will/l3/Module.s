@@ -5796,17 +5796,20 @@ function optionsForOpenerExport()
     downloadPath : null,
     remotePath : null,
 
-    isRemote : null,
-    isUpToDate : null,
+    repo : null,
+
+    // isRemote : null,
+    // isUpToDate : null,
 
   }
 
   let result = _.mapOnly( module, fields );
 
-  debugger; xxx
+  // debugger; xxx
   // result.hasFiles = true;
   // result.isRepository = true;
-  result.repo = module.repo;
+  // result.repo = module.repo;
+
   result.willfilesArray = _.entityMake( result.willfilesArray );
 
   return result;

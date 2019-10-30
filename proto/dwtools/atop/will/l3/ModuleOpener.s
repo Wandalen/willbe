@@ -1089,7 +1089,7 @@ function _repoForm()
   else
   {
     opener._.localPath = opener.commonPath;
-    _.assert( opener.repo === null );
+    // _.assert( opener.repo === null );
     if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
     // opener.repo = new _.Will.Repository
     opener.repo = will.repoFrom
