@@ -2398,7 +2398,7 @@ function modulesDownload_body( o )
         () => 'Submodule' + ( variant.opener ? variant.opener.qualifiedName : n ) + ' was not preformed to download it'
       );
 
-      if( !variant.isRemote )
+      if( !variant.isRemote || !variant.relation )
       return variantLocalMaybe( variant );
       if( variant.relation && !variant.relation.enabled )
       return variantLocalMaybe( variant );

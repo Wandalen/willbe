@@ -18508,6 +18508,9 @@ var Self =
     exportRewritesOutFile,
     exportWithRemoteSubmodules,
     exportDiffDownloadPathsRegular,
+    /* xxx : implement same test for hierarchy-remote and irregular */
+    /* xxx : implement clean tests */
+    /* xxx : refactor ** clean */
     // exportAuto, // xxx : later
 
     importPathLocal,
@@ -18547,6 +18550,7 @@ var Self =
     submodulesDownloadThrowing,
     submodulesDownloadDiffDownloadPathsRegular,
     submodulesDownloadDiffDownloadPathsIrregular,
+    /* xxx : implement same test for hierarchy-remote */
 
     submodulesUpdateThrowing,
     submodulesAgreeThrowing,
