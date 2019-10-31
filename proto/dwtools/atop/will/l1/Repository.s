@@ -420,7 +420,7 @@ function status( o )
     _.assert( _.boolIs( repo.hasFiles ) );
 
     if( repo.isRepository )
-    return end( repo.hasLocalChanges );
+    return end( !repo.hasLocalChanges );
     else
     return end( !repo.hasFiles )
 

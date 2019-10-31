@@ -1538,9 +1538,26 @@ function _repoDownload( o )
       _.assert( _.boolIs( deleting ) );
       if( deleting )
       {
+        safeToDeleteCheck();
         fileProvider.filesDelete({ filePath : opener.downloadPath, throwing : 0, sync : 1 });
       }
       return deleting;
+    }
+
+    function safeToDeleteCheck()
+    {
+      if( opener.repo.isRepository )
+      if( !opener.repo.safeToDelete )
+      {
+       _.assert( opener.repo.hasLocalChanges === true );
+       throw _.errBrief
+       (
+         'Module at', opener.decoratedAbsoluteName, `needs to be deleted, but has local changes.`,
+         '\nPlease commit and push your local changes and try again.'
+       );
+      }
+
+      _.assert( opener.repo.hasLocalChanges === false );
     }
 
   }
