@@ -1233,6 +1233,7 @@ function _repoDownload( o )
   let downloading = null;
   let origin = null;
   let hasLocalChanges = null;
+  let hasLocalUncommittedChanges = null;
   let isValid = null;
   let reopened = [];
   let dirStatusMap = Object.create( null );
@@ -1422,7 +1423,7 @@ function _repoDownload( o )
     _.assert( opener.repo.hasFiles === true );
     _.assert( opener.repo.isRepository === true );
 
-    if( hasLocalChangesReform() )
+    if( hasLocalUncommittedChangesReform() )
     throw _.errBrief
     (
       'Module at', opener.decoratedAbsoluteName, 'needs to be updated, but has local changes.',
@@ -1433,14 +1434,14 @@ function _repoDownload( o )
 
   /* */
 
-  function hasLocalChangesReform()
+  function hasLocalUncommittedChangesReform()
   {
-    if( hasLocalChanges !== null )
-    return hasLocalChanges;
+    if( hasLocalUncommittedChanges !== null )
+    return hasLocalUncommittedChanges;
     // hasLocalChanges = opener.repoHasLocalChanges();
-    hasLocalChanges = opener.repo.hasLocalChanges;
-    _.assert( _.boolIs( hasLocalChanges ) );
-    return hasLocalChanges;
+    hasLocalUncommittedChanges = opener.repo.hasLocalUncommittedChanges;
+    _.assert( _.boolIs( hasLocalUncommittedChanges ) );
+    return hasLocalUncommittedChanges;
   }
 
   /* */

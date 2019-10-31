@@ -111,6 +111,7 @@ statusInvalidate.defaults =
   hasFiles : null,
   isRepository : null,
   hasLocalChanges : null,
+  hasLocalUncommittedChanges : null,
   isUpToDate : null,
   remoteIsValid : null,
   safeToDelete : null,
@@ -206,6 +207,10 @@ function status( o )
     if( o.hasLocalChanges )
     if( o.reset || repo[ Symbol.for( 'hasLocalChanges' ) ] === null )
     ready.also( hasLocalChangesReform );
+
+    if( o.hasLocalUncommittedChanges )
+    if( o.reset || repo[ Symbol.for( 'hasLocalUncommittedChanges' ) ] === null )
+    ready.also( hasLocalUncommittedChangesReform );
 
     if( o.isUpToDate )
     if( o.reset || repo[ Symbol.for( 'isUpToDate' ) ] === null )
@@ -361,6 +366,44 @@ function status( o )
     {
       _.assert( _.boolIs( result ) );
       repo._.hasLocalChanges = result;
+      return result;
+    }
+
+  }
+
+  //
+
+  function hasLocalUncommittedChangesReform()
+  {
+
+    // _.assert( !!repo.willfilesPath || !!repo.dirPath );
+    _.assert( arguments.length === 0 );
+    _.assert( _.boolIs( repo.isRepository ) );
+
+    if( !repo.isRepository )
+    return end( false );
+
+    // let vcs = will.vcsToolsFor( repo.remotePath );
+    // if( !_.arrayHas( vcs.protocols, 'git' ) )
+    // return end( false );
+
+    // qqq : use remoteProvider
+    // let remoteProvider = will.vcsProviderFor( repo.remotePath );
+    // return remoteProvider.hasLocalChanges( repo.downloadPath );
+    let result = vcs.hasLocalChanges
+    ({
+      localPath : repo.downloadPath,
+      uncommitted : 1,
+      unpushed : 0,
+      sync : 1,
+    });
+
+    return end( result );
+
+    function end( result )
+    {
+      _.assert( _.boolIs( result ) );
+      repo._.hasLocalUncommittedChanges = result;
       return result;
     }
 
@@ -1014,6 +1057,7 @@ let LocalDefaults =
   hasFiles : true,
   isRepository : true,
   hasLocalChanges : false,
+  hasLocalUncommittedChanges : false,
   isUpToDate : true,
   remoteIsValid : true,
   safeToDelete : false,
@@ -1104,6 +1148,7 @@ let Accessors =
   hasFiles : { getter : _statusGetter_functor( 'hasFiles' ), readOnly : 1 },
   isRepository : { getter : _statusGetter_functor( 'isRepository' ), readOnly : 1 },
   hasLocalChanges : { getter : _statusGetter_functor( 'hasLocalChanges' ), readOnly : 1 },
+  hasLocalUncommittedChanges : { getter : _statusGetter_functor( 'hasLocalUncommittedChanges' ), readOnly : 1 },
   remoteIsValid : { getter : _statusGetter_functor( 'remoteIsValid' ), readOnly : 1 },
   isUpToDate : { getter : _statusGetter_functor( 'isUpToDate' ), readOnly : 1 },
   safeToDelete : { getter : _statusGetter_functor( 'safeToDelete' ), readOnly : 1 },
