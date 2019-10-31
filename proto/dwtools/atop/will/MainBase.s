@@ -2441,10 +2441,17 @@ function modulesDownload_body( o )
 
     if( o.dry )
     {
-      return variant.opener._repoIsFresh({ mode : o.mode })
-      .then( ( isFreash ) =>
+      let statusOptions =
       {
-        if( !isFreash )
+        downloadRequired : o.mode === 'download',
+        updateRequired : o.mode === 'update',
+        agreeRequired : o.mode === 'agree',
+      }
+
+      return variant.opener.repo.status( statusOptions )
+      .then( ( result ) =>
+      {
+        if( result.downloadRequired || result.updateRequired || result.agreeRequired )
         variantDownloaded( variant );
         return null;
       })

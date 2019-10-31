@@ -192,43 +192,43 @@ function status( o )
   {
 
     if( o.dirExists )
-    if( o.reset || repo.dirExists === null )
+    if( o.reset || repo[ Symbol.for( 'dirExists' ) ] === null )
     ready.also( dirExistsReform );
 
     if( o.hasFiles )
-    if( o.reset || repo.hasFiles === null )
+    if( o.reset || repo[ Symbol.for( 'hasFiles' ) ] === null )
     ready.also( hasFilesReform );
 
     if( o.isRepository )
-    if( o.reset || repo.isRepository === null )
+    if( o.reset || repo[ Symbol.for( 'isRepository' ) ] === null )
     ready.also( isRepositoryReform );
 
     if( o.hasLocalChanges )
-    if( o.reset || repo.hasLocalChanges === null )
+    if( o.reset || repo[ Symbol.for( 'hasLocalChanges' ) ] === null )
     ready.also( hasLocalChangesReform );
 
     if( o.isUpToDate )
-    if( o.reset || repo.isUpToDate === null )
+    if( o.reset || repo[ Symbol.for( 'isUpToDate' ) ] === null )
     ready.also( isUpToDateReform );
 
     if( o.remoteIsValid )
-    if( o.reset || repo.remoteIsValid === null )
+    if( o.reset || repo[ Symbol.for( 'remoteIsValid' ) ] === null )
     ready.also( remoteIsValidReform );
 
     if( o.safeToDelete )
-    if( o.reset || repo.safeToDelete === null )
+    if( o.reset || repo[ Symbol.for( 'safeToDelete' ) ] === null )
     ready.also( safeToDeleteReform );
 
     if( o.downloadRequired )
-    if( o.reset || repo.downloadRequired === null )
+    if( o.reset || repo[ Symbol.for( 'downloadRequired' ) ] === null )
     ready.then( downloadRequiredReform );
 
     if( o.updateRequired )
-    if( o.reset || repo.updateRequired === null )
+    if( o.reset || repo[ Symbol.for( 'updateRequired' ) ] === null )
     ready.then( updateRequiredReform );
 
     if( o.agreeRequired )
-    if( o.reset || repo.agreeRequired === null )
+    if( o.reset || repo[ Symbol.for( 'agreeRequired' ) ] === null )
     ready.then( agreeRequiredReform );
 
   }

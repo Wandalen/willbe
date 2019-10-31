@@ -1468,18 +1468,18 @@ function _repoDownload( o )
   function remoteIsValidReform()
   {
 
-    if( remoteIsValid !== null )
-    return remoteIsValid;
+    if( origin !== null )
+    return origin;
 
     let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
 
-    remoteIsValid = gitProvider.hasRemote
+    origin = gitProvider.hasRemote
     ({
       localPath : opener.downloadPath,
       remotePath : opener.remotePath
     });
 
-    return remoteIsValid;
+    return origin;
   }
 
   /* */
