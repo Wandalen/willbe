@@ -375,7 +375,7 @@ function isAvailableGet()
   if( !relation.opener )
   return false;
 
-  if( !relation.opener.hasFiles )
+  if( !relation.opener.repo.hasFiles )
   return false;
 
   if( !relation.opener.isOpened() )
