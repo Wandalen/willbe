@@ -4490,34 +4490,100 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
     test.identical( got.exitCode, 0 );
 
     let exp =
+// `
+//  +-- module::z
+//    +-- module::a
+//    | +-- module::Tools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
+//    | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+//    | +-- module::a0
+//    |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+//    |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+//    +-- module::b
+//    | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
+//    | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+//    +-- module::c
+//    | +-- module::a0
+//    | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+//    | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+//    | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
+//    +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+// `
 `
  +-- module::z
    +-- module::a
-   | +-- module::Tools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
-   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
+   | | +-- module::wFiles - path::remote:=npm:///wFiles
+   | | +-- module::wCloner - path::remote:=npm:///wcloner
+   | | +-- module::wStringer - path::remote:=npm:///wstringer
+   | | +-- module::wTesting - path::remote:=npm:///wTesting
+   | | +-- module::wSelector - path::remote:=npm:///wselector
+   | | +-- module::wTools
+   | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::wTools - path::remote:=npm:///wTools
+   | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+   | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
+   | | +-- module::wPathTools
+   | | +-- module::wFiles - path::remote:=npm:///wFiles
+   | | +-- module::wTesting - path::remote:=npm:///wTesting
    | +-- module::a0
-   |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   |   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   |   | +-- module::wTools - path::remote:=npm:///wTools
+   |   | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+   |   | +-- module::wArraySorted - path::remote:=npm:///warraysorted
+   |   | +-- module::wPathTools
+   |   | +-- module::wFiles - path::remote:=npm:///wFiles
+   |   | +-- module::wTesting - path::remote:=npm:///wTesting
+   |   +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   |     +-- module::wTools - path::remote:=npm:///wTools
+   |     +-- module::wFiles - path::remote:=npm:///wFiles
+   |     +-- module::wTesting - path::remote:=npm:///wTesting
    +-- module::b
-   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
+   | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::wTools - path::remote:=npm:///wTools
+   | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+   | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
+   | | +-- module::wPathTools
+   | | +-- module::wFiles - path::remote:=npm:///wFiles
+   | | +-- module::wTesting - path::remote:=npm:///wTesting
    | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
    +-- module::c
    | +-- module::a0
-   | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   | | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | | +-- module::wTools - path::remote:=npm:///wTools
+   | | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+   | | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
+   | | | +-- module::wPathTools
+   | | | +-- module::wFiles - path::remote:=npm:///wFiles
+   | | | +-- module::wTesting - path::remote:=npm:///wTesting
+   | | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   | |   +-- module::wTools - path::remote:=npm:///wTools
+   | |   +-- module::wFiles - path::remote:=npm:///wFiles
+   | |   +-- module::wTesting - path::remote:=npm:///wTesting
    | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
-   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+     +-- module::wTools - path::remote:=npm:///wTools
+     +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+     +-- module::wArraySorted - path::remote:=npm:///warraysorted
+     +-- module::wPathTools
+     +-- module::wFiles - path::remote:=npm:///wFiles
+     +-- module::wTesting - path::remote:=npm:///wTesting
 `
+
     test.identical( _.strCount( got.output, exp ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::' ), 16 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 58 );
     test.identical( _.strCount( got.output, '+-- module::z' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::a' ), 3 );
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::wTools' ), 9 );
+    test.identical( _.strCount( got.output, '+-- module::wPathTools' ), 10 );
+    test.identical( _.strCount( got.output, '+-- module::wPathBasic' ), 7 );
+    test.identical( _.strCount( got.output, '+-- module::wUriBasic' ), 0 ); /* xxx */
+    test.identical( _.strCount( got.output, '+-- module::wProto' ), 0 );
+    test.identical( _.strCount( got.output, '+-- module::Tools' ), 0 );
+    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 0 );
+    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 0 );
     test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
 
@@ -6317,8 +6383,8 @@ function cleanRecursive( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 25 );
-    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
     return null;
@@ -6331,7 +6397,7 @@ function cleanRecursive( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 33 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 31 );
 
     var exp =
     [
@@ -6479,7 +6545,7 @@ function cleanDisabledModule( test )
     var files = _.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 0 );
-    test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 0 );
+    test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
 
     return null;
   })
@@ -7634,7 +7700,7 @@ function exportMixed( test )
       // {
       //   "criterion" : { "predefined" : 1 }
       // },
-      "download" : { "path" : `../.module/Proto`, "criterion" : { "predefined" : 1 } },
+      "download" : { "path" : `../.module/Proto`/*, "criterion" : { "predefined" : 1 }*/ },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
@@ -9116,6 +9182,7 @@ function exportBroken( test )
       },
       criterion :
       {
+        generated : 1,
         default : 1,
         debug : 1,
         raw : 1,
@@ -9137,6 +9204,7 @@ function exportBroken( test )
       },
       criterion :
       {
+        generated : 1,
         default : 1,
         debug : 1,
         raw : 1,
@@ -10219,50 +10287,6 @@ exportRecursiveLocal.timeOut = 300000;
 
 //
 
-function exportRecursiveRemote( test )
-{
-  let self = this;
-  let a = self.assetFor( test, 'export-in-out' );
-
-  a.reflect();
-
-  /* - */
-
-  a.start({ execPath : '.with c .clean recursive:2' })
-  a.start({ execPath : '.with c .export.recursive' })
-
-  .finally( ( err, got ) =>
-  {
-    test.case = 'first';
-
-    test.is( !err );
-    test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'Exported module::' ), 6 );
-
-    var files = _.fileProvider.dirRead( a.abs( '.' ) );
-    test.identical( files, [ '.module', 'a', 'c.will.yml', 'out' ] );
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) );
-    test.identical( files, [ 'PathTools', 'UriBasic' ] );
-    var files = _.fileProvider.dirRead( a.abs( 'out' ) );
-    test.identical( files, [ 'c.out.will.yml', 'debug' ] );
-
-    var files = _.fileProvider.dirRead( a.abs( 'a' ) );
-    test.identical( files, [ '.module', 'out', 'will.yml' ] );
-    var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
-    test.identical( files, [ 'Proto', 'Tools' ] );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-} /* end of function exportRecursiveRemote */
-
-exportRecursiveRemote.timeOut = 300000;
-
-//
-
 function exportDotless( test )
 {
   let self = this;
@@ -10775,8 +10799,8 @@ function exportWithRemoteSubmodules( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 25 );
-    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
     return null;
@@ -10860,73 +10884,14 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 34 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 36 );
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( got.output, 'Exported module::' ), 8 );
-    test.identical( _.strCount( got.output, '+ 0/7 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s) of' ), 0 );
 
     return null;
   })
-
-  /* - */
-
-  // a.ready
-  //
-  // .then( () =>
-  // {
-  //   test.case = '.with c .submodules.download recursive:2';
-  //   a.reflect();
-  //   return null;
-  // })
-  //
-  // a.start( '.with c .clean recursive:2' )
-  // a.start( '.with c .submodules.download recursive:2' )
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.identical( got.exitCode, 0 );
-  //
-  //   var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
-  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   test.identical( _.strCount( got.output, '! Failed to open' ), 4 );
-  //   test.identical( _.strCount( got.output, '. Opened .' ), 26 );
-  //   test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
-  //   test.identical( _.strCount( got.output, 'was downloaded' ), 6 );
-  //   test.identical( _.strCount( got.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
-  //
-  //   return null;
-  // })
-  //
-  // a.start( '.with c .submodules.download recursive:2' )
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.case = 'second';
-  //   test.identical( got.exitCode, 0 );
-  //
-  //   var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
-  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-  //   test.identical( _.strCount( got.output, '. Opened .' ), 26 );
-  //   test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
-  //   test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
-  //   test.identical( _.strCount( got.output, '+ 0/7 submodule(s) of module::c were downloaded' ), 1 );
-  //
-  //   return null;
-  // })
 
   /* - */
 
@@ -11260,7 +11225,7 @@ function importLocalRepo( test )
       // {
       //   "criterion" : { "predefined" : 1 }
       // },
-      "download" : { "path" : `Proto`, 'criterion' : { 'predefined' : 1 } },
+      "download" : { "path" : `Proto` },
       "export" : { "path" : `{path::download}/proto/**` },
       "temp" : { "path" : `../out` },
       "exported.dir.export" :
@@ -11510,13 +11475,13 @@ function reflectNothingFromSubmodules( test )
           "filePath" : { "**" : "" },
           "prefixPath" : "../proto"
         },
-        "criterion" : { "default" : 1, "export" : 1 },
+        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "mandatory" : 1
       },
       "exported.files.proto.export" :
       {
         "src" : { "filePath" : { 'path::exported.files.proto.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export", 'recursive' : 0 },
-        "criterion" : { "default" : 1, "export" : 1 },
+        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "recursive" : 0,
         "mandatory" : 1
       }
@@ -13484,9 +13449,9 @@ function shellVerbosity( test )
     test.case = '.build verbosity.0';
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from start\' )"' ), 0 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 0 );
     test.identical( _.strCount( got.output, routinePath ), 1 );
-    test.identical( _.strCount( got.output, 'message from start' ), 0 );
+    test.identical( _.strCount( got.output, 'message from shell' ), 0 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
     return null;
@@ -13501,9 +13466,9 @@ function shellVerbosity( test )
     test.case = '.build verbosity.1';
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from start\' )"' ), 1 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
     test.identical( _.strCount( got.output, routinePath ), 1 );
-    test.identical( _.strCount( got.output, 'message from start' ), 1 );
+    test.identical( _.strCount( got.output, 'message from shell' ), 1 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
     return null;
@@ -13518,9 +13483,9 @@ function shellVerbosity( test )
     test.case = '.build verbosity.2';
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from start\' )"' ), 1 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
     test.identical( _.strCount( got.output, routinePath ), 1 );
-    test.identical( _.strCount( got.output, 'message from start' ), 2 );
+    test.identical( _.strCount( got.output, 'message from shell' ), 2 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
     return null;
@@ -13535,9 +13500,9 @@ function shellVerbosity( test )
     test.case = '.build verbosity.3';
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from start\' )"' ), 1 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
     test.identical( _.strCount( got.output, routinePath ), 2 );
-    test.identical( _.strCount( got.output, 'message from start' ), 2 );
+    test.identical( _.strCount( got.output, 'message from shell' ), 2 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
     return null;
@@ -13552,9 +13517,9 @@ function shellVerbosity( test )
     test.case = 'verbosity:5';
 
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from start\' )"' ), 1 );
+    test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
     test.identical( _.strCount( got.output, routinePath ), 2 );
-    test.identical( _.strCount( got.output, 'message from start' ), 2 );
+    test.identical( _.strCount( got.output, 'message from shell' ), 2 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 1 );
 
     return null;
@@ -18146,10 +18111,6 @@ fixateDetached.timeOut = 500000;
   runWillbe checks if willbe can be terminated on early start from terminal when executed as child process using ExecUnrestricted script
 */
 
-/*
-qqq : attention required
-*/
-
 function runWillbe( test )
 {
 
@@ -18426,7 +18387,7 @@ var Self =
 
     openWith,
     openEach,
-    // withMixed, // xxx : later
+    withMixed, /* qqq : please fix */
     // eachMixed, // xxx : later
     withList,
     // eachList, // xxx : later
@@ -18475,7 +18436,7 @@ var Self =
     buildSingleModule,
     buildSingleStep,
     buildSubmodules,
-    buildDetached,
+    buildDetached, /* qqq : have a look, please */
 
     exportSingle,
     exportItself,
@@ -18501,7 +18462,6 @@ var Self =
     exportRecursive,
     exportRecursiveUsingSubmodule,
     exportRecursiveLocal,
-    exportRecursiveRemote,
     exportDotless,
     exportDotlessSingle,
     exportTracing,
@@ -18514,11 +18474,11 @@ var Self =
     // exportAuto, // xxx : later
 
     importPathLocal,
-    importLocalRepo,
+    // importLocalRepo, /* xxx : later */
     importOutWithDeletedSource,
 
     reflectNothingFromSubmodules,
-    reflectGetPath,
+    reflectGetPath, /* xxx : fix */
     reflectSubdir,
     reflectSubmodulesWithBase,
     reflectComposite,
