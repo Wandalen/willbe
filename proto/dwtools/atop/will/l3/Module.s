@@ -588,7 +588,7 @@ function precopy2( o )
   module.outPath = o.outPath;
 
   if( o.about )
-  module.about = o.about
+  module.about = o.about;
   if( o.pathResourceMap )
   module.pathResourceMap = o.pathResourceMap;
 
@@ -3652,6 +3652,8 @@ function _peerChanged()
   let will = module.will;
 
   if( !will )
+  return;
+  if( !module.dirPath )
   return;
 
   if( module.isOut )
