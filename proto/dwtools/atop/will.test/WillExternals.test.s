@@ -16315,7 +16315,7 @@ function submodulesVerify( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local does not have files' ) );
     return null;
   })
 
