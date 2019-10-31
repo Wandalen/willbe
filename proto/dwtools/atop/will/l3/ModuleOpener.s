@@ -1191,9 +1191,9 @@ function _repoFormFormal()
   // opener.repoHasFilesReform();
   // opener.repoIsGoodReform();
 
-  // opener.status({ all : 0, reset : 1, hasFiles : 1, isRepository : 1 });
+  // opener.status({ all : 0, invalidating : 1, hasFiles : 1, isRepository : 1 });
 
-  opener.repo.status({ all : 0, reset : 1, hasFiles : 1, isRepository : 1 });
+  opener.repo.status({ all : 0, invalidating : 1, hasFiles : 1, isRepository : 1 });
 
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
 
@@ -1240,6 +1240,7 @@ function _repoDownload( o )
   let dirStatusMap = Object.create( null );
   let status;
   let ready = _.Consequence().take( null );
+  let reflected = Object.create( null );
 
   _.routineOptions( _repoDownload, o );
   _.assert( arguments.length === 1 );
@@ -1256,7 +1257,7 @@ function _repoDownload( o )
 
   return ready
   // .then( () => opener._repoIsFresh({ mode : o.mode }) )
-  .then( () => opener.repo.status({ all : 1, reset : 1 }) )
+  .then( () => opener.repo.status({ all : 1, invalidating : 1 }) )
   .then( function( arg )
   {
     status = arg;
@@ -1338,8 +1339,9 @@ function _repoDownload( o )
   .then( function( arg )
   {
 
-    // if( downloading && !o.dry ) // yyy
-    // openersReform();
+    /* qqq : make optimal status updating after module is downloaded */
+    if( downloading && !o.dry )
+    openersReform();
 
     /*
       first reopen modules with the same local path
@@ -1435,7 +1437,7 @@ function _repoDownload( o )
 
   /* */
 
-  function hasLocalUncommittedChangesReform()
+  function hasLocalUncommittedChangesReform() /* xxx */
   {
     if( hasLocalUncommittedChanges !== null )
     return hasLocalUncommittedChanges;
@@ -1585,15 +1587,20 @@ function _repoDownload( o )
 
   function openersReform()
   {
+    _.assert( !o.dry );
+    _.assert( !!downloading );
+
     let variant = will.variantFrom( opener );
     variant.openers.forEach( ( opener2 ) =>
     {
-      if( downloading && !o.dry )
-      {
-        opener.repo._.hasFiles = true;
-        // opener.repo._.isUpToDate = true;
-      }
+      opener2.repo.statusInvalidate({ all : 1 });
+      // if( downloading && !o.dry )
+      // {
+      // opener2.repo._.hasFiles = true;
+      // opener2.repo.statusInvalidate({ all : 1, hasFiles : 1 });
+      // }
     });
+
     return null;
   }
 
@@ -1638,9 +1645,10 @@ function _repoDownload( o )
 
     return dirStatus( opener2 ).then( ( status ) =>
     {
-      // debugger;
       _.assert( _.boolIs( status.required ) );
       _.assert( _.boolIs( status.safeToDelete ) );
+      if( reflected[ opener2.downloadPath ] )
+      return null;
       if( !status.required )
       return null;
       if( !status.safeToDelete )
@@ -1649,10 +1657,10 @@ function _repoDownload( o )
           `Cant ${o.mode} ${module.qualifiedName} at ${module.localPath}, because it has local changes.`
         , ` Please commit changes or delete it manually.`
       );
+      reflected[ opener2.downloadPath ] = true;
       if( will.verbosity >= 3 )
       logger.log( ` + Reflected ${path.moveTextualReport( opener2.downloadPath, opener.downloadPath )}` );
       let filter = { filePath : { [ opener.downloadPath ] : opener2.downloadPath } }
-      // debugger;
       return fileProvider.filesReflect({ filter, dstRewritingOnlyPreserving : 1, linking : 'hardLink' });
     });
   }
@@ -1693,16 +1701,13 @@ function _repoDownload( o )
     return null;
 
     if( same )
-    // return opener2.reopen();
     return moduleReopen( opener2 );
     else
     return dirStatus( opener2 ).then( ( status ) =>
     {
-      // debugger;
       _.assert( _.boolIs( status.required ) )
       if( !status.required )
       return null;
-      // if( !status.isFresh )
       return moduleReopen( opener2 );
       return null;
     });
@@ -1740,45 +1745,13 @@ function _repoDownload( o )
     return new _.Consequence().take( dirStatusMap[ opener2.downloadPath ] );
 
     let ready = new _.Consequence().take( null );
-    // let result = Object.create( null );
-    // result.isRepo = null;
-    // result.hasLocalChanges = null;
-    // result.isFresh = null;
 
     ready.then( ( arg ) =>
     {
-      // return opener2.repoIsGoodReform();
-      return opener2.repo.status({ all : 1, reset : 1, isRepository : 1 });
+      return opener2.repo.status({ all : 1, invalidating : 1, isRepository : 1 });
     });
-    // ready.then( ( arg ) =>
-    // {
-    //   result.isRepo = arg;
-    //   debugger;
-    //   if( !result.isRepo )
-    //   {
-    //     if( fileProvider.fileExists( opener2.downloadPath ) && !fileProvider.dirIsEmpty( opener2.downloadPath ) )
-    //     return true;
-    //     return false;
-    //   }
-    //
-    //   hasLocalChanges = opener2.hasLocalChanges;
-    //   _.assert( _.boolIs( hasLocalChanges ) );
-    //
-    //   return hasLocalChanges;
-    //   // return opener2.repoHasLocalChanges();
-    // });
-    // ready.then( ( arg ) =>
-    // {
-    //   debugger;
-    //   result.hasLocalChanges = arg;
-    //   if( result.isRepo )
-    //   return opener2._repoIsFresh({ mode : o.mode });
-    //   return null;
-    // });
     ready.then( ( status ) =>
     {
-      // debugger; xxx
-      // result.isFresh = isFresh;
 
       if( o.mode === 'download' )
       status.required = status.downloadRequired;

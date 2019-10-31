@@ -5,8 +5,11 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
-  if( !it.module || it.module.isRemote || !it.module.about.name )
-  throw _.errBrief( 'Module should be local, opened and have name' );
+  if( !it.module || it.module.repo.remotePath || !it.module.about.name )
+  {
+    debugger;
+    throw _.errBrief( 'Module should be local, opened and have name' );
+  }
 
   let localPath = it.variant.dirPath;
   let remotePath = null;

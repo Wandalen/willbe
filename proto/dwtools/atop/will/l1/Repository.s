@@ -178,7 +178,7 @@ function status( o )
 
     for( let k in o )
     {
-      if( k === 'all' || k === 'reset' )
+      if( k === 'all' || k === 'invalidating' )
       continue;
       if( o[ k ] )
       {
@@ -193,47 +193,47 @@ function status( o )
   {
 
     if( o.dirExists )
-    if( o.reset || repo._.dirExists === null )
+    if( o.invalidating || repo._.dirExists === null )
     ready.also( dirExistsReform );
 
     if( o.hasFiles )
-    if( o.reset || repo._.hasFiles === null )
+    if( o.invalidating || repo._.hasFiles === null )
     ready.also( hasFilesReform );
 
     if( o.isRepository )
-    if( o.reset || repo._.isRepository === null )
+    if( o.invalidating || repo._.isRepository === null )
     ready.also( isRepositoryReform );
 
     if( o.hasLocalChanges )
-    if( o.reset || repo._.hasLocalChanges === null )
+    if( o.invalidating || repo._.hasLocalChanges === null )
     ready.also( hasLocalChangesReform );
 
     if( o.hasLocalUncommittedChanges )
-    if( o.reset || repo._.hasLocalUncommittedChanges === null )
+    if( o.invalidating || repo._.hasLocalUncommittedChanges === null )
     ready.also( hasLocalUncommittedChangesReform );
 
     if( o.isUpToDate )
-    if( o.reset || repo._.isUpToDate === null )
+    if( o.invalidating || repo._.isUpToDate === null )
     ready.also( isUpToDateReform );
 
     if( o.remoteIsValid )
-    if( o.reset || repo._.remoteIsValid === null )
+    if( o.invalidating || repo._.remoteIsValid === null )
     ready.also( remoteIsValidReform );
 
     if( o.safeToDelete )
-    if( o.reset || repo._.safeToDelete === null )
+    if( o.invalidating || repo._.safeToDelete === null )
     ready.also( safeToDeleteReform );
 
     if( o.downloadRequired )
-    if( o.reset || repo._.downloadRequired === null )
+    if( o.invalidating || repo._.downloadRequired === null )
     ready.then( downloadRequiredReform );
 
     if( o.updateRequired )
-    if( o.reset || repo._.updateRequired === null )
+    if( o.invalidating || repo._.updateRequired === null )
     ready.then( updateRequiredReform );
 
     if( o.agreeRequired )
-    if( o.reset || repo._.agreeRequired === null )
+    if( o.invalidating || repo._.agreeRequired === null )
     ready.then( agreeRequiredReform );
 
   }
@@ -251,7 +251,7 @@ function status( o )
     throw _.err( err, `\nFailed to get status for repository at ${repo.downloadPath}` );
     for( let k in o )
     {
-      if( k === 'all' || k === 'reset' )
+      if( k === 'all' || k === 'invalidating' )
       continue;
       if( o[ k ] )
       {
@@ -667,7 +667,7 @@ status.defaults =
 {
   ... statusInvalidate.defaults,
   all : 0,
-  reset : 0,
+  invalidating : 0,
 }
 
 //

@@ -6604,6 +6604,1124 @@ cleanDisabledModule.description =
 
 //
 
+function cleanHierarchyRemote( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'hierarchy-remote' );
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with z .clean';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with z .clean' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 1 );
+    test.identical( _.strCount( got.output, ' at ' ), 3 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .clean';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .clean' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 1 );
+    test.identical( _.strCount( got.output, ' at ' ), 3 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .clean recursive:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .clean recursive:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 15 );
+    test.identical( _.strCount( got.output, ' at ' ), 17 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .clean recursive:2';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .clean recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 32 );
+    test.identical( _.strCount( got.output, ' at ' ), 34 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .clean recursive:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with ** .clean recursive:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 32 );
+    test.identical( _.strCount( got.output, ' at ' ), 34 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .clean recursive:2';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with ** .clean recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 32 );
+    test.identical( _.strCount( got.output, ' at ' ), 34 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function cleanHierarchyRemote */
+
+cleanHierarchyRemote.timeOut = 500000;
+
+//
+
+function cleanHierarchyRemoteDry( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'hierarchy-remote' );
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with z .clean dry:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with z .clean dry:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 1 );
+    test.identical( _.strCount( got.output, ' at ' ), 3 );
+    test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .clean dry:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .clean dry:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 1 );
+    test.identical( _.strCount( got.output, ' at ' ), 3 );
+    test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .clean recursive:1 dry:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .clean recursive:1 dry:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 15 );
+    test.identical( _.strCount( got.output, ' at ' ), 17 );
+    test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .clean recursive:2 dry:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .clean recursive:2 dry:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 32 );
+    test.identical( _.strCount( got.output, ' at ' ), 34 );
+    test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .clean recursive:1 dry:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with ** .clean recursive:1 dry:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 32 );
+    test.identical( _.strCount( got.output, ' at ' ), 34 );
+    test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .clean recursive:2 dry:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with ** .clean recursive:2 dry:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 32 );
+    test.identical( _.strCount( got.output, ' at ' ), 34 );
+    test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function cleanHierarchyRemoteDry */
+
+cleanHierarchyRemoteDry.timeOut = 500000;
+
+//
+
+function cleanSubmodulesHierarchyRemote( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'hierarchy-remote' );
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with z .submodules.clean';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with z .submodules.clean' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 1 );
+    test.identical( _.strCount( got.output, ' at ' ), 3 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .submodules.clean';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .submodules.clean' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 1 );
+    test.identical( _.strCount( got.output, ' at ' ), 3 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .submodules.clean recursive:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .submodules.clean recursive:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 6 );
+    test.identical( _.strCount( got.output, ' at ' ), 8 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .submodules.clean recursive:2';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .submodules.clean recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 11 );
+    test.identical( _.strCount( got.output, ' at ' ), 13 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .submodules.clean recursive:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with ** .submodules.clean recursive:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 11 );
+    test.identical( _.strCount( got.output, ' at ' ), 13 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .submodules.clean recursive:2';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with ** .submodules.clean recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 11 );
+    test.identical( _.strCount( got.output, ' at ' ), 13 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function cleanSubmodulesHierarchyRemote */
+
+cleanSubmodulesHierarchyRemote.timeOut = 500000;
+
+//
+
+function cleanSubmodulesHierarchyRemoteDry( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'hierarchy-remote' );
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with z .submodules.clean dry:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with z .submodules.clean dry:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 1 );
+    test.identical( _.strCount( got.output, ' at ' ), 3 );
+    test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .submodules.clean dry:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .submodules.clean dry:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 1 );
+    test.identical( _.strCount( got.output, ' at ' ), 3 );
+    test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .submodules.clean recursive:1 dry:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .submodules.clean recursive:1 dry:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 6 );
+    test.identical( _.strCount( got.output, ' at ' ), 8 );
+    test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .submodules.clean recursive:2 dry:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .submodules.clean recursive:2 dry:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 11 );
+    test.identical( _.strCount( got.output, ' at ' ), 13 );
+    test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .submodules.clean recursive:1 dry:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with ** .submodules.clean recursive:1 dry:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 11 );
+    test.identical( _.strCount( got.output, ' at ' ), 13 );
+    test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .submodules.clean recursive:2 dry:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with ** .submodules.clean recursive:2 dry:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 11 );
+    test.identical( _.strCount( got.output, ' at ' ), 13 );
+    test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function cleanSubmodulesHierarchyRemoteDry */
+
+cleanSubmodulesHierarchyRemoteDry.timeOut = 500000;
+
+//
+
 function buildSingleModule( test )
 {
   let self = this;
@@ -15191,6 +16309,247 @@ submodulesDownloadDiffDownloadPathsIrregular.timeOut = 300000;
 
 //
 
+function submodulesDownloadHierarchyRemote( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'hierarchy-remote' );
+
+  /* - */
+
+  // xxx
+  // a.ready
+  //
+  // .then( () =>
+  // {
+  //   test.case = '.with z .submodules.download';
+  //   a.reflect();
+  //   return null;
+  // })
+  //
+  // a.start( '.with z .clean recursive:2' )
+  // a.start( '.with z .submodules.download' )
+  //
+  // .then( ( got ) =>
+  // {
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   var exp = [ 'PathTools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'PathTools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'PathTools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = null;
+  //   var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 14 );
+  //   test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+  //   test.identical( _.strCount( got.output, 'was downloaded' ), 1 );
+  //   test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
+  //
+  //   return null;
+  // })
+  //
+  // a.start( '.with z .submodules.download' )
+  //
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'second';
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   var exp = [ 'PathTools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'PathTools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'PathTools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = null;
+  //   var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 14 );
+  //   test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+  //   test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
+  //   test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+  //
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // a.ready
+  //
+  // .then( () =>
+  // {
+  //   test.case = '.with z .submodules.download recursive:2';
+  //   a.reflect();
+  //   return null;
+  // })
+  //
+  // a.start( '.with z .clean recursive:2' )
+  // a.start( '.with z .submodules.download recursive:2' )
+  //
+  // .then( ( got ) =>
+  // {
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   var exp = [ 'PathTools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'PathTools', 'Proto', 'Tools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'PathBasic', 'PathTools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'UriBasic' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+  //   test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+  //   test.identical( _.strCount( got.output, 'was downloaded' ), 5 );
+  //   test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+  //
+  //   return null;
+  // })
+  //
+  // a.start( '.with z .submodules.download recursive:2' )
+  //
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'second';
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   var exp = [ 'PathTools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'PathTools', 'Proto', 'Tools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'PathBasic', 'PathTools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'UriBasic' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+  //   test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+  //   test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
+  //   test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
+  //
+  //   return null;
+  // })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .submodules.download recursive:2';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with z .clean recursive:2' )
+  a.start( '.with ** .submodules.download recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 5 );
+    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
+
+  // a.start( '.with z .submodules.download recursive:2' )
+  //
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'second';
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   var exp = [ 'PathTools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'PathTools', 'Proto', 'Tools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'PathBasic', 'PathTools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'UriBasic' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+  //   test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+  //   test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
+  //   test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
+  //
+  //   return null;
+  // })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function submodulesDownloadHierarchyRemote */
+
+submodulesDownloadHierarchyRemote.timeOut = 300000;
+
+//
+
 function submodulesUpdateThrowing( test )
 {
   let self = this;
@@ -18568,6 +19927,10 @@ var Self =
     cleanWithInPath,
     cleanRecursive,
     cleanDisabledModule,
+    cleanHierarchyRemote,
+    cleanHierarchyRemoteDry,
+    cleanSubmodulesHierarchyRemote,
+    cleanSubmodulesHierarchyRemoteDry,
 
     buildSingleModule,
     buildSingleStep,
@@ -18647,7 +20010,7 @@ var Self =
     submodulesDownloadStepAndCommand,
     submodulesDownloadDiffDownloadPathsRegular,
     submodulesDownloadDiffDownloadPathsIrregular,
-    /* xxx : implement same test for hierarchy-remote */
+    submodulesDownloadHierarchyRemote,
 
     submodulesUpdateThrowing,
     submodulesAgreeThrowing,

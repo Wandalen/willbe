@@ -352,6 +352,97 @@ defaults.withDisabledModules = 0;
 
 //
 
+function _commandCleanLike( o )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  _.routineOptions( _commandCleanLike, arguments );
+  _.assert( _.routineIs( o.commandRoutine ) );
+  _.assert( _.routineIs( o.onAll ) );
+  _.assert( _.strIs( o.name ) );
+  _.assert( _.objectIs( o.event ) );
+
+  will._commandsBegin( o.commandRoutine );
+
+  if( will.currentOpeners === null && will.currentOpener === null )
+  ready.then( () => will.openersFind() );
+
+  ready
+  .then( () => filter() )
+  .then( () => forAll() )
+  .finally( end );
+
+  return ready;
+
+  /* */
+
+  function filter()
+  {
+    _.assert( _.arrayIs( will.currentOpeners ) );
+
+    let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly( o, will.modulesFilter.defaults ) );
+    if( openers2.length )
+    will.currentOpeners = openers2;
+
+    return null;
+  }
+
+  /* */
+
+  function forAll()
+  {
+    let ready2 = new _.Consequence().take( null );
+    let it2 = _.mapExtend( null, o );
+
+    _.assert( arguments.length === 0 );
+    _.assert( _.arrayIs( will.currentOpeners ) );
+    it2.openers = will.currentOpeners;
+    it2.roots = will.modulesOnlyRoots( it2.openers );
+
+    ready2.then( () =>
+    {
+      will.readingEnd();
+      return o.onAll.call( will, it2 );
+    });
+
+    ready2.finally( ( err, arg ) =>
+    {
+      if( err )
+      throw _.err( err, `\nFailed to ${o.name}` );
+      return arg;
+    });
+
+    return ready2;
+  }
+
+  /* */
+
+  function end( err, arg )
+  {
+    will._commandsEnd( o.commandRoutine );
+    if( err )
+    debugger;
+    if( err )
+    logger.log( _.errOnce( err ) );
+    if( err )
+    throw err;
+    return arg;
+  }
+
+}
+
+var defaults = _commandCleanLike.defaults = _.mapExtend( null, _.Will.ModuleFilterDefaults );
+
+defaults.event = null;
+defaults.onAll = null;
+defaults.commandRoutine = null;
+defaults.name = null;
+defaults.withDisabledModules = 0;
+
+//
+
 function _commandNewLike( o )
 {
   let will = this;
@@ -1378,26 +1469,6 @@ defaults.withRemotePath = 'Print remote paths. Default is 0';
 
 //
 
-function commandSubmodulesClean( e )
-{
-  let will = this;
-
-  return will._commandBuildLike
-  ({
-    event : e,
-    name : 'clean submodules',
-    onEach : handleEach,
-    commandRoutine : commandSubmodulesClean,
-  });
-
-  function handleEach( it )
-  {
-    return it.opener.openedModule.submodulesClean();
-  }
-}
-
-//
-
 function commandSubmodulesAdd( e )
 {
   let will = this;
@@ -1407,7 +1478,7 @@ function commandSubmodulesAdd( e )
     event : e,
     name : 'clean submodules',
     onEach : handleEach,
-    commandRoutine : commandSubmodulesClean,
+    commandRoutine : commandSubmodulesAdd,
   });
 
   function handleEach( it )
@@ -1536,18 +1607,39 @@ function commandSubmodulesVersionsDownload( e )
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
-  return will._commandBuildLike
+  return will._commandCleanLike
   ({
     event : e,
     name : 'download submodules',
-    onEach : handleEach,
+    onAll : handleAll,
     commandRoutine : commandSubmodulesVersionsDownload,
   });
 
-  function handleEach( it )
+  function handleAll( it )
   {
-    return it.opener.openedModule.subModulesDownload( _.mapExtend( null, e.propertiesMap ) );
+    _.assert( _.arrayIs( it.openers ) );
+
+    let o2 = _.mapExtend( null, e.propertiesMap );
+    o2.modules = it.openers;
+    _.routineOptions( will.modulesDownload, o2 );
+    if( o2.recursive === 2 )
+    o2.modules = it.roots;
+
+    return will.modulesDownload( o2 );
   }
+
+  // return will._commandBuildLike
+  // ({
+  //   event : e,
+  //   name : 'download submodules',
+  //   onEach : handleEach,
+  //   commandRoutine : commandSubmodulesVersionsDownload,
+  // });
+  //
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.subModulesDownload( _.mapExtend( null, e.propertiesMap ) );
+  // }
 
 }
 
@@ -1849,18 +1941,39 @@ function commandClean( e )
   e.propertiesMap.fast = !dry;
   e.propertiesMap.fast = 0; /* xxx */
 
-  return will._commandBuildLike
+  return will._commandCleanLike
   ({
     event : e,
     name : 'clean',
-    onEach : handleEach,
+    onAll : handleAll,
     commandRoutine : commandClean,
   });
 
-  function handleEach( it )
+  function handleAll( it )
   {
-    return it.opener.openedModule.clean( _.mapExtend( null, e.propertiesMap ) );
+    _.assert( _.arrayIs( it.openers ) );
+
+    let o2 = _.mapExtend( null, e.propertiesMap );
+    o2.modules = it.openers;
+    _.routineOptions( will.modulesClean, o2 );
+    if( o2.recursive === 2 )
+    o2.modules = it.roots;
+
+    return will.modulesClean( o2 );
   }
+
+  // return will._commandBuildLike
+  // ({
+  //   event : e,
+  //   name : 'clean',
+  //   onEach : handleEach,
+  //   commandRoutine : commandClean,
+  // });
+  //
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.clean( _.mapExtend( null, e.propertiesMap ) );
+  // }
 
 }
 
@@ -1873,6 +1986,76 @@ commandClean.commandProperties =
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
 }
+
+//
+
+function commandSubmodulesClean( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  let propertiesMap = _.strStructureParse( e.argument );
+  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
+  e.propertiesMap.dry = !!e.propertiesMap.dry;;
+  let dry = e.propertiesMap.dry;
+  if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
+  e.propertiesMap.fast = !dry;
+  e.propertiesMap.fast = 0; /* xxx */
+
+  return will._commandCleanLike
+  ({
+    event : e,
+    name : 'clean',
+    onAll : handleAll,
+    commandRoutine : commandSubmodulesClean,
+  });
+
+  function handleAll( it )
+  {
+    _.assert( _.arrayIs( it.openers ) );
+
+    let o2 = _.mapExtend( null, e.propertiesMap );
+    o2.modules = it.openers;
+    _.routineOptions( will.modulesClean, o2 );
+    if( o2.recursive === 2 )
+    o2.modules = it.roots;
+    o2.cleaningSubmodules = 1;
+    o2.cleaningOut = 0;
+    o2.cleaningTemp = 0;
+
+    return will.modulesClean( o2 );
+  }
+
+}
+
+commandSubmodulesClean.commandProperties =
+{
+  dry : 'Dry run without deleting. Default is dry:0.',
+  recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
+  fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
+}
+
+//
+
+// function commandSubmodulesClean( e )
+// {
+//   let will = this;
+//
+//   return will._commandBuildLike
+//   ({
+//     event : e,
+//     name : 'clean submodules',
+//     onEach : handleEach,
+//     commandRoutine : commandSubmodulesClean,
+//   });
+//
+//   function handleEach( it )
+//   {
+//     return it.opener.openedModule.submodulesClean();
+//   }
+// }
 
 //
 
@@ -2023,6 +2206,7 @@ let Extend =
 
   _commandListLike,
   _commandBuildLike,
+  _commandCleanLike,
   _commandNewLike,
   _commandTreeLike,
 
@@ -2054,7 +2238,6 @@ let Extend =
   commandModulesTopologicalList,
   commandModulesTree,
 
-  commandSubmodulesClean,
   commandSubmodulesAdd,
   commandSubmodulesFixate,
   commandSubmodulesUpgrade,
@@ -2071,6 +2254,7 @@ let Extend =
   commandDo,
   commandHookCall,
   commandClean,
+  commandSubmodulesClean,
   commandBuild,
   commandExport,
   commandExportRecursive,

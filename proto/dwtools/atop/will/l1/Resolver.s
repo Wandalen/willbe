@@ -91,15 +91,17 @@ function _onSelectorDown()
   if( !it.dstWritingDown )
   return end();
 
-  if( rop.pathResolving || it.isFunction )
-  resolver._pathsResolve.call( it );
+  resolver._pathPerform.call( it );
 
-  resolver._pathsNormalize.call( it );
-
-  if( rop.pathNativizing || it.isFunction )
-  resolver._pathsNativize.call( it );
-
-  resolver._pathsUnwrap.call( it );
+  // if( rop.pathResolving || it.isFunction )
+  // resolver._pathsResolve.call( it );
+  //
+  // resolver._pathsNormalize.call( it );
+  //
+  // if( rop.pathNativizing || it.isFunction )
+  // resolver._pathsNativize.call( it );
+  //
+  // resolver._pathsUnwrap.call( it );
 
   return end();
 
@@ -182,6 +184,8 @@ function _onDownEnd()
 
   // if( rop.pathNativizing || it.isFunction ) // yyy
   // resolver._pathsNativize.call( it );
+
+  resolver._pathPerform.call( it );
 
   return Parent._onDownEnd.call( it );
 }
@@ -442,6 +446,30 @@ function _currentExclude()
 // --
 // path
 // --
+
+function _pathPerform()
+{
+  let it = this;
+  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
+  let will = rop.baseModule.will;
+
+  if( !it.dstWritingDown )
+  return;
+
+  if( rop.pathResolving || it.isFunction )
+  resolver._pathsResolve.call( it );
+
+  resolver._pathsNormalize.call( it );
+
+  if( rop.pathNativizing || it.isFunction )
+  resolver._pathsNativize.call( it );
+
+  resolver._pathsUnwrap.call( it );
+
+}
+
+//
 
 function _pathsTransform( onPath, onStr )
 {
@@ -968,6 +996,22 @@ function _functionThisUp()
   it.srcChanged();
 }
 
+//
+
+function _functionStringsJoinDown()
+{
+  let it = this;
+  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let resolver = rop.Resolver;
+
+  if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
+  return;
+
+  // resolver._pathPerform.call( it );
+
+  return Parent._functionStringsJoinDown.call( it );
+}
+
 // --
 // err
 // --
@@ -1423,6 +1467,7 @@ let submodulesResolve = _.routineFromPreAndBody( resolve.pre, submodulesResolve_
 // declare
 // --
 
+let functionSymbol = Symbol.for( 'function' );
 let Extend =
 {
 
@@ -1450,6 +1495,7 @@ let Extend =
 
   // path
 
+  _pathPerform,
   _pathsTransform,
   _pathsNormalize,
   _pathNormalize,
@@ -1465,6 +1511,7 @@ let Extend =
 
   _functionOsGetUp,
   _functionThisUp,
+  _functionStringsJoinDown,
 
   // err
 

@@ -2130,7 +2130,8 @@ function modulesFor_body( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let visitedSet = new Set;
+  let visitedVariantsSet = new Set;
+  let visitedModulesSet = new Set;
 
   _.assert( arguments.length === 1 );
   _.assertRoutineOptions( modulesFor_body, arguments );
@@ -2181,20 +2182,33 @@ function modulesFor_body( o )
     let o2 = _.mapOnly( o, will.modulesEach.defaults );
     o2.outputFormat = '/';
     o2.modules = variants;
-    // debugger;
     let result = will.modulesEach( o2 );
-    // debugger;
     return result;
   }
 
   function variantAction( variant )
   {
-    if( visitedSet.has( variant ) )
+    let ready = new _.Consequence().take( null );
+    if( o.onEachModule )
+    variant.modules.forEach( ( module ) =>
+    {
+      if( visitedModulesSet.has( module ) )
+      return null;
+      visitedModulesSet.add( module );
+      let o3 = _.mapExtend( null, o );
+      o3.module = module;
+      ready.then( () => o.onEachModule( module, o3 ) );
+    });
+    if( visitedVariantsSet.has( variant ) )
     return null;
-    visitedSet.add( variant );
-    let o3 = _.mapExtend( null, o );
-    o3.module = variant;
-    return o.onEach( variant, o3 ) || null;
+    visitedVariantsSet.add( variant );
+    if( o.onEachVariant )
+    {
+      let o3 = _.mapExtend( null, o );
+      o3.variant = variant;
+      ready.then( () => o.onEachVariant( variant, o3 ) );
+    }
+    return ready;
   }
 
 }
@@ -2211,13 +2225,15 @@ defaults.withPeers = 1;
 defaults.left = 1;
 defaults.nodesGroup = null;
 defaults.modules = null;
-defaults.onEach = null;
+defaults.onEachVariant = null;
+defaults.onEachModule = null;
 
 delete defaults.outputFormat;
 delete defaults.onUp;
 delete defaults.onDown;
 delete defaults.onNode;
 
+_.assert( defaults.onEach === undefined );
 _.assert( defaults.withDisabledSubmodules === 0 );
 _.assert( defaults.withDisabledModules === 0 );
 
@@ -2279,25 +2295,24 @@ function modulesDownload_body( o )
   return _.Consequence().take( o );
 
   let rootModule = o.modules.length === 1 ? o.modules[ 0 ].module : null;
-  let rootModulePath = rootModule ? rootModule.localPath : null;
-  let rootVariant = rootModule ? will.variantFrom( rootModule ) : null;
+  // let rootModulePath = rootModule ? rootModule.localPath : null;
+  // let rootVariant = rootModule ? will.variantFrom( rootModule ) : null;
+  let rootVariants = will.variantsFrom( o.modules );
 
-  return download( o.modules )
+  return variantsUpformAndDownload( rootVariants )
   .finally( ( err, arg ) =>
   {
     if( err )
     debugger;
     if( err )
     throw _.err( err, '\nFailed to', ( o.mode ), 'submodules' );
-
     log();
-
     return o;
   });
 
   /* */
 
-  function download( variants )
+  function variantsUpformAndDownload( variants )
   {
     let ready = new _.Consequence().take( null );
 
@@ -2331,7 +2346,7 @@ function modulesDownload_body( o )
     {
       let d = o.downloadedContainer.length - downloadedLengthWas;
       if( d > 0 && o.recursive >= 2 )
-      return download( variants );
+      return variantsUpformAndDownload( variants );
       return o;
     });
 
@@ -2342,19 +2357,33 @@ function modulesDownload_body( o )
 
   function log()
   {
-    if( !o.downloadedContainer.length && !o.loggingNoChanges )
-    return;
 
+    rootVariants = rootVariants.filter( ( variant ) =>
+    {
+      if( !variantIsRoot( variant ) )
+      return;
+      if( variant.isOut && variant.peer )
+      if( _.arrayHas( rootVariants, variant.peer ) )
+      return;
+      return variant;
+    });
     let remoteContainer = o.remoteContainer.filter( ( variant ) =>
     {
+      if( variantIsRoot( variant ) )
+      return;
       return !variant.isOut || !_.arrayHas( o.remoteContainer, variant.peer );
     });
     let localContainer = o.localContainer.filter( ( variant ) =>
     {
-      if( variant === rootVariant || variant.peer === rootVariant )
+      if( variantIsRoot( variant ) )
       return;
+      // if( variant === rootVariant || variant.peer === rootVariant )
+      // return;
       return !variant.isOut || !_.arrayHas( o.localContainer, variant.peer );
     });
+
+    if( !o.downloadedContainer.length && !o.loggingNoChanges )
+    return;
 
     let ofModule = rootModule ? ' of ' + rootModule.absoluteName : '';
     let total = ( remoteContainer.length + localContainer.length );
@@ -2492,6 +2521,19 @@ function modulesDownload_body( o )
 
   /* */
 
+  function variantIsRoot( variant )
+  {
+    if( variant.isRemote )
+    return false;
+    if( _.arrayHas( rootVariants, variant ) )
+    return true;
+    if( rootVariants.some( ( rootVariant ) => rootVariant.peer === variant ) )
+    return true;
+    return false;
+  }
+
+  /* */
+
   function variantDownloaded( variant )
   {
     _.arrayAppendOnceStrictly( o.downloadedContainer, variant );
@@ -2519,11 +2561,17 @@ function modulesDownload_body( o )
   function variantRemote( variant )
   {
 
-    if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
-    {
-      debugger;
-      return null;
-    }
+    // if( variantIsRoot( variant ) )
+    // {
+    //   debugger;
+    //   return null;
+    // }
+    //
+    // if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
+    // {
+    //   debugger;
+    //   return null;
+    // }
 
     _.assert( !!variant.remotePath );
     _.arrayAppendOnce( o.remoteContainer, variant );
@@ -2536,21 +2584,23 @@ function modulesDownload_body( o )
   function variantLocal( variant )
   {
 
-    if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
-    return null;
+    // if( variantIsRoot( variant ) )
+    // {
+    //   debugger;
+    //   return null;
+    // }
+    //
+    // if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
+    // return null;
 
     if( variant.peer )
     {
       if( _.arrayHas( o.doneContainer, variant.peer ) )
       return variantDone( variant );
-      // if( _.arrayHas( o.doneContainer, variant.peer ) )
-      // return variantDone( variant );
     }
 
     if( _.arrayHas( o.doneContainer, variant ) )
     return null;
-    // if( _.arrayHas( o.doneContainer, variant ) )
-    // return null;
 
     _.assert( _.strIs( variant.localPath ) );
     _.arrayAppendOnce( o.localContainer, variant );
@@ -2562,13 +2612,17 @@ function modulesDownload_body( o )
 
   function variantDone( variant )
   {
-    if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
-    return null;
 
-    // if( variant.localPath )
+    // if( variantIsRoot( variant ) )
+    // {
+    //   debugger;
+    //   return null;
+    // }
+    //
+    // if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
+    // return null;
+
     _.arrayAppendOnce( o.doneContainer, variant );
-    // if( variant.remotePath )
-    // _.arrayAppendOnce( o.doneContainer, variant.remotePath );
     return null;
   }
 
@@ -2578,7 +2632,6 @@ function modulesDownload_body( o )
 var defaults = modulesDownload_body.defaults = _.mapExtend
 (
   null,
-  // _.graph.AbstractNodesGroup.prototype.each.defaults,
   modulesEach.defaults,
   relationFit.defaults
 );
@@ -2596,7 +2649,7 @@ defaults.doneContainer = null;
 defaults.loggingNoChanges = 1;
 defaults.recursive = 1;
 defaults.withStem = 1;
-defaults.withOut = 1; // yyy
+defaults.withOut = 1;
 defaults.withIn = 1;
 defaults.withPeers = 1;
 defaults.nodesGroup = null;
@@ -2617,12 +2670,12 @@ function modulesUpform( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let visitedSet = new Set;
+  // let visitedSet = new Set;
 
   o = _.routineOptions( modulesUpform, arguments );
 
   let o2 = _.mapOnly( o, will.modulesFor.defaults );
-  o2.onEach = handleEach;
+  o2.onEachModule = handleEach;
   return will.modulesFor( o2 )
   .finally( ( err, arg ) =>
   {
@@ -2633,31 +2686,37 @@ function modulesUpform( o )
 
   /* */
 
-  function handleEach( variant, op )
+  function handleEach( module, op )
   {
-
-    if( visitedSet.has( variant ) )
-    debugger;
-    if( visitedSet.has( variant ) )
-    return null;
-
-    variant.reform();
-
-    if( !variant.module && o.allowingMissing )
-    return null;
-    if( !variant.module )
-    debugger;
-    if( !variant.module )
-    throw _.err
-    (
-        `Cant upform ${module.absoluteName} because ${variant.relation ? variant.relation.absoluteName : variant.opener.absoluteName} is not available.`
-      , `\nLooked at ${variant.opener ? variant.opener.commonPath : variant.relation.path}`
-    );
-
-    visitedSet.add( variant );
-    let o3 = _.mapOnly( o, variant.module.upform.defaults );
-    return variant.module.upform( o3 );
+    let o3 = _.mapOnly( o, module.upform.defaults );
+    return module.upform( o3 );
   }
+
+  // function handleEach( variant, op )
+  // {
+  //
+  //   if( visitedSet.has( variant ) )
+  //   debugger;
+  //   if( visitedSet.has( variant ) )
+  //   return null;
+  //
+  //   variant.reform();
+  //
+  //   if( !variant.module && o.allowingMissing )
+  //   return null;
+  //   if( !variant.module )
+  //   debugger;
+  //   if( !variant.module )
+  //   throw _.err
+  //   (
+  //       `Cant upform ${module.absoluteName} because ${variant.relation ? variant.relation.absoluteName : variant.opener.absoluteName} is not available.`
+  //     , `\nLooked at ${variant.opener ? variant.opener.commonPath : variant.relation.path}`
+  //   );
+  //
+  //   visitedSet.add( variant );
+  //   let o3 = _.mapOnly( o, variant.module.upform.defaults );
+  //   return variant.module.upform( o3 );
+  // }
 
 }
 
@@ -2666,13 +2725,231 @@ var defaults = modulesUpform.defaults = _.mapExtend( null, UpformingDefaults, mo
 defaults.recursive = 2;
 defaults.withStem = 1;
 defaults.withPeers = 1;
-defaults.allowingMissing = 1;
+// defaults.allowingMissing = 1;
 defaults.all = 1;
 
 delete defaults.outputFormat;
 delete defaults.onUp;
 delete defaults.onDown;
 delete defaults.onNode;
+
+//
+
+function modulesClean( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let files = Object.create( null );
+
+  o = _.routineOptions( modulesClean, arguments );
+
+  if( o.beginTime === null )
+  o.beginTime = _.timeNow();
+
+  let o2 = _.mapOnly( o, will.modulesFor.defaults );
+  o2.onEachModule = handleEach;
+  return will.modulesFor( o2 )
+  .then( ( arg ) =>
+  {
+    debugger;
+    let o2 = _.mapOnly( o, will.cleanDelete.defaults );
+    o2.files = files;
+    return will.cleanDelete( o2 );
+  })
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    throw _.err( err, `\nFailed to clean modules` );
+
+    debugger;
+    let o2 = _.mapOnly( o, will.cleanLog.defaults );
+    o2.files = files;
+    will.cleanLog( o2 );
+    debugger;
+
+    return arg;
+  });
+
+  /* */
+
+  function handleEach( module, op )
+  {
+
+    let o3 = _.mapOnly( o, module.cleanWhatSingle.defaults );
+    o3.files = files;
+    return module.cleanWhatSingle( o3 );
+
+    // let o3 = _.mapOnly( o, module.clean.defaults );
+    // debugger;
+    // return module.clean( o3 );
+  }
+
+}
+
+var defaults = modulesClean.defaults = _.mapExtend( null, modulesFor.defaults );
+
+defaults.dry = 0;
+defaults.fast = 0;
+defaults.beginTime = null;
+defaults.cleaningSubmodules = 1;
+defaults.cleaningOut = 1;
+defaults.cleaningTemp = 1;
+
+defaults.recursive = 0;
+defaults.withStem = 1;
+defaults.withPeers = 1;
+
+delete defaults.outputFormat;
+delete defaults.onUp;
+delete defaults.onDown;
+delete defaults.onNode;
+
+// --
+// clean
+// --
+
+function cleanLog( o )
+{
+  // let module = this;
+  let will = this;
+  let logger = will.logger;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  // let time = _.timeNow();
+
+  o = _.routineOptions( cleanLog, arguments );
+
+  _.assert( _.intIs( o.beginTime ) );
+  _.assert( _.mapIs( o.files ) ) 
+
+  if( o.explanation === null )
+  if( o.dry )
+  o.explanation = ' . Clean will delete ';
+  else
+  o.explanation = ' - Clean deleted ';
+
+  if( !o.spentTime )
+  o.spentTime = _.timeNow() - o.beginTime;
+
+  let textualReport = path.groupTextualReport
+  ({
+    explanation : o.explanation,
+    groupsMap : o.files,
+    verbosity : logger.verbosity,
+    spentTime : o.spentTime,
+  });
+
+  if( will.verbosity >= 2 )
+  logger.log( textualReport );
+
+  return textualReport;
+}
+
+var defaults = cleanLog.defaults =
+{
+
+  // cleaningSubmodules : 1,
+  // cleaningOut : 1,
+  // cleaningTemp : 1,
+
+  files : null,
+  explanation : null,
+  beginTime : null,
+  spentTime : null,
+  dry : 1,
+
+}
+
+//
+
+function cleanDelete( o )
+{
+  // let module = this;
+  let will = this;
+  let logger = will.logger;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  o = _.routineOptions( cleanDelete, arguments );
+
+  // if( o.beginTime === null )
+  // o.beginTime = _.timeNow();
+
+  will.readingEnd(); debugger;
+
+  if( o.dry )
+  {
+    return null;
+    // let o2 = _.mapOnly( o, module.cleanLog.defaults );
+    // return module.cleanLog( o2 );
+  }
+
+  // let o2 = _.mapExtend( null, o );
+  // delete o2.late;
+  // delete o2.dry;
+  // let files = module.cleanWhat( o2 );
+
+  _.assert( _.mapIs( o.files ) );
+  _.assert( _.arrayIs( o.files[ '/' ] ) );
+
+  for( let f = o.files[ '/' ].length-1 ; f >= 0 ; f-- )
+  {
+    let filePath = o.files[ '/' ][ f ];
+    _.assert( path.isAbsolute( filePath ) );
+
+    if( o.fast )
+    fileProvider.filesDelete
+    ({
+      filePath : filePath,
+      verbosity : 0,
+      throwing : 0,
+      late : 1,
+    });
+    else
+    fileProvider.fileDelete
+    ({
+      filePath : filePath,
+      verbosity : 0,
+      throwing : 0,
+    });
+
+  }
+
+  // time = _.timeNow() - time;
+  //
+  // let o3 = _.mapOnly( o, module.cleanLog.defaults );
+  // o3.explanation = ' - Clean deleted ';
+  // o3.spentTime = time;
+  // o3.files = files;
+  //
+  // let textualReport = module.cleanLog( o3 );
+
+  return o.files;
+}
+
+var defaults = cleanDelete.defaults =
+{
+
+  // cleaningSubmodules : 1,
+  // cleaningOut : 1,
+  // cleaningTemp : 1,
+
+  // beginTime : null,
+
+  dry : 0,
+  fast : 0,
+  files : null,
+
+  // explanation : ' . Clean will delete ',
+  // spentTime : null,
+
+}
+
+// var defaults = clean.defaults = Object.create( cleanWhat.defaults );
+//
+// defaults.dry = 0;
 
 // --
 // variant
@@ -4283,6 +4560,12 @@ let Extend =
   modulesFor,
   modulesDownload,
   modulesUpform,
+  modulesClean,
+
+  // clean
+
+  cleanLog,
+  cleanDelete,
 
   // variant
 

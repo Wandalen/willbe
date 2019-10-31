@@ -2309,7 +2309,7 @@ function modulesBuild_body( o )
   ready.then( () =>
   {
     let o2 = _.mapOnly( o, will.modulesFor.defaults );
-    o2.onEach = handleEach;
+    o2.onEachModule = handleEach;
     o2.modules = [ module ];
     o2.left = 0;
     return will.modulesFor( o2 );
@@ -2328,12 +2328,12 @@ function modulesBuild_body( o )
 
   /* */
 
-  function handleEach( record, op )
+  function handleEach( module, op )
   {
     let o3 = _.mapOnly( o, module.moduleBuild.defaults );
-    if( !record.module )
-    throw _.err( `${record.object.absoluteName} at ${record.object.localPath || record.object.remotePath} is not opened or invalid` );
-    return record.module.moduleBuild( o3 );
+    // if( !variant.module )
+    // throw _.err( `${variant.object.absoluteName} at ${variant.object.localPath || variant.object.remotePath} is not opened or invalid` );
+    return module.moduleBuild( o3 );
   }
 
 }
@@ -2348,6 +2348,10 @@ defaults.withOut = 0;
 defaults.withIn = 1;
 defaults.upforming = 1;
 defaults.downloading = 1;
+
+delete defaults.onEach;
+delete defaults.onEachModule;
+delete defaults.onEachVariant;
 
 _.assert( defaults.outputFormat === undefined );
 _.assert( defaults.withDisabledSubmodules === 0 );
@@ -2384,7 +2388,7 @@ defaults.withDisabledStem = 1;
 defaults.recursive = 2;
 defaults.withStem = 1;
 defaults.withPeers = 1;
-defaults.allowingMissing = 1;
+// defaults.allowingMissing = 1;
 
 delete defaults.outputFormat;
 delete defaults.onUp;
@@ -2418,7 +2422,6 @@ function rootModuleSet( src )
   {
     if( opener instanceof _.Will.ModuleOpener )
     opener._.rootModule = src;
-    // opener[ rootModuleSymbol ] = src;
   });
 
   if( oldRootModule && src )
@@ -2428,15 +2431,12 @@ function rootModuleSet( src )
       outputFormat : '/',
       recursive : 2,
       withPeers : 1,
-      // withDisabled : 1,
-      // ... _.Will.RelationFilterOn,
     });
-    modules.forEach( ( record ) =>
+    modules.forEach( ( variant ) =>
     {
-      let module2 = record.module || record.opener;
+      let module2 = variant.module || variant.opener;
       if( module2 === null )
       return;
-      // _.assert( module2.rootModule === oldRootModule || module2.rootModule === null ); // yyy xxx
       _.assert( module2.rootModule !== undefined );
       if( module2.rootModuleSetAct )
       module2.rootModuleSetAct( src );
@@ -3344,7 +3344,7 @@ function submodulesVerify( o )
     // con.then( () => relation.opener.repoIsDownloadedReform() )
     // con.then( () => relation.opener.repoIsGoodReform() )
     // con.then( () => relation.opener.repoIsUpToDateReform() )
-    con.then( () => relation.opener.repo.status({ all : 1, reset : 1 }) )
+    con.then( () => relation.opener.repo.status({ all : 1, invalidating : 1 }) )
     con.then( () => relation )
     return con;
   }
@@ -5271,16 +5271,15 @@ function cleanWhatSingle( o )
 
   o = _.routineOptions( cleanWhatSingle, arguments );
 
-  if( o.result === null )
-  o.result = Object.create( null );
-  o.result[ '/' ] = o.result[ '/' ] || [];
+  if( o.files === null )
+  o.files = Object.create( null );
+  o.files[ '/' ] = o.files[ '/' ] || [];
 
   /* submodules */
 
   if( o.cleaningSubmodules )
   {
 
-    // debugger;
     find( module.cloneDirPathGet() );
     if( module.rootModule !== module )
     find( module.cloneDirPathGet( module ) );
@@ -5312,21 +5311,16 @@ function cleanWhatSingle( o )
 
   if( o.cleaningTemp )
   {
-    // debugger;
     let resource = module.pathOrReflectorResolve( 'temp' );
 
     if( resource && resource instanceof _.Will.Reflector )
     {
-      // debugger;
       let o2 = resource.optionsForFindExport();
       o2.mandatory = 0;
-      // debugger;
       find( o2 );
-      // debugger;
     }
     else if( resource && resource instanceof _.Will.PathResource )
     {
-      // debugger;
       let filePath = resource.path;
       if( !filePath )
       filePath = [];
@@ -5334,48 +5328,11 @@ function cleanWhatSingle( o )
       find( filePath );
     }
 
-    // let temp;
-    //
-    // temp = module.reflectorResolve
-    // ({
-    //   selector : 'reflector::temp',
-    //   pathResolving : 'in',
-    //   missingAction : 'undefine',
-    // });
-    //
-    // if( temp )
-    // {
-    //   let o2 = temp.optionsForFindExport();
-    //   find( o2 );
-    // }
-    //
-    // if( !temp )
-    // {
-    //   temp = module.pathResolve
-    //   ({
-    //     selector : 'path::temp',
-    //     pathResolving : 'in',
-    //     missingAction : 'undefine',
-    //   });
-    //
-    //   if( !temp )
-    //   temp = [];
-    //
-    //   temp = _.arrayAs( path.s.join( module.inPath, temp ) );
-    //
-    //   for( let p = 0 ; p < temp.length ; p++ )
-    //   {
-    //     let filePath = temp[ p ];
-    //     find( filePath );
-    //   }
-    //
-    // }
-
   }
 
   filePaths.sort();
 
-  return o.result;
+  return o.files;
 
   /* - */
 
@@ -5409,16 +5366,14 @@ function cleanWhatSingle( o )
     op.filter = op.filter || Object.create( null );
     op.filter.recursive = 2;
 
-    // debugger;
     let found = fileProvider.filesDelete( op );
-    // debugger;
     _.assert( op.filter.formed === 5 );
 
     let r = path.group
     ({
       keys : op.filter.filePath,
       vals : found,
-      result : o.result,
+      result : o.files,
     });
 
   }
@@ -5431,7 +5386,7 @@ cleanWhatSingle.defaults =
   cleaningOut : 1,
   cleaningTemp : 1,
   fast : 0,
-  result : null,
+  files : null,
 }
 
 //
@@ -5446,9 +5401,9 @@ function cleanWhat( o )
 
   _.routineOptions( cleanWhat, arguments );
 
-  if( o.result === null )
-  o.result = Object.create( null );
-  o.result[ '/' ] = o.result[ '/' ] || [];
+  if( o.files === null )
+  o.files = Object.create( null );
+  o.files[ '/' ] = o.files[ '/' ] || [];
 
   let modules = module.modulesEach
   ({
@@ -5466,7 +5421,7 @@ function cleanWhat( o )
     module2.cleanWhatSingle( o2 );
   });
 
-  return o.result;
+  return o.files;
 }
 
 var defaults = cleanWhat.defaults = Object.create( cleanWhatSingle.defaults );
@@ -5475,7 +5430,7 @@ defaults.recursive = 0;
 
 //
 
-function cleanWhatReport( o )
+function cleanLog( o )
 {
   let module = this;
   let will = module.will;
@@ -5484,38 +5439,43 @@ function cleanWhatReport( o )
   let path = fileProvider.path;
   let time = _.timeNow();
 
-  o = _.routineOptions( cleanWhatReport, arguments );
+  o = _.routineOptions( cleanLog, arguments );
 
-  if( !o.report )
+  if( !o.files )
   {
     let o2 = _.mapExtend( null, o );
-    delete o2.report;
+    delete o2.files;
     delete o2.explanation;
     delete o2.spentTime;
-    o.report = module.cleanWhat( o2 );
+    o.files = module.cleanWhat( o2 );
   }
 
-  if( !o.spentTime )
-  o.spentTime = _.timeNow() - time;
+  debugger;
+  let o3 = _.mapOnly( o, will.cleanLog.defaults );
+  return will.cleanLog( o3 );
 
-  let textualReport = path.groupTextualReport
-  ({
-    explanation : o.explanation,
-    groupsMap : o.report,
-    verbosity : logger.verbosity,
-    spentTime : o.spentTime,
-  });
-
-  logger.log( textualReport );
-
-  return textualReport;
+  // if( !o.spentTime )
+  // o.spentTime = _.timeNow() - time;
+  //
+  // let textualReport = path.groupTextualReport
+  // ({
+  //   explanation : o.explanation,
+  //   groupsMap : o.files,
+  //   verbosity : logger.verbosity,
+  //   spentTime : o.spentTime,
+  // });
+  //
+  // logger.log( textualReport );
+  //
+  // return textualReport;
 }
 
-var defaults = cleanWhatReport.defaults = Object.create( cleanWhat.defaults );
+var defaults = cleanLog.defaults = Object.create( cleanWhat.defaults );
 
-defaults.report = null;
+defaults.files = null;
 defaults.explanation = ' . Clean will delete ';
-defaults.spentTime = null
+defaults.beginTime = null;
+defaults.spentTime = null;
 
 //
 
@@ -5526,63 +5486,76 @@ function clean( o )
   let logger = will.logger;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let time = _.timeNow();
 
   o = _.routineOptions( clean, arguments );
 
-  will.readingEnd();
+  if( o.beginTime === null )
+  o.beginTime = _.timeNow();
 
-  if( o.dry )
-  {
-    let o2 = _.mapOnly( o, module.cleanWhatReport.defaults );
-    return module.cleanWhatReport( o2 );
-  }
+  let o2 = _.mapOnly( o, module.cleanWhat.defaults );
+  o.files = module.cleanWhat( o2 );
 
-  let o2 = _.mapExtend( null, o );
-  delete o2.late;
-  delete o2.dry;
-  let report = module.cleanWhat( o2 );
+  debugger; xxx
 
-  _.assert( _.mapIs( report ) );
-  _.assert( _.arrayIs( report[ '/' ] ) );
+  will.cleanDelete( o );
+  will.cleanLog( o );
 
-  for( let f = report[ '/' ].length-1 ; f >= 0 ; f-- )
-  {
-    let filePath = report[ '/' ][ f ];
-    _.assert( path.isAbsolute( filePath ) );
+  return o.files;
 
-    if( o.fast )
-    fileProvider.filesDelete
-    ({
-      filePath : filePath,
-      verbosity : 0,
-      throwing : 0,
-      late : 1,
-    });
-    else
-    fileProvider.fileDelete
-    ({
-      filePath : filePath,
-      verbosity : 0,
-      throwing : 0,
-    });
-
-  }
-
-  time = _.timeNow() - time;
-
-  let o3 = _.mapOnly( o, module.cleanWhatReport.defaults );
-  o3.explanation = ' - Clean deleted ';
-  o3.spentTime = time;
-  o3.report = report;
-
-  let textualReport = module.cleanWhatReport( o3 );
-
-  return report;
+  // will.readingEnd();
+  //
+  // if( o.dry )
+  // {
+  //   let o2 = _.mapOnly( o, module.cleanLog.defaults );
+  //   return module.cleanLog( o2 );
+  // }
+  //
+  // let o2 = _.mapExtend( null, o );
+  // delete o2.late;
+  // delete o2.dry;
+  // let files = module.cleanWhat( o2 );
+  //
+  // _.assert( _.mapIs( files ) );
+  // _.assert( _.arrayIs( files[ '/' ] ) );
+  //
+  // for( let f = files[ '/' ].length-1 ; f >= 0 ; f-- )
+  // {
+  //   let filePath = files[ '/' ][ f ];
+  //   _.assert( path.isAbsolute( filePath ) );
+  //
+  //   if( o.fast )
+  //   fileProvider.filesDelete
+  //   ({
+  //     filePath : filePath,
+  //     verbosity : 0,
+  //     throwing : 0,
+  //     late : 1,
+  //   });
+  //   else
+  //   fileProvider.fileDelete
+  //   ({
+  //     filePath : filePath,
+  //     verbosity : 0,
+  //     throwing : 0,
+  //   });
+  //
+  // }
+  //
+  // time = _.timeNow() - time;
+  //
+  // let o3 = _.mapOnly( o, module.cleanLog.defaults );
+  // o3.explanation = ' - Clean deleted ';
+  // o3.spentTime = time;
+  // o3.files = files;
+  //
+  // let textualReport = module.cleanLog( o3 );
+  //
+  // return files;
 }
 
 var defaults = clean.defaults = Object.create( cleanWhat.defaults );
 
+defaults.beginTime = null;
 defaults.dry = 0;
 
 // --
@@ -7182,7 +7155,7 @@ let Extend =
 
   cleanWhatSingle,
   cleanWhat,
-  cleanWhatReport,
+  cleanLog,
   clean,
 
   // resolver

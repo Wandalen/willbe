@@ -2394,7 +2394,7 @@ function groupTextualReport_body( o )
     if( commonPath )
     r += ', at ' + commonPath;
     if( o.spentTime !== null )
-    r += ', found in ' + _.timeSpentFormat( o.spentTime );
+    r += ', in ' + _.timeSpentFormat( o.spentTime );
   }
 
   return r;

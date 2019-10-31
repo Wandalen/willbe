@@ -9019,7 +9019,7 @@ function submodulesResolve( test )
     test.is( submodule instanceof will.ModulesRelation );
     // test.is( submodule.hasFiles );
     test.is( submodule.opener.repo.hasFiles );
-    test.is( submodule.opener.repo === submodule.opener.openedModule.repo ); 
+    test.is( submodule.opener.repo === submodule.opener.openedModule.repo );
     test.is( !!submodule.opener );
     test.identical( submodule.name, 'Tools' );
 
