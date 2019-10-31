@@ -250,7 +250,7 @@ function usedBy( user )
       module.remotePathEachAdopt({ remotePath : user.remotePath, downloadPath : user.downloadPath });
     }
 
-    _.assert( user.downloadPath === module.downloadPath );
+    _.assert( user.downloadPath === module.downloadPath ); 
     _.assert( user.remotePath === module.remotePath );
     _.assert( user.repo === module.repo );
 
