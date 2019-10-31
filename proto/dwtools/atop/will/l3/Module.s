@@ -185,8 +185,8 @@ function init( o )
   if( module.willfilesPath === null )
   module.willfilesPath = _.select( module.willfilesArray, '*/filePath' );
 
-  if( module.id === 1086 )
-  debugger;
+  // if( module.id === 1086 )
+  // debugger;
 
   module._nameChanged();
 
@@ -234,7 +234,26 @@ function usedBy( user )
   {
     if( user.superRelation )
     module.superRelationsAppend( user.superRelation );
+
+    _.assert( user.downloadPath === null || module.downloadPath === null || user.downloadPath === module.downloadPath );
+    _.assert( user.remotePath === null || module.remotePath === null || user.remotePath === module.remotePath );
+
+    if( !user.remotePath && module.remotePath )
+    {
+      _.assert( _.strDefined( module.downloadPath ) );
+      user.remotePathEachAdopt({ remotePath : module.remotePath, downloadPath : module.downloadPath });
+    }
+    else if( user.remotePath && !module.remotePath )
+    {
+      debugger;
+      _.assert( _.strDefined( user.downloadPath ) );
+      module.remotePathEachAdopt({ remotePath : user.remotePath, downloadPath : user.downloadPath });
+    }
+
+    _.assert( user.downloadPath === module.downloadPath ); 
+    _.assert( user.remotePath === module.remotePath );
     _.assert( user.repo === module.repo );
+
   }
 
   return module;
@@ -556,22 +575,21 @@ function precopy2( o )
   if( !module.rootModule && !o.rootModule )
   o.rootModule = module;
 
-  if( o.will !== undefined )
+  if( o.will )
   module.will = o.will;
-  if( o.repo !== undefined )
+  if( o.repo )
   module.repo = o.repo;
 
-  // if( o.isRemote !== undefined )
-  // module.isRemote = o.isRemote;
   if( o.isOut !== undefined )
   module.isOut = o.isOut;
-
   if( o.inPath !== undefined )
   module.inPath = o.inPath;
   if( o.outPath !== undefined )
   module.outPath = o.outPath;
 
-  if( o.pathResourceMap !== undefined )
+  if( o.about )
+  module.about = o.about;
+  if( o.pathResourceMap )
   module.pathResourceMap = o.pathResourceMap;
 
   if( o.localPath !== undefined )
@@ -829,10 +847,6 @@ function predefinedForm()
     importableFromIn : 1,
     importableFromOut : 1,
     predefined : 0,
-    // criterion :
-    // {
-    //   predefined : 0,
-    // },
   })
 
   path
@@ -844,10 +858,6 @@ function predefinedForm()
     importableFromIn : 1,
     importableFromOut : 1,
     predefined : 0,
-    // criterion :
-    // {
-    //   predefined : 0,
-    // },
   })
 
   path
@@ -872,7 +882,7 @@ function predefinedForm()
 
   path
   ({
-    name : 'module.peer.willfiles', /* xxx : introduce module.peer */
+    name : 'module.peer.willfiles',
     path : null,
     writable : 0,
     exportable : 1,
@@ -934,10 +944,10 @@ function predefinedForm()
   ({
     name : 'remote',
     path : null,
-    writable : 1,
+    writable : 0,
     exportable : 0,
-    importableFromIn : 1,
-    importableFromOut : 1,
+    importableFromIn : 0,
+    importableFromOut : 0,
   })
 
   path
@@ -1201,10 +1211,6 @@ function predefinedForm()
       importableFromIn : 0,
       importableFromOut : 0,
       predefined : 1,
-      // criterion :
-      // {
-      //   predefined : 1,
-      // }
     }
 
     if( defaults === null )
@@ -1245,19 +1251,9 @@ function predefinedForm()
 
     let defaults =
     {
-      // module : module,
-      // writable : 0,
-      // exportable : 0,
-      importableFromIn : 1,
+      importableFromIn : 0,
       importableFromOut : 1,
-      // criterion :
-      // {
-      //   predefined : 1,
-      // }
     }
-
-    // if( o.name === 'download' )
-    // debugger;
 
     o = prepare( defaults, o );
 
@@ -1275,6 +1271,12 @@ function predefinedForm()
     {
       result = new will.PathResource( o );
     }
+
+    // if( result.importableFromIn )
+    // {
+    //   logger.log( `${result.qualifiedName} is importable from in` );
+    //   debugger;
+    // }
 
     result.form1();
 
@@ -3650,6 +3652,8 @@ function _peerChanged()
 
   if( !will )
   return;
+  if( !module.dirPath )
+  return;
 
   if( module.isOut )
   {
@@ -3681,6 +3685,21 @@ function peerModuleSet( src )
 
   if( module.peerModule === src )
   return src;
+
+  if( src && src.remotePath )
+  {
+    // debugger;
+    let peerRemotePath = src.peerRemotePathGet();
+    /*
+      if peer module is not formed then peerRemotePath is not deducable
+    */
+    if( peerRemotePath )
+    {
+      _.assert( module.remotePath === null || module.remotePath === peerRemotePath );
+      _.assert( module.downloadPath === null || module.downloadPath === src.downloadPath );
+      module.remotePathEachAdopt({ remotePath : peerRemotePath, downloadPath : module.downloadPath });
+    }
+  }
 
   let was = module.peerModule;
   module[ peerModuleSymbol ] = src;
@@ -3775,8 +3794,16 @@ function _remoteChanged()
   let logger = will.logger;
 
   _.assert( !!module.pathResourceMap[ 'current.remote' ] );
-
   _.assert( module.commonPath === module.localPath );
+
+  /* */
+
+  if( module.remotePath )
+  {
+    // if( module.id === 155 )
+    // debugger;
+    module.remotePathEachAdoptCurrent();
+  }
 
   /* */
 
@@ -3796,6 +3823,27 @@ function _remoteChanged()
   {
     module.pathResourceMap[ 'current.remote' ].path = null;
   }
+
+  /* */
+
+  if( module.peerModule && !module.peerModule.remotePath && module.remotePath )
+  {
+
+    // if( module.id === 155 )
+    // debugger;
+
+    // debugger;
+    _.assert( _.strDefined( module.downloadPath ) );
+    module.peerModule.remotePathEachAdopt
+    ({
+      remotePath : module.peerRemotePathGet(),
+      downloadPath : module.downloadPath,
+    });
+    // module.remotePathEachAdoptCurrent();
+
+  }
+
+  /* */
 
 }
 
@@ -4444,6 +4492,30 @@ function _pathRegister()
   let module = this;
   let will = module.will;
 
+  // if( module.downloadPath !== module.repo.downloadPath || module.remotePath !== module.repo.remotePath )
+  // {
+  //   debugger; xxx
+  //
+  //   module.repo = will.repoFrom
+  //   ({
+  //     isRemote : !!module.remotePath,
+  //     downloadPath : module.downloadPath,
+  //     remotePath : module.remotePath,
+  //   });
+  //
+  //   for( let u = 0 ; u < module.userArray.length ; u++ )
+  //   {
+  //     let opener = module.userArray[ u ];
+  //     if( opener instanceof will.ModuleOpener );
+  //     {
+  //       _.assert( opener.downloadPath === module.downloadPath );
+  //       _.assert( opener.remotePath === module.remotePath );
+  //       opener.repo = module.repo;
+  //     }
+  //   }
+  //
+  // }
+
   will.modulePathRegister( module );
   will.variantFrom( module );
 
@@ -4457,16 +4529,22 @@ function _pathRegister()
   _.assert( !!o2.withDisabledModules );
   _.assert( !!o2.withDisabledSubmodules );
 
-  // ({
-  //   withPeers : 0,
-  //   outputFormat : '/',
-  //   // ... _.Will.RelationFilterOn,
-  // });
-
   variants.forEach( ( variant ) =>
   {
     will.variantsFrom( variant.relations );
   });
+
+}
+
+//
+
+function _pathUnregister()
+{
+  let module = this;
+  let will = module.will;
+
+  // will.modulePathRegister( module );
+  will.modulePathUnregister( module );
 
 }
 
@@ -4532,6 +4610,22 @@ function cloneDirPathGet( rootModule )
     let inPath = rootModule.peerInPathGet();
     if( inPath )
     return _.Will.CloneDirPathFor( inPath );
+  }
+
+  // if( rootModule.isOut )
+  // {
+  //   debugger;
+  //   let inPath = rootModule.peerInPathGet();
+  //   if( inPath )
+  //   return _.Will.CloneDirPathFor( inPath );
+  // }
+
+  if( rootModule.isOut )
+  {
+    debugger;
+    if( module.verbosity )
+    logger.error( ` ! Out willfile of ${module.localPath} does not have path::module.peer.in, but should` );
+    return null;
   }
 
   _.assert( !rootModule.isOut );
@@ -4608,6 +4702,19 @@ function peerInPathGet()
   return result || null;
 }
 
+// //
+//
+// function remotePathRegister()
+// {
+//   let module = this;
+//
+//   if( module.id === 3 || module.id === 155 )
+//   debugger;
+//
+//   _.assert( _.strDefined( module.remotePath ) ); debugger; xxx
+//
+// }
+
 //
 
 function predefinedPathGet_functor( fieldName, resourceName, absolutize )
@@ -4621,6 +4728,12 @@ function predefinedPathGet_functor( fieldName, resourceName, absolutize )
     return null;
 
     let result = module.pathMap[ resourceName ] || null;
+
+    if( result )
+    if( _.Will.Resolver.selectorIs( result ) )
+    {
+      result = module.pathResolve( result );
+    }
 
     if( absolutize && result )
     {
@@ -4673,9 +4786,10 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
       filePath = module.pathsRelative( basePath, filePath );
     }
 
-    if( fieldName === 'localPath' || fieldName === 'remotePath' )
+    if( fieldName === 'localPath' || fieldName === 'remotePath' ) /* xxx : move out to set */
     {
-      will.modulePathUnregister( module );
+      // will.modulePathUnregister( module );
+      module._pathUnregister();
     }
 
     module.pathResourceMap[ resourceName ].path = filePath;
@@ -4788,10 +4902,15 @@ function remotePathSet( filePath )
   let ex = module.remotePath;
   let isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
 
-  module._remotePathPut( filePath );
+  // if( filePath && !isIdentical )
+  // {
+  //   debugger;
+  //   _.assert( _.strDefined( module.downloadPath ) );
+  //   module.remotePathEachAdopt({ remotePath : filePath, downloadPath : module.downloadPath });
+  //   module.remotePathEachAdoptCurrent();
+  // }
 
-  // if( !isIdentical )
-  // module._filePathChanged2();
+  module._remotePathPut( filePath );
 
   if( !isIdentical )
   module._remoteChanged();
@@ -4808,6 +4927,36 @@ function remotePathSet( filePath )
   });
 
   return filePath;
+}
+
+//
+
+function remotePathEachAdoptAct( o )
+{
+  let module = this;
+  let will = module.will;
+
+  _.assertRoutineOptions( remotePathEachAdoptAct, o );
+
+  moduleAdoptPath( module );
+
+  return true;
+
+  function moduleAdoptPath( module )
+  {
+    module.remotePathAdopt( o );
+    module.userArray.forEach( ( opener2 ) =>
+    {
+      if( !( opener2 instanceof _.Will.ModuleOpener ) )
+      return;
+      opener2.remotePathAdopt( o );
+    });
+  }
+}
+
+remotePathEachAdoptAct.defaults =
+{
+  ... Parent.prototype.remotePathAdopt.defaults,
 }
 
 //
@@ -5056,7 +5205,7 @@ function aliasNamesGet()
   for( let u = 0 ; u < module.userArray.length ; u++ )
   {
     let opener = module.userArray[ u ];
-    _.assert( opener instanceof will.ModuleOpener );
+    if( opener instanceof will.ModuleOpener )
     if( opener.aliasName )
     _.arrayAppendElementOnce( result, opener.aliasName )
   }
@@ -5235,6 +5384,9 @@ function cleanWhatSingle( o )
 
     if( _.arrayIs( op ) || _.strIs( op ) )
     op = { filter : { filePath : op } }
+
+    if( op === null )
+    return;
 
     if( _.arrayIs( op.filter.filePath.length ) && !op.filter.filePath.length )
     return;
@@ -6959,6 +7111,7 @@ let Extend =
   _filePathChanged1,
   _filePathChanged2,
   _pathRegister,
+  _pathUnregister,
   inPathGet,
   outPathGet,
   outfilePathGet,
@@ -6966,6 +7119,7 @@ let Extend =
   peerLocalPathGet,
   peerRemotePathGet,
   peerInPathGet,
+  // remotePathRegister,
 
   willfilesPathGet,
   dirPathGet,
@@ -7009,6 +7163,7 @@ let Extend =
   willfilesPathSet,
   localPathSet,
   remotePathSet,
+  remotePathEachAdoptAct,
 
   // name
 

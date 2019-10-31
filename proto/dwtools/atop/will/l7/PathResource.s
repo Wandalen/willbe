@@ -43,7 +43,11 @@ function OnInstanceExists( o )
   _.routineOptions( OnInstanceExists, arguments );
 
   o.resource.criterion = o.resource.criterion || Object.create( null );
+
+  _.assert( _.boolLike( o.instance.importableFromIn ) );
+  if( !o.instance.importableFromIn )
   _.mapSupplement( o.resource.criterion, o.instance.criterion );
+
   o.resource.exportable = o.instance.exportable;
   o.resource.importableFromIn = o.instance.importableFromIn;
   o.resource.importableFromOut = o.instance.importableFromOut;

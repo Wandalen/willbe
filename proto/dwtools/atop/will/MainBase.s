@@ -748,14 +748,14 @@ function variantsInfoExport( variants )
   if( !variants )
   {
     variants = _.longOnce( _.mapVals( will.variantMap ) );
-    variants = variants.filter( ( variant ) =>
-    {
-      if( variant.relation && !variant.relation.enabled )
-      return false;
-      if( variant.isRemote === false )
-      return false;
-      return variant;
-    });
+    // variants = variants.filter( ( variant ) =>
+    // {
+    //   if( variant.relation && !variant.relation.enabled )
+    //   return false;
+    //   if( variant.isRemote === false )
+    //   return false;
+    //   return variant;
+    // });
   }
 
   return _.map( variants, ( variant ) => variant.infoExport() ).join( '\n' );
@@ -775,6 +775,14 @@ function _pathChanged( o )
   o.val = _.path.simplify( o.val );
   if( o.isIdential === null )
   o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
+
+  // if( o.val )
+  // if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
+  // if( o.object.id === 1086 )
+  // {
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   debugger;
+  // }
 
   // if( o.val )
   // if( o.fieldName === 'outPath' || o.fieldName === 'out' )
@@ -2404,7 +2412,7 @@ function modulesDownload_body( o )
         () => 'Submodule' + ( variant.opener ? variant.opener.qualifiedName : n ) + ' was not preformed to download it'
       );
 
-      if( !variant.isRemote )
+      if( !variant.isRemote || !variant.relation )
       return variantLocalMaybe( variant );
       if( variant.relation && !variant.relation.enabled )
       return variantLocalMaybe( variant );
@@ -2436,15 +2444,12 @@ function modulesDownload_body( o )
     {
       if( _.arrayHas( o.doneContainer, variant.peer ) )
       {
-        // debugger;
         return variantDone( variant );
       }
-      // if( _.arrayHas( o.doneContainer, variant.peer ) )
-      // {
-      //   debugger;
-      //   return variantDone( variant );
-      // }
     }
+
+    _.assert( !!variant.relation && !!variant.relation.opener );
+    let opener = variant.relation.opener;
 
     variantRemote( variant );
     variantDone( variant );
@@ -2472,8 +2477,8 @@ function modulesDownload_body( o )
     }
     else
     {
-      let o2 = _.mapOnly( o, variant.opener._repoDownload.defaults );
-      let r = _.Consequence.From( variant.opener._repoDownload( o2 ) );
+      let o2 = _.mapOnly( o, opener._repoDownload.defaults );
+      let r = _.Consequence.From( opener._repoDownload( o2 ) );
       return r.then( ( downloaded ) =>
       {
         _.assert( _.boolIs( downloaded ) );

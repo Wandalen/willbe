@@ -250,7 +250,6 @@ function _filePathChanged2( o )
 
   if( o.commonPath !== null )
   module[ fileNameSymbol ] = path.fullName( o.commonPath );
-  // module[ willfilesPathSymbol ] = o.willfilesPath;
 
   will._pathChanged
   ({
@@ -295,17 +294,156 @@ function _filePathChanged2( o )
 _filePathChanged2.defaults = _.mapExtend( null, _filePathChanged1.defaults );
 
 //
+
+function _remotePathAdopt()
+{
+  let module = this;
+  let will = module.will;
+
+  // debugger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( _.strDefined( module.remotePath ) );
+  _.assert( _.strDefined( module.downloadPath ) );
+  _.assert( _.strBegins( module.localPath, module.downloadPath ) );
+
+  if( module.downloadPath !== module.repo.downloadPath || module.remotePath !== module.repo.remotePath )
+  {
+    // debugger;
+    module.repo = will.repoFrom
+    ({
+      isRemote : !!module.remotePath,
+      downloadPath : module.downloadPath,
+      remotePath : module.remotePath,
+    });
+  }
+
+  return true;
+}
+
+//
+
+function remotePathAdopt( o )
+{
+  let module = this;
+  let will = module.will;
+
+  if( _.strIs( arguments[ 0 ] ) )
+  o = { remotePath : arguments[ 0 ] }
+  o = _.routineOptions( remotePathAdopt, o );
+  _.assert( arguments.length === 1 );
+
+  if( module.remotePath === o.remotePath )
+  return false;
+
+  if( o.downloadPath === null )
+  o.downloadPath = module.downloadPath;
+
+  // debugger;
+
+  _.assert( _.strDefined( o.downloadPath ) );
+  if( o.downloadPath )
+  module._downloadPathPut( o.downloadPath );
+  _.assert( _.strDefined( o.remotePath ) );
+  module.remotePathSet( o.remotePath );
+
+  // debugger;
+
+  _.assert( module.remotePath === o.remotePath );
+
+  module._remotePathAdopt();
+
+  // _.assert( _.strDefined( module.downloadPath ) );
+  // _.assert( _.strBegins( module.localPath, module.downloadPath ) );
+  //
+  // if( module.downloadPath !== module.repo.downloadPath || module.remotePath !== module.repo.remotePath )
+  // {
+  //   debugger;
+  //   module.repo = will.repoFrom
+  //   ({
+  //     isRemote : !!module.remotePath,
+  //     downloadPath : module.downloadPath,
+  //     remotePath : module.remotePath,
+  //   });
+  // }
+
+  return true;
+}
+
+remotePathAdopt.defaults =
+{
+  remotePath : null,
+  downloadPath : null,
+}
+
 // //
 //
-// function _filePathChanged2()
+// function remotePathEachAdoptAct( o )
 // {
 //   let module = this;
+//   let will = module.will;
+//   let variant = will.variantOf( module ); /* xxx : optimize variantFrom */
+//   if( !variant )
+//   variant = will.variantFrom( module );
 //
-//   _.assert( arguments.length === 0 );
+//   _.assertRoutineOptions( remotePathEachAdoptAct, o );
 //
-//   module._filePathSet( module.willfilesPath );
+//   variant.modules.forEach( ( module ) => module.remotePathAdopt( o ) );
+//   variant.openers.forEach( ( opener ) => opener.remotePathAdopt( o ) );
+//   variant.reform();
 //
+//   return true;
 // }
+//
+// remotePathEachAdoptAct.defaults =
+// {
+//   ... remotePathAdopt.defaults,
+// }
+
+//
+
+function remotePathEachAdopt( o )
+{
+  let module = this;
+  let will = module.will;
+
+  if( _.strIs( arguments[ 0 ] ) )
+  o = { remotePath : arguments[ 0 ] }
+  o = _.routineOptions( remotePathAdopt, o );
+  _.assert( arguments.length === 1 );
+
+  if( module.remotePath === o.remotePath )
+  return false;
+
+  let result = module.remotePathEachAdoptAct( o );
+
+  _.assert( module.remotePath === o.remotePath );
+
+  return result;
+}
+
+remotePathEachAdopt.defaults =
+{
+  ... remotePathAdopt.defaults,
+}
+
+//
+
+function remotePathEachAdoptCurrent()
+{
+  let module = this;
+  let will = module.will;
+
+  _.assert( arguments.length === 0 );
+
+  module._remotePathAdopt();
+
+  let o2 = Object.create( null );
+  o2.remotePath = module.remotePath;
+  o2.downloadPath = module.downloadPath;
+
+  return module.remotePathEachAdoptAct( o2 );
+}
 
 // --
 // name
@@ -1575,6 +1713,12 @@ let Extend =
   _filePathSet,
   _filePathChanged1,
   _filePathChanged2,
+
+  _remotePathAdopt,
+  remotePathAdopt,
+  // remotePathEachAdoptAct,
+  remotePathEachAdopt,
+  remotePathEachAdoptCurrent,
 
   // name
 

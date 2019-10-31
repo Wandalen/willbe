@@ -27,14 +27,12 @@ function reposRedownload()
     return null;
   });
 
-  /* - */
-
-  clone( 'Color', '01d8e996b03401c131a0deb2ad8201b23e89397b' );
-  clone( 'PathBasic', '2e84d73699bdf5894fd3051169a1e2511a63e427' );
-  clone( 'Procedure', '78d6af643b132a959675b7f0489ace2e9a6c4e60' );
-  clone( 'Proto', 'b2054cc5549d24c421f4c71875e6da41fa36ffe0' );
-  clone( 'Tools', '14163d4223466b178fec3adf67dc85a9ece32ad5' );
-  clone( 'UriBasic', '382707a813d7b0a369aad2689f39c166930f9d87' );
+  clone( 'Color', '4ac65b56d4ca59d6e8ec48d3d70f410fae930ed3' );
+  clone( 'PathBasic', '622fb3c259013f3f6e2aeec73642645b3ce81dbc' );
+  clone( 'Procedure', 'd7b2cd8dc0a82a78343100462fe399c92cabe55c' );
+  clone( 'Proto', '70fcc0c31996758b86f85aea1ae58e0e8c2cb8a7' );
+  clone( 'Tools', '8fa27d72fe02d5e496b26e16669970a69d71fdb1' );
+  clone( 'UriBasic', 'd7022e6dcd5ab7f2d71aeb740d41a65dfaabdecf' );
 
   return ready;
 }
