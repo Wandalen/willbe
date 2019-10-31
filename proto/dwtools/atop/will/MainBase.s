@@ -923,7 +923,7 @@ function versionIsUpToDate( o )
     }
     else
     {
-      logger.log( `Utility willbe is up to date. Current version: ${currentVersion}` );
+      logger.log( `Current version: ${currentVersion}. Utility willbe is up to date.` );
     }
 
     return true;
