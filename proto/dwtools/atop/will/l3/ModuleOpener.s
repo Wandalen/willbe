@@ -1234,6 +1234,7 @@ function _repoDownload( o )
   let downloading = null;
   let origin = null;
   let hasLocalChanges = null;
+  let hasLocalUncommittedChanges = null;
   let isValid = null;
   let reopened = [];
   let dirStatusMap = Object.create( null );
@@ -1423,7 +1424,7 @@ function _repoDownload( o )
     _.assert( opener.repo.hasFiles === true );
     _.assert( opener.repo.isRepository === true );
 
-    if( hasLocalChangesReform() )
+    if( hasLocalUncommittedChangesReform() )
     throw _.errBrief
     (
       'Module at', opener.decoratedAbsoluteName, 'needs to be updated, but has local changes.',
@@ -1434,14 +1435,14 @@ function _repoDownload( o )
 
   /* */
 
-  function hasLocalChangesReform()
+  function hasLocalUncommittedChangesReform()
   {
-    if( hasLocalChanges !== null )
-    return hasLocalChanges;
+    if( hasLocalUncommittedChanges !== null )
+    return hasLocalUncommittedChanges;
     // hasLocalChanges = opener.repoHasLocalChanges();
-    hasLocalChanges = opener.hasLocalChanges;
-    _.assert( _.boolIs( hasLocalChanges ) );
-    return hasLocalChanges;
+    hasLocalUncommittedChanges = opener.repo.hasLocalUncommittedChanges;
+    _.assert( _.boolIs( hasLocalUncommittedChanges ) );
+    return hasLocalUncommittedChanges;
   }
 
   /* */
@@ -1469,18 +1470,18 @@ function _repoDownload( o )
   function remoteIsValidReform()
   {
 
-    if( remoteIsValid !== null )
-    return remoteIsValid;
+    if( origin !== null )
+    return origin;
 
     let gitProvider = will.fileProvider.providerForPath( opener.remotePath );
 
-    remoteIsValid = gitProvider.hasRemote
+    origin = gitProvider.hasRemote
     ({
       localPath : opener.downloadPath,
       remotePath : opener.remotePath
     });
 
-    return remoteIsValid;
+    return origin;
   }
 
   /* */
@@ -1538,9 +1539,26 @@ function _repoDownload( o )
       _.assert( _.boolIs( deleting ) );
       if( deleting )
       {
+        safeToDeleteCheck();
         fileProvider.filesDelete({ filePath : opener.downloadPath, throwing : 0, sync : 1 });
       }
       return deleting;
+    }
+
+    function safeToDeleteCheck()
+    {
+      if( opener.repo.isRepository )
+      if( !opener.repo.safeToDelete )
+      {
+       _.assert( opener.repo.hasLocalChanges === true );
+       throw _.errBrief
+       (
+         'Module at', opener.decoratedAbsoluteName, `needs to be deleted, but has local changes.`,
+         '\nPlease commit and push your local changes and try again.'
+       );
+      }
+
+      _.assert( opener.repo.hasLocalChanges === false );
     }
 
   }

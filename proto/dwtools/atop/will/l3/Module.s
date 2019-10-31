@@ -3236,7 +3236,7 @@ function submodulesVerify( o )
   function onEach( r )
   {
     if( o.hasFiles )
-    if( !r.opener.repo.isRepository )
+    if( !r.opener.repo.hasFiles )
     {
       if( o.throwing )
       throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'does not have files' );
@@ -3257,7 +3257,7 @@ function submodulesVerify( o )
 
     /* is remote / enabled */
 
-    if( !r.opener.isRemote )
+    if( !r.opener.repo.isRemote )
     return true;
     if( r.relation && !r.relation.enabled )
     return true;
@@ -3265,14 +3265,14 @@ function submodulesVerify( o )
     /* repository check */
 
     if( o.isRepository )
-    if( !r.opener.isRepository )
+    if( !r.opener.repo.isRepository )
     {
       if( o.throwing )
       throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), `is downloaded, but it's not a repository` );
       return false;
     }
 
-    let remoteProvider = will.fileProvider.providerForPath( r.opener.remotePath );
+    let remoteProvider = will.fileProvider.providerForPath( r.opener.repo.remotePath );
 
     /* origin check */
 
@@ -3280,11 +3280,11 @@ function submodulesVerify( o )
     {
       let result = remoteProvider.hasRemote
       ({
-        localPath : r.opener.downloadPath,
-        remotePath : r.opener.remotePath
+        localPath : r.opener.repo.downloadPath,
+        remotePath : r.opener.repo.remotePath
       });
 
-      if( !result.hasRemote )
+      if( !result.remoteIsValid )
       {
         if( o.throwing )
         throw _.errBrief
@@ -3301,15 +3301,15 @@ function submodulesVerify( o )
 
     if( o.isUpToDate )
     {
-      if( r.opener.isUpToDate )
+      if( r.opener.repo.isUpToDate )
       return true;
 
       if( !o.throwing )
       return false;
 
-      let remoteParsed = remoteProvider.pathParse( r.opener.remotePath );
+      let remoteParsed = remoteProvider.pathParse( r.opener.repo.remotePath );
       let remoteVersion = remoteParsed.hash || 'master';
-      let localVersion = remoteProvider.versionLocalRetrive( r.opener.downloadPath );
+      let localVersion = remoteProvider.versionLocalRetrive( r.opener.repo.downloadPath );
 
       if( remoteVersion === localVersion )
       throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not up to date!' );
@@ -3320,8 +3320,6 @@ function submodulesVerify( o )
         '\nCurrent:', localVersion,
         '\nExpected:', remoteVersion
       );
-
-      return false;
     }
 
     return true;
@@ -3342,10 +3340,11 @@ function submodulesVerify( o )
   function reform( relation )
   {
     let con = new _.Consequence().take( null );
-    con.then( () => relation.opener.preform() )
-    con.then( () => relation.opener.repoIsDownloadedReform() )
-    con.then( () => relation.opener.repoIsGoodReform() )
-    con.then( () => relation.opener.repoIsUpToDateReform() )
+    // con.then( () => relation.opener.preform() )
+    // con.then( () => relation.opener.repoIsDownloadedReform() )
+    // con.then( () => relation.opener.repoIsGoodReform() )
+    // con.then( () => relation.opener.repoIsUpToDateReform() )
+    con.then( () => relation.opener.repo.status({ all : 1, reset : 1 }) )
     con.then( () => relation )
     return con;
   }

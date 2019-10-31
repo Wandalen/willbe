@@ -14837,6 +14837,94 @@ submodulesDownloadThrowing.timeOut = 300000;
 
 //
 
+function submodulesDownloadStepAndCommand( test )
+{
+  let self = this;
+  let originalDirPath = _.path.join( self.assetDirPath, 'submodules-download' );
+  let routinePath = _.path.join( self.suitePath, test.name );
+  let abs = self.abs_functor( routinePath );
+  let rel = self.rel_functor( routinePath );
+  let submodulesPath = _.path.join( routinePath, '.module' );
+  let localRepoPath = _.path.join( routinePath, 'module' );
+  let ready = new _.Consequence().take( null );
+  let downloadPath = _.path.join( routinePath, '.module/PathBasic' );
+
+  let start = _.process.starter
+  ({
+    execPath : 'node ' + self.willPath,
+    currentPath : routinePath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  let shell2 = _.process.starter
+  ({
+    currentPath : localRepoPath,
+    outputCollecting : 1,
+    outputGraying : 1,
+    outputGraying : 1,
+    throwingExitCode : 0,
+    ready : ready,
+  })
+
+  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+
+  /* submodules.download step downloads submodules recursively, but should not */
+
+  ready
+
+  .then( () =>
+  {
+    test.case = 'download using step::submodules.download'
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+  shell2( 'git init' )
+  shell2( 'git add .' )
+  shell2( 'git commit -m init' )
+  start({ execPath : '.build' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    let files = self.find( submodulesPath );
+    test.is( !_.arrayHas( files, './Tools' ) )
+    test.is( !_.arrayHas( files, './Proto' ) )
+    test.is( _.arrayHas( files, './submodule' ) )
+    return null;
+  })
+
+  /* submodules.download command downloads only own submodule, as expected */
+
+  .then( () =>
+  {
+    test.case = 'download using command submodules.download'
+    _.fileProvider.filesDelete( submodulesPath );
+    return null;
+  })
+  shell2( 'git init' )
+  shell2( 'git add .' )
+  shell2( 'git commit -m init' )
+  start({ execPath : '.submodules.download' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    let files = self.find( submodulesPath );
+    test.is( !_.arrayHas( files, './Tools' ) )
+    test.is( !_.arrayHas( files, './Proto' ) )
+    test.is( _.arrayHas( files, './submodule' ) )
+    return null;
+  })
+
+  /*  */
+
+  return ready;
+}
+
+//
+
 function submodulesDownloadDiffDownloadPathsRegular( test )
 {
   let self = this;
@@ -15516,6 +15604,54 @@ function submodulesAgreeThrowing( test )
     return null;
   })
 
+
+
+  .then( () =>
+  {
+    test.case = 'donwloaded repo has uncommitted change, error expected';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    return null;
+  })
+  start({ execPath : '.with good .submodules.versions.agree' })
+  shell2( 'git -C .module/PathBasic reset --hard HEAD~1' )
+  .then( () =>
+  {
+    _.fileProvider.fileWrite( _.path.join( downloadPath, 'was.package.json' ), 'was.package.json' );
+    return null;
+  })
+  start({ execPath : '.with good .submodules.versions.agree' })
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Module at module::submodules-download-errors-good / opener::PathBasic needs to be updated, but has local changes' ) );
+    test.is( _.strHas( got.output, 'Failed to agree module::submodules-download-errors-good / opener::PathBasic' ) );
+    return null;
+  })
+
+  //
+
+  .then( () =>
+  {
+    test.case = 'donwloaded repo has unpushed change and wrong origin, error expected';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    return null;
+  })
+  start({ execPath : '.with good .submodules.versions.agree' })
+  shell2( 'git -C .module/PathBasic reset --hard HEAD~1' )
+  shell2( 'git -C .module/PathBasic commit -m unpushed --allow-empty' )
+  shell2( 'git -C .module/PathBasic remote remove origin' )
+  shell2( 'git -C .module/PathBasic remote add origin https://github.com/Wandalen/wTools.git' )
+  start({ execPath : '.with good .submodules.versions.agree' })
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'needs to be deleted, but has local changes' ) );
+    test.is( _.strHas( got.output, 'Failed to agree module::submodules-download-errors-good / opener::PathBasic' ) );
+    return null;
+  })
+
   /* - */
 
   return ready;
@@ -16192,7 +16328,7 @@ function submodulesVerify( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local does not have files' ) );
     return null;
   })
 
@@ -16565,12 +16701,12 @@ function stepWillbeVersionCheck( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : assetDstPath } })
   _.fileProvider.softLink( nodeModulesDstPath, nodeModulesSrcPath );
 
-  // let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/Exec' ) );
+  let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
   let start = _.process.starter
   ({
-    execPath : 'node ' + self.willPath,
+    execPath : 'node ' + execPath,
     currentPath : assetDstPath,
     outputCollecting : 1,
     throwingExitCode : 0,
@@ -16724,7 +16860,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local does not have files' ) );
     // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -16742,7 +16878,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local does not have files' ) );
     // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -18508,6 +18644,7 @@ var Self =
     submodulesDownloadSwitchBranch,
     submodulesDownloadRecursive,
     submodulesDownloadThrowing,
+    submodulesDownloadStepAndCommand,
     submodulesDownloadDiffDownloadPathsRegular,
     submodulesDownloadDiffDownloadPathsIrregular,
     /* xxx : implement same test for hierarchy-remote */

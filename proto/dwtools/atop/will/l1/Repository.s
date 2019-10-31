@@ -111,6 +111,7 @@ statusInvalidate.defaults =
   hasFiles : null,
   isRepository : null,
   hasLocalChanges : null,
+  hasLocalUncommittedChanges : null,
   isUpToDate : null,
   remoteIsValid : null,
   safeToDelete : null,
@@ -192,43 +193,47 @@ function status( o )
   {
 
     if( o.dirExists )
-    if( o.reset || repo.dirExists === null )
+    if( o.reset || repo._.dirExists === null )
     ready.also( dirExistsReform );
 
     if( o.hasFiles )
-    if( o.reset || repo.hasFiles === null )
+    if( o.reset || repo._.hasFiles === null )
     ready.also( hasFilesReform );
 
     if( o.isRepository )
-    if( o.reset || repo.isRepository === null )
+    if( o.reset || repo._.isRepository === null )
     ready.also( isRepositoryReform );
 
     if( o.hasLocalChanges )
-    if( o.reset || repo.hasLocalChanges === null )
+    if( o.reset || repo._.hasLocalChanges === null )
     ready.also( hasLocalChangesReform );
 
+    if( o.hasLocalUncommittedChanges )
+    if( o.reset || repo._.hasLocalUncommittedChanges === null )
+    ready.also( hasLocalUncommittedChangesReform );
+
     if( o.isUpToDate )
-    if( o.reset || repo.isUpToDate === null )
+    if( o.reset || repo._.isUpToDate === null )
     ready.also( isUpToDateReform );
 
     if( o.remoteIsValid )
-    if( o.reset || repo.remoteIsValid === null )
+    if( o.reset || repo._.remoteIsValid === null )
     ready.also( remoteIsValidReform );
 
     if( o.safeToDelete )
-    if( o.reset || repo.safeToDelete === null )
+    if( o.reset || repo._.safeToDelete === null )
     ready.also( safeToDeleteReform );
 
     if( o.downloadRequired )
-    if( o.reset || repo.downloadRequired === null )
+    if( o.reset || repo._.downloadRequired === null )
     ready.then( downloadRequiredReform );
 
     if( o.updateRequired )
-    if( o.reset || repo.updateRequired === null )
+    if( o.reset || repo._.updateRequired === null )
     ready.then( updateRequiredReform );
 
     if( o.agreeRequired )
-    if( o.reset || repo.agreeRequired === null )
+    if( o.reset || repo._.agreeRequired === null )
     ready.then( agreeRequiredReform );
 
   }
@@ -366,6 +371,44 @@ function status( o )
 
   }
 
+  //
+
+  function hasLocalUncommittedChangesReform()
+  {
+
+    // _.assert( !!repo.willfilesPath || !!repo.dirPath );
+    _.assert( arguments.length === 0 );
+    _.assert( _.boolIs( repo.isRepository ) );
+
+    if( !repo.isRepository )
+    return end( false );
+
+    // let vcs = will.vcsToolsFor( repo.remotePath );
+    // if( !_.arrayHas( vcs.protocols, 'git' ) )
+    // return end( false );
+
+    // qqq : use remoteProvider
+    // let remoteProvider = will.vcsProviderFor( repo.remotePath );
+    // return remoteProvider.hasLocalChanges( repo.downloadPath );
+    let result = vcs.hasLocalChanges
+    ({
+      localPath : repo.downloadPath,
+      uncommitted : 1,
+      unpushed : 0,
+      sync : 1,
+    });
+
+    return end( result );
+
+    function end( result )
+    {
+      _.assert( _.boolIs( result ) );
+      repo._.hasLocalUncommittedChanges = result;
+      return result;
+    }
+
+  }
+
   /* */
 
   function safeToDeleteReform()
@@ -377,7 +420,7 @@ function status( o )
     _.assert( _.boolIs( repo.hasFiles ) );
 
     if( repo.isRepository )
-    return end( repo.hasLocalChanges );
+    return end( !repo.hasLocalChanges );
     else
     return end( !repo.hasFiles )
 
@@ -1014,6 +1057,7 @@ let LocalDefaults =
   hasFiles : true,
   isRepository : true,
   hasLocalChanges : false,
+  hasLocalUncommittedChanges : false,
   isUpToDate : true,
   remoteIsValid : true,
   safeToDelete : false,
@@ -1104,6 +1148,7 @@ let Accessors =
   hasFiles : { getter : _statusGetter_functor( 'hasFiles' ), readOnly : 1 },
   isRepository : { getter : _statusGetter_functor( 'isRepository' ), readOnly : 1 },
   hasLocalChanges : { getter : _statusGetter_functor( 'hasLocalChanges' ), readOnly : 1 },
+  hasLocalUncommittedChanges : { getter : _statusGetter_functor( 'hasLocalUncommittedChanges' ), readOnly : 1 },
   remoteIsValid : { getter : _statusGetter_functor( 'remoteIsValid' ), readOnly : 1 },
   isUpToDate : { getter : _statusGetter_functor( 'isUpToDate' ), readOnly : 1 },
   safeToDelete : { getter : _statusGetter_functor( 'safeToDelete' ), readOnly : 1 },

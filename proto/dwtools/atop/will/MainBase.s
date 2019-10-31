@@ -866,7 +866,6 @@ function versionIsUpToDate( o )
 
   _.routineOptions( versionIsUpToDate, o );
 
-  let currentVersion = will.versionGet();
 
   let ready = _.process.start
   ({
@@ -881,9 +880,18 @@ function versionIsUpToDate( o )
     if( err )
     throw _.err( err, '\nFailed to check version of utility willbe' );
 
-    let latestVersion = _.strStrip( result.output );
+    let currentVersion = parse( will.versionGet() );
+    let latestVersion = parse( _.strStrip( result.output ) );
 
-    if( latestVersion !== currentVersion )
+    let upToDate = true;
+    for( let i = 0; i < currentVersion.length; i++ )
+    if( currentVersion[ i ] < latestVersion[ i ] )
+    {
+      upToDate = false;
+      break;
+    }
+
+    if( !upToDate )
     {
       let message =
       [
@@ -915,13 +923,19 @@ function versionIsUpToDate( o )
     }
     else
     {
-      logger.log( 'Utility willbe is up to date!' );
+      logger.log( `Current version: ${currentVersion}. Utility willbe is up to date.` );
     }
 
     return true;
   })
 
   return ready;
+
+  function parse( src )
+  {
+    let parts = _.strSplitNonPreserving({ src, delimeter : '.' });
+    return parts.map( ( p ) => parseInt( p ) );
+  }
 }
 
 versionIsUpToDate.defaults =
@@ -2446,10 +2460,17 @@ function modulesDownload_body( o )
 
     if( o.dry )
     {
-      return opener._repoIsFresh({ mode : o.mode })
-      .then( ( isFreash ) =>
+      let statusOptions =
       {
-        if( !isFreash )
+        downloadRequired : o.mode === 'download',
+        updateRequired : o.mode === 'update',
+        agreeRequired : o.mode === 'agree',
+      }
+
+      return variant.opener.repo.status( statusOptions )
+      .then( ( result ) =>
+      {
+        if( result.downloadRequired || result.updateRequired || result.agreeRequired )
         variantDownloaded( variant );
         return null;
       })
