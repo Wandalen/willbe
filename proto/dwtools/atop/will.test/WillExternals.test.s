@@ -12021,6 +12021,90 @@ exportDiffDownloadPathsRegular.timeOut = 300000;
 
 //
 
+function exportHierarchyRemote( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'hierarchy-remote' );
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with z .export.recursive';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with z .clean recursive:2' )
+  a.start( '.with z .export.recursive' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'a.out.will.yml', 'c.out.will.yml', 'debug' ];
+    var files = _.fileProvider.dirRead( a.abs( 'out' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 4 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 34 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 6 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 8 );
+    test.identical( _.strCount( got.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
+
+    return null;
+  })
+
+  // a.start( '.with z .export.recursive' )
+  //
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'second';
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
+  //   test.identical( files, exp );
+  //
+  //   var exp = [ 'a.out.will.yml', 'c.out.will.yml', 'debug' ];
+  //   var files = _.fileProvider.dirRead( a.abs( 'out' ) )
+  //   test.identical( files, exp );
+  //
+  //   test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+  //   test.identical( _.strCount( got.output, '. Opened .' ), 36 );
+  //   test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+  //   test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
+  //   test.identical( _.strCount( got.output, 'Exported module::' ), 8 );
+  //   test.identical( _.strCount( got.output, 'submodule(s) of' ), 0 );
+  //
+  //   return null;
+  // })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function exportHierarchyRemote */
+
+exportHierarchyRemote.timeOut = 300000;
+
+//
+
 function exportAuto( test )
 {
   let self = this;
@@ -19967,6 +20051,7 @@ var Self =
     exportRewritesOutFile,
     exportWithRemoteSubmodules,
     exportDiffDownloadPathsRegular,
+    exportHierarchyRemote,
     /* xxx : implement same test for hierarchy-remote and irregular */
     /* xxx : implement clean tests */
     /* xxx : refactor ** clean */

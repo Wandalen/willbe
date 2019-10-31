@@ -2753,7 +2753,6 @@ function modulesClean( o )
   return will.modulesFor( o2 )
   .then( ( arg ) =>
   {
-    debugger;
     let o2 = _.mapOnly( o, will.cleanDelete.defaults );
     o2.files = files;
     return will.cleanDelete( o2 );
@@ -2822,7 +2821,7 @@ function cleanLog( o )
   o = _.routineOptions( cleanLog, arguments );
 
   _.assert( _.intIs( o.beginTime ) );
-  _.assert( _.mapIs( o.files ) ) 
+  _.assert( _.mapIs( o.files ) )
 
   if( o.explanation === null )
   if( o.dry )
@@ -2877,7 +2876,7 @@ function cleanDelete( o )
   // if( o.beginTime === null )
   // o.beginTime = _.timeNow();
 
-  will.readingEnd(); debugger;
+  will.readingEnd();
 
   if( o.dry )
   {

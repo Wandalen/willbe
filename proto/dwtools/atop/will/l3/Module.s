@@ -5495,10 +5495,13 @@ function clean( o )
   let o2 = _.mapOnly( o, module.cleanWhat.defaults );
   o.files = module.cleanWhat( o2 );
 
-  debugger; xxx
+  debugger;
 
-  will.cleanDelete( o );
-  will.cleanLog( o );
+  let o3 = _.mapOnly( o, will.cleanDelete.defaults );
+  will.cleanDelete( o3 );
+
+  let o4 = _.mapOnly( o, will.cleanLog.defaults );
+  will.cleanLog( o4 );
 
   return o.files;
 
@@ -6339,7 +6342,12 @@ function structureExportModules( modules, op )
 
   });
 
-  _.assert( op.dst.root.length === 1, () => `Failed to find exactly one root, found ${op.dst.root.length}` );
+  _.assert
+  (
+    op.dst.root.length === 1,
+    () => `Failed to find exactly one root, found ${op.dst.root.length}`
+        , `\n Common path : ${module.commonPath}`
+  );
 
   return op.dst;
 
