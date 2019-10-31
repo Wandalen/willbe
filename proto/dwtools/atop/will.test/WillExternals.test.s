@@ -15639,6 +15639,54 @@ function submodulesAgreeThrowing( test )
     return null;
   })
 
+
+
+  .then( () =>
+  {
+    test.case = 'donwloaded repo has uncommitted change, error expected';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    return null;
+  })
+  start({ execPath : '.with good .submodules.versions.agree' })
+  shell2( 'git -C .module/PathBasic reset --hard HEAD~1' )
+  .then( () =>
+  {
+    _.fileProvider.fileWrite( _.path.join( downloadPath, 'was.package.json' ), 'was.package.json' );
+    return null;
+  })
+  start({ execPath : '.with good .submodules.versions.agree' })
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Module at module::submodules-download-errors-good / opener::PathBasic needs to be updated, but has local changes' ) );
+    test.is( _.strHas( got.output, 'Failed to agree module::submodules-download-errors-good / opener::PathBasic' ) );
+    return null;
+  })
+
+  //
+
+  .then( () =>
+  {
+    test.case = 'donwloaded repo has unpushed change and wrong origin, error expected';
+    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.dirMake( downloadPath );
+    return null;
+  })
+  start({ execPath : '.with good .submodules.versions.agree' })
+  shell2( 'git -C .module/PathBasic reset --hard HEAD~1' )
+  shell2( 'git -C .module/PathBasic commit -m unpushed --allow-empty' )
+  shell2( 'git -C .module/PathBasic remote remove origin' )
+  shell2( 'git -C .module/PathBasic remote add origin https://github.com/Wandalen/wTools.git' )
+  start({ execPath : '.with good .submodules.versions.agree' })
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'needs to be deleted, but has local changes' ) );
+    test.is( _.strHas( got.output, 'Failed to agree module::submodules-download-errors-good / opener::PathBasic' ) );
+    return null;
+  })
+
   /* - */
 
   return ready;
