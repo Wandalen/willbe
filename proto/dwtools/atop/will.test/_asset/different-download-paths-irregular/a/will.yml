@@ -13,7 +13,7 @@ submodule :
 
 path :
 
-  out : out
+  out : ../out
   out.debug :
     path : '{path::out}/debug'
     criterion :

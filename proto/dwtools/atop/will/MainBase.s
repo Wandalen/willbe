@@ -2993,11 +2993,11 @@ function openersAdoptModule( module )
     opener.moduleAdopt( module );
     result += 1;
 
-    if( !opener.isDownloaded )
-    {
-      debugger;
-      opener.isDownloaded = true;
-    }
+    // if( !opener.repo.isDownloaded )
+    // {
+    //   debugger;
+    //   opener.repo.isDownloaded = true;
+    // }
 
   });
 

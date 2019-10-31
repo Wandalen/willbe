@@ -977,7 +977,7 @@ function infoExport()
   else
   result += `repository ${repo.id}\n`;
 
-  result += `  local path : ${repo.localPath}\n`;
+  result += `  remote path : ${repo.remotePath}\n`;
   result += `  download path : ${repo.downloadPath}\n`;
   result += `  isRemote : ${repo.isRemote}\n`;
 

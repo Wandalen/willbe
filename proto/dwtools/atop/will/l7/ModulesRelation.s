@@ -626,7 +626,7 @@ function infoExport()
 
   }
 
-  resultMap.hasFiles = relation.opener ? relation.opener.hasFiles : null;
+  // resultMap.hasFiles = relation.opener ? relation.opener.hasFiles : null;
   resultMap.isAvailable = relation.isAvailable;
 
   let result = relation._infoExport({ fields : resultMap });
@@ -842,6 +842,7 @@ let Forbids =
   isGitRepository : 'isGitRepository',
   isDownloaded : 'isDownloaded',
   isRepository : 'isRepository',
+  hasFiles : 'hasFiles',
 }
 
 // --
