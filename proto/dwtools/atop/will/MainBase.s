@@ -858,7 +858,6 @@ function versionIsUpToDate( o )
 
   _.routineOptions( versionIsUpToDate, o );
 
-  let currentVersion = will.versionGet();
 
   let ready = _.process.start
   ({
@@ -873,9 +872,18 @@ function versionIsUpToDate( o )
     if( err )
     throw _.err( err, '\nFailed to check version of utility willbe' );
 
-    let latestVersion = _.strStrip( result.output );
+    let currentVersion = parse( will.versionGet() );
+    let latestVersion = parse( _.strStrip( result.output ) );
 
-    if( latestVersion !== currentVersion )
+    let upToDate = true;
+    for( let i = 0; i < currentVersion.length; i++ )
+    if( currentVersion[ i ] < latestVersion[ i ] )
+    {
+      upToDate = false;
+      break;
+    }
+
+    if( !upToDate )
     {
       let message =
       [
@@ -914,6 +922,12 @@ function versionIsUpToDate( o )
   })
 
   return ready;
+
+  function parse( src )
+  {
+    let parts = _.strSplitNonPreserving({ src, delimeter : '.' });
+    return parts.map( ( p ) => parseInt( p ) );
+  }
 }
 
 versionIsUpToDate.defaults =

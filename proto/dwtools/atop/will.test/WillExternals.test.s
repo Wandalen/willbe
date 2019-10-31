@@ -16688,12 +16688,12 @@ function stepWillbeVersionCheck( test )
   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : assetDstPath } })
   _.fileProvider.softLink( nodeModulesDstPath, nodeModulesSrcPath );
 
-  // let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/Exec' ) );
+  let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
   let start = _.process.starter
   ({
-    execPath : 'node ' + self.willPath,
+    execPath : 'node ' + execPath,
     currentPath : assetDstPath,
     outputCollecting : 1,
     throwingExitCode : 0,
