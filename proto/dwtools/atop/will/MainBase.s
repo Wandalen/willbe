@@ -748,14 +748,14 @@ function variantsInfoExport( variants )
   if( !variants )
   {
     variants = _.longOnce( _.mapVals( will.variantMap ) );
-    variants = variants.filter( ( variant ) =>
-    {
-      if( variant.relation && !variant.relation.enabled )
-      return false;
-      if( variant.isRemote === false )
-      return false;
-      return variant;
-    });
+    // variants = variants.filter( ( variant ) =>
+    // {
+    //   if( variant.relation && !variant.relation.enabled )
+    //   return false;
+    //   if( variant.isRemote === false )
+    //   return false;
+    //   return variant;
+    // });
   }
 
   return _.map( variants, ( variant ) => variant.infoExport() ).join( '\n' );
@@ -2430,15 +2430,12 @@ function modulesDownload_body( o )
     {
       if( _.arrayHas( o.doneContainer, variant.peer ) )
       {
-        // debugger;
         return variantDone( variant );
       }
-      // if( _.arrayHas( o.doneContainer, variant.peer ) )
-      // {
-      //   debugger;
-      //   return variantDone( variant );
-      // }
     }
+
+    _.assert( !!variant.relation && !!variant.relation.opener );
+    let opener = variant.relation.opener;
 
     variantRemote( variant );
     variantDone( variant );
@@ -2449,7 +2446,7 @@ function modulesDownload_body( o )
 
     if( o.dry )
     {
-      return variant.opener._repoIsFresh({ mode : o.mode })
+      return opener._repoIsFresh({ mode : o.mode })
       .then( ( isFreash ) =>
       {
         if( !isFreash )
@@ -2459,8 +2456,8 @@ function modulesDownload_body( o )
     }
     else
     {
-      let o2 = _.mapOnly( o, variant.opener._repoDownload.defaults );
-      let r = _.Consequence.From( variant.opener._repoDownload( o2 ) );
+      let o2 = _.mapOnly( o, opener._repoDownload.defaults );
+      let r = _.Consequence.From( opener._repoDownload( o2 ) );
       return r.then( ( downloaded ) =>
       {
         _.assert( _.boolIs( downloaded ) );

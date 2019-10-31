@@ -2008,6 +2008,54 @@ function remotePathPut( val )
 
 //
 
+function remotePathEachAdoptAct( o )
+{
+  let opener = this;
+  let will = opener.will;
+  // let variant = will.variantOf( module ); /* xxx : optimize variantFrom */
+  // if( !variant )
+  // variant = will.variantFrom( module );
+  //
+  // _.assertRoutineOptions( remotePathEachAdoptAct, o );
+  //
+  // variant.modules.forEach( ( module ) => module.remotePathAdopt( o ) );
+  // variant.openers.forEach( ( opener ) => opener.remotePathAdopt( o ) );
+  // variant.reform();
+
+  _.assertRoutineOptions( remotePathEachAdoptAct, o );
+
+  opener.remotePathAdopt( o );
+
+  if( opener.openedModule )
+  moduleAdoptPath( opener.openedModule );
+
+  // if( opener.peerModule )
+  // moduleAdoptPath( opener.peerModule );
+
+  return true;
+
+  function moduleAdoptPath( module )
+  {
+    debugger;
+    module.remotePathAdopt( o );
+    module.userArray.forEach( ( opener2 ) =>
+    {
+      if( opener2 === opener )
+      return;
+      if( !( opener2 instanceof _.Will.ModuleOpener ) )
+      return;
+      opener2.remotePathAdopt( o );
+    });
+  }
+}
+
+remotePathEachAdoptAct.defaults =
+{
+  ... Parent.prototype.remotePathAdopt.defaults,
+}
+
+//
+
 function sharedFieldPut_functor( fieldName )
 {
   let symbol = Symbol.for( fieldName );
@@ -2472,6 +2520,7 @@ let Extend =
   _downloadPathPut,
   _localPathPut,
   remotePathPut,
+  remotePathEachAdoptAct,
 
   // name
 

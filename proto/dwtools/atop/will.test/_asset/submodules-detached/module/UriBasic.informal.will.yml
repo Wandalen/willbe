@@ -7,15 +7,15 @@ path :
 
   in : ..
   out : out
-  remote : 'git+https:///github.com/Wandalen/wUriBasic.git'
-  download : '.module/{about::name}'
-  export : '{path::download}/proto/**'
+  remote2 : 'git+https:///github.com/Wandalen/wUriBasic.git'
+  download2 : '.module/{about::name}'
+  export : '{path::download2}/proto/**'
 
 reflector :
 
   download :
-    src : path::remote
-    dst : path::download
+    src : path::remote2
+    dst : path::download2
 
 step :
 

@@ -571,13 +571,28 @@ function mergeIn( variant2 )
   objects.forEach( ( object ) => variant._remove( object ) );
   objects.forEach( ( object ) => variant2._add( object ) );
 
-  _.assert( variant.peer === null || variant2.peer === null || variant.peer === variant2.peer, 'not implemented' );
+  // _.assert( variant.peer === null || variant2.peer === null || variant.peer === variant2.peer, 'not implemented' );
   if( variant.peer )
   {
-    _.assert( !variant.peer.finitedIs() );
-    variant2.peer = variant.peer;
-    variant2.peer.peer = variant2;
+    let peer = variant.peer;
+    _.assert( !peer.finitedIs() );
     variant.peer = null;
+    peer.peer = null;
+
+    if( variant2.peer === null )
+    {
+      debugger;
+      variant2.peer = peer;
+      peer.peer = variant2;
+    }
+    else
+    {
+      // debugger;
+      peer.mergeIn( variant2.peer );
+      _.assert( peer.finitedIs() );
+      _.assert( peer.peer === null );
+    }
+
   }
 
   _.assert( !variant.finitedIs() );
@@ -986,7 +1001,7 @@ function VariantOf( will, object )
     let variant2 = _.any( paths, ( path ) => will.variantMap[ path ] );
     if( variant2 )
     _.assert( _.all( paths, ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant2 ) );
-    _.assert( variant === variant2 || !variant2 );
+    _.assert( variant === variant2 || !variant2 || !variant2.ownSomething() );
   }
 
   return variant;

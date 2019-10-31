@@ -376,15 +376,36 @@ remotePathAdopt.defaults =
   downloadPath : null,
 }
 
+// //
+//
+// function remotePathEachAdoptAct( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let variant = will.variantOf( module ); /* xxx : optimize variantFrom */
+//   if( !variant )
+//   variant = will.variantFrom( module );
+//
+//   _.assertRoutineOptions( remotePathEachAdoptAct, o );
+//
+//   variant.modules.forEach( ( module ) => module.remotePathAdopt( o ) );
+//   variant.openers.forEach( ( opener ) => opener.remotePathAdopt( o ) );
+//   variant.reform();
+//
+//   return true;
+// }
+//
+// remotePathEachAdoptAct.defaults =
+// {
+//   ... remotePathAdopt.defaults,
+// }
+
 //
 
 function remotePathEachAdopt( o )
 {
   let module = this;
   let will = module.will;
-  let variant = will.variantOf( module ); /* xxx : optimize variantFrom */
-  if( !variant )
-  variant = will.variantFrom( module );
 
   if( _.strIs( arguments[ 0 ] ) )
   o = { remotePath : arguments[ 0 ] }
@@ -394,11 +415,11 @@ function remotePathEachAdopt( o )
   if( module.remotePath === o.remotePath )
   return false;
 
-  variant.modules.forEach( ( module ) => module.remotePathAdopt( o ) );
-  variant.openers.forEach( ( opener ) => opener.remotePathAdopt( o ) );
-  variant.reform();
+  let result = module.remotePathEachAdoptAct( o );
 
-  return true;
+  _.assert( module.remotePath === o.remotePath );
+
+  return result;
 }
 
 remotePathEachAdopt.defaults =
@@ -408,16 +429,12 @@ remotePathEachAdopt.defaults =
 
 //
 
-function _remotePathEachAdopt()
+function remotePathEachAdoptCurrent()
 {
   let module = this;
   let will = module.will;
-  let variant = will.variantFrom( module ); /* xxx : optimize variantFrom */
 
   _.assert( arguments.length === 0 );
-  // _.assert( _.strDefined( module.remotePath ) );
-  // _.assert( _.strDefined( module.downloadPath ) );
-  // _.assert( _.strBegins( module.localPath, module.downloadPath ) );
 
   module._remotePathAdopt();
 
@@ -425,52 +442,8 @@ function _remotePathEachAdopt()
   o2.remotePath = module.remotePath;
   o2.downloadPath = module.downloadPath;
 
-  variant.openers.forEach( ( opener ) => opener.remotePathAdopt( o2 ) );
-  variant.modules.forEach( ( module ) => module.remotePathAdopt( o2 ) );
-  variant.reform();
-
-  return true;
+  return module.remotePathEachAdoptAct( o2 );
 }
-
-// //
-//
-// function remotePathAdopt( remotePath )
-// {
-//   let module = this;
-//
-//   if( module.remotePath === remotePath )
-//   return false;
-//
-//   _.assert( _.strDefined( remotePath ) );
-//
-//   debugger; xxx
-//   module._.remotePath = remotePath;
-//   debugger;
-//
-//   if( module.downloadPath !== module.repo.downloadPath || module.remotePath !== module.repo.remotePath )
-//   {
-//     debugger;
-//     module.repo = will.repoFrom
-//     ({
-//       isRemote : !!module.remotePath,
-//       downloadPath : module.downloadPath,
-//       remotePath : module.remotePath,
-//     });
-//   }
-//
-//   // for( let u = 0 ; u < module.userArray.length ; u++ )
-//   // {
-//   //   let opener = module.userArray[ u ];
-//   //   if( opener instanceof will.ModuleOpener );
-//   //   {
-//   //     _.assert( opener.downloadPath === module.downloadPath );
-//   //     _.assert( opener.remotePath === module.remotePath );
-//   //     opener.repo = module.repo;
-//   //   }
-//   // }
-//
-//   return true;
-// }
 
 // --
 // name
@@ -1743,8 +1716,9 @@ let Extend =
 
   _remotePathAdopt,
   remotePathAdopt,
+  // remotePathEachAdoptAct,
   remotePathEachAdopt,
-  _remotePathEachAdopt,
+  remotePathEachAdoptCurrent,
 
   // name
 
