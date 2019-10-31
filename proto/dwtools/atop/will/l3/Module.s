@@ -4148,7 +4148,6 @@ function resourceAllocate_body( o )
     let resource2 = map[ o.resourceName ];
     if( resource2 && resource2.criterion.generated )
     {
-      debugger;
       return resource2;
     }
   }

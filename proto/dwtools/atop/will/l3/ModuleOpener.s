@@ -1253,10 +1253,9 @@ function _repoDownload( o )
   _.assert( !!opener.superRelation );
   _.assert( _.arrayHas( [ 'download', 'update', 'agree' ], o.mode ) );
 
-  debugger;
+  // debugger;
 
   return ready
-  // .then( () => opener._repoIsFresh({ mode : o.mode }) )
   .then( () => opener.repo.status({ all : 1, invalidating : 1 }) )
   .then( function( arg )
   {
@@ -1269,14 +1268,8 @@ function _repoDownload( o )
     else if( o.mode === 'agree' )
     downloading = status.agreeRequired;
 
-    // downloading = !arg;
-
     _.assert( _.mapIs( status ) );
     _.assert( _.boolIs( downloading ) );
-
-    // debugger;
-    // if( !downloading )
-    // return downloading;
 
     if( o.mode === 'download' )
     {

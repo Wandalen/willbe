@@ -2762,11 +2762,11 @@ function modulesClean( o )
     if( err )
     throw _.err( err, `\nFailed to clean modules` );
 
-    debugger;
+    // debugger;
     let o2 = _.mapOnly( o, will.cleanLog.defaults );
     o2.files = files;
     will.cleanLog( o2 );
-    debugger;
+    // debugger;
 
     return arg;
   });
