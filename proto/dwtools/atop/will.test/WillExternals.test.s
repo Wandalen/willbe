@@ -16847,7 +16847,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local does not have files' ) );
     // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -16865,7 +16865,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule relation::local is not downloaded' ) );
+    test.is( _.strHas( got.output, '! Submodule relation::local does not have files' ) );
     // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
