@@ -127,15 +127,16 @@ function reform()
   //   debugger;
   // }
 
-  variant.mergeMaybe();
-
-  _.assert( !variant.finitedIs() );
-
-  if( !variant.isUsed() )
-  {
-    variant.finit();
-    return false;
-  }
+  // if( variant.id === 3 && will.variantWithId( 1722 ) )
+  // debugger;
+  //
+  // variant.mergeMaybe();
+  // _.assert( !variant.finitedIs() );
+  // if( !variant.isUsed() )
+  // {
+  //   variant.finit();
+  //   return false;
+  // }
 
   // {
   //   let variant2 = variant.mergeMaybe();
@@ -152,10 +153,25 @@ function reform()
   //   return variant2;
   // }
 
-  if( variant.id === 83 && !variant.ownSomething() )
-  debugger;
+  // if( variant.id === 83 && !variant.ownSomething() )
+  // debugger;
 
   pathsForm();
+
+  // if( variant.id === 3 && will.variantWithId( 1722 ) )
+  // debugger;
+
+  variant.mergeMaybe();
+  // _.assert( !variant.finitedIs() );
+  if( variant.finitedIs() )
+  {
+    return false;
+  }
+  if( !variant.isUsed() )
+  {
+    variant.finit();
+    return false;
+  }
 
   verify();
   register();
@@ -214,6 +230,7 @@ function reform()
 
   function pathsForm()
   {
+
     variant.localPaths.splice( 0, variant.localPaths.length );
     variant.remotePaths.splice( 0, variant.remotePaths.length );
 
@@ -231,6 +248,7 @@ function reform()
 
     _.assert( !variant.localPaths.length || _.arrayHas( variant.localPaths, variant.localPath ) );
     _.assert( !variant.remotePaths.length || _.arrayHas( variant.remotePaths, variant.remotePath ) );
+
   }
 
   /* */
@@ -553,13 +571,34 @@ function mergeIn( variant2 )
   objects.forEach( ( object ) => variant._remove( object ) );
   objects.forEach( ( object ) => variant2._add( object ) );
 
+  _.assert( variant.peer === null || variant2.peer === null || variant.peer === variant2.peer, 'not implemented' );
+  if( variant.peer )
+  {
+    _.assert( !variant.peer.finitedIs() );
+    variant2.peer = variant.peer;
+    variant2.peer.peer = variant2;
+    variant.peer = null;
+  }
+
   _.assert( !variant.finitedIs() );
   _.assert( !variant2.finitedIs() );
 
   variant.reform();
-  variant2.reform(); /* yyy */
 
+  if( variant.ownSomething() )
+  {
+    _.assert( 'not tested' );
+  }
+  else
+  {
+    if( !variant.finitedIs() )
+    variant.finit();
+  }
+
+  _.assert( variant.finitedIs() );
   _.assert( !variant2.finitedIs() );
+
+  variant2.reform(); /* yyy */
 
   if( variant.finitedIs() )
   return true;
@@ -571,6 +610,7 @@ function mergeIn( variant2 )
   //   variant2._add( object );
   //   return object;
   // }
+
 }
 
 //
@@ -1026,7 +1066,7 @@ function _relationAdd( relation )
   _.assert( variant2 === variant || variant2 === undefined );
   will.objectToVariantHash.set( relation, variant );
 
-  _.assert( changed || _.all( variant.PathsOf( relation ), ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
+  _.assert( variant.formed === -1 || changed || _.all( variant.PathsOf( relation ), ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
 
   return changed;
 }
@@ -1101,7 +1141,7 @@ function _openerAdd( opener )
   _.assert( variant2 === variant || variant2 === undefined );
   will.objectToVariantHash.set( opener, variant );
 
-  _.assert( changed || _.all( variant.PathsOf( opener ), ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
+  _.assert( variant.formed === -1 || changed || _.all( variant.PathsOf( opener ), ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
 
   return changed;
 }
@@ -1168,7 +1208,7 @@ function _moduleAdd( module )
   _.assert( variant2 === variant || variant2 === undefined, 'Module can belong only to one variant' );
   will.objectToVariantHash.set( module, variant );
 
-  _.assert( changed || _.all( variant.PathsOf( module ), ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
+  _.assert( variant.formed === -1 || changed || _.all( variant.PathsOf( module ), ( path ) => will.variantMap[ path ] === undefined || will.variantMap[ path ] === variant ) );
 
   return changed;
 }

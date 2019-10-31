@@ -250,7 +250,6 @@ function _filePathChanged2( o )
 
   if( o.commonPath !== null )
   module[ fileNameSymbol ] = path.fullName( o.commonPath );
-  // module[ willfilesPathSymbol ] = o.willfilesPath;
 
   will._pathChanged
   ({
@@ -295,16 +294,182 @@ function _filePathChanged2( o )
 _filePathChanged2.defaults = _.mapExtend( null, _filePathChanged1.defaults );
 
 //
+
+function _remotePathAdopt()
+{
+  let module = this;
+  let will = module.will;
+
+  // debugger;
+
+  _.assert( arguments.length === 0 );
+  _.assert( _.strDefined( module.remotePath ) );
+  _.assert( _.strDefined( module.downloadPath ) );
+  _.assert( _.strBegins( module.localPath, module.downloadPath ) );
+
+  if( module.downloadPath !== module.repo.downloadPath || module.remotePath !== module.repo.remotePath )
+  {
+    // debugger;
+    module.repo = will.repoFrom
+    ({
+      isRemote : !!module.remotePath,
+      downloadPath : module.downloadPath,
+      remotePath : module.remotePath,
+    });
+  }
+
+  return true;
+}
+
+//
+
+function remotePathAdopt( o )
+{
+  let module = this;
+  let will = module.will;
+
+  if( _.strIs( arguments[ 0 ] ) )
+  o = { remotePath : arguments[ 0 ] }
+  o = _.routineOptions( remotePathAdopt, o );
+  _.assert( arguments.length === 1 );
+
+  if( module.remotePath === o.remotePath )
+  return false;
+
+  if( o.downloadPath === null )
+  o.downloadPath = module.downloadPath;
+
+  // debugger;
+
+  _.assert( _.strDefined( o.downloadPath ) );
+  if( o.downloadPath )
+  module._downloadPathPut( o.downloadPath );
+  _.assert( _.strDefined( o.remotePath ) );
+  module.remotePathSet( o.remotePath );
+
+  // debugger;
+
+  _.assert( module.remotePath === o.remotePath );
+
+  module._remotePathAdopt();
+
+  // _.assert( _.strDefined( module.downloadPath ) );
+  // _.assert( _.strBegins( module.localPath, module.downloadPath ) );
+  //
+  // if( module.downloadPath !== module.repo.downloadPath || module.remotePath !== module.repo.remotePath )
+  // {
+  //   debugger;
+  //   module.repo = will.repoFrom
+  //   ({
+  //     isRemote : !!module.remotePath,
+  //     downloadPath : module.downloadPath,
+  //     remotePath : module.remotePath,
+  //   });
+  // }
+
+  return true;
+}
+
+remotePathAdopt.defaults =
+{
+  remotePath : null,
+  downloadPath : null,
+}
+
+//
+
+function remotePathEachAdopt( o )
+{
+  let module = this;
+  let will = module.will;
+  let variant = will.variantOf( module ); /* xxx : optimize variantFrom */
+  if( !variant )
+  variant = will.variantFrom( module );
+
+  if( _.strIs( arguments[ 0 ] ) )
+  o = { remotePath : arguments[ 0 ] }
+  o = _.routineOptions( remotePathAdopt, o );
+  _.assert( arguments.length === 1 );
+
+  if( module.remotePath === o.remotePath )
+  return false;
+
+  variant.modules.forEach( ( module ) => module.remotePathAdopt( o ) );
+  variant.openers.forEach( ( opener ) => opener.remotePathAdopt( o ) );
+  variant.reform();
+
+  return true;
+}
+
+remotePathEachAdopt.defaults =
+{
+  ... remotePathAdopt.defaults,
+}
+
+//
+
+function _remotePathEachAdopt()
+{
+  let module = this;
+  let will = module.will;
+  let variant = will.variantFrom( module ); /* xxx : optimize variantFrom */
+
+  _.assert( arguments.length === 0 );
+  // _.assert( _.strDefined( module.remotePath ) );
+  // _.assert( _.strDefined( module.downloadPath ) );
+  // _.assert( _.strBegins( module.localPath, module.downloadPath ) );
+
+  module._remotePathAdopt();
+
+  let o2 = Object.create( null );
+  o2.remotePath = module.remotePath;
+  o2.downloadPath = module.downloadPath;
+
+  variant.openers.forEach( ( opener ) => opener.remotePathAdopt( o2 ) );
+  variant.modules.forEach( ( module ) => module.remotePathAdopt( o2 ) );
+  variant.reform();
+
+  return true;
+}
+
 // //
 //
-// function _filePathChanged2()
+// function remotePathAdopt( remotePath )
 // {
 //   let module = this;
 //
-//   _.assert( arguments.length === 0 );
+//   if( module.remotePath === remotePath )
+//   return false;
 //
-//   module._filePathSet( module.willfilesPath );
+//   _.assert( _.strDefined( remotePath ) );
 //
+//   debugger; xxx
+//   module._.remotePath = remotePath;
+//   debugger;
+//
+//   if( module.downloadPath !== module.repo.downloadPath || module.remotePath !== module.repo.remotePath )
+//   {
+//     debugger;
+//     module.repo = will.repoFrom
+//     ({
+//       isRemote : !!module.remotePath,
+//       downloadPath : module.downloadPath,
+//       remotePath : module.remotePath,
+//     });
+//   }
+//
+//   // for( let u = 0 ; u < module.userArray.length ; u++ )
+//   // {
+//   //   let opener = module.userArray[ u ];
+//   //   if( opener instanceof will.ModuleOpener );
+//   //   {
+//   //     _.assert( opener.downloadPath === module.downloadPath );
+//   //     _.assert( opener.remotePath === module.remotePath );
+//   //     opener.repo = module.repo;
+//   //   }
+//   // }
+//
+//   return true;
 // }
 
 // --
@@ -1575,6 +1740,11 @@ let Extend =
   _filePathSet,
   _filePathChanged1,
   _filePathChanged2,
+
+  _remotePathAdopt,
+  remotePathAdopt,
+  remotePathEachAdopt,
+  _remotePathEachAdopt,
 
   // name
 

@@ -185,8 +185,8 @@ function init( o )
   if( module.willfilesPath === null )
   module.willfilesPath = _.select( module.willfilesArray, '*/filePath' );
 
-  if( module.id === 1086 )
-  debugger;
+  // if( module.id === 1086 )
+  // debugger;
 
   module._nameChanged();
 
@@ -234,7 +234,37 @@ function usedBy( user )
   {
     if( user.superRelation )
     module.superRelationsAppend( user.superRelation );
+
+    _.assert( user.downloadPath === null || module.downloadPath === null || user.downloadPath === module.downloadPath );
+    _.assert( user.remotePath === null || module.remotePath === null || user.remotePath === module.remotePath );
+
+    if( !user.remotePath && module.remotePath )
+    {
+      // debugger;
+      _.assert( _.strDefined( module.downloadPath ) );
+      user.remotePathEachAdopt({ remotePath : module.remotePath, downloadPath : module.downloadPath });
+      // user._.remotePath = module.remotePath;
+      // user._.downloadPath = module.downloadPath;
+      // user.repo = module.repo;
+      // // user.isRemote = true;
+      // will.variantFrom( user ).reform(); /* xxx : optimize */
+    }
+    else if( user.remotePath && !module.remotePath )
+    {
+      debugger;
+      _.assert( _.strDefined( user.downloadPath ) );
+      module.remotePathEachAdopt({ remotePath : user.remotePath, downloadPath : user.downloadPath });
+      // user._.remotePath = module.remotePath;
+      // user._.downloadPath = module.downloadPath;
+      // user.repo = module.repo;
+      // // user.isRemote = true;
+      // will.variantFrom( user ).reform(); /* xxx : optimize */
+    }
+
+    _.assert( user.downloadPath === module.downloadPath );
+    _.assert( user.remotePath === module.remotePath );
     _.assert( user.repo === module.repo );
+
   }
 
   return module;
@@ -3683,6 +3713,15 @@ function peerModuleSet( src )
   if( module.peerModule === src )
   return src;
 
+  if( src && src.remotePath )
+  {
+    debugger;
+    let peerRemotePath = src.peerRemotePathGet();
+    _.assert( module.remotePath === null || module.remotePath === peerRemotePath );
+    _.assert( module.downloadPath === null || module.downloadPath === src.downloadPath );
+    module.remotePathEachAdopt({ remotePath : peerRemotePath, downloadPath : module.downloadPath });
+  }
+
   let was = module.peerModule;
   module[ peerModuleSymbol ] = src;
 
@@ -3776,8 +3815,16 @@ function _remoteChanged()
   let logger = will.logger;
 
   _.assert( !!module.pathResourceMap[ 'current.remote' ] );
-
   _.assert( module.commonPath === module.localPath );
+
+  /* */
+
+  if( module.remotePath )
+  {
+    // if( module.id === 155 )
+    // debugger;
+    module._remotePathEachAdopt();
+  }
 
   /* */
 
@@ -3797,6 +3844,27 @@ function _remoteChanged()
   {
     module.pathResourceMap[ 'current.remote' ].path = null;
   }
+
+  /* */
+
+  if( module.peerModule && !module.peerModule.remotePath && module.remotePath )
+  {
+
+    // if( module.id === 155 )
+    // debugger;
+
+    // debugger;
+    _.assert( _.strDefined( module.downloadPath ) );
+    module.peerModule.remotePathEachAdopt
+    ({
+      remotePath : module.peerRemotePathGet(),
+      downloadPath : module.downloadPath,
+    });
+    // module._remotePathEachAdopt();
+
+  }
+
+  /* */
 
 }
 
@@ -4445,6 +4513,30 @@ function _pathRegister()
   let module = this;
   let will = module.will;
 
+  // if( module.downloadPath !== module.repo.downloadPath || module.remotePath !== module.repo.remotePath )
+  // {
+  //   debugger; xxx
+  //
+  //   module.repo = will.repoFrom
+  //   ({
+  //     isRemote : !!module.remotePath,
+  //     downloadPath : module.downloadPath,
+  //     remotePath : module.remotePath,
+  //   });
+  //
+  //   for( let u = 0 ; u < module.userArray.length ; u++ )
+  //   {
+  //     let opener = module.userArray[ u ];
+  //     if( opener instanceof will.ModuleOpener );
+  //     {
+  //       _.assert( opener.downloadPath === module.downloadPath );
+  //       _.assert( opener.remotePath === module.remotePath );
+  //       opener.repo = module.repo;
+  //     }
+  //   }
+  //
+  // }
+
   will.modulePathRegister( module );
   will.variantFrom( module );
 
@@ -4458,16 +4550,22 @@ function _pathRegister()
   _.assert( !!o2.withDisabledModules );
   _.assert( !!o2.withDisabledSubmodules );
 
-  // ({
-  //   withPeers : 0,
-  //   outputFormat : '/',
-  //   // ... _.Will.RelationFilterOn,
-  // });
-
   variants.forEach( ( variant ) =>
   {
     will.variantsFrom( variant.relations );
   });
+
+}
+
+//
+
+function _pathUnregister()
+{
+  let module = this;
+  let will = module.will;
+
+  // will.modulePathRegister( module );
+  will.modulePathUnregister( module );
 
 }
 
@@ -4609,6 +4707,19 @@ function peerInPathGet()
   return result || null;
 }
 
+// //
+//
+// function remotePathRegister()
+// {
+//   let module = this;
+//
+//   if( module.id === 3 || module.id === 155 )
+//   debugger;
+//
+//   _.assert( _.strDefined( module.remotePath ) ); debugger; xxx
+//
+// }
+
 //
 
 function predefinedPathGet_functor( fieldName, resourceName, absolutize )
@@ -4674,9 +4785,10 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
       filePath = module.pathsRelative( basePath, filePath );
     }
 
-    if( fieldName === 'localPath' || fieldName === 'remotePath' )
+    if( fieldName === 'localPath' || fieldName === 'remotePath' ) /* xxx : move out to set */
     {
-      will.modulePathUnregister( module );
+      // will.modulePathUnregister( module );
+      module._pathUnregister();
     }
 
     module.pathResourceMap[ resourceName ].path = filePath;
@@ -4789,10 +4901,15 @@ function remotePathSet( filePath )
   let ex = module.remotePath;
   let isIdentical = ex === filePath || _.entityIdentical( _.path.simplify( ex ), _.path.simplify( filePath ) );
 
-  module._remotePathPut( filePath );
+  // if( filePath && !isIdentical )
+  // {
+  //   debugger;
+  //   _.assert( _.strDefined( module.downloadPath ) );
+  //   module.remotePathEachAdopt({ remotePath : filePath, downloadPath : module.downloadPath });
+  //   module._remotePathEachAdopt();
+  // }
 
-  // if( !isIdentical )
-  // module._filePathChanged2();
+  module._remotePathPut( filePath );
 
   if( !isIdentical )
   module._remoteChanged();
@@ -5057,7 +5174,7 @@ function aliasNamesGet()
   for( let u = 0 ; u < module.userArray.length ; u++ )
   {
     let opener = module.userArray[ u ];
-    _.assert( opener instanceof will.ModuleOpener );
+    if( opener instanceof will.ModuleOpener )
     if( opener.aliasName )
     _.arrayAppendElementOnce( result, opener.aliasName )
   }
@@ -6960,6 +7077,7 @@ let Extend =
   _filePathChanged1,
   _filePathChanged2,
   _pathRegister,
+  _pathUnregister,
   inPathGet,
   outPathGet,
   outfilePathGet,
@@ -6967,6 +7085,7 @@ let Extend =
   peerLocalPathGet,
   peerRemotePathGet,
   peerInPathGet,
+  // remotePathRegister,
 
   willfilesPathGet,
   dirPathGet,

@@ -186,7 +186,6 @@ function optionsForModuleExport()
     downloadPath : null,
     remotePath : null,
 
-    // isRemote : null,
     isOut : null,
 
   }
@@ -1067,8 +1066,10 @@ function _repoForm()
   _.assert( opener.formed <= 2 );
   _.assert( opener.openedModule === null );
 
-  let downloadPath, remotePath;
+  // if( opener.id === 1083 )
+  // debugger;
 
+  let downloadPath, remotePath;
   // opener.isRemote = opener.repoIsRemote();
   let isRemote = opener.repoIsRemote();
 
@@ -1952,6 +1953,61 @@ function willfilesPathSet( filePath )
 
 //
 
+function remotePathSet( src )
+{
+  let opener = this;
+  let module = opener.openedModule;
+  let will = opener.will;
+
+  // debugger;
+  if( opener.__.remotePath === src )
+  {
+    debugger;
+    _.assert( !opener.openedModule || opener.openedModule.remotePath === src );
+    return;
+  }
+
+  // debugger;
+  opener.remotePathPut( src );
+  if( opener.openedModule )
+  {
+    opener.openedModule.remotePath = src;
+    _.assert( opener.openedModule.remotePath === src );
+  }
+
+}
+
+//
+
+function remotePathPut( val )
+{
+  let opener = this;
+  let will = opener.will;
+  let module = opener.openedModule;
+  let ex = opener.__.remotePath;
+
+  if( val === ex )
+  return val;
+
+  opener.__.remotePath = val;
+
+  // _.assert( !module || module.remotePath === val );
+
+  if( will )
+  will._pathChanged
+  ({
+    object : opener,
+    fieldName : 'remotePath',
+    val,
+    ex,
+    kind : 'put',
+  });
+
+  return val;
+}
+
+//
+
 function sharedFieldPut_functor( fieldName )
 {
   let symbol = Symbol.for( fieldName );
@@ -1961,7 +2017,7 @@ function sharedFieldPut_functor( fieldName )
     let opener = this;
     let will = opener.will;
     let module = opener.openedModule;
-    let ex = opener[ symbol ]
+    let ex = opener[ symbol ];
 
     opener[ symbol ] = val;
 
@@ -1991,12 +2047,12 @@ let downloadPathGet = sharedFieldGet_functor( 'downloadPath' );
 let localPathGet = sharedFieldGet_functor( 'localPath' );
 let remotePathGet = sharedFieldGet_functor( 'remotePath' );
 
-let willfilesPathPut = sharedFieldPut_functor( 'willfilesPath' );
-let dirPathPut = sharedFieldPut_functor( 'dirPath' );
-let commonPathPut = sharedFieldPut_functor( 'commonPath' );
-let downloadPathPut = sharedFieldPut_functor( 'downloadPath' );
-let localPathPut = sharedFieldPut_functor( 'localPath' );
-let remotePathPut = sharedFieldPut_functor( 'remotePath' );
+let _willfilesPathPut = sharedFieldPut_functor( 'willfilesPath' );
+let _dirPathPut = sharedFieldPut_functor( 'dirPath' );
+let _commonPathPut = sharedFieldPut_functor( 'commonPath' );
+let _downloadPathPut = sharedFieldPut_functor( 'downloadPath' );
+let _localPathPut = sharedFieldPut_functor( 'localPath' );
+// let remotePathPut = sharedFieldPut_functor( 'remotePath' );
 
 // --
 // name
@@ -2309,7 +2365,7 @@ let Accessors =
   commonPath : { getter : commonPathGet, readOnly : 1 },
   localPath : { getter : localPathGet, readOnly : 1, },
   downloadPath : { getter : downloadPathGet, readOnly : 1 },
-  remotePath : { getter : remotePathGet, readOnly : 1 },
+  remotePath : { getter : remotePathGet, setter : remotePathSet },
 
   name : { getter : nameGet, readOnly : 1 },
   aliasName : { setter : aliasNameSet },
@@ -2408,12 +2464,13 @@ let Extend =
   remotePathGet,
 
   willfilesPathSet,
+  remotePathSet,
 
-  willfilesPathPut,
-  dirPathPut,
-  commonPathPut,
-  downloadPathPut,
-  localPathPut,
+  _willfilesPathPut,
+  _dirPathPut,
+  _commonPathPut,
+  _downloadPathPut,
+  _localPathPut,
   remotePathPut,
 
   // name

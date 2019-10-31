@@ -777,6 +777,14 @@ function _pathChanged( o )
   o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
 
   // if( o.val )
+  // if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
+  // if( o.object.id === 1086 )
+  // {
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   debugger;
+  // }
+
+  // if( o.val )
   // if( o.fieldName === 'outPath' || o.fieldName === 'out' )
   // if( o.object.id === 209 || o.object.id === 84 )
   // {
