@@ -1438,7 +1438,7 @@ function _repoDownload( o )
     if( hasLocalChanges !== null )
     return hasLocalChanges;
     // hasLocalChanges = opener.repoHasLocalChanges();
-    hasLocalChanges = opener.hasLocalChanges;
+    hasLocalChanges = opener.repo.hasLocalChanges;
     _.assert( _.boolIs( hasLocalChanges ) );
     return hasLocalChanges;
   }
