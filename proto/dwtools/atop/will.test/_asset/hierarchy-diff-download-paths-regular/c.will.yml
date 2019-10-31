@@ -7,10 +7,10 @@ about :
 submodule :
 
   a : a/
-  # UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/
-  # PathTools : git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out.will
-  # PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/
-  # Color : git+https:///github.com/Wandalen/wColor.git/out/wColor.out
+  UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/
+  PathTools : git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out.will
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/
+  Color : git+https:///github.com/Wandalen/wColor.git/out/wColor.out
 
 path :
 
