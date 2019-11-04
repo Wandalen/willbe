@@ -242,7 +242,7 @@ function _propertyGetterSetterMake( o )
 
   function unfunct( functor )
   {
-    if( _.routineIs( functor ) && functor.rubrics && _.arrayHas( functor.rubrics, 'functor' ) )
+    if( _.routineIs( functor ) && functor.rubrics && _.longHas( functor.rubrics, 'functor' ) )
     {
       if( functor.defaults && functor.defaults.fieldName !== undefined )
       functor = functor({ fieldName : o.name });
@@ -716,7 +716,7 @@ function declare_body( o )
 
     let o2 = o.names[ n ];
 
-    if( _.routineIs( o2 ) && o2.rubrics && _.arrayHas( o2.rubrics, 'functor' ) )
+    if( _.routineIs( o2 ) && o2.rubrics && _.longHas( o2.rubrics, 'functor' ) )
     {
       if( o2.defaults && o2.defaults.fieldName !== undefined )
       o2 = o2({ fieldName : n });

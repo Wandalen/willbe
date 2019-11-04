@@ -2143,6 +2143,7 @@ function withList( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'withList/.will.yml' ), 1 );
     test.identical( _.strCount( got.output, 'module-' ), 1 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     return null;
   })
 
@@ -2156,6 +2157,7 @@ function withList( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'withList/.will.yml' ), 1 );
     test.identical( _.strCount( got.output, 'Module for testing' ), 1 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     return null;
   })
 
@@ -2169,6 +2171,7 @@ function withList( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'withList/.will.yml' ), 1 );
     test.identical( _.strCount( got.output, routinePath ), 2 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     return null;
   })
 
@@ -2212,6 +2215,8 @@ function eachList( test )
     test.case = '.each . .resources.list about::name';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Module at' ), 6 );
     test.identical( _.strCount( got.output, 'module-' ), 6 );
 
@@ -2239,6 +2244,8 @@ function eachList( test )
     test.case = '.imply v:1 ; .each . .resources.list about::name';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Module at' ), 0 );
     test.identical( _.strCount( got.output, 'module-' ), 6 );
     test.identical( _.strLinesCount( got.output ), 8 );
@@ -2267,6 +2274,8 @@ function eachList( test )
     test.case = '.imply v:1 ; .each . .resources.list path::module.common';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Module at' ), 0 );
     test.identical( _.strCount( got.output, routinePath ), 6 );
     test.identical( _.strLinesCount( got.output ), 8 );
@@ -2289,6 +2298,8 @@ function eachList( test )
     test.case = '.imply v:1 ; .each * .resources.list path::module.common';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Module at' ), 0 );
     test.identical( _.strCount( got.output, routinePath ), 6 );
     test.identical( _.strLinesCount( got.output ), 8 );
@@ -2311,6 +2322,8 @@ function eachList( test )
     test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Module at' ), 0 );
     test.identical( _.strCount( got.output, routinePath ), 9 );
     test.identical( _.strLinesCount( got.output ), 11 );
@@ -2367,6 +2380,7 @@ function eachBrokenIll( test )
     test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
     test.is( !err );
     test.notIdentical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Failed to resolve' ), 0 );
     test.identical( _.strCount( got.output, 'eachBrokenIll/' ), 6 );
     test.identical( _.strCount( got.output, 'Failed to open willfile' ), 1 );
@@ -2419,6 +2433,7 @@ function eachBrokenNon( test )
     test.case = '.each */* .paths.list';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Read 1 willfile' ), 1 );
     test.identical( _.strCount( got.output, 'Module at' ), 1 );
     test.identical( _.strCount( got.output, 'Paths' ), 1 );
@@ -2470,6 +2485,7 @@ function eachBrokenCommand( test )
     test.case = '.each */* .resource.list path::module.common';
     test.is( !err );
     test.notIdentical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Unknown command ".resource.list"' ), 1 );
     test.identical( _.strCount( got.output, 'Module at' ), 3 );
     test.identical( _.strCount( got.output, '      ' ), 0 );
@@ -3322,6 +3338,7 @@ function verbositySet( test )
     test.case = '.imply verbosity:3 ; .build';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
 
     test.is( _.strHas( got.output, '.imply verbosity:3 ; .build' ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
@@ -3351,6 +3368,7 @@ function verbositySet( test )
     test.case = '.imply verbosity:2 ; .build';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
 
     test.is( _.strHas( got.output, '.imply verbosity:2 ; .build' ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
@@ -3380,6 +3398,7 @@ function verbositySet( test )
     test.case = '.imply verbosity:1 ; .build';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
 
     test.is( _.strHas( got.output, '.imply verbosity:1 ; .build' ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
@@ -5336,6 +5355,7 @@ function listSteps( test )
     test.case = '.steps.list';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
 
     test.is( _.strHas( got.output, 'step::delete.out.debug' ) );
     test.is( _.strHas( got.output, /step::reflect\.proto\.[^d]/ ) );
@@ -5354,6 +5374,7 @@ function listSteps( test )
     test.case = '.steps.list';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
 
     test.is( _.strHas( got.output, 'step::delete.out.debug' ) );
     test.is( _.strHas( got.output, /step::reflect\.proto\.[^d]/ ) );
@@ -5372,6 +5393,7 @@ function listSteps( test )
     test.case = '.steps.list';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
 
     test.is( !_.strHas( got.output, 'step::delete.out.debug' ) );
     test.is( _.strHas( got.output, /step::reflect\.proto\.[^d]/ ) );
@@ -5390,6 +5412,7 @@ function listSteps( test )
     test.case = '.steps.list';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
 
     test.is( !_.strHas( got.output, 'step::delete.out.debug' ) );
     test.is( !_.strHas( got.output, /step::reflect\.proto\.[^d]/ ) );
@@ -7966,6 +7989,7 @@ function buildSubmodules( test )
   .finally( ( err, got ) =>
   {
     test.is( !err );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     var files = self.find( outPath );
     test.gt( files.length, 60 );
     return null;
@@ -9042,7 +9066,7 @@ function exportSecond( test )
           "prefixPath" : "../doc"
         },
         "mandatory" : 1,
-        "criterion" : { "doc" : 1, "export" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 }
       },
       "exported.files.doc.export" :
       {
@@ -9055,7 +9079,7 @@ function exportSecond( test )
         },
         "recursive" : 0,
         "mandatory" : 1,
-        "criterion" : { "doc" : 1, "export" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 }
       },
       "exported.proto.export" :
       {
@@ -9065,7 +9089,7 @@ function exportSecond( test )
           "prefixPath" : "../proto"
         },
         "mandatory" : 1,
-        "criterion" : { "proto" : 1, "export" : 1 }
+        "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 }
       },
       "exported.files.proto.export" :
       {
@@ -9078,7 +9102,7 @@ function exportSecond( test )
         },
         "recursive" : 0,
         "mandatory" : 1,
-        "criterion" : { "proto" : 1, "export" : 1 }
+        "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 }
       }
     }
     test.identical( outfile.reflector, expected );
@@ -9142,17 +9166,17 @@ function exportSecond( test )
       },
       "exported.files.doc.export" :
       {
-        "criterion" : { "doc" : 1, "export" : 1 },
+        "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 },
         "path" : [ "../doc", "../doc/File.md" ]
       },
       "exported.dir.proto.export" :
       {
-        "criterion" : { "proto" : 1, "export" : 1 },
+        "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
         "path" : "../proto"
       },
       "exported.files.proto.export" :
       {
-        "criterion" : { "proto" : 1, "export" : 1 },
+        "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
         "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ]
       },
       'module.peer.in' :
@@ -9256,7 +9280,7 @@ function exportSecond( test )
           "prefixPath" : "../doc"
         },
         "mandatory" : 1,
-        "criterion" : { "doc" : 1, "export" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 }
       },
       "exported.files.doc.export" :
       {
@@ -9269,7 +9293,7 @@ function exportSecond( test )
         },
         "recursive" : 0,
         "mandatory" : 1,
-        "criterion" : { "doc" : 1, "export" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 }
       },
       "exported.proto.export" :
       {
@@ -9279,7 +9303,7 @@ function exportSecond( test )
           "prefixPath" : "../proto"
         },
         "mandatory" : 1,
-        "criterion" : { "proto" : 1, "export" : 1 }
+        "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 }
       },
       "exported.files.proto.export" :
       {
@@ -9292,7 +9316,7 @@ function exportSecond( test )
         },
         "recursive" : 0,
         "mandatory" : 1,
-        "criterion" : { "proto" : 1, "export" : 1 }
+        "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 }
       }
     }
     test.identical( outfile.reflector, expected );
@@ -11354,6 +11378,7 @@ function exportRecursiveLocal( test )
 
     test.is( !err );
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Exported module::' ), 9 );
     return null;
   })
@@ -11363,6 +11388,7 @@ function exportRecursiveLocal( test )
   {
     test.is( !err );
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
 
     test.identical( _.strCount( got.output, 'About' ), 1 );
     test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
@@ -11379,6 +11405,7 @@ function exportRecursiveLocal( test )
     test.case = 'second';
     test.is( !err );
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Exported module::' ), 15 );
     return null;
   })
@@ -11388,6 +11415,7 @@ function exportRecursiveLocal( test )
   {
     test.is( !err );
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
 
     test.identical( _.strCount( got.output, 'About' ), 1 );
     test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
@@ -11759,6 +11787,7 @@ function exportTracing( test )
   .finally( ( err, op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
     _.errAttend( err );
     return null;
@@ -12066,6 +12095,7 @@ function exportHierarchyRemote( test )
     return null;
   })
 
+  // xxx
   // a.start( '.with z .export.recursive' )
   //
   // .then( ( got ) =>
@@ -12102,6 +12132,145 @@ function exportHierarchyRemote( test )
 } /* end of function exportHierarchyRemote */
 
 exportHierarchyRemote.timeOut = 300000;
+
+//
+
+function exportWithDisabled( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'broken-out' );
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withDisabled:1 ; .with */* .export.recursive';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.imply withDisabled:1 ; .with */* .export.recursive' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp =
+    [
+      '.',
+      './module1',
+      './module1/.ex.will.yml',
+      './module1/.im.will.yml',
+      './module1/out',
+      './module1/out/module1.out.will.yml',
+      './module1/proto',
+      './module1/proto/File1.txt',
+      './module2',
+      './module2/will.yml',
+      './module2/out',
+      './module2/out/module2.out.will.yml'
+    ];
+    var files = self.find( a.abs( '.' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported' ), 2 );
+    test.identical( _.strCount( got.output, 'Unhandled' ), 0 );
+    test.identical( _.strHas( got.output, '! Outdated' ), true );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.imply withDisabled:0 ; .with */* .export.recursive';
+    a.reflect();
+    _.fileProvider.filesDelete( a.abs( 'module1/out' ) );
+    return null;
+  })
+
+  a.start( '.imply withDisabled:0 ; .with */* .export.recursive' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp =
+    [
+      '.',
+      './module1',
+      './module1/.ex.will.yml',
+      './module1/.im.will.yml',
+      './module1/proto',
+      './module1/proto/File1.txt',
+      './module2',
+      './module2/will.yml',
+      './module2/out',
+      './module2/out/module2.out.will.yml'
+    ];
+    var files = self.find( a.abs( '.' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported' ), 1 );
+    test.identical( _.strCount( got.output, 'Unhandled' ), 0 );
+    test.identical( _.strHas( got.output, '! Outdated' ), false );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with */* .export.recursive';
+    a.reflect();
+    _.fileProvider.filesDelete( a.abs( 'module1/out' ) );
+    return null;
+  })
+
+  a.start( '.with */* .export.recursive' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp =
+    [
+      '.',
+      './module1',
+      './module1/.ex.will.yml',
+      './module1/.im.will.yml',
+      './module1/proto',
+      './module1/proto/File1.txt',
+      './module2',
+      './module2/will.yml',
+      './module2/out',
+      './module2/out/module2.out.will.yml'
+    ];
+    var files = self.find( a.abs( '.' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported' ), 1 );
+    test.identical( _.strCount( got.output, 'Unhandled' ), 0 );
+    test.identical( _.strHas( got.output, '! Outdated' ), false );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function exportWithDisabled */
+
+exportWithDisabled.timeOut = 300000;
 
 //
 
@@ -13570,7 +13739,7 @@ function reflectWithOptions( test )
   {
     test.is( !err );
     test.is( !!got.exitCode );
-    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
     test.is( _.strHas( got.output, /Failed .*module::.+ \/ step::reflect\.proto2/ ) );
     test.is( _.strHas( got.output, /No file found at .+/ ) );
@@ -14000,6 +14169,7 @@ function relfectSubmodulesWithNotExistingFile( test )
     test.is( err === undefined );
     if( err )
     logger.log( err );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     return arg || null;
   })
 
@@ -14009,6 +14179,7 @@ function relfectSubmodulesWithNotExistingFile( test )
   .finally( ( err, arg ) =>
   {
     test.is( _.errIs( err ) );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     logger.log( err );
     if( err )
     throw err;
@@ -16092,9 +16263,9 @@ function submodulesDownloadStepAndCommand( test )
   {
     test.identical( got.exitCode, 0 );
     let files = self.find( submodulesPath );
-    test.is( !_.arrayHas( files, './Tools' ) )
-    test.is( !_.arrayHas( files, './Proto' ) )
-    test.is( _.arrayHas( files, './submodule' ) )
+    test.is( !_.longHas( files, './Tools' ) )
+    test.is( !_.longHas( files, './Proto' ) )
+    test.is( _.longHas( files, './submodule' ) )
     return null;
   })
 
@@ -16114,9 +16285,9 @@ function submodulesDownloadStepAndCommand( test )
   {
     test.identical( got.exitCode, 0 );
     let files = self.find( submodulesPath );
-    test.is( !_.arrayHas( files, './Tools' ) )
-    test.is( !_.arrayHas( files, './Proto' ) )
-    test.is( _.arrayHas( files, './submodule' ) )
+    test.is( !_.longHas( files, './Tools' ) )
+    test.is( !_.longHas( files, './Proto' ) )
+    test.is( _.longHas( files, './submodule' ) )
     return null;
   })
 
@@ -20052,6 +20223,7 @@ var Self =
     exportWithRemoteSubmodules,
     exportDiffDownloadPathsRegular,
     exportHierarchyRemote,
+    exportWithDisabled,
     /* xxx : implement same test for hierarchy-remote and irregular */
     /* xxx : implement clean tests */
     /* xxx : refactor ** clean */

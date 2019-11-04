@@ -655,7 +655,7 @@ function longOnce/*longRemoveDuplicates*/( dstLong, onEvaluate )
   let length = dstLong.length;
 
   for( let i = 0; i < dstLong.length; i++ )
-  if( _.arrayLeftIndex( dstLong, dstLong[ i ], i+1, onEvaluate ) !== -1 )
+  if( _.longLeftIndex( dstLong, dstLong[ i ], i+1, onEvaluate ) !== -1 )
   length--;
 
   if( length === dstLong.length )
@@ -666,7 +666,7 @@ function longOnce/*longRemoveDuplicates*/( dstLong, onEvaluate )
 
   let j = 1;
   for( let i = 1; i < dstLong.length && j < length; i++ )
-  if( _.arrayRightIndex( result, dstLong[ i ], j-1, onEvaluate ) === -1 )
+  if( _.longRightIndex( result, dstLong[ i ], j-1, onEvaluate ) === -1 )
   result[ j++ ] = dstLong[ i ];
 
   _.assert( j === length );
@@ -725,7 +725,7 @@ function longAreRepeatedProbe( srcArray, onEvaluate )
 
     result.array[ i ] = 0;
 
-    let left = _.arrayLeftIndex( srcArray, element, i+1, onEvaluate );
+    let left = _.longLeftIndex( srcArray, element, i+1, onEvaluate );
     if( left >= 0 )
     {
       result.array[ i ] = 1;
@@ -735,7 +735,7 @@ function longAreRepeatedProbe( srcArray, onEvaluate )
         result.uniques -= 1;
         result.condensed -= 1;
         result.array[ left ] = 1;
-        left = _.arrayLeftIndex( srcArray, element, left+1, onEvaluate );
+        left = _.longLeftIndex( srcArray, element, left+1, onEvaluate );
       }
       while( left >= 0 );
     }
@@ -1035,7 +1035,7 @@ function hasLength( src )
 
 //
 
-function arrayHasArray( arr )
+function longHasDepth( arr )
 {
 
   if( !_.arrayLike( arr ) )
@@ -1143,7 +1143,7 @@ function arrayHas( array, value, evaluator1, evaluator2 )
   }
   else
   {
-    if( _.arrayLeftIndex( array, value, evaluator1, evaluator2 ) >= 0 )
+    if( _.longLeftIndex( array, value, evaluator1, evaluator2 ) >= 0 )
     return true;
     return false;
   }
@@ -1222,10 +1222,10 @@ function arrayHasAll( src )
 
 //
 
-function arrayHasNone( src )
+function longHasNone( src )
 {
   _.assert( arguments.length >= 1, 'Expects at least one argument' );
-  _.assert( _.arrayLike( src ) || _.bufferTypedIs( src ), 'arrayHasNone :', 'array expected' );
+  _.assert( _.arrayLike( src ) || _.bufferTypedIs( src ), 'longHasNone :', 'array expected' );
 
   for( let a = 1 ; a < arguments.length ; a++ )
   {
@@ -1242,7 +1242,7 @@ function arrayHasNone( src )
 
 //
 
-function arrayAll( src )
+function longAll( src )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
@@ -1275,7 +1275,7 @@ function arrayAny( src )
 
 //
 
-function arrayNone( src )
+function longNone( src )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.longIs( src ) );
@@ -1502,7 +1502,7 @@ function arrayAs( src )
 // array sequential search
 // --
 
-function arrayLeftIndex( arr, ins, evaluator1, evaluator2 )
+function longLeftIndex( arr, ins, evaluator1, evaluator2 )
 {
   let fromIndex = 0;
 
@@ -1558,7 +1558,7 @@ function arrayLeftIndex( arr, ins, evaluator1, evaluator2 )
 
 //
 
-function arrayRightIndex( arr, ins, evaluator1, evaluator2 )
+function longRightIndex( arr, ins, evaluator1, evaluator2 )
 {
   if( ins === undefined )
   debugger;
@@ -1617,16 +1617,16 @@ function arrayRightIndex( arr, ins, evaluator1, evaluator2 )
 //
 
 /**
- * The arrayLeft() routine returns a new object containing the properties, (index, element),
+ * The longLeft() routine returns a new object containing the properties, (index, element),
  * corresponding to a found value (ins) from an array (arr).
  *
- * It creates the variable (i), assigns and calls to it the function( _.arrayLeftIndex( arr, ins, evaluator1 ) ),
+ * It creates the variable (i), assigns and calls to it the function( _.longLeftIndex( arr, ins, evaluator1 ) ),
  * that returns the index of the value (ins) in the array (arr).
- * [wTools.arrayLeftIndex()]{@link wTools.arrayLeftIndex}
+ * [wTools.longLeftIndex()]{@link wTools.longLeftIndex}
  * If (i) is more or equal to the zero, it returns the object containing the properties ({ index : i, element : arr[ i ] }).
  * Otherwise, it returns the empty object.
  *
- * @see {@link wTools.arrayLeftIndex} - See for more information.
+ * @see {@link wTools.longLeftIndex} - See for more information.
  *
  * @param { longIs } arr - Entity to check.
  * @param { * } ins - Element to locate in the array.
@@ -1634,24 +1634,24 @@ function arrayRightIndex( arr, ins, evaluator1, evaluator2 )
  *
  * @example
  * // returns { index : 3, element : 'str' }
- * _.arrayLeft( [ 1, 2, false, 'str', 5 ], 'str', function( a, b ) { return a === b } );
+ * _.longLeft( [ 1, 2, false, 'str', 5 ], 'str', function( a, b ) { return a === b } );
  *
  * @example
  * // returns {  }
- * _.arrayLeft( [ 1, 2, 3, 4, 5 ], 6 );
+ * _.longLeft( [ 1, 2, 3, 4, 5 ], 6 );
  *
  * @returns { Object } Returns a new object containing the properties, (index, element),
  * corresponding to the found value (ins) from the array (arr).
  * Otherwise, it returns the empty object.
- * @function arrayLeft
+ * @function longLeft
  * @throws { Error } Will throw an Error if (evaluator1) is not a Function.
  * @memberof wTools
  */
 
-function arrayLeft( arr, ins, evaluator1, evaluator2 )
+function longLeft( arr, ins, evaluator1, evaluator2 )
 {
   let result = Object.create( null );
-  let i = _.arrayLeftIndex( arr, ins, evaluator1, evaluator2 );
+  let i = _.longLeftIndex( arr, ins, evaluator1, evaluator2 );
 
   _.assert( 2 <= arguments.length && arguments.length <= 4 );
 
@@ -1666,10 +1666,10 @@ function arrayLeft( arr, ins, evaluator1, evaluator2 )
 
 //
 
-function arrayRight( arr, ins, evaluator1, evaluator2 )
+function longRight( arr, ins, evaluator1, evaluator2 )
 {
   let result = Object.create( null );
-  let i = _.arrayRightIndex( arr, ins, evaluator1, evaluator2 );
+  let i = _.longRightIndex( arr, ins, evaluator1, evaluator2 );
 
   _.assert( 2 <= arguments.length && arguments.length <= 4 );
 
@@ -1684,22 +1684,22 @@ function arrayRight( arr, ins, evaluator1, evaluator2 )
 
 //
 
-function arrayLeftDefined( arr )
+function longLeftDefined( arr )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  return _.arrayLeft( arr, true, function( e ){ return e !== undefined; } );
+  return _.longLeft( arr, true, function( e ){ return e !== undefined; } );
 }
 
 //
 
-function arrayRightDefined( arr )
+function longRightDefined( arr )
 {
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  return _.arrayRight( arr, true, function( e ){ return e !== undefined; } );
+  return _.longRight( arr, true, function( e ){ return e !== undefined; } );
 }
 
 //
@@ -1733,13 +1733,13 @@ function arrayCountElement( srcArray, element, onEvaluate1, onEvaluate2 )
   _.assert( 2 <= arguments.length && arguments.length <= 4 );
   _.assert( _.longIs( srcArray ), 'Expects long' );
 
-  let left = _.arrayLeftIndex( srcArray, element, onEvaluate1, onEvaluate2 );
+  let left = _.longLeftIndex( srcArray, element, onEvaluate1, onEvaluate2 );
   // let index = srcArray.indexOf( element );
 
   while( left >= 0 )
   {
     result += 1;
-    left = _.arrayLeftIndex( srcArray, element, left+1, onEvaluate1, onEvaluate2 );
+    left = _.longLeftIndex( srcArray, element, left+1, onEvaluate1, onEvaluate2 );
     // index = srcArray.indexOf( element, index+1 );
   }
 
@@ -2120,7 +2120,7 @@ function arrayPrependedOnce( dstArray, ins, evaluator1, evaluator2 )
 {
   _.assert( _.arrayIs( dstArray ) );
 
-  let i = _.arrayLeftIndex.apply( _, arguments );
+  let i = _.longLeftIndex.apply( _, arguments );
 
   if( i === -1 )
   {
@@ -2269,7 +2269,7 @@ function arrayPrependedElementOnce( dstArray, ins, evaluator1, evaluator2 )
 {
   _.assert( _.arrayIs( dstArray ) );
 
-  let i = _.arrayLeftIndex.apply( _, arguments );
+  let i = _.longLeftIndex.apply( _, arguments );
 
   if( i === -1 )
   {
@@ -2536,7 +2536,7 @@ function arrayPrependedArrayOnce( dstArray, insArray, evaluator1, evaluator2 )
 
   for( let i = insArray.length - 1; i >= 0; i-- )
   {
-    if( _.arrayLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 ) === -1 )
+    if( _.longLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 ) === -1 )
     {
       dstArray.unshift( insArray[ i ] );
       result += 1;
@@ -2838,7 +2838,7 @@ function arrayPrependedArraysOnce( dstArray, insArray, evaluator1, evaluator2 )
 
   function _prependOnce( element )
   {
-    let index = _.arrayLeftIndex( dstArray, element, evaluator1, evaluator2 );
+    let index = _.longLeftIndex( dstArray, element, evaluator1, evaluator2 );
     if( index === -1 )
     {
       // dstArray.unshift( argument );
@@ -3050,7 +3050,7 @@ function arrayAppended( dstArray, ins )
 
 function arrayAppendedOnce( dstArray, ins, evaluator1, evaluator2 )
 {
-  let i = _.arrayLeftIndex.apply( _, arguments );
+  let i = _.longLeftIndex.apply( _, arguments );
 
   if( i === -1 )
   {
@@ -3143,7 +3143,7 @@ function arrayAppendedElement( dstArray, ins )
 
 function arrayAppendedElementOnce( dstArray, ins )
 {
-  let i = _.arrayLeftIndex.apply( _, arguments );
+  let i = _.longLeftIndex.apply( _, arguments );
 
   if( i === -1 )
   {
@@ -3310,7 +3310,7 @@ function arrayAppendedArrayOnce( dstArray, insArray, evaluator1, evaluator2 )
 
   for( let i = 0 ; i < insArray.length ; i++ )
   {
-    if( _.arrayLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 ) === -1 )
+    if( _.longLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 ) === -1 )
     {
       dstArray.push( insArray[ i ] );
       result += 1;
@@ -3504,7 +3504,7 @@ function arrayAppendedArraysOnce( dstArray, insArray, evaluator1, evaluator2 )
 
   function _appendOnce( argument )
   {
-    let index = _.arrayLeftIndex( dstArray, argument, evaluator1, evaluator2 );
+    let index = _.longLeftIndex( dstArray, argument, evaluator1, evaluator2 );
     if( index === -1 )
     {
       dstArray.push( argument );
@@ -3588,7 +3588,7 @@ function arrayRemoved( dstArray, ins, evaluator1, evaluator2 )
 
 function arrayRemovedOnce( dstArray, ins, evaluator1, evaluator2 )
 {
-  let index = _.arrayLeftIndex.apply( _, arguments );
+  let index = _.longLeftIndex.apply( _, arguments );
   if( index >= 0 )
   dstArray.splice( index, 1 );
 
@@ -3599,14 +3599,14 @@ function arrayRemovedOnce( dstArray, ins, evaluator1, evaluator2 )
 
 function arrayRemovedOnceStrictly( dstArray, ins, evaluator1, evaluator2 )
 {
-  let index = _.arrayLeftIndex.apply( _, arguments );
+  let index = _.longLeftIndex.apply( _, arguments );
   if( index >= 0 )
   {
     dstArray.splice( index, 1 );
   }
   else _.assert( 0, () => 'Array does not have element ' + _.toStrShort( ins ) );
 
-  let newIndex = _.arrayLeftIndex.apply( _, arguments );
+  let newIndex = _.longLeftIndex.apply( _, arguments );
   _.assert( newIndex < 0, () => 'The element ' + _.toStrShort( ins ) + ' is several times in dstArray' );
 
   return index;
@@ -3669,7 +3669,7 @@ function arrayRemoveElementOnceStrictly( dstArray, ins, evaluator1, evaluator2 )
   if( Config.debug )
   {
     let result = arrayRemovedElementOnce.apply( this, arguments );
-    let index = _.arrayLeftIndex.apply( _, arguments );
+    let index = _.longLeftIndex.apply( _, arguments );
     _.assert( index < 0 );
     _.assert( result >= 0, () => 'Array does not have element ' + _.toStrShort( ins ) );
   }
@@ -3693,7 +3693,7 @@ function arrayRemoveElementOnceStrictly( dstArray, ins, evaluator1, evaluator2 )
 
 function arrayRemovedElement( dstArray, ins, evaluator1, evaluator2 )
 {
-  let index = _.arrayLeftIndex.apply( this, arguments );
+  let index = _.longLeftIndex.apply( this, arguments );
   let removedElements = 0;
 
   for( let i = 0; i < dstArray.length; i++ )
@@ -3704,7 +3704,7 @@ function arrayRemovedElement( dstArray, ins, evaluator1, evaluator2 )
       removedElements = removedElements + 1;
       i = i - 1 ;
     }
-    index = _.arrayLeftIndex.apply( this, arguments );
+    index = _.longLeftIndex.apply( this, arguments );
   }
   return removedElements;
 }
@@ -3728,9 +3728,9 @@ function arrayRemovedElement( dstArray, ins, evaluator1, evaluator2 )
  * that looking for the value of the (ins) in the (dstArray).
  * If true, it removes the value (ins) from (dstArray) array by corresponding index.
  * Otherwise, if passed three arguments, it calls the routine
- * [arrayLeftIndex( dstArray, ins, onEvaluate )]{@link wTools.arrayLeftIndex}
+ * [longLeftIndex( dstArray, ins, onEvaluate )]{@link wTools.longLeftIndex}
  * If callback function(onEvaluate) returns true, it returns the index that will be removed from (dstArray).
- * @see {@link wTools.arrayLeftIndex} - See for more information.
+ * @see {@link wTools.longLeftIndex} - See for more information.
  *
  * @param { Array } dstArray - The source array.
  * @param { * } ins - The value to remove.
@@ -3758,7 +3758,7 @@ function arrayRemovedElement( dstArray, ins, evaluator1, evaluator2 )
 function arrayRemovedElementOnce( dstArray, ins, evaluator1, evaluator2 )
 {
 
-  let index = _.arrayLeftIndex.apply( _, arguments );
+  let index = _.longLeftIndex.apply( _, arguments );
   if( index >= 0 )
   dstArray.splice( index, 1 );
 
@@ -3766,7 +3766,7 @@ function arrayRemovedElementOnce( dstArray, ins, evaluator1, evaluator2 )
   /* "!!! : breaking" */
   /* // arrayRemovedElementOnce should return the removed element
   let result;
-  let index = _.arrayLeftIndex.apply( _, arguments );
+  let index = _.longLeftIndex.apply( _, arguments );
 
   if( index >= 0 )
   {
@@ -3784,7 +3784,7 @@ function arrayRemovedElementOnceStrictly( dstArray, ins, evaluator1, evaluator2 
 {
 
   let result;
-  let index = _.arrayLeftIndex.apply( _, arguments );
+  let index = _.longLeftIndex.apply( _, arguments );
   if( index >= 0 )
   {
     result = dstArray[ index ];
@@ -3792,7 +3792,7 @@ function arrayRemovedElementOnceStrictly( dstArray, ins, evaluator1, evaluator2 
   }
   else _.assert( 0, () => 'Array does not have element ' + _.toStrShort( ins ) );
 
-  index = _.arrayLeftIndex.apply( _, arguments );
+  index = _.longLeftIndex.apply( _, arguments );
   _.assert( index < 0, () => 'The element ' + _.toStrShort( ins ) + ' is several times in dstArray' );
 
   return result;
@@ -3803,7 +3803,7 @@ function arrayRemovedElementOnceStrictly( dstArray, ins, evaluator1, evaluator2 
 {
 
   let result;
-  let index = _.arrayLeftIndex.apply( _, arguments );
+  let index = _.longLeftIndex.apply( _, arguments );
   if( index >= 0 )
   {
     result = dstArray[ index ];
@@ -3914,7 +3914,7 @@ function arrayRemovedArray( dstArray, insArray )
  * If callback function(onEqualize) returns true, it returns the index that will be removed from (dstArray),
  * and then incrementing the variable (result++).
  *
- * @see wTools.arrayLeftIndex
+ * @see wTools.longLeftIndex
  *
  * @param { longIs } dstArray - The target array.
  * @param { longIs } insArray - The source array.
@@ -3954,7 +3954,7 @@ function arrayRemovedArrayOnce( dstArray, insArray, evaluator1, evaluator2 )
 
   for( let i = 0, len = insArray.length; i < len ; i++ )
   {
-    index = _.arrayLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 );
+    index = _.longLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 );
 
     if( index >= 0 )
     {
@@ -4105,7 +4105,7 @@ function arrayRemovedArraysOnce( dstArray, insArray, evaluator1, evaluator2 )
 
   function _removeOnce( argument )
   {
-    let index = _.arrayLeftIndex( dstArray, argument, evaluator1, evaluator2 );
+    let index = _.longLeftIndex( dstArray, argument, evaluator1, evaluator2 );
     if( index >= 0 )
     {
       dstArray.splice( index, 1 );
@@ -4214,14 +4214,14 @@ function arrayRemoveAll( dstArray, ins, evaluator1, evaluator2 )
 
 function arrayRemovedAll( dstArray, ins, evaluator1, evaluator2  )
 {
-  let index = _.arrayLeftIndex.apply( _, arguments );
+  let index = _.longLeftIndex.apply( _, arguments );
   let result = 0;
 
   while( index >= 0 )
   {
     dstArray.splice( index, 1 );
     result += 1;
-    index = _.arrayLeftIndex.apply( _, arguments );
+    index = _.longLeftIndex.apply( _, arguments );
   }
 
   return result;
@@ -4261,7 +4261,7 @@ function arrayRemoveDuplicates( dstArray, evaluator )
     let index;
     do
     {
-      index = _.arrayRightIndex( dstArray, dstArray[ i ], evaluator );
+      index = _.longRightIndex( dstArray, dstArray[ i ], evaluator );
       if( index !== i )
       {
         dstArray.splice( index, 1 );
@@ -4283,12 +4283,12 @@ function arrayRemoveDuplicates( dstArray, evaluator )
   for( let i1 = 0 ; i1 < dstArray.length ; i1++ )
   {
     let element1 = dstArray[ i1 ];
-    let index = _.arrayRightIndex( dstArray, element1, evaluator );
+    let index = _.longRightIndex( dstArray, element1, evaluator );
 
     while ( index !== i1 )
     {
       dstArray.splice( index, 1 );
-      index = _.arrayRightIndex( dstArray, element1, evaluator );
+      index = _.longRightIndex( dstArray, element1, evaluator );
     }
   }
 
@@ -4464,7 +4464,7 @@ function arrayFlattenedOnce( dstArray, insArray, evaluator1, evaluator2 )
       }
       else
       {
-        let index = _.arrayLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 );
+        let index = _.longLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 );
         if( index === -1 )
         {
           dstArray.push( insArray[ i ] );
@@ -4478,7 +4478,7 @@ function arrayFlattenedOnce( dstArray, insArray, evaluator1, evaluator2 )
 
     _.assert( insArray !== undefined, 'The Array should have no undefined' );
 
-    let index = _.arrayLeftIndex( dstArray, insArray, evaluator1, evaluator2 );
+    let index = _.longLeftIndex( dstArray, insArray, evaluator1, evaluator2 );
     if( index === -1 )
     {
       dstArray.push( insArray );
@@ -4496,7 +4496,7 @@ function arrayFlattenedOnce( dstArray, insArray, evaluator1, evaluator2 )
     {
       if( _.longIs( insArray[ i ] ) )
       onLongOnce( insArray[ i ], insIndex )
-      else if( _.arrayLeftIndex( dstArray, insArray[ i ] ) === -1 )
+      else if( _.longLeftIndex( dstArray, insArray[ i ] ) === -1 )
       dstArray.splice( insIndex++, 0, insArray[ i ] );
     }
   }
@@ -4543,7 +4543,7 @@ function arrayFlattenedOnceStrictly( dstArray, insArray, evaluator1, evaluator2 
       }
       else
       {
-        let index = _.arrayLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 );
+        let index = _.longLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 );
         if( Config.debug )
         _.assert( index === -1, 'Elements must not be repeated' );
 
@@ -4558,7 +4558,7 @@ function arrayFlattenedOnceStrictly( dstArray, insArray, evaluator1, evaluator2 
   else
   {
     _.assert( insArray !== undefined, 'The Array should have no undefined' );
-    let index = _.arrayLeftIndex( dstArray, insArray, evaluator1, evaluator2 );
+    let index = _.longLeftIndex( dstArray, insArray, evaluator1, evaluator2 );
     if( Config.debug )
     _.assert( index === -1, 'Elements must not be repeated' );
 
@@ -4579,10 +4579,10 @@ function arrayFlattenedOnceStrictly( dstArray, insArray, evaluator1, evaluator2 
     {
       if( _.longIs( insArray[ i ] ) )
       onLongOnce( insArray[ i ], insIndex )
-      else if( _.arrayLeftIndex( dstArray, insArray[ i ] ) === -1 )
+      else if( _.longLeftIndex( dstArray, insArray[ i ] ) === -1 )
       dstArray.splice( insIndex++, 0, insArray[ i ] );
       else if( Config.debug )
-      _.assert( _.arrayLeftIndex( dstArray, insArray[ i ] ) === -1, 'Elements must not be repeated' );
+      _.assert( _.longLeftIndex( dstArray, insArray[ i ] ) === -1, 'Elements must not be repeated' );
     }
   }
 }
@@ -4736,7 +4736,7 @@ function arrayFlattenedDefinedOnce( dstArray, insArray, evaluator1, evaluator2 )
       }
       else
       {
-        let index = _.arrayLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 );
+        let index = _.longLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 );
         if( index === -1 )
         {
           dstArray.push( insArray[ i ] );
@@ -4748,7 +4748,7 @@ function arrayFlattenedDefinedOnce( dstArray, insArray, evaluator1, evaluator2 )
   else if( insArray !== undefined )
   {
 
-    let index = _.arrayLeftIndex( dstArray, insArray, evaluator1, evaluator2 );
+    let index = _.longLeftIndex( dstArray, insArray, evaluator1, evaluator2 );
     if( index === -1 )
     {
       dstArray.push( insArray );
@@ -4766,7 +4766,7 @@ function arrayFlattenedDefinedOnce( dstArray, insArray, evaluator1, evaluator2 )
     {
       if( _.longIs( insArray[ i ] ) )
       onLongOnce( insArray[ i ], insIndex )
-      else if( _.arrayLeftIndex( dstArray, insArray[ i ] ) === -1 )
+      else if( _.longLeftIndex( dstArray, insArray[ i ] ) === -1 )
       dstArray.splice( insIndex++, 0, insArray[ i ] );
     }
   }
@@ -4817,7 +4817,7 @@ function arrayFlattenedDefinedOnceStrictly( dstArray, insArray, evaluator1, eval
       }
       else
       {
-        let index = _.arrayLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 );
+        let index = _.longLeftIndex( dstArray, insArray[ i ], evaluator1, evaluator2 );
         if( Config.debug )
         _.assert( index === -1, 'Elements must not be repeated' );
         if( index === -1 )
@@ -4831,7 +4831,7 @@ function arrayFlattenedDefinedOnceStrictly( dstArray, insArray, evaluator1, eval
   else if( insArray !== undefined )
   {
 
-    let index = _.arrayLeftIndex( dstArray, insArray, evaluator1, evaluator2 );
+    let index = _.longLeftIndex( dstArray, insArray, evaluator1, evaluator2 );
     if( Config.debug )
     _.assert( index === -1, 'Elements must not be repeated' );
 
@@ -4852,10 +4852,10 @@ function arrayFlattenedDefinedOnceStrictly( dstArray, insArray, evaluator1, eval
     {
       if( _.longIs( insArray[ i ] ) )
       onLongOnce( insArray[ i ], insIndex )
-      else if( _.arrayLeftIndex( dstArray, insArray[ i ] ) === -1 )
+      else if( _.longLeftIndex( dstArray, insArray[ i ] ) === -1 )
       dstArray.splice( insIndex++, 0, insArray[ i ] );
       else if( Config.debug )
-      _.assert( _.arrayLeftIndex( dstArray, insArray[ i ] ) === -1, 'Elements must not be repeated' );
+      _.assert( _.longLeftIndex( dstArray, insArray[ i ] ) === -1, 'Elements must not be repeated' );
     }
   }
 }
@@ -4873,13 +4873,13 @@ function arrayReplace( dstArray, ins, sub, evaluator1, evaluator2 )
   let index = -1;
   let result = 0;
 
-  index = _.arrayLeftIndex( dstArray, ins, evaluator1, evaluator2 );
+  index = _.longLeftIndex( dstArray, ins, evaluator1, evaluator2 );
 
   while( index !== -1 )
   {
     dstArray.splice( index, 1, sub );
     result += 1;
-    index = _.arrayLeftIndex( dstArray, ins, evaluator1, evaluator2 );
+    index = _.longLeftIndex( dstArray, ins, evaluator1, evaluator2 );
   }
 
   return dstArray;
@@ -4965,13 +4965,13 @@ function arrayReplaced( dstArray, ins, sub, evaluator1, evaluator2 )
   let index = -1;
   let result = 0;
 
-  index = _.arrayLeftIndex( dstArray, ins, evaluator1, evaluator2 );
+  index = _.longLeftIndex( dstArray, ins, evaluator1, evaluator2 );
 
   while( index !== -1 )
   {
     dstArray.splice( index, 1, sub );
     result += 1;
-    index = _.arrayLeftIndex( dstArray, ins, evaluator1, evaluator2 );
+    index = _.longLeftIndex( dstArray, ins, evaluator1, evaluator2 );
   }
 
   return result;
@@ -4991,7 +4991,7 @@ function arrayReplacedOnce( dstArray, ins, sub, evaluator1, evaluator2 )
 
   let index = -1;
 
-  index = _.arrayLeftIndex( dstArray, ins, evaluator1, evaluator2 );
+  index = _.longLeftIndex( dstArray, ins, evaluator1, evaluator2 );
 
   if( index >= 0 )
   dstArray.splice( index, 1, sub );
@@ -5028,13 +5028,13 @@ function arrayReplaceElement( dstArray, ins, sub, evaluator1, evaluator2 )
   let index = -1;
   let result = 0;
 
-  index = _.arrayLeftIndex( dstArray, ins, evaluator1, evaluator2 );
+  index = _.longLeftIndex( dstArray, ins, evaluator1, evaluator2 );
 
   while( index !== -1 )
   {
     dstArray.splice( index, 1, sub );
     result += 1;
-    index = _.arrayLeftIndex( dstArray, ins, evaluator1, evaluator2 );
+    index = _.longLeftIndex( dstArray, ins, evaluator1, evaluator2 );
   }
 
   return dstArray;
@@ -5076,13 +5076,13 @@ function arrayReplacedElement( dstArray, ins, sub, evaluator1, evaluator2 )
   let index = -1;
   let result = 0;
 
-  index = _.arrayLeftIndex( dstArray, ins, evaluator1, evaluator2 );
+  index = _.longLeftIndex( dstArray, ins, evaluator1, evaluator2 );
 
   while( index !== -1 )
   {
     dstArray.splice( index, 1, sub );
     result += 1;
-    index = _.arrayLeftIndex( dstArray, ins, evaluator1, evaluator2 );
+    index = _.longLeftIndex( dstArray, ins, evaluator1, evaluator2 );
   }
 
   return result;
@@ -5102,7 +5102,7 @@ function arrayReplacedElementOnce( dstArray, ins, sub, evaluator1, evaluator2 )
 
   let index = -1;
 
-  index = _.arrayLeftIndex( dstArray, ins, evaluator1, evaluator2 );
+  index = _.longLeftIndex( dstArray, ins, evaluator1, evaluator2 );
 
   if( index >= 0 )
   dstArray.splice( index, 1, sub );
@@ -5205,7 +5205,7 @@ function arrayReplacedArray( dstArray, ins, sub, evaluator1, evaluator2 )
   for( let i = 0, len = ins.length; i < len; i++ )
   {
     let dstArray2 = oldDstArray.slice(); // Array modified for each ins element
-    index = _.arrayLeftIndex( dstArray2, ins[ i ], evaluator1, evaluator2 );
+    index = _.longLeftIndex( dstArray2, ins[ i ], evaluator1, evaluator2 );
     while( index !== -1 )
     {
       let subValue = sub[ i ];
@@ -5221,7 +5221,7 @@ function arrayReplacedArray( dstArray, ins, sub, evaluator1, evaluator2 )
       }
 
       result += 1;
-      index = _.arrayLeftIndex( dstArray2, ins[ i ], evaluator1, evaluator2 );
+      index = _.longLeftIndex( dstArray2, ins[ i ], evaluator1, evaluator2 );
     }
   }
 
@@ -5242,7 +5242,7 @@ function arrayReplacedArrayOnce( dstArray, ins, sub, evaluator1, evaluator2 )
   //let oldDstArray = dstArray.slice();  // Array with src values stored
   for( let i = 0, len = ins.length; i < len; i++ )
   {
-    index = _.arrayLeftIndex( dstArray, ins[ i ], evaluator1, evaluator2 );
+    index = _.longLeftIndex( dstArray, ins[ i ], evaluator1, evaluator2 );
     if( index >= 0 )
     {
       let subValue = sub[ i ];
@@ -5343,14 +5343,14 @@ function arrayReplacedArrays( dstArray, ins, sub, evaluator1, evaluator2 )
   {
     let dstArray2 = oldDstArray.slice();
     //let index = dstArray.indexOf( argument );
-    let index = _.arrayLeftIndex( dstArray2, argument, evaluator1, evaluator2 );
+    let index = _.longLeftIndex( dstArray2, argument, evaluator1, evaluator2 );
 
     while( index !== -1 )
     {
       dstArray2.splice( index, 1, subValue );
       dstArray.splice( index, 1, subValue );
       result += 1;
-      index = _.arrayLeftIndex( dstArray2, argument, evaluator1, evaluator2 );
+      index = _.longLeftIndex( dstArray2, argument, evaluator1, evaluator2 );
     }
   }
 
@@ -5390,7 +5390,7 @@ function arrayReplacedArraysOnce( dstArray, ins, sub, evaluator1, evaluator2 )
   {
     let dstArray2 = oldDstArray.slice();
     //let index = dstArray.indexOf( argument );
-    let index = _.arrayLeftIndex( dstArray2, argument, evaluator1, evaluator2 );
+    let index = _.longLeftIndex( dstArray2, argument, evaluator1, evaluator2 );
 
     if( index !== -1 )
     {
@@ -5468,13 +5468,13 @@ function arrayReplacedAll( dstArray, ins, sub, evaluator1, evaluator2 )
   let index = -1;
   let result = 0;
 
-  index = _.arrayLeftIndex( dstArray, ins, evaluator1, evaluator2 );
+  index = _.longLeftIndex( dstArray, ins, evaluator1, evaluator2 );
 
   while( index !== -1 )
   {
     dstArray.splice( index, 1, sub );
     result += 1;
-    index = _.arrayLeftIndex( dstArray, ins, evaluator1, evaluator2 );
+    index = _.longLeftIndex( dstArray, ins, evaluator1, evaluator2 );
   }
 
   return result;
@@ -5615,7 +5615,7 @@ let Routines =
 
   constructorLikeArray,
   hasLength,
-  arrayHasArray,
+  longHasDepth,
 
   arrayCompare,
   arrayIdentical,
@@ -5623,11 +5623,11 @@ let Routines =
   arrayHas, /* dubious */
   arrayHasAny, /* dubious */
   arrayHasAll, /* dubious */
-  arrayHasNone, /* dubious */
+  longHasNone, /* dubious */
 
-  arrayAll,
+  longAll,
   arrayAny,
-  arrayNone,
+  longNone,
 
   // scalar
 
@@ -5644,14 +5644,14 @@ let Routines =
 
   // array sequential search
 
-  arrayLeftIndex,
-  arrayRightIndex,
+  longLeftIndex,
+  longRightIndex,
 
-  arrayLeft,
-  arrayRight,
+  longLeft,
+  longRight,
 
-  arrayLeftDefined,
-  arrayRightDefined,
+  longLeftDefined,
+  longRightDefined,
 
   arrayCountElement, /* qqq : cover by tests */
   arrayCountTotal, /* qqq : cover by tests */

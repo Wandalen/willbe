@@ -2112,7 +2112,7 @@ function strSplitsQuotedRejoin_body( o )
 
     if( s2 >= o.splits.length )
     {
-      if( !_.arrayHas( o.delimeter, split ) )
+      if( !_.longHas( o.delimeter, split ) )
       {
         let splitNew = o.splits.splice( s, 2 ).join( '' );
         o.splits[ s-1 ] = o.splits[ s-1 ] + splitNew;
@@ -2182,7 +2182,7 @@ function strSplitsDropDelimeters_body( o )
     if( _.regexpsTestAny( o.delimeter, split ) )
     o.splits.splice( s, 1 );
 
-    // if( _.arrayHas( o.delimeter, split ) )
+    // if( _.longHas( o.delimeter, split ) )
     // o.splits.splice( s, 1 );
     //
     // if( s % 2 === 1 )

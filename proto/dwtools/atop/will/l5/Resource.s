@@ -179,7 +179,7 @@ function MakeForEachCriterion( o )
     try
     {
 
-      _.assert( o.resource.module instanceof will.OpenedModule );
+      _.assert( o.resource.module instanceof will.Module );
       _.assert( !!o.resource.module[ Cls.MapName ] );
       let instance = o.resource.module[ Cls.MapName ][ o.resource.name ];
       if( instance )
@@ -614,7 +614,7 @@ function _inheritSingle( o )
 
   if( resource2.formed < 2 )
   {
-    _.sure( !_.arrayHas( o.visited, resource2.name ), () => 'Cyclic dependency ' + resource.qualifiedName + ' of ' + resource2.qualifiedName );
+    _.sure( !_.longHas( o.visited, resource2.name ), () => 'Cyclic dependency ' + resource.qualifiedName + ' of ' + resource2.qualifiedName );
     resource2._inheritForm({ visited : o.visited });
   }
 
@@ -932,7 +932,7 @@ function infoExport()
   return result;
 }
 
-var defaults = infoExport.defaults = Object.create( _.Will.OpenedModule.prototype.structureExport.defaults );
+var defaults = infoExport.defaults = Object.create( _.Will.Module.prototype.structureExport.defaults );
 defaults.copyingNonExportable = 1;
 defaults.formed = 1;
 defaults.strict = 0;
@@ -980,7 +980,7 @@ function structureExport()
   return fields;
 }
 
-structureExport.defaults = Object.create( _.Will.OpenedModule.prototype.structureExport.defaults );
+structureExport.defaults = Object.create( _.Will.Module.prototype.structureExport.defaults );
 
 //
 
@@ -1107,7 +1107,7 @@ function moduleSet( src )
 
   resource[ moduleSymbol ] = src;
 
-  _.assert( resource.module === null || resource.module instanceof _.Will.OpenedModule );
+  _.assert( resource.module === null || resource.module instanceof _.Will.Module );
 
   return src;
 }
@@ -1142,7 +1142,7 @@ function resolve_body( o )
   return resolved;
 }
 
-var defaults = resolve_body.defaults = Object.create( _.Will.OpenedModule.prototype.resolve.defaults );
+var defaults = resolve_body.defaults = Object.create( _.Will.Module.prototype.resolve.defaults );
 defaults.prefixlessAction = 'default';
 
 let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
@@ -1196,7 +1196,7 @@ function reflectorResolve_body( o )
   return resolved;
 }
 
-reflectorResolve_body.defaults = Object.create( _.Will.OpenedModule.prototype.reflectorResolve.defaults );
+reflectorResolve_body.defaults = Object.create( _.Will.Module.prototype.reflectorResolve.defaults );
 
 let reflectorResolve = _.routineFromPreAndBody( resolve.pre, reflectorResolve_body );
 

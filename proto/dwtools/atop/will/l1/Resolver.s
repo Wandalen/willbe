@@ -247,7 +247,7 @@ function _statusPreUpdate()
 
   if( it.down && it.down.src && it.down.src instanceof will.ModulesRelation )
   {
-    _.assert( it.src instanceof will.OpenedModule )
+    _.assert( it.src instanceof will.Module )
     let valid = it.src.isValid();
     if( !valid )
     throw _.errBrief
@@ -257,7 +257,7 @@ function _statusPreUpdate()
     );
   }
 
-  if( it.src instanceof will.OpenedModule )
+  if( it.src instanceof will.Module )
   {
     it.currentModule = it.src;
   }
@@ -1107,7 +1107,7 @@ function resolve_pre( routine, args )
 
   Parent.resolve.pre.call( resolver, routine, args );
 
-  _.assert( _.arrayHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), () => 'Unknown value of option path resolving ' + o.pathResolving );
+  _.assert( _.longHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), () => 'Unknown value of option path resolving ' + o.pathResolving );
   _.assert( !o.defaultResourceKind || !_.path.isGlob( o.defaultResourceKind ), () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( o.defaultResourceKind ) );
 
   if( o.src === null )
@@ -1126,7 +1126,7 @@ function resolve_body( o )
   let path = fileProvider.path;
   let currentContext = o.currentContext = o.currentContext || module;
 
-  _.assert( o.src instanceof will.OpenedModule );
+  _.assert( o.src instanceof will.Module );
 
   o.currentThis = resolver.resolveContextPrepare
   ({

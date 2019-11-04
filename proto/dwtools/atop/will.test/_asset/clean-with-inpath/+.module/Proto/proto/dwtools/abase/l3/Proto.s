@@ -1875,36 +1875,90 @@ function ifDebugProxyReadOnly( ins )
 
 //
 
-function proxyMap( dst, original )
+// function proxyMap( front, back )
+function proxyMap( o )
 {
 
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( !!dst );
-  _.assert( !!original );
+  if( arguments.length === 2 )
+  o = { front : arguments[ 0 ], back : arguments[ 1 ] }
+  o = _.routineOptions( proxyMap, o );
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+  _.assert( !!o.front );
+  _.assert( !!o.back );
+  let back = o.back;
 
   let handler =
   {
-    get : function( dst, k, proxy )
+    get : function( front, key, proxy )
     {
-      if( dst[ k ] !== undefined )
-      return dst[ k ];
-      return original[ k ];
+      if( front[ key ] !== undefined )
+      return front[ key ];
+      return back[ key ];
     },
-    set : function( dst, k, val, proxy )
+    set : function( front, key, val, proxy )
     {
-      if( dst[ k ] !== undefined )
-      dst[ k ] = val;
-      else if( original[ k ] !== undefined )
-      original[ k ] = val;
+      if( front[ key ] !== undefined )
+      front[ key ] = val;
+      else if( back[ key ] !== undefined )
+      back[ key ] = val;
       else
-      dst[ k ] = val;
+      front[ key ] = val;
       return true;
     },
   }
 
-  let result = new Proxy( dst, handler );
+  let result = new Proxy( o.front, handler );
 
   return result;
+}
+
+proxyMap.defaults =
+{
+  front : null,
+  back : null,
+}
+
+//
+
+function proxyShadow( o )
+{
+
+  if( arguments.length === 2 )
+  o = { front : arguments[ 0 ], back : arguments[ 1 ] }
+  o = _.routineOptions( proxyShadow, o );
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+  _.assert( !!o.front );
+  _.assert( !!o.back );
+  let front = o.front;
+
+  let handler =
+  {
+    get : function( back, key, context )
+    {
+      if( front[ key ] !== undefined )
+      return front[ key ];
+      return Reflect.get( ... arguments );
+    },
+    set : function( back, key, val, context )
+    {
+      if( front[ key ] !== undefined )
+      {
+        front[ key ] = val;
+        return true;
+      }
+      return Reflect.set( ... arguments );
+    },
+  };
+
+  let shadowProxy = new Proxy( o.back, handler );
+
+  return shadowProxy;
+}
+
+proxyShadow.defaults =
+{
+  front : null,
+  back : null,
 }
 
 // --
@@ -2054,9 +2108,9 @@ function defaultProxyFlatteningToArray( src )
 //   o = _.routineOptions( field, arguments );
 //   _.assert( arguments.length === 1 );
 //   _.assert( _.strIs( o.iniToIns ) );
-//   _.assert( _.arrayHas( [ 'scalar' , 'array' , 'map' ], o.collection ) );
+//   _.assert( _.longHas( [ 'scalar' , 'array' , 'map' ], o.collection ) );
 //   _.assert( 'scalar' === o.collection, 'not implemented' );
-//   _.assert( _.arrayHas( [ 'val' , 'shallow' , 'deep' , 'make' , 'construct' ], o.iniToIns ) );
+//   _.assert( _.longHas( [ 'val' , 'shallow' , 'deep' , 'make' , 'construct' ], o.iniToIns ) );
 //
 //   let definition = new Definition( o );
 //
@@ -2547,6 +2601,7 @@ let Routines =
   proxyReadOnly,
   ifDebugProxyReadOnly,
   proxyMap,
+  proxyShadow,
 
   // default
 

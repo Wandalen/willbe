@@ -350,7 +350,7 @@ function _performRecursive()
     modules.forEach( ( module2 ) =>
     {
 
-      _.assert( module2 instanceof _.Will.OpenedModule );
+      _.assert( module2 instanceof _.Will.Module );
 
       con.then( () =>
       {
@@ -460,121 +460,6 @@ function _performPrepare2()
 
   return null;
 }
-
-// //
-//
-// function _performReadExported()
-// {
-//   let exported = this;
-//   let inModule = exported.inModule;
-//   let will = inModule.will;
-//   let build = inModule.buildMap[ exported.name ];
-//   let hub = will.fileProvider;
-//   let hd = hub.providersWithProtocolMap.file;
-//   let path = hub.path;
-//   let logger = will.logger;
-//   let outFilePath = inModule.outfilePathGet();
-//
-//   _.assert( exported.outModule === null );
-//
-//   let o2 =
-//   {
-//     willfilesPath : outFilePath,
-//     original : inModule,
-//     rootModule : inModule.rootModule,
-//     searching : 'exact',
-//     reason : 'export',
-//   }
-//
-//   let opener2 = will._openerMake({ opener : o2 })
-//
-//   opener2.preform();
-//   opener2.find({ throwing : 0 });
-//
-//   return opener2.open({ throwing : 1, all : 0 })
-//   .then( ( module2 ) =>
-//   {
-//
-//     _.assert( !!will.formed );
-//
-//     if( !opener2.openedModule.isValid() )
-//     {
-//       logger.log( _.errBrief( `Module ${opener2.absoluteName} was not valid` ) );
-//       return module2;
-//     }
-//
-//     if( !opener2.openedModule.isConsistent() )
-//     {
-//       logger.log( _.errBrief( `Module ${opener2.absoluteName} was not consistent, please export it` ) );
-//       return module2;
-//     }
-//
-//     let willfile = opener2.openedModule.willfilesArray[ 0 ];
-//     let structure = willfile.structureOf( opener2.openedModule );
-//     _.assert( willfile && opener2.openedModule.willfilesArray.length === 1 );
-//     _.assert( opener2.openedModule.isValid() );
-//     _.assert( opener2.openedModule.isOut );
-//     _.assert( _.mapIs( structure ) );
-//     _.assert( _.mapIs( structure.exported ) );
-//
-//     for( let exportedName in structure.exported )
-//     {
-//       if( exportedName === exported.name )
-//       continue;
-//       let exported2 = opener2.openedModule.exportedMap[ exportedName ];
-//       _.assert( exported2 instanceof Self );
-//       inModule.resourceImport({ srcResource : exported2 });
-//     }
-//
-//     return module2;
-//   })
-//   .finally( ( err, module2 ) =>
-//   {
-//
-//     err = err || opener2.error;
-//
-//     if( opener2 && !opener2.error && module2 )
-//     exported.outModule = module2;
-//
-//     if( err )
-//     {
-//       err = _.err( err, `\nFailed to read exported out-willfile ${opener2.willfilesPath} to extend it` );
-//       let requireVerbosity = 5;
-//       if( _.strIs( err.originalMessage ) )
-//       if( !_.strHas( err.originalMessage, 'Found no willfile at' ) )
-//       if( !_.strHas( err.originalMessage, 'Found no out-willfile' ) )
-//       if( !_.strHas( err.originalMessage, 'Out-willfile is inconsistent with its in-willfiles' ) )
-//       requireVerbosity = 3;
-//       if( requireVerbosity <= will.verbosity )
-//       {
-//         if( !_.errIsLogged( err ) )
-//         {
-//           logger.up( 2 );
-//           logger.log( err );
-//           logger.down( 2 );
-//         }
-//       }
-//     }
-//
-//     if( err )
-//     try
-//     {
-//       opener2.finit();
-//     }
-//     catch( err2 )
-//     {
-//       debugger;
-//       err2 = _.err( err2 );
-//       logger.log( _.errOnce( err2 ) );
-//       throw err2;
-//     }
-//
-//     if( err )
-//     _.errAttend( err );
-//     return module2 || null;
-//   })
-//
-// }
 
 //
 
@@ -997,7 +882,7 @@ function _performReloadOutFile()
     debugger;
     if( err )
     throw _.err( err, `\nFailed to reopen ${name} after exporting it` );
-    _.assert( outModule2 instanceof _.Will.OpenedModule );
+    _.assert( outModule2 instanceof _.Will.Module );
     // debugger;
     // exported.outModule = outModule2;
     return outModule2;
@@ -1019,12 +904,10 @@ function perform( frame )
   _.assert( arguments.length === 1 );
 
   con.then( () => exported._performPrepare1( frame ) );
-  // con.then( () => exported._performReadExported() );
   con.then( () => exported._performOutModule() );
   con.then( () => exported._performReform() );
   con.then( () => exported._performSubmodulesPeersOpen() );
   con.then( () => exported._performRecursive() );
-  // con.then( () => exported._performReadExported() );
   con.then( () => exported._performPrepare2() );
   con.then( () => exported._performExportedReflectors() );
   con.then( () => exported._performExportedFilesReflector() );
@@ -1148,7 +1031,6 @@ let Extend =
   _performSubmodulesPeersOpen,
   _performRecursive,
   _performPrepare2,
-  // _performReadExported,
   _performExportedReflectors,
   _performExportedFilesReflector,
   _performPaths,

@@ -323,7 +323,7 @@ function stepRoutineShell( frame )
 
   _.assert( arguments.length === 1 );
   _.sure( opts.shell === null || _.strIs( opts.shell ) || _.arrayIs( opts.shell ) );
-  _.sure( _.arrayHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
+  _.sure( _.longHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
 
   if( opts.forEachDst )
   forEachDst = forEachDstReflector = step.reflectorResolve( opts.forEachDst );
@@ -405,7 +405,7 @@ function stepRoutineTranspile( frame )
   let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
 
-  _.sure( _.arrayHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
+  _.sure( _.longHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
   _.assert( arguments.length === 1 );
 
   if( opts.entry )

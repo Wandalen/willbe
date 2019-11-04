@@ -1413,7 +1413,7 @@ function joinIfDefined()
 function joinCross()
 {
 
-  if( _.arrayHasArray( arguments ) )
+  if( _.longHasDepth( arguments ) )
   {
     let result = [];
 
@@ -2249,7 +2249,7 @@ function _commonPair( src1, src2 )
     if( result.isRelative )
     if( result.splitted[ 0 ] === self._downStr )
     {
-      result.levelsDown = _.arrayCountElement( result.splitted,self._downStr );
+      result.levelsDown = _.longCountElement( result.splitted,self._downStr );
       debugger;
       let substr = _.longFill( [], self._downStr, result.levelsDown ).join( '/' );
       // let substr = _.longFillTimes( [], result.levelsDown,self._downStr ).join( '/' );

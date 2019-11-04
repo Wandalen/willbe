@@ -8294,36 +8294,36 @@ function arrayToStr( test )
 
 //
 
-function arrayCompare( test )
+function longCompare( test )
 {
 
   test.case = 'empty arrays';
-  var got = _.arrayCompare( [], [] );
+  var got = _.longCompare( [], [] );
   var expected = 0;
   test.identical( got, expected );
 
   test.case = 'first array is empty';
-  var got = _.arrayCompare( [], [ 1, 2 ] );
+  var got = _.longCompare( [], [ 1, 2 ] );
   var expected = 0;
   test.identical( got, expected );
 
   test.case = 'length of the first array is less than second';
-  var got = _.arrayCompare( [ 4 ], [ 1, 2 ] );
+  var got = _.longCompare( [ 4 ], [ 1, 2 ] );
   var expected = 3;
   test.identical( got, expected );
 
   test.case = 'arrays are equal';
-  var got = _.arrayCompare( [ 1, 5 ], [ 1, 5 ] );
+  var got = _.longCompare( [ 1, 5 ], [ 1, 5 ] );
   var expected = 0;
   test.identical( got, expected );
 
   test.case = 'a difference';
-  var got = _.arrayCompare( [ 1, 5 ], [ 1, 2 ] );
+  var got = _.longCompare( [ 1, 5 ], [ 1, 2 ] );
   var expected = 3;
   test.identical( got, expected );
 
   test.case = 'a negative difference';
-  var got = _.arrayCompare( [ 1, 5 ], [ 1, 6 ] );
+  var got = _.longCompare( [ 1, 5 ], [ 1, 6 ] );
   var expected = -1;
   test.identical( got, expected );
 
@@ -8334,7 +8334,7 @@ function arrayCompare( test )
   var src2 = function src2() {
     return arguments;
   }( 1, 2 );
-  var got = _.arrayCompare( src1, src2 );
+  var got = _.longCompare( src1, src2 );
   var expected = 3;
   test.identical( got, expected );
 
@@ -8346,52 +8346,52 @@ function arrayCompare( test )
   test.case = 'no arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayCompare();
+    _.longCompare();
   });
 
   test.case = 'not enough arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayCompare( [ 1, 5 ] );
+    _.longCompare( [ 1, 5 ] );
   });
 
   test.case = 'extra argument';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayCompare( [ 1, 5 ], [ 1, 2 ], 'redundant argument' );
+    _.longCompare( [ 1, 5 ], [ 1, 2 ], 'redundant argument' );
   });
 
   test.case = 'wrong type of arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayCompare( 'wrong argument', 'wrong argument' );
+    _.longCompare( 'wrong argument', 'wrong argument' );
   });
 
   test.case = 'second array is empty';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayCompare( [ 1, 5 ], [] );
+    _.longCompare( [ 1, 5 ], [] );
   });
 
   test.case = 'length of the second array is less than first';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayCompare( [ 1, 5 ], [ 1 ] );
+    _.longCompare( [ 1, 5 ], [ 1 ] );
   });
 
 };
 
 //
 
-function arraysAreIdentical( test )
+function longIdentical( test )
 {
   test.case = 'empty arrays';
-  var got = _.arraysAreIdentical( [], [] );
+  var got = _.longIdentical( [], [] );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'arrays are equal';
-  var got = _.arraysAreIdentical( [ 1, 2, 3 ], [ 1, 2, 3 ] );
+  var got = _.longIdentical( [ 1, 2, 3 ], [ 1, 2, 3 ] );
   var expected = true;
   test.identical( got, expected );
 
@@ -8402,17 +8402,17 @@ function arraysAreIdentical( test )
   function src2() {
     return arguments;
   };
-  var got = _.arraysAreIdentical( src1( 3, 7, 33 ), src2( 3, 7, 13 ) );
+  var got = _.longIdentical( src1( 3, 7, 33 ), src2( 3, 7, 13 ) );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'arrays are not equal';
-  var got = _.arraysAreIdentical( [ 1, 2, 3, 'Hi!' ], [ 1, 2, 3, 'Hello there!' ] );
+  var got = _.longIdentical( [ 1, 2, 3, 'Hi!' ], [ 1, 2, 3, 'Hello there!' ] );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'arrays length are not equal';
-  var got = _.arraysAreIdentical( [ 1, 2, 3 ], [ 1, 2 ] );
+  var got = _.longIdentical( [ 1, 2, 3 ], [ 1, 2 ] );
   var expected = false;
   test.identical( got, expected );
 
@@ -8424,26 +8424,26 @@ function arraysAreIdentical( test )
   test.case = 'no arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.arraysAreIdentical();
+    _.longIdentical();
   });
 
   test.case = 'not enough arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.arraysAreIdentical( [ 1, 2, 3 ] );
+    _.longIdentical( [ 1, 2, 3 ] );
   });
 
   test.case = 'extra argument';
   test.shouldThrowErrorSync( function()
   {
-    _.arraysAreIdentical( [ 1, 2, 3 ], [ 1, 2 ], 'redundant argument' );
+    _.longIdentical( [ 1, 2, 3 ], [ 1, 2 ], 'redundant argument' );
   });
 
 };
 
 //
 
-function arrayHasAny( test )
+function longHasAny( test )
 {
   /* constructors */
 
@@ -8494,61 +8494,61 @@ function arrayHasAny( test )
 
     test.case = 'src = empty long, one argument';
     var src = makeLong( [] );
-    var got = _.arrayHasAny( src );
+    var got = _.longHasAny( src );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = empty long, ins = undefined';
     var src = makeLong( [] );
-    var got = _.arrayHasAny( src, undefined );
+    var got = _.longHasAny( src, undefined );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = empty long, ins = string';
     var src = makeLong( [] );
-    var got = _.arrayHasAny( src, 'str' );
+    var got = _.longHasAny( src, 'str' );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = empty long, ins = array';
     var src = makeLong( [] );
-    var got = _.arrayHasAny( src, [ false, 7 ] );
+    var got = _.longHasAny( src, [ false, 7 ] );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = number, matches';
     var src = makeLong( [ 1, 2, 1, false, 5 ] );
-    var got = _.arrayHasAny( src, 5 );
+    var got = _.longHasAny( src, 5 );
     var expected = true;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = string, no matches';
     var src = makeLong( [ 1, 2, 5, false ] );
-    var got = _.arrayHasAny( src, 'str' );
+    var got = _.longHasAny( src, 'str' );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = array, matches';
     var src = makeLong( [ 5, null, 42, false ] );
-    var got = _.arrayHasAny( src, [ 42, false ] );
+    var got = _.longHasAny( src, [ 42, false ] );
     var expected = true;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = array, no matches';
     var src = makeLong( [ 5, null, 32, false, 42 ] );
-    var got = _.arrayHasAny( src, [ true, 7 ] );
+    var got = _.longHasAny( src, [ true, 7 ] );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = long, matches';
     var src = makeLong( [ 5, null, 42, false ] );
-    var got = _.arrayHasAny( src, makeLong( [ 42, 12 ] ) );
+    var got = _.longHasAny( src, makeLong( [ 42, 12 ] ) );
     var expected = true;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = long, no matches';
     var src = makeLong( [ 5, null, 42, false ] );
-    var got = _.arrayHasAny( src, makeLong( [ 30, 12 ] ) );
+    var got = _.longHasAny( src, makeLong( [ 30, 12 ] ) );
     var expected = false;
     test.identical( got, expected );
   }
@@ -8558,28 +8558,28 @@ function arrayHasAny( test )
   test.case = 'with evaluator, matches';
   var evaluator = ( e ) => e.a;
   var src = [ { a : 2 }, { a : 5 }, 'str', 42, false ];
-  var got = _.arrayHasAny( src, [ [ false ], 7, { a : 2 } ], evaluator );
+  var got = _.longHasAny( src, [ [ false ], 7, { a : 2 } ], evaluator );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'with evaluator, no matches';
   var evaluator = ( e ) => e.a;
   var src = [ { a : 3 }, { a : 5 }, 'str', 42, false ];
-  var got = _.arrayHasAny( src, [ { a : 2 }, { a : 4 } ], evaluator );
+  var got = _.longHasAny( src, [ { a : 2 }, { a : 4 } ], evaluator );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'with equalizer, matches';
   var equalizer = ( e1, e2 ) => e1.a === e2.a;
   var src = [ { a : 4 }, { a : 2 }, 42, false ];
-  var got = _.arrayHasAny( src, [ { a : 2 }, { b : 7 } ], equalizer );
+  var got = _.longHasAny( src, [ { a : 2 }, { b : 7 } ], equalizer );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'with equalizer, no matches';
   var equalizer = ( e1, e2 ) => e1.a === e2.a;
   var src = [ { a : 4 }, { a : 3 }, 42, false ];
-  var got = _.arrayHasAny( src, [ { a : 2 }, { a : 7 } ], equalizer );
+  var got = _.longHasAny( src, [ { a : 2 }, { a : 7 } ], equalizer );
   var expected = false;
   test.identical( got, expected );
 
@@ -8589,22 +8589,22 @@ function arrayHasAny( test )
   return;
 
   test.case = 'without arguments';
-  test.shouldThrowErrorSync( () => _.arrayHasAny() );
+  test.shouldThrowErrorSync( () => _.longHasAny() );
 
   test.case = 'src has wrong type';
-  test.shouldThrowErrorSync( () => _.arrayHasAny( 'wrong argument', false ) );
-  test.shouldThrowErrorSync( () => _.arrayHasAny( 1, false ) );
+  test.shouldThrowErrorSync( () => _.longHasAny( 'wrong argument', false ) );
+  test.shouldThrowErrorSync( () => _.longHasAny( 1, false ) );
 
   test.case = 'ins has wrong type';
-  test.shouldThrowErrorSync( () => _.arrayHasAny( [ 1, 2, 3, false ], new BufferRaw( 2 ) ) );
+  test.shouldThrowErrorSync( () => _.longHasAny( [ 1, 2, 3, false ], new BufferRaw( 2 ) ) );
 
   test.case = 'evaluator is not a routine';
-  test.shouldThrowErrorSync( () => _.arrayHasAny( [ 1, 2, 3, false ], 2, 3 ) );
+  test.shouldThrowErrorSync( () => _.longHasAny( [ 1, 2, 3, false ], 2, 3 ) );
 };
 
 //
 
-function arrayHasAll( test )
+function longHasAll( test )
 {
   /* constructors */
 
@@ -8655,61 +8655,61 @@ function arrayHasAll( test )
 
     test.case = 'src = empty long, one argument';
     var src = makeLong( [] );
-    var got = _.arrayHasAll( src );
+    var got = _.longHasAll( src );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = empty long, ins = undefined';
     var src = makeLong( [] );
-    var got = _.arrayHasAll( src, undefined );
+    var got = _.longHasAll( src, undefined );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = empty long, ins = string';
     var src = makeLong( [] );
-    var got = _.arrayHasAll( src, 'str' );
+    var got = _.longHasAll( src, 'str' );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = empty long, ins = array';
     var src = makeLong( [] );
-    var got = _.arrayHasAll( src, [ false, 7 ] );
+    var got = _.longHasAll( src, [ false, 7 ] );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = number, matches';
     var src = makeLong( [ 1, 2, 5, false ] );
-    var got = _.arrayHasAll( src, 5 );
+    var got = _.longHasAll( src, 5 );
     var expected = true;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = string, no matches';
     var src = makeLong( [ 1, 2, 5, false ] );
-    var got = _.arrayHasAll( src, 'str' );
+    var got = _.longHasAll( src, 'str' );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = array, matches';
     var src = makeLong( [ 5, null, 42, false, 1 ] );
-    var got = _.arrayHasAll( src, [ 42, 1 ] );
+    var got = _.longHasAll( src, [ 42, 1 ] );
     var expected = true;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = array, no matches';
     var src = makeLong( [ 5, null, 42, false ] );
-    var got = _.arrayHasAll( src, [ 42, 7 ] );
+    var got = _.longHasAll( src, [ 42, 7 ] );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = long, matches';
     var src = makeLong( [ 5, null, 42, false, 12 ] );
-    var got = _.arrayHasAll( src, makeLong( [ 42, 12 ] ) );
+    var got = _.longHasAll( src, makeLong( [ 42, 12 ] ) );
     var expected = true;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = long, no matches';
     var src = makeLong( [ 5, null, 42, false ] );
-    var got = _.arrayHasAll( src, makeLong( [ 30, 42 ] ) );
+    var got = _.longHasAll( src, makeLong( [ 30, 42 ] ) );
     var expected = false;
     test.identical( got, expected );
   }
@@ -8719,28 +8719,28 @@ function arrayHasAll( test )
   test.case = 'with evaluator, matches';
   var evaluator = ( e ) => e.a;
   var src = [ { a : 2 }, { a : 5 }, 'str', 42, false ];
-  var got = _.arrayHasAll( src, [ [ false ], 7, { a : 2 } ], evaluator );
+  var got = _.longHasAll( src, [ [ false ], 7, { a : 2 } ], evaluator );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'with evaluator, no matches';
   var evaluator = ( e ) => e.a;
   var src = [ { a : 3 }, { a : 5 }, 'str', 42, false ];
-  var got = _.arrayHasAll( src, [ { a : 2 }, { a : 4 } ], evaluator );
+  var got = _.longHasAll( src, [ { a : 2 }, { a : 4 } ], evaluator );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'with equalizer, matches';
   var equalizer = ( e1, e2 ) => e1.a === e2.a;
   var src = [ { a : 4 }, { a : 2 }, 42, false ];
-  var got = _.arrayHasAll( src, [ { a : 2 }, { b : 7 } ], equalizer );
+  var got = _.longHasAll( src, [ { a : 2 }, { b : 7 } ], equalizer );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'with equalizer, no matches';
   var equalizer = ( e1, e2 ) => e1.a === e2.a;
   var src = [ { a : 4 }, { a : 3 }, 42, false ];
-  var got = _.arrayHasAll( src, [ { a : 2 }, { a : 7 } ], equalizer );
+  var got = _.longHasAll( src, [ { a : 2 }, { a : 7 } ], equalizer );
   var expected = false;
   test.identical( got, expected );
 
@@ -8750,22 +8750,22 @@ function arrayHasAll( test )
   return;
 
   test.case = 'without arguments';
-  test.shouldThrowErrorSync( () => _.arrayHasAll() );
+  test.shouldThrowErrorSync( () => _.longHasAll() );
 
   test.case = 'src has wrong type';
-  test.shouldThrowErrorSync( () => _.arrayHasAll( 'wrong argument', false ) );
-  test.shouldThrowErrorSync( () => _.arrayHasAll( 1, false ) );
+  test.shouldThrowErrorSync( () => _.longHasAll( 'wrong argument', false ) );
+  test.shouldThrowErrorSync( () => _.longHasAll( 1, false ) );
 
   test.case = 'ins has wrong type';
-  test.shouldThrowErrorSync( () => _.arrayHasAll( [ 1, 2, 3, false ], new BufferRaw( 2 ) ) );
+  test.shouldThrowErrorSync( () => _.longHasAll( [ 1, 2, 3, false ], new BufferRaw( 2 ) ) );
 
   test.case = 'evaluator is not a routine';
-  test.shouldThrowErrorSync( () => _.arrayHasAll( [ 1, 2, 3, false ], 2, 3 ) );
+  test.shouldThrowErrorSync( () => _.longHasAll( [ 1, 2, 3, false ], 2, 3 ) );
 };
 
 //
 
-function arrayHasNone( test )
+function longHasNone( test )
 {
   /* constructors */
 
@@ -8816,61 +8816,61 @@ function arrayHasNone( test )
 
     test.case = 'src = empty long, one argument';
     var src = makeLong( [] );
-    var got = _.arrayHasNone( src );
+    var got = _.longHasNone( src );
     var expected = true;
     test.identical( got, expected );
 
     test.case = 'src = empty long, ins = undefined';
     var src = makeLong( [] );
-    var got = _.arrayHasNone( src, undefined );
+    var got = _.longHasNone( src, undefined );
     var expected = true;
     test.identical( got, expected );
 
     test.case = 'src = empty long, ins = string';
     var src = makeLong( [] );
-    var got = _.arrayHasNone( src, 'str' );
+    var got = _.longHasNone( src, 'str' );
     var expected = true;
     test.identical( got, expected );
 
     test.case = 'src = empty long, ins = array';
     var src = makeLong( [] );
-    var got = _.arrayHasNone( src, [ false, 7 ] );
+    var got = _.longHasNone( src, [ false, 7 ] );
     var expected = true;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = number, matches';
     var src = makeLong( [ 1, 2, 1, false, 5 ] );
-    var got = _.arrayHasNone( src, 5 );
+    var got = _.longHasNone( src, 5 );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = string, no matches';
     var src = makeLong( [ 1, 2, 5, false ] );
-    var got = _.arrayHasNone( src, 'str' );
+    var got = _.longHasNone( src, 'str' );
     var expected = true;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = array, matches';
     var src = makeLong( [ 5, null, 42, false ] );
-    var got = _.arrayHasNone( src, [ 42, false ] );
+    var got = _.longHasNone( src, [ 42, false ] );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = array, no matches';
     var src = makeLong( [ 5, null, 32, false, 42 ] );
-    var got = _.arrayHasNone( src, [ true, 7 ] );
+    var got = _.longHasNone( src, [ true, 7 ] );
     var expected = true;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = long, matches';
     var src = makeLong( [ 5, null, 42, false ] );
-    var got = _.arrayHasNone( src, makeLong( [ 42, 12 ] ) );
+    var got = _.longHasNone( src, makeLong( [ 42, 12 ] ) );
     var expected = false;
     test.identical( got, expected );
 
     test.case = 'src = long, ins = long, no matches';
     var src = makeLong( [ 5, null, 42, false ] );
-    var got = _.arrayHasNone( src, makeLong( [ 30, 12 ] ) );
+    var got = _.longHasNone( src, makeLong( [ 30, 12 ] ) );
     var expected = true;
     test.identical( got, expected );
   }
@@ -8880,28 +8880,28 @@ function arrayHasNone( test )
   test.case = 'with evaluator, matches';
   var evaluator = ( e ) => e.a;
   var src = [ { a : 2 }, { a : 5 }, 'str', 42, false ];
-  var got = _.arrayHasNone( src, [ [ false ], 7, { a : 2 } ], evaluator );
+  var got = _.longHasNone( src, [ [ false ], 7, { a : 2 } ], evaluator );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'with evaluator, no matches';
   var evaluator = ( e ) => e.a;
   var src = [ { a : 3 }, { a : 5 }, 'str', 42, false ];
-  var got = _.arrayHasNone( src, [ { a : 2 }, { a : 4 } ], evaluator );
+  var got = _.longHasNone( src, [ { a : 2 }, { a : 4 } ], evaluator );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'with equalizer, matches';
   var equalizer = ( e1, e2 ) => e1.a === e2.a;
   var src = [ { a : 4 }, { a : 2 }, 42, false ];
-  var got = _.arrayHasNone( src, [ { a : 2 }, { b : 7 } ], equalizer );
+  var got = _.longHasNone( src, [ { a : 2 }, { b : 7 } ], equalizer );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'with equalizer, no matches';
   var equalizer = ( e1, e2 ) => e1.a === e2.a;
   var src = [ { a : 4 }, { a : 3 }, 42, false ];
-  var got = _.arrayHasNone( src, [ { a : 2 }, { a : 7 } ], equalizer );
+  var got = _.longHasNone( src, [ { a : 2 }, { a : 7 } ], equalizer );
   var expected = true;
   test.identical( got, expected );
 
@@ -8911,17 +8911,17 @@ function arrayHasNone( test )
   return;
 
   test.case = 'without arguments';
-  test.shouldThrowErrorSync( () => _.arrayHasNone() );
+  test.shouldThrowErrorSync( () => _.longHasNone() );
 
   test.case = 'src has wrong type';
-  test.shouldThrowErrorSync( () => _.arrayHasNone( 'wrong argument', false ) );
-  test.shouldThrowErrorSync( () => _.arrayHasNone( 1, false ) );
+  test.shouldThrowErrorSync( () => _.longHasNone( 'wrong argument', false ) );
+  test.shouldThrowErrorSync( () => _.longHasNone( 1, false ) );
 
   test.case = 'ins has wrong type';
-  test.shouldThrowErrorSync( () => _.arrayHasNone( [ 1, 2, 3, false ], new BufferRaw( 2 ) ) );
+  test.shouldThrowErrorSync( () => _.longHasNone( [ 1, 2, 3, false ], new BufferRaw( 2 ) ) );
 
   test.case = 'evaluator is not a routine';
-  test.shouldThrowErrorSync( () => _.arrayHasNone( [ 1, 2, 3, false ], 2, 3 ) );
+  test.shouldThrowErrorSync( () => _.longHasNone( [ 1, 2, 3, false ], 2, 3 ) );
 };
 
 //
@@ -11594,31 +11594,31 @@ function arrayRelength_( test )
 
 //
 
-function arrayLeftIndex( test )
+function longLeftIndex( test )
 {
 
   test.case = 'nothing';
-  var got = _.arrayLeftIndex( [], 3 );
+  var got = _.longLeftIndex( [], 3 );
   var expected = -1;
   test.identical( got, expected );
 
   test.case = 'second index';
-  var got = _.arrayLeftIndex( [ 1, 2, 3 ], 3 );
+  var got = _.longLeftIndex( [ 1, 2, 3 ], 3 );
   var expected = 2;
   test.identical( got, expected );
 
   test.case = 'zero index';
-  var got = _.arrayLeftIndex( [ 1, 2, 3 ], 3, ( el, ins ) => el < ins );
+  var got = _.longLeftIndex( [ 1, 2, 3 ], 3, ( el, ins ) => el < ins );
   var expected = 0;
   test.identical( got, expected );
 
   test.case = 'nothing';
-  var got = _.arrayLeftIndex( [ 1, 2, 3 ], 4 );
+  var got = _.longLeftIndex( [ 1, 2, 3 ], 4 );
   var expected = -1;
   test.identical( got, expected );
 
   test.case = 'nothing';
-  var got = _.arrayLeftIndex( [ 1, 2, 3 ], 3, ( el, ins ) => el > ins );
+  var got = _.longLeftIndex( [ 1, 2, 3 ], 3, ( el, ins ) => el > ins );
   var expected = -1;
   test.identical( got, expected );
 
@@ -11628,40 +11628,40 @@ function arrayLeftIndex( test )
     return arguments;
   }
   var _arr = arr( 3, 7, 13 );
-  var got = _.arrayLeftIndex( _arr, 13 );
+  var got = _.longLeftIndex( _arr, 13 );
   var expected = 2;
   test.identical( got, expected );
 
   test.case = 'fromIndex';
-  var got = _.arrayLeftIndex( [ 0, 0, 0, 0 ], 0, 0 );
+  var got = _.longLeftIndex( [ 0, 0, 0, 0 ], 0, 0 );
   var expected = 0;
   test.identical( got, expected );
 
   test.case = 'fromIndex';
-  var got = _.arrayLeftIndex( [ 0, 0, 0, 0 ], 0, 3 );
+  var got = _.longLeftIndex( [ 0, 0, 0, 0 ], 0, 3 );
   var expected = 3;
   test.identical( got, expected );
 
   test.case = 'fromIndex';
-  var got = _.arrayLeftIndex( [ 0, 0, 0, 0 ], 0, -1 );
+  var got = _.longLeftIndex( [ 0, 0, 0, 0 ], 0, -1 );
   var expected = 3;
   test.identical( got, expected );
 
   test.case = 'fromIndex + evaluator';
-  var got = _.arrayLeftIndex( [ 1, 1, 2, 2, 3, 3 ], 3, 2, ( el, ins ) => el < ins );
+  var got = _.longLeftIndex( [ 1, 1, 2, 2, 3, 3 ], 3, 2, ( el, ins ) => el < ins );
   var expected = 2;
   test.identical( got, expected );
 
   test.case = 'fromIndex + evaluator x2';
   var evaluator1 = ( el ) => el + 1;
   var evaluator2 = ( ins ) => ins * 2;
-  var got = _.arrayLeftIndex( [ 6, 6, 5, 5 ], 3, 2, evaluator1, evaluator2 );
+  var got = _.longLeftIndex( [ 6, 6, 5, 5 ], 3, 2, evaluator1, evaluator2 );
   var expected = 2;
   test.identical( got, expected );
 
   test.case = 'evaluator search first element of array';
   var evaluator = ( e ) => e[ 0 ];
-  var got = _.arrayLeftIndex( [ 1, 2, 3, [ 2 ], 3, [ 4 ] ], [ 2 ], evaluator );
+  var got = _.longLeftIndex( [ 1, 2, 3, [ 2 ], 3, [ 4 ] ], [ 2 ], evaluator );
   var expected = 3;
   test.identical( got, expected );
 
@@ -11673,50 +11673,50 @@ function arrayLeftIndex( test )
   test.case = 'one argument';
   test.shouldThrowErrorSync( function()
   {
-    var got = _.arrayLeftIndex( [ 1, 2, 3 ] );
+    var got = _.longLeftIndex( [ 1, 2, 3 ] );
   });
 
   test.case = 'no arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayLeftIndex();
+    _.longLeftIndex();
   });
 
   test.case = 'third argument is wrong';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayLeftIndex( [ 1, 2, 3 ], 2, 'wrong argument' );
+    _.longLeftIndex( [ 1, 2, 3 ], 2, 'wrong argument' );
   });
 
 };
 
 //
 
-function arrayRightIndex( test )
+function longRightIndex( test )
 {
 
   test.case = 'nothing';
-  var got = _.arrayRightIndex( [], 3 );
+  var got = _.longRightIndex( [], 3 );
   var expected = -1;
   test.identical( got, expected );
 
   test.case = 'second index';
-  var got = _.arrayRightIndex( [ 1, 2, 3 ], 3 );
+  var got = _.longRightIndex( [ 1, 2, 3 ], 3 );
   var expected = 2;
   test.identical( got, expected );
 
   test.case = 'zero index';
-  var got = _.arrayRightIndex( [ 1, 2, 3 ], 3, function( el, ins ) { return el < ins } );
+  var got = _.longRightIndex( [ 1, 2, 3 ], 3, function( el, ins ) { return el < ins } );
   var expected = 1;
   test.identical( got, expected );
 
   test.case = 'nothing';
-  var got = _.arrayRightIndex( [ 1, 2, 3 ], 4 );
+  var got = _.longRightIndex( [ 1, 2, 3 ], 4 );
   var expected = -1;
   test.identical( got, expected );
 
   test.case = 'nothing';
-  var got = _.arrayRightIndex( [ 1, 2, 3 ], 3, function( el, ins ) { return el > ins } );
+  var got = _.longRightIndex( [ 1, 2, 3 ], 3, function( el, ins ) { return el > ins } );
   var expected = -1;
   test.identical( got, expected );
 
@@ -11726,54 +11726,54 @@ function arrayRightIndex( test )
     return arguments;
   }
   var _arr = arr( 3, 7, 13 );
-  var got = _.arrayRightIndex( _arr, 13 );
+  var got = _.longRightIndex( _arr, 13 );
   var expected = 2;
   test.identical( got, expected );
 
   test.case = 'fifth index';
-  var got = _.arrayRightIndex( 'abcdef', 'e', function( el, ins ) { return el > ins } );
+  var got = _.longRightIndex( 'abcdef', 'e', function( el, ins ) { return el > ins } );
   var expected = 5;
   test.identical( got, expected );
 
   test.case = 'third index';
-  var got = _.arrayRightIndex( 'abcdef', 'd' );
+  var got = _.longRightIndex( 'abcdef', 'd' );
   var expected = 3;
   test.identical( got, expected );
 
   test.case = 'second index';
-  var got = _.arrayRightIndex( 'abcdef', 'c', function( el ) { return el; } );
+  var got = _.longRightIndex( 'abcdef', 'c', function( el ) { return el; } );
   var expected = 2;
   test.identical( got, expected );
 
   test.case = 'fromIndex';
-  var got = _.arrayRightIndex( [ 0, 0, 0, 0 ], 0, 0 );
+  var got = _.longRightIndex( [ 0, 0, 0, 0 ], 0, 0 );
   var expected = 0;
   test.identical( got, expected );
 
   test.case = 'fromIndex';
-  var got = _.arrayRightIndex( [ 0, 0, 0, 0 ], 0, 3 );
+  var got = _.longRightIndex( [ 0, 0, 0, 0 ], 0, 3 );
   var expected = 3;
   test.identical( got, expected );
 
   test.case = 'fromIndex';
-  var got = _.arrayRightIndex( [ 0, 1, 1, 0 ], 0, 1 );
+  var got = _.longRightIndex( [ 0, 1, 1, 0 ], 0, 1 );
   var expected = 0;
   test.identical( got, expected );
 
   test.case = 'fromIndex';
-  var got = _.arrayRightIndex( [ 0, 1, 1, 0 ], 1, 2 );
+  var got = _.longRightIndex( [ 0, 1, 1, 0 ], 1, 2 );
   var expected = 2;
   test.identical( got, expected );
 
   test.case = 'fromIndex + evaluator';
-  var got = _.arrayRightIndex( [ 1, 1, 2, 2, 3, 3 ], 3, 4, function( el, ins ) { return el < ins } );
+  var got = _.longRightIndex( [ 1, 1, 2, 2, 3, 3 ], 3, 4, function( el, ins ) { return el < ins } );
   var expected = 3;
   test.identical( got, expected );
 
   test.case = 'fromIndex + evaluator x2';
   var evaluator1 = function( el ) { return el + 1 }
   var evaluator2 = function( ins ) { return ins * 2 }
-  var got = _.arrayRightIndex( [ 6, 6, 5, 5 ], 3, 2, evaluator1, evaluator2 );
+  var got = _.longRightIndex( [ 6, 6, 5, 5 ], 3, 2, evaluator1, evaluator2 );
   var expected = 2;
   test.identical( got, expected );
 
@@ -11785,40 +11785,40 @@ function arrayRightIndex( test )
   test.case = 'one argument';
   test.shouldThrowErrorSync( function()
   {
-    var got = _.arrayRightIndex( [ 1, 2, 3 ] );
+    var got = _.longRightIndex( [ 1, 2, 3 ] );
   });
 
   test.case = 'no arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayRightIndex();
+    _.longRightIndex();
   });
 
   test.case = 'third argument is wrong';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayRightIndex( [ 1, 2, 3 ], 2, 'wrong argument' );
+    _.longRightIndex( [ 1, 2, 3 ], 2, 'wrong argument' );
   });
 
 };
 
 //
 
-function arrayLeft( test )
+function longLeft( test )
 {
 
   test.case = 'returns an object';
-  var got = _.arrayLeft( [ 1, 2, 3, 4, 5 ], 3 );
+  var got = _.longLeft( [ 1, 2, 3, 4, 5 ], 3 );
   var expected = { index : 2, element : 3 };
   test.identical( got, expected );
 
   test.case = 'returns an object';
-  var got = _.arrayLeft( [ 1, 2, false, 'str', 5 ], 'str', function( a, b ) { return a === b } );
+  var got = _.longLeft( [ 1, 2, false, 'str', 5 ], 'str', function( a, b ) { return a === b } );
   var expected = { index : 3, element : 'str' };
   test.identical( got, expected );
 
   test.case = 'returns an object';
-  var got = _.arrayLeft( [ 1, 2, false, 'str', 5 ], 5, function( a ) { return a; } );
+  var got = _.longLeft( [ 1, 2, false, 'str', 5 ], 5, function( a ) { return a; } );
   var expected = { index : 4, element : 5 };
   test.identical( got, expected );
 
@@ -11830,26 +11830,26 @@ function arrayLeft( test )
   test.case = 'no arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayLeft();
+    _.longLeft();
   });
 
   test.case = 'not enough arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayLeft( [] );
+    _.longLeft( [] );
   });
 
   test.case = 'third argument is wrong';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayLeft( [ 1, 2, 3 ], 2, 'wrong argument' );
+    _.longLeft( [ 1, 2, 3 ], 2, 'wrong argument' );
   });
 
 };
 
 //
 
-function arrayCountElement( test )
+function longCountElement( test )
 {
   /* constructors */
 
@@ -11900,37 +11900,37 @@ function arrayCountElement( test )
   {
     test.case = 'src = empty long, element = number';
     var src = makeLong( [] );
-    var got = _.arrayCountElement( src, 3 );
+    var got = _.longCountElement( src, 3 );
     var expected = 0;
     test.identical( got, expected );
 
     test.case = 'src = empty long, element = undefined';
     var src = makeLong( [] );
-    var got = _.arrayCountElement( src, undefined );
+    var got = _.longCountElement( src, undefined );
     var expected = 0;
     test.identical( got, expected );
 
     test.case = 'src = empty long, element = null';
     var src = makeLong( [] );
-    var got = _.arrayCountElement( src, null );
+    var got = _.longCountElement( src, null );
     var expected = 0;
     test.identical( got, expected );
 
     test.case = 'element = string, no matches';
     var src = makeLong( [ 1, 2, null, 10, 10, true ] );
-    var got = _.arrayCountElement( src, 'hi' );
+    var got = _.longCountElement( src, 'hi' );
     var expected = 0;
     test.identical( got, expected );
 
     test.case = 'element = number, one matching';
     var src = makeLong( [ 1, 2, null, 10, 10, true ] );
-    var got = _.arrayCountElement( src, 2 );
+    var got = _.longCountElement( src, 2 );
     var expected = 1;
     test.identical( got, expected );
 
     test.case = 'element = number, four matches';
     var src = makeLong( [ 1, 2, 'str', 10, 10, true, 2, 2, 10, 10 ] );
-    var got = _.arrayCountElement( src, 10 );
+    var got = _.longCountElement( src, 10 );
     var expected = 4;
     test.identical( got, expected );
 
@@ -11940,41 +11940,41 @@ function arrayCountElement( test )
     {
       test.case = 'src = complex long, no evaluator, no equalizer';
       var src = makeLong( [ [ 0 ], [ 0 ], [ 0 ], [ 0 ], [ 1 ] ] );
-      var got = _.arrayCountElement( src, 0 );
+      var got = _.longCountElement( src, 0 );
       var expected = 0;
       test.identical( got, expected );
 
       test.case = 'src = complex long, one evaluator, no matches';
       var src = makeLong( [ [ 0 ], [ 0 ], [ 0 ], [ 0 ], [ 1 ] ] );
-      var got = _.arrayCountElement( src, 2, ( e ) => e[ 0 ] );
+      var got = _.longCountElement( src, 2, ( e ) => e[ 0 ] );
       var expected = 0;
       test.identical( got, expected );
 
       test.case = 'src = complex long, one evaluator, four matches';
       var src = makeLong( [ [ 0 ], [ 0 ], [ 0 ], [ 0 ], [ 1 ] ] );
-      var got = _.arrayCountElement( src, 0, ( e ) => e[ 0 ] );
+      var got = _.longCountElement( src, 0, ( e ) => e[ 0 ] );
       var expected = 0;
       test.identical( got, expected );
 
       test.case = 'src = complex long, evaluator1 and evaluator2, one matching';
       var src = makeLong( [ [ 1, 3 ], [ 2, 2 ], [ 3, 1 ] ] );
-      var got = _.arrayCountElement( src, 1, ( e ) => e[ 1 ], ( e ) => e + 2 );
+      var got = _.longCountElement( src, 1, ( e ) => e[ 1 ], ( e ) => e + 2 );
       var expected = 1;
       test.identical( got, expected );
 
       test.case = 'src = complex long, evaluator1 and evaluator2, four matches';
       var src = makeLong( [ [ 0 ], [ 0 ], [ 0 ], [ 0 ], [ 1 ] ] );
-      var got = _.arrayCountElement( src, 0, ( e ) => e[ 0 ], ( e ) => e );
+      var got = _.longCountElement( src, 0, ( e ) => e[ 0 ], ( e ) => e );
       var expected = 4;
       test.identical( got, expected );
 
       test.case = 'element = number, without equalizer, two mathces';
-      var got = _.arrayCountElement( [ 1, 2, 3, 2, 'str' ], 2 );
+      var got = _.longCountElement( [ 1, 2, 3, 2, 'str' ], 2 );
       var expected = 2;
       test.identical( got, expected );
 
       test.case = 'element = number, equalizer, four mathces';
-      var got = _.arrayCountElement( [ 1, 2, 3, 2, 'str' ], 2, ( a, b ) => _.typeOf( a ) === _.typeOf( b ) );
+      var got = _.longCountElement( [ 1, 2, 3, 2, 'str' ], 2, ( a, b ) => _.typeOf( a ) === _.typeOf( b ) );
       var expected = 4;
       test.identical( got, expected );
     }
@@ -11986,39 +11986,39 @@ function arrayCountElement( test )
   return;
 
   test.case = 'without arguments';
-  test.shouldThrowErrorSync( () => _.arrayCountElement() );
+  test.shouldThrowErrorSync( () => _.longCountElement() );
 
   test.case = 'one argument';
-  test.shouldThrowErrorSync( () => _.arrayCountElement( [ 1, 2, 3, 'abc', 13 ] ) );
+  test.shouldThrowErrorSync( () => _.longCountElement( [ 1, 2, 3, 'abc', 13 ] ) );
 
   test.case = 'extra argument';
-  test.shouldThrowErrorSync( () => _.arrayCountElement( [ 1, 2, 3, true ], true, 'extra argument' ) );
+  test.shouldThrowErrorSync( () => _.longCountElement( [ 1, 2, 3, true ], true, 'extra argument' ) );
 
   test.case = 'wrong type of first srcArray';
-  test.shouldThrowErrorSync( () => _.arrayCountElement( undefined, true ) );
-  test.shouldThrowErrorSync( () => _.arrayCountElement( null, true ) );
-  test.shouldThrowErrorSync( () => _.arrayCountElement( 'str', true ) );
-  test.shouldThrowErrorSync( () => _.arrayCountElement( 4, true ) );
+  test.shouldThrowErrorSync( () => _.longCountElement( undefined, true ) );
+  test.shouldThrowErrorSync( () => _.longCountElement( null, true ) );
+  test.shouldThrowErrorSync( () => _.longCountElement( 'str', true ) );
+  test.shouldThrowErrorSync( () => _.longCountElement( 4, true ) );
 
   test.case = 'evaluator is wrong - have no arguments';
-  test.shouldThrowErrorSync( () => _.arrayCountElement( [ 3, 4, 5, true ], 3, () => 3 ) );
+  test.shouldThrowErrorSync( () => _.longCountElement( [ 3, 4, 5, true ], 3, () => 3 ) );
 
   test.case = 'evaluator is wrong - have three arguments';
-  test.shouldThrowErrorSync( () => _.arrayCountElement( [ 3, 4, 5, true ], 3, ( a, b, c ) => _.typeOf( a ) === _.typeOf( b ) === _.typeOf( c ) ) );
+  test.shouldThrowErrorSync( () => _.longCountElement( [ 3, 4, 5, true ], 3, ( a, b, c ) => _.typeOf( a ) === _.typeOf( b ) === _.typeOf( c ) ) );
 
   test.case = 'evaluator2 is unnacessary';
-  test.shouldThrowErrorSync( () => _.arrayCountElement( [ 3, 4, 5, true ], 3, ( a, b ) => _.typeOf( a ) === _.typeOf( b ), ( e ) => e ) );
+  test.shouldThrowErrorSync( () => _.longCountElement( [ 3, 4, 5, true ], 3, ( a, b ) => _.typeOf( a ) === _.typeOf( b ), ( e ) => e ) );
 
   test.case = 'evaluator2 is wrong - have no arguments';
-  test.shouldThrowErrorSync( () => _.arrayCountElement( [ 3, 4, 5, true ], 3, ( a ) => a, () => e ) );
+  test.shouldThrowErrorSync( () => _.longCountElement( [ 3, 4, 5, true ], 3, ( a ) => a, () => e ) );
 
   test.case = 'fourth argument is wrong - have two arguments';
-  test.shouldThrowErrorSync( () => _.arrayCountElement( [ 3, 4, 5, true ], 3, ( a ) => a, ( a, b ) => e ) );
+  test.shouldThrowErrorSync( () => _.longCountElement( [ 3, 4, 5, true ], 3, ( a ) => a, ( a, b ) => e ) );
 };
 
 //
 
-function arrayCountTotal( test )
+function longCountTotal( test )
 {
   /* constructors */
 
@@ -12071,25 +12071,25 @@ function arrayCountTotal( test )
 
     test.case = 'empty array';
     var src = makeLong( [] );
-    var got = _.arrayCountTotal( src );
+    var got = _.longCountTotal( src );
     var expected = 0;
     test.identical( got, expected );
 
     test.case = 'several nulls';
     var src = makeLong( [ null, null, null ] );
-    var got = _.arrayCountTotal( src );
+    var got = _.longCountTotal( src );
     var expected = 0;
     test.identical( got, expected );
 
     test.case = 'several zeros';
     var src = makeLong( [ 0, 0, 0, 0 ] );
-    var got = _.arrayCountTotal( src );
+    var got = _.longCountTotal( src );
     var expected = 0;
     test.identical( got, expected );
 
     test.case = 'mix of nulls and zeros';
     var src = makeLong( [ 0, null, null, 0, 0, 0, null ] );
-    var got = _.arrayCountTotal( src );
+    var got = _.longCountTotal( src );
     var expected = 0;
     test.identical( got, expected );
 
@@ -12097,7 +12097,7 @@ function arrayCountTotal( test )
 
     test.case = 'sum of no repeated elements';
     var src = makeLong( [ 1, 3, 5, 7, 9, 1, 3 ] );
-    var got = _.arrayCountTotal( src );
+    var got = _.longCountTotal( src );
     var expected = 29;
     test.identical( got, expected );
 
@@ -12105,19 +12105,19 @@ function arrayCountTotal( test )
 
     test.case = 'all true';
     var src = makeLong( [ true, true, true, true ] );
-    var got = _.arrayCountTotal( src );
+    var got = _.longCountTotal( src );
     var expected = 4;
     test.identical( got, expected );
 
     test.case = 'all false';
     var src = makeLong( [ false, false, false, false, false ] );
-    var got = _.arrayCountTotal( src );
+    var got = _.longCountTotal( src );
     var expected = 0;
     test.identical( got, expected );
 
     test.case = 'mix of true and false';
     var src = makeLong( [ false, false, true, false, true, false, false, true ] );
-    var got = _.arrayCountTotal( src );
+    var got = _.longCountTotal( src );
     var expected = 3;
     test.identical( got, expected );
 
@@ -12125,19 +12125,19 @@ function arrayCountTotal( test )
 
     test.case = 'all true and numbers';
     var src = makeLong( [ true, 2, 1, true, true, 0, true ] );
-    var got = _.arrayCountTotal( src );
+    var got = _.longCountTotal( src );
     var expected = 7;
     test.identical( got, expected );
 
     test.case = 'all false and numbers';
     var src = makeLong( [ 1, false, 0, false, false, 4, 3, false, false ] );
-    var got = _.arrayCountTotal( src );
+    var got = _.longCountTotal( src );
     var expected = 8;
     test.identical( got, expected );
 
     test.case = 'mix of true, false, numbers and null';
     var src = makeLong( [ null, false, false, 0, true, null, false, 10, true, false, false, true, 2, null ] );
-    var got = _.arrayCountTotal( src );
+    var got = _.longCountTotal( src );
     var expected = 15;
     test.identical( got, expected );
 
@@ -12147,13 +12147,13 @@ function arrayCountTotal( test )
     {
       test.case = 'numbers, negative result';
       var src = makeLong( [ 2, -3, 4, -4, 6, -7 ] );
-      var got = _.arrayCountTotal( src );
+      var got = _.longCountTotal( src );
       var expected = -2;
       test.identical( got, expected );
 
       test.case = 'mix of true, false, numbers and null - negative result';
       var src = makeLong( [ null, false, false, 0, true, null, -8, false, 10, true, false, -9, false, true, 2, null ] );
-      var got = _.arrayCountTotal( src );
+      var got = _.longCountTotal( src );
       var expected = -2;
       test.identical( got, expected );
     }
@@ -12165,41 +12165,41 @@ function arrayCountTotal( test )
   return;
 
   test.case = 'without arguments';
-  test.shouldThrowErrorSync( () => _.arrayCountTotal() );
+  test.shouldThrowErrorSync( () => _.longCountTotal() );
 
   test.case = 'extra arguments';
-  test.shouldThrowErrorSync( () => _.arrayCountTotal( [ 1, 2, -3, 13 ], [] ) );
+  test.shouldThrowErrorSync( () => _.longCountTotal( [ 1, 2, -3, 13 ], [] ) );
 
   test.case = 'wrong type of srcArray';
-  test.shouldThrowErrorSync( () => _.arrayCountTotal( undefined ) );
-  test.shouldThrowErrorSync( () => _.arrayCountTotal( null ) );
-  test.shouldThrowErrorSync( () => _.arrayCountTotal( 'wrong' ) );
-  test.shouldThrowErrorSync( () => _.arrayCountTotal( 3 ) );
+  test.shouldThrowErrorSync( () => _.longCountTotal( undefined ) );
+  test.shouldThrowErrorSync( () => _.longCountTotal( null ) );
+  test.shouldThrowErrorSync( () => _.longCountTotal( 'wrong' ) );
+  test.shouldThrowErrorSync( () => _.longCountTotal( 3 ) );
 
   test.case = 'srcArray contains strings';
-  test.shouldThrowErrorSync( () => _.arrayCountTotal( [ 1, '2', 3, 'a' ] ) );
+  test.shouldThrowErrorSync( () => _.longCountTotal( [ 1, '2', 3, 'a' ] ) );
 
   test.case = 'srcArray contains arrays';
-  test.shouldThrowErrorSync( () => _.arrayCountTotal( [ 1, [ 2 ], 3, [ null ] ] ) );
+  test.shouldThrowErrorSync( () => _.longCountTotal( [ 1, [ 2 ], 3, [ null ] ] ) );
 };
 
 //
 
-function arrayCountUnique( test )
+function longCountUnique( test )
 {
 
   test.case = 'nothing';
-  var got = _.arrayCountUnique( [] );
+  var got = _.longCountUnique( [] );
   var expected = 0;
   test.identical( got, expected );
 
   test.case = 'nothing';
-  var got = _.arrayCountUnique( [ 1, 2, 3, 4, 5 ] );
+  var got = _.longCountUnique( [ 1, 2, 3, 4, 5 ] );
   var expected = 0;
   test.identical( got, expected );
 
   test.case = 'three pairs';
-  var got = _.arrayCountUnique( [ 1, 1, 2, 'abc', 'abc', 4, true, true ] );
+  var got = _.longCountUnique( [ 1, 1, 2, 'abc', 'abc', 4, true, true ] );
   var expected = 3;
   test.identical( got, expected );
 
@@ -12211,25 +12211,25 @@ function arrayCountUnique( test )
   test.case = 'no arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayCountUnique();
+    _.longCountUnique();
   });
 
   test.case = 'extra argument';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayCountUnique( [ 1, 1, 2, 'abc', 'abc', 4, true, true ], function( e ) { return e }, 'redundant argument' );
+    _.longCountUnique( [ 1, 1, 2, 'abc', 'abc', 4, true, true ], function( e ) { return e }, 'redundant argument' );
   });
 
   test.case = 'first argument is wrong';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayCountUnique( 'wrong argument', function( e ) { return e } );
+    _.longCountUnique( 'wrong argument', function( e ) { return e } );
   });
 
   test.case = 'second argument is wrong';
   test.shouldThrowErrorSync( function()
   {
-    _.arrayCountUnique( [ 1, 1, 2, 'abc', 'abc', 4, true, true ], 'wrong argument' );
+    _.longCountUnique( [ 1, 1, 2, 'abc', 'abc', 4, true, true ], 'wrong argument' );
   });
 
 };
@@ -35379,12 +35379,12 @@ var Self =
 
     // array checker
 
-    arrayCompare,
-    arraysAreIdentical,
+    longCompare,
+    longIdentical,
 
-    arrayHasAny,
-    arrayHasAll,
-    arrayHasNone,
+    longHasAny,
+    longHasAll,
+    longHasNone,
 
     // array transformer
 
@@ -35404,14 +35404,14 @@ var Self =
 
     // array sequential search
 
-    arrayLeftIndex,
-    arrayRightIndex,
+    longLeftIndex,
+    longRightIndex,
 
-    arrayLeft,
+    longLeft,
 
-    arrayCountElement,
-    arrayCountTotal,
-    arrayCountUnique,
+    longCountElement,
+    longCountTotal,
+    longCountUnique,
 
     // array etc
 

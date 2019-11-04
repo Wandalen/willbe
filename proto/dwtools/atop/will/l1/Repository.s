@@ -173,7 +173,7 @@ function status( o )
     _.assert( !!remoteProvider );
   }
 
-  if( repo.isRemote === false || !_.arrayHas( vcs.protocols, 'git' ) )
+  if( repo.isRemote === false || !_.longHas( vcs.protocols, 'git' ) )
   {
 
     for( let k in o )
@@ -347,7 +347,7 @@ function status( o )
     return end( false );
 
     // let vcs = will.vcsToolsFor( repo.remotePath );
-    // if( !_.arrayHas( vcs.protocols, 'git' ) )
+    // if( !_.longHas( vcs.protocols, 'git' ) )
     // return end( false );
 
     // qqq : use remoteProvider
@@ -384,7 +384,7 @@ function status( o )
     return end( false );
 
     // let vcs = will.vcsToolsFor( repo.remotePath );
-    // if( !_.arrayHas( vcs.protocols, 'git' ) )
+    // if( !_.longHas( vcs.protocols, 'git' ) )
     // return end( false );
 
     // qqq : use remoteProvider
@@ -446,7 +446,7 @@ function status( o )
     // _.assert( !!remoteProvider.isVcs );
 
     // let vcs = will.vcsToolsFor( repo.remotePath );
-    if( !_.arrayHas( vcs.protocols, 'git' ) ) /* xxx qqq */
+    if( !_.longHas( vcs.protocols, 'git' ) ) /* xxx qqq */
     return end( false );
 
     let result = vcs.isRepository

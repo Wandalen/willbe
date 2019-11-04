@@ -224,7 +224,6 @@ function _commandListLike( o )
         // if( o2.criterion.predefined === undefined )
         // o2.criterion.predefined = false;
 
-        // debugger;
         resources = it.opener.openedModule.resolve( o2 );
 
         if( _.arrayIs( resources ) )
@@ -266,7 +265,12 @@ function _commandBuildLike( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
+  debugger;
   _.routineOptions( _commandBuildLike, arguments );
+  _.mapSupplementNulls( o, will.filterImplied() );
+  _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
+
+  _.all( _.Will.ModuleFilterNulls, ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` ) );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
@@ -290,6 +294,7 @@ function _commandBuildLike( o )
   {
     if( will.currentOpeners )
     {
+      debugger;
       let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly( o, will.modulesFilter.defaults ) );
       if( openers2.length )
       will.currentOpeners = openers2;
@@ -342,13 +347,13 @@ function _commandBuildLike( o )
 
 }
 
-var defaults = _commandBuildLike.defaults = _.mapExtend( null, _.Will.ModuleFilterDefaults );
+var defaults = _commandBuildLike.defaults = _.mapExtend( null, _.Will.ModuleFilterNulls );
 
 defaults.event = null;
 defaults.onEach = null;
 defaults.commandRoutine = null;
 defaults.name = null;
-defaults.withDisabledModules = 0;
+// defaults.withDisabledModules = 0;
 
 //
 
@@ -359,6 +364,10 @@ function _commandCleanLike( o )
   let ready = new _.Consequence().take( null );
 
   _.routineOptions( _commandCleanLike, arguments );
+  _.mapSupplementNulls( o, will.filterImplied() );
+  _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
+
+  _.all( _.Will.ModuleFilterNulls, ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` ) );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
   _.assert( _.strIs( o.name ) );
@@ -433,13 +442,13 @@ function _commandCleanLike( o )
 
 }
 
-var defaults = _commandCleanLike.defaults = _.mapExtend( null, _.Will.ModuleFilterDefaults );
+var defaults = _commandCleanLike.defaults = _.mapExtend( null, _.Will.ModuleFilterNulls );
 
 defaults.event = null;
 defaults.onAll = null;
 defaults.commandRoutine = null;
 defaults.name = null;
-defaults.withDisabledModules = 0;
+// defaults.withDisabledModules = 0;
 
 //
 
@@ -450,10 +459,25 @@ function _commandNewLike( o )
   let ready = new _.Consequence().take( null );
 
   _.routineOptions( _commandNewLike, arguments );
+  _.mapSupplementNulls( o, will.filterImplied() );
+
+  debugger;
+  if( o.withInvalid === null )
+  o.withInvalid = 0;
+  if( o.withDisabledModules === null )
+  o.withDisabledModules = 0;
+
+  _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
+
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
+
+//   withIn : 1,
+//   withOut : 1,
+//   withInvalid : 0,
+//   withDisabledModules : 0,
 
   will._commandsBegin( o.commandRoutine );
 
@@ -466,22 +490,6 @@ function _commandNewLike( o )
   o2.tracing = 0;
 
   ready.then( () => will.openersFind( _.mapOnly( o2, will.openersFind.defaults ) ) );
-
-  // ready.then( () => will.openersFind({ localPath, tracing : 0 }) );
-
-  // ready.then( () =>
-  // {
-  //   return will.modulesFindWithAt
-  //   ({
-  //     withIn : o.withIn,
-  //     withOut : o.withOut,
-  //     withInvalid : o.withInvalid,
-  //     withDisabledModules : o.withDisabledModules,
-  //     selector : localPath,
-  //     tracing : 0,
-  //   })
-  // })
-
   ready.then( () => will.openersCurrentEach( forSingle ) );
   ready.finally( end );
 
@@ -533,17 +541,24 @@ function _commandNewLike( o )
 
 }
 
-_commandNewLike.defaults =
-{
-  event : null,
-  onEach : null,
-  commandRoutine : null,
-  name : null,
-  withIn : 1,
-  withOut : 1,
-  withInvalid : 0,
-  withDisabledModules : 0,
-}
+var defaults = _commandNewLike.defaults = _.mapExtend( null, _.Will.ModuleFilterNulls );
+
+defaults.event = null;
+defaults.onEach = null;
+defaults.commandRoutine = null;
+defaults.name = null;
+
+// _commandNewLike.defaults =
+// {
+//   event : null,
+//   onEach : null,
+//   commandRoutine : null,
+//   name : null,
+//   withIn : 1,
+//   withOut : 1,
+//   withInvalid : 0,
+//   withDisabledModules : 0,
+// }
 
 //
 
@@ -956,7 +971,11 @@ function commandWith( e )
     });
   }
 
-  return will.modulesFindWithAt({ selector : isolated.argument, atLeastOne : !path.isGlob( isolated.argument ) })
+  return will.modulesFindWithAt
+  ({
+    selector : isolated.argument,
+    atLeastOne : !path.isGlob( isolated.argument ),
+  })
   .then( function( it )
   {
     will.currentOpeners = it.sortedOpeners;
@@ -1494,10 +1513,11 @@ function commandSubmodulesAdd( e )
     let found = will.modulesFindWithAt
     ({
       selector : filePath,
-      withDisabledModules : 1,
-      withDisabledSubmodules : 1,
+      // withDisabledModules : 1,
+      // withDisabledSubmodules : 1,
       withInvalid : 1,
       tracing : 0,
+      ... will.filterImplied(),
     });
 
     found.then( ( it ) =>
@@ -1546,7 +1566,9 @@ function commandSubmodulesFixate( e )
 
   function handleEach( it )
   {
-    return it.opener.openedModule.submodulesFixate( _.mapExtend( null, e.propertiesMap ) );
+    let o2 = will.filterImplied();
+    o2 = _.mapExtend( o2, e.propertiesMap )
+    return it.opener.openedModule.submodulesFixate( o2 );
   }
 
 }
@@ -1628,19 +1650,6 @@ function commandSubmodulesVersionsDownload( e )
     return will.modulesDownload( o2 );
   }
 
-  // return will._commandBuildLike
-  // ({
-  //   event : e,
-  //   name : 'download submodules',
-  //   onEach : handleEach,
-  //   commandRoutine : commandSubmodulesVersionsDownload,
-  // });
-  //
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.subModulesDownload( _.mapExtend( null, e.propertiesMap ) );
-  // }
-
 }
 
 commandSubmodulesVersionsDownload.commandProperties =
@@ -1671,7 +1680,9 @@ function commandSubmodulesVersionsUpdate( e )
 
   function handleEach( it )
   {
-    return it.opener.openedModule.subModulesUpdate( _.mapExtend( null, e.propertiesMap ) );
+    let o2 = will.filterImplied();
+    o2 = _.mapExtend( o2, e.propertiesMap )
+    return it.opener.openedModule.subModulesUpdate( o2 );
   }
 
 }
@@ -1702,7 +1713,9 @@ function commandSubmodulesVersionsVerify( e )
 
   function handleEach( it )
   {
-    return it.opener.openedModule.submodulesVerify( _.mapExtend( null, e.propertiesMap ) );
+    let o2 = will.filterImplied();
+    o2 = _.mapExtend( o2, e.propertiesMap )
+    return it.opener.openedModule.submodulesVerify( o2 );
   }
 }
 
@@ -1731,7 +1744,9 @@ function commandSubmodulesVersionsAgree( e )
 
   function handleEach( it )
   {
-    return it.opener.openedModule.subModulesAgree( _.mapExtend( null, e.propertiesMap ) );
+    let o2 = will.filterImplied();
+    o2 = _.mapExtend( o2, e.propertiesMap )
+    return it.opener.openedModule.subModulesAgree( o2 );
   }
 
 }
@@ -1795,7 +1810,7 @@ function commandModuleNewWith( e )
     onEach : handleEach,
     commandRoutine : commandModuleNewWith,
     withOut : 0,
-    withDisabledModules : 0,
+    // withDisabledModules : 0,
     withInvalid : 1,
   })
   .then( ( arg ) =>
@@ -1864,7 +1879,7 @@ function commandDo( e )
     onEach : handleEach,
     commandRoutine : commandDo,
     withOut : 0,
-    withDisabledModules : 0,
+    // withDisabledModules : 0,
     withInvalid : 1,
   })
   .then( ( arg ) =>
@@ -1904,7 +1919,7 @@ function commandHookCall( e )
     onEach : handleEach,
     commandRoutine : commandHookCall,
     withOut : 0,
-    withDisabledModules : 0,
+    // withDisabledModules : 0,
     withInvalid : 1,
   })
   .then( ( arg ) =>
@@ -1953,7 +1968,8 @@ function commandClean( e )
   {
     _.assert( _.arrayIs( it.openers ) );
 
-    let o2 = _.mapExtend( null, e.propertiesMap );
+    let o2 = will.filterImplied();
+    o2 = _.mapExtend( o2, e.propertiesMap );
     o2.modules = it.openers;
     _.routineOptions( will.modulesClean, o2 );
     if( o2.recursive === 2 )
@@ -1961,19 +1977,6 @@ function commandClean( e )
 
     return will.modulesClean( o2 );
   }
-
-  // return will._commandBuildLike
-  // ({
-  //   event : e,
-  //   name : 'clean',
-  //   onEach : handleEach,
-  //   commandRoutine : commandClean,
-  // });
-  //
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.clean( _.mapExtend( null, e.propertiesMap ) );
-  // }
 
 }
 
@@ -2016,7 +2019,8 @@ function commandSubmodulesClean( e )
   {
     _.assert( _.arrayIs( it.openers ) );
 
-    let o2 = _.mapExtend( null, e.propertiesMap );
+    let o2 = will.filterImplied();
+    o2 = _.mapExtend( o2, e.propertiesMap );
     o2.modules = it.openers;
     _.routineOptions( will.modulesClean, o2 );
     if( o2.recursive === 2 )
@@ -2078,6 +2082,7 @@ function commandBuild( e )
   {
     return it.opener.openedModule.modulesBuild
     ({
+      ... _.mapBut( will.filterImplied(), { withIn : null, withOut : null } ),
       name : request.subject,
       criterion : request.map,
       recursive : 0,
@@ -2108,6 +2113,7 @@ function commandExport( e )
   {
     return it.opener.openedModule.modulesExport
     ({
+      ... _.mapBut( will.filterImplied(), { withIn : null, withOut : null } ),
       name : request.subject,
       criterion : request.map,
       recursive : 0,
@@ -2126,6 +2132,7 @@ function commandExportRecursive( e )
   let ready = new _.Consequence().take( null );
   let request = will.Resolver.strRequestParse( e.argument );
 
+  debugger;
   return will._commandBuildLike
   ({
     event : e,
@@ -2138,12 +2145,24 @@ function commandExportRecursive( e )
   {
     return it.opener.openedModule.modulesExport
     ({
+      ... _.mapBut( will.filterImplied(), { withIn : null, withOut : null } ),
       name : request.subject,
       criterion : request.map,
-      recursive : 2,
+      recursive : 0,
       kind : 'export',
     });
   }
+
+  // function handleEach( it )
+  // {
+  //   return it.opener.openedModule.modulesExport
+  //   ({
+  //     name : request.subject,
+  //     criterion : request.map,
+  //     recursive : 2,
+  //     kind : 'export',
+  //   });
+  // }
 
 }
 

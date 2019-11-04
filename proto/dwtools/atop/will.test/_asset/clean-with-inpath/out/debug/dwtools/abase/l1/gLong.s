@@ -192,7 +192,7 @@ function longOnce( dstLong, onEvaluate )
   let length = dstLong.length;
 
   for( let i = 0; i < dstLong.length; i++ )
-  if( _.arrayLeftIndex( dstLong, dstLong[ i ], i+1, onEvaluate ) !== -1 )
+  if( _.longLeftIndex( dstLong, dstLong[ i ], i+1, onEvaluate ) !== -1 )
   length--;
 
   if( length === dstLong.length )
@@ -446,14 +446,14 @@ function longHasUniques( o )
     continue;
 
     let currentUnique = 1;
-    index = _.arrayLeftIndex( o.src, o.src[ i ], index+1, o.onEvaluate );
+    index = _.longLeftIndex( o.src, o.src[ i ], index+1, o.onEvaluate );
     if( index >= 0 )
     do
     {
       isUnique[ index ] = 0;
       number -= 1;
       currentUnique = 0;
-      index = _.arrayLeftIndex( o.src, o.src[ i ], index+1, o.onEvaluate );
+      index = _.longLeftIndex( o.src, o.src[ i ], index+1, o.onEvaluate );
     }
     while( index >= 0 );
 
@@ -696,7 +696,7 @@ function longAreRepeatedProbe( srcArray, onEvaluate )
 
     result.array[ i ] = 0;
 
-    let left = _.arrayLeftIndex( srcArray, element, i+1, onEvaluate );
+    let left = _.longLeftIndex( srcArray, element, i+1, onEvaluate );
     if( left >= 0 )
     {
       result.array[ i ] = 1;
@@ -706,7 +706,7 @@ function longAreRepeatedProbe( srcArray, onEvaluate )
         result.uniques -= 1;
         result.condensed -= 1;
         result.array[ left ] = 1;
-        left = _.arrayLeftIndex( srcArray, element, left+1, onEvaluate );
+        left = _.longLeftIndex( srcArray, element, left+1, onEvaluate );
       }
       while( left >= 0 );
     }

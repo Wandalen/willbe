@@ -82,8 +82,7 @@ function unform()
   if( relation.formed )
   {
     let variant = will.variantOf( relation );
-    // _.assert( !!variant || !relation.enabled );
-    if( variant && variant.has( relation ) )
+    if( variant && variant.own( relation ) )
     variant.remove( relation );
   }
 
@@ -108,7 +107,7 @@ function form1()
   let logger = will.logger;
 
   _.assert( arguments.length === 0 );
-  _.assert( relation.module instanceof will.OpenedModule );
+  _.assert( relation.module instanceof will.Module );
 
   /* */
 
@@ -129,7 +128,7 @@ function form1()
   _.assert( relation.opener.formed >= 2 );
 
   // if( relation.enabled ) /* ttt */
-  will.variantFrom( relation );
+  will.variantReform( relation );
 
   /* end */
 
@@ -232,10 +231,6 @@ function _closeEnd()
   if( relation.formed > 2 )
   relation.formed = 2;
 
-  // let variant = will.variantOf( relation );
-  // if( variant && variant.has( relation ) )
-  // variant.remove( relation );
-
   return relation;
 }
 
@@ -308,7 +303,7 @@ function _openEnd()
   _.assert( !!relation.opener.openedModule );
 
   // if( relation.enabled ) /* ttt */
-  will.variantFrom( relation );
+  will.variantReform( relation );
 
   let modules2 = relation.opener.openedModule.modulesEachAll
   ({
@@ -351,8 +346,49 @@ function _moduleAdoptEnd()
 }
 
 // --
-// accessor
+// etc
 // --
+
+function own( object )
+{
+  let relation = this;
+  let will = relation.will;
+
+  _.assert( !!object );
+
+  if( object instanceof _.Will.ModulesRelation )
+  {
+    if( object === relation )
+    return relation;
+    if( relation.opener )
+    relation.opener.own( object );
+  }
+  else
+  {
+    if( relation.opener === object )
+    return true;
+    if( relation.opener.openedModule === object )
+    return true;
+    if( relation.opener )
+    return relation.opener.own( object );
+  }
+
+  return false;
+}
+
+//
+
+function ownedBy( object )
+{
+  let relation = this;
+
+  if( _.arrayIs( object ) )
+  return _.any( object, ( object ) => relation.ownedBy( object ) );
+
+  return object.own( relation );
+}
+
+//
 
 function isValid()
 {
@@ -543,7 +579,7 @@ function moduleSet( src )
 
   resource[ moduleSymbol ] = src;
 
-  _.assert( resource.module === null || resource.module instanceof _.Will.OpenedModule );
+  _.assert( resource.module === null || resource.module instanceof _.Will.Module );
 
   return src;
 }
@@ -841,7 +877,6 @@ let Accessors =
 let Forbids =
 {
   data : 'data',
-  own : 'own',
   isGitRepository : 'isGitRepository',
   isDownloaded : 'isDownloaded',
   isRepository : 'isRepository',
@@ -872,8 +907,10 @@ let Extend =
   _openEnd,
   _moduleAdoptEnd,
 
-  // accessor
+  // etc
 
+  own,
+  ownedBy,
   isValid,
   isAvailableGet,
   // isDownloadedGet,

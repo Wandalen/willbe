@@ -32,7 +32,7 @@ function finit()
   if( willf.storageWillfile )
   {
     _.arrayRemoveOnce( willf.storageWillfile.storedWillfiles, willf );
-    _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.arrayCountElement( willf.storageWillfile.storedWillfiles, willf ) === 0 );
+    _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.longCountElement( willf.storageWillfile.storedWillfiles, willf ) === 0 );
     if( willf.storageWillfile && willf.storageWillfile !== willf )
     if( !willf.storageWillfile.isUsed() )
     {
@@ -133,7 +133,7 @@ function unform()
 
   if( willf.storageWillfile )
   _.arrayRemoveOnce( willf.storageWillfile.storedWillfiles, willf );
-  _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.arrayCountElement( willf.storageWillfile.storedWillfiles, willf ) === 0 );
+  _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.longCountElement( willf.storageWillfile.storedWillfiles, willf ) === 0 );
 
   /* end */
 
@@ -239,7 +239,7 @@ function _registerForm()
 
   if( willf.storageWillfile )
   _.arrayAppendOnce( willf.storageWillfile.storedWillfiles, willf );
-  _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.arrayCountElement( willf.storageWillfile.storedWillfiles, willf ) === 1 );
+  _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.longCountElement( willf.storageWillfile.storedWillfiles, willf ) === 1 );
 
   /* end */
 
@@ -430,7 +430,7 @@ function _open()
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.arrayCountElement( willf.storageWillfile.storedWillfiles, willf ) === 1 );
+  _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.longCountElement( willf.storageWillfile.storedWillfiles, willf ) === 1 );
 
   /* read */
 
@@ -862,7 +862,7 @@ function peerWillfilesOpen()
       _.assert( got.willf.peerWillfiles === null || ( got.willf.peerWillfiles.length === 1 && got.willf.peerWillfiles[ 0 ] === willf ) );
       if( got.willf.peerWillfiles === null )
       got.willf.peerWillfiles = [ willf ];
-      _.assert( _.arrayHas( got.willf.peerWillfiles, willf ) );
+      _.assert( _.longHas( got.willf.peerWillfiles, willf ) );
     }
   });
 
@@ -1073,6 +1073,9 @@ function hashFullFor( filePath )
 function isConsistentWith( willf2, opening )
 {
   let willf = this;
+  let will = willf.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
   _.assert( willf.isOut );
@@ -1367,7 +1370,7 @@ function elementGet( sectionName, elementName )
   let result;
 
   _.assert( arguments.length === 2 );
-  _.assert( _.arrayHas( willfs, willf ) );
+  _.assert( _.longHas( willfs, willf ) );
 
   for( let w = 0 ; w < willfs.length ; w++ )
   {

@@ -408,7 +408,7 @@ function _inheritSingle( o )
 
   if( reflector2.formed < 3 )
   {
-    _.sure( !_.arrayHas( o.visited, reflector2.name ), () => 'Cyclic dependency ' + reflector.qualifiedName + ' of ' + reflector2.qualifiedName );
+    _.sure( !_.longHas( o.visited, reflector2.name ), () => 'Cyclic dependency ' + reflector.qualifiedName + ' of ' + reflector2.qualifiedName );
     if( reflector2.formed < 2 )
     {
       reflector2.form2({ visited : o.visited });

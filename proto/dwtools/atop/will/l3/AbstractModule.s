@@ -87,8 +87,8 @@ function isUsedManually()
     return;
     if( node === module )
     return;
-    if( module instanceof _.Will.OpenedModule )
-    if( node instanceof _.Will.OpenedModule )
+    if( module instanceof _.Will.Module )
+    if( node instanceof _.Will.Module )
     return;
     found.push( node );
   }
@@ -145,6 +145,20 @@ function optionsFormingForward( o )
 }
 
 optionsFormingForward.defaults = _.mapExtend( null, _.Will.UpformingDefaults );
+
+//
+
+function ownedBy( object )
+{
+  let module = this;
+
+  if( _.arrayIs( object ) )
+  return _.any( object, ( object ) => module.ownedBy( object ) );
+
+  _.assert( !!object );
+
+  return object.own( module );
+}
 
 // --
 // path
@@ -300,8 +314,6 @@ function _remotePathAdopt()
   let module = this;
   let will = module.will;
 
-  // debugger;
-
   _.assert( arguments.length === 0 );
   _.assert( _.strDefined( module.remotePath ) );
   _.assert( _.strDefined( module.downloadPath ) );
@@ -309,7 +321,6 @@ function _remotePathAdopt()
 
   if( module.downloadPath !== module.repo.downloadPath || module.remotePath !== module.repo.remotePath )
   {
-    // debugger;
     module.repo = will.repoFrom
     ({
       isRemote : !!module.remotePath,
@@ -339,33 +350,15 @@ function remotePathAdopt( o )
   if( o.downloadPath === null )
   o.downloadPath = module.downloadPath;
 
-  // debugger;
-
   _.assert( _.strDefined( o.downloadPath ) );
   if( o.downloadPath )
   module._downloadPathPut( o.downloadPath );
   _.assert( _.strDefined( o.remotePath ) );
   module.remotePathSet( o.remotePath );
 
-  // debugger;
-
   _.assert( module.remotePath === o.remotePath );
 
   module._remotePathAdopt();
-
-  // _.assert( _.strDefined( module.downloadPath ) );
-  // _.assert( _.strBegins( module.localPath, module.downloadPath ) );
-  //
-  // if( module.downloadPath !== module.repo.downloadPath || module.remotePath !== module.repo.remotePath )
-  // {
-  //   debugger;
-  //   module.repo = will.repoFrom
-  //   ({
-  //     isRemote : !!module.remotePath,
-  //     downloadPath : module.downloadPath,
-  //     remotePath : module.remotePath,
-  //   });
-  // }
 
   return true;
 }
@@ -375,30 +368,6 @@ remotePathAdopt.defaults =
   remotePath : null,
   downloadPath : null,
 }
-
-// //
-//
-// function remotePathEachAdoptAct( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let variant = will.variantOf( module ); /* xxx : optimize variantFrom */
-//   if( !variant )
-//   variant = will.variantFrom( module );
-//
-//   _.assertRoutineOptions( remotePathEachAdoptAct, o );
-//
-//   variant.modules.forEach( ( module ) => module.remotePathAdopt( o ) );
-//   variant.openers.forEach( ( opener ) => opener.remotePathAdopt( o ) );
-//   variant.reform();
-//
-//   return true;
-// }
-//
-// remotePathEachAdoptAct.defaults =
-// {
-//   ... remotePathAdopt.defaults,
-// }
 
 //
 
@@ -1707,6 +1676,7 @@ let Extend =
 
   isUsedManually,
   optionsFormingForward,
+  ownedBy,
 
   // path
 
@@ -1716,7 +1686,6 @@ let Extend =
 
   _remotePathAdopt,
   remotePathAdopt,
-  // remotePathEachAdoptAct,
   remotePathEachAdopt,
   remotePathEachAdoptCurrent,
 

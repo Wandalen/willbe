@@ -72,7 +72,7 @@ function strIsolate_pre( routine, args )
  * @throws { Exception } Throw an exception if( o ) is not a Map.
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
  * @throws { Exception } Throw an exception if( o.delimeter ) is not a Array or String.
- * @throws { Exception } Throw an exception if( o ) is extended by uknown property.
+ * @throws { Exception } Throw an exception if( o ) is extended by unknown property.
  * @memberof wTools
  *
  */
