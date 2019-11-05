@@ -20155,24 +20155,24 @@ var Self =
   tests :
   {
 
-    // preCloneRepos,
-    // singleModuleWithSpaceTrivial,
-    // make,
-    // transpile,
-    // moduleNewDotless,
-    // moduleNewDotlessSingle,
-    // moduleNewNamed,
-    //
-    // openWith,
-    // openEach,
-    withMixed, /* qqq : please fix */
-    // // eachMixed, // xxx : later
-    // withList,
-    // // eachList, // xxx : later
-    // eachBrokenIll,
-    // eachBrokenNon,
-    // eachBrokenCommand,
-    // openExportClean,
+    preCloneRepos,
+    singleModuleWithSpaceTrivial,
+    make,
+    transpile,
+    moduleNewDotless,
+    moduleNewDotlessSingle,
+    moduleNewNamed,
+
+    openWith,
+    openEach,
+    withMixed, /* xxx : later */
+    // eachMixed, // xxx : later
+    withList,
+    // eachList, // xxx : later
+    eachBrokenIll,
+    eachBrokenNon,
+    eachBrokenCommand,
+    openExportClean,
 
     // reflect
 
@@ -20194,135 +20194,135 @@ var Self =
     reflectComplexInherit,
     reflectorMasks,
 
-    // // with do
-    //
-    // withDoInfo,
-    // withDoStatus,
-    // withDoCommentOut,
-    //
-    // hookCallInfo,
-    // hookGitMake,
-    // hookPrepare,
-    //
-    // verbositySet,
-    // verbosityStepDelete,
-    // verbosityStepPrintName,
-    // modulesTreeDotless,
-    // modulesTreeLocal,
-    // modulesTreeHierarchyRemote,
-    // modulesTreeHierarchyRemoteDownloaded,
-    // modulesTreeHierarchyRemotePartiallyDownloaded,
-    // modulesTreeDisabledAndCorrupted,
-    //
-    // help,
-    // listSingleModule,
-    // listWithSubmodulesSimple,
-    // listWithSubmodules,
-    // listSteps,
-    //
-    // clean,
-    // cleanSingleModule,
-    // cleanBroken1,
-    // cleanBroken2,
-    // cleanBrokenSubmodules,
-    // cleanNoBuild,
-    // cleanDry,
-    // cleanSubmodules,
-    // cleanMixed,
-    // cleanWithInPath,
-    // cleanRecursive,
-    // cleanDisabledModule,
-    // cleanHierarchyRemote,
-    // cleanHierarchyRemoteDry,
-    // cleanSubmodulesHierarchyRemote,
-    // cleanSubmodulesHierarchyRemoteDry,
-    //
-    // buildSingleModule,
-    // buildSingleStep,
-    // buildSubmodules,
-    // // buildDetached, /* xxx : later */
-    //
-    // exportSingle,
-    // exportItself,
-    // exportNonExportable,
-    // exportInformal,
-    // exportWithReflector,
-    // exportToRoot,
-    // // exportMixed, /* xxx : later */
-    // exportSecond,
-    // exportSubmodules,
-    // exportMultiple,
-    // exportImportMultiple,
-    // exportBroken,
-    // exportDoc,
-    // exportImport,
-    // exportBrokenNoreflector,
-    // exportCourrputedOutfileUnknownSection,
-    // exportCourruptedOutfileSyntax,
-    // exportCourruptedSubmodulesDisabled,
-    // exportDisabledModule,
-    // exportOutdated,
-    // exportWholeModule,
-    // exportRecursive,
-    // exportRecursiveUsingSubmodule,
-    // exportRecursiveLocal,
-    // exportDotless,
-    // exportDotlessSingle,
-    // exportTracing,
-    // exportRewritesOutFile,
-    // exportWithRemoteSubmodules,
-    // exportDiffDownloadPathsRegular,
-    // exportHierarchyRemote,
-    // exportWithDisabled,
-    // /* xxx : implement same test for hierarchy-remote and irregular */
-    // /* xxx : implement clean tests */
-    // /* xxx : refactor ** clean */
-    // // exportAuto, // xxx : later
-    //
-    // importPathLocal,
-    // // importLocalRepo, /* xxx : later */
-    // importOutWithDeletedSource,
-    //
-    // shellWithCriterion,
-    // shellVerbosity,
-    //
-    // functionStringsJoin,
-    // functionPlatform,
-    // functionThisCriterion,
-    //
-    // submodulesDownloadSingle,
-    // submodulesDownloadUpdate,
-    // submodulesDownloadUpdateDry,
-    // submodulesDownloadSwitchBranch,
-    // submodulesDownloadRecursive,
-    // submodulesDownloadThrowing,
-    // submodulesDownloadStepAndCommand,
-    // submodulesDownloadDiffDownloadPathsRegular,
-    // submodulesDownloadDiffDownloadPathsIrregular,
-    // submodulesDownloadHierarchyRemote,
-    //
-    // submodulesUpdateThrowing,
-    // submodulesAgreeThrowing,
-    // submodulesVersionsAgreeWrongOrigin,
-    // submodulesDownloadedUpdate,
-    // subModulesUpdate,
-    // subModulesUpdateSwitchBranch,
-    // submodulesVerify,
-    // versionsAgree,
-    //
-    // stepSubmodulesDownload,
-    // stepWillbeVersionCheck,
-    // stepSubmodulesAreUpdated,
-    //
-    // // upgradeDryDetached, // xxx : look later
-    // // upgradeDetached, // xxx : look later
-    // // upgradeDetachedExperiment, // xxx : look later
-    // // fixateDryDetached, // xxx : look later
-    // // fixateDetached, // xxx : look later
-    //
-    // // runWillbe, // qqq : help to fix, please
-    //
-    // // resourcesFormReflectorsExperiment, // qqq : done?
+    // with do
+
+    withDoInfo,
+    withDoStatus,
+    withDoCommentOut,
+
+    hookCallInfo,
+    hookGitMake,
+    hookPrepare,
+
+    verbositySet,
+    verbosityStepDelete,
+    verbosityStepPrintName,
+    modulesTreeDotless,
+    modulesTreeLocal,
+    modulesTreeHierarchyRemote,
+    modulesTreeHierarchyRemoteDownloaded,
+    modulesTreeHierarchyRemotePartiallyDownloaded,
+    modulesTreeDisabledAndCorrupted,
+
+    help,
+    listSingleModule,
+    listWithSubmodulesSimple,
+    listWithSubmodules,
+    listSteps,
+
+    clean,
+    cleanSingleModule,
+    cleanBroken1,
+    cleanBroken2,
+    cleanBrokenSubmodules,
+    cleanNoBuild,
+    cleanDry,
+    cleanSubmodules,
+    cleanMixed,
+    cleanWithInPath,
+    cleanRecursive,
+    cleanDisabledModule,
+    cleanHierarchyRemote,
+    cleanHierarchyRemoteDry,
+    cleanSubmodulesHierarchyRemote,
+    cleanSubmodulesHierarchyRemoteDry,
+
+    buildSingleModule,
+    buildSingleStep,
+    buildSubmodules,
+    // buildDetached, /* xxx : later */
+
+    exportSingle,
+    exportItself,
+    exportNonExportable,
+    exportInformal,
+    exportWithReflector,
+    exportToRoot,
+    // exportMixed, /* xxx : later */
+    exportSecond,
+    exportSubmodules,
+    exportMultiple,
+    exportImportMultiple,
+    exportBroken,
+    exportDoc,
+    exportImport,
+    exportBrokenNoreflector,
+    exportCourrputedOutfileUnknownSection,
+    exportCourruptedOutfileSyntax,
+    exportCourruptedSubmodulesDisabled,
+    exportDisabledModule,
+    exportOutdated,
+    exportWholeModule,
+    exportRecursive,
+    exportRecursiveUsingSubmodule,
+    exportRecursiveLocal,
+    exportDotless,
+    exportDotlessSingle,
+    exportTracing,
+    exportRewritesOutFile,
+    exportWithRemoteSubmodules,
+    exportDiffDownloadPathsRegular,
+    exportHierarchyRemote,
+    exportWithDisabled,
+    /* xxx : implement same test for hierarchy-remote and irregular */
+    /* xxx : implement clean tests */
+    /* xxx : refactor ** clean */
+    // exportAuto, // xxx : later
+
+    importPathLocal,
+    // importLocalRepo, /* xxx : later */
+    importOutWithDeletedSource,
+
+    shellWithCriterion,
+    shellVerbosity,
+
+    functionStringsJoin,
+    functionPlatform,
+    functionThisCriterion,
+
+    submodulesDownloadSingle,
+    submodulesDownloadUpdate,
+    submodulesDownloadUpdateDry,
+    submodulesDownloadSwitchBranch,
+    submodulesDownloadRecursive,
+    submodulesDownloadThrowing,
+    submodulesDownloadStepAndCommand,
+    submodulesDownloadDiffDownloadPathsRegular,
+    submodulesDownloadDiffDownloadPathsIrregular,
+    submodulesDownloadHierarchyRemote,
+
+    submodulesUpdateThrowing,
+    submodulesAgreeThrowing,
+    submodulesVersionsAgreeWrongOrigin,
+    submodulesDownloadedUpdate,
+    subModulesUpdate,
+    subModulesUpdateSwitchBranch,
+    submodulesVerify,
+    versionsAgree,
+
+    stepSubmodulesDownload,
+    stepWillbeVersionCheck,
+    stepSubmodulesAreUpdated,
+
+    // upgradeDryDetached, // xxx : look later
+    // upgradeDetached, // xxx : look later
+    // upgradeDetachedExperiment, // xxx : look later
+    // fixateDryDetached, // xxx : look later
+    // fixateDetached, // xxx : look later
+
+    // runWillbe, // qqq : help to fix, please
+
+    // resourcesFormReflectorsExperiment, // qqq : done?
 
   }
 

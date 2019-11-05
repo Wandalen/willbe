@@ -1314,8 +1314,18 @@ function pathsResolve( o )
 
   function basePathResolve( src, isSrc )
   {
-    let srcRelativePath = reflector.src.prefixPath ? path.fromGlob( reflector.src.prefixPath ) : module.inPath;
-    let dstRelativePath = reflector.dst.prefixPath ? path.fromGlob( reflector.dst.prefixPath ) : module.inPath;
+    let relativePath, relativePathNormalized;
+
+    if( isSrc )
+    {
+      relativePath = reflector.src.prefixPath ? reflector.src.prefixPath : module.inPath;
+      relativePathNormalized = reflector.src.prefixPath ? path.fromGlob( reflector.src.prefixPath ) : module.inPath;
+    }
+    else
+    {
+      relativePath = reflector.dst.prefixPath ? reflector.dst.prefixPath : module.inPath;
+      relativePathNormalized = reflector.dst.prefixPath ? path.fromGlob( reflector.dst.prefixPath ) : module.inPath;
+    }
 
     return path.filterPairsInplace( src, ( it ) =>
     {
@@ -1334,14 +1344,11 @@ function pathsResolve( o )
 
     function end( it )
     {
-      // it.src = reflector.pathAbsolute( it.src, isSrc );
-      // it.dst = reflector.pathAbsolute( it.dst, isSrc );
-
       if( it.src && !_.boolLike( it.src ) && !path.isAbsolute( it.src ) && !path.isGlobal( it.src ) )
-      it.src = path.s.join( srcRelativePath, it.src );
+      it.src = path.s.join( relativePathNormalized, it.src );
 
       if( it.dst && !_.boolLike( it.dst ) && !path.isAbsolute( it.dst ) && !path.isGlobal( it.dst ) )
-      it.dst = path.s.join( dstRelativePath, it.dst );
+      it.dst = path.s.join( relativePath, it.dst );
 
       return it;
     }
