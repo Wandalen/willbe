@@ -91,8 +91,10 @@ function onSuiteBegin()
   });
 
   let reposDownload = require( './ReposDownload.s' );
+  debugger;
   return reposDownload().then( () =>
   {
+    debugger;
     _.assert( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'Tools' ) ) );
     return null;
   })
@@ -3852,7 +3854,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
 
 //
 
-function reflectSubmodulesWithPluralCriterionAutoExport( test )
+function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
 {
   let self = this;
   let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-submodules-with-plural-criterion' );
@@ -3911,7 +3913,7 @@ function reflectSubmodulesWithPluralCriterionAutoExport( test )
   return ready;
 }
 
-reflectSubmodulesWithPluralCriterionAutoExport.timeOut = 300000;
+reflectSubmodulesWithPluralCriterionEmbeddedExport.timeOut = 300000;
 
 //
 
@@ -20185,7 +20187,7 @@ var Self =
     reflectWithSelectorInDstFilter,
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
-    reflectSubmodulesWithPluralCriterionAutoExport,
+    reflectSubmodulesWithPluralCriterionEmbeddedExport,
     // relfectSubmodulesWithNotExistingFile, // zzz : uncomment after final transition to willbe
     reflectInherit,
     reflectInheritSubmodules,

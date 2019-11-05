@@ -539,11 +539,6 @@ function outModuleOpen( o )
   .finally( ( err, module2 ) =>
   {
 
-    // if( err )
-    // logger.log( `In outModuleOpen err#${err.id}` );
-    // if( opener2.error )
-    // logger.log( `In outModuleOpen opener2.error#${opener2.error.id}` );
-
     err = err || opener2.error;
 
     if( err )
@@ -566,35 +561,32 @@ function outModuleOpen( o )
       }
     }
 
-    if( err )
-    try
-    {
-      opener2.finit();
-    }
-    catch( err2 )
+    if( err && !opener2.finitedIs() )
     {
       debugger;
-      err2 = _.err( err2 );
-      logger.log( _.errOnce( err2 ) );
-      throw err2;
+      opener2.peerModule = null;
+      if( opener2.openedModule )
+      opener2.openedModule.peerModule = null;
+      _.assert( opener2.peerModule === null );
+      _.assert( opener2.openedModule === null || opener2.openedModule.peerModule === null );
+
+      try
+      {
+        opener2.finit();
+      }
+      catch( err2 )
+      {
+        debugger;
+        err2 = _.err( err2 );
+        logger.log( _.errOnce( err2 ) );
+        throw err2;
+      }
+
+      _.assert( !module.finitedIs() );
     }
 
-    // debugger;
-    // logger.log( 'err.logged', err.logged );
-    // logger.log( 'err.attended', err.attended );
-    // err.logged = false;
-    // err.attended = false;
-    // logger.log( 'err.logged', err.logged );
-    // logger.log( 'err.attended', err.attended );
-    // debugger;
-
-    // logger.log( 'In outModuleOpen' );
     if( err )
     _.errAttend( err );
-
-    // logger.log( err.logged, err.logged );
-    // logger.log( err.attended, err.attended );
-    // debugger;
 
     return module2 || null;
   })
@@ -613,13 +605,14 @@ function outModuleOpenOrMake( o )
   o = _.routineOptions( outModuleOpenOrMake, arguments );
   o.willfilesPath = o.willfilesPath || module.outfilePathGet();
 
-  // debugger;
+  _.assert( !module.finitedIs() );
+
   return module.outModuleOpen()
   .then( ( outModule ) =>
   {
 
-    // debugger;
     _.assert( outModule === null || outModule.isOut );
+    _.assert( !module.finitedIs() );
 
     if( !outModule )
     return module.outModuleMake( o );
@@ -2255,13 +2248,13 @@ function exportedMake( o )
 
   o = _.routineOptions( exportedMake, arguments );
   _.assert( o.build instanceof _.Will.Build );
+  _.assert( !module.finitedIs() );
 
   if( !module.isOut )
   {
     _.assert( _.mapKeys( module.exportedMap ).length === 0 );
     _.assert( !module.finitedIs() );
 
-    // debugger;
     if( module.peerModule && !module.peerModule.isValid() )
     {
       let peerModule = module.peerModule;
