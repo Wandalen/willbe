@@ -345,7 +345,9 @@ function _inheritMultiple( o )
 
   // if( reflector.absoluteName === "module::a / module::submodule2 / reflector::exported.files.export" )
   // debugger;
-  if( reflector.name === 'reflect.not.test.only.js.v1' )
+  // if( reflector.name === 'reflect.not.test.only.js.v1' )
+  // debugger;
+  if( reflector.name === 'reflect.files2' )
   debugger;
   // if( reflector.name === 'only.js' )
   // debugger;
@@ -387,7 +389,9 @@ function _inheritMultiple( o )
   reflector.dst.and( reflector._accumulator.dst ).pathsSupplementJoining( reflector._accumulator.dst );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
-  if( reflector.name === 'reflect.not.test.only.js.v1' )
+  // if( reflector.name === 'reflect.not.test.only.js.v1' )
+  // debugger;
+  if( reflector.name === 'reflect.files2' )
   debugger;
 
   return reflector;
@@ -837,7 +841,9 @@ function _inheritPrefixes( o )
 
   /* */
 
-  if( reflector.name === "reflect.files2" )
+  // if( reflector.name === "reflect.files2" )
+  // debugger;
+  if( reflector.name === 'reflect.files2' )
   debugger;
 
   let srcPrefixPath = reflector.src.prefixPath;
@@ -870,7 +876,7 @@ function _inheritPrefixes( o )
     {
       // debugger;
       if( will.Resolver.selectorIs( prefixPath ) )
-      return inherit( prefixPath, 0 );
+      return inherit( prefixPath, 1 );
       return prefixPath;
     });
   }
@@ -879,8 +885,8 @@ function _inheritPrefixes( o )
     reflector.dst.prefixPath = dstPrefixPath;
   }
 
-  if( reflector.name === "reflect.files2" )
-  debugger;
+  // if( reflector.name === "reflect.files2" )
+  // debugger;
 
   // if( reflector.dst.prefixPath )
   // reflector.dst.prefixPath = path.filterInplace( reflector.dst.prefixPath, ( prefixPath ) =>
@@ -929,6 +935,9 @@ function _inheritPrefixes( o )
     });
 
   }
+
+  if( reflector.name === 'reflect.files2' )
+  debugger;
 
 }
 

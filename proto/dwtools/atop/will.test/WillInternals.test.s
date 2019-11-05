@@ -5787,7 +5787,8 @@ function reflectorInheritedResolve( test )
         'filePath' :
         {
           '.' : [ 'debug1', 'debug2' ],
-          '**.test**' : false
+          '../**.js' : true,
+          '../**.test**' : false,
         },
         'prefixPath' : 'proto'
       },
