@@ -371,7 +371,7 @@ function outModuleMake( o )
   if( moduleWas )
   {
     debugger;
-    _.assert( 0, 'not tested' );
+    // _.assert( 0, 'not tested' );
     _.assert( moduleWas.peerModule === module );
     _.assert( moduleWas === module.peerModule );
     moduleWas.peerModule = null;
@@ -501,7 +501,7 @@ function outModuleOpen( o )
     rootModule : module.rootModule,
     searching : 'exact',
     reason : 'export',
-    // peerModule : module,
+    peerModule : module,
   }
 
   let opener2 = will._openerMake({ opener : o2 })

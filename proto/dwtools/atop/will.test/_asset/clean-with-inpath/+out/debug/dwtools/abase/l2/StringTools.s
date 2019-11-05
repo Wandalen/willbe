@@ -1953,7 +1953,10 @@ function strSplitsCoupledGroup( o )
   }
 
   if( begins.length && !o.allowingUncoupledPrefix )
-  throw _.err( _.strQuote( begins[ begins.length-1 ] ), 'does not have complementing closing\n' );
+  {
+    debugger;
+    throw _.err( _.strQuote( begins[ begins.length-1 ] ), 'does not have complementing closing\n' );
+  }
 
   return o.splits;
 }

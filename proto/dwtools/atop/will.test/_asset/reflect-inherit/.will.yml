@@ -80,7 +80,7 @@ reflector :
       filePath : reflector::files2
 
   reflect.files2 :
-    inherit : reflector::files3
+    # inherit : reflector::files3
     src :
       prefixPath : reflector::files1
     dst :

@@ -1883,8 +1883,6 @@ function modulesFindWithAt( o )
     if( !err )
     err = op.errs[ 0 ];
 
-    debugger;
-
     if( err )
     {
       debugger;

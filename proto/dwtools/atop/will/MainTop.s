@@ -265,7 +265,6 @@ function _commandBuildLike( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  debugger;
   _.routineOptions( _commandBuildLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
@@ -294,7 +293,6 @@ function _commandBuildLike( o )
   {
     if( will.currentOpeners )
     {
-      debugger;
       let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly( o, will.modulesFilter.defaults ) );
       if( openers2.length )
       will.currentOpeners = openers2;
@@ -1079,7 +1077,7 @@ function commandEach( e )
     if( will.mainOpener )
     will.mainOpener.isMain = false;
     will.currentOpenerChange( it.currentOpener );
-    will.currentOpenerPath = it.currentOpenerPath || null; debugger;
+    will.currentOpenerPath = it.currentOpenerPath || null;
     it.currentOpener.isMain = true;
     _.assert( will.mainOpener === it.currentOpener );
     _.assert( will.currentOpener === it.currentOpener );

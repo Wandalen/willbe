@@ -179,6 +179,7 @@ function stepRoutineReflect( frame )
 
     _.assert( opts.src.isPaired() );
     let mtr = opts.src.moveTextualReport();
+    debugger;
     logger.log( ' + ' + reflector.decoratedQualifiedName + ' reflected ' + opts.result.length + ' file(s) ' + mtr + ' in ' + _.timeSpent( time ) );
 
   }

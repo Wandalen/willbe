@@ -496,6 +496,7 @@ function _performExportedReflectors()
   let exp;
   let recursive = null;
 
+  // debugger;
   exp = inModule.pathResolve
   ({
     selector : exported.exportPath,
@@ -568,6 +569,7 @@ function _performExportedReflectors()
   }
   else _.assert( 0 );
 
+  // debugger;
   if( recursive !== null )
   exportedReflector.src.recursive = recursive;
   exportedReflector.criterion = _.mapExtend( exportedReflector.criterion, exported.criterion );
