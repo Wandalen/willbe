@@ -352,7 +352,8 @@ function _moduleAdoptEnd()
 function own( object )
 {
   let relation = this;
-  let will = relation.will;
+  let module = relation.module;
+  let will = module.will;
 
   _.assert( !!object );
 
@@ -386,6 +387,78 @@ function ownedBy( object )
   return _.any( object, ( object ) => relation.ownedBy( object ) );
 
   return object.own( relation );
+}
+
+//
+
+function submodulesRelationsFilter( o )
+{
+  let relation = this;
+  let module = relation.module;
+  let will = module.will;
+
+  o = _.routineOptions( submodulesRelationsFilter, arguments );
+
+  let result = relation.submodulesRelationsOwnFilter( o );
+  let variant = will.variantFrom( relation );
+  let variants = variant.submodulesVariantsFilter( o );
+
+  result = _.arrayAppendArraysOnce( result, variants.map( ( variant ) => variant.objects ) );
+
+  return result;
+}
+
+submodulesRelationsFilter.defaults =
+{
+
+  ... _.Will.RelationFilterDefaults,
+  withPeers : 1,
+  withoutDuplicates : 0,
+
+}
+
+//
+
+function submodulesRelationsOwnFilter( o )
+{
+  let relation = this;
+
+  _.assert( arguments.length === 1 );
+
+  if( relation.opener )
+  if( relation.opener.openedModule )
+  return relation.opener.openedModule.submodulesRelationsOwnFilter( o );
+
+  return [];
+}
+
+submodulesRelationsOwnFilter.defaults =
+{
+
+  ... _.Will.RelationFilterDefaults,
+  withPeers : 1,
+  withoutDuplicates : 0,
+
+}
+
+//
+
+function toModule()
+{
+  let relation = this;
+  let module = relation.module;
+  let will = module.will;
+  if( relation.opener.openedModule && relation.opener.openedModule )
+  return relation.opener.openedModule;
+  return null;
+}
+
+//
+
+function toRelation()
+{
+  let relation = this;
+  return relation;
 }
 
 //
@@ -588,7 +661,7 @@ function moduleSet( src )
 // exporter
 // --
 
-function structureExport( o )
+function exportStructure( o )
 {
   let relation = this;
   let module = relation.module;
@@ -598,7 +671,7 @@ function structureExport( o )
   let path = fileProvider.path;
   let rootModule = module.rootModule;
 
-  let result = Parent.prototype.structureExport.apply( this, arguments );
+  let result = Parent.prototype.exportStructure.apply( this, arguments );
 
   if( result === undefined )
   return result;
@@ -639,11 +712,11 @@ function structureExport( o )
   return result;
 }
 
-structureExport.defaults = Object.create( _.Will.Resource.prototype.structureExport.defaults );
+exportStructure.defaults = Object.create( _.Will.Resource.prototype.exportStructure.defaults );
 
 //
 
-function infoExport()
+function exportInfo( o )
 {
   let relation = this;
   let module = relation.module;
@@ -651,8 +724,10 @@ function infoExport()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let resultMap = Parent.prototype.structureExport.call( relation );
+  let resultMap = Parent.prototype.exportStructure.call( relation );
   let tab = '  ';
+
+  o = _.routineOptions( exportInfo, arguments );
 
   if( relation.opener )
   {
@@ -668,9 +743,14 @@ function infoExport()
   // resultMap.hasFiles = relation.opener ? relation.opener.hasFiles : null;
   resultMap.isAvailable = relation.isAvailable;
 
-  let result = relation._infoExport({ fields : resultMap });
+  let result = relation._exportInfo({ fields : resultMap });
 
   return result;
+}
+
+exportInfo.defaults =
+{
+  verbosity : 2,
 }
 
 // --
@@ -911,6 +991,11 @@ let Extend =
 
   own,
   ownedBy,
+  submodulesRelationsFilter,
+  submodulesRelationsOwnFilter,
+  toModule,
+  toRelation,
+
   isValid,
   isAvailableGet,
   // isDownloadedGet,
@@ -926,8 +1011,8 @@ let Extend =
 
   // exporter
 
-  structureExport,
-  infoExport,
+  exportStructure,
+  exportInfo,
 
   // etc
 

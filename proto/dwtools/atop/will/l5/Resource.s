@@ -618,7 +618,7 @@ function _inheritSingle( o )
     resource2._inheritForm({ visited : o.visited });
   }
 
-  let extend = _.mapOnly( resource2, _.mapNulls( resource.structureExport({ compact : 0, copyingAggregates : 1 }) ) );
+  let extend = _.mapOnly( resource2, _.mapNulls( resource.exportStructure({ compact : 0, copyingAggregates : 1 }) ) );
   delete extend.criterion;
   resource.copy( extend );
   resource.criterionInherit( resource2.criterion );
@@ -904,11 +904,11 @@ function CriterionValueNormalize( criterionValue )
 // export
 // --
 
-function _infoExport( o )
+function _exportInfo( o )
 {
   let resource = this;
   let result = '';
-  o = _.routineOptions( _infoExport, arguments );
+  o = _.routineOptions( _exportInfo, arguments );
 
   result += resource.decoratedAbsoluteName + '\n';
   result += _.toStr( o.fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } );
@@ -916,37 +916,37 @@ function _infoExport( o )
   return result;
 }
 
-var defaults = _infoExport.defaults = Object.create( null );
+var defaults = _exportInfo.defaults = Object.create( null );
 defaults.fields = 1;
 
 //
 
-function infoExport()
+function exportInfo()
 {
   let resource = this;
-  let o = _.routineOptions( infoExport, arguments );
+  let o = _.routineOptions( exportInfo, arguments );
 
-  let fields = resource.structureExport( o );
-  let result = resource._infoExport({ fields });
+  let fields = resource.exportStructure( o );
+  let result = resource._exportInfo({ fields });
 
   return result;
 }
 
-var defaults = infoExport.defaults = Object.create( _.Will.Module.prototype.structureExport.defaults );
+var defaults = exportInfo.defaults = Object.create( _.Will.Module.prototype.exportStructure.defaults );
 defaults.copyingNonExportable = 1;
 defaults.formed = 1;
 defaults.strict = 0;
 
 //
 
-function structureExport()
+function exportStructure()
 {
   let resource = this;
-  let o = _.routineOptions( structureExport, arguments );
+  let o = _.routineOptions( exportStructure, arguments );
 
   if( !o.formed )
   if( resource.unformedResource )
-  return resource.unformedResource.structureExport.call( resource.unformedResource, o );
+  return resource.unformedResource.exportStructure.call( resource.unformedResource, o );
 
   if( !o.copyingNonExportable )
   if( !resource.exportable )
@@ -980,7 +980,7 @@ function structureExport()
   return fields;
 }
 
-structureExport.defaults = Object.create( _.Will.Module.prototype.structureExport.defaults );
+exportStructure.defaults = Object.create( _.Will.Module.prototype.exportStructure.defaults );
 
 //
 
@@ -1365,9 +1365,9 @@ let Extend =
 
   // export
 
-  _infoExport,
-  infoExport,
-  structureExport,
+  _exportInfo,
+  exportInfo,
+  exportStructure,
   extraExport,
   compactField,
 

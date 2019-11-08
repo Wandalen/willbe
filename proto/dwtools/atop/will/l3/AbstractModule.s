@@ -70,8 +70,8 @@ function isUsedManually()
   let sys = new _.graph.AbstractGraphSystem
   ({
     onNodeIs : nodeIs,
-    onNodeNameGet : nodeName,
-    onOutNodesGet : nodeOutNodes,
+    onNodeName : nodeName,
+    onNodeOutNodes : nodeOutNodes,
   });
   let group = sys.nodesGroup();
 
@@ -441,6 +441,25 @@ function decoratedAbsoluteNameGet()
   let module = this;
   let result = module.absoluteName;
   return _.color.strFormat( result, 'entity' );
+}
+
+//
+
+function nameWithLocationGet()
+{
+  let module = this;
+  let name = _.color.strFormat( module.qualifiedName + '#' + module.id, 'entity' );
+  if( module.localPath )
+  {
+    let localPath = _.color.strFormat( module.localPath, 'path' );
+    let result = `${name} at ${localPath}`;
+    return result;
+  }
+  else
+  {
+    let result = `${name}`;
+    return result;
+  }
 }
 
 // --
@@ -1694,6 +1713,7 @@ let Extend =
   qualifiedNameGet,
   decoratedQualifiedNameGet,
   decoratedAbsoluteNameGet,
+  nameWithLocationGet,
 
   // willfile
 

@@ -1446,8 +1446,8 @@ function save( o )
 
   o = _.routineOptions( save, arguments );
 
-  let o2 = _.mapOnly( o, willf.structureExport.defaults );
-  let structure = willf.structureExport( o2 );
+  let o2 = _.mapOnly( o, willf.exportStructure.defaults );
+  let structure = willf.exportStructure( o2 );
 
   _.assert( _.strIs( willf.filePath ) );
 
@@ -1471,23 +1471,23 @@ save.defaults =
 
 //
 
-function structureExport( o )
+function exportStructure( o )
 {
   let willf = this;
   let will = willf.will;
   let module = willf.openedModule;
-  o = _.routineOptions( structureExport, arguments );
+  o = _.routineOptions( exportStructure, arguments );
   debugger;
 
-  let o2 = _.mapOnly( o, module.structureExport.defaults );
+  let o2 = _.mapOnly( o, module.exportStructure.defaults );
   o2.willf = willf
-  let structure = module.structureExport( o2 );
+  let structure = module.exportStructure( o2 );
 
   debugger;
   return structure
 }
 
-structureExport.defaults =
+exportStructure.defaults =
 {
 }
 
@@ -1659,7 +1659,7 @@ let Extend =
   errorSet,
 
   save,
-  structureExport,
+  exportStructure,
 
   // relation
 

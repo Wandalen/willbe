@@ -1080,7 +1080,7 @@ function resolveContextPrepare( o )
   }
   else if( o.currentThis instanceof will.Resource )
   {
-    o.currentThis = o.currentThis.structureExport();
+    o.currentThis = o.currentThis.exportStructure();
   }
   else _.assert( 0 );
 

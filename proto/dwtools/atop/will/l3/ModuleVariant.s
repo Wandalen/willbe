@@ -112,7 +112,7 @@ function reform()
   // if( variant.id === 209 || variant.id === 259 )
   // if( variant.id === 209 )
   // {
-  //   logger.log( '>', variant.infoExport() );
+  //   logger.log( '>', variant.exportInfo() );
   //   debugger;
   // }
 
@@ -128,7 +128,7 @@ function reform()
 
   // if( variant.id === 282 )
   // {
-  //   logger.log( variant.infoExport() );
+  //   logger.log( variant.exportInfo() );
   //   debugger;
   // }
 
@@ -1468,13 +1468,111 @@ function isUsed()
 
 //
 
-function submodulesGet( o )
+// function submodulesRelationsFilter( o )
+// {
+//   let variant = this;
+//   let will = variant.will;
+//   let result = [];
+//
+//   o = _.routineOptions( submodulesRelationsFilter, arguments );
+//
+//   let filter = _.mapOnly( o, will.relationFit.defaults );
+//
+//   variantLook( variant );
+//
+//   if( !variant.peer )
+//   if( variant.module && variant.module.peerModule )
+//   {
+//     debugger;
+//     variant.From({ module : variant.module.peerModule, will : will });
+//     _.assert( _.longHas( variant.peer.modules, variant.module.peerModule ) );
+//   }
+//
+//   if( o.withPeers )
+//   if( variant.peer )
+//   variantLook( variant.peer );
+//
+//   if( o.withoutDuplicates )
+//   result = result.filter( ( variant ) =>
+//   {
+//     return !variant.isOut || !_.longHas( result, variant.peer );
+//   });
+//
+//   return result;
+//
+//   /* */
+//
+//   function variantLook( variant )
+//   {
+//
+//     if( variant.module )
+//     for( let s in variant.module.submoduleMap )
+//     {
+//       let relation = variant.module.submoduleMap[ s ];
+//
+//       let variant2 = variant.VariantOf( will, relation );
+//       if( !variant2 )
+//       variant2 = variant.From({ relation : relation, will : will });
+//       _.assert( !!variant2 );
+//
+//       if( !variant2.peer )
+//       if( variant2.module && variant2.module.peerModule )
+//       {
+//         debugger;
+//         _.assert( 0, 'not tested' );
+//         variant2.From({ module : variant2.module.peerModule, will : will });
+//       }
+//
+//       /*
+//       getting shadow sould go after setting up variant
+//       */
+//
+//       // variant2 = variant2.shadow({ relation })
+//       variantAppendMaybe( variant2 );
+//
+//       if( o.withPeers )
+//       if( variant2.peer )
+//       variantAppendMaybe( variant2.peer );
+//
+//     }
+//
+//   }
+//
+//   /* */
+//
+//   function variantAppendMaybe( variant )
+//   {
+//
+//     if( !will.relationFit( variant, filter ) )
+//     return;
+//
+//     _.assert( variant instanceof _.Will.ModuleVariant );
+//     _.arrayAppendOnce( result, variant );
+//
+//   }
+//
+//   /* */
+//
+// }
+//
+// submodulesRelationsFilter.defaults =
+// {
+//
+//   ... _.Will.RelationFilterDefaults,
+//   withPeers : 1,
+//   withoutDuplicates : 0,
+//
+// }
+
+//
+
+function submodulesVariantsFilter( o )
 {
   let variant = this;
   let will = variant.will;
   let result = [];
 
-  o = _.routineOptions( submodulesGet, arguments );
+  o = _.routineOptions( submodulesVariantsFilter, arguments );
 
   let filter = _.mapOnly( o, will.relationFit.defaults );
 
@@ -1564,7 +1662,7 @@ function submodulesGet( o )
 
 }
 
-submodulesGet.defaults =
+submodulesVariantsFilter.defaults =
 {
 
   ... _.Will.RelationFilterDefaults,
@@ -1699,16 +1797,6 @@ function shadow( o )
     return !!val && ( val !== _.unknown );
   }
 
-  // function shadowFill()
-  // {
-  //   if( shadowMap.module === _.unknown )
-  //   shadowMap.module = variant.module;
-  //   if( shadowMap.relation === _.unknown )
-  //   shadowMap.relation = variant.relation;
-  //   if( shadowMap.opener === _.unknown )
-  //   shadowMap.opener = variant.opener;
-  // }
-
 }
 
 shadow.defaults =
@@ -1719,11 +1807,27 @@ shadow.defaults =
   peer : _.unknown,
 }
 
+//
+
+function toModule()
+{
+  let variant = this;
+  return variant.module;
+}
+
+//
+
+function toRelation()
+{
+  let variant = this;
+  return variant.relation;
+}
+
 // --
 // export
 // --
 
-function infoExport()
+function exportInfo()
 {
   let result = '';
   let variant = this;
@@ -1977,12 +2081,14 @@ let Extend =
   own,
   ownSomething,
   isUsed,
-  submodulesGet,
+  submodulesVariantsFilter,
   shadow,
+  toModule,
+  toRelation,
 
   // export
 
-  infoExport,
+  exportInfo,
   nameWithLocationGet,
 
   // etc

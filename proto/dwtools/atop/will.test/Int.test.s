@@ -2591,311 +2591,310 @@ function exportSuperIn( test )
 
   /* - */
 
-  // ready
-  // .then( () =>
-  // {
-  //   test.case = 'export super debug, without out, without recursion, without peers';
-  //
-  //   _.fileProvider.filesDelete( routinePath );
-  //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  //   _.fileProvider.filesDelete( abs( 'super.out' ) );
-  //   _.fileProvider.filesDelete( abs( 'sub.out' ) );
-  //
-  //   opener = will.openerMakeManual({ willfilesPath : superInPath });
-  //
-  //   will.prefer
-  //   ({
-  //     allOfMain : 0,
-  //     allOfSub : 0,
-  //   });
-  //
-  //   return opener.open({ subModulesFormed : 1 });
-  // })
-  //
-  // .then( () =>
-  // {
-  //   let module = opener.openedModule;
-  //   return module.moduleExport({ criterion : { debug : 1 } });
-  // })
-  //
-  // .finally( ( err, arg ) =>
-  // {
-  //   var module = opener.openedModule;
-  //
-  //   test.is( _.errIs( err ) );
-  //   test.identical( _.strCount( err.message, 'Exporting is impossible because found no out-willfile' ), 1 );
-  //   test.identical( _.strCount( err.message, 'module::supermodule / exported::export.debug' ), 1 );
-  //
-  //   test.description = 'files';
-  //   var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
-  //   var exp =
-  //   [
-  //     '.',
-  //     './sub.ex.will.yml',
-  //     './sub.im.will.yml',
-  //     './super.ex.will.yml',
-  //     './super.im.will.yml',
-  //     './proto',
-  //     './proto/File.debug.js',
-  //     './proto/File.release.js',
-  //     './super.out',
-  //     './super.out/debug',
-  //     './super.out/debug/File.debug.js',
-  //     './super.out/debug/File.release.js'
-  //   ]
-  //   test.identical( files, exp );
-  //
-  //   test.description = 'no error';
-  //   test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 4 );
-  //   will.openersErrorsRemoveAll();
-  //   test.identical( will.openersErrorsArray.length, 0 );
-  //
-  //   opener.finit();
-  //   return null;
-  // })
-  //
-  // /* - */
-  //
-  // ready
-  // .then( () =>
-  // {
-  //   test.case = 'export super debug, without out, without recursion, with peers';
-  //
-  //   _.fileProvider.filesDelete( routinePath );
-  //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  //   _.fileProvider.filesDelete( abs( 'super.out' ) );
-  //   _.fileProvider.filesDelete( abs( 'sub.out' ) );
-  //
-  //   opener = will.openerMakeManual({ willfilesPath : superInPath });
-  //
-  //   will.prefer
-  //   ({
-  //     allOfMain : 0,
-  //     allOfSub : 0,
-  //     peerModulesFormedOfMain : 1,
-  //     peerModulesFormedOfSub : 1,
-  //   });
-  //
-  //   return opener.open({ subModulesFormed : 1 });
-  // })
-  //
-  // .then( () =>
-  // {
-  //   let module = opener.openedModule;
-  //   let builds = module.exportsResolve({ criterion : { debug : 1 } });
-  //   let build = builds[ 0 ];
-  //   return build.perform();
-  // })
-  //
-  // .finally( ( err, arg ) =>
-  // {
-  //   var module = opener.openedModule;
-  //
-  //   test.is( _.errIs( err ) );
-  //   test.identical( _.strCount( err.message, 'Exporting is impossible because found no out-willfile' ), 1 );
-  //   test.identical( _.strCount( err.message, 'module::supermodule / exported::export.debug' ), 1 );
-  //
-  //   test.description = 'files';
-  //   var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
-  //   var exp =
-  //   [
-  //     '.',
-  //     './sub.ex.will.yml',
-  //     './sub.im.will.yml',
-  //     './super.ex.will.yml',
-  //     './super.im.will.yml',
-  //     './proto',
-  //     './proto/File.debug.js',
-  //     './proto/File.release.js',
-  //     './super.out',
-  //     './super.out/debug',
-  //     './super.out/debug/File.debug.js',
-  //     './super.out/debug/File.release.js'
-  //   ]
-  //   test.identical( files, exp );
-  //
-  //   test.description = '1st - attempt to open super.out on opening peer, 2nd - attempt to open super.out on opening peer';
-  //   test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 4 );
-  //   will.openersErrorsRemoveAll();
-  //   test.identical( will.openersErrorsArray.length, 0 );
-  //
-  //   opener.finit();
-  //   return null;
-  // })
-  // xxx
-  //
-  // /* - */
-  //
-  // ready
-  // .then( () =>
-  // {
-  //   test.case = 'export sub, then super';
-  //
-  //   _.fileProvider.filesDelete( routinePath );
-  //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  //   _.fileProvider.filesDelete( abs( 'super.out' ) );
-  //   _.fileProvider.filesDelete( abs( 'sub.out' ) );
-  //   opener = will.openerMakeManual({ willfilesPath : subInPath });
-  //
-  //   will.prefer
-  //   ({
-  //     allOfMain : 0,
-  //     allOfSub : 0,
-  //   });
-  //
-  //   will.readingBegin();
-  //   return opener.open({ subModulesFormed : 1 });
-  // })
-  //
-  // .then( () =>
-  // {
-  //   let module = opener.openedModule;
-  //   let builds = opener.openedModule.exportsResolve({ criterion : { debug : 1 } });
-  //   let build = builds[ 0 ];
-  //   return build.perform();
-  // })
-  //
-  // .then( () =>
-  // {
-  //   let module = opener.openedModule;
-  //   let builds = opener.openedModule.exportsResolve({ criterion : { debug : 0 } });
-  //   let build = builds[ 0 ];
-  //   return build.perform();
-  // })
-  //
-  // .then( () =>
-  // {
-  //   let module = opener.openedModule;
-  //   let builds = opener.openedModule.exportsResolve({ criterion : { debug : 0 } });
-  //   let build = builds[ 0 ];
-  //   return build.perform();
-  // })
-  //
-  // .then( ( arg ) =>
-  // {
-  //   var module = opener.openedModule;
-  //
-  //   test.description = 'outfile';
-  //   var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
-  //   var modulePaths = _.mapKeys( outfile.module );
-  //   var exp = [ 'sub.out', '../sub' ];
-  //   test.setsAreIdentical( modulePaths, exp );
-  //   var exported = _.mapKeys( _.select( outfile.module[ outfile.root[ 0 ] ], 'exported/*' ) );
-  //   var exp = [ 'export.debug', 'export.' ];
-  //   test.setsAreIdentical( exported, exp );
-  //   var sections = _.mapKeys( outfile );
-  //   var exp = [ 'format', 'root', 'consistency', 'module' ];
-  //   test.setsAreIdentical( sections, exp );
-  //   var exp = [ 'sub.out', '../sub' ];
-  //   test.setsAreIdentical( _.mapKeys( outfile.module ), exp );
-  //   var exp = [ 'sub.out' ];
-  //   test.setsAreIdentical( outfile.root, exp );
-  //
-  //   test.description = 'files';
-  //   var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
-  //   var exp =
-  //   [
-  //     '.',
-  //     './sub.ex.will.yml',
-  //     './sub.im.will.yml',
-  //     './super.ex.will.yml',
-  //     './super.im.will.yml',
-  //     './proto',
-  //     './proto/File.debug.js',
-  //     './proto/File.release.js',
-  //     './sub.out',
-  //     './sub.out/sub.out.will.yml',
-  //     './sub.out/debug',
-  //     './sub.out/debug/File.debug.js',
-  //     './sub.out/release',
-  //     './sub.out/release/File.release.js'
-  //   ]
-  //   test.identical( files, exp );
-  //
-  //   test.description = 'two attempts to open out file';
-  //   test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 1 );
-  //   will.openersErrorsRemoveAll();
-  //   test.identical( will.openersErrorsArray.length, 0 );
-  //
-  //   opener.finit();
-  //   return null;
-  // });
-  //
-  // ready
-  // .then( () =>
-  // {
-  //   opener = will.openerMakeManual({ willfilesPath : superInPath });
-  //   will.prefer
-  //   ({
-  //     allOfMain : 0,
-  //     allOfSub : 0,
-  //   });
-  //
-  //   return opener.open({ subModulesFormed : 1 });
-  // })
-  //
-  // .then( () =>
-  // {
-  //   let module = opener.openedModule;
-  //   return module.modulesExport({ criterion : { debug : 1 } });
-  // })
-  //
-  // .finally( ( err, arg ) =>
-  // {
-  //   var module = opener.openedModule;
-  //   test.description = 'no error';
-  //   test.is( !_.errIs( err ) );
-  //
-  //   test.description = 'files';
-  //   var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
-  //   var exp =
-  //   [
-  //     '.',
-  //     './sub.ex.will.yml',
-  //     './sub.im.will.yml',
-  //     './super.ex.will.yml',
-  //     './super.im.will.yml',
-  //     './proto',
-  //     './proto/File.debug.js',
-  //     './proto/File.release.js',
-  //     './sub.out',
-  //     './sub.out/sub.out.will.yml',
-  //     './sub.out/debug',
-  //     './sub.out/debug/File.debug.js',
-  //     './sub.out/release',
-  //     './sub.out/release/File.release.js',
-  //     './super.out',
-  //     './super.out/supermodule.out.will.yml',
-  //     './super.out/debug',
-  //     './super.out/debug/File.debug.js',
-  //     './super.out/debug/File.release.js'
-  //   ]
-  //   test.identical( files, exp );
-  //
-  //   test.description = 'outfile';
-  //   var outfile = _.fileProvider.fileConfigRead( superOutFilePath );
-  //   var modulePaths = _.mapKeys( outfile.module );
-  //   var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
-  //   test.setsAreIdentical( modulePaths, exp );
-  //   var exported = _.mapKeys( _.select( outfile.module[ outfile.root[ 0 ] ], 'exported/*' ) );
-  //   var exp = [ 'export.debug' ];
-  //   test.setsAreIdentical( exported, exp );
-  //   var sections = _.mapKeys( outfile );
-  //   var exp = [ 'format', 'root', 'consistency', 'module' ];
-  //   test.setsAreIdentical( sections, exp );
-  //   var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
-  //   test.setsAreIdentical( _.mapKeys( outfile.module ), exp );
-  //   var exp = [ 'supermodule.out' ];
-  //   test.setsAreIdentical( outfile.root, exp );
-  //
-  //   test.description = 'two attempts to open super.out';
-  //   test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 2 );
-  //   will.openersErrorsRemoveAll();
-  //   test.identical( will.openersErrorsArray.length, 0 );
-  //
-  //   opener.finit();
-  //   return null;
-  // })
+  ready
+  .then( () =>
+  {
+    test.case = 'export super debug, without out, without recursion, without peers';
+
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    _.fileProvider.filesDelete( abs( 'super.out' ) );
+    _.fileProvider.filesDelete( abs( 'sub.out' ) );
+
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
+
+    will.prefer
+    ({
+      allOfMain : 0,
+      allOfSub : 0,
+    });
+
+    return opener.open({ subModulesFormed : 1 });
+  })
+
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    return module.moduleExport({ criterion : { debug : 1 } });
+  })
+
+  .finally( ( err, arg ) =>
+  {
+    var module = opener.openedModule;
+
+    test.is( _.errIs( err ) );
+    test.identical( _.strCount( err.message, 'Exporting is impossible because found no out-willfile' ), 1 );
+    test.identical( _.strCount( err.message, 'module::supermodule / exported::export.debug' ), 1 );
+
+    test.description = 'files';
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './super.out',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js'
+    ]
+    test.identical( files, exp );
+
+    test.description = 'no error';
+    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 4 );
+    will.openersErrorsRemoveAll();
+    test.identical( will.openersErrorsArray.length, 0 );
+
+    opener.finit();
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = 'export super debug, without out, without recursion, with peers';
+
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    _.fileProvider.filesDelete( abs( 'super.out' ) );
+    _.fileProvider.filesDelete( abs( 'sub.out' ) );
+
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
+
+    will.prefer
+    ({
+      allOfMain : 0,
+      allOfSub : 0,
+      peerModulesFormedOfMain : 1,
+      peerModulesFormedOfSub : 1,
+    });
+
+    return opener.open({ subModulesFormed : 1 });
+  })
+
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = module.exportsResolve({ criterion : { debug : 1 } });
+    let build = builds[ 0 ];
+    return build.perform();
+  })
+
+  .finally( ( err, arg ) =>
+  {
+    var module = opener.openedModule;
+
+    test.is( _.errIs( err ) );
+    test.identical( _.strCount( err.message, 'Exporting is impossible because found no out-willfile' ), 1 );
+    test.identical( _.strCount( err.message, 'module::supermodule / exported::export.debug' ), 1 );
+
+    test.description = 'files';
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './super.out',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js'
+    ]
+    test.identical( files, exp );
+
+    test.description = '1st - attempt to open super.out on opening peer, 2nd - attempt to open super.out on opening peer';
+    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 4 );
+    will.openersErrorsRemoveAll();
+    test.identical( will.openersErrorsArray.length, 0 );
+
+    opener.finit();
+    return null;
+  })
+
+  /* - */
+
+  ready
+  .then( () =>
+  {
+    test.case = 'export sub, then super';
+
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    _.fileProvider.filesDelete( abs( 'super.out' ) );
+    _.fileProvider.filesDelete( abs( 'sub.out' ) );
+    opener = will.openerMakeManual({ willfilesPath : subInPath });
+
+    will.prefer
+    ({
+      allOfMain : 0,
+      allOfSub : 0,
+    });
+
+    will.readingBegin();
+    return opener.open({ subModulesFormed : 1 });
+  })
+
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = opener.openedModule.exportsResolve({ criterion : { debug : 1 } });
+    let build = builds[ 0 ];
+    return build.perform();
+  })
+
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = opener.openedModule.exportsResolve({ criterion : { debug : 0 } });
+    let build = builds[ 0 ];
+    return build.perform();
+  })
+
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    let builds = opener.openedModule.exportsResolve({ criterion : { debug : 0 } });
+    let build = builds[ 0 ];
+    return build.perform();
+  })
+
+  .then( ( arg ) =>
+  {
+    var module = opener.openedModule;
+
+    test.description = 'outfile';
+    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var modulePaths = _.mapKeys( outfile.module );
+    var exp = [ 'sub.out', '../sub' ];
+    test.setsAreIdentical( modulePaths, exp );
+    var exported = _.mapKeys( _.select( outfile.module[ outfile.root[ 0 ] ], 'exported/*' ) );
+    var exp = [ 'export.debug', 'export.' ];
+    test.setsAreIdentical( exported, exp );
+    var sections = _.mapKeys( outfile );
+    var exp = [ 'format', 'root', 'consistency', 'module' ];
+    test.setsAreIdentical( sections, exp );
+    var exp = [ 'sub.out', '../sub' ];
+    test.setsAreIdentical( _.mapKeys( outfile.module ), exp );
+    var exp = [ 'sub.out' ];
+    test.setsAreIdentical( outfile.root, exp );
+
+    test.description = 'files';
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub.out',
+      './sub.out/sub.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './sub.out/release',
+      './sub.out/release/File.release.js'
+    ]
+    test.identical( files, exp );
+
+    test.description = 'two attempts to open out file';
+    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 1 );
+    will.openersErrorsRemoveAll();
+    test.identical( will.openersErrorsArray.length, 0 );
+
+    opener.finit();
+    return null;
+  });
+
+  ready
+  .then( () =>
+  {
+    opener = will.openerMakeManual({ willfilesPath : superInPath });
+    will.prefer
+    ({
+      allOfMain : 0,
+      allOfSub : 0,
+    });
+
+    return opener.open({ subModulesFormed : 1 });
+  })
+
+  .then( () =>
+  {
+    let module = opener.openedModule;
+    return module.modulesExport({ criterion : { debug : 1 } });
+  })
+
+  .finally( ( err, arg ) =>
+  {
+    var module = opener.openedModule;
+    test.description = 'no error';
+    test.is( !_.errIs( err ) );
+
+    test.description = 'files';
+    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    var exp =
+    [
+      '.',
+      './sub.ex.will.yml',
+      './sub.im.will.yml',
+      './super.ex.will.yml',
+      './super.im.will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub.out',
+      './sub.out/sub.out.will.yml',
+      './sub.out/debug',
+      './sub.out/debug/File.debug.js',
+      './sub.out/release',
+      './sub.out/release/File.release.js',
+      './super.out',
+      './super.out/supermodule.out.will.yml',
+      './super.out/debug',
+      './super.out/debug/File.debug.js',
+      './super.out/debug/File.release.js'
+    ]
+    test.identical( files, exp );
+
+    test.description = 'outfile';
+    var outfile = _.fileProvider.fileConfigRead( superOutFilePath );
+    var modulePaths = _.mapKeys( outfile.module );
+    var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
+    test.setsAreIdentical( modulePaths, exp );
+    var exported = _.mapKeys( _.select( outfile.module[ outfile.root[ 0 ] ], 'exported/*' ) );
+    var exp = [ 'export.debug' ];
+    test.setsAreIdentical( exported, exp );
+    var sections = _.mapKeys( outfile );
+    var exp = [ 'format', 'root', 'consistency', 'module' ];
+    test.setsAreIdentical( sections, exp );
+    var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
+    test.setsAreIdentical( _.mapKeys( outfile.module ), exp );
+    var exp = [ 'supermodule.out' ];
+    test.setsAreIdentical( outfile.root, exp );
+
+    test.description = 'two attempts to open super.out';
+    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 2 );
+    will.openersErrorsRemoveAll();
+    test.identical( will.openersErrorsArray.length, 0 );
+
+    opener.finit();
+    return null;
+  })
 
   /* - */
 
@@ -5292,7 +5291,7 @@ function reflectorResolve( test )
       'mandatory' : 1
     }
     resolved.form();
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5311,7 +5310,7 @@ function reflectorResolve( test )
       'mandatory' : 1
     }
     resolved.form();
-    var resolvedData = resolved.structureExport();
+    var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5333,7 +5332,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
     }
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5353,7 +5352,7 @@ function reflectorResolve( test )
       'mandatory' : 1,
     }
 
-    var resolvedData = resolved.structureExport();
+    var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5375,7 +5374,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
     }
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5394,7 +5393,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
     }
-    var resolvedData = resolved.structureExport();
+    var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5416,7 +5415,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
     }
-    var resolvedData = resolved.structureExport({ formed:1 });
+    var resolvedData = resolved.exportStructure({ formed:1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5435,7 +5434,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
     }
-    var resolvedData = resolved.structureExport();
+    var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5457,7 +5456,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
     }
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5478,7 +5477,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
     }
-    var resolvedData = resolved.structureExport();
+    var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5502,7 +5501,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1
     }
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5525,7 +5524,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1
     }
-    var resolvedData = resolved.structureExport();
+    var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5543,7 +5542,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 6 },
       'mandatory' : 1
     }
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5567,7 +5566,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 6 },
       'mandatory' : 1
     }
-    var resolvedData = resolved.structureExport();
+    var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5589,7 +5588,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 7 },
       'mandatory' : 1,
     }
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5612,7 +5611,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 7 },
       'mandatory' : 1,
     }
-    var resolvedData = resolved.structureExport();
+    var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5692,7 +5691,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1
     }
     resolved.form();
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5712,7 +5711,7 @@ function reflectorInheritedResolve( test )
       'inherit' : [ 'reflect.proto1' ]
     }
     resolved.form();
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5732,7 +5731,7 @@ function reflectorInheritedResolve( test )
       'inherit' : [ 'reflect.proto1' ]
     }
     resolved.form();
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5752,7 +5751,7 @@ function reflectorInheritedResolve( test )
       'inherit' : [ 'reflect.proto1' ]
     }
     resolved.form();
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5772,7 +5771,7 @@ function reflectorInheritedResolve( test )
       'inherit' : [ 'reflect.proto1' ]
     }
     resolved.form();
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5797,7 +5796,7 @@ function reflectorInheritedResolve( test )
       'inherit' : [ 'not.test', 'only.js' ]
     }
     resolved.form();
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5818,7 +5817,7 @@ function reflectorInheritedResolve( test )
       'inherit' : [ 'reflector::files3' ]
     }
     resolved.form();
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5839,7 +5838,7 @@ function reflectorInheritedResolve( test )
       'inherit' : [ 'reflector::files3' ]
     }
     resolved.form();
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -5860,7 +5859,7 @@ function reflectorInheritedResolve( test )
       'inherit' : [ 'reflector::files3' ]
     }
     resolved.form();
-    var resolvedData = resolved.structureExport({ formed : 1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -8948,19 +8947,17 @@ function modulesEachDuplicates( test )
   /* - */
 
   a.ready
+
   .then( () =>
   {
     a.reflect();
     opener = a.will.openerMakeManual({ willfilesPath : modulePath });
-    // return opener.open();
-    return a.will.modulesDownload({ modules : [ opener ], recursive : 2 })
+    return opener.open();
   })
 
   .then( () =>
   {
-    // debugger;
-    // return opener.openedModule.submodulesDownload({ recursive : 2 });
-    return opener.open();
+    return a.will.modulesDownload({ modules : [ opener ], recursive : 2 })
   })
 
   .then( () =>
@@ -8977,7 +8974,7 @@ function modulesEachDuplicates( test )
     o2.withPeers = 1;
     o2.onUp = handleUp;
     o2.outputFormat = '*/module';
-    var got = opener.openedModule.modulesEach( o2 )
+    var got = opener.openedModule.modulesEach( o2 );
 
     test.is( ups.length === got.length );
     test.is( ups[ 0 ] === got[ 0 ] );
@@ -9366,7 +9363,6 @@ function submodulesDeleteAndDownload( test )
       // ]
       // var got = _.select( will.openersArray, '*/willfilesPath' )
       // test.identical( got, abs( expected ) );
-      // xxx
 
       opener.finit();
 
@@ -9475,7 +9471,7 @@ function customLogger( test )
 
 //
 
-function resourcePathRemotePreserved( test )
+function resourcePathRemote( test )
 {
   let self = this;
   let originalAssetPath = _.path.join( self.assetDirPath, 'export-informal' );
@@ -9502,7 +9498,6 @@ function resourcePathRemotePreserved( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve();
     let build = builds[ 0 ];
-    will.readingEnd();
     return build.perform()
   })
   .then( () =>
@@ -9693,7 +9688,7 @@ var Self =
     submodulesDeleteAndDownload,
 
     customLogger,
-    resourcePathRemotePreserved,
+    resourcePathRemote,
     moduleIsNotValid
 
   }

@@ -1008,7 +1008,7 @@ function repoLatestVersion()
 
 //
 
-function infoExport()
+function exportInfo()
 {
   let repo = this;
   let will = repo.will;
@@ -1190,7 +1190,7 @@ let Extend =
   repoLocalVersion,
   repoLatestVersion,
 
-  infoExport,
+  exportInfo,
   Hash,
 
   // relation

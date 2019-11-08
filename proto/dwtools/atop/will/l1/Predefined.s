@@ -155,7 +155,7 @@ function stepRoutineReflect( frame )
   .catch( ( err ) =>
   {
     debugger;
-    err = _.err( err, '\n\n', _.strIndentation( reflector.infoExport(), '  ' ), '\n' );
+    err = _.err( err, '\n\n', _.strIndentation( reflector.exportInfo(), '  ' ), '\n' );
     throw _.err( err );
     // throw _.errBrief( err );
   })
@@ -179,7 +179,6 @@ function stepRoutineReflect( frame )
 
     _.assert( opts.src.isPaired() );
     let mtr = opts.src.moveTextualReport();
-    debugger;
     logger.log( ' + ' + reflector.decoratedQualifiedName + ' reflected ' + opts.result.length + ' file(s) ' + mtr + ' in ' + _.timeSpent( time ) );
 
   }
@@ -568,7 +567,7 @@ function stepRoutineNpmGenerate( frame )
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
   let verbosity = step.verbosityWithDelta( -1 );
-  let about = module.about.structureExport();
+  let about = module.about.exportStructure();
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );

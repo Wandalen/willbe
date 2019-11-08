@@ -1738,7 +1738,7 @@ optionsForReflectExport.defaults =
 
 //
 
-function structureExport()
+function exportStructure()
 {
   let reflector = this;
   let module = reflector.module;
@@ -1746,11 +1746,11 @@ function structureExport()
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let o = _.routineOptions( structureExport, arguments );
+  let o = _.routineOptions( exportStructure, arguments );
 
   _.assert( reflector.src instanceof _.FileRecordFilter );
 
-  let result = Parent.prototype.structureExport.apply( this, arguments );
+  let result = Parent.prototype.exportStructure.apply( this, arguments );
 
   if( result === undefined )
   return result;
@@ -1817,7 +1817,7 @@ function structureExport()
 
 }
 
-structureExport.defaults = Object.create( _.Will.Resource.prototype.structureExport.defaults );
+exportStructure.defaults = Object.create( _.Will.Resource.prototype.exportStructure.defaults );
 
 //
 
@@ -1964,7 +1964,7 @@ let Extend =
   optionsForFindExport,
   optionsForFindGroupExport,
   optionsForReflectExport,
-  structureExport,
+  exportStructure,
 
   // accessor
 

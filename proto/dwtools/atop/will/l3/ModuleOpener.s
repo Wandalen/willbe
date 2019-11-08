@@ -100,6 +100,7 @@ function optionsForModuleExport()
 
   let result = _.mapOnly( opener, Import );
 
+  result.superRelations = null;
   result.willfilesArray = _.entityMake( result.willfilesArray );
 
   _.assert( _.boolLike( opener.isOut ), 'Expects defined {- opener.isOut -}' );
@@ -526,6 +527,9 @@ function find( o )
   _.assert( _.longHas( [ 'smart', 'strict', 'exact' ], opener.searching ) );
   _.assert( opener.formed <= 2 );
 
+  // if( opener.id === 48 || opener.id === 484 )
+  // debugger;
+
   if( opener.openedModule )
   return opener.openedModule;
 
@@ -538,12 +542,6 @@ function find( o )
     if( opener.formed < 3 )
     opener.formed = 3;
 
-    /*
-      xxx qqq : check
-        import module
-        import module.out
-        import module.out.will
-    */
     let openedModule = opener.openedModule;
     if( !openedModule )
     openedModule = will.moduleAt( opener.willfilesPath );
@@ -661,8 +659,6 @@ function open( o )
   try
   {
 
-    // _.assert( opener.formed <= 3, () => `${opener.absoluteName} was already opened` );
-
     if( opener.error )
     throw opener.error;
 
@@ -685,7 +681,6 @@ function open( o )
     skipping.subModulesFormed = !o.subModulesFormed;
     skipping.resourcesFormed = !o.resourcesFormed;
 
-    // let processing = stager.stageStateBegun( 'opened' ) || ( stager.stageStateEnded( 'opened' ) && !stager.stageStateEnded( 'formed' ) );
     let processing = stager.stageStateBegun( 'opened' ) && !stager.stageStateEnded( 'formed' );
     _.assert( !processing, 'not tested' );
 
@@ -909,6 +904,9 @@ function openedModuleSet( module )
 
   opener[ openedModuleSymbol ] = module;
 
+  if( module )
+  module.assertIsValidIntegrity(); /* zzz : temp */
+
   return module;
 }
 
@@ -944,6 +942,76 @@ function moduleUseError( module )
   if( module.ready.errorsCount() )
   opener.error = opener.error || module.ready.errorsGet()[ 0 ];
 
+}
+
+//
+
+function submodulesRelationsFilter( o )
+{
+  let opener = this;
+  let will = opener.will;
+
+  o = _.routineOptions( submodulesRelationsFilter, arguments );
+
+  let result = opener.submodulesRelationsOwnFilter( o );
+  let variant = will.variantFrom( opener );
+  let variants = variant.submodulesVariantsFilter( o );
+
+  result = _.arrayAppendArraysOnce( result, variants.map( ( variant ) => variant.objects ) );
+
+  return result;
+}
+
+submodulesRelationsFilter.defaults =
+{
+
+  ... _.Will.RelationFilterDefaults,
+  withPeers : 1,
+  withoutDuplicates : 0,
+
+}
+
+//
+
+function submodulesRelationsOwnFilter( o )
+{
+  let opener = this;
+
+  _.assert( arguments.length === 1 );
+
+  if( opener.openedModule )
+  return opener.openedModule.submodulesRelationsOwnFilter( o );
+
+  return [];
+}
+
+submodulesRelationsOwnFilter.defaults =
+{
+
+  ... _.Will.RelationFilterDefaults,
+  withPeers : 1,
+  withoutDuplicates : 0,
+
+}
+
+//
+
+function toModule()
+{
+  let opener = this;
+  let will = opener.will;
+  if( opener.openedModule )
+  return opener.openedModule;
+  return null;
+}
+
+//
+
+function toRelation()
+{
+  let opener = this;
+  let will = opener.will;
+  return opener.superRelation;
 }
 
 // --
@@ -1078,6 +1146,9 @@ function _repoForm()
   _.assert( opener.formed >= 1 );
   _.assert( opener.formed <= 2 );
   _.assert( opener.openedModule === null );
+
+  // if( opener.id === 484 )
+  // debugger;
 
   let downloadPath, remotePath;
   let isRemote = opener.repoIsRemote();
@@ -2282,6 +2353,38 @@ let isOutGet = accessorGet_functor( 'isOut' );
 let isOutSet = accessorSet_functor( 'isOut' );
 
 // --
+// export
+// --
+
+function exportInfo( o )
+{
+  let opener = this;
+  let will = opener.will;
+  let result = '';
+
+  o = _.routineOptions( exportInfo, arguments );
+
+  if( o.verbosity >= 1 )
+  result += opener.decoratedAbsoluteName + '#' + opener.id;
+
+  if( o.verbosity >= 2 )
+  {
+    let fields = Object.create( null );
+    fields.remote = opener.remotePath;
+    fields.local = opener.localPath;
+    fields.download = opener.downloadPath;
+    result += '\n' + _.toStrNice( fields );
+  }
+
+  return result;
+}
+
+exportInfo.defaults =
+{
+  verbosity : 2,
+}
+
+// --
 // relations
 // --
 
@@ -2457,6 +2560,10 @@ let Extend =
   openedModuleSet,
   moduleUsePaths,
   moduleUseError,
+  submodulesRelationsFilter,
+  submodulesRelationsOwnFilter,
+  toModule,
+  toRelation,
 
   // submodule
 
@@ -2522,6 +2629,10 @@ let Extend =
   // isRemoteSet,
   // isUpToDateSet,
   isOutSet,
+
+  // export
+
+  exportInfo,
 
   // relation
 

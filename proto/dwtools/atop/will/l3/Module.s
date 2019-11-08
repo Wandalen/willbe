@@ -343,6 +343,8 @@ function cloneExtending( o )
 
   let result = _.Copyable.prototype.cloneExtending.call( module, o );
 
+  _.assert( !result.superRelations || result.superRelations !== module.superRelations );
+
   return result;
 }
 
@@ -371,7 +373,7 @@ function outModuleMake( o )
   if( moduleWas )
   {
     debugger;
-    // _.assert( 0, 'not tested' );
+    _.assert( 0, 'not tested' );
     _.assert( moduleWas.peerModule === module );
     _.assert( moduleWas === module.peerModule );
     moduleWas.peerModule = null;
@@ -396,6 +398,7 @@ function outModuleMake( o )
 
   let o3 = opener2.optionsForModuleExport();
   o3.original = null;
+  _.assert( o3.superRelations === null );
   let rootModule = o3.rootModule = opener2.rootModule;
   let module2 = module.cloneExtending( o3 );
 
@@ -444,6 +447,10 @@ function outModuleMake( o )
   module2.ready.sync();
 
   will.openersAdoptModule( module2 );
+
+  /* zzz : temp */
+  module.assertIsValidIntegrity();
+  module2.assertIsValidIntegrity();
 
   return module2;
 
@@ -563,7 +570,6 @@ function outModuleOpen( o )
 
     if( err && !opener2.finitedIs() )
     {
-      debugger;
       opener2.peerModule = null;
       if( opener2.openedModule )
       opener2.openedModule.peerModule = null;
@@ -739,13 +745,20 @@ function _preform()
 
   /* */
 
-  _.assert( arguments.length === 0 );
-  _.assert( !!module.will );
-  _.assert( will.moduleWithIdMap[ module.id ] === module );
-  _.assert( module.dirPath === null || _.strDefined( module.dirPath ) );
-  _.assert( !!module.willfilesPath || !!module.dirPath );
-  _.assert( module.rootModule instanceof will.Module );
-  _.assert( _.strsAreAll( module.willfilesPath ) || _.strIs( module.dirPath ), 'Expects willfilesPath or dirPath' );
+  if( Config.debug )
+  {
+
+    module.assertIsValidIntegrity();
+
+    _.assert( arguments.length === 0 );
+    _.assert( !!module.will );
+    _.assert( will.moduleWithIdMap[ module.id ] === module );
+    _.assert( module.dirPath === null || _.strDefined( module.dirPath ) );
+    _.assert( !!module.willfilesPath || !!module.dirPath );
+    _.assert( module.rootModule instanceof will.Module );
+    _.assert( _.strsAreAll( module.willfilesPath ) || _.strIs( module.dirPath ), 'Expects willfilesPath or dirPath' );
+
+  }
 
   /* */
 
@@ -2596,12 +2609,17 @@ function superRelationsSet( src )
   _.assert( src === null || _.arrayIs( src ) );
   _.assert( src === null || src.every( ( superRelation ) => superRelation instanceof _.Will.ModulesRelation ) );
 
-  if( module.id === 60 )
-  debugger;
+  if( !module[ superRelationsSymbol ] )
+  module[ superRelationsSymbol ] = [];
 
-  module[ superRelationsSymbol ] = src;
+  if( src === null )
+  _.arrayEmpty( module[ superRelationsSymbol ] );
+  else
+  _.arrayAppendArrayOnce( module[ superRelationsSymbol ], src );
 
-  return src;
+  module.assertIsValidIntegrity(); /* zzz : temp */
+
+  return module[ superRelationsSymbol ];
 }
 
 //
@@ -2609,9 +2627,6 @@ function superRelationsSet( src )
 function superRelationsAppend( src )
 {
   let module = this;
-
-  // if( module.id === 60 )
-  // debugger;
 
   if( _.arrayIs( src ) )
   {
@@ -3470,6 +3485,138 @@ defaults.isUpToDate = 1
 
 //
 
+function submodulesRelationsFilter( o )
+{
+  let module = this;
+  let will = module.will;
+
+  o = _.routineOptions( submodulesRelationsFilter, arguments );
+
+  let result = module.submodulesRelationsOwnFilter( o );
+  let variant = will.variantFrom( module );
+  let variants = variant.submodulesVariantsFilter( o );
+
+  // if( variants.length )
+  // debugger;
+  result = _.arrayAppendArraysOnce( result, variants.map( ( variant ) => variant.objects ) );
+
+  return result;
+}
+
+submodulesRelationsFilter.defaults =
+{
+
+  ... _.Will.RelationFilterDefaults,
+  withPeers : 1,
+  withoutDuplicates : 0,
+
+}
+
+//
+
+function submodulesRelationsOwnFilter( o )
+{
+  let module = this;
+  let will = module.will;
+  let result = [];
+
+  o = _.routineOptions( submodulesRelationsOwnFilter, arguments );
+
+  let filter = _.mapOnly( o, will.relationFit.defaults );
+
+  moduleLook( module );
+
+  if( o.withPeers )
+  if( module.peerModule )
+  moduleLook( module.peerModule );
+
+  if( o.withoutDuplicates )
+  result = result.filter( ( module ) =>
+  {
+    return !module.isOut || !_.longHas( result, module.peerModule );
+  });
+
+  return result;
+
+  /* */
+
+  function moduleLook( module )
+  {
+
+    for( let s in module.submoduleMap )
+    {
+      let relation = module.submoduleMap[ s ];
+
+      moduleAppendMaybe( relation );
+      if( relation.opener )
+      moduleAppendMaybe( relation.opener );
+      if( relation.opener.openedModule )
+      moduleAppendMaybe( relation.opener.openedModule );
+
+      if( o.withPeers )
+      if( relation.opener && relation.opener.peerModule )
+      {
+        moduleAppendMaybe( relation.opener.peerModule );
+      }
+
+    }
+
+  }
+
+  /* */
+
+  function moduleAppendMaybe( module )
+  {
+
+    if( !will.relationFit( module, filter ) )
+    return;
+
+    // _.assert( module instanceof _.Will.ModuleVariant );
+    // _.assert( module instanceof _.Will.ModulesRelation || module instanceof _.Will.Module );
+    _.assert( will.ObjectIs( module ) );
+    _.arrayAppendOnce( result, module );
+
+  }
+
+  /* */
+
+}
+
+submodulesRelationsOwnFilter.defaults =
+{
+
+  ... _.Will.RelationFilterDefaults,
+  withPeers : 1,
+  withoutDuplicates : 0,
+
+}
+
+//
+
+function toModule()
+{
+  let module = this;
+  let will = module.will;
+
+  module.assertIsValidIntegrity(); /* zzz : temp */
+
+  return module;
+}
+
+//
+
+function toRelation()
+{
+  let module = this;
+  let will = module.will;
+
+  module.assertIsValidIntegrity(); /* zzz : temp */
+
+  return module.superRelations[ 0 ] || null;
+}
+
+//
+
 function submodulesAdd( o )
 {
   let module = this;
@@ -3486,6 +3633,7 @@ function submodulesAdd( o )
 
   variants.forEach( ( variant ) =>
   {
+    _.assert( will.isVariant( variant ) );
     if( !variant.module )
     return;
     if( !variant.module.about.name )
@@ -3908,17 +4056,22 @@ function peerModuleFromVariant( variant )
     {
       if( module2.localPath === peerLocalPath )
       {
-        _.assert
+        // _.assert
+        // (
+        //     0
+        //   , 'Probably something wrong because modules should be aware of its peer.'
+        //   , `\nBut ${module.absoluteName} at ${module.localPath} is not aware`
+        // );
+        logger.error
         (
-            0
-          , 'Probably something wrong because modules should be aware of its peer.'
+            'Probably something wrong because modules should be aware of its peer.'
           , `\nBut ${module.absoluteName} at ${module.localPath} is not aware`
         )
         module.peerModule = module2;
         _.assert( module.peerModule === module2 );
         _.assert( module2.peerModule === module );
-        module.assertState();
-        module2.assertState();
+        module.assertIsValidIntegrity();
+        module2.assertIsValidIntegrity();
         return true;
       }
     });
@@ -4073,7 +4226,7 @@ function resourceMapForKind( resourceKind )
   if( resourceKind === 'export' )
   result = module.buildMap;
   else if( resourceKind === 'about' )
-  result = module.about.structureExport();
+  result = module.about.exportStructure();
   else if( resourceKind === 'module' )
   result = module.rootModule.moduleWithNameMap;
   else
@@ -4201,22 +4354,38 @@ function resourceAllocate_body( o )
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.resourceName ) );
 
+  // if( o.resourceName === "exported.dir.proto.export" )
+  // debugger;
+  //
+  // if( o.generating )
+  // {
+  //   let map = module.resourceMapForKind( o.resourceKind );
+  //   let resource2 = map[ o.resourceName ];
+  //   if( resource2 && resource2.criterion.generated )
+  //   {
+  //     return resource2;
+  //   }
+  // }
+
+  let resourceName2 = module.resourceNameAllocate( o );
+  let cls = module.resourceClassForKind( o.resourceKind );
+  let resource;
+
   if( o.generating )
   {
+
     let map = module.resourceMapForKind( o.resourceKind );
-    let resource2 = map[ o.resourceName ];
+    let resource2 = map[ resourceName2 ];
     if( resource2 && resource2.criterion.generated )
     {
       return resource2;
     }
+
   }
 
-  let resourceName2 = module.resourceNameAllocate( o );
-  let cls = module.resourceClassForKind( o.resourceKind );
-  let resource = new cls({ module : module, name : resourceName2 }).form1();
-
-  if( o.generating )
-  resource.criterion.generated = 1;
+  let o2 = { module : module, name : resourceName2 };
+  o2.criterion = { generated : 1 };
+  resource = new cls( o2 ).form1();
 
   return resource;
 }
@@ -4280,8 +4449,13 @@ function resourceNameAllocate_body( o )
   {
     resourceName2 = o.resourceName + '.' + counter;
     counter += 1;
+    if( map[ resourceName2 ] !== undefined )
+    {
+      if( !o.generating || map[ resourceName2 ].criterion.generated )
+      break;
+    }
   }
-  while( map[ resourceName2 ] !== undefined && !map[ resourceName2 ].criterion.generated );
+  while( true );
 
   return resourceName2;
 }
@@ -4566,6 +4740,7 @@ function _pathRegister()
 
   variants.forEach( ( variant ) =>
   {
+    _.assert( will.isVariant( variant ) );
     will.variantsReform( variant.relations );
   });
 
@@ -5255,17 +5430,6 @@ function shortNameArrayGet()
   return [ module.name ];
   let result = rootModule.shortNameArrayGet();
   result.push( module.name );
-  return result;
-}
-
-//
-
-function nameWithLocationGet()
-{
-  let module = this;
-  let name = _.color.strFormat( module.qualifiedName, 'entity' );
-  let localPath = _.color.strFormat( module.localPath, 'path' );
-  let result = `${name} at ${localPath}`;
   return result;
 }
 
@@ -5960,35 +6124,27 @@ function optionsForOpenerExport()
 
 //
 
-function infoExport( o )
+function exportInfo( o )
 {
   let module = this;
   let will = module.will;
   let result = '';
 
-  o = _.routineOptions( infoExport, arguments );
+  o = _.routineOptions( exportInfo, arguments );
 
   if( o.verbosity >= 1 )
-  result += module.decoratedAbsoluteName;
+  result += module.decoratedAbsoluteName + '#' + module.id;
 
   if( o.verbosity >= 3 )
-  result += module.about.infoExport();
-
-  debugger;
+  result += module.about.exportInfo();
 
   if( o.verbosity >= 2 )
   {
     let fields = Object.create( null );
-    // fields.commonPath = module.commonPath;
-    // fields.willfilesPath = module.willfilesPath;
-    fields.remotePath = module.remotePath;
-    fields.localPath = module.localPath;
-    fields.downloadPath = module.downloadPath;
-
-    // fields = module.pathsRelative({ basePath : module.dirPath, filePath : fields, onlyLocal : 1 });
-
+    fields.remote = module.remotePath;
+    fields.local = module.localPath;
+    fields.download = module.downloadPath;
     result += '\n' + _.toStrNice( fields );
-    // result += '\n' + _.toStrNice( fields ) + '\n';
   }
 
   if( o.verbosity >= 4 )
@@ -6006,9 +6162,9 @@ function infoExport( o )
   return result;
 }
 
-infoExport.defaults =
+exportInfo.defaults =
 {
-  verbosity : 9,
+  verbosity : 2,
 }
 
 //
@@ -6052,12 +6208,12 @@ function infoExportResource( collection )
       if( _.longHas( modules, resource ) )
       return;
       modules.push( resource );
-      result += resource.infoExport({ verbosity : 2 });
+      result += resource.exportInfo({ verbosity : 2 });
       result += '\n\n';
     }
     else if( _.instanceIs( resource ) )
     {
-      result += resource.infoExport();
+      result += resource.exportInfo();
       result += '\n\n';
     }
     else
@@ -6094,7 +6250,7 @@ function infoExportModulesTopological()
 
 //
 
-function structureExport( o )
+function exportStructure( o )
 {
   let module = this;
   let will = module.will;
@@ -6103,7 +6259,7 @@ function structureExport( o )
   o.dst = o.dst || Object.create( null );
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  o = _.routineOptions( structureExport, arguments );
+  o = _.routineOptions( exportStructure, arguments );
 
   o.module = module;
 
@@ -6113,7 +6269,7 @@ function structureExport( o )
   let o2 = _.mapExtend( null, o );
   delete o2.dst;
 
-  o.dst.about = module.about.structureExport();
+  o.dst.about = module.about.exportStructure();
   o.dst.path = module.structureExportResources( module.pathResourceMap, o2 );
   o.dst.submodule = module.structureExportResources( module.submoduleMap, o2 );
   o.dst.reflector = module.structureExportResources( module.reflectorMap, o2 );
@@ -6152,7 +6308,7 @@ function structureExport( o )
   return o.dst;
 }
 
-structureExport.defaults =
+exportStructure.defaults =
 {
   dst : null,
   compact : 1,
@@ -6227,9 +6383,7 @@ function structureExportOut( o )
   });
 
   _.assert( modules.length >= 2, 'No module to export' );
-  // debugger;
   module.structureExportModules( modules, o );
-  // debugger;
 
   let rootModuleStructure = o.dst.module[ module.fileName ];
   _.assert( !!rootModuleStructure );
@@ -6246,7 +6400,7 @@ function structureExportOut( o )
   return o.dst;
 }
 
-structureExportOut.defaults = Object.create( structureExport.defaults );
+structureExportOut.defaults = Object.create( exportStructure.defaults );
 
 //
 
@@ -6291,7 +6445,7 @@ function structureExportResources( resources, options )
 
   _.each( resources, ( resource, r ) =>
   {
-    result[ r ] = resource.structureExport( options );
+    result[ r ] = resource.exportStructure( options );
     if( result[ r ] === undefined )
     delete result[ r ];
   });
@@ -6340,7 +6494,7 @@ function structureExportModules( modules, op )
     {
       let o2 = _.mapExtend( null, op );
       delete o2.dst;
-      let moduleStructure = op.dst.module[ relative ] = module2.structureExport( o2 );
+      let moduleStructure = op.dst.module[ relative ] = module2.exportStructure( o2 );
       consitencyAdd( moduleStructure.consistency );
     }
 
@@ -6416,7 +6570,7 @@ function structureExportConsistency( o )
   return result;
 }
 
-structureExportConsistency.defaults = Object.create( structureExport.defaults );
+structureExportConsistency.defaults = Object.create( exportStructure.defaults );
 
 //
 
@@ -6456,7 +6610,7 @@ function resourceImport( o )
 
   }
 
-  let resourceData = o.srcResource.structureExport();
+  let resourceData = o.srcResource.exportStructure();
 
   if( _.mapIs( resourceData ) )
   for( let k in resourceData )
@@ -6736,19 +6890,38 @@ function errTooMany( builds, what )
 
 //
 
-function assertState()
+function assertIsValidIntegrity()
 {
   let module = this;
 
-  _.all( module.userArray, ( opener ) =>
+  if( module.userArray )
+  _.each( module.userArray, ( opener ) =>
   {
-    _.assert( !( opener instanceof _.Will.ModuleOpener ) || ( opener.peerModule === module.peerModule ) );
+    if( !( opener instanceof _.Will.ModuleOpener ) )
+    return;
+    _.assert( !opener.finitedIs() );
+    _.assert( opener.openedModule === module );
+    _.assert( opener.peerModule === module.peerModule );
     _.assert( _.entityIdentical( opener.__.willfilesPath, module.willfilesPath ) );
     _.assert( opener.__.dirPath === module.dirPath );
     _.assert( opener.__.commonPath === module.commonPath );
     _.assert( opener.__.localPath === module.localPath );
     _.assert( opener.__.remotePath === module.remotePath );
     _.assert( module.commonPath === module.localPath );
+    _.assert( opener.superRelation === null || _.longHas( module.superRelations, opener.superRelation ) );
+  });
+
+  if( module.superRelations )
+  _.each( module.superRelations, ( relation ) =>
+  {
+    _.assert( !!relation.opener );
+    _.assert( !relation.finitedIs() );
+    _.assert
+    (
+        _.longHas( module.userArray, relation.opener )
+      , `${module.nameWithLocationGet()} does not have reference on its`
+      + `\n${relation.opener.nameWithLocationGet}`
+    );
   });
 
   return true;
@@ -7048,6 +7221,10 @@ let Extend =
   moduleFixatePathFor,
 
   submodulesVerify,
+  submodulesRelationsFilter,
+  submodulesRelationsOwnFilter,
+  toModule,
+  toRelation,
 
   submodulesAdd,
   submodulesReload,
@@ -7154,7 +7331,6 @@ let Extend =
   _nameRegister,
   absoluteNameGet,
   shortNameArrayGet,
-  nameWithLocationGet,
 
   // clean
 
@@ -7186,12 +7362,12 @@ let Extend =
 
   optionsForOpenerExport,
 
-  infoExport,
+  exportInfo,
   infoExportPaths,
   infoExportResource,
   infoExportModulesTopological,
 
-  structureExport,
+  exportStructure,
   structureExportOut,
   structureExportForModuleExport,
   structureExportResources,
@@ -7208,7 +7384,7 @@ let Extend =
 
   shell,
   errTooMany,
-  assertState,
+  assertIsValidIntegrity,
 
   // relation
 

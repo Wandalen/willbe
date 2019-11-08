@@ -112,10 +112,10 @@ let orgGetterSetter =
 
 //
 
-function infoExport()
+function exportInfo()
 {
   let about = this;
-  let fields = about.structureExport();
+  let fields = about.exportStructure();
 
   if( Object.keys( fields ).length === 0 )
   return '';
@@ -131,7 +131,7 @@ function infoExport()
 
 //
 
-function structureExport()
+function exportStructure()
 {
   let about = this;
   let fields = about.cloneData({ compact : 1, copyingAggregates : 0 });
@@ -201,8 +201,8 @@ let Extend =
   init,
   copy,
 
-  infoExport,
-  structureExport,
+  exportInfo,
+  exportStructure,
 
   // relation
 

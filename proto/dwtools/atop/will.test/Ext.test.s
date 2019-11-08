@@ -91,10 +91,8 @@ function onSuiteBegin()
   });
 
   let reposDownload = require( './ReposDownload.s' );
-  debugger;
   return reposDownload().then( () =>
   {
-    debugger;
     _.assert( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'Tools' ) ) );
     return null;
   })
@@ -6718,25 +6716,6 @@ function help( test )
     ready : ready,
     throwingExitCode : 0,
   })
-
-  // xxx
-  // let self = this;
-  // let originalAssetPath = _.path.join( self.assetDirPath, 'single' );
-  // let routinePath = _.path.join( self.suitePath, test.name );
-  // // let execPath = _.path.nativize( _.path.join( __dirname, '../will/Exec' ) );
-  // let ready = new _.Consequence().take( null )
-  //
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   throwingExitCode : 0,
-  //   ready : ready,
-  // })
-  //
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* */
 
@@ -14241,6 +14220,47 @@ function exportWithDisabled( test )
 
   .then( () =>
   {
+    test.case = '.imply withDisabled:0 ; .with */* .export';
+    a.reflect();
+    _.fileProvider.filesDelete( a.abs( 'module1/out' ) );
+    return null;
+  })
+
+  a.start( '.imply withDisabled:0 ; .with */* .export' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp =
+    [
+      '.',
+      './module1',
+      './module1/.ex.will.yml',
+      './module1/.im.will.yml',
+      './module1/proto',
+      './module1/proto/File1.txt',
+      './module2',
+      './module2/will.yml',
+      './module2/out',
+      './module2/out/module2.out.will.yml'
+    ];
+    var files = self.find( a.abs( '.' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, 'Exported' ), 1 );
+    test.identical( _.strCount( got.output, 'Unhandled' ), 0 );
+    test.identical( _.strHas( got.output, '! Outdated' ), false );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
     test.case = '.with */* .export.recursive';
     a.reflect();
     _.fileProvider.filesDelete( a.abs( 'module1/out' ) );
@@ -14283,6 +14303,78 @@ function exportWithDisabled( test )
 } /* end of function exportWithDisabled */
 
 exportWithDisabled.timeOut = 300000;
+
+//
+
+function exportOutResourceWithoutGeneratedCriterion( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'bug-resource-exists' );
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with c .submodules.download';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.export' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 1 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'debug', 'wChangeTransactor.out.will.yml' ];
+    var files = _.fileProvider.dirRead( a.abs( 'out' ) )
+    test.identical( files, exp );
+
+    var outfile = _.fileProvider.fileConfigRead( a.abs( 'out/wChangeTransactor.out.will.yml' ) );
+    var exp =
+    [
+      'module.willfiles',
+      'module.common',
+      'module.original.willfiles',
+      'module.peer.willfiles',
+      'module.peer.in',
+      'download',
+      'repository',
+      'origins',
+      'bugs',
+      'in',
+      'temp',
+      'out',
+      'out.debug',
+      'out.release',
+      'proto',
+      'export',
+      'exported.dir.proto.export',
+      'exported.files.proto.export',
+      'exported.dir.proto.export.1',
+      'exported.files.proto.export.1'
+    ]
+    var got = _.mapKeys( outfile.module[ 'wChangeTransactor.out' ].path );
+    test.identical( _.setFrom( got ), _.setFrom( exp ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function exportOutResourceWithoutGeneratedCriterion */
+
+exportOutResourceWithoutGeneratedCriterion.timeOut = 100000;
 
 //
 
@@ -16599,154 +16691,153 @@ function submodulesDownloadHierarchyRemote( test )
 
   /* - */
 
-  // xxx
-  // a.ready
-  //
-  // .then( () =>
-  // {
-  //   test.case = '.with z .submodules.download';
-  //   a.reflect();
-  //   return null;
-  // })
-  //
-  // a.start( '.with z .clean recursive:2' )
-  // a.start( '.with z .submodules.download' )
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.identical( got.exitCode, 0 );
-  //
-  //   var exp = [ 'PathTools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'PathTools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'PathTools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = null;
-  //   var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-  //   test.identical( _.strCount( got.output, '. Opened .' ), 14 );
-  //   test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
-  //   test.identical( _.strCount( got.output, 'was downloaded' ), 1 );
-  //   test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
-  //
-  //   return null;
-  // })
-  //
-  // a.start( '.with z .submodules.download' )
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.case = 'second';
-  //   test.identical( got.exitCode, 0 );
-  //
-  //   var exp = [ 'PathTools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'PathTools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'PathTools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = null;
-  //   var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-  //   test.identical( _.strCount( got.output, '. Opened .' ), 14 );
-  //   test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
-  //   test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
-  //   test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
-  //
-  //   return null;
-  // })
-  //
-  // /* - */
-  //
-  // a.ready
-  //
-  // .then( () =>
-  // {
-  //   test.case = '.with z .submodules.download recursive:2';
-  //   a.reflect();
-  //   return null;
-  // })
-  //
-  // a.start( '.with z .clean recursive:2' )
-  // a.start( '.with z .submodules.download recursive:2' )
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.identical( got.exitCode, 0 );
-  //
-  //   var exp = [ 'PathTools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'PathTools', 'Proto', 'Tools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'PathBasic', 'PathTools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'UriBasic' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-  //   test.identical( _.strCount( got.output, '. Opened .' ), 26 );
-  //   test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
-  //   test.identical( _.strCount( got.output, 'was downloaded' ), 5 );
-  //   test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
-  //
-  //   return null;
-  // })
-  //
-  // a.start( '.with z .submodules.download recursive:2' )
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.case = 'second';
-  //   test.identical( got.exitCode, 0 );
-  //
-  //   var exp = [ 'PathTools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'PathTools', 'Proto', 'Tools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'PathBasic', 'PathTools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'UriBasic' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-  //   test.identical( _.strCount( got.output, '. Opened .' ), 26 );
-  //   test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
-  //   test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
-  //   test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
-  //
-  //   return null;
-  // })
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with z .submodules.download';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with z .clean recursive:2' )
+  a.start( '.with z .submodules.download' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 14 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
+
+  a.start( '.with z .submodules.download' )
+
+  .then( ( got ) =>
+  {
+    test.case = 'second';
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 14 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
+    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with z .submodules.download recursive:2';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with z .clean recursive:2' )
+  a.start( '.with z .submodules.download recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 5 );
+    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
+
+  a.start( '.with z .submodules.download recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.case = 'second';
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
+    test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
 
   /* - */
 
@@ -16791,37 +16882,37 @@ function submodulesDownloadHierarchyRemote( test )
     return null;
   })
 
-  // a.start( '.with z .submodules.download recursive:2' )
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.case = 'second';
-  //   test.identical( got.exitCode, 0 );
-  //
-  //   var exp = [ 'PathTools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'PathTools', 'Proto', 'Tools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'PathBasic', 'PathTools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'UriBasic' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-  //   test.identical( _.strCount( got.output, '. Opened .' ), 26 );
-  //   test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
-  //   test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
-  //   test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
-  //
-  //   return null;
-  // })
+  a.start( '.with z .submodules.download recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.case = 'second';
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
+    test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
 
   /* - */
 
@@ -20165,7 +20256,7 @@ var Self =
 
     openWith,
     openEach,
-    withMixed, /* xxx : later */
+    // withMixed, /* xxx : later */
     // eachMixed, // xxx : later
     withList,
     // eachList, // xxx : later
@@ -20245,7 +20336,7 @@ var Self =
     exportSingle,
     exportItself,
     exportNonExportable,
-    exportInformal,
+    // exportInformal, /* xxx : later */
     exportWithReflector,
     exportToRoot,
     // exportMixed, /* xxx : later */
@@ -20274,6 +20365,7 @@ var Self =
     exportDiffDownloadPathsRegular,
     exportHierarchyRemote,
     exportWithDisabled,
+    exportOutResourceWithoutGeneratedCriterion,
     /* xxx : implement same test for hierarchy-remote and irregular */
     /* xxx : implement clean tests */
     /* xxx : refactor ** clean */
@@ -20322,7 +20414,7 @@ var Self =
 
     // runWillbe, // qqq : help to fix, please
 
-    // resourcesFormReflectorsExperiment, // qqq : done?
+    // resourcesFormReflectorsExperiment, // xxx : look
 
   }
 

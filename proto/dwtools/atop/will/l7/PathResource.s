@@ -203,7 +203,7 @@ function form3()
 // exporter
 // --
 
-function structureExport()
+function exportStructure()
 {
   let resource = this;
   let module = resource.module;
@@ -211,9 +211,9 @@ function structureExport()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let o = _.routineOptions( structureExport, arguments );
+  let o = _.routineOptions( exportStructure, arguments );
 
-  let result = Parent.prototype.structureExport.apply( resource, [ o ] );
+  let result = Parent.prototype.exportStructure.apply( resource, [ o ] );
 
   if( !result )
   return result;
@@ -245,7 +245,7 @@ function structureExport()
   return result;
 }
 
-structureExport.defaults = Object.create( Parent.prototype.structureExport.defaults );
+exportStructure.defaults = Object.create( Parent.prototype.exportStructure.defaults );
 
 //
 
@@ -439,7 +439,7 @@ let Extend =
 
   // exporter
 
-  structureExport,
+  exportStructure,
   compactField,
 
   // etc
