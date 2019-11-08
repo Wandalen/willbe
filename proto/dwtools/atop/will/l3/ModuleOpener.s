@@ -204,9 +204,9 @@ function unform()
     openedModule.finit();
   }
 
-  let variant = will.variantOf( opener );
-  if( variant && variant.own( opener ) )
-  variant.remove( opener );
+  let junction = will.junctionOf( opener );
+  if( junction && junction.own( opener ) )
+  junction.remove( opener );
 
   opener.formed = 0;
 
@@ -954,10 +954,10 @@ function submodulesRelationsFilter( o )
   o = _.routineOptions( submodulesRelationsFilter, arguments );
 
   let result = opener.submodulesRelationsOwnFilter( o );
-  let variant = will.variantFrom( opener );
-  let variants = variant.submodulesVariantsFilter( o );
+  let junction = will.junctionFrom( opener );
+  let junctions = junction.submodulesJunctionsFilter( o );
 
-  result = _.arrayAppendArraysOnce( result, variants.map( ( variant ) => variant.objects ) );
+  result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
 
   return result;
 }
@@ -1088,9 +1088,9 @@ function rootModuleSet( src )
 
   if( will )
   {
-    let variant = will.variantOf( opener );
-    if( variant )
-    variant.reform();
+    let junction = will.junctionOf( opener );
+    if( junction )
+    junction.reform();
   }
 
   return src;
@@ -1196,7 +1196,7 @@ function _repoForm()
     should goes after setting formed
   */
 
-  will.variantReform( opener );
+  will.junctionReform( opener );
 
   return opener;
 }
@@ -1654,8 +1654,8 @@ function _repoDownload( o )
     _.assert( !o.dry );
     _.assert( !!downloading );
 
-    let variant = will.variantReform( opener );
-    variant.openers.forEach( ( opener2 ) =>
+    let junction = will.junctionReform( opener );
+    junction.openers.forEach( ( opener2 ) =>
     {
       opener2.repo.statusInvalidate({ all : 1 });
       // if( downloading && !o.dry )
@@ -1673,15 +1673,15 @@ function _repoDownload( o )
   function modulesCopy()
   {
     let ready = new _.Consequence().take( null );
-    let variant = will.variantFrom( opener );
+    let junction = will.junctionFrom( opener );
 
-    variant.openers.forEach( ( opener2 ) =>
+    junction.openers.forEach( ( opener2 ) =>
     {
       ready.also( moduleCopy( opener2 ) );
     });
 
-    if( variant.peer )
-    variant.peer.openers.forEach( ( opener2 ) =>
+    if( junction.peer )
+    junction.peer.openers.forEach( ( opener2 ) =>
     {
       ready.also( moduleCopy( opener2 ) );
     });
@@ -1734,18 +1734,18 @@ function _repoDownload( o )
   function modulesReopen( same )
   {
     let ready = new _.Consequence().take( null );
-    let variant = will.variantFrom( opener );
-    _.assert( !variant.finitedIs() );
+    let junction = will.junctionFrom( opener );
+    _.assert( !junction.finitedIs() );
 
-    variant.reform();
+    junction.reform();
 
-    variant.openers.forEach( ( opener2 ) =>
+    junction.openers.forEach( ( opener2 ) =>
     {
       ready.then( () => moduleReopenMaybe( opener2, same ) );
     });
 
-    if( variant.peer )
-    variant.peer.openers.forEach( ( opener2 ) =>
+    if( junction.peer )
+    junction.peer.openers.forEach( ( opener2 ) =>
     {
       ready.then( () => moduleReopenMaybe( opener2, same ) );
     });
@@ -1973,7 +1973,7 @@ function _filePathChanged2( o )
   if( opener.willfilesPath && opener.commonPath && opener.formed >= 2 )
   {
     // if( !opener.superRelation || opener.superRelation.enabled ) /* ttt */
-    will.variantReform( opener );
+    will.junctionReform( opener );
   }
 
   return o;
@@ -2054,15 +2054,15 @@ function remotePathEachAdoptAct( o )
 {
   let opener = this;
   let will = opener.will;
-  // let variant = will.variantOf( module ); /* xxx : optimize variantFrom */
-  // if( !variant )
-  // variant = will.variantFrom( module );
+  // let junction = will.junctionOf( module ); /* xxx : optimize junctionFrom */
+  // if( !junction )
+  // junction = will.junctionFrom( module );
   //
   // _.assertRoutineOptions( remotePathEachAdoptAct, o );
   //
-  // variant.modules.forEach( ( module ) => module.remotePathAdopt( o ) );
-  // variant.openers.forEach( ( opener ) => opener.remotePathAdopt( o ) );
-  // variant.reform();
+  // junction.modules.forEach( ( module ) => module.remotePathAdopt( o ) );
+  // junction.openers.forEach( ( opener ) => opener.remotePathAdopt( o ) );
+  // junction.reform();
 
   _.assertRoutineOptions( remotePathEachAdoptAct, o );
 

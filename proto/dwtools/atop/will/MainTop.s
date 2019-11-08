@@ -119,9 +119,9 @@ function _openersCurrentEach( o )
     it.opener = opener;
     it.module = opener.openedModule;
     it.openers = will.currentOpeners;
-    it.variant = will.variantOf( opener );
-    if( !it.variant )
-    it.variant = will.variantFrom( opener );
+    it.junction = will.junctionOf( opener );
+    if( !it.junction )
+    it.junction = will.junctionFrom( opener );
     it.will = will;
     return it;
   }
@@ -1520,8 +1520,8 @@ function commandSubmodulesAdd( e )
 
     found.then( ( it ) =>
     {
-      let variants = will.variantsFrom( it.sortedOpeners );
-      return module.submodulesAdd({ modules : variants });
+      let junctions = will.junctionsFrom( it.sortedOpeners );
+      return module.submodulesAdd({ modules : junctions });
     })
 
     found.finally( ( err, added ) =>

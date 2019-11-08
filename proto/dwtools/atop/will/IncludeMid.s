@@ -17,7 +17,7 @@ if( typeof module !== 'undefined' )
   require( './l3/AbstractModule.s' );
   require( './l3/Module.s' );
   require( './l3/ModuleOpener.s' );
-  require( './l3/ModuleVariant.s' );
+  require( './l3/ModuleJunction.s' );
 
   require( './l5/Resource.s' );
 

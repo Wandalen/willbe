@@ -4582,7 +4582,7 @@ reflectorMasks.timeOut = 200000;
 function withDoInfo( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4629,7 +4629,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 10 );
     test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    test.identical( _.strCount( got.output, 'local :' ), 1 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -4644,7 +4644,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 10 );
     test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    test.identical( _.strCount( got.output, 'local :' ), 1 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -4659,7 +4659,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 10 );
     test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    test.identical( _.strCount( got.output, 'local :' ), 1 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -4674,7 +4674,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 12 );
     test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 7 );
+    test.identical( _.strCount( got.output, 'local :' ), 7 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -4689,7 +4689,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 9 );
     test.identical( _.strCount( got.output, '! Outdated' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 7 );
+    test.identical( _.strCount( got.output, 'local :' ), 7 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -4704,7 +4704,7 @@ function withDoInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 3 );
     test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 4 );
+    test.identical( _.strCount( got.output, 'local :' ), 4 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
 
     return null;
@@ -4732,7 +4732,7 @@ withDoInfo.description =
 function withDoStatus( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4844,7 +4844,7 @@ withDoStatus.description =
 function withDoCommentOut( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4920,7 +4920,7 @@ withDoCommentOut.description =
 function hookCallInfo( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -4967,7 +4967,7 @@ function hookCallInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 10 );
     test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    test.identical( _.strCount( got.output, 'local :' ), 1 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -4982,7 +4982,7 @@ function hookCallInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 10 );
     test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    test.identical( _.strCount( got.output, 'local :' ), 1 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -4997,7 +4997,7 @@ function hookCallInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 10 );
     test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 1 );
+    test.identical( _.strCount( got.output, 'local :' ), 1 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -5012,7 +5012,7 @@ function hookCallInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 12 );
     test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 7 );
+    test.identical( _.strCount( got.output, 'local :' ), 7 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -5027,7 +5027,7 @@ function hookCallInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 9 );
     test.identical( _.strCount( got.output, '! Outdated' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 7 );
+    test.identical( _.strCount( got.output, 'local :' ), 7 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
     return null;
   })
@@ -5042,7 +5042,7 @@ function hookCallInfo( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 3 );
     test.identical( _.strCount( got.output, '! Outdated' ), 1 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 0 );
-    test.identical( _.strCount( got.output, 'localPath :' ), 4 );
+    test.identical( _.strCount( got.output, 'local :' ), 4 );
     test.identical( _.strCount( got.output, 'Done hook::info.js in' ), 1 );
 
     return null;
@@ -5069,7 +5069,7 @@ hookCallInfo.description =
 function hookGitMake( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -5151,7 +5151,7 @@ hookGitMake.timeOut = 300000;
 function hookPrepare( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'many-dos' );
+  let originalAssetPath = _.path.join( self.assetDirPath, 'dos' );
   let routinePath = _.path.join( self.suitePath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -14309,7 +14309,7 @@ exportWithDisabled.timeOut = 300000;
 function exportOutResourceWithoutGeneratedCriterion( test )
 {
   let self = this;
-  let a = self.assetFor( test, 'bug-resource-exists' );
+  let a = self.assetFor( test, 'export-out-resource-without-generated-criterion' );
 
   /* - */
 

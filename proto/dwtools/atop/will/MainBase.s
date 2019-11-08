@@ -688,8 +688,8 @@ function resourceWrap( o )
   o = { module : o }
   else if( o instanceof _.Will.ModuleOpener )
   o = { opener : o }
-  else if( o instanceof _.Will.ModuleVariant )
-  o = { variant : o }
+  else if( o instanceof _.Will.ModuleJunction )
+  o = { junction : o }
 
   return o;
 }
@@ -733,15 +733,15 @@ resourcesInfoExport.defaults =
 
 //
 
-function variantsWithId( id )
+function junctionsWithId( id )
 {
   let will = this;
 
-  for( let v in will.variantMap )
+  for( let v in will.junctionMap )
   {
-    let variant = will.variantMap[ v ];
-    if( variant.id === id )
-    return variant;
+    let junction = will.junctionMap[ v ];
+    if( junction.id === id )
+    return junction;
   }
 
   return null;
@@ -749,23 +749,23 @@ function variantsWithId( id )
 
 //
 
-function variantsInfoExport( variants )
+function junctionsInfoExport( junctions )
 {
   let will = this;
-  if( !variants )
+  if( !junctions )
   {
-    variants = _.longOnce( _.mapVals( will.variantMap ) );
-    // variants = variants.filter( ( variant ) =>
+    junctions = _.longOnce( _.mapVals( will.junctionMap ) );
+    // junctions = junctions.filter( ( junction ) =>
     // {
-    //   if( variant.relation && !variant.relation.enabled )
+    //   if( junction.relation && !junction.relation.enabled )
     //   return false;
-    //   if( variant.isRemote === false )
+    //   if( junction.isRemote === false )
     //   return false;
-    //   return variant;
+    //   return junction;
     // });
   }
 
-  return _.map( variants, ( variant ) => variant.exportInfo() ).join( '\n' );
+  return _.map( junctions, ( junction ) => junction.exportInfo() ).join( '\n' );
 }
 
 //
@@ -782,6 +782,14 @@ function _pathChanged( o )
   o.val = _.path.simplify( o.val );
   if( o.isIdential === null )
   o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
+
+  if( o.val )
+  if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
+  if( o.object.id === 690 || o.object.id === 692 )
+  {
+    logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+    debugger;
+  }
 
   // if( o.val )
   // if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
@@ -1163,12 +1171,12 @@ function moduleFit_pre( routine, args )
 {
   let module = this;
 
-  let variant = args[ 0 ];
+  let junction = args[ 0 ];
   let opts = args[ 1 ];
   opts = _.routineOptions( routine, opts );
   _.assert( args.length === 2 );
 
-  return _.unrollFrom([ variant, opts ]);
+  return _.unrollFrom([ junction, opts ]);
 }
 
 function moduleFit_body( object, opts )
@@ -1176,40 +1184,40 @@ function moduleFit_body( object, opts )
   let will = this;
   let logger = will.logger;
 
-  let variant = will.variantFrom( object );
+  let junction = will.junctionFrom( object );
   let module = object.toModule();
   if( !module )
-  module = variant.module;
+  module = junction.module;
 
   _.assert( arguments.length === 2 );
-  _.assert( variant instanceof _.Will.ModuleVariant )
+  _.assert( junction instanceof _.Will.ModuleJunction )
 
-  if( !opts.withKnown && variant.object )
+  if( !opts.withKnown && junction.object )
   return false;
 
-  if( !opts.withUnknown && !variant.object )
+  if( !opts.withUnknown && !junction.object )
   return false;
 
-  if( !opts.withValid && variant.object )
-  if( variant.object.isValid() )
+  if( !opts.withValid && junction.object )
+  if( junction.object.isValid() )
   {
     debugger;
     return false;
   }
 
-  if( !opts.withInvalid && variant.object )
-  if( !variant.object.isValid() )
+  if( !opts.withInvalid && junction.object )
+  if( !junction.object.isValid() )
   {
     debugger;
     return false;
   }
 
-  if( !opts.withOut && variant.isOut !== null )
-  if( variant.isOut )
+  if( !opts.withOut && junction.isOut !== null )
+  if( junction.isOut )
   return false;
 
-  if( !opts.withIn && variant.isOut !== null )
-  if( !variant.isOut )
+  if( !opts.withIn && junction.isOut !== null )
+  if( !junction.isOut )
   return false;
 
   if( !opts.withEnabledModules && module )
@@ -1236,16 +1244,16 @@ function relationFit_body( object, opts )
 {
   let will = this;
   let logger = will.logger;
-  let variant = will.variantFrom( object );
+  let junction = will.junctionFrom( object );
   let relation = object;
 
   if( !( object instanceof _.Will.ModulesRelation ) )
-  relation = variant.relation;
+  relation = junction.relation;
 
   _.assert( arguments.length === 2 );
-  _.assert( will.ObjectIs( object ) || will.isVariant( object ) );
-  // _.assert( object instanceof _.Will.ModulesRelation || object instanceof _.Will.Module || object instanceof _.Will.ModuleVariant );
-  // _.assert( object instanceof _.Will.ModuleVariant ); /* ttt */
+  _.assert( will.ObjectIs( object ) || will.isJunction( object ) );
+  // _.assert( object instanceof _.Will.ModulesRelation || object instanceof _.Will.Module || object instanceof _.Will.ModuleJunction );
+  // _.assert( object instanceof _.Will.ModuleJunction ); /* ttt */
 
   let result = will.moduleFit.body.call( will, object, _.mapOnly( opts, will.moduleFit.defaults ) );
   if( !result )
@@ -1282,7 +1290,7 @@ let relationFit = _.routineFromPreAndBody( moduleFit_pre, relationFit_body );
 
 //
 
-function modulesFilter( variants, o )
+function modulesFilter( junctions, o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -1291,14 +1299,14 @@ function modulesFilter( variants, o )
   let result = [];
 
   _.assert( arguments.length === 2 );
-  _.assert( _.arrayIs( variants ) );
+  _.assert( _.arrayIs( junctions ) );
   o = _.routineOptions( modulesFilter, o );
 
-  variants.forEach( ( module ) =>
+  junctions.forEach( ( module ) =>
   {
-    let variant = module;
-    variant = will.variantFrom( module );
-    if( will.moduleFit.body.call( will, variant, o ) )
+    let junction = module;
+    junction = will.junctionFrom( module );
+    if( will.moduleFit.body.call( will, junction, o ) )
     result.push( module );
   });
 
@@ -1309,7 +1317,7 @@ modulesFilter.defaults = _.mapExtend( null, moduleFit.defaults );
 
 //
 
-function relationsFilter( variants, o )
+function relationsFilter( junctions, o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -1318,15 +1326,15 @@ function relationsFilter( variants, o )
   let result = [];
 
   _.assert( arguments.length === 2 );
-  _.assert( _.arrayIs( variants ) );
+  _.assert( _.arrayIs( junctions ) );
   o = _.routineOptions( relationsFilter, o );
 
-  variants.forEach( ( module ) =>
+  junctions.forEach( ( module ) =>
   {
-    let variant = module;
-    // if( !( variant instanceof _.Will.ModuleVariant ) )
-    variant = will.variantFrom( module );
-    if( will.relationFit.body.call( will, variant, o ) )
+    let junction = module;
+    // if( !( junction instanceof _.Will.ModuleJunction ) )
+    junction = will.junctionFrom( module );
+    if( will.relationFit.body.call( will, junction, o ) )
     result.push( module );
   });
 
@@ -1881,9 +1889,9 @@ function modulesFindWithAt( o )
       op.openers = openers2;
     }
 
-    op.variants = will.variantsFrom( op.openers );
-    // op.sortedVariants = will.graphTopSort( op.variants );
-    // op.sortedVariants.reverse();
+    op.junctions = will.junctionsFrom( op.openers );
+    // op.sortedJunctions = will.graphTopSort( op.junctions );
+    // op.sortedJunctions.reverse();
 
     // debugger;
     // op.sortedOpeners = op.openers.slice();
@@ -1911,14 +1919,14 @@ function modulesFindWithAt( o )
     });
 
     // op.sortedOpeners = [];
-    // op.sortedVariants = _.filter( op.sortedVariants, ( variant ) =>
+    // op.sortedJunctions = _.filter( op.sortedJunctions, ( junction ) =>
     // {
-    //   let opener = _.arraySetIntersection( op.openers.slice(), variant.openers )[ 0 ];
+    //   let opener = _.arraySetIntersection( op.openers.slice(), junction.openers )[ 0 ];
     //   if( !opener )
     //   return;
     //   _.assert( !opener.superRelation );
     //   op.sortedOpeners.push( opener );
-    //   return variant;
+    //   return junction;
     // });
 
     return op;
@@ -1940,7 +1948,7 @@ function modulesOnlyRoots( modules )
 {
   let will = this;
   let visitedContainer = _.containerAdapter.from( new Set );
-  let variantMap = will.variantMap;
+  let junctionMap = will.junctionMap;
 
   if( modules === null || modules === undefined )
   modules = will.modulesArray;
@@ -1957,7 +1965,7 @@ function modulesOnlyRoots( modules )
 
   let nodesGroup = will.graphGroupMake( _.mapOnly( filter, will.graphGroupMake.defaults ) );
 
-  /* first make variants for each module */
+  /* first make junctions for each module */
 
   let o2 =
   {
@@ -1978,7 +1986,7 @@ function modulesOnlyRoots( modules )
 
   objects.forEach( ( object ) =>
   {
-    _.arrayAppendArrayOnce( objects, will.variantFrom( object ).objects );
+    _.arrayAppendArrayOnce( objects, will.junctionFrom( object ).objects );
   });
 
   /* then add in-roots of trees */
@@ -1991,25 +1999,25 @@ function modulesOnlyRoots( modules )
 
   sources = sources.filter( ( object ) =>
   {
-    let variant = will.variantOf( object );
-    if( !variant.object )
+    let junction = will.junctionOf( object );
+    if( !junction.object )
     return false;
-    if( !variant.isOut )
+    if( !junction.isOut )
     return true;
-    if( variant.peer && _.longHasAny( sources, variant.peer.objects ) )
+    if( junction.peer && _.longHasAny( sources, junction.peer.objects ) )
     return false;
     return true;
   });
 
   debugger;
 
-  // sources = sources.filter( ( variant ) =>
+  // sources = sources.filter( ( junction ) =>
   // {
-  //   if( !variant.object )
+  //   if( !junction.object )
   //   return false;
-  //   if( !variant.isOut )
+  //   if( !junction.isOut )
   //   return true;
-  //   if( variant.peer && _.longHas( sources, variant.peer ) )
+  //   if( junction.peer && _.longHas( sources, junction.peer ) )
   //   return false;
   //   return true;
   // });
@@ -2058,7 +2066,7 @@ function modulesEach_body( o )
   let nodes = _.arrayAs( o.modules );
   nodes = _.filter( nodes, ( node ) =>
   {
-    if( will.isVariant( node ) )
+    if( will.isJunction( node ) )
     return _.unrollFrom( node.objects );
     return node;
   });
@@ -2081,7 +2089,7 @@ function modulesEach_body( o )
 
   /* */
 
-  // let nodes = _.arrayAs( will.variantsFrom( o.modules ) );
+  // let nodes = _.arrayAs( will.junctionsFrom( o.modules ) );
   //
   // if( o.withPeers )
   // {
@@ -2114,7 +2122,7 @@ function modulesEach_body( o )
   // if( o.withStem )
   // debugger;
 
-  o.result = _.longOnce( o.result.map( ( variant ) => outputFrom( variant ) ) );
+  o.result = _.longOnce( o.result.map( ( junction ) => outputFrom( junction ) ) );
 
   if( o.descriptive )
   return o;
@@ -2131,9 +2139,9 @@ function modulesEach_body( o )
          object instanceof _.Will.Module
       || object instanceof _.Will.ModuleOpener
       || object instanceof _.Will.ModulesRelation
-      || object instanceof _.Will.ModuleVariant
+      || object instanceof _.Will.ModuleJunction
     );
-    if( object instanceof _.Will.ModuleVariant )
+    if( object instanceof _.Will.ModuleJunction )
     _.arrayAppendOnce( o.ownedObjects, object.objects );
     else
     o.ownedObjects.push( object );
@@ -2146,7 +2154,7 @@ function modulesEach_body( o )
   {
 
     _.assert( will.ObjectIs( object ) );
-    let variant = will.variantFrom( object );
+    let junction = will.junctionFrom( object );
 
     if( o.withDisabledStem && it.level === 0 )
     {
@@ -2162,7 +2170,7 @@ function modulesEach_body( o )
 
     if( it.continueNode )
     {
-      variant.objects.forEach( ( object ) =>
+      junction.objects.forEach( ( object ) =>
       {
         if( object.ownedBy( o.ownedObjects ) )
         objectAppend( object );
@@ -2191,14 +2199,14 @@ function modulesEach_body( o )
       return object.toModule();
       // if( object instanceof _.Will.Module )
       // return object;
-      // return will.variantFrom( object ).module;
+      // return will.junctionFrom( object ).module;
     }
     else if( o.outputFormat === '*/relation' )
     {
       return object.toRelation();
       // if( object instanceof _.Will.ModulesRelation )
       // return object;
-      // return will.variantFrom( object ).relation;
+      // return will.junctionFrom( object ).relation;
     }
     else if( o.outputFormat === '*/object' )
     {
@@ -2207,9 +2215,9 @@ function modulesEach_body( o )
     }
     else if( o.outputFormat === '/' )
     {
-      if( object instanceof _.Will.ModuleVariant )
+      if( object instanceof _.Will.ModuleJunction )
       return object;
-      return will.variantFrom( object );
+      return will.junctionFrom( object );
     }
     else _.assert( 0 );
   }
@@ -2271,7 +2279,7 @@ function modulesFor_body( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let visitedVariantsSet = new Set;
+  let visitedJunctionsSet = new Set;
   let visitedModulesSet = new Set;
 
   _.assert( arguments.length === 1 );
@@ -2280,13 +2288,13 @@ function modulesFor_body( o )
   if( !o.nodesGroup )
   o.nodesGroup = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
   // o.modules = _.arrayAs( o.nodesGroup.nodesAddOnce( o.modules ) );
-  // o.modules = _.arrayAs( will.variantsFrom( o.modules ) );
+  // o.modules = _.arrayAs( will.junctionsFrom( o.modules ) );
   o.modules = _.arrayAs( o.modules );
   _.assert( _.arrayIs( o.modules ) );
 
-  let variants = variantsEach( o.modules );
+  let junctions = junctionsEach( o.modules );
 
-  return act( variants )
+  return act( junctions )
   .finally( ( err, arg ) =>
   {
     if( err )
@@ -2298,42 +2306,42 @@ function modulesFor_body( o )
 
   /* */
 
-  function act( variants )
+  function act( junctions )
   {
     let ready = new _.Consequence().take( null );
 
     ready.then( () =>
     {
       let ready = new _.Consequence().take( null );
-      variants.forEach( ( variant ) => ready.then( () => variantAction( variant ) ) );
+      junctions.forEach( ( junction ) => ready.then( () => junctionAction( junction ) ) );
       return ready;
     });
 
     ready.then( () =>
     {
-      let variants2 = variantsEach( variants );
-      if( variants2.length > variants.length && o.recursive >= 2 )
-      return act( variants2 );
+      let junctions2 = junctionsEach( junctions );
+      if( junctions2.length > junctions.length && o.recursive >= 2 )
+      return act( junctions2 );
       return o;
     });
 
     return ready;
   }
 
-  function variantsEach( variants )
+  function junctionsEach( junctions )
   {
     let o2 = _.mapOnly( o, will.modulesEach.defaults );
     o2.outputFormat = '/';
-    o2.modules = variants;
+    o2.modules = junctions;
     let result = will.modulesEach( o2 );
     return result;
   }
 
-  function variantAction( variant )
+  function junctionAction( junction )
   {
     let ready = new _.Consequence().take( null );
     if( o.onEachModule )
-    variant.modules.forEach( ( module ) =>
+    junction.modules.forEach( ( module ) =>
     {
       if( visitedModulesSet.has( module ) )
       return null;
@@ -2342,14 +2350,14 @@ function modulesFor_body( o )
       o3.module = module;
       ready.then( () => o.onEachModule( module, o3 ) );
     });
-    if( visitedVariantsSet.has( variant ) )
+    if( visitedJunctionsSet.has( junction ) )
     return null;
-    visitedVariantsSet.add( variant );
-    if( o.onEachVariant )
+    visitedJunctionsSet.add( junction );
+    if( o.onEachJunction )
     {
       let o3 = _.mapExtend( null, o );
-      o3.variant = variant;
-      ready.then( () => o.onEachVariant( variant, o3 ) );
+      o3.junction = junction;
+      ready.then( () => o.onEachJunction( junction, o3 ) );
     }
     return ready;
   }
@@ -2368,7 +2376,7 @@ defaults.withPeers = 1;
 defaults.left = 1;
 defaults.nodesGroup = null;
 defaults.modules = null;
-defaults.onEachVariant = null;
+defaults.onEachJunction = null;
 defaults.onEachModule = null;
 
 delete defaults.outputFormat;
@@ -2423,7 +2431,7 @@ function modulesDownload_body( o )
   _.assertRoutineOptions( modulesDownload_body, arguments );
 
   // o.modules = _.arrayAs( o.nodesGroup.nodesAddOnce( o.modules ) );
-  // o.modules = _.arrayAs( will.variantsFrom( o.modules ) );
+  // o.modules = _.arrayAs( will.junctionsFrom( o.modules ) );
   o.modules = _.arrayAs( o.modules );
   _.assert( _.arrayIs( o.modules ) );
 
@@ -2441,10 +2449,10 @@ function modulesDownload_body( o )
 
   let rootModule = o.modules.length === 1 ? o.modules[ 0 ].module : null;
   // let rootModulePath = rootModule ? rootModule.localPath : null;
-  // let rootVariant = rootModule ? will.variantFrom( rootModule ) : null;
-  let rootVariants = _.arrayAs( will.variantsFrom( o.modules ) );
+  // let rootJunction = rootModule ? will.junctionFrom( rootModule ) : null;
+  let rootJunctions = _.arrayAs( will.junctionsFrom( o.modules ) );
 
-  return variantsUpformAndDownload( rootVariants )
+  return junctionsUpformAndDownload( rootJunctions )
   .finally( ( err, arg ) =>
   {
     if( err )
@@ -2457,21 +2465,21 @@ function modulesDownload_body( o )
 
   /* */
 
-  function variantsUpformAndDownload( variants )
+  function junctionsUpformAndDownload( junctions )
   {
     let ready = new _.Consequence().take( null );
 
     ready.then( () =>
     {
       let o2 = _.mapOnly( o, will.modulesUpform.defaults );
-      o2.modules = variants;
+      o2.modules = junctions;
       o2.recursive = o.recursive;
       o2.all = 0;
       o2.subModulesFormed = 1;
       o2.withPeers = 1;
       return will.modulesUpform( o2 );
       // ({
-      //   modules : variants,
+      //   modules : junctions,
       //   recursive : o.recursive,
       //   all : 0,
       //   subModulesFormed : 1,
@@ -2483,21 +2491,21 @@ function modulesDownload_body( o )
     {
       let o2 = _.mapOnly( o, will.modulesEach.defaults );
       o2.outputFormat = '/';
-      o2.modules = variants;
+      o2.modules = junctions;
       o2.withPeers = 1; /* yyy */
       o2.withIn = 1;
       o2.withOut = 1;
       delete o2.nodesGroup;
-      variants = will.modulesEach( o2 );
+      junctions = will.modulesEach( o2 );
       downloadedLengthWas = o.downloadedContainer.length;
-      return variantsDownload( variants );
+      return junctionsDownload( junctions );
     });
 
     ready.then( () =>
     {
       let d = o.downloadedContainer.length - downloadedLengthWas;
       if( d > 0 && o.recursive >= 2 )
-      return variantsUpformAndDownload( variants );
+      return junctionsUpformAndDownload( junctions );
       return o;
     });
 
@@ -2509,28 +2517,28 @@ function modulesDownload_body( o )
   function log()
   {
 
-    rootVariants = rootVariants.filter( ( variant ) =>
+    rootJunctions = rootJunctions.filter( ( junction ) =>
     {
-      if( !variantIsRoot( variant ) )
+      if( !junctionIsRoot( junction ) )
       return;
-      if( variant.isOut && variant.peer )
-      if( _.longHas( rootVariants, variant.peer ) )
+      if( junction.isOut && junction.peer )
+      if( _.longHas( rootJunctions, junction.peer ) )
       return;
-      return variant;
+      return junction;
     });
-    let remoteContainer = o.remoteContainer.filter( ( variant ) =>
+    let remoteContainer = o.remoteContainer.filter( ( junction ) =>
     {
-      if( variantIsRoot( variant ) )
+      if( junctionIsRoot( junction ) )
       return;
-      return !variant.isOut || !_.longHas( o.remoteContainer, variant.peer );
+      return !junction.isOut || !_.longHas( o.remoteContainer, junction.peer );
     });
-    let localContainer = o.localContainer.filter( ( variant ) =>
+    let localContainer = o.localContainer.filter( ( junction ) =>
     {
-      if( variantIsRoot( variant ) )
+      if( junctionIsRoot( junction ) )
       return;
-      // if( variant === rootVariant || variant.peer === rootVariant )
+      // if( junction === rootJunction || junction.peer === rootJunction )
       // return;
-      return !variant.isOut || !_.longHas( o.localContainer, variant.peer );
+      return !junction.isOut || !_.longHas( o.localContainer, junction.peer );
     });
 
     if( !o.downloadedContainer.length && !o.loggingNoChanges )
@@ -2560,48 +2568,48 @@ function modulesDownload_body( o )
 
   /* */
 
-  function variantsDownload( variants )
+  function junctionsDownload( junctions )
   {
     let ready2 = new _.Consequence().take( null );
 
-    _.assert( _.arrayIs( variants ) );
-    variants.forEach( ( variant ) => /* xxx : make it parallel */
+    _.assert( _.arrayIs( junctions ) );
+    junctions.forEach( ( junction ) => /* xxx : make it parallel */
     {
 
-      _.assert( will.isVariant( variant ) );
+      _.assert( will.isJunction( junction ) );
 
-      if( !variant.object )
+      if( !junction.object )
       return;
 
       _.assert
       (
-        !!variant.object,
-        () => `No object for ${variant.localPath}`
+        !!junction.object,
+        () => `No object for ${junction.localPath}`
       );
 
-      if( _.longHas( o.doneContainer, variant ) )
+      if( _.longHas( o.doneContainer, junction ) )
       return null;
 
       _.assert
       (
-        !!variant.opener,
-        () => 'Submodule' + ( variant.relation ? variant.relation.qualifiedName : variant.module.qualifiedName ) + ' was not opened or downloaded'
+        !!junction.opener,
+        () => 'Submodule' + ( junction.relation ? junction.relation.qualifiedName : junction.module.qualifiedName ) + ' was not opened or downloaded'
       );
 
       _.assert
       (
-        !!variant.opener && variant.opener.formed >= 2,
-        () => 'Submodule' + ( variant.opener ? variant.opener.qualifiedName : n ) + ' was not preformed to download it'
+        !!junction.opener && junction.opener.formed >= 2,
+        () => 'Submodule' + ( junction.opener ? junction.opener.qualifiedName : n ) + ' was not preformed to download it'
       );
 
-      if( !variant.isRemote || !variant.relation )
-      return variantLocalMaybe( variant );
-      if( variant.relation && !variant.relation.enabled )
-      return variantLocalMaybe( variant );
+      if( !junction.isRemote || !junction.relation )
+      return junctionLocalMaybe( junction );
+      if( junction.relation && !junction.relation.enabled )
+      return junctionLocalMaybe( junction );
 
       ready2.then( () =>
       {
-        return variantDownload( variant );
+        return junctionDownload( junction );
       });
 
     });
@@ -2611,33 +2619,33 @@ function modulesDownload_body( o )
 
   /* */
 
-  function variantDownload( variant )
+  function junctionDownload( junction )
   {
 
-    if( _.longHas( o.localContainer, variant ) || _.longHas( o.localContainer, variant ) )
+    if( _.longHas( o.localContainer, junction ) || _.longHas( o.localContainer, junction ) )
     {
       _.assert( 0, 'unexpected' );
     }
 
-    if( _.longHas( o.doneContainer, variant ) )
-    return variantDone( variant );
+    if( _.longHas( o.doneContainer, junction ) )
+    return junctionDone( junction );
 
-    if( variant.peer )
+    if( junction.peer )
     {
-      if( _.longHas( o.doneContainer, variant.peer ) )
+      if( _.longHas( o.doneContainer, junction.peer ) )
       {
-        return variantDone( variant );
+        return junctionDone( junction );
       }
     }
 
-    _.assert( !!variant.relation && !!variant.relation.opener );
-    let opener = variant.relation.opener;
+    _.assert( !!junction.relation && !!junction.relation.opener );
+    let opener = junction.relation.opener;
 
-    variantRemote( variant );
-    variantDone( variant );
-    if( variant.peer )
+    junctionRemote( junction );
+    junctionDone( junction );
+    if( junction.peer )
     {
-      variantDone( variant.peer );
+      junctionDone( junction.peer );
     }
 
     if( o.dry )
@@ -2649,11 +2657,11 @@ function modulesDownload_body( o )
         agreeRequired : o.mode === 'agree',
       }
 
-      return variant.opener.repo.status( statusOptions )
+      return junction.opener.repo.status( statusOptions )
       .then( ( result ) =>
       {
         if( result.downloadRequired || result.updateRequired || result.agreeRequired )
-        variantDownloaded( variant );
+        junctionDownloaded( junction );
         return null;
       })
     }
@@ -2665,7 +2673,7 @@ function modulesDownload_body( o )
       {
         _.assert( _.boolIs( downloaded ) );
         if( downloaded )
-        variantDownloaded( variant );
+        junctionDownloaded( junction );
         return downloaded;
       });
     }
@@ -2674,108 +2682,108 @@ function modulesDownload_body( o )
 
   /* */
 
-  function variantIsRoot( variant )
+  function junctionIsRoot( junction )
   {
-    if( variant.isRemote )
+    if( junction.isRemote )
     return false;
-    if( _.longHas( rootVariants, variant ) )
+    if( _.longHas( rootJunctions, junction ) )
     return true;
-    if( rootVariants.some( ( rootVariant ) => rootVariant.peer === variant ) )
+    if( rootJunctions.some( ( rootJunction ) => rootJunction.peer === junction ) )
     return true;
     return false;
   }
 
   /* */
 
-  function variantDownloaded( variant )
+  function junctionDownloaded( junction )
   {
-    _.arrayAppendOnceStrictly( o.downloadedContainer, variant );
+    _.arrayAppendOnceStrictly( o.downloadedContainer, junction );
   }
 
   /* */
 
-  function variantLocalMaybe( variant )
+  function junctionLocalMaybe( junction )
   {
 
-    if( variant.isRemote )
-    return variantRemote( variant );
+    if( junction.isRemote )
+    return junctionRemote( junction );
 
-    if( variant.peer && variant.peer.object && variant.peer.isRemote )
-    return variantRemote( variant );
+    if( junction.peer && junction.peer.object && junction.peer.isRemote )
+    return junctionRemote( junction );
 
-    if( variant.object.root === variant.object )
+    if( junction.object.root === junction.object )
     debugger;
 
-    variantLocal( variant );
+    junctionLocal( junction );
   }
 
   /* */
 
-  function variantRemote( variant )
+  function junctionRemote( junction )
   {
 
-    // if( variantIsRoot( variant ) )
+    // if( junctionIsRoot( junction ) )
     // {
     //   debugger;
     //   return null;
     // }
     //
-    // if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
+    // if( rootModulePath && junction.localPath && rootModulePath === junction.localPath )
     // {
     //   debugger;
     //   return null;
     // }
 
-    _.assert( !!variant.remotePath );
-    _.arrayAppendOnce( o.remoteContainer, variant );
-    _.assert( !_.longHas( o.localContainer, variant ) );
+    _.assert( !!junction.remotePath );
+    _.arrayAppendOnce( o.remoteContainer, junction );
+    _.assert( !_.longHas( o.localContainer, junction ) );
     return null;
   }
 
   /* */
 
-  function variantLocal( variant )
+  function junctionLocal( junction )
   {
 
-    // if( variantIsRoot( variant ) )
+    // if( junctionIsRoot( junction ) )
     // {
     //   debugger;
     //   return null;
     // }
     //
-    // if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
+    // if( rootModulePath && junction.localPath && rootModulePath === junction.localPath )
     // return null;
 
-    if( variant.peer )
+    if( junction.peer )
     {
-      if( _.longHas( o.doneContainer, variant.peer ) )
-      return variantDone( variant );
+      if( _.longHas( o.doneContainer, junction.peer ) )
+      return junctionDone( junction );
     }
 
-    if( _.longHas( o.doneContainer, variant ) )
+    if( _.longHas( o.doneContainer, junction ) )
     return null;
 
-    _.assert( _.strIs( variant.localPath ) );
-    _.arrayAppendOnce( o.localContainer, variant );
+    _.assert( _.strIs( junction.localPath ) );
+    _.arrayAppendOnce( o.localContainer, junction );
 
     return null;
   }
 
   /* */
 
-  function variantDone( variant )
+  function junctionDone( junction )
   {
 
-    // if( variantIsRoot( variant ) )
+    // if( junctionIsRoot( junction ) )
     // {
     //   debugger;
     //   return null;
     // }
     //
-    // if( rootModulePath && variant.localPath && rootModulePath === variant.localPath )
+    // if( rootModulePath && junction.localPath && rootModulePath === junction.localPath )
     // return null;
 
-    _.arrayAppendOnce( o.doneContainer, variant );
+    _.arrayAppendOnce( o.doneContainer, junction );
     return null;
   }
 
@@ -2845,30 +2853,30 @@ function modulesUpform( o )
     return module.upform( o3 );
   }
 
-  // function handleEach( variant, op )
+  // function handleEach( junction, op )
   // {
   //
-  //   if( visitedSet.has( variant ) )
+  //   if( visitedSet.has( junction ) )
   //   debugger;
-  //   if( visitedSet.has( variant ) )
+  //   if( visitedSet.has( junction ) )
   //   return null;
   //
-  //   variant.reform();
+  //   junction.reform();
   //
-  //   if( !variant.module && o.allowingMissing )
+  //   if( !junction.module && o.allowingMissing )
   //   return null;
-  //   if( !variant.module )
+  //   if( !junction.module )
   //   debugger;
-  //   if( !variant.module )
+  //   if( !junction.module )
   //   throw _.err
   //   (
-  //       `Cant upform ${module.absoluteName} because ${variant.relation ? variant.relation.absoluteName : variant.opener.absoluteName} is not available.`
-  //     , `\nLooked at ${variant.opener ? variant.opener.commonPath : variant.relation.path}`
+  //       `Cant upform ${module.absoluteName} because ${junction.relation ? junction.relation.absoluteName : junction.opener.absoluteName} is not available.`
+  //     , `\nLooked at ${junction.opener ? junction.opener.commonPath : junction.relation.path}`
   //   );
   //
-  //   visitedSet.add( variant );
-  //   let o3 = _.mapOnly( o, variant.module.upform.defaults );
-  //   return variant.module.upform( o3 );
+  //   visitedSet.add( junction );
+  //   let o3 = _.mapOnly( o, junction.module.upform.defaults );
+  //   return junction.module.upform( o3 );
   // }
 
 }
@@ -3101,10 +3109,10 @@ objectsLogInfo.defaults =
 }
 
 // --
-// variant
+// junction
 // --
 
-function isVariant( object )
+function isJunction( object )
 {
   let will = this;
 
@@ -3112,79 +3120,79 @@ function isVariant( object )
 
   if( !object )
   return false;
-  if( object instanceof _.Will.ModuleVariant )
+  if( object instanceof _.Will.ModuleJunction )
   return true;
   return false;
 }
 
 //
 
-function variantReform( object )
+function junctionReform( object )
 {
   let will = this;
   _.assert( arguments.length === 1 );
 
-  return _.Will.ModuleVariant.VariantReform( will, object );
+  return _.Will.ModuleJunction.JunctionReform( will, object );
 }
 
 //
 
-function variantsReform( varaints )
+function junctionsReform( varaints )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.Will.ModuleVariant.VariantsReform( will, varaints );
+  return _.Will.ModuleJunction.JunctionsReform( will, varaints );
 }
 
 //
 
-function variantFrom( object )
+function junctionFrom( object )
 {
   let will = this;
   _.assert( arguments.length === 1 );
 
   // xxx : switch on optimization
-  let result = will.variantOf( object );
+  let result = will.junctionOf( object );
   if( result )
   return result;
 
-  return _.Will.ModuleVariant.VariantFrom( will, object );
+  return _.Will.ModuleJunction.JunctionFrom( will, object );
 }
 
 //
 
-function variantsFrom( varaints )
+function junctionsFrom( varaints )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.Will.ModuleVariant.VariantsFrom( will, varaints );
+  return _.Will.ModuleJunction.JunctionsFrom( will, varaints );
 }
 
 //
 
-function variantOf( object )
+function junctionOf( object )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.Will.ModuleVariant.VariantOf( will, object );
+  return _.Will.ModuleJunction.JunctionOf( will, object );
 }
 
 //
 
-function variantsOf( varaints )
+function junctionsOf( varaints )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.Will.ModuleVariant.VariantsOf( will, object );
+  return _.Will.ModuleJunction.JunctionsOf( will, object );
 }
 
 //
 
-function variantWithId( id )
+function junctionWithId( id )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.any( will.variantMap, ( variant ) => variant.id === id ? variant : undefined );
+  return _.any( will.junctionMap, ( junction ) => junction.id === id ? junction : undefined );
 }
 
 // --
@@ -3215,7 +3223,7 @@ function graphGroupMake( o )
     onNodeFrom : nodeFrom,
     onNodeName : nodeName,
     onNodeOutNodes : nodeOut,
-    onNodeVariant : nodeEvaluate,
+    onNodeJunction : nodeJunction,
   });
 
   let group = sys.nodesGroup();
@@ -3228,14 +3236,14 @@ function graphGroupMake( o )
 
   function nodeName( object )
   {
-    return will.variantFrom( object ).name;
+    return will.junctionFrom( object ).name;
   }
 
   /* */
 
-  function nodeEvaluate( object )
+  function nodeJunction( object )
   {
-    return will.variantFrom( object );
+    return will.junctionFrom( object );
   }
 
   /* */
@@ -3243,16 +3251,16 @@ function graphGroupMake( o )
   function isNode( object )
   {
     return will.ObjectIs( object );
-    // if( !variant )
+    // if( !junction )
     // return false;
-    // if( variant instanceof _.Will.Module )
+    // if( junction instanceof _.Will.Module )
     // return true;
-    // if( variant instanceof _.Will.ModuleOpener )
+    // if( junction instanceof _.Will.ModuleOpener )
     // return true;
-    // if( variant instanceof _.Will.ModulesRelation )
+    // if( junction instanceof _.Will.ModulesRelation )
     // return true;
     // return false;
-    // return variant instanceof _.Will.ModuleVariant;
+    // return junction instanceof _.Will.ModuleJunction;
   }
 
   /* */
@@ -3261,12 +3269,12 @@ function graphGroupMake( o )
   {
     _.assert( will.ObjectIs( object ) );
     return object;
-    // let variant = will.variantOf( object );
-    // if( variant )
-    // return variant;
-    // _.assert( !( object instanceof _.Will.ModuleVariant ) );
-    // variant = will.variantFrom( object );
-    // return variant;
+    // let junction = will.junctionOf( object );
+    // if( junction )
+    // return junction;
+    // _.assert( !( object instanceof _.Will.ModuleJunction ) );
+    // junction = will.junctionFrom( object );
+    // return junction;
   }
 
   /* */
@@ -3295,8 +3303,8 @@ function graphGroupMake( o )
     // will.objectsLogInfo( result );
     // if( _global_.debugger )
     // debugger;
-    // let variant = will.variantFrom( object );
-    // return variant.submodulesGet( _.mapOnly( o, variant.submodulesGet.defaults ) );
+    // let junction = will.junctionFrom( object );
+    // return junction.submodulesGet( _.mapOnly( o, junction.submodulesGet.defaults ) );
     return result;
   }
 
@@ -3349,9 +3357,9 @@ function graphInfoExportAsTree( modules, o )
   o = _.routineOptions( graphInfoExportAsTree, o );
 
   if( o.onNodeName === null )
-  o.onNodeName = variantNameAndPath;
+  o.onNodeName = junctionNameAndPath;
   if( o.onUp === null )
-  o.onUp = variantUp;
+  o.onUp = junctionUp;
 
   let group = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
 
@@ -3368,20 +3376,20 @@ function graphInfoExportAsTree( modules, o )
 
   /* */
 
-  function variantUp( object, it )
+  function junctionUp( object, it )
   {
     return object;
   }
 
-  function variantNameAndPath( object )
+  function junctionNameAndPath( object )
   {
     _.assert( will.ObjectIs( object ) );
-    let variant = will.variantFrom( object );
-    let result = variant.object instanceof _.Will.ModuleOpener ? 'module::' + variant.opener.name : variant.object.qualifiedName;
+    let junction = will.junctionFrom( object );
+    let result = junction.object instanceof _.Will.ModuleOpener ? 'module::' + junction.opener.name : junction.object.qualifiedName;
     if( o.withLocalPath )
-    result += ` - path::local:=${_.color.strFormat( variant.localPath, 'path' )}`;
-    if( o.withRemotePath && variant.remotePath )
-    result += ` - path::remote:=${_.color.strFormat( variant.remotePath, 'path' )}`;
+    result += ` - path::local:=${_.color.strFormat( junction.localPath, 'path' )}`;
+    if( o.withRemotePath && junction.remotePath )
+    result += ` - path::remote:=${_.color.strFormat( junction.remotePath, 'path' )}`;
     return result;
   }
 
@@ -4286,18 +4294,18 @@ function hookItFrom( o )
   if( o.opener && !o.module )
   o.module = o.opener.openedModule;
   o.openers = will.currentOpeners;
-  // if( !o.variant )
-  // o.variant = will.variantOf( opener );
-  if( !o.variant )
-  o.variant = will.variantFrom( opener );
+  // if( !o.junction )
+  // o.junction = will.junctionOf( opener );
+  if( !o.junction )
+  o.junction = will.junctionFrom( opener );
   if( !o.opener )
-  o.opener = o.variant.opener;
+  o.opener = o.junction.opener;
   if( !o.module )
-  o.module = o.variant.module;
+  o.module = o.junction.module;
 
-  _.assert( o.variant instanceof _.Will.ModuleVariant );
+  _.assert( o.junction instanceof _.Will.ModuleJunction );
 
-  let relativeLocalPath = _.path.relative( o.variant.dirPath, o.variant.localPath );
+  let relativeLocalPath = _.path.relative( o.junction.dirPath, o.junction.localPath );
 
   if( !o.will )
   o.will = will;
@@ -4326,7 +4334,7 @@ function hookItFrom( o )
   if( !o.start )
   o.start = _.process.starter
   ({
-    currentPath : o.variant.dirPath,
+    currentPath : o.junction.dirPath,
     outputCollecting : 1,
     outputGraying : 1,
     outputPiping : 1,
@@ -4341,7 +4349,7 @@ function hookItFrom( o )
   if( !o.startNonThrowing )
   o.startNonThrowing = _.process.starter
   ({
-    currentPath : o.variant.dirPath,
+    currentPath : o.junction.dirPath,
     outputCollecting : 1,
     outputGraying : 1,
     outputPiping : 1,
@@ -4357,7 +4365,7 @@ function hookItFrom( o )
   if( !o.startWill )
   o.startWill = _.process.starter
   ({
-    currentPath : o.variant.dirPath,
+    currentPath : o.junction.dirPath,
     execPath : `${will.WillPathGet()} .with ${relativeLocalPath} `,
     outputCollecting : 1,
     outputGraying : 1,
@@ -4382,7 +4390,7 @@ hookItFrom.defaults =
 {
 
   will : null,
-  variant : null,
+  junction : null,
   module : null,
   opener : null,
   openers : null,
@@ -4416,7 +4424,7 @@ function hookCall( o )
 
   o = _.routineOptions( hookCall, arguments );
   _.assert( o.will === will );
-  _.assert( !!o.variant );
+  _.assert( !!o.junction );
 
   /* */
 
@@ -4535,7 +4543,7 @@ function hookCall( o )
   function exeCall()
   {
     _.assert( 0, 'not tested' );
-    o.execPath = `${o.execPath} ${_.strRequestStr( o.request )} localPath:${o.variant.localPath}`;
+    o.execPath = `${o.execPath} ${_.strRequestStr( o.request )} localPath:${o.junction.localPath}`;
     return _.process.start
     ({
       ready : o.ready,
@@ -4736,8 +4744,8 @@ let Restricts =
   willfilesReadEndTime : null,
 
   repoMap : _.define.own({}),
-  variantMap : _.define.own({}),
-  objectToVariantHash : _.define.own( new HashMap ),
+  junctionMap : _.define.own({}),
+  objectToJunctionHash : _.define.own( new HashMap ),
   modulesArray : _.define.own([]),
   moduleWithIdMap : _.define.own({}),
   moduleWithCommonPathMap : _.define.own({}),
@@ -4860,8 +4868,8 @@ let Extend =
 
   resourceWrap,
   resourcesInfoExport,
-  variantsWithId,
-  variantsInfoExport,
+  junctionsWithId,
+  junctionsInfoExport,
   _pathChanged,
   versionGet,
   versionIsUpToDate,
@@ -4907,16 +4915,16 @@ let Extend =
   objectsExportInfo,
   objectsLogInfo,
 
-  // variant
+  // junction
 
-  isVariant,
-  variantReform,
-  variantsReform,
-  variantFrom,
-  variantsFrom,
-  variantOf,
-  variantsOf,
-  variantWithId,
+  isJunction,
+  junctionReform,
+  junctionsReform,
+  junctionFrom,
+  junctionsFrom,
+  junctionOf,
+  junctionsOf,
+  junctionWithId,
 
   // graph
 

@@ -638,7 +638,7 @@ function unform()
 {
   let module = this;
   let will = module.will;
-  let variant = will.variantOf( module );
+  let junction = will.junctionOf( module );
 
   _.assert( arguments.length === 0 );
 
@@ -656,8 +656,8 @@ function unform()
     module.stager.cancel();
     _.assert( _.strIs( module.commonPath ) );
     will.moduleIdUnregister( module );
-    if( variant )
-    variant.remove( module );
+    if( junction )
+    junction.remove( module );
   }
 
   module.close();
@@ -1614,10 +1614,10 @@ function reopen()
   _.assert( !module.finitedIs() );
   _.assert( arguments.length === 0 );
 
-  let variant = will.variantReform( module );
-  if( variant.openers.length !== 1 )
+  let junction = will.junctionReform( module );
+  if( junction.openers.length !== 1 )
   debugger;
-  variant.openers.forEach( ( opener2 ) =>
+  junction.openers.forEach( ( opener2 ) =>
   {
     ready.then( () => opener2.reopen() );
   });
@@ -1790,7 +1790,7 @@ function _willfilesOpenEnd()
   if( module.stager.isValid() )
   {
     // debugger;
-    module.peerModuleFromVariant();
+    module.peerModuleFromJunction();
   }
 
   return null;
@@ -2449,8 +2449,8 @@ function modulesBuild_body( o )
   function handleEach( module, op )
   {
     let o3 = _.mapOnly( o, module.moduleBuild.defaults );
-    // if( !variant.module )
-    // throw _.err( `${variant.object.absoluteName} at ${variant.object.localPath || variant.object.remotePath} is not opened or invalid` );
+    // if( !junction.module )
+    // throw _.err( `${junction.object.absoluteName} at ${junction.object.localPath || junction.object.remotePath} is not opened or invalid` );
     return module.moduleBuild( o3 );
   }
 
@@ -2469,7 +2469,7 @@ defaults.downloading = 1;
 
 delete defaults.onEach;
 delete defaults.onEachModule;
-delete defaults.onEachVariant;
+delete defaults.onEachJunction;
 delete defaults.withOut;
 delete defaults.withIn;
 
@@ -2552,9 +2552,9 @@ function rootModuleSet( src )
       recursive : 2,
       withPeers : 1,
     });
-    modules.forEach( ( variant ) =>
+    modules.forEach( ( junction ) =>
     {
-      let module2 = variant.module || variant.opener;
+      let module2 = junction.module || junction.opener;
       if( module2 === null )
       return;
       _.assert( module2.rootModule !== undefined );
@@ -2592,9 +2592,9 @@ function rootModuleSetAct( src )
 
   if( will )
   {
-    let variant = will.variantOf( module );
-    if( variant )
-    variant.reform();
+    let junction = will.junctionOf( module );
+    if( junction )
+    junction.reform();
   }
 
   return src;
@@ -3493,12 +3493,12 @@ function submodulesRelationsFilter( o )
   o = _.routineOptions( submodulesRelationsFilter, arguments );
 
   let result = module.submodulesRelationsOwnFilter( o );
-  let variant = will.variantFrom( module );
-  let variants = variant.submodulesVariantsFilter( o );
+  let junction = will.junctionFrom( module );
+  let junctions = junction.submodulesJunctionsFilter( o );
 
-  // if( variants.length )
+  // if( junctions.length )
   // debugger;
-  result = _.arrayAppendArraysOnce( result, variants.map( ( variant ) => variant.objects ) );
+  result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
 
   return result;
 }
@@ -3571,7 +3571,7 @@ function submodulesRelationsOwnFilter( o )
     if( !will.relationFit( module, filter ) )
     return;
 
-    // _.assert( module instanceof _.Will.ModuleVariant );
+    // _.assert( module instanceof _.Will.ModuleJunction );
     // _.assert( module instanceof _.Will.ModulesRelation || module instanceof _.Will.Module );
     _.assert( will.ObjectIs( module ) );
     _.arrayAppendOnce( result, module );
@@ -3629,19 +3629,19 @@ function submodulesAdd( o )
 
   o = _.routineOptions( submodulesAdd, arguments );
 
-  let variants = will.variantsReform( o.modules );
+  let junctions = will.junctionsReform( o.modules );
 
-  variants.forEach( ( variant ) =>
+  junctions.forEach( ( junction ) =>
   {
-    _.assert( will.isVariant( variant ) );
-    if( !variant.module )
+    _.assert( will.isJunction( junction ) );
+    if( !junction.module )
     return;
-    if( !variant.module.about.name )
+    if( !junction.module.about.name )
     return;
-    if( variant.module === module )
+    if( junction.module === module )
     return;
 
-    if( _.any( module.submoduleMap, ( relation ) => will.variantFrom( relation ) === variant ) )
+    if( _.any( module.submoduleMap, ( relation ) => will.junctionFrom( relation ) === junction ) )
     {
       debugger;
       return;
@@ -3649,8 +3649,8 @@ function submodulesAdd( o )
 
     let o2 = Object.create( null );
     o2.module = module;
-    o2.path = variant.remotePath || variant.localPath;
-    o2.name = variant.module.originDirNameGet();
+    o2.path = junction.remotePath || junction.localPath;
+    o2.name = junction.module.originDirNameGet();
     let relation = new _.Will.ModulesRelation( o2 );
     ready.then( () => relation.form() );
     ready.then( () => counter += 1 );
@@ -4038,21 +4038,21 @@ let submodulesPeersOpen = _.routineFromPreAndBody( modulesEach_pre, submodulesPe
 
 //
 
-function peerModuleFromVariant( variant )
+function peerModuleFromJunction( junction )
 {
   let module = this;
   let will = module.will;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  if( !variant )
-  variant = will.variantFrom( module );
+  if( !junction )
+  junction = will.junctionFrom( module );
 
-  if( !module.peerModule && variant.peer && variant.peer.modules.length )
+  if( !module.peerModule && junction.peer && junction.peer.modules.length )
   {
     let peerLocalPath = module.peerLocalPathGet();
     if( peerLocalPath )
-    variant.peer.modules.some( ( module2 ) =>
+    junction.peer.modules.some( ( module2 ) =>
     {
       if( module2.localPath === peerLocalPath )
       {
@@ -4702,7 +4702,7 @@ function _filePathChanged2( o )
     let relation = module.submoduleMap[ s ];
     // if( relation.formed && relation.enabled ) /* ttt */
     if( relation.formed )
-    will.variantReform( relation );
+    will.junctionReform( relation );
   }
 
   _.assert( module.localPath === module.commonPath || module.localPath === null );
@@ -4726,22 +4726,22 @@ function _pathRegister()
 
   will.modulePathRegister( module );
 
-  let variant = will.variantReform( module );
+  let junction = will.junctionReform( module );
 
   let o2 =
   {
     withPeers : 0,
     outputFormat : '/',
   }
-  let variants = module.modulesEachAll( o2 );
+  let junctions = module.modulesEachAll( o2 );
 
   _.assert( !!o2.withDisabledModules );
   _.assert( !!o2.withDisabledSubmodules );
 
-  variants.forEach( ( variant ) =>
+  junctions.forEach( ( junction ) =>
   {
-    _.assert( will.isVariant( variant ) );
-    will.variantsReform( variant.relations );
+    _.assert( will.isJunction( junction ) );
+    will.junctionsReform( junction.relations );
   });
 
 }
@@ -6359,19 +6359,19 @@ function structureExportOut( o )
   });
 
   let modules = [];
-  found.result.forEach( ( variant ) =>
+  found.result.forEach( ( junction ) =>
   {
-    if( !variant.module )
+    if( !junction.module )
     debugger;
-    if( !variant.module )
+    if( !junction.module )
     throw _.err
     (
-        `${variant.object.absoluteName} is not available. `
-      + `\nRemote path is ${variant.remotePath}`
-      + `\nLocal path is ${variant.localPath}`
+        `${junction.object.absoluteName} is not available. `
+      + `\nRemote path is ${junction.remotePath}`
+      + `\nLocal path is ${junction.localPath}`
     );
     let c = 0;
-    variant.modules.forEach( ( module ) =>
+    junction.modules.forEach( ( module ) =>
     {
       if( _.longHas( found.ownedObjects, module ) )
       {
@@ -7239,7 +7239,7 @@ let Extend =
   peerModuleSet,
   peerWillfilesPathFromWillfiles,
   submodulesPeersOpen,
-  peerModuleFromVariant,
+  peerModuleFromJunction,
 
   // resource
 

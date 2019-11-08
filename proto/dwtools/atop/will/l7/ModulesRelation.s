@@ -81,9 +81,9 @@ function unform()
 
   if( relation.formed )
   {
-    let variant = will.variantOf( relation );
-    if( variant && variant.own( relation ) )
-    variant.remove( relation );
+    let junction = will.junctionOf( relation );
+    if( junction && junction.own( relation ) )
+    junction.remove( relation );
   }
 
   return Parent.prototype.unform.call( relation );
@@ -128,7 +128,7 @@ function form1()
   _.assert( relation.opener.formed >= 2 );
 
   // if( relation.enabled ) /* ttt */
-  will.variantReform( relation );
+  will.junctionReform( relation );
 
   /* end */
 
@@ -303,7 +303,7 @@ function _openEnd()
   _.assert( !!relation.opener.openedModule );
 
   // if( relation.enabled ) /* ttt */
-  will.variantReform( relation );
+  will.junctionReform( relation );
 
   let modules2 = relation.opener.openedModule.modulesEachAll
   ({
@@ -400,10 +400,10 @@ function submodulesRelationsFilter( o )
   o = _.routineOptions( submodulesRelationsFilter, arguments );
 
   let result = relation.submodulesRelationsOwnFilter( o );
-  let variant = will.variantFrom( relation );
-  let variants = variant.submodulesVariantsFilter( o );
+  let junction = will.junctionFrom( relation );
+  let junctions = junction.submodulesJunctionsFilter( o );
 
-  result = _.arrayAppendArraysOnce( result, variants.map( ( variant ) => variant.objects ) );
+  result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
 
   return result;
 }
