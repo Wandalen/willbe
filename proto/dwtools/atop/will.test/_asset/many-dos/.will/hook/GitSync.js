@@ -5,11 +5,11 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
-  _.fileProvider.filesFind( it.variant.dirPath + '**' );
+  _.fileProvider.filesFind( it.junction.dirPath + '**' );
 
   let status = _.git.statusFull
   ({
-    insidePath : it.variant.dirPath,
+    insidePath : it.junction.dirPath,
   });
 
   if( status.uncommitted )

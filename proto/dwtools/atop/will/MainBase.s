@@ -783,13 +783,13 @@ function _pathChanged( o )
   if( o.isIdential === null )
   o.isIdentical = o.ex === o.val || _.entityIdentical( o.val, o.ex );
 
-  if( o.val )
-  if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
-  if( o.object.id === 690 || o.object.id === 692 )
-  {
-    logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
-    debugger;
-  }
+  // if( o.val )
+  // if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
+  // if( o.object.id === 690 || o.object.id === 692 )
+  // {
+  //   logger.log( o.object.absoluteName, '#' + o.object.id, o.kind, o.fieldName, _.toStrNice( o.val ) );
+  //   debugger;
+  // }
 
   // if( o.val )
   // if( o.fieldName === 'remotePath' || o.fieldName === 'remote' )
@@ -1991,11 +1991,9 @@ function modulesOnlyRoots( modules )
 
   /* then add in-roots of trees */
 
-  debugger;
-
+  // debugger;
   let sources = nodesGroup.sourcesFromNodes( objects );
-
-  debugger;
+  // debugger;
 
   sources = sources.filter( ( object ) =>
   {
@@ -2008,8 +2006,6 @@ function modulesOnlyRoots( modules )
     return false;
     return true;
   });
-
-  debugger;
 
   // sources = sources.filter( ( junction ) =>
   // {

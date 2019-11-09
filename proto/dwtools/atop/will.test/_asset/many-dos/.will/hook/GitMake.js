@@ -11,7 +11,7 @@ function onModule( it )
     throw _.errBrief( 'Module should be local, opened and have name' );
   }
 
-  let localPath = it.variant.dirPath;
+  let localPath = it.junction.dirPath;
   let remotePath = null;
 
   debugger;
@@ -38,10 +38,10 @@ function onModule( it )
     if( config.about && config.about[ 'github.token' ] )
     token = config.about[ 'github.token' ];
 
-    _.assert( !_.strEnds( it.variant.localPath, 'git/trunk/' ), 'guard' );
+    _.assert( !_.strEnds( it.junction.localPath, 'git/trunk/' ), 'guard' );
 
     if( o.verbosity )
-    logger.log( `Making repository for ${it.variant.nameWithLocationGet()}` );
+    logger.log( `Making repository for ${it.junction.nameWithLocationGet()}` );
     if( o.verbosity >= 2 )
     logger.log( `localPath : ${_.color.strFormat( String( localPath ), 'path' )}` );
     if( o.verbosity >= 2 )
@@ -64,7 +64,7 @@ function onModule( it )
     err = _.err
     (
         err
-      , `\nFailed to make an repository for ${it.variant.nameWithLocationGet()}`
+      , `\nFailed to make an repository for ${it.junction.nameWithLocationGet()}`
       , `\nlocalPath : ${localPath}`
       , `\nremotePath : ${remotePath}`
     );

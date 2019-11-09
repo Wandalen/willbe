@@ -189,8 +189,8 @@ module:
           - ../proto/dwtools/atop/will/l3
           - ../proto/dwtools/atop/will/l3/AbstractModule.s
           - ../proto/dwtools/atop/will/l3/Module.s
+          - ../proto/dwtools/atop/will/l3/ModuleJunction.s
           - ../proto/dwtools/atop/will/l3/ModuleOpener.s
-          - ../proto/dwtools/atop/will/l3/ModuleVariant.s
           - ../proto/dwtools/atop/will/l5
           - ../proto/dwtools/atop/will/l5/Resource.s
           - ../proto/dwtools/atop/will/l7
@@ -3861,6 +3861,4 @@ module:
       ../.im.will.yml:
         hash: f08ac5c86e7787044931876698566930
         size: 6782
-      willbe.out.will.yml:
-        hash: de801e6470bda84b288b0b110420a11d
-        size: 169536
+      willbe.out.will.yml: *ref_0

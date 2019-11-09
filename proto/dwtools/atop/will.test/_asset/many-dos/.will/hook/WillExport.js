@@ -21,7 +21,7 @@ function onModule( it )
   return;
 
   if( o.verbosity )
-  logger.log( `Exporting ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Exporting ${it.junction.nameWithLocationGet()}` );
 
   if( o.dry )
   return;
@@ -36,7 +36,7 @@ module.exports = onModule;
 
 function npmConfigIsEnabled( it, fileName )
 {
-  let npmConfigPath = _.path.join( it.variant.dirPath, fileName );
+  let npmConfigPath = _.path.join( it.junction.dirPath, fileName );
   if( _.fileProvider.fileExists( npmConfigPath ) )
   if( !isEnabled( npmConfigPath ) )
   return false;

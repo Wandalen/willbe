@@ -44,7 +44,7 @@ function pathTmpRelace( it, willfPath )
   let write = read.replace( ins, sub.trim() );
 
   if( o.verbosity )
-  logger.log( `Replacing tmp in ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Replacing tmp in ${it.junction.nameWithLocationGet()}` );
 
   if( o.verbosity >= 2 )
   logger.log( write );
@@ -73,7 +73,7 @@ function pathExportExportReplace( it, willfPath )
   let write = splits.join( '' );
 
   if( o.verbosity )
-  logger.log( `Replacing "export : {path::export}" in ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Replacing "export : {path::export}" in ${it.junction.nameWithLocationGet()}` );
 
   if( o.verbosity >= 2 )
   logger.log( write );
@@ -106,7 +106,7 @@ function pathExportAdd( it, willfPath )
   return;
 
   if( o.verbosity )
-  logger.log( `Adding path::export to ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Adding path::export to ${it.junction.nameWithLocationGet()}` );
 
   splits.splice( 2, 0, `${pre}export : '{path::proto}/**'\n` );
   let write = splits.join( '' );
@@ -135,7 +135,7 @@ function pathExportUse( it, willfPath )
   let write = _.strReplace( read, 'export : path::proto', 'export : path::export' );
 
   if( o.verbosity )
-  logger.log( `Using path::export in ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Using path::export in ${it.junction.nameWithLocationGet()}` );
 
   if( o.verbosity >= 2 )
   logger.log( write );
@@ -164,7 +164,7 @@ function pathRemotesAdd( it, willfPath )
   return;
 
   if( o.verbosity )
-  logger.log( `Adding path::remotes to ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Adding path::remotes to ${it.junction.nameWithLocationGet()}` );
 
   let remotesPath =
   [
@@ -202,7 +202,7 @@ function pathRemotesToOrigins( it, willfPath )
   let write = _.strReplace( read, ' remotes :', ' origins :' );
 
   if( o.verbosity )
-  logger.log( `Replacing path::origins <- path::remotes ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Replacing path::origins <- path::remotes ${it.junction.nameWithLocationGet()}` );
 
   if( o.verbosity >= 2 )
   logger.log( write );

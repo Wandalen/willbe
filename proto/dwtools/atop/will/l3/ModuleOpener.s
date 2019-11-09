@@ -1903,6 +1903,43 @@ function repoUpdate()
 // path
 // --
 
+function _pathChanged( o )
+{
+  let opener = this;
+  let will = opener.will;
+
+  _.assert( o.val !== undefined );
+  _.routineOptions( _pathChanged, arguments );
+
+  if( o.isIdentical === null )
+  o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
+
+  _.assert( opener.__[ o.name ] !== undefined );
+  opener.__[ o.name ] = o.val;
+
+  if( will && opener.openedModule )
+  if( o.touching )
+  if( !o.isIdentical )
+  {
+    debugger;
+    let o2 = _.mapExtend( null, o );
+    o2.touching = 0;
+    opener.openedModule._pathChanged( o2 );
+  }
+
+}
+
+_pathChanged.defaults =
+{
+  name : null,
+  ex : null,
+  val : null,
+  isIdentical : null,
+  touching : 9,
+}
+
+//
+
 function _filePathChanged1( o )
 {
   let opener = this;
@@ -2584,6 +2621,7 @@ let Extend =
 
   // path
 
+  _pathChanged,
   _filePathChanged1,
   _filePathChanged2,
 

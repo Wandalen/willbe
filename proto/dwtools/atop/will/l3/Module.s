@@ -4631,6 +4631,102 @@ pathsRebase.defaults =
 
 //
 
+function _pathChanged( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( o.val !== undefined );
+  _.routineOptions( _pathChanged, arguments );
+
+  if( o.isIdentical === null )
+  o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
+
+  if( will && module.userArray )
+  if( o.touching )
+  if( !o.isIdentical )
+  if( module.SharedPaths[ o.name ] !== undefined )
+  {
+    module.userArray.forEach( ( opener ) =>
+    {
+      if( !( opener instanceof _.Will.ModuleOpener ) )
+      return;
+      let o2 = _.mapExtend( null, o );
+      o2.touching = 0;
+      if( o2.val )
+      if( o2.name !== 'inPath' )
+      o2.val = path.s.join( module.inPath, o2.val );
+      else
+      o2.val = path.s.join( module.dirPath, o2.val );
+      opener._pathChanged( o2 );
+      _.assert( _.identical( opener[ o2.name ], o2.val ) );
+    });
+  }
+
+}
+
+_pathChanged.defaults =
+{
+  name : null,
+  ex : null,
+  val : null,
+  isIdentical : null,
+  touching : 9,
+}
+
+//
+
+function _pathResourceChanged( o )
+{
+  let module = this;
+  let will = module.will;
+
+  _.assert( o.val !== undefined );
+  _.assert( _.strDefined( o.name ) );
+  _.routineOptions( _pathResourceChanged, arguments );
+
+  if( o.isIdentical === null )
+  o.isIdentical = o.ex === o.val || _.entityIdentical( o.ex, o.val );
+
+  if( module.ResourceToPathName.hasKey( o.name ) )
+  {
+    let o2 = _.mapExtend( null, o );
+    o2.name = module.ResourceToPathName.forKey( o.name );
+    module._pathChanged( o2 );
+  }
+
+  let o2 = _.mapExtend( null, o );
+  o2.kind = 'resource.set';
+  o2.object = module;
+  o2.fieldName = o.name;
+  delete o2.name;
+  will._pathChanged( o2 );
+
+  // will._pathChanged
+  // ({
+  //   object : module,
+  //   fieldName : resource.name,
+  //   val : src,
+  //   ex,
+  //   kind : 'resource.set',
+  // });
+
+}
+
+_pathResourceChanged.defaults =
+{
+  name : null,
+  ex : null,
+  val : null,
+  isIdentical : null,
+}
+
+//
+
+/* xxx : use _pathChanged instead */
 function _filePathChanged1( o )
 {
   let module = this;
@@ -4924,7 +5020,9 @@ function predefinedPathGet_functor( fieldName, resourceName, absolutize )
     if( !module.will)
     return null;
 
-    let result = module.pathMap[ resourceName ] || null;
+    let result = module.pathMap[ resourceName ];
+    if( result === undefined )
+    result = null;
 
     if( result )
     if( _.Will.Resolver.selectorIs( result ) )
@@ -5054,10 +5152,6 @@ function predefinedPathSet_functor( fieldName, resourceName )
     _.assert( !!module[ putName ] );
     module[ putName ]( filePath );
 
-    // debugger;
-    // if( _.strIs( filePath ) && _.strEnds( filePath, '/wTools.out.will' ) )
-    // debugger;
-
     if( will )
     will._pathChanged
     ({
@@ -5159,7 +5253,6 @@ let currentRemotePathGet = predefinedPathGet_functor( 'currentRemotePath', 'curr
 let willPathGet = predefinedPathGet_functor( 'willPath', 'will' );
 let originalWillfilesPathGet = predefinedPathGet_functor( 'originalWillfilesPath', 'module.original.willfiles' );
 let peerWillfilesPathGet = predefinedPathGet_functor( 'peerWillfilesPath', 'module.peer.willfiles' );
-// let peerInPathGet = predefinedPathGet_functor( 'peerInPath', 'module.peer.in' );
 
 let decoratedWillfilesPathGet = decoratedPathGet_functor( 'willfilesPath' );
 let decoratedInPathGet = decoratedPathGet_functor( 'inPath' );
@@ -5175,8 +5268,8 @@ let decoratedOriginalWillfilesPathGet = decoratedPathGet_functor( 'originalWillf
 let decoratedPeerWillfilesPathGet = decoratedPathGet_functor( 'peerWillfilesPath' );
 let decoratedPeerInPathGet = decoratedPathGet_functor( 'peerInPath' );
 
-let _inPathPut = predefinedPathPut_functor( 'inPath', 'in', 'dirPath', 0 );
-let _outPathPut = predefinedPathPut_functor( 'outPath', 'out', 'inPath', 0 );
+let _inPathPut = predefinedPathPut_functor( 'inPath', 'in', 'dirPath' );
+let _outPathPut = predefinedPathPut_functor( 'outPath', 'out', 'inPath' );
 let _willfilesPathPut = predefinedPathPut_functor( 'willfilesPath', 'module.willfiles', 0 );
 let _dirPathPut = predefinedPathPut_functor( 'dirPath', 'module.dir', 0 );
 let _commonPathPut = predefinedPathPut_functor( 'commonPath', 'module.common', 0 );
@@ -6935,19 +7028,43 @@ let rootModuleSymbol = Symbol.for( 'rootModule' );
 let peerModuleSymbol = Symbol.for( 'peerModule' );
 let superRelationsSymbol = Symbol.for( 'superRelations' );
 
+let SharedPaths =
+{
+
+  'localPath' : null,
+  'remotePath' : null,
+  'willfilesPath' : null,
+  'commonPath' : null,
+  'downloadPath' : null,
+  'dirPath' : null,
+
+};
+
+let ResourceToPathName = new _.NameMapper().set
+({
+
+  'local' : 'localPath',
+  'remote' : 'remotePath',
+  'module.willfiles' : 'willfilesPath',
+  'module.common' : 'commonPath',
+  'download' : 'downloadPath',
+  'module.dir' : 'dirPath',
+  'in' : 'inPath',
+  'out' : 'outPath',
+  'current.remote' : 'currentRemotePath',
+  'module.original.willfiles' : 'originalWillfilesPath',
+  'module.peer.willfiles' : 'peerWillfilesPath',
+  'module.peer.in' : 'peerInPath',
+
+});
+
 let Composes =
 {
 
   willfilesPath : null,
-  // inPath : null,
-  // outPath : null,
   localPath : null,
   downloadPath : null,
   remotePath : null,
-
-  // isRemote : null,
-  // isUpToDate : null,
-  // isOut : null,
 
   verbosity : 0,
 
@@ -7016,6 +7133,8 @@ let Restricts =
 let Statics =
 {
 
+  SharedPaths,
+  ResourceToPathName,
   ResourceSetter_functor,
 
 }
@@ -7264,6 +7383,8 @@ let Extend =
   pathsRelative,
   pathsRebase,
 
+  _pathChanged,
+  _pathResourceChanged,
   _filePathChanged1,
   _filePathChanged2,
   _pathRegister,

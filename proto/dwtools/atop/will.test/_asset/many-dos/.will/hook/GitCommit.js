@@ -7,11 +7,11 @@ function onModule( it )
 
   debugger;
 
-  _.fileProvider.filesFind( it.variant.dirPath + '**' );
+  _.fileProvider.filesFind( it.junction.dirPath + '**' );
 
   let status = _.git.statusFull
   ({
-    insidePath : it.variant.dirPath,
+    insidePath : it.junction.dirPath,
     unpushed : 0,
     prs : 0,
     remote : 0,
@@ -23,7 +23,7 @@ function onModule( it )
   return null;
 
   if( o.verbosity )
-  logger.log( `Committing ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Committing ${it.junction.nameWithLocationGet()}` );
 
   if( o.dry )
   return;

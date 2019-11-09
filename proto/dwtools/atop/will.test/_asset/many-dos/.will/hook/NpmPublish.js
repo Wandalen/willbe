@@ -5,17 +5,17 @@ function onModule( it )
   let o = it.request.map;
   let _ = it.tools;
   let logger = it.logger;
-  let configPath = _.path.join( it.variant.dirPath, 'package.json' );
-  let wasconfigPath = _.path.join( it.variant.dirPath, 'was.package.json' );
+  let configPath = _.path.join( it.junction.dirPath, 'package.json' );
+  let wasconfigPath = _.path.join( it.junction.dirPath, 'was.package.json' );
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  if( !it.variant.module )
+  if( !it.junction.module )
   return;
 
-  if( !it.variant.module.about.enabled )
+  if( !it.junction.module.about.enabled )
   return;
 
   if( !o.tag )
@@ -25,7 +25,7 @@ function onModule( it )
   throw _.errBrief( `Does not have ${wasconfigPath}` );
 
   if( o.verbosity )
-  logger.log( `Publishing ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Publishing ${it.junction.nameWithLocationGet()}` );
 
   if( o.dry )
   return;
@@ -33,7 +33,7 @@ function onModule( it )
   if( !isEnabled( it, wasconfigPath ) )
   return;
 
-  _.assert( _.path.isTrailed( it.variant.localPath ), 'not tested' );
+  _.assert( _.path.isTrailed( it.junction.localPath ), 'not tested' );
 
   it.start( 'local-will .export' );
 
@@ -54,7 +54,7 @@ function onModule( it )
   _.npm.fixate
   ({
     dry : o.dry,
-    localPath : it.variant.dirPath,
+    localPath : it.junction.dirPath,
     configPath : activeconfigPath,
     tag : o.tag,
     onDependency,
@@ -63,7 +63,7 @@ function onModule( it )
 
   _.npm.publish
   ({
-    localPath : it.variant.dirPath,
+    localPath : it.junction.dirPath,
     tag : o.tag,
     ready : it.ready,
     verbosity : o.verbosity === 2 ? 2 : o.verbosity -1,

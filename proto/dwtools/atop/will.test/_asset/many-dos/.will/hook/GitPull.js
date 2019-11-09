@@ -7,7 +7,7 @@ function onModule( it )
 
   // let status = _.git.statusFull
   // ({
-  //   insidePath : it.variant.dirPath,
+  //   insidePath : it.junction.dirPath,
   //   unpushed : 0,
   //   prs : 0,
   //   remote : 0,
@@ -16,11 +16,11 @@ function onModule( it )
   // return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Pulling ${it.junction.nameWithLocationGet()}` );
 
   // if( status.local )
   // {
-  //   logger.log( _.errBrief( `${it.variant.nameWithLocationGet()} has local changes!` ) );
+  //   logger.log( _.errBrief( `${it.junction.nameWithLocationGet()} has local changes!` ) );
   //   return null;
   // }
 

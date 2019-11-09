@@ -5,20 +5,20 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
-  _.fileProvider.filesFind( it.variant.dirPath + '**' );
+  _.fileProvider.filesFind( it.junction.dirPath + '**' );
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
   let o2 = _.mapOnly( o, _.git.statusFull.defaults );
-  o2.insidePath = it.variant.dirPath;
+  o2.insidePath = it.junction.dirPath;
   let status = _.git.statusFull( o2 );
 
   if( !status.status )
   return null;
 
-  logger.log( it.variant.nameWithLocationGet() );
+  logger.log( it.junction.nameWithLocationGet() );
   logger.log( status.status );
 
 }

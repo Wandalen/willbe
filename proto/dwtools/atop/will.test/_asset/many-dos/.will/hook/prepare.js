@@ -13,30 +13,30 @@ function onModule( it )
   return;
 
   // debugger;
-  // if( it.withPath !== it.variant.dirPath && path.begins( it.withPath, it.variant.dirPath ) )
-  if( it.withPath !== it.variant.localPath )
+  // if( it.withPath !== it.junction.dirPath && path.begins( it.withPath, it.junction.dirPath ) )
+  if( it.withPath !== it.junction.localPath )
   {
     debugger;
     throw _.errBrief
     (
-        `Attempt to prepare ${it.variant.localPath}.`
+        `Attempt to prepare ${it.junction.localPath}.`
       , `\nBut called from ${it.withPath}.`
       , `\nMake a willfile in directory which you want to prepare first then call the hook from the directory.`
     );
   }
 
   if( o.verbosity )
-  logger.log( `Preparing ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Preparing ${it.junction.nameWithLocationGet()}` );
 
   it.will.hooks.TemplateStandard.call( it );
 
   it.ready.then( () =>
   {
-    if( !_.Will.IsModuleAt( it.variant.localPath ) )
-    throw _.errBrief( `No module at ${it.variant.localPath}` );
-    let tempWillfPath = it.variant.localPath + ( path.isTrailed( it.variant.localPath ) ? '' : '.' ) + 'will.yml';
+    if( !_.Will.IsModuleAt( it.junction.localPath ) )
+    throw _.errBrief( `No module at ${it.junction.localPath}` );
+    let tempWillfPath = it.junction.localPath + ( path.isTrailed( it.junction.localPath ) ? '' : '.' ) + 'will.yml';
     if( fileProvider.fileExists( tempWillfPath ) )
-    fileProvider.fileRename( path.join( it.variant.dirPath, '-' + path.fullName( tempWillfPath ) ), tempWillfPath );
+    fileProvider.fileRename( path.join( it.junction.dirPath, '-' + path.fullName( tempWillfPath ) ), tempWillfPath );
     return null;
   });
 

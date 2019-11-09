@@ -8,16 +8,16 @@ function onModule( it )
   if( !it.module )
   return;
 
-  // let status = _.git.statusFull({ insidePath : it.variant.dirPath, checkingPrs : 0, checkingRemoteChanges : 0 });
+  // let status = _.git.statusFull({ insidePath : it.junction.dirPath, checkingPrs : 0, checkingRemoteChanges : 0 });
   // if( !status.isRepository )
   // return null;
 
   if( o.verbosity )
-  logger.log( `${it.variant.nameWithLocationGet()}` );
+  logger.log( `${it.junction.nameWithLocationGet()}` );
 
   it.startWill( `${it.request.original}` );
 
-  // let relativeLocalPath = _.path.relative( it.variant.dirPath, it.variant.localPath );
+  // let relativeLocalPath = _.path.relative( it.junction.dirPath, it.junction.localPath );
   // it.start( `local-will .with ${relativeLocalPath} ${it.request.original}` );
 
 }

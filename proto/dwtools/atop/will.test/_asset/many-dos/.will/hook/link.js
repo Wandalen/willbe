@@ -17,7 +17,7 @@ function onModule( it )
 
   /* basePath */
 
-  let basePath = _.arrayAs( it.variant.dirPath );
+  let basePath = _.arrayAs( it.junction.dirPath );
   if( config && config.path && config.path.link )
   _.arrayAppendArrayOnce( basePath, _.arrayAs( config.path.link ) );
   basePath = _.path.s.join( it.will.withPath, basePath );

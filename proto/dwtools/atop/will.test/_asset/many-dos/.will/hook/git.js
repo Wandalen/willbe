@@ -5,11 +5,11 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
-  if( !_.git.insideRepository( it.variant.dirPath ) )
+  if( !_.git.insideRepository( it.junction.dirPath ) )
   return null;
 
   if( o.verbosity )
-  logger.log( `${it.variant.nameWithLocationGet()}` );
+  logger.log( `${it.junction.nameWithLocationGet()}` );
 
   it.start( `git ${it.request.original}` );
 

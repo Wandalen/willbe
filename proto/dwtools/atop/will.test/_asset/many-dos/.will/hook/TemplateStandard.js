@@ -12,7 +12,7 @@ function onModule( it )
   return;
 
   if( o.verbosity )
-  logger.log( `Applying template::Standard to ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Applying template::Standard to ${it.junction.nameWithLocationGet()}` );
 
   if( o.dry )
   return;
@@ -20,7 +20,7 @@ function onModule( it )
   var writer = _.TemplateFileWriter
   ({
     resolver : _.TemplateTreeResolver(),
-    dst : it.variant.dirPath,
+    dst : it.junction.dirPath,
     srcTemplatePath : __dirname + '/template/Standard.js',
     name : it.module.about.name,
     onConfigGet : () => onConfigGet( it ),

@@ -6,7 +6,7 @@ function onModule( it )
   let logger = it.logger;
 
   if( o.verbosity )
-  logger.log( `Cleaning ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Cleaning ${it.junction.nameWithLocationGet()}` );
 
   del( '.module' );
   del( 'out' );

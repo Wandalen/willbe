@@ -4,7 +4,7 @@ function onModule( it )
   let o = it.request.map;
   if( it.module && !it.module.about.enabled )
   return end( false );
-  let localPath = it.variant.localPath;
+  let localPath = it.junction.localPath;
   let npmConfigPath = _.path.join( localPath, 'package.json' );
   let config = _.fileProvider.fileConfigRead( localPath );
   if( !config.name )
@@ -18,7 +18,7 @@ function onModule( it )
     if( o.verbosity )
     {
       let enabled = enabled ? 'enabled' : 'disabled';
-      logger.log( `${it.variant.object.qualifiedNameDecorated} is ${enabled} at ${it.variant.localPath}` );
+      logger.log( `${it.junction.object.qualifiedNameDecorated} is ${enabled} at ${it.junction.localPath}` );
     }
     return result;
   }

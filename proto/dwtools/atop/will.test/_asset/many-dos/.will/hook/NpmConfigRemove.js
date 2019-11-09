@@ -16,7 +16,7 @@ function onModule( it )
   return;
 
   if( o.verbosity )
-  logger.log( it.variant.nameWithLocationGet() );
+  logger.log( it.junction.nameWithLocationGet() );
   if( o.verbosity )
   logger.log( `Renaming ${wasPackagePath} <- ${packagePath}` );
 

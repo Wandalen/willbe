@@ -357,15 +357,20 @@ function _pathSet( src )
     module.pathMap[ resource.name ] = resource.path;
   }
 
-  if( module )
-  module.will._pathChanged
-  ({
-    object : module,
-    fieldName : resource.name,
-    val : src,
-    ex,
-    kind : 'resource.set',
-  });
+  if( module && !resource.original && !resource.phantom )
+  {
+    module._pathResourceChanged({ name : resource.name, ex : ex, val : src });
+  }
+
+  // if( module )
+  // module.will._pathChanged
+  // ({
+  //   object : module,
+  //   fieldName : resource.name,
+  //   val : src,
+  //   ex,
+  //   kind : 'resource.set',
+  // });
 
 }
 
@@ -379,10 +384,6 @@ let Composes =
 {
 
   path : _.define.field({ ini : null, order : 1 }),
-  // path : null,
-  // description : null,
-  // criterion : null,
-  // inherit : _.define.own([]),
 
 }
 

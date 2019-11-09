@@ -7,7 +7,7 @@ function onModule( it )
   let willfPath = _.arrayAs( it.opener.willfilesPath );
 
   if( o.verbosity )
-  logger.log( `Module init of ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Module init of ${it.junction.nameWithLocationGet()}` );
 
   xxx
 

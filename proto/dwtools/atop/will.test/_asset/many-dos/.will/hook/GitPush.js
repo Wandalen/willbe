@@ -9,7 +9,7 @@ function onModule( it )
 
   let status = _.git.statusFull
   ({
-    insidePath : it.variant.dirPath,
+    insidePath : it.junction.dirPath,
     local : 0,
     uncommitted : 0,
     unpushed : 1,
@@ -24,7 +24,7 @@ function onModule( it )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pushing ${it.variant.nameWithLocationGet()}` );
+  logger.log( `Pushing ${it.junction.nameWithLocationGet()}` );
 
   debugger;
 
