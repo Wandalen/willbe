@@ -6043,7 +6043,7 @@ function modulesTreeLocal( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '-- module::' ), 19 );
+    test.identical( _.strCount( got.output, '-- module::' ), 37 );
 
     let exp =
 `
@@ -6051,22 +6051,40 @@ Command ".imply v:1 ; .with */* .modules.tree"
  +-- module::module-x
  |
  +-- module::module-ab-named
+ | +-- module::sub-a
+ | +-- module::sub-b
  | +-- module::module-a
  | +-- module::module-b
  |
  +-- module::module-bc-named
+ | +-- module::sub-b
+ | +-- module::sub-c
  | +-- module::module-b
  | +-- module::module-c
  |
  +-- module::module-aabc
+ | +-- module::sub-a
+ | +-- module::sub-ab
+ | | +-- module::module-a
+ | | +-- module::module-b
+ | +-- module::sub-c
  | +-- module::module-a
  | +-- module::module-ab
+ | | +-- module::sub-a
+ | | +-- module::sub-b
  | | +-- module::module-a
  | | +-- module::module-b
  | +-- module::module-c
  |
  +-- module::module-abac
+   +-- module::sub-ab
+   | +-- module::module-a
+   | +-- module::module-b
+   +-- module::sub-a
+   +-- module::sub-c
    +-- module::module-ab
+   | +-- module::sub-a
+   | +-- module::sub-b
    | +-- module::module-a
    | +-- module::module-b
    +-- module::module-a
@@ -7994,6 +8012,45 @@ function cleanBrokenSubmodules( test )
 
 cleanBrokenSubmodules.timeOut = 200000;
 
+//
+
+function cleanHdBug( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'hierarchy-hd-bug' );
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with z .clean recursive:2';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with z .clean recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml', './group1/group10', './group1/group10/a0.will.yml' ];
+    var files = self.find( a.abs( '.' ) );
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, 'Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function cleanHdBug */
 
 //
 
@@ -8436,7 +8493,7 @@ function cleanRecursive( test )
   return ready;
 } /* end of function cleanRecursive */
 
-cleanRecursive.timeOut = 300000;
+cleanRecursive.timeOut = 500000;
 
 //
 
@@ -12537,6 +12594,8 @@ exportBrokenNoreflector.description =
 `
 removed reflector::exported.export is not obstacle to list out file
 `
+
+exportBrokenNoreflector.timeOut = 500000;
 
 //
 
@@ -16924,6 +16983,190 @@ submodulesDownloadHierarchyRemote.timeOut = 300000;
 
 //
 
+function submodulesDownloadHierarchyDuplicate( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'hierarchy-duplicate' );
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with z .submodules.download';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with z .clean recursive:2' )
+  a.start( '.with z .submodules.download' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 14 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
+
+  a.start( '.with z .submodules.download' )
+
+  .then( ( got ) =>
+  {
+    test.case = 'second';
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 14 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
+    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with z .submodules.download recursive:2';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with z .clean recursive:2' )
+  a.start( '.with z .submodules.download recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 5 );
+    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
+
+  a.start( '.with z .submodules.download recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.case = 'second';
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
+    test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .submodules.download recursive:2';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with z .clean recursive:2' )
+  a.start( '.with ** .submodules.download recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 5 );
+    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
+
+  a.start( '.with z .submodules.download recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.case = 'second';
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
+    test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function submodulesDownloadHierarchyDuplicate */
+
+submodulesDownloadHierarchyDuplicate.timeOut = 300000;
+
+//
+
 function submodulesUpdateThrowing( test )
 {
   let self = this;
@@ -20301,8 +20544,8 @@ var Self =
     modulesTreeDotless,
     modulesTreeLocal,
     modulesTreeHierarchyRemote,
-    modulesTreeHierarchyRemoteDownloaded,
-    modulesTreeHierarchyRemotePartiallyDownloaded,
+    // modulesTreeHierarchyRemoteDownloaded, /* xxx : later */
+    // modulesTreeHierarchyRemotePartiallyDownloaded, /* xxx : later */
     modulesTreeDisabledAndCorrupted,
 
     help,
@@ -20316,6 +20559,7 @@ var Self =
     cleanBroken1,
     cleanBroken2,
     cleanBrokenSubmodules,
+    cleanHdBug,
     cleanNoBuild,
     cleanDry,
     cleanSubmodules,
@@ -20392,6 +20636,7 @@ var Self =
     submodulesDownloadDiffDownloadPathsRegular,
     submodulesDownloadDiffDownloadPathsIrregular,
     submodulesDownloadHierarchyRemote,
+    submodulesDownloadHierarchyDuplicate,
 
     submodulesUpdateThrowing,
     submodulesAgreeThrowing,
