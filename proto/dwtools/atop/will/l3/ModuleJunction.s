@@ -92,82 +92,27 @@ function reform()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  // let remotePaths = [];
 
   if( junction.formed === -1 )
   return;
 
-  // if( junction )
-  // logger.log( `Reforming junction::${junction.name}#${junction.id} at ${junction.localPath}` );
-  // if( junction.id === 109 )
-  // debugger;
+  // logger.log( `Reforming junction::${junction.name}#${junction.id} at ${junction.localPath}` ); debugger;
 
   junction.formed = -1;
 
   _.assert( !junction.finitedIs() );
 
-  // if( junction.id === 83 || junction.id === 259 )
-  // if( junction.id === 83 )
-  // if( junction.id === 83 || junction.id === 129 )
-  // if( junction.id === 209 || junction.id === 259 )
-  // if( junction.id === 209 )
-  // {
-  //   logger.log( '>', junction.exportInfo() );
-  //   debugger;
-  // }
-
-  // if( !junction.opener && !junction.module && !junction.relation )
-  // debugger;
-
   if( junction.finitedIs() )
   return;
 
-  // if( junction.module && junction.opener && junction.peer )
-  // if( junction.id === 583 )
-  // debugger;
-
-  // if( junction.id === 282 )
-  // {
-  //   logger.log( junction.exportInfo() );
-  //   debugger;
-  // }
-
-  // if( junction.id === 3 && will.junctionWithId( 1722 ) )
-  // debugger;
-  //
-  // junction.mergeMaybe();
-  // _.assert( !junction.finitedIs() );
-  // if( !junction.isUsed() )
-  // {
-  //   junction.finit();
-  //   return false;
-  // }
-
-  // {
-  //   let junction2 = junction.mergeMaybe();
-  //   if( junction2 )
-  //   return junction2;
-  // }
-
   associationsAdd();
   objectFind();
-
-  // {
-  //   let junction2 = junction.mergeMaybe();
-  //   if( junction2 )
-  //   return junction2;
-  // }
-
-  // if( junction.id === 83 && !junction.ownSomething() )
-  // debugger;
-
   pathsForm();
 
-  // if( junction.id === 3 && will.junctionWithId( 1722 ) )
+  // if( junction.id === 610 )
   // debugger;
 
-  junction.mergeMaybe();
-  // _.assert( !junction.finitedIs() );
+  junction.mergeMaybe( 1 );
   if( junction.finitedIs() )
   {
     return false;
@@ -183,6 +128,8 @@ function reform()
   peerForm();
   nameForm();
   isOutForm();
+
+  // logger.log( `Reformed junction::${junction.name}#${junction.id} at ${junction.localPath}` ); debugger;
 
   junction.formed = 1;
   return junction;
@@ -360,12 +307,6 @@ function reform()
     _.assert( module instanceof _.Will.Module );
     _.assert( !module.peerModule );
 
-    // let peerWillfilesPath = module.pathMap[ 'module.peer.willfiles' ];
-    // if( !peerWillfilesPath )
-    // return;
-    // _.assert( !!peerWillfilesPath );
-    // let localPath = _.Will.CommonPathFor( peerWillfilesPath );
-
     let localPath = module.peerLocalPathGet();
     if( !localPath )
     return;
@@ -374,7 +315,6 @@ function reform()
     {
       let junction2 = will.junctionMap[ localPath ];
       peerAssign( junction, junction2 );
-      // junction2.reform(); // xxx
       return junction2;
     }
 
@@ -410,43 +350,10 @@ function reform()
       let junction2 = junction.JunctionOf( will, object.peerModule );
       if( junction2 && junction2.peer === junction )
       return junction.peer;
-      // else
-      // {
-      //   debugger;
-      //   // _.assert( 0, 'not tested' );
-      // }
     }
 
-    // let junction2 = _.Will.ModuleJunction.From({ object : peerModule, will : will }); // yyy
     let junction2 = _.Will.ModuleJunction.JunctionOf( will, peerModule );
     peerAssign( junction, junction2 );
-
-    // _.assert( !junction.finitedIs() );
-    // junction.peer = _.Will.ModuleJunction.From({ object : peerModule, will : will });
-    // _.assert( !junction.finitedIs() );
-    // if( junction.peer.peer && junction.peer.peer !== junction )
-    // {
-    //   if( !junction.peer.peer.ownSomething() )
-    //   {
-    //     debugger;
-    //     junction.peer.peer.finit();
-    //   }
-    //   else
-    //   {
-    //     debugger;
-    //     junction.peer.peer = null;
-    //   }
-    // }
-    // _.assert( junction.peer.peer === junction || junction.peer.peer === null );
-    //
-    // if( junction.peer.finitedIs() )
-    // {
-    //   junction.peer = null;
-    // }
-    // else
-    // {
-    //   junction.peer.peer = junction;
-    // }
 
     return junction2;
   }
@@ -456,9 +363,6 @@ function reform()
   function peerAssign( junction, junction2 )
   {
     _.assert( !junction.finitedIs() );
-
-    // if( junction2.peer === junction || junction2.peer === null )
-    // assign();
 
     if( junction2.peer && junction2.peer !== junction )
     {
@@ -470,7 +374,6 @@ function reform()
       else
       {
         debugger;
-        // junction2.peer = null;
         junction2.peer.mergeIn( junction );
       }
     }
@@ -484,23 +387,12 @@ function reform()
       }
       else
       {
-        // debugger;
-        // junction.peer = null;
         junction2.mergeIn( junction.peer );
         return;
       }
     }
 
     assign();
-
-    // if( junction2.finitedIs() )
-    // {
-    //   junction.peer = null;
-    // }
-    // else
-    // {
-    //   junction2.peer = junction;
-    // }
 
     function assign()
     {
@@ -569,14 +461,9 @@ function mergeIn( junction2 )
   junction.openers.slice().forEach( ( object ) => objects.push( object ) );
   junction.modules.slice().forEach( ( object ) => objects.push( object ) );
 
-  // junction.relations.slice().forEach( ( object ) => junction._remove( object ) );
-  // junction.openers.slice().forEach( ( object ) => junction._remove( object ) );
-  // junction.modules.slice().forEach( ( object ) => junction._remove( object ) );
-
   objects.forEach( ( object ) => junction._remove( object ) );
   objects.forEach( ( object ) => junction2._add( object ) );
 
-  // _.assert( junction.peer === null || junction2.peer === null || junction.peer === junction2.peer, 'not implemented' );
   if( junction.peer )
   {
     let peer = junction.peer;
@@ -592,7 +479,6 @@ function mergeIn( junction2 )
     }
     else
     {
-      // debugger;
       peer.mergeIn( junction2.peer );
       _.assert( peer.finitedIs() );
       _.assert( peer.peer === null );
@@ -623,19 +509,11 @@ function mergeIn( junction2 )
   if( junction.finitedIs() )
   return true;
   return false;
-
-  // function move( object )
-  // {
-  //   junction._remove( object );
-  //   junction2._add( object );
-  //   return object;
-  // }
-
 }
 
 //
 
-function mergeMaybe()
+function mergeMaybe( usingPath )
 {
   let junction = this;
   let will = junction.will;
@@ -645,12 +523,39 @@ function mergeMaybe()
   let junction2;
   let reset;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 1 );
 
-  merge();
+  let merged = merge();
 
   if( reset )
   merge();
+
+  if( !merged && usingPath )
+  {
+
+    junction.localPaths.every( ( localPath ) =>
+    {
+      let junction3 = will.junctionMap[ localPath ];
+      if( junction3 && junction3 !== junction )
+      {
+        junction.mergeIn( junction3 );
+        return false;
+      }
+      return true;
+    });
+
+    junction.remotePaths.every( ( remotePath ) =>
+    {
+      let junction3 = will.junctionMap[ remotePath ];
+      if( junction3 && junction3 !== junction )
+      {
+        junction.mergeIn( junction3 );
+        return false;
+      }
+      return true;
+    });
+
+  }
 
   _.assert( !reset );
 
@@ -735,6 +640,7 @@ function mergeMaybe()
       let junction3 = will.objectToJunctionHash.get( object );
       if( junction3 && junction3 !== junction )
       {
+        _.assert( 0, 'not tested' );
         reset = 1;
         junction3.mergeIn( junction );
         return junction3;
@@ -769,6 +675,7 @@ function From( o )
   if( o.object && o.object instanceof Self )
   {
     junction = o.object;
+    return junction;
   }
   else if( _.mapIs( o.object ) )
   {
@@ -778,19 +685,20 @@ function From( o )
   else
   {
     junction = will.objectToJunctionHash.get( o.object );
+    if( junction )
+    return junction;
   }
 
-  if( junction && junction.object ) /* xxx : remove ? */
-  {
-    let localPath, remotePath;
-    [ localPath, remotePath ] = junction.PathsOf( junction.object );
-
-    if( localPath !== junction.localPath )
-    changed = true;
-    if( remotePath !== junction.remotePath )
-    changed = true;
-
-  }
+  // if( junction && junction.object ) /* xxx : remove ? */
+  // {
+  //   let localPath, remotePath;
+  //   [ localPath, remotePath ] = junction.PathsOf( junction.object );
+  //
+  //   if( localPath !== junction.localPath )
+  //   changed = true;
+  //   if( remotePath !== junction.remotePath )
+  //   changed = true;
+  // }
 
   if( !junction )
   junctionWithPath();
@@ -1001,7 +909,6 @@ function JunctionFrom( will, object )
   if( !object.will )
   object.will = will;
 
-  // xxx : swtich on
   result = will.objectToJunctionHash.get( object );
   if( result )
   return result;
@@ -1612,36 +1519,39 @@ function submodulesJunctionsFilter( o )
   function junctionLook( junction )
   {
 
-    if( junction.module )
-    for( let s in junction.module.submoduleMap )
+    // if( junction.module )
+    junction.modules.forEach( ( module ) =>
     {
-      let relation = junction.module.submoduleMap[ s ];
-
-      let junction2 = junction.JunctionOf( will, relation );
-      if( !junction2 )
-      junction2 = junction.From({ relation : relation, will : will });
-      _.assert( !!junction2 );
-
-      if( !junction2.peer )
-      if( junction2.module && junction2.module.peerModule )
+      for( let s in module.submoduleMap )
       {
-        debugger;
-        _.assert( 0, 'not tested' );
-        junction2.From({ module : junction2.module.peerModule, will : will });
+        let relation = module.submoduleMap[ s ];
+
+        // let junction2 = junction.JunctionOf( will, relation );
+        // if( !junction2 )
+        let junction2 = junction.From({ relation : relation, will : will });
+        _.assert( !!junction2 );
+
+        if( !junction2.peer )
+        if( junction2.module && junction2.module.peerModule )
+        {
+          debugger;
+          _.assert( 0, 'not tested' );
+          junction2.From({ module : junction2.module.peerModule, will : will });
+        }
+
+        /*
+        getting shadow sould go after setting up junction
+        */
+
+        // junction2 = junction2.shadow({ relation })
+        junctionAppendMaybe( junction2 );
+
+        if( o.withPeers )
+        if( junction2.peer )
+        junctionAppendMaybe( junction2.peer );
+
       }
-
-      /*
-      getting shadow sould go after setting up junction
-      */
-
-      // junction2 = junction2.shadow({ relation })
-      junctionAppendMaybe( junction2 );
-
-      if( o.withPeers )
-      if( junction2.peer )
-      junctionAppendMaybe( junction2.peer );
-
-    }
+    });
 
   }
 
@@ -1821,6 +1731,14 @@ function toRelation()
 {
   let junction = this;
   return junction.relation;
+}
+
+//
+
+function toJunction()
+{
+  let junction = this;
+  return junction;
 }
 
 // --
@@ -2085,6 +2003,7 @@ let Extend =
   shadow,
   toModule,
   toRelation,
+  toJunction,
 
   // export
 

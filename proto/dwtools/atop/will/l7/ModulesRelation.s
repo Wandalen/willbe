@@ -403,6 +403,9 @@ function submodulesRelationsFilter( o )
   let junction = will.junctionFrom( relation );
   let junctions = junction.submodulesJunctionsFilter( o );
 
+  if( o.withPeers )
+  _.arrayPrependOnce( junctions, junction ); /* yyy */
+
   result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
 
   return result;
@@ -459,6 +462,16 @@ function toRelation()
 {
   let relation = this;
   return relation;
+}
+
+//
+
+function toJunction()
+{
+  let relation = this;
+  let module = relation.module;
+  let will = module.will;
+  return will.junctionFrom( relation );
 }
 
 //
@@ -995,6 +1008,7 @@ let Extend =
   submodulesRelationsOwnFilter,
   toModule,
   toRelation,
+  toJunction,
 
   isValid,
   isAvailableGet,

@@ -1889,7 +1889,7 @@ function modulesFindWithAt( o )
       op.openers = openers2;
     }
 
-    op.junctions = will.junctionsFrom( op.openers );
+    op.junctions = _.longOnce( will.junctionsFrom( op.openers ) );
     // op.sortedJunctions = will.graphTopSort( op.junctions );
     // op.sortedJunctions.reverse();
 
@@ -1977,12 +1977,11 @@ function modulesOnlyRoots( modules )
     nodesGroup : nodesGroup,
   }
 
-  // _global_.debugger = 1;
-  // debugger;
-
+  _global_.debugger = 1;
+  debugger;
   let objects = will.modulesEach( o2 );
-
-  // debugger;
+  debugger;
+  /* 51 */
 
   objects.forEach( ( object ) =>
   {
@@ -1991,13 +1990,14 @@ function modulesOnlyRoots( modules )
 
   /* then add in-roots of trees */
 
-  // debugger;
+  debugger;
   let sources = nodesGroup.sourcesFromNodes( objects );
-  // debugger;
+  debugger;
 
+  sources = _.longOnce( sources, ( object ) => will.junctionFrom( object ) );
   sources = sources.filter( ( object ) =>
   {
-    let junction = will.junctionOf( object );
+    let junction = will.junctionFrom( object );
     if( !junction.object )
     return false;
     if( !junction.isOut )
@@ -2056,6 +2056,7 @@ function modulesEach_body( o )
   o.ownedObjects = [];
   o.modules = _.arrayAs( o.modules );
   o.modules.forEach( objectAppend );
+  _.assert( will.ObjectsAreAll( o.modules ) );
 
   /* ttt */
 
@@ -2113,7 +2114,9 @@ function modulesEach_body( o )
   // if( o.modules[ 0 ].id === 5 )
   // if( o.withStem )
   // debugger;
+  // debugger;
   o.result = o.nodesGroup.each( o2 );
+  // debugger;
   // if( o.modules[ 0 ].id === 5 )
   // if( o.withStem )
   // debugger;
@@ -2287,8 +2290,9 @@ function modulesFor_body( o )
   // o.modules = _.arrayAs( will.junctionsFrom( o.modules ) );
   o.modules = _.arrayAs( o.modules );
   _.assert( _.arrayIs( o.modules ) );
+  _.assert( will.ObjectsAreAll( o.modules ) );
 
-  let junctions = junctionsEach( o.modules );
+  let junctions = objectsEach( o.modules );
 
   return act( junctions )
   .finally( ( err, arg ) =>
@@ -2302,50 +2306,77 @@ function modulesFor_body( o )
 
   /* */
 
-  function act( junctions )
+  function act( objects )
   {
     let ready = new _.Consequence().take( null );
 
     ready.then( () =>
     {
       let ready = new _.Consequence().take( null );
+      objects.forEach( ( object ) => ready.then( () => objectAction( object ) ) );
+      return ready;
+    });
+
+    ready.then( () =>
+    {
+      let ready = new _.Consequence().take( null );
+      let junctions = _.longOnce( will.junctionsFrom( objects ) );
       junctions.forEach( ( junction ) => ready.then( () => junctionAction( junction ) ) );
       return ready;
     });
 
     ready.then( () =>
     {
-      let junctions2 = junctionsEach( junctions );
-      if( junctions2.length > junctions.length && o.recursive >= 2 )
-      return act( junctions2 );
+      let objects2 = objectsEach( objects );
+      if( objects2.length > objects.length && o.recursive >= 2 )
+      return act( objects2 );
       return o;
     });
 
     return ready;
   }
 
-  function junctionsEach( junctions )
+  /* */
+
+  function objectsEach( objects )
   {
     let o2 = _.mapOnly( o, will.modulesEach.defaults );
-    o2.outputFormat = '/';
-    o2.modules = junctions;
+    // o2.outputFormat = '/';
+    o2.outputFormat = '*/object';
+    o2.modules = objects;
+    debugger;
     let result = will.modulesEach( o2 );
+    debugger;
     return result;
   }
 
-  function junctionAction( junction )
+  /* */
+
+  function objectAction( object )
   {
+    _.assert( will.ObjectIs( object ) );
     let ready = new _.Consequence().take( null );
     if( o.onEachModule )
-    junction.modules.forEach( ( module ) =>
     {
-      if( visitedModulesSet.has( module ) )
+      object = object.toModule();
+      if( !( object instanceof _.Will.Module ) )
       return null;
-      visitedModulesSet.add( module );
+      if( visitedModulesSet.has( object ) )
+      return null;
+      visitedModulesSet.add( object );
       let o3 = _.mapExtend( null, o );
-      o3.module = module;
-      ready.then( () => o.onEachModule( module, o3 ) );
-    });
+      o3.module = object;
+      ready.then( () => o.onEachModule( object, o3 ) );
+    }
+    return ready;
+  }
+
+  /* */
+
+  function junctionAction( junction )
+  {
+    _.assert( junction instanceof _.Will.ModuleJunction );
+    let ready = new _.Consequence().take( null );
     if( visitedJunctionsSet.has( junction ) )
     return null;
     visitedJunctionsSet.add( junction );
@@ -2357,6 +2388,8 @@ function modulesFor_body( o )
     }
     return ready;
   }
+
+  /* */
 
 }
 
@@ -2430,6 +2463,8 @@ function modulesDownload_body( o )
   // o.modules = _.arrayAs( will.junctionsFrom( o.modules ) );
   o.modules = _.arrayAs( o.modules );
   _.assert( _.arrayIs( o.modules ) );
+  _.assert( will.ObjectsAreAll( o.modules ) );
+  // _.assert( _.all( o.modules, ( module ) => module instanceof _.Will.Module ) );
 
   let filter = _.mapOnly( o, _.Will.prototype.relationsFilter.defaults );
   filter.withOut = false;
@@ -2443,12 +2478,12 @@ function modulesDownload_body( o )
   if( !o.modules.length )
   return _.Consequence().take( o );
 
-  let rootModule = o.modules.length === 1 ? o.modules[ 0 ].module : null;
+  let rootModule = o.modules.length === 1 ? o.modules[ 0 ] : null;
   // let rootModulePath = rootModule ? rootModule.localPath : null;
   // let rootJunction = rootModule ? will.junctionFrom( rootModule ) : null;
   let rootJunctions = _.arrayAs( will.junctionsFrom( o.modules ) );
 
-  return junctionsUpformAndDownload( rootJunctions )
+  return objectsUpformAndDownload( o.modules )
   .finally( ( err, arg ) =>
   {
     if( err )
@@ -2461,21 +2496,21 @@ function modulesDownload_body( o )
 
   /* */
 
-  function junctionsUpformAndDownload( junctions )
+  function objectsUpformAndDownload( objects )
   {
     let ready = new _.Consequence().take( null );
 
     ready.then( () =>
     {
       let o2 = _.mapOnly( o, will.modulesUpform.defaults );
-      o2.modules = junctions;
+      o2.modules = objects;
       o2.recursive = o.recursive;
       o2.all = 0;
       o2.subModulesFormed = 1;
       o2.withPeers = 1;
       return will.modulesUpform( o2 );
       // ({
-      //   modules : junctions,
+      //   modules : objects,
       //   recursive : o.recursive,
       //   all : 0,
       //   subModulesFormed : 1,
@@ -2486,22 +2521,23 @@ function modulesDownload_body( o )
     ready.then( ( arg ) =>
     {
       let o2 = _.mapOnly( o, will.modulesEach.defaults );
-      o2.outputFormat = '/';
-      o2.modules = junctions;
+      // o2.outputFormat = '/';
+      o2.outputFormat = '*/object';
+      o2.modules = objects;
       o2.withPeers = 1; /* yyy */
       o2.withIn = 1;
       o2.withOut = 1;
       delete o2.nodesGroup;
-      junctions = will.modulesEach( o2 );
+      objects = will.modulesEach( o2 );
       downloadedLengthWas = o.downloadedContainer.length;
-      return junctionsDownload( junctions );
+      return objectsDownload( objects );
     });
 
     ready.then( () =>
     {
       let d = o.downloadedContainer.length - downloadedLengthWas;
       if( d > 0 && o.recursive >= 2 )
-      return junctionsUpformAndDownload( junctions );
+      return objectsUpformAndDownload( objects );
       return o;
     });
 
@@ -2540,7 +2576,7 @@ function modulesDownload_body( o )
     if( !o.downloadedContainer.length && !o.loggingNoChanges )
     return;
 
-    let ofModule = rootModule ? ' of ' + rootModule.absoluteName : '';
+    let ofModule = rootModule ? ' of ' + ( rootModule.toModule() ? rootModule.toModule() : rootModule ).absoluteName : '';
     let total = ( remoteContainer.length + localContainer.length );
     logger.rbegin({ verbosity : -2 });
     let phrase = '';
@@ -2564,11 +2600,13 @@ function modulesDownload_body( o )
 
   /* */
 
-  function junctionsDownload( junctions )
+  function objectsDownload( objects )
   {
     let ready2 = new _.Consequence().take( null );
 
-    _.assert( _.arrayIs( junctions ) );
+    _.assert( _.arrayIs( objects ) );
+    let junctions = _.longOnce( will.junctionsFrom( objects ) );
+
     junctions.forEach( ( junction ) => /* xxx : make it parallel */
     {
 
@@ -2907,9 +2945,12 @@ function modulesClean( o )
 
   let o2 = _.mapOnly( o, will.modulesFor.defaults );
   o2.onEachModule = handleEach;
+
+  debugger;
   return will.modulesFor( o2 )
   .then( ( arg ) =>
   {
+    debugger;
     let o2 = _.mapOnly( o, will.cleanDelete.defaults );
     o2.files = files;
     return will.cleanDelete( o2 );
@@ -2919,11 +2960,9 @@ function modulesClean( o )
     if( err )
     throw _.err( err, `\nFailed to clean modules` );
 
-    // debugger;
     let o2 = _.mapOnly( o, will.cleanLog.defaults );
     o2.files = files;
     will.cleanLog( o2 );
-    // debugger;
 
     return arg;
   });
@@ -2932,14 +2971,10 @@ function modulesClean( o )
 
   function handleEach( module, op )
   {
-
+    debugger;
     let o3 = _.mapOnly( o, module.cleanWhatSingle.defaults );
     o3.files = files;
     return module.cleanWhatSingle( o3 );
-
-    // let o3 = _.mapOnly( o, module.clean.defaults );
-    // debugger;
-    // return module.clean( o3 );
   }
 
 }
@@ -2983,6 +3018,11 @@ function ObjectIs( object )
 
   return false;
 }
+
+let ObjectsAre = _.vectorize( ObjectIs );
+let ObjectsAreAll = _.vectorizeAll( ObjectIs );
+let ObjectsAreAny = _.vectorizeAny( ObjectIs );
+let ObjectsAreNone = _.vectorizeNone( ObjectIs );
 
 //
 
@@ -3147,10 +3187,9 @@ function junctionFrom( object )
   let will = this;
   _.assert( arguments.length === 1 );
 
-  // xxx : switch on optimization
-  let result = will.junctionOf( object );
-  if( result )
-  return result;
+  // let result = will.junctionOf( object );
+  // if( result )
+  // return result;
 
   return _.Will.ModuleJunction.JunctionFrom( will, object );
 }
@@ -3286,6 +3325,21 @@ function graphGroupMake( o )
     // if( object.absoluteName === 'opener::a0' )
     // debugger;
 
+    // if( _global_.debugger )
+    // if( will.junctionFrom( object ).id === 51 )
+    // debugger;
+/*
+"junction:: : #1448
+  path::local : hd:///atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools
+  module::z / module::wPathTools / opener::wPathTools #1447 #1576
+  module::z / module::wPathTools / relation::wPathTools #1446 #1575
+"
+will.junctionWithId( 922 ).exportInfo()
+"junction:: : #922
+  path::local : hd:///atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools
+  module::z / module::wPathTools / opener::wPathTools #921 #1050
+  module::z / module::wPathTools / relation::wPathTools #920 #1049
+*/
     let result = object.submodulesRelationsFilter( _.mapOnly( o, object.submodulesRelationsFilter.defaults ) );
 
     // result.forEach( ( object ) =>
@@ -3343,14 +3397,14 @@ function graphTopSort( modules )
 
 //
 
-function graphInfoExportAsTree( modules, o )
+function graphExportTreeInfo( modules, o )
 {
   let will = this;
 
-  o = _.routineOptions( graphInfoExportAsTree, o );
+  o = _.routineOptions( graphExportTreeInfo, o );
   _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 )
 
-  o = _.routineOptions( graphInfoExportAsTree, o );
+  o = _.routineOptions( graphExportTreeInfo, o );
 
   if( o.onNodeName === null )
   o.onNodeName = junctionNameAndPath;
@@ -3366,6 +3420,8 @@ function graphInfoExportAsTree( modules, o )
   modules = will.modulesOnlyRoots( modules );
 
   let o2 = _.mapOnly( o, group.rootsExportInfoTree.defaults );
+  o2.allVariants = 0;
+  o2.allSiblings = 0;
   let info = group.rootsExportInfoTree( modules, o2 );
 
   return info;
@@ -3391,7 +3447,7 @@ function graphInfoExportAsTree( modules, o )
 
 }
 
-var defaults = graphInfoExportAsTree.defaults = _.mapExtend
+var defaults = graphExportTreeInfo.defaults = _.mapExtend
 (
   null,
   _.graph.AbstractNodesGroup.prototype.rootsExportInfoTree.defaults,
@@ -4780,6 +4836,10 @@ let Statics =
   // path
 
   ObjectIs,
+  ObjectsAre,
+  ObjectsAreAll,
+  ObjectsAreAny,
+  ObjectsAreNone,
   ObjectsExportInfo,
   ObjectsLogInfo,
   WillPathGet,
@@ -4906,6 +4966,11 @@ let Extend =
   // object
 
   ObjectIs,
+  ObjectsAre,
+  ObjectsAreAll,
+  ObjectsAreAny,
+  ObjectsAreNone,
+
   ObjectsExportInfo,
   ObjectsLogInfo,
   objectsExportInfo,
@@ -4927,7 +4992,7 @@ let Extend =
   assertGraphGroup,
   graphGroupMake,
   graphTopSort,
-  graphInfoExportAsTree,
+  graphExportTreeInfo,
 
   // opener
 

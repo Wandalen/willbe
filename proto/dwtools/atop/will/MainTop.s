@@ -1473,7 +1473,7 @@ function commandModulesTree( e )
     filtering was done earlier
     */
     propertiesMap.onlyRoots = 0;
-    logger.log( will.graphInfoExportAsTree( modules, propertiesMap ) );
+    logger.log( will.graphExportTreeInfo( modules, propertiesMap ) );
     return null;
   }
 
@@ -1766,8 +1766,6 @@ function commandModuleNew( e )
   let ready = new _.Consequence().take( null );
   let request = will.Resolver.strRequestParse( e.argument );
 
-  debugger;
-
   if( request.subject )
   request.map.localPath = request.subject;
   if( request.map.v !== undefined )
@@ -1966,7 +1964,8 @@ function commandClean( e )
   {
     _.assert( _.arrayIs( it.openers ) );
 
-    let o2 = will.filterImplied();
+    // let o2 = will.filterImplied();
+    let o2 = { ... will.RelationFilterOn };
     o2 = _.mapExtend( o2, e.propertiesMap );
     o2.modules = it.openers;
     _.routineOptions( will.modulesClean, o2 );
@@ -2017,7 +2016,8 @@ function commandSubmodulesClean( e )
   {
     _.assert( _.arrayIs( it.openers ) );
 
-    let o2 = will.filterImplied();
+    // let o2 = will.filterImplied();
+    let o2 = { ... will.RelationFilterOn };
     o2 = _.mapExtend( o2, e.propertiesMap );
     o2.modules = it.openers;
     _.routineOptions( will.modulesClean, o2 );
@@ -2041,26 +2041,6 @@ commandSubmodulesClean.commandProperties =
 
 //
 
-// function commandSubmodulesClean( e )
-// {
-//   let will = this;
-//
-//   return will._commandBuildLike
-//   ({
-//     event : e,
-//     name : 'clean submodules',
-//     onEach : handleEach,
-//     commandRoutine : commandSubmodulesClean,
-//   });
-//
-//   function handleEach( it )
-//   {
-//     return it.opener.openedModule.submodulesClean();
-//   }
-// }
-
-//
-
 function commandBuild( e )
 {
   let will = this;
@@ -2080,7 +2060,8 @@ function commandBuild( e )
   {
     return it.opener.openedModule.modulesBuild
     ({
-      ... _.mapBut( will.filterImplied(), { withIn : null, withOut : null } ),
+      // ... _.mapBut( will.filterImplied(), { withIn : null, withOut : null } ),
+      ... _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } ),
       name : request.subject,
       criterion : request.map,
       recursive : 0,
@@ -2111,7 +2092,8 @@ function commandExport( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut( will.filterImplied(), { withIn : null, withOut : null } ),
+      // ... _.mapBut( will.filterImplied(), { withIn : null, withOut : null } ),
+      ... _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } ),
       name : request.subject,
       criterion : request.map,
       recursive : 0,
@@ -2143,24 +2125,14 @@ function commandExportRecursive( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut( will.filterImplied(), { withIn : null, withOut : null } ),
+      // ... _.mapBut( will.filterImplied(), { withIn : null, withOut : null } ),
+      ... _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } ),
       name : request.subject,
       criterion : request.map,
       recursive : 0,
       kind : 'export',
     });
   }
-
-  // function handleEach( it )
-  // {
-  //   return it.opener.openedModule.modulesExport
-  //   ({
-  //     name : request.subject,
-  //     criterion : request.map,
-  //     recursive : 2,
-  //     kind : 'export',
-  //   });
-  // }
 
 }
 

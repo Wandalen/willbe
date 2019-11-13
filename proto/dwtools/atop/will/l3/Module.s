@@ -3617,6 +3617,15 @@ function toRelation()
 
 //
 
+function toJunction()
+{
+  let module = this;
+  let will = module.will;
+  return will.junctionFrom( module );
+}
+
+//
+
 function submodulesAdd( o )
 {
   let module = this;
@@ -6447,32 +6456,38 @@ function structureExportOut( o )
     withDisabledSubmodules : 0,
     withDisabledStem : 1,
     recursive : 2,
-    outputFormat : '/',
+    outputFormat : '*/module',
     descriptive : 1,
   });
 
   let modules = [];
-  found.result.forEach( ( junction ) =>
+  found.result.forEach( ( module2 ) =>
   {
-    if( !junction.module )
-    debugger;
-    if( !junction.module )
-    throw _.err
-    (
-        `${junction.object.absoluteName} is not available. `
-      + `\nRemote path is ${junction.remotePath}`
-      + `\nLocal path is ${junction.localPath}`
-    );
-    let c = 0;
-    junction.modules.forEach( ( module ) =>
+    // if( !junction.module )
+    // debugger;
+    // if( !junction.module )
+    if( !( module2 instanceof _.Will.Module ) )
     {
-      if( _.longHas( found.ownedObjects, module ) )
+      debugger;
+      let junction = will.junctionFrom( module2 );
+      throw _.err
+      (
+          `${junction.object.absoluteName} is not available. `
+        + `\nRemote path is ${junction.remotePath}`
+        + `\nLocal path is ${junction.localPath}`
+      );
+    }
+    let c = 0;
+    // module.modules.forEach( ( module ) =>
+    // {
+      if( _.longHas( found.ownedObjects, module2 ) )
       {
-        modules.push( module );
+        modules.push( module2 );
         c += 1;
       }
-    });
-    _.assert( c <= 1 );
+    // });
+    // _.assert( c <= 1 );
+    _.assert( c === 1 );
   });
 
   _.assert( modules.length >= 2, 'No module to export' );
@@ -7344,6 +7359,7 @@ let Extend =
   submodulesRelationsOwnFilter,
   toModule,
   toRelation,
+  toJunction,
 
   submodulesAdd,
   submodulesReload,

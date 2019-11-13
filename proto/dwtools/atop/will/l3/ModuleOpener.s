@@ -1014,6 +1014,15 @@ function toRelation()
   return opener.superRelation;
 }
 
+//
+
+function toJunction()
+{
+  let opener = this;
+  let will = opener.will;
+  return will.junctionFrom( opener );
+}
+
 // --
 // submodule
 // --
@@ -2601,6 +2610,7 @@ let Extend =
   submodulesRelationsOwnFilter,
   toModule,
   toRelation,
+  toJunction,
 
   // submodule
 

@@ -11,9 +11,13 @@ function onModule( it )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
+  debugger;
+
   let o2 = _.mapOnly( o, _.git.statusFull.defaults );
   o2.insidePath = it.junction.dirPath;
   let got = _.git.statusFull( o2 );
+
+  debugger;
 
   if( !got.status )
   return null;
