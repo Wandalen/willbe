@@ -733,43 +733,6 @@ resourcesInfoExport.defaults =
 
 //
 
-function junctionsWithId( id )
-{
-  let will = this;
-
-  for( let v in will.junctionMap )
-  {
-    let junction = will.junctionMap[ v ];
-    if( junction.id === id )
-    return junction;
-  }
-
-  return null;
-}
-
-//
-
-function junctionsInfoExport( junctions )
-{
-  let will = this;
-  if( !junctions )
-  {
-    junctions = _.longOnce( _.mapVals( will.junctionMap ) );
-    // junctions = junctions.filter( ( junction ) =>
-    // {
-    //   if( junction.relation && !junction.relation.enabled )
-    //   return false;
-    //   if( junction.isRemote === false )
-    //   return false;
-    //   return junction;
-    // });
-  }
-
-  return _.map( junctions, ( junction ) => junction.exportInfo() ).join( '\n' );
-}
-
-//
-
 function _pathChanged( o )
 {
   let will = this;
@@ -1898,9 +1861,7 @@ function modulesFindWithAt( o )
     // op.sortedOpeners.forEach( ( opener ) => _.assert( opener instanceof _.Will.ModuleOpener ) );
     // debugger;
 
-    // debugger;
     op.sortedOpeners = will.graphTopSort( op.openers );
-    // debugger;
     op.sortedOpeners.reverse();
 
     op.sortedOpeners = op.sortedOpeners.filter( ( object ) =>
@@ -1977,24 +1938,45 @@ function modulesOnlyRoots( modules )
     nodesGroup : nodesGroup,
   }
 
-  _global_.debugger = 1;
-  debugger;
+  // _global_.debugger = 1;
   let objects = will.modulesEach( o2 );
-  debugger;
-  /* 51 */
 
-  objects.forEach( ( object ) =>
-  {
-    _.arrayAppendArrayOnce( objects, will.junctionFrom( object ).objects );
-  });
+  objects = will.objectsAllVariants( objects );
+  // objects.forEach( ( object ) =>
+  // {
+  //   _.arrayAppendArrayOnce( objects, will.junctionFrom( object ).objects );
+  // });
 
   /* then add in-roots of trees */
 
-  debugger;
   let sources = nodesGroup.sourcesFromNodes( objects );
-  debugger;
+
+  /* xxx : temp fix */
+
+  let o3 =
+  {
+    ... filter,
+    modules : sources,
+    revisiting : 0,
+    withStem : 0,
+    withPeers : 1,
+    recursive : 2,
+    outputFormat : '*/object',
+    nodesGroup : nodesGroup,
+  }
+
+  // _global_.debugger = true;
+  // debugger;
+  // let sourcesHasObjects = will.modulesEach( o3 );
+  // debugger;
+  // let sourcesHasVariants = will.objectsToVariants( sourcesHasObjects );
+  // sourcesHasObjects = will.objectsAllVariants( sourcesHasObjects );
+
+  /* xxx : use only one variant instead of all
+  */
 
   sources = _.longOnce( sources, ( object ) => will.junctionFrom( object ) );
+  // debugger;
   sources = sources.filter( ( object ) =>
   {
     let junction = will.junctionFrom( object );
@@ -2004,8 +1986,14 @@ function modulesOnlyRoots( modules )
     return true;
     if( junction.peer && _.longHasAny( sources, junction.peer.objects ) )
     return false;
+    // if( _.longHas( sourcesHasVariants, junction ) ) /* xxx : temp workaround */
+    // {
+    //   debugger; xxx
+    //   return false;
+    // }
     return true;
   });
+  // debugger;
 
   // sources = sources.filter( ( junction ) =>
   // {
@@ -2152,6 +2140,9 @@ function modulesEach_body( o )
   function handleUp( object, it )
   {
 
+    // if( _global_.debugger )
+    // debugger;
+
     _.assert( will.ObjectIs( object ) );
     let junction = will.junctionFrom( object );
 
@@ -2292,9 +2283,9 @@ function modulesFor_body( o )
   _.assert( _.arrayIs( o.modules ) );
   _.assert( will.ObjectsAreAll( o.modules ) );
 
-  let junctions = objectsEach( o.modules );
+  let objects = objectsEach( o.modules );
 
-  return act( junctions )
+  return act( objects )
   .finally( ( err, arg ) =>
   {
     if( err )
@@ -2344,9 +2335,11 @@ function modulesFor_body( o )
     // o2.outputFormat = '/';
     o2.outputFormat = '*/object';
     o2.modules = objects;
-    debugger;
+    // if( _global_.debugger )
+    // debugger;
     let result = will.modulesEach( o2 );
-    debugger;
+    // if( _global_.debugger )
+    // debugger;
     return result;
   }
 
@@ -3144,6 +3137,29 @@ objectsLogInfo.defaults =
   ... objectsExportInfo.defaults,
 }
 
+//
+
+function objectsAllVariants( objects )
+{
+  let will = this;
+  let result = [];
+
+  objects.forEach( ( object ) =>
+  {
+    _.arrayAppendArrayOnce( result, will.junctionFrom( object ).objects );
+  });
+
+  return result;
+}
+
+//
+
+function objectsToVariants( objects )
+{
+  let will = this;
+  return _.longOnce( objects.map( ( object ) => object.toJunction() ) );
+}
+
 // --
 // junction
 // --
@@ -3167,7 +3183,6 @@ function junctionReform( object )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-
   return _.Will.ModuleJunction.JunctionReform( will, object );
 }
 
@@ -3209,7 +3224,7 @@ function junctionOf( object )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.Will.ModuleJunction.JunctionOf( will, object );
+  return _.Will.ModuleJunction.JunctionWithObject( will, object );
 }
 
 //
@@ -3218,7 +3233,7 @@ function junctionsOf( varaints )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.Will.ModuleJunction.JunctionsOf( will, object );
+  return _.Will.ModuleJunction.JunctionsWithObjects( will, object );
 }
 
 //
@@ -3228,6 +3243,43 @@ function junctionWithId( id )
   let will = this;
   _.assert( arguments.length === 1 );
   return _.any( will.junctionMap, ( junction ) => junction.id === id ? junction : undefined );
+}
+
+// //
+//
+// function junctionsWithId( id )
+// {
+//   let will = this;
+//
+//   for( let v in will.junctionMap )
+//   {
+//     let junction = will.junctionMap[ v ];
+//     if( junction.id === id )
+//     return junction;
+//   }
+//
+//   return null;
+// }
+
+//
+
+function junctionsInfoExport( junctions )
+{
+  let will = this;
+  if( !junctions )
+  {
+    junctions = _.longOnce( _.mapVals( will.junctionMap ) );
+    // junctions = junctions.filter( ( junction ) =>
+    // {
+    //   if( junction.relation && !junction.relation.enabled )
+    //   return false;
+    //   if( junction.isRemote === false )
+    //   return false;
+    //   return junction;
+    // });
+  }
+
+  return _.map( junctions, ( junction ) => junction.exportInfo() ).join( '\n' );
 }
 
 // --
@@ -3340,6 +3392,9 @@ will.junctionWithId( 922 ).exportInfo()
   module::z / module::wPathTools / opener::wPathTools #921 #1050
   module::z / module::wPathTools / relation::wPathTools #920 #1049
 */
+
+    // if( _global_.debugger )
+    // debugger;
     let result = object.submodulesRelationsFilter( _.mapOnly( o, object.submodulesRelationsFilter.defaults ) );
 
     // result.forEach( ( object ) =>
@@ -3422,7 +3477,13 @@ function graphExportTreeInfo( modules, o )
   let o2 = _.mapOnly( o, group.rootsExportInfoTree.defaults );
   o2.allVariants = 0;
   o2.allSiblings = 0;
+
+  // _global_.debugger = 1;
+  // debugger;
+  // modules = [ modules[ 1 ] ]; /* xxx */
+
   let info = group.rootsExportInfoTree( modules, o2 );
+  // debugger;
 
   return info;
 
@@ -4345,7 +4406,7 @@ function hookItFrom( o )
 
   if( o.opener && !o.module )
   o.module = o.opener.openedModule;
-  o.openers = will.currentOpeners;
+  o.openers = will.currentOpeners; /* xxx : currentOpeners is not available here! */
   // if( !o.junction )
   // o.junction = will.junctionOf( opener );
   if( !o.junction )
@@ -4924,8 +4985,6 @@ let Extend =
 
   resourceWrap,
   resourcesInfoExport,
-  junctionsWithId,
-  junctionsInfoExport,
   _pathChanged,
   versionGet,
   versionIsUpToDate,
@@ -4975,6 +5034,8 @@ let Extend =
   ObjectsLogInfo,
   objectsExportInfo,
   objectsLogInfo,
+  objectsAllVariants,
+  objectsToVariants,
 
   // junction
 
@@ -4986,6 +5047,7 @@ let Extend =
   junctionOf,
   junctionsOf,
   junctionWithId,
+  junctionsInfoExport,
 
   // graph
 

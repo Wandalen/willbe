@@ -8649,7 +8649,7 @@ function pathsResolveResolvedPath( test )
 
     test.case = 'empty str';
     var src = '';
-    var exp = '';
+    var exp = null;
     var got = module.pathResolve
     ({
       selector : src,
@@ -9000,8 +9000,10 @@ function modulesEachDuplicates( test )
     o2.withPeers = 1;
     o2.onUp = handleUp;
     o2.outputFormat = '*/module';
+    _global_.debugger = 1;
+    debugger;
     var got = opener.openedModule.submoduleMap.a.opener.openedModule.modulesEach( o2 )
-
+    debugger;
     test.is( ups.length === got.length );
     test.is( ups[ 0 ] === got[ 0 ] );
 

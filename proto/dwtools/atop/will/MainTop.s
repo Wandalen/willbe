@@ -976,7 +976,9 @@ function commandWith( e )
   })
   .then( function( it )
   {
+    // debugger;
     will.currentOpeners = it.sortedOpeners;
+    // debugger;
 
     if( !will.currentOpeners.length )
     throw _.errBrief
@@ -2112,7 +2114,7 @@ function commandExportRecursive( e )
   let ready = new _.Consequence().take( null );
   let request = will.Resolver.strRequestParse( e.argument );
 
-  debugger;
+  // debugger;
   return will._commandBuildLike
   ({
     event : e,
@@ -2129,7 +2131,7 @@ function commandExportRecursive( e )
       ... _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } ),
       name : request.subject,
       criterion : request.map,
-      recursive : 0,
+      recursive : 2,
       kind : 'export',
     });
   }

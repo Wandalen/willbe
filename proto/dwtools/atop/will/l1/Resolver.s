@@ -41,8 +41,6 @@ function _onSelector( selector )
     if( !resolver.selectorIs( selector ) )
     if( !it.composite )
     {
-      if( _global_.debugger )
-      debugger;
       selector = new _.Will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : selector });
       selector.form1();
       it.src = selector;
@@ -60,9 +58,6 @@ function _onSelectorDown()
   let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-
-  if( _global_.debugger )
-  debugger;
 
   if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.select.composite )
   {
@@ -616,8 +611,6 @@ function _pathsNativize()
 
   resolver._pathsTransform.call( it, handleResource, handleStr );
 
-  // resolver._pathsTransform.call( it, resolver._pathNativize, handleStr );
-
   function handleResource( filePath, resource )
   {
     resource.path = resolver._pathNativize.call( it, filePath, resource )
@@ -626,56 +619,8 @@ function _pathsNativize()
 
   function handleStr( str )
   {
-    // debugger;
     return str;
   }
-
-  // // if( it.selectMultipleOptions )
-  // // {
-  // //   if( !rop.selectorIsPath )
-  // //   return;
-  // // }
-  // // else
-  // // {
-  // //   if( !it.selectorIsPath )
-  // //   return;
-  // //   if( it.down && it.down.selectorIsPath )
-  // //   return;
-  // // }
-  //
-  // if( it.dst instanceof will.PathResource )
-  // return resourceNativize( resource );
-  //
-  // if( _.arrayIs( it.dst ) || _.mapIs( it.dst ) )
-  // it.dst = _.map( it.dst, ( resource ) =>
-  // {
-  //   if( _.strIs( resource ) )
-  //   {
-  //     debugger;
-  //   }
-  //   // if( _.strIs( resource ) )
-  //   // return _pathNativize.call( it, resource );
-  //   if( resource instanceof will.PathResource )
-  //   return resourceNativize( resource );
-  //   // {
-  //   //   resource = resource.cloneDerivative();
-  //   //   _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
-  //   //   if( resource.path )
-  //   //   resource.path = _pathNativize.call( it, resource.path );
-  //   // }
-  //   // else debugger;
-  //   // return resource;
-  //   return resource
-  // });
-  //
-  // function resourceNativize( resource )
-  // {
-  //   resource = resource.cloneDerivative();
-  //   _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
-  //   if( resource.path )
-  //   resource.path = resolver._pathNativize.call( it, resource.path );
-  //   return resource;
-  // }
 
 }
 
@@ -794,14 +739,10 @@ function _pathResolve( filePath, resource )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let resourceName = resource.name;
-  // let filePath = resource.path;
   let result = filePath;
 
   if( filePath === null || filePath === '' )
   return result;
-
-  // if( _global_.debugger )
-  // debugger;
 
   _.assert( rit.composite !== undefined );
   _.assert( !!currentModule );

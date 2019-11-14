@@ -1193,8 +1193,8 @@ function pathsResolve( o )
   paired = true;
   _.assert( paired );
 
-  if( reflector.name === "reflect.submodules.debug" )
-  debugger;
+  // if( reflector.name === "reflect.submodules.debug" )
+  // debugger;
 
   // if( _.mapIs( reflector.src.filePath ) )
   // reflector.src.filePathNullizeMaybe();

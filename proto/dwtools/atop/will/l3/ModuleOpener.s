@@ -949,18 +949,29 @@ function moduleUseError( module )
 function submodulesRelationsFilter( o )
 {
   let opener = this;
-  let will = opener.will;
 
-  o = _.routineOptions( submodulesRelationsFilter, arguments );
+  _.assert( arguments.length === 1 );
 
-  let result = opener.submodulesRelationsOwnFilter( o );
-  let junction = will.junctionFrom( opener );
-  let junctions = junction.submodulesJunctionsFilter( o );
+  if( opener.openedModule )
+  return opener.openedModule.submodulesRelationsFilter( o );
 
-  result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
-
-  return result;
+  return [];
 }
+
+// {
+//   let opener = this;
+//   let will = opener.will;
+//
+//   o = _.routineOptions( submodulesRelationsFilter, arguments );
+//
+//   let result = opener.submodulesRelationsOwnFilter( o );
+//   let junction = will.junctionFrom( opener );
+//   let junctions = junction.submodulesJunctionsFilter( _.mapOnly( o, junction.submodulesJunctionsFilter ) );
+//
+//   result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
+//
+//   return result;
+// }
 
 submodulesRelationsFilter.defaults =
 {
@@ -991,8 +1002,11 @@ submodulesRelationsOwnFilter.defaults =
   ... _.Will.RelationFilterDefaults,
   withPeers : 1,
   withoutDuplicates : 0,
+  allVariants : 0,
 
 }
+
+_.assert( submodulesRelationsOwnFilter.defaults.withStem === undefined );
 
 //
 

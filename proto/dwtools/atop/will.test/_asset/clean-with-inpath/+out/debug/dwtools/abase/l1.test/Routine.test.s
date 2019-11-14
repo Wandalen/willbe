@@ -905,6 +905,27 @@ function routineExtend( test )
   test.identical( got.body, _.routinesCompose.body );
   test.identical( typeof got, 'function' );
 
+  function f1(){}
+  f1.map1 = {};
+  f1.map1.a = 1;
+  f1.map2 = Object.create( {} );
+  f1.map2.a = 2;
+  f1.str = 'str';
+  f1.number = 13;
+  f1.routine = function r(){};
+
+  var got = _.routineExtend( null, f1 );
+  test.equivalent( got.map1, f1.map1 );
+  test.equivalent( got.map2, f1.map2 );
+  test.equivalent( got.str, f1.str );
+  test.equivalent( got.number, f1.number );
+  test.equivalent( got.routine, f1.routine );
+
+  test.case = 'second arg has not pre and body properties';
+  var got = _.routineExtend( null, _.unrollIs );
+  test.is( _.routineIs( got ) );
+  test.is( got( _.unrollFrom( [] ) ) );
+
   test.case = 'dst is null, src is map with pre and body properties';
   var src =
   {
@@ -957,7 +978,7 @@ function routineExtend( test )
   test.case = 'single dst';
   var dst = function( o )
   {
-  };
+  }
   var got = _.routineExtend( dst );
   test.identical( got, dst );
   test.identical( typeof got, 'function' );
@@ -967,12 +988,14 @@ function routineExtend( test )
   {
   };
   dst.a = 0;
-  dst.b = 0;
+  dst.b = 3;
+  dst.c = 'c';
   var got = _.routineExtend( dst );
   test.identical( got, dst );
   test.identical( typeof got, 'function' );
   test.identical( got.a, 0 );
-  test.identical( got.b, 0 );
+  test.identical( got.b, 3 );
+  test.identical( got.c, 'c' );
 
   test.case = 'single dst is routine, has hiden properties';
   var dst = function( o )
@@ -1249,11 +1272,11 @@ function routineExtend( test )
     _.routineExtend( null );
   });
 
-  test.case = 'second arg has not pre and body properties';
-  test.shouldThrowErrorSync( function()
-  {
-    _.routineExtend( null, _.unrollIs );
-  });
+  // test.case = 'second arg has not pre and body properties';
+  // test.shouldThrowErrorSync( function()
+  // {
+  //   _.routineExtend( null, _.unrollIs );
+  // });
 
   test.case = 'second arg is primitive';
   test.shouldThrowErrorSync( function()
@@ -2435,6 +2458,98 @@ function vectorizeBypassingEmpty( test )
 
 //
 
+function vectorizeAll( test )
+{
+
+  test.case = 'trivial';
+  function isOdd( a )
+  {
+    return a % 2;
+  }
+  isOdd.map1 = {};
+  isOdd.map1.a = 1;
+  isOdd.map2 = Object.create( {} );
+  isOdd.map2.a = 2;
+  isOdd.str = 'str';
+  isOdd.number = 13;
+  isOdd.routine = function r(){};
+  var got = _.vectorizeAll( isOdd );
+  test.equivalent( got.map1, isOdd.map1 );
+  test.equivalent( got.map2, isOdd.map2 );
+  test.equivalent( got.str, isOdd.str );
+  test.equivalent( got.number, isOdd.number );
+  test.equivalent( got.routine, isOdd.routine );
+  test.is( _.routineIs( got ) );
+  test.identical( got([ 0, 1, 2, 3 ]), 0 );
+  test.identical( got([ 0, 2 ]), 0 );
+  test.identical( got([ 1, 3 ]), true );
+
+}
+
+//
+
+function vectorizeAny( test )
+{
+
+  test.case = 'trivial';
+  function isOdd( a )
+  {
+    return a % 2;
+  }
+  isOdd.map1 = {};
+  isOdd.map1.a = 1;
+  isOdd.map2 = Object.create( {} );
+  isOdd.map2.a = 2;
+  isOdd.str = 'str';
+  isOdd.number = 13;
+  isOdd.routine = function r(){};
+  var got = _.vectorizeAny( isOdd );
+  test.equivalent( got.map1, isOdd.map1 );
+  test.equivalent( got.map2, isOdd.map2 );
+  test.equivalent( got.str, isOdd.str );
+  test.equivalent( got.number, isOdd.number );
+  test.equivalent( got.routine, isOdd.routine );
+  test.is( _.routineIs( got ) );
+  test.identical( got([ 0, 1, 2, 3 ]), 1 );
+  test.identical( got([ 0, 2 ]), false );
+  test.identical( got([ 1, 3 ]), 1 );
+
+}
+
+//
+
+function vectorizeNone( test )
+{
+
+  test.case = 'trivial';
+  function isOdd( a )
+  {
+    return a % 2;
+  }
+  isOdd.map1 = {};
+  isOdd.map1.a = 1;
+  isOdd.map2 = Object.create( {} );
+  isOdd.map2.a = 2;
+  isOdd.str = 'str';
+  isOdd.number = 13;
+  isOdd.routine = function r(){};
+  var got = _.vectorizeNone( isOdd );
+  test.equivalent( got.map1, isOdd.map1 );
+  test.equivalent( got.map2, isOdd.map2 );
+  test.equivalent( got.str, isOdd.str );
+  test.equivalent( got.number, isOdd.number );
+  test.equivalent( got.routine, isOdd.routine );
+  test.is( _.routineIs( got ) );
+  test.identical( got([ 0, 1, 2, 3 ]), false );
+  test.identical( got([ 0, 2 ]), true );
+  test.identical( got([ 1, 3 ]), false );
+
+}
+
+// --
+//
+// --
+
 var Self =
 {
 
@@ -2462,7 +2577,11 @@ var Self =
     vectorize,
     /* qqq : split test routine vectorize */
     /* qqq : add tests for vectorize* routines */
-    vectorizeBypassingEmpty
+    vectorizeBypassingEmpty,
+
+    vectorizeAll, /* qqq : extend please */
+    vectorizeAny, /* qqq : extend please */
+    vectorizeNone, /* qqq : extend please */
 
   }
 

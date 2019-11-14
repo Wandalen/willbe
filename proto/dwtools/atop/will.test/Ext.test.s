@@ -6043,7 +6043,7 @@ function modulesTreeLocal( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, '-- module::' ), 37 );
+    test.identical( _.strCount( got.output, '-- module::' ), 19 );
 
     let exp =
 `
@@ -6051,40 +6051,22 @@ Command ".imply v:1 ; .with */* .modules.tree"
  +-- module::module-x
  |
  +-- module::module-ab-named
- | +-- module::sub-a
- | +-- module::sub-b
  | +-- module::module-a
  | +-- module::module-b
  |
  +-- module::module-bc-named
- | +-- module::sub-b
- | +-- module::sub-c
  | +-- module::module-b
  | +-- module::module-c
  |
  +-- module::module-aabc
- | +-- module::sub-a
- | +-- module::sub-ab
- | | +-- module::module-a
- | | +-- module::module-b
- | +-- module::sub-c
  | +-- module::module-a
  | +-- module::module-ab
- | | +-- module::sub-a
- | | +-- module::sub-b
  | | +-- module::module-a
  | | +-- module::module-b
  | +-- module::module-c
  |
  +-- module::module-abac
-   +-- module::sub-ab
-   | +-- module::module-a
-   | +-- module::module-b
-   +-- module::sub-a
-   +-- module::sub-c
    +-- module::module-ab
-   | +-- module::sub-a
-   | +-- module::sub-b
    | +-- module::module-a
    | +-- module::module-b
    +-- module::module-a
@@ -13837,7 +13819,7 @@ function exportTracing( test )
   .finally( ( err, op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
     _.errAttend( err );
     return null;

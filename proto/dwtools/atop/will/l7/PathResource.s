@@ -328,6 +328,10 @@ function _pathSet( src )
   if( _.arrayLike( src ) )
   src = _.arraySlice( src );
 
+  if( src === '' )
+  {
+    src = null;
+  }
   if( src !== null )
   {
     src = _.uri.s.undot( src );

@@ -1787,6 +1787,9 @@ function _willfilesOpenEnd()
   let will = module.will;
   let logger = will.logger;
 
+  // if( module.id === 273 )
+  // debugger;
+
   if( module.stager.isValid() )
   {
     // debugger;
@@ -2430,11 +2433,14 @@ function modulesBuild_body( o )
     o2.left = 0;
     o2.withOut = 0;
     o2.withIn = 1;
+    // _global_.debugger = 1;
+    debugger;
     return will.modulesFor( o2 );
   })
 
   ready.finally( ( err, arg ) =>
   {
+    debugger;
     if( err )
     debugger;
     if( err )
@@ -2448,6 +2454,7 @@ function modulesBuild_body( o )
 
   function handleEach( module, op )
   {
+    debugger;
     let o3 = _.mapOnly( o, module.moduleBuild.defaults );
     // if( !junction.module )
     // throw _.err( `${junction.object.absoluteName} at ${junction.object.localPath || junction.object.remotePath} is not opened or invalid` );
@@ -3492,13 +3499,43 @@ function submodulesRelationsFilter( o )
 
   o = _.routineOptions( submodulesRelationsFilter, arguments );
 
+  // if( module.id === 178 )
+  // debugger;
+
+  // if( _global_.debugger )
+  // debugger;
+
   let result = module.submodulesRelationsOwnFilter( o );
+  let resultJunctions = will.junctionsFrom( result );
+
   let junction = will.junctionFrom( module );
-  let junctions = junction.submodulesJunctionsFilter( o );
+  let junctions = junction.submodulesJunctionsFilter( _.mapOnly( o, junction.submodulesJunctionsFilter.defaults ) );
 
   // if( junctions.length )
   // debugger;
-  result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
+  // result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
+
+  junctions.forEach( ( junction2 ) =>
+  {
+    if( _.longHas( resultJunctions, junction2 ) )
+    return;
+    if( !junction2.object )
+    return;
+    // debugger;
+    _.arrayAppendOnceStrictly( result, junction2.object );
+    _.arrayAppendOnceStrictly( resultJunctions, junction2 );
+  });
+
+  // if( o.withPeers )
+  // if( module.peerModule )
+  // moduleLook( module.peerModule );
+
+  if( o.withoutDuplicates )
+  result = result.filter( ( object2 ) =>
+  {
+    let junction2 = object2.toJunction();
+    return !junction2.isOut || !junction2.peer || !_.longHas( resultJunctions, junction2.peer );
+  });
 
   return result;
 }
@@ -3533,8 +3570,12 @@ function submodulesRelationsOwnFilter( o )
   if( o.withoutDuplicates )
   result = result.filter( ( module ) =>
   {
-    return !module.isOut || !_.longHas( result, module.peerModule );
+    return !module.isOut || !module.peerModule || !_.longHas( result, module.peerModule );
   });
+
+  if( o.allVariants === 0 )
+  if( result.length )
+  result = _.longOnce( result, ( object ) => object.toJunction() );
 
   return result;
 
@@ -3588,6 +3629,7 @@ submodulesRelationsOwnFilter.defaults =
   ... _.Will.RelationFilterDefaults,
   withPeers : 1,
   withoutDuplicates : 0,
+  allVariants : 0,
 
 }
 
@@ -4054,8 +4096,10 @@ function peerModuleFromJunction( junction )
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  if( !junction )
-  junction = will.junctionFrom( module );
+  if( junction )
+  junction.reform();
+  else
+  junction = will.junctionReform( module );
 
   if( !module.peerModule && junction.peer && junction.peer.modules.length )
   {
@@ -4065,12 +4109,12 @@ function peerModuleFromJunction( junction )
     {
       if( module2.localPath === peerLocalPath )
       {
-        // _.assert
-        // (
-        //     0
-        //   , 'Probably something wrong because modules should be aware of its peer.'
-        //   , `\nBut ${module.absoluteName} at ${module.localPath} is not aware`
-        // );
+        _.assert
+        (
+            0
+          , 'Probably something wrong because modules should be aware of its peer.'
+          , `\nBut ${module.absoluteName} at ${module.localPath} is not aware`
+        );
         logger.error
         (
             'Probably something wrong because modules should be aware of its peer.'
@@ -4440,10 +4484,10 @@ function resourceNameAllocate_body( o )
   let resource2 = map[ o.resourceName ];
   if( resource2 === undefined )
   return o.resourceName;
+
   if( o.generating )
   if( resource2.criterion.generated )
   {
-    debugger;
     return o.resourceName;
   }
 
@@ -4458,9 +4502,11 @@ function resourceNameAllocate_body( o )
   {
     resourceName2 = o.resourceName + '.' + counter;
     counter += 1;
+    if( map[ resourceName2 ] === undefined )
+    break;
     if( map[ resourceName2 ] !== undefined )
     {
-      if( !o.generating || map[ resourceName2 ].criterion.generated )
+      if( o.generating && map[ resourceName2 ].criterion.generated )
       break;
     }
   }

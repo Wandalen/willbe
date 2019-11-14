@@ -394,22 +394,34 @@ function ownedBy( object )
 function submodulesRelationsFilter( o )
 {
   let relation = this;
-  let module = relation.module;
-  let will = module.will;
 
-  o = _.routineOptions( submodulesRelationsFilter, arguments );
+  _.assert( arguments.length === 1 );
 
-  let result = relation.submodulesRelationsOwnFilter( o );
-  let junction = will.junctionFrom( relation );
-  let junctions = junction.submodulesJunctionsFilter( o );
+  if( relation.opener )
+  if( relation.opener.openedModule )
+  return relation.opener.openedModule.submodulesRelationsFilter( o );
 
-  if( o.withPeers )
-  _.arrayPrependOnce( junctions, junction ); /* yyy */
-
-  result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
-
-  return result;
+  return [];
 }
+
+// {
+//   let relation = this;
+//   let module = relation.module;
+//   let will = module.will;
+//
+//   o = _.routineOptions( submodulesRelationsFilter, arguments );
+//
+//   let result = relation.submodulesRelationsOwnFilter( o );
+//   let junction = will.junctionFrom( relation );
+//   let junctions = junction.submodulesJunctionsFilter( o );
+//
+//   // if( o.withPeers )
+//   // _.arrayPrependOnce( junctions, junction ); /* yyy */
+//
+//   result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
+//
+//   return result;
+// }
 
 submodulesRelationsFilter.defaults =
 {
@@ -441,6 +453,7 @@ submodulesRelationsOwnFilter.defaults =
   ... _.Will.RelationFilterDefaults,
   withPeers : 1,
   withoutDuplicates : 0,
+  allVariants : 0,
 
 }
 

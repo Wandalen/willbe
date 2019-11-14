@@ -96,6 +96,9 @@ function reform()
   if( junction.formed === -1 )
   return;
 
+  // if( junction.id === 452 )
+  // debugger;
+
   // logger.log( `Reforming junction::${junction.name}#${junction.id} at ${junction.localPath}` ); debugger;
 
   junction.formed = -1;
@@ -130,6 +133,11 @@ function reform()
   isOutForm();
 
   // logger.log( `Reformed junction::${junction.name}#${junction.id} at ${junction.localPath}` ); debugger;
+
+  junction.assertIntegrityVerify();
+
+  // if( junction.id === 452 )
+  // debugger;
 
   junction.formed = 1;
   return junction;
@@ -347,12 +355,12 @@ function reform()
       if( !object.peerModule )
       return junction.peer;
 
-      let junction2 = junction.JunctionOf( will, object.peerModule );
+      let junction2 = junction.JunctionWithObject( will, object.peerModule );
       if( junction2 && junction2.peer === junction )
       return junction.peer;
     }
 
-    let junction2 = _.Will.ModuleJunction.JunctionOf( will, peerModule );
+    let junction2 = _.Will.ModuleJunction.JunctionWithObject( will, peerModule );
     peerAssign( junction, junction2 );
 
     return junction2;
@@ -457,6 +465,7 @@ function mergeIn( junction2 )
   _.assert( !junction2.finitedIs() );
   _.assert( arguments.length === 1 );
 
+  /* xxx : use junction.objects */
   junction.relations.slice().forEach( ( object ) => objects.push( object ) );
   junction.openers.slice().forEach( ( object ) => objects.push( object ) );
   junction.modules.slice().forEach( ( object ) => objects.push( object ) );
@@ -686,8 +695,16 @@ function From( o )
   {
     junction = will.objectToJunctionHash.get( o.object );
     if( junction )
-    return junction;
+    {
+    //   junction.assertIntegrityVerify();
+      // if( junction.id === 452 )
+      // debugger;
+      return junction;
+    }
   }
+
+  // if( o.object && o.object.id === 5 )
+  // debugger;
 
   // if( junction && junction.object ) /* xxx : remove ? */
   // {
@@ -864,20 +881,27 @@ function PathsOfAsMap( object )
 
 //
 
-function JunctionReform( will, object )
+function JunctionReform( will, o )
 {
   let cls = this;
   let result;
 
   _.assert( arguments.length === 2 );
-  _.assert( !!object );
+  _.assert( !!o );
 
-  if( !_.mapIs( object ) )
-  object = { object : object }
-  if( !object.will )
-  object.will = will;
+  if( !_.mapIs( o ) )
+  o = { object : o }
+  if( !o.will )
+  o.will = will;
 
-  result = cls.From( object );
+  let junction = will.objectToJunctionHash.get( o.object );
+  if( junction )
+  {
+    junction.reform();
+    return junction;
+  }
+
+  result = cls.From( o );
 
   return result;
 }
@@ -910,8 +934,12 @@ function JunctionFrom( will, object )
   object.will = will;
 
   result = will.objectToJunctionHash.get( object );
+
   if( result )
-  return result;
+  {
+    result.assertIntegrityVerify();
+    return result;
+  }
 
   result = cls.From( object );
 
@@ -932,7 +960,7 @@ function JunctionsFrom( will, junctions )
 
 //
 
-function JunctionOf( will, object )
+function JunctionWithObject( will, object )
 {
   let cls = this;
 
@@ -959,14 +987,14 @@ function JunctionOf( will, object )
 
 //
 
-function JunctionsOf( will, junctions )
+function JunctionsWithObjects( will, junctions )
 {
   let cls = this;
   _.assert( arguments.length === 2 );
   if( _.arrayLike( junctions ) )
-  return _.filter( junctions, ( junction ) => cls.JunctionOf( will, junction ) );
+  return _.filter( junctions, ( junction ) => cls.JunctionWithObject( will, junction ) );
   else
-  return cls.JunctionOf( will, junction );
+  return cls.JunctionWithObject( will, junction );
 }
 
 //
@@ -1051,7 +1079,7 @@ function _relationAdd( relation )
   changed = _.arrayAppendedOnce( junction.relations, relation ) > -1 || changed;
 
   let junction2 = will.objectToJunctionHash.get( relation );
-  _.assert( junction2 === junction || junction2 === undefined );
+  _.assert( junction.formed === -1 || junction2 === junction || junction2 === undefined );
   will.objectToJunctionHash.set( relation, junction );
 
   _.assert( junction.formed === -1 || changed || _.all( junction.PathsOf( relation ), ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction ) );
@@ -1126,7 +1154,7 @@ function _openerAdd( opener )
   changed = _.arrayAppendedOnce( junction.openers, opener ) > -1 || changed;
 
   let junction2 = will.objectToJunctionHash.get( opener );
-  _.assert( junction2 === junction || junction2 === undefined );
+  _.assert( junction.formed === -1 || junction2 === junction || junction2 === undefined );
   will.objectToJunctionHash.set( opener, junction );
 
   _.assert( junction.formed === -1 || changed || _.all( junction.PathsOf( opener ), ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction ) );
@@ -1417,7 +1445,7 @@ function isUsed()
 //     {
 //       let relation = junction.module.submoduleMap[ s ];
 //
-//       let junction2 = junction.JunctionOf( will, relation );
+//       let junction2 = junction.JunctionWithObject( will, relation );
 //       if( !junction2 )
 //       junction2 = junction.From({ relation : relation, will : will });
 //       _.assert( !!junction2 );
@@ -1519,6 +1547,10 @@ function submodulesJunctionsFilter( o )
   function junctionLook( junction )
   {
 
+    // if( _global_.debugger )
+    // if( junction.id === 176 )
+    // debugger;
+
     // if( junction.module )
     junction.modules.forEach( ( module ) =>
     {
@@ -1526,7 +1558,7 @@ function submodulesJunctionsFilter( o )
       {
         let relation = module.submoduleMap[ s ];
 
-        // let junction2 = junction.JunctionOf( will, relation );
+        // let junction2 = junction.JunctionWithObject( will, relation );
         // if( !junction2 )
         let junction2 = junction.From({ relation : relation, will : will });
         _.assert( !!junction2 );
@@ -1696,7 +1728,7 @@ function shadow( o )
   {
     _.assert( peerModule instanceof _.Will.Module );
     _.assert( shadowMap.peer === _.unknown );
-    shadowMap.peer = junction.JunctionOf( will, peerModule );
+    shadowMap.peer = junction.JunctionWithObject( will, peerModule );
     if( !shadowMap.peer )
     shadowMap.peer = junction.JunctionFrom( will, peerModule );
     shadowMap.peer = shadowMap.peer.shadow({ module : peerModule, peer : shadowProxy });
@@ -1715,6 +1747,26 @@ shadow.defaults =
   relation : _.unknown,
   opener : _.unknown,
   peer : _.unknown,
+}
+
+//
+
+function assertIntegrityVerify()
+{
+  let junction = this;
+  let will = junction.will;
+  let objects = junction.objects;
+
+  objects.forEach( ( object ) =>
+  {
+    _.assert( will.objectToJunctionHash.get( object ) === junction, `Integrity of ${junction.nameWithLocationGet()} is broken. Another junction has this object.` );
+    _.assert( _.longHasAll( objects, junction.AssociationsOf( object ) ), `Integrity of ${junction.nameWithLocationGet()} is broken. One or several associations are no in the list.` );
+    let p = junction.PathsOfAsMap( object );
+    _.assert( !p.localPath || _.longHas( junction.localPaths, p.localPath ), `Integrity of ${junction.nameWithLocationGet()} is broken. Local path ${p.localPath} is not in the list` );
+    _.assert( !p.remotePath || _.longHas( junction.remotePaths, p.remotePath ), `Integrity of ${junction.nameWithLocationGet()} is broken. Remote path ${p.remotePath} is not in the list` );
+  });
+
+  return true;
 }
 
 //
@@ -1933,8 +1985,8 @@ let Statics =
   JunctionsReform,
   JunctionFrom,
   JunctionsFrom,
-  JunctionOf,
-  JunctionsOf,
+  JunctionWithObject,
+  JunctionsWithObjects,
   AssociationsOf,
   ObjectToOptionsMap,
 }
@@ -1977,8 +2029,8 @@ let Extend =
   JunctionsReform,
   JunctionFrom,
   JunctionsFrom,
-  JunctionOf,
-  JunctionsOf,
+  JunctionWithObject,
+  JunctionsWithObjects,
   AssociationsOf,
   ObjectToOptionsMap,
 
@@ -2001,6 +2053,7 @@ let Extend =
   isUsed,
   submodulesJunctionsFilter,
   shadow,
+  assertIntegrityVerify,
   toModule,
   toRelation,
   toJunction,
