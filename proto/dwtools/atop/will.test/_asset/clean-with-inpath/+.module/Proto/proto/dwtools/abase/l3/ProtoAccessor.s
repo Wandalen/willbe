@@ -2097,6 +2097,8 @@ let Routines =
   _forbidDeclare,
   ownForbid,
 
+  supplement,
+
   // etc
 
   readOnly,

@@ -8933,7 +8933,7 @@ function cleanHierarchyRemote( test )
 
 } /* end of function cleanHierarchyRemote */
 
-cleanHierarchyRemote.timeOut = 500000;
+cleanHierarchyRemote.timeOut = 1000000;
 
 //
 
