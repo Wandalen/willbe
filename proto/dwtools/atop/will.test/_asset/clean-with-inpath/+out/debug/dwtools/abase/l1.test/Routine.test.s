@@ -43,6 +43,120 @@ var context3 = new contextConstructor3();
 
 //
 
+function routineIs( test )
+{
+  var got = _.routineIs( 1 );
+  test.identical( got, false )
+
+  var got = _.routineIs( '' );
+  test.identical( got, false )
+
+  var got = _.routineIs( {} );
+  test.identical( got, false )
+
+  var got = _.routineIs( [] );
+  test.identical( got, false )
+
+  var got = _.routineIs( () => {} );
+  test.identical( got, true )
+
+  var got = _.routineIs( function () {} );
+  test.identical( got, true )
+
+  var got = _.routineIs( function a() {} );
+  test.identical( got, true )
+
+  var got = _.routineIs( async function () {} );
+  test.identical( got, true )
+
+  var got = _.routineIs( async () => {} );
+  test.identical( got, true )
+
+  var got = _.routineIs( async function a() {} );
+  test.identical( got, true )
+
+  var got = _.routineIs( Object );
+  test.identical( got, true )
+}
+
+//
+
+function routineIsSync( test )
+{
+  var got = _.routineIsSync( 1 );
+  test.identical( got, false )
+
+  var got = _.routineIsSync( '' );
+  test.identical( got, false )
+
+  var got = _.routineIsSync( {} );
+  test.identical( got, false )
+
+  var got = _.routineIsSync( [] );
+  test.identical( got, false )
+
+  var got = _.routineIsSync( () => {} );
+  test.identical( got, true )
+
+  var got = _.routineIsSync( function () {} );
+  test.identical( got, true )
+
+  var got = _.routineIsSync( function a() {} );
+  test.identical( got, true )
+
+  var got = _.routineIsSync( async function () {} );
+  test.identical( got, false )
+
+  var got = _.routineIsSync( async () => {} );
+  test.identical( got, false )
+
+  var got = _.routineIsSync( async function a() {} );
+  test.identical( got, false )
+
+  var got = _.routineIsSync( Object );
+  test.identical( got, true )
+}
+
+//
+
+function routineIsAsync( test )
+{
+  var got = _.routineIsAsync( 1 );
+  test.identical( got, false )
+
+  var got = _.routineIsAsync( '' );
+  test.identical( got, false )
+
+  var got = _.routineIsAsync( {} );
+  test.identical( got, false )
+
+  var got = _.routineIsAsync( [] );
+  test.identical( got, false )
+
+  var got = _.routineIsAsync( () => {} );
+  test.identical( got, false )
+
+  var got = _.routineIsAsync( function () {} );
+  test.identical( got, false )
+
+  var got = _.routineIsAsync( function a() {} );
+  test.identical( got, false )
+
+  var got = _.routineIsAsync( async function () {} );
+  test.identical( got, true )
+
+  var got = _.routineIsAsync( async () => {} );
+  test.identical( got, true )
+
+  var got = _.routineIsAsync( async function a() {} );
+  test.identical( got, true )
+
+  var got = _.routineIsAsync( Object );
+  test.identical( got, false )
+}
+
+//
+
 function _routineJoin( test )
 {
 
@@ -2558,6 +2672,10 @@ var Self =
 
   tests :
   {
+
+    routineIs,
+    routineIsSync,
+    routineIsAsync,
 
     /* qqq : tests for constructorJoin, extend tests for routineJoin */
 

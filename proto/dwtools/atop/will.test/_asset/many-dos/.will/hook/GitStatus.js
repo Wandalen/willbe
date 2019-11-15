@@ -11,13 +11,16 @@ function onModule( it )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  debugger;
+  let config = _.fileProvider.fileConfigUserRead();
+  let token = null;
+  if( config.about && config.about[ 'github.token' ] )
+  token = config.about[ 'github.token' ];
 
   let o2 = _.mapOnly( o, _.git.statusFull.defaults );
   o2.insidePath = it.junction.dirPath;
+  if( !o2.token )
+  o2.token = token;
   let got = _.git.statusFull( o2 );
-
-  debugger;
 
   if( !got.status )
   return null;
@@ -49,5 +52,6 @@ defaults.remoteTags = null;
 defaults.prs = 1;
 defaults.v = null;
 defaults.verbosity = 1;
+defaults.token = null;
 
 module.exports = onModule;

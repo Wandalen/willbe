@@ -8876,8 +8876,8 @@ function cleanHierarchyRemote( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 32 );
-    test.identical( _.strCount( got.output, ' at ' ), 34 );
+    test.identical( _.strCount( got.output, ' at .' ), 24 );
+    test.identical( _.strCount( got.output, ' at ' ), 26 );
     test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -9212,7 +9212,7 @@ function cleanHierarchyRemoteDry( test )
 
 } /* end of function cleanHierarchyRemoteDry */
 
-cleanHierarchyRemoteDry.timeOut = 500000;
+cleanHierarchyRemoteDry.timeOut = 1000000;
 
 //
 
@@ -9492,7 +9492,7 @@ function cleanSubmodulesHierarchyRemote( test )
 
 } /* end of function cleanSubmodulesHierarchyRemote */
 
-cleanSubmodulesHierarchyRemote.timeOut = 500000;
+cleanSubmodulesHierarchyRemote.timeOut = 1000000;
 
 //
 
@@ -9771,7 +9771,7 @@ function cleanSubmodulesHierarchyRemoteDry( test )
 
 } /* end of function cleanSubmodulesHierarchyRemoteDry */
 
-cleanSubmodulesHierarchyRemoteDry.timeOut = 500000;
+cleanSubmodulesHierarchyRemoteDry.timeOut = 1000000;
 
 //
 
@@ -18644,6 +18644,12 @@ function stepWillbeVersionCheck( test )
 
   let nodeModulesSrcPath = _.path.join( willbeRootPath, 'node_modules' );
   let nodeModulesDstPath = _.path.join( willbeDstPath, 'node_modules' );
+
+  if( !_.fileProvider.fileExists( _.path.join( willbeRootPath, 'package.json' ) ) )
+  {
+    test.is( true );
+    return;
+  }
 
   _.fileProvider.filesReflect
   ({
