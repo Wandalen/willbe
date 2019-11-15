@@ -1,0 +1,17 @@
+about :
+
+  name : plugin1
+  version : '0.0.0'
+
+path :
+
+  export : '**'
+
+build :
+
+  export :
+    criterion :
+      export : 1
+      default : 1
+    steps :
+      step::module.export

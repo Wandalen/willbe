@@ -5,24 +5,25 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
-  // let status = _.git.statusFull
-  // ({
-  //   insidePath : it.junction.dirPath,
-  //   unpushed : 0,
-  //   prs : 0,
-  //   remote : 0,
-  // });
-  // if( !status.isRepository )
-  // return null;
+  let status = _.git.statusFull
+  ({
+    insidePath : it.junction.dirPath,
+    unpushed : 0,
+    prs : 0,
+    remote : 1,
+  });
+
+  if( !status.isRepository || !status.remote )
+  return null;
 
   if( o.verbosity )
   logger.log( `Pulling ${it.junction.nameWithLocationGet()}` );
 
-  // if( status.local )
-  // {
-  //   logger.log( _.errBrief( `${it.junction.nameWithLocationGet()} has local changes!` ) );
-  //   return null;
-  // }
+  if( status.uncommitted )
+  {
+    logger.log( _.errBrief( `${it.junction.nameWithLocationGet()} has local changes!` ) );
+    return null;
+  }
 
   let config = _.fileProvider.fileConfigUserRead();
   let provider = _.FileFilter.Archive();

@@ -1,0 +1,35 @@
+
+about :
+
+  name : 'module1'
+  version : '0.5.0'
+  enabled : 0
+
+step :
+
+  proto.export :
+    inherit : module.export
+    export : path::export
+    tar : 0
+    criterion :
+      content : 'proto'
+
+build :
+
+  proto.export :
+    criterion :
+      content : 'proto'
+      export : 1
+    steps :
+      # - build::debug.raw
+      - step::proto.export
+
+  export :
+
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      # - build::npm
+      - build::proto.export
+      # - build::doc.export

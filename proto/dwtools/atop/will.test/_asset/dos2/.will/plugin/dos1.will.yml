@@ -1,0 +1,5 @@
+submodule :
+
+  dos :
+    remote : hd://../dos/.will/hook/
+    local : dos1

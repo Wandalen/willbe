@@ -5,8 +5,6 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
-  debugger;
-
   _.fileProvider.filesFind( it.junction.dirPath + '**' );
 
   let status = _.git.statusFull
@@ -28,13 +26,8 @@ function onModule( it )
   if( o.dry )
   return;
 
-  debugger;
-
   it.start( `git add --all` );
   it.start( `git commit ${it.request.original}` );
-
-  // it.startNonThrowing( `git add --all` );
-  // it.startNonThrowing( `git commit ${it.request.original}` );
 
 }
 

@@ -37,7 +37,7 @@ function onModule( it )
 
   it.start( 'local-will .export' );
 
-  _.npm.bump
+  let bumped = _.npm.bump
   ({
     dry : o.dry,
     configPath : wasconfigPath,
@@ -60,6 +60,28 @@ function onModule( it )
     onDependency,
     verbosity : o.verbosity - 2,
   });
+
+  {
+    let it2 = it.will.hookItNew( it );
+    it2.request.subject = `-am "version ${bumped.config.version}"`
+    it2.request.original = it2.request.subject;
+    it2.will.hooks.GitSync.call( it2 );
+  }
+
+  {
+    let it2 = it.will.hookItNew( it );
+    it2.request.subject = '';
+    it2.request.original = '';
+    it2.request.map = { name : bumped.config.version };
+    it2.will.hooks.GitTag.call( it2 );
+  }
+
+  {
+    let it2 = it.will.hookItNew( it );
+    it2.request.subject = '';
+    it2.request.original = '';
+    it2.will.hooks.GitPush.call( it2 );
+  }
 
   _.npm.publish
   ({

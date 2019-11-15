@@ -1,0 +1,35 @@
+
+about :
+
+  name : module2
+
+path :
+
+  in : '.'
+  out : 'out'
+  export : '*'
+  temp :
+    - 'path::out'
+    - 'package-lock.json'
+    - 'package.json'
+    - 'node_modules'
+
+step :
+
+  proto.export :
+
+    inherit : module.export
+    export : path::export
+    tar : 0
+    criterion :
+      content : 'proto'
+
+build :
+
+  export :
+
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      - step::proto.export

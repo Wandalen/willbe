@@ -5,8 +5,6 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
-  debugger;
-
   let status = _.git.statusFull
   ({
     insidePath : it.junction.dirPath,
@@ -26,12 +24,6 @@ function onModule( it )
   if( o.verbosity )
   logger.log( `Pushing ${it.junction.nameWithLocationGet()}` );
 
-  debugger;
-
-  // it.start( `git status` );
-  // it.start( `git push --tags` );
-  // it.start( `git push --follow-tags` );
-  // it.start( `git push -u origin --all --follow-tags` );
   it.start( `git push -u origin --all` );
   if( status.unpushedTags )
   it.start( `git push --tags` );

@@ -1,0 +1,54 @@
+
+
+about :
+
+  name : "wChangeTransactor"
+  description : "Still sketch. Mixin to add the ability to track changes of an object, to reflect changes in a data structure and to make possible to apply the changes to another object. Use the module to mirror object's changes somehow elsewhere, for example on server-side or client-side."
+  version : "0.3.55"
+  enabled : 1
+  interpreters :
+  - nodejs >= 8.0.0
+  - chrome >= 60.0.0
+  - firefox >= 60.0.0
+  keywords :
+  - wTools
+
+# execution :
+# 
+# scripts :
+# test : wtest .run proto/**
+# docgen : wdocgen staging
+# 
+path :
+
+  repository : git+https:///github.com/Wandalen/wChangeTransactor.git
+  origins :
+   - git+https:///github.com/Wandalen/wChangeTransactor.git
+   - npm:///wchangetransactor
+  bugs : https:///github.com/Wandalen/wChangeTransactor/issues
+
+step :
+
+  export.proto :
+    inherit : module.export
+    export : path::export
+    tar : 0
+    criterion :
+      debug : 1
+      proto : 1
+
+build :
+
+  proto.export :
+    criterion :
+      default : 1
+      debug : 1
+      raw : 1
+      proto : 1
+      export : 1
+      tar : 1
+      public : 1
+    steps :
+      - build::debug.raw
+      - step::export.proto
+
