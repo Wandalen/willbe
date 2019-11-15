@@ -8777,7 +8777,7 @@ function cleanHierarchyRemote( test )
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic' ];
+    var exp = [ 'PathBasic', 'PathTools' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -8788,8 +8788,8 @@ function cleanHierarchyRemote( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 15 );
-    test.identical( _.strCount( got.output, ' at ' ), 17 );
+    test.identical( _.strCount( got.output, ' at .' ), 7 );
+    test.identical( _.strCount( got.output, ' at ' ), 9 );
     test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -8832,8 +8832,8 @@ function cleanHierarchyRemote( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 32 );
-    test.identical( _.strCount( got.output, ' at ' ), 34 );
+    test.identical( _.strCount( got.output, ' at .' ), 24 );
+    test.identical( _.strCount( got.output, ' at ' ), 26 );
     test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -8920,8 +8920,8 @@ function cleanHierarchyRemote( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 32 );
-    test.identical( _.strCount( got.output, ' at ' ), 34 );
+    test.identical( _.strCount( got.output, ' at .' ), 24 );
+    test.identical( _.strCount( got.output, ' at ' ), 26 );
     test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -9067,8 +9067,8 @@ function cleanHierarchyRemoteDry( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 15 );
-    test.identical( _.strCount( got.output, ' at ' ), 17 );
+    test.identical( _.strCount( got.output, ' at .' ), 7 );
+    test.identical( _.strCount( got.output, ' at ' ), 9 );
     test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -9111,8 +9111,8 @@ function cleanHierarchyRemoteDry( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 32 );
-    test.identical( _.strCount( got.output, ' at ' ), 34 );
+    test.identical( _.strCount( got.output, ' at .' ), 24 );
+    test.identical( _.strCount( got.output, ' at ' ), 26 );
     test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -9155,8 +9155,8 @@ function cleanHierarchyRemoteDry( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 32 );
-    test.identical( _.strCount( got.output, ' at ' ), 34 );
+    test.identical( _.strCount( got.output, ' at .' ), 24 );
+    test.identical( _.strCount( got.output, ' at ' ), 26 );
     test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -9199,8 +9199,8 @@ function cleanHierarchyRemoteDry( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 32 );
-    test.identical( _.strCount( got.output, ' at ' ), 34 );
+    test.identical( _.strCount( got.output, ' at .' ), 24 );
+    test.identical( _.strCount( got.output, ' at ' ), 26 );
     test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -9336,7 +9336,7 @@ function cleanSubmodulesHierarchyRemote( test )
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic' ];
+    var exp = [ 'PathBasic', 'PathTools' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -9347,8 +9347,8 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 6 );
-    test.identical( _.strCount( got.output, ' at ' ), 8 );
+    test.identical( _.strCount( got.output, ' at .' ), 4 );
+    test.identical( _.strCount( got.output, ' at ' ), 6 );
     test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -9391,8 +9391,8 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 11 );
-    test.identical( _.strCount( got.output, ' at ' ), 13 );
+    test.identical( _.strCount( got.output, ' at .' ), 9 );
+    test.identical( _.strCount( got.output, ' at ' ), 11 );
     test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -9435,8 +9435,8 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 11 );
-    test.identical( _.strCount( got.output, ' at ' ), 13 );
+    test.identical( _.strCount( got.output, ' at .' ), 9 );
+    test.identical( _.strCount( got.output, ' at ' ), 11 );
     test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -9479,8 +9479,8 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 11 );
-    test.identical( _.strCount( got.output, ' at ' ), 13 );
+    test.identical( _.strCount( got.output, ' at .' ), 9 );
+    test.identical( _.strCount( got.output, ' at ' ), 11 );
     test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -9626,8 +9626,8 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 6 );
-    test.identical( _.strCount( got.output, ' at ' ), 8 );
+    test.identical( _.strCount( got.output, ' at .' ), 4 );
+    test.identical( _.strCount( got.output, ' at ' ), 6 );
     test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -9670,8 +9670,8 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 11 );
-    test.identical( _.strCount( got.output, ' at ' ), 13 );
+    test.identical( _.strCount( got.output, ' at .' ), 9 );
+    test.identical( _.strCount( got.output, ' at ' ), 11 );
     test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -9714,8 +9714,8 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 11 );
-    test.identical( _.strCount( got.output, ' at ' ), 13 );
+    test.identical( _.strCount( got.output, ' at .' ), 9 );
+    test.identical( _.strCount( got.output, ' at ' ), 11 );
     test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -9758,8 +9758,8 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 26 );
     test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( got.output, ' at .' ), 11 );
-    test.identical( _.strCount( got.output, ' at ' ), 13 );
+    test.identical( _.strCount( got.output, ' at .' ), 9 );
+    test.identical( _.strCount( got.output, ' at ' ), 11 );
     test.identical( _.strCount( got.output, '. Clean will delete' ), 1 );
 
     return null;

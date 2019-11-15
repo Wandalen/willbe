@@ -2434,13 +2434,13 @@ function modulesBuild_body( o )
     o2.withOut = 0;
     o2.withIn = 1;
     // _global_.debugger = 1;
-    debugger;
+    // debugger;
     return will.modulesFor( o2 );
   })
 
   ready.finally( ( err, arg ) =>
   {
-    debugger;
+    // debugger;
     if( err )
     debugger;
     if( err )
@@ -2454,7 +2454,7 @@ function modulesBuild_body( o )
 
   function handleEach( module, op )
   {
-    debugger;
+    // debugger;
     let o3 = _.mapOnly( o, module.moduleBuild.defaults );
     // if( !junction.module )
     // throw _.err( `${junction.object.absoluteName} at ${junction.object.localPath || junction.object.remotePath} is not opened or invalid` );
