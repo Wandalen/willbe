@@ -46,7 +46,6 @@ function exec()
   let appArgs = _.process.args({ keyValDelimeter : 0 });
   let ca = will._commandsMake();
 
-
   return _.Consequence
   .Try( () =>
   {
@@ -143,6 +142,228 @@ function openersCurrentEach( onEach )
   ({
     onEach,
   });
+}
+
+//
+
+function openersFind( o )
+{
+  let will = this;
+  let logger = will.logger;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  o = _.routineOptions( openersFind, arguments );
+  _.assert( will.currentOpener === null );
+  _.assert( will.currentOpeners === null );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  let o2 = _.mapExtend( null, o );
+  o2.selector = o.localPath;
+  delete o2.localPath;
+  return will.modulesFindWithAt( o2 )
+  .finally( function( err, it )
+  {
+
+    if( err )
+    debugger;
+    if( err )
+    throw _.err( err );
+
+    will.currentOpeners = it.openers;
+    if( !will.currentOpeners.length )
+    debugger;
+    if( !will.currentOpeners.length )
+    throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
+
+    return will.currentOpeners;
+  })
+
+}
+
+openersFind.defaults =
+{
+
+  ... _.mapExtend( null, _.Will.prototype.modulesFindWithAt.defaults ),
+
+  localPath : './',
+  tracing : 1,
+
+}
+
+//
+
+function currentOpenerChange( src )
+{
+  let will = this;
+
+  _.assert( src === null || src instanceof will.ModuleOpener );
+  _.assert( arguments.length === 1 );
+
+  if( src && will[ currentOpenerSymbol ] === src )
+  return src;
+
+  will[ currentOpenerSymbol ] = src;
+  will.currentOpenerPath = null;
+
+  return src;
+}
+
+// --
+// etc
+// --
+
+function errEncounter( error )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+
+  _.process.exitCode( -1 );
+  logger.log( _.errOnce( error ) );
+
+}
+
+// --
+// meta command
+// --
+
+function _commandsMake()
+{
+  let will = this;
+  let logger = will.logger;
+  let fileProvider = will.fileProvider;
+  let appArgs = _.process.args();
+
+  _.assert( _.instanceIs( will ) );
+  _.assert( arguments.length === 0 );
+
+  let commands =
+  {
+
+    'help' :                            { e : _.routineJoin( will, will.commandHelp ),                        h : 'Get help.' },
+    'imply' :                           { e : _.routineJoin( will, will.commandImply ),                       h : 'Change state or imply value of a variable' },
+    'version' :                         { e : _.routineJoin( will, will.commandVersion ),                     h : 'Get current version.' },
+    'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                h : 'Check if current version of willbe is the latest.' },
+
+    'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               h : 'List information about resources of the current module.' },
+    'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
+    'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              h : 'List submodules of the current module.' },
+    'modules list' :                    { e : _.routineJoin( will, will.commandModulesList ),                 h : 'List all modules.' },
+    'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList ),      h : 'List all modules topologically.' },
+    'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree ),                 h : 'List all found modules as a tree.' },
+    'reflectors list' :                 { e : _.routineJoin( will, will.commandReflectorsList ),              h : 'List avaialable reflectors the current module.' },
+    'steps list' :                      { e : _.routineJoin( will, will.commandStepsList ),                   h : 'List avaialable steps the current module.' },
+    'builds list' :                     { e : _.routineJoin( will, will.commandBuildsList ),                  h : 'List avaialable builds the current module.' },
+    'exports list' :                    { e : _.routineJoin( will, will.commandExportsList ),                 h : 'List avaialable exports the current module.' },
+    'about list' :                      { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
+    'about' :                           { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
+
+    'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean ),             h : 'Delete all downloaded submodules.' },
+    'submodules add' :                  { e : _.routineJoin( will, will.commandSubmodulesAdd ),               h : 'Add submodules.' },
+    'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
+    'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
+
+    'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  h : 'Download each submodule if such was not downloaded so far.' },
+    'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
+    'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  h : 'Download each submodule if such was not downloaded so far.' },
+    'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
+    'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify ),    h : 'Check whether each submodule is on branch which is specified in willfile' },
+    'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     h : 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.' },
+
+    'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       h : 'Run shell command on the module.' },
+    'do' :                              { e : _.routineJoin( will, will.commandDo ),                          h : 'Run JS script on the module.' },
+    'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
+    'call' :                            { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
+    'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
+    'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
+    'export' :                          { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
+    'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
+
+    'module new' :                      { e : _.routineJoin( will, will.commandModuleNew ),                   h : 'Create a new module.' },
+    'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               h : 'Make a new module in the current directory and call a specified hook for the module to prepare it.' },
+
+    'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks' },
+
+    'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
+    'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
+
+  }
+
+  let ca = _.CommandsAggregator
+  ({
+    basePath : fileProvider.path.current(),
+    commands : commands,
+    commandPrefix : 'node ',
+    logger : will.logger,
+  })
+
+  _.assert( ca.logger === will.logger );
+  _.assert( ca.verbosity === will.verbosity );
+
+  //will._commandsConfigAdd( ca );
+
+  ca.form();
+
+  return ca;
+}
+
+//
+
+function _commandsBegin( command )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+
+  if( will.topCommand === null )
+  will.topCommand = command;
+
+}
+
+//
+
+function _commandsEnd( command )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+
+  if( will.topCommand !== command )
+  return false;
+
+  try
+  {
+
+    will.topCommand = null;
+
+    if( will.currentOpener )
+    will.currentOpener.finit();
+    will.currentOpenerChange( null );
+
+    if( will.currentOpeners )
+    will.currentOpeners.forEach( ( opener ) => opener.finitedIs() ? null : opener.finit() );
+    will.currentOpeners = null;
+
+    if( will.beeping )
+    _.diagnosticBeep();
+    _.procedure.terminationBegin();
+
+  }
+  catch( err )
+  {
+    debugger;
+    will.errEncounter( err );
+    will.currentOpenerChange( null );
+    if( will.beeping )
+    _.diagnosticBeep();
+    _.process.exit( -1 );
+  }
+
+  return true;
 }
 
 //
@@ -623,225 +844,9 @@ _commandTreeLike.defaults =
   name : null,
 }
 
-//
-
-function openersFind( o )
-{
-  let will = this;
-  let logger = will.logger;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  o = _.routineOptions( openersFind, arguments );
-  _.assert( will.currentOpener === null );
-  _.assert( will.currentOpeners === null );
-  _.assert( arguments.length === 0 || arguments.length === 1 );
-
-  let o2 = _.mapExtend( null, o );
-  o2.selector = o.localPath;
-  delete o2.localPath;
-  return will.modulesFindWithAt( o2 )
-  .finally( function( err, it )
-  {
-
-    if( err )
-    debugger;
-    if( err )
-    throw _.err( err );
-
-    will.currentOpeners = it.openers;
-    if( !will.currentOpeners.length )
-    debugger;
-    if( !will.currentOpeners.length )
-    throw _.errBrief( `Found no willfile at ${path.resolve( o.localPath )}` );
-
-    return will.currentOpeners;
-  })
-
-}
-
-openersFind.defaults =
-{
-
-  ... _.mapExtend( null, _.Will.prototype.modulesFindWithAt.defaults ),
-
-  localPath : './',
-  tracing : 1,
-
-}
-
-//
-
-function _commandsMake()
-{
-  let will = this;
-  let logger = will.logger;
-  let fileProvider = will.fileProvider;
-  let appArgs = _.process.args();
-
-  _.assert( _.instanceIs( will ) );
-  _.assert( arguments.length === 0 );
-
-  let commands =
-  {
-
-    'help' :                            { e : _.routineJoin( will, will.commandHelp ),                        h : 'Get help.' },
-    'imply' :                           { e : _.routineJoin( will, will.commandImply ),                       h : 'Change state or imply value of a variable' },
-    'version' :                         { e : _.routineJoin( will, will.commandVersion ),                     h : 'Get current version.' },
-    'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                h : 'Check if current version of willbe is the latest.' },
-
-    'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               h : 'List information about resources of the current module.' },
-    'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
-    'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              h : 'List submodules of the current module.' },
-    'modules list' :                    { e : _.routineJoin( will, will.commandModulesList ),                 h : 'List all modules.' },
-    'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList ),      h : 'List all modules topologically.' },
-    'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree ),                 h : 'List all found modules as a tree.' },
-    'reflectors list' :                 { e : _.routineJoin( will, will.commandReflectorsList ),              h : 'List avaialable reflectors the current module.' },
-    'steps list' :                      { e : _.routineJoin( will, will.commandStepsList ),                   h : 'List avaialable steps the current module.' },
-    'builds list' :                     { e : _.routineJoin( will, will.commandBuildsList ),                  h : 'List avaialable builds the current module.' },
-    'exports list' :                    { e : _.routineJoin( will, will.commandExportsList ),                 h : 'List avaialable exports the current module.' },
-    'about list' :                      { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
-    'about' :                           { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
-
-    'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean ),             h : 'Delete all downloaded submodules.' },
-    'submodules add' :                  { e : _.routineJoin( will, will.commandSubmodulesAdd ),               h : 'Add submodules.' },
-    'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
-    'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
-
-    'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  h : 'Download each submodule if such was not downloaded so far.' },
-    'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
-    'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  h : 'Download each submodule if such was not downloaded so far.' },
-    'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
-    'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify ),    h : 'Check whether each submodule is on branch which is specified in willfile' },
-    'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     h : 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.' },
-
-    'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       h : 'Run shell command on the module.' },
-    'do' :                              { e : _.routineJoin( will, will.commandDo ),                          h : 'Run JS script on the module.' },
-    'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
-    'call' :                            { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
-    'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
-    'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
-    'export' :                          { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
-    'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
-    'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
-    'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
-
-    'module new' :                      { e : _.routineJoin( will, will.commandModuleNew ),                   h : 'Create a new module.' },
-    'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               h : 'Make a new module in the current directory and call a specified hook for the module to prepare it.' },
-
-    'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks' },
-
-  }
-
-  let ca = _.CommandsAggregator
-  ({
-    basePath : fileProvider.path.current(),
-    commands : commands,
-    commandPrefix : 'node ',
-    logger : will.logger,
-  })
-
-  _.assert( ca.logger === will.logger );
-  _.assert( ca.verbosity === will.verbosity );
-
-  //will._commandsConfigAdd( ca );
-
-  ca.form();
-
-  return ca;
-}
-
-//
-
-function _commandsBegin( command )
-{
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
-
-  if( will.topCommand === null )
-  will.topCommand = command;
-
-}
-
-//
-
-function _commandsEnd( command )
-{
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
-
-  if( will.topCommand !== command )
-  return false;
-
-  try
-  {
-
-    will.topCommand = null;
-
-    if( will.currentOpener )
-    will.currentOpener.finit();
-    will.currentOpenerChange( null );
-
-    if( will.currentOpeners )
-    will.currentOpeners.forEach( ( opener ) => opener.finitedIs() ? null : opener.finit() );
-    will.currentOpeners = null;
-
-    if( will.beeping )
-    _.diagnosticBeep();
-    _.procedure.terminationBegin();
-
-  }
-  catch( err )
-  {
-    debugger;
-    will.errEncounter( err );
-    will.currentOpenerChange( null );
-    if( will.beeping )
-    _.diagnosticBeep();
-    _.process.exit( -1 );
-  }
-
-  return true;
-}
-
-//
-
-function errEncounter( error )
-{
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
-
-  _.process.exitCode( -1 );
-  logger.log( _.errOnce( error ) );
-  // _.errLogOnce( error );
-
-}
-
-//
-
-function currentOpenerChange( src )
-{
-  let will = this;
-
-  _.assert( src === null || src instanceof will.ModuleOpener );
-  _.assert( arguments.length === 1 );
-
-  if( src && will[ currentOpenerSymbol ] === src )
-  return src;
-
-  will[ currentOpenerSymbol ] = src;
-  will.currentOpenerPath = null;
-
-  return src;
-}
-
-//
+// --
+// command
+// --
 
 function commandHelp( e )
 {
@@ -933,254 +938,6 @@ function commandVersionCheck( e )
 commandVersionCheck.commandProperties =
 {
   throwing : 'Throw an error if utility is not up to date. Default : 1'
-}
-
-//
-
-function commandWith( e )
-{
-  let will = this.form();
-  let ca = e.ca;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
-
-  if( will.currentOpener )
-  {
-    will.currentOpener.finit();
-    will.currentOpenerChange( null );
-  }
-
-  _.sure( _.strDefined( e.argument ), 'Expects path to module' );
-  _.assert( arguments.length === 1 );
-
-  will._commandsBegin( commandWith );
-
-  let isolated = ca.commandIsolateSecondFromArgument( e.argument );
-  if( !isolated )
-  throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
-
-  will.withPath = path.join( path.current(), will.withPath, path.fromGlob( isolated.argument ) );
-  if( _.strBegins( isolated.secondSubject, '.module.new' ) )
-  {
-    return ca.commandPerform
-    ({
-      command : isolated.secondCommand,
-    });
-  }
-
-  return will.modulesFindWithAt
-  ({
-    selector : isolated.argument,
-    atLeastOne : !path.isGlob( isolated.argument ),
-  })
-  .then( function( it )
-  {
-    // debugger;
-    will.currentOpeners = it.sortedOpeners;
-    // debugger;
-
-    if( !will.currentOpeners.length )
-    throw _.errBrief
-    (
-        `No module sattisfy criteria.`
-      , `\nLooked at ${_.strQuote( path.resolve( isolated.argument ) )}`
-    );
-
-    // if( !will.currentOpeners.length )
-    // throw _.errBrief( 'Found no willfile at ' + _.strQuote( path.resolve( isolated.argument ) ) );
-
-    return ca.commandPerform
-    ({
-      command : isolated.secondCommand,
-    })
-  })
-  .finally( ( err, arg ) =>
-  {
-    if( err )
-    will.errEncounter( err );
-    will._commandsEnd( commandWith );
-    if( err )
-    {
-      err = _.err( err );
-      logger.log( _.errOnce( err ) );
-      throw err;
-    }
-    return arg;
-  });
-
-}
-
-//
-
-function commandEach( e )
-{
-  let will = this.form();
-  let ca = e.ca;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
-  let levelUp = 0;
-
-  if( will.currentOpener )
-  {
-    will.currentOpener.finit();
-    will.currentOpenerChange( null );
-  }
-
-  _.sure( _.strDefined( e.argument ), 'Expects path to module' )
-  _.assert( arguments.length === 1 );
-
-  will._commandsBegin( commandEach );
-
-  let isolated = ca.commandIsolateSecondFromArgument( e.argument );
-
-  if( !isolated )
-  throw _.errBrief( 'Format of .each command should be: .each {-path-} .command' );
-
-  _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
-
-  let con = will.modulesFindEachAt
-  ({
-    selector : isolated.argument,
-    onBegin : handleBegin,
-    onEnd : handleEnd,
-    onError : handleError,
-  });
-
-  con.finally( ( err, arg ) =>
-  {
-    if( err )
-    will.errEncounter( err );
-    will._commandsEnd( commandEach );
-    if( err )
-    {
-      err = _.err( err );
-      logger.log( _.errOnce( err ) );
-      throw err;
-    }
-    // throw _.errLogOnce( err );
-    return arg;
-  });
-
-  return con;
-
-  /* */
-
-  function handleBegin( it )
-  {
-
-    // debugger;
-    _.assert( will.currentOpener === null );
-    _.assert( will.currentOpenerPath === null );
-    // _.assert( will.mainModule === null );
-    // _.assert( will.mainOpener === null ); // yyy
-
-    if( will.mainOpener )
-    will.mainOpener.isMain = false;
-    will.currentOpenerChange( it.currentOpener );
-    will.currentOpenerPath = it.currentOpenerPath || null;
-    it.currentOpener.isMain = true;
-    _.assert( will.mainOpener === it.currentOpener );
-    _.assert( will.currentOpener === it.currentOpener );
-    // will.mainOpener = it.currentOpener;
-    // will.mainModule = it.currentOpener.openedModule;
-    // will.mainOpener === it.currentOpener; // yyy
-
-    if( will.verbosity > 1 )
-    {
-      logger.log( '' );
-      logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.currentOpener.commonPath, 'path' ) );
-      if( will.currentOpenerPath )
-      logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentOpenerPath, 'path' ) );
-    }
-
-    return null;
-  }
-
-  /* */
-
-  function handleEnd( it )
-  {
-
-    // debugger;
-    logger.up();
-    levelUp = 1;
-
-    // debugger;
-    let r = ca.commandPerform
-    ({
-      command : isolated.secondCommand,
-    });
-
-    _.assert( r !== undefined );
-
-    r = _.Consequence.From( r );
-
-    return r.finally( ( err, arg ) =>
-    {
-      logger.down();
-      levelUp = 0;
-
-      // debugger;
-      _.assert( will.currentOpener === it.currentOpener || will.currentOpener === null );
-      // _.assert( will.currentOpener === it.currentOpener ); // xxx
-      // _.assert( will.mainModule === will.currentOpener.openedModule );
-      _.assert( will.mainOpener === it.currentOpener );
-      will.currentOpenerChange( null );
-      it.currentOpener.isMain = false;
-      if( !it.currentOpener.isUsed() )
-      it.currentOpener.finit();
-      _.assert( will.mainOpener === null );
-      _.assert( will.currentOpener === null );
-      _.assert( will.currentOpenerPath === null );
-      // will.mainModule = null;
-      // will.mainOpener = null; // yyy
-
-      if( err )
-      logger.log( _.errOnce( _.errBrief( '\n', err, '\n' ) ) );
-      if( err )
-      throw _.err( err );
-      return arg;
-    });
-
-  }
-
-  /* */
-
-  function handleError( err )
-  {
-
-    if( will.currentOpener )
-    will.currentOpener.finit();
-    will.currentOpenerChange( null );
-    // will.mainModule = null;
-    will.mainOpener = null;
-
-    if( levelUp )
-    {
-      levelUp = 0;
-      logger.down();
-    }
-
-  }
-
-}
-
-//
-
-function commandGitPreservingHardLinks( e )
-{
-  let will = this;
-  let ca = e.ca;
-  let logger = will.logger;
-
-  let enable = _.numberFrom( e.argument );
-
-  if( enable )
-  _.git.hookPreservingHardLinksRegister();
-  else
-  _.git.hookPreservingHardLinksUnregister();
 }
 
 //
@@ -2049,6 +1806,7 @@ function commandBuild( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let request = will.Resolver.strRequestParse( e.argument );
+  let doneContainer = [];
 
   return will._commandBuildLike
   ({
@@ -2062,8 +1820,8 @@ function commandBuild( e )
   {
     return it.opener.openedModule.modulesBuild
     ({
-      // ... _.mapBut( will.filterImplied(), { withIn : null, withOut : null } ),
       ... _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } ),
+      doneContainer,
       name : request.subject,
       criterion : request.map,
       recursive : 0,
@@ -2081,6 +1839,7 @@ function commandExport( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let request = will.Resolver.strRequestParse( e.argument );
+  let doneContainer = [];
 
   return will._commandBuildLike
   ({
@@ -2094,8 +1853,8 @@ function commandExport( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      // ... _.mapBut( will.filterImplied(), { withIn : null, withOut : null } ),
       ... _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } ),
+      doneContainer,
       name : request.subject,
       criterion : request.map,
       recursive : 0,
@@ -2113,8 +1872,8 @@ function commandExportRecursive( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let request = will.Resolver.strRequestParse( e.argument );
+  let doneContainer = [];
 
-  // debugger;
   return will._commandBuildLike
   ({
     event : e,
@@ -2127,13 +1886,251 @@ function commandExportRecursive( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      // ... _.mapBut( will.filterImplied(), { withIn : null, withOut : null } ),
       ... _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } ),
+      doneContainer,
       name : request.subject,
       criterion : request.map,
       recursive : 2,
       kind : 'export',
     });
+  }
+
+}
+
+//
+
+function commandGitPreservingHardLinks( e )
+{
+  let will = this;
+  let ca = e.ca;
+  let logger = will.logger;
+
+  let enable = _.numberFrom( e.argument );
+
+  if( enable )
+  _.git.hookPreservingHardLinksRegister();
+  else
+  _.git.hookPreservingHardLinksUnregister();
+}
+
+// --
+// command iterator
+// --
+
+/* xxx : add test routine checking wrong syntax error handling */
+function commandWith( e )
+{
+  let will = this.form();
+  let ca = e.ca;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+
+  if( will.currentOpener )
+  {
+    will.currentOpener.finit();
+    will.currentOpenerChange( null );
+  }
+
+  _.sure( _.strDefined( e.argument ), 'Expects path to module' );
+  _.assert( arguments.length === 1 );
+
+  will._commandsBegin( commandWith );
+
+  let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+  if( !isolated )
+  throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
+
+  will.withPath = path.join( path.current(), will.withPath, path.fromGlob( isolated.argument ) );
+  if( _.strBegins( isolated.secondSubject, '.module.new' ) )
+  {
+    return ca.commandPerform
+    ({
+      command : isolated.secondCommand,
+    });
+  }
+
+  return will.modulesFindWithAt
+  ({
+    selector : isolated.argument,
+    atLeastOne : !path.isGlob( isolated.argument ),
+  })
+  .then( function( it )
+  {
+    will.currentOpeners = it.sortedOpeners;
+
+    if( !will.currentOpeners.length )
+    throw _.errBrief
+    (
+        `No module sattisfy criteria.`
+      , `\nLooked at ${_.strQuote( path.resolve( isolated.argument ) )}`
+    );
+
+    return ca.commandPerform
+    ({
+      command : isolated.secondCommand,
+    });
+
+  })
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    will.errEncounter( err );
+    will._commandsEnd( commandWith );
+    if( err )
+    throw _.err( err );
+    return arg;
+  });
+
+}
+
+//
+
+function commandEach( e )
+{
+  let will = this.form();
+  let ca = e.ca;
+  let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
+  let logger = will.logger;
+  let levelUp = 0;
+
+  if( will.currentOpener )
+  {
+    will.currentOpener.finit();
+    will.currentOpenerChange( null );
+  }
+
+  _.sure( _.strDefined( e.argument ), 'Expects path to module' )
+  _.assert( arguments.length === 1 );
+
+  will._commandsBegin( commandEach );
+
+  let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+
+  if( !isolated )
+  throw _.errBrief( 'Format of .each command should be: .each {-path-} .command' );
+
+  _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
+
+  let con = will.modulesFindEachAt
+  ({
+    selector : isolated.argument,
+    onBegin : handleBegin,
+    onEnd : handleEnd,
+    onError : handleError,
+  });
+
+  con.finally( ( err, arg ) =>
+  {
+    if( err )
+    will.errEncounter( err );
+    will._commandsEnd( commandEach );
+    if( err )
+    throw _.err( err );
+    return arg;
+  });
+
+  return con;
+
+  /* */
+
+  function handleBegin( it )
+  {
+
+    // debugger;
+    _.assert( will.currentOpener === null );
+    _.assert( will.currentOpenerPath === null );
+    // _.assert( will.mainModule === null );
+    // _.assert( will.mainOpener === null ); // yyy
+
+    if( will.mainOpener )
+    will.mainOpener.isMain = false;
+    will.currentOpenerChange( it.currentOpener );
+    will.currentOpenerPath = it.currentOpenerPath || null;
+    it.currentOpener.isMain = true;
+    _.assert( will.mainOpener === it.currentOpener );
+    _.assert( will.currentOpener === it.currentOpener );
+    // will.mainOpener = it.currentOpener;
+    // will.mainModule = it.currentOpener.openedModule;
+    // will.mainOpener === it.currentOpener; // yyy
+
+    if( will.verbosity > 1 )
+    {
+      logger.log( '' );
+      logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.currentOpener.commonPath, 'path' ) );
+      if( will.currentOpenerPath )
+      logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentOpenerPath, 'path' ) );
+    }
+
+    return null;
+  }
+
+  /* */
+
+  function handleEnd( it )
+  {
+
+    // debugger;
+    logger.up();
+    levelUp = 1;
+
+    // debugger;
+    let r = ca.commandPerform
+    ({
+      command : isolated.secondCommand,
+    });
+
+    _.assert( r !== undefined );
+
+    r = _.Consequence.From( r );
+
+    return r.finally( ( err, arg ) =>
+    {
+      logger.down();
+      levelUp = 0;
+
+      // debugger;
+      _.assert( will.currentOpener === it.currentOpener || will.currentOpener === null );
+      // _.assert( will.currentOpener === it.currentOpener ); // xxx
+      // _.assert( will.mainModule === will.currentOpener.openedModule );
+      _.assert( will.mainOpener === it.currentOpener );
+      will.currentOpenerChange( null );
+      it.currentOpener.isMain = false;
+      if( !it.currentOpener.isUsed() )
+      it.currentOpener.finit();
+      _.assert( will.mainOpener === null );
+      _.assert( will.currentOpener === null );
+      _.assert( will.currentOpenerPath === null );
+      // will.mainModule = null;
+      // will.mainOpener = null; // yyy
+
+      if( err )
+      logger.log( _.errOnce( _.errBrief( '\n', err, '\n' ) ) );
+      if( err )
+      throw _.err( err );
+      return arg;
+    });
+
+  }
+
+  /* */
+
+  function handleError( err )
+  {
+
+    if( will.currentOpener )
+    will.currentOpener.finit();
+    will.currentOpenerChange( null );
+    // will.mainModule = null;
+    will.mainOpener = null;
+
+    if( levelUp )
+    {
+      levelUp = 0;
+      logger.down();
+    }
+
   }
 
 }
@@ -2192,8 +2189,22 @@ let Extend =
   exec,
   init,
 
+  // opener
+
   _openersCurrentEach,
   openersCurrentEach,
+  openersFind,
+  currentOpenerChange,
+
+  // etc
+
+  errEncounter,
+
+  // meta command
+
+  _commandsMake,
+  _commandsBegin,
+  _commandsEnd,
 
   _commandListLike,
   _commandBuildLike,
@@ -2201,20 +2212,12 @@ let Extend =
   _commandNewLike,
   _commandTreeLike,
 
-  openersFind,
-
-  _commandsMake,
-  _commandsBegin,
-  _commandsEnd,
-  errEncounter,
-  currentOpenerChange,
+  // command
 
   commandHelp,
   commandImply,
   commandVersion,
   commandVersionCheck,
-  commandWith,
-  commandEach,
 
   commandResourcesList,
   commandPathsList,
@@ -2251,6 +2254,11 @@ let Extend =
   commandExportRecursive,
 
   commandGitPreservingHardLinks,
+
+  // command iterator
+
+  commandWith,
+  commandEach,
 
   // relation
 

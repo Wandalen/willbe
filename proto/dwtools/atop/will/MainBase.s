@@ -2277,8 +2277,6 @@ function modulesFor_body( o )
 
   if( !o.nodesGroup )
   o.nodesGroup = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
-  // o.modules = _.arrayAs( o.nodesGroup.nodesAddOnce( o.modules ) );
-  // o.modules = _.arrayAs( will.junctionsFrom( o.modules ) );
   o.modules = _.arrayAs( o.modules );
   _.assert( _.arrayIs( o.modules ) );
   _.assert( will.ObjectsAreAll( o.modules ) );
@@ -2332,14 +2330,9 @@ function modulesFor_body( o )
   function objectsEach( objects )
   {
     let o2 = _.mapOnly( o, will.modulesEach.defaults );
-    // o2.outputFormat = '/';
     o2.outputFormat = '*/object';
     o2.modules = objects;
-    // if( _global_.debugger )
-    // debugger;
     let result = will.modulesEach( o2 );
-    // if( _global_.debugger )
-    // debugger;
     return result;
   }
 
@@ -2555,11 +2548,15 @@ function modulesDownload_body( o )
     {
       if( junctionIsRoot( junction ) )
       return;
+      if( !junction.module && junction.relation && !junction.relation.enabled )
+      return;
       return !junction.isOut || !_.longHas( o.remoteContainer, junction.peer );
     });
     let localContainer = o.localContainer.filter( ( junction ) =>
     {
       if( junctionIsRoot( junction ) )
+      return;
+      if( !junction.module && junction.relation && !junction.relation.enabled )
       return;
       // if( junction === rootJunction || junction.peer === rootJunction )
       // return;
@@ -2986,6 +2983,135 @@ delete defaults.outputFormat;
 delete defaults.onUp;
 delete defaults.onDown;
 delete defaults.onNode;
+
+//
+
+function modulesBuild_pre( routine, args )
+{
+  let o = _.routineOptions( routine, args );
+  if( o.doneContainer === null )
+  o.doneContainer = [];
+  return o;
+}
+
+function modulesBuild_body( o )
+{
+  // let module = this;
+  let will = this;
+  // let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  o = _.assertRoutineOptions( modulesBuild_body, arguments );
+  _.assert( _.arrayIs( o.doneContainer ) );
+
+  ready.then( () =>
+  {
+    if( !o.downloading )
+    return null;
+    let o2 = _.mapOnly( o, will.modulesDownload.defaults );
+    o2.loggingNoChanges = 0;
+    // o2.modules = [ module ];
+    if( o2.recursive === 0 )
+    o2.recursive = 1;
+    o2.strict = 0;
+    o2.withOut = 0;
+    o2.withIn = 1;
+    return will.modulesDownload( o2 );
+  })
+
+  ready.then( () =>
+  {
+    if( !o.upforming || o.downloading )
+    return null;
+    let o2 = _.mapOnly( o, will.modulesUpform.defaults );
+    // o2.modules = [ module ];
+    o2.all = 0;
+    o2.subModulesFormed = 1;
+    o2.peerModulesFormed = 1;
+    o2.withOut = 0;
+    o2.withIn = 1;
+    return will.modulesUpform( o2 );
+  })
+
+  ready.then( () =>
+  {
+    let o2 = _.mapOnly( o, will.modulesFor.defaults );
+    o2.onEachModule = moduleBuild;
+    // o2.modules = [ module ];
+    o2.left = 0;
+    o2.withOut = 0;
+    o2.withIn = 1;
+    return will.modulesFor( o2 );
+  })
+
+  ready.finally( ( err, arg ) =>
+  {
+    if( err )
+    debugger;
+    if( err )
+    throw _.err( err, `\nFailed to ${o.kind} ${module.absoluteName} at ${module.localPath}` );
+    return arg;
+  })
+
+  return ready;
+
+  /* */
+
+  function moduleBuild( module, op )
+  {
+    let o3 = _.mapOnly( o, module.moduleBuild.defaults );
+    _.assert( module instanceof _.Will.Module );
+    if( _.longHas( o.doneContainer, module ) )
+    return null;
+    o.doneContainer.push( module );
+    return module.moduleBuild( o3 );
+  }
+
+}
+
+// var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, _.Will.prototype.modulesFor.defaults );
+var defaults = modulesBuild_body.defaults =
+{
+
+  ... _.mapExtend( null, modulesFor.defaults ),
+
+  name : null,
+  criterion : null,
+  kind : 'build',
+
+  modules : null,
+  doneContainer : null,
+  recursive : 0,
+  withStem : 1,
+  withDisabledStem : 1,
+  withPeers : 1,
+  upforming : 1,
+  downloading : 1,
+
+}
+
+delete defaults.onEach;
+delete defaults.onEachModule;
+delete defaults.onEachJunction;
+delete defaults.withOut;
+delete defaults.withIn;
+
+_.assert( defaults.outputFormat === undefined );
+_.assert( defaults.withIn === undefined );
+_.assert( defaults.onEach === undefined );
+_.assert( defaults.withDisabledSubmodules === 0 );
+_.assert( defaults.withDisabledModules === 0 );
+
+let modulesBuild = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
+modulesBuild.defaults.kind = 'build';
+modulesBuild.defaults.downloading = 1;
+
+let modulesExport = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
+modulesExport.defaults.kind = 'export';
+modulesExport.defaults.downloading = 1;
 
 // --
 // object
@@ -3475,12 +3601,7 @@ function graphExportTreeInfo( modules, o )
   o2.allVariants = 0;
   o2.allSiblings = 0;
 
-  // _global_.debugger = 1;
-  // debugger;
-  // modules = [ modules[ 1 ] ]; /* xxx */
-
   let info = group.rootsExportInfoTree( modules, o2 );
-  // debugger;
 
   return info;
 
@@ -4404,8 +4525,6 @@ function hookItFrom( o )
   if( o.opener && !o.module )
   o.module = o.opener.openedModule;
   o.openers = will.currentOpeners; /* xxx : currentOpeners is not available here! */
-  // if( !o.junction )
-  // o.junction = will.junctionOf( opener );
   if( !o.junction )
   o.junction = will.junctionFrom( opener );
   if( !o.opener )
@@ -5015,9 +5134,12 @@ let Extend =
   modulesEach,
   modulesEachAll,
   modulesFor,
+
   modulesDownload,
   modulesUpform,
   modulesClean,
+  modulesBuild,
+  modulesExport,
 
   // object
 

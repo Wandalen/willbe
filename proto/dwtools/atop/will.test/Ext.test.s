@@ -14138,40 +14138,69 @@ function exportHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
     test.identical( _.strCount( got.output, 'was downloaded' ), 5 );
     test.identical( _.strCount( got.output, 'Exported module::' ), 10 );
-    test.identical( _.strCount( got.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'were downloaded' ), 1 );
 
     return null;
   })
 
-  // xxx
-  // a.start( '.with z .export.recursive' )
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.case = 'second';
-  //   test.identical( got.exitCode, 0 );
-  //
-  //   var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
-  //   var files = _.fileProvider.dirRead( a.abs( '.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
-  //   test.identical( files, exp );
-  //
-  //   var exp = [ 'a.out.will.yml', 'c.out.will.yml', 'debug' ];
-  //   var files = _.fileProvider.dirRead( a.abs( 'out' ) )
-  //   test.identical( files, exp );
-  //
-  //   test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-  //   test.identical( _.strCount( got.output, '. Opened .' ), 36 );
-  //   test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
-  //   test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
-  //   test.identical( _.strCount( got.output, 'Exported module::' ), 8 );
-  //   test.identical( _.strCount( got.output, 'submodule(s) of' ), 0 );
-  //
-  //   return null;
-  // })
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with ** .export.recursive';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .clean recursive:2' )
+  a.start( '.with ** .export.recursive' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+    var exp = [ 'debug', 'z.out.will.yml' ];
+    var files = _.fileProvider.dirRead( a.abs( 'out' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+    var exp = [ 'a.out.will.yml', 'b.out.will.yml', 'debug' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/out' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+    var exp = [ 'a0.out.will.yml', 'debug' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/out' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+    var exp = [ 'c.out.will.yml', 'debug' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group2/out' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 38 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 5 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 12 );
+    test.identical( _.strCount( got.output, 'module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'were downloaded' ), 1 );
+
+    return null;
+  })
 
   /* - */
 

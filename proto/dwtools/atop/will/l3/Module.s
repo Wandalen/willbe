@@ -2388,78 +2388,74 @@ function modulesBuild_body( o )
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  o.modules = [ module ];
+  return will.modulesBuild( o );
 
-  o = _.routineOptions( modulesBuild_body, arguments );
-
-  ready.then( () =>
-  {
-    if( !o.downloading )
-    return null;
-    let o2 = _.mapOnly( o, will.modulesDownload.defaults );
-    o2.loggingNoChanges = 0;
-    o2.modules = [ module ];
-    if( o2.recursive === 0 )
-    o2.recursive = 1;
-    // o2.recursive = 2; /* yyy */
-    o2.strict = 0;
-    o2.withOut = 0;
-    o2.withIn = 1;
-    return will.modulesDownload( o2 );
-  })
-
-  ready.then( () =>
-  {
-    if( !o.upforming || o.downloading )
-    return null;
-    let o2 = _.mapOnly( o, will.modulesUpform.defaults );
-    o2.modules = [ module ];
-    o2.all = 0;
-    o2.subModulesFormed = 1;
-    o2.peerModulesFormed = 1;
-    o2.withOut = 0;
-    o2.withIn = 1;
-    return will.modulesUpform( o2 );
-  })
-
-  ready.then( () =>
-  {
-    let o2 = _.mapOnly( o, will.modulesFor.defaults );
-    o2.onEachModule = handleEach;
-    o2.modules = [ module ];
-    o2.left = 0;
-    o2.withOut = 0;
-    o2.withIn = 1;
-    // _global_.debugger = 1;
-    // debugger;
-    return will.modulesFor( o2 );
-  })
-
-  ready.finally( ( err, arg ) =>
-  {
-    // debugger;
-    if( err )
-    debugger;
-    if( err )
-    throw _.err( err, `\nFailed to ${o.kind} ${module.absoluteName} at ${module.localPath}` );
-    return arg;
-  })
-
-  return ready;
-
-  /* */
-
-  function handleEach( module, op )
-  {
-    // debugger;
-    let o3 = _.mapOnly( o, module.moduleBuild.defaults );
-    // if( !junction.module )
-    // throw _.err( `${junction.object.absoluteName} at ${junction.object.localPath || junction.object.remotePath} is not opened or invalid` );
-    return module.moduleBuild( o3 );
-  }
+  // let fileProvider = will.fileProvider;
+  // let path = fileProvider.path;
+  // let logger = will.logger;
+  // let ready = new _.Consequence().take( null );
+  //
+  // o = _.routineOptions( modulesBuild_body, arguments );
+  //
+  // ready.then( () =>
+  // {
+  //   if( !o.downloading )
+  //   return null;
+  //   let o2 = _.mapOnly( o, will.modulesDownload.defaults );
+  //   o2.loggingNoChanges = 0;
+  //   o2.modules = [ module ];
+  //   if( o2.recursive === 0 )
+  //   o2.recursive = 1;
+  //   o2.strict = 0;
+  //   o2.withOut = 0;
+  //   o2.withIn = 1;
+  //   return will.modulesDownload( o2 );
+  // })
+  //
+  // ready.then( () =>
+  // {
+  //   if( !o.upforming || o.downloading )
+  //   return null;
+  //   let o2 = _.mapOnly( o, will.modulesUpform.defaults );
+  //   o2.modules = [ module ];
+  //   o2.all = 0;
+  //   o2.subModulesFormed = 1;
+  //   o2.peerModulesFormed = 1;
+  //   o2.withOut = 0;
+  //   o2.withIn = 1;
+  //   return will.modulesUpform( o2 );
+  // })
+  //
+  // ready.then( () =>
+  // {
+  //   let o2 = _.mapOnly( o, will.modulesFor.defaults );
+  //   o2.onEachModule = handleEach;
+  //   o2.modules = [ module ];
+  //   o2.left = 0;
+  //   o2.withOut = 0;
+  //   o2.withIn = 1;
+  //   return will.modulesFor( o2 );
+  // })
+  //
+  // ready.finally( ( err, arg ) =>
+  // {
+  //   if( err )
+  //   debugger;
+  //   if( err )
+  //   throw _.err( err, `\nFailed to ${o.kind} ${module.absoluteName} at ${module.localPath}` );
+  //   return arg;
+  // })
+  //
+  // return ready;
+  //
+  // /* */
+  //
+  // function handleEach( module, op )
+  // {
+  //   let o3 = _.mapOnly( o, module.moduleBuild.defaults );
+  //   return module.moduleBuild( o3 );
+  // }
 
 }
 
@@ -2469,10 +2465,9 @@ defaults.recursive = 0;
 defaults.withStem = 1;
 defaults.withDisabledStem = 1;
 defaults.withPeers = 1;
-// defaults.withOut = 0;
-// defaults.withIn = 1;
 defaults.upforming = 1;
 defaults.downloading = 1;
+defaults.doneContainer = null;
 
 delete defaults.onEach;
 delete defaults.onEachModule;
@@ -7371,6 +7366,7 @@ let Extend =
 
   modulesEach,
   modulesEachAll,
+
   modulesBuild,
   modulesExport,
   modulesUpform,
