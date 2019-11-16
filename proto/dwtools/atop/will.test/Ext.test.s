@@ -14034,10 +14034,10 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 34 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 36 );
     test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
     test.identical( _.strCount( got.output, 'was downloaded' ), 6 );
-    test.identical( _.strCount( got.output, 'Exported module::' ), 8 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 10 );
     test.identical( _.strCount( got.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
@@ -14063,10 +14063,10 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 36 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 38 );
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
-    test.identical( _.strCount( got.output, 'Exported module::' ), 8 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 10 );
     test.identical( _.strCount( got.output, 'submodule(s) of' ), 0 );
 
     return null;
@@ -14134,13 +14134,13 @@ function exportHierarchyRemote( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 36 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 38 );
     test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
     test.identical( _.strCount( got.output, 'was downloaded' ), 5 );
-    test.identical( _.strCount( got.output, 'Exported module::' ), 10 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 12 );
     test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'module::z were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'module::z were downloaded' ), 2 );
+    test.identical( _.strCount( got.output, 'were downloaded' ), 6 );
 
     return null;
   })
@@ -14197,7 +14197,7 @@ function exportHierarchyRemote( test )
     test.identical( _.strCount( got.output, 'was downloaded' ), 5 );
     test.identical( _.strCount( got.output, 'Exported module::' ), 12 );
     test.identical( _.strCount( got.output, 'module::z were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'were downloaded' ), 9 );
 
     return null;
   })
@@ -14461,6 +14461,48 @@ function exportOutResourceWithoutGeneratedCriterion( test )
 } /* end of function exportOutResourceWithoutGeneratedCriterion */
 
 exportOutResourceWithoutGeneratedCriterion.timeOut = 100000;
+
+//
+
+function exportWillAndOut( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'export-will-and-out' ); xxx
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with c .export.recursive';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with c .clean recursive:2' )
+  a.start( '.with c .export.recursive' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function exportWillAndOut */
+
+exportWillAndOut.timeOut = 300000;
 
 //
 
@@ -20643,6 +20685,7 @@ var Self =
     exportHierarchyRemote,
     exportWithDisabled,
     exportOutResourceWithoutGeneratedCriterion,
+    exportWillAndOut,
     /* xxx : implement same test for hierarchy-remote and irregular */
     /* xxx : implement clean tests */
     /* xxx : refactor ** clean */

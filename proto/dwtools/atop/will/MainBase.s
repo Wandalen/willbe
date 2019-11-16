@@ -2344,15 +2344,21 @@ function modulesFor_body( o )
     let ready = new _.Consequence().take( null );
     if( o.onEachModule )
     {
-      object = object.toModule();
-      if( !( object instanceof _.Will.Module ) )
-      return null;
-      if( visitedModulesSet.has( object ) )
-      return null;
-      visitedModulesSet.add( object );
-      let o3 = _.mapExtend( null, o );
-      o3.module = object;
-      ready.then( () => o.onEachModule( object, o3 ) );
+      // object = object.toModule();
+      let junction = object.toJunction();
+      let objects = [ object ];
+      _.arrayAppendArrayOnce( objects, junction.modules );
+      objects.forEach( ( object ) =>
+      {
+        if( !( object instanceof _.Will.Module ) )
+        return null;
+        if( visitedModulesSet.has( object ) )
+        return null;
+        visitedModulesSet.add( object );
+        let o3 = _.mapExtend( null, o );
+        o3.module = object;
+        ready.then( () => o.onEachModule( object, o3 ) );
+      });
     }
     return ready;
   }
