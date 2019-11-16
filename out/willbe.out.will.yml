@@ -207,6 +207,26 @@ module:
           - ../proto/dwtools/atop/will.test/Remake.s
           - ../proto/dwtools/atop/will.test/ReposDownload.s
           - ../proto/dwtools/atop/will.test/_asset
+          - ../proto/dwtools/atop/will.test/_asset/broken-out
+          - ../proto/dwtools/atop/will.test/_asset/broken-out/module1
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/broken-out/module1/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/broken-out/module1/.im.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/broken-out/module1/+out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/broken-out/module1/+out/module1.out.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/broken-out/module1/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/broken-out/module1/out/module1.out.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/broken-out/module1/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/broken-out/module1/proto/File1.txt
+          - ../proto/dwtools/atop/will.test/_asset/broken-out/module2
+          - ../proto/dwtools/atop/will.test/_asset/broken-out/module2/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/broken-out/module2/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/broken-out/module2/out/module2.out.will.yml
           - ../proto/dwtools/atop/will.test/_asset/clean
           - ../proto/dwtools/atop/will.test/_asset/clean/Build.will.yml
           - ../proto/dwtools/atop/will.test/_asset/clean/NoBuild.will.yml
@@ -724,6 +744,138 @@ module:
             ../proto/dwtools/atop/will.test/_asset/corrupted-submodules-disabled/super.ex.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/corrupted-submodules-disabled/super.im.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/dos
+          - ../proto/dwtools/atop/will.test/_asset/dos/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/build.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/clean.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/export.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/git.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitCommit.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitMake.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitPull.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitPush.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitStatus.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitSync.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitTag.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitUncommitted.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitUnpushed.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/info.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/link.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/ModuleInit.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/ModuleIsEnabled.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/NpmConfigRemove.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/NpmInstall.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/NpmPublish.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/prepare.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/publish.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/status.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/TemplateStandard.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/will.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/WillExport.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/WillfCommentOut.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/WillfPatch.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/template
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/template/Standard.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/_hidden
+          - ../proto/dwtools/atop/will.test/_asset/dos/_hidden/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/dos/corrupted
+          - ../proto/dwtools/atop/will.test/_asset/dos/corrupted/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/dos/disabled
+          - ../proto/dwtools/atop/will.test/_asset/dos/disabled/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/dos/execution_section
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos/execution_section/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/dos/wExperiment
+          - ../proto/dwtools/atop/will.test/_asset/dos/wExperiment/Index.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/wExperiment/LICENSE
+          - ../proto/dwtools/atop/will.test/_asset/dos/wExperiment/package.json
+          - ../proto/dwtools/atop/will.test/_asset/dos/wExperiment/README.md
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos/wExperiment/was.package.json
+          - ../proto/dwtools/atop/will.test/_asset/dos/wExperiment/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/dos2
+          - ../proto/dwtools/atop/will.test/_asset/dos2/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/dos2/.will
+          - ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/dos1.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/dos2.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/plugin1.out.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/build.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/clean.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/export.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/git.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/GitCommit.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/GitMake.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/GitPull.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/GitPush.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/GitStatus.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/GitSync.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/GitTag.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/GitUncommitted.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/GitUnpushed.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/info.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/link.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/ModuleInit.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/ModuleIsEnabled.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/NpmConfigRemove.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/NpmInstall.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/NpmPublish.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/prepare.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/publish.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/status.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/TemplateStandard.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/will.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/WillExport.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/WillfCommentOut.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/WillfPatch.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/template
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos2/.will/plugin/plugin1/hook/template/Standard.js
           - ../proto/dwtools/atop/will.test/_asset/each-broken
           - ../proto/dwtools/atop/will.test/_asset/each-broken/.will.yml
           - ../proto/dwtools/atop/will.test/_asset/each-broken/a.will.yml
@@ -955,6 +1107,8 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/export-multiple-exported/sub.out
           - >-
+            ../proto/dwtools/atop/will.test/_asset/export-multiple-exported/sub.out/File.debug.js
+          - >-
             ../proto/dwtools/atop/will.test/_asset/export-multiple-exported/sub.out/submodule.debug.out.tgs
           - >-
             ../proto/dwtools/atop/will.test/_asset/export-multiple-exported/sub.out/submodule.out.tgs
@@ -984,6 +1138,36 @@ module:
             ../proto/dwtools/atop/will.test/_asset/export-multiple-exported/super.out/release
           - >-
             ../proto/dwtools/atop/will.test/_asset/export-multiple-exported/super.out/release/File.release.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/+out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/+out/wChangeTransactor.out.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/out/wChangeTransactor.out.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/out/debug
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/out/debug/dwtools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/out/debug/dwtools/amid
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/out/debug/dwtools/amid/File.txt
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/proto/dwtools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/proto/dwtools/amid
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-out-resource-without-generated-criterion/proto/dwtools/amid/File.txt
           - ../proto/dwtools/atop/will.test/_asset/export-rewrites-out-file
           - >-
             ../proto/dwtools/atop/will.test/_asset/export-rewrites-out-file/.will.single-export.yml
@@ -1162,6 +1346,160 @@ module:
             ../proto/dwtools/atop/will.test/_asset/hierarchy-diff-download-paths-regular/a
           - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-diff-download-paths-regular/a/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/hierarchy-duplicate
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-duplicate/z.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/hierarchy-duplicate/group1
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-duplicate/group1/a.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug
+          - ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/z.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+
+          - ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/z.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module/PathTools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module/PathTools/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module/PathTools/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module/PathTools/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module/PathTools/out/wPathTools.out.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/a.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/PathTools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/PathTools/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/PathTools/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/PathTools/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/PathTools/out/wPathTools.out.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Proto/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Proto/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Proto/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Proto/out/wProto.out.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Tools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Tools/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Tools/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Tools/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Tools/out/wTools.out.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/a0.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathBasic
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathBasic/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathBasic/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathBasic/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathBasic/out/wPathBasic.out.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathTools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathTools/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathTools/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathTools/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathTools/out/wPathTools.out.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/.module
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools/out/wPathTools.out.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/a.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/PathTools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/PathTools/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/PathTools/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/PathTools/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/PathTools/out/wPathTools.out.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Proto/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Proto/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Proto/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Proto/out/wProto.out.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Tools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Tools/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Tools/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Tools/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Tools/out/wTools.out.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/a0.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathBasic
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathBasic/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathBasic/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathBasic/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathBasic/out/wPathBasic.out.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools/out/wPathTools.out.will.yml
           - ../proto/dwtools/atop/will.test/_asset/hierarchy-remote
           - ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/z.will.yml
           - ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1
@@ -1239,79 +1577,6 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/many
           - ../proto/dwtools/atop/will.test/_asset/many/.ex.will.yml
           - ../proto/dwtools/atop/will.test/_asset/many/.im.will.yml
-          - ../proto/dwtools/atop/will.test/_asset/many-dos
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/will.yml
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.module
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/build.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/clean.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/export.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/git.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitCommit.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitMake.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitPull.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitPush.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitStatus.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitSync.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitUncommitted.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/GitUnpushed.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/info.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/link.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/ModuleInit.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/ModuleIsEnabled.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/NpmConfigRemove.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/NpmInstall.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/NpmPublish.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/prepare.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/publish.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/status.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/TemplateStandard.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/will.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/WillExport.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/WillfCommentOut.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/WillfPatch.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/template
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/.will/hook/template/Standard.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/_hidden
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/_hidden/will.yml
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/corrupted
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/corrupted/will.yml
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/disabled
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/disabled/will.yml
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/execution_section
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/execution_section/will.yml
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/wExperiment
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/wExperiment/Index.js
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/wExperiment/LICENSE
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/wExperiment/package.json
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/wExperiment/README.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/many-dos/wExperiment/was.package.json
-          - ../proto/dwtools/atop/will.test/_asset/many-dos/wExperiment/will.yml
           - ../proto/dwtools/atop/will.test/_asset/many-few
           - ../proto/dwtools/atop/will.test/_asset/many-few/.ex.will.yml
           - ../proto/dwtools/atop/will.test/_asset/many-few/.im.will.yml

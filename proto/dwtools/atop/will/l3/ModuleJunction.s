@@ -482,7 +482,6 @@ function mergeIn( junction2 )
 
     if( junction2.peer === null )
     {
-      debugger;
       junction2.peer = peer;
       peer.peer = junction2;
     }

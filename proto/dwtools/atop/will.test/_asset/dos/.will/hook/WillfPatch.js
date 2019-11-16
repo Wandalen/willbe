@@ -8,9 +8,9 @@ function onModule( it )
 
   willfPath.forEach( ( willfPath ) =>
   {
-    pathTmpRelace( it, willfPath );
+    // pathTmpRelace( it, willfPath );
     // pathExportExportReplace( it, willfPath );
-    // pathExportAdd( it, willfPath );
+    pathExportAdd( it, willfPath );
     // pathExportUse( it, willfPath );
     // pathRemotesAdd( it, willfPath );
     // pathRemotesToOrigins( it, willfPath );

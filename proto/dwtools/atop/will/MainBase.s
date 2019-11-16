@@ -2570,7 +2570,7 @@ function modulesDownload_body( o )
     return;
 
     let ofModule = rootModule ? ' of ' + ( rootModule.toModule() ? rootModule.toModule() : rootModule ).absoluteName : '';
-    let total = ( remoteContainer.length + localContainer.length );
+    let total = ( remoteContainer.length + localContainer.length ); debugger;
     logger.rbegin({ verbosity : -2 });
     let phrase = '';
     if( o.mode === 'update' )
@@ -2939,11 +2939,9 @@ function modulesClean( o )
   let o2 = _.mapOnly( o, will.modulesFor.defaults );
   o2.onEachModule = handleEach;
 
-  debugger;
   return will.modulesFor( o2 )
   .then( ( arg ) =>
   {
-    debugger;
     let o2 = _.mapOnly( o, will.cleanDelete.defaults );
     o2.files = files;
     return will.cleanDelete( o2 );
@@ -2964,7 +2962,6 @@ function modulesClean( o )
 
   function handleEach( module, op )
   {
-    debugger;
     let o3 = _.mapOnly( o, module.cleanWhatSingle.defaults );
     o3.files = files;
     return module.cleanWhatSingle( o3 );
