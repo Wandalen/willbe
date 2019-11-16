@@ -4596,7 +4596,6 @@ function hookCall( o )
 
   function jsCall()
   {
-    // let ready = o.ready;
     let ready = new _.Consequence().take( null );
 
     ready
@@ -4628,7 +4627,8 @@ function hookCall( o )
     if( o.sync )
     ready.deasync();
 
-    return ready.split();
+    return ready;
+    // return ready.split();
   }
 
   /* */
