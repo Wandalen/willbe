@@ -3312,10 +3312,6 @@ defaults.upgrading = null;
 
 //
 
-/* qqq : rewrite using method status */
-/* qqq : introduce module verify to ModuleAbstract and call it please */
-/* qqq : fix */
-
 function submodulesVerify( o )
 {
   let module = this;

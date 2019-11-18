@@ -1179,9 +1179,6 @@ function _repoForm()
   _.assert( opener.formed <= 2 );
   _.assert( opener.openedModule === null );
 
-  // if( opener.id === 484 )
-  // debugger;
-
   let downloadPath, remotePath;
   let isRemote = opener.repoIsRemote();
 
@@ -1304,27 +1301,6 @@ function _repoFormFormal()
 }
 
 //
-
-/*
-
-qqq : investigate please, fix and cover here and in wFiles
-  - for download :
-  -- if error then new directory should no be made
-  -- if error and directory ( possibly empty ) existed then it should not be deleted
-  - for other modules : investigate is it applicable to other modes
-
- = Message
-    Process returned exit code 128
-    Launched as "git clone https://github.com/Wandalen/wPathBasic.git ."
-     -> Stderr
-     -  Cloning into '.'...
-     -  fatal: unable to access 'https://github.com/Wandalen/wPathBasic.git/': Could not resolve host: github.com
-     -
-     -< Stderr
-    Failed to download module::reflect-get-path / opener::PathBasic
-    Failed to download submodules
-
-*/
 
 function _repoDownload( o )
 {

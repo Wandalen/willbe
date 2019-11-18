@@ -18,22 +18,51 @@ var _ = _global_.wTools;
 function objectLike( t )
 {
 
-  t.description = 'array-like entities should not overlap with array-like entities set';
+  async function sync1()
+  {
+  }
 
-  t.identical( _.objectLike( new ArrayBuffer( 10 ) ),false );
-  t.identical( _.objectLike( new Float32Array( 10 ) ),false );
-  t.identical( _.objectLike( new Int32Array( 10 ) ),false );
-  t.identical( _.objectLike( new DataView( new ArrayBuffer( 10 ) ) ),false );
-  t.identical( _.objectLike( new Array( 10 ) ),false );
-  t.identical( _.objectLike( [ 1,2,3 ] ),false );
-  t.identical( _.objectLike( new Map ),false );
+  async function sync2()
+  {
+  }
 
-  t.description = 'this entities are object-like';
+  sync2.map = {}
+  sync2.array = [];
+  sync2.str = 'str';
 
-  t.identical( _.objectLike( _global_ ),true );
-  t.identical( _.objectLike( new Object() ),true );
-  t.identical( _.objectLike( {} ),true );
-  t.identical( _.objectLike( Object.create( null ) ),true );
+  async function async1()
+  {
+  }
+
+  async function async2()
+  {
+  }
+
+  async2.map = {}
+  async2.array = [];
+  async2.str = 'str';
+
+  t.description = 'not object-like';
+
+  t.identical( _.objectLike( new ArrayBuffer( 10 ) ), false );
+  t.identical( _.objectLike( new Float32Array( 10 ) ), false );
+  t.identical( _.objectLike( new Int32Array( 10 ) ), false );
+  t.identical( _.objectLike( new DataView( new ArrayBuffer( 10 ) ) ), false );
+  t.identical( _.objectLike( new Array( 10 ) ), false );
+  t.identical( _.objectLike( [ 1, 2, 3 ] ), false );
+  t.identical( _.objectLike( new Map ), false );
+
+  t.identical( _.objectLike( sync1 ), false );
+  t.identical( _.objectLike( sync2 ), true );
+  t.identical( _.objectLike( async1 ), false );
+  t.identical( _.objectLike( async2 ), true );
+
+  t.description = 'object-like';
+
+  t.identical( _.objectLike( _global_ ), true );
+  t.identical( _.objectLike( new Object() ), true );
+  t.identical( _.objectLike( {} ), true );
+  t.identical( _.objectLike( Object.create( null ) ), true );
 
 }
 
@@ -62,7 +91,7 @@ function consequenceLike( test )
   test.case = 'check if entity is a consequenceLike';
 
   if( !_.consequenceLike )
-  return test.identical( true,true );
+  return test.identical( true, true );
 
   test.is( !_.consequenceLike() );
   test.is( !_.consequenceLike( {} ) );
