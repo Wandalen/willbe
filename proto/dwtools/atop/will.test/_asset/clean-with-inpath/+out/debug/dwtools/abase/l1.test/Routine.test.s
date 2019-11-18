@@ -139,7 +139,6 @@ function routineIsPure( test )
   var got = _.routineIsPure( function a() {} );
   test.identical( got, true )
 
-  debugger;
   var got = _.routineIsPure( async function () {} );
   test.identical( got, true )
 
