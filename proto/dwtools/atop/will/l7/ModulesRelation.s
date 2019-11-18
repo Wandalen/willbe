@@ -471,6 +471,14 @@ function toModule()
 
 //
 
+function toOpener()
+{
+  let relation = this;
+  return relation.opener;
+}
+
+//
+
 function toRelation()
 {
   let relation = this;
@@ -1020,6 +1028,7 @@ let Extend =
   submodulesRelationsFilter,
   submodulesRelationsOwnFilter,
   toModule,
+  toOpener,
   toRelation,
   toJunction,
 

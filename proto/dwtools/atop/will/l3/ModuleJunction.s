@@ -566,6 +566,12 @@ function mergeMaybe( usingPath )
   }
 
   _.assert( !reset );
+  _.assert( !junction2 || !junction2.finitedIs() );
+
+  if( !junction.finitedIs() )
+  junction.assertIntegrityVerify();
+  if( junction2 && !junction2.finitedIs() )
+  junction2.assertIntegrityVerify();
 
   return junction2 || false;
 
@@ -977,7 +983,7 @@ function JunctionWithObject( will, object )
     let paths = cls.PathsOf( object );
     let junction2 = _.any( paths, ( path ) => will.junctionMap[ path ] );
     if( junction2 )
-    _.assert( _.all( paths, ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction2 ) );
+    _.assert( junction2.formed !== 1 || _.all( paths, ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction2 ) );
     _.assert( junction === junction2 || !junction2 || !junction2.ownSomething() );
   }
 
@@ -1778,6 +1784,14 @@ function toModule()
 
 //
 
+function toOpener()
+{
+  let junction = this;
+  return junction.opener;
+}
+
+//
+
 function toRelation()
 {
   let junction = this;
@@ -2054,6 +2068,7 @@ let Extend =
   shadow,
   assertIntegrityVerify,
   toModule,
+  toOpener,
   toRelation,
   toJunction,
 

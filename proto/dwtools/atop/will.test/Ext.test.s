@@ -14209,6 +14209,12 @@ function exportHierarchyRemote( test )
 } /* end of function exportHierarchyRemote */
 
 exportHierarchyRemote.timeOut = 300000;
+exportHierarchyRemote.description =
+`
+- "with module .export.recursive" should export the same number of modules as "with ** .export.recursive"
+- each format of recursive export command should export each instance of each module exactly one time
+- each instance of a module is exported once even if module has several instances in different location
+`
 
 //
 
@@ -15909,342 +15915,399 @@ function submodulesDownloadSwitchBranch( test )
 
 submodulesDownloadSwitchBranch.timeOut = 300000;
 
+// //
 //
-
-function submodulesDownloadRecursive( test )
-{
-  let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
-  let routinePath = _.path.join( self.suitePath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    outputGraying : 1,
-    mode : 'spawn',
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
-  /* - */
-
-  ready
-
-  .then( () =>
-  {
-    test.case = '.with * .submodules.download recursive:2';
-    _.fileProvider.filesDelete( submodulesPath );
-    return null;
-  })
-
-  start({ execPath : '.with * .submodules.download recursive:2' })
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    var exp = [ 'PathBasic', 'PathTools', 'Proto', 'Tools', 'UriBasic' ];
-    var files = _.fileProvider.dirRead( submodulesPath );
-    test.identical( files, exp )
-
-    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
-    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
-
-    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded in' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
-
-    return null;
-  })
-
-  start({ execPath : '.with * .submodules.download recursive:2' })
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    var exp = [ 'PathBasic', 'PathTools', 'Proto', 'Tools', 'UriBasic' ];
-    var files = _.fileProvider.dirRead( submodulesPath );
-    test.identical( files, exp )
-
-    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Read 20 willfile(s) in' ), 1 );
-    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
-
-    test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded in' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  ready
-
-  .then( () =>
-  {
-    test.case = '.with ** .submodules.download recursive:2';
-    _.fileProvider.filesDelete( submodulesPath );
-    return null;
-  })
-
-  start({ execPath : '.with ** .submodules.download recursive:2' })
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    var exp = [ 'PathBasic', 'PathTools', 'Proto', 'Tools', 'UriBasic' ];
-    var files = _.fileProvider.dirRead( submodulesPath );
-    test.identical( files, exp )
-
-    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
-    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
-
-    test.identical( _.strCount( got.output, '+ 2/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z / module::c were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z / module::a were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s)' ), 5 );
-
-    return null;
-  })
-
-  start({ execPath : '.with ** .submodules.download recursive:2' })
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    var exp = [ 'PathBasic', 'PathTools', 'Proto', 'Tools', 'UriBasic' ];
-    var files = _.fileProvider.dirRead( submodulesPath );
-    test.identical( files, exp )
-
-    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Read 20 willfile(s) in' ), 1 );
-    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
-
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathBasic were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wProto were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wTools were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::c were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathTools were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::a were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
-
-    return null;
-  })
-
-  /* - */
-
-  ready
-
-  .then( () =>
-  {
-    test.case = '.with * .submodules.download recursive:1';
-    _.fileProvider.filesDelete( submodulesPath );
-    return null;
-  })
-
-  start({ execPath : '.with * .submodules.download recursive:1' })
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    var exp = [ 'PathTools' ];
-    var files = _.fileProvider.dirRead( submodulesPath );
-    test.identical( files, exp )
-
-    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
-    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
-
-    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded in' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
-
-    return null;
-  })
-
-  start({ execPath : '.with * .submodules.download recursive:1' })
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    var exp = [ 'PathTools' ];
-    var files = _.fileProvider.dirRead( submodulesPath );
-    test.identical( files, exp )
-
-    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Read 8 willfile(s) in' ), 1 );
-    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
-
-    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded in' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  ready
-
-  .then( () =>
-  {
-    test.case = '.with ** .submodules.download recursive:1';
-    _.fileProvider.filesDelete( submodulesPath );
-    return null;
-  })
-
-  start({ execPath : '.with ** .submodules.download recursive:1' })
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    var exp = [ 'PathBasic', 'PathTools', 'Proto', 'Tools', 'UriBasic' ];
-    var files = _.fileProvider.dirRead( submodulesPath );
-    test.identical( files, exp )
-
-    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
-    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
-
-    test.identical( _.strCount( got.output, '+ 2/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 1/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s)' ), 5 );
-
-    return null;
-  })
-
-  start({ execPath : '.with ** .submodules.download recursive:1' })
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    var exp = [ 'PathBasic', 'PathTools', 'Proto', 'Tools', 'UriBasic' ];
-    var files = _.fileProvider.dirRead( submodulesPath );
-    test.identical( files, exp )
-
-    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Read 20 willfile(s) in' ), 1 );
-    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
-
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathBasic were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wProto were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wTools were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathTools were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
-
-    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathBasic / module::wPathBasic were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic / module::wUriBasic were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wProto / module::wProto were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wTools / module::wTools were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathTools / module::wPathTools were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
-    // test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
-
-    return null;
-  })
-
-  /* - */
-
-  ready
-
-  .then( () =>
-  {
-    test.case = '.with * .submodules.download recursive:0';
-    _.fileProvider.filesDelete( submodulesPath );
-    return null;
-  })
-
-  start({ execPath : '.with * .submodules.download recursive:0' })
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    var exp = null;
-    var files = _.fileProvider.dirRead( submodulesPath );
-    test.identical( files, exp )
-
-    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
-    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
-
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  ready
-
-  .then( () =>
-  {
-    test.case = '.with ** .submodules.download recursive:0';
-    _.fileProvider.filesDelete( submodulesPath );
-    return null;
-  })
-
-  start({ execPath : '.with ** .submodules.download recursive:0' })
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    var exp = null;
-    var files = _.fileProvider.dirRead( submodulesPath );
-    test.identical( files, exp )
-
-    test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
-    test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
-
-    test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of' ), 5 );
-    test.identical( _.strCount( got.output, 'submodule(s)' ), 5 );
-
-    return null;
-  })
-
-  /* - */
-
-  return ready;
-} /* end of function submodulesDownloadRecursive */
-
-submodulesDownloadRecursive.timeOut = 500000;
+// function submodulesDownloadRecursive( test )
+// {
+//   let self = this;
+//   let a = self.assetFor( test, 'hierarchy-remote' );
+//
+//   // let a = self.assetFor( test, 'hierarchy-diff-download-paths-regular' );
+//   // let originalAssetPath = _.path.join( self.assetDirPath, 'hierarchy-remote' );
+//   // let routinePath = _.path.join( self.suitePath, test.name );
+//   // let abs = self.abs_functor( routinePath );
+//   // let rel = self.rel_functor( routinePath );
+//   // let submodulesPath = _.path.join( routinePath, '.module' );
+//   //
+//   // let ready = new _.Consequence().take( null );
+//   //
+//   // let start = _.process.starter
+//   // ({
+//   //   execPath : 'node ' + self.willPath,
+//   //   currentPath : routinePath,
+//   //   outputCollecting : 1,
+//   //   outputGraying : 1,
+//   //   outputGraying : 1,
+//   //   mode : 'spawn',
+//   //   ready : ready,
+//   // })
+//   //
+//   // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+//
+//   /* - */
+//
+//   a.ready
+//
+//   .then( () =>
+//   {
+//     test.case = '.with * .submodules.download recursive:2';
+//     a.reflect();
+//     // _.fileProvider.filesDelete( a.abs( '.module' ) );
+//     return null;
+//   })
+//
+//   a.start({ execPath : '.with * .submodules.download recursive:2' })
+//
+//   .then( ( got ) =>
+//   {
+//     test.identical( got.exitCode, 0 );
+//
+//     var exp = [ 'PathTools' ];
+//     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
+//     test.identical( files, exp )
+//
+//     var exp = null;
+//     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) );
+//     test.identical( files, exp )
+//
+//     test.identical( _.strCount( got.output, '! Failed to open' ), 4 );
+//     test.identical( _.strCount( got.output, '. Read 2 willfile(s) in' ), 1 );
+//     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+//
+//     test.identical( _.strCount( got.output, '+ 6/7 submodule(s) of module::c were downloaded in' ), 1 );
+//     test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
+//     test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+//
+//     return null;
+//   })
+//
+//   a.start({ execPath : '.with * .submodules.download recursive:2' })
+//
+//   .then( ( got ) =>
+//   {
+//     test.identical( got.exitCode, 0 );
+//
+//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
+//     test.identical( files, exp )
+//
+//     var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
+//     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
+//     test.identical( files, exp )
+//
+//     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+//     test.identical( _.strCount( got.output, '. Read 26 willfile(s) in' ), 1 );
+//     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+//
+//     test.identical( _.strCount( got.output, '+ 0/7 submodule(s) of module::c were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
+//     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+//
+//     return null;
+//   })
+//
+//   /* - */
+//
+//   a.ready
+//
+//   .then( () =>
+//   {
+//     test.case = '.with ** .submodules.download recursive:2';
+//     // _.fileProvider.filesDelete( a.abs( '.module' ) );
+//     a.reflect();
+//     return null;
+//   })
+//
+//   a.start({ execPath : '.with ** .submodules.download recursive:2' })
+//
+//   .then( ( got ) =>
+//   {
+//     test.identical( got.exitCode, 0 );
+//
+//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
+//     test.identical( files, exp )
+//
+//     var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
+//     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
+//     test.identical( files, exp )
+//
+//     test.identical( _.strCount( got.output, '! Failed to open' ), 4 );
+//     test.identical( _.strCount( got.output, '. Read 2 willfile(s) in' ), 1 );
+//     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+//
+//     test.identical( _.strCount( got.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
+//     test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+//
+//     return null;
+//   })
+//
+//   a.start({ execPath : '.with ** .submodules.download recursive:2' })
+//
+//   .then( ( got ) =>
+//   {
+//     test.identical( got.exitCode, 0 );
+//
+//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
+//     test.identical( files, exp )
+//
+//     var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
+//     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
+//     test.identical( files, exp )
+//
+//     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+//     test.identical( _.strCount( got.output, '. Read 26 willfile(s) in' ), 1 );
+//     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+//
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathBasic were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wProto were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wTools were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::c were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathTools were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::a were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/7 submodule(s) of module::c were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
+//     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+//
+//     return null;
+//   })
+//
+//   /* - */
+//
+//   a.ready
+//
+//   .then( () =>
+//   {
+//     test.case = '.with * .submodules.download recursive:1';
+//     // _.fileProvider.filesDelete( a.abs( '.module' ) );
+//     a.reflect();
+//     return null;
+//   })
+//
+//   a.start({ execPath : '.with * .submodules.download recursive:1' })
+//
+//   .then( ( got ) =>
+//   {
+//     test.identical( got.exitCode, 0 );
+//
+//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
+//     test.identical( files, exp )
+//
+//     var exp = [ 'Color', 'PathBasic' ];
+//     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
+//     test.identical( files, exp )
+//
+//     test.identical( _.strCount( got.output, '! Failed to open' ), 4 );
+//     test.identical( _.strCount( got.output, '. Read 2 willfile(s) in' ), 1 );
+//     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+//
+//     test.identical( _.strCount( got.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
+//     test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+//
+//     return null;
+//   })
+//
+//   a.start({ execPath : '.with * .submodules.download recursive:1' })
+//
+//   .then( ( got ) =>
+//   {
+//     test.identical( got.exitCode, 0 );
+//
+//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
+//     test.identical( files, exp )
+//
+//     var exp = [ 'Color', 'PathBasic' ];
+//     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
+//     test.identical( files, exp )
+//
+//     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+//     test.identical( _.strCount( got.output, '. Read 20 willfile(s) in' ), 1 );
+//     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+//
+//     test.identical( _.strCount( got.output, '+ 0/5 submodule(s) of module::c were downloaded in' ), 1 );
+//     test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
+//     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+//
+//     return null;
+//   })
+//
+//   /* - */
+//
+//   a.ready
+//
+//   .then( () =>
+//   {
+//     test.case = '.with ** .submodules.download recursive:1';
+//     // _.fileProvider.filesDelete( a.abs( '.module' ) );
+//     a.reflect();
+//     return null;
+//   })
+//
+//   a.start({ execPath : '.with ** .submodules.download recursive:1' })
+//
+//   .then( ( got ) =>
+//   {
+//     test.identical( got.exitCode, 0 );
+//
+//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
+//     test.identical( files, exp )
+//
+//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
+//     test.identical( files, exp )
+//
+//     test.identical( _.strCount( got.output, '! Failed to open' ), 4 );
+//     test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
+//     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+//
+//     test.identical( _.strCount( got.output, '+ 2/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 1/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, 'submodule(s)' ), 5 );
+//     test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+//
+//     return null;
+//   })
+//
+//   a.start({ execPath : '.with ** .submodules.download recursive:1' })
+//
+//   .then( ( got ) =>
+//   {
+//     test.identical( got.exitCode, 0 );
+//
+//     var exp = [ 'PathTools' ];
+//     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
+//     test.identical( files, exp )
+//
+//     var exp = [ 'PathTools' ];
+//     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
+//     test.identical( files, exp )
+//
+//     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+//     test.identical( _.strCount( got.output, '. Read 20 willfile(s) in' ), 1 );
+//     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+//
+//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathBasic were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wProto were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wTools were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathTools were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
+//     test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+//
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathBasic / module::wPathBasic were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic / module::wUriBasic were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wProto / module::wProto were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wTools / module::wTools were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathTools / module::wPathTools were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
+//
+//     return null;
+//   })
+//
+//   /* - */
+//
+//   a.ready
+//
+//   .then( () =>
+//   {
+//     test.case = '.with * .submodules.download recursive:0';
+//     // _.fileProvider.filesDelete( a.abs( '.module' ) );
+//     a.reflect();
+//     return null;
+//   })
+//
+//   a.start({ execPath : '.with * .submodules.download recursive:0' })
+//
+//   .then( ( got ) =>
+//   {
+//     test.identical( got.exitCode, 0 );
+//
+//     var exp = null;
+//     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
+//     test.identical( files, exp )
+//
+//     var exp = [ 'PathTools' ];
+//     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
+//     test.identical( files, exp )
+//
+//     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
+//     test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
+//     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+//
+//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
+//     test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+//
+//     return null;
+//   })
+//
+//   /* - */
+//
+//   a.ready
+//
+//   .then( () =>
+//   {
+//     test.case = '.with ** .submodules.download recursive:0';
+//     // _.fileProvider.filesDelete( a.abs( '.module' ) );
+//     a.reflect();
+//     return null;
+//   })
+//
+//   a.start({ execPath : '.with ** .submodules.download recursive:0' })
+//
+//   .then( ( got ) =>
+//   {
+//     test.identical( got.exitCode, 0 );
+//
+//     var exp = null;
+//     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
+//     test.identical( files, exp )
+//
+//     var exp = [ 'PathTools' ];
+//     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
+//     test.identical( files, exp )
+//
+//     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
+//     test.identical( _.strCount( got.output, '. Read 5 willfile(s) in' ), 1 );
+//     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
+//
+//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of' ), 5 );
+//     test.identical( _.strCount( got.output, 'submodule(s)' ), 5 );
+//     test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+//
+//     return null;
+//   })
+//
+//   /* - */
+//
+//   return a.ready;
+// } /* end of function submodulesDownloadRecursive */
+//
+// submodulesDownloadRecursive.timeOut = 500000;
+// xxx
 
 //
 
@@ -16273,7 +16336,7 @@ function submodulesDownloadThrowing( test )
     ready : ready,
   })
 
-  let shell2 = _.process.starter
+  let start2 = _.process.starter
   ({
     currentPath : routinePath,
     outputCollecting : 1,
@@ -16397,7 +16460,7 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  shell2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
+  start2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
   .then( () =>
   {
     filesBefore = self.find( downloadPath );
@@ -16481,7 +16544,7 @@ function submodulesDownloadStepAndCommand( test )
     ready : ready,
   })
 
-  let shell2 = _.process.starter
+  let start2 = _.process.starter
   ({
     currentPath : localRepoPath,
     outputCollecting : 1,
@@ -16503,9 +16566,9 @@ function submodulesDownloadStepAndCommand( test )
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
-  shell2( 'git init' )
-  shell2( 'git add .' )
-  shell2( 'git commit -m init' )
+  start2( 'git init' )
+  start2( 'git add .' )
+  start2( 'git commit -m init' )
   start({ execPath : '.build' })
   .then( ( got ) =>
   {
@@ -16525,9 +16588,9 @@ function submodulesDownloadStepAndCommand( test )
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
-  shell2( 'git init' )
-  shell2( 'git add .' )
-  shell2( 'git commit -m init' )
+  start2( 'git init' )
+  start2( 'git add .' )
+  start2( 'git commit -m init' )
   start({ execPath : '.submodules.download' })
   .then( ( got ) =>
   {
@@ -17075,19 +17138,20 @@ function submodulesDownloadHierarchyDuplicate( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'Tools' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'Tools' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 14 );
-    test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 1 );
     test.identical( _.strCount( got.output, 'was downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
 
     return null;
   })
@@ -17099,19 +17163,20 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.case = 'second';
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'Tools' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'Tools' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 14 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 8 );
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
-    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
 
     return null;
   })
@@ -17134,19 +17199,20 @@ function submodulesDownloadHierarchyDuplicate( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'Tools' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var exp = [ 'Tools' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
-    test.identical( _.strCount( got.output, 'was downloaded' ), 5 );
-    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 1 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
 
     return null;
   })
@@ -17158,19 +17224,20 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.case = 'second';
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'Tools' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var exp = [ 'Tools' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 8 );
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
-    test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
 
     return null;
   })
@@ -17193,15 +17260,21 @@ function submodulesDownloadHierarchyDuplicate( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+
+    var exp = [ 'Tools' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
+    var exp = [ 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
-    test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
-    test.identical( _.strCount( got.output, 'was downloaded' ), 5 );
-    test.identical( _.strCount( got.output, '+ 5/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 1 );
+    test.identical( _.strCount( got.output, 'was downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 1/2 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
 
     return null;
   })
@@ -17213,15 +17286,21 @@ function submodulesDownloadHierarchyDuplicate( test )
     test.case = 'second';
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+
+    var exp = [ 'Tools' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
+    var exp = [ 'Tools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 8 );
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
-    test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'submodule(s)' ), 1 );
 
     return null;
   })
@@ -17262,7 +17341,7 @@ function submodulesUpdateThrowing( test )
     ready : ready,
   })
 
-  let shell2 = _.process.starter
+  let start2 = _.process.starter
   ({
     currentPath : routinePath,
     outputCollecting : 1,
@@ -17387,7 +17466,7 @@ function submodulesUpdateThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  shell2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
+  start2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
   .then( () =>
   {
     filesBefore = self.find( downloadPath );
@@ -17474,7 +17553,7 @@ function submodulesAgreeThrowing( test )
     ready : ready,
   })
 
-  let shell2 = _.process.starter
+  let start2 = _.process.starter
   ({
     currentPath : routinePath,
     outputCollecting : 1,
@@ -17636,7 +17715,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  shell2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
+  start2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
   start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
@@ -17659,7 +17738,7 @@ function submodulesAgreeThrowing( test )
     return null;
   })
   start({ execPath : '.with good .submodules.versions.agree' })
-  shell2( 'git -C .module/PathBasic reset --hard HEAD~1' )
+  start2( 'git -C .module/PathBasic reset --hard HEAD~1' )
   .then( () =>
   {
     _.fileProvider.fileWrite( _.path.join( downloadPath, 'was.package.json' ), 'was.package.json' );
@@ -17684,10 +17763,10 @@ function submodulesAgreeThrowing( test )
     return null;
   })
   start({ execPath : '.with good .submodules.versions.agree' })
-  shell2( 'git -C .module/PathBasic reset --hard HEAD~1' )
-  shell2( 'git -C .module/PathBasic commit -m unpushed --allow-empty' )
-  shell2( 'git -C .module/PathBasic remote remove origin' )
-  shell2( 'git -C .module/PathBasic remote add origin https://github.com/Wandalen/wTools.git' )
+  start2( 'git -C .module/PathBasic reset --hard HEAD~1' )
+  start2( 'git -C .module/PathBasic commit -m unpushed --allow-empty' )
+  start2( 'git -C .module/PathBasic remote remove origin' )
+  start2( 'git -C .module/PathBasic remote add origin https://github.com/Wandalen/wTools.git' )
   start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
@@ -17731,7 +17810,7 @@ function submodulesVersionsAgreeWrongOrigin( test )
     ready : ready,
   })
 
-  let shell2 = _.process.starter
+  let start2 = _.process.starter
   ({
     currentPath : routinePath,
     outputCollecting : 1,
@@ -17754,7 +17833,7 @@ function submodulesVersionsAgreeWrongOrigin( test )
     return null;
   })
 
-  shell2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
+  start2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
   start({ execPath : '.with good .submodules.versions.agree' })
 
   .then( ( got ) =>
@@ -18055,7 +18134,7 @@ function subModulesUpdateSwitchBranch( test )
     ready : ready,
   })
 
-  let shell2 = _.process.starter
+  let start2 = _.process.starter
   ({
     currentPath : routinePath,
     outputCollecting : 1,
@@ -18224,9 +18303,9 @@ function subModulesUpdateSwitchBranch( test )
     ready : ready
   })
 
-  shell2( 'git -C cloned checkout master' )
-  shell2( 'git -C cloned commit --allow-empty -m test' )
-  shell2( 'git -C cloned push' )
+  start2( 'git -C cloned checkout master' )
+  start2( 'git -C cloned commit --allow-empty -m test' )
+  start2( 'git -C cloned push' )
 
   start({ execPath : '.submodules.update' })
 
@@ -18312,8 +18391,7 @@ subModulesUpdateSwitchBranch.timeOut = 300000;
 
 //
 
-//
-
+/* qqq : improve test coverage of submodulesVerify */
 function submodulesVerify( test )
 {
   let self = this;
@@ -18329,21 +18407,24 @@ function submodulesVerify( test )
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    outputGraying : 1,
     throwingExitCode : 0,
     ready : ready,
   })
 
-  let shell2 = _.process.starter
+  let start2 = _.process.starter
   ({
     currentPath : localModulePathSrc,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
-  let shell3 = _.process.starter
+  let start3 = _.process.starter
   ({
     currentPath : localModulePathDst,
     outputCollecting : 1,
+    outputGraying : 1,
     ready : ready,
   })
 
@@ -18356,9 +18437,9 @@ function submodulesVerify( test )
   })
 
   start( '.with ./module/ .export' )
-  shell2( 'git init' )
-  shell2( 'git add -fA .' )
-  shell2( 'git commit -m init' )
+  start2( 'git init' )
+  start2( 'git add -fA .' )
+  start2( 'git commit -m init' )
 
   /* */
 
@@ -18373,7 +18454,7 @@ function submodulesVerify( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule relation::local does not have files' ) );
+    test.is( _.strHas( got.output, '! Submodule opener::local does not have files' ) );
     return null;
   })
 
@@ -18391,7 +18472,7 @@ function submodulesVerify( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    test.is( _.strHas( got.output, '1 / 1 submodule(s) of module::submodules / module::local were verified' ) );
     return null;
   })
 
@@ -18408,7 +18489,7 @@ function submodulesVerify( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    test.is( _.strHas( got.output, '1 / 1 submodule(s) of module::submodules / module::local were verified' ) );
     return null;
   })
 
@@ -18420,14 +18501,14 @@ function submodulesVerify( test )
     return null;
   })
 
-  shell3( 'git commit --allow-empty -m test' )
+  start3( 'git commit --allow-empty -m test' )
 
   start( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /1\/1 submodule\(s\) of .*module::submodules.* were verified in/ ) );
+    test.is( _.strHas( got.output, '1 / 1 submodule(s) of module::submodules / module::local were verified' ) );
     return null;
   })
 
@@ -18439,14 +18520,14 @@ function submodulesVerify( test )
     return null;
   })
 
-  shell3( 'git checkout -b testbranch' )
+  start3( 'git checkout -b testbranch' )
 
   start( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Submodule relation::local has version different from that is specified in will-file' ) );
+    test.is( _.strHas( got.output, 'Submodule module::local has version different from that is specified in will-file' ) );
     return null;
   })
 
@@ -18475,7 +18556,7 @@ function versionsAgree( test )
     ready : ready,
   })
 
-  let shell2 = _.process.starter
+  let start2 = _.process.starter
   ({
     currentPath : localModulePathSrc,
     outputCollecting : 1,
@@ -18483,7 +18564,7 @@ function versionsAgree( test )
     ready : ready,
   })
 
-  let shell3 = _.process.starter
+  let start3 = _.process.starter
   ({
     currentPath : localModulePathDst,
     outputCollecting : 1,
@@ -18500,9 +18581,9 @@ function versionsAgree( test )
   })
 
   start( '.with ./module/ .export' )
-  shell2( 'git init' )
-  shell2( 'git add -fA .' )
-  shell2( 'git commit -m init' )
+  start2( 'git init' )
+  start2( 'git add -fA .' )
+  start2( 'git commit -m init' )
 
   /* */
 
@@ -18546,7 +18627,7 @@ function versionsAgree( test )
     return null;
   })
 
-  shell3( 'git commit --allow-empty -m test' )
+  start3( 'git commit --allow-empty -m test' )
   start( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
@@ -18554,7 +18635,7 @@ function versionsAgree( test )
     test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
-  shell3( 'git status' )
+  start3( 'git status' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -18570,7 +18651,7 @@ function versionsAgree( test )
     return null;
   })
 
-  shell2( 'git commit --allow-empty -m test' )
+  start2( 'git commit --allow-empty -m test' )
   start( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
@@ -18580,7 +18661,7 @@ function versionsAgree( test )
     test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
-  shell3( 'git status' )
+  start3( 'git status' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -18596,8 +18677,8 @@ function versionsAgree( test )
     return null;
   })
 
-  shell3( 'git reset --hard origin' )
-  shell2( 'git commit --allow-empty -m test2' )
+  start3( 'git reset --hard origin' )
+  start2( 'git commit --allow-empty -m test2' )
   start( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
@@ -18606,7 +18687,7 @@ function versionsAgree( test )
     test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
-  shell3( 'git status' )
+  start3( 'git status' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -18819,7 +18900,7 @@ function stepSubmodulesAreUpdated( test )
     ready : ready,
   })
 
-  let shell2 = _.process.starter
+  let start2 = _.process.starter
   ({
     currentPath : localModulePath,
     outputCollecting : 1,
@@ -18836,10 +18917,10 @@ function stepSubmodulesAreUpdated( test )
   })
 
   start( '.with ./module/ .export' )
-  shell2( 'git init' )
-  shell2( 'git add -fA .' )
-  shell2( 'git commit -m init' )
-  shell2( 'git commit --allow-empty -m test' )
+  start2( 'git init' )
+  start2( 'git add -fA .' )
+  start2( 'git commit -m init' )
+  start2( 'git commit --allow-empty -m test' )
 
   /* */
 
@@ -18885,7 +18966,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  shell2( 'git commit --allow-empty -m test' )
+  start2( 'git commit --allow-empty -m test' )
 
   start( '.build' )
 
@@ -20706,7 +20787,7 @@ var Self =
     submodulesDownloadUpdate,
     submodulesDownloadUpdateDry,
     submodulesDownloadSwitchBranch,
-    submodulesDownloadRecursive,
+    // submodulesDownloadRecursive,
     submodulesDownloadThrowing,
     submodulesDownloadStepAndCommand,
     submodulesDownloadDiffDownloadPathsRegular,

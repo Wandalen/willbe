@@ -622,6 +622,148 @@ function repoIsRemote( remotePath )
   return !!remoteProvider.isVcs;
 }
 
+//
+
+function repoVerify( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( module.isPreformed() ); 
+  _.assert( arguments.length === 1 );
+
+  _.routineOptions( repoVerify, o );
+
+  let ready = new _.Consequence().take( null );
+
+  ready.then( () => reform( module ) )
+  ready.then( () => act( module ) )
+
+  return ready;
+
+  /* */
+
+  function act( module )
+  {
+
+    if( o.hasFiles )
+    if( !module.repo.hasFiles )
+    {
+      if( o.throwing )
+      throw _.errBrief( '! Submodule', ( module.qualifiedName ), 'does not have files' );
+      return false;
+    }
+
+    _.assert
+    (
+      !!module && module.formed >= 2,
+      () => 'Submodule', ( module ? module.qualifiedName : n ), 'was not preformed to verify'
+    );
+
+    /* isValid */
+
+    if( o.isValid )
+    if( !module.isValid() )
+    throw _.err( opener.error, '\n! Submodule', ( module.qualifiedName ), 'is downloaded, but it\'s not valid.' );
+
+    /* is remote / enabled */
+
+    if( !module.repo.isRemote )
+    return true;
+    // if( r.relation && !r.relation.enabled )
+    // return true;
+
+    /* repository check */
+
+    if( o.isRepository )
+    if( !module.repo.isRepository )
+    {
+      if( o.throwing )
+      throw _.errBrief( '! Submodule', ( module.qualifiedName ), `is downloaded, but it's not a repository` );
+      return false;
+    }
+
+    let remoteProvider = will.fileProvider.providerForPath( module.repo.remotePath );
+
+    /* origin check */
+
+    if( o.hasRemote )
+    {
+      let result = remoteProvider.hasRemote
+      ({
+        localPath : module.repo.downloadPath,
+        remotePath : module.repo.remotePath
+      });
+
+      if( !result.remoteIsValid )
+      {
+        if( o.throwing )
+        throw _.errBrief
+        (
+          '! Submodule', ( module.qualifiedName ), 'has different origin url:',
+          _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
+        );
+
+        return false;
+      }
+    }
+
+    /* version check */
+
+    if( o.isUpToDate )
+    {
+      if( module.repo.isUpToDate )
+      return true;
+
+      if( !o.throwing )
+      return false;
+
+      let remoteParsed = remoteProvider.pathParse( module.repo.remotePath );
+      let remoteVersion = remoteParsed.hash || 'master';
+      let localVersion = remoteProvider.versionLocalRetrive( module.repo.downloadPath );
+
+      if( remoteVersion === localVersion )
+      throw _.errBrief( '! Submodule', ( module.qualifiedName ), 'is not up to date!' );
+
+      throw _.errBrief
+      (
+        '! Submodule', ( module.qualifiedName ), 'has version different from that is specified in will-file!',
+        '\nCurrent:', localVersion,
+        '\nExpected:', remoteVersion
+      );
+    }
+
+    return true;
+
+  }
+
+  /* */
+
+  function reform( module )
+  {
+    let con = new _.Consequence().take( null );
+    con.then( () => module.repo.status({ all : 1, invalidating : 1 }) )
+    con.then( () => module )
+    return con;
+  }
+
+  /* */
+
+}
+
+var defaults  = repoVerify.defaults = Object.create( null );
+
+defaults.throwing = 1;
+defaults.asMap = 0;
+defaults.hasFiles = 1;
+defaults.hasRemote = 1;
+defaults.isValid = 1;
+defaults.isRepository = 1;
+defaults.isUpToDate = 1
+
 // --
 // relations
 // --
@@ -767,6 +909,7 @@ let Extend =
   // repo
 
   repoIsRemote,
+  repoVerify,
 
   // relation
 

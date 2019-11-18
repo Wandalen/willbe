@@ -429,8 +429,8 @@ function CommonPathNormalize( commonPath )
 {
   let commonPath2 = commonPath;
   commonPath2 = commonPath.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.\w+)?$/, '' );
-  if( commonPath !== commonPath2 )
-  debugger;
+  // if( commonPath !== commonPath2 )
+  // debugger;
   return commonPath2;
 }
 
@@ -2271,6 +2271,7 @@ function modulesFor_body( o )
   let logger = will.logger;
   let visitedJunctionsSet = new Set;
   let visitedModulesSet = new Set;
+  let visitedObjectSet = new Set;
 
   _.assert( arguments.length === 1 );
   _.assertRoutineOptions( modulesFor_body, arguments );
@@ -2342,24 +2343,50 @@ function modulesFor_body( o )
   {
     _.assert( will.ObjectIs( object ) );
     let ready = new _.Consequence().take( null );
+
+    if( o.onEachObject )
+    {
+      let junction = object.toJunction();
+      let objects = [ object ];
+
+      objects.forEach( ( object ) =>
+      {
+        if( visitedObjectSet.has( object ) )
+        return null;
+        visitedObjectSet.add( object );
+
+        if( o.onEachObject )
+        {
+          let o3 = _.mapExtend( null, o );
+          o3.object = object;
+          ready.then( () => o.onEachObject( object, o3 ) );
+        }
+
+      });
+    }
+
     if( o.onEachModule )
     {
-      // object = object.toModule();
       let junction = object.toJunction();
       let objects = [ object ];
       _.arrayAppendArrayOnce( objects, junction.modules );
+
       objects.forEach( ( object ) =>
       {
-        if( !( object instanceof _.Will.Module ) )
-        return null;
         if( visitedModulesSet.has( object ) )
         return null;
         visitedModulesSet.add( object );
-        let o3 = _.mapExtend( null, o );
-        o3.module = object;
-        ready.then( () => o.onEachModule( object, o3 ) );
+
+        if( object && object instanceof _.Will.Module )
+        {
+          let o3 = _.mapExtend( null, o );
+          o3.module = object;
+          ready.then( () => o.onEachModule( object, o3 ) );
+        }
+
       });
     }
+
     return ready;
   }
 
@@ -2399,6 +2426,7 @@ defaults.nodesGroup = null;
 defaults.modules = null;
 defaults.onEachJunction = null;
 defaults.onEachModule = null;
+defaults.onEachObject = null;
 
 delete defaults.outputFormat;
 delete defaults.onUp;
@@ -3002,9 +3030,7 @@ function modulesBuild_pre( routine, args )
 
 function modulesBuild_body( o )
 {
-  // let module = this;
   let will = this;
-  // let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
@@ -3019,7 +3045,6 @@ function modulesBuild_body( o )
     return null;
     let o2 = _.mapOnly( o, will.modulesDownload.defaults );
     o2.loggingNoChanges = 0;
-    // o2.modules = [ module ];
     if( o2.recursive === 0 )
     o2.recursive = 1;
     o2.strict = 0;
@@ -3033,7 +3058,6 @@ function modulesBuild_body( o )
     if( !o.upforming || o.downloading )
     return null;
     let o2 = _.mapOnly( o, will.modulesUpform.defaults );
-    // o2.modules = [ module ];
     o2.all = 0;
     o2.subModulesFormed = 1;
     o2.peerModulesFormed = 1;
@@ -3046,7 +3070,6 @@ function modulesBuild_body( o )
   {
     let o2 = _.mapOnly( o, will.modulesFor.defaults );
     o2.onEachModule = moduleBuild;
-    // o2.modules = [ module ];
     o2.left = 0;
     o2.withOut = 0;
     o2.withIn = 1;
@@ -3058,7 +3081,7 @@ function modulesBuild_body( o )
     if( err )
     debugger;
     if( err )
-    throw _.err( err, `\nFailed to ${o.kind} ${module.absoluteName} at ${module.localPath}` );
+    throw _.err( err, `\nFailed to ${o.kind}` );
     return arg;
   })
 
@@ -3118,6 +3141,293 @@ modulesBuild.defaults.downloading = 1;
 let modulesExport = _.routineFromPreAndBody( modulesBuild_pre, modulesBuild_body );
 modulesExport.defaults.kind = 'export';
 modulesExport.defaults.downloading = 1;
+
+//
+
+function modulesVerify_pre( routine, args )
+{
+  let o = _.routineOptions( routine, args );
+  return o;
+}
+
+function modulesVerify_body( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let verifiedNumber = 0;
+  let totalNumber = 0;
+  let time = _.timeNow();
+
+  o = _.assertRoutineOptions( modulesVerify_body, arguments );
+  // _.assert( _.arrayIs( o.doneContainer ) );
+
+  logger.up();
+
+  ready.then( () =>
+  {
+    let o2 = _.mapOnly( o, will.modulesFor.defaults );
+    o2.onEachObject = moduleVerify;
+    debugger;
+    return will.modulesFor( o2 );
+  })
+
+  ready.finally( ( err, arg ) =>
+  {
+    debugger;
+    if( err )
+    debugger;
+    if( err )
+    throw _.err( err, `\nFailed to verify` );
+
+    if( o.asMap )
+    return { verifiedNumber, totalNumber };
+
+    let ofModule = ' ';
+    if( o.modules.length === 1 )
+    {
+      let module = o.modules[ 0 ];
+      module = module.toModule() || module.toOpener() || module;
+      // ofModule = ` of ${module.decoratedQualifiedName} `;
+      ofModule = ` of ${module.decoratedAbsoluteName} `;
+    }
+
+    logger.log( `${verifiedNumber} / ${totalNumber} submodule(s)${ofModule}were verified in ${_.timeSpent( time )}` );
+    logger.down();
+
+    return arg;
+  })
+
+  return ready;
+
+  /* */
+
+  function moduleVerify( object, op )
+  {
+    debugger;
+    if( object instanceof _.Will.ModulesRelation )
+    if( object.opener )
+    object = object.opener;
+    if( !( object instanceof _.Will.Module || object instanceof _.Will.ModuleOpener ) )
+    return null;
+    if( object instanceof _.Will.ModuleOpener )
+    if( object.openedModule )
+    object = object.openedModule;
+    let o3 = _.mapOnly( o, object.repoVerify.defaults ); debugger;
+    _.assert( object instanceof _.Will.Module || object instanceof _.Will.ModuleOpener );
+    // if( _.longHas( o.doneContainer, object ) )
+    // return null;
+    // o.doneContainer.push( object );
+    return object.repoVerify( o3 ).then( ( verified ) =>
+    {
+      debugger;
+      totalNumber += 1;
+      if( verified )
+      verifiedNumber += 1;
+      return verified;
+    });
+  }
+
+  /* */
+
+}
+
+var defaults = modulesVerify_body.defaults =
+{
+
+  ... _.mapExtend( null, modulesFor.defaults ),
+
+  recursive : 1,
+  throwing : 1,
+  asMap : 0,
+
+  hasFiles : 1,
+  isValid : 1,
+  isRepository : 1,
+  hasRemote : 1,
+  isUpToDate : 1,
+
+}
+
+delete defaults.onEach;
+delete defaults.onEachModule;
+delete defaults.onEachJunction;
+// delete defaults.withOut;
+// delete defaults.withIn;
+
+let modulesVerify = _.routineFromPreAndBody( modulesVerify_pre, modulesVerify_body );
+
+// //
+//
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let totalNumber = _.mapKeys( module.submoduleMap ).length;
+//   let verifiedNumber = 0;
+//   let time = _.timeNow();
+//
+//   _.assert( module.preformed > 0  );
+//   _.assert( arguments.length === 1 );
+//
+//   _.routineOptions( modulesVerify, o );
+//
+//   logger.up();
+//
+//   let modules = module.modulesEach({ outputFormat : '/', recursive : o.recursive, withDisabledStem : 1 });
+//   let ready = new _.Consequence().take( null );
+//
+//   _.each( modules, ( r ) =>
+//   {
+//     // ready.then( () => reform( r ) )
+//     ready.then( () => onEach( r ) );
+//     ready.then( onEachEnd );
+//   })
+//
+//   ready.then( () =>
+//   {
+//     if( o.asMap )
+//     return { verifiedNumber, totalNumber };
+//     logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.timeSpent( time ) );
+//     logger.down();
+//     return verifiedNumber === totalNumber;
+//   })
+//
+//   return ready;
+//
+//   /* */
+//
+//   function onEach( r )
+//   {
+//
+//     // if( o.hasFiles )
+//     // if( !r.opener.repo.hasFiles )
+//     // {
+//     //   if( o.throwing )
+//     //   throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'does not have files' );
+//     //   return false;
+//     // }
+//     //
+//     // _.assert
+//     // (
+//     //   !!r.opener && r.opener.formed >= 2,
+//     //   () => 'Submodule', ( r.opener ? r.opener.qualifiedName : n ), 'was not preformed to verify'
+//     // );
+//     //
+//     // /* isValid */
+//     //
+//     // if( o.isValid )
+//     // if( !r.opener.isValid() )
+//     // throw _.err( opener.error, '\n! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is downloaded, but it\'s not valid.' );
+//     //
+//     // /* is remote / enabled */
+//     //
+//     // if( !r.opener.repo.isRemote )
+//     // return true;
+//     // if( r.relation && !r.relation.enabled )
+//     // return true;
+//     //
+//     // /* repository check */
+//     //
+//     // if( o.isRepository )
+//     // if( !r.opener.repo.isRepository )
+//     // {
+//     //   if( o.throwing )
+//     //   throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), `is downloaded, but it's not a repository` );
+//     //   return false;
+//     // }
+//     //
+//     // let remoteProvider = will.fileProvider.providerForPath( r.opener.repo.remotePath );
+//     //
+//     // /* origin check */
+//     //
+//     // if( o.hasRemote )
+//     // {
+//     //   let result = remoteProvider.hasRemote
+//     //   ({
+//     //     localPath : r.opener.repo.downloadPath,
+//     //     remotePath : r.opener.repo.remotePath
+//     //   });
+//     //
+//     //   if( !result.remoteIsValid )
+//     //   {
+//     //     if( o.throwing )
+//     //     throw _.errBrief
+//     //     (
+//     //       '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has different origin url:',
+//     //       _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
+//     //     );
+//     //
+//     //     return false;
+//     //   }
+//     // }
+//     //
+//     // /* version check */
+//     //
+//     // if( o.isUpToDate )
+//     // {
+//     //   if( r.opener.repo.isUpToDate )
+//     //   return true;
+//     //
+//     //   if( !o.throwing )
+//     //   return false;
+//     //
+//     //   let remoteParsed = remoteProvider.pathParse( r.opener.repo.remotePath );
+//     //   let remoteVersion = remoteParsed.hash || 'master';
+//     //   let localVersion = remoteProvider.versionLocalRetrive( r.opener.repo.downloadPath );
+//     //
+//     //   if( remoteVersion === localVersion )
+//     //   throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not up to date!' );
+//     //
+//     //   throw _.errBrief
+//     //   (
+//     //     '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has version different from that is specified in will-file!',
+//     //     '\nCurrent:', localVersion,
+//     //     '\nExpected:', remoteVersion
+//     //   );
+//     // }
+//     //
+//     // return true;
+//   }
+//
+//   /*  */
+//
+//   function onEachEnd( verified )
+//   {
+//     if( verified )
+//     verifiedNumber += 1;
+//     return verified;
+//   }
+//
+//   /*  */
+//
+//   // function reform( relation )
+//   // {
+//   //   let con = new _.Consequence().take( null );
+//   //   con.then( () => relation.opener.repo.status({ all : 1, invalidating : 1 }) )
+//   //   con.then( () => relation )
+//   //   return con;
+//   // }
+//
+// }
+//
+// var defaults  = modulesVerify.defaults = Object.create( null );
+//
+// defaults.recursive = 1;
+// defaults.throwing = 1;
+// defaults.asMap = 0;
+//
+// defaults.hasFiles = 1;
+// defaults.isValid = 1;
+// defaults.isRepository = 1;
+// defaults.hasRemote = 1;
+// defaults.isUpToDate = 1
+//
+// // xxx
 
 // --
 // object
@@ -5146,6 +5456,7 @@ let Extend =
   modulesClean,
   modulesBuild,
   modulesExport,
+  modulesVerify,
 
   // object
 

@@ -3314,167 +3314,24 @@ defaults.upgrading = null;
 
 /* qqq : rewrite using method status */
 /* qqq : introduce module verify to ModuleAbstract and call it please */
+/* qqq : fix */
 
 function submodulesVerify( o )
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
   let logger = will.logger;
-  let totalNumber = _.mapKeys( module.submoduleMap ).length;
-  let verifiedNumber = 0;
-  let time = _.timeNow();
-
-  _.assert( module.preformed > 0  );
-  _.assert( arguments.length === 1 );
 
   _.routineOptions( submodulesVerify, o );
 
-  logger.up();
-
-  let modules = module.modulesEach({ outputFormat : '/', recursive : o.recursive, withDisabledStem : 1 });
-  let ready = new _.Consequence().take( null );
-
-  _.each( modules, ( r ) =>
-  {
-    ready.then( () => reform( r ) )
-    ready.then( onEach );
-    ready.then( onEachEnd );
-  })
-
-  ready.then( () =>
-  {
-    if( o.asMap )
-    return { verifiedNumber, totalNumber };
-
-    logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.timeSpent( time ) );
-    logger.down();
-    return verifiedNumber === totalNumber;
-  })
-
-  return ready;
-
-  /* */
-
-  function onEach( r )
-  {
-    if( o.hasFiles )
-    if( !r.opener.repo.hasFiles )
-    {
-      if( o.throwing )
-      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'does not have files' );
-      return false;
-    }
-
-    _.assert
-    (
-      !!r.opener && r.opener.formed >= 2,
-      () => 'Submodule', ( r.opener ? r.opener.qualifiedName : n ), 'was not preformed to verify'
-    );
-
-    /* isValid */
-
-    if( o.isValid )
-    if( !r.opener.isValid() )
-    throw _.err( opener.error, '\n! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is downloaded, but it\'s not valid.' );
-
-    /* is remote / enabled */
-
-    if( !r.opener.repo.isRemote )
-    return true;
-    if( r.relation && !r.relation.enabled )
-    return true;
-
-    /* repository check */
-
-    if( o.isRepository )
-    if( !r.opener.repo.isRepository )
-    {
-      if( o.throwing )
-      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), `is downloaded, but it's not a repository` );
-      return false;
-    }
-
-    let remoteProvider = will.fileProvider.providerForPath( r.opener.repo.remotePath );
-
-    /* origin check */
-
-    if( o.hasRemote )
-    {
-      let result = remoteProvider.hasRemote
-      ({
-        localPath : r.opener.repo.downloadPath,
-        remotePath : r.opener.repo.remotePath
-      });
-
-      if( !result.remoteIsValid )
-      {
-        if( o.throwing )
-        throw _.errBrief
-        (
-          '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has different origin url:',
-          _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
-        );
-
-        return false;
-      }
-    }
-
-    /* version check */
-
-    if( o.isUpToDate )
-    {
-      if( r.opener.repo.isUpToDate )
-      return true;
-
-      if( !o.throwing )
-      return false;
-
-      let remoteParsed = remoteProvider.pathParse( r.opener.repo.remotePath );
-      let remoteVersion = remoteParsed.hash || 'master';
-      let localVersion = remoteProvider.versionLocalRetrive( r.opener.repo.downloadPath );
-
-      if( remoteVersion === localVersion )
-      throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not up to date!' );
-
-      throw _.errBrief
-      (
-        '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has version different from that is specified in will-file!',
-        '\nCurrent:', localVersion,
-        '\nExpected:', remoteVersion
-      );
-    }
-
-    return true;
-
-  }
-
-  /*  */
-
-  function onEachEnd( verified )
-  {
-    if( verified )
-    verifiedNumber += 1;
-    return verified;
-  }
-
-  /*  */
-
-  function reform( relation )
-  {
-    let con = new _.Consequence().take( null );
-    // con.then( () => relation.opener.preform() )
-    // con.then( () => relation.opener.repoIsDownloadedReform() )
-    // con.then( () => relation.opener.repoIsGoodReform() )
-    // con.then( () => relation.opener.repoIsUpToDateReform() )
-    con.then( () => relation.opener.repo.status({ all : 1, invalidating : 1 }) )
-    con.then( () => relation )
-    return con;
-  }
+  let o2 = _.mapExtend( null, o );
+  o2.modules = _.mapVals( module.submoduleMap );
+  o2.withStem = 1;
+  return will.modulesVerify( o2 );
 }
 
-var defaults  = submodulesVerify.defaults = Object.create( null );
+var defaults = submodulesVerify.defaults = _.mapExtend( null, _.Will.prototype.modulesFor.defaults );
+
 defaults.recursive = 1;
 defaults.throwing = 1;
 defaults.asMap = 0;
@@ -3484,6 +3341,196 @@ defaults.isValid = 1;
 defaults.isRepository = 1;
 defaults.hasRemote = 1;
 defaults.isUpToDate = 1
+
+delete defaults.withStem;
+delete defaults.onEach;
+delete defaults.onEachModule;
+delete defaults.onEachJunction;
+// delete defaults.withOut;
+// delete defaults.withIn;
+
+_.assert( defaults.outputFormat === undefined );
+_.assert( defaults.withDisabledSubmodules === 0 );
+_.assert( defaults.withDisabledModules === 0 );
+
+// var defaults  = submodulesVerify.defaults = Object.create( null );
+//
+// defaults.recursive = 1;
+// defaults.throwing = 1;
+// defaults.asMap = 0;
+//
+// defaults.hasFiles = 1;
+// defaults.isValid = 1;
+// defaults.isRepository = 1;
+// defaults.hasRemote = 1;
+// defaults.isUpToDate = 1
+
+// {
+//   let module = this;
+//   let will = module.will;
+//   let fileProvider = will.fileProvider;
+//   let path = fileProvider.path;
+//   let logger = will.logger;
+//   let totalNumber = _.mapKeys( module.submoduleMap ).length;
+//   let verifiedNumber = 0;
+//   let time = _.timeNow();
+//
+//   _.assert( module.preformed > 0  );
+//   _.assert( arguments.length === 1 );
+//
+//   _.routineOptions( submodulesVerify, o );
+//
+//   logger.up();
+//
+//   let modules = module.modulesEach({ outputFormat : '/', recursive : o.recursive, withDisabledStem : 1 });
+//   let ready = new _.Consequence().take( null );
+//
+//   _.each( modules, ( r ) =>
+//   {
+//     // ready.then( () => reform( r ) )
+//     ready.then( () => onEach( r ) );
+//     ready.then( onEachEnd );
+//   })
+//
+//   ready.then( () =>
+//   {
+//     if( o.asMap )
+//     return { verifiedNumber, totalNumber };
+//
+//     logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.timeSpent( time ) );
+//     logger.down();
+//     return verifiedNumber === totalNumber;
+//   })
+//
+//   return ready;
+//
+//   /* */
+//
+//   function onEach( r )
+//   {
+//
+//     // if( o.hasFiles )
+//     // if( !r.opener.repo.hasFiles )
+//     // {
+//     //   if( o.throwing )
+//     //   throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'does not have files' );
+//     //   return false;
+//     // }
+//     //
+//     // _.assert
+//     // (
+//     //   !!r.opener && r.opener.formed >= 2,
+//     //   () => 'Submodule', ( r.opener ? r.opener.qualifiedName : n ), 'was not preformed to verify'
+//     // );
+//     //
+//     // /* isValid */
+//     //
+//     // if( o.isValid )
+//     // if( !r.opener.isValid() )
+//     // throw _.err( opener.error, '\n! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is downloaded, but it\'s not valid.' );
+//     //
+//     // /* is remote / enabled */
+//     //
+//     // if( !r.opener.repo.isRemote )
+//     // return true;
+//     // if( r.relation && !r.relation.enabled )
+//     // return true;
+//     //
+//     // /* repository check */
+//     //
+//     // if( o.isRepository )
+//     // if( !r.opener.repo.isRepository )
+//     // {
+//     //   if( o.throwing )
+//     //   throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), `is downloaded, but it's not a repository` );
+//     //   return false;
+//     // }
+//     //
+//     // let remoteProvider = will.fileProvider.providerForPath( r.opener.repo.remotePath );
+//     //
+//     // /* origin check */
+//     //
+//     // if( o.hasRemote )
+//     // {
+//     //   let result = remoteProvider.hasRemote
+//     //   ({
+//     //     localPath : r.opener.repo.downloadPath,
+//     //     remotePath : r.opener.repo.remotePath
+//     //   });
+//     //
+//     //   if( !result.remoteIsValid )
+//     //   {
+//     //     if( o.throwing )
+//     //     throw _.errBrief
+//     //     (
+//     //       '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has different origin url:',
+//     //       _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
+//     //     );
+//     //
+//     //     return false;
+//     //   }
+//     // }
+//     //
+//     // /* version check */
+//     //
+//     // if( o.isUpToDate )
+//     // {
+//     //   if( r.opener.repo.isUpToDate )
+//     //   return true;
+//     //
+//     //   if( !o.throwing )
+//     //   return false;
+//     //
+//     //   let remoteParsed = remoteProvider.pathParse( r.opener.repo.remotePath );
+//     //   let remoteVersion = remoteParsed.hash || 'master';
+//     //   let localVersion = remoteProvider.versionLocalRetrive( r.opener.repo.downloadPath );
+//     //
+//     //   if( remoteVersion === localVersion )
+//     //   throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not up to date!' );
+//     //
+//     //   throw _.errBrief
+//     //   (
+//     //     '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has version different from that is specified in will-file!',
+//     //     '\nCurrent:', localVersion,
+//     //     '\nExpected:', remoteVersion
+//     //   );
+//     // }
+//     //
+//     // return true;
+//   }
+//
+//   /*  */
+//
+//   function onEachEnd( verified )
+//   {
+//     if( verified )
+//     verifiedNumber += 1;
+//     return verified;
+//   }
+//
+//   /*  */
+//
+//   // function reform( relation )
+//   // {
+//   //   let con = new _.Consequence().take( null );
+//   //   con.then( () => relation.opener.repo.status({ all : 1, invalidating : 1 }) )
+//   //   con.then( () => relation )
+//   //   return con;
+//   // }
+//
+// }
+//
+// var defaults  = submodulesVerify.defaults = Object.create( null );
+//
+// defaults.recursive = 1;
+// defaults.throwing = 1;
+// defaults.asMap = 0;
+//
+// defaults.hasFiles = 1;
+// defaults.isValid = 1;
+// defaults.isRepository = 1;
+// defaults.hasRemote = 1;
+// defaults.isUpToDate = 1
 
 //
 
@@ -3638,6 +3685,25 @@ function toModule()
   module.assertIsValidIntegrity(); /* zzz : temp */
 
   return module;
+}
+
+//
+
+function toOpener()
+{
+  let module = this;
+  let will = module.will;
+
+  module.assertIsValidIntegrity(); /* zzz : temp */
+
+  for( let u = 0 ; u < module.userArray.length ; u++ )
+  {
+    let opener = module.userArray[ u ];
+    if( opener instanceof will.ModuleOpener )
+    return opener;
+  }
+
+  return null;
 }
 
 //
@@ -7400,7 +7466,9 @@ let Extend =
   submodulesRelationsFilter,
   submodulesRelationsOwnFilter,
   toModule,
+  toOpener,
   toRelation,
+  toOpener,
   toJunction,
 
   submodulesAdd,
