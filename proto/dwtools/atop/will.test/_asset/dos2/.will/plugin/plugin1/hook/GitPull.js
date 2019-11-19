@@ -21,7 +21,7 @@ function onModule( it )
 
   if( status.uncommitted )
   {
-    logger.log( _.errBrief( `${it.junction.nameWithLocationGet()} has local changes!` ) );
+    throw _.errBrief( `${it.junction.nameWithLocationGet()} has local changes!` );
     return null;
   }
 
@@ -33,7 +33,6 @@ function onModule( it )
   provider.archive.fileMapAutosaving = 1;
   provider.archive.verbosity = 2;
   provider.archive.restoreLinksBegin();
-
   it.start( `git pull` );
 
   it.ready.tap( () =>
@@ -41,7 +40,12 @@ function onModule( it )
     provider.archive.restoreLinksEnd();
   });
 
-  it.ready.catch( ( err ) => logger.log( _.errOnce( _.errBrief( err ) ) ) || null );
+  it.ready.catch( ( err ) =>
+  {
+    err = _.errBrief( err );
+    logger.log( _.errOnce( err ) );
+    throw err;
+  });
 
 }
 

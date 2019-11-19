@@ -86,6 +86,8 @@ function assetFor( test, name )
   a.test = test;
   a.name = name;
   a.originalAssetPath = _.path.join( self.assetDirPath, name );
+  a.originalAbs = self.abs_functor( a.originalAssetPath );
+  a.originalRel = self.rel_functor( a.originalAssetPath );
   a.routinePath = _.path.join( self.suitePath, test.name );
   a.abs = self.abs_functor( a.routinePath );
   a.rel = self.rel_functor( a.routinePath );

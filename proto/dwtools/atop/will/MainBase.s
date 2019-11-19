@@ -5047,6 +5047,10 @@ function hookCall( o )
       return r;
       return null;
     })
+    .then( ( arg ) =>
+    {
+      return o.ready;
+    })
     .finally( ( err, arg ) =>
     {
       if( err )
@@ -5057,7 +5061,11 @@ function hookCall( o )
     })
 
     if( o.sync )
-    ready.deasync();
+    {
+      // return ready.deasync();
+      ready.deasyncWait();
+      return ready.sync();
+    }
 
     return ready;
     // return ready.split();

@@ -117,6 +117,8 @@ function assetFor( test, name )
   a.test = test;
   a.name = name;
   a.originalAssetPath = _.path.join( self.assetDirPath, name );
+  a.originalAbs = self.abs_functor( a.originalAssetPath );
+  a.originalRel = self.rel_functor( a.originalAssetPath );
   a.routinePath = _.path.join( self.suitePath, test.name );
   a.abs = self.abs_functor( a.routinePath );
   a.rel = self.rel_functor( a.routinePath );
@@ -4844,68 +4846,51 @@ withDoStatus.description =
 function withDoCommentOut( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'dos' );
-  let routinePath = _.path.join( self.suitePath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : ready,
-  })
+  let a = self.assetFor( test, 'dos' );
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'execution_section/will.yml' ) );
+    a.reflect();
+    var outfile = _.fileProvider.fileConfigRead( a.abs( 'execution_section/will.yml' ) );
     test.is( !!outfile.execution );
     return null;
   })
-  start( '.with ** .do .will/hook/WillfCommentOut.js execution' )
+  a.start( '.with ** .do .will/hook/WillfCommentOut.js execution' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'Comment out "execution" in module::execution_section at' ), 1 );
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'execution_section/will.yml' ) );
+    var outfile = _.fileProvider.fileConfigRead( a.abs( 'execution_section/will.yml' ) );
     test.is( !outfile.execution );
     return null;
   })
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'execution_section/will.yml' ) );
+    a.reflect();
+    var outfile = _.fileProvider.fileConfigRead( a.abs( 'execution_section/will.yml' ) );
     test.is( !!outfile.execution );
     return null;
   })
-  start( '.with ** .do .will/hook/WillfCommentOut.js execution dry:1' )
+  a.start( '.with ** .do .will/hook/WillfCommentOut.js execution dry:1' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'Comment out "execution" in module::execution_section at' ), 1 );
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'execution_section/will.yml' ) );
+    var outfile = _.fileProvider.fileConfigRead( a.abs( 'execution_section/will.yml' ) );
     test.is( !!outfile.execution );
     return null;
   })
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function withDoCommentOut */
 
 withDoCommentOut.timeOut = 300000;
@@ -5311,6 +5296,550 @@ function hookPrepare( test )
 } /* end of function hookPrepare */
 
 hookPrepare.timeOut = 300000;
+
+//
+
+function hookLink( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'git-conflict' );
+
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  a.ready
+  .then( ( got ) =>
+  {
+    a.reflect();
+    _.fileProvider.filesReflect({ reflectMap : { [ _.path.join( self.assetDirPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    _.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), '\ncopy' );
+    _.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), '\ncopy' );
+    return null;
+  })
+
+  originalShell( 'git init' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  a.shell( `git clone original clone` );
+
+  a.start( '.with original/ .call link beeping:0' )
+  .then( ( got ) =>
+  {
+    test.case = '.with original/ .call link beeping:0';
+
+    test.identical( _.strHas( got.output, '+ hardLink' ), true );
+    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
+    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+
+    return null;
+  })
+
+  a.start( '.with clone/ .call link beeping:0' )
+  .then( ( got ) =>
+  {
+    test.case = '.with clone/ .call link beeping:0';
+
+    test.identical( _.strHas( got.output, '+ hardLink' ), true );
+    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
+    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+} /* end of function hookLink */
+
+hookLink.description =
+`
+- same files are hardlinked
+- same files from different modules are not hardlinked
+`
+
+//
+
+function hookGitPullConflict( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'git-conflict' );
+
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  a.ready
+  .then( ( got ) =>
+  {
+    a.reflect();
+    _.fileProvider.filesReflect({ reflectMap : { [ _.path.join( self.assetDirPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    _.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+    _.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+    return null;
+  })
+
+  originalShell( 'git init' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  a.shell( `git clone original clone` );
+
+  a.start( '.with clone/ .call link beeping:0' )
+
+  .then( ( got ) =>
+  {
+    test.description = 'hardlink';
+
+    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+
+    _.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
+    _.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
+
+    var exp =
+`
+original/f.txt
+copy
+original
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+clone
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+clone
+`
+    var orignalRead2 = _.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+    test.equivalent( orignalRead2, exp );
+
+    return null;
+  })
+
+  originalShell( 'git commit -am second' );
+
+  a.startNonThrowing( '.with clone/ .call GitPull' )
+  .then( ( got ) =>
+  {
+    test.description = 'has local changes';
+    test.notIdentical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'has local changes' ), 1 );
+
+    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+
+    var exp =
+`
+original/f.txt
+copy
+original
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+clone
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+clone
+`
+    var orignalRead2 = _.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+    test.equivalent( orignalRead2, exp );
+
+    return null;
+  })
+
+  cloneShell( 'git commit -am second' );
+
+  a.startNonThrowing( '.with clone/ .call GitPull' )
+  .then( ( got ) =>
+  {
+    test.description = 'conflict';
+    test.notIdentical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'has local changes' ), 0 );
+    test.identical( _.strCount( got.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+    test.identical( _.strCount( got.output, 'Restored 1 links' ), 1 );
+
+    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+
+    var exp =
+`
+original/f.txt
+copy
+original
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+<<<<<<< HEAD
+clone
+=======
+original
+>>>>>>>
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+<<<<<<< HEAD
+clone
+=======
+original
+>>>>>>>
+`
+    var orignalRead2 = _.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+    test.equivalent( orignalRead2, exp );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+} /* end of function hookGitPullConflict */
+
+hookGitPullConflict.timeOut = 300000;
+hookGitPullConflict.description =
+`
+- pull done
+- conflict is not obstacle to relink files
+- if conflict then application returns error code
+`
+
+//
+
+function hookGitSyncColflict( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'git-conflict' );
+
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  a.ready
+  .then( ( got ) =>
+  {
+    a.reflect();
+    _.fileProvider.filesReflect({ reflectMap : { [ _.path.join( self.assetDirPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    _.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+    _.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+    return null;
+  })
+
+  originalShell( 'git init' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  a.shell( `git clone original clone` );
+
+  a.start( '.with clone/ .call link beeping:0' )
+
+  .then( ( got ) =>
+  {
+    test.description = 'hardlink';
+
+    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+
+    _.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
+    _.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
+
+    var exp =
+`
+original/f.txt
+copy
+original
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+clone
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+clone
+`
+    var orignalRead2 = _.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+    test.equivalent( orignalRead2, exp );
+
+    return null;
+  })
+
+  originalShell( 'git commit -am second' );
+
+  a.startNonThrowing( '.with clone/ .call GitSync -am "second"' )
+  .then( ( got ) =>
+  {
+    test.description = 'conflict';
+    test.notIdentical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'has local changes' ), 0 );
+    test.identical( _.strCount( got.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+    test.identical( _.strCount( got.output, 'Restored 1 links' ), 1 );
+    test.identical( _.strCount( got.output, '> git add' ), 1 );
+    test.identical( _.strCount( got.output, '> git commit' ), 1 );
+    test.identical( _.strCount( got.output, '> git push' ), 0 );
+
+    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+
+    var exp =
+`
+original/f.txt
+copy
+original
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+<<<<<<< HEAD
+clone
+=======
+original
+>>>>>>>
+`
+    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+<<<<<<< HEAD
+clone
+=======
+original
+>>>>>>>
+`
+    var orignalRead2 = _.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+    test.equivalent( orignalRead2, exp );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+} /* end of function hookGitSyncColflict */
+
+hookGitSyncColflict.timeOut = 300000;
+hookGitSyncColflict.description =
+`
+- pull done
+- conflict is not obstacle to relink files
+- if conflict then application returns error code
+`
+
+//
+
+function hookGitSyncArguments( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'git-conflict' );
+
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  a.ready
+  .then( ( got ) =>
+  {
+    a.reflect();
+    _.fileProvider.filesReflect({ reflectMap : { [ _.path.join( self.assetDirPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    _.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+    _.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+    return null;
+  })
+
+  originalShell( 'git init' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  a.shell( `git clone original clone` );
+
+  a.ready.then( ( got ) =>
+  {
+    test.description = 'hardlink';
+    _.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
+    _.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
+    return null;
+  })
+
+  originalShell( 'git commit -am second' );
+
+  // _global_.debugger = 1;
+  debugger;
+  a.startNonThrowing( '.with clone/ .call GitSync -am "second commit"' ) /* xxx qqq : make it working */
+  // a.startNonThrowing( '.with clone/ .call GitSync -am "second"' )
+  .then( ( got ) =>
+  {
+    debugger;
+    test.description = 'conflict';
+    test.notIdentical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'has local changes' ), 0 );
+    test.identical( _.strCount( got.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+    test.identical( _.strCount( got.output, '> git add' ), 1 );
+    test.identical( _.strCount( got.output, '> git commit' ), 1 );
+    test.identical( _.strCount( got.output, '> git push' ), 0 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+} /* end of function hookGitSyncArguments */
+
+hookGitSyncArguments.timeOut = 300000;
+hookGitSyncArguments.description =
+`
+- quoted argument passed to git through willbe properly
+`
 
 //
 
@@ -20667,7 +21196,7 @@ var Self =
     // reflect
 
     reflectNothingFromSubmodules,
-    reflectGetPath, /* xxx : fix */
+    reflectGetPath,
     reflectSubdir,
     reflectSubmodulesWithBase,
     reflectComposite,
@@ -20693,6 +21222,10 @@ var Self =
     hookCallInfo,
     hookGitMake,
     hookPrepare,
+    hookLink,
+    hookGitPullConflict,
+    hookGitSyncColflict,
+    hookGitSyncArguments,
 
     verbositySet,
     verbosityStepDelete,
