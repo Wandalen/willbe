@@ -299,13 +299,32 @@ function strIsolate_body( o )
     return _._strRightSingle( o.src, o.delimeter, undefined, index );
   }
 
+  /* */
+
+  let quotedRanges = [];
+
+  function quoteRangesSetup( index )
+  {
+    let quotes = [];
+    for( let i = 0 ; i < o.src.length ; i++ )
+    {
+      if( _.arrayHas( o.quoting,  ) )
+    }
+  }
+
+  function quoteRange( index )
+  {
+    for( let i = 0 ; i < x ; i++ )
+
+  }
+
 }
 
 strIsolate_body.defaults =
 {
   src : null,
   delimeter : ' ',
-  quoting : null,
+  quoting : [ '"', '`', '\'' ],
   left : 1,
   times : 1,
   none : 1,
@@ -586,6 +605,7 @@ let Fields =
 
 let Routines =
 {
+
 
   strIsolate : _.routineFromPreAndBody( strIsolate_pre, strIsolate_body ),
   strIsolateLeftOrNone : _.routineFromPreAndBody( strIsolate_pre, strIsolateLeftOrNone_body ),
