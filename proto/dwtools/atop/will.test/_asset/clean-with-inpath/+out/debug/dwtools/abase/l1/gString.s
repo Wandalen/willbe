@@ -201,7 +201,7 @@ function strIsolate_pre( routine, args )
 // {
 //   src : null,
 //   delimeter : ' ',
-//   quoting : null,
+//   quote : null,
 //   left : 1,
 //   times : 1,
 //   none : 1,
@@ -222,6 +222,10 @@ function strIsolate_body( o )
 
   if( _.arrayIs( o.delimeter ) && o.delimeter.length === 1 )
   o.delimeter = o.delimeter[ 0 ];
+
+  let quote;
+  if( o.quote )
+  quote = _.strQuoteAnalyze({ src : o.src, quote : o.quote });
 
   /* */
 
@@ -289,34 +293,93 @@ function strIsolate_body( o )
 
   function strLeft( index )
   {
-    return _._strLeftSingle( o.src, o.delimeter, index, undefined );
+    let r = _._strLeftSingle( o.src, o.delimeter, index, undefined );
+    if( quote )
+    if( r.entry !== undefined )
+    {
+      let range = inQuoteRange( r.index );
+      if( range )
+      return strLeft( range[ 1 ]+1 );
+    }
+    return r;
   }
 
   /* */
 
   function strRight( index )
   {
-    return _._strRightSingle( o.src, o.delimeter, undefined, index );
+    let r = _._strRightSingle( o.src, o.delimeter, undefined, index );
+    if( quote )
+    if( r.entry !== undefined )
+    {
+      let range = inQuoteRange( r.index );
+      if( range )
+      return strRight( range[ 0 ] );
+    }
+    return r;
   }
 
   /* */
 
-  let quotedRanges = [];
-
-  function quoteRangesSetup( index )
+  function inQuoteRange( offset )
   {
-    let quotes = [];
-    for( let i = 0 ; i < o.src.length ; i++ )
+    let i = binSearch( offset );
+    if( i % 2 )
     {
-      if( _.arrayHas( o.quoting,  ) )
+      i -= 1;
     }
+    if( i < 0 || i >= quote.ranges.length )
+    return false;
+    let b = quote.ranges[ i ];
+    let e = quote.ranges[ i+1 ];
+    if( !( b <= offset && offset <= e ) )
+    return false;
+    return [ b, e ];
   }
 
-  function quoteRange( index )
+  /* */
+
+  function binSearch( val )
   {
-    for( let i = 0 ; i < x ; i++ )
-
+    let l = 0;
+    let r = quote.ranges.length;
+    let m;
+    if( quote.ranges.length )
+    debugger;
+    do
+    {
+      m = Math.floor( ( l + r ) / 2 );
+      if( quote.ranges[ m ] < val )
+      l = m+1;
+      else if( quote.ranges[ m ] > val )
+      r = m;
+      else
+      return m;
+    }
+    while( l < r );
+    if( quote.ranges[ m ] < val )
+    return m+1;
+    return m;
   }
+
+  /* */
+
+  // let quotedRanges = [];
+  //
+  // function quoteRangesSetup( index )
+  // {
+  //   let quotes = [];
+  //   for( let i = 0 ; i < o.src.length ; i++ )
+  //   {
+  //     if( _.arrayHas( o.quote,  ) )
+  //   }
+  // }
+  //
+  // function quoteRange( index )
+  // {
+  //   for( let i = 0 ; i < x ; i++ )
+  //
+  // }
 
 }
 
@@ -324,7 +387,8 @@ strIsolate_body.defaults =
 {
   src : null,
   delimeter : ' ',
-  quoting : [ '"', '`', '\'' ],
+  quote : 0,
+  // quoting : [ '"', '`', '\'' ],
   left : 1,
   times : 1,
   none : 1,
@@ -372,7 +436,7 @@ strIsolateLeftOrNone_body.defaults =
   src : null,
   delimeter : ' ',
   times : 1,
-  quoting : null,
+  quote : null,
 }
 
 //
@@ -390,7 +454,7 @@ strIsolateLeftOrAll_body.defaults =
   src : null,
   delimeter : ' ',
   times : 1,
-  quoting : null,
+  quote : null,
 }
 
 //
@@ -431,7 +495,7 @@ strIsolateRightOrNone_body.defaults =
   src : null,
   delimeter : ' ',
   times : 1,
-  quoting : null,
+  quote : null,
 }
 
 //
@@ -449,10 +513,71 @@ strIsolateRightOrAll_body.defaults =
   src : null,
   delimeter : ' ',
   times : 1,
-  quoting : null,
+  quote : null,
 }
 
 //
+
+// function strIsolateInsideOrNoneSingle( src, begin, end )
+// {
+//
+//   _.assert( _.strIs( src ), 'Expects string {-src-}' );
+//   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+//
+//   let b = _.strLeft( src, begin );
+//
+//   if( b.entry === undefined )
+//   return notFound();
+//
+//   let e = _.strRight( src, end );
+//
+//   if( e.entry === undefined )
+//   return notFound();
+//
+//   if( e.index < b.index + b.entry.length )
+//   return notFound();
+//
+//   let result =
+//   [
+//     src.substring( 0, b.index ),
+//     b.entry,
+//     src.substring( b.index + b.entry.length, e.index ),
+//     e.entry,
+//     src.substring( e.index+e.entry.length, src.length )
+//   ];
+//
+//   return result;
+//
+//   function notFound()
+//   {
+//     return [];
+//   }
+// }
+//
+// //
+//
+// function strIsolateInsideOrNone( src, begin, end )
+// {
+//
+//   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+//
+//   if( _.arrayLike( src ) )
+//   {
+//     let result = [];
+//     for( let s = 0 ; s < src.length ; s++ )
+//     result[ s ] = _.strIsolateInsideOrNoneSingle( src[ s ], begin, end );
+//     return result;
+//   }
+//   else
+//   {
+//     return _.strIsolateInsideOrNoneSingle( src, begin, end );
+//   }
+//
+// }
+
+//
+
+/* qqq : update doc of strIsolateInsideLeftSignle */
 
 /**
   * Returns part of a source string( src ) between first occurrence of( begin ) and last occurrence of( end ).
@@ -464,128 +589,136 @@ strIsolateRightOrAll_body.defaults =
   * @param { String } end - String to find from end source.
   *
   * @example
-  * _.strIsolateInsideOrNone( 'abcd', 'a', 'd' );
+  * _.strIsolateInsideLeftSignle( 'abcd', 'a', 'd' );
   * // returns 'bc'
   *
   * @example
-  * _.strIsolateInsideOrNone( 'aabcc', 'a', 'c' );
+  * _.strIsolateInsideLeftSignle( 'aabcc', 'a', 'c' );
   * // returns 'aabcc'
   *
   * @example
-  * _.strIsolateInsideOrNone( 'aabcc', 'a', 'a' );
+  * _.strIsolateInsideLeftSignle( 'aabcc', 'a', 'a' );
   * // returns 'a'
   *
   * @example
-  * _.strIsolateInsideOrNone( 'abc', 'a', 'a' );
+  * _.strIsolateInsideLeftSignle( 'abc', 'a', 'a' );
   * // returns undefined
   *
   * @example
-  * _.strIsolateInsideOrNone( 'abcd', 'x', 'y' )
+  * _.strIsolateInsideLeftSignle( 'abcd', 'x', 'y' )
   * // returns undefined
   *
   * @example
   * //index of begin is bigger then index of end
-  * _.strIsolateInsideOrNone( 'abcd', 'c', 'a' )
+  * _.strIsolateInsideLeftSignle( 'abcd', 'c', 'a' )
   * // returns undefined
   *
   * @returns { string } Returns part of source string between ( begin ) and ( end ) or undefined.
   * @throws { Exception } If all arguments are not strings;
   * @throws { Exception } If ( argumets.length ) is not equal 3.
-  * @function strIsolateInsideOrNone
+  * @function strIsolateInsideLeftSignle
   * @memberof wTools
   */
 
-function strIsolateInsideOrNoneSingle( src, begin, end )
+function strIsolateInsideLeftSignle( src, begin, end )
 {
 
   _.assert( _.strIs( src ), 'Expects string {-src-}' );
-  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+  _.assert( arguments.length === 2 || arguments.length === 3 );
+  let b, e;
 
-  let b = _.strLeft( src, begin );
+  if( end === undefined )
+  {
+    let pairs = arguments[ 1 ];
+    _.assert( _.strIs( pairs ) || _.arrayIs( pairs ) );
+    pairs = _.strQuotePairsNormalize( pairs );
 
-  if( b.entry === undefined )
-  return;
+    let l = 0;
+    let begin = []
+    for( let q = 0 ; q < pairs.length ; q++ )
+    {
+      let quotingPair = pairs[ q ];
+      begin.push( quotingPair[ 0 ] );
+    }
 
-  let e = _.strRight( src, end );
+    do
+    {
 
-  if( e.entry === undefined )
-  return;
+      b = _.strLeft( src, begin, l );
+
+      if( b.entry === undefined )
+      return notFound();
+
+      _.assert( _.numberIs( b.instanceIndex ) );
+      let end = pairs[ b.instanceIndex ][ 1 ];
+
+      e = _.strRight( src, end, Math.min( b.index+1, src.length ) );
+
+      if( e.entry === undefined )
+      l = b.index+1;
+      else
+      break;
+      // return notFound();
+
+    }
+    while( l < src.length );
+
+    if( e.entry === undefined )
+    return notFound();
+
+  }
+  else
+  {
+
+    b = _.strLeft( src, begin );
+
+    if( b.entry === undefined )
+    return notFound();
+
+    e = _.strRight( src, end, Math.min( b.index+1, src.length ) );
+
+    if( e.entry === undefined )
+    return notFound();
+
+  }
 
   if( e.index < b.index + b.entry.length )
-  return;
+  return notFound();
 
-  let result = [ src.substring( 0, b.index ), b.entry, src.substring( b.index + b.entry.length, e.index ), e.entry, src.substring( e.index+e.entry.length, src.length ) ];
+  let result =
+  [
+    src.substring( 0, b.index ),
+    b.entry,
+    src.substring( b.index + b.entry.length, e.index ),
+    e.entry,
+    src.substring( e.index + e.entry.length, src.length )
+  ];
 
   return result;
+
+  function notFound()
+  {
+    return [ '', '', src, '', '' ];
+  }
 }
 
 //
 
-function strIsolateInsideOrNone( src, begin, end )
+function strIsolateInsideLeft( src, begin, end )
 {
 
-  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+  _.assert( arguments.length === 2 || arguments.length === 3 );
 
   if( _.arrayLike( src ) )
   {
     let result = [];
     for( let s = 0 ; s < src.length ; s++ )
-    result[ s ] = _.strIsolateInsideOrNoneSingle( src[ s ], begin, end );
+    result[ s ] = _.strIsolateInsideLeftSignle( src[ s ], begin, end );
     return result;
   }
   else
   {
-    return _.strIsolateInsideOrNoneSingle( src, begin, end );
-  }
-
-}
-
-//
-
-function strIsolateInsideOrAllSignle( src, begin, end )
-{
-
-  _.assert( _.strIs( src ), 'Expects string {-src-}' );
-  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
-
-  let b = _.strLeft( src, begin );
-
-  if( b.entry === undefined )
-  b = { entry : '', index : 0 }
-
-  let e = _.strRight( src, end );
-
-  if( e.entry === undefined )
-  e = { entry : '', index : src.length }
-
-  if( e.index < b.index + b.entry.length )
-  {
-    e.index = src.length;
-    e.entry = '';
-  }
-
-  let result = [ src.substring( 0, b.index ), b.entry, src.substring( b.index + b.entry.length, e.index ), e.entry, src.substring( e.index+e.entry.length, src.length ) ];
-
-  return result;
-}
-
-//
-
-function strIsolateInsideOrAll( src, begin, end )
-{
-
-  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
-
-  if( _.arrayLike( src ) )
-  {
-    let result = [];
-    for( let s = 0 ; s < src.length ; s++ )
-    result[ s ] = _.strIsolateInsideOrAllSignle( src[ s ], begin, end );
-    return result;
-  }
-  else
-  {
-    return _.strIsolateInsideOrAllSignle( src, begin, end );
+    return _.strIsolateInsideLeftSignle( src, begin, end );
   }
 
 }
@@ -613,10 +746,11 @@ let Routines =
   strIsolateRightOrNone : _.routineFromPreAndBody( strIsolate_pre, strIsolateRightOrNone_body ),
   strIsolateRightOrAll : _.routineFromPreAndBody( strIsolate_pre, strIsolateRightOrAll_body ),
 
-  strIsolateInsideOrNoneSingle,
-  strIsolateInsideOrNone,
-  strIsolateInsideOrAllSignle,
-  strIsolateInsideOrAll,
+  // strIsolateInsideOrNoneSingle,
+  // strIsolateInsideOrNone,
+  strIsolateInsideLeftSignle,
+  strIsolateInsideLeft,
+  /* qqq : implement, cover and document routine strIsolateInsideRight* */
 
 }
 

@@ -4380,9 +4380,6 @@ function WillfilesFind( o )
       mode : 'distinct',
     }
 
-    // if( _.strHas( o.commonPath, 'out/submodule' ) )
-    // debugger;
-
     filter.filePath = path.mapExtend( filter.filePath );
     filter.filePath = path.filterPairs( filter.filePath, ( it ) =>
     {
@@ -4423,6 +4420,7 @@ function WillfilesFind( o )
       return { [ it.src ] : it.dst };
     });
 
+    debugger;
     let files = fileProvider.filesFind( o2 );
 
     let files2 = [];

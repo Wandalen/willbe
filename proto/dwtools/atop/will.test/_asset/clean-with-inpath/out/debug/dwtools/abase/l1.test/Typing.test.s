@@ -53,9 +53,9 @@ function objectLike( t )
   t.identical( _.objectLike( new Map ), false );
 
   t.identical( _.objectLike( sync1 ), false );
-  t.identical( _.objectLike( sync2 ), true );
+  t.identical( _.objectLike( sync2 ), false );
   t.identical( _.objectLike( async1 ), false );
-  t.identical( _.objectLike( async2 ), true );
+  t.identical( _.objectLike( async2 ), false );
 
   t.description = 'object-like';
 

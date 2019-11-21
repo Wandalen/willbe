@@ -2049,14 +2049,19 @@ function strSplitsQuotedRejoin_pre( routine, args )
       _.assert( !o.quotingPrefixes );
       _.assert( !o.quotingPostfixes );
       o.quoting = _.arrayAs( o.quoting );
-      o.quotingPrefixes = o.quoting;
-      o.quotingPostfixes = o.quoting;
+      o.quotingPrefixes = o.quoting.map( ( q ) => _.arrayIs( q ) ? q[ 0 ] : q );
+      o.quotingPostfixes = o.quoting.map( ( q ) => _.arrayIs( q ) ? q[ 0 ] : q );
       o.quoting = true;
     }
     else _.assert( 0, 'unexpected type of {-o.quoting-}' );
 
-    _.assert( o.quotingPrefixes.length === o.quotingPostfixes.length );
-    _.assert( _.boolLike( o.quoting ) );
+    if( Config.debug )
+    {
+      _.assert( o.quotingPrefixes.length === o.quotingPostfixes.length );
+      _.assert( _.boolLike( o.quoting ) );
+      o.quotingPrefixes.forEach( ( q ) => _.assert( _.strIs( q ) ) );
+      o.quotingPostfixes.forEach( ( q ) => _.assert( _.strIs( q ) ) );
+    }
 
   }
 
