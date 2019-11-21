@@ -1545,8 +1545,8 @@ function isConsistent( o )
     _.assert( willfile.openedModule instanceof module.Self );
     _.assert
     (
-        !!willfile.openedModule.peerModule
-      , `Peer module of ${module.absoluteName} at ${module.localPath} was not opened to check it consistency`
+      !!willfile.openedModule.peerModule
+      , () => `Peer module of ${module.absoluteName} at ${module.localPath} was not opened to check it consistency`
     );
     if( !willfile.openedModule.peerModule )
     return false;
@@ -2319,8 +2319,8 @@ function exportedMake( o )
     // debugger;
     _.assert
     (
-        module.peerModule && module.peerModule.isValid() && module.peerModule.isOut
-      , `Out of ${module.peerModule ? module.peerModule.qualifiedName : 'the module'} is not valid`
+      module.peerModule && module.peerModule.isValid() && module.peerModule.isOut
+      , () => `Out of ${module.peerModule ? module.peerModule.qualifiedName : 'the module'} is not valid`
     );
     outModule = module.peerModule;
     return make();
@@ -4079,9 +4079,6 @@ function peerModuleSet( src )
           'Several peer modules'
         + `\n  ${path.moveTextualReport( module.commonPath, path.common( module.peerWillfilesPath ) )}`
         + `\n  ${path.moveTextualReport( src.commonPath, path.common( src.peerWillfilesPath ) )}`
-        // + `\n  ${module.commonPath} has peer path : ${module.peerWillfilesPath}`
-        // + `\n  but`
-        // + `\n  ${src.commonPath} has peer path : ${src.peerWillfilesPath}`
       );
     }
     src.peerModule = module;
@@ -4168,9 +4165,9 @@ function peerModuleFromJunction( junction )
       {
         _.assert
         (
-            0
-          , 'Probably something wrong because modules should be aware of its peer.'
-          , `\nBut ${module.absoluteName} at ${module.localPath} is not aware`
+          0
+          , () => 'Probably something wrong because modules should be aware of its peer.'
+                + `\nBut ${module.absoluteName} at ${module.localPath} is not aware`
         );
         logger.error
         (
@@ -6694,7 +6691,7 @@ function structureExportModules( modules, op )
     _.sure
     (
       module2.isOut || module.commonPath === module2.commonPath || ( module2.peerModule && module2.peerModule.isOut && module2.peerModule.isValid() ),
-      `Submodules should be loaded from out-willfiles, but ${module2.decoratedAbsoluteName} is loaded from\n${module2.willfilesPath}`
+      () => `Submodules should be loaded from out-willfiles, but ${module2.decoratedAbsoluteName} is loaded from\n${module2.willfilesPath}`
     );
 
     if( op.dst.module[ relative ] )

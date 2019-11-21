@@ -1687,12 +1687,20 @@ function commandHookCall( e )
   function handleEach( it )
   {
     let it2 = _.mapOnly( it, will.hookItFrom.defaults );
+    debugger;
     it2.execPath = path.join( will.hooksPath, execPath );
     it2 = will.hookItFrom( it2 );
+    debugger;
     return will.hookCall( it2 );
   }
 
 }
+
+/*
+Puppeteer test sample equivalent to Spectron sample you may see here
+https://bitbucket.org/stoneridgetechnology/encore.electron/src/development/test/PuppeteerSample.test.ss
+
+*/
 
 //
 
@@ -1937,6 +1945,7 @@ function commandWith( e )
 
   will._commandsBegin( commandWith );
 
+  debugger;
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
   if( !isolated )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
@@ -2007,7 +2016,6 @@ function commandEach( e )
   will._commandsBegin( commandEach );
 
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
-
   if( !isolated )
   throw _.errBrief( 'Format of .each command should be: .each {-path-} .command' );
 

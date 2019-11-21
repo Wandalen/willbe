@@ -1608,6 +1608,17 @@ function strPrimitive( test )
 
 //
 
+function strQuotedRanges( test )
+{
+
+  var got = _.strQuote( '', '' );
+  var expected = [ '', '', '' ];
+  test.identical( got, expected );
+
+}
+
+//
+
 function strIsolateLeftOrNone( test )
 {
   var got, expected;
@@ -2013,6 +2024,20 @@ function strIsolateLeftOrNone( test )
   test.identical( got, expected );
 
   test.close( 'abababa with regexp' )
+
+  /* - */
+
+  test.open( 'quoting' )
+
+  got = _.strIsolateLeftOrNone( 'a b c d', ' ' );
+  expected = [ 'a', ' ', 'b c d' ];
+  test.identical( got, expected );
+
+  got = _.strIsolateLeftOrNone( '"a b" c d', ' ' );
+  expected = [ 'a', ' ', 'b c d' ];
+  test.identical( got, expected );
+
+  test.close( 'quoting' )
 
   /* - */
 
@@ -3872,6 +3897,8 @@ var Self =
 
     strShort,
     strPrimitive,
+
+    strQuotedRanges,
 
     strIsolateLeftOrNone,
     strIsolateLeftOrAll,
