@@ -4166,12 +4166,12 @@ function peerModuleFromJunction( junction )
         _.assert
         (
           0
-          , () => 'Probably something wrong because modules should be aware of its peer.'
+          , () => `Probably something wrong because modules should be aware of its peer.`
                 + `\nBut ${module.absoluteName} at ${module.localPath} is not aware`
         );
         logger.error
         (
-            'Probably something wrong because modules should be aware of its peer.'
+            `Probably something wrong because modules should be aware of its peer.`
           , `\nBut ${module.absoluteName} at ${module.localPath} is not aware`
         )
         module.peerModule = module2;
