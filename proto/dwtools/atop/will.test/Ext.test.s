@@ -17866,7 +17866,7 @@ function submodulesDownloadNpm( test )
   })
 
   /* */
-  ~
+  
   a.start( '.submodules.download' )
 
   .then( ( got ) =>
@@ -17935,6 +17935,118 @@ function submodulesDownloadNpm( test )
 
   return a.ready;
 }
+
+submodulesDownloadNpm.timeOut = 300000;
+
+//
+
+function submodulesUpdateNpm( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'submodules-download-npm' );
+  let versions = {}
+  let willFilePath = a.abs( '.will.yml' );
+  
+  /* - */
+
+  a.ready
+  
+  .then( () =>
+  {
+    versions[ 'Tools' ] = _.npm.versionRemoteRetrive( 'npm:///wTools' );
+    versions[ 'Path' ] = _.npm.versionRemoteRetrive( 'npm:///wpathbasic@alpha' );
+    versions[ 'Uri' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wuribasic#0.6.131' );
+    
+    a.reflect();
+    
+    return null;
+  })
+
+  /* */
+  
+  a.start( '.submodules.update' )
+
+  .then( ( got ) =>
+  {
+    test.case = 'download npm modules';
+    
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'Path', 'Path.will.yml', 'Tools', 'Tools.will.yml', 'Uri', 'Uri.will.yml' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 3 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+    test.identical( _.strCount( got.output, 'were updated' ), 1 );
+    test.identical( _.strCount( got.output, '+ 3/3 submodule(s) of module::supermodule were updated' ), 1 );
+    
+    test.identical( _.strCount( got.output, `module::Tools was updated to version ${versions['Tools']}` ), 1 );
+    test.identical( _.strCount( got.output, `module::Path was updated to version ${versions['Path']}` ), 1 );
+    test.identical( _.strCount( got.output, `module::Uri was updated to version ${versions['Uri']}` ), 1 );
+    
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/Tools' ) );
+    test.identical( version, versions[ 'Tools' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/Uri' ) );
+    test.identical( version, versions[ 'Uri' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/Path' ) );
+    test.identical( version, versions[ 'Path' ] )
+    
+    return null;
+  })
+  
+  /*  */
+  
+  .then( ( got ) =>
+  { 
+    let willFile = a.fileProvider.fileRead( willFilePath );
+    willFile = _.strReplace( willFile, '@alpha', '@beta' );
+    willFile = _.strReplace( willFile, '#0.6.131', '#0.6.122' );
+    a.fileProvider.fileWrite( willFilePath, willFile );
+    
+    versions[ 'Path' ] = _.npm.versionRemoteRetrive( 'npm:///wpathbasic@beta' );
+    versions[ 'Uri' ] = '0.6.122'
+    
+    return null;
+  })
+  
+  a.start( '.submodules.update' )
+
+  .then( ( got ) =>
+  { 
+    test.case = 'second run of .submodules.update';
+    
+    test.identical( got.exitCode, 0 );
+
+    var exp = [ 'Path', 'Path.will.yml', 'Tools', 'Tools.will.yml', 'Uri', 'Uri.will.yml' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 6 );
+    test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
+    test.identical( _.strCount( got.output, 'were updated' ), 1 );
+    test.identical( _.strCount( got.output, '+ 2/3 submodule(s) of module::supermodule were updated' ), 1 );
+    
+    test.identical( _.strCount( got.output, `module::Tools was updated version ${versions['Tools']}` ), 0 );
+    test.identical( _.strCount( got.output, `module::Path was updated version ${versions['Path']}` ), 0 );
+    test.identical( _.strCount( got.output, `module::Uri was updated version ${versions['Uri']}` ), 0 );
+    
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/Tools' ) );
+    test.identical( version, versions[ 'Tools' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/Uri' ) );
+    test.identical( version, versions[ 'Uri' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/Path' ) );
+    test.identical( version, versions[ 'Path' ] )
+    
+    return null;
+  })
+
+  return a.ready;
+}
+
+submodulesUpdateNpm.timeOut = 300000;
 
 //
 
@@ -21422,6 +21534,7 @@ var Self =
     submodulesDownloadHierarchyRemote,
     submodulesDownloadHierarchyDuplicate,
     submodulesDownloadNpm,
+    submodulesUpdateNpm,
 
     submodulesUpdateThrowing,
     submodulesAgreeThrowing,
