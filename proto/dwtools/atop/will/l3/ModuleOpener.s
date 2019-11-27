@@ -1409,8 +1409,11 @@ function _repoDownload( o )
     return filesDownload();
   })
   .then( function( arg )
-  {
-
+  { 
+    let vcs = will.vcsToolsFor( opener.repo.remotePath );
+    if( downloading && !o.dry && vcs === _.npm )
+    moduleNpmInit();
+    
     /* qqq : make optimal status updating after module is downloaded */
     if( downloading && !o.dry )
     openersReform();
@@ -1461,7 +1464,7 @@ function _repoDownload( o )
      if( !opener.repo.isRepository )
      throw _.err
      (
-       `Module ${opener.decoratedAbsoluteName} is downloaded, but it's not a git repository.\n`,
+       `Module ${opener.decoratedAbsoluteName} is downloaded, but it's not a git repository or npm module.\n`,
        'Rename/remove path:', _.color.strFormat( opener.downloadPath, 'path' ), 'and try again.'
      );
    }
@@ -1804,6 +1807,33 @@ function _repoDownload( o )
       });
       return arg;
     })
+  }
+  
+  /* */
+  
+  function moduleNpmInit()
+  { 
+    let willFilePath = path.join( path.dir( opener.repo.downloadPath ), opener.aliasName + '.will.yml' );
+    
+    if( fileProvider.fileExists( willFilePath ) )
+    return;
+    
+    let willFile = 
+`
+about :
+
+  name : ${opener.aliasName}
+  
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      step::module.export
+`
+    fileProvider.fileWrite( willFilePath, willFile );
   }
 
   /* */
