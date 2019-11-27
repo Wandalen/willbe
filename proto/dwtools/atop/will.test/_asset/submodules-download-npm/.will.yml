@@ -1,0 +1,23 @@
+submodule :
+  Tools : npm:///wTools
+  Path : npm:///wpathbasic@alpha
+  Uri : npm:///wuribasic#0.6.131
+
+about :
+
+  name : supermodule
+  version : 0.1.0
+
+path :
+
+  in : .
+  out : out
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+      debug : 1
+    steps :
+      - step::submodules.download
