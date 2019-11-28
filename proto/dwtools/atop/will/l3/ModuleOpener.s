@@ -1320,6 +1320,7 @@ function _repoDownload( o )
   let status;
   let ready = _.Consequence().take( null );
   let reflected = Object.create( null );
+  let vcsTool = null;
 
   _.routineOptions( _repoDownload, o );
   _.assert( arguments.length === 1 );
@@ -1410,9 +1411,13 @@ function _repoDownload( o )
   })
   .then( function( arg )
   { 
-    let vcs = will.vcsToolsFor( opener.repo.remotePath );
-    if( downloading && !o.dry && vcs === _.npm )
-    moduleNpmInit();
+    /*
+      create will module for npm module after download
+    */
+   
+    vcsTool = will.vcsToolsFor( opener.repo.remotePath );
+    if( downloading && !o.dry && vcsTool === _.npm )
+    moduleNpmCreate();
     
     /* qqq : make optimal status updating after module is downloaded */
     if( downloading && !o.dry )
@@ -1423,7 +1428,17 @@ function _repoDownload( o )
     */
 
     if( o.opening && !o.dry && downloading )
-    return modulesReopen( 1 );
+    return modulesReopen( 1 )
+    return null;
+  })
+  .then( function( arg )
+  { 
+    /*
+      export npm module after download
+    */
+   
+    if( downloading && !o.dry && vcsTool === _.npm )
+    return opener.openedModule.moduleExport();
     return null;
   })
   .then( function( arg )
@@ -1811,18 +1826,38 @@ function _repoDownload( o )
   
   /* */
   
-  function moduleNpmInit()
+  function moduleNpmCreate()
   { 
     let willFilePath = path.join( path.dir( opener.repo.downloadPath ), opener.aliasName + '.will.yml' );
     
-    if( fileProvider.fileExists( willFilePath ) )
-    return;
+    let packageJsonPath = path.join( opener.repo.downloadPath, 'package.json' );
+    let packageJson = fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+    let includeAny = path.s.dot( packageJson.files );
     
     let willFile = 
 `
 about :
 
   name : ${opener.aliasName}
+  
+path :
+  
+  in : ${opener.aliasName}
+  
+reflector :
+
+  files :
+     src :
+       filePath : path::in
+       maskAll :
+         includeAny : [ ${includeAny.join( ', ' )} ]
+  
+step :
+
+  export :
+    inherit : module.export
+    export : reflector::files
+    tar : 0
   
 build :
 
@@ -1831,7 +1866,7 @@ build :
       default : 1
       export : 1
     steps :
-      step::module.export
+      step::export
 `
     fileProvider.fileWrite( willFilePath, willFile );
   }
