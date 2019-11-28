@@ -18013,7 +18013,7 @@ submodulesDownloadNpm.timeOut = 300000;
 
 //
 
-function submodulesUpdateNpm( test )
+function submodulesDownloadUpdateNpm( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-download-npm' );
@@ -18177,7 +18177,7 @@ function submodulesUpdateNpm( test )
   return a.ready;
 }
 
-submodulesUpdateNpm.timeOut = 300000;
+submodulesDownloadUpdateNpm.timeOut = 300000;
 
 //
 
@@ -21666,7 +21666,7 @@ var Self =
     submodulesDownloadHierarchyRemote,
     submodulesDownloadHierarchyDuplicate,
     submodulesDownloadNpm,
-    submodulesUpdateNpm,
+    submodulesDownloadUpdateNpm,
 
     submodulesUpdateThrowing,
     submodulesAgreeThrowing,
