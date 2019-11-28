@@ -3917,6 +3917,63 @@ reflectSubmodulesWithPluralCriterionEmbeddedExport.timeOut = 300000;
 
 //
 
+function reflectNpmModules( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflect-npm-modules' );
+
+  /* - */
+
+  a.ready
+  
+  .then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  /* */
+  
+  a.start( '.build' )
+
+  .then( ( got ) =>
+  {
+    test.case = 'reflect exported npm modules';
+    
+    test.identical( got.exitCode, 0 );
+
+    var exp = 
+    [
+      '.',
+      './out',
+      './out/wUriBasic.out.will.yml',
+      './proto',
+      './proto/dwtools',
+      './proto/dwtools/Tools.s',
+      './proto/dwtools/abase',
+      './proto/dwtools/abase/l3',
+      './proto/dwtools/abase/l3/PathBasic.s',
+      './proto/dwtools/abase/l4',
+      './proto/dwtools/abase/l4/PathsBasic.s',
+      './proto/dwtools/abase/l4/Uri.s',
+      './proto/dwtools/abase/l5',
+      './proto/dwtools/abase/l5/Uris.s'
+    ]
+    var files = self.find( a.abs( 'out' ) )
+    test.identical( files, exp );
+
+    return null;
+  })
+  
+  /*  */
+
+  return a.ready;
+}
+
+reflectNpmModules.timeOut = 150000;
+
+//
+
 /*
   moduleA exports:
   proto
@@ -21510,6 +21567,7 @@ var Self =
     /* xxx : implement clean tests */
     /* xxx : refactor ** clean */
     // exportAuto, // xxx : later
+    reflectNpmModules,
 
     importPathLocal,
     // importLocalRepo, /* xxx : later */
