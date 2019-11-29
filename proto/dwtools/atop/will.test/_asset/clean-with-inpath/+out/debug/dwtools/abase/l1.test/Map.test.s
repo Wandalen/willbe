@@ -11,6 +11,154 @@ if( typeof module !== 'undefined' )
 var _global = _global_;
 var _ = _global_.wTools;
 
+//--
+// map checker
+//--
+
+function countableIs( test )
+{
+  test.case = 'without argument';
+  var got = _.countableIs();
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'undefined';
+  var got = _.countableIs( undefined );
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'null';
+  var got = _.countableIs( null );
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'false';
+  var got = _.countableIs( false );
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'empty string';
+  var got = _.countableIs( '' );
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'zero';
+  var got = _.countableIs( 0 );
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'NaN';
+  var got = _.countableIs( NaN );
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'a boolean';
+  var got = _.countableIs( true );
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'a number';
+  var got = _.countableIs( 13 );
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'a function';
+  var got = _.countableIs( function() {} );
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'constructor';
+  var Constr = function( x )
+  {
+    this.x = x;
+    return this;
+  }
+  var got = _.countableIs( new Constr( 0 ) );
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'a string';
+  var got = _.countableIs( 'str' );
+  var expected = true;
+  test.identical( got, expected );
+
+  test.case = 'an array';
+  var got = _.countableIs( [] );
+  var expected = true;
+  test.identical( got, expected );
+
+  test.case = 'an unroll';
+  var got = _.countableIs( _.unrollMake( [ 1 ] ) );
+  var expected = true;
+  test.identical( got, expected );
+
+  test.case = 'an argumentsArray';
+  var got = _.countableIs( _.argumentsArrayMake( [ 1 ] ) );
+  var expected = true;
+  test.identical( got, expected );
+
+  test.case = 'BufferRaw';
+  var got = _.countableIs( new BufferRaw( 5 ) );
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'BufferView';
+  var got = _.countableIs( new BufferView( new BufferRaw( 5 ) ) );
+  var expected = false;
+  test.identical( got, expected );
+
+  test.case = 'BufferTyped';
+  var got = _.countableIs( new U8x( 5 ) );
+  var expected = true;
+  test.identical( got, expected );
+
+  if( Config.interpreter === 'njs' )
+  {
+    test.case = 'BufferNode';
+    var got = _.countableIs( BufferNode.alloc( 5 ) );
+    var expected = true;
+    test.identical( got, expected );
+  }
+
+  test.case = 'Set';
+  var got = _.countableIs( new Set( [ 5 ] ) );
+  var expected = true;
+  test.identical( got, expected );
+
+  test.case = 'Map';
+  var got = _.countableIs( new Map( [ [ 1, 2 ] ] ) );
+  var expected = true;
+  test.identical( got, expected );
+
+  test.case = 'pure empty map';
+  var got = _.countableIs( Object.create( null ) );
+  var expected = true;
+  test.identical( got, expected );
+
+  test.case = 'pure map';
+  var src = Object.create( null );
+  src.x = 1;
+  var got = _.countableIs( src );
+  var expected = true;
+  test.identical( got, expected );
+
+  test.case = 'map from pure map';
+  var src = Object.create( Object.create( null ) );
+  var got = _.countableIs( src );
+  var expected = true;
+  test.identical( got, expected );
+
+  test.case = 'an empty object';
+  var got = _.countableIs( {} );
+  var expected = true;
+  test.identical( got, expected );
+
+  test.case = 'an object';
+  var got = _.countableIs( { a : 7, b : 13 } );
+  var expected = true;
+  test.identical( got, expected );
+}
+
 //
 
 function mapIs( test )
@@ -65,11 +213,6 @@ function mapIs( test )
 
   test.case = 'a function';
   var got = _.mapIs( function() {  } );
-  var expected = false;
-  test.identical( got, expected );
-
-  test.case = 'a string';
-  var got = _.mapIs( Object.create( { a : 7 } ) );
   var expected = false;
   test.identical( got, expected );
 
@@ -4069,7 +4212,9 @@ var Self =
   tests :
   {
 
-    // map tester
+    // map checker l0/l3/iMap.s
+
+    countableIs,
 
     mapIs,
 

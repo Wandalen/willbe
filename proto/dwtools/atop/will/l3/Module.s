@@ -1808,7 +1808,7 @@ function _willfilesReadBegin()
   let logger = will.logger;
 
   will._willfilesReadBegin();
-  // module.willfilesReadBeginTime = _.timeNow();
+  // module.willfilesReadBeginTime = _.time.now();
 
   return null;
 }
@@ -1827,7 +1827,7 @@ function _willfilesReadEnd()
   // if( module === module.rootModule && !module.original )
   // {
   //   if( !module.willfilesReadTimeReported )
-  //   logger.log( ' . Read', module.willfilesResolve().length, 'willfile(s) in', _.timeSpent( module.willfilesReadBeginTime ), '\n' );
+  //   logger.log( ' . Read', module.willfilesResolve().length, 'willfile(s) in', _.time.spent( module.willfilesReadBeginTime ), '\n' );
   //   module.willfilesReadTimeReported = 1;
   // }
 
@@ -3369,7 +3369,7 @@ _.assert( defaults.withDisabledModules === 0 );
 //   let logger = will.logger;
 //   let totalNumber = _.mapKeys( module.submoduleMap ).length;
 //   let verifiedNumber = 0;
-//   let time = _.timeNow();
+//   let time = _.time.now();
 //
 //   _.assert( module.preformed > 0  );
 //   _.assert( arguments.length === 1 );
@@ -3393,7 +3393,7 @@ _.assert( defaults.withDisabledModules === 0 );
 //     if( o.asMap )
 //     return { verifiedNumber, totalNumber };
 //
-//     logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.timeSpent( time ) );
+//     logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.time.spent( time ) );
 //     logger.down();
 //     return verifiedNumber === totalNumber;
 //   })
@@ -5816,7 +5816,7 @@ function cleanLog( o )
   let logger = will.logger;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let time = _.timeNow();
+  let time = _.time.now();
 
   o = _.routineOptions( cleanLog, arguments );
 
@@ -5834,7 +5834,7 @@ function cleanLog( o )
   return will.cleanLog( o3 );
 
   // if( !o.spentTime )
-  // o.spentTime = _.timeNow() - time;
+  // o.spentTime = _.time.now() - time;
   //
   // let textualReport = path.groupTextualReport
   // ({
@@ -5869,7 +5869,7 @@ function clean( o )
   o = _.routineOptions( clean, arguments );
 
   if( o.beginTime === null )
-  o.beginTime = _.timeNow();
+  o.beginTime = _.time.now();
 
   let o2 = _.mapOnly( o, module.cleanWhat.defaults );
   o.files = module.cleanWhat( o2 );
@@ -5923,7 +5923,7 @@ function clean( o )
   //
   // }
   //
-  // time = _.timeNow() - time;
+  // time = _.time.now() - time;
   //
   // let o3 = _.mapOnly( o, module.cleanLog.defaults );
   // o3.explanation = ' - Clean deleted ';

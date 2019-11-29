@@ -896,7 +896,7 @@ function _performReloadOutFile()
 
 function perform( frame )
 {
-  let time = _.timeNow();
+  let time = _.time.now();
   let exported = this;
   let inModule = exported.inModule;
   let will = inModule.will;

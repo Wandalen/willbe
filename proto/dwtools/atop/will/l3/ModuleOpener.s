@@ -1309,7 +1309,7 @@ function _repoDownload( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let time = _.timeNow();
+  let time = _.time.now();
   let downloading = null;
   let origin = null;
   let hasLocalChanges = null;
@@ -1858,7 +1858,7 @@ function _repoDownload( o )
         phrase = 'agreed with';
         else if( o.mode === 'download' )
         phrase = 'downloaded';
-        logger.log( ` + ${module.decoratedQualifiedName} will be ${phrase} ${_.color.strFormat( version, 'path' )} in ${_.timeSpent( time )}` );
+        logger.log( ` + ${module.decoratedQualifiedName} will be ${phrase} ${_.color.strFormat( version, 'path' )} in ${_.time.spent( time )}` );
         // logger.log( ' + ' + module.decoratedQualifiedName + ' will be ' + ( o.mode + phrase ) + ' version ' + _.color.strFormat( version, 'path' ) );
       }
       else
@@ -1872,7 +1872,7 @@ function _repoDownload( o )
         phrase = 'was agreed with version';
         else if( o.mode === 'download' )
         phrase = 'was downloaded version';
-        logger.log( ` + ${module.decoratedQualifiedName} ${phrase} ${_.color.strFormat( version, 'path' )} in ${_.timeSpent( time )}` );
+        logger.log( ` + ${module.decoratedQualifiedName} ${phrase} ${_.color.strFormat( version, 'path' )} in ${_.time.spent( time )}` );
       }
     }
   }

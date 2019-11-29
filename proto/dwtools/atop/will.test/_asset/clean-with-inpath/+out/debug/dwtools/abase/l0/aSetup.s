@@ -5,103 +5,55 @@
 let _global = _global_;
 let _realGlobal = _global._realGlobal_
 let _ = _global.wTools;
-let Self = _global.wTools;;
+let Self = _global.wTools.setup = _global.wTools.setup || Object.create( null );
 
 // --
 // setup
 // --
 
-function _setupUnhandledErrorHandler0()
+function _errUnhandledHandler1()
 {
 
-  if( _global._setupUnhandledErrorHandlerDone )
-  return;
+  let args = _.setup._errUnhandledPre( arguments );
+  let result = _.setup._errUnhandledHandler2.apply( this, args );
 
-  _global._setupUnhandledErrorHandlerDone = 1;
+  if( _.setup._errUnhandledHandler0 )
+  _.setup._errUnhandledHandler0.apply( this, arguments );
 
-  let handlerWas = null;
-  if( _global.process && typeof _global.process.on === 'function' )
+  return result;
+}
+
+//
+
+function _errUnhandledHandler2( err, kind )
+{
+  if( !kind )
+  kind = 'unhandled error';
+  let prefix = `--------------- ${kind} --------------->\n`;
+  let postfix = `--------------- ${kind} ---------------<\n`;
+  let errStr = err.toString();
+
+  try
   {
-    handlerWas = _global.process.onUncaughtException;
-    _global.process.on( 'uncaughtException', handleNodeError );
-    Self._handleUnhandledError0 = handleNodeError;
-    if( handlerWas )
-    throw Error( 'not tested' );
+    errStr = err.toString();
   }
-  else if( Object.hasOwnProperty.call( _global, 'onerror' ) )
+  catch( err2 )
   {
-    handlerWas = _global.onerror;
-    _global.onerror = handleBrowserError;
-    Self._handleUnhandledError0 = handleBrowserError;
-  }
-
-  /* */
-
-  function handleBrowserError( message, sourcePath, lineno, colno, error )
-  {
-    let result;
-
-    if( Self._handleUnhandledError1 )
-    result = Self._handleUnhandledError1.apply( this, arguments );
-    else
-    result = handleError( new Error( message ) );
-
-    if( handlerWas )
-    handlerWas.apply( this, arguments );
-
-    return result;
-  }
-
-  /* */
-
-  function handleNodeError( err )
-  {
-    let result;
-
-    if( Self._handleUnhandledError1 )
-    result = Self._handleUnhandledError1.apply( this, arguments );
-    else
-    result = handleError( err );
-
-    if( handlerWas )
-    handlerWas.apply( this, arguments );
-
-    if( _appExitError )
-    _appExitError( -1 );
-
-    if( Self._handleUnhandledError1 )
-    return result;
-  }
-
-  /* */
-
-  function handleError( err )
-  {
-    let prefix = '------------------------------- unhandled error ------------------------------->\n';
-    let postfix = '------------------------------- unhandled error -------------------------------<\n';
-    let errStr = err.toString();
-
-    try
-    {
-      errStr = err.toString();
-    }
-    catch( err2 )
-    {
-      debugger;
-      console.error( err2 );
-    }
-
-    console.error( prefix );
-    console.error( errStr );
-    console.error( err ? err.stack : '' );
-    console.error( postfix );
     debugger;
-
+    console.error( err2 );
   }
+
+  console.error( prefix );
+  console.error( errStr );
+  console.error( err ? err.stack : '' );
+  console.error( postfix );
+  debugger;
+
+  processExit();
 
   /* */
 
-  function _appExitError()
+  function processExit()
   {
     try
     {
@@ -120,10 +72,51 @@ function _setupUnhandledErrorHandler0()
 
 //
 
-function _setup0()
+function _setupUnhandledErrorHandler0()
 {
 
-  _setupUnhandledErrorHandler0();
+  if( _global._setupUnhandledErrorHandlerDone )
+  return;
+
+  _global._setupUnhandledErrorHandlerDone = 1;
+
+  _.setup._errUnhandledHandler1 = _errUnhandledHandler1;
+  if( _global.process && typeof _global.process.on === 'function' )
+  {
+    _global.process.on( 'uncaughtException', _.setup._errUnhandledHandler1 );
+    _.setup._errUnhandledPre = _errPreNode;
+  }
+  else if( Object.hasOwnProperty.call( _global, 'onerror' ) )
+  {
+    _.setup._errUnhandledHandler0 = _global.onerror;
+    _global.onerror = _.setup._errUnhandledHandler1;
+    _.setup._errUnhandledPre = _errPreBrowser;
+  }
+
+  /* */
+
+  function _errPreBrowser( args )
+  {
+    return [ new Error( args[ 0 ] ) ];
+  }
+
+  /* */
+
+  function _errPreNode( args )
+  {
+    return args;
+  }
+
+  /* */
+
+}
+
+//
+
+function _setup2()
+{
+
+  _.setup._setupUnhandledErrorHandler0();
 
 }
 
@@ -141,17 +134,19 @@ let Fields =
 let Routines =
 {
 
-  _handleUnhandledError0 : null,
-  _handleUnhandledError1 : null,
+  _errUnhandledPre : null,
+  _errUnhandledHandler0 : null,
+  _errUnhandledHandler1,
+  _errUnhandledHandler2,
   _setupUnhandledErrorHandler0,
-  _setup0,
+  _setup2,
 
 }
 
 Object.assign( Self, Fields );
 Object.assign( Self, Routines );
 
-Self._setup0();
+Self._setup2();
 
 // --
 // export

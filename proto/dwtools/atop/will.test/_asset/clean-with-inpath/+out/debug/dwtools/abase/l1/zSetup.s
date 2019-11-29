@@ -4,11 +4,137 @@
 
 let _global = _global_;
 let _ = _global.wTools;
-let Self = _global.wTools;
+let Self = _global.wTools.setup = _global.wTools.setup || Object.create( null );
 
 // --
 // setup
 // --
+
+function _errUnhandledHandler2( err, kind )
+{
+  if( !kind )
+  kind = 'unhandled error';
+  let prefix = `--------------- ${kind} --------------->\n`;
+  let postfix = `--------------- ${kind} ---------------<\n`;
+  let logger = _global.logger || _global.console;
+
+  /* */
+
+  consoleUnbar();
+  attend( err );
+
+  console.error( prefix );
+
+  errLogFields();
+  errLog();
+
+  console.error( postfix );
+
+  processExit();
+
+  /* */
+
+  function consoleUnbar()
+  {
+    try
+    {
+      if( _.Logger && _.Logger.ConsoleBar && _.Logger.ConsoleIsBarred( console ) )
+      _.Logger.ConsoleBar({ on : 0 });
+    }
+    catch( err2 )
+    {
+      debugger;
+      console.error( err2 );
+    }
+  }
+
+  /* */
+
+  function errLog()
+  {
+    try
+    {
+      err = _.errProcess( err );
+      if( _.errLog )
+      _.errLog( err );
+      else
+      console.error( err );
+    }
+    catch( err2 )
+    {
+      debugger;
+      console.error( err2 );
+      console.error( err );
+    }
+  }
+
+  /* */
+
+  function errLogFields()
+  {
+    if( !err.originalMessage && _.objectLike && _.objectLike( err ) )
+    try
+    {
+      let serr = _.toStr && _.field ? _.toStr.fields( err, { errorAsMap : 1 } ) : err;
+      console.error( serr );
+    }
+    catch( err2 )
+    {
+      debugger;
+      console.error( err2 );
+    }
+  }
+
+  /* */
+
+  function attend( err )
+  {
+    try
+    {
+      _.errProcess( err );
+      if( _.errIsAttended( err ) )
+      return
+    }
+    catch( err2 )
+    {
+      debugger;
+      console.error( err2 );
+    }
+  }
+
+  /* */
+
+  function processExit()
+  {
+    if( _.process && _.process.exit )
+    try
+    {
+      _.process.exitCode( -1 );
+      _.process.exitReason( err );
+      _.process.exit();
+    }
+    catch( err2 )
+    {
+      debugger;
+      console.log( err2 );
+    }
+    else
+    try
+    {
+      if( _global.process )
+      {
+        if( !process.exitCode )
+        process.exitCode = -1;
+      }
+    }
+    catch( err )
+    {
+    }
+  }
+
+}
+
+//
 
 function _setupUnhandledErrorHandler1()
 {
@@ -28,19 +154,20 @@ function _setupUnhandledErrorHandler1()
 
   if( _global.process && _.routineIs( _global.process.on ) )
   {
-    Self._handleUnhandledError1 = handleNodeError;
+    _.setup._errUnhandledPre = _errPreNode;
   }
-  else if( Object.hasOwnProperty.call( _global,'onerror' ) )
+  else if( Object.hasOwnProperty.call( _global, 'onerror' ) )
   {
-    Self._handleUnhandledError1 = handleBrowserError;
+    _.setup._errUnhandledPre = _errPreBrowser;
   }
 
   /* */
 
-  function handleBrowserError( message, sourcePath, lineno, colno, error )
+  function _errPreBrowser( args )
   {
+    let message, sourcePath, lineno, colno, error = args;
+    let err = error || message;
 
-    let err = error;
     if( _._err )
     err = _._err
     ({
@@ -55,98 +182,17 @@ function _setupUnhandledErrorHandler1()
       },
     });
 
-    return handleError( err );
+    return [ err ];
   }
 
   /* */
 
-  function handleNodeError( err )
+  function _errPreNode( args )
   {
-    return handleError( err );
+    return [ args[ 0 ] ];
   }
 
   /* */
-
-  function handleError( err )
-  {
-    let prefix = '------------------------------- unhandled error ------------------------------->\n';
-    let postfix = '------------------------------- unhandled error -------------------------------<\n';
-
-    /* */
-
-    try
-    {
-      if( _.errIsAttended( err ) )
-      return
-    }
-    catch( err2 )
-    {
-      debugger;
-      console.error( err2 );
-    }
-
-    /* */
-
-    if( _.process && _.process.exitCode )
-    try
-    {
-      _.process.exitCode( -1 )
-    }
-    catch( err2 )
-    {
-      debugger;
-      console.log( err2 );
-    }
-
-    /* */
-
-    console.error( prefix );
-
-    /* */
-
-    try
-    {
-      console.error( ' * Application' );
-      console.error( _.diagnosticApplicationEntryPointInfo() + '\n' );
-    }
-    catch( err2 )
-    {
-      debugger;
-      console.error( err2 );
-    }
-
-    /* */
-
-    if( !err.originalMessage && _.objectLike && _.objectLike( err ) )
-    try
-    {
-      let serr = _.toStr && _.field ? _.toStr.fields( err,{ errorAsMap : 1 } ) : err;
-      console.error( err );
-    }
-    catch( err2 )
-    {
-      debugger;
-      console.error( err2 );
-    }
-
-    try
-    {
-      if( _.errLog )
-      _.errLog( err );
-      else
-      console.error( err );
-    }
-    catch( err2 )
-    {
-      debugger;
-      console.error( err2 );
-      console.error( err );
-    }
-
-    console.error( postfix );
-    debugger;
-
-  }
 
 }
 
@@ -154,9 +200,6 @@ function _setupUnhandledErrorHandler1()
 
 function _setupConfig()
 {
-
-  // if( _global.WTOOLS_PRIVATE )
-  // return;
 
   if( _global.__GLOBAL_WHICH__ !== 'real' )
   return;
@@ -240,7 +283,7 @@ function _setupTesterPlaceholder()
       _.assert( arguments.length === 0 || arguments.length === 1 );
       _.assert( _.strIs( testSuitName ) || testSuitName === undefined, 'test : expects string {-testSuitName-}' );
       debugger;
-      _.timeReady( function()
+      _.time.ready( function()
       {
         debugger;
         if( _realGlobal_.wTester.test === test )
@@ -254,22 +297,48 @@ function _setupTesterPlaceholder()
 
 //
 
-function _setup1()
+function _setupProcedure()
 {
 
-  Self._sourcePath = _.diagnosticStack([ 1, Infinity ]);
+  if( _realGlobal_ !== _global && _realGlobal_.wTools && _realGlobal_.wTools.setup && _realGlobal_.wTools.setup._entryProcedureStack )
+  Self._entryProcedureStack =  _realGlobal_.wTools.setup._entryProcedureStack;
+
+  if( Self._entryProcedureStack )
+  return;
+
+  let stack = _.diagnosticStack().split( '\n' );
+  for( let s = stack.length-1 ; s >= 0 ; s-- )
+  {
+    let call = stack[ s ];
+    let location = _.diagnosticLocationFromCall( call );
+    if( !location.isInternal )
+    {
+      stack.splice( s+1, stack.length );
+      stack.splice( 0, s );
+      break;
+    }
+  }
+
+  Self._entryProcedureStack = stack.join( '\n' );
+}
+
+//
+
+function _setup9()
+{
 
   _.assert( _global._WTOOLS_SETUP_EXPECTED_ !== false );
 
   if( _global._WTOOLS_SETUP_EXPECTED_ !== false )
   {
-    _._setupConfig();
-    _._setupUnhandledErrorHandler1();
-    _._setupLoggerPlaceholder();
-    _._setupTesterPlaceholder();
+    _.setup._setupConfig();
+    _.setup._setupUnhandledErrorHandler1();
+    _.setup._setupLoggerPlaceholder();
+    _.setup._setupTesterPlaceholder();
+    _.setup._setupProcedure();
   }
 
-  _.assert( !!Self.timeNow );
+  _.assert( !!_.time && !!_.time.now );
 
 }
 
@@ -277,22 +346,32 @@ function _setup1()
 // routines
 // --
 
+let Fields =
+{
+
+  _entryProcedureStack : null,
+
+}
+
 let Routines =
 {
 
+  _errUnhandledHandler2,
   _setupUnhandledErrorHandler1,
 
   _setupConfig,
   _setupLoggerPlaceholder,
   _setupTesterPlaceholder,
+  _setupProcedure,
 
-  _setup1,
+  _setup9,
 
 }
 
-Object.assign( Self,Routines );
+Object.assign( Self, Fields );
+Object.assign( Self, Routines );
 
-Self._setup1();
+Self._setup9();
 
 // --
 // export

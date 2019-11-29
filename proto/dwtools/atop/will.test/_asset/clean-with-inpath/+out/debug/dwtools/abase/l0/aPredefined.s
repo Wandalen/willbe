@@ -32,13 +32,13 @@ _global._global_ = _wasGlobal;
 if( _global_.__GLOBAL_WHICH__ === 'real' )
 {
 
-  if( _global_.wBase )
-  {
-    if( _global_.wTools.usePath )
-    _global_.wTools.usePath( __dirname + '/../..' ); /* xxx : remove later */
-    module[ 'exports' ] = _global_.wBase;
-    return;
-  }
+  // if( _global_.wBase )
+  // {
+  //   if( _global_.wTools.usePath )
+  //   _global_.wTools.usePath( __dirname + '/../..' ); /* xxx : remove later */
+  //   module[ 'exports' ] = _global_.wBase;
+  //   return;
+  // }
 
   if( _global_.wBase )
   {
@@ -88,14 +88,14 @@ throw Error( 'wTools was already defined' );
 
 //
 
-_global.wTools = Object.create( null );
+_global.wTools = Object.hasOwnProperty.call( _global, 'wTools' ) ? _global.wTools : Object.create( null );
 _realGlobal_.wTools = _realGlobal_.wTools || Object.create( null );
 let Self = _global.wTools;
 let _ = Self;
 
 Self.__GLOBAL_WHICH__ = _global.__GLOBAL_WHICH__;
 
-// special globals
+// special tokens
 
 Self.def = Symbol.for( 'def' );
 Self.nothing = Symbol.for( 'nothing' );

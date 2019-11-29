@@ -6203,7 +6203,7 @@ function strSplit( test )
     preservingQuoting : 0,
     inliningQuoting : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:', ' ', '', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6220,7 +6220,7 @@ function strSplit( test )
     preservingQuoting : 1,
     inliningQuoting : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:', '" "', '', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6237,7 +6237,7 @@ function strSplit( test )
     preservingQuoting : 0,
     inliningQuoting : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter: ', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6254,7 +6254,7 @@ function strSplit( test )
     preservingQuoting : 1,
     inliningQuoting : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6269,7 +6269,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
@@ -6284,7 +6284,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6299,7 +6299,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
@@ -6314,7 +6314,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6329,7 +6329,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
@@ -6344,7 +6344,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6360,7 +6360,7 @@ function strSplit( test )
     preservingDelimeters : 1,
     preservingQuoting : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6375,7 +6375,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
@@ -6390,7 +6390,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
@@ -6405,7 +6405,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '/', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
@@ -6420,7 +6420,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
@@ -6435,7 +6435,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '/', '', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
@@ -6450,7 +6450,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
@@ -6465,7 +6465,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '/', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
@@ -6480,7 +6480,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
@@ -6495,7 +6495,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '/', '', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
@@ -6522,7 +6522,7 @@ function strSplit( test )
     preservingQuoting : 1,
     inliningQuoting : 1,
     delimeter : [ '\n' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ '', '= Org', '', '- Q: "Where?"', '- A1: "Here."', '', '- A2: "There."', '' ];
@@ -6539,7 +6539,7 @@ function strSplit( test )
     preservingQuoting : 1,
     inliningQuoting : 0,
     delimeter : [ '\n' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ '', '= Org', '', '- Q:', '"Where?"', '', '- A1:', '"Here."', '', '', '- A2:', '"There."', '', '' ];
@@ -6556,7 +6556,7 @@ function strSplit( test )
     preservingQuoting : 0,
     inliningQuoting : 1,
     delimeter : [ '\n' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ '', '= Org', '', '- Q: Where?', '- A1: Here.', '', '- A2: There.', '' ];
@@ -6573,7 +6573,7 @@ function strSplit( test )
     preservingQuoting : 0,
     inliningQuoting : 0,
     delimeter : [ '\n' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ '', '= Org', '', '- Q:', 'Where?', '', '- A1:', 'Here.', '', '', '- A2:', 'There.', '', '' ];
@@ -6954,49 +6954,66 @@ function strSplitCamel( test )
 // extractor
 //--
 
-function strSub( test )
+function strOnly( test )
 {
 
   test.case = 'simple string - get all';
-  var got = _.strSub( 'Hello', [ 0, 5 ] );
+  var got = _.strOnly( 'Hello', [ 0, 5 ] );
   var expected = 'Hello';
   test.identical( got, expected );
 
   test.case = 'simple string - range bigger than length';
-  var got = _.strSub( 'Hello', [ 0, 8 ] );
+  var got = _.strOnly( 'Hello', [ 0, 8 ] );
   var expected = 'Hello';
   test.identical( got, expected );
 
   test.case = 'simple string - get subString';
-  var got = _.strSub( 'Hello', [ 0, 4 ] );
+  var got = _.strOnly( 'Hello', [ 0, 4 ] );
   var expected = 'Hell';
   test.identical( got, expected );
 
   test.case = 'simple string - get end of string';
-  var got = _.strSub( 'Hello', [ 3, 5 ] );
+  var got = _.strOnly( 'Hello', [ 3, 5 ] );
   var expected = 'lo';
   test.identical( got, expected );
 
   test.case = 'simple string - range reversed';
-  var got = _.strSub( 'Hello', [ 4, 0 ] );
+  var got = _.strOnly( 'Hello', [ 4, 0 ] );
   var expected = 'Hell';
   test.identical( got, expected );
 
   test.case = 'simple string - range in the middle of the string';
-  var got = _.strSub( 'Hello', [ 2, 3 ] );
+  var got = _.strOnly( 'Hello', [ 2, 3 ] );
   var expected = 'l';
   test.identical( got, expected );
 
   test.case = 'empty string';
-  var got = _.strSub( '', [ 2, 3 ] );
+  var got = _.strOnly( '', [ 2, 3 ] );
   var expected = '';
   test.identical( got, expected );
 
   test.case = 'Input array';
-  var got = _.strSub( [ 'Hello', 'World'], [ 3, 4 ] );
+  var got = _.strOnly( [ 'Hello', 'World'], [ 3, 4 ] );
   var expected = [ 'l', 'l' ];
   test.identical( got, expected );
 
+  test.case = 'second argument is number';
+  var src = 'a\nb\nc';
+  var got = _.strOnly( src, 0 );
+  var expected = 'a';
+  test.identical( got, expected );
+
+  test.case = 'second argument is number';
+  var src = 'a\nb\nc';
+  var got = _.strOnly( src, 1 );
+  var expected = '\n';
+  test.identical( got, expected );
+
+  test.case = 'second argument is number';
+  var src = 'a\nb\nc';
+  var got = _.strOnly( src, -1 );
+  var expected = 'c';
+  test.identical( got, expected );
 
   /**/
 
@@ -7006,103 +7023,103 @@ function strSub( test )
   test.case = 'no arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub();
+    _.strOnly();
   });
 
   test.case = 'Too many arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( '1', '2', '3' );
+    _.strOnly( '1', '2', '3' );
   });
 
   test.case = 'Too many ranges';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( 'Hello world', [ 0, 1 ], [ 2, 3 ] );
+    _.strOnly( 'Hello world', [ 0, 1 ], [ 2, 3 ] );
   });
 
   test.case = 'Not enough arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( '1' );
+    _.strOnly( '1' );
   });
 
   test.case = 'invalid argument type';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( 123, [ 0, 1 ] );
+    _.strOnly( 123, [ 0, 1 ] );
   });
 
   test.case = 'null argument';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( null, [ 0, 1 ] );
+    _.strOnly( null, [ 0, 1 ] );
   });
 
   test.case = 'NaN argument';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( NaN, [ 0, 1 ] );
+    _.strOnly( NaN, [ 0, 1 ] );
   });
 
   test.case = 'Regexp argument';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( /a?$/, [ 0, 1 ] );
+    _.strOnly( /a?$/, [ 0, 1 ] );
   });
 
-  test.case = 'invalid argument range';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( 'hi ', 123 );
-  });
+  // test.case = 'invalid argument range';
+  // test.shouldThrowErrorSync( function()
+  // {
+  //   _.strOnly( 'hi ', 123 );
+  // });
 
   test.case = 'null range';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( 'good morning', null );
+    _.strOnly( 'good morning', null );
   });
 
   test.case = 'NaN range';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( 'good afternoon', NaN );
+    _.strOnly( 'good afternoon', NaN );
   });
 
   test.case = 'Regexp range';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( 'good night', /a?$/ );
+    _.strOnly( 'good night', /a?$/ );
   });
 
   test.case = 'Array with wrong arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( [ null, NaN, 3, /a?$/ ], [ 0, 1 ] );
+    _.strOnly( [ null, NaN, 3, /a?$/ ], [ 0, 1 ] );
   });
 
   test.case = 'Range array with wrong arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( [ 'Hello', 'world' ], [ null, NaN ] );
+    _.strOnly( [ 'Hello', 'world' ], [ null, NaN ] );
   });
 
   test.case = 'Range array empty';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( [ 'Hello', 'world' ], [ ] );
+    _.strOnly( [ 'Hello', 'world' ], [ ] );
   });
 
   test.case = 'Range array with not enough arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( [ 'Hello', 'world' ], [ 2 ] );
+    _.strOnly( [ 'Hello', 'world' ], [ 2 ] );
   });
 
   test.case = 'Range array with too many arguments';
   test.shouldThrowErrorSync( function()
   {
-    _.strSub( [ 'Hello', 'world' ], [ 2, 3, 4 ] );
+    _.strOnly( [ 'Hello', 'world' ], [ 2, 3, 4 ] );
   });
 
 }
@@ -7150,7 +7167,7 @@ function strExtractInlined( test )
 
   test.case = 'trivial case';
   var srcStr = 'this #background:red#is#background:default# text and is not';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, onInlined,  });
   var expected =
   [
     'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and is not'
@@ -7161,7 +7178,7 @@ function strExtractInlined( test )
 
   test.case = 'openning delimeter # does not have closing';
   var srcStr = 'this #background:red#is#background:default# text and # is not';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, onInlined,  });
   var expected =
   [
     'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not'
@@ -7172,7 +7189,7 @@ function strExtractInlined( test )
 
   test.case = 'two inlined substrings is not in fact inlined';
   var srcStr = '#simple # text #background:red#is#background:default# text and # is not#';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, onInlined,  });
   var expected =
   [
     '#simple # text ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not#'
@@ -7183,7 +7200,7 @@ function strExtractInlined( test )
 
   test.case = 'inlined at the beginning and false inlined';
   var srcStr = '#background:red#i#s#background:default##text';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, onInlined,  });
   var expected =
   [
     '', [ 'background', 'red' ], 'i#s', [ 'background', 'default' ], '#text'
@@ -7194,7 +7211,7 @@ function strExtractInlined( test )
 
   test.case = 'inlined at the beginning and the end';
   var srcStr = '#background:red#i#s#background:default#';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, onInlined,  });
   var expected =
   [
     '', [ 'background', 'red' ], 'i#s', [ 'background', 'default' ], ''
@@ -7205,7 +7222,7 @@ function strExtractInlined( test )
 
   test.case = 'inlined at the beginning and the end with preservingEmpty:0';
   var srcStr = '#background:red#i#s#background:default#';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined, preservingEmpty : 0 });
+  var got = _.strExtractInlined({ src : srcStr, onInlined, preservingEmpty : 0 });
   var expected =
   [
     [ 'background', 'red' ], 'i#s', [ 'background', 'default' ],
@@ -7216,7 +7233,7 @@ function strExtractInlined( test )
 
   test.case = 'wrapped by inlined text';
   var srcStr = '#background:red#text#background:default#';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  } );
+  var got = _.strExtractInlined({ src : srcStr, onInlined,  } );
   var expected =
   [
     '', [ 'background', 'red' ], 'text', [ 'background', 'default' ], '',
@@ -8961,7 +8978,7 @@ function strLinesSelect( test )
 
   /**/
 
-  got = _.strLinesSelect({ /*ttt*/src, range : [ 2, 5 ], zero : 4 });
+  got = _.strLinesSelect({ src, range : [ 2, 5 ], zeroLine : 4 });
   expected = 'a';
   test.identical( got, expected );
 
@@ -8973,11 +8990,11 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 2,
     numberOfLines : 3,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
   expected = 'a\nb\nc';
   test.identical( got, expected );
@@ -8986,11 +9003,11 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 3,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
   expected = 'a\nb';
   test.identical( got, expected );
@@ -8999,11 +9016,11 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 1,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
   expected = 'a';
   test.identical( got, expected );
@@ -9012,11 +9029,11 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 99,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
   expected = src;
   test.identical( got, expected );
@@ -9026,11 +9043,11 @@ function strLinesSelect( test )
   var src = 'a\nb\nc\nd';
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : -1,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
   expected = '';
   test.identical( got, expected );
@@ -9039,11 +9056,11 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 0,
     numberOfLines : 1,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
   expected = '';
   test.identical( got, expected );
@@ -9054,7 +9071,7 @@ function strLinesSelect( test )
     line : 1,
     numberOfLines : 1,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
   expected = '';
   test.identical( got, expected );
@@ -9067,11 +9084,11 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 2,
     selectMode : 'begin',
-    zero : 1
+    zeroLine : 1
   });
   expected = 'a\nb';
   test.identical( got, expected );
@@ -9080,11 +9097,11 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : -1,
     numberOfLines : 2,
     selectMode : 'begin',
-    zero : 1
+    zeroLine : 1
   });
   expected = '';
   test.identical( got, expected );
@@ -9093,11 +9110,11 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 0,
     selectMode : 'begin',
-    zero : 1
+    zeroLine : 1
   });
   expected = '';
   test.identical( got, expected );
@@ -9106,24 +9123,24 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 99,
     selectMode : 'begin',
-    zero : 1
+    zeroLine : 1
   });
   expected = src;
   test.identical( got, expected );
 
-  /* zero > range[ 0 ] */
+  /* zeroLine > range[ 0 ] */
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 5,
     selectMode : 'begin',
-    zero : 2
+    zeroLine : 2
   });
   expected = src;
   test.identical( got, expected );
@@ -9136,7 +9153,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 4,
     numberOfLines : 2,
     selectMode : 'end'
@@ -9148,7 +9165,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : -1,
     numberOfLines : 2,
     selectMode : 'end'
@@ -9160,7 +9177,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 0,
     selectMode : 'end'
@@ -9172,7 +9189,7 @@ function strLinesSelect( test )
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 99,
     selectMode : 'end'
@@ -9180,15 +9197,15 @@ function strLinesSelect( test )
   expected = 'a';
   test.identical( got, expected );
 
-  /* zero > range[ 0 ] */
+  /* zeroLine > range[ 0 ] */
 
   got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 5,
     selectMode : 'end',
-    zero : 2
+    zeroLine : 2
   });
   expected = '';
   test.identical( got, expected );
@@ -9224,15 +9241,15 @@ function strLinesSelect( test )
 
   test.case = 'number'
 
-  /**/
+  /* */
 
-  got = _.strLinesSelect
+  var expected = ' 1 : a\n*2 : b';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     range : [ 1, 3 ],
-    number : 1
+    numbering : 1
   });
-  expected = '1 : a\n2 : b';
   test.identical( got, expected );
 
   /* - */
@@ -9270,11 +9287,9 @@ function strLinesSelect( test )
   ipsum dolor`;
   test.identical( got, expected );
 
-
-
   test.case = 'custom new line';
   var src2 ='Lorem||ipsum dolor||sit amet||consectetur'
-  var got = _.strLinesSelect( { src : src2, range : [ 3, 5 ], zero : 1, delimteter : '||' } );
+  var got = _.strLinesSelect( { src : src2, range : [ 3, 5 ], zeroLine : 1, delimteter : '||' } );
   var expected = `sit amet||consectetur`;
   test.identical( got, expected );
 
@@ -9354,7 +9369,7 @@ ghij
   test.open( 'numberOfLines : 0' );
 
   var crange = 6;
-  var sub = _.strSub( srcStr, [ crange, crange + 1 ] );
+  var sub = _.strOnly( srcStr, [ crange, crange + 1 ] );
 
   var expectedSplits =
   [
@@ -9374,7 +9389,7 @@ ghij
   test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
+  test.will = 'check strOnly';
   test.identical( sub, 'd' );
 
   test.close( 'numberOfLines : 0' );
@@ -9581,7 +9596,7 @@ ghij
   test.open( 'numberOfLines : 0' );
 
   var crange = [ 6,9 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
 
   var expectedSplits =
   [
@@ -9601,7 +9616,7 @@ ghij
   test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
+  test.will = 'check strOnly';
   test.identical( sub, 'def' );
 
   test.close( 'numberOfLines : 0' );
@@ -9611,7 +9626,7 @@ ghij
   test.open( 'numberOfLines : 1' );
 
   var crange = [ 6,9 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
 
   var expectedSplits =
   [
@@ -9631,7 +9646,7 @@ ghij
   test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
+  test.will = 'check strOnly';
   test.identical( sub, 'def' );
 
   test.close( 'numberOfLines : 1' );
@@ -9641,7 +9656,7 @@ ghij
   test.open( 'numberOfLines : 2' );
 
   var crange = [ 6,9 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
 
   var expectedSplits =
   [
@@ -9661,7 +9676,7 @@ ghij
   test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
+  test.will = 'check strOnly';
   test.identical( sub, 'def' );
 
   test.close( 'numberOfLines : 2' );
@@ -9671,7 +9686,7 @@ ghij
   test.open( 'numberOfLines : 3' );
 
   var crange = [ 6,9 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
 
   var expectedSplits =
   [
@@ -9691,7 +9706,7 @@ ghij
   test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
+  test.will = 'check strOnly';
   test.identical( sub, 'def' );
 
   test.close( 'numberOfLines : 3' );
@@ -9701,7 +9716,7 @@ ghij
   test.open( 'numberOfLines : 4' );
 
   var crange = [ 6,9 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
 
   var expectedSplits =
   [
@@ -9721,7 +9736,7 @@ ghij
   test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
+  test.will = 'check strOnly';
   test.identical( sub, 'def' );
 
   test.close( 'numberOfLines : 4' );
@@ -9739,7 +9754,7 @@ ghij
   test.open( 'numberOfLines : 0' );
 
   var crange = [ 4,11 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
 
   var expectedSplits =
   [
@@ -9759,7 +9774,7 @@ ghij
   test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
+  test.will = 'check strOnly';
   test.identical( sub, 'c\ndef\ng' );
 
   test.close( 'numberOfLines : 0' );
@@ -9769,7 +9784,7 @@ ghij
   test.open( 'numberOfLines : 1' );
 
   var crange = [ 4,11 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
 
   var expectedSplits =
   [
@@ -9789,7 +9804,7 @@ ghij
   test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
+  test.will = 'check strOnly';
   test.identical( sub, 'c\ndef\ng' );
 
   test.close( 'numberOfLines : 1' );
@@ -9799,7 +9814,7 @@ ghij
   test.open( 'numberOfLines : 2' );
 
   var crange = [ 4,11 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
 
   var expectedSplits =
   [
@@ -9819,7 +9834,7 @@ ghij
   test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
+  test.will = 'check strOnly';
   test.identical( sub, 'c\ndef\ng' );
 
   test.close( 'numberOfLines : 2' );
@@ -9829,7 +9844,7 @@ ghij
   test.open( 'numberOfLines : 3' );
 
   var crange = [ 4,11 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
 
   var expectedSplits =
   [
@@ -9849,7 +9864,7 @@ ghij
   test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
+  test.will = 'check strOnly';
   test.identical( sub, 'c\ndef\ng' );
 
   test.close( 'numberOfLines : 3' );
@@ -9859,7 +9874,7 @@ ghij
   test.open( 'numberOfLines : 4' );
 
   var crange = [ 4,11 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
 
   var expectedSplits =
   [
@@ -9879,7 +9894,7 @@ ghij
   test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
+  test.will = 'check strOnly';
   test.identical( sub, 'c\ndef\ng' );
 
   test.close( 'numberOfLines : 4' );
@@ -10107,7 +10122,7 @@ ghij
   test.case = 'single line in the middle'; /* */
 
   var crange = [ 3,5 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 2,3 ] );
   test.identical( sub, 'bc' );
@@ -10115,7 +10130,7 @@ ghij
   test.case = 'line in the middle with NL'; /* */
 
   var crange = [ 3,6 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 2,4 ] );
   test.identical( sub, 'bc\n' );
@@ -10123,7 +10138,7 @@ ghij
   test.case = 'single line in the beginning'; /* */
 
   var crange = [ 1,2 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 1,2 ] );
   test.identical( sub, 'a' );
@@ -10131,7 +10146,7 @@ ghij
   test.case = 'line in the beginning with NL'; /* */
 
   var crange = [ 1,3 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 1,3 ] );
   test.identical( sub, 'a\n' );
@@ -10139,7 +10154,7 @@ ghij
   test.case = 'single line in the end'; /* */
 
   var crange = [ 10,14 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 4,5 ] );
   test.identical( sub, 'ghij' );
@@ -10147,7 +10162,7 @@ ghij
   test.case = 'line in the end with NL'; /* */
 
   var crange = [ 10,15 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 4,6 ] );
   test.identical( sub, 'ghij\n' );
@@ -10155,7 +10170,7 @@ ghij
   test.case = 'not aligned range with multiple lines'; /* */
 
   var crange = [ 4,11 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 2,5 ] );
   test.identical( sub, 'c\ndef\ng' );
@@ -10163,7 +10178,7 @@ ghij
   test.case = 'empty line in the beginning'; /* */
 
   var crange = [ 0,0 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 0,1 ] );
   test.identical( sub, '' );
@@ -10171,7 +10186,7 @@ ghij
   test.case = 'empty line in the end'; /* */
 
   var crange = [ 15,15 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 5,6 ] );
   test.identical( sub, '' );
@@ -10192,7 +10207,7 @@ ghij`
   test.case = 'single line in the middle'; /* */
 
   var crange = [ 2,4 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 1,2 ] );
   test.identical( sub, 'bc' );
@@ -10200,7 +10215,7 @@ ghij`
   test.case = 'line in the middle with NL'; /* */
 
   var crange = [ 2,5 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 1,3 ] );
   test.identical( sub, 'bc\n' );
@@ -10208,7 +10223,7 @@ ghij`
   test.case = 'single line in the beginning'; /* */
 
   var crange = [ 0,1 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 0,1 ] );
   test.identical( sub, 'a' );
@@ -10216,7 +10231,7 @@ ghij`
   test.case = 'line in the beginning with NL'; /* */
 
   var crange = [ 0,2 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 0,2 ] );
   test.identical( sub, 'a\n' );
@@ -10224,7 +10239,7 @@ ghij`
   test.case = 'single line in the end'; /* */
 
   var crange = [ 9,13 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 3,4 ] );
   test.identical( sub, 'ghij' );
@@ -10232,7 +10247,7 @@ ghij`
   test.case = 'line in the end with NL'; /* */
 
   var crange = [ 9,14 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 3,4 ] );
   test.identical( sub, 'ghij' );
@@ -10240,7 +10255,7 @@ ghij`
   test.case = 'not aligned range with multiple lines'; /* */
 
   var crange = [ 3,10 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 1,4 ] );
   test.identical( sub, 'c\ndef\ng' );
@@ -10319,7 +10334,7 @@ var Self =
 
     // extractor
 
-    strSub,
+    strOnly,
     strExtractInlined,
     strExtractInlinedStereo,
     strUnjoin,

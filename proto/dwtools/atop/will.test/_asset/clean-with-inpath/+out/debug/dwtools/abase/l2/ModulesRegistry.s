@@ -88,7 +88,7 @@ let wLookerExtra =
 let wArraySorted =
 {
   includeAny : includeAny( 'abase/l4/ArraySorted.s', 'warraysorted' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.sorted },
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.sorted && !!_global.wTools.sorted.lookUp },
 }
 
 let wArraySparse =
@@ -100,7 +100,7 @@ let wArraySparse =
 let wAppBasic =
 {
   includeAny : includeAny( 'abase/l4/ProcessBasic.s', 'wappbasic' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.process },
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.process && !!_global.wTools.process.start },
 }
 
 let wUriBasic =

@@ -28,7 +28,7 @@ let Self = _global_.wTools;
 //
 // //
 //
-// function diagnosticStackRemoveBegin( stack, include, exclude )
+// function diagnosticStackRemoveLeft( stack, include, exclude )
 // {
 //   return stack;
 // }
@@ -498,7 +498,7 @@ function diagnosticStack( stack, range )
 
 //
 
-function diagnosticStackRemoveBegin( stack, include, exclude )
+function diagnosticStackRemoveLeft( stack, include, exclude )
 {
   if( arguments.length !== 3 )
   throw Error( 'Expects two arguments' );
@@ -578,7 +578,7 @@ function errIs( src )
 
 //
 
-function errIsRefined( src )
+function errIsStandard( src )
 {
   if( _.errIs( src ) === false )
   return false;
@@ -889,8 +889,8 @@ function _err( o )
 
     }
 
-    if( ( o.stackRemobeBeginInclude || o.stackRemobeBeginExclude ) && o.stack )
-    o.stack = _.diagnosticStackRemoveBegin( o.stack, o.stackRemobeBeginInclude || null, o.stackRemobeBeginExclude || null );
+    if( ( o.stackRemovingBeginIncluding || o.stackRemovingBeginExcluding ) && o.stack )
+    o.stack = _.diagnosticStackRemoveLeft( o.stack, o.stackRemovingBeginIncluding || null, o.stackRemovingBeginExcluding || null );
 
     if( !o.stack )
     o.stack = o.fallBackStack;
@@ -1219,8 +1219,8 @@ _err.defaults =
 {
   /* to make catch stack work properly it should be 1 */
   level : 1,
-  stackRemobeBeginInclude : null,
-  stackRemobeBeginExclude : null,
+  stackRemovingBeginIncluding : null,
+  stackRemovingBeginExcluding : null,
   usingSourceCode : 1,
   condensingStack : 1,
   debugging : null,
@@ -1305,7 +1305,7 @@ function errAttend( err )
 
   _.assert( arguments.length === 1 );
 
-  if( !_.errIsRefined( err ) )
+  if( !_.errIsStandard( err ) )
   err = _._err
   ({
     args : arguments,
@@ -1344,7 +1344,7 @@ function errLogEnd( err )
 
   _.assert( arguments.length === 1 );
 
-  if( !_.errIsRefined( err ) )
+  if( !_.errIsStandard( err ) )
   err = _._err
   ({
     args : arguments,
@@ -2067,14 +2067,14 @@ let Routines =
 
   diagnosticLocation,
   diagnosticStack,
-  diagnosticStackRemoveBegin,
+  diagnosticStackRemoveLeft,
   diagnosticStackCondense,
   diagnosticCode,
 
   // error
 
   errIs,
-  errIsRefined,
+  errIsStandard,
   errIsAttended,
   errIsLogged,
   errOriginalMessage,

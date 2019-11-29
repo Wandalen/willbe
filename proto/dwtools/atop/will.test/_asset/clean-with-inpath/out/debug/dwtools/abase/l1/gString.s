@@ -323,7 +323,7 @@ function strIsolate_body( o )
 
   function inQuoteRange( offset )
   {
-    let i = binSearch( offset );
+    let i = _.sorted.searchFirstIndex( quote.ranges, offset );
     if( i % 2 )
     {
       i -= 1;
@@ -339,28 +339,28 @@ function strIsolate_body( o )
 
   /* */
 
-  function binSearch( val )
-  {
-    let l = 0;
-    let r = quote.ranges.length;
-    let m;
-    if( quote.ranges.length )
-    debugger;
-    do
-    {
-      m = Math.floor( ( l + r ) / 2 );
-      if( quote.ranges[ m ] < val )
-      l = m+1;
-      else if( quote.ranges[ m ] > val )
-      r = m;
-      else
-      return m;
-    }
-    while( l < r );
-    if( quote.ranges[ m ] < val )
-    return m+1;
-    return m;
-  }
+  // function binSearch( val )
+  // {
+  //   let l = 0;
+  //   let r = quote.ranges.length;
+  //   let m;
+  //   if( quote.ranges.length )
+  //   debugger;
+  //   do
+  //   {
+  //     m = Math.floor( ( l + r ) / 2 );
+  //     if( quote.ranges[ m ] < val )
+  //     l = m+1;
+  //     else if( quote.ranges[ m ] > val )
+  //     r = m;
+  //     else
+  //     return m;
+  //   }
+  //   while( l < r );
+  //   if( quote.ranges[ m ] < val )
+  //   return m+1;
+  //   return m;
+  // }
 
   /* */
 

@@ -343,7 +343,11 @@ function regexpsSources( o )
     if( _.regexpIs( src ) )
     {
       o.sources[ s ] = src.source;
-      _.assert( o.flags === null || src.flags === o.flags, () => 'All RegExps should have flags field with the same value ' + _.strQuote( src.flags ) + ' != ' + _.strQuote( o.flags ) );
+      _.assert
+      (
+        o.flags === null || src.flags === o.flags,
+        () => `All RegExps should have flags field with the same value ${ _.strQuote( src.flags ) } != ${ _.strQuote( o.flags ) }` 
+      );
       if( o.flags === null )
       o.flags = src.flags;
     }

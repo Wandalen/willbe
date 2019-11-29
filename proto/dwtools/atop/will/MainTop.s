@@ -1554,7 +1554,7 @@ function commandModuleNewWith( e )
   let path = will.fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let time = _.timeNow();
+  let time = _.time.now();
   let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
   let execPath = e.argument;
 
@@ -1571,7 +1571,7 @@ function commandModuleNewWith( e )
   .then( ( arg ) =>
   {
     if( will.verbosity >= 2 )
-    logger.log( `Done ${_.color.strFormat( 'hook::' + e.argument, 'entity' )} in ${_.timeSpent( time )}` );
+    logger.log( `Done ${_.color.strFormat( 'hook::' + e.argument, 'entity' )} in ${_.time.spent( time )}` );
     return arg;
   });
 
@@ -1623,7 +1623,7 @@ function commandDo( e )
   let path = will.fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let time = _.timeNow();
+  let time = _.time.now();
   let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
   let execPath = e.argument;
 
@@ -1640,7 +1640,7 @@ function commandDo( e )
   .then( ( arg ) =>
   {
     if( will.verbosity >= 2 )
-    logger.log( `Done ${_.color.strFormat( e.argument, 'code' )} in ${_.timeSpent( time )}` );
+    logger.log( `Done ${_.color.strFormat( e.argument, 'code' )} in ${_.time.spent( time )}` );
     return arg;
   });
 
@@ -1663,7 +1663,7 @@ function commandHookCall( e )
   let path = will.fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let time = _.timeNow();
+  let time = _.time.now();
   let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
   let execPath = e.argument;
 
@@ -1680,7 +1680,7 @@ function commandHookCall( e )
   .then( ( arg ) =>
   {
     if( will.verbosity >= 2 )
-    logger.log( `Done ${_.color.strFormat( 'hook::' + e.argument, 'entity' )} in ${_.timeSpent( time )}` );
+    logger.log( `Done ${_.color.strFormat( 'hook::' + e.argument, 'entity' )} in ${_.time.spent( time )}` );
     return arg;
   });
 
