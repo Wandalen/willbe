@@ -6217,7 +6217,7 @@ function _buildsResolve_body( o )
 
         _.assert( _.mapIs( build.criterion ) );
 
-        let satisfied = _.mapSatisfy
+        let satisfied = _.objectSatisfy
         ({
           template,
           src : build.criterion,

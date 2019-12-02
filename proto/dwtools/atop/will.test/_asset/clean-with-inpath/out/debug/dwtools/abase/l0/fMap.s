@@ -303,27 +303,27 @@ function mapContain( src, ins )
 //
 
 /**
- * Short-cut for _mapSatisfy() routine.
+ * Short-cut for _objectSatisfy() routine.
  * Checks if object( o.src ) has at least one key/value pair that is represented in( o.template ).
  * Also works with ( o.template ) as routine that check( o.src ) with own rules.
- * @param {wTools.mapSatisfyOptions} o - Default options {@link wTools.mapSatisfyOptions}.
+ * @param {wTools.objectSatisfyOptions} o - Default options {@link wTools.objectSatisfyOptions}.
  * @returns {boolean} Returns true if( o.src ) has same key/value pair(s) with( o.template )
  * or result if ( o.template ) routine call is true.
  *
  * @example
  * //returns true
- * _.mapSatisfy( {a : 1, b : 1, c : 1 }, { a : 1, b : 2 } );
+ * _.objectSatisfy( {a : 1, b : 1, c : 1 }, { a : 1, b : 2 } );
  *
  * @example
  * //returns true
- * _.mapSatisfy( { template : {a : 1, b : 1, c : 1 }, src : { a : 1, b : 2 } } );
+ * _.objectSatisfy( { template : {a : 1, b : 1, c : 1 }, src : { a : 1, b : 2 } } );
  *
  * @example
  * //returns false
  * function routine( src ){ return src.a === 12 }
- * _.mapSatisfy( { template : routine, src : { a : 1, b : 2 } } );
+ * _.objectSatisfy( { template : routine, src : { a : 1, b : 2 } } );
  *
- * @function mapSatisfy
+ * @function objectSatisfy
  * @throws {exception} If( arguments.length ) is not equal to 1 or 2.
  * @throws {exception} If( o.template ) is not a Object.
  * @throws {exception} If( o.template ) is not a Routine.
@@ -331,7 +331,7 @@ function mapContain( src, ins )
  * @memberof wTools
 */
 
-function mapSatisfy( o )
+function objectSatisfy( o )
 {
 
   if( arguments.length === 2 )
@@ -341,12 +341,12 @@ function mapSatisfy( o )
   _.assert( _.objectIs( o.template ) || _.routineIs( o.template ) );
   _.assert( o.src !== undefined );
 
-  _.routineOptions( mapSatisfy, o );
+  _.routineOptions( objectSatisfy, o );
 
-  return _mapSatisfy( o.template, o.src, o.src, o.levels );
+  return _objectSatisfy( o.template, o.src, o.src, o.levels );
 }
 
-mapSatisfy.defaults =
+objectSatisfy.defaults =
 {
   template : null,
   src : null,
@@ -356,8 +356,8 @@ mapSatisfy.defaults =
 //
 
 /**
- * Default options for _mapSatisfy() routine.
- * @typedef {object} wTools.mapSatisfyOptions
+ * Default options for _objectSatisfy() routine.
+ * @typedef {object} wTools.objectSatisfyOptions
  * @property {object|function} [ template=null ] - Map to compare with( src ) or routine that checks each value of( src ).
  * @property {object} [ src=null ] - Source map.
  * @property {number} [ levels=256 ] - Number of levels in map structure.
@@ -368,27 +368,27 @@ mapSatisfy.defaults =
  * Checks if object( src ) has at least one key/value pair that is represented in( template ).
  * Returns true if( template ) has one or more indentical key/value pair with( src ).
  * If( template ) is provided as routine, routine uses it to check( src ).
- * @param {wTools.mapSatisfyOptions} args - Arguments list {@link wTools.mapSatisfyOptions}.
+ * @param {wTools.objectSatisfyOptions} args - Arguments list {@link wTools.objectSatisfyOptions}.
  * @returns {boolean} Returns true if( src ) has same key/value pair(s) with( template ).
  *
  * @example
  * //returns true
- * _._mapSatisfy( {a : 1, b : 1, c : 1 }, { a : 1, b : 2 } );
+ * _._objectSatisfy( {a : 1, b : 1, c : 1 }, { a : 1, b : 2 } );
  *
  * @example
  * //returns false
- * _._mapSatisfy( {a : 1, b : 1, c : 1 }, { y : 1 , j : 1 } );
+ * _._objectSatisfy( {a : 1, b : 1, c : 1 }, { y : 1 , j : 1 } );
  *
  * @example
  * //returns true
  * function template( src ){ return src.y === 1 }
- * _._mapSatisfy( template, { y : 1 , j : 1 } );
+ * _._objectSatisfy( template, { y : 1 , j : 1 } );
  *
- * @function _mapSatisfy
+ * @function _objectSatisfy
  * @memberof wTools
 */
 
-function _mapSatisfy( template, src, root, levels )
+function _objectSatisfy( template, src, root, levels )
 {
 
   if( template === src )
@@ -414,7 +414,7 @@ function _mapSatisfy( template, src, root, levels )
     for( let t in template )
     {
       let satisfy = false;
-      satisfy = _mapSatisfy( template[ t ], src[ t ], root, levels-1 );
+      satisfy = _objectSatisfy( template[ t ], src[ t ], root, levels-1 );
       if( !satisfy )
       return false;
     }
@@ -1892,7 +1892,7 @@ function mapSupplementByMapsRemovingRecursive( dstMap, srcMaps )
   qqq : add test
 */
 
-function mapSetWithKeys( dstMap, src, val )
+function objectSetWithKeys( dstMap, src, val )
 {
 
   if( dstMap === null )
@@ -5120,8 +5120,8 @@ let Routines =
   mapsAreIdentical,
   mapContain,
 
-  mapSatisfy,
-  _mapSatisfy,
+  objectSatisfy,
+  _objectSatisfy,
 
   mapHas : mapHasKey,
   mapHasKey,
@@ -5219,8 +5219,8 @@ let Routines =
 
   // map manipulator
 
-  mapSetWithKeys,
-  mapSet : mapSetWithKeys,
+  objectSetWithKeys,
+  mapSet : objectSetWithKeys,
   mapDelete,
 
   // map transformer

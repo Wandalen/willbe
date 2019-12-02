@@ -15,55 +15,55 @@ var _ = _global_.wTools;
 // map checker
 //--
 
-function countableIs( test )
+function iterableIs( test )
 {
   test.case = 'without argument';
-  var got = _.countableIs();
+  var got = _.iterableIs();
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'undefined';
-  var got = _.countableIs( undefined );
+  var got = _.iterableIs( undefined );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'null';
-  var got = _.countableIs( null );
+  var got = _.iterableIs( null );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'false';
-  var got = _.countableIs( false );
+  var got = _.iterableIs( false );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'empty string';
-  var got = _.countableIs( '' );
+  var got = _.iterableIs( '' );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'zero';
-  var got = _.countableIs( 0 );
+  var got = _.iterableIs( 0 );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'NaN';
-  var got = _.countableIs( NaN );
+  var got = _.iterableIs( NaN );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'a boolean';
-  var got = _.countableIs( true );
+  var got = _.iterableIs( true );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'a number';
-  var got = _.countableIs( 13 );
+  var got = _.iterableIs( 13 );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'a function';
-  var got = _.countableIs( function() {} );
+  var got = _.iterableIs( function() {} );
   var expected = false;
   test.identical( got, expected );
 
@@ -73,88 +73,88 @@ function countableIs( test )
     this.x = x;
     return this;
   }
-  var got = _.countableIs( new Constr( 0 ) );
+  var got = _.iterableIs( new Constr( 0 ) );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'a string';
-  var got = _.countableIs( 'str' );
+  var got = _.iterableIs( 'str' );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'an array';
-  var got = _.countableIs( [] );
+  var got = _.iterableIs( [] );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'an unroll';
-  var got = _.countableIs( _.unrollMake( [ 1 ] ) );
+  var got = _.iterableIs( _.unrollMake( [ 1 ] ) );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'an argumentsArray';
-  var got = _.countableIs( _.argumentsArrayMake( [ 1 ] ) );
+  var got = _.iterableIs( _.argumentsArrayMake( [ 1 ] ) );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'BufferRaw';
-  var got = _.countableIs( new BufferRaw( 5 ) );
+  var got = _.iterableIs( new BufferRaw( 5 ) );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'BufferView';
-  var got = _.countableIs( new BufferView( new BufferRaw( 5 ) ) );
+  var got = _.iterableIs( new BufferView( new BufferRaw( 5 ) ) );
   var expected = false;
   test.identical( got, expected );
 
   test.case = 'BufferTyped';
-  var got = _.countableIs( new U8x( 5 ) );
+  var got = _.iterableIs( new U8x( 5 ) );
   var expected = true;
   test.identical( got, expected );
 
   if( Config.interpreter === 'njs' )
   {
     test.case = 'BufferNode';
-    var got = _.countableIs( BufferNode.alloc( 5 ) );
+    var got = _.iterableIs( BufferNode.alloc( 5 ) );
     var expected = true;
     test.identical( got, expected );
   }
 
   test.case = 'Set';
-  var got = _.countableIs( new Set( [ 5 ] ) );
+  var got = _.iterableIs( new Set( [ 5 ] ) );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'Map';
-  var got = _.countableIs( new Map( [ [ 1, 2 ] ] ) );
+  var got = _.iterableIs( new Map( [ [ 1, 2 ] ] ) );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'pure empty map';
-  var got = _.countableIs( Object.create( null ) );
+  var got = _.iterableIs( Object.create( null ) );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'pure map';
   var src = Object.create( null );
   src.x = 1;
-  var got = _.countableIs( src );
+  var got = _.iterableIs( src );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'map from pure map';
   var src = Object.create( Object.create( null ) );
-  var got = _.countableIs( src );
+  var got = _.iterableIs( src );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'an empty object';
-  var got = _.countableIs( {} );
+  var got = _.iterableIs( {} );
   var expected = true;
   test.identical( got, expected );
 
   test.case = 'an object';
-  var got = _.countableIs( { a : 7, b : 13 } );
+  var got = _.iterableIs( { a : 7, b : 13 } );
   var expected = true;
   test.identical( got, expected );
 }
@@ -746,73 +746,73 @@ function mapMake( test )
 // map manipulator
 //
 
-function mapSetWithKeys( test )
+function objectSetWithKeys( test )
 {
   test.case = 'dstMap is null or empty';
 
-  var got = _.mapSetWithKeys( null, [], 2  );
+  var got = _.objectSetWithKeys( null, [], 2  );
   test.identical( got, {} );
 
-  var got = _.mapSetWithKeys( {}, [], 2  );
+  var got = _.objectSetWithKeys( {}, [], 2  );
   test.identical( got, {} );
 
-  var got = _.mapSetWithKeys( null, 'a', 2  );
+  var got = _.objectSetWithKeys( null, 'a', 2  );
   test.identical( got, { 'a' : 2 } );
 
-  var got = _.mapSetWithKeys( {}, 'a', 2  );
+  var got = _.objectSetWithKeys( {}, 'a', 2  );
   test.identical( got, { 'a' : 2 } );
 
-  var got = _.mapSetWithKeys( null, [ 'a', 'b' ], 2  );
+  var got = _.objectSetWithKeys( null, [ 'a', 'b' ], 2  );
   test.identical( got, { 'a' : 2, 'b' : 2 } );
 
-  var got = _.mapSetWithKeys( {}, [ 'a', 'b' ], 2  );
+  var got = _.objectSetWithKeys( {}, [ 'a', 'b' ], 2  );
   test.identical( got, { 'a' : 2, 'b' : 2 } );
 
-  var got = _.mapSetWithKeys( {}, [ 1, 2 ], 2  );
+  var got = _.objectSetWithKeys( {}, [ 1, 2 ], 2  );
   test.identical( got, { 1 : 2, 2 : 2 } );
 
   test.case = 'dstMap is not null';
 
-  var got = _.mapSetWithKeys( { 'a' : 2 }, 'a', 'abc'  );
+  var got = _.objectSetWithKeys( { 'a' : 2 }, 'a', 'abc'  );
   test.identical( got, { 'a' : 'abc' } );
 
-  var got = _.mapSetWithKeys( { 'a' : 2 }, 'b', 3  );
+  var got = _.objectSetWithKeys( { 'a' : 2 }, 'b', 3  );
   test.identical( got, { 'a' : 2, 'b' : 3 } );
 
-  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], 3 );
+  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], 3 );
   test.identical( got, { 'a' : 2, 'b' : 3, 'c' : 3 } );
 
-  var got = _.mapSetWithKeys( { 0 : 0 }, [ 1, 2 ], 2  );
+  var got = _.objectSetWithKeys( { 0 : 0 }, [ 1, 2 ], 2  );
   test.identical( got, { 0 : 0, 1 : 2, 2 : 2 } );
 
   test.case = 'val is array';
 
-  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], [ 3 ] );
+  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], [ 3 ] );
   test.identical( got, { 'a' : 2, 'b' : [ 3 ], 'c' : [ 3 ] } );
 
-  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], [ 3, 'aa' ] );
+  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], [ 3, 'aa' ] );
   test.identical( got, { 'a' : 2, 'b' : [ 3, 'aa' ], 'c' : [ 3, 'aa' ] } );
 
-  var got = _.mapSetWithKeys( { 0 : 0 }, [ 0, 2 ], [ 3, 'aa' ]  );
+  var got = _.objectSetWithKeys( { 0 : 0 }, [ 0, 2 ], [ 3, 'aa' ]  );
   test.identical( got, { 0 : [ 3, 'aa' ], 2 : [ 3, 'aa' ] } );
 
   test.case = 'val is object';
 
-  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], { 'cc' : 1 } );
+  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], { 'cc' : 1 } );
   test.identical( got, { 'a' : 2, 'b' : { 'cc' : 1 }, 'c' : { 'cc' : 1 } } );
 
-  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], { 'd' : undefined } );
+  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], { 'd' : undefined } );
   test.identical( got, { 'a' : 2, 'b' : { 'd' : undefined }, 'c' : { 'd' : undefined } } );
 
-  var got = _.mapSetWithKeys( { 0 : 0 }, [ 0, 2 ], { 3 : 'aa' } );
+  var got = _.objectSetWithKeys( { 0 : 0 }, [ 0, 2 ], { 3 : 'aa' } );
   test.identical( got, { 0 : { 3 : 'aa' }, 2 : { 3 : 'aa' } } );
 
   test.case = 'src has null or undefined values';
 
-  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ null, 'c' ], 'aa' );
+  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ null, 'c' ], 'aa' );
   test.identical( got, { 'a' : 2, 'b' : 1, 'c' : 'aa', null : 'aa' } );
 
-  var got = _.mapSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ undefined, 'c' ], 'aa' );
+  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ undefined, 'c' ], 'aa' );
   test.identical( got, { 'a' : 2, 'b' : 1, 'c' : 'aa', undefined : 'aa' } );
 
   /* - */
@@ -821,19 +821,19 @@ function mapSetWithKeys( test )
   return;
 
   test.case = 'no arguments'
-  test.shouldThrowErrorSync( () => _.mapSetWithKeys() );
+  test.shouldThrowErrorSync( () => _.objectSetWithKeys() );
 
   test.case = 'too many arguments'
-  test.shouldThrowErrorSync( () => _.mapSetWithKeys( {}, 'a', 'a', 1 ) );
+  test.shouldThrowErrorSync( () => _.objectSetWithKeys( {}, 'a', 'a', 1 ) );
 
   test.case = 'dstMap is not object or null'
-  test.shouldThrowErrorSync( () => _.mapSetWithKeys( [], 'a', 'a' ) );
+  test.shouldThrowErrorSync( () => _.objectSetWithKeys( [], 'a', 'a' ) );
 
   test.case = 'src is not array of strings or string'
 
-  test.shouldThrowErrorSync( () => _.mapSetWithKeys( { 'a' : 1 }, 1, 'a' ) );
+  test.shouldThrowErrorSync( () => _.objectSetWithKeys( { 'a' : 1 }, 1, 'a' ) );
 
-  test.shouldThrowErrorSync( () => _.mapSetWithKeys( { 'a' : 1 }, { 'k' : 2 }, 'a' ) );
+  test.shouldThrowErrorSync( () => _.objectSetWithKeys( { 'a' : 1 }, { 'k' : 2 }, 'a' ) );
 }
 
 // --
@@ -4214,7 +4214,7 @@ var Self =
 
     // map checker l0/l3/iMap.s
 
-    countableIs,
+    iterableIs,
 
     mapIs,
 
@@ -4231,7 +4231,7 @@ var Self =
 
     // map manipulator
 
-    mapSetWithKeys,
+    objectSetWithKeys,
 
     // map convert
 

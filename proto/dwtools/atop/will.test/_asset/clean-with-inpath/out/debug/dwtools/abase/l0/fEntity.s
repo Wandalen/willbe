@@ -707,7 +707,7 @@ function _filter_functor( condition, levels )
       return e;
       if( !_.objectLike( e ) )
       return;
-      let satisfied = _.mapSatisfy
+      let satisfied = _.objectSatisfy
       ({
         template : template,
         src : e,

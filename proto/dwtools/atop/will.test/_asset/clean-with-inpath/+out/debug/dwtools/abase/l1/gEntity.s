@@ -113,7 +113,7 @@ function uncountableSize( src )
   if( _.regexpIs( src ) )
   return _.uncountableSize( src.source ) + src.flags.length * 1;
 
-  if( !_.countableIs( src ) )
+  if( !_.iterableIs( src ) )
   return 8;
 
   // if( _.longIs( src ) )
@@ -182,11 +182,11 @@ function entitySize( src )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  if( _.primitiveIs( src ) || !_.countableIs( src ) || _.bufferAnyIs( src ) )
+  if( _.primitiveIs( src ) || !_.iterableIs( src ) || _.bufferAnyIs( src ) )
   return _.uncountableSize( src );
 
   if( _.look )
-  if( _.containerIs( src ) || _.countableIs( src ) )
+  if( _.containerIs( src ) || _.iterableIs( src ) )
   {
     _.look( src, onEach );
   }
@@ -229,7 +229,7 @@ function entitySize( src )
   //   return result;
   // }
   //
-  // if( _.countableIs( src ) )
+  // if( _.iterableIs( src ) )
   // {
   //   let result = 0;
   //   for( let k in src )
@@ -261,7 +261,7 @@ function entitySize( src )
       result += _.uncountableSize( k );
     }
 
-    if( _.primitiveIs( e ) || !_.countableIs( e ) || _.bufferAnyIs( e ) )
+    if( _.primitiveIs( e ) || !_.iterableIs( e ) || _.bufferAnyIs( e ) )
     result += _.uncountableSize( e );
 
   }
