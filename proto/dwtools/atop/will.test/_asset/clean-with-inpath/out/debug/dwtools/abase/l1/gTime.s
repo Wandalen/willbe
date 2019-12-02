@@ -379,7 +379,8 @@ function outError_body( o )
     err = _.time._errTimeOut
     ({
       message : 'Time out!',
-      value : con,
+      reason : 'time out',
+      consequnce : con,
       procedure : o.procedure,
     });
 
@@ -403,20 +404,31 @@ function _errTimeOut( o )
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
   o.message = o.message || 'Time out!';
-  o.value = o.value || true;
+  o.reason = o.reason || 'time out';
 
+  debugger;
   let err = _._err
   ({
     args : [ o.message ],
     throws : o.procedure ? [ o.procedure._sourcePath ] : [],
-    asyncCallsStack : o.procedure.stack() ? [ o.procedure.stack() ] : [],
+    asyncCallsStack : o.procedure ? [ o.procedure.stack() ] : [],
   });
-  Object.defineProperty( err, 'time.out',
+
+  Object.defineProperty( err, 'reason',
   {
     enumerable : false,
     configurable : false,
     writable : false,
-    value : o.value,
+    value : o.reason,
+  });
+
+  if( o.consequnce )
+  Object.defineProperty( err, 'consequnce',
+  {
+    enumerable : false,
+    configurable : false,
+    writable : false,
+    value : o.consequnce,
   });
 
   return err;
@@ -425,7 +437,8 @@ function _errTimeOut( o )
 _errTimeOut.defaults =
 {
   message : null,
-  value : null,
+  reason : null,
+  consequnce : null,
   procedure : null,
 }
 

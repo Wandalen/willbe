@@ -242,7 +242,7 @@ function _propertyGetterSetterMake( o )
 
   function unfunct( functor )
   {
-    if( _.routineIs( functor ) && functor.rubrics && _.longHas( functor.rubrics, 'functor' ) )
+    if( functor && functor.rubrics && _.longHas( functor.rubrics, 'functor' ) )
     {
       if( functor.defaults && functor.defaults.fieldName !== undefined )
       functor = functor({ fieldName : o.name });
@@ -415,62 +415,6 @@ _register.defaults =
   combining : 0,
 }
 
-/**
- * Generates options object for declare.body, _forbidDeclare functions.
- * Can be called in three ways:
- * - First by passing all options in one object;
- * - Second by passing object and name options;
- * - Third by passing object, names and message option as third parameter.
- * @param {Object} o - options {@link module:Tools/base/Proto.wTools.accessor~AccessorOptions}.
- *
- * @example
- * //returns
- * // { object: [Function],
- * // methods: [Function],
- * // names: { a: 'a', b: 'b' },
- * // message: [ 'set/get call' ] }
- *
- * let Self = function ClassName( o ) { };
- * _.accessor._declare_pre( Self, { a : 'a', b : 'b' }, 'set/get call' );
- *
- * @private
- * @function _declare_pre
- * @memberof module:Tools/base/Proto.wTools.accessor
- */
-
-function _declare_pre( routine, args )
-{
-  let o;
-
-  _.assert( arguments.length === 2 );
-
-  if( args.length === 1 )
-  {
-    o = args[ 0 ];
-  }
-  else
-  {
-    o = Object.create( null );
-    o.object = args[ 0 ];
-    o.names = args[ 1 ];
-    _.assert( args.length >= 2 );
-  }
-
-  if( args.length > 2 )
-  {
-    o.message = _.longSlice( args, 2 );
-  }
-
-  if( _.strIs( o.names ) )
-  o.names = { [ o.names ] : o.names }
-
-  _.routineOptions( routine, o );
-  _.assert( !_.primitiveIs( o.object ), 'Expects object as argument but got', o.object );
-  _.assert( _.objectIs( o.names ) || _.arrayIs( o.names ), 'Expects object names as argument but got', o.names );
-
-  return o;
-}
-
 //
 
 function _declareAct( o )
@@ -602,6 +546,65 @@ var defaults = _declareAct.defaults = Object.create( AccessorDefaults );
 defaults.name = null;
 defaults.object = null;
 defaults.methods = null;
+
+//
+
+/**
+ * Generates options map for declare.body, _forbidDeclare functions.
+ * Can be called in three ways:
+ * - First by passing all options in one object;
+ * - Second by passing object and name options;
+ * - Third by passing object, names and message option as third parameter.
+ * @param {Object} o - options {@link module:Tools/base/Proto.wTools.accessor~AccessorOptions}.
+ *
+ * @example
+ * //returns
+ * // { object: [Function],
+ * // methods: [Function],
+ * // names: { a: 'a', b: 'b' },
+ * // message: [ 'set/get call' ] }
+ *
+ * let Self = function ClassName( o ) { };
+ * _.accessor._declare_pre( Self, { a : 'a', b : 'b' }, 'set/get call' );
+ *
+ * @private
+ * @function _declare_pre
+ * @memberof module:Tools/base/Proto.wTools.accessor
+ */
+
+function _declare_pre( routine, args )
+{
+  let o;
+
+  _.assert( arguments.length === 2 );
+
+  if( args.length === 1 )
+  {
+    o = args[ 0 ];
+  }
+  else
+  {
+    o = Object.create( null );
+    o.object = args[ 0 ];
+    o.names = args[ 1 ];
+    _.assert( args.length >= 2 );
+  }
+
+  if( args.length > 2 )
+  {
+    _.assert( o.messages === null || o.messages === undefined );
+    o.message = _.longSlice( args, 2 );
+  }
+
+  if( _.strIs( o.names ) )
+  o.names = { [ o.names ] : o.names }
+
+  _.routineOptions( routine, o );
+  _.assert( !_.primitiveIs( o.object ), 'Expects object as argument but got', o.object );
+  _.assert( _.objectIs( o.names ) || _.arrayIs( o.names ), 'Expects object names as argument but got', o.names );
+
+  return o;
+}
 
 //
 
@@ -751,8 +754,9 @@ function declare_body( o )
 
 }
 
-var defaults = declare_body.defaults = Object.create( _declareAct.defaults );
+var defaults = declare_body.defaults = _.mapExtend( null, _declareAct.defaults );
 defaults.names = null;
+delete defaults.name;
 
 let declare = _.routineFromPreAndBody( _declare_pre, declare_body );
 
@@ -1937,17 +1941,19 @@ function alias_pre( routine, args )
 
   let o = args[ 0 ];
   if( _.strIs( args[ 0 ] ) )
-  o = { originalName : args[ 0 ], aliasName : args[ 1 ] }
+  o = { originalName : args[ 0 ] }
+  // o = { originalName : args[ 0 ], aliasName : args[ 1 ] }
 
   _.routineOptions( routine, o );
 
-  if( o.aliasName === null )
-  o.aliasName = o.originalName;
-  if( o.originalName === null )
-  o.originalName = o.aliasName;
+  // if( o.aliasName === null )
+  // o.aliasName = o.originalName;
+  // if( o.originalName === null )
+  // o.originalName = o.aliasName;
 
-  _.assert( args.length === 1 || args.length === 2, 'Expects single argument' );
-  _.assert( _.strIs( o.aliasName ) );
+  _.assert( args.length === 1, 'Expects single argument' );
+  // _.assert( args.length === 1 || args.length === 2, 'Expects single argument' );
+  // _.assert( _.strIs( o.aliasName ) );
   _.assert( _.strIs( o.originalName ) );
 
   return o;
@@ -1957,35 +1963,42 @@ function alias_pre( routine, args )
 
 function aliasSetter_functor_body( o )
 {
-
-  let containerName = o.containerName;
+  let container = o.container;
   let originalName = o.originalName;
-  let aliasName = o.aliasName;
+  // let aliasName = o.aliasName;
 
   _.assertRoutineOptions( aliasSetter_functor_body, arguments );
 
-  if( containerName )
+  if( _.strIs( container ) )
   return function aliasSet( src )
   {
     let self = this;
-    self[ containerName ][ originalName ] = src;
-    return self[ containerName ][ originalName ];
+    self[ container ][ originalName ] = src;
+    return self[ container ][ originalName ];
   }
-  else
+  else if( _.objectLike( container ) )
+  return function aliasGet( src )
+  {
+    let self = this;
+    return container[ originalName ] = src;
+  }
+  else if( container === null )
   return function aliasSet( src )
   {
     let self = this;
     self[ originalName ] = src;
     return self[ originalName ];
   }
+  else _.assert( 0, `Unknown type of container ${_.strType( container )}` );
 
 }
 
 aliasSetter_functor_body.defaults =
 {
-  containerName : null,
+  container : null,
   originalName : null,
-  aliasName : null,
+  // aliasName : null,
+  // fieldName : null,
 }
 
 let aliasSet_functor = _.routineFromPreAndBody( alias_pre, aliasSetter_functor_body );
@@ -2005,24 +2018,31 @@ let aliasSet_functor = _.routineFromPreAndBody( alias_pre, aliasSetter_functor_b
 function aliasGet_functor_body( o )
 {
 
-  let containerName = o.containerName;
+  let container = o.container;
   let originalName = o.originalName;
-  let aliasName = o.aliasName;
+  // let aliasName = o.aliasName;
 
   _.assertRoutineOptions( aliasGet_functor_body, arguments );
 
-  if( containerName )
+  if( _.strIs( container ) )
   return function aliasGet( src )
   {
     let self = this;
-    return self[ containerName ][ originalName ];
+    return self[ container ][ originalName ];
   }
-  else
-  return function aliasSet( src )
+  else if( _.objectLike( container ) )
+  return function aliasGet( src )
+  {
+    let self = this;
+    return container[ originalName ];
+  }
+  else if( container === null )
+  return function aliasGet( src )
   {
     let self = this;
     return self[ originalName ];
   }
+  else _.assert( 0, `Unknown type of container ${_.strType( container )}` );
 
 }
 
@@ -2033,7 +2053,62 @@ let aliasGetter_functor = _.routineFromPreAndBody( alias_pre, aliasGet_functor_b
 //
 
 let aliasSuite = suiteMakerFrom_functor( aliasGetter_functor, aliasSet_functor );
-// let aliasSuite = suiteMakerFrom_functor( aliasGet_functor_body, aliasSet_functor );
+
+// --
+// meta
+// --
+
+function _DefinesGenerate( dst, src, kind )
+{
+  if( dst === null )
+  dst = Object.create( null );
+
+  _.assert( arguments.length === 3 );
+
+  for( let s in src )
+  {
+    dst[ s ] = _DefineGenerate( src[ s ], kind );
+  }
+
+  return dst;
+}
+
+//
+
+function _DefineGenerate( original, kind )
+{
+  _.assert( _.routineIs( original ) );
+
+  let r =
+  {
+    [ original.name ] : function()
+    {
+      // if( original.pre )
+      // {
+      //   o = original.pre( routine, arguments );
+      // }
+      // else
+      // {
+      //   _.assert( arguments.length === 1 );
+      // }
+      // _.assert( _.mapIs( o ) );
+      let definition = _.define[ kind ]({ ini : arguments, routine : original });
+      _.assert( _.definitionIs( definition ) );
+      return definition;
+    }
+  }
+
+  let routine = r[ original.name ];
+
+  _.routineExtend( routine, original );
+  _.assert( arguments.length === 2 );
+
+  routine.originalFunctor = original;
+
+  _.assert( _.routineIs( _.define[ kind ] ) );
+
+  return routine;
+}
 
 // --
 // fields
@@ -2107,15 +2182,19 @@ let Routines =
 
 }
 
+//
+
 let Getter =
 {
 
-  alias : aliasGet_functor_body,
+  alias : aliasGetter_functor,
   toElement : toElementGet_functor,
   toStructure : toStructureGet_functor,
   withSymbol : withSymbolGet_functor,
 
 }
+
+//
 
 let Setter =
 {
@@ -2134,13 +2213,7 @@ let Setter =
 
 }
 
-// let GetterSetter =
-// {
 //
-//   // accessorToElement,
-//   toElement,
-//
-// }
 
 let Suite =
 {
@@ -2161,9 +2234,6 @@ _.mapExtend( _.accessor, Fields );
 _.accessor.forbid( _, Forbids );
 _.accessor.forbid( _.accessor, Forbids );
 
-// _.accessor.getterSetter = _.accessor.getterSetter || Object.create( null );
-// _.mapExtend( _.accessor.getterSetter, GetterSetter );
-
 _.accessor.getter = _.accessor.getter || Object.create( null );
 _.mapExtend( _.accessor.getter, Getter );
 
@@ -2172,6 +2242,14 @@ _.mapExtend( _.accessor.setter, Setter );
 
 _.accessor.suite = _.accessor.suite || Object.create( null );
 _.mapExtend( _.accessor.suite, Suite );
+
+// debugger;
+_.accessor.define = _.accessor.define || Object.create( null );
+_.accessor.define.getter = _DefinesGenerate( _.accessor.define.getter || null, _.accessor.getter, 'getter' );
+// _.accessor.define.setter = _DefinesGenerate( _.accessor.define.setter || null, _.accessor.setter, 'setter' );
+// _.accessor.define.suite = _DefinesGenerate( _.accessor.define.suite || null, _.accessor.suite, 'accessor' );
+
+_.assert( _.routineIs( _.accessor.define.getter.alias ) );
 
 // --
 // export

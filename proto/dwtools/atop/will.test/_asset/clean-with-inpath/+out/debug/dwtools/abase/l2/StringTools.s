@@ -4236,7 +4236,7 @@ qqq : cover onLine
  * If( o.range ) and ( o.line ) are both not provided function generates range by formula: [ 0, n + 1 ], where n: number of ( o.delimteter ) in source( o.src ).
  * Returns selected lines range as string or empty string if nothing selected.
  * Can be called in three ways:
- * - First by passing all parameters in one options object( o ) ;
+ * - First by passing all parameters in one options map( o ) ;
  * - Second by passing source string( o.src ) and range( o.range ) as array or number;
  * - Third by passing source string( o.src ), range start and end position.
  *
@@ -4454,7 +4454,7 @@ strLinesSelect.defaults =
  * Get the nearest ( o.numberOfLines ) lines to the range ( o.charsRange ) from source string( o.src ).
  * Returns object with two elements: .
  * Can be called in two ways:
- * - First by passing all parameters in one options object( o ) ;
+ * - First by passing all parameters in one options map( o ) ;
  * - Second by passing source string( o.src ) and range( o.range ) as array or number;
  *
  * @param { Object } o - Options.

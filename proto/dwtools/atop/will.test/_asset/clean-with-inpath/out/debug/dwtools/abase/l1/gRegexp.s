@@ -526,9 +526,9 @@ regexpsAtLeastFirst.defaults =
  * @param {String[]} [options.but=null] a list of words,from each will consist regexp
  * @param {boolean} [options.atLeastOne=true] indicates whether search matches at least once
  * @param {...String} [words] a list of words, from each will consist regexp. This arguments can be used instead
- * options object.
+ * options map.
  * @returns {RegExp} Result regexp
- * @throws {Error} If passed arguments are not strings or options object.
+ * @throws {Error} If passed arguments are not strings or options map.
  * @throws {Error} If options contains any different from 'but' or 'atLeastOnce' properties.
  * @function regexpsNone
  * @memberof wTools

@@ -268,23 +268,6 @@ function entitySize( src )
 
 }
 
-//
-
-function containerEmpty( dstContainer )
-{
-  if( _.longIs( dstContainer ) )
-  _.longEmpty( dstContainer );
-  else if( _.setIs( dstContainer ) )
-  dstContainer.clear();
-  else if( _.hashMapIs( dstContainer ) )
-  dstContainer.clear();
-  else if( _.mapLike( dstContainer ) )
-  _.mapEmpty( dstContainer );
-  else
-  _.assert( 0, `Not clear how to empty non-container ${_.strType( dstContainer )}` );
-  return dstContainer;
-}
-
 // --
 // fields
 // --
@@ -300,15 +283,12 @@ let Fields =
 let Routines =
 {
 
-  entityLength, /* qqq : implement good coverage */
+  entityLength, /* qqq : implement coverage */
   lengthOf : entityLength,
 
-  uncountableSize, /* qqq : implement good coverage */
-  entitySize, /* qqq : implement good coverage */
+  uncountableSize, /* qqq : implement coverage */
+  entitySize, /* qqq : implement coverage */
   sizeOf : entitySize,
-
-  containerEmpty, /* qqq : implement good coverage */
-  empty : containerEmpty,
 
 }
 

@@ -240,6 +240,23 @@ function buildSimple( test )
 
 //
 
+function ReplaceSetsAreIdentical()
+{
+  _.include( 'wIntrospector' );
+
+  let file = _.introspection.thisFile().parse();
+
+  file.routines = file.routines.filter( null, ( r ) =>
+  {
+  });
+
+  file.rewrite();
+}
+
+ReplaceSetsAreIdentical();
+
+//
+
 function openNamedFast( test )
 {
   let self = this;

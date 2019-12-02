@@ -333,6 +333,24 @@ let wFilesSvn =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.fileProvider.Svn },
 }
 
+let wFileExecutor =
+{
+  includeAny : includeAny( 'amid/l7/executor/FileExecutor.s', 'wFileExecutor' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.wFileExecutor },
+}
+
+let wFileExecutorHtmlFormatters =
+{
+  includeAny : includeAny( 'amid/l7/executor/HtmlFormatters.s', 'wFileExecutorHtmlFormatters' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.FileExecutorHtmlFormatters },
+}
+
+let wPathTranslator =
+{
+  includeAny : includeAny( 'amid/l5_mapper/PathTranslator.s', 'wpathtranslator' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.PathTranslator },
+}
+
 let wTimeMarker =
 {
   includeAny : includeAny( 'amid/amixin/TimeMarker.s', 'wtimemarker' ),
@@ -363,22 +381,10 @@ let wStager =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Stager },
 }
 
-let wFileExecutor =
+let wIntrospector =
 {
-  includeAny : includeAny( 'amid/l7/executor/FileExecutor.s', 'wFileExecutor' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.wFileExecutor },
-}
-
-let wFileExecutorHtmlFormatters =
-{
-  includeAny : includeAny( 'amid/l7/executor/HtmlFormatters.s', 'wFileExecutorHtmlFormatters' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.FileExecutorHtmlFormatters },
-}
-
-let wPathTranslator =
-{
-  includeAny : includeAny( 'amid/l5_mapper/PathTranslator.s', 'wpathtranslator' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.PathTranslator },
+  includeAny : includeAny( 'amid/l3/introspector/IncludeMid.s', 'wintrospectorbasic' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.introspector },
 }
 
 let wNameMapper =
@@ -651,19 +657,22 @@ let Extend =
   wVocabulary,
   wCommandsAggregator,
   wCommandsConfig,
+
   wFiles,
   wFilesArchive,
   wFilesEncoders,
   wFilesSvn,
+  wFileExecutor,
+  wFileExecutorHtmlFormatters,
+  wPathTranslator,
+
   wTimeMarker,
   wVerbal,
   wStateStorage,
   wStateSession,
   wStager,
-  wFileExecutor,
-  wFileExecutorHtmlFormatters,
+  wIntrospector,
 
-  wPathTranslator,
   wNameMapper,
   wTemplateTreeResolver,
   wTemplateTreeResolver2,

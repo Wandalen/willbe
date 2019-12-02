@@ -1354,7 +1354,7 @@ function arrayFromRangeWithNumberOfSteps( range , numberOfSteps )
  * The longSelectWithIndices() routine selects elements from (srcArray) by indexes of (indicesArray).
  *
  * @param { longIs } srcArray - Values for the new array.
- * @param { ( longIs | object ) } [ indicesArray = indicesArray.indices ] - Indexes of elements from the (srcArray) or options object.
+ * @param { ( longIs | object ) } [ indicesArray = indicesArray.indices ] - Indexes of elements from the (srcArray) or options map.
  *
  * @example
  * _.longSelectWithIndices( [ 1, 2, 3, 4, 5 ], [ 2, 3, 4 ] );

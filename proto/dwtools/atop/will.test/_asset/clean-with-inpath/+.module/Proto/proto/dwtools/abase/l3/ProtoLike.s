@@ -12,7 +12,7 @@ var _ = _global_.wTools;
 var _ObjectHasOwnProperty = Object.hasOwnProperty;
 var _nameFielded = _.nameFielded;
 
-_.assert( !_.construction )
+_.assert( !_.lconstruction )
 
 //
 
@@ -54,7 +54,7 @@ function like()
     writable : false,
     value : function Construction( o )
     {
-      _.assert( arguments.length === 0 || arguments.length === 1,'construction expects one or none argument' );
+      _.assert( arguments.length === 0 || arguments.length === 1,'lconstruction expects one or none argument' );
 
       if( !( this instanceof proto.constructor ) )
       if( o instanceof proto.constructor )
@@ -196,9 +196,9 @@ var Proto =
   isLike,
 }
 
-_.assert( !_.construction );
-_.construction = Object.create( null );
-_.mapExtend( _.construction, Proto );
+_.assert( !_.lconstruction );
+_.lconstruction = Object.create( null );
+_.mapExtend( _.lconstruction, Proto );
 
 // --
 // declare
