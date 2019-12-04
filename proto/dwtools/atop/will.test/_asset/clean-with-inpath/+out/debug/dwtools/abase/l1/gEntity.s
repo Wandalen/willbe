@@ -101,45 +101,11 @@ function uncountableSize( src )
   if( _.numberIs( src.byteLength ) )
   return src.byteLength;
 
-  // if( _.numberIs( src ) )
-  // return 8;
-  //
-  // if( !_.definedIs( src ) )
-  // return 8;
-  //
-  // if( _.boolIs( src ) || _.dateIs( src ) )
-  // return 8;
-
   if( _.regexpIs( src ) )
   return _.uncountableSize( src.source ) + src.flags.length * 1;
 
   if( !_.iterableIs( src ) )
   return 8;
-
-  // if( _.longIs( src ) )
-  // {
-  //   let result = 0;
-  //   for( let i = 0; i < src.length; i++ )
-  //   {
-  //     result += _.uncountableSize( src[ i ] );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
-  //
-  // if( _.mapIs( src ) )
-  // {
-  //   let result = 0;
-  //   for( let k in src )
-  //   {
-  //     result += _.uncountableSize( k );
-  //     result += _.uncountableSize( src[ k ] );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
 
   return NaN;
 }
@@ -192,57 +158,6 @@ function entitySize( src )
   }
 
   return result;
-  // if( _.longLike( src ) )
-  // {
-  //   let result = 0;
-  //   for( let i = 0; i < src.length; i++ )
-  //   {
-  //     result += _.entitySize( src[ i ] );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
-  //
-  // if( _.mapLike( src ) )
-  // {
-  //   let result = 0;
-  //   for( let k in src )
-  //   {
-  //     result += _.entitySize( k );
-  //     result += _.entitySize( src[ k ] );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
-  //
-  // if( _.setLike( src ) )
-  // {
-  //   let result = 0; debugger; xxx
-  //   for( let e of src )
-  //   {
-  //     result += _.entitySize( e );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
-  //
-  // if( _.iterableIs( src ) )
-  // {
-  //   let result = 0;
-  //   for( let k in src )
-  //   {
-  //     result += _.entitySize( k );
-  //     result += _.entitySize( src[ k ] );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
-  //
-  // return NaN;
 
   function onEach( e, k, it )
   {

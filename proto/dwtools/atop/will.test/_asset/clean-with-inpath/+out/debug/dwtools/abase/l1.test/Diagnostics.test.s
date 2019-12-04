@@ -1,6 +1,6 @@
 ( function _Diagnostics_test_s_( ) {
 
-'use strict'; 
+'use strict';
 
 if( typeof module !== 'undefined' )
 {
@@ -11,198 +11,14 @@ if( typeof module !== 'undefined' )
 var _global = _global_;
 var _ = _global_.wTools;
 
-//
-
-function _err( test )
-{
-
-  var errObj1 = new Error( 'err obj for tesst' );
-  var errMsg2 = errObj1.message;
-
-  var errMsg1 = 'some error message',
-    strName = 'Diagnostics.test.s',
-    errObj2 = new Error( 'Error #3' ),
-    errMsg3 = errObj2.message,
-    optionsObj3 =
-  {
-      level : 1,
-      args : [ errObj1 ]
-  },
-
-    optionsObj4 =
-  {
-      level : 3,
-      args : [ errMsg1, errObj2 ]
-  };
-
-  /* - */
-
-  test.case = 'single string passed as args property : result should be Error obj';
-  var optionsObj2 =
-  {
-    level : 1,
-    args : [ errMsg1 ]
-  };
-  var got = _._err( optionsObj2 );
-  test.identical( got instanceof Error, true );
-
-  test.case = 'single string passed as args property : result message should contains passed string';
-  var expectMsg = new RegExp( errMsg1 );
-  test.identical( expectMsg.test( got.message ), true );
-
-  test.case = 'single string passed as args property : result message should contains file name';
-  var expectFileName = new RegExp( strName );
-  test.identical( expectFileName.test( got.message ), true );
-
-  test.case = 'single error instance passed as args property : result should be Error obj';
-  var got = _._err( optionsObj3 );
-  test.identical( got instanceof Error, true );
-
-  test.case = 'single error instance passed as args property : result message should contains passed string';
-  var expectMsg = new RegExp( errMsg2 );
-  test.identical( expectMsg.test( got.message ), true );
-
-  test.case = 'single error instance passed as args property : result message should contains file name';
-  test.identical( _.strHas( got.message, errObj1.location.path ), true );
-
-  /* - */
-
-  test.open( 'several error instances/messages passed as args property' );
-  var got = _._err( optionsObj4 );
-  test.identical( got instanceof Error, true );
-
-  test.case = 'result message should contains all passed string';
-  var expectMsg1 = new RegExp( errMsg3 );
-  var expectMsg2 = new RegExp( errMsg1 );
-  test.identical( [ expectMsg1.test( got.message ), expectMsg2.test( got.message ) ], [ true, true ] );
-
-  test.case = 'result message should contains file name';
-  var expectFileName = new RegExp( strName );
-  test.identical( expectFileName.test( got.message ), true );
-
-  test.close( 'several error instances/messages passed as args property' );
-
-  /* - */
-
-  var optionsObj1 =
-  {
-    level : 1,
-    args : null
-  };
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'missed argument';
-  test.shouldThrowErrorSync( function( )
-  {
-    _._err( );
-  } );
-
-  test.case = 'extra argument';
-  test.shouldThrowErrorSync( function( )
-  {
-    _._err( optionsObj1, optionsObj2 );
-  } );
-
-  test.case = 'options.args not array';
-  test.shouldThrowErrorSync( function( )
-  {
-    _._err( optionsObj1 );
-  } );
-
-}
-
-//
-
-function err( test )
-{
-  var errMsg1 = 'some error message',
-    strName = 'Diagnostics.test.s',
-    errObj1 = new Error( 'err obj for tesst' ),
-    errMsg2 = errObj1.message,
-    errObj2 = new Error( 'Error #3' ),
-    errMsg3 = errObj2.message;
-
-  test.case = 'single string passed as args property : result should be Error obj';
-  var got = _.err( errMsg1 );
-  test.identical( got instanceof Error, true );
-
-  test.case = 'single string passed as args property : result message should contains passed string';
-  var expectMsg = new RegExp( errMsg1 );
-  test.identical( expectMsg.test( got.message ), true );
-
-  test.case = 'single string passed as args property : result message should contains file name';
-  var expectFileName = new RegExp( strName );
-  test.identical( expectFileName.test( got.message ), true );
-
-  test.case = 'single error instance passed as args property : result should be Error obj';
-  var got = _.err( errObj1 );
-  test.identical( got instanceof Error, true );
-
-  test.case = 'single error instance passed as args property : result message should contains passed string';
-  var expectMsg = new RegExp( errMsg2 );
-  test.identical( expectMsg.test( got.message ), true );
-
-  test.case = 'single error instance passed as args property : result message should contains file name';
-  test.identical( _.strHas( got.message,errObj1.location.path ), true );
-
-  test.case = 'several error instances/messages passed as args property : result should be Error obj';
-  var got = _.err( errObj2, errMsg1 );
-  test.identical( got instanceof Error, true );
-
-  test.case = 'several error instances/messages passed as args : result message should contains all ' +
-    'passed string';
-  var expectMsg1 = new RegExp( errMsg3 ),
-    expectMsg2 = new RegExp( errMsg1 );
-  test.identical( [ expectMsg1.test( got.message ), expectMsg2.test( got.message ) ], [ true, true ] );
-
-  test.case = 'several error instances/messages passed as args property : result message should contains ' +
-    'file name';
-  var expectFileName = new RegExp( strName );
-  test.identical( expectFileName.test( got.message ), true );
-
-};
-
-//
-
-function errLog( test )
-{
-  var errMsg1 = 'some error message',
-    strName = 'Diagnostics.test.s',
-    errObj1 = new Error( 'err obj for tesst' ),
-    errMsg2 = errObj1.message;
-
-
-  test.case = 'single string passed as args property : result should be Error obj';
-  var got = _.errLog( errMsg1 );
-  test.identical( got instanceof Error, true );
-
-  test.case = 'single string passed as args property : result message should contains passed string';
-  var expectMsg = new RegExp( errMsg1 );
-  test.identical( expectMsg.test( got.message ), true );
-
-  test.case = 'single string passed as args property : result message should contains file name';
-  var expectFileName = new RegExp( strName );
-  test.identical( expectFileName.test( got.message ), true );
-
-  test.case = 'single error instance passed as args property : result should be Error obj';
-  var got = _.errLog( errObj1 );
-  test.identical( got instanceof Error, true );
-
-  test.case = 'single error instance passed as args property : result message should contains passed string';
-  var expectMsg = new RegExp( errMsg2 );
-  test.identical( expectMsg.test( got.message ), true );
-
-  test.case = 'single error instance passed as args property : result message should contains file name';
-  test.identical( _.strHas( got.message,errObj1.location.path ), true );
-
-}
-
-//
+// --
+// tests
+// --
 
 function sureMapHasExactly( test )
 {
+  var err;
+
   test.case = 'correct input';
   var srcMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
   var screenMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
@@ -306,6 +122,8 @@ function sureMapHasExactly( test )
 
 function sureMapOwnExactly( test )
 {
+  var err;
+
   test.case = 'correct input';
   var srcMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
   var screenMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
@@ -409,6 +227,8 @@ function sureMapOwnExactly( test )
 
 function sureMapHasOnly( test )
 {
+  var err;
+
   test.case = 'correct input';
   var srcMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
   var screenMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
@@ -515,6 +335,8 @@ function sureMapHasOnly( test )
 
 function sureMapOwnOnly( test )
 {
+  var err;
+
   test.case = 'correct input';
   var srcMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
   var screenMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
@@ -618,6 +440,8 @@ function sureMapOwnOnly( test )
 
 function sureMapHasAll( test )
 {
+  var err;
+
   test.case = 'correct input';
   var srcMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
   var screenMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
@@ -721,6 +545,8 @@ function sureMapHasAll( test )
 
 function sureMapOwnAll( test )
 {
+  var err;
+
   test.case = 'correct input';
   var srcMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
   var screenMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
@@ -824,6 +650,8 @@ function sureMapOwnAll( test )
 
 function sureMapHasNone( test )
 {
+  var err;
+
   test.case = 'correct input';
   var srcMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
   var screenMap = { 'e' : 13, 'f' : 77, 'g' : 3, 'h' : 'Mikle' };
@@ -927,6 +755,8 @@ function sureMapHasNone( test )
 
 function sureMapOwnNone( test )
 {
+  var err;
+
   test.case = 'correct input';
   var srcMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
   var screenMap = { 'e' : 13, 'f' : 77, 'g' : 3, 'h' : 'Mikle' };
@@ -1030,6 +860,8 @@ function sureMapOwnNone( test )
 
 function sureMapHasNoUndefine( test )
 {
+  var err;
+
   test.case = 'correct input';
   var srcMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
   var msg = function(){ return srcMap.a + srcMap.b };
@@ -1125,6 +957,8 @@ function sureMapHasNoUndefine( test )
 
 function assertMapHasFields( test )
 {
+  var err;
+
   // in normal mode this test should throw error. The routine return true when Config.debug === false
   if( !Config.debug )
   {
@@ -1237,6 +1071,8 @@ function assertMapHasFields( test )
 
 function assertMapOwnFields( test )
 {
+  var err;
+
 // in normal mode this test should throw error. The routine return true when Config.debug === false
   if( !Config.debug )
   {
@@ -1348,6 +1184,8 @@ function assertMapOwnFields( test )
 
 function assertMapHasOnly( test )
 {
+  var err;
+
 // in normal mode this test should throw error. The routine return true when Config.debug === false
   if( !Config.debug )
   {
@@ -1460,6 +1298,8 @@ function assertMapHasOnly( test )
 
 function assertMapOwnOnly( test )
 {
+  var err;
+
 // in normal mode this test should throw error. The routine return true when Config.debug === false
   if( !Config.debug )
   {
@@ -1572,6 +1412,8 @@ function assertMapOwnOnly( test )
 
 function assertMapHasNone( test )
 {
+  var err;
+
 // in normal mode this test should throw error. The routine return true when Config.debug === false
   if( !Config.debug )
   {
@@ -1684,6 +1526,8 @@ function assertMapHasNone( test )
 
 function assertMapOwnNone( test )
 {
+  var err;
+
 // in normal mode this test should throw error. The routine return true when Config.debug === false
   if( !Config.debug )
   {
@@ -1796,6 +1640,8 @@ function assertMapOwnNone( test )
 
 function assertMapHasNoUndefine( test )
 {
+  var err;
+
 // in normal mode this test should throw error. The routine return true when Config.debug === false
   if( !Config.debug )
   {
@@ -1980,7 +1826,9 @@ function diagnosticStack( test )
 
 };
 
-//
+// --
+// define test suite
+// --
 
 var Self =
 {
@@ -1990,10 +1838,6 @@ var Self =
 
   tests :
   {
-
-    _err   : _err,
-    err    : err,
-    errLog,
 
     // test sureMap*
 

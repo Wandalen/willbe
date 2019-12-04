@@ -1065,7 +1065,7 @@ function _err( o )
       else
       result += ' = Message\n' + originalMessage + '\n';
       if( o.condensingStack )
-      result += '\n = Condensed calls stack\n' + stackCondensed + '';
+      result += '\n = Beautified calls stack\n' + stackCondensed + '';
       else
       result += '\n = Functions stack\n' + o.stack + '';
       result += '\n = Catches stack\n' + catches + '\n';

@@ -252,13 +252,12 @@ function out_body( o )
 
   if( con )
   {
-    con.procedure( o.procedure );
+    let procedure2 = o.procedure.clone();
+    con.procedure( procedure2 );
     con.give( function timeGot( err, arg )
     {
-      // if( err ) /* xxx : remove, leave another if */
-      // clearTimeout( timer );
       if( arg === _.dont )
-      clearTimeout( timer );
+      _.time.cancel( timer );
       con.take( err, arg );
     });
   }
@@ -267,19 +266,13 @@ function out_body( o )
 
   timer = _.time.begin( o.delay, o.procedure, timeEnd );
 
-  // let stack = _.diagnosticStack();
-
   return con;
 
   /* */
 
   function timeEnd()
   {
-    // if( stack )
-    // console.log( '_global.__GLOBAL_WHICH__', _global.__GLOBAL_WHICH__, _.time.begin.which );
     let result;
-
-    // _.assert( !_.procedure.namesMap || !!_.procedure.activeProcedure, stack );
 
     handleCalled = true;
 
@@ -406,21 +399,21 @@ function _errTimeOut( o )
   o.message = o.message || 'Time out!';
   o.reason = o.reason || 'time out';
 
-  debugger;
   let err = _._err
   ({
     args : [ o.message ],
     throws : o.procedure ? [ o.procedure._sourcePath ] : [],
     asyncCallsStack : o.procedure ? [ o.procedure.stack() ] : [],
+    reason : o.reason,
   });
 
-  Object.defineProperty( err, 'reason',
-  {
-    enumerable : false,
-    configurable : false,
-    writable : false,
-    value : o.reason,
-  });
+  // Object.defineProperty( err, 'reason',
+  // {
+  //   enumerable : false,
+  //   configurable : false,
+  //   writable : false,
+  //   value : o.reason,
+  // });
 
   if( o.consequnce )
   Object.defineProperty( err, 'consequnce',
