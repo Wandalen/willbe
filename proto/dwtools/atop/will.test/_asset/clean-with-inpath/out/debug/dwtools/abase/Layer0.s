@@ -12,6 +12,7 @@ if( typeof module !== 'undefined' && module !== null )
 
   require( './l0/l3/iBool.s' );
   require( './l0/l3/iBuffer.s' );
+  require( './l0/l3/iContainer.s' );
   require( './l0/l3/iEntity.s' );
   require( './l0/l3/iErr.s' );
   require( './l0/l3/iFunctional.s' );
@@ -21,6 +22,7 @@ if( typeof module !== 'undefined' && module !== null )
   require( './l0/l3/iRange.s' );
   require( './l0/l3/iRegexp.s' );
   require( './l0/l3/iRoutine.s' );
+  require( './l0/l3/iSet.s' );
   require( './l0/l3/iStr.s' );
   require( './l0/l3/iTime.s' );
   require( './l0/l3/iType.s' );
@@ -28,6 +30,7 @@ if( typeof module !== 'undefined' && module !== null )
 
   require( './l0/l5/fBool.s' );
   require( './l0/l5/fBuffer.s' );
+  require( './l0/l5/fContainer.s' );
   require( './l0/l5/fEntity.s' );
   require( './l0/l5/fErr.s' );
   require( './l0/l5/fFunctional.s' );
@@ -38,6 +41,7 @@ if( typeof module !== 'undefined' && module !== null )
   require( './l0/l5/fRegexp.s' );
   require( './l0/l5/fRoutine.s' );
   require( './l0/l5/fSorted.s' );
+  require( './l0/l5/fSet.s' );
   require( './l0/l5/fStr.s' );
   require( './l0/l5/fTime.s' );
   require( './l0/l5/fUnroll.s' );
@@ -52,6 +56,7 @@ if( typeof module !== 'undefined' && module !== null )
 
   require( './l0/l8/gBool.s' );
   require( './l0/l8/gBuffer.s' );
+  require( './l0/l8/gContainer.s' );
   require( './l0/l8/gEntity.s' );
   require( './l0/l8/gErr.s' );
   require( './l0/l8/gFunctional.s' );
@@ -62,6 +67,7 @@ if( typeof module !== 'undefined' && module !== null )
   require( './l0/l8/gRange.s' );
   require( './l0/l8/gRegexp.s' );
   require( './l0/l8/gRoutine.s' );
+  require( './l0/l8/gSet.s' );
   require( './l0/l8/gStr.s' );
   require( './l0/l8/gTime.s' );
 

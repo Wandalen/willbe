@@ -234,7 +234,7 @@ function _propertyGetterSetterMake( o )
 
   _.assert( !result.set || o.setter !== false, () => 'Field ' + _.strQuote( o.name ) + ' is read only, but setter found in' + _.toStrShort( o.methods ) );
   _.assert( !!result.set || o.setter === false, () => 'Field ' + _.strQuote( o.name ) + ' is not read only, but setter not found in' + _.toStrShort( o.methods ) );
-  _.assert( !!result.get );
+  _.assert( !!result.get || o.getter === false, () => 'Field ' + _.strQuote( o.name ) + ' is not read only, but getter not found in' + _.toStrShort( o.methods ) );
 
   return result;
 
@@ -1216,20 +1216,50 @@ function suiteMakerFrom_functor( fop )
   if( fop.setterFunctor && _.entityIdentical )
   _.assert( _.entityIdentical( defaults, _.mapExtend( null, fop.setterFunctor.defaults ) ) );
 
+  let _pre = fop.getterFunctor.pre || fop.setterFunctor.pre;
+  if( _pre )
+  accessorMaker.pre = pre;
+
   accessorMaker.defaults = defaults;
 
   return accessorMaker;
 
   /* */
 
+  function pre( routine, args )
+  {
+    let o2 = _pre( routine, args );
+    // if( fop.getterFunctor.pre )
+    // {
+    //   let args2 = _.filter( null, args, ( e, k ) => _.structure.extendReplacing( null, e ) );
+    //   let o2 = fop.getterFunctor.pre.call( fop.getterFunctor, args2 );
+    // }
+    return o2;
+  }
+
+  /* */
+
   function accessorMaker( o )
   {
     let r = Object.create( null );
-    _.routineOptions( accessorMaker, arguments );
+
+    if( _pre )
+    o = pre( accessorMaker, arguments );
+    else
+    o = _.routineOptions( accessorMaker, arguments );
+
     if( fop.setterFunctor )
+    if( fop.setterFunctor.body )
+    r.set = fop.setterFunctor.body( o );
+    else
     r.set = fop.setterFunctor( o );
+
     if( fop.getterFunctor )
+    if( fop.getterFunctor.body )
+    r.get = fop.getterFunctor.body( o );
+    else
     r.get = fop.getterFunctor( o );
+
     return r;
   }
 
@@ -1976,8 +2006,8 @@ function aliasSetter_functor_body( o )
     self[ container ][ originalName ] = src;
     return self[ container ][ originalName ];
   }
-  else if( _.objectLike( container ) )
-  return function aliasGet( src )
+  else if( _.objectLike( container ) || _.routineLike( container ) )
+  return function aliasSet( src )
   {
     let self = this;
     return container[ originalName ] = src;
@@ -2030,7 +2060,7 @@ function aliasGet_functor_body( o )
     let self = this;
     return self[ container ][ originalName ];
   }
-  else if( _.objectLike( container ) )
+  else if( _.objectLike( container ) || _.routineLike( container ) )
   return function aliasGet( src )
   {
     let self = this;
@@ -2083,15 +2113,6 @@ function _DefineGenerate( original, kind )
   {
     [ original.name ] : function()
     {
-      // if( original.pre )
-      // {
-      //   o = original.pre( routine, arguments );
-      // }
-      // else
-      // {
-      //   _.assert( arguments.length === 1 );
-      // }
-      // _.assert( _.mapIs( o ) );
       let definition = _.define[ kind ]({ ini : arguments, routine : original });
       _.assert( _.definitionIs( definition ) );
       return definition;
@@ -2243,11 +2264,10 @@ _.mapExtend( _.accessor.setter, Setter );
 _.accessor.suite = _.accessor.suite || Object.create( null );
 _.mapExtend( _.accessor.suite, Suite );
 
-// debugger;
 _.accessor.define = _.accessor.define || Object.create( null );
 _.accessor.define.getter = _DefinesGenerate( _.accessor.define.getter || null, _.accessor.getter, 'getter' );
-// _.accessor.define.setter = _DefinesGenerate( _.accessor.define.setter || null, _.accessor.setter, 'setter' );
-// _.accessor.define.suite = _DefinesGenerate( _.accessor.define.suite || null, _.accessor.suite, 'accessor' );
+_.accessor.define.setter = _DefinesGenerate( _.accessor.define.setter || null, _.accessor.setter, 'setter' );
+_.accessor.define.suite = _DefinesGenerate( _.accessor.define.suite || null, _.accessor.suite, 'accessor' );
 
 _.assert( _.routineIs( _.accessor.define.getter.alias ) );
 

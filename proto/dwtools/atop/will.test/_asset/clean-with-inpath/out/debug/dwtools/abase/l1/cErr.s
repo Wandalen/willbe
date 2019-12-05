@@ -66,7 +66,7 @@ function diagnosticCode( o )
       }
       catch( err )
       {
-        o.sourceCode = ` ! Cant load source code of ${ _.strQuote( o.location.path ) }`;
+        o.sourceCode = ` ! Cant load source code of "${ o.location.path }"`;
       }
 
       if( !o.sourceCode )

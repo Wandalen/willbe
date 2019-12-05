@@ -151,6 +151,25 @@ function rel_functor( routinePath )
   }
 }
 
+//
+
+function ReplaceSetsAreIdentical()
+{
+  _.include( 'wIntrospector' );
+
+  debugger;
+  let file = _.introspector.thisFile().parse();
+  debugger;
+
+  file.routines = file.routines.filter( null, ( r ) =>
+  {
+  });
+
+  file.arrange();
+}
+
+ReplaceSetsAreIdentical();
+
 // --
 // tests
 // --
@@ -237,23 +256,6 @@ function buildSimple( test )
 
   });
 }
-
-//
-
-function ReplaceSetsAreIdentical()
-{
-  _.include( 'wIntrospector' );
-
-  let file = _.introspection.thisFile().parse();
-
-  file.routines = file.routines.filter( null, ( r ) =>
-  {
-  });
-
-  file.rewrite();
-}
-
-ReplaceSetsAreIdentical();
 
 //
 

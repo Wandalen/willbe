@@ -293,7 +293,7 @@ function strIsolate_body( o )
 
   function strLeft( index )
   {
-    let r = _._strLeftSingle( o.src, o.delimeter, index, undefined );
+    let r = _._strLeftSingle( o.src, o.delimeter, [ index, undefined ] );
     if( quote )
     if( r.entry !== undefined )
     {
@@ -308,7 +308,7 @@ function strIsolate_body( o )
 
   function strRight( index )
   {
-    let r = _._strRightSingle( o.src, o.delimeter, undefined, index );
+    let r = _._strRightSingle( o.src, o.delimeter, [ undefined, index ] );
     if( quote )
     if( r.entry !== undefined )
     {
@@ -644,7 +644,7 @@ function strIsolateInsideLeftSignle( src, begin, end )
     do
     {
 
-      b = _.strLeft( src, begin, l );
+      b = _.strLeft( src, begin, [ l, src.length ] );
 
       if( b.entry === undefined )
       return notFound();

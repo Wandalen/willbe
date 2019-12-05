@@ -346,7 +346,7 @@ function regexpsSources( o )
       _.assert
       (
         o.flags === null || src.flags === o.flags,
-        () => `All RegExps should have flags field with the same value ${ _.strQuote( src.flags ) } != ${ _.strQuote( o.flags ) }` 
+        () => `All RegExps should have flags field with the same value "${ src.flags }" != "${ o.flags }"` 
       );
       if( o.flags === null )
       o.flags = src.flags;
