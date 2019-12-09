@@ -14,13 +14,10 @@ function ready( timeOut, procedure, onReady )
 {
 
   _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
-  // _.assert( _.numberIs( arguments[ 0 ] ) || _.routineIs( arguments[ 0 ] ) || arguments[ 0 ] === undefined );
 
-  // let time = 0;
   if( _.numberIs( arguments[ 0 ] ) )
   {
     timeOut = arguments[ 0 ];
-    // onReady = arguments[ 1 ];
     if( !_.procedureIs( arguments[ 1 ] ) )
     {
       onReady = arguments[ 1 ];
@@ -252,8 +249,7 @@ function out_body( o )
 
   if( con )
   {
-    let procedure2 = o.procedure.clone();
-    con.procedure( procedure2 );
+    con.procedure( o.procedure.clone() );
     con.give( function timeGot( err, arg )
     {
       if( arg === _.dont )
@@ -290,6 +286,8 @@ function out_body( o )
 
   }
 
+  /* */
+
 }
 
 out_body.defaults =
@@ -297,6 +295,7 @@ out_body.defaults =
   delay : null,
   onEnd : null,
   procedure : null,
+  isFinally : false,
 }
 
 let out = _.routineFromPreAndBody( out_pre, out_body );
@@ -345,6 +344,7 @@ let out = _.routineFromPreAndBody( out_pre, out_body );
  * @memberof wTools
  */
 
+/* xxx : remove the body, use out_body */
 function outError_body( o )
 {
   _.assert( _.routineIs( _.Consequence ) );
@@ -437,58 +437,80 @@ _errTimeOut.defaults =
 
 //
 
-function periodic( delay, onReady )
+function rarely_functor( perTime, routine )
 {
-  _.assert( _.routineIs( _.Consequence ) );
+  let lastTime = _.time.now() - perTime;
 
-  let con = new _.Consequence();
-  let id;
+  _.assert( arguments.length === 2 );
+  _.assert( _.numberIs( perTime ) );
+  _.assert( _.routineIs( routine ) );
 
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.numberIs( delay ) );
-
-  let _onReady = null;
-
-  if( _.routineIs( onReady ) )
-  _onReady = function()
+  return function fewer()
   {
-    let result = onReady.call();
-    if( result === false )
-    clearInterval( id );
-    _.Consequence.take( con, undefined );
-    con.finally( handlePeriodicCon );
-  }
-  else if( onReady instanceof wConsquence )
-  _onReady = function()
-  {
-    let result = onReady.ping();
-    if( result === false )
-    clearInterval( id );
-    _.Consequence.take( con, undefined );
-    con.finally( handlePeriodicCon );
-  }
-  else if( onReady === undefined )
-  _onReady = function()
-  {
-    _.Consequence.take( con, undefined );
-    con.finally( handlePeriodicCon );
-  }
-  else throw _.err( 'unexpected type of onReady' );
-
-  id = setInterval( _onReady, delay );
-
-  return con;
-
-  function handlePeriodicCon( err )
-  {
-    if( arg === _.dont )
-    clearInterval( id );
-    // if( err )
-    // clearInterval( id );
-    /* xxx */
+    let now = _.time.now();
+    let elapsed = now - lastTime;
+    if( elapsed < perTime )
+    return;
+    lastTime = now;
+    return routine.apply( this, arguments );
   }
 
 }
+
+// //
+//
+// function periodic( delay, onReady )
+// {
+//   _.assert( _.routineIs( _.Consequence ) );
+//
+//   let con = new _.Consequence();
+//   let id;
+//
+//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+//   _.assert( _.numberIs( delay ) );
+//
+//   let _onReady = null;
+//
+//   if( _.routineIs( onReady ) )
+//   _onReady = function()
+//   {
+//     let result = onReady.call();
+//     if( result === false )
+//     clearInterval( id );
+//     _.Consequence.take( con, undefined );
+//     con.finally( handlePeriodicCon );
+//   }
+//   else if( onReady instanceof wConsquence )
+//   _onReady = function()
+//   {
+//     let result = onReady.ping();
+//     if( result === false )
+//     clearInterval( id );
+//     _.Consequence.take( con, undefined );
+//     con.finally( handlePeriodicCon );
+//   }
+//   else if( onReady === undefined )
+//   _onReady = function()
+//   {
+//     _.Consequence.take( con, undefined );
+//     con.finally( handlePeriodicCon );
+//   }
+//   else throw _.err( 'unexpected type of onReady' );
+//
+//   id = setInterval( _onReady, delay );
+//
+//   return con;
+//
+//   function handlePeriodicCon( err )
+//   {
+//     if( arg === _.dont )
+//     clearInterval( id );
+//     // if( err )
+//     // clearInterval( id );
+//     /* xxx */
+//   }
+//
+// }
 
 //
 
@@ -579,9 +601,11 @@ let Routines =
 
   out,
   outError,
+
   _errTimeOut,
 
-  periodic, /* dubious */
+  rarely_functor, /* check */
+  // periodic, /* dubious */
   once, /* dubious */
 
 }

@@ -2,9 +2,6 @@
 
 'use strict';
 
-/*
-*/
-
 if( typeof module !== 'undefined' )
 {
   let _ = require( '../../Tools.s' );
@@ -157,13 +154,18 @@ function ReplaceSetsAreIdentical()
 {
   _.include( 'wIntrospector' );
 
-  debugger;
-  let file = _.introspector.thisFile().parse();
-  debugger;
+  let file = _.introspector.thisFile().refine();
 
-  file.routines = file.routines.filter( null, ( r ) =>
+  logger.log( file.productExportInfo() );
+
+  debugger;
+  file.product.nodes.map( null, ( node ) =>
   {
+    let found = file.nodeSearch( node, 'setsAreIdentical' );
+    if( _.mapKeys( found ).length )
+    debugger;
   });
+  debugger;
 
   file.arrange();
 }

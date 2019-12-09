@@ -33,10 +33,12 @@ if( typeof module !== 'undefined' && module !== null )
   require( './l0/l5/fContainer.s' );
   require( './l0/l5/fEntity.s' );
   require( './l0/l5/fErr.s' );
+  require( './l0/l5/fEvent.s' );
   require( './l0/l5/fFunctional.s' );
   require( './l0/l5/fLong.s' );
   require( './l0/l5/fMap.s' );
   require( './l0/l5/fNumber.s' );
+  require( './l0/l5/fProcess.s' );
   require( './l0/l5/fRange.s' );
   require( './l0/l5/fRegexp.s' );
   require( './l0/l5/fRoutine.s' );

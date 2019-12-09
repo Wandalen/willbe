@@ -8611,7 +8611,7 @@ function groupTextualReport( test )
     spentTime : 5000
   }
   var got = _.path.groupTextualReport( _.mapExtend( null,defaults, o ) );
-  var expected = '0 file(s), found in 5.000s';
+  var expected = '0 file(s), in 5.000s';
   test.identical( got,expected );
 
   test.open( 'locals' )
@@ -8655,7 +8655,7 @@ function groupTextualReport( test )
     '   4 at /',
     '   2 at ./a',
     '   2 at ./b',
-    '- Deleted 4 file(s), at /, found in 5.000s'
+    '- Deleted 4 file(s), at /, in 5.000s'
   ].join( '\n' )
   test.identical( got,expected );
 
@@ -8685,7 +8685,7 @@ function groupTextualReport( test )
    4 at /
    2 at ./a
    2 at ./b
-- Deleted 4 file(s), at /, found in 5.000s`;
+- Deleted 4 file(s), at /, in 5.000s`;
   test.equivalent( got, expected );
 
   test.case = 'relative, explanation + groupsMap + spentTime, verbosity : 5';
@@ -8711,7 +8711,7 @@ function groupTextualReport( test )
    4 at .
    2 at ./a
    2 at ./b
-- Deleted 4 file(s), at ., found in 5.000s
+- Deleted 4 file(s), at ., in 5.000s
 `
   test.equivalent( got, expected );
 

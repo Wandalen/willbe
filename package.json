@@ -1,6 +1,6 @@
 {
   "name" : "willbe", 
-  "version" : "0.5.32", 
+  "version" : "0.5.33", 
   "description" : "Utility to manage modules of complex modular systems", 
   "author" : "Kostiantyn Wandalen <wanalen@willbe.so>", 
   "contributors" : 
