@@ -1124,9 +1124,6 @@ function routinesChain( test )
 function routineExtend( test )
 {
 
-  // var got = _.routineExtend( dst, { c : { s : 1 } } );
-  // test.identical( got.c, {} ); // true
-
   test.open( 'dst is null, src has pre and body properties');
 
   test.case = 'dst is null, src is routine maked by routineFromPreAndBody';

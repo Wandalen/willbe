@@ -30,6 +30,10 @@ function entityEntityEqualize( test )
   var got = _.entityEntityEqualize( undefined, null );
   test.identical( got, false );
 
+  test.case = 'nan and nan';
+  var got = _.entityEntityEqualize( NaN, NaN );
+  test.identical( got, true );
+
   test.case = 'equal numbers';
   var got = _.entityEntityEqualize( 1, 1 );
   test.identical( got, true );

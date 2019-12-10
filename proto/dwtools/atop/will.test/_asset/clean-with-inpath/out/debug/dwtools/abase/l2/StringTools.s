@@ -907,6 +907,59 @@ function strCommonRight( ins )
 
 //
 
+/**
+ * Routine strRandom() makes string with random length with random symbols defined
+ * by option {-o.alphabet-}.
+ * Routine accepts two types of parameter. First of them is options map {-o-}, the second 
+ * is Number (Range) {-length-}.
+ *
+ * First set of parameters
+ * @param { Map } o - Options map.
+ * @param { Number|Range } o.length - The length of random string.
+ * The generated string may has fixed length if {-o.length-} defined by a number. If {-o.length-} 
+ * defined by a Range, then length of generated string is variable.
+ * @param { String } o.alphabet - String with symbols for generated string.
+ * Default range of symbols is 'a' - 'z'.
+ *
+ * Second set of parameters
+ * @param { Number|Range } length - The length of random string.
+ * The generated string may has fixed length if {-o.length-} defined by a number. If {-o.length-} 
+ * defined by a Range, then length of generated string is variable.
+ * @param { String } o.alphabet - String with symbols for generated string.
+ *
+ * @example
+ * _.strRandom( 0 );
+ * // returns ''
+ *
+ * @example
+ * _.strRandom( 2 );
+ * // returns 'vb' 
+ * // string with 2 random symbols from 'a' to 'z'
+ *
+ * @example
+ * _.strRandom( [ 1, 5 ] )
+ * // returns 'soyx'
+ * // string with length from 1 to 5 and random symbols from 'a' to 'z'
+ *
+ * @example
+ * _.strRandom( { length : 3, alphabet : 'a' } )
+ * // returns 'aaa'
+ * // string with length 3 and symbol 'a'
+ *
+ * @example
+ * _.strRandom( { length : [ 1, 5 ], alphabet : 'ab' } )
+ * // returns 'aabab'
+ * // string with length from 1 to 5 and random symbols 'a' and 'b'
+ *
+ * @returns { String } - Returns string with random length and symbols.
+ * @function strRandom
+ * @throws { Error } If arguments.length is less or more then one.
+ * @throws { Error } If options map {-o-} has unnacessary fields.
+ * @throws { Error } If parameter {-length-} or option {-o.length-} is not a Number and not a Range.
+ * @memberof wTools
+ *
+ */
+
 function strRandom( o )
 {
   if( !_.mapIs( o ) )
@@ -1349,26 +1402,23 @@ strEscape.defaults =
 //
 
 /**
- * Converts source string( src ) into unicode representation by replacing each symbol with its escaped unicode equivalent.
- * Example: ( 't' -> '\u0074' ). Returns result of conversion as new string or empty string if source has zero length.
- * @param {string} str - Source string to parse.
- * @returns {string} Returns string with result of conversion.
+ * Converts number {-code-} into unicode representation.
+ * Returns result of conversion as new string.
+ *
+ * @param { Number } code - The code to convert into unicode representation.
  *
  * @example
- * _.strUnicodeEscape( 'abc' );
- * // returns \u0061\u0062\u0063;
+ * _.strCodeUnicodeEscape( 70 );
+ * // returns '\\u0046'
  *
  * @example
- * _.strUnicodeEscape( 'world' );
- * // returns \u0077\u006f\u0072\u006c\u0064
+ * _.strCodeUnicodeEscape( 77 );
+ * // returns '\\u004d'
  *
- * @example
- * _.strUnicodeEscape( '//test//' );
- * // returns \u002f\u002f\u0074\u0065\u0073\u0074\u002f\u002f
- *
- * @method strUnicodeEscape
- * @throws { Exception } Throws a exception if no argument provided.
- * @throws { Exception } Throws a exception if( src ) is not a String.
+ * @returns { String } - Returns string with result of conversion.
+ * @function strCodeUnicodeEscape 
+ * @throws { Exception } If arguments.length is less or more then one.
+ * @throws { Exception } If {-src-} is not a Number.
  * @memberof wTools
  *
  */
@@ -1391,10 +1441,10 @@ function strCodeUnicodeEscape( code )
 //
 
 /**
- * Converts source string( src ) into unicode representation by replacing each symbol with its escaped unicode equivalent.
- * Example: ( 't' -> '\u0074' ). Returns result of conversion as new string or empty string if source has zero length.
- * @param {string} str - Source string to parse.
- * @returns {string} Returns string with result of conversion.
+ * Converts source string {-str-} into unicode representation by replacing each symbol with its escaped unicode equivalent.
+ * Returns result of conversion as new string or empty string if source has zero length.
+ *
+ * @param { String } str - Source string to parse.
  *
  * @example
  * _.strUnicodeEscape( 'abc' );
@@ -1408,9 +1458,10 @@ function strCodeUnicodeEscape( code )
  * _.strUnicodeEscape( '//test//' );
  * // returns \u002f\u002f\u0074\u0065\u0073\u0074\u002f\u002f
  *
- * @method strUnicodeEscape
- * @throws { Exception } Throws a exception if no argument provided.
- * @throws { Exception } Throws a exception if( src ) is not a String.
+ * @returns { String } - Returns string with result of conversion.
+ * @function strUnicodeEscape
+ * @throws { Exception } If arguments.length is less or more then one.
+ * @throws { Exception } If {-src-} is not a String.
  * @memberof wTools
  *
  */
@@ -3186,17 +3237,16 @@ strExtractInlinedStereo.defaults =
 //
 
 /**
- * Splits string( srcStr ) into parts using array( maskArray ) as mask and returns them as array.
- * Mask( maskArray ) contains string(s) separated by marker( strUnjoin.any ). Mask must starts/ends with first/last letter from source
- * or can be replaced with marker( strUnjoin.any ). Position of( strUnjoin.any ) determines which part of source string will be splited:
- * - If( strUnjoin.any ) is before string it marks everything before that string. Example: ( [ _.strUnjoin.any, 'postfix' ] ).
- * - If( strUnjoin.any ) is after string it marks everything after that string. Example: ( [ 'prefix', _.strUnjoin.any ] ).
- * - If( strUnjoin.any ) is between two strings it marks everything between them. Example: ( [ 'prefix', _.strUnjoin.any, 'postfix' ] ).
- * - If( strUnjoin.any ) is before and after string it marks all except that string. Example: ( [ '_.strUnjoin.any', something, '_.strUnjoin.any' ] ).
+ * Routine strUnjoin() splits string {-srcStr-} into parts using array {-maskArray-} as mask and returns an array with splitted parts.
+ * Mask {-maskArray-} contains string(s) separated by marker ( strUnjoin.any ). Mask must starts/ends with first/last letter from source
+ * or can be replaced with marker ( strUnjoin.any ). Position of ( strUnjoin.any ) determines which part of source string will be splited:
+ * - If ( strUnjoin.any ) is provided before string, it marks everything before that string. Example: ( [ _.strUnjoin.any, 'postfix' ] ).
+ * - If ( strUnjoin.any ) is provided after string, it marks everything after that string. Example: ( [ 'prefix', _.strUnjoin.any ] ).
+ * - If ( strUnjoin.any ) is provided between two strings, it marks everything between them. Example: ( [ 'prefix', _.strUnjoin.any, 'postfix' ] ).
+ * - If ( strUnjoin.any ) is provided before and after string, it marks all except that string. Example: ( [ '_.strUnjoin.any', something, '_.strUnjoin.any' ] ).
  *
  * @param {string} srcStr - Source string.
  * @param {array} maskArray - Contains mask for source string.
- * @returns {array} Returns array with unjoined string part.
  *
  * @example
  * _.strUnjoin( 'prefix_something_postfix', [ 'prefix', _.strUnjoin.any, 'postfix' ] );
@@ -3218,11 +3268,12 @@ strExtractInlinedStereo.defaults =
  * _.strUnjoin( 'prefix_something_postfix', [ _.strUnjoin.any, 'x', _.strUnjoin.any, 'p', _.strUnjoin.any ] );
  * // returns [ 'prefi', 'x', '_something_', 'p', 'ostfix' ]
  *
- * @method strUnjoin
- * @throws { Exception } If no arguments provided.
- * @throws { Exception } If( srcStr ) is not a String.
- * @throws { Exception } If( maskArray ) is not a Array.
- * @throws { Exception } If( maskArray ) value is not String or strUnjoin.any.
+ * @returns {array} Returns array with unjoined string part.
+ * @function strUnjoin
+ * @throws { Exception } If arguments.length is less or more then two.
+ * @throws { Exception } If {-srcStr-} is not a String.
+ * @throws { Exception } If {-maskArray-} is not an Array.
+ * @throws { Exception } If {-maskArray-} value is not String or strUnjoin.any.
  * @memberof wTools
  *
  */
@@ -3322,13 +3373,12 @@ _.assert( _.routineIs( strUnjoin.any ) );
 // --
 
 /**
- * Returns a string with the source string appended to itself n-times.
- * Expects two objects: source string( s ) ( or array of strings ) and number of concatenations( times ).
- * The string ( s ) and the number ( times ) remain unchanged.
+ * Routine _strDup() returns a string with the source string appended to itself n-times.
+ * Expects two parameter: source string {-s-} ( or array of strings ) and number of concatenations {-times-}.
+ * The string {-s-}  and the number {-times-} remain unchanged.
  *
- * @param { Array/String } s - Source array of strings / source string.
+ * @param { Array/String } s - Source array of strings or source string.
  * @param { Number } times - Number of concatenation cycles.
- * @returns { String } - Returns a string containing the src string concatenated n-times.
  *
  * @example
  * _.strDup( 'Word', 5 );
@@ -3342,10 +3392,11 @@ _.assert( _.routineIs( strUnjoin.any ) );
  * _.strDup( [ 'ab', 'd', '3 4'], 2 );
  * // returns [ 'abab', 'dd', '3 43 4']
  *
- * @method strDup
- * @throws { Exception } Throw an exception if( s ) is not a String or an array of strings.
- * @throws { Exception } Throw an exception if( times ) is not a Number.
- * @throws { Exception } Throw an exception if( arguments.length ) is not equal 2.
+ * @returns { String|Array } - Returns a string or an array of string containing the src string concatenated n-times.
+ * @function strDup
+ * @throws { Exception } If arguments.length is less or more then two.
+ * @throws { Exception } If {-s-} is not a String or an array of strings.
+ * @throws { Exception } If {-times-} is not a Number.
  * @memberof wTools
  *
  */
@@ -4816,8 +4867,8 @@ let Proto =
   strCapitalize,
   strDecapitalize,
   strEscape,
-  strCodeUnicodeEscape,
-  strUnicodeEscape, /* qqq : document me */
+  strCodeUnicodeEscape, /* Dmytro : extended documentation */
+  strUnicodeEscape, /* qqq : document me | Dmytro : documented */
   strReverse,
 
   // stripper
