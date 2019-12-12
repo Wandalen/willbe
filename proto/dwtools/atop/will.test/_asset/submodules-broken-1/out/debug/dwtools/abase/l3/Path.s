@@ -856,10 +856,10 @@ function dir_pre( routine, args )
 {
   let o = args[ 0 ];
   if( _.strIs( o ) )
-  o = { filePath : o };
+  o = { filePath : args[ 0 ], depth : args[ 1 ] };
 
   _.routineOptions( routine, o );
-  _.assert( args.length === 1 );
+  _.assert( args.length === 1 || args.length === 2 );
   _.assert( arguments.length === 2 );
   _.assert( _.strDefined( o.filePath ), 'Expects not empty string {- o.filePath -}' );
 
@@ -917,10 +917,6 @@ function dir_body( o )
     }
   }
 
-  // if( o.first )
-  // if( o.filePath[ i - 1 ] === '/' )
-  // return o.filePath;
-
   let result;
 
   if( o.first )
@@ -932,12 +928,6 @@ function dir_body( o )
   if( isTrailed )
   result = _.strAppendOnce( result, self._upStr );
 
-  // if( !o.first && result !== self._rootStr )
-  // result = _.strRemoveEnd( result, self._upStr )
-
-  // if( result === '' )
-  // result = this._rootStr;
-
   _.assert( !!result.length )
 
   return result;
@@ -947,6 +937,7 @@ dir_body.defaults =
 {
   filePath : null,
   first : 0,
+  depth : 1,
 }
 
 let dir = _.routineFromPreAndBody( dir_pre, dir_body );
@@ -954,6 +945,8 @@ dir.defaults.first = 0;
 
 let dirFirst = _.routineFromPreAndBody( dir_pre, dir_body );
 dirFirst.defaults.first = 1;
+
+/* qqq2 : implement and cover option depth. ask how */
 
 //
 

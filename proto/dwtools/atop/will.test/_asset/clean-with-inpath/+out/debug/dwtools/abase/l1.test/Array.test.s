@@ -6664,11 +6664,11 @@ function longSort( test )
       return 1;
       else if( a === b )
       return 0;
-      else 
+      else
       return -1;
     };
     var got = _.longSort( dst, src, comparator );
-    test.identical( got, [ 0, 0, 1, 3, 4, 5, 10, 10, 14 ] ); /* qqq2 ! Dmytro : extended callback */
+    test.identical( got, [ 0, 0, 1, 3, 4, 5, 10, 10, 14 ] );
 
     test.case = 'not empty container, onEvaluate - evaluator';
     var dst = null;
@@ -6698,7 +6698,7 @@ function longSort( test )
       return 1;
       else if( a === b )
       return 0;
-      else 
+      else
       return -1;
     };
     var got = _.longSort( dst, comparator );
@@ -6714,7 +6714,7 @@ function longSort( test )
       return 1;
       else if( a === b )
       return 0;
-      else 
+      else
       return -1;
     };
     var got = _.longSort( dst, src, comparator );
