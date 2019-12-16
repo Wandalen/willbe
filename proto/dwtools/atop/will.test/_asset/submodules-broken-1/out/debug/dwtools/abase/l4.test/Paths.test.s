@@ -10,7 +10,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wTesting' );
   _.include( 'wStringer' );
 
-  require( '../l4/PathsBasic.s' );
+  require( '../l3/PathsBasic.s' );
 
 }
 

@@ -12,8 +12,6 @@ function onModule( it )
   if( !it.module.about.name )
   return;
 
-  // debugger;
-  // if( it.withPath !== it.junction.dirPath && path.begins( it.withPath, it.junction.dirPath ) )
   if( it.withPath !== it.junction.localPath )
   {
     debugger;

@@ -8,10 +8,10 @@ if( typeof module !== 'undefined' && module !== null )
 
   require( './Layer0.s' );
 
-  require( './l1/IncludeTools.s' );
+  // require( './l1/ModuleBasic.s' );
+  require( './l1/ModulesRegistry.s' );
   require( './l1/NameTools.s' );
   require( './l1/StrBasic.s' );
-  require( './l1/ModulesRegistry.s' );
 
 }
 

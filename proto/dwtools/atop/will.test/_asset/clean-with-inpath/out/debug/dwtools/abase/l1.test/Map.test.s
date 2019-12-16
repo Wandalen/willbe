@@ -5778,6 +5778,208 @@ function assertMapOwnNone( test )
   test.identical( _.strHas( err.message, 'Expects two, three or four arguments' ), true );
 }
 
+//
+
+function sureMapHasNoUndefine( test )
+{
+  var err;
+
+  test.case = 'correct input';
+  var srcMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
+  var msg = function(){ return srcMap.a + srcMap.b };
+  test.identical( _.sureMapHasNoUndefine( srcMap), true );
+  test.identical( _.sureMapHasNoUndefine( srcMap, msg ), true );
+  test.identical( _.sureMapHasNoUndefine( srcMap, msg, 'msg' ), true );
+  test.identical( _.sureMapHasNoUndefine( srcMap, () => 'This is ' + 'explanation' ), true );
+
+  test.case = 'check error message, no msg';
+  var otherMap = { 'd' : undefined };
+  try
+  {
+    _.sureMapHasNoUndefine( otherMap )
+  }
+  catch ( e )
+  {
+    err = e;
+  }
+  test.identical( err instanceof Error, true );
+  test.identical( _.strHas( err.message, 'Object should have no undefines, but has : "d"' ), true );
+
+  test.case = 'check error message, msg routine';
+  var otherMap = { 'd' : undefined };
+  var msg = function(){ return srcMap.a + srcMap.b };
+  try
+  {
+    _.sureMapHasNoUndefine( otherMap, msg )
+  }
+  catch ( e )
+  {
+    err = e;
+  }
+  test.identical( err instanceof Error, true );
+  test.identical( _.strHas( err.message, '90 "d"' ), true );
+
+  test.case = 'check error message, msg string';
+  var otherMap = { 'd' : undefined };
+  try
+  {
+    _.sureMapHasNoUndefine( otherMap, 'msg' )
+  }
+  catch ( e )
+  {
+    err = e;
+  }
+  test.identical( err instanceof Error, true );
+  test.identical( _.strHas( err.message, 'msg "d"' ), true );
+
+  test.case = 'check error message, msg string & msg routine';
+  var otherMap = { 'd' : undefined };
+  var msg = function(){ return srcMap.a + srcMap.b };
+  try
+  {
+    _.sureMapHasNoUndefine( otherMap, 'msg', msg )
+  }
+  catch ( e )
+  {
+    err = e;
+  }
+  test.identical( err instanceof Error, true );
+  test.identical( _.strHas( err.message, 'msg 90 "d"' ), true );
+
+  test.case = 'check error message, msg routine';
+  var otherMap = { 'd' : undefined };
+  var msg = function(){ return srcMap.a + srcMap.b };
+  try
+  {
+    _.sureMapHasNoUndefine( otherMap, () => 'This is ' + 'explanation' )
+  }
+  catch ( e )
+  {
+    err = e;
+  }
+  test.identical( err instanceof Error, true );
+  test.identical( _.strHas( err.message, 'This is explanation "d"' ), true );
+
+  test.case = 'check error message, four or more arguments';
+  var otherMap = { 'd' : undefined };
+  var msg = function(){ return srcMap.a + srcMap.b };
+  try
+  {
+    _.sureMapHasNoUndefine( srcMap, msg, 'msg', 'msg' )
+  }
+  catch ( e )
+  {
+    err = e;
+  }
+  test.identical( err instanceof Error, true );
+  test.identical( _.strHas( err.message, 'Expects one, two or three arguments' ), true );
+}
+
+//
+
+function assertMapHasNoUndefine( test )
+{
+  var err;
+
+// in normal mode this test should throw error. The routine return true when Config.debug === false
+  if( !Config.debug )
+  {
+    test.case = 'Config.debug === false';
+    var otherMap = { 'd' : undefined };
+    test.identical( _.assertMapHasNoUndefine( otherMap ), true );
+  }
+
+  test.case = 'correct input';
+  var srcMap = { 'a' : 13, 'b' : 77, 'c' : 3, 'd' : 'Mikle' };
+  var msg = function(){ return srcMap.a + srcMap.b };
+  test.identical( _.assertMapHasNoUndefine( srcMap), true );
+  test.identical( _.assertMapHasNoUndefine( srcMap, msg ), true );
+  test.identical( _.assertMapHasNoUndefine( srcMap, msg, 'msg' ), true );
+  test.identical( _.assertMapHasNoUndefine( srcMap, () => 'This is ' + 'explanation' ), true );
+
+  test.case = 'check error message, no msg';
+  var otherMap = { 'd' : undefined };
+  try
+  {
+    _.assertMapHasNoUndefine( otherMap )
+  }
+  catch ( e )
+  {
+    err = e;
+  }
+  test.identical( err instanceof Error, true );
+  test.identical( _.strHas( err.message, 'Object should have no undefines, but has : "d"' ), true );
+
+  test.case = 'check error message, msg routine';
+  var otherMap = { 'd' : undefined };
+  var msg = function(){ return srcMap.a + srcMap.b };
+  try
+  {
+    _.assertMapHasNoUndefine( otherMap, msg )
+  }
+  catch ( e )
+  {
+    err = e;
+  }
+  test.identical( err instanceof Error, true );
+  test.identical( _.strHas( err.message, '90 "d"' ), true );
+
+  test.case = 'check error message, msg string';
+  var otherMap = { 'd' : undefined };
+  try
+  {
+    _.assertMapHasNoUndefine( otherMap, 'msg' )
+  }
+  catch ( e )
+  {
+    err = e;
+  }
+  test.identical( err instanceof Error, true );
+  test.identical( _.strHas( err.message, 'msg "d"' ), true );
+
+  test.case = 'check error message, msg string & msg routine';
+  var otherMap = { 'd' : undefined };
+  var msg = function(){ return srcMap.a + srcMap.b };
+  try
+  {
+    _.assertMapHasNoUndefine( otherMap, 'msg', msg )
+  }
+  catch ( e )
+  {
+    err = e;
+  }
+  test.identical( err instanceof Error, true );
+  test.identical( _.strHas( err.message, 'msg 90 "d"' ), true );
+
+  test.case = 'check error message, msg routine';
+  var otherMap = { 'd' : undefined };
+  var msg = function(){ return srcMap.a + srcMap.b };
+  try
+  {
+    _.assertMapHasNoUndefine( otherMap, () => 'This is ' + 'explanation' )
+  }
+  catch ( e )
+  {
+    err = e;
+  }
+  test.identical( err instanceof Error, true );
+  test.identical( _.strHas( err.message, 'This is explanation "d"' ), true );
+
+  test.case = 'check error message, four or more arguments';
+  var otherMap = { 'd' : undefined };
+  var msg = function(){ return srcMap.a + srcMap.b };
+  try
+  {
+    _.assertMapHasNoUndefine( srcMap, msg, 'msg', 'msg' )
+  }
+  catch ( e )
+  {
+    err = e;
+  }
+  test.identical( err instanceof Error, true );
+  test.identical( _.strHas( err.message, 'Expects one, two or three arguments' ), true );
+}
+
 // --
 // define test suite
 // --
@@ -5896,6 +6098,9 @@ var Self =
 
     assertMapHasNone,
     assertMapOwnNone,
+
+    sureMapHasNoUndefine,
+    assertMapHasNoUndefine,
 
   }
 

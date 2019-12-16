@@ -997,6 +997,46 @@ strRandom.defaults =
 
 //
 
+/**
+ * Routine strAlphabetFromRange() generates a string with a sequence of symbols started from
+ * first element of {-range-} and ended on previous element before last.
+ *
+ * @param { Range } range - Range of symbols. It is two elements array. Elements of {-range-}
+ * should have a String or a Number type.
+ *
+ * @example
+ * _.strAlphabetFromRange( [ 97, 98 ] );
+ * // returns 'a'
+ *
+ * @example
+ * _.strAlphabetFromRange( 97, 100 );
+ * // returns 'abc'
+ *
+ * @example
+ * _.strAlphabetFromRange( [ 'a', 'b' ] );
+ * // returns 'a'
+ *
+ * @example
+ * _.strAlphabetFromRange( 'a', 'd' );
+ * // returns 'abc'
+ *
+ * @example
+ * _.strAlphabetFromRange( [ 'a', 98 ] );
+ * // returns 'a'
+ *
+ * @example
+ * _.strAlphabetFromRange( 97, 'd' );
+ * // returns 'abc'
+ *
+ * @returns { String } - Returns string with sequence of symbols.
+ * @function strAlphabetFromRange
+ * @throws { Error } If arguments.length is less then one.
+ * @throws { Error } If range.length is less or more then two.
+ * @throws { Error } If range[ 0 ] or range[ 1 ] is not a Number and not a String.
+ * @memberof wTools
+ *
+ */
+
 function strAlphabetFromRange( range )
 {
   _.assert( _.arrayIs( range ) && range.length === 2 )
@@ -4524,8 +4564,8 @@ strLinesSelect.defaults =
 }
 
 /* qqq :
-- cover option highlighting
-- cover option zeroLine
+- cover option highlighting | Dmytro : covered
+- cover option zeroLine | Dmytro : covered
 */
 
 //
@@ -4852,8 +4892,8 @@ let Proto =
 
   strCommonLeft, /* qqq : document me | Dmytro : documented */
   strCommonRight, /* qqq : document me | Dmytro : documented */
-  strRandom, /* qqq : document and extend test coverage */
-  strAlphabetFromRange, /* qqq : cover and document please */
+  strRandom, /* qqq : document and extend test coverage | Dmytro : coverage is extended, routine is documented */
+  strAlphabetFromRange, /* qqq : cover and document please | Dmytro : covered and documented */
 
   // formatter
 

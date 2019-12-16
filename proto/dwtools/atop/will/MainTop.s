@@ -274,8 +274,9 @@ function _commandsMake()
 
     'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       h : 'Run shell command on the module.' },
     'do' :                              { e : _.routineJoin( will, will.commandDo ),                          h : 'Run JS script on the module.' },
-    'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
     'call' :                            { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
+    'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
+    'hooks list' :                      { e : _.routineJoin( will, will.commandHooksList ),                   h : 'List available hooks.' },
     'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
     'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
     'export' :                          { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
@@ -1674,7 +1675,6 @@ function commandHookCall( e )
     onEach : handleEach,
     commandRoutine : commandHookCall,
     withOut : 0,
-    // withDisabledModules : 0,
     withInvalid : 1,
   })
   .then( ( arg ) =>
@@ -1696,11 +1696,20 @@ function commandHookCall( e )
 
 }
 
-/*
-Puppeteer test sample equivalent to Spectron sample you may see here
-https://bitbucket.org/stoneridgetechnology/encore.electron/src/development/test/PuppeteerSample.test.ss
+//
 
-*/
+function commandHooksList( e )
+{
+  let will = this.form();
+  let logger = will.logger;
+
+  will.hooksReload();
+  logger.log( 'Found hooks' );
+  logger.up();
+  will.hooksList();
+  logger.down();
+
+}
 
 //
 
@@ -2255,6 +2264,7 @@ let Extend =
   commandShell,
   commandDo,
   commandHookCall,
+  commandHooksList,
   commandClean,
   commandSubmodulesClean,
   commandBuild,

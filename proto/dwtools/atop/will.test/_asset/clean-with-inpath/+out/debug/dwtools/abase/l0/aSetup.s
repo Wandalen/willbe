@@ -72,7 +72,7 @@ function _errUnhandledHandler2( err, kind )
 
 //
 
-function _setupUnhandledErrorHandler0()
+function _setupUnhandledErrorHandler2()
 {
 
   if( _global._setupUnhandledErrorHandlerDone )
@@ -113,10 +113,12 @@ function _setupUnhandledErrorHandler0()
 
 //
 
-function _setup2()
+function _Setup2()
 {
 
-  _.setup._setupUnhandledErrorHandler0();
+  _.process = _.process || Object.create( null );
+
+  _.setup._setupUnhandledErrorHandler2();
 
 }
 
@@ -138,15 +140,15 @@ let Routines =
   _errUnhandledHandler0 : null,
   _errUnhandledHandler1,
   _errUnhandledHandler2,
-  _setupUnhandledErrorHandler0,
-  _setup2,
+  _setupUnhandledErrorHandler2,
+  _Setup2,
 
 }
 
 Object.assign( Self, Fields );
 Object.assign( Self, Routines );
 
-Self._setup2();
+Self._Setup2();
 
 // --
 // export

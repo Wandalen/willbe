@@ -390,7 +390,7 @@ function _register( o )
   }
 
   if( Config.debug )
-  descriptor.stack = _.diagnosticStack();
+  descriptor.stack = _.introspector.stack();
 
   if( o.combining === 'append' )
   {

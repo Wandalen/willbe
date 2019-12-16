@@ -219,7 +219,7 @@ function form()
   will.formAssociates();
 
   if( !will.environmentPath )
-  will.environmentPath = will.environmentPathDetermine( will.fileProvider.path.current() );
+  will.environmentPath = will.environmentPathFind( will.fileProvider.path.current() );
   if( !will.withPath )
   will.withPath = will.fileProvider.path.join( will.fileProvider.path.current(), './' );
 
@@ -538,7 +538,7 @@ function environmentPathSet( src )
 
 //
 
-function environmentPathDetermine( dirPath )
+function environmentPathFind( dirPath )
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -4789,6 +4789,23 @@ function hooksReload()
 
 //
 
+function hooksList()
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  for( let h in will.hooks )
+  {
+    let hook = will.hooks[ h ];
+    logger.log( `${hook.name} at ${_.color.strFormat( hook.file.absolute, 'path' )}` );
+  }
+
+}
+
+//
+
 function hookItNew( o )
 {
   let will = this;
@@ -5411,7 +5428,7 @@ let Extend =
 
   hooksPathGet,
   environmentPathSet,
-  environmentPathDetermine,
+  environmentPathFind,
 
   // etc
 
@@ -5537,6 +5554,7 @@ let Extend =
   // hooks
 
   hooksReload,
+  hooksList,
   hookItNew,
   hookItFrom,
   hookCall,

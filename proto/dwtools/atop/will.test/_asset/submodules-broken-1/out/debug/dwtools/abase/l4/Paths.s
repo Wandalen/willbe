@@ -17,7 +17,7 @@ if( typeof module !== 'undefined' )
 
   let _ = require( '../../Tools.s' );
 
-  require( '../l3/PathBasic.s' );
+  require( '../l2/PathBasic.s' );
 
 }
 

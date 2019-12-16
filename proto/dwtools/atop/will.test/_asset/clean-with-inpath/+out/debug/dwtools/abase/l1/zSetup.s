@@ -136,7 +136,7 @@ function _errUnhandledHandler2( err, kind )
 
 //
 
-function _setupUnhandledErrorHandler1()
+function _setupUnhandledErrorHandler9()
 {
 
   if( !_global._setupUnhandledErrorHandlerDone )
@@ -251,10 +251,10 @@ function _setupTesterPlaceholder()
     _realGlobal_.wTests = Object.create( null );
 
     if( !testSuit.suiteFilePath )
-    testSuit.suiteFilePath = _.diagnosticLocation( 1 ).path;
+    testSuit.suiteFilePath = _.introspector.location( 1 ).filePath;
 
     if( !testSuit.suiteFileLocation )
-    testSuit.suiteFileLocation = _.diagnosticLocation( 1 ).full;
+    testSuit.suiteFileLocation = _.introspector.location( 1 ).full;
 
     _.assert( _.strDefined( testSuit.suiteFileLocation ),'Test suit expects a mandatory option ( suiteFileLocation )' );
     _.assert( _.objectIs( testSuit ) );
@@ -306,12 +306,12 @@ function _setupProcedure()
   if( Self._entryProcedureStack )
   return;
 
-  let stack = _.diagnosticStack().split( '\n' );
+  let stack = _.introspector.stack().split( '\n' );
   for( let s = stack.length-1 ; s >= 0 ; s-- )
   {
     let call = stack[ s ];
-    let location = _.diagnosticLocationFromCall( call );
-    if( !location.isInternal )
+    let location = _.introspector.locationFromStackFrame( call );
+    if( !location.internal )
     {
       stack.splice( s+1, stack.length );
       stack.splice( 0, s );
@@ -324,7 +324,7 @@ function _setupProcedure()
 
 //
 
-function _setup9()
+function _Setup9()
 {
 
   _.assert( _global._WTOOLS_SETUP_EXPECTED_ !== false );
@@ -332,7 +332,7 @@ function _setup9()
   if( _global._WTOOLS_SETUP_EXPECTED_ !== false )
   {
     _.setup._setupConfig();
-    _.setup._setupUnhandledErrorHandler1();
+    _.setup._setupUnhandledErrorHandler9();
     _.setup._setupLoggerPlaceholder();
     _.setup._setupTesterPlaceholder();
     _.setup._setupProcedure();
@@ -357,21 +357,21 @@ let Routines =
 {
 
   _errUnhandledHandler2,
-  _setupUnhandledErrorHandler1,
+  _setupUnhandledErrorHandler9,
 
   _setupConfig,
   _setupLoggerPlaceholder,
   _setupTesterPlaceholder,
   _setupProcedure,
 
-  _setup9,
+  _Setup9,
 
 }
 
 Object.assign( Self, Fields );
 Object.assign( Self, Routines );
 
-Self._setup9();
+Self._Setup9();
 
 // --
 // export

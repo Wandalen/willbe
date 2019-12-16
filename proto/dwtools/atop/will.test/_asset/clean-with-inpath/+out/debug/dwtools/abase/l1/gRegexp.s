@@ -187,28 +187,6 @@ let _floor = Math.floor;
 
 //
 
-/**
- * Escapes special characters with a slash ( \ ). Supports next set of characters : .*+?^=! :${}()|[]/\
- *
- * @example
- * _.regexpEscape( 'Hello. How are you?' );
- * // returns "Hello\. How are you\?"
- *
- * @param {String} src Regexp string
- * @returns {String} Escaped string
- * @function regexpEscape
- * @memberof wTools
- */
-
-function regexpEscape( src )
-{
-  _.assert( _.strIs( src ) );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  return src.replace( /([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1" );
-}
-
-//
-
 let regexpsEscape = null;
 
 //
@@ -346,7 +324,7 @@ function regexpsSources( o )
       _.assert
       (
         o.flags === null || src.flags === o.flags,
-        () => `All RegExps should have flags field with the same value "${ src.flags }" != "${ o.flags }"` 
+        () => `All RegExps should have flags field with the same value "${ src.flags }" != "${ o.flags }"`
       );
       if( o.flags === null )
       o.flags = src.flags;
@@ -849,9 +827,6 @@ let Routines =
 {
 
   // regexp
-
-  regexpEscape,
-  regexpsEscape : _.routineVectorize_functor( regexpEscape ),
 
   regexpArrayMake,
   regexpFrom,

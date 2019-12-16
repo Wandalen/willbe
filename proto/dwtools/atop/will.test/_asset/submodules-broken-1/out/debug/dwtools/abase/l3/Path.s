@@ -28,87 +28,89 @@ if( typeof module !== 'undefined' )
 
 let _global = _global_;
 let _ = _global_.wTools;
+_.assert( !!_.path );
 let Self = _.path = _.path || Object.create( null );
 
+// // --
+// // meta
+// // --
+//
+// function Init()
+// {
+//   let self = this;
+//
+//   _.assert( _.strIs( self._rootStr ) );
+//   _.assert( _.strIs( self._upStr ) );
+//   _.assert( _.strIs( self._hereStr ) );
+//   _.assert( _.strIs( self._downStr ) );
+//
+//   if( !self._downUpStr )
+//   self._downUpStr = self._downStr + self._upStr; /* ../ */
+//   if( !self._hereUpStr )
+//   self._hereUpStr = self._hereStr + self._upStr; /* ./ */
+//
+//   self._rootRegSource = _.regexpEscape( self._rootStr );
+//   self._upRegSource = _.regexpEscape( self._upStr );
+//   self._downRegSource = _.regexpEscape( self._downStr );
+//   self._hereRegSource = _.regexpEscape( self._hereStr );
+//   self._downUpRegSource = _.regexpEscape( self._downUpStr );
+//   self._hereUpRegSource = _.regexpEscape( self._hereUpStr );
+//
+//   let root = self._rootRegSource;
+//   let up = self._upRegSource;
+//   let down = self._downRegSource;
+//   let here = self._hereRegSource;
+//
+//   let beginOrChar = '(?:.|^)';
+//   let butUp = `(?:(?!${up}).)+`;
+//   let notDownUp = `(?!${down}(?:${up}|$))`;
+//   let upOrBegin = `(?:^|${up})`;
+//   let upOrEnd = `(?:${up}|$)`;
+//   let splitOrUp = `(?:(?:${up}${up})|((${upOrBegin})${notDownUp}${butUp}${up}))`; /* split or / */
+//
+//   self._delDownRegexp = new RegExp( `(${beginOrChar})${splitOrUp}${down}(${upOrEnd})`, '' );
+//   self._delHereRegexp = new RegExp( up + here + '(' + up + '|$)' );
+//   self._delUpDupRegexp = /\/{2,}/g;
+//
+// }
+//
+// //
+//
+// function CloneExtending( o )
+// {
+//   _.assert( arguments.length === 1 );
+//   let result = Object.create( this )
+//   _.mapExtend( result, Parameters,o );
+//   result.Init();
+//   return result;
+// }
+
 // --
-// internal
+// checker
 // --
 
-function Init()
-{
-  let self = this;
-
-  _.assert( _.strIs( self._rootStr ) );
-  _.assert( _.strIs( self._upStr ) );
-  _.assert( _.strIs( self._hereStr ) );
-  _.assert( _.strIs( self._downStr ) );
-
-  if( !self._downUpStr )
-  self._downUpStr = self._downStr + self._upStr; /* ../ */
-  if( !self._hereUpStr )
-  self._hereUpStr = self._hereStr + self._upStr; /* ./ */
-
-  self._rootRegSource = _.regexpEscape( self._rootStr );
-  self._upRegSource = _.regexpEscape( self._upStr );
-  self._downRegSource = _.regexpEscape( self._downStr );
-  self._hereRegSource = _.regexpEscape( self._hereStr );
-  self._downUpRegSource = _.regexpEscape( self._downUpStr );
-  self._hereUpRegSource = _.regexpEscape( self._hereUpStr );
-
-  let root = self._rootRegSource;
-  let up = self._upRegSource;
-  let down = self._downRegSource;
-  let here = self._hereRegSource;
-
-  let beginOrChar = '(?:.|^)';
-  let butUp = `(?:(?!${up}).)+`;
-  let notDownUp = `(?!${down}(?:${up}|$))`;
-  let upOrBegin = `(?:^|${up})`;
-  let upOrEnd = `(?:${up}|$)`;
-  let splitOrUp = `(?:(?:${up}${up})|((${upOrBegin})${notDownUp}${butUp}${up}))`; /* split or / */
-
-  self._delDownRegexp = new RegExp( `(${beginOrChar})${splitOrUp}${down}(${upOrEnd})`, '' );
-  self._delHereRegexp = new RegExp( up + here + '(' + up + '|$)' );
-  self._delUpDupRegexp = /\/{2,}/g;
-
-}
+// function is( path )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   return _.strIs( path );
+// }
+//
+// //
+//
+// function are( paths )
+// {
+//   let self = this;
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   if( _.mapIs( paths ) )
+//   return true;
+//   if( !_.arrayIs( paths ) )
+//   return false;
+//   return paths.every( ( path ) => self.is( path ) );
+// }
 
 //
 
-function CloneExtending( o )
-{
-  _.assert( arguments.length === 1 );
-  let result = Object.create( this )
-  _.mapExtend( result, Parameters,o );
-  result.Init();
-  return result;
-}
-
-// --
-// path tester
-// --
-
-function is( path )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  return _.strIs( path );
-}
-
-//
-
-function are( paths )
-{
-  let self = this;
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  if( _.mapIs( paths ) )
-  return true;
-  if( !_.arrayIs( paths ) )
-  return false;
-  return paths.every( ( path ) => self.is( path ) );
-}
-
-//
-
+/* xxx : make new version in module Files */
 function like( path )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
@@ -150,13 +152,9 @@ function isSafe( filePath,level )
 
   if( level >= 1 )
   {
-    //let isAbsolute = this.isAbsolute( filePath );
-    //if( isAbsolute )
     if( this.isAbsolute( filePath ) )
     {
-      // debugger;
       let parts = filePath.split( this._upStr ).filter( ( p ) => p.trim() );
-      //let number = parts.lenth;
       if( process.platform === 'win32' && parts.length && parts[ 0 ].length === 1 )
       parts.splice( 0, 1 );
       if( parts.length <= 1 )
@@ -179,586 +177,562 @@ function isSafe( filePath,level )
   if( /(^|\/)\.(?!$|\/|\.)/.test( filePath ) )
   return false;
 
-  // if( level >= 1 )
-  // if( filePath.indexOf( '/' ) === 1 )
-  // if( filePath[ 0 ] === '/' )
-  // {
-  //   throw _.err( 'not tested' );
-  //   return false;
-  // }
-
   if( level >= 3 )
   if( /(^|\/)node_modules($|\/)/.test( filePath ) )
   return false;
 
-  // if( safe )
-  // safe = filePath.length > 8 || ( filePath[ 0 ] !== '/' && filePath[ 1 ] !== ':' );
-
   return true;
 }
 
+// //
 //
-
-/**
- * Checks if string path is refined ( checks that the string doesn´t contain left( \\ ) or double slashes ( // ) ), and it also
- * returns true when the path has slash ( / ) in the end .
- * @param {String} filePath Source path for check
- * @returns {boolean}
- * @function isRefinedMaybeTrailed
- * @memberof module:Tools/PathBasic.wTools.path
- */
-
-function isRefinedMaybeTrailed( path )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.strIs( path ), 'Expects string {-path-}, but got', _.strType( path ) );
-
-  // if( !path.length )
-  // return false;
-
-  if( path[ 1 ] === ':' && path[ 2 ] === '\\' )
-  return false;
-
-  let leftSlash = /\\/g;
-  let doubleSlash = /\/\//g;
-
-  if( leftSlash.test( path ) /* || doubleSlash.test( path ) */ )
-  return false;
-
-  // if( !_.strEnds( path, this._upStr + this._upStr ) )
-  // return false;
-  // if( path !== this._upStr && !_.strEnds( path, this._upStr + this._upStr ) && _.strEnds( path, this._upStr ) )
-  // return false;
-
-  return true;
-}
-
+// /**
+//  * Checks if string path is refined ( checks that the string doesn´t contain left( \\ ) or double slashes ( // ) ), and it also
+//  * returns true when the path has slash ( / ) in the end .
+//  * @param {String} filePath Source path for check
+//  * @returns {boolean}
+//  * @function isRefined
+//  * @memberof module:Tools/PathBasic.wTools.path
+//  */
 //
-
-/**
- * Checks if string path is refined: checks that the string doesn´t contain left( \\ ) or double slashes ( // ) ), and that it is not trailed
- * @param {String} filePath Source path for check
- * @returns {boolean}
- * @function isRefined
- * @memberof module:Tools/PathBasic.wTools.path
- */
-
-function isRefined( path )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.strIs( path ), 'Expects string {-path-}, but got', _.strType( path ) );
-
-  if( !this.isRefinedMaybeTrailed( path ) )
-  return false;
-
-  // if( !_.strEnds( path, this._upStr + this._upStr ) )
-  // return false;
-
-  // if( path !== this._upStr && !_.strEnds( path, this._upStr + this._upStr ) && _.strEnds( path, this._upStr ) )
-  // return false;
-
-  return true;
-}
-
+// function isRefined( path )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( _.strIs( path ), 'Expects string {-path-}, but got', _.strType( path ) );
 //
-
-/**
- * Checks if string path is normalized, and maybe trailed ( ends with a slash ( / ) ).
- * @param {String} filePath Source path for check
- * @returns {boolean}
- * @function isNormalizedMaybeTrailed
- * @memberof module:Tools/PathBasic.wTools.path
- */
-
-function isNormalizedMaybeTrailed( filePath )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.strIs( filePath ), 'Expects string' );
-  let normalizedPath = this.normalize( filePath )
-  let trailedPath = this.trail( normalizedPath );
-  return normalizedPath === filePath || trailedPath === filePath;
-}
-
+//   if( path[ 1 ] === ':' && path[ 2 ] === '\\' )
+//   return false;
 //
-
-/**
- * Checks if string path is normalized.
- * @param {String} filePath Source path for check
- * @returns {boolean}
- * @function isNormalized
- * @memberof module:Tools/PathBasic.wTools.path
- */
-
-function isNormalized( filePath )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.strIs( filePath ), 'Expects string' );
-  let normalizedPath = this.normalize( filePath )
-  return normalizedPath === filePath;
-}
-
+//   let leftSlash = /\\/g;
+//   let doubleSlash = /\/\//g;
 //
-
-function isAbsolute( filePath )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.strIs( filePath ), 'Expects string {-filePath-}, but got', _.strType( filePath ) );
-  // _.assert( filePath.indexOf( '\\' ) === -1,'Expects refined {-filePath-}, but got', filePath );
-  // _.assert(  filePath === '' || this.isRefinedMaybeTrailed( filePath ), () => 'Expects refined {-filePath-}, but got ' + _.strQuote( filePath ) );
-  // _.assert( _.filePath.isNormalized( filePath ),'Expects normalized {-filePath-}, but got', filePath ); // Throws many errors
-  filePath = this.refine( filePath );
-  return _.strBegins( filePath, this._upStr );
-}
-
+//   if( leftSlash.test( path ) )
+//   return false;
 //
-
-function isRelative( filePath )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.strIs( filePath ), 'Expects string {-filePath-}, but got', _.strType( filePath ) );
-  return !this.isAbsolute( filePath );
-}
-
+//   return true;
+// }
 //
-
-function isGlobal( filePath )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.strIs( filePath ), 'Expects string' );
-  return _.strHas( filePath, '://' );
-  // return _.strHas( filePath, '://' ) || _.strHas( filePath, '#' );
-}
-
+// // //
+// //
+// // /**
+// //  * Checks if string path is refined: checks that the string doesn´t contain left( \\ ) or double slashes ( // ) ), and that it is not trailed
+// //  * @param {String} filePath Source path for check
+// //  * @returns {boolean}
+// //  * @function isRefined
+// //  * @memberof module:Tools/PathBasic.wTools.path
+// //  */
+// //
+// // function isRefined( path )
+// // {
+// //   _.assert( arguments.length === 1, 'Expects single argument' );
+// //   _.assert( _.strIs( path ), 'Expects string {-path-}, but got', _.strType( path ) );
+// //
+// //   if( !this.isRefined( path ) )
+// //   return false;
+// //
+// //   return true;
+// // }
 //
-
-function isRoot( filePath )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.strIs( filePath ), 'Expects string {-filePath-}, but got', _.strType( filePath ) );
-  if( filePath === this._rootStr )
-  return true;
-  if( this.isRelative( filePath ) )
-  return false;
-  if( this.normalize( filePath ) === this._rootStr )
-  return true;
-
-  return false;
-}
-
+// //
 //
-
-function isDotted( srcPath )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  if( srcPath === this._hereStr )
-  return true;
-  if( srcPath === this._downStr )
-  return true;
-  if( _.strBegins( srcPath, this._hereStr + this._upStr ) )
-  return true;
-  if( _.strBegins( srcPath, this._downStr + this._upStr ) )
-  return true;
-  return false;
-}
-
+// /**
+//  * Checks if string path is normalized, and maybe trailed ( ends with a slash ( / ) ).
+//  * @param {String} filePath Source path for check
+//  * @returns {boolean}
+//  * @function isNormalized
+//  * @memberof module:Tools/PathBasic.wTools.path
+//  */
 //
-
-function isTrailed( srcPath )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  if( srcPath === this._rootStr )
-  return false;
-  return _.strEnds( srcPath,this._upStr );
-}
+// function isNormalized( filePath )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( _.strIs( filePath ), 'Expects string' );
+//   let normalizedPath = this.normalize( filePath )
+//   let trailedPath = this.trail( normalizedPath );
+//   return normalizedPath === filePath || trailedPath === filePath;
+// }
+//
+// //
+//
+// /**
+//  * Checks if string path is normalized.
+//  * @param {String} filePath Source path for check
+//  * @returns {boolean}
+//  * @function isNormalized
+//  * @memberof module:Tools/PathBasic.wTools.path
+//  */
+//
+// function isNormalized( filePath )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( _.strIs( filePath ), 'Expects string' );
+//   let normalizedPath = this.normalize( filePath )
+//   return normalizedPath === filePath;
+// }
+//
+// //
+//
+// function isAbsolute( filePath )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( _.strIs( filePath ), 'Expects string {-filePath-}, but got', _.strType( filePath ) );
+//   filePath = this.refine( filePath );
+//   return _.strBegins( filePath, this._upStr );
+// }
+//
+// //
+//
+// function isRelative( filePath )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( _.strIs( filePath ), 'Expects string {-filePath-}, but got', _.strType( filePath ) );
+//   return !this.isAbsolute( filePath );
+// }
+//
+// //
+//
+// function isGlobal( filePath )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( _.strIs( filePath ), 'Expects string' );
+//   return _.strHas( filePath, '://' );
+// }
+//
+// //
+//
+// function isRoot( filePath )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( _.strIs( filePath ), 'Expects string {-filePath-}, but got', _.strType( filePath ) );
+//   if( filePath === this._rootStr )
+//   return true;
+//   if( this.isRelative( filePath ) )
+//   return false;
+//   if( this.normalize( filePath ) === this._rootStr )
+//   return true;
+//
+//   return false;
+// }
+//
+// //
+//
+// function _isDotted( srcPath )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   if( srcPath === this._hereStr )
+//   return true;
+//   if( srcPath === this._downStr )
+//   return true;
+//   if( _.strBegins( srcPath, this._hereStr + this._upStr ) )
+//   return true;
+//   if( _.strBegins( srcPath, this._downStr + this._upStr ) )
+//   return true;
+//   return false;
+// }
+//
+// //
+//
+// function isDotted( srcPath )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   if( this._isDotted( srcPath ) )
+//   return true;
+//   /* qqq : cover all casess */
+//   if( _.strBegins( srcPath, this._hereStr + '\\' ) )
+//   return true;
+//   if( _.strBegins( srcPath, this._downStr + '\\' ) )
+//   return true;
+//   return false;
+// }
+//
+// //
+//
+// function isTrailed( srcPath )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   if( srcPath === this._rootStr )
+//   return false;
+//   return _.strEnds( srcPath,this._upStr );
+// }
 
 //
 
-let isGlob = (function functor()
+function isGlob( src )
 {
-
-  let _pathIsGlobRegexpStr = '';
-  _pathIsGlobRegexpStr += '(?:[?*]+)'; /* asterix,question mark */
-  _pathIsGlobRegexpStr += '|(?:([!?*@+]*)\\((.*?(?:\\|(.*?))*)\\))'; /* parentheses */
-  _pathIsGlobRegexpStr += '|(?:\\[(.+?)\\])'; /* square brackets */
-  _pathIsGlobRegexpStr += '|(?:\\{(.*)\\})'; /* curly brackets */
-  _pathIsGlobRegexpStr += '|(?:\0)'; /* zero */
-
-  let _pathIsGlobRegexp = new RegExp( _pathIsGlobRegexpStr );
-
-  isGlob.functor = functor;
-
-  return isGlob;
-
-  function isGlob( src )
-  {
-    _.assert( arguments.length === 1, 'Expects single argument' );
-    _.assert( _.strIs( src ) );
-
-    if( this.fileProvider && !this.fileProvider.globing )
-    {
-      // debugger;
-      return false;
-    }
-
-    /* let regexp = /(\*\*)|([!?*])|(\[.*\])|(\(.*\))|\{.*\}+(?![^[]*\])/g; */
-
-    return _pathIsGlobRegexp.test( src );
-  }
-
-})();
-
-//
-
-function hasBase( srcPath )
-{
-  return _.strHasAny( srcPath, [ '\0', '()' ] );
-}
-
-//
-
-function begins( srcPath,beginPath )
-{
-  _.assert( arguments.length === 2, 'Expects two arguments' );
-  _.assert( _.strIs( srcPath ), 'Expects string {-srcPath-}, but got', _.strType( srcPath ) );
-  _.assert( _.strIs( beginPath ), 'Expects string {-beginPath-}, but got', _.strType( beginPath ) );
-  if( srcPath === beginPath )
-  return true;
-  return _.strBegins( srcPath,this.trail( beginPath ) );
-}
-
-//
-
-function ends( srcPath,endPath )
-{
-  _.assert( arguments.length === 2, 'Expects two arguments' );
-  endPath = this.undot( endPath );
-
-  if( !_.strEnds( srcPath,endPath ) )
-  return false;
-
-  let begin = _.strRemoveEnd( srcPath,endPath );
-  if( begin === '' || _.strEnds( begin,this._upStr ) || _.strEnds( begin,this._hereStr ) )
-  return true;
-
-  return false;
-}
-
-// --
-// reformer
-// --
-
-/**
-  * The routine refine() regularize a Windows paths to posix path format by replacing left slashes to slash ( \\ to / ).
-  * If the path has a disk label, the routine puts slash '/' before and after the disk label.
-  * If the path is an empty string, method returns ''. Otherwise, routine returns original path.
-  *
-  * @param {string} src - path for refinement.
-  *
-  * @example
-  *  // returns '/foo//bar/../';
-  *  let path = '\\foo\\\\bar\\..\\';
-  *  path = wTools.refine( path );
-  *
-  * @example
-  *  // returns '/C/temp//foo/bar/../';
-  *  let path = 'C:\\temp\\\\foo\\bar\\..\\';
-  *  path = wTools.refine( path );
-  *
-  * @example
-  *  // returns '';
-  *  let path = '';
-  *  path = wTools.refine( path );
-  *
-  * @example
-  *  // returns '/foo/bar/';
-  *  let path = '/foo/bar/';
-  *  path = wTools.refine( path );
-  *
-  * @returns {string} Returns refined path.
-  * @throws {Error} If {-arguments.length-} is less or more then one.
-  * @throws {Error} If passed argument is not a string.
-  * @function refine
-  * @memberof module:Tools/PathBasic.wTools.path
-  */
-
-function refine( src )
-{
+  let self = this;
 
   _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( src ) );
 
-  let result = src;
-
-  if( result[ 1 ] === ':' )
+  if( self.fileProvider && !self.fileProvider.globing )
   {
-    if( result[ 2 ] === '\\' || result[ 2 ] === '/' )
-    {
-      if( result.length > 3 )
-      result = '/' + result[ 0 ] + '/' + result.substring( 3 );
-      else
-      result = '/' + result[ 0 ]
-    }
-    else if( result.length === 2 )
-    {
-      result = '/' + result[ 0 ];
-    }
+    return false;
   }
 
-  result = result.replace( /\\/g, '/' );
+  if( !self._pathIsGlobRegexp )
+  _setup();
 
-  return result;
+  return self._pathIsGlobRegexp.test( src );
+
+  function _setup()
+  {
+    let _pathIsGlobRegexpStr = '';
+    _pathIsGlobRegexpStr += '(?:[?*]+)'; /* asterix,question mark */
+    _pathIsGlobRegexpStr += '|(?:([!?*@+]*)\\((.*?(?:\\|(.*?))*)\\))'; /* parentheses */
+    _pathIsGlobRegexpStr += '|(?:\\[(.+?)\\])'; /* square brackets */
+    _pathIsGlobRegexpStr += '|(?:\\{(.*)\\})'; /* curly brackets */
+    _pathIsGlobRegexpStr += '|(?:\0)'; /* zero */
+    self._pathIsGlobRegexp = new RegExp( _pathIsGlobRegexpStr );
+  }
+
 }
 
 //
 
-function _normalize( o )
+function hasSymbolBase( srcPath )
 {
-  let debug = 0;
-  if( 0 )
-  debug = 1;
-
-  _.assertRoutineOptions( _normalize, arguments );
-  _.assert( _.strIs( o.src ), 'Expects string' );
-
-  if( !o.src.length )
-  return '';
-
-  let result = o.src;
-
-  result = this.refine( result );
-
-  if( debug )
-  console.log( 'normalize.refined : ' + result );
-
-  /* detrailing */
-
-  if( o.tolerant )
-  {
-    /* remove "/" duplicates */
-    result = result.replace( this._delUpDupRegexp, this._upStr );
-  }
-
-  let endsWithUp = false;
-  let beginsWithHere = false;
-
-  /* remove right "/" */
-
-  if( result !== this._upStr && !_.strEnds( result, this._upStr + this._upStr ) && _.strEnds( result, this._upStr ) )
-  {
-    endsWithUp = true;
-    result = _.strRemoveEnd( result, this._upStr );
-  }
-
-  /* undoting */
-
-  while( !_.strBegins( result, this._hereUpStr + this._upStr ) && _.strBegins( result, this._hereUpStr ) )
-  {
-    beginsWithHere = true;
-    result = _.strRemoveBegin( result, this._hereUpStr );
-  }
-
-  /* remove second "." */
-
-  if( result.indexOf( this._hereStr ) !== -1 )
-  {
-
-    while( this._delHereRegexp.test( result ) )
-    result = result.replace( this._delHereRegexp, function( match, postSlash )
-    {
-      return postSlash || '';
-    });
-    if( result === '' )
-    result = this._upStr;
-
-  }
-
-  /* remove .. */
-
-  if( result.indexOf( this._downStr ) !== -1 )
-  {
-
-    while( this._delDownRegexp.test( result ) )
-    result = result.replace( this._delDownRegexp, ( match, notBegin, split, preSlash, postSlash ) =>
-    {
-      if( preSlash === '' )
-      return notBegin;
-      if( !notBegin )
-      return notBegin + preSlash;
-      else
-      return notBegin + ( postSlash || '' );
-    });
-
-  }
-
-  /* nothing left */
-
-  if( !result.length )
-  result = '.';
-
-  /* dot and trail */
-
-  if( o.detrailing )
-  if( result !== this._upStr && !_.strEnds( result, this._upStr + this._upStr ) )
-  result = _.strRemoveEnd( result, this._upStr );
-
-  if( !o.detrailing && endsWithUp )
-  if( result !== this._rootStr )
-  result = result + this._upStr;
-
-  if( !o.undoting && beginsWithHere )
-  result = this.dot( result );
-
-  if( debug )
-  console.log( 'normalize.result : ' + result );
-
-  return result;
+  return _.strHasAny( srcPath, [ '\0', '()' ] );
 }
 
-_normalize.defaults =
-{
-  src : null,
-  tolerant : false,
-  detrailing : false,
-  undoting : false,
-}
-
+// // //
+// //
+// // function begins( srcPath,beginPath )
+// // {
+// //   _.assert( arguments.length === 2, 'Expects two arguments' );
+// //   _.assert( _.strIs( srcPath ), 'Expects string {-srcPath-}, but got', _.strType( srcPath ) );
+// //   _.assert( _.strIs( beginPath ), 'Expects string {-beginPath-}, but got', _.strType( beginPath ) );
+// //   if( srcPath === beginPath )
+// //   return true;
+// //   return _.strBegins( srcPath,this.trail( beginPath ) );
+// // }
+// //
+// // //
+// //
+// // function ends( srcPath,endPath )
+// // {
+// //   _.assert( arguments.length === 2, 'Expects two arguments' );
+// //   endPath = this.undot( endPath );
+// //
+// //   if( !_.strEnds( srcPath,endPath ) )
+// //   return false;
+// //
+// //   let begin = _.strRemoveEnd( srcPath,endPath );
+// //   if( begin === '' || _.strEnds( begin,this._upStr ) || _.strEnds( begin,this._hereStr ) )
+// //   return true;
+// //
+// //   return false;
+// // }
 //
-
-/**
- * Regularize a path by collapsing redundant delimeters and resolving '..' and '.' segments,so A//B,A/./B and
-    A/foo/../B all become A/B. This string manipulation may change the meaning of a path that contains symbolic links.
-    On Windows,it converts forward slashes to backward slashes. If the path is an empty string,method returns '.'
-    representing the current working directory.
- * @example
-   let path = '/foo/bar//baz1/baz2//some/..'
-   path = wTools.normalize( path ); // /foo/bar/baz1/baz2
- * @param {string} src path for normalization
- * @returns {string}
- * @function normalize
- * @memberof module:Tools/PathBasic.wTools.path
- */
-
-function normalize( src )
-{
-  let result = this._normalize({ src, tolerant : false, detrailing : false, undoting : false });
-
-  _.assert( _.strIs( src ), 'Expects string' );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
-  _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
-
-  if( Config.debug )
-  {
-    let i = result.lastIndexOf( this._upStr + this._downStr + this._upStr );
-    _.assert( i === -1 || !/\w/.test( result.substring( 0, i ) ) );
-  }
-
-  return result;
-}
-
+// // --
+// // reformer
+// // --
 //
-
-function normalizeTolerant( src )
-{
-  _.assert( _.strIs( src ),'Expects string' );
-
-  let result = this._normalize({ src, tolerant : true, detrailing : false, undoting : false });
-
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( result === this._upStr || _.strEnds( result, this._upStr ) || !_.strEnds( result, this._upStr + this._upStr ) );
-  _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
-  _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
-
-  if( Config.debug )
-  {
-    _.assert( !this._delUpDupRegexp.test( result ) );
-  }
-
-  return result;
-}
-
+// /**
+//   * The routine refine() regularize a Windows paths to posix path format by replacing left slashes to slash ( \\ to / ).
+//   * If the path has a disk label, the routine puts slash '/' before and after the disk label.
+//   * If the path is an empty string, method returns ''. Otherwise, routine returns original path.
+//   *
+//   * @param {string} src - path for refinement.
+//   *
+//   * @example
+//   *  // returns '/foo//bar/../';
+//   *  let path = '\\foo\\\\bar\\..\\';
+//   *  path = wTools.refine( path );
+//   *
+//   * @example
+//   *  // returns '/C/temp//foo/bar/../';
+//   *  let path = 'C:\\temp\\\\foo\\bar\\..\\';
+//   *  path = wTools.refine( path );
+//   *
+//   * @example
+//   *  // returns '';
+//   *  let path = '';
+//   *  path = wTools.refine( path );
+//   *
+//   * @example
+//   *  // returns '/foo/bar/';
+//   *  let path = '/foo/bar/';
+//   *  path = wTools.refine( path );
+//   *
+//   * @returns {string} Returns refined path.
+//   * @throws {Error} If {-arguments.length-} is less or more then one.
+//   * @throws {Error} If passed argument is not a string.
+//   * @function refine
+//   * @memberof module:Tools/PathBasic.wTools.path
+//   */
 //
-
-function canonize( src )
-{
-  let result = this._normalize({ src, tolerant : false, detrailing : true, undoting : true });
-
-  _.assert( _.strIs( src ), 'Expects string' );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( result === this._upStr || _.strEnds( result, this._upStr + this._upStr ) || !_.strEnds( result, this._upStr ) );
-  _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
-  _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
-
-  if( Config.debug )
-  {
-    let i = result.lastIndexOf( this._upStr + this._downStr + this._upStr );
-    _.assert( i === -1 || !/\w/.test( result.substring( 0, i ) ) );
-  }
-
-  return result;
-}
-
+// function refine( src )
+// {
 //
-
-function canonizeTolerant( src )
-{
-  _.assert( _.strIs( src ),'Expects string' );
-
-  let result = this._normalize({ src, tolerant : true, detrailing : true, undoting : true });
-
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( result === this._upStr || _.strEnds( result, this._upStr ) || !_.strEnds( result, this._upStr + this._upStr ) );
-  _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
-  _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
-
-  if( Config.debug )
-  {
-    _.assert( !this._delUpDupRegexp.test( result ) );
-  }
-
-  return result;
-}
-
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( _.strIs( src ) );
 //
-
-function _pathNativizeWindows( filePath )
-{
-  let self = this;
-  _.assert( _.strIs( filePath ), 'Expects string' ) ;
-  let result = filePath.replace( /\//g, '\\' );
-
-  if( result[ 0 ] === '\\' )
-  if( result.length === 2 || result[ 2 ] === ':' || result[ 2 ] === '\\' )
-  result = result[ 1 ] + ':' + result.substring( 2 );
-
-  return result;
-}
-
+//   let result = src;
 //
-
-function _pathNativizePosix( filePath )
-{
-  let self = this;
-  _.assert( _.strIs( filePath ), 'Expects string' );
-  return filePath;
-}
-
+//   if( result[ 1 ] === ':' )
+//   {
+//     if( result[ 2 ] === '\\' || result[ 2 ] === '/' )
+//     {
+//       if( result.length > 3 )
+//       result = '/' + result[ 0 ] + '/' + result.substring( 3 );
+//       else
+//       result = '/' + result[ 0 ]
+//     }
+//     else if( result.length === 2 )
+//     {
+//       result = '/' + result[ 0 ];
+//     }
+//   }
 //
+//   result = result.replace( /\\/g, '/' );
 //
-// let nativize;
-// if( _global.process && _global.process.platform === 'win32' )
-// nativize = _pathNativizeWindows;
-// else
-// nativize = _pathNativizePosix;
-
-function nativize()
-{
-  if( _global.process && _global.process.platform === 'win32' )
-  this.nativize = this._pathNativizeWindows;
-  else
-  this.nativize = this._pathNativizePosix;
-  return this.nativize.apply( this, arguments );
-}
+//   return result;
+// }
+//
+// //
+//
+// function _normalize( o )
+// {
+//   // let debug = 0;
+//   // if( 0 )
+//   // debug = 1;
+//
+//   _.assertRoutineOptions( _normalize, arguments );
+//   _.assert( _.strIs( o.src ), 'Expects string' );
+//
+//   if( !o.src.length )
+//   return '';
+//
+//   let result = o.src;
+//
+//   result = this.refine( result );
+//
+//   // if( debug )
+//   // console.log( 'normalize.refined : ' + result );
+//
+//   /* detrailing */
+//
+//   if( o.tolerant )
+//   {
+//     /* remove "/" duplicates */
+//     result = result.replace( this._delUpDupRegexp, this._upStr );
+//   }
+//
+//   let endsWithUp = false;
+//   let beginsWithHere = false;
+//
+//   /* remove right "/" */
+//
+//   if( result !== this._upStr && !_.strEnds( result, this._upStr + this._upStr ) && _.strEnds( result, this._upStr ) )
+//   {
+//     endsWithUp = true;
+//     result = _.strRemoveEnd( result, this._upStr );
+//   }
+//
+//   /* undoting */
+//
+//   while( !_.strBegins( result, this._hereUpStr + this._upStr ) && _.strBegins( result, this._hereUpStr ) )
+//   {
+//     beginsWithHere = true;
+//     result = _.strRemoveBegin( result, this._hereUpStr );
+//   }
+//
+//   /* remove second "." */
+//
+//   if( result.indexOf( this._hereStr ) !== -1 )
+//   {
+//
+//     while( this._delHereRegexp.test( result ) )
+//     result = result.replace( this._delHereRegexp, function( match, postSlash )
+//     {
+//       return postSlash || '';
+//     });
+//     if( result === '' )
+//     result = this._upStr;
+//
+//   }
+//
+//   /* remove .. */
+//
+//   if( result.indexOf( this._downStr ) !== -1 )
+//   {
+//
+//     while( this._delDownRegexp.test( result ) )
+//     result = result.replace( this._delDownRegexp, ( match, notBegin, split, preSlash, postSlash ) =>
+//     {
+//       if( preSlash === '' )
+//       return notBegin;
+//       if( !notBegin )
+//       return notBegin + preSlash;
+//       else
+//       return notBegin + ( postSlash || '' );
+//     });
+//
+//   }
+//
+//   /* nothing left */
+//
+//   if( !result.length )
+//   result = '.';
+//
+//   /* dot and trail */
+//
+//   if( o.detrailing )
+//   if( result !== this._upStr && !_.strEnds( result, this._upStr + this._upStr ) )
+//   result = _.strRemoveEnd( result, this._upStr );
+//
+//   if( !o.detrailing && endsWithUp )
+//   if( result !== this._rootStr )
+//   result = result + this._upStr;
+//
+//   if( !o.undoting && beginsWithHere )
+//   result = this._dot( result );
+//
+//   // if( debug )
+//   // console.log( 'normalize.result : ' + result );
+//
+//   return result;
+// }
+//
+// _normalize.defaults =
+// {
+//   src : null,
+//   tolerant : false,
+//   detrailing : false,
+//   undoting : false,
+// }
+//
+// //
+//
+// /**
+//  * Regularize a path by collapsing redundant delimeters and resolving '..' and '.' segments,so A//B,A/./B and
+//     A/foo/../B all become A/B. This string manipulation may change the meaning of a path that contains symbolic links.
+//     On Windows,it converts forward slashes to backward slashes. If the path is an empty string,method returns '.'
+//     representing the current working directory.
+//  * @example
+//    let path = '/foo/bar//baz1/baz2//some/..'
+//    path = wTools.normalize( path ); // /foo/bar/baz1/baz2
+//  * @param {string} src path for normalization
+//  * @returns {string}
+//  * @function normalize
+//  * @memberof module:Tools/PathBasic.wTools.path
+//  */
+//
+// function normalize( src )
+// {
+//   let result = this._normalize({ src, tolerant : false, detrailing : false, undoting : false });
+//
+//   _.assert( _.strIs( src ), 'Expects string' );
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
+//   _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
+//
+//   if( Config.debug )
+//   {
+//     let i = result.lastIndexOf( this._upStr + this._downStr + this._upStr );
+//     _.assert( i === -1 || !/\w/.test( result.substring( 0, i ) ) );
+//   }
+//
+//   return result;
+// }
+//
+// //
+//
+// function normalizeTolerant( src )
+// {
+//   _.assert( _.strIs( src ),'Expects string' );
+//
+//   let result = this._normalize({ src, tolerant : true, detrailing : false, undoting : false });
+//
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( result === this._upStr || _.strEnds( result, this._upStr ) || !_.strEnds( result, this._upStr + this._upStr ) );
+//   _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
+//   _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
+//
+//   if( Config.debug )
+//   {
+//     _.assert( !this._delUpDupRegexp.test( result ) );
+//   }
+//
+//   return result;
+// }
+//
+// //
+//
+// function canonize( src )
+// {
+//   let result = this._normalize({ src, tolerant : false, detrailing : true, undoting : true });
+//
+//   _.assert( _.strIs( src ), 'Expects string' );
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( result === this._upStr || _.strEnds( result, this._upStr + this._upStr ) || !_.strEnds( result, this._upStr ) );
+//   _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
+//   _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
+//
+//   if( Config.debug )
+//   {
+//     let i = result.lastIndexOf( this._upStr + this._downStr + this._upStr );
+//     _.assert( i === -1 || !/\w/.test( result.substring( 0, i ) ) );
+//   }
+//
+//   return result;
+// }
+//
+// //
+//
+// function canonizeTolerant( src )
+// {
+//   _.assert( _.strIs( src ),'Expects string' );
+//
+//   let result = this._normalize({ src, tolerant : true, detrailing : true, undoting : true });
+//
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( result === this._upStr || _.strEnds( result, this._upStr ) || !_.strEnds( result, this._upStr + this._upStr ) );
+//   _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
+//   _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
+//
+//   if( Config.debug )
+//   {
+//     _.assert( !this._delUpDupRegexp.test( result ) );
+//   }
+//
+//   return result;
+// }
+//
+// //
+//
+// function _nativizeWindows( filePath )
+// {
+//   let self = this;
+//   _.assert( _.strIs( filePath ), 'Expects string' ) ;
+//   let result = filePath.replace( /\//g, '\\' );
+//
+//   if( result[ 0 ] === '\\' )
+//   if( result.length === 2 || result[ 2 ] === ':' || result[ 2 ] === '\\' )
+//   result = result[ 1 ] + ':' + result.substring( 2 );
+//
+//   return result;
+// }
+//
+// //
+//
+// function _nativizePosix( filePath )
+// {
+//   let self = this;
+//   _.assert( _.strIs( filePath ), 'Expects string' );
+//   return filePath;
+// }
+//
+// //
+//
+// function nativize()
+// {
+//   if( _global.process && _global.process.platform === 'win32' )
+//   this.nativize = this._nativizeWindows;
+//   else
+//   this.nativize = this._nativizePosix;
+//   return this.nativize.apply( this, arguments );
+// }
 
 // --
 // transformer
@@ -775,178 +749,193 @@ function from( src )
   _.assert( 0, 'Expects string, but got ' + _.strType( src ) );
 
 }
-
 //
-
-function dot( filePath )
-{
-
-  /*
-    cant use isAbsolute
-  */
-
-  // _.assert( !this.isAbsolute( path ) );
-  _.assert( !_.strBegins( filePath, this._upStr ) );
-  _.assert( arguments.length === 1 );
-
-  /*
-    not .
-    not begins with ./
-    not ..
-    not begins with ../
-  */
-
-  if( filePath !== this._hereStr && !_.strBegins( filePath, this._hereUpStr ) && filePath !== this._downStr && !_.strBegins( filePath, this._downUpStr ) )
-  {
-    _.assert( !_.strBegins( filePath, this._upStr ) );
-    filePath = this._hereUpStr + filePath;
-  }
-
-  return filePath;
-}
-
+// //
 //
-
-function undot( filePath )
-{
-  return _.strRemoveBegin( filePath, this._hereUpStr );
-}
-
+// function _dot( filePath )
+// {
 //
-
-function trail( srcPath )
-{
-  _.assert( this.is( srcPath ) );
-  _.assert( arguments.length === 1 );
-
-  if( !_.strEnds( srcPath,this._upStr ) )
-  return srcPath + this._upStr;
-
-  return srcPath;
-}
-
+//   if( !this._isDotted( filePath ) )
+//   {
+//     _.assert( !_.strBegins( filePath, this._upStr ) );
+//     filePath = this._hereUpStr + filePath;
+//   }
 //
-
-function detrail( path )
-{
-  _.assert( this.is( path ) );
-  _.assert( arguments.length === 1 );
-
-  if( path !== this._rootStr )
-  return _.strRemoveEnd( path,this._upStr );
-
-  return path;
-}
-
+//   return filePath;
+// }
 //
-
-/**
- * Returns the directory name of `path`.
- * @example
- * let path = '/foo/bar/baz/text.txt'
- * wTools.dir( path ); // '/foo/bar/baz'
- * @param {string} path path string
- * @returns {string}
- * @throws {Error} If argument is not string
- * @function dir
- * @memberof module:Tools/PathBasic.wTools.path
- */
-
-function dir_pre( routine, args )
-{
-  let o = args[ 0 ];
-  if( _.strIs( o ) )
-  o = { filePath : args[ 0 ], depth : args[ 1 ] };
-
-  _.routineOptions( routine, o );
-  _.assert( args.length === 1 || args.length === 2 );
-  _.assert( arguments.length === 2 );
-  _.assert( _.strDefined( o.filePath ), 'Expects not empty string {- o.filePath -}' );
-
-  return o;
-}
-
-function dir_body( o )
-{
-  let self = this;
-  let isTrailed = this.isTrailed( o.filePath );
-
-  _.assertRoutineOptions( dir_body, arguments );
-
-  if( o.first )
-  o.filePath = this.normalize( o.filePath );
-  else
-  o.filePath = this.canonize( o.filePath );
-
-  if( o.first )
-  if( isTrailed )
-  return o.filePath;
-
-  if( o.filePath === this._rootStr )
-  {
-    return o.filePath + this._downStr + ( o.first ? this._upStr : '' );
-  }
-
-  if( _.strEnds( o.filePath, this._upStr + this._downStr ) || o.filePath === this._downStr )
-  {
-    return o.filePath + this._upStr + this._downStr + ( o.first ? this._upStr : '' );
-  }
-
-  let i = o.filePath.lastIndexOf( this._upStr );
-
-  if( i === 0 )
-  {
-    return this._rootStr;
-  }
-
-  if( i === -1 )
-  {
-    if( o.first )
-    {
-      if( o.filePath === this._hereStr )
-      return this._downStr + this._upStr;
-      else
-      return this._hereStr + this._upStr;
-    }
-    else
-    {
-      if( o.filePath === this._hereStr )
-      return this._downStr + ( isTrailed ? this._upStr : '' );
-      else
-      return this._hereStr + ( isTrailed ? this._upStr : '' );
-    }
-  }
-
-  let result;
-
-  if( o.first )
-  result = o.filePath.substr( 0, i + self._upStr.length );
-  else
-  result = o.filePath.substr( 0, i );
-
-  if( !o.first )
-  if( isTrailed )
-  result = _.strAppendOnce( result, self._upStr );
-
-  _.assert( !!result.length )
-
-  return result;
-}
-
-dir_body.defaults =
-{
-  filePath : null,
-  first : 0,
-  depth : 1,
-}
-
-let dir = _.routineFromPreAndBody( dir_pre, dir_body );
-dir.defaults.first = 0;
-
-let dirFirst = _.routineFromPreAndBody( dir_pre, dir_body );
-dirFirst.defaults.first = 1;
-
-/* qqq2 : implement and cover option depth. ask how */
+// //
+//
+// function dot( filePath )
+// {
+//
+//   /*
+//     cant use isAbsolute
+//   */
+//
+//   _.assert( !_.strBegins( filePath, this._upStr ) );
+//   _.assert( arguments.length === 1 );
+//
+//   /*
+//     not .
+//     not begins with ./
+//     not ..
+//     not begins with ../
+//   */
+//
+//   // if( filePath !== this._hereStr && !_.strBegins( filePath, this._hereUpStr ) && filePath !== this._downStr && !_.strBegins( filePath, this._downUpStr ) )
+//   if( !this.isDotted( filePath ) )
+//   {
+//     _.assert( !_.strBegins( filePath, this._upStr ) );
+//     filePath = this._hereUpStr + filePath;
+//   }
+//
+//   return filePath;
+// }
+//
+// //
+//
+// function undot( filePath )
+// {
+//   return _.strRemoveBegin( filePath, this._hereUpStr );
+// }
+//
+// //
+//
+// function trail( srcPath )
+// {
+//   _.assert( this.is( srcPath ) );
+//   _.assert( arguments.length === 1 );
+//
+//   if( !_.strEnds( srcPath,this._upStr ) )
+//   return srcPath + this._upStr;
+//
+//   return srcPath;
+// }
+//
+// //
+//
+// function detrail( path )
+// {
+//   _.assert( this.is( path ) );
+//   _.assert( arguments.length === 1 );
+//
+//   if( path !== this._rootStr )
+//   return _.strRemoveEnd( path,this._upStr );
+//
+//   return path;
+// }
+//
+// //
+//
+// /**
+//  * Returns the directory name of `path`.
+//  * @example
+//  * let path = '/foo/bar/baz/text.txt'
+//  * wTools.dir( path ); // '/foo/bar/baz'
+//  * @param {string} path path string
+//  * @returns {string}
+//  * @throws {Error} If argument is not string
+//  * @function dir
+//  * @memberof module:Tools/PathBasic.wTools.path
+//  */
+//
+// function dir_pre( routine, args )
+// {
+//   let o = args[ 0 ];
+//   if( _.strIs( o ) )
+//   o = { filePath : args[ 0 ], depth : args[ 1 ] };
+//
+//   _.routineOptions( routine, o );
+//   _.assert( args.length === 1 || args.length === 2 );
+//   _.assert( arguments.length === 2 );
+//   _.assert( _.intIs( o.depth ) );
+//   _.assert( _.strDefined( o.filePath ), 'Expects not empty string {- o.filePath -}' );
+//
+//   return o;
+// }
+//
+// function dir_body( o )
+// {
+//   let self = this;
+//   let isTrailed = this.isTrailed( o.filePath );
+//
+//   _.assertRoutineOptions( dir_body, arguments );
+//
+//   if( o.first )
+//   o.filePath = this.normalize( o.filePath );
+//   else
+//   o.filePath = this.canonize( o.filePath );
+//
+//   if( o.first )
+//   if( isTrailed )
+//   return o.filePath;
+//
+//   if( o.filePath === this._rootStr )
+//   {
+//     return o.filePath + this._downStr + ( o.first ? this._upStr : '' );
+//   }
+//
+//   if( _.strEnds( o.filePath, this._upStr + this._downStr ) || o.filePath === this._downStr )
+//   {
+//     return o.filePath + this._upStr + this._downStr + ( o.first ? this._upStr : '' );
+//   }
+//
+//   let i = o.filePath.lastIndexOf( this._upStr );
+//
+//   if( i === 0 )
+//   {
+//     return this._rootStr;
+//   }
+//
+//   if( i === -1 )
+//   {
+//     if( o.first )
+//     {
+//       if( o.filePath === this._hereStr )
+//       return this._downStr + this._upStr;
+//       else
+//       return this._hereStr + this._upStr;
+//     }
+//     else
+//     {
+//       if( o.filePath === this._hereStr )
+//       return this._downStr + ( isTrailed ? this._upStr : '' );
+//       else
+//       return this._hereStr + ( isTrailed ? this._upStr : '' );
+//     }
+//   }
+//
+//   let result;
+//
+//   if( o.first )
+//   result = o.filePath.substr( 0, i + self._upStr.length );
+//   else
+//   result = o.filePath.substr( 0, i );
+//
+//   if( !o.first )
+//   if( isTrailed )
+//   result = _.strAppendOnce( result, self._upStr );
+//
+//   _.assert( !!result.length )
+//
+//   return result;
+// }
+//
+// dir_body.defaults =
+// {
+//   filePath : null,
+//   first : 0,
+//   depth : 1,
+// }
+//
+// let dir = _.routineFromPreAndBody( dir_pre, dir_body );
+// dir.defaults.first = 0;
+//
+// let dirFirst = _.routineFromPreAndBody( dir_pre, dir_body );
+// dirFirst.defaults.first = 1;
+//
+// /* qqq2 : implement and cover option depth. ask how */
 
 //
 
@@ -1004,7 +993,6 @@ function name_pre( routine, args )
   _.assert( args.length === 1 );
   _.assert( arguments.length === 2 );
   _.assert( _.strIs( o.path ), 'Expects string {-o.path-}' );
-  // _.assert( _.strIs( o.path ), 'Expects strings {-o.path-}' ); /* qqq : string, not strings. _.strIs( o.path ) is singular */
 
   return o;
 }
@@ -1015,7 +1003,6 @@ function name_body( o )
   if( _.strIs( o ) )
   o = { path : o };
 
-  // o = _.assertRoutineOptions( name, arguments ); /* qqq : no imply with asserts */
   _.assertRoutineOptions( name, arguments );
 
   o.path = this.canonize( o.path );
@@ -1983,8 +1970,6 @@ function _relative( o )
     result = this._hereUpStr;
     else
     result = this._hereUpStr + result;
-    // if( !self.path.isDotted( result ) )
-    // result = this._hereUpStr + result;
   }
 
   /* checks if result is normalized */
@@ -2009,7 +1994,6 @@ function _relative( o )
         this.undot( this.join( o.basePath, result ) ) === this.undot( o.filePath )
       , () => o.basePath + ' + ' + result + ' <> ' + o.filePath
     );
-    // _.assert( this.canonize( this.join( o.basePath, result ) ) === this.canonize( o.filePath ), () => o.basePath + ' + ' + result + ' <> ' + this.normalize( o.filePath ) );
   }
 
   return result;
@@ -2561,8 +2545,8 @@ let Parameters =
   _upStr : '/',
   _hereStr : '.',
   _downStr : '..',
-  _hereUpStr : null,
-  _downUpStr : null,
+  _hereUpStr : null, /* ./ */
+  _downUpStr : null, /* ../ */
 
   _rootRegSource : null,
   _upRegSource : null,
@@ -2574,6 +2558,7 @@ let Parameters =
   _delHereRegexp : null,
   _delDownRegexp : null,
   _delUpDupRegexp : null,
+  _pathIsGlobRegexp : null,
 
 }
 
@@ -2596,62 +2581,61 @@ let Fields =
 let Routines =
 {
 
-  // internal
+  // // meta
+  //
+  // Init,
+  // CloneExtending,
 
-  Init,
-  CloneExtending,
+  // checker
 
-  // _pathMultiplicator_functor,
-  // _filterNoInnerArray,
-  // _filterOnlyPath,
-
-  // path tester
-
-  is,
-  are,
+  // is,
+  // are,
   like,
   isElement,
+
   isSafe,
-  isRefinedMaybeTrailed,
-  isRefined,
-  isNormalizedMaybeTrailed,
-  isNormalized,
-  isAbsolute,
-  isRelative,
-  isGlobal,
-  isRoot,
-  isDotted,
-  isTrailed,
+  // isRefined,
+  // isNormalized,
+  // isAbsolute,
+  // isRelative,
+  // isGlobal,
+  // isRoot,
+  // _isDotted,
+  // isDotted,
+  // isTrailed,
+
   isGlob,
-  hasBase,
+  hasSymbolBase,
 
-  begins,
-  ends,
+  // begins,
+  // ends,
 
-  // reformer
-
-  refine,
-  _normalize,
-  normalize,
-  normalizeTolerant,
-  canonize,
-  canonizeTolerant,
-
-  _pathNativizeWindows,
-  _pathNativizePosix,
-  nativize,
+  // // reformer
+  //
+  // refine,
+  // _normalize,
+  // normalize,
+  // normalizeTolerant,
+  // canonize,
+  // canonizeTolerant,
+  //
+  // _nativizeWindows,
+  // _nativizePosix,
+  // nativize,
 
   // transformer
 
   from,
 
-  dot,
-  undot,
-  trail,
-  detrail,
+  // _dot,
+  // dot,
+  // undot,
+  // trail,
+  // detrail,
+  //
+  // dir,
+  // dirFirst,
 
-  dir,
-  dirFirst,
   prefixGet,
   name,
   fullName,
@@ -2713,11 +2697,5 @@ Self.Init();
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
-
-if( typeof module !== 'undefined' )
-{
-  // require( '../l4/PathsBasic.s' );
-  // require( '../l7/Glob.s' );
-}
 
 })();

@@ -12044,7 +12044,7 @@ function exportSubmodules( test )
     test.identical( got.exitCode, 0 );
 
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/debug/dwtools/abase/l0/l1/Predefined.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/debug/dwtools/abase/l3/PathBasic.s' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/debug/dwtools/abase/l2/PathBasic.s' ) ) );
     test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/submodules.out.will.yml' ) ) );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
@@ -21340,6 +21340,8 @@ var Self =
     stepSubmodulesDownload,
     stepWillbeVersionCheck,
     stepSubmodulesAreUpdated,
+
+    /* xxx : cover "will .module.new.with prepare" */
 
     // upgradeDryDetached, // xxx : look later
     // upgradeDetached, // xxx : look later
