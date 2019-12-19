@@ -4310,6 +4310,8 @@ function WillfilesFind( o )
   _.assert( o.recursive === false );
   _.assert( !path.isGlobal( path.fromGlob( o.commonPath ) ), 'Expects local path' );
 
+  debugger;
+
   if( !o.tracing )
   return findFor( o.commonPath );
 

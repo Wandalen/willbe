@@ -19,6 +19,10 @@ var _ = _global_.wTools;
 
 /*
 qqq : implement test checking "will .call link" links files ".dot1" ".dot2"
+xxx : should work
+  > local-will .imply withOut:0 .with * .call GitStatus
+  not only
+  > local-will .imply withOut:0 ; .with * .call GitStatus 
 xxx : find solution
   > git push --tags
   fatal: TaskCanceledException encountered.

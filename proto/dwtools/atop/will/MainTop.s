@@ -1954,7 +1954,6 @@ function commandWith( e )
 
   will._commandsBegin( commandWith );
 
-  debugger;
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
   if( !isolated )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
