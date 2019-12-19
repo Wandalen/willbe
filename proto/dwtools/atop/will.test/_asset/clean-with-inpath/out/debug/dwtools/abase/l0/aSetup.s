@@ -11,24 +11,24 @@ let Self = _global.wTools.setup = _global.wTools.setup || Object.create( null );
 // setup
 // --
 
-function _errUnhandledHandler1()
+function _errUncaughtHandler1()
 {
 
-  let args = _.setup._errUnhandledPre( arguments );
-  let result = _.setup._errUnhandledHandler2.apply( this, args );
+  let args = _.setup._errUncaughtPre( arguments );
+  let result = _.setup._errUncaughtHandler2.apply( this, args );
 
-  if( _.setup._errUnhandledHandler0 )
-  _.setup._errUnhandledHandler0.apply( this, arguments );
+  if( _.setup._errUncaughtHandler0 )
+  _.setup._errUncaughtHandler0.apply( this, arguments );
 
   return result;
 }
 
 //
 
-function _errUnhandledHandler2( err, kind )
+function _errUncaughtHandler2( err, kind )
 {
   if( !kind )
-  kind = 'unhandled error';
+  kind = 'uncaught error';
   let prefix = `--------------- ${kind} --------------->\n`;
   let postfix = `--------------- ${kind} ---------------<\n`;
   let errStr = err.toString();
@@ -72,25 +72,25 @@ function _errUnhandledHandler2( err, kind )
 
 //
 
-function _setupUnhandledErrorHandler2()
+function _setupUncaughtErrorHandler2()
 {
 
-  if( _global._setupUnhandledErrorHandlerDone )
+  if( _global._setupUncaughtErrorHandlerDone )
   return;
 
-  _global._setupUnhandledErrorHandlerDone = 1;
+  _global._setupUncaughtErrorHandlerDone = 1;
 
-  _.setup._errUnhandledHandler1 = _errUnhandledHandler1;
+  _.setup._errUncaughtHandler1 = _errUncaughtHandler1;
   if( _global.process && typeof _global.process.on === 'function' )
   {
-    _global.process.on( 'uncaughtException', _.setup._errUnhandledHandler1 );
-    _.setup._errUnhandledPre = _errPreNode;
+    _global.process.on( 'uncaughtException', _.setup._errUncaughtHandler1 );
+    _.setup._errUncaughtPre = _errPreNode;
   }
   else if( Object.hasOwnProperty.call( _global, 'onerror' ) )
   {
-    _.setup._errUnhandledHandler0 = _global.onerror;
-    _global.onerror = _.setup._errUnhandledHandler1;
-    _.setup._errUnhandledPre = _errPreBrowser;
+    _.setup._errUncaughtHandler0 = _global.onerror;
+    _global.onerror = _.setup._errUncaughtHandler1;
+    _.setup._errUncaughtPre = _errPreBrowser;
   }
 
   /* */
@@ -118,7 +118,7 @@ function _Setup2()
 
   _.process = _.process || Object.create( null );
 
-  _.setup._setupUnhandledErrorHandler2();
+  _.setup._setupUncaughtErrorHandler2();
 
 }
 
@@ -129,18 +129,18 @@ function _Setup2()
 let Fields =
 {
 
-  _setupUnhandledErrorHandlerDone : 0,
+  _setupUncaughtErrorHandlerDone : 0,
 
 }
 
 let Routines =
 {
 
-  _errUnhandledPre : null,
-  _errUnhandledHandler0 : null,
-  _errUnhandledHandler1,
-  _errUnhandledHandler2,
-  _setupUnhandledErrorHandler2,
+  _errUncaughtPre : null,
+  _errUncaughtHandler0 : null,
+  _errUncaughtHandler1,
+  _errUncaughtHandler2,
+  _setupUncaughtErrorHandler2,
   _Setup2,
 
 }

@@ -750,7 +750,7 @@ let Routines =
   // strIsolateInsideOrNone,
   strIsolateInsideLeftSignle,
   strIsolateInsideLeft,
-  /* qqq : implement, cover and document routine strIsolateInsideRight* */
+  /* qqq : implement, cover and document routine strIsolateInsideLeft* */
 
 }
 

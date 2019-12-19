@@ -1680,7 +1680,7 @@ function openWith( test )
   {
     test.ni( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
     var files = self.find( _.path.join( routinePath, 'out' ) );
@@ -1712,7 +1712,7 @@ function openWith( test )
   {
     test.ni( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
     var files = self.find( _.path.join( routinePath, 'out' ) );
@@ -1779,7 +1779,7 @@ function openWith( test )
   {
     test.ni( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
     var files = self.find( _.path.join( routinePath, 'out' ) );
@@ -1990,7 +1990,7 @@ function withMixed( test )
   {
     test.is( got.exitCode !== 0 );
     test.is( _.strHas( got.output, 'No module sattisfy criteria.' ) );
-    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
     return null;
   })
@@ -10887,7 +10887,7 @@ function exportNonExportable( test )
   {
     test.is( got.exitCode !== 0 );
 
-    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
     test.identical( _.strCount( got.output, 'module::supermodule / relation::Submodule is not opened' ), 1 );
@@ -14788,7 +14788,7 @@ function exportWithDisabled( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported' ), 2 );
-    test.identical( _.strCount( got.output, 'Unhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
     test.identical( _.strHas( got.output, '! Outdated' ), true );
 
     return null;
@@ -14829,7 +14829,7 @@ function exportWithDisabled( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported' ), 1 );
-    test.identical( _.strCount( got.output, 'Unhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
     test.identical( _.strHas( got.output, '! Outdated' ), false );
 
     return null;
@@ -14870,7 +14870,7 @@ function exportWithDisabled( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported' ), 1 );
-    test.identical( _.strCount( got.output, 'Unhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
     test.identical( _.strHas( got.output, '! Outdated' ), false );
 
     return null;
@@ -14911,7 +14911,7 @@ function exportWithDisabled( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported' ), 1 );
-    test.identical( _.strCount( got.output, 'Unhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
     test.identical( _.strHas( got.output, '! Outdated' ), false );
 
     return null;

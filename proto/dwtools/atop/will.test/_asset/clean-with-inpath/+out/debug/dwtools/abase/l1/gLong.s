@@ -178,6 +178,10 @@ qqq : routine longOnce requires good test coverage and documentation
 Dmytro : covered and extended documentation.
 */
 
+/*
+qqq2 : implement routine longOnce_. ask how
+*/
+
 function longOnce( dstLong, onEvaluate )
 {
   _.assert( 1 <= arguments.length || arguments.length <= 2 );

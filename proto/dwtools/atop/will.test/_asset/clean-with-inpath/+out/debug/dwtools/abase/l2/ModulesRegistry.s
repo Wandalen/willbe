@@ -394,7 +394,7 @@ let wStager =
 let wIntrospector =
 {
   sourcePath : sourcePath( 'amid/l3/introspector/IncludeMid.s', 'wintrospectorbasic' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.introspector },
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.introspector && !!_global.wTools.thisFile },
 }
 
 let wNameMapper =

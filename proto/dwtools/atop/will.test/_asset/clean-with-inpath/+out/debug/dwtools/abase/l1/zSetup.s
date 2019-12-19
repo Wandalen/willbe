@@ -10,10 +10,10 @@ let Self = _global.wTools.setup = _global.wTools.setup || Object.create( null );
 // setup
 // --
 
-function _errUnhandledHandler2( err, kind )
+function _errUncaughtHandler2( err, kind )
 {
   if( !kind )
-  kind = 'unhandled error';
+  kind = 'uncaught error';
   let prefix = `--------------- ${kind} --------------->\n`;
   let postfix = `--------------- ${kind} ---------------<\n`;
   let logger = _global.logger || _global.console;
@@ -136,29 +136,29 @@ function _errUnhandledHandler2( err, kind )
 
 //
 
-function _setupUnhandledErrorHandler9()
+function _setupUncaughtErrorHandler9()
 {
 
-  if( !_global._setupUnhandledErrorHandlerDone )
+  if( !_global._setupUncaughtErrorHandlerDone )
   {
     debugger;
     throw Error( 'setup0 should be called first' );
   }
 
-  if( _global._setupUnhandledErrorHandlerDone > 1 )
+  if( _global._setupUncaughtErrorHandlerDone > 1 )
   return;
 
-  _global._setupUnhandledErrorHandlerDone = 2;
+  _global._setupUncaughtErrorHandlerDone = 2;
 
   /* */
 
   if( _global.process && _.routineIs( _global.process.on ) )
   {
-    _.setup._errUnhandledPre = _errPreNode;
+    _.setup._errUncaughtPre = _errPreNode;
   }
   else if( Object.hasOwnProperty.call( _global, 'onerror' ) )
   {
-    _.setup._errUnhandledPre = _errPreBrowser;
+    _.setup._errUncaughtPre = _errPreBrowser;
   }
 
   /* */
@@ -332,7 +332,7 @@ function _Setup9()
   if( _global._WTOOLS_SETUP_EXPECTED_ !== false )
   {
     _.setup._setupConfig();
-    _.setup._setupUnhandledErrorHandler9();
+    _.setup._setupUncaughtErrorHandler9();
     _.setup._setupLoggerPlaceholder();
     _.setup._setupTesterPlaceholder();
     _.setup._setupProcedure();
@@ -356,8 +356,8 @@ let Fields =
 let Routines =
 {
 
-  _errUnhandledHandler2,
-  _setupUnhandledErrorHandler9,
+  _errUncaughtHandler2,
+  _setupUncaughtErrorHandler9,
 
   _setupConfig,
   _setupLoggerPlaceholder,

@@ -447,7 +447,7 @@ function isIncluded( src )
 
 function _includedRegister( o )
 {
-  _.assertRoutineOptions( _includedRegister, arguments );
+  _.assertRoutineOptionsPreservingUndefines( _includedRegister, arguments );
   try
   {
 
