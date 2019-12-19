@@ -2901,6 +2901,293 @@ function mapAllFields( test )
 
 //
 
+function hashMapExtend( test ) 
+{
+  test.case = 'dst - null, src - empty hash map';
+  var dst = null;
+  var src = new Map();
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map();
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got !== dst );
+  test.is( got !== src );
+
+  test.case = 'dst - null, src - empty simple map';
+  var dst = null;
+  var src = {};
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map();
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got !== dst );
+  test.is( got !== src );
+
+  test.case = 'dst - null, src - filled hash map';
+  var dst = null;
+  var src = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ] ] );
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ] ] );
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got !== dst );
+  test.is( got !== src );
+
+  test.case = 'dst - null, src - filled simple map';
+  var dst = null;
+  var src = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map( [ [ '1', 1 ], [ 'null', null ], [ 'str', 'str' ], [ 'undefined', undefined ], [ '', '' ], [ 'false', false ] ] );
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got !== dst );
+  test.is( got !== src );
+
+  /* - */
+
+  test.open( 'dst - hash map, src - hash map' );
+
+  test.case = 'dst - empty, src - empty';
+  var dst = new Map();
+  var src = new Map();
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map();
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst - empty, src - filled';
+  var dst = new Map();
+  var src = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ] ] );
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ] ] );
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst - filled, src - filled';
+  var dst = new Map( [ [ { a : 1 }, { a : 1 } ] ] );
+  var src = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ] ] );
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map( [ [ { a : 1 }, { a : 1 } ], [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ] ] );
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst and src - almost identical';
+  var dst = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ] ] );
+  var src = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ] ] );
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ], [ [ 1 ], [ 1 ] ] ] );
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst and src have identical keys';
+  var dst = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ] ] );
+  var src = new Map( [ [ 1, 2 ], [ null, undefined ], [ 'str', '' ], [ undefined, null ], [ '', 'str' ], [ false, true ], [ [ 1 ], [  2 ] ] ] );
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map( [ [ 1, 2 ], [ null, undefined ], [ 'str', '' ], [ undefined, null ], [ '', 'str' ], [ false, true ], [ [ 1 ], [ 1 ] ], [ [ 1 ], [  2 ] ] ] );
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst === src';
+  var dst = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ] ] );
+  var src = dst;
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ] ] );
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got === dst );
+  test.is( got === src );
+
+  test.close( 'dst - hash map, src - hash map' );
+
+  /* - */ 
+
+  test.open( 'dst - hash map, src - simple map' );
+
+  test.case = 'dst - empty, src - empty';
+  var dst = new Map();
+  var src = {};
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map();
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst - empty, src - filled';
+  var dst = new Map();
+  var src = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false, [ 1 ] : [ 1 ] };
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map( [ [ '1', [ 1 ] ], [ 'null', null ], [ 'str', 'str' ], [ 'undefined', undefined ], [ '', '' ], [ 'false', false ] ] );
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst - filled, src - filled';
+  var dst = new Map( [ [ { a : 1 }, { a : 1 } ] ] );
+  var src = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false, [ 1 ] : [ 1 ] };
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map( [ [ { a : 1 }, { a : 1 } ], [ '1', [ 1 ] ], [ 'null', null ], [ 'str', 'str' ], [ 'undefined', undefined ], [ '', '' ], [ 'false', false ] ] );
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst and src - almost identical';
+  var dst = new Map( [ [ 1, [ 1 ] ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ] ] );
+  var src = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false, [ 1 ] : [ 1 ] };
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map( [ [ 1, [ 1 ] ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ '1', [ 1 ] ], [ 'null', null ], [ 'undefined', undefined ], [ 'false', false ] ] );
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst and src have identical keys';
+  var dst = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', 'str' ], [ undefined, undefined ], [ '', '' ], [ false, false ], [ [ 1 ], [ 1 ] ] ] );
+  var src = { 1 : 1, null : undefined, 'str' : '', undefined : null, '' : 'str', false : true, [ 1 ] : 2 };
+  var got = _.hashMapExtend( dst, src );
+  var exp = new Map( [ [ 1, 1 ], [ null, null ], [ 'str', '' ], [ undefined, undefined ], [ '', 'str' ], [ false, false ], [ [ 1 ], [ 1 ] ], [ '1', 2 ], [ 'null', undefined ], [ 'undefined', null ], [ 'false', true ] ] );
+  test.identical( [ ... got.entries() ], [ ... exp.entries() ] );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.close( 'dst - hash map, src - simple map' );
+
+  /* - */
+
+  test.open( 'dst - simple map, src - hash map' );
+
+  test.case = 'dst - empty, src - empty';
+  var dst = {};
+  var src = new Map();
+  var got = _.hashMapExtend( dst, src );
+  var exp = {};
+  test.identical( got, exp );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst - empty, src - filled';
+  var dst = {};
+  var src = new Map( [ [ '1', [ 1 ] ], [ 'null', null ], [ 'str', 'str' ], [ 'undefined', undefined ], [ '', '' ], [ 'false', false ] ] );
+  var got = _.hashMapExtend( dst, src );
+  var exp = { 1 : [ 1 ], null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  test.identical( got, exp );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst - filled, src - filled';
+  var dst = { a : 1 };
+  var src = new Map( [ [ '1', [ 1 ] ], [ 'null', null ], [ 'str', 'str' ], [ 'undefined', undefined ], [ '', '' ], [ 'false', false ] ] );
+  var got = _.hashMapExtend( dst, src );
+  var exp = { a : 1, 1 : [ 1 ], null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  test.identical( got, exp );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst and src - almost identical';
+  var dst = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  var src = new Map( [ [ '1', 1 ], [ 'null', null ], [ 'str', 'str' ], [ 'undefined', undefined ], [ '', '' ], [ 'false', false ] ] );
+  var got = _.hashMapExtend( dst, src );
+  var exp = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  test.identical( got, exp );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst and src have identical keys';
+  var dst = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  var src = new Map( [ [ '1', [ 1 ] ], [ 'null', undefined ], [ 'str', '' ], [ 'undefined', null ], [ '', 'str' ], [ 'false', true ] ] );
+  var got = _.hashMapExtend( dst, src );
+  var exp = { 1 : [ 1 ], null : undefined, 'str' : '', undefined : null, '' : 'str', false : true };
+  test.identical( got, exp );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.close( 'dst - simple map, src - hash map' );
+
+  /* - */
+
+  test.open( 'dst - simple map, src - simple map' );
+
+  test.case = 'dst - empty, src - empty';
+  var dst = {};
+  var src = {};
+  var got = _.hashMapExtend( dst, src );
+  var exp = {};
+  test.identical( got, exp );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst - empty, src - filled';
+  var dst = {};
+  var src = { 1 : [ 1 ], null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  var got = _.hashMapExtend( dst, src );
+  var exp = { 1 : [ 1 ], null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  test.identical( got, exp );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst - filled, src - filled';
+  var dst = { a : 1 };
+  var src = { 1 : [ 1 ], null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  var got = _.hashMapExtend( dst, src );
+  var exp = { a : 1, 1 : [ 1 ], null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  test.identical( got, exp );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst and src - almost identical';
+  var dst = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  var src = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  var got = _.hashMapExtend( dst, src );
+  var exp = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  test.identical( got, exp );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst and src have identical keys';
+  var dst = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  var src = { 1 : [ 1 ], null : undefined, 'str' : '', undefined : null, '' : 'str', false : true };
+  var got = _.hashMapExtend( dst, src );
+  var exp = { 1 : [ 1 ], null : undefined, 'str' : '', undefined : null, '' : 'str', false : true };
+  test.identical( got, exp );
+  test.is( got === dst );
+  test.is( got !== src );
+
+  test.case = 'dst === src';
+  var dst = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  var src = dst;
+  var got = _.hashMapExtend( dst, src );
+  var exp = { 1 : 1, null : null, 'str' : 'str', undefined : undefined, '' : '', false : false };
+  test.identical( got, exp );
+  test.is( got === dst );
+  test.is( got === src );
+
+  test.close( 'dst - simple map, src - simple map' );
+
+  /* - */
+
+  if( !Config.debug ) 
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.hashMapExtend() );
+
+  test.case = 'one argument';
+  test.shouldThrowErrorSync( () => _.hashMapExtend( new Map( [ [ 1, 1 ] ] ) ) );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.hashMapExtend( new Map( [ [ 1, 1 ] ] ), {}, {} ) );
+
+  test.case = 'wrong type of dst';
+  test.shouldThrowErrorSync( () => _.hashMapExtend( 'wrong', {} ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.hashMapExtend( new Map( [ [ 1, 2 ] ] ), 'wrong' ) );
+  test.shouldThrowErrorSync( () => _.hashMapExtend( null, null ) );
+
+  test.case = 'dst - simple map, src - hash map with unliteral keys';
+  test.shouldThrowErrorSync( () => _.hashMapExtend( { a : 1 }, new Map( [ [ 1, 2 ], [ null, null ] ] ) ) );
+}
+
+//
+
 function mapOnlyPrimitives( test )
 {
   test.case = 'emtpy';
@@ -6049,6 +6336,12 @@ var Self =
     mapFields,
     mapOwnFields,
     mapAllFields,
+
+    // hash map 
+
+    hashMapExtend,
+
+    // map selector
 
     mapOnlyPrimitives,
 

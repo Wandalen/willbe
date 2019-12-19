@@ -9716,6 +9716,8 @@ var Self =
     resourcePathRemote,
     moduleIsNotValid
 
+    /* qqq : implement test checking "will .call link" links files ".dot1" ".dot2" */
+
   }
 
 }

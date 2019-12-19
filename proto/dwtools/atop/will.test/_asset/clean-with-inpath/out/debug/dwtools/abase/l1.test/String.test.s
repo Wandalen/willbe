@@ -7556,12 +7556,7 @@ function strIsolateRightOrAll( test )
 
 function strIsolateInsideLeft( test )
 {
-
-  /* - */
-
   test.open( 'string' );
-
-  /* - */
 
   test.case = 'begin';
   var expected = [ '', 'aa', '_aa_bb_', 'bb', '_cc_cc' ];
@@ -7586,7 +7581,6 @@ function strIsolateInsideLeft( test )
   /* */
 
   test.case = 'begin, several entry';
-
   var expected = [ '', 'aa', '_aa_bb_', 'bb', '_cc_cc' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', [ 'aa', 'bb' ], [ 'aa', 'bb' ] );
   test.identical( got, expected );
@@ -7595,7 +7589,6 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'middle, several entry';
-
   var expected = [ 'aa_aa_', 'bb', '_bb_cc_', 'cc', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', [ 'bb', 'cc' ], [ 'bb', 'cc' ] );
   test.identical( got, expected );
@@ -7604,7 +7597,6 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'end, several entry';
-
   var expected = [ 'aa_aa_bb_bb_', 'cc', '_', 'cc', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', [ 'cc', 'dd' ], [ 'cc', 'dd' ] );
   test.identical( got, expected );
@@ -7618,7 +7610,6 @@ function strIsolateInsideLeft( test )
   /* */
 
   test.case = 'begin, several entry, several sources';
-
   var expected = [ [ '', 'aa', '_aa_bb_', 'bb', '_cc_cc' ], [ 'cc_cc_', 'bb', '_bb_aa_', 'aa', '' ] ];
   var got = _.strIsolateInsideLeft( [ 'aa_aa_bb_bb_cc_cc', 'cc_cc_bb_bb_aa_aa' ], [ 'aa', 'bb' ], [ 'aa', 'bb' ] );
   test.identical( got, expected );
@@ -7627,7 +7618,6 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'middle, several entry, several sources';
-
   var expected = [ [ 'aa_aa_', 'bb', '_bb_cc_', 'cc', '' ], [ '', 'cc', '_cc_bb_', 'bb', '_aa_aa' ] ];
   var got = _.strIsolateInsideLeft( [ 'aa_aa_bb_bb_cc_cc', 'cc_cc_bb_bb_aa_aa' ], [ 'bb', 'cc' ], [ 'bb', 'cc' ] );
   test.identical( got, expected );
@@ -7636,7 +7626,6 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'end, several entry, several sources';
-
   var expected = [ [ 'aa_aa_bb_bb_', 'cc', '_', 'cc', '' ], [ '', 'cc', '_', 'cc', '_bb_bb_aa_aa' ] ];
   var got = _.strIsolateInsideLeft( [ 'aa_aa_bb_bb_cc_cc', 'cc_cc_bb_bb_aa_aa' ], [ 'cc', 'dd' ], [ 'cc', 'dd' ] );
   test.identical( got, expected );
@@ -7650,69 +7639,57 @@ function strIsolateInsideLeft( test )
   /* */
 
   test.case = 'no entry';
-
   var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', [], [] );
   test.identical( got, expected );
 
   test.case = 'not found';
-
   var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', 'dd', 'dd' );
   test.identical( got, expected );
 
   test.case = 'not found begin';
-
   var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', 'dd', '' );
   test.identical( got, expected );
 
   test.case = 'not found end';
-
   var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', '', 'dd' );
   test.identical( got, expected );
 
   test.case = 'empty entry';
-
   var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', '', '' );
   test.identical( got, expected );
 
   test.case = 'empty entry, empty src';
-
   var expected = [ '', '', '', '', '' ];
   var got = _.strIsolateInsideLeft( '', '', '' );
   test.identical( got, expected );
 
   test.case = 'empty src';
-
   var expected = [ '', '', '', '', '' ];
   var got = _.strIsolateInsideLeft( '', 'aa', 'bb' );
   test.identical( got, expected );
 
+  test.close( 'string' );
+
   /* - */
 
-  test.close( 'string' );
   test.open( 'regexp' );
 
-  /* */
-
   test.case = 'begin smeared';
-
   var expected = [ 'x', 'aa', 'x_xaax_xbbx_xb', 'bx', '_xccx_xccx' ];
   var got = _.strIsolateInsideLeft( 'xaax_xaax_xbbx_xbbx_xccx_xccx', /a\w/, /b\w/ );
   test.identical( got, expected );
 
   test.case = 'middle smeared';
-
   var expected = [ 'xaax_xaax_x', 'bb', 'x_xbbx_xccx_xc', 'cx', '' ];
   var got = _.strIsolateInsideLeft( 'xaax_xaax_xbbx_xbbx_xccx_xccx', /b\w/, /c\w/ );
   test.identical( got, expected );
 
   test.case = 'end smeared';
-
-  // var expected = [ 'xaax_xaax_xbbx_xbbx_x', 'cc', 'x_xccx', '', '' ];
   var expected = [ '', '', 'xaax_xaax_xbbx_xbbx_xccx_xccx', '', '' ];
   var got = _.strIsolateInsideLeft( 'xaax_xaax_xbbx_xbbx_xccx_xccx', /c\w/, /d\w/ );
   test.identical( got, expected );
@@ -7721,20 +7698,16 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'begin';
-
   var expected = [ '', 'aa', '_aa_bb_', 'bb', '_cc_cc' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', /a+/, /b+/ );
   test.identical( got, expected );
 
   test.case = 'middle';
-
   var expected = [ 'aa_aa_', 'bb', '_bb_cc_', 'cc', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', /b+/, /c+/ );
   test.identical( got, expected );
 
   test.case = 'end';
-
-  // var expected = [ 'aa_aa_bb_bb_', 'cc', '_cc', '', '' ];
   var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', /c+/, /d+/ );
   test.identical( got, expected );
@@ -7745,7 +7718,6 @@ function strIsolateInsideLeft( test )
   /* */
 
   test.case = 'begin, several entry';
-
   var expected = [ '', 'aa', '_aa_bb_', 'bb', '_cc_cc' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', [ /a+/, /b+/ ], [ /a+/, /b+/ ] );
   test.identical( got, expected );
@@ -7754,7 +7726,6 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'middle, several entry';
-
   var expected = [ 'aa_aa_', 'bb', '_bb_cc_', 'cc', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', [ /b+/, /c+/ ], [ /b+/, /c+/ ] );
   test.identical( got, expected );
@@ -7763,7 +7734,6 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'end, several entry';
-
   var expected = [ 'aa_aa_bb_bb_', 'cc', '_', 'cc', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', [ /c+/, /d+/ ], [ /c+/, /d+/ ] );
   test.identical( got, expected );
@@ -7777,7 +7747,6 @@ function strIsolateInsideLeft( test )
   /* */
 
   test.case = 'begin, several entry, several sources';
-
   var expected = [ [ '', 'aa', '_aa_bb_', 'bb', '_cc_cc' ], [ 'cc_cc_', 'bb', '_bb_aa_', 'aa', '' ] ];
   var got = _.strIsolateInsideLeft( [ 'aa_aa_bb_bb_cc_cc', 'cc_cc_bb_bb_aa_aa' ], [ /a+/, /b+/ ], [ /a+/, /b+/ ] );
   test.identical( got, expected );
@@ -7786,7 +7755,6 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'middle, several entry, several sources';
-
   var expected = [ [ 'aa_aa_', 'bb', '_bb_cc_', 'cc', '' ], [ '', 'cc', '_cc_bb_', 'bb', '_aa_aa' ] ];
   var got = _.strIsolateInsideLeft( [ 'aa_aa_bb_bb_cc_cc', 'cc_cc_bb_bb_aa_aa' ], [ /b+/, /c+/ ], [ /b+/, /c+/ ] );
   test.identical( got, expected );
@@ -7795,7 +7763,6 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'end, several entry, several sources';
-
   var expected = [ [ 'aa_aa_bb_bb_', 'cc', '_', 'cc', '' ], [ '', 'cc', '_', 'cc', '_bb_bb_aa_aa' ] ];
   var got = _.strIsolateInsideLeft( [ 'aa_aa_bb_bb_cc_cc', 'cc_cc_bb_bb_aa_aa' ], [ /c+/, /d+/ ], [ /c+/, /d+/ ] );
   test.identical( got, expected );
@@ -7809,48 +7776,39 @@ function strIsolateInsideLeft( test )
   /* */
 
   test.case = 'no entry';
-
   var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', [], [] );
   test.identical( got, expected );
 
   test.case = 'not found';
-
   var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', /d+/, /d+/ );
   test.identical( got, expected );
 
   test.case = 'not found begin';
-
   var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', /d+/, new RegExp( '' ) );
   test.identical( got, expected );
 
   test.case = 'not found end';
-
   var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', new RegExp( '' ), /d+/ );
   test.identical( got, expected );
 
   test.case = 'empty entry';
-
   var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', new RegExp( '' ), new RegExp( '' ) );
   test.identical( got, expected );
 
   test.case = 'empty entry, empty src';
-
   var expected = [ '', '', '', '', '' ];
   var got = _.strIsolateInsideLeft( '', new RegExp( '' ), new RegExp( '' ) );
   test.identical( got, expected );
 
   test.case = 'empty src';
-
   var expected = [ '', '', '', '', '' ];
   var got = _.strIsolateInsideLeft( '', /a+/, /b+/ );
   test.identical( got, expected );
-
-  /* - */
 
   test.close( 'regexp' );
 
@@ -7858,15 +7816,25 @@ function strIsolateInsideLeft( test )
 
   if( !Config.debug )
   return;
-
+  
+  test.case = 'without arguments';
   test.shouldThrowErrorSync( () => _.strIsolateInsideLeft() );
-  test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( '' ) );
-  test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( '', 3 ) );
-  test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( '', '', '', '' ) );
-  test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( 1, '', '' ) );
-  test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( '123', 1, '' ) );
-  test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( '123', '', 3 ) );
 
+  test.case = 'one argument';
+  test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( '' ) );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( '', '', '', '' ) );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( 1, '', '' ) );
+  
+  test.case = 'wrong type of begin';
+  test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( '', 3 ) );
+  test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( '123', 1, '' ) );
+
+  test.case = 'wrong type of end';
+  test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( '123', '', 3 ) );
 }
 
 //

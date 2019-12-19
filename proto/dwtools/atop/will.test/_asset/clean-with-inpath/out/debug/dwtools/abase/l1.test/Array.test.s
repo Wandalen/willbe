@@ -5209,6 +5209,1115 @@ function longRelength_( test )
 
 //
 
+function longShallowCloneOneArgument( test ) 
+{
+  test.open( 'single argument' );
+
+  test.case = 'empty array';
+  var src = [];
+  var got = _.longShallowClone( src );
+  var exp = [];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src );
+
+  test.case = 'filled array';
+  var src = [ 1, 'str', {}, null, undefined ];
+  var got = _.longShallowClone( src );
+  var exp = [ 1, 'str', {}, null, undefined ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src );
+
+  /* */
+
+  test.case = 'empty unroll';
+  var src = _.unrollMake( [] );
+  var got = _.longShallowClone( src );
+  var exp = _.unrollMake( [] );
+  test.identical( got, exp );
+  test.is( _.unrollIs( got ) );
+  test.is( got !== src );
+
+  test.case = 'filled unroll';
+  var src = _.unrollMake( [ 1, 'str', {}, null, undefined ] );
+  var got = _.longShallowClone( src );
+  var exp = _.unrollMake( [ 1, 'str', {}, null, undefined ] );
+  test.identical( got, exp );
+  test.is( _.unrollIs( got ) );
+  test.is( got !== src );
+
+  /* */
+
+  test.case = 'empty argumentsArray';
+  var src = _.argumentsArrayMake( [] );
+  var got = _.longShallowClone( src );
+  var exp = [];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src );
+
+  test.case = 'filled argumentsArray';
+  var src = _.argumentsArrayMake( [ 1, 'str', {}, null, undefined ] );
+  var got = _.longShallowClone( src );
+  var exp = [ 1, 'str', {}, null, undefined ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src );
+
+  /* */
+
+  test.case = 'empty BufferRaw';
+  var src = new BufferRaw();
+  var got = _.longShallowClone( src );
+  var exp = new BufferRaw();
+  test.identical( got, exp );
+  test.is( _.bufferRawIs( got ) );
+  test.is( got !== src );
+
+  test.case = 'filled BufferRaw';
+  var src = new U8x( [ 1, 2, 3, 4, 5 ] ).buffer;
+  var got = _.longShallowClone( src );
+  var exp = new U8x( [ 1, 2, 3, 4, 5 ] ).buffer;
+  test.identical( got, exp );
+  test.is( _.bufferRawIs( got ) );
+  test.is( got !== src );
+
+  /* */
+
+  test.case = 'empty BufferView';
+  var src = new BufferView( new BufferRaw() );
+  var got = _.longShallowClone( src );
+  var exp = new BufferView( new BufferRaw() );
+  test.identical( got, exp );
+  test.is( _.bufferViewIs( got ) );
+  test.is( got !== src );
+
+  test.case = 'filled BufferView';
+  var src = new BufferView( new U8x( [ 1, 2, 3, 4, 5 ] ).buffer );
+  var got = _.longShallowClone( src );
+  var exp = new BufferView( new U8x( [ 1, 2, 3, 4, 5 ] ).buffer );
+  test.identical( got, exp );
+  test.is( _.bufferViewIs( got ) );
+  test.is( got !== src );
+
+  /* */
+
+  test.case = 'empty bufferTyped - U8x';
+  var src = new U8x();
+  var got = _.longShallowClone( src );
+  var exp = new U8x();
+  test.identical( got, exp );
+  test.is( _.bufferTypedIs( got ) );
+  test.is( got !== src );
+
+  test.case = 'filled BufferView - U8x';
+  var src = new U8x( [ 1, 2, 3, 4, 5 ] );
+  var got = _.longShallowClone( src );
+  var exp = new U8x( [ 1, 2, 3, 4, 5 ] );
+  test.identical( got, exp );
+  test.is( _.bufferTypedIs( got ) );
+  test.is( got !== src );
+
+  test.case = 'empty bufferTyped - I16x';
+  var src = new I16x();
+  var got = _.longShallowClone( src );
+  var exp = new I16x();
+  test.identical( got, exp );
+  test.is( _.bufferTypedIs( got ) );
+  test.is( got !== src );
+
+  test.case = 'filled BufferView - I16x';
+  var src = new I16x( [ 1, 2, 3, 4, 5 ] );
+  var got = _.longShallowClone( src );
+  var exp = new I16x( [ 1, 2, 3, 4, 5 ] );
+  test.identical( got, exp );
+  test.is( _.bufferTypedIs( got ) );
+  test.is( got !== src );
+
+  test.case = 'empty bufferTyped - F64x';
+  var src = new F64x();
+  var got = _.longShallowClone( src );
+  var exp = new F64x();
+  test.identical( got, exp );
+  test.is( _.bufferTypedIs( got ) );
+  test.is( got !== src );
+
+  test.case = 'filled BufferView - F64x';
+  var src = new F64x( [ 1, 2, 3, 4, 5 ] );
+  var got = _.longShallowClone( src );
+  var exp = new F64x( [ 1, 2, 3, 4, 5 ] );
+  test.identical( got, exp );
+  test.is( _.bufferTypedIs( got ) );
+  test.is( got !== src );
+
+  /* */
+
+  if( Config.interpreter === 'njs' )
+  {
+    test.case = 'empty BufferNode';
+    var src = BufferNode.alloc( 0 );
+    var got = _.longShallowClone( src );
+    var exp = BufferNode.alloc( 0 );
+    test.identical( got, exp );
+    test.is( _.bufferNodeIs( got ) );
+    test.is( got !== src );
+
+    test.case = 'filled BufferNode';
+    var src = BufferNode.from( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longShallowClone( src );
+    var exp = BufferNode.from( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, exp );
+    test.is( _.bufferNodeIs( got ) );
+    test.is( got !== src );
+  }
+
+  test.close( 'single argument' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.longShallowClone() );
+
+  test.case = 'wrong type of first argument';
+  test.shouldThrowErrorSync( () => _.longShallowClone( 1 ) );
+  test.shouldThrowErrorSync( () => _.longShallowClone( {} ) );
+
+  test.case = 'one of the arguments is undefined';
+  test.shouldThrowErrorSync( () => _.longShallowClone( [ 1 ], 2, undefined, 'str' ) );
+}
+
+//
+
+function longShallowCloneFirstArrayLike( test )
+{
+  test.open( 'first argument - array' );
+
+  test.case = 'first - empty array, other - not containers';
+  var src1 = [];
+  var src2 = 'str';
+  var src3 = { a : 1 };
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'next - not containers';
+  var src1 = [ [ 1 ], null ];
+  var src2 = 'str';
+  var src3 = { a : 1 };
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'empty arrays';
+  var src1 = [];
+  var src2 = [];
+  var src3 = [];
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'first - empty array, other - empty containers';
+  var src1 = [];
+  var src2 = _.argumentsArrayMake( 0 );
+  var src3 = new F64x( 0 );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'first - empty array, other - filled arrays';
+  var src1 = [];
+  var src2 = [ 1, 2 ];
+  var src3 = [ 'str', { a : 1 } ];
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ 1, 2, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'filled arrays';
+  var src1 = [ [ 1 ], null ];
+  var src2 = [ 1, 2 ];
+  var src3 = [ 'str', { a : 1 } ];
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 1, 2, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferRaw and unroll';
+  var src1 = [ [ 1 ], null ];
+  var src2 = new U8x( [ 1, 2 ] ).buffer;
+  var src3 = _.unrollMake( [ 'str', { a : 1 } ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 1, 2, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferView and argumentsArray';
+  var src1 = [ [ 1 ], null ];
+  var src2 = new BufferView( new U8x( [ 1, 2 ] ).buffer );
+  var src3 = _.argumentsArrayMake( [ 'str', { a : 1 } ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 1, 2, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferTyped';
+  var src1 = [ [ 1 ], null ];
+  var src2 = new U8x( [ 1, 2 ] );
+  var src3 = new I32x( [ -2, 3 ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 1, 2, -2, 3 ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+  
+  if( Config.interpreter === 'njs' ) 
+  {
+    test.case = 'other - BufferNode';
+    var src1 = [ [ 1 ], null ];
+    var src2 = BufferNode.from( [ 1, 2 ] );
+    var src3 = BufferNode.alloc( 2 );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = [ [ 1 ], null, 1, 2, 0, 0 ];
+    test.identical( got, exp );
+    test.is( _.arrayIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );    
+  }
+
+  test.close( 'first argument - array' );
+
+  /* - */
+
+  test.open( 'first argument - argumentsArray' );
+
+  test.case = 'first - empty argumentsArray, other - not containers';
+  var src1 = _.argumentsArrayMake( [] );
+  var src2 = 'str';
+  var src3 = { a : 1 };
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'next - not containers';
+  var src1 = _.argumentsArrayMake( [ [ 1 ], null ] );
+  var src2 = 'str';
+  var src3 = { a : 1 };
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'empty argumentsArray';
+  var src1 = _.argumentsArrayMake( [] );
+  var src2 = _.argumentsArrayMake( [] );
+  var src3 = _.argumentsArrayMake( [] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'first - empty argumentsArray, other - empty containers';
+  var src1 = _.argumentsArrayMake( [] );
+  var src2 = _.unrollMake( [] );
+  var src3 = new U8x().buffer;
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'first - empty argumentsArray, other - filled argumentsArray';
+  var src1 = _.argumentsArrayMake( [] );
+  var src2 = _.argumentsArrayMake( [ 1, 2 ] );
+  var src3 = _.argumentsArrayMake( [ 'str', { a : 1 } ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ 1, 2, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'filled arrays';
+  var src1 = _.argumentsArrayMake( [ [ 1 ], null ] );
+  var src2 = [ 1, 2 ];
+  var src3 = [ 'str', { a : 1 } ];
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 1, 2, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferRaw and unroll';
+  var src1 = _.argumentsArrayMake( [ [ 1 ], null ] );
+  var src2 = new U8x( [ 1, 2 ] ).buffer;
+  var src3 = _.unrollMake( [ 'str', { a : 1 } ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 1, 2, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferView and array';
+  var src1 = _.argumentsArrayMake( [ [ 1 ], null ] );
+  var src2 = new BufferView( new U8x( [ 1, 2 ] ).buffer );
+  var src3 = [ 'str', { a : 1 } ];
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 1, 2, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferTyped';
+  var src1 = _.argumentsArrayMake( [ [ 1 ], null ] );
+  var src2 = new U8x( [ 1, 2 ] );
+  var src3 = new I32x( [ -2, 3 ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 1, 2, -2, 3 ];
+  test.identical( got, exp );
+  test.is( _.arrayIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+  
+  if( Config.interpreter === 'njs' ) 
+  {
+    test.case = 'other - BufferNode';
+    var src1 = _.argumentsArrayMake( [ [ 1 ], null ] );
+    var src2 = BufferNode.from( [ 1, 2 ] );
+    var src3 = BufferNode.alloc( 2 );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = [ [ 1 ], null, 1, 2, 0, 0 ];
+    test.identical( got, exp );
+    test.is( _.arrayIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );    
+  }
+
+  test.close( 'first argument - argumentsArray' );
+
+  /* - */
+
+  test.open( 'first argument - unroll' );
+
+  test.case = 'first - empty unroll, other - not containers';
+  var src1 = _.unrollMake( [] );
+  var src2 = 'str';
+  var src3 = { a : 1 };
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.unrollIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - not containers';
+  var src1 = _.unrollMake( [ [ 1 ], null ] );
+  var src2 = 'str';
+  var src3 = { a : 1 };
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.unrollIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'empty argumentsArray';
+  var src1 = _.unrollMake( [] );
+  var src2 = _.unrollMake( [] );
+  var src3 = _.unrollMake( [] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [];
+  test.identical( got, exp );
+  test.is( _.unrollIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'first - empty unroll, other - empty containers';
+  var src1 = _.unrollMake( [] );
+  var src2 = _.argumentsArrayMake( [] );
+  var src3 = new U8x().buffer;
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [];
+  test.identical( got, exp );
+  test.is( _.unrollIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'first - empty unroll, other - filled unrolls';
+  var src1 = _.unrollMake( [] );
+  var src2 = _.unrollMake( [ 1, 2 ] );
+  var src3 = _.unrollMake( [ 'str', { a : 1 } ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ 1, 2, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.unrollIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'filled arrays';
+  var src1 = _.unrollMake( [ [ 1 ], null ] );
+  var src2 = [ 1, 2 ];
+  var src3 = [ 'str', { a : 1 } ];
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 1, 2, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.unrollIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferRaw and argumentsArray';
+  var src1 = _.unrollMake( [ [ 1 ], null ] );
+  var src2 = new U8x( [ 1, 2 ] ).buffer;
+  var src3 = _.argumentsArrayMake( [ 'str', { a : 1 } ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 1, 2, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.unrollIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferView and argumentsArray';
+  var src1 = _.unrollMake( [ [ 1 ], null ] );
+  var src2 = new BufferView( new U8x( [ 1, 2 ] ).buffer );
+  var src3 = _.argumentsArrayMake( [ 'str', { a : 1 } ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 1, 2, 'str', { a : 1 } ];
+  test.identical( got, exp );
+  test.is( _.unrollIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferTyped';
+  var src1 = _.unrollMake( [ [ 1 ], null ] );
+  var src2 = new U8x( [ 1, 2 ] );
+  var src3 = new I32x( [ -2, 3 ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = [ [ 1 ], null, 1, 2, -2, 3 ];
+  test.identical( got, exp );
+  test.is( _.unrollIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+  
+  if( Config.interpreter === 'njs' ) 
+  {
+    test.case = 'other - BufferNode';
+    var src1 = _.unrollMake( [ [ 1 ], null ] );
+    var src2 = BufferNode.from( [ 1, 2 ] );
+    var src3 = BufferNode.alloc( 2 );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = [ [ 1 ], null, 1, 2, 0, 0 ];
+    test.identical( got, exp );
+    test.is( _.unrollIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );    
+  }
+
+  test.close( 'first argument - unroll' );
+}
+
+//
+
+function longShallowCloneFirstBuffer( test ) 
+{
+  test.open( 'first argument - BufferRaw' );
+
+  test.case = 'first - empty BufferRaw, other - not containers';
+  var src1 = new BufferRaw();
+  var src2 = 1;
+  var src3 = 2;
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new U8x( [ 1, 2 ] ).buffer;
+  test.identical( got, exp );
+  test.is( _.bufferRawIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - not containers';
+  var src1 = new BufferRaw( 2 );
+  var src2 = 1;
+  var src3 = 2;
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new U8x( [ 0, 0, 1, 2 ] ).buffer;
+  test.identical( got, exp );
+  test.is( _.bufferRawIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'empty BufferRaw';
+  var src1 = new BufferRaw();
+  var src2 = new BufferRaw();
+  var src3 = new BufferRaw();
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new BufferRaw();
+  test.identical( got, exp );
+  test.is( _.bufferRawIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'first - empty BufferRaw, other - empty containers';
+  var src1 = new BufferRaw();
+  var src2 = _.argumentsArrayMake( [] );
+  var src3 = new U8x();
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new BufferRaw();
+  test.identical( got, exp );
+  test.is( _.bufferRawIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'first - empty BufferRaw, other - filled BufferRaw';
+  var src1 = new BufferRaw();
+  var src2 = new U8x( [ 1, 2 ] ).buffer;
+  var src3 = new U8x( [ 3, 4 ] ).buffer;
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new U8x( [ 1, 2, 3, 4 ] ).buffer;
+  test.identical( got, exp );
+  test.is( _.bufferRawIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'filled arrays';
+  var src1 = new BufferRaw( 2 );
+  var src2 = [ 1, 2 ];
+  var src3 = [ 3, 4 ];
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new U8x( [ 0, 0, 1, 2, 3, 4 ] ).buffer;
+  test.identical( got, exp );
+  test.is( _.bufferRawIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - unroll and argumentsArray';
+  var src1 = new U8x( [ 1, 2 ] ).buffer;
+  var src2 = _.unrollMake( [ 1, 2 ] );
+  var src3 = _.argumentsArrayMake( [ 3, 4 ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new U8x( [ 1, 2, 1, 2, 3, 4 ] ).buffer;
+  test.identical( got, exp );
+  test.is( _.bufferRawIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferView and argumentsArray';
+  var src1 = new U8x( [ 1, 2 ] ).buffer;
+  var src2 = new BufferView( new U8x( [ 1, 2 ] ).buffer );
+  var src3 = _.argumentsArrayMake( [ 3, 4 ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new U8x( [ 1, 2, 1, 2, 3, 4 ] ).buffer;
+  test.identical( got, exp );
+  test.is( _.bufferRawIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferTyped';
+  var src1 = new U8x( [ 1, 2 ] ).buffer;
+  var src2 = new U8x( [ 1, 2 ] );
+  var src3 = new I32x( [ 2, 3 ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new U8x( [ 1, 2, 1, 2, 2, 3 ] ).buffer;
+  test.identical( got, exp );
+  test.is( _.bufferRawIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+  
+  if( Config.interpreter === 'njs' ) 
+  {
+    test.case = 'other - BufferNode';
+    var src1 = new U8x( [ 1, 2 ] ).buffer;
+    var src2 = BufferNode.from( [ 1, 2 ] );
+    var src3 = BufferNode.from( [ 0, 0 ] );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = new U8x( [ 1, 2, 1, 2, 0, 0 ] ).buffer;
+    test.identical( got, exp );
+    test.is( _.bufferRawIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );    
+  }
+
+  test.close( 'first argument - BufferRaw' );
+
+  /* - */
+
+  test.open( 'first argument - BufferView' );
+
+  test.case = 'first - empty BufferView, other - not containers';
+  var src1 = new BufferView( new BufferRaw() );
+  var src2 = 1;
+  var src3 = 2;
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new BufferView( new U8x( [ 1, 2 ] ).buffer );
+  test.identical( got, exp );
+  test.is( _.bufferViewIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - not containers';
+  var src1 = new BufferView( new BufferRaw( 2 ) );
+  var src2 = 1;
+  var src3 = 2;
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new BufferView( new U8x( [ 0, 0, 1, 2 ] ).buffer );
+  test.identical( got, exp );
+  test.is( _.bufferViewIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'empty BufferView';
+  var src1 = new BufferView( new BufferRaw() );
+  var src2 = new BufferView( new BufferRaw() );
+  var src3 = new BufferView( new BufferRaw() );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new BufferView( new BufferRaw() );
+  test.identical( got, exp );
+  test.is( _.bufferViewIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'first - empty BufferView, other - empty containers';
+  var src1 = new BufferView( new BufferRaw() );
+  var src2 = _.argumentsArrayMake( [] );
+  var src3 = new U8x();
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new BufferView( new BufferRaw() );
+  test.identical( got, exp );
+  test.is( _.bufferViewIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'first - empty BufferView, other - filled BufferView';
+  var src1 = new BufferView( new BufferRaw() );
+  var src2 = new BufferView( new U8x( [ 1, 2 ] ).buffer );
+  var src3 = new U8x( [ 3, 4 ] ).buffer;
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new BufferView( new U8x( [ 1, 2, 3, 4 ] ).buffer );
+  test.identical( got, exp );
+  test.is( _.bufferViewIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'filled arrays';
+  var src1 = new BufferView( new BufferRaw( 2 ) );
+  var src2 = [ 1, 2 ];
+  var src3 = [ 3, 4 ];
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new BufferView( new U8x( [ 0, 0, 1, 2, 3, 4 ] ).buffer );
+  test.identical( got, exp );
+  test.is( _.bufferViewIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - unroll and argumentsArray';
+  var src1 = new BufferView( new U8x( [ 1, 2 ] ).buffer );
+  var src2 = _.unrollMake( [ 1, 2 ] );
+  var src3 = _.argumentsArrayMake( [ 3, 4 ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new BufferView( new U8x( [ 1, 2, 1, 2, 3, 4 ] ).buffer );
+  test.identical( got, exp );
+  test.is( _.bufferViewIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferRaw and argumentsArray';
+  var src1 = new BufferView( new U8x( [ 1, 2 ] ).buffer );
+  var src2 = new U8x( [ 1, 2 ] ).buffer;
+  var src3 = _.argumentsArrayMake( [ 3, 4 ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new BufferView( new U8x( [ 1, 2, 1, 2, 3, 4 ] ).buffer );
+  test.identical( got, exp );
+  test.is( _.bufferViewIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+
+  test.case = 'other - BufferTyped';
+  var src1 = new BufferView( new U8x( [ 1, 2 ] ).buffer );
+  var src2 = new U8x( [ 1, 2 ] );
+  var src3 = new I32x( [ 2, 3 ] );
+  var got = _.longShallowClone( src1, src2, src3 );
+  var exp = new BufferView( new U8x( [ 1, 2, 1, 2, 2, 3 ] ).buffer );
+  test.identical( got, exp );
+  test.is( _.bufferViewIs( got ) );
+  test.is( got !== src1 );
+  test.is( got !== src2 );
+  test.is( got !== src3 );
+  
+  if( Config.interpreter === 'njs' ) 
+  {
+    test.case = 'other - BufferNode';
+    var src1 = new BufferView( new U8x( [ 1, 2 ] ).buffer );
+    var src2 = BufferNode.from( [ 1, 2 ] );
+    var src3 = BufferNode.alloc( 2 );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = new BufferView( new U8x( [ 1, 2, 1, 2, 0, 0 ] ).buffer );
+    test.identical( got, exp );
+    test.is( _.bufferViewIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );    
+  }
+
+  test.close( 'first argument - BufferView' );
+
+  /* - */
+
+  var bufferTyped =
+  [
+    U8x,
+    // I8x,
+    // U8ClampedX,
+    // U16x,
+    I16x,
+    // U32x,
+    // I32x,
+    // F32x,
+    F64x
+  ];
+
+  for( let i = 0; i < bufferTyped.length; i++ )
+  {
+    test.open( 'first argument - ' + bufferTyped[ i ].name  );
+
+    test.case = 'first - empty ' + bufferTyped[ i ].name + ', other - not containers';
+    var src1 = new bufferTyped[ i ]();
+    var src2 = 1;
+    var src3 = 2;
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = new bufferTyped[ i ]( [ 1, 2 ] );
+    test.identical( got, exp );
+    test.is( _.bufferTypedIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'other - not containers';
+    var src1 = new bufferTyped[ i ]( 2 );
+    var src2 = 1;
+    var src3 = 2;
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = new bufferTyped[ i ]( [ 0, 0, 1, 2 ] );
+    test.identical( got, exp );
+    test.is( _.bufferTypedIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'empty ' + bufferTyped[ i ].name;
+    var src1 = new bufferTyped[ i ]();
+    var src2 = new bufferTyped[ i ]();
+    var src3 = new bufferTyped[ i ]();
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = new bufferTyped[ i ]();
+    test.identical( got, exp );
+    test.is( _.bufferTypedIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'first - empty ' + bufferTyped[ i ].name + ', other - empty containers';
+    var src1 = new bufferTyped[ i ]();
+    var src2 = _.argumentsArrayMake( [] );
+    var src3 = _.unrollMake( 0 );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = new bufferTyped[ i ]();
+    test.identical( got, exp );
+    test.is( _.bufferTypedIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'first - empty ' + bufferTyped[ i ].name + ', other - filled ' + bufferTyped[ i ].name;
+    var src1 = new bufferTyped[ i ]();
+    var src2 = new U8x( [ 1, 2 ] ).buffer;
+    var src3 = new U8x( [ 3, 4 ] ).buffer;
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = new bufferTyped[ i ]( [ 1, 2, 3, 4 ] );
+    test.identical( got, exp );
+    test.is( _.bufferTypedIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'filled arrays';
+    var src1 = new bufferTyped[ i ]( 2 );
+    var src2 = [ 1, 2 ];
+    var src3 = [ 3, 4 ];
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = new bufferTyped[ i ]( [ 0, 0, 1, 2, 3, 4 ] );
+    test.identical( got, exp );
+    test.is( _.bufferTypedIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'other - unroll and argumentsArray';
+    var src1 = new bufferTyped[ i ]( [ 1, 2 ] );
+    var src2 = _.unrollMake( [ 1, 2 ] );
+    var src3 = _.argumentsArrayMake( [ 3, 4 ] );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = new bufferTyped[ i ]( [ 1, 2, 1, 2, 3, 4 ] );
+    test.identical( got, exp );
+    test.is( _.bufferTypedIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'other - BufferView and argumentsArray';
+    var src1 = new bufferTyped[ i ]( [ 1, 2 ] );
+    var src2 = new BufferView( new U8x( [ 1, 2 ] ).buffer );
+    var src3 = _.argumentsArrayMake( [ 3, 4 ] );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = new bufferTyped[ i ]( [ 1, 2, 1, 2, 3, 4 ] );
+    test.identical( got, exp );
+    test.is( _.bufferTypedIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'other - BufferRaw';
+    var src1 = new bufferTyped[ i ]( [ 1, 2 ] );
+    var src2 = new U8x( [ 1, 2 ] ).buffer;
+    var src3 = new U8x( [ 2, 3 ] ).buffer;
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = new bufferTyped[ i ]( [ 1, 2, 1, 2, 2, 3 ] );
+    test.identical( got, exp );
+    test.is( _.bufferTypedIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+    
+    if( Config.interpreter === 'njs' ) 
+    {
+      test.case = 'other - BufferNode';
+      var src1 = new bufferTyped[ i ]( [ 1, 2 ] );
+      var src2 = BufferNode.from( [ 1, 2 ] );
+      var src3 = BufferNode.from( [ 0, 0 ] );
+      var got = _.longShallowClone( src1, src2, src3 );
+      var exp = new bufferTyped[ i ]( [ 1, 2, 1, 2, 0, 0 ] );
+      test.identical( got, exp );
+      test.is( _.bufferTypedIs( got ) );
+      test.is( got !== src1 );
+      test.is( got !== src2 );
+      test.is( got !== src3 );    
+    }
+
+    test.close( 'first argument - ' + bufferTyped[ i ].name );
+  }
+
+  /* - */
+
+  if( Config.interpreter === 'njs' ) 
+  {
+    test.open( 'first argument - BufferNode' );
+
+    test.case = 'first - empty BufferRaw, other - not containers';
+    var src1 = BufferNode.alloc( 0 );
+    var src2 = 1;
+    var src3 = 2;
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = BufferNode.from( [ 1, 2 ] );
+    test.identical( got, exp );
+    test.is( _.bufferNodeIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'other - not containers';
+    var src1 = BufferNode.alloc( 2 );
+    var src2 = 1;
+    var src3 = 2;
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = BufferNode.from( [ 0, 0, 1, 2 ] );
+    test.identical( got, exp );
+    test.is( _.bufferNodeIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'empty BufferNode';
+    var src1 = BufferNode.alloc( 0 );
+    var src2 = BufferNode.alloc( 0 );
+    var src3 = BufferNode.alloc( 0 );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = BufferNode.alloc( 0 );
+    test.identical( got, exp );
+    test.is( _.bufferNodeIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'first - empty BufferNode, other - empty containers';
+    var src1 = BufferNode.alloc( 0 );
+    var src2 = _.argumentsArrayMake( [] );
+    var src3 = new U8x();
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = BufferNode.alloc( 0 );
+    test.identical( got, exp );
+    test.is( _.bufferNodeIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'first - empty BufferNode, other - filled BufferNode';
+    var src1 = BufferNode.alloc( 0 );
+    var src2 = BufferNode.from( [ 1, 2 ] );
+    var src3 = BufferNode.from( [ 3, 4 ] );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = BufferNode.from( [ 1, 2, 3, 4 ] );
+    test.identical( got, exp );
+    test.is( _.bufferNodeIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'filled arrays';
+    var src1 = BufferNode.alloc( 2 );
+    var src2 = [ 1, 2 ];
+    var src3 = [ 3, 4 ];
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = BufferNode.from( [ 0, 0, 1, 2, 3, 4 ] );
+    test.identical( got, exp );
+    test.is( _.bufferNodeIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'other - unroll and argumentsArray';
+    var src1 = BufferNode.from( [ 1, 2 ] );
+    var src2 = _.unrollMake( [ 1, 2 ] );
+    var src3 = _.argumentsArrayMake( [ 3, 4 ] );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = BufferNode.from( [ 1, 2, 1, 2, 3, 4 ] );
+    test.identical( got, exp );
+    test.is( _.bufferNodeIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'other - BufferView and argumentsArray';
+    var src1 = BufferNode.from( [ 1, 2 ] );
+    var src2 = new BufferView( new U8x( [ 1, 2 ] ).buffer );
+    var src3 = _.argumentsArrayMake( [ 3, 4 ] );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = BufferNode.from( [ 1, 2, 1, 2, 3, 4 ] );
+    test.identical( got, exp );
+    test.is( _.bufferNodeIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+
+    test.case = 'other - BufferTyped';
+    var src1 = BufferNode.from( [ 1, 2 ] );
+    var src2 = new U8x( [ 1, 2 ] );
+    var src3 = new I32x( [ 2, 3 ] );
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = BufferNode.from( [ 1, 2, 1, 2, 2, 3 ] );
+    test.identical( got, exp );
+    test.is( _.bufferNodeIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );
+    
+    test.case = 'other - BufferRaw';
+    var src1 = BufferNode.from( [ 1, 2 ] );
+    var src2 = new U8x( [ 1, 2 ] ).buffer;
+    var src3 = new U8x( 2 ).buffer;
+    var got = _.longShallowClone( src1, src2, src3 );
+    var exp = BufferNode.from( [ 1, 2, 1, 2, 0, 0 ] );
+    test.identical( got, exp );
+    test.is( _.bufferNodeIs( got ) );
+    test.is( got !== src1 );
+    test.is( got !== src2 );
+    test.is( got !== src3 );    
+    
+    test.close( 'first argument - BufferNode' );
+  } 
+}
+longShallowCloneFirstBuffer.timeOut = 10000;
+
+//
+
 function longRepresent( test )
 {
 
@@ -5281,7 +6390,7 @@ function longRepresent( test )
     _.longRepresent( [ 1, 2, 3, 4, 5 ], 2, 4, 'redundant argument' );
   });
 
-};
+}
 
 //
 
@@ -38345,6 +39454,10 @@ var Self =
     longRelength,
     longRelengthInplace,
     longRelength_,
+
+    longShallowCloneOneArgument,
+    longShallowCloneFirstArrayLike,
+    longShallowCloneFirstBuffer,
 
     longRepresent,
     // longResize, // Dmytro : uncomment when it will be reimplemented
