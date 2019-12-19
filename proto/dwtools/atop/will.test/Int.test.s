@@ -17,6 +17,15 @@ if( typeof module !== 'undefined' )
 var _global = _global_;
 var _ = _global_.wTools;
 
+/*
+qqq : implement test checking "will .call link" links files ".dot1" ".dot2"
+xxx : find solution
+  > git push --tags
+  fatal: TaskCanceledException encountered.
+  A task was canceled.
+  bash: /dev/tty: No such device or address
+*/
+
 // --
 // context
 // --
@@ -9715,8 +9724,6 @@ var Self =
     customLogger,
     resourcePathRemote,
     moduleIsNotValid
-
-    /* qqq : implement test checking "will .call link" links files ".dot1" ".dot2" */
 
   }
 

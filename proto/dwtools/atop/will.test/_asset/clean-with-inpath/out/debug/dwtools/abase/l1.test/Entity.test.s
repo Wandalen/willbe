@@ -408,7 +408,7 @@ function entityAssignFieldFromContainer( test )
 //
 
 /*
-qqq : improve test entityLength, normalize it, please | Dmytro : improved, normalized, extended 
+qqq : improve test entityLength, normalize it, please | Dmytro : improved, normalized, extended
 */
 
 function entityLength( test )
@@ -547,7 +547,7 @@ function entityLength( test )
 
 //
 
-function uncountableSize( test ) 
+function uncountableSize( test )
 {
   test.case = 'undefined';
   var got = _.uncountableSize( undefined );
@@ -775,7 +775,7 @@ function entitySize( test )
 
   test.case = 'HashMap';
   var got = _.entitySize( new Map( [ [ undefined, undefined ], [ 1, 2 ], [ '', 'str' ] ] ) );
-  var exp = _.look ? 39 : 0;
+  var exp = _.look ? 35 : 0;
   test.identical( got, exp );
 
   test.case = 'function';
