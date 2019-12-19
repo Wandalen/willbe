@@ -172,8 +172,7 @@ function status( o )
     _.assert( !!vcs );
     _.assert( !!remoteProvider );
   }
-
-  if( repo.isRemote === false || !_.longHas( vcs.protocols, 'git' ) )
+  if( repo.isRemote === false || _.longHasNone( vcs.protocols, [ 'git','npm' ] ) )
   {
 
     for( let k in o )
@@ -441,12 +440,12 @@ function status( o )
     _.assert( _.strDefined( repo.downloadPath ) );
     // _.assert( !!repo.willfilesPath );
     _.assert( repo.isRemote === true );
-
+    
     // let remoteProvider = will.vcsProviderFor( repo.remotePath );
     // _.assert( !!remoteProvider.isVcs );
-
+    
     // let vcs = will.vcsToolsFor( repo.remotePath );
-    if( !_.longHas( vcs.protocols, 'git' ) ) /* xxx qqq */
+    if( _.longHasNone( vcs.protocols, [ 'git', 'npm' ] ) ) /* xxx qqq */
     return end( false );
 
     let result = vcs.isRepository
