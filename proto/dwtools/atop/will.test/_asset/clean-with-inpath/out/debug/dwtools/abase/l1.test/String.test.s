@@ -5,7 +5,11 @@
 if( typeof module !== 'undefined' )
 {
   let _ = require( '../Layer2.s' );
+
   _.include( 'wTesting' );
+
+  // _.include( 'wStringer' );
+
 }
 
 var _global = _global_;
@@ -1950,17 +1954,17 @@ function strQuote( test )
   var got = _.strQuote( 'str' );
   test.identical( got, '"str"' );
 
-  test.case = 'src - map';
-  var got = _.strQuote( { src : {} } );
-  test.identical( got, '"[object Object] "' );
-
-  test.case = 'src - Set';
-  var got = _.strQuote( new Set() );
-  test.identical( got, '"[object Set] "' );
-
-  test.case = 'src - BufferRaw';
-  var got = _.strQuote( new BufferRaw( 10 ) );
-  test.identical( got, '"[object ArrayBuffer] "' );
+  // test.case = 'src - map';
+  // var got = _.strQuote( { src : {} } );
+  // test.identical( got, '"[object Object] "' );
+  //
+  // test.case = 'src - Set';
+  // var got = _.strQuote( new Set() );
+  // test.identical( got, '"[object Set] "' );
+  //
+  // test.case = 'src - BufferRaw';
+  // var got = _.strQuote( new BufferRaw( 10 ) );
+  // test.identical( got, '"[object ArrayBuffer] "' );
 
   test.case = 'src - empty array';
   var got = _.strQuote( [] );
@@ -1999,18 +2003,6 @@ function strQuote( test )
   test.case = 'src - string';
   var got = _.strQuote( { src : 'str' } );
   test.identical( got, '"str"' );
-
-  test.case = 'src - map';
-  var got = _.strQuote( { src : {} } );
-  test.identical( got, '"[object Object] "' );
-
-  test.case = 'src - Set';
-  var got = _.strQuote( { src : new Set() } );
-  test.identical( got, '"[object Set] "' );
-
-  test.case = 'src - BufferRaw';
-  var got = _.strQuote( { src : new BufferView( new BufferRaw() ) } );
-  test.identical( got, '"[object DataView] "' );
 
   test.case = 'src - empty array';
   var got = _.strQuote( { src : [] } );
@@ -2054,18 +2046,6 @@ function strQuote( test )
   var got = _.strQuote( 'str', '_' );
   test.identical( got, '_str_' );
 
-  test.case = 'src - map';
-  var got = _.strQuote( { src : {}, quote : '\'' } );
-  test.identical( got, '\'[object Object] \'' );
-
-  test.case = 'src - Set';
-  var got = _.strQuote( new Set(), '""' );
-  test.identical( got, '""[object Set] ""' );
-
-  test.case = 'src - BufferRaw';
-  var got = _.strQuote( new BufferRaw( 10 ), ' ' );
-  test.identical( got, ' [object ArrayBuffer]  ' );
-
   test.case = 'src - empty array';
   var got = _.strQuote( [], 'a' );
   test.identical( got, [] );
@@ -2099,18 +2079,6 @@ function strQuote( test )
   test.case = 'src - string';
   var got = _.strQuote( { src : 'str', quote : '""' } );
   test.identical( got, '""str""' );
-
-  test.case = 'src - map';
-  var got = _.strQuote( { src : {}, quote : '`' } );
-  test.identical( got, '`[object Object] `' );
-
-  test.case = 'src - Set';
-  var got = _.strQuote( { src : new Set(), quote : '' } );
-  test.identical( got, '[object Set] ' );
-
-  test.case = 'src - BufferRaw';
-  var got = _.strQuote( { src : new BufferView( new BufferRaw() ), quote : ' ' } );
-  test.identical( got, ' [object DataView]  ' );
 
   test.case = 'src - empty array';
   var got = _.strQuote( { src : [], quote : '"' } );
@@ -2316,7 +2284,7 @@ function strQuotePairsNormalize( test )
 {
   test.case = 'quote - true';
   var got = _.strQuotePairsNormalize( true );
-  var expected = 
+  var expected =
   [
     [ '"', '"' ],
     [ '`', '`' ],
@@ -2326,7 +2294,7 @@ function strQuotePairsNormalize( test )
 
   test.case = 'quote - boolLike';
   var got = _.strQuotePairsNormalize( 2 );
-  var expected = 
+  var expected =
   [
     [ '"', '"' ],
     [ '`', '`' ],
@@ -2358,10 +2326,10 @@ function strQuotePairsNormalize( test )
   var got = _.strQuotePairsNormalize( [ '', ' ', '\n', 'str' ] );
   var expected =
   [
-    [ '', '' ], 
+    [ '', '' ],
     [ ' ', ' ' ],
-    [ '\n', '\n' ], 
-    [ 'str', 'str' ] 
+    [ '\n', '\n' ],
+    [ 'str', 'str' ]
   ];
   test.identical( got, expected );
 
@@ -2371,7 +2339,7 @@ function strQuotePairsNormalize( test )
   [
     [ '', '' ], [ '', '' ],
     [ ' ', ' ' ], [ ' ', ' ' ],
-    [ '\n', '\n' ], [ '\n', '\n' ], 
+    [ '\n', '\n' ], [ '\n', '\n' ],
     [ 'str', 'str' ], [ 'str', 'str' ]
   ];
   test.identical( got, expected );
@@ -2382,7 +2350,7 @@ function strQuotePairsNormalize( test )
   [
     [ '', '' ],
     [ ' ', ' ' ],
-    [ '\n', '\n' ], 
+    [ '\n', '\n' ],
     [ 'str', 'str' ]
   ];
   test.identical( got, expected );
@@ -2393,7 +2361,7 @@ function strQuotePairsNormalize( test )
   [
     [ '', '' ], [ '', '' ],
     [ ' ', ' ' ], [ '""', '""' ],
-    [ '\n', '\n' ], [ '\t', '\t' ], 
+    [ '\n', '\n' ], [ '\t', '\t' ],
     [ 'str', 'str' ], [ 'src', 'src' ]
   ];
   test.identical( got, expected );
@@ -2404,7 +2372,7 @@ function strQuotePairsNormalize( test )
   [
     [ '', '""' ],
     [ ' ', '\t' ],
-    [ '\n', '\r' ], 
+    [ '\n', '\r' ],
     [ 'str', 'src' ]
   ];
   test.identical( got, expected );
@@ -2505,7 +2473,7 @@ function strQuoteAnalyze( test )
   test.identical( got, expected );
 
   test.case = 'src = string, quote - null ';
-  var expected = 
+  var expected =
   {
     ranges : [ 1, 5, 6, 9 ],
     quotes : [ "'", "`" ]
@@ -2514,7 +2482,7 @@ function strQuoteAnalyze( test )
   test.identical( got, expected );
 
   test.case = 'src = string, quote - "\'" ';
-  var expected = 
+  var expected =
   {
     ranges : [ 1, 5 ],
     quotes : [ "'" ]
@@ -2523,7 +2491,7 @@ function strQuoteAnalyze( test )
   test.identical( got, expected );
 
   test.case = 'src = string, quote - array with quotes';
-  var expected = 
+  var expected =
   {
     ranges : [ 1, 5, 6, 9 ],
     quotes : [ "'", "`" ]
@@ -2532,7 +2500,7 @@ function strQuoteAnalyze( test )
   test.identical( got, expected );
 
   test.case = 'src = string, quote - array with pairs of quotes';
-  var expected = 
+  var expected =
   {
     ranges : [ 1, 5, 6, 9 ],
     quotes : [ "'", "`" ]
@@ -2541,7 +2509,7 @@ function strQuoteAnalyze( test )
   test.identical( got, expected );
 
   test.case = 'src = string, quote - string';
-  var expected = 
+  var expected =
   {
     ranges : [ 0, 4, 7, 11 ],
     quotes : [ '--', '--' ]
@@ -2550,7 +2518,7 @@ function strQuoteAnalyze( test )
   test.identical( got, expected );
 
   test.case = 'src = string, quote - pairs of different strings';
-  var expected = 
+  var expected =
   {
     ranges : [ 0, 4 ],
     quotes : [ '**' ]
@@ -2613,7 +2581,7 @@ function strQuoteAnalyze( test )
 
   test.case = 'extra arguments';
   test.shouldThrowErrorSync( () => _.strQuoteAnalyze( '\'a\'"b"`c`', null, 'extra' ) );
-  
+
   test.case = 'wrong types of quote';
   test.shouldThrowErrorSync( () => _.strQuoteAnalyze( '\'a\'"b"`c`', {} ) );
 }
@@ -3144,7 +3112,7 @@ function strOutsideOf( test )
 
 //--
 // replacers
-//-- 
+//--
 
 function strRemoveBegin( test )
 {
@@ -7816,7 +7784,7 @@ function strIsolateInsideLeft( test )
 
   if( !Config.debug )
   return;
-  
+
   test.case = 'without arguments';
   test.shouldThrowErrorSync( () => _.strIsolateInsideLeft() );
 
@@ -7828,7 +7796,7 @@ function strIsolateInsideLeft( test )
 
   test.case = 'wrong type of src';
   test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( 1, '', '' ) );
-  
+
   test.case = 'wrong type of begin';
   test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( '', 3 ) );
   test.shouldThrowErrorSync( () => _.strIsolateInsideLeft( '123', 1, '' ) );
@@ -7956,7 +7924,7 @@ function strBeginOf( test )
 
   if( !Config.debug )
   return;
-  
+
   test.case = 'without arguments';
   test.shouldThrowErrorSync( () => _.strBeginOf() );
 
@@ -8244,7 +8212,7 @@ var Self =
   {
 
     strLeft, /* qqq : update | Dmytro : updated, new option implemented */
-    strRight, /* qqq : update | Dmytro : updated, new option implemented */ 
+    strRight, /* qqq : update | Dmytro : updated, new option implemented */
 
     strEquivalent,
     strsEquivalent,

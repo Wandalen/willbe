@@ -9,7 +9,7 @@ if( typeof module !== 'undefined' )
 
   _.include( 'wTesting' );
 
-  if( !_.isIncluded( 'wProto' ) )
+  if( !_.module.isIncluded( 'wProto' ) )
   {
     require( '../../abase/l3_proto/Include.s' );
   }
@@ -28,20 +28,20 @@ function isLike( test )
 
   var Base1 = _.like().end;
   var Base2 = _.like().end;
-  var Mid = _.like( Base1,Base2 ).end;
+  var Mid = _.like( Base1, Base2 ).end;
 
   test.case = 'Base1 class like itself';
-  var is = _.construction.isLike( Base1,Base1 );
+  var is = _.lconstruction.isLike( Base1, Base1 );
   test.is( is );
 
   test.case = 'Mid class like itself';
-  var is = _.construction.isLike( Mid,Mid );
+  var is = _.lconstruction.isLike( Mid, Mid );
   test.is( is );
 
   test.case = 'Mid class like one of parent';
-  var is = _.construction.isLike( Mid,Base1 );
+  var is = _.lconstruction.isLike( Mid, Base1 );
   test.is( is );
-  var is = _.construction.isLike( Mid,Base2 );
+  var is = _.lconstruction.isLike( Mid, Base2 );
   test.is( is );
 
   /* */
@@ -50,21 +50,21 @@ function isLike( test )
   debugger;
   var base1 = Base1.constructor();
   debugger;
-  var is = _.construction.isLike( base1,Base1 );
+  var is = _.lconstruction.isLike( base1, Base1 );
   test.is( is );
 
   test.case = 'base instance like another base class';
   var base1 = Base1.constructor();
-  var is = _.construction.isLike( base1,Base2 );
+  var is = _.lconstruction.isLike( base1, Base2 );
   test.is( !is );
 
   test.case = 'mid instance like one of class';
   var mid = Mid.constructor();
-  var is = _.construction.isLike( mid,Mid );
+  var is = _.lconstruction.isLike( mid, Mid );
   test.is( is );
-  var is = _.construction.isLike( mid,Base1 );
+  var is = _.lconstruction.isLike( mid, Base1 );
   test.is( is );
-  var is = _.construction.isLike( mid,Base2 );
+  var is = _.lconstruction.isLike( mid, Base2 );
   test.is( is );
 
 }

@@ -6,6 +6,7 @@ if( typeof module !== 'undefined' )
 {
   let _ = require( '../Layer2.s' );
   _.include( 'wTesting' );
+  // _.include( 'wStringer' );
 }
 
 var _global = _global_;
@@ -8617,6 +8618,7 @@ function strJoinPath( test )
 
 function strConcat( test )
 {
+
   test.case = 'srcs - empty array';
   var srcs = [];
   var got = _.strConcat( srcs );
@@ -8625,37 +8627,46 @@ function strConcat( test )
   test.case = 'srcs - empty string';
   var srcs = '';
   var got = _.strConcat( srcs );
-  test.identical( got, ' ' );
+  test.identical( got, '' );
 
   test.case = 'srcs - not empty string';
   var srcs = 'str';
   var got = _.strConcat( srcs );
-  test.identical( got, 'str ' );
+  test.identical( got, 'str' );
 
   test.case = 'srcs - number';
   var srcs = 1;
   var got = _.strConcat( srcs );
-  test.identical( got, '1 ' );
+  test.identical( got, '1' );
 
   test.case = 'srcs - function';
   var srcs = ( e ) => 'str';
   var got = _.strConcat( srcs );
-  test.identical( got, 'str ' );
+  test.identical( got, 'str' );
 
   test.case = 'srcs - object';
   var srcs = { a : 2 };
   var got = _.strConcat( srcs );
-  test.identical( got, '[object Object] ' );
+  if( _.toStrFine )
+  test.identical( got, '{ a : 2 }' );
+  else
+  test.identical( got, '[object Object]' );
 
   test.case = 'srcs - BufferRaw';
   var srcs = new BufferRaw( 3 );
   var got = _.strConcat( srcs );
-  test.identical( got, '[object ArrayBuffer] ' );
+  if( _.toStrFine )
+  test.identical( got, '( new U8x([ 0x0, 0x0, 0x0 ]) ).buffer' );
+  else
+  test.identical( got, '[object ArrayBuffer]' );
 
   test.case = 'srcs - BufferTyped';
   var srcs = new U8x( [ 1, 2, 3 ] );
   var got = _.strConcat( srcs );
-  test.identical( got, '1,2,3 ' );
+  if( _.toStrFine )
+  test.identical( got, '( new Uint8Array([ 1, 2, 3 ]) )' );
+  else
+  test.identical( got, '1,2,3' );
 
   test.case = 'srcs - array of strings, new line symbol in the string';
   var srcs =
@@ -8666,72 +8677,78 @@ function strConcat( test )
     module::module-a`
   ];
   var got = _.strConcat( srcs );
-  test.identical( got, 'b variant:: : #83\n    path::local\n    module::module-a ' );
+  test.identical( got, 'b variant:: : #83\n    path::local\n    module::module-a' );
 
   test.case = 'srcs - array';
   var srcs = [ 1, 2, 'str', 3, [ 2 ] ];
   var got = _.strConcat( srcs );
-  test.identical( got, '1 2 str 3 2 ' );
+  if( _.toStrFine )
+  test.identical( got, '1 2 str 3 [ 2 ]' );
+  else
+  test.identical( got, '1 2 str 3 2' );
 
   test.case = 'srcs - unroll';
   var srcs = _.unrollMake( [ 1, 2, 'str', 3, [ 2 ] ] );
   var got = _.strConcat( srcs );
-  test.identical( got, '1 2 str 3 2 ' );
+  if( _.toStrFine )
+  test.identical( got, '1 2 str 3 [ 2 ]' );
+  else
+  test.identical( got, '1 2 str 3 2' );
 
   test.case = 'srcs - array of strings, strings begin with spaces';
   var srcs = [ '  b', '    a:: : c', '    d::e' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '  b a:: : c d::e ' );
+  test.identical( got, '  b a:: : c d::e' );
 
   test.case = 'srcs - array of strings, strings end with spaces';
   var srcs = [ 'b    ', 'variant:: : #83    ', 'path::local    ' ];
   var got = _.strConcat( srcs );
-  test.identical( got, 'b variant:: : #83 path::local     ' );
+  test.identical( got, 'b variant:: : #83 path::local    ' );
 
   test.case = 'srcs - array of strings, strings begin and end with spaces';
   var srcs = [ '    b    ', '    variant:: : #83    ', '    path::local    ' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '    b variant:: : #83 path::local     ' );
+  test.identical( got, '    b variant:: : #83 path::local    ' );
 
   test.case = 'srcs - array of strings, strings begin with spaces, end with new line symbol';
   var srcs = [ '  b\n', '  variant:: : #83\n', '  path::local' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '  b\n  variant:: : #83\n  path::local ' );
+  test.identical( got, '  b\n  variant:: : #83\n  path::local' );
 
   test.case = 'srcs - array of strings, strings begin with new line symbol, end with spaces';
   var srcs = [ '\nb    ', '\nvariant:: : #83    ', '\npath::local    ' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '\nb\nvariant:: : #83\npath::local     ' );
+  test.identical( got, '\nb\nvariant:: : #83\npath::local    ' );
 
   test.case = 'srcs - array of strings, strings begin and end with new line symbol';
   var srcs = [ '\nb\n', '\nvariant:: : #83\n', '\npath::local\n' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '\nb\n\nvariant:: : #83\n\npath::local\n ' );
+  test.identical( got, '\nb\n\nvariant:: : #83\n\npath::local\n' );
 
   test.case = 'srcs - array of strings, strings begin and end with new line symbol';
   var srcs = [ '\nb\n', '\nvariant:: : #83\n', '\npath::local\n' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '\nb\n\nvariant:: : #83\n\npath::local\n ' );
+  test.identical( got, '\nb\n\nvariant:: : #83\n\npath::local\n' );
 
   test.case = 'srcs - array of strings, strings begin with new line symbol, end with new line symbol and spaces';
   var srcs = [ '\nb\n    ', '\nvariant:: : #83\n    ', '\npath::local\n    ' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '\nb\n\nvariant:: : #83\n\npath::local\n     ' );
+  test.identical( got, '\nb\n\nvariant:: : #83\n\npath::local\n    ' );
 
   test.case = 'srcs - array of strings, strings begin with new line symbol and spaces, end with new line symbol';
   var srcs = [ '    \nb\n', '    \nvariant:: : #83\n', '    \npath::local\n' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '    \nb\n    \nvariant:: : #83\n    \npath::local\n ' );
+  test.identical( got, '    \nb\n    \nvariant:: : #83\n    \npath::local\n' );
 
   test.case = 'srcs - array of strings, strings begin with new line symbol and spaces, end with new line symbol';
   var srcs = [ '    \nb\n', '    \nvariant:: : #83\n', '    \npath::local\n' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '    \nb\n    \nvariant:: : #83\n    \npath::local\n ' );
+  test.identical( got, '    \nb\n    \nvariant:: : #83\n    \npath::local\n' );
 
   test.case = 'srcs - array of strings, strings begin with new line symbol and spaces, end with new line symbol and spaces';
   var srcs = [ '    \nb\n    ', '    \nvariant:: : #83\n    ', '    \npath::local\n    ' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '    \nb\n    \nvariant:: : #83\n    \npath::local\n     ' );
+  test.identical( got, '    \nb\n    \nvariant:: : #83\n    \npath::local\n    ' );
 
   /* */
 
@@ -8739,13 +8756,7 @@ function strConcat( test )
   var srcs = [ 'a ||', 'b ||', 'c ||', 'd' ];
   var o = { lineDelimter : '||' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, 'a ||b ||c ||d ' );
-
-  // test.case = 'optionsForToStr';
-  // var srcs = [ 'a ||', 'b ||', 'c ||', 'd' ];
-  // var o = { optionsForToStr : { stringWrapper : '/' } };
-  // var got = _.strConcat( srcs, o );
-  // test.identical( got, 'a || b || c || d ' );
+  test.identical( got, 'a ||b ||c ||d' );
 
   test.case = 'onToStr';
   let onToStr = ( src ) => String( src ) + 1;
@@ -8758,37 +8769,37 @@ function strConcat( test )
   var srcs = [ 'a', 'b', 'c', 'd' ];
   var o = { linePrefix : '|| ' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, '|| a b c d ' );
+  test.identical( got, '|| a b c d' );
 
   test.case = 'linePrefix, lineDelimter';
   var srcs = [ 'a\n', 'b\n', 'c\n', 'd\n' ];
   var o = { linePrefix : '|| ' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, '|| a\n|| b\n|| c\n|| d\n||  ' );
+  test.identical( got, '|| a\n|| b\n|| c\n|| d\n|| ' );
 
   test.case = 'linePostfix, not uses lineDelimter';
   var srcs = [ 'a', 'b', 'c', 'd' ];
   var o = { linePostfix : ' ||' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, 'a b c d  ||' );
+  test.identical( got, 'a b c d ||' );
 
   test.case = 'linePostfix, lineDelimter';
   var srcs = [ 'a\n', 'b\n', 'c\n', 'd\n' ];
   var o = { linePostfix : ' ||' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, 'a ||\nb ||\nc ||\nd ||\n  ||' );
+  test.identical( got, 'a ||\nb ||\nc ||\nd ||\n ||' );
 
   test.case = 'linePrefix and linePostfix, not uses lineDelimter';
   var srcs = [ 'a', 'b', 'c', 'd' ];
   var o = { linePostfix : ' ||', linePrefix : '|| ' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, '|| a b c d  ||')
+  test.identical( got, '|| a b c d ||')
 
   test.case = 'linePrefix and linePostfix, lineDelimter';
   var srcs = [ 'a\n', 'b\n', 'c\n', 'd\n' ];
   var o = { linePostfix : ' ||', linePrefix : '|| ' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, '|| a ||\n|| b ||\n|| c ||\n|| d ||\n||   ||' );
+  test.identical( got, '|| a ||\n|| b ||\n|| c ||\n|| d ||\n||  ||' );
 }
 
 //--
@@ -11299,6 +11310,7 @@ var Self =
     strLinesNearest,
     strLinesCount,
     strLinesRangeWithCharRange,
+
   }
 
 }

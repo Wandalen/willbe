@@ -245,11 +245,19 @@ function out_body( o )
   o.procedure = _.Procedure( 2 ).name( 'time.out' );
   _.assert( _.procedureIs( o.procedure ) );
 
+  // if( o.procedure.id === 2 )
+  // debugger;
+
+  // /* */
+  //
+  // timer = _.time.begin( o.delay, o.procedure, timeEnd );
+
   /* */
 
   if( con )
   {
     con.procedure( o.procedure.clone() );
+    // con.procedure( o.procedure );
     con.give( function timeGot( err, arg )
     {
       if( arg === _.dont )
@@ -362,6 +370,7 @@ function outError_body( o )
   if( Config.debug )
   con.tag = 'TimeOutError';
 
+  // debugger;
   con.finally( function outError( err, arg )
   {
     if( err )
@@ -377,7 +386,8 @@ function outError_body( o )
       procedure : o.procedure,
     });
 
-    return _.Consequence().error( err );
+    throw err;
+    // return _.Consequence().error( err );
   });
 
   return con;

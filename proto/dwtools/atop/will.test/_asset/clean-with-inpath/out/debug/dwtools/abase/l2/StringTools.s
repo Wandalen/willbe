@@ -304,17 +304,17 @@ function strsLongest()
 // {
 //   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 //   _.assert( _.strIs( src ), 'Expects string {-src-}' );
-// 
+//
 //   let result = src;
 //   let beginOf = _._strBeginOf( result, begin );
 //   if( beginOf !== false )
 //   result = result.substr( beginOf.length, result.length );
-// 
+//
 //   return result;
 // }
-// 
+//
 // //
-// 
+//
 // /**
 //  * Finds substring prefix ( begin ) occurrence from the very begining of source ( src ) and removes it.
 //  * Returns original string if source( src ) does not have occurrence of ( prefix ).
@@ -338,19 +338,19 @@ function strsLongest()
 //  * @memberof wTools
 //  *
 //  */
-// 
+//
 // function strRemoveBegin( src, begin )
 // {
 //   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 //   _.assert( _.longIs( src ) || _.strIs( src ), 'Expects string or array of strings {-src-}' );
 //   _.assert( _.longIs( begin ) || _.strIs( begin ) || _.regexpIs( begin ), 'Expects string/regexp or array of strings/regexps {-begin-}' );
-// 
+//
 //   let result = [];
 //   let srcIsArray = _.longIs( src );
-// 
+//
 //   if( _.strIs( src ) && !_.longIs( begin ) )
 //   return _._strRemovedBegin( src, begin );
-// 
+//
 //   src = _.arrayAs( src );
 //   begin = _.arrayAs( begin );
 //   for( let s = 0, slen = src.length ; s < slen ; s++ )
@@ -367,30 +367,30 @@ function strsLongest()
 //     src1 = src1.substr( beginOf.length, src1.length );
 //     result[ s ] = src1;
 //   }
-// 
+//
 //   if( !srcIsArray )
 //   return result[ 0 ];
-// 
+//
 //   return result;
 // }
-// 
+//
 // //
-// 
+//
 // function _strRemovedEnd( src, end )
 // {
 //   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 //   _.assert( _.strIs( src ), 'Expects string {-src-}' );
-// 
+//
 //   let result = src;
 //   let endOf = _._strEndOf( result, end );
 //   if( endOf !== false )
 //   result = result.substr( 0, result.length - endOf.length );
-// 
+//
 //   return result;
 // }
-// 
+//
 // //
-// 
+//
 // /**
 //  * Removes occurrence of postfix ( end ) from the very end of string( src ).
 //  * Returns original string if no occurrence finded.
@@ -413,22 +413,22 @@ function strsLongest()
 //  * @memberof wTools
 //  *
 //  */
-// 
+//
 // function strRemoveEnd( src, end )
 // {
 //   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 //   _.assert( _.longIs( src ) || _.strIs( src ), 'Expects string or array of strings {-src-}' );
 //   _.assert( _.longIs( end ) || _.strIs( end ) || _.regexpIs( end ), 'Expects string/regexp or array of strings/regexps {-end-}' );
-// 
+//
 //   let result = [];
 //   let srcIsArray = _.longIs( src );
-// 
+//
 //   if( _.strIs( src ) && !_.longIs( end ) )
 //   return _._strRemovedEnd( src, end );
-// 
+//
 //   src = _.arrayAs( src );
 //   end = _.arrayAs( end );
-// 
+//
 //   for( let s = 0, slen = src.length ; s < slen ; s++ )
 //   {
 //     let endOf = false;
@@ -443,10 +443,10 @@ function strsLongest()
 //     src1 = src1.substr( 0, src1.length - endOf.length );
 //     result[ s ] = src1;
 //   }
-// 
+//
 //   if( !srcIsArray )
 //   return result[ 0 ];
-// 
+//
 //   return result;
 // }
 
@@ -539,10 +539,10 @@ function strRemove( srcStr, insStr )
 //   _.assert( _.strIs( ins ) || _.longIs( ins ), 'Expects {-ins-} as string/array of strings' );
 //   if( _.longIs( begin ) && _.longIs( ins ) )
 //   _.assert( begin.length === ins.length );
-// 
+//
 //   begin = _.arrayAs( begin );
 //   let result = _.arrayAs( src ).slice();
-// 
+//
 //   for( let k = 0, srcLength = result.length; k < srcLength; k++ )
 //   for( let j = 0, beginLength = begin.length; j < beginLength; j++ )
 //   if( _.strBegins( result[ k ], begin[ j ] ) )
@@ -552,25 +552,25 @@ function strRemove( srcStr, insStr )
 //     result[ k ] = prefix + _.strRemoveBegin( result[ k ] , begin[ j ] );
 //     break;
 //   }
-// 
+//
 //   if( result.length === 1 && _.strIs( src ) )
 //   return result[ 0 ];
-// 
+//
 //   return result;
 // }
-// 
+//
 // //
-// 
+//
 // function strReplaceEnd( src, end, ins )
 // {
 //   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
 //   _.assert( _.strIs( ins ) || _.longIs( ins ), 'Expects {-ins-} as string/array of strings' );
 //   if( _.longIs( end ) && _.longIs( ins ) )
 //   _.assert( end.length === ins.length );
-// 
+//
 //   end = _.arrayAs( end );
 //   let result = _.arrayAs( src ).slice();
-// 
+//
 //   for( let k = 0, srcLength = result.length; k < srcLength; k++ )
 //   for( let j = 0, endLength = end.length; j < endLength; j++ )
 //   if( _.strEnds( result[ k ], end[ j ] ) )
@@ -579,26 +579,26 @@ function strRemove( srcStr, insStr )
 //     _.assert( _.strIs( postfix ) );
 //     result[ k ] = _.strRemoveEnd( result[ k ] , end[ j ] ) + postfix;
 //   }
-// 
+//
 //   if( result.length === 1 && _.strIs( src ) )
 //   return result[ 0 ];
-// 
+//
 //   return result;
 // }
-// 
+//
 // //
-// 
+//
 // function _strReplaced( srcStr, insStr, subStr )
 // {
 //   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
 //   _.assert( _.strIs( srcStr ), 'Expects string {-src-}' );
-// 
+//
 //   let result = srcStr;
-// 
+//
 //   if( !_.longIs( insStr ) )
 //   {
 //     _.assert( _.strIs( subStr ), 'Expects string {-sub-}' );
-// 
+//
 //     result = result.replace( insStr, subStr );
 //   }
 //   else
@@ -607,16 +607,16 @@ function strRemove( srcStr, insStr )
 //     for( let i = 0; i < insStr.length; i++ )
 //     {
 //       _.assert( _.strIs( subStr[ i ] ), 'Expects string {-sub-}' );
-// 
+//
 //       result = result.replace( insStr[ i ], subStr[ i ] );
 //     }
 //   }
-// 
+//
 //   return result;
 // }
-// 
+//
 // //
-// 
+//
 // /**
 // * Finds substring or regexp ( insStr ) occurrence from the source string ( srcStr ) and replaces them
 // * with the subStr values.
@@ -643,31 +643,31 @@ function strRemove( srcStr, insStr )
 // * @memberof wTools
 // *
 // */
-// 
+//
 // function strReplace( srcStr, insStr, subStr )
 // {
 //   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
 //   _.assert( _.longIs( srcStr ) || _.strIs( srcStr ), 'Expects string or array of strings {-src-}' );
 //   _.assert( _.longIs( insStr ) || _.strIs( insStr ) || _.regexpIs( insStr ), 'Expects string/regexp or array of strings/regexps {-begin-}' );
 //   _.assert( _.longIs( subStr ) || _.strIs( subStr ), 'Expects string or array of strings {-src-}' );
-// 
+//
 //   let result = [];
 //   let srcIsArray = _.longIs( srcStr );
-// 
+//
 //   if( _.strIs( srcStr ) && !_.longIs( srcStr ) )
 //   return _._strReplaced( srcStr, insStr, subStr );
-// 
+//
 //   srcStr = _.arrayAs( srcStr );
-// 
+//
 //   for( let s = 0; s < srcStr.length; s++ )
 //   {
 //     let src = srcStr[ s ];
 //     result[ s ] = _._strReplaced( src, insStr, subStr );
 //   }
-// 
+//
 //   if( !srcIsArray )
 //   return result[ 0 ];
-// 
+//
 //   return result;
 // }
 
@@ -789,7 +789,7 @@ function strReplaceWords( src, ins, sub )
 
 /**
  * Routine strCommonLeft() finds common symbols from the begining of all strings passed to arguments list.
- * Routine uses first argument {-ins-} as a pattern. If some string doesn`t have the same first symbols 
+ * Routine uses first argument {-ins-} as a pattern. If some string doesn`t have the same first symbols
  * as the pattern {-ins-}, the function returns an empty string.
  * Otherwise, it returns the symbol sequence that appears from the start of each string.
  *
@@ -849,7 +849,7 @@ function strCommonLeft( ins )
 
 /**
  * Routine strCommonRight() finds common symbols from the end of all strings passed to arguments list.
- * Routine uses first argument {-ins-} as a pattern. If some string doesn`t have the same end symbols 
+ * Routine uses first argument {-ins-} as a pattern. If some string doesn`t have the same end symbols
  * as the pattern {-ins-}, the function returns an empty string.
  * Otherwise, it returns the symbol sequence that appears from the end of each string.
  *
@@ -910,20 +910,20 @@ function strCommonRight( ins )
 /**
  * Routine strRandom() makes string with random length with random symbols defined
  * by option {-o.alphabet-}.
- * Routine accepts two types of parameter. First of them is options map {-o-}, the second 
+ * Routine accepts two types of parameter. First of them is options map {-o-}, the second
  * is Number (Range) {-length-}.
  *
  * First set of parameters
  * @param { Map } o - Options map.
  * @param { Number|Range } o.length - The length of random string.
- * The generated string may has fixed length if {-o.length-} defined by a number. If {-o.length-} 
+ * The generated string may has fixed length if {-o.length-} defined by a number. If {-o.length-}
  * defined by a Range, then length of generated string is variable.
  * @param { String } o.alphabet - String with symbols for generated string.
  * Default range of symbols is 'a' - 'z'.
  *
  * Second set of parameters
  * @param { Number|Range } length - The length of random string.
- * The generated string may has fixed length if {-o.length-} defined by a number. If {-o.length-} 
+ * The generated string may has fixed length if {-o.length-} defined by a number. If {-o.length-}
  * defined by a Range, then length of generated string is variable.
  * @param { String } o.alphabet - String with symbols for generated string.
  *
@@ -933,7 +933,7 @@ function strCommonRight( ins )
  *
  * @example
  * _.strRandom( 2 );
- * // returns 'vb' 
+ * // returns 'vb'
  * // string with 2 random symbols from 'a' to 'z'
  *
  * @example
@@ -1456,7 +1456,7 @@ strEscape.defaults =
  * // returns '\\u004d'
  *
  * @returns { String } - Returns string with result of conversion.
- * @function strCodeUnicodeEscape 
+ * @function strCodeUnicodeEscape
  * @throws { Exception } If arguments.length is less or more then one.
  * @throws { Exception } If {-src-} is not a Number.
  * @memberof wTools

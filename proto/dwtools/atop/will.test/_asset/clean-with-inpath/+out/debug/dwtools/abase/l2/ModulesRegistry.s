@@ -8,10 +8,6 @@ _.module = _.module || Object.create( null );
 _.module.lateModules = _.module.lateModules || Object.create( null );
 let Self = _.module.lateModules;
 
-// if( !Object.hasOwnProperty.call( _global, 'ModuleRegistry' ) )
-// _global.ModulesRegistry = Object.create( null );
-// let Self = _global.ModulesRegistry;
-
 /**
  * @typedef {Object} ModulesRegistry - Map that contains info about modules, is uses by {@link wTools.include}.
  * @memberof wTools
@@ -31,13 +27,7 @@ function sourcePath( filePath, name )
 // include map
 // --
 
-// base / l3
-
-// let wNameTools =
-// {
-//   sourcePath : sourcePath( 'abase/l3/NameTools.s', 'wNameTools' ),
-//   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.idWithInt; },
-// }
+// base / l2
 
 let wEntityBasic =
 {
@@ -62,6 +52,8 @@ let wRoutineBasic =
   sourcePath : sourcePath( 'abase/l2/RoutineBasic.s', 'wroutinebasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.exec },
 }
+
+// base / l3
 
 let wProto =
 {
@@ -598,12 +590,15 @@ let wMaker =
 let Modules =
 {
 
-  // base / l3
+  // base / l2
 
   wEntityBasic,
   wLooker,
   wPathBasic,
   wRoutineBasic,
+
+  // base / l3
+
   wProto,
 
   // base / l4

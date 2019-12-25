@@ -42,7 +42,7 @@ function like()
     {
       // debugger;
       _.assert( arguments.length === 1, 'Expects single argument' );
-      _.mapExtend( this,o );
+      _.mapExtend( this, o );
       return this;
     }
   });
@@ -54,7 +54,7 @@ function like()
     writable : false,
     value : function Construction( o )
     {
-      _.assert( arguments.length === 0 || arguments.length === 1,'lconstruction expects one or none argument' );
+      _.assert( arguments.length === 0 || arguments.length === 1, 'lconstruction expects one or none argument' );
 
       if( !( this instanceof proto.constructor ) )
       if( o instanceof proto.constructor )
@@ -62,13 +62,13 @@ function like()
       else
       return new( _.constructorJoin( proto.constructor, arguments ) );
 
-      _.assertMapHasOnly( this,proto,'Prototype of the object ' + ( location ? 'defined at\n' + location + '\n' : '' ) + 'does not have requested fields.' );
+      _.assertMapHasOnly( this, proto, 'Prototype of the object ' + ( location ? 'defined at\n' + location + '\n' : '' ) + 'does not have requested fields.' );
 
-      _.mapComplement( this,proto );
+      _.mapComplement( this, proto );
       Object.preventExtensions( this );
 
       if( o )
-      _.mapExtend( this,o );
+      _.mapExtend( this, o );
 
       return this;
     }
@@ -80,7 +80,7 @@ function like()
     var arg = arguments[ a ];
     _.assert( !!arg[ symbolForAllClasses ] );
     if( arg[ symbolForAllClasses ] )
-    _.arrayAppendArrayOnce( allClasses,arg[ symbolForAllClasses ] );
+    _.arrayAppendArrayOnce( allClasses, arg[ symbolForAllClasses ] );
   }
 
   proto.constructor.prototype = proto;
@@ -117,7 +117,7 @@ function like()
   Object.freeze( helper );
 
   if( arguments.length > 0 )
-  _.mapExtend.apply( _,Array.prototype.concat.apply( [ proto ],arguments ) );
+  _.mapExtend.apply( _, Array.prototype.concat.apply( [ proto ], arguments ) );
 
   return helper;
 }
@@ -135,7 +135,7 @@ function name( src )
 function also( src )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.mapExtend( this.proto,src );
+  _.mapExtend( this.proto, src );
   return this;
 }
 
@@ -144,7 +144,7 @@ function also( src )
 function but( src )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.mapDelete( this.proto,src );
+  _.mapDelete( this.proto, src );
   return this;
 }
 
@@ -157,7 +157,7 @@ function _endGet()
 
 //
 
-function isLike( instance,parent )
+function isLike( instance, parent )
 {
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   if( !instance[ symbolForAllClasses ] )
