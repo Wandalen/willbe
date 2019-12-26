@@ -17,8 +17,7 @@ let Self = _global_.wTools;
  *  - For undefined returns 0;
  *  - In other cases returns 1.
  *
- * @param {*} src - Source entity.
- * @returns {number} Returns "length" of entity.
+ * @param { * } src - Source entity.
  *
  * @example
  * _.entityLength( [ 1, 2, 3 ] );
@@ -37,6 +36,7 @@ let Self = _global_.wTools;
  * _.entityLength( src );
  * // returns 0
  *
+ * @returns {number} Returns "length" of entity.
  * @function entityLength
  * @memberof wTools
 */
@@ -101,45 +101,11 @@ function uncountableSize( src )
   if( _.numberIs( src.byteLength ) )
   return src.byteLength;
 
-  // if( _.numberIs( src ) )
-  // return 8;
-  //
-  // if( !_.definedIs( src ) )
-  // return 8;
-  //
-  // if( _.boolIs( src ) || _.dateIs( src ) )
-  // return 8;
-
   if( _.regexpIs( src ) )
   return _.uncountableSize( src.source ) + src.flags.length * 1;
 
-  if( !_.countableIs( src ) )
+  if( !_.iterableIs( src ) )
   return 8;
-
-  // if( _.longIs( src ) )
-  // {
-  //   let result = 0;
-  //   for( let i = 0; i < src.length; i++ )
-  //   {
-  //     result += _.uncountableSize( src[ i ] );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
-  //
-  // if( _.mapIs( src ) )
-  // {
-  //   let result = 0;
-  //   for( let k in src )
-  //   {
-  //     result += _.uncountableSize( k );
-  //     result += _.uncountableSize( src[ k ] );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
 
   return NaN;
 }
@@ -182,67 +148,16 @@ function entitySize( src )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  if( _.primitiveIs( src ) || !_.countableIs( src ) || _.bufferAnyIs( src ) )
+  if( _.primitiveIs( src ) || !_.iterableIs( src ) || _.bufferAnyIs( src ) )
   return _.uncountableSize( src );
 
   if( _.look )
-  if( _.containerIs( src ) || _.countableIs( src ) )
+  if( _.containerIs( src ) || _.iterableIs( src ) )
   {
     _.look( src, onEach );
   }
 
   return result;
-  // if( _.longLike( src ) )
-  // {
-  //   let result = 0;
-  //   for( let i = 0; i < src.length; i++ )
-  //   {
-  //     result += _.entitySize( src[ i ] );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
-  //
-  // if( _.mapLike( src ) )
-  // {
-  //   let result = 0;
-  //   for( let k in src )
-  //   {
-  //     result += _.entitySize( k );
-  //     result += _.entitySize( src[ k ] );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
-  //
-  // if( _.setLike( src ) )
-  // {
-  //   let result = 0; debugger; xxx
-  //   for( let e of src )
-  //   {
-  //     result += _.entitySize( e );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
-  //
-  // if( _.countableIs( src ) )
-  // {
-  //   let result = 0;
-  //   for( let k in src )
-  //   {
-  //     result += _.entitySize( k );
-  //     result += _.entitySize( src[ k ] );
-  //     if( isNaN( result ) )
-  //     break;
-  //   }
-  //   return result;
-  // }
-  //
-  // return NaN;
 
   function onEach( e, k, it )
   {
@@ -261,28 +176,11 @@ function entitySize( src )
       result += _.uncountableSize( k );
     }
 
-    if( _.primitiveIs( e ) || !_.countableIs( e ) || _.bufferAnyIs( e ) )
+    if( _.primitiveIs( e ) || !_.iterableIs( e ) || _.bufferAnyIs( e ) )
     result += _.uncountableSize( e );
 
   }
 
-}
-
-//
-
-function containerEmpty( dstContainer )
-{
-  if( _.longIs( dstContainer ) )
-  _.longEmpty( dstContainer );
-  else if( _.setIs( dstContainer ) )
-  dstContainer.clear();
-  else if( _.hashMapIs( dstContainer ) )
-  dstContainer.clear();
-  else if( _.mapLike( dstContainer ) )
-  _.mapEmpty( dstContainer );
-  else
-  _.assert( 0, `Not clear how to empty non-container ${_.strType( dstContainer )}` );
-  return dstContainer;
 }
 
 // --
@@ -300,15 +198,12 @@ let Fields =
 let Routines =
 {
 
-  entityLength, /* qqq : implement good coverage */
+  entityLength, /* qqq : implement coverage | Dmytro : coverage is extended */
   lengthOf : entityLength,
 
-  uncountableSize, /* qqq : implement good coverage */
-  entitySize, /* qqq : implement good coverage */
+  uncountableSize, /* qqq : implement coverage | Dmytro : covered */
+  entitySize, /* qqq : implement coverage | Dmytro : coverage is extended, need clarification about long like and iterable entities */
   sizeOf : entitySize,
-
-  containerEmpty, /* qqq : implement good coverage */
-  empty : containerEmpty,
 
 }
 

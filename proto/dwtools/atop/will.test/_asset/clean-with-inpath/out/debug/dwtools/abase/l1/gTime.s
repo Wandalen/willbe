@@ -4,79 +4,48 @@
 
 let _global = _global_;
 let _ = _global_.wTools;
-let Self = _global_.wTools;
-
-let _ArrayIndexOf = Array.prototype.indexOf;
-let _ArrayLastIndexOf = Array.prototype.lastIndexOf;
-let _ArraySlice = Array.prototype.slice;
-let _ArraySplice = Array.prototype.splice;
-let _FunctionBind = Function.prototype.bind;
-let _ObjectToString = Object.prototype.toString;
-let _ObjectHasOwnProperty = Object.hasOwnProperty;
-let _ObjectPropertyIsEumerable = Object.propertyIsEnumerable;
-let _ceil = Math.ceil;
-let _floor = Math.floor;
+let Self = _global_.wTools.time = _global_.wTools.time || Object.create( null );
 
 // --
-// time
+// implementation
 // --
 
-let _TimeInfinity = Math.pow( 2, 31 )-1;
-function timeBegin( delay, onEnd )
-{
-  let timer = null;
-
-  if( delay === undefined )
-  delay = Infinity;
-
-  if( delay >= _TimeInfinity )
-  delay = _TimeInfinity;
-
-  _.assert( arguments.length <= 4 );
-  _.assert( _.numberIs( delay ) );
-
-  if( arguments[ 2 ] !== undefined || arguments[ 3 ] !== undefined )
-  onEnd = _.routineJoin.call( _, arguments[ 1 ], arguments[ 2 ], arguments[ 3 ] );
-
-  if( delay > 0 )
-  timer = setTimeout( out, delay );
-  else
-  timer = timeSoon( out );
-
-  return timer;
-
-  /* */
-
-  function out()
-  {
-    if( onEnd )
-    onEnd( timer );
-  }
-
-}
-
-//
-
-function timeEnd( timer )
-{
-  clearTimeout( timer );
-  return timer;
-}
-
-//
-
-function timeReady( onReady )
+function ready( timeOut, procedure, onReady )
 {
 
-  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
-  _.assert( _.numberIs( arguments[ 0 ] ) || _.routineIs( arguments[ 0 ] ) || arguments[ 0 ] === undefined );
+  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 || arguments.length === 3 );
 
-  let time = 0;
   if( _.numberIs( arguments[ 0 ] ) )
   {
-    time = arguments[ 0 ];
-    onReady = arguments[ 1 ];
+    timeOut = arguments[ 0 ];
+    if( !_.procedureIs( arguments[ 1 ] ) )
+    {
+      onReady = arguments[ 1 ];
+      procedure = undefined;
+    }
   }
+  else if( _.procedureIs( arguments[ 0 ] ) )
+  {
+    procedure = arguments[ 0 ];
+    onReady = arguments[ 1 ];
+    timeOut = undefined;
+  }
+  else
+  {
+    onReady = arguments[ 0 ];
+    procedure = undefined;
+    timeOut = undefined;
+  }
+
+  if( !timeOut )
+  timeOut = 0;
+
+  if( !procedure )
+  procedure = _.Procedure({ _stack : 1, _name : 'timeReady' });
+
+  _.assert( _.procedureIs( procedure ) );
+  _.assert( _.intIs( timeOut ) );
+  _.assert( _.routineIs( onReady ) || onReady === undefined );
 
   if( typeof window !== 'undefined' && typeof document !== 'undefined' && document.readyState != 'complete' )
   {
@@ -85,9 +54,9 @@ function timeReady( onReady )
     function handleReady()
     {
       if( _.Consequence )
-      return _.timeOut( time, onReady ).finally( con );
+      return _.time.out( timeOut, procedure, onReady ).finally( con );
       else if( onReady )
-      _.timeBegin( time, onReady );
+      _.time.begin( timeOut, procedure, onReady );
       else _.assert( 0 );
     }
 
@@ -97,9 +66,9 @@ function timeReady( onReady )
   else
   {
     if( _.Consequence )
-    return _.timeOut( time, onReady );
+    return _.time.out( timeOut, procedure, onReady );
     else if( onReady )
-    _.timeBegin( time, onReady );
+    _.time.begin( timeOut, procedure, onReady );
     else _.assert( 0 );
   }
 
@@ -107,85 +76,17 @@ function timeReady( onReady )
 
 //
 
-function timeReadyJoin( context, routine, args )
+function readyJoin( context, routine, args )
 {
   let joinedRoutine = _.routineJoin( context, routine, args );
   return _timeReady;
   function _timeReady()
   {
     let args = arguments;
+    let procedure = _.Procedure({ _stack : 1, _name : 'timeReadyJoin' });
     let joinedRoutine2 = _.routineSeal( this, joinedRoutine, args );
-    return _.timeReady( joinedRoutine2 );
+    return _.time.ready( procedure, joinedRoutine2 );
   }
-}
-
-//
-
-function timeOnce( delay, onBegin, onEnd )
-{
-  let con = _.Consequence ? new _.Consequence({ sourcePath : 2 }) : undefined;
-  let taken = false;
-  let options;
-  let optionsDefault =
-  {
-    delay : null,
-    onBegin : null,
-    onEnd : null,
-  }
-
-  if( _.objectIs( delay ) )
-  {
-    options = delay;
-    _.assert( arguments.length === 1, 'Expects single argument' );
-    _.assertMapHasOnly( options, optionsDefault );
-    delay = options.delay;
-    onBegin = options.onBegin;
-    onEnd = options.onEnd;
-  }
-  else
-  {
-    _.assert( 2 <= arguments.length && arguments.length <= 3 );
-  }
-
-  _.assert( delay >= 0 );
-  _.assert( _.primitiveIs( onBegin ) || _.routineIs( onBegin ) || _.objectIs( onBegin ) );
-  _.assert( _.primitiveIs( onEnd ) || _.routineIs( onEnd ) || _.objectIs( onEnd ) );
-
-  return function timeOnce()
-  {
-
-    if( taken )
-    {
-      /*console.log( 'timeOnce :', 'was taken' );*/
-      return;
-    }
-    taken = true;
-
-    if( onBegin )
-    {
-      if( _.routineIs( onBegin ) ) onBegin.apply( this, arguments );
-      else if( _.objectIs( onBegin ) ) onBegin.take( arguments );
-      if( con )
-      con.take( null );
-    }
-
-    _.timeOut( delay, function()
-    {
-
-      if( onEnd )
-      {
-        if( _.routineIs( onEnd ) ) onEnd.apply( this, arguments );
-        else if( _.objectIs( onEnd ) ) onEnd.take( arguments );
-        if( con )
-        con.take( null );
-      }
-      taken = false;
-
-    });
-
-    return con;
-  }
-
 }
 
 //
@@ -194,51 +95,51 @@ function timeOnce( delay, onBegin, onEnd )
  * Routine creates timer that executes provided routine( onReady ) after some amout of time( delay ).
  * Returns wConsequence instance. {@link module:Tools/base/Consequence.wConsequence wConsequence}
  *
- * If ( onReady ) is not provided, timeOut returns consequence that gives empty message after ( delay ).
- * If ( onReady ) is a routine, timeOut returns consequence that gives message with value returned or error throwed by ( onReady ).
- * If ( onReady ) is a consequence or routine that returns it, timeOut returns consequence and waits until consequence from ( onReady ) resolves the message, then
- * timeOut gives that resolved message throught own consequence.
- * If ( delay ) <= 0 timeOut performs all operations on nextTick in node
+ * If ( onReady ) is not provided, time.out returns consequence that gives empty message after ( delay ).
+ * If ( onReady ) is a routine, time.out returns consequence that gives message with value returned or error throwed by ( onReady ).
+ * If ( onReady ) is a consequence or routine that returns it, time.out returns consequence and waits until consequence from ( onReady ) resolves the message, then
+ * time.out gives that resolved message throught own consequence.
+ * If ( delay ) <= 0 time.out performs all operations on nextTick in node
  * @see {@link https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/#the-node-js-event-loop-timers-and-process-nexttick }
  * or after 1 ms delay in browser.
  * Returned consequence controls the timer. Timer can be easly stopped by giving an error from than consequence( see examples below ).
- * Important - Error that stops timer is returned back as regular message inside consequence returned by timeOut.
- * Also timeOut can run routine with different context and arguments( see example below ).
+ * Important - Error that stops timer is returned back as regular message inside consequence returned by time.out.
+ * Also time.out can run routine with different context and arguments( see example below ).
  *
  * @param {Number} delay - Delay in ms before ( onReady ) is fired.
  * @param {Function|wConsequence} onReady - Routine that will be executed with delay.
  *
  * @example
  * // simplest, just timer
- * let t = _.timeOut( 1000 );
+ * let t = _.time.out( 1000 );
  * t.give( () => console.log( 'Message with 1000ms delay' ) )
  * console.log( 'Normal message' )
  *
  * @example
  * // run routine with delay
  * let routine = () => console.log( 'Message with 1000ms delay' );
- * let t = _.timeOut( 1000, routine );
+ * let t = _.time.out( 1000, routine );
  * t.give( () => console.log( 'Routine finished work' ) );
  * console.log( 'Normal message' )
  *
  * @example
  * // routine returns consequence
  * let routine = () => new _.Consequence().take( 'msg' );
- * let t = _.timeOut( 1000, routine );
+ * let t = _.time.out( 1000, routine );
  * t.give( ( err, got ) => console.log( 'Message from routine : ', got ) );
  * console.log( 'Normal message' )
  *
  * @example
- * // timeOut waits for long time routine
- * let routine = () => _.timeOut( 1500, () => 'work done' ) ;
- * let t = _.timeOut( 1000, routine );
+ * // time.out waits for long time routine
+ * let routine = () => _.time.out( 1500, () => 'work done' ) ;
+ * let t = _.time.out( 1000, routine );
  * t.give( ( err, got ) => console.log( 'Message from routine : ', got ) );
  * console.log( 'Normal message' )
  *
  * @example
  * // how to stop timer
  * let routine = () => console.log( 'This message never appears' );
- * let t = _.timeOut( 5000, routine );
+ * let t = _.time.out( 5000, routine );
  * t.error( 'stop' );
  * t.give( ( err, got ) => console.log( 'Error returned as regular message : ', got ) );
  * console.log( 'Normal message' )
@@ -252,24 +153,29 @@ function timeOnce( delay, onBegin, onEnd )
  * }
  * let context = { x : 5 };
  * let arguments = [ 6 ];
- * let t = _.timeOut( 100, context, routine, arguments );
+ * let t = _.time.out( 100, context, routine, arguments );
  * t.give( ( err, got ) => console.log( 'Result of routine execution : ', got ) );
  *
  * @returns {wConsequence} Returns wConsequence instance that resolves message when work is done.
  * @throws {Error} If ( delay ) is not a Number.
  * @throws {Error} If ( onEnd ) is not a routine or wConsequence instance.
- * @function timeOut
+ * @function time.out
  * @memberof wTools
  */
 
-function timeOut_pre( routine, args )
+function out_pre( routine, args )
 {
   let o;
+  let procedure;
 
   _.assert( arguments.length === 2 );
-  _.assert( args );
+  _.assert( !!args );
 
-  // debugger;
+  if( _.procedureIs( args[ 1 ] ) )
+  {
+    procedure = args[ 1 ];
+    args = _.longBut( args, [ 1, 2 ] );
+  }
 
   if( !_.mapIs( args[ 0 ] ) || args.length !== 1 )
   {
@@ -302,8 +208,6 @@ function timeOut_pre( routine, args )
     else if( args[ 2 ] !== undefined || args[ 3 ] !== undefined )
     _.assert( _.routineIs( args[ 2 ] ) );
 
-    // if( args[ 2 ] !== undefined || args[ 3 ] !== undefined )
-    // debugger;
     if( args[ 2 ] !== undefined || args[ 3 ] !== undefined )
     onEnd = _.routineJoin.call( _, args[ 1 ], args[ 2 ], args[ 3 ] );
 
@@ -315,7 +219,10 @@ function timeOut_pre( routine, args )
     o = args[ 0 ];
   }
 
-  // debugger;
+  _.assert( _.mapIs( o ) );
+
+  if( procedure )
+  o.procedure = procedure;
 
   _.routineOptions( routine, o );
   _.assert( _.numberIs( o.delay ) );
@@ -326,30 +233,42 @@ function timeOut_pre( routine, args )
 
 //
 
-function timeOut_body( o )
+function out_body( o )
 {
-  let con = _.Consequence ? new _.Consequence({ sourcePath : 3 }) : undefined;
+  let con = new _.Consequence();
   let timer = null;
   let handleCalled = false;
 
-  _.assertRoutineOptions( timeOut_body, arguments );
+  _.assertRoutineOptions( out_body, arguments );
+
+  if( o.procedure === null )
+  o.procedure = _.Procedure( 2 ).name( 'time.out' );
+  _.assert( _.procedureIs( o.procedure ) );
+
+  // if( o.procedure.id === 2 )
+  // debugger;
+
+  // /* */
+  //
+  // timer = _.time.begin( o.delay, o.procedure, timeEnd );
 
   /* */
 
   if( con )
   {
-    con.procedure( 'timeOut' ).sourcePath( o.stackLevel + 2 );
+    con.procedure( o.procedure.clone() );
+    // con.procedure( o.procedure );
     con.give( function timeGot( err, arg )
     {
-      if( err )
-      clearTimeout( timer );
+      if( arg === _.dont )
+      _.time.cancel( timer );
       con.take( err, arg );
     });
   }
 
   /* */
 
-  timer = _.timeBegin( o.delay, timeEnd );
+  timer = _.time.begin( o.delay, o.procedure, timeEnd );
 
   return con;
 
@@ -366,7 +285,7 @@ function timeOut_body( o )
       if( o.onEnd )
       con.first( o.onEnd );
       else
-      con.take( timeOut );
+      con.take( _.time.out );
     }
     else
     {
@@ -375,51 +294,50 @@ function timeOut_body( o )
 
   }
 
+  /* */
+
 }
 
-timeOut_body.defaults =
+out_body.defaults =
 {
   delay : null,
   onEnd : null,
-  stackLevel : 1,
+  procedure : null,
+  isFinally : false,
 }
 
-let timeOut = _.routineFromPreAndBody( timeOut_pre, timeOut_body );
-
-//
-
-let timeSoon = typeof process === 'undefined' ? function( h ){ return setTimeout( h, 0 ) } : process.nextTick;
+let out = _.routineFromPreAndBody( out_pre, out_body );
 
 //
 
 /**
- * Routine works moslty same like {@link wTools.timeOut} but has own small features:
+ * Routine works moslty same like {@link wTools.time.out} but has own small features:
  *  Is used to set execution time limit for async routines that can run forever or run too long.
- *  wConsequence instance returned by timeOutError always give an error:
- *  - Own 'timeOut' error message if ( onReady ) was not provided or it execution dont give any error.
+ *  wConsequence instance returned by time.outError always give an error:
+ *  - Own 'time.out' error message if ( onReady ) was not provided or it execution dont give any error.
  *  - Error throwed or returned in consequence by ( onRead ) routine.
  *
  * @param {Number} delay - Delay in ms before ( onReady ) is fired.
  * @param {Function|wConsequence} onReady - Routine that will be executed with delay.
  *
  * @example
- * // timeOut error after delay
- * let t = _.timeOutError( 1000 );
+ * // time.out error after delay
+ * let t = _.time.outError( 1000 );
  * t.give( ( err, got ) => { throw err; } )
  *
  * @example
- * // using timeOutError with long time routine
+ * // using time.outError with long time routine
  * let time = 5000;
- * let timeOut = time / 2;
+ * let time.out = time / 2;
  * function routine()
  * {
- *   return _.timeOut( time );
+ *   return _.time.out( time );
  * }
  * // orKeepingSplit waits until one of provided consequences will resolve the message.
- * // In our example single timeOutError consequence was added, so orKeepingSplit adds own context consequence to the queue.
- * // Consequence returned by 'routine' resolves message in 5000 ms, but timeOutError will do the same in 2500 ms and 'timeOut'.
+ * // In our example single time.outError consequence was added, so orKeepingSplit adds own context consequence to the queue.
+ * // Consequence returned by 'routine' resolves message in 5000 ms, but time.outError will do the same in 2500 ms and 'time.out'.
  * routine()
- * .orKeepingSplit( _.timeOutError( timeOut ) )
+ * .orKeepingSplit( _.time.outError( time.out ) )
  * .give( function( err, got )
  * {
  *   if( err )
@@ -430,129 +348,108 @@ let timeSoon = typeof process === 'undefined' ? function( h ){ return setTimeout
  * @returns {wConsequence} Returns wConsequence instance that resolves error message when work is done.
  * @throws {Error} If ( delay ) is not a Number.
  * @throws {Error} If ( onReady ) is not a routine or wConsequence instance.
- * @function timeOutError
+ * @function time.outError
  * @memberof wTools
  */
 
-function timeOutError_body( o )
+/* xxx : remove the body, use out_body */
+function outError_body( o )
 {
   _.assert( _.routineIs( _.Consequence ) );
-  _.assertRoutineOptions( timeOutError_body, arguments );
+  _.assertRoutineOptions( outError_body, arguments );
 
-  let stackLevel = o.stackLevel;
+  if( _.numberIs( o.procedure ) )
+  o.procedure += 1;
+  else if( o.procedure === null )
+  o.procedure = 2;
 
-  o.stackLevel += 1;
-  let con = _.timeOut.body.call( _, o );
+  if( !o.procedure || _.numberIs( o.procedure ) )
+  o.procedure = _.procedure.from( o.procedure ).nameElse( 'time.outError' );
 
+  let con = _.time.out.body.call( _, o );
+  if( Config.debug )
   con.tag = 'TimeOutError';
-  let procedure = con.procedure( 'timeOutError' ).sourcePath( stackLevel + 2 );
-  con.finally( function( err, arg )
+
+  // debugger;
+  con.finally( function outError( err, arg )
   {
     if( err )
-    return _.Consequence().error( err );
+    throw err;
+    if( arg === _.dont )
+    return arg;
 
-    err = _.err( 'Time out!' );
-
-    Object.defineProperty( err, 'timeOut',
-    {
-      enumerable : false,
-      configurable : false,
-      writable : false,
-      value : 1,
+    err = _.time._errTimeOut
+    ({
+      message : 'Time out!',
+      reason : 'time out',
+      consequnce : con,
+      procedure : o.procedure,
     });
 
-    return _.Consequence().error( err );
+    throw err;
+    // return _.Consequence().error( err );
   });
 
-  // procedure.end();
-
   return con;
 }
 
-timeOutError_body.defaults = Object.create( timeOut_body.defaults );
+outError_body.defaults = Object.create( out_body.defaults );
 
-let timeOutError = _.routineFromPreAndBody( timeOut_pre, timeOutError_body );
+let outError = _.routineFromPreAndBody( out_pre, outError_body );
 
 //
 
-function timePeriodic( delay, onReady )
+function _errTimeOut( o )
 {
-  _.assert( _.routineIs( _.Consequence ) );
-  let con = new _.Consequence();
-  let id;
+  if( _.strIs( o ) )
+  o = { message : o }
+  o = _.routineOptions( _errTimeOut, o );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+  o.message = o.message || 'Time out!';
+  o.reason = o.reason || 'time out';
 
-  // if( arguments.length > 2 )
+  let err = _._err
+  ({
+    args : [ o.message ],
+    throws : o.procedure ? [ o.procedure._sourcePath ] : [],
+    asyncCallsStack : o.procedure ? [ o.procedure.stack() ] : [],
+    reason : o.reason,
+  });
+
+  // Object.defineProperty( err, 'reason',
   // {
-  //   throw _.err( 'Not tested' );
-  //   _.assert( arguments.length <= 4 );
-  //   onReady = _.routineJoin( arguments[ 2 ], onReady[ 3 ], arguments[ 4 ] );
-  // }
+  //   enumerable : false,
+  //   configurable : false,
+  //   writable : false,
+  //   value : o.reason,
+  // });
 
-  _.assert( _.numberIs( delay ) );
-
-  function handlePeriodicCon( err )
+  if( o.consequnce )
+  Object.defineProperty( err, 'consequnce',
   {
-    if( err ) clearInterval( id );
-  }
+    enumerable : false,
+    configurable : false,
+    writable : false,
+    value : o.consequnce,
+  });
 
-  let _onReady = null;
+  return err;
+}
 
-  if( _.routineIs( onReady ) )
-  _onReady = function()
-  {
-    let result = onReady.call();
-    if( result === false )
-    clearInterval( id );
-    _.Consequence.take( con, undefined );
-    con.finally( handlePeriodicCon );
-  }
-  else if( onReady instanceof wConsquence )
-  _onReady = function()
-  {
-    let result = onReady.ping();
-    if( result === false )
-    clearInterval( id );
-    _.Consequence.take( con, undefined );
-    con.finally( handlePeriodicCon );
-  }
-  else if( onReady === undefined )
-  _onReady = function()
-  {
-    _.Consequence.take( con, undefined );
-    con.finally( handlePeriodicCon );
-  }
-  else throw _.err( 'unexpected type of onReady' );
-
-  id = setInterval( _onReady, delay );
-
-  return con;
+_errTimeOut.defaults =
+{
+  message : null,
+  reason : null,
+  consequnce : null,
+  procedure : null,
 }
 
 //
 
-function _timeNow_functor()
+function rarely_functor( perTime, routine )
 {
-  let now;
-
-  // _.assert( arguments.length === 0 );
-
-  if( typeof performance !== 'undefined' && performance.now !== undefined )
-  now = _.routineJoin( performance, performance.now );
-  else if( Date.now )
-  now = _.routineJoin( Date, Date.now );
-  else
-  now = function(){ return Date().getTime() };
-
-  return now;
-}
-
-//
-
-function timeFewer_functor( perTime, routine )
-{
-  let lastTime = _.timeNow() - perTime;
+  let lastTime = _.time.now() - perTime;
 
   _.assert( arguments.length === 2 );
   _.assert( _.numberIs( perTime ) );
@@ -560,7 +457,7 @@ function timeFewer_functor( perTime, routine )
 
   return function fewer()
   {
-    let now = _.timeNow();
+    let now = _.time.now();
     let elapsed = now - lastTime;
     if( elapsed < perTime )
     return;
@@ -570,103 +467,130 @@ function timeFewer_functor( perTime, routine )
 
 }
 
-//
-
-function timeFrom( time )
-{
-  _.assert( arguments.length === 1 );
-  if( _.numberIs( time ) )
-  return time;
-  if( _.dateIs( time ) )
-  return time.getTime()
-  _.assert( 0, 'Not clear how to coerce to time', _.strType( time ) );
-}
-
-//
-
-function timeSpent( description, time )
-{
-  let now = _.timeNow();
-
-  if( arguments.length === 1 )
-  {
-    time = arguments[ 0 ];
-    description = '';
-  }
-
-  _.assert( 1 <= arguments.length && arguments.length <= 2 );
-  _.assert( _.numberIs( time ) );
-  _.assert( _.strIs( description ) );
-
-  // if( description && description !== ' ' )
-  // description = description;
-
-  let result = description + _.timeSpentFormat( now-time );
-
-  return result;
-}
-
-//
-
-function timeSpentFormat( spent )
-{
-  let now = _.timeNow();
-
-  _.assert( 1 === arguments.length );
-  _.assert( _.numberIs( spent ) );
-
-  let result = ( 0.001*( spent ) ).toFixed( 3 ) + 's';
-
-  return result;
-}
-
-//
-
-function dateToStr( date )
-{
-  let y = date.getFullYear();
-  let m = date.getMonth() + 1;
-  let d = date.getDate();
-  if( m < 10 ) m = '0' + m;
-  if( d < 10 ) d = '0' + d;
-  let result = [ y, m, d ].join( '.' );
-  return result;
-}
-
-//
-
-// let _timeSleepBuffer = new I32x( new SharedArrayBuffer( 4 ) );
-// function timeSleep( time )
-// {
-//   _.assert( time >= 0 );
-//   Atomics.wait( _timeSleepBuffer, 0, 1, time );
-// }
-//
 // //
 //
-// function timeSleepUntil( o )
+// function periodic( delay, onReady )
 // {
-//   if( _.routineIs( o ) )
-//   o = { onCondition : o }
+//   _.assert( _.routineIs( _.Consequence ) );
 //
-//   if( o.periodicity === undefined )
-//   o.periodicity = timeSleepUntil.defaults.periodicity;
+//   let con = new _.Consequence();
+//   let id;
 //
-//   let i = 0;
-//   while( !o.onCondition() )
+//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+//   _.assert( _.numberIs( delay ) );
+//
+//   let _onReady = null;
+//
+//   if( _.routineIs( onReady ) )
+//   _onReady = function()
 //   {
-//     _.timeSleep( o.periodicity );
+//     let result = onReady.call();
+//     if( result === false )
+//     clearInterval( id );
+//     _.Consequence.take( con, undefined );
+//     con.finally( handlePeriodicCon );
+//   }
+//   else if( onReady instanceof wConsquence )
+//   _onReady = function()
+//   {
+//     let result = onReady.ping();
+//     if( result === false )
+//     clearInterval( id );
+//     _.Consequence.take( con, undefined );
+//     con.finally( handlePeriodicCon );
+//   }
+//   else if( onReady === undefined )
+//   _onReady = function()
+//   {
+//     _.Consequence.take( con, undefined );
+//     con.finally( handlePeriodicCon );
+//   }
+//   else throw _.err( 'unexpected type of onReady' );
+//
+//   id = setInterval( _onReady, delay );
+//
+//   return con;
+//
+//   function handlePeriodicCon( err )
+//   {
+//     if( arg === _.dont )
+//     clearInterval( id );
+//     // if( err )
+//     // clearInterval( id );
+//     /* xxx */
 //   }
 //
-//   return true;
-// }
-//
-// timeSleepUntil.defaults =
-// {
-//   onCondition : null,
-//   periodicity : 100,
 // }
 
+//
+
+function once( delay, onBegin, onEnd )
+{
+  let con = _.Consequence ? new _.Consequence({ sourcePath : 2 }) : undefined;
+  let taken = false;
+  let options;
+  let optionsDefault =
+  {
+    delay : null,
+    onBegin : null,
+    onEnd : null,
+  }
+
+  if( _.objectIs( delay ) )
+  {
+    options = delay;
+    _.assert( arguments.length === 1, 'Expects single argument' );
+    _.assertMapHasOnly( options, optionsDefault );
+    delay = options.delay;
+    onBegin = options.onBegin;
+    onEnd = options.onEnd;
+  }
+  else
+  {
+    _.assert( 2 <= arguments.length && arguments.length <= 3 );
+  }
+
+  _.assert( 0, 'not tested' );
+  _.assert( delay >= 0 );
+  _.assert( _.primitiveIs( onBegin ) || _.routineIs( onBegin ) || _.objectIs( onBegin ) );
+  _.assert( _.primitiveIs( onEnd ) || _.routineIs( onEnd ) || _.objectIs( onEnd ) );
+
+  return function once()
+  {
+
+    if( taken )
+    {
+      /*console.log( 'once :', 'was taken' );*/
+      return;
+    }
+    taken = true;
+
+    if( onBegin )
+    {
+      if( _.routineIs( onBegin ) ) onBegin.apply( this, arguments );
+      else if( _.objectIs( onBegin ) ) onBegin.take( arguments );
+      if( con )
+      con.take( null );
+    }
+
+    _.time.out( delay, function()
+    {
+
+      if( onEnd )
+      {
+        if( _.routineIs( onEnd ) ) onEnd.apply( this, arguments );
+        else if( _.objectIs( onEnd ) ) onEnd.take( arguments );
+        if( con )
+        con.take( null );
+      }
+      taken = false;
+
+    });
+
+    return con;
+  }
+
+}
 // --
 // fields
 // --
@@ -682,43 +606,30 @@ let Fields =
 let Routines =
 {
 
-  timeBegin,
-  timeEnd,
+  ready,
+  readyJoin,
 
-  timeReady,
-  timeReadyJoin,
-  timeOnce,
-  timeOut,
-  timeSoon,
-  timeOutError,
+  out,
+  outError,
 
-  timePeriodic, /* dubious */
+  _errTimeOut,
 
-  _timeNow_functor,
-  timeNow : _timeNow_functor(),
-
-  timeFewer_functor,
-
-  timeFrom,
-  timeSpent,
-  timeSpentFormat,
-  dateToStr,
-
-  // timeSleep, /* experimental */
-  // timeSleepUntil, /* experimental */
+  rarely_functor, /* check */
+  // periodic, /* dubious */
+  once, /* dubious */
 
 }
 
 //
 
-Object.assign( Self, Routines );
-Object.assign( Self, Fields );
+_.mapSupplement( Self, Fields );
+_.mapSupplement( Self, Routines );
 
 // --
 // export
 // --
 
 if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ] = Self;
+module[ 'exports' ] = _;
 
 })();

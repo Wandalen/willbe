@@ -1309,7 +1309,7 @@ function _repoDownload( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let time = _.timeNow();
+  let time = _.time.now();
   let downloading = null;
   let origin = null;
   let hasLocalChanges = null;
@@ -1320,6 +1320,7 @@ function _repoDownload( o )
   let status;
   let ready = _.Consequence().take( null );
   let reflected = Object.create( null );
+  let vcsTool = null;
 
   _.routineOptions( _repoDownload, o );
   _.assert( arguments.length === 1 );
@@ -1409,8 +1410,15 @@ function _repoDownload( o )
     return filesDownload();
   })
   .then( function( arg )
-  {
-
+  { 
+    /*
+      create will module for npm module after download
+    */
+   
+    vcsTool = will.vcsToolsFor( opener.repo.remotePath );
+    if( downloading && !o.dry && vcsTool === _.npm )
+    moduleNpmCreate();
+    
     /* qqq : make optimal status updating after module is downloaded */
     if( downloading && !o.dry )
     openersReform();
@@ -1420,7 +1428,17 @@ function _repoDownload( o )
     */
 
     if( o.opening && !o.dry && downloading )
-    return modulesReopen( 1 );
+    return modulesReopen( 1 )
+    return null;
+  })
+  .then( function( arg )
+  { 
+    /*
+      export npm module after download
+    */
+   
+    if( downloading && !o.dry && vcsTool === _.npm )
+    return opener.openedModule.moduleExport();
     return null;
   })
   .then( function( arg )
@@ -1461,7 +1479,7 @@ function _repoDownload( o )
      if( !opener.repo.isRepository )
      throw _.err
      (
-       `Module ${opener.decoratedAbsoluteName} is downloaded, but it's not a git repository.\n`,
+       `Module ${opener.decoratedAbsoluteName} is downloaded, but it's not a git repository or npm module.\n`,
        'Rename/remove path:', _.color.strFormat( opener.downloadPath, 'path' ), 'and try again.'
      );
    }
@@ -1805,6 +1823,53 @@ function _repoDownload( o )
       return arg;
     })
   }
+  
+  /* */
+  
+  function moduleNpmCreate()
+  { 
+    let willFilePath = path.join( path.dir( opener.repo.downloadPath ), opener.aliasName + '.will.yml' );
+    
+    let packageJsonPath = path.join( opener.repo.downloadPath, 'package.json' );
+    let packageJson = fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+    let includeAny = path.s.dot( packageJson.files );
+    
+    let willFile = 
+`
+about :
+
+  name : ${opener.aliasName}
+  
+path :
+  
+  in : ${opener.aliasName}
+  
+reflector :
+
+  files :
+     src :
+       filePath : path::in
+       maskAll :
+         includeAny : [ ${includeAny.join( ', ' )} ]
+  
+step :
+
+  export :
+    inherit : module.export
+    export : reflector::files
+    tar : 0
+  
+build :
+
+  export :
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      step::export
+`
+    fileProvider.fileWrite( willFilePath, willFile );
+  }
 
   /* */
 
@@ -1858,7 +1923,7 @@ function _repoDownload( o )
         phrase = 'agreed with';
         else if( o.mode === 'download' )
         phrase = 'downloaded';
-        logger.log( ` + ${module.decoratedQualifiedName} will be ${phrase} ${_.color.strFormat( version, 'path' )} in ${_.timeSpent( time )}` );
+        logger.log( ` + ${module.decoratedQualifiedName} will be ${phrase} ${_.color.strFormat( version, 'path' )} in ${_.time.spent( time )}` );
         // logger.log( ' + ' + module.decoratedQualifiedName + ' will be ' + ( o.mode + phrase ) + ' version ' + _.color.strFormat( version, 'path' ) );
       }
       else
@@ -1872,7 +1937,7 @@ function _repoDownload( o )
         phrase = 'was agreed with version';
         else if( o.mode === 'download' )
         phrase = 'was downloaded version';
-        logger.log( ` + ${module.decoratedQualifiedName} ${phrase} ${_.color.strFormat( version, 'path' )} in ${_.timeSpent( time )}` );
+        logger.log( ` + ${module.decoratedQualifiedName} ${phrase} ${_.color.strFormat( version, 'path' )} in ${_.time.spent( time )}` );
       }
     }
   }

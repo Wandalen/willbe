@@ -3,10 +3,10 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global.wTools;
-if( !Object.hasOwnProperty.call( _global, 'ModuleRegistry' ) )
-_global.ModulesRegistry = Object.create( null );
-let Self = _global.ModulesRegistry;
+let _ = _global.wTools = _global.wTools || Object.create( null );
+_.module = _.module || Object.create( null );
+_.module.lateModules = _.module.lateModules || Object.create( null );
+let Self = _.module.lateModules;
 
 /**
  * @typedef {Object} ModulesRegistry - Map that contains info about modules, is uses by {@link wTools.include}.
@@ -17,7 +17,7 @@ let Self = _global.ModulesRegistry;
 // helper
 // --
 
-function includeAny( filePath, name )
+function sourcePath( filePath, name )
 {
   _.assert( arguments.length === 2 );
   return [ '../../' + filePath, filePath, name ];
@@ -27,47 +27,43 @@ function includeAny( filePath, name )
 // include map
 // --
 
-// base / l3
-
-// let wNameTools =
-// {
-//   includeAny : includeAny( 'abase/l3/NameTools.s', 'wNameTools' ),
-//   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.idWithInt; },
-// }
+// base / l2
 
 let wEntityBasic =
 {
-  includeAny : includeAny( 'abase/l3/EntityBasic.s', 'wentitybasic' ),
+  sourcePath : sourcePath( 'abase/l2/EntityBasic.s', 'wentitybasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.entityVals; },
 }
 
 let wLooker =
 {
-  includeAny : includeAny( 'abase/l3/Looker.s', 'wlooker' ),
+  sourcePath : sourcePath( 'abase/l2/Looker.s', 'wlooker' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.look; },
 }
 
 let wPathBasic =
 {
-  includeAny : includeAny( 'abase/l4/PathsBasic.s', 'wpathbasic' ),
+  sourcePath : sourcePath( 'abase/l3/PathsBasic.s', 'wpathbasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.path && !!_global.wTools.path.s },
 }
 
 let wRoutineBasic =
 {
-  includeAny : includeAny( 'abase/l3/RoutineBasic.s', 'wroutinebasic' ),
+  sourcePath : sourcePath( 'abase/l2/RoutineBasic.s', 'wroutinebasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.exec },
 }
 
+// base / l3
+
 let wProto =
 {
-  includeAny : includeAny( 'abase/l3_proto/Include.s', 'wProto' ),
+  sourcePath : sourcePath( 'abase/l3_proto/Include.s', 'wProto' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.mixinDelcare },
 }
 
 let wStringer =
 {
-  includeAny : includeAny( 'abase/l3/Stringer.s', 'wstringer' ),
+  sourcePath : sourcePath( 'abase/l3/Stringer.s', 'wstringer' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Stringer; },
 }
 
@@ -75,43 +71,43 @@ let wStringer =
 
 let wReplicator =
 {
-  includeAny : includeAny( 'abase/l4/Replicator.s', 'wreplicator' ),
+  sourcePath : sourcePath( 'abase/l4/Replicator.s', 'wreplicator' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.replicate; },
 }
 
 let wLookerExtra =
 {
-  includeAny : includeAny( 'abase/l4/LookerExtra.s', 'wlookerextra' ),
+  sourcePath : sourcePath( 'abase/l4/LookerExtra.s', 'wlookerextra' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.entitySearch },
 }
 
 let wArraySorted =
 {
-  includeAny : includeAny( 'abase/l4/ArraySorted.s', 'warraysorted' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.sorted },
+  sourcePath : sourcePath( 'abase/l4/ArraySorted.s', 'warraysorted' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.sorted && !!_global.wTools.sorted.lookUp },
 }
 
 let wArraySparse =
 {
-  includeAny : includeAny( 'abase/l4/ArraySparse.s', 'warraysparse' ),
+  sourcePath : sourcePath( 'abase/l4/ArraySparse.s', 'warraysparse' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.sparse },
 }
 
 let wAppBasic =
 {
-  includeAny : includeAny( 'abase/l4/ProcessBasic.s', 'wappbasic' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.process },
+  sourcePath : sourcePath( 'abase/l4/ProcessBasic.s', 'wappbasic' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.process && !!_global.wTools.process.start },
 }
 
 let wUriBasic =
 {
-  includeAny : includeAny( 'abase/l5/Uris.s', 'wuribasic' ),
+  sourcePath : sourcePath( 'abase/l5/Uris.s', 'wuribasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.uri && !!_global.wTools.uri.s && !!_global.wTools.uri.s.parse },
 }
 
 let wTraverser =
 {
-  includeAny : includeAny( 'abase/l4/Traverser.s', 'wtraverser' ),
+  sourcePath : sourcePath( 'abase/l4/Traverser.s', 'wtraverser' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools._traverse },
 }
 
@@ -119,51 +115,57 @@ let wTraverser =
 
 let wPathTools =
 {
-  includeAny : includeAny( 'abase/l5/PathTools.s', 'wpathtools' ),
+  sourcePath : sourcePath( 'abase/l5/PathTools.s', 'wpathtools' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.path && !!_global.wTools.path.mapExtend },
 }
 
 let wSelector =
 {
-  includeAny : includeAny( 'abase/l5/Selector.s', 'wselector' ),
+  sourcePath : sourcePath( 'abase/l5/Selector.s', 'wselector' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.select; },
 }
 
 let wWebUriBasic =
 {
-  includeAny : includeAny( 'abase/l5/WebUri.s', 'wweburibasic' ),
+  sourcePath : sourcePath( 'abase/l5/WebUri.s', 'wweburibasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.weburi },
 }
 
 let wCloner =
 {
-  includeAny : includeAny( 'abase/l5/Cloner.s', 'wcloner' ),
+  sourcePath : sourcePath( 'abase/l5/Cloner.s', 'wcloner' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools._clone },
 }
 
 let wStringsExtra =
 {
-  includeAny : includeAny( 'abase/l5/StringTools.s', 'wstringsextra' ),
+  sourcePath : sourcePath( 'abase/l5/StringTools.s', 'wstringsextra' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.strSorterParse; },
+}
+
+let wProcessWatcher =
+{
+  sourcePath : sourcePath( 'abase/l5/ProcessWatcher.s', 'wprocesswatcher' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.process && !!_global.wTools.process.watchMaking; },
 }
 
 // base / l6
 
 let wEqualer =
 {
-  includeAny : includeAny( 'abase/l6/Equaler.s', 'wequaler' ),
+  sourcePath : sourcePath( 'abase/l6/Equaler.s', 'wequaler' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools._equalIt },
 }
 
 let wResolver =
 {
-  includeAny : includeAny( 'abase/l6/Resolver.s', 'wresolver' ),
+  sourcePath : sourcePath( 'abase/l6/Resolver.s', 'wresolver' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Resolver; },
 }
 
 let wSelectorExtra =
 {
-  includeAny : includeAny( 'abase/l6/SelectorExtra.s', 'wselectorextra' ),
+  sourcePath : sourcePath( 'abase/l6/SelectorExtra.s', 'wselectorextra' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.entityProbe; },
 }
 
@@ -171,31 +173,31 @@ let wSelectorExtra =
 
 let wConsequizer =
 {
-  includeAny : includeAny( 'abase/l7_mixin/Consequizer.', 'wconsequizer' ),
+  sourcePath : sourcePath( 'abase/l7_mixin/Consequizer.', 'wconsequizer' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Consequizer; },
 }
 
 let wCopyable =
 {
-  includeAny : includeAny( 'abase/l7_mixin/Copyable.s', 'wCopyable' ),
+  sourcePath : sourcePath( 'abase/l7_mixin/Copyable.s', 'wCopyable' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Copyable; },
 }
 
 let wInstancing =
 {
-  includeAny : includeAny( 'abase/l7_mixin/Instancing.s', 'winstancing' ),
+  sourcePath : sourcePath( 'abase/l7_mixin/Instancing.s', 'winstancing' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Instancing; },
 }
 
 let wEventHandler =
 {
-  includeAny : includeAny( 'abase/l7_mixin/EventHandler.s', 'wEventHandler' ),
+  sourcePath : sourcePath( 'abase/l7_mixin/EventHandler.s', 'wEventHandler' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.EventHandler; },
 }
 
 let wFieldsStack =
 {
-  includeAny : includeAny( 'abase/l7_mixin/FieldsStack.s', 'wfieldsstack' ),
+  sourcePath : sourcePath( 'abase/l7_mixin/FieldsStack.s', 'wfieldsstack' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.FieldsStack; },
 }
 
@@ -203,19 +205,19 @@ let wFieldsStack =
 
 let wProcedure =
 {
-  includeAny : includeAny( 'abase/l8/Procedure.s', 'wprocedure' ),
+  sourcePath : sourcePath( 'abase/l8/Procedure.s', 'wprocedure' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.procedure },
 }
 
 let wGdfStrategy =
 {
-  includeAny : includeAny( 'abase/l8/GdfConverter.s', 'wgdfstrategy' ),
+  sourcePath : sourcePath( 'abase/l8/GdfConverter.s', 'wgdfstrategy' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Gdf },
 }
 
 let wBaseEncoder =
 {
-  includeAny : includeAny( 'abase/l4/Encoder.s', 'wbaseencoder' ),
+  sourcePath : sourcePath( 'abase/l4/Encoder.s', 'wbaseencoder' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.encode },
 }
 
@@ -223,25 +225,25 @@ let wBaseEncoder =
 
 let wLogger =
 {
-  includeAny : includeAny( 'abase/l9/printer/top/Logger.s', 'wLogger' ),
+  sourcePath : sourcePath( 'abase/l9/printer/top/Logger.s', 'wLogger' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Logger; },
 }
 
 let wPrinterToFile =
 {
-  includeAny : includeAny( 'abase/l9/printer/top/ToFile.ss', 'wloggertofile' ),
+  sourcePath : sourcePath( 'abase/l9/printer/top/ToFile.ss', 'wloggertofile' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.PrinterToFile; },
 }
 
 let wPrinterToJs =
 {
-  includeAny : includeAny( 'abase/l9/printer/top/ToJstructure.s', 'wloggertojs' ),
+  sourcePath : sourcePath( 'abase/l9/printer/top/ToJstructure.s', 'wloggertojs' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.PrinterToJs; },
 }
 
 let wConsequence =
 {
-  includeAny : includeAny( 'abase/l9/consequence/Consequence.s', 'wConsequence' ),
+  sourcePath : sourcePath( 'abase/l9/consequence/Consequence.s', 'wConsequence' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Consequence; },
 }
 
@@ -249,19 +251,19 @@ let wConsequence =
 
 let wDomBaseLayer1 =
 {
-  includeAny : includeAny( 'abase_dom/l1/Common.js', 'wdombaselayer1' ),
+  sourcePath : sourcePath( 'abase_dom/l1/Common.js', 'wdombaselayer1' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools._domBaselayer1Loaded },
 }
 
 let wDomBaseLayer3 =
 {
-  includeAny : includeAny( 'abase_dom/l3/Common.js', 'wdombaselayer3' ),
+  sourcePath : sourcePath( 'abase_dom/l3/Common.js', 'wdombaselayer3' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools._domBaselayer3Loaded },
 }
 
 let wDomBaseLayer5 =
 {
-  includeAny : includeAny( 'abase_dom/l5/Common.js', 'wdombasel5' ),
+  sourcePath : sourcePath( 'abase_dom/l5/Common.js', 'wdombasel5' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools._domBasel5Loaded },
 }
 
@@ -269,217 +271,223 @@ let wDomBaseLayer5 =
 
 let wRegexpObject =
 {
-  includeAny : includeAny( 'amid/bclass/RegexpObject.s', 'wRegexpObject' ),
+  sourcePath : sourcePath( 'amid/bclass/RegexpObject.s', 'wRegexpObject' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.RegexpObject; },
 }
 
 let wColor =
 {
-  includeAny : includeAny( 'amid/color/Color.s', 'wColor' ),
+  sourcePath : sourcePath( 'amid/color/Color.s', 'wColor' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.ColorMap },
 }
 
 let wColor256 =
 {
-  includeAny : includeAny( 'amid/color/Color256.s', 'wColor256' ),
+  sourcePath : sourcePath( 'amid/color/Color256.s', 'wColor256' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.ColorMap && Object.keys( _global.wTools.ColorMap ).length > 100 },
 }
 
 let wChangeTransactor =
 {
-  includeAny : includeAny( 'amid/changes/ChangeTransactor.s', 'wChangeTransactor' ),
+  sourcePath : sourcePath( 'amid/changes/ChangeTransactor.s', 'wChangeTransactor' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.ChangeTransactor },
 }
 
 let wVocabulary =
 {
-  includeAny : includeAny( 'amid/bclass/Vocabulary.s', 'wvocabulary' ),
+  sourcePath : sourcePath( 'amid/bclass/Vocabulary.s', 'wvocabulary' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Vocabulary },
 }
 
 let wCommandsAggregator =
 {
-  includeAny : includeAny( 'amid/l7/Commands/CommandsAggregator.s', 'wcommandsaggregator' ),
+  sourcePath : sourcePath( 'amid/l7/Commands/CommandsAggregator.s', 'wcommandsaggregator' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.CommandsAggregator },
 }
 
 let wCommandsConfig =
 {
-  includeAny : includeAny( 'amid/l7/commands/mixin/CommandsConfig.s', 'wcommandsconfig' ),
+  sourcePath : sourcePath( 'amid/l7/commands/mixin/CommandsConfig.s', 'wcommandsconfig' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.CommandsConfig },
 }
 
 let wFiles =
 {
-  includeAny : includeAny( 'amid/files/UseTop.s', 'wFiles' ),
+  sourcePath : sourcePath( 'amid/files/UseTop.s', 'wFiles' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.fileProvider },
 }
 
 let wFilesArchive =
 {
-  includeAny : includeAny( 'amid/files/IncludeArchive.s', 'wfilesarchive' ),
+  sourcePath : sourcePath( 'amid/files/IncludeArchive.s', 'wfilesarchive' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.FilesArchive },
 }
 
 let wFilesEncoders =
 {
-  includeAny : includeAny( 'amid/files/l1/EncodersExtended.s', 'wfilesencoders' ),
+  sourcePath : sourcePath( 'amid/files/l1/EncodersExtended.s', 'wfilesencoders' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.FileReadEncoders && !!_global.wTools.FileReadEncoders.yml },
 }
 
 let wFilesSvn =
 {
-  includeAny : includeAny( 'amid/files/fprovider/pSvn.ss', 'wFilesSvn' ),
+  sourcePath : sourcePath( 'amid/files/fprovider/pSvn.ss', 'wFilesSvn' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.fileProvider.Svn },
-}
-
-let wTimeMarker =
-{
-  includeAny : includeAny( 'amid/amixin/TimeMarker.s', 'wtimemarker' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.TimeMarker },
-}
-
-let wVerbal =
-{
-  includeAny : includeAny( 'amid/amixin/Verbal.s', 'wverbal' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Verbal },
-}
-
-let wStateStorage =
-{
-  includeAny : includeAny( 'amid/amixin/aStateStorage.s', 'wstatestorage' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StateStorage },
-}
-
-let wStateSession =
-{
-  includeAny : includeAny( 'amid/amixin/StateSession.s', 'wstatesession' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StateSession },
-}
-
-let wStager =
-{
-  includeAny : includeAny( 'amid/l3/stager/Stager.s', 'wstager' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Stager },
 }
 
 let wFileExecutor =
 {
-  includeAny : includeAny( 'amid/l7/executor/FileExecutor.s', 'wFileExecutor' ),
+  sourcePath : sourcePath( 'amid/l7/executor/FileExecutor.s', 'wFileExecutor' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.wFileExecutor },
 }
 
 let wFileExecutorHtmlFormatters =
 {
-  includeAny : includeAny( 'amid/l7/executor/HtmlFormatters.s', 'wFileExecutorHtmlFormatters' ),
+  sourcePath : sourcePath( 'amid/l7/executor/HtmlFormatters.s', 'wFileExecutorHtmlFormatters' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.FileExecutorHtmlFormatters },
 }
 
 let wPathTranslator =
 {
-  includeAny : includeAny( 'amid/l5_mapper/PathTranslator.s', 'wpathtranslator' ),
+  sourcePath : sourcePath( 'amid/l5_mapper/PathTranslator.s', 'wpathtranslator' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.PathTranslator },
+}
+
+let wTimeMarker =
+{
+  sourcePath : sourcePath( 'amid/amixin/TimeMarker.s', 'wtimemarker' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.TimeMarker },
+}
+
+let wVerbal =
+{
+  sourcePath : sourcePath( 'amid/amixin/Verbal.s', 'wverbal' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Verbal },
+}
+
+let wStateStorage =
+{
+  sourcePath : sourcePath( 'amid/amixin/aStateStorage.s', 'wstatestorage' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StateStorage },
+}
+
+let wStateSession =
+{
+  sourcePath : sourcePath( 'amid/amixin/StateSession.s', 'wstatesession' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StateSession },
+}
+
+let wStager =
+{
+  sourcePath : sourcePath( 'amid/l3/stager/Stager.s', 'wstager' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Stager },
+}
+
+let wIntrospector =
+{
+  sourcePath : sourcePath( 'amid/l3/introspector/IncludeMid.s', 'wintrospectorbasic' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.introspector && !!_global.wTools.thisFile },
 }
 
 let wNameMapper =
 {
-  includeAny : includeAny( 'amid/l5_mapper/NameMapper.s', 'wnamemapper' ),
+  sourcePath : sourcePath( 'amid/l5_mapper/NameMapper.s', 'wnamemapper' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.NameMapper },
 }
 
 let wTemplateTreeResolver =
 {
-  includeAny : includeAny( 'amid/l5_mapper/TemplateTreeAresolver.s', 'wtemplatetreeresolver' ),
+  sourcePath : sourcePath( 'amid/l5_mapper/TemplateTreeAresolver.s', 'wtemplatetreeresolver' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.TemplateTreeResolver },
 }
 
 let wTemplateTreeResolver2 =
 {
-  includeAny : includeAny( 'amid/l5_mapper/TemplateTreeResolver2.s', 'wtemplatetreeresolver2' ),
+  sourcePath : sourcePath( 'amid/l5_mapper/TemplateTreeResolver2.s', 'wtemplatetreeresolver2' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.TemplateTreeResolver2 },
 }
 
 let wTemplateTreeEnvironment =
 {
-  includeAny : includeAny( 'amid/l5_mapper/TemplateTreeEnvironment.s', 'wtemplatetreeenvironment' ),
+  sourcePath : sourcePath( 'amid/l5_mapper/TemplateTreeEnvironment.s', 'wtemplatetreeenvironment' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.TemplateTreeEnvironment },
 }
 
 let wTemplateFileWriter =
 {
-  includeAny : includeAny( 'amid/l5_mapper/TemplateFileWriter.s', 'wtemplatefilewriter' ),
+  sourcePath : sourcePath( 'amid/l5_mapper/TemplateFileWriter.s', 'wtemplatefilewriter' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.TemplateFileWriter },
 }
 
 let wGraphBasic =
 {
-  includeAny : includeAny( 'amid/l1/graphBasic/IncludeTop.s', 'wgraphbasic' ),
+  sourcePath : sourcePath( 'amid/l1/graphBasic/IncludeTop.s', 'wgraphbasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.graph && !!_global.wTools.graph.AbstractGraphSystem },
 }
 
 let wGraphTools =
 {
-  includeAny : includeAny( 'amid/l1/graphTools/IncludeTop.s', 'wgraphtools' ),
+  sourcePath : sourcePath( 'amid/l1/graphTools/IncludeTop.s', 'wgraphtools' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.graph && !!_global.wTools.graph.GraphSystem },
 }
 
 let wGitTools =
 {
-  includeAny : includeAny( 'amid/l3/git/IncludeMid.s', 'wgittools' ),
+  sourcePath : sourcePath( 'amid/l3/git/IncludeMid.s', 'wgittools' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.git },
 }
 
 let wNpmTools =
 {
-  includeAny : includeAny( 'amid/l3/npm/IncludeMid.s', 'wnpmtools' ),
+  sourcePath : sourcePath( 'amid/l3/npm/IncludeMid.s', 'wnpmtools' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.npm },
 }
 
 let wYamlTools =
 {
-  includeAny : includeAny( 'amid/l3/yaml/IncludeMid.s', 'wyamltools' ),
+  sourcePath : sourcePath( 'amid/l3/yaml/IncludeMid.s', 'wyamltools' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.yaml },
 }
 
 // let wGraphLive =
 // {
-//   includeAny : includeAny( 'amid/l1/graphTools/IncludeLive', 'wgraphlive' ),
+//   sourcePath : sourcePath( 'amid/l1/graphTools/IncludeLive', 'wgraphlive' ),
 //   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.LiveSystem },
 // }
 
 let wSchema =
 {
-  includeAny : includeAny( 'amid/schema/Top.s', 'wSchema' ),
+  sourcePath : sourcePath( 'amid/schema/Top.s', 'wSchema' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.schema },
 }
 
 let wScriptLauncher =
 {
-  includeAny : includeAny( 'amid/launcher/ScriptLauncher.s', 'wscriptlauncher' ),
+  sourcePath : sourcePath( 'amid/launcher/ScriptLauncher.s', 'wscriptlauncher' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.ScriptLauncher },
 }
 
 let wExchangePoint =
 {
-  includeAny : includeAny( 'amid/exchangePoint/ExchangePoint.s', 'wExchangePoint' ),
+  sourcePath : sourcePath( 'amid/exchangePoint/ExchangePoint.s', 'wExchangePoint' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.ExchangePoint },
 }
 
 let wCommunicator =
 {
-  includeAny : includeAny( 'amid/communicator/Communicator.s', 'wCommunicator' ),
+  sourcePath : sourcePath( 'amid/communicator/Communicator.s', 'wCommunicator' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Communicator },
 }
 
 let wIncubator =
 {
-  includeAny : includeAny( 'amid/worker/Incubator.s', 'wIncubator' ),
+  sourcePath : sourcePath( 'amid/worker/Incubator.s', 'wIncubator' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Incubator },
 }
 
 let wCollectionOfInstances =
 {
-  includeAny : includeAny( 'amid/container/CollectionOfInstances.s', 'wcollectionofinstances' ),
+  sourcePath : sourcePath( 'amid/container/CollectionOfInstances.s', 'wcollectionofinstances' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.CollectionOfInstances },
 }
 
@@ -487,7 +495,7 @@ let wCollectionOfInstances =
 
 let wServletTools =
 {
-  includeAny : includeAny( 'amid/servlet/ServletTools.ss', 'wservlettools' ),
+  sourcePath : sourcePath( 'amid/servlet/ServletTools.ss', 'wservlettools' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.servlet },
 }
 
@@ -495,7 +503,7 @@ let wServletTools =
 
 let wBitmask =
 {
-  includeAny : includeAny( 'amid/l5_mapper/Bitmask.s', 'wBitmask' ),
+  sourcePath : sourcePath( 'amid/l5_mapper/Bitmask.s', 'wBitmask' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Bitmask },
 }
 
@@ -503,25 +511,25 @@ let wBitmask =
 
 let wMathScalar =
 {
-  includeAny : includeAny( 'amath/l1/Scalar.s', 'wmathscalar' ),
+  sourcePath : sourcePath( 'amath/l1/Scalar.s', 'wmathscalar' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.clamp },
 }
 
 let wMathVector =
 {
-  includeAny : includeAny( 'amath/l3_vector/Main.s', 'wmathvector' ),
+  sourcePath : sourcePath( 'amath/l3_vector/Main.s', 'wmathvector' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.vector },
 }
 
 let wMathSpace =
 {
-  includeAny : includeAny( 'amath/l5_space/Main.s', 'wmathspace' ),
+  sourcePath : sourcePath( 'amath/l5_space/Main.s', 'wmathspace' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Space },
 }
 
 let wMathConcepts =
 {
-  includeAny : includeAny( 'amath/l8/Concepts.ss', 'wmathconcepts' ),
+  sourcePath : sourcePath( 'amath/l8/Concepts.ss', 'wmathconcepts' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.box },
 }
 
@@ -529,49 +537,49 @@ let wMathConcepts =
 
 let wStarter =
 {
-  includeAny : includeAny( 'atop/starter/MainTop.s', 'wstarter' ),
+  sourcePath : sourcePath( 'atop/starter/MainTop.s', 'wstarter' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StarterMaker },
 }
 
 let wTesting =
 {
-  includeAny : includeAny( 'atop/tester/MainTop.s', 'wTesting' ),
+  sourcePath : sourcePath( 'atop/tester/MainTop.s', 'wTesting' ),
   isIncluded : function(){ return _realGlobal_.wTester && _realGlobal_.wTester._isReal_; },
 }
 
 let wTranspilationStrategy =
 {
-  includeAny : includeAny( 'atop/transpilationStrategy/MainBase.s', 'wtranspilationstrategy' ),
+  sourcePath : sourcePath( 'atop/transpilationStrategy/MainBase.s', 'wtranspilationstrategy' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.TranspilationStrategy },
 }
 
 let wFilesOperationsDirector =
 {
-  includeAny : includeAny( 'atop/files/OperationsDirector.s', 'wfilesoperationsdirector' ),
+  sourcePath : sourcePath( 'atop/files/OperationsDirector.s', 'wfilesoperationsdirector' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.FilesOperationsDirector },
 }
 
 let wFilesLinker =
 {
-  includeAny : includeAny( 'atop/files/Linker.s', 'wfileslinker' ),
+  sourcePath : sourcePath( 'atop/files/Linker.s', 'wfileslinker' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.FilesLinker },
 }
 
 let wBaker =
 {
-  includeAny : includeAny( 'atop/baker/Baker.s', 'wBaker' ),
+  sourcePath : sourcePath( 'atop/baker/Baker.s', 'wBaker' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Baker },
 }
 
 let wBakerWithFileExecutor =
 {
-  includeAny : includeAny( 'atop/baker/BakerWithFileExecutor.s', 'wBakerWithFileExecutor' ),
+  sourcePath : sourcePath( 'atop/baker/BakerWithFileExecutor.s', 'wBakerWithFileExecutor' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.wBakerWithFileExecutor },
 }
 
 let wMaker =
 {
-  includeAny : includeAny( 'atop/maker/Maker.s', 'wMaker' ),
+  sourcePath : sourcePath( 'atop/maker/Maker.s', 'wMaker' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Maker },
 }
 
@@ -579,15 +587,18 @@ let wMaker =
 // declare
 // --
 
-let Extend =
+let Modules =
 {
 
-  // base / l3
+  // base / l2
 
   wEntityBasic,
   wLooker,
   wPathBasic,
   wRoutineBasic,
+
+  // base / l3
+
   wProto,
 
   // base / l4
@@ -608,6 +619,7 @@ let Extend =
   wWebUriBasic,
   wCloner,
   wStringsExtra,
+  wProcessWatcher,
 
   // base / l6
 
@@ -651,19 +663,22 @@ let Extend =
   wVocabulary,
   wCommandsAggregator,
   wCommandsConfig,
+
   wFiles,
   wFilesArchive,
   wFilesEncoders,
   wFilesSvn,
+  wFileExecutor,
+  wFileExecutorHtmlFormatters,
+  wPathTranslator,
+
   wTimeMarker,
   wVerbal,
   wStateStorage,
   wStateSession,
   wStager,
-  wFileExecutor,
-  wFileExecutorHtmlFormatters,
+  wIntrospector,
 
-  wPathTranslator,
   wNameMapper,
   wTemplateTreeResolver,
   wTemplateTreeResolver2,
@@ -712,18 +727,28 @@ let Extend =
 
 }
 
-Object.assign( Self, Extend );
+Object.assign( _.module.lateModules, Modules );
+if( _.module.declareAll )
+_.module.declareAll( _.module.lateModules );
+
+/*
+xxx : remove isIncluded
+*/
+
+// _.mapSupplement( _global.ModulesRegistry, Modules );
+// if( _.module )
+// _.module.registerKnown( _global.ModulesRegistry );
 
 // --
 // export
 // --
 
 if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ] = Self;
+module[ 'exports' ] = _;
 
 })();
 
-/*
+/* xxx : rename
 - wequaler -> wequaler
 - wpathbasic -> wpathbasic
 - wuribasic -> wuribasic

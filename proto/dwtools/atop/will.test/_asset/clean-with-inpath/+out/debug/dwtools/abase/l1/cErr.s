@@ -6,173 +6,14 @@ let _ObjectHasOwnProperty = Object.hasOwnProperty;
 let _global = _global_;
 let _ = _global.wTools;
 let _err = _._err;
-let Self = _;
 
 // --
 // diagnostics
 // --
 
-let _diagnosticCodeExecuting = 0;
-function diagnosticCode( o )
-{
-
-  _.routineOptions( diagnosticCode, o );
-  _.assert( arguments.length === 0 || arguments.length === 1 );
-
-  if( _diagnosticCodeExecuting )
-  return;
-  _diagnosticCodeExecuting += 1;
-
-  try
-  {
-
-    if( !o.location )
-    {
-      if( o.error )
-      o.location = _.diagnosticLocation({ error : o.error, level : o.level });
-      else
-      o.location = _.diagnosticLocation({ stack : o.stack, level : o.stack ? o.level : o.level+1 });
-    }
-
-    if( !_.numberIs( o.location.line ) )
-    return end();
-
-    /* */
-
-    if( !o.sourceCode )
-    {
-
-      if( !o.location.path )
-      return end();
-
-      let codeProvider = _.codeProvider || _.fileProvider;
-
-      if( !codeProvider )
-      return end();
-
-      try
-      {
-
-        // if( _global._starter_ )
-        // debugger;
-        // if( _global._starter_ )
-        // _global._starter_.fileProvider.fileRead( _.weburi.parse( o.location.path ).downloadWebPath );
-        // o.location.path = codeProvider.path.normalize( o.location.path );
-        let filePath = codeProvider.path.normalizeTolerant( o.location.path );
-        if( codeProvider.path.isAbsolute( filePath ) )
-        o.sourceCode = codeProvider.fileRead
-        ({
-          filePath : filePath,
-          sync : 1,
-          throwing : 0,
-        })
-
-      }
-      catch( err )
-      {
-        o.sourceCode = ' ! Cant load source code of ' + _.strQuote( o.location.path );
-      }
-
-      if( !o.sourceCode )
-      return end();
-
-    }
-
-    /* */
-
-    let result = _.strLinesSelect
-    ({
-      src : o.sourceCode,
-      line : o.location.line,
-      numberOfLines : o.numberOfLines,
-      selectMode : o.selectMode,
-      zero : 1,
-      number : 1,
-    });
-
-    if( result && _.strIndentation )
-    result = o.identation + _.strIndentation( result, o.identation );
-
-    if( o.withPath )
-    result = o.location.full + '\n' + result;
-
-    return end( result );
-
-  }
-  catch( err )
-  {
-    console.log( err.toString() );
-    return;
-  }
-
-  /* */
-
-  function end( result )
-  {
-    _diagnosticCodeExecuting -= 1;
-    return result;
-  }
-
-}
-
-diagnosticCode.defaults =
-{
-  level : 0,
-  numberOfLines : 5,
-  withPath : 1,
-  selectMode : 'center',
-  identation : '    ',
-  stack : null,
-  error : null,
-  location : null,
-  sourceCode : null,
-}
-
-//
-
 function diagnosticBeep()
 {
   console.log( '\x07' );
-}
-
-//
-
-function diagnosticApplicationEntryPointData()
-{
-  let result = Object.create( null );
-  if( _global.process !== undefined )
-  {
-    if( _global.process.argv )
-    result.execPath = _global.process.argv.join( ' ' );
-    if( _.routineIs( _global.process.cwd ) )
-    result.currentPath = _global.process.cwd();
-  }
-  return result;
-}
-
-//
-
-function diagnosticApplicationEntryPointInfo()
-{
-  let data = _.diagnosticApplicationEntryPointData();
-  let result = '';
-
-  if( data.currentPath )
-  result = join( 'Current path', data.currentPath );
-  if( data.execPath )
-  result = join( 'Exec path', data.execPath );
-
-  return result;
-
-  /* */
-
-  function join( left, right )
-  {
-    if( result )
-    result += '\n';
-    result += left + ' : ' + right;
-    return result;
-  }
 }
 
 //
@@ -872,7 +713,7 @@ function isInstanceOrClass( _constructor, _this )
 
 //
 
-function isOwnNoConstructor( ins )
+function ownNoConstructor( ins )
 {
   _.assert( _.objectLikeOrRoutine( ins ) );
   _.assert( arguments.length === 1 );
@@ -895,7 +736,7 @@ function sureOwnNoConstructor( ins )
   _.sure( _.objectLikeOrRoutine( ins ) );
   // let args = _.longSlice( arguments );
   let args = Array.prototype.slice.call( arguments );
-  args[ 0 ] = _.isOwnNoConstructor( ins );
+  args[ 0 ] = _.ownNoConstructor( ins );
   _.sure.apply( _, args );
 }
 
@@ -914,7 +755,7 @@ function assertOwnNoConstructor( ins )
   _.assert( _.objectLikeOrRoutine( ins ) );
   // let args = _.longSlice( arguments );
   let args = Array.prototype.slice.call( arguments );
-  args[ 0 ] = _.isOwnNoConstructor( ins );
+  args[ 0 ] = _.ownNoConstructor( ins );
 
   if( args.length === 1 )
   args.push( () => 'Entity should not own constructor, but own ' + _.toStrShort( ins ) );
@@ -939,14 +780,11 @@ let error =
   ErrorAbort,
 }
 
-let Extend =
+let ExtendTools =
 {
 
-  diagnosticCode,
+  // diagnosticCode,
   diagnosticBeep,
-
-  diagnosticApplicationEntryPointData,
-  diagnosticApplicationEntryPointInfo,
 
   diagnosticWatchFields, /* experimental */
   diagnosticProxyFields, /* experimental */
@@ -958,7 +796,7 @@ let Extend =
   // checker
 
   isInstanceOrClass,
-  isOwnNoConstructor,
+  ownNoConstructor,
 
   // sure
 
@@ -972,14 +810,14 @@ let Extend =
 
 }
 
-Object.assign( Self, Extend );
-Object.assign( Self.error, error );
+Object.assign( _.error, error );
+Object.assign( _, ExtendTools );
 
 // --
 // export
 // --
 
 if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ] = Self;
+module[ 'exports' ] = _;
 
 })();

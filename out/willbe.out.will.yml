@@ -1206,6 +1206,14 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/export-whole/module/proto/dir
           - >-
             ../proto/dwtools/atop/will.test/_asset/export-whole/module/proto/dir/File2.s
+          - ../proto/dwtools/atop/will.test/_asset/export-will-and-out
+          - ../proto/dwtools/atop/will.test/_asset/export-will-and-out/explicit
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-will-and-out/explicit/will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-will-and-out/explicit/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-will-and-out/explicit/proto/File.js
           - ../proto/dwtools/atop/will.test/_asset/export-with-reflector
           - >-
             ../proto/dwtools/atop/will.test/_asset/export-with-reflector/.ex.will.yml
@@ -1330,6 +1338,12 @@ module:
             ../proto/dwtools/atop/will.test/_asset/function-strings-join/proto/File3.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/function-strings-join/proto/Produce.js
+          - ../proto/dwtools/atop/will.test/_asset/git-conflict
+          - ../proto/dwtools/atop/will.test/_asset/git-conflict/original
+          - ../proto/dwtools/atop/will.test/_asset/git-conflict/original/f1.txt
+          - ../proto/dwtools/atop/will.test/_asset/git-conflict/original/f2.txt
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/git-conflict/original/will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-diff-download-paths-irregular
           - >-
@@ -2106,6 +2120,9 @@ module:
             ../proto/dwtools/atop/will.test/_asset/submodules-download-errors/bad.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/submodules-download-errors/good.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/submodules-download-npm
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/submodules-download-npm/.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules-downloaded-update
           - >-
             ../proto/dwtools/atop/will.test/_asset/submodules-downloaded-update/.will.yml

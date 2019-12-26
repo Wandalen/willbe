@@ -462,7 +462,7 @@ function vectorize_body( o )
         assert( !_.longIs( args[ d ] ), () => 'Arguments should have only arrays or only maps, but not both. Incorrect argument : ' + args[ d ] );
 
         let arg = Object.create( null );
-        _.mapSetWithKeys( arg, keys, args[ d ] );
+        _.objectSetWithKeys( arg, keys, args[ d ] );
         args[ d ] = arg;
       }
     }

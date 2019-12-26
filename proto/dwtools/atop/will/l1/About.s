@@ -84,7 +84,7 @@ function copy( o )
 
 //
 
-let _nameGetterSetter = _.accessor.suite.alias({ containerName : 'values', originalName : 'name' });
+let _nameGetterSetter = _.accessor.suite.alias({ container : 'values', originalName : 'name' });
 let nameGetterSetter =
 {
   get : _nameGetterSetter.get,
@@ -97,7 +97,7 @@ let nameGetterSetter =
   }
 }
 
-let _orgGetterSetter = _.accessor.suite.alias({ containerName : 'values', originalName : 'org' });
+let _orgGetterSetter = _.accessor.suite.alias({ container : 'values', originalName : 'org' });
 let orgGetterSetter =
 {
   get : _orgGetterSetter.get,
@@ -185,7 +185,7 @@ let Accessors =
 {
   name : { getterSetter : nameGetterSetter },
   org : { getterSetter : orgGetterSetter },
-  enabled : { getterSetter : _.accessor.suite.alias({ containerName : 'values', originalName : 'enabled' }) },
+  enabled : { getterSetter : _.accessor.suite.alias({ container : 'values', originalName : 'enabled' }) },
 }
 
 // --

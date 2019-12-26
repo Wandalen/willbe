@@ -35,7 +35,7 @@ function onModule( it )
 
   _.assert( _.path.isTrailed( it.junction.localPath ), 'not tested' );
 
-  it.start( 'local-will .export' );
+  it.start( 'will .export' );
 
   let bumped = _.npm.bump
   ({

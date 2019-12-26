@@ -199,7 +199,7 @@ function strCount( src, ins )
   let i = 0;
   do
   {
-    let found = _.strLeft( src, ins, i );
+    let found = _.strLeft( src, ins, [ i, src.length ] );
     if( found.entry === undefined )
     break;
     i = found.index + found.entry.length;
@@ -300,155 +300,155 @@ function strsLongest()
 // replacer
 // --
 
-function _strRemovedBegin( src, begin )
-{
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.strIs( src ), 'Expects string {-src-}' );
-
-  let result = src;
-  let beginOf = _._strBeginOf( result, begin );
-  if( beginOf !== false )
-  result = result.substr( beginOf.length, result.length );
-
-  return result;
-}
-
+// function _strRemovedBegin( src, begin )
+// {
+//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+//   _.assert( _.strIs( src ), 'Expects string {-src-}' );
 //
-
-/**
- * Finds substring prefix ( begin ) occurrence from the very begining of source ( src ) and removes it.
- * Returns original string if source( src ) does not have occurrence of ( prefix ).
- *
- * @param { String } src - Source string to parse.
- * @param { String } prefix - String that is to be dropped.
- * @returns { String } Returns string with result of prefix removement.
- *
- * @example
- * _.strRemoveBegin( 'example', 'exa' );
- * // returns mple
- *
- * @example
- * _.strRemoveBegin( 'example', 'abc' );
- * // returns example
- *
- * @function strRemoveBegin
- * @throws { Exception } Throws a exception if( src ) is not a String.
- * @throws { Exception } Throws a exception if( prefix ) is not a String.
- * @throws { Exception } Throws a exception if( arguments.length ) is not equal 2.
- * @memberof wTools
- *
- */
-
-function strRemoveBegin( src, begin )
-{
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.longIs( src ) || _.strIs( src ), 'Expects string or array of strings {-src-}' );
-  _.assert( _.longIs( begin ) || _.strIs( begin ) || _.regexpIs( begin ), 'Expects string/regexp or array of strings/regexps {-begin-}' );
-
-  let result = [];
-  let srcIsArray = _.longIs( src );
-
-  if( _.strIs( src ) && !_.longIs( begin ) )
-  return _._strRemovedBegin( src, begin );
-
-  src = _.arrayAs( src );
-  begin = _.arrayAs( begin );
-  for( let s = 0, slen = src.length ; s < slen ; s++ )
-  {
-    let beginOf = false;
-    let src1 = src[ s ]
-    for( let b = 0, blen = begin.length ; b < blen ; b++ )
-    {
-      beginOf = _._strBeginOf( src1, begin[ b ] );
-      if( beginOf !== false )
-      break;
-    }
-    if( beginOf !== false )
-    src1 = src1.substr( beginOf.length, src1.length );
-    result[ s ] = src1;
-  }
-
-  if( !srcIsArray )
-  return result[ 0 ];
-
-  return result;
-}
-
+//   let result = src;
+//   let beginOf = _._strBeginOf( result, begin );
+//   if( beginOf !== false )
+//   result = result.substr( beginOf.length, result.length );
 //
-
-function _strRemovedEnd( src, end )
-{
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.strIs( src ), 'Expects string {-src-}' );
-
-  let result = src;
-  let endOf = _._strEndOf( result, end );
-  if( endOf !== false )
-  result = result.substr( 0, result.length - endOf.length );
-
-  return result;
-}
-
+//   return result;
+// }
 //
-
-/**
- * Removes occurrence of postfix ( end ) from the very end of string( src ).
- * Returns original string if no occurrence finded.
- * @param { String } src - Source string to parse.
- * @param { String } postfix - String that is to be dropped.
- * @returns { String } Returns string with result of postfix removement.
- *
- * @example
- * _.strRemoveEnd( 'example', 'le' );
- * // returns examp
- *
- * @example
- * _.strRemoveEnd( 'example', 'abc' );
- * // returns example
- *
- * @function strRemoveEnd
- * @throws { Exception } Throws a exception if( src ) is not a String.
- * @throws { Exception } Throws a exception if( postfix ) is not a String.
- * @throws { Exception } Throws a exception if( arguments.length ) is not equal 2.
- * @memberof wTools
- *
- */
-
-function strRemoveEnd( src, end )
-{
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.longIs( src ) || _.strIs( src ), 'Expects string or array of strings {-src-}' );
-  _.assert( _.longIs( end ) || _.strIs( end ) || _.regexpIs( end ), 'Expects string/regexp or array of strings/regexps {-end-}' );
-
-  let result = [];
-  let srcIsArray = _.longIs( src );
-
-  if( _.strIs( src ) && !_.longIs( end ) )
-  return _._strRemovedEnd( src, end );
-
-  src = _.arrayAs( src );
-  end = _.arrayAs( end );
-
-  for( let s = 0, slen = src.length ; s < slen ; s++ )
-  {
-    let endOf = false;
-    let src1 = src[ s ]
-    for( let b = 0, blen = end.length ; b < blen ; b++ )
-    {
-      endOf = _._strEndOf( src1, end[ b ] );
-      if( endOf !== false )
-      break;
-    }
-    if( endOf !== false )
-    src1 = src1.substr( 0, src1.length - endOf.length );
-    result[ s ] = src1;
-  }
-
-  if( !srcIsArray )
-  return result[ 0 ];
-
-  return result;
-}
+// //
+//
+// /**
+//  * Finds substring prefix ( begin ) occurrence from the very begining of source ( src ) and removes it.
+//  * Returns original string if source( src ) does not have occurrence of ( prefix ).
+//  *
+//  * @param { String } src - Source string to parse.
+//  * @param { String } prefix - String that is to be dropped.
+//  * @returns { String } Returns string with result of prefix removement.
+//  *
+//  * @example
+//  * _.strRemoveBegin( 'example', 'exa' );
+//  * // returns mple
+//  *
+//  * @example
+//  * _.strRemoveBegin( 'example', 'abc' );
+//  * // returns example
+//  *
+//  * @function strRemoveBegin
+//  * @throws { Exception } Throws a exception if( src ) is not a String.
+//  * @throws { Exception } Throws a exception if( prefix ) is not a String.
+//  * @throws { Exception } Throws a exception if( arguments.length ) is not equal 2.
+//  * @memberof wTools
+//  *
+//  */
+//
+// function strRemoveBegin( src, begin )
+// {
+//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+//   _.assert( _.longIs( src ) || _.strIs( src ), 'Expects string or array of strings {-src-}' );
+//   _.assert( _.longIs( begin ) || _.strIs( begin ) || _.regexpIs( begin ), 'Expects string/regexp or array of strings/regexps {-begin-}' );
+//
+//   let result = [];
+//   let srcIsArray = _.longIs( src );
+//
+//   if( _.strIs( src ) && !_.longIs( begin ) )
+//   return _._strRemovedBegin( src, begin );
+//
+//   src = _.arrayAs( src );
+//   begin = _.arrayAs( begin );
+//   for( let s = 0, slen = src.length ; s < slen ; s++ )
+//   {
+//     let beginOf = false;
+//     let src1 = src[ s ]
+//     for( let b = 0, blen = begin.length ; b < blen ; b++ )
+//     {
+//       beginOf = _._strBeginOf( src1, begin[ b ] );
+//       if( beginOf !== false )
+//       break;
+//     }
+//     if( beginOf !== false )
+//     src1 = src1.substr( beginOf.length, src1.length );
+//     result[ s ] = src1;
+//   }
+//
+//   if( !srcIsArray )
+//   return result[ 0 ];
+//
+//   return result;
+// }
+//
+// //
+//
+// function _strRemovedEnd( src, end )
+// {
+//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+//   _.assert( _.strIs( src ), 'Expects string {-src-}' );
+//
+//   let result = src;
+//   let endOf = _._strEndOf( result, end );
+//   if( endOf !== false )
+//   result = result.substr( 0, result.length - endOf.length );
+//
+//   return result;
+// }
+//
+// //
+//
+// /**
+//  * Removes occurrence of postfix ( end ) from the very end of string( src ).
+//  * Returns original string if no occurrence finded.
+//  * @param { String } src - Source string to parse.
+//  * @param { String } postfix - String that is to be dropped.
+//  * @returns { String } Returns string with result of postfix removement.
+//  *
+//  * @example
+//  * _.strRemoveEnd( 'example', 'le' );
+//  * // returns examp
+//  *
+//  * @example
+//  * _.strRemoveEnd( 'example', 'abc' );
+//  * // returns example
+//  *
+//  * @function strRemoveEnd
+//  * @throws { Exception } Throws a exception if( src ) is not a String.
+//  * @throws { Exception } Throws a exception if( postfix ) is not a String.
+//  * @throws { Exception } Throws a exception if( arguments.length ) is not equal 2.
+//  * @memberof wTools
+//  *
+//  */
+//
+// function strRemoveEnd( src, end )
+// {
+//   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+//   _.assert( _.longIs( src ) || _.strIs( src ), 'Expects string or array of strings {-src-}' );
+//   _.assert( _.longIs( end ) || _.strIs( end ) || _.regexpIs( end ), 'Expects string/regexp or array of strings/regexps {-end-}' );
+//
+//   let result = [];
+//   let srcIsArray = _.longIs( src );
+//
+//   if( _.strIs( src ) && !_.longIs( end ) )
+//   return _._strRemovedEnd( src, end );
+//
+//   src = _.arrayAs( src );
+//   end = _.arrayAs( end );
+//
+//   for( let s = 0, slen = src.length ; s < slen ; s++ )
+//   {
+//     let endOf = false;
+//     let src1 = src[ s ]
+//     for( let b = 0, blen = end.length ; b < blen ; b++ )
+//     {
+//       endOf = _._strEndOf( src1, end[ b ] );
+//       if( endOf !== false )
+//       break;
+//     }
+//     if( endOf !== false )
+//     src1 = src1.substr( 0, src1.length - endOf.length );
+//     result[ s ] = src1;
+//   }
+//
+//   if( !srcIsArray )
+//   return result[ 0 ];
+//
+//   return result;
+// }
 
 //
 
@@ -533,144 +533,143 @@ function strRemove( srcStr, insStr )
 
 //
 
-function strReplaceBegin( src, begin, ins )
-{
-  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
-  _.assert( _.strIs( ins ) || _.longIs( ins ), 'Expects {-ins-} as string/array of strings' );
-  if( _.longIs( begin ) && _.longIs( ins ) )
-  _.assert( begin.length === ins.length );
-
-  begin = _.arrayAs( begin );
-  let result = _.arrayAs( src ).slice();
-
-  for( let k = 0, srcLength = result.length; k < srcLength; k++ )
-  for( let j = 0, beginLength = begin.length; j < beginLength; j++ )
-  if( _.strBegins( result[ k ], begin[ j ] ) )
-  {
-    let prefix = _.longIs( ins ) ? ins[ j ] : ins;
-    _.assert( _.strIs( prefix ) );
-    result[ k ] = prefix + _.strRemoveBegin( result[ k ] , begin[ j ] );
-    break;
-  }
-
-  if( result.length === 1 && _.strIs( src ) )
-  return result[ 0 ];
-
-  return result;
-}
-
+// function strReplaceBegin( src, begin, ins )
+// {
+//   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+//   _.assert( _.strIs( ins ) || _.longIs( ins ), 'Expects {-ins-} as string/array of strings' );
+//   if( _.longIs( begin ) && _.longIs( ins ) )
+//   _.assert( begin.length === ins.length );
 //
-
-function strReplaceEnd( src, end, ins )
-{
-  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
-  _.assert( _.strIs( ins ) || _.longIs( ins ), 'Expects {-ins-} as string/array of strings' );
-  if( _.longIs( end ) && _.longIs( ins ) )
-  _.assert( end.length === ins.length );
-
-  end = _.arrayAs( end );
-  let result = _.arrayAs( src ).slice();
-
-  for( let k = 0, srcLength = result.length; k < srcLength; k++ )
-  for( let j = 0, endLength = end.length; j < endLength; j++ )
-  if( _.strEnds( result[ k ], end[ j ] ) )
-  {
-    let postfix = _.longIs( ins ) ? ins[ j ] : ins;
-    _.assert( _.strIs( postfix ) );
-    result[ k ] = _.strRemoveEnd( result[ k ] , end[ j ] ) + postfix;
-  }
-
-  if( result.length === 1 && _.strIs( src ) )
-  return result[ 0 ];
-
-  return result;
-}
-
+//   begin = _.arrayAs( begin );
+//   let result = _.arrayAs( src ).slice();
 //
-
-function _strReplaced( srcStr, insStr, subStr )
-{
-  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
-  _.assert( _.strIs( srcStr ), 'Expects string {-src-}' );
-
-  let result = srcStr;
-
-  if( !_.longIs( insStr ) )
-  {
-    _.assert( _.strIs( subStr ), 'Expects string {-sub-}' );
-
-    result = result.replace( insStr, subStr );
-  }
-  else
-  {
-    _.assert( insStr.length === subStr.length, 'Search and replace strings must have same length' );
-    for( let i = 0; i < insStr.length; i++ )
-    {
-      _.assert( _.strIs( subStr[ i ] ), 'Expects string {-sub-}' );
-
-      result = result.replace( insStr[ i ], subStr[ i ] );
-    }
-  }
-
-  return result;
-}
-
+//   for( let k = 0, srcLength = result.length; k < srcLength; k++ )
+//   for( let j = 0, beginLength = begin.length; j < beginLength; j++ )
+//   if( _.strBegins( result[ k ], begin[ j ] ) )
+//   {
+//     let prefix = _.longIs( ins ) ? ins[ j ] : ins;
+//     _.assert( _.strIs( prefix ) );
+//     result[ k ] = prefix + _.strRemoveBegin( result[ k ] , begin[ j ] );
+//     break;
+//   }
 //
-
-/**
-* Finds substring or regexp ( insStr ) occurrence from the source string ( srcStr ) and replaces them
-* with the subStr values.
-* Returns original string if source( src ) does not have occurrence of ( insStr ).
-*
-* @param { String } srcStr - Source string to parse.
-* @param { String } insStr - String/RegExp that is to be replaced.
-* @param { String } subStr - Replacement String/RegExp.
-* @returns { String } Returns string with result of substring replacement.
-*
-* @example
-* _.strReplace( 'source string', 's', 'S' );
-* // returns Source string
-*
-* @example
-* _.strReplace( 'example', 's' );
-* // returns example
-*
-* @function strReplace
-* @throws { Exception } Throws a exception if( srcStr ) is not a String.
-* @throws { Exception } Throws a exception if( insStr ) is not a String or a RegExp.
-* @throws { Exception } Throws a exception if( subStr ) is not a String.
-* @throws { Exception } Throws a exception if( arguments.length ) is not equal 3.
-* @memberof wTools
-*
-*/
-
-function strReplace( srcStr, insStr, subStr )
-{
-  _.assert( arguments.length === 3, 'Expects exactly three arguments' );
-  _.assert( _.longIs( srcStr ) || _.strIs( srcStr ), 'Expects string or array of strings {-src-}' );
-  _.assert( _.longIs( insStr ) || _.strIs( insStr ) || _.regexpIs( insStr ), 'Expects string/regexp or array of strings/regexps {-begin-}' );
-  _.assert( _.longIs( subStr ) || _.strIs( subStr ), 'Expects string or array of strings {-src-}' );
-
-  let result = [];
-  let srcIsArray = _.longIs( srcStr );
-
-  if( _.strIs( srcStr ) && !_.longIs( srcStr ) )
-  return _._strReplaced( srcStr, insStr, subStr );
-
-  srcStr = _.arrayAs( srcStr );
-
-  for( let s = 0; s < srcStr.length; s++ )
-  {
-    let src = srcStr[ s ];
-    result[ s ] = _._strReplaced( src, insStr, subStr );
-  }
-
-  if( !srcIsArray )
-  return result[ 0 ];
-
-  return result;
-}
-
+//   if( result.length === 1 && _.strIs( src ) )
+//   return result[ 0 ];
+//
+//   return result;
+// }
+//
+// //
+//
+// function strReplaceEnd( src, end, ins )
+// {
+//   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+//   _.assert( _.strIs( ins ) || _.longIs( ins ), 'Expects {-ins-} as string/array of strings' );
+//   if( _.longIs( end ) && _.longIs( ins ) )
+//   _.assert( end.length === ins.length );
+//
+//   end = _.arrayAs( end );
+//   let result = _.arrayAs( src ).slice();
+//
+//   for( let k = 0, srcLength = result.length; k < srcLength; k++ )
+//   for( let j = 0, endLength = end.length; j < endLength; j++ )
+//   if( _.strEnds( result[ k ], end[ j ] ) )
+//   {
+//     let postfix = _.longIs( ins ) ? ins[ j ] : ins;
+//     _.assert( _.strIs( postfix ) );
+//     result[ k ] = _.strRemoveEnd( result[ k ] , end[ j ] ) + postfix;
+//   }
+//
+//   if( result.length === 1 && _.strIs( src ) )
+//   return result[ 0 ];
+//
+//   return result;
+// }
+//
+// //
+//
+// function _strReplaced( srcStr, insStr, subStr )
+// {
+//   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+//   _.assert( _.strIs( srcStr ), 'Expects string {-src-}' );
+//
+//   let result = srcStr;
+//
+//   if( !_.longIs( insStr ) )
+//   {
+//     _.assert( _.strIs( subStr ), 'Expects string {-sub-}' );
+//
+//     result = result.replace( insStr, subStr );
+//   }
+//   else
+//   {
+//     _.assert( insStr.length === subStr.length, 'Search and replace strings must have same length' );
+//     for( let i = 0; i < insStr.length; i++ )
+//     {
+//       _.assert( _.strIs( subStr[ i ] ), 'Expects string {-sub-}' );
+//
+//       result = result.replace( insStr[ i ], subStr[ i ] );
+//     }
+//   }
+//
+//   return result;
+// }
+//
+// //
+//
+// /**
+// * Finds substring or regexp ( insStr ) occurrence from the source string ( srcStr ) and replaces them
+// * with the subStr values.
+// * Returns original string if source( src ) does not have occurrence of ( insStr ).
+// *
+// * @param { String } srcStr - Source string to parse.
+// * @param { String } insStr - String/RegExp that is to be replaced.
+// * @param { String } subStr - Replacement String/RegExp.
+// * @returns { String } Returns string with result of substring replacement.
+// *
+// * @example
+// * _.strReplace( 'source string', 's', 'S' );
+// * // returns Source string
+// *
+// * @example
+// * _.strReplace( 'example', 's' );
+// * // returns example
+// *
+// * @function strReplace
+// * @throws { Exception } Throws a exception if( srcStr ) is not a String.
+// * @throws { Exception } Throws a exception if( insStr ) is not a String or a RegExp.
+// * @throws { Exception } Throws a exception if( subStr ) is not a String.
+// * @throws { Exception } Throws a exception if( arguments.length ) is not equal 3.
+// * @memberof wTools
+// *
+// */
+//
+// function strReplace( srcStr, insStr, subStr )
+// {
+//   _.assert( arguments.length === 3, 'Expects exactly three arguments' );
+//   _.assert( _.longIs( srcStr ) || _.strIs( srcStr ), 'Expects string or array of strings {-src-}' );
+//   _.assert( _.longIs( insStr ) || _.strIs( insStr ) || _.regexpIs( insStr ), 'Expects string/regexp or array of strings/regexps {-begin-}' );
+//   _.assert( _.longIs( subStr ) || _.strIs( subStr ), 'Expects string or array of strings {-src-}' );
+//
+//   let result = [];
+//   let srcIsArray = _.longIs( srcStr );
+//
+//   if( _.strIs( srcStr ) && !_.longIs( srcStr ) )
+//   return _._strReplaced( srcStr, insStr, subStr );
+//
+//   srcStr = _.arrayAs( srcStr );
+//
+//   for( let s = 0; s < srcStr.length; s++ )
+//   {
+//     let src = srcStr[ s ];
+//     result[ s ] = _._strReplaced( src, insStr, subStr );
+//   }
+//
+//   if( !srcIsArray )
+//   return result[ 0 ];
+//
+//   return result;
+// }
 
 //
 
@@ -789,16 +788,17 @@ function strReplaceWords( src, ins, sub )
 // --
 
 /**
- * Find common symbols from the begining of all strings passed to arguments list. Uses first argument( ins ) as pattern.
- * If some string doesn`t have the same first symbols as the pattern ( ins ), the function returns an empty string.
+ * Routine strCommonLeft() finds common symbols from the begining of all strings passed to arguments list.
+ * Routine uses first argument {-ins-} as a pattern. If some string doesn`t have the same first symbols
+ * as the pattern {-ins-}, the function returns an empty string.
  * Otherwise, it returns the symbol sequence that appears from the start of each string.
  *
- * @param {string} ins - Sequence of possible symbols.
- * @returns {string} Returns found common symbols.
+ * @param { String } ins - Sequence of possible symbols.
+ * @param { String } ... - Another strings to search common sequence of symbols.
  *
  * @example
- * _.strCommonLeft( 'abcd', 'ab', 'abc', 'a' );
- * // returns 'a'
+ * _.strCommonLeft( 'abcd', 'ab', 'abc', 'abd' );
+ * // returns 'ab'
  *
  * @example
  * _.strCommonLeft( 'abcd', 'abc', 'abcd' );
@@ -808,8 +808,9 @@ function strReplaceWords( src, ins, sub )
  * _.strCommonLeft( 'abcd', 'abc', 'd' )
  * // returns ''
  *
- * @method strCommonLeft
- * @throws {exception} If ( ins ) is not a String.
+ * @returns { String } - Returns found common symbols.
+ * @function strCommonLeft
+ * @throws { Error } If {-ins-} is not a String.
  * @memberof wTools
  *
  */
@@ -847,27 +848,29 @@ function strCommonLeft( ins )
 //
 
 /**
- * Finds common symbols from the end of all strings passed to arguments list. Uses first argument( ins ) as pattern.
- * If some string doesn`t have same last symbol with pattern( ins ), the function returns an empty string.
+ * Routine strCommonRight() finds common symbols from the end of all strings passed to arguments list.
+ * Routine uses first argument {-ins-} as a pattern. If some string doesn`t have the same end symbols
+ * as the pattern {-ins-}, the function returns an empty string.
  * Otherwise, it returns the symbol sequence that appears from the end of each string.
  *
  * @param { String } ins - Sequence of possible symbols.
- * @returns { String } Returns found common symbols.
+ * @param { String } ... - Another strings to search common sequence of symbols.
  *
  * @example
- * _.strCommonRight( 'ame', 'same', 'name' );
- * // returns 'ame'
+ * _.strCommonRight( 'same', 'came', 'me', 'code' );
+ * // returns 'e'
  *
  * @example
- * _.strCommonRight( 'abc', 'dbc', 'ddc', 'aac' );
- * // returns 'c'
+ * _.strCommonRight( 'add', 'ddd', 'hdd' );
+ * // returns 'dd'
  *
  * @example
- * _.strCommonRight( 'abc', 'dba', 'abc' );
+ * _.strCommonRight( 'abcd', 'abc', 'd' )
  * // returns ''
  *
- * @method strCommonRight
- * @throws {exception} If( ins ) is not a String.
+ * @returns { String } - Returns found common symbols.
+ * @function strCommonRight
+ * @throws { Error } If {-ins-} is not a String.
  * @memberof wTools
  *
  */
@@ -903,6 +906,59 @@ function strCommonRight( ins )
 }
 
 //
+
+/**
+ * Routine strRandom() makes string with random length with random symbols defined
+ * by option {-o.alphabet-}.
+ * Routine accepts two types of parameter. First of them is options map {-o-}, the second
+ * is Number (Range) {-length-}.
+ *
+ * First set of parameters
+ * @param { Map } o - Options map.
+ * @param { Number|Range } o.length - The length of random string.
+ * The generated string may has fixed length if {-o.length-} defined by a number. If {-o.length-}
+ * defined by a Range, then length of generated string is variable.
+ * @param { String } o.alphabet - String with symbols for generated string.
+ * Default range of symbols is 'a' - 'z'.
+ *
+ * Second set of parameters
+ * @param { Number|Range } length - The length of random string.
+ * The generated string may has fixed length if {-o.length-} defined by a number. If {-o.length-}
+ * defined by a Range, then length of generated string is variable.
+ * @param { String } o.alphabet - String with symbols for generated string.
+ *
+ * @example
+ * _.strRandom( 0 );
+ * // returns ''
+ *
+ * @example
+ * _.strRandom( 2 );
+ * // returns 'vb'
+ * // string with 2 random symbols from 'a' to 'z'
+ *
+ * @example
+ * _.strRandom( [ 1, 5 ] )
+ * // returns 'soyx'
+ * // string with length from 1 to 5 and random symbols from 'a' to 'z'
+ *
+ * @example
+ * _.strRandom( { length : 3, alphabet : 'a' } )
+ * // returns 'aaa'
+ * // string with length 3 and symbol 'a'
+ *
+ * @example
+ * _.strRandom( { length : [ 1, 5 ], alphabet : 'ab' } )
+ * // returns 'aabab'
+ * // string with length from 1 to 5 and random symbols 'a' and 'b'
+ *
+ * @returns { String } - Returns string with random length and symbols.
+ * @function strRandom
+ * @throws { Error } If arguments.length is less or more then one.
+ * @throws { Error } If options map {-o-} has unnacessary fields.
+ * @throws { Error } If parameter {-length-} or option {-o.length-} is not a Number and not a Range.
+ * @memberof wTools
+ *
+ */
 
 function strRandom( o )
 {
@@ -940,6 +996,46 @@ strRandom.defaults =
 }
 
 //
+
+/**
+ * Routine strAlphabetFromRange() generates a string with a sequence of symbols started from
+ * first element of {-range-} and ended on previous element before last.
+ *
+ * @param { Range } range - Range of symbols. It is two elements array. Elements of {-range-}
+ * should have a String or a Number type.
+ *
+ * @example
+ * _.strAlphabetFromRange( [ 97, 98 ] );
+ * // returns 'a'
+ *
+ * @example
+ * _.strAlphabetFromRange( 97, 100 );
+ * // returns 'abc'
+ *
+ * @example
+ * _.strAlphabetFromRange( [ 'a', 'b' ] );
+ * // returns 'a'
+ *
+ * @example
+ * _.strAlphabetFromRange( 'a', 'd' );
+ * // returns 'abc'
+ *
+ * @example
+ * _.strAlphabetFromRange( [ 'a', 98 ] );
+ * // returns 'a'
+ *
+ * @example
+ * _.strAlphabetFromRange( 97, 'd' );
+ * // returns 'abc'
+ *
+ * @returns { String } - Returns string with sequence of symbols.
+ * @function strAlphabetFromRange
+ * @throws { Error } If arguments.length is less then one.
+ * @throws { Error } If range.length is less or more then two.
+ * @throws { Error } If range[ 0 ] or range[ 1 ] is not a Number and not a String.
+ * @memberof wTools
+ *
+ */
 
 function strAlphabetFromRange( range )
 {
@@ -1346,26 +1442,23 @@ strEscape.defaults =
 //
 
 /**
- * Converts source string( src ) into unicode representation by replacing each symbol with its escaped unicode equivalent.
- * Example: ( 't' -> '\u0074' ). Returns result of conversion as new string or empty string if source has zero length.
- * @param {string} str - Source string to parse.
- * @returns {string} Returns string with result of conversion.
+ * Converts number {-code-} into unicode representation.
+ * Returns result of conversion as new string.
+ *
+ * @param { Number } code - The code to convert into unicode representation.
  *
  * @example
- * _.strUnicodeEscape( 'abc' );
- * // returns \u0061\u0062\u0063;
+ * _.strCodeUnicodeEscape( 70 );
+ * // returns '\\u0046'
  *
  * @example
- * _.strUnicodeEscape( 'world' );
- * // returns \u0077\u006f\u0072\u006c\u0064
+ * _.strCodeUnicodeEscape( 77 );
+ * // returns '\\u004d'
  *
- * @example
- * _.strUnicodeEscape( '//test//' );
- * // returns \u002f\u002f\u0074\u0065\u0073\u0074\u002f\u002f
- *
- * @method strUnicodeEscape
- * @throws { Exception } Throws a exception if no argument provided.
- * @throws { Exception } Throws a exception if( src ) is not a String.
+ * @returns { String } - Returns string with result of conversion.
+ * @function strCodeUnicodeEscape
+ * @throws { Exception } If arguments.length is less or more then one.
+ * @throws { Exception } If {-src-} is not a Number.
  * @memberof wTools
  *
  */
@@ -1388,10 +1481,10 @@ function strCodeUnicodeEscape( code )
 //
 
 /**
- * Converts source string( src ) into unicode representation by replacing each symbol with its escaped unicode equivalent.
- * Example: ( 't' -> '\u0074' ). Returns result of conversion as new string or empty string if source has zero length.
- * @param {string} str - Source string to parse.
- * @returns {string} Returns string with result of conversion.
+ * Converts source string {-str-} into unicode representation by replacing each symbol with its escaped unicode equivalent.
+ * Returns result of conversion as new string or empty string if source has zero length.
+ *
+ * @param { String } str - Source string to parse.
  *
  * @example
  * _.strUnicodeEscape( 'abc' );
@@ -1405,9 +1498,10 @@ function strCodeUnicodeEscape( code )
  * _.strUnicodeEscape( '//test//' );
  * // returns \u002f\u002f\u0074\u0065\u0073\u0074\u002f\u002f
  *
- * @method strUnicodeEscape
- * @throws { Exception } Throws a exception if no argument provided.
- * @throws { Exception } Throws a exception if( src ) is not a String.
+ * @returns { String } - Returns string with result of conversion.
+ * @function strUnicodeEscape
+ * @throws { Exception } If arguments.length is less or more then one.
+ * @throws { Exception } If {-src-} is not a String.
  * @memberof wTools
  *
  */
@@ -1934,7 +2028,7 @@ function strSplitsCoupledGroup( o )
     else if( _.regexpsTestAny( o.postfix, element ) )
     {
       if( begins.length === 0 && !o.allowingUncoupledPostfix )
-      throw _.err( _.strQuote( element ), 'does not have complementing openning\n' );
+      throw _.err( `"${ element }" does not have complementing openning\n` );
 
       if( begins.length === 0 )
       continue;
@@ -1955,7 +2049,7 @@ function strSplitsCoupledGroup( o )
   if( begins.length && !o.allowingUncoupledPrefix )
   {
     debugger;
-    throw _.err( _.strQuote( begins[ begins.length-1 ] ), 'does not have complementing closing\n' );
+    throw _.err( `"${ begins[ begins.length-1 ] }" does not have complementing closing\n` );
   }
 
   return o.splits;
@@ -2718,7 +2812,7 @@ defaults.preservingDelimeters = 0;
 qqq : cover it by test
 Dmytro : covered,
 maybe, routine needs assertion
-_.assert( arguments.lenght === 1, 'Expects one argument' );
+_.assert( arguments.length === 1, 'Expects one argument' );
 if assertion will be accepted, then test.case = 'a few arguments' will throw error
 */
 
@@ -2750,10 +2844,10 @@ function strSplitCamel( src )
  * @returns {string} Returns the corresponding substring.
  *
  * @example
- * _.strSub( 'fi' );
+ * _.strOnly( 'fi' );
  * // returns [ 'first', [ 0, 2 ] ]
  *
- * @method strSub
+ * @method strOnly
  * @throws { Exception } Throw an exception if( arguments.length ) is not equal 2.
  * @throws { Exception } Throw an exception if( srcStr ) is not a String.
  * @throws { Exception } Throw an exception if( range ) is not a range.
@@ -2761,13 +2855,80 @@ function strSplitCamel( src )
  *
  */
 
-function _strSub( srcStr, range )
+function strOnlySingle( srcStr, range )
 {
+
+/* qqq : reference point of negative is length. implement and cover please */
+
+// xxx
+// _.strOnly( 'abc', [ -2, -1 ] ) => ''
+// _.strOnly( 'abc', [ 1, 2 ] ) => 'b'
+// _.strOnly( 'abc', [ 1, 2 ] ) => 'b'
+//
+// 3-2 = 1
+// 3-1 = 2
+
+  if( _.numberIs( range ) )
+  {
+    if( range < 0 )
+    range = srcStr.length + range;
+    range = [ range, range + 1 ];
+  }
+  else
+  {
+    if( range[ 1 ] < 0 )
+    range[ 1 ] = srcStr.length + range[ 1 ];
+    if( range[ 0 ] < 0 )
+    range[ 0 ] = srcStr.length + range[ 0 ];
+  }
+
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( _.strIs( srcStr ) );
-  _.assert( _.rangeIs( range ) );
+  _.assert( _.rangeDefined( range ) );
 
   return srcStr.substring( range[ 0 ], range[ 1 ] );
+}
+
+//
+
+// srcStr:str ins:str -> str
+// srcStr:str ins:[ * str ] -> [ * str ]
+// srcStr:[ * str ] ins:[ * str ] -> [ * str ]
+
+function strButSingle( srcStr, range, ins )
+{
+
+/* qqq : reference point of negative is length. implement and cover please */
+
+  if( _.numberIs( range ) )
+  {
+    if( range < 0 )
+    range = srcStr.length + range;
+    range = [ range, range + 1 ];
+  }
+  else
+  {
+    if( range[ 1 ] < 0 )
+    range[ 1 ] = srcStr.length + range[ 1 ];
+    if( range[ 0 ] < 0 )
+    range[ 0 ] = srcStr.length + range[ 0 ];
+  }
+
+  if( _.numberIs( range ) )
+  range = [ range, range + 1 ];
+
+  _.assert( arguments.length === 2 || arguments.length === 3 );
+  _.assert( _.strIs( srcStr ) );
+  _.assert( _.rangeDefined( range ) );
+  _.assert( ins === undefined || _.strIs( ins ) || _.longIs( ins ) );
+  _.assert( !_.longIs( ins ), 'not implemented' );
+
+  /* qqq : implement for case ins is long */
+
+  if( ins )
+  return srcStr.substring( 0, range[ 0 ] ) + ins + srcStr.substring( range[ 1 ], srcStr.length );
+  else
+  return srcStr.substring( 0, range[ 0 ] ) + srcStr.substring( range[ 1 ], srcStr.length );
 }
 
 //
@@ -3116,17 +3277,16 @@ strExtractInlinedStereo.defaults =
 //
 
 /**
- * Splits string( srcStr ) into parts using array( maskArray ) as mask and returns them as array.
- * Mask( maskArray ) contains string(s) separated by marker( strUnjoin.any ). Mask must starts/ends with first/last letter from source
- * or can be replaced with marker( strUnjoin.any ). Position of( strUnjoin.any ) determines which part of source string will be splited:
- * - If( strUnjoin.any ) is before string it marks everything before that string. Example: ( [ _.strUnjoin.any, 'postfix' ] ).
- * - If( strUnjoin.any ) is after string it marks everything after that string. Example: ( [ 'prefix', _.strUnjoin.any ] ).
- * - If( strUnjoin.any ) is between two strings it marks everything between them. Example: ( [ 'prefix', _.strUnjoin.any, 'postfix' ] ).
- * - If( strUnjoin.any ) is before and after string it marks all except that string. Example: ( [ '_.strUnjoin.any', something, '_.strUnjoin.any' ] ).
+ * Routine strUnjoin() splits string {-srcStr-} into parts using array {-maskArray-} as mask and returns an array with splitted parts.
+ * Mask {-maskArray-} contains string(s) separated by marker ( strUnjoin.any ). Mask must starts/ends with first/last letter from source
+ * or can be replaced with marker ( strUnjoin.any ). Position of ( strUnjoin.any ) determines which part of source string will be splited:
+ * - If ( strUnjoin.any ) is provided before string, it marks everything before that string. Example: ( [ _.strUnjoin.any, 'postfix' ] ).
+ * - If ( strUnjoin.any ) is provided after string, it marks everything after that string. Example: ( [ 'prefix', _.strUnjoin.any ] ).
+ * - If ( strUnjoin.any ) is provided between two strings, it marks everything between them. Example: ( [ 'prefix', _.strUnjoin.any, 'postfix' ] ).
+ * - If ( strUnjoin.any ) is provided before and after string, it marks all except that string. Example: ( [ '_.strUnjoin.any', something, '_.strUnjoin.any' ] ).
  *
  * @param {string} srcStr - Source string.
  * @param {array} maskArray - Contains mask for source string.
- * @returns {array} Returns array with unjoined string part.
  *
  * @example
  * _.strUnjoin( 'prefix_something_postfix', [ 'prefix', _.strUnjoin.any, 'postfix' ] );
@@ -3148,11 +3308,12 @@ strExtractInlinedStereo.defaults =
  * _.strUnjoin( 'prefix_something_postfix', [ _.strUnjoin.any, 'x', _.strUnjoin.any, 'p', _.strUnjoin.any ] );
  * // returns [ 'prefi', 'x', '_something_', 'p', 'ostfix' ]
  *
- * @method strUnjoin
- * @throws { Exception } If no arguments provided.
- * @throws { Exception } If( srcStr ) is not a String.
- * @throws { Exception } If( maskArray ) is not a Array.
- * @throws { Exception } If( maskArray ) value is not String or strUnjoin.any.
+ * @returns {array} Returns array with unjoined string part.
+ * @function strUnjoin
+ * @throws { Exception } If arguments.length is less or more then two.
+ * @throws { Exception } If {-srcStr-} is not a String.
+ * @throws { Exception } If {-maskArray-} is not an Array.
+ * @throws { Exception } If {-maskArray-} value is not String or strUnjoin.any.
  * @memberof wTools
  *
  */
@@ -3252,13 +3413,12 @@ _.assert( _.routineIs( strUnjoin.any ) );
 // --
 
 /**
- * Returns a string with the source string appended to itself n-times.
- * Expects two objects: source string( s ) ( or array of strings ) and number of concatenations( times ).
- * The string ( s ) and the number ( times ) remain unchanged.
+ * Routine _strDup() returns a string with the source string appended to itself n-times.
+ * Expects two parameter: source string {-s-} ( or array of strings ) and number of concatenations {-times-}.
+ * The string {-s-}  and the number {-times-} remain unchanged.
  *
- * @param { Array/String } s - Source array of strings / source string.
+ * @param { Array/String } s - Source array of strings or source string.
  * @param { Number } times - Number of concatenation cycles.
- * @returns { String } - Returns a string containing the src string concatenated n-times.
  *
  * @example
  * _.strDup( 'Word', 5 );
@@ -3272,10 +3432,11 @@ _.assert( _.routineIs( strUnjoin.any ) );
  * _.strDup( [ 'ab', 'd', '3 4'], 2 );
  * // returns [ 'abab', 'dd', '3 43 4']
  *
- * @method strDup
- * @throws { Exception } Throw an exception if( s ) is not a String or an array of strings.
- * @throws { Exception } Throw an exception if( times ) is not a Number.
- * @throws { Exception } Throw an exception if( arguments.length ) is not equal 2.
+ * @returns { String|Array } - Returns a string or an array of string containing the src string concatenated n-times.
+ * @function strDup
+ * @throws { Exception } If arguments.length is less or more then two.
+ * @throws { Exception } If {-s-} is not a String or an array of strings.
+ * @throws { Exception } If {-times-} is not a Number.
  * @memberof wTools
  *
  */
@@ -3692,7 +3853,7 @@ function strConcat( srcs, o )
   if( o.onToStr === null )
   o.onToStr = function onToStr( src, op )
   {
-    return _.toStr( src, op.optionsForToStr ); /* Dmytro : now optionsForToStr is not used in routine toStr */
+    return _.toStr( src, op.optionsForToStr );
   }
 
   let defaultOptionsForToStr =
@@ -3844,12 +4005,6 @@ strConcat.defaults =
  *
  */
 
-/*
-qqq : extend coverage of strIndentation
-Dmytro : coverage NOT extended. Description and realisation of routine is not identical.
-So, test routine is corrected corresponds to actual state of routine.
-*/
-
 function strIndentation( src, tab )
 {
 
@@ -3907,6 +4062,50 @@ function strIndentation( src, tab )
 //
 //   return result;
 // }
+
+//
+
+function strLinesBut( src, range, ins )
+{
+
+  if( _.strIs( src ) )
+  src = src.split( '\n' );
+
+  _.assert( arguments.length === 2 || arguments.length === 3 );
+  _.assert( _.longIs( src ) );
+  _.assert( ins === undefined || _.strIs( ins ) || _.longIs( ins ) );
+  _.assert( !_.longIs( ins ), 'not implemented' );
+
+  if( _.numberIs( range ) )
+  {
+    if( range < 0 )
+    range = src.length + range;
+    range = [ range, range + 1 ];
+  }
+
+  if( range[ 1 ] < 0 )
+  range[ 1 ] = src.length + range[ 1 ];
+
+  _.assert( _.rangeIs( range ) );
+
+  /* qqq : should work
+    _.strLinesBut( _.strLinesBut( got1, 0 ), -1 )
+  */
+
+  /* qqq : implement not implemented
+  */
+
+  if( ins )
+  {
+    _.assert( _.strIs( ins ) );
+    return _.longBut( src, range, [ ins ] ).join( '\n' );
+  }
+  else
+  {
+    return _.longBut( src, range ).join( '\n' );
+  }
+
+}
 
 //
 
@@ -3992,8 +4191,8 @@ function strLinesStrip( src )
 
 /**
  * Puts line counter before each line/element of provided source( o.src ).
- * If( o.src ) is a string, function splits it into array using new line as splitter, then puts line counter at the begining of each line( element ).
- * If( o.src ) is a array, function puts line counter at the begining of each line( element ).
+ * If( o.src ) is a string, function splits it into array using new line as splitter, then puts line counter at the beginning of each line( element ).
+ * If( o.src ) is a array, function puts line counter at the beginning of each line( element ).
  * Initial value of a counter can be changed by defining( o.first ) options( o ) property.
  * Can be called in two ways:
  * - First by passing all options in one object;
@@ -4001,7 +4200,7 @@ function strLinesStrip( src )
  *
  * @param { Object } o - options.
  * @param { String/Array } [ o.src=null ] - Source string or array of lines( not array of texts ).
- * With line we mean it does not have eol. Otherwise please join the array to let the routine to resplit the text,
+ * With line we mean it does not have EOF. Otherwise please join the array to let the routine to resplit the text,
  * like that: _.strLinesNumber( array.join( '\n' ) ).
  * @param { Number} [ o.first=1 ] - Sets initial value of a counter.
  * @returns { String } Returns string with line enumeration.
@@ -4025,7 +4224,7 @@ function strLinesStrip( src )
  * // 3: line3
  *
  * @example
- * _.strLinesNumber( { src:'line1\nline2\nline3', first : 2 } );
+ * _.strLinesNumber( { src:'line1\nline2\nline3', zeroLine : 2 } );
  * // returns
  * // 2: line1
  * // 3: line2
@@ -4041,7 +4240,7 @@ function strLinesNumber( o )
 {
 
   if( !_.objectIs( o ) )
-  o = { src : arguments[ 0 ], first : arguments[ 1 ] };
+  o = { src : arguments[ 0 ], zeroLine : arguments[ 1 ] };
 
   _.routineOptions( strLinesNumber, o );
   _.assert( arguments.length === 1 || arguments.length === 2 );
@@ -4049,15 +4248,17 @@ function strLinesNumber( o )
 
   /* */
 
-  if( o.first === null  )
+  if( o.zeroLine === null  )
   {
-    if( o.firstChar === null )
-    o.first = 1;
-    else if( _.numberIs( o.firstChar ) )
+    if( o.zeroChar === null )
+    {
+      o.zeroLine = 1;
+    }
+    else if( _.numberIs( o.zeroChar ) )
     {
       debugger;
       let src = _.arrayIs( o.src ) ? o.src.join( '\n' ) : o.src;
-      o.first = _.strLinesCount( src.substring( 0, o.firstChar+1 ) );
+      o.zeroLine = _.strLinesCount( src.substring( 0, o.zeroChar+1 ) );
     }
   }
 
@@ -4067,9 +4268,16 @@ function strLinesNumber( o )
 
   /* */
 
-  if( o.onLine ) for( let l = 0; l < lines.length; l += 1 )
+  let maxNumberLength = String( lines.length - 1 + o.zeroLine ).length;
+  let zeroLineLength = String( o.zeroLine ).length;
+  let maxNumLength = maxNumberLength > zeroLineLength ? maxNumberLength : zeroLineLength;
+
+  if( o.onLine )
+  for( let l = 0; l < lines.length; l += 1 )
   {
-    lines[ l ] = o.onLine( [ ( l + o.first ), ' : ', lines[ l ] ], o );
+    let numLength = String( l + o.zeroLine ).length;
+
+    lines[ l ] = o.onLine( [ ' '.repeat( maxNumLength - numLength ), ( l + o.zeroLine ), ' : ', lines[ l ] ], o.zeroLine + l, o );
     if( lines[ l ] === undefined )
     {
       lines.splice( l, 1 );
@@ -4077,10 +4285,31 @@ function strLinesNumber( o )
     }
     _.assert( _.strIs( lines[ l ] ) );
   }
-  else for( let l = 0; l < lines.length; l += 1 )
+  else
+  for( let l = 0; l < lines.length; l += 1 )
   {
-    lines[ l ] = ( l + o.first ) + ' : ' + lines[ l ];
+    let numLength = String( l + o.zeroLine ).length;
+    lines[ l ] = ' '.repeat( maxNumLength - numLength ) + ( l + o.zeroLine ) + ' : ' + lines[ l ];
   }
+
+  // if( o.onLine )
+  // for( let l = 0; l < lines.length; l += 1 )
+  // {
+  //   lines[ l ] = o.onLine( [ ( l + o.zeroLine ), ' : ', lines[ l ] ], o.zeroLine + l, o );
+  //   if( lines[ l ] === undefined )
+  //   {
+  //     lines.splice( l, 1 );
+  //     l -= 1;
+  //   }
+  //   _.assert( _.strIs( lines[ l ] ) );
+  // }
+  // else
+  // for( let l = 0; l < lines.length; l += 1 )
+  // {
+  //   lines[ l ] = ( l + o.zeroLine ) + ' : ' + lines[ l ];
+  // }
+
+  /* */
 
   return lines.join( '\n' );
 }
@@ -4088,10 +4317,16 @@ function strLinesNumber( o )
 strLinesNumber.defaults =
 {
   src : null,
-  first : null,
-  firstChar : null,
+  zeroLine : null,
+  zeroChar : null,
   onLine : null,
 }
+
+/*
+qqq : cover zeroLine | Dmytro : covered
+qqq : cover zeroChar | Dmytro : covered
+qqq : cover onLine | Dmytro : covered
+*/
 
 //
 
@@ -4121,7 +4356,7 @@ strLinesNumber.defaults =
  * If( o.range ) and ( o.line ) are both not provided function generates range by formula: [ 0, n + 1 ], where n: number of ( o.delimteter ) in source( o.src ).
  * Returns selected lines range as string or empty string if nothing selected.
  * Can be called in three ways:
- * - First by passing all parameters in one options object( o ) ;
+ * - First by passing all parameters in one options map( o ) ;
  * - Second by passing source string( o.src ) and range( o.range ) as array or number;
  * - Third by passing source string( o.src ), range start and end position.
  *
@@ -4209,9 +4444,13 @@ function strLinesSelect( o )
     o = { src : arguments[ 0 ], range : [ arguments[ 1 ], arguments[ 2 ] ] };
   }
 
+  _.routineOptions( strLinesSelect, o );
   _.assert( arguments.length <= 3 );
   _.assert( _.strIs( o.src ) );
-  _.routineOptions( strLinesSelect, o );
+  _.assert( _.boolLike( o.highlighting ) || _.longHas( [ '*' ], o.highlighting ) );
+
+  if( _.boolLike( o.highlighting ) && o.highlighting )
+  o.highlighting = '*';
 
   /* range */
 
@@ -4232,12 +4471,23 @@ function strLinesSelect( o )
     }
   }
 
+  if( o.line === null )
+  {
+    if( o.selectMode === 'center' )
+    o.line = Math.floor( ( o.range[ 0 ] + o.range[ 1 ] ) / 2 );
+    else if( o.selectMode === 'begin' )
+    o.line = o.range[ 0 ];
+    else if( o.selectMode === 'end' )
+    o.line = o.range[ 1 ] - 1;
+  }
+
   _.assert( _.longIs( o.range ) );
+  _.assert( _.intIs( o.line ) );
 
   /* */
 
   let f = 0;
-  let counter = o.zero;
+  let counter = o.zeroLine;
   while( counter < o.range[ 0 ] )
   {
     f = o.src.indexOf( o.delimteter, f );
@@ -4266,27 +4516,57 @@ function strLinesSelect( o )
 
   let result = f < l ? o.src.substring( f, l ) : '';
 
-  /* number */
+  /* numbering */
 
-  if( o.number )
-  result = _.strLinesNumber( result, o.range[ 0 ] );
+  if( o.numbering )
+  result = _.strLinesNumber
+  ({
+    src : result,
+    zeroLine : o.range[ 0 ],
+    onLine : lineHighlight,
+  });
 
   return result;
+
+  /* */
+
+  function lineHighlight( line, l )
+  {
+    if( !o.highlighting )
+    return line.join( '' );
+    if( l === o.line )
+    line[ 0 ] = '* ' + line[ 0 ];
+    else
+    line[ 0 ] = '  ' + line[ 0 ];
+    // line[ 1 ] = _.strBut( line[ 1 ], 0, '*' );
+    return line.join( '' );
+  }
+
+  /* */
+
 }
 
 strLinesSelect.defaults =
 {
+
   src : null,
   range : null,
 
   line : null,
   numberOfLines : 3,
   selectMode : 'center',
+  highlighting : '*',
 
-  number : 0,
-  zero : 1,
+  numbering : 0,
+  zeroLine : 1,
   delimteter : '\n',
+
 }
+
+/* qqq :
+- cover option highlighting | Dmytro : covered
+- cover option zeroLine | Dmytro : covered
+*/
 
 //
 
@@ -4294,7 +4574,7 @@ strLinesSelect.defaults =
  * Get the nearest ( o.numberOfLines ) lines to the range ( o.charsRange ) from source string( o.src ).
  * Returns object with two elements: .
  * Can be called in two ways:
- * - First by passing all parameters in one options object( o ) ;
+ * - First by passing all parameters in one options map( o ) ;
  * - Second by passing source string( o.src ) and range( o.range ) as array or number;
  *
  * @param { Object } o - Options.
@@ -4591,17 +4871,17 @@ let Proto =
 
   // replacer
 
-  _strRemovedBegin,
-  strRemoveBegin,
-  _strRemovedEnd,
-  strRemoveEnd,
+  // _strRemovedBegin,
+  // strRemoveBegin,
+  // _strRemovedEnd,
+  // strRemoveEnd,
   _strRemoved,
   strRemove,
 
-  strReplaceBegin,
-  strReplaceEnd,
-  _strReplaced,
-  strReplace,
+  // strReplaceBegin,
+  // strReplaceEnd,
+  // _strReplaced,
+  // strReplace,
 
   strPrependOnce,
   strAppendOnce,
@@ -4610,16 +4890,16 @@ let Proto =
 
   // etc
 
-  strCommonLeft, /* qqq : document me */
-  strCommonRight, /* qqq : document me */
-  strRandom, /* qqq : document and extend test coverage */
-  strAlphabetFromRange, /* qqq : cover and document please */
+  strCommonLeft, /* qqq : document me | Dmytro : documented */
+  strCommonRight, /* qqq : document me | Dmytro : documented */
+  strRandom, /* qqq : document and extend test coverage | Dmytro : coverage is extended, routine is documented */
+  strAlphabetFromRange, /* qqq : cover and document please | Dmytro : covered and documented */
 
   // formatter
 
-  strForRange, /* experimental */
-  strForCall, /* experimental */
-  strStrShort,
+  strForRange, /* xxx : investigate */
+  strForCall, /* xxx : investigate */
+  strStrShort, /* xxx : investigate */
   strDifference,
 
   // transformer
@@ -4627,20 +4907,20 @@ let Proto =
   strCapitalize,
   strDecapitalize,
   strEscape,
-  strCodeUnicodeEscape,
-  strUnicodeEscape, /* qqq : document me */
+  strCodeUnicodeEscape, /* Dmytro : extended documentation */
+  strUnicodeEscape, /* qqq : document me | Dmytro : documented */
   strReverse,
 
   // stripper
 
   strStrip,
-  strsStrip : _.routineVectorize_functor( strStrip ),
+  strsStrip : _.vectorize( strStrip ),
   strStripLeft,
-  strsStripLeft : _.routineVectorize_functor( strStripLeft ),
+  strsStripLeft : _.vectorize( strStripLeft ),
   strStripRight,
-  strsStripRight : _.routineVectorize_functor( strStripRight ),
-  strRemoveAllSpaces : _.routineVectorize_functor( _strRemoveAllSpaces ),
-  strStripEmptyLines : _.routineVectorize_functor( _strStripEmptyLines ),
+  strsStripRight : _.vectorize( strStripRight ),
+  strRemoveAllSpaces : _.vectorize( _strRemoveAllSpaces ),
+  strStripEmptyLines : _.vectorize( _strStripEmptyLines ),
 
   // splitter
 
@@ -4660,18 +4940,19 @@ let Proto =
 
   strSplitCamel,
 
-  // strSplitNaive,
-
   // extractor
 
-  strSub : _.routineVectorize_functor( _strSub ),
+  strOnlySingle,
+  strOnly : _.vectorize( strOnlySingle ), /* qqq : cover and document */
+  strButSingle,
+  strBut : _.vectorize( strButSingle ), /* qqq : cover and document */
   strExtractInlined,
   strExtractInlinedStereo,
   strUnjoin, /* qqq : document me */
 
   // joiner
 
-  strDup : _.routineVectorize_functor( _strDup ), /* qqq : document me */
+  strDup : _.vectorize( _strDup ), /* qqq : document me */
   strJoin,
   strJoinPath, /* qqq : cover and document me // Dmytro : covered and documented */
   strConcat,
@@ -4679,12 +4960,14 @@ let Proto =
   // liner
 
   strIndentation,
+  strLinesBut, /* qqq : implement, document and cover */
+  // strLinesOnly, /* qqq : implement, document and cover */
   strLinesSplit,
   strLinesJoin,
   strLinesStrip, /* qqq : test coverage */
   strLinesNumber,
   strLinesSelect,
-  strLinesNearest, /* qqq : check coverage */
+  strLinesNearest, /* qqq : check coverage | Dmytro : checked, improved formatting */
   strLinesNearestReport,
   strLinesCount,
   strLinesRangeWithCharRange,

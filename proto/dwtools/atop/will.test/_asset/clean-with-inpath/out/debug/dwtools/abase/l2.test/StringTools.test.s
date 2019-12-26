@@ -1,4 +1,4 @@
-( function _StringBasic_test_s_() {
+( function _Str_test_s_() {
 
 'use strict';
 
@@ -6,6 +6,7 @@ if( typeof module !== 'undefined' )
 {
   let _ = require( '../Layer2.s' );
   _.include( 'wTesting' );
+  // _.include( 'wStringer' );
 }
 
 var _global = _global_;
@@ -137,442 +138,442 @@ function strCount( test )
 // replacer
 // --
 
-function strRemoveBegin( test )
-{
-  var got, expected;
-
-  /* - */
-
-  test.case = 'returns string with removed occurrence from start';
-  var got = _.strRemoveBegin( 'example','exa' );
-  var expected = 'mple';
-  test.identical( got, expected );
-
-  test.case = 'returns original if no occurrence found';
-  var got = _.strRemoveBegin( 'mple','exa' );
-  var expected = 'mple';
-  test.identical( got, expected );
-
-  test.case = 'returns original if occurence is not at the beginning';
-  var got = _.strRemoveBegin( 'example','ple' );
-  var expected = 'example';
-  test.identical( got, expected );
-
-  /* - */
-
-  test.case = 'other';
-
-  /**/
-
-  got = _.strRemoveBegin( '', '' );
-  expected = '';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( '', 'x' );
-  expected = '';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'abc', 'a' );
-  expected = 'bc';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'abc', 'ab' );
-  expected = 'c';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'abc', 'x' );
-  expected = 'abc';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'abc', 'abc' );
-  expected = '';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'abc', '' );
-  expected = 'abc';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'abc', [ 'a', 'b', 'c' ] );
-  expected = 'bc';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'abc', [ 'b', 'c', 'a' ] );
-  expected = 'bc';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'aabbcc', [ 'a', 'b', 'c' ] );
-  expected = 'abbcc';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'abcabc', [ 'a', 'b', 'c' ] );
-  expected = 'bcabc';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'abc', [ '', 'a' ] );
-  expected = 'abc';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'abc', [ 'abc', 'a' ] );
-  expected = '';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( [ 'abc', 'bca', 'cab' ], [ 'a', 'd' ] );
-  expected = [ 'bc', 'bca', 'cab' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( [ 'abc', 'bca', 'cab' ], [ 'a', 'b', 'c' ] );
-  expected = [ 'bc', 'ca', 'ab' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( [ 'abcabc', 'bcabca', 'cabcab' ], [ 'a', 'b', 'c' ] );
-  expected = [ 'bcabc', 'cabca', 'abcab' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( [ 'abcabc', 'bcabca', 'cabcab' ], [ 'b', 'c', 'a' ] );
-  expected = [ 'bcabc', 'cabca', 'abcab' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( [ 'a', 'b', 'c' ], [ 'x' ] );
-  expected = [ 'a', 'b', 'c' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ] );
-  expected = [ '', '', '' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( [ 'a', 'b', 'c' ], [ ] );
-  expected = [ 'a', 'b', 'c' ];
-  test.identical( got, expected );
-
-  /* - */
-
-  test.case = 'RegExp';
-
-  /**/
-
-  got = _.strRemoveBegin( 'example', /ex/ );
-  expected = 'ample';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( [ 'example', 'examplex' ] , /ex\z/ );
-  expected = [ 'example', 'examplex' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( [ 'example', '1example', 'example2', 'exam3ple' ], /\d/ );
-  expected = [ 'example', 'example', 'example2', 'exam3ple' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'example', [ /am/ ] );
-  expected = 'example';
-  test.identical( got, expected );
-
-
-  /**/
-
-  got = _.strRemoveBegin( 'example', [ /ex/, /\w/ ] );
-  expected = 'ample';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'example', [ /\w/, /ex/ ] );
-  expected = 'xample';
-  test.identical( got, expected );
-
-
-  /**/
-
-  got = _.strRemoveBegin( 'example', /[axe]/ );
-  expected = 'xample';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveBegin( 'example', /\w{4}/ );
-  expected = 'ple';
-  test.identical( got, expected );
-
-  /* - */
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'without arguments';
-  test.shouldThrowErrorSync( () => _.strRemoveBegin() );
-
-  test.case = 'extra arguments';
-  test.shouldThrowErrorSync( () => _.strRemoveBegin( 'abcd','a','a' ) );
-
-  test.case = 'invalid type of src argument';
-  test.shouldThrowErrorSync( () => _.strRemoveBegin( 1, '' ) );
-  test.shouldThrowErrorSync( () => _.strRemoveBegin( 1,'2' ) );
-  test.shouldThrowErrorSync( () => _.strRemoveBegin( [ 'str', 1 ], '2' ) );
-  test.shouldThrowErrorSync( () => _.strRemoveBegin( [ 'str', /ex/ ], '2' ) );
-  test.shouldThrowErrorSync( () => _.strRemoveBegin( [ 'str', true ], '2' ) );
-
-  test.case = 'invalid type of begin argument';
-  test.shouldThrowErrorSync( () => _.strRemoveBegin( 'a', 1 ) );
-  test.shouldThrowErrorSync( () => _.strRemoveBegin( 'a', null ) );
-  test.shouldThrowErrorSync( () => _.strRemoveBegin( 'aa', [ ' a', 2 ] ) );
-
-  test.case = 'invalid type of arguments';
-  test.shouldThrowErrorSync( () => _.strRemoveBegin( undefined, undefined ) );
-  test.shouldThrowErrorSync( () => _.strRemoveBegin( null, null ) );
-}
-
+// function strRemoveBegin( test )
+// {
+//   var got, expected;
 //
-
-function strRemoveEnd( test )
-{
-  var got, expected;
-
-  test.case = 'returns string with removed occurrence from end';
-  var got = _.strRemoveEnd( 'example','mple' );
-  var expected = 'exa';
-  test.identical( got, expected );
-
-  test.case = 'returns original if no occurrence found ';
-  var got = _.strRemoveEnd( 'example','' );
-  var expected = 'example';
-  test.identical( got, expected );
-
-  test.case = 'returns original if occurrence is not at the end ';
-  var got = _.strRemoveEnd( 'example','exa' );
-  var expected = 'example';
-  test.identical( got, expected );
-
-  /* - */
-
-  test.case = 'other';
-
-  /**/
-
-  got = _.strRemoveEnd( '', '' );
-  expected = '';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( '', 'x' );
-  expected = '';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'abc', 'c' );
-  expected = 'ab';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'abc', 'bc' );
-  expected = 'a';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'abc', 'x' );
-  expected = 'abc';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'abc', 'abc' );
-  expected = '';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'abc', '' );
-  expected = 'abc';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'abc', [ 'a', 'b', 'c' ] );
-  expected = 'ab';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'abc', [ '', 'a' ] );
-  expected = 'abc';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'abc', [ '', 'c' ] );
-  expected = 'abc';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'abc', [ 'abc', 'a' ] );
-  expected = '';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( [ 'abc', 'bca', 'cab' ], [ 'a', 'd' ] );
-  expected = [ 'abc', 'bc', 'cab' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( [ 'abc', 'bca', 'cab' ], [ 'a', 'b', 'c' ] );
-  expected = [ 'ab', 'bc', 'ca' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( [ 'a', 'b', 'c' ], [ 'x' ] );
-  expected = [ 'a', 'b', 'c' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ] );
-  expected = [ '', '', '' ];
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( [ 'a', 'b', 'c' ], [ ] );
-  expected = [ 'a', 'b', 'c' ];
-  test.identical( got, expected );
-
-  /* - */
-
-  test.case = 'RegExp';
-
-  /**/
-
-  got = _.strRemoveEnd( 'example', /ple/ );
-  expected = 'exam';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'example', /le$/ );
-  expected = 'examp';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'example', /^le/ );
-  expected = 'example';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'example', /\d/ );
-  expected = 'example';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'example', /am/ );
-  expected = 'example';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'example', /[axe]/ );
-  expected = 'exampl';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( 'example', /\w{4}/ );
-  expected = 'exa';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strRemoveEnd( [ 'example', '1example', 'example2', 'exam3ple' ], [ /\d/, /e/, /^3/ ] );
-  expected = [ 'exampl', '1exampl', 'example', 'exam3pl' ];
-  test.identical( got, expected );
-
-  /* - */
-
-  if( !Config.debug )
-  return;
-
-  test.shouldThrowErrorSync( () => _.strRemoveEnd( 1, '' ) );
-  test.shouldThrowErrorSync( () => _.strRemoveEnd( 'a', 1 ) );
-  test.shouldThrowErrorSync( () => _.strRemoveEnd() );
-  test.shouldThrowErrorSync( () => _.strRemoveEnd( undefined, undefined ) );
-  test.shouldThrowErrorSync( () => _.strRemoveEnd( null, null ) );
-
-  test.case = 'invalid arguments count';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strRemoveEnd( 'one','two','three' );
-  });
-
-  test.case = 'no arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strRemoveEnd( );
-  });
-
-  test.case = 'first argument is wrong';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strRemoveEnd( 1,'second' );
-  });
-
-  test.case = 'second argument is wrong';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strRemoveEnd( 'first',2 );
-  });
-
-}
+//   /* - */
+//
+//   test.case = 'returns string with removed occurrence from start';
+//   var got = _.strRemoveBegin( 'example','exa' );
+//   var expected = 'mple';
+//   test.identical( got, expected );
+//
+//   test.case = 'returns original if no occurrence found';
+//   var got = _.strRemoveBegin( 'mple','exa' );
+//   var expected = 'mple';
+//   test.identical( got, expected );
+//
+//   test.case = 'returns original if occurence is not at the beginning';
+//   var got = _.strRemoveBegin( 'example','ple' );
+//   var expected = 'example';
+//   test.identical( got, expected );
+//
+//   /* - */
+//
+//   test.case = 'other';
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( '', '' );
+//   expected = '';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( '', 'x' );
+//   expected = '';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'abc', 'a' );
+//   expected = 'bc';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'abc', 'ab' );
+//   expected = 'c';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'abc', 'x' );
+//   expected = 'abc';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'abc', 'abc' );
+//   expected = '';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'abc', '' );
+//   expected = 'abc';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'abc', [ 'a', 'b', 'c' ] );
+//   expected = 'bc';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'abc', [ 'b', 'c', 'a' ] );
+//   expected = 'bc';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'aabbcc', [ 'a', 'b', 'c' ] );
+//   expected = 'abbcc';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'abcabc', [ 'a', 'b', 'c' ] );
+//   expected = 'bcabc';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'abc', [ '', 'a' ] );
+//   expected = 'abc';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'abc', [ 'abc', 'a' ] );
+//   expected = '';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( [ 'abc', 'bca', 'cab' ], [ 'a', 'd' ] );
+//   expected = [ 'bc', 'bca', 'cab' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( [ 'abc', 'bca', 'cab' ], [ 'a', 'b', 'c' ] );
+//   expected = [ 'bc', 'ca', 'ab' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( [ 'abcabc', 'bcabca', 'cabcab' ], [ 'a', 'b', 'c' ] );
+//   expected = [ 'bcabc', 'cabca', 'abcab' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( [ 'abcabc', 'bcabca', 'cabcab' ], [ 'b', 'c', 'a' ] );
+//   expected = [ 'bcabc', 'cabca', 'abcab' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( [ 'a', 'b', 'c' ], [ 'x' ] );
+//   expected = [ 'a', 'b', 'c' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ] );
+//   expected = [ '', '', '' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( [ 'a', 'b', 'c' ], [ ] );
+//   expected = [ 'a', 'b', 'c' ];
+//   test.identical( got, expected );
+//
+//   /* - */
+//
+//   test.case = 'RegExp';
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'example', /ex/ );
+//   expected = 'ample';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( [ 'example', 'examplex' ] , /ex\z/ );
+//   expected = [ 'example', 'examplex' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( [ 'example', '1example', 'example2', 'exam3ple' ], /\d/ );
+//   expected = [ 'example', 'example', 'example2', 'exam3ple' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'example', [ /am/ ] );
+//   expected = 'example';
+//   test.identical( got, expected );
+//
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'example', [ /ex/, /\w/ ] );
+//   expected = 'ample';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'example', [ /\w/, /ex/ ] );
+//   expected = 'xample';
+//   test.identical( got, expected );
+//
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'example', /[axe]/ );
+//   expected = 'xample';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveBegin( 'example', /\w{4}/ );
+//   expected = 'ple';
+//   test.identical( got, expected );
+//
+//   /* - */
+//
+//   if( !Config.debug )
+//   return;
+//
+//   test.case = 'without arguments';
+//   test.shouldThrowErrorSync( () => _.strRemoveBegin() );
+//
+//   test.case = 'extra arguments';
+//   test.shouldThrowErrorSync( () => _.strRemoveBegin( 'abcd','a','a' ) );
+//
+//   test.case = 'invalid type of src argument';
+//   test.shouldThrowErrorSync( () => _.strRemoveBegin( 1, '' ) );
+//   test.shouldThrowErrorSync( () => _.strRemoveBegin( 1,'2' ) );
+//   test.shouldThrowErrorSync( () => _.strRemoveBegin( [ 'str', 1 ], '2' ) );
+//   test.shouldThrowErrorSync( () => _.strRemoveBegin( [ 'str', /ex/ ], '2' ) );
+//   test.shouldThrowErrorSync( () => _.strRemoveBegin( [ 'str', true ], '2' ) );
+//
+//   test.case = 'invalid type of begin argument';
+//   test.shouldThrowErrorSync( () => _.strRemoveBegin( 'a', 1 ) );
+//   test.shouldThrowErrorSync( () => _.strRemoveBegin( 'a', null ) );
+//   test.shouldThrowErrorSync( () => _.strRemoveBegin( 'aa', [ ' a', 2 ] ) );
+//
+//   test.case = 'invalid type of arguments';
+//   test.shouldThrowErrorSync( () => _.strRemoveBegin( undefined, undefined ) );
+//   test.shouldThrowErrorSync( () => _.strRemoveBegin( null, null ) );
+// }
+//
+// //
+//
+// function strRemoveEnd( test )
+// {
+//   var got, expected;
+//
+//   test.case = 'returns string with removed occurrence from end';
+//   var got = _.strRemoveEnd( 'example','mple' );
+//   var expected = 'exa';
+//   test.identical( got, expected );
+//
+//   test.case = 'returns original if no occurrence found ';
+//   var got = _.strRemoveEnd( 'example','' );
+//   var expected = 'example';
+//   test.identical( got, expected );
+//
+//   test.case = 'returns original if occurrence is not at the end ';
+//   var got = _.strRemoveEnd( 'example','exa' );
+//   var expected = 'example';
+//   test.identical( got, expected );
+//
+//   /* - */
+//
+//   test.case = 'other';
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( '', '' );
+//   expected = '';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( '', 'x' );
+//   expected = '';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'abc', 'c' );
+//   expected = 'ab';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'abc', 'bc' );
+//   expected = 'a';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'abc', 'x' );
+//   expected = 'abc';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'abc', 'abc' );
+//   expected = '';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'abc', '' );
+//   expected = 'abc';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'abc', [ 'a', 'b', 'c' ] );
+//   expected = 'ab';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'abc', [ '', 'a' ] );
+//   expected = 'abc';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'abc', [ '', 'c' ] );
+//   expected = 'abc';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'abc', [ 'abc', 'a' ] );
+//   expected = '';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( [ 'abc', 'bca', 'cab' ], [ 'a', 'd' ] );
+//   expected = [ 'abc', 'bc', 'cab' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( [ 'abc', 'bca', 'cab' ], [ 'a', 'b', 'c' ] );
+//   expected = [ 'ab', 'bc', 'ca' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( [ 'a', 'b', 'c' ], [ 'x' ] );
+//   expected = [ 'a', 'b', 'c' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ] );
+//   expected = [ '', '', '' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( [ 'a', 'b', 'c' ], [ ] );
+//   expected = [ 'a', 'b', 'c' ];
+//   test.identical( got, expected );
+//
+//   /* - */
+//
+//   test.case = 'RegExp';
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'example', /ple/ );
+//   expected = 'exam';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'example', /le$/ );
+//   expected = 'examp';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'example', /^le/ );
+//   expected = 'example';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'example', /\d/ );
+//   expected = 'example';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'example', /am/ );
+//   expected = 'example';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'example', /[axe]/ );
+//   expected = 'exampl';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( 'example', /\w{4}/ );
+//   expected = 'exa';
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   got = _.strRemoveEnd( [ 'example', '1example', 'example2', 'exam3ple' ], [ /\d/, /e/, /^3/ ] );
+//   expected = [ 'exampl', '1exampl', 'example', 'exam3pl' ];
+//   test.identical( got, expected );
+//
+//   /* - */
+//
+//   if( !Config.debug )
+//   return;
+//
+//   test.shouldThrowErrorSync( () => _.strRemoveEnd( 1, '' ) );
+//   test.shouldThrowErrorSync( () => _.strRemoveEnd( 'a', 1 ) );
+//   test.shouldThrowErrorSync( () => _.strRemoveEnd() );
+//   test.shouldThrowErrorSync( () => _.strRemoveEnd( undefined, undefined ) );
+//   test.shouldThrowErrorSync( () => _.strRemoveEnd( null, null ) );
+//
+//   test.case = 'invalid arguments count';
+//   test.shouldThrowErrorSync( function()
+//   {
+//     _.strRemoveEnd( 'one','two','three' );
+//   });
+//
+//   test.case = 'no arguments';
+//   test.shouldThrowErrorSync( function()
+//   {
+//     _.strRemoveEnd( );
+//   });
+//
+//   test.case = 'first argument is wrong';
+//   test.shouldThrowErrorSync( function()
+//   {
+//     _.strRemoveEnd( 1,'second' );
+//   });
+//
+//   test.case = 'second argument is wrong';
+//   test.shouldThrowErrorSync( function()
+//   {
+//     _.strRemoveEnd( 'first',2 );
+//   });
+//
+// }
 
 //
 
@@ -789,371 +790,371 @@ function strRemove( test )
 
 //
 
-function strReplaceBegin( test )
-{
-  /**/
-
-  var got, expected;
-
-  got = _.strReplaceBegin( '', '', '' );
-  expected = '';
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( '', '', 'a' );
-  expected = 'a';
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( 'a', 'a', 'b' );
-  expected = 'b';
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( 'a', 'x', 'b' );
-  expected = 'a';
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( 'abc', 'ab', 'c' );
-  expected = 'cc';
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( 'abc', '', 'c' );
-  expected = 'cabc';
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( [], '', '' );
-  expected = [];
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( [ 'a', 'b', 'c' ], 'a', 'c' );
-  expected = [ 'c', 'b', 'c' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ], 'c' );
-  expected = [ 'c', 'c', 'c' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ] );
-  expected = [ 'x', 'y', 'z' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( [ 'aa', 'bb', 'cc' ], [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ] );
-  expected = [ 'xa', 'yb', 'zc' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( [ 'aa', 'bb', 'cc' ], [ 'y', 'z', 'c' ], [ 'x', 'y', 'z' ] );
-  expected = [ 'aa', 'bb', 'zc' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ], 'c' );
-  expected = [ 'a', 'b', 'c' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( [ 'a', 'ab', 'ac' ], 'a', [ 'x', 'y', 'z' ] );
-  expected = [ 'x', 'xb', 'xc' ];
-  test.identical( got, expected );  /* - */
-
-  /**/
-
-  test.case = 'RegExp';
-
-  /**/
-
-  got = _.strReplaceBegin( 'example', /exa/, 'si' );
-  expected = 'simple';
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( 'example', /ex$/, 'no' );
-  expected = 'example';
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( [ 'example', 'lexical' ], [ /^le/, /ex$/, /\w{3}/ ], [ 'a', 'b', 'si' ]  );
-  expected = [ 'simple', 'axical' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( [ 'example', 'lexical' ], [ /^le/, /ex$/, /\w{3}/ ], 'si' );
-  expected = [ 'simple', 'sixical' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( [ 'example1', '3example', 'exam4ple' ], /\d/, '2' );
-  expected = [ 'example1', '2example', 'exam4ple' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( [ 'example', '1example', 'example2', 'exam3ple' ], [ /\d/, /e/, /^3/ ], [ '3', '2', '1' ]  );
-  expected = [ '2xample', '3example', '2xample2', '2xam3ple' ];
-  test.identical( got, expected );
-
-  /**/
-
-  test.case = 'Null';
-
-  /**/
-
-  got = _.strReplaceBegin( null, /exa/, 'si' );
-  expected = [];
-  test.identical( got, expected );
-
-  got = _.strReplaceBegin( 'example', null, 'no' );
-  expected = 'example';
-  test.identical( got, expected );
-
-  /* - */
-
-  if( !Config.debug )
-  return;
-
-  test.shouldThrowErrorSync( () => _.strReplaceBegin() );
-  test.shouldThrowErrorSync( () => _.strReplaceBegin( 1, '', '' ) );
-  test.shouldThrowErrorSync( () => _.strReplaceBegin( '' ) );
-  test.shouldThrowErrorSync( () => _.strReplaceBegin( 1, '', '', '' ) );
-  test.shouldThrowErrorSync( () => _.strReplaceBegin( 'a', 1, '' ) );
-  test.shouldThrowErrorSync( () => _.strReplaceBegin( 'a', 'a', 1 ) );
-  test.shouldThrowErrorSync( () => _.strReplaceBegin( 'a', [ 'x', 1 ], 'a' ) );
-  test.shouldThrowErrorSync( () => _.strReplaceBegin( 'a', [ 'b', 'a' ], [ 'x', 1 ] ) );
-  test.shouldThrowErrorSync( () => _.strReplaceBegin( 'a', [ 'a' ], [ 'x', '1' ] ) );
-  test.shouldThrowErrorSync( () => _.strReplaceBegin( 'string', 'begin', null ) );
-  test.shouldThrowErrorSync( () => _.strReplaceBegin( 'string', 'begin', undefined ) );
-  test.shouldThrowErrorSync( () => _.strReplaceBegin( 'string', undefined, 'ins' ) );
-  test.shouldThrowErrorSync( () => _.strReplaceBegin( undefined, 'begin', 'ins' ) );
-}
-
+// function strReplaceBegin( test )
+// {
+//   /**/
 //
-
-function strReplaceEnd( test )
-{
-  /**/
-
-  var got, expected;
-
-  got = _.strReplaceEnd( '', '', '' );
-  expected = '';
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( '', '', 'a' );
-  expected = 'a';
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( 'a', 'a', 'b' );
-  expected = 'b';
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( 'a', 'x', 'b' );
-  expected = 'a';
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( 'abc', 'bc', 'c' );
-  expected = 'ac';
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( 'abc', '', 'c' );
-  expected = 'abcc';
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( [], '', '' );
-  expected = [];
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( [ 'a', 'b', 'c' ], 'a', 'c' );
-  expected = [ 'c', 'b', 'c' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ], 'c' );
-  expected = [ 'c', 'c', 'c' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ] );
-  expected = [ 'x', 'y', 'z' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( [ 'aa', 'bb', 'cc' ], [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ] );
-  expected = [ 'ax', 'by', 'cz' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( [ 'aa', 'bb', 'cc' ], [ 'y', 'z', 'c' ], [ 'x', 'y', 'z' ] );
-  expected = [ 'aa', 'bb', 'cz' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ], 'c' );
-  expected = [ 'a', 'b', 'c' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( [ 'a', 'ab', 'ca' ], 'a', [ 'x', 'y', 'z' ] );
-  expected = [ 'x', 'ab', 'cx' ];
-  test.identical( got, expected );
-
-  /**/
-
-  test.case = 'RegExp';
-
-  /**/
-
-  got = _.strReplaceEnd( 'example', /ple/, 'en' );
-  expected = 'examen';
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( 'example', /^le/, 'no' );
-  expected = 'example';
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( [ 'example', 'lexical' ], [ /^le/, /ex$/, /\w{3}/ ], [ 'a', 'b', 'en' ]  );
-  expected = [ 'examen', 'lexien' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( [ 'example', 'lexical' ], [ /al$/, /ex$/, /\w{3}/ ], 'en' );
-  expected = [ 'examen', 'lexien' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( [ 'example1', '3example', 'exam4ple' ], /\d/, '2' );
-  expected = [ 'example2', '3example', 'exam4ple' ];
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( [ 'example', '1example', 'example2', 'exam2ple' ], [ /\d/, /e/, /^3/ ], [ '3', '2', '1' ]  );
-  expected = [ 'exampl2', '1exampl2', 'example3', 'exam2pl2' ];
-  test.identical( got, expected );
-
-  /**/
-
-  test.case = 'Null';
-
-  /**/
-
-  got = _.strReplaceEnd( null, /le/, 'si' );
-  expected = [];
-  test.identical( got, expected );
-
-  got = _.strReplaceEnd( 'example', null, 'no' );
-  expected = 'example';
-  test.identical( got, expected );
-
-  /* - */
-
-  if( !Config.debug )
-  return;
-
-  test.shouldThrowErrorSync( () => _.strReplaceEnd() );
-  test.shouldThrowErrorSync( () => _.strReplaceEnd( 1, '', '' ) );
-  test.shouldThrowErrorSync( () => _.strReplaceEnd( '' ) );
-  test.shouldThrowErrorSync( () => _.strReplaceEnd( 1, '', '', '' ) );
-  test.shouldThrowErrorSync( () => _.strReplaceEnd( 'a', 1, '' ) );
-  test.shouldThrowErrorSync( () => _.strReplaceEnd( 'a', 'a', 1 ) );
-  test.shouldThrowErrorSync( () => _.strReplaceEnd( 'a', [ 'x', 1 ], 'a' ) );
-  test.shouldThrowErrorSync( () => _.strReplaceEnd( 'a', [ 'a' ], [ 1 ] ) );
-  test.shouldThrowErrorSync( () => _.strReplaceEnd( 'a', [ 'b', 'c' ], [ 'c' ] ) );
-  test.shouldThrowErrorSync( () => _.strReplaceEnd( 'string', 'end', null ) );
-  test.shouldThrowErrorSync( () => _.strReplaceEnd( 'string', 'end', undefined ) );
-  test.shouldThrowErrorSync( () => _.strReplaceEnd( 'string', undefined, 'ins' ) );
-  test.shouldThrowErrorSync( () => _.strReplaceEnd( undefined, 'end', 'ins' ) );
-}
-
+//   var got, expected;
 //
-
-function strReplace( test )
-{
-  /**/
-
-  var got, expected;
-
-  got = _.strReplace( '', '', '' );
-  expected = '';
-  test.identical( got, expected );
-
-  got = _.strReplace( '', '', 'a' );
-  expected = 'a';
-  test.identical( got, expected );
-
-  got = _.strReplace( 'a', 'a', 'b' );
-  expected = 'b';
-  test.identical( got, expected );
-
-  got = _.strReplace( 'a', 'x', 'b' );
-  expected = 'a';
-  test.identical( got, expected );
-
-  got = _.strReplace( 'bcabcabc', 'bc', 'c' );
-  expected = 'cabcabc';
-  test.identical( got, expected );
-
-  got = _.strReplace( [], '', '' );
-  expected = [];
-  test.identical( got, expected );
-
-  got = _.strReplace( [ 'aa', 'ba', 'c' ], 'a', 'c' );
-  expected = [ 'ca', 'bc', 'c' ];
-  test.identical( got, expected );
-
-  got = _.strReplace( [ 'abc', 'cab', 'cba' ], [ 'a', 'b', 'c' ], [ 'c', 'c', 'c' ] );
-  expected = [ 'ccc', 'ccc', 'ccc' ];
-  test.identical( got, expected );
-
-  got = _.strReplace( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ] );
-  expected = [ 'x', 'y', 'z' ];
-  test.identical( got, expected );
-
-  got = _.strReplace( [ 'ab', 'bc', 'ca' ], [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ] );
-  expected = [ 'xy', 'yz', 'zx' ];
-  test.identical( got, expected );
-
-  got = _.strReplace( [ 'aa', 'bb', 'cc' ], [ 'y', 'z', 'c' ], [ 'x', 'y', 'z' ] );
-  expected = [ 'aa', 'bb', 'zc' ];
-  test.identical( got, expected );
-
-  got = _.strReplace( [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ], [ '1', '2', '3' ] );
-  expected = [ 'a', 'b', 'c' ];
-  test.identical( got, expected );
-
-  got = _.strReplace( [ 'a', 'bab', 'ca' ], 'a', 'x' );
-  expected = [ 'x', 'bxb', 'cx' ];
-  test.identical( got, expected );
-
-  /**/
-
-  test.case = 'RegExp';
-
-  /**/
-
-  got = _.strReplace( 'example', /ple/, 'en' );
-  expected = 'examen';
-  test.identical( got, expected );
-
-  got = _.strReplace( 'example', /^le/, 'no' );
-  expected = 'example';
-  test.identical( got, expected );
-
-  got = _.strReplace( [ 'example', 'lex11ical' ], [ /^le/, /ex$/, /\d{2}/ ], [ 'a', 'b', 'en' ]  );
-  expected = [ 'example', 'axenical' ];
-  test.identical( got, expected );
-
-  got = _.strReplace( [ 'example', 'lexical' ], [ /al$/, /^ex/ ], [ '1', '2' ] );
-  expected = [ '2ample', 'lexic1' ];
-  test.identical( got, expected );
-
-  got = _.strReplace( [ 'example1', '3example', 'exam4ple' ], /\d/, '2' );
-  expected = [ 'example2', '2example', 'exam2ple' ];
-  test.identical( got, expected );
-
-  got = _.strReplace( [ '3example', '1example', 'example2', 'exam2ple' ], [ /\d/, /e/, /^3/ ], [ '3', '2', '1' ]  );
-  expected = [ '12xample', '12xample', '2xample3', '2xam3ple' ];
-  test.identical( got, expected );
-
-  /* - */
-
-  if( !Config.debug )
-  return;
-
-  test.shouldThrowErrorSync( () => _.strReplace() );
-  test.shouldThrowErrorSync( () => _.strReplace( 1, '', '' ) );
-  test.shouldThrowErrorSync( () => _.strReplace( '' ) );
-  test.shouldThrowErrorSync( () => _.strReplace( 1, '', '', '' ) );
-  test.shouldThrowErrorSync( () => _.strReplace( 'a', 1, '' ) );
-  test.shouldThrowErrorSync( () => _.strReplace( 'a', 'a', 1 ) );
-  test.shouldThrowErrorSync( () => _.strReplace( 'a', [ 'x', 1 ], 'a' ) );
-  test.shouldThrowErrorSync( () => _.strReplace( 'a', [ 'a' ], [ 1 ] ) );
-  test.shouldThrowErrorSync( () => _.strReplace( 'a', [ 'b', 'c' ], [ 'c' ] ) );
-  test.shouldThrowErrorSync( () => _.strReplace( 'string', 'sub', null ) );
-  test.shouldThrowErrorSync( () => _.strReplace( 'string', 'sub', undefined ) );
-  test.shouldThrowErrorSync( () => _.strReplace( 'string', null, 'ins' ) );
-  test.shouldThrowErrorSync( () => _.strReplace( 'string', undefined, 'ins' ) );
-  test.shouldThrowErrorSync( () => _.strReplace( null, 'sub', 'ins' ) );
-  test.shouldThrowErrorSync( () => _.strReplace( undefined, 'sub', 'ins' ) );
-}
+//   got = _.strReplaceBegin( '', '', '' );
+//   expected = '';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( '', '', 'a' );
+//   expected = 'a';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( 'a', 'a', 'b' );
+//   expected = 'b';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( 'a', 'x', 'b' );
+//   expected = 'a';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( 'abc', 'ab', 'c' );
+//   expected = 'cc';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( 'abc', '', 'c' );
+//   expected = 'cabc';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( [], '', '' );
+//   expected = [];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( [ 'a', 'b', 'c' ], 'a', 'c' );
+//   expected = [ 'c', 'b', 'c' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ], 'c' );
+//   expected = [ 'c', 'c', 'c' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ] );
+//   expected = [ 'x', 'y', 'z' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( [ 'aa', 'bb', 'cc' ], [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ] );
+//   expected = [ 'xa', 'yb', 'zc' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( [ 'aa', 'bb', 'cc' ], [ 'y', 'z', 'c' ], [ 'x', 'y', 'z' ] );
+//   expected = [ 'aa', 'bb', 'zc' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ], 'c' );
+//   expected = [ 'a', 'b', 'c' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( [ 'a', 'ab', 'ac' ], 'a', [ 'x', 'y', 'z' ] );
+//   expected = [ 'x', 'xb', 'xc' ];
+//   test.identical( got, expected );  /* - */
+//
+//   /**/
+//
+//   test.case = 'RegExp';
+//
+//   /**/
+//
+//   got = _.strReplaceBegin( 'example', /exa/, 'si' );
+//   expected = 'simple';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( 'example', /ex$/, 'no' );
+//   expected = 'example';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( [ 'example', 'lexical' ], [ /^le/, /ex$/, /\w{3}/ ], [ 'a', 'b', 'si' ]  );
+//   expected = [ 'simple', 'axical' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( [ 'example', 'lexical' ], [ /^le/, /ex$/, /\w{3}/ ], 'si' );
+//   expected = [ 'simple', 'sixical' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( [ 'example1', '3example', 'exam4ple' ], /\d/, '2' );
+//   expected = [ 'example1', '2example', 'exam4ple' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( [ 'example', '1example', 'example2', 'exam3ple' ], [ /\d/, /e/, /^3/ ], [ '3', '2', '1' ]  );
+//   expected = [ '2xample', '3example', '2xample2', '2xam3ple' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   test.case = 'Null';
+//
+//   /**/
+//
+//   got = _.strReplaceBegin( null, /exa/, 'si' );
+//   expected = [];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceBegin( 'example', null, 'no' );
+//   expected = 'example';
+//   test.identical( got, expected );
+//
+//   /* - */
+//
+//   if( !Config.debug )
+//   return;
+//
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin() );
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin( 1, '', '' ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin( '' ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin( 1, '', '', '' ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin( 'a', 1, '' ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin( 'a', 'a', 1 ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin( 'a', [ 'x', 1 ], 'a' ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin( 'a', [ 'b', 'a' ], [ 'x', 1 ] ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin( 'a', [ 'a' ], [ 'x', '1' ] ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin( 'string', 'begin', null ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin( 'string', 'begin', undefined ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin( 'string', undefined, 'ins' ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceBegin( undefined, 'begin', 'ins' ) );
+// }
+//
+// //
+//
+// function strReplaceEnd( test )
+// {
+//   /**/
+//
+//   var got, expected;
+//
+//   got = _.strReplaceEnd( '', '', '' );
+//   expected = '';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( '', '', 'a' );
+//   expected = 'a';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( 'a', 'a', 'b' );
+//   expected = 'b';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( 'a', 'x', 'b' );
+//   expected = 'a';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( 'abc', 'bc', 'c' );
+//   expected = 'ac';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( 'abc', '', 'c' );
+//   expected = 'abcc';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( [], '', '' );
+//   expected = [];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( [ 'a', 'b', 'c' ], 'a', 'c' );
+//   expected = [ 'c', 'b', 'c' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ], 'c' );
+//   expected = [ 'c', 'c', 'c' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ] );
+//   expected = [ 'x', 'y', 'z' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( [ 'aa', 'bb', 'cc' ], [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ] );
+//   expected = [ 'ax', 'by', 'cz' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( [ 'aa', 'bb', 'cc' ], [ 'y', 'z', 'c' ], [ 'x', 'y', 'z' ] );
+//   expected = [ 'aa', 'bb', 'cz' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ], 'c' );
+//   expected = [ 'a', 'b', 'c' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( [ 'a', 'ab', 'ca' ], 'a', [ 'x', 'y', 'z' ] );
+//   expected = [ 'x', 'ab', 'cx' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   test.case = 'RegExp';
+//
+//   /**/
+//
+//   got = _.strReplaceEnd( 'example', /ple/, 'en' );
+//   expected = 'examen';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( 'example', /^le/, 'no' );
+//   expected = 'example';
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( [ 'example', 'lexical' ], [ /^le/, /ex$/, /\w{3}/ ], [ 'a', 'b', 'en' ]  );
+//   expected = [ 'examen', 'lexien' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( [ 'example', 'lexical' ], [ /al$/, /ex$/, /\w{3}/ ], 'en' );
+//   expected = [ 'examen', 'lexien' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( [ 'example1', '3example', 'exam4ple' ], /\d/, '2' );
+//   expected = [ 'example2', '3example', 'exam4ple' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( [ 'example', '1example', 'example2', 'exam2ple' ], [ /\d/, /e/, /^3/ ], [ '3', '2', '1' ]  );
+//   expected = [ 'exampl2', '1exampl2', 'example3', 'exam2pl2' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   test.case = 'Null';
+//
+//   /**/
+//
+//   got = _.strReplaceEnd( null, /le/, 'si' );
+//   expected = [];
+//   test.identical( got, expected );
+//
+//   got = _.strReplaceEnd( 'example', null, 'no' );
+//   expected = 'example';
+//   test.identical( got, expected );
+//
+//   /* - */
+//
+//   if( !Config.debug )
+//   return;
+//
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd() );
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd( 1, '', '' ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd( '' ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd( 1, '', '', '' ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd( 'a', 1, '' ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd( 'a', 'a', 1 ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd( 'a', [ 'x', 1 ], 'a' ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd( 'a', [ 'a' ], [ 1 ] ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd( 'a', [ 'b', 'c' ], [ 'c' ] ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd( 'string', 'end', null ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd( 'string', 'end', undefined ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd( 'string', undefined, 'ins' ) );
+//   test.shouldThrowErrorSync( () => _.strReplaceEnd( undefined, 'end', 'ins' ) );
+// }
+//
+// //
+//
+// function strReplace( test )
+// {
+//   /**/
+//
+//   var got, expected;
+//
+//   got = _.strReplace( '', '', '' );
+//   expected = '';
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( '', '', 'a' );
+//   expected = 'a';
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( 'a', 'a', 'b' );
+//   expected = 'b';
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( 'a', 'x', 'b' );
+//   expected = 'a';
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( 'bcabcabc', 'bc', 'c' );
+//   expected = 'cabcabc';
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( [], '', '' );
+//   expected = [];
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( [ 'aa', 'ba', 'c' ], 'a', 'c' );
+//   expected = [ 'ca', 'bc', 'c' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( [ 'abc', 'cab', 'cba' ], [ 'a', 'b', 'c' ], [ 'c', 'c', 'c' ] );
+//   expected = [ 'ccc', 'ccc', 'ccc' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( [ 'a', 'b', 'c' ], [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ] );
+//   expected = [ 'x', 'y', 'z' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( [ 'ab', 'bc', 'ca' ], [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ] );
+//   expected = [ 'xy', 'yz', 'zx' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( [ 'aa', 'bb', 'cc' ], [ 'y', 'z', 'c' ], [ 'x', 'y', 'z' ] );
+//   expected = [ 'aa', 'bb', 'zc' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( [ 'a', 'b', 'c' ], [ 'x', 'y', 'z' ], [ '1', '2', '3' ] );
+//   expected = [ 'a', 'b', 'c' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( [ 'a', 'bab', 'ca' ], 'a', 'x' );
+//   expected = [ 'x', 'bxb', 'cx' ];
+//   test.identical( got, expected );
+//
+//   /**/
+//
+//   test.case = 'RegExp';
+//
+//   /**/
+//
+//   got = _.strReplace( 'example', /ple/, 'en' );
+//   expected = 'examen';
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( 'example', /^le/, 'no' );
+//   expected = 'example';
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( [ 'example', 'lex11ical' ], [ /^le/, /ex$/, /\d{2}/ ], [ 'a', 'b', 'en' ]  );
+//   expected = [ 'example', 'axenical' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( [ 'example', 'lexical' ], [ /al$/, /^ex/ ], [ '1', '2' ] );
+//   expected = [ '2ample', 'lexic1' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( [ 'example1', '3example', 'exam4ple' ], /\d/, '2' );
+//   expected = [ 'example2', '2example', 'exam2ple' ];
+//   test.identical( got, expected );
+//
+//   got = _.strReplace( [ '3example', '1example', 'example2', 'exam2ple' ], [ /\d/, /e/, /^3/ ], [ '3', '2', '1' ]  );
+//   expected = [ '12xample', '12xample', '2xample3', '2xam3ple' ];
+//   test.identical( got, expected );
+//
+//   /* - */
+//
+//   if( !Config.debug )
+//   return;
+//
+//   test.shouldThrowErrorSync( () => _.strReplace() );
+//   test.shouldThrowErrorSync( () => _.strReplace( 1, '', '' ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( '' ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( 1, '', '', '' ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( 'a', 1, '' ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( 'a', 'a', 1 ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( 'a', [ 'x', 1 ], 'a' ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( 'a', [ 'a' ], [ 1 ] ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( 'a', [ 'b', 'c' ], [ 'c' ] ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( 'string', 'sub', null ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( 'string', 'sub', undefined ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( 'string', null, 'ins' ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( 'string', undefined, 'ins' ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( null, 'sub', 'ins' ) );
+//   test.shouldThrowErrorSync( () => _.strReplace( undefined, 'sub', 'ins' ) );
+// }
 
 //
 
@@ -1637,33 +1638,145 @@ function strCommonRight( test )
 
 function strRandom( test )
 {
-
-  test.case = 'trivial';
-  var got = _.strRandom( 5 );
-  test.identical( got.length, 5 );
-  test.is( _.strIs( got ) );
-
   test.case = 'empty';
   var got = _.strRandom( 0 );
   test.identical( got, '' );
 
+  test.case = 'o - number > 0';
+  var got = _.strRandom( 4 );
+  test.identical( got.length, 4 );
+  test.is( _.strIs( got ) );
+  test.is( _.strHas( _.strAlphabetFromRange( [ 'a', 'z' ] ), got[ 0 ] ) );
+  test.is( _.strHas( _.strAlphabetFromRange( [ 'a', 'z' ] ), got[ 1 ] ) );
+  test.is( _.strHas( _.strAlphabetFromRange( [ 'a', 'z' ] ), got[ 2 ] ) );
+  test.is( _.strHas( _.strAlphabetFromRange( [ 'a', 'z' ] ), got[ 3 ] ) );
+
   test.case = 'range';
   for( let i = 0 ; i < 10 ; i++ )
   {
-    var got = _.strRandom([ 0, 2 ]);
-    test.ge( got.length, 0 );
-    test.lt( got.length, 2 );
+    var got = _.strRandom( [ 1, 3 ] );
+    test.ge( got.length, 1 );
+    test.lt( got.length, 3 );
+    test.is( _.strHas( _.strAlphabetFromRange( [ 'a', 'z' ] ), got[ 0 ] ) );
   }
 
   test.case = 'options';
   for( let i = 0 ; i < 5 ; i++ )
   {
-    var got = _.strRandom({ length : [ 0, 5 ], alphabet : _.strAlphabetFromRange([ 33, 130 ]) });
-    test.ge( got.length, 0 );
+    var got = _.strRandom({ length : [ 1, 5 ], alphabet : _.strAlphabetFromRange( [ 33, 130 ] ) });
+    test.ge( got.length, 1 );
     test.lt( got.length, 5 );
-    console.log( got );
+    test.is( _.strHas( _.strAlphabetFromRange( [ 33, 130 ] ), got[ 0 ] ) );
   }
 
+  test.case = 'set with single symbol';
+  var got = _.strRandom( { length : 2, alphabet : 'aaa' } );
+  test.identical( got, 'aa' );
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strRandom() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strRandom( 1, 'extra' ) );
+
+  test.case = 'length is not a range, not a number';
+  test.shouldThrowErrorSync( () => _.strRandom( [ 1, 2, 3 ] ) );
+  test.shouldThrowErrorSync( () => _.strRandom( { length : [ 1, 2, 3 ] } ) );
+
+  test.case = 'unnacessary fields in options map';
+  test.shouldThrowErrorSync( () => _.strRandom( { length : [ 1, 2, 3 ], unnacessary : 1 } ) );
+}
+
+//
+
+function strAlphabetFromRange( test )
+{
+  test.case = 'single character';
+  var got = _.strAlphabetFromRange( [ 'a', 'b' ] );
+  var exp = 'a';
+  test.identical( got, exp );
+
+  test.case = 'a few character';
+  var got = _.strAlphabetFromRange( [ 'b', 'f' ] );
+  var exp = 'bcde';
+  test.identical( got, exp );
+
+  test.case = 'single character';
+  var got = _.strAlphabetFromRange( [ 'abc', 'bcd' ] );
+  var exp = 'a';
+  test.identical( got, exp );
+
+  test.case = 'a few character';
+  var got = _.strAlphabetFromRange( [ 'bcd', 'fgh' ] );
+  var exp = 'bcde';
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'single character';
+  var got = _.strAlphabetFromRange( [ 99, 100 ] );
+  var exp = 'c';
+  test.identical( got, exp );
+
+  test.case = 'a few character';
+  var got = _.strAlphabetFromRange( [ 100, 104 ] );
+  var exp = 'defg';
+  test.identical( got, exp );
+
+  // test.case = 'single character';
+  // var got = _.strAlphabetFromRange( [ 100, 99 ] );
+  // var exp = 'd';
+  // test.identical( got, exp );
+  //
+  // test.case = 'a few character';
+  // var got = _.strAlphabetFromRange( [ 104, 100 ] );
+  // var exp = 'hgfe';
+  // test.identical( got, exp );
+
+  /* */
+
+  test.case = 'single character';
+  var got = _.strAlphabetFromRange( [ 'c', 100 ] );
+  var exp = 'c';
+  test.identical( got, exp );
+
+  test.case = 'a few character';
+  var got = _.strAlphabetFromRange( [ 'd', 104 ] );
+  var exp = 'defg';
+  test.identical( got, exp );
+
+  test.case = 'single character';
+  var got = _.strAlphabetFromRange( [ 99, 'd' ] );
+  var exp = 'c';
+  test.identical( got, exp );
+
+  test.case = 'a few character';
+  var got = _.strAlphabetFromRange( [ 100, 'h' ] );
+  var exp = 'defg';
+  test.identical( got, exp );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strAlphabetFromRange() );
+
+  test.case = 'wrong type of range';
+  test.shouldThrowErrorSync( () => _.strAlphabetFromRange( 'ab' ) );
+
+  test.case = 'wrong length of range';
+  test.shouldThrowErrorSync( () => _.strAlphabetFromRange( [] ) );
+  test.shouldThrowErrorSync( () => _.strAlphabetFromRange( [ 'a' ] ) );
+  test.shouldThrowErrorSync( () => _.strAlphabetFromRange( [ 'a', 'b', 'c' ] ) );
+
+  test.case = 'wrong type of range elements';
+  test.shouldThrowErrorSync( () => _.strAlphabetFromRange( [ { a : 'a' }, 67 ] ) );
+  test.shouldThrowErrorSync( () => _.strAlphabetFromRange( [ [ 'a' ], 67 ] ) );
 }
 
 //--
@@ -6203,7 +6316,7 @@ function strSplit( test )
     preservingQuoting : 0,
     inliningQuoting : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:', ' ', '', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6220,7 +6333,7 @@ function strSplit( test )
     preservingQuoting : 1,
     inliningQuoting : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:', '" "', '', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6237,7 +6350,7 @@ function strSplit( test )
     preservingQuoting : 0,
     inliningQuoting : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter: ', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6254,7 +6367,7 @@ function strSplit( test )
     preservingQuoting : 1,
     inliningQuoting : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6269,7 +6382,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
@@ -6284,7 +6397,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6299,7 +6412,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
@@ -6314,7 +6427,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6329,7 +6442,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
@@ -6344,7 +6457,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6360,7 +6473,7 @@ function strSplit( test )
     preservingDelimeters : 1,
     preservingQuoting : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '/', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
@@ -6375,7 +6488,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check ', '', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
@@ -6390,7 +6503,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
@@ -6405,7 +6518,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '/', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
@@ -6420,7 +6533,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
@@ -6435,7 +6548,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '/', '', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
@@ -6450,7 +6563,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
@@ -6465,7 +6578,7 @@ function strSplit( test )
     preservingEmpty : 0,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '/', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
@@ -6480,7 +6593,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 0,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
@@ -6495,7 +6608,7 @@ function strSplit( test )
     preservingEmpty : 1,
     preservingDelimeters : 1,
     delimeter : [ ' > ', ' < ', '/' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ 'Test check', '/', '', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
@@ -6522,7 +6635,7 @@ function strSplit( test )
     preservingQuoting : 1,
     inliningQuoting : 1,
     delimeter : [ '\n' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ '', '= Org', '', '- Q: "Where?"', '- A1: "Here."', '', '- A2: "There."', '' ];
@@ -6539,7 +6652,7 @@ function strSplit( test )
     preservingQuoting : 1,
     inliningQuoting : 0,
     delimeter : [ '\n' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ '', '= Org', '', '- Q:', '"Where?"', '', '- A1:', '"Here."', '', '', '- A2:', '"There."', '', '' ];
@@ -6556,7 +6669,7 @@ function strSplit( test )
     preservingQuoting : 0,
     inliningQuoting : 1,
     delimeter : [ '\n' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ '', '= Org', '', '- Q: Where?', '- A1: Here.', '', '- A2: There.', '' ];
@@ -6573,7 +6686,7 @@ function strSplit( test )
     preservingQuoting : 0,
     inliningQuoting : 0,
     delimeter : [ '\n' ],
-    /*ttt*/src,
+    src,
   }
   var got = _.strSplit( o );
   var expected = [ '', '= Org', '', '- Q:', 'Where?', '', '- A1:', 'Here.', '', '', '- A2:', 'There.', '', '' ];
@@ -6954,157 +7067,401 @@ function strSplitCamel( test )
 // extractor
 //--
 
-function strSub( test )
+function strOnlySingle( test )
 {
-
-  test.case = 'simple string - get all';
-  var got = _.strSub( 'Hello', [ 0, 5 ] );
-  var expected = 'Hello';
+  test.case = 'range - number, first symbol';
+  var src = 'a\nb\nc';
+  var got = _.strOnlySingle( src, 0 );
+  var expected = 'a';
   test.identical( got, expected );
 
-  test.case = 'simple string - range bigger than length';
-  var got = _.strSub( 'Hello', [ 0, 8 ] );
-  var expected = 'Hello';
+  test.case = 'range - number';
+  var src = 'a\nb\nc';
+  var got = _.strOnlySingle( src, 1 );
+  var expected = '\n';
   test.identical( got, expected );
 
-  test.case = 'simple string - get subString';
-  var got = _.strSub( 'Hello', [ 0, 4 ] );
-  var expected = 'Hell';
+  test.case = 'range - number, last symbol';
+  var src = 'a\nb\nc';
+  var got = _.strOnlySingle( src, 4 );
+  var expected = 'c';
   test.identical( got, expected );
 
-  test.case = 'simple string - get end of string';
-  var got = _.strSub( 'Hello', [ 3, 5 ] );
-  var expected = 'lo';
-  test.identical( got, expected );
-
-  test.case = 'simple string - range reversed';
-  var got = _.strSub( 'Hello', [ 4, 0 ] );
-  var expected = 'Hell';
-  test.identical( got, expected );
-
-  test.case = 'simple string - range in the middle of the string';
-  var got = _.strSub( 'Hello', [ 2, 3 ] );
-  var expected = 'l';
-  test.identical( got, expected );
-
-  test.case = 'empty string';
-  var got = _.strSub( '', [ 2, 3 ] );
+  test.case = 'range - number bigger then srcStr.length';
+  var src = 'a\nb\nc';
+  var got = _.strOnlySingle( src, 6 );
   var expected = '';
   test.identical( got, expected );
 
-  test.case = 'Input array';
-  var got = _.strSub( [ 'Hello', 'World'], [ 3, 4 ] );
-  var expected = [ 'l', 'l' ];
+  test.case = 'range - negative number, last symbol';
+  var src = 'a\nb\nc';
+  var got = _.strOnlySingle( src, -1 );
+  var expected = 'c';
   test.identical( got, expected );
 
+  test.case = 'range - negative number, first symbol';
+  var src = 'a\nb\nc';
+  var got = _.strOnlySingle( src, -5 );
+  var expected = 'a';
+  test.identical( got, expected );
 
-  /**/
+  test.case = 'range - negative number, absolute value bigger then srcStr.length';
+  var src = 'a\nb\nc';
+  var got = _.strOnlySingle( src, -7 );
+  var expected = '';
+  test.identical( got, expected );
 
-  if( !Config.debug )
-  return;
+  /* */
 
-  test.case = 'no arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub();
-  });
+  test.case = 'srcStr - empty string';
+  var got = _.strOnlySingle( '', [ 2, 3 ] );
+  var expected = '';
+  test.identical( got, expected );
 
-  test.case = 'Too many arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( '1', '2', '3' );
-  });
+  test.case = 'srcStr, range[ 0 ] === range[ 1 ]';
+  var got = _.strOnlySingle( 'Hello', [ 1, 1 ] );
+  var expected = '';
+  test.identical( got, expected );
 
-  test.case = 'Too many ranges';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( 'Hello world', [ 0, 1 ], [ 2, 3 ] );
-  });
+  test.case = 'srcStr, get all';
+  var got = _.strOnlySingle( 'Hello', [ 0, 5 ] );
+  var expected = 'Hello';
+  test.identical( got, expected );
 
-  test.case = 'Not enough arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( '1' );
-  });
+  test.case = 'srcStr, range bigger than length';
+  var got = _.strOnlySingle( 'Hello', [ 0, 8 ] );
+  var expected = 'Hello';
+  test.identical( got, expected );
 
-  test.case = 'invalid argument type';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( 123, [ 0, 1 ] );
-  });
+  test.case = 'srcStr, get subString';
+  var got = _.strOnlySingle( 'Hello', [ 2, 3 ] );
+  var expected = 'l';
+  test.identical( got, expected );
 
-  test.case = 'null argument';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( null, [ 0, 1 ] );
-  });
+  test.case = 'srcStr, get end of string';
+  var got = _.strOnlySingle( 'Hello', [ 3, 5 ] );
+  var expected = 'lo';
+  test.identical( got, expected );
 
-  test.case = 'NaN argument';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( NaN, [ 0, 1 ] );
-  });
+  test.case = 'srcStr, range reversed';
+  var got = _.strOnlySingle( 'Hello', [ 4, 0 ] );
+  var expected = 'Hell';
+  test.identical( got, expected );
 
-  test.case = 'Regexp argument';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( /a?$/, [ 0, 1 ] );
-  });
+  /* */
 
-  test.case = 'invalid argument range';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( 'hi ', 123 );
-  });
+  test.case = 'srcStr, range[ 0 ] === range[ 1 ], range[ 0 ] < 0';
+  var got = _.strOnlySingle( 'Hello', [ -2, -2 ] );
+  var expected = '';
+  test.identical( got, expected );
 
-  test.case = 'null range';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( 'good morning', null );
-  });
+  test.case = 'srcStr, get all, range[ 0 ] < 0';
+  var got = _.strOnlySingle( 'Hello', [ -5, 5 ] );
+  var expected = 'Hello';
+  test.identical( got, expected );
 
-  test.case = 'NaN range';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( 'good afternoon', NaN );
-  });
+  test.case = 'srcStr, range bigger than length, range[ 0 ] < 0';
+  var got = _.strOnlySingle( 'Hello', [ -7, 5 ] );
+  var expected = 'Hello';
+  test.identical( got, expected );
 
-  test.case = 'Regexp range';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( 'good night', /a?$/ );
-  });
+  test.case = 'srcStr, get subString, range[ 0 ] and range[ 1 ] < 0';
+  var got = _.strOnlySingle( 'Hello', [ -3, -2 ] );
+  var expected = 'l';
+  test.identical( got, expected );
 
-  test.case = 'Array with wrong arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( [ null, NaN, 3, /a?$/ ], [ 0, 1 ] );
-  });
+  test.case = 'srcStr, get start of string, range[ 0 ] and range[ 1 ] < 0';
+  var got = _.strOnlySingle( 'Hello', [ -5, -4 ] );
+  var expected = 'H';
+  test.identical( got, expected );
 
-  test.case = 'Range array with wrong arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( [ 'Hello', 'world' ], [ null, NaN ] );
-  });
+  test.case = 'srcStr, range reversed, range[ 0 ] and range[ 1 ] < 0';
+  var got = _.strOnlySingle( 'Hello', [ -2, -3 ] );
+  var expected = 'l';
+  test.identical( got, expected );
 
-  test.case = 'Range array empty';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( [ 'Hello', 'world' ], [ ] );
-  });
+  /* - */
 
-  test.case = 'Range array with not enough arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( [ 'Hello', 'world' ], [ 2 ] );
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strOnlySingle() );
 
-  test.case = 'Range array with too many arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strSub( [ 'Hello', 'world' ], [ 2, 3, 4 ] );
-  });
+  test.case = 'one argument';
+  test.shouldThrowErrorSync( () => _.strOnlySingle( 'abc' ) );
 
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strOnlySingle( 'abc', [ 1, 2 ], 'extra' ) );
+
+  test.case = 'wrong type of srcStr';
+  test.shouldThrowErrorSync( () => _.strOnlySingle( 123, [ 0, 1 ] ) );
+  test.shouldThrowErrorSync( () => _.strOnlySingle( null, [ 0, 1 ] ) );
+  test.shouldThrowErrorSync( () => _.strOnlySingle( /a?$/, [ 0, 1 ] ) );
+
+  test.case = 'wrong type of range';
+  test.shouldThrowErrorSync( () => _.strOnlySingle( 'abc', null ) );
+  test.shouldThrowErrorSync( () => _.strOnlySingle( 'abc', 'wrong' ) );
+
+  test.case = 'wrong range';
+  test.shouldThrowErrorSync( () => _.strOnlySingle( 'abc', [ 1 ] ) );
+  test.shouldThrowErrorSync( () => _.strOnlySingle( 'abc', [ 1, 2, 3 ] ) );
+}
+
+function strOnly( test )
+{
+  test.open( 'not vectorized' );
+
+  test.case = 'range - number, first symbol';
+  var src = 'a\nb\nc';
+  var got = _.strOnly( src, 0 );
+  var expected = 'a';
+  test.identical( got, expected );
+
+  test.case = 'range - number';
+  var src = 'a\nb\nc';
+  var got = _.strOnly( src, 1 );
+  var expected = '\n';
+  test.identical( got, expected );
+
+  test.case = 'range - number, last symbol';
+  var src = 'a\nb\nc';
+  var got = _.strOnly( src, 4 );
+  var expected = 'c';
+  test.identical( got, expected );
+
+  test.case = 'range - number bigger then srcStr.length';
+  var src = 'a\nb\nc';
+  var got = _.strOnly( src, 6 );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'range - negative number, last symbol';
+  var src = 'a\nb\nc';
+  var got = _.strOnly( src, -1 );
+  var expected = 'c';
+  test.identical( got, expected );
+
+  test.case = 'range - negative number, first symbol';
+  var src = 'a\nb\nc';
+  var got = _.strOnly( src, -5 );
+  var expected = 'a';
+  test.identical( got, expected );
+
+  test.case = 'range - negative number, absolute value bigger then srcStr.length';
+  var src = 'a\nb\nc';
+  var got = _.strOnly( src, -7 );
+  var expected = '';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'srcStr - empty string';
+  var got = _.strOnly( '', [ 2, 3 ] );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'srcStr, range[ 0 ] === range[ 1 ]';
+  var got = _.strOnly( 'Hello', [ 1, 1 ] );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'srcStr, get all';
+  var got = _.strOnly( 'Hello', [ 0, 5 ] );
+  var expected = 'Hello';
+  test.identical( got, expected );
+
+  test.case = 'srcStr, range bigger than length';
+  var got = _.strOnly( 'Hello', [ 0, 8 ] );
+  var expected = 'Hello';
+  test.identical( got, expected );
+
+  test.case = 'srcStr, get subString';
+  var got = _.strOnly( 'Hello', [ 2, 3 ] );
+  var expected = 'l';
+  test.identical( got, expected );
+
+  test.case = 'srcStr, get end of string';
+  var got = _.strOnly( 'Hello', [ 3, 5 ] );
+  var expected = 'lo';
+  test.identical( got, expected );
+
+  test.case = 'srcStr, range reversed';
+  var got = _.strOnly( 'Hello', [ 4, 0 ] );
+  var expected = 'Hell';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'srcStr, range[ 0 ] === range[ 1 ], range[ 0 ] < 0';
+  var got = _.strOnly( 'Hello', [ -2, -2 ] );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'srcStr, get all, range[ 0 ] < 0';
+  var got = _.strOnly( 'Hello', [ -5, 5 ] );
+  var expected = 'Hello';
+  test.identical( got, expected );
+
+  test.case = 'srcStr, range bigger than length, range[ 0 ] < 0';
+  var got = _.strOnly( 'Hello', [ -7, 5 ] );
+  var expected = 'Hello';
+  test.identical( got, expected );
+
+  test.case = 'srcStr, get subString, range[ 0 ] and range[ 1 ] < 0';
+  var got = _.strOnly( 'Hello', [ -3, -2 ] );
+  var expected = 'l';
+  test.identical( got, expected );
+
+  test.case = 'srcStr, get start of string, range[ 0 ] and range[ 1 ] < 0';
+  var got = _.strOnly( 'Hello', [ -5, -4 ] );
+  var expected = 'H';
+  test.identical( got, expected );
+
+  test.case = 'srcStr, range reversed, range[ 0 ] and range[ 1 ] < 0';
+  var got = _.strOnly( 'Hello', [ -2, -3 ] );
+  var expected = 'l';
+  test.identical( got, expected );
+
+  test.close( 'not vectorized' );
+
+  /* - */
+
+  test.open( 'vectorized' );
+
+  test.case = 'range - number, first symbol';
+  var src = [ 'a\nb\nc', '', 'abc' ];
+  var got = _.strOnly( src, 0 );
+  var expected = [ 'a', '', 'a' ];
+  test.identical( got, expected );
+
+  test.case = 'range - number';
+  var src = [ 'a\nb\nc', '', 'abc' ];
+  var got = _.strOnly( src, 1 );
+  var expected = [ '\n', '', 'b' ];
+  test.identical( got, expected );
+
+  test.case = 'range - number, last symbol of longest string';
+  var src = [ 'a\nb\nc', '', 'abc' ];
+  var got = _.strOnly( src, 4 );
+  var expected = [ 'c', '', '' ];
+  test.identical( got, expected );
+
+  test.case = 'range - number bigger then longest srcStr.length';
+  var src = [ 'a\nb\nc', '', 'abc' ];
+  var got = _.strOnly( src, 6 );
+  var expected = [ '', '', '' ];
+  test.identical( got, expected );
+
+  test.case = 'range - negative number, last symbol';
+  var src = [ 'a\nb\nc', '', 'abc' ];
+  var got = _.strOnly( src, -1 );
+  var expected = [ 'c', '', 'c' ];
+  test.identical( got, expected );
+
+  test.case = 'range - negative number, first symbol of longest string';
+  var src = [ 'a\nb\nc', '', 'abc' ];
+  var got = _.strOnly( src, -5 );
+  var expected = [ 'a', '', '' ];
+  test.identical( got, expected );
+
+  test.case = 'range - negative number, absolute value bigger then longest srcStr.length';
+  var src = [ 'a\nb\nc', '', 'abc' ];
+  var got = _.strOnly( src, -7 );
+  var expected = [ '', '', '' ];
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'srcStr - empty strings';
+  var got = _.strOnly( [ '', '', '' ], [ 2, 3 ] );
+  var expected = [ '', '', '' ];
+  test.identical( got, expected );
+
+  test.case = 'srcStr, range[ 0 ] === range[ 1 ]';
+  var got = _.strOnly( [ 'Hello', 'world', 'abc', '' ], [ 1, 1 ] );
+  var expected = [ '', '', '', '' ];
+  test.identical( got, expected );
+
+  test.case = 'srcStr, get all';
+  var got = _.strOnly( [ 'Hello', 'world', 'abc', '' ], [ 0, 5 ] );
+  var expected = [ 'Hello', 'world', 'abc', '' ];
+  test.identical( got, expected );
+
+  test.case = 'srcStr, range bigger than length';
+  var got = _.strOnly( [ 'Hello', 'world', 'abc', '' ], [ 0, 8 ] );
+  var expected = [ 'Hello', 'world', 'abc', '' ];
+  test.identical( got, expected );
+
+  test.case = 'srcStr, get subString';
+  var got = _.strOnly( [ 'Hello', 'world', 'abc', '' ], [ 2, 3 ] );
+  var expected = [ 'l', 'r', 'c', '' ];
+  test.identical( got, expected );
+
+  test.case = 'srcStr, get end of string';
+  var got = _.strOnly( [ 'Hello', 'world', 'abc', '' ], [ 3, 5 ] );
+  var expected = [ 'lo', 'ld', '', '' ];
+  test.identical( got, expected );
+
+  test.case = 'srcStr, range reversed';
+  var got = _.strOnly( [ 'Hello', 'world', 'abc', '' ], [ 4, 0 ] );
+  var expected = [ 'Hell', 'worl', 'abc', '' ];
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'srcStr, range[ 0 ] === range[ 1 ], range[ 0 ] < 0';
+  var got = _.strOnly( [ 'Hello', 'world', 'abc', '' ], [ -2, -2 ] );
+  var expected = [ '', '', '', '' ];
+  test.identical( got, expected );
+
+  test.case = 'srcStr, get all, range[ 0 ] < 0';
+  var got = _.strOnly( [ 'Hello', 'world', 'abc', '' ], [ -5, 5 ] );
+  var expected = [ 'Hello', 'world', 'abc', '' ];
+  test.identical( got, expected );
+
+  // test.case = 'srcStr, range bigger than length, range[ 0 ] < 0';
+  // var got = _.strOnly( [ 'Hello', 'world', 'abc', '' ], [ -7, 5 ] );
+  // var expected = [ 'Hello', 'world', 'abc', '' ];
+  // test.identical( got, expected );
+
+  test.case = 'srcStr, get subString, range[ 0 ] and range[ 1 ] < 0';
+  var got = _.strOnly( [ 'Hello', 'world', 'abc', '' ], [ -3, -2 ] );
+  var expected = [ 'l', 'r', 'c', '' ];
+  test.identical( got, expected );
+
+  // test.case = 'srcStr, get start of string, range[ 0 ] and range[ 1 ] < 0';
+  // var got = _.strOnly( [ 'Hello', 'world', 'abc', '' ], [ -5, -4 ] );
+  // var expected = [ 'H', 'w', '', '' ];
+  // test.identical( got, expected );
+
+  test.case = 'srcStr, range reversed, range[ 0 ] and range[ 1 ] < 0';
+  var got = _.strOnly( [ 'Hello', 'world', 'abc', '' ], [ -2, -3 ] );
+  var expected = [ 'l', 'r', 'c', '' ];
+  test.identical( got, expected );
+
+  test.close( 'vectorized' );
+
+  /* - */
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strOnly() );
+
+  test.case = 'one argument';
+  test.shouldThrowErrorSync( () => _.strOnly( 'abc' ) );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strOnly( 'abc', [ 1, 2 ], 'extra' ) );
+
+  test.case = 'wrong type of srcStr';
+  test.shouldThrowErrorSync( () => _.strOnly( 123, [ 0, 1 ] ) );
+  test.shouldThrowErrorSync( () => _.strOnly( null, [ 0, 1 ] ) );
+  test.shouldThrowErrorSync( () => _.strOnly( /a?$/, [ 0, 1 ] ) );
+
+  test.case = 'wrong type of range';
+  test.shouldThrowErrorSync( () => _.strOnly( 'abc', null ) );
+  test.shouldThrowErrorSync( () => _.strOnly( 'abc', 'wrong' ) );
+
+  test.case = 'wrong range';
+  test.shouldThrowErrorSync( () => _.strOnly( 'abc', [ 1 ] ) );
+  test.shouldThrowErrorSync( () => _.strOnly( 'abc', [ 1, 2, 3 ] ) );
 }
 
 //
@@ -7150,7 +7507,7 @@ function strExtractInlined( test )
 
   test.case = 'trivial case';
   var srcStr = 'this #background:red#is#background:default# text and is not';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, onInlined,  });
   var expected =
   [
     'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and is not'
@@ -7161,7 +7518,7 @@ function strExtractInlined( test )
 
   test.case = 'openning delimeter # does not have closing';
   var srcStr = 'this #background:red#is#background:default# text and # is not';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, onInlined,  });
   var expected =
   [
     'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not'
@@ -7172,7 +7529,7 @@ function strExtractInlined( test )
 
   test.case = 'two inlined substrings is not in fact inlined';
   var srcStr = '#simple # text #background:red#is#background:default# text and # is not#';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, onInlined,  });
   var expected =
   [
     '#simple # text ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not#'
@@ -7183,7 +7540,7 @@ function strExtractInlined( test )
 
   test.case = 'inlined at the beginning and false inlined';
   var srcStr = '#background:red#i#s#background:default##text';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, onInlined,  });
   var expected =
   [
     '', [ 'background', 'red' ], 'i#s', [ 'background', 'default' ], '#text'
@@ -7194,7 +7551,7 @@ function strExtractInlined( test )
 
   test.case = 'inlined at the beginning and the end';
   var srcStr = '#background:red#i#s#background:default#';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  });
+  var got = _.strExtractInlined({ src : srcStr, onInlined,  });
   var expected =
   [
     '', [ 'background', 'red' ], 'i#s', [ 'background', 'default' ], ''
@@ -7205,7 +7562,7 @@ function strExtractInlined( test )
 
   test.case = 'inlined at the beginning and the end with preservingEmpty:0';
   var srcStr = '#background:red#i#s#background:default#';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined, preservingEmpty : 0 });
+  var got = _.strExtractInlined({ src : srcStr, onInlined, preservingEmpty : 0 });
   var expected =
   [
     [ 'background', 'red' ], 'i#s', [ 'background', 'default' ],
@@ -7216,7 +7573,7 @@ function strExtractInlined( test )
 
   test.case = 'wrapped by inlined text';
   var srcStr = '#background:red#text#background:default#';
-  var got = _.strExtractInlined({ src : srcStr, /*ttt*/onInlined,  } );
+  var got = _.strExtractInlined({ src : srcStr, onInlined,  } );
   var expected =
   [
     '', [ 'background', 'red' ], 'text', [ 'background', 'default' ], '',
@@ -8261,6 +8618,7 @@ function strJoinPath( test )
 
 function strConcat( test )
 {
+
   test.case = 'srcs - empty array';
   var srcs = [];
   var got = _.strConcat( srcs );
@@ -8269,37 +8627,46 @@ function strConcat( test )
   test.case = 'srcs - empty string';
   var srcs = '';
   var got = _.strConcat( srcs );
-  test.identical( got, ' ' );
+  test.identical( got, '' );
 
   test.case = 'srcs - not empty string';
   var srcs = 'str';
   var got = _.strConcat( srcs );
-  test.identical( got, 'str ' );
+  test.identical( got, 'str' );
 
   test.case = 'srcs - number';
   var srcs = 1;
   var got = _.strConcat( srcs );
-  test.identical( got, '1 ' );
+  test.identical( got, '1' );
 
   test.case = 'srcs - function';
   var srcs = ( e ) => 'str';
   var got = _.strConcat( srcs );
-  test.identical( got, 'str ' );
+  test.identical( got, 'str' );
 
   test.case = 'srcs - object';
   var srcs = { a : 2 };
   var got = _.strConcat( srcs );
-  test.identical( got, '[object Object] ' );
+  if( _.toStrFine )
+  test.identical( got, '{ a : 2 }' );
+  else
+  test.identical( got, '[object Object]' );
 
   test.case = 'srcs - BufferRaw';
   var srcs = new BufferRaw( 3 );
   var got = _.strConcat( srcs );
-  test.identical( got, '[object ArrayBuffer] ' );
+  if( _.toStrFine )
+  test.identical( got, '( new U8x([ 0x0, 0x0, 0x0 ]) ).buffer' );
+  else
+  test.identical( got, '[object ArrayBuffer]' );
 
   test.case = 'srcs - BufferTyped';
   var srcs = new U8x( [ 1, 2, 3 ] );
   var got = _.strConcat( srcs );
-  test.identical( got, '1,2,3 ' );
+  if( _.toStrFine )
+  test.identical( got, '( new Uint8Array([ 1, 2, 3 ]) )' );
+  else
+  test.identical( got, '1,2,3' );
 
   test.case = 'srcs - array of strings, new line symbol in the string';
   var srcs =
@@ -8310,72 +8677,78 @@ function strConcat( test )
     module::module-a`
   ];
   var got = _.strConcat( srcs );
-  test.identical( got, 'b variant:: : #83\n    path::local\n    module::module-a ' );
+  test.identical( got, 'b variant:: : #83\n    path::local\n    module::module-a' );
 
   test.case = 'srcs - array';
   var srcs = [ 1, 2, 'str', 3, [ 2 ] ];
   var got = _.strConcat( srcs );
-  test.identical( got, '1 2 str 3 2 ' );
+  if( _.toStrFine )
+  test.identical( got, '1 2 str 3 [ 2 ]' );
+  else
+  test.identical( got, '1 2 str 3 2' );
 
   test.case = 'srcs - unroll';
   var srcs = _.unrollMake( [ 1, 2, 'str', 3, [ 2 ] ] );
   var got = _.strConcat( srcs );
-  test.identical( got, '1 2 str 3 2 ' );
+  if( _.toStrFine )
+  test.identical( got, '1 2 str 3 [ 2 ]' );
+  else
+  test.identical( got, '1 2 str 3 2' );
 
   test.case = 'srcs - array of strings, strings begin with spaces';
   var srcs = [ '  b', '    a:: : c', '    d::e' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '  b a:: : c d::e ' );
+  test.identical( got, '  b a:: : c d::e' );
 
   test.case = 'srcs - array of strings, strings end with spaces';
   var srcs = [ 'b    ', 'variant:: : #83    ', 'path::local    ' ];
   var got = _.strConcat( srcs );
-  test.identical( got, 'b variant:: : #83 path::local     ' );
+  test.identical( got, 'b variant:: : #83 path::local    ' );
 
   test.case = 'srcs - array of strings, strings begin and end with spaces';
   var srcs = [ '    b    ', '    variant:: : #83    ', '    path::local    ' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '    b variant:: : #83 path::local     ' );
+  test.identical( got, '    b variant:: : #83 path::local    ' );
 
   test.case = 'srcs - array of strings, strings begin with spaces, end with new line symbol';
   var srcs = [ '  b\n', '  variant:: : #83\n', '  path::local' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '  b\n  variant:: : #83\n  path::local ' );
+  test.identical( got, '  b\n  variant:: : #83\n  path::local' );
 
   test.case = 'srcs - array of strings, strings begin with new line symbol, end with spaces';
   var srcs = [ '\nb    ', '\nvariant:: : #83    ', '\npath::local    ' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '\nb\nvariant:: : #83\npath::local     ' );
+  test.identical( got, '\nb\nvariant:: : #83\npath::local    ' );
 
   test.case = 'srcs - array of strings, strings begin and end with new line symbol';
   var srcs = [ '\nb\n', '\nvariant:: : #83\n', '\npath::local\n' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '\nb\n\nvariant:: : #83\n\npath::local\n ' );
+  test.identical( got, '\nb\n\nvariant:: : #83\n\npath::local\n' );
 
   test.case = 'srcs - array of strings, strings begin and end with new line symbol';
   var srcs = [ '\nb\n', '\nvariant:: : #83\n', '\npath::local\n' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '\nb\n\nvariant:: : #83\n\npath::local\n ' );
+  test.identical( got, '\nb\n\nvariant:: : #83\n\npath::local\n' );
 
   test.case = 'srcs - array of strings, strings begin with new line symbol, end with new line symbol and spaces';
   var srcs = [ '\nb\n    ', '\nvariant:: : #83\n    ', '\npath::local\n    ' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '\nb\n\nvariant:: : #83\n\npath::local\n     ' );
+  test.identical( got, '\nb\n\nvariant:: : #83\n\npath::local\n    ' );
 
   test.case = 'srcs - array of strings, strings begin with new line symbol and spaces, end with new line symbol';
   var srcs = [ '    \nb\n', '    \nvariant:: : #83\n', '    \npath::local\n' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '    \nb\n    \nvariant:: : #83\n    \npath::local\n ' );
+  test.identical( got, '    \nb\n    \nvariant:: : #83\n    \npath::local\n' );
 
   test.case = 'srcs - array of strings, strings begin with new line symbol and spaces, end with new line symbol';
   var srcs = [ '    \nb\n', '    \nvariant:: : #83\n', '    \npath::local\n' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '    \nb\n    \nvariant:: : #83\n    \npath::local\n ' );
+  test.identical( got, '    \nb\n    \nvariant:: : #83\n    \npath::local\n' );
 
   test.case = 'srcs - array of strings, strings begin with new line symbol and spaces, end with new line symbol and spaces';
   var srcs = [ '    \nb\n    ', '    \nvariant:: : #83\n    ', '    \npath::local\n    ' ];
   var got = _.strConcat( srcs );
-  test.identical( got, '    \nb\n    \nvariant:: : #83\n    \npath::local\n     ' );
+  test.identical( got, '    \nb\n    \nvariant:: : #83\n    \npath::local\n    ' );
 
   /* */
 
@@ -8383,13 +8756,7 @@ function strConcat( test )
   var srcs = [ 'a ||', 'b ||', 'c ||', 'd' ];
   var o = { lineDelimter : '||' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, 'a ||b ||c ||d ' );
-
-  // test.case = 'optionsForToStr';
-  // var srcs = [ 'a ||', 'b ||', 'c ||', 'd' ];
-  // var o = { optionsForToStr : { stringWrapper : '/' } };
-  // var got = _.strConcat( srcs, o );
-  // test.identical( got, 'a || b || c || d ' );
+  test.identical( got, 'a ||b ||c ||d' );
 
   test.case = 'onToStr';
   let onToStr = ( src ) => String( src ) + 1;
@@ -8402,37 +8769,37 @@ function strConcat( test )
   var srcs = [ 'a', 'b', 'c', 'd' ];
   var o = { linePrefix : '|| ' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, '|| a b c d ' );
+  test.identical( got, '|| a b c d' );
 
   test.case = 'linePrefix, lineDelimter';
   var srcs = [ 'a\n', 'b\n', 'c\n', 'd\n' ];
   var o = { linePrefix : '|| ' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, '|| a\n|| b\n|| c\n|| d\n||  ' );
+  test.identical( got, '|| a\n|| b\n|| c\n|| d\n|| ' );
 
   test.case = 'linePostfix, not uses lineDelimter';
   var srcs = [ 'a', 'b', 'c', 'd' ];
   var o = { linePostfix : ' ||' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, 'a b c d  ||' );
+  test.identical( got, 'a b c d ||' );
 
   test.case = 'linePostfix, lineDelimter';
   var srcs = [ 'a\n', 'b\n', 'c\n', 'd\n' ];
   var o = { linePostfix : ' ||' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, 'a ||\nb ||\nc ||\nd ||\n  ||' );
+  test.identical( got, 'a ||\nb ||\nc ||\nd ||\n ||' );
 
   test.case = 'linePrefix and linePostfix, not uses lineDelimter';
   var srcs = [ 'a', 'b', 'c', 'd' ];
   var o = { linePostfix : ' ||', linePrefix : '|| ' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, '|| a b c d  ||')
+  test.identical( got, '|| a b c d ||')
 
   test.case = 'linePrefix and linePostfix, lineDelimter';
   var srcs = [ 'a\n', 'b\n', 'c\n', 'd\n' ];
   var o = { linePostfix : ' ||', linePrefix : '|| ' };
   var got = _.strConcat( srcs, o );
-  test.identical( got, '|| a ||\n|| b ||\n|| c ||\n|| d ||\n||   ||' );
+  test.identical( got, '|| a ||\n|| b ||\n|| c ||\n|| d ||\n||  ||' );
 }
 
 //--
@@ -8707,76 +9074,36 @@ function strLinesStrip( test )
 
 function strLinesNumber( test )
 {
-  var got, expected;
+  test.open( 'arguments' );
 
-  test.case = 'trivial';
+  test.case = 'src - empty string';
+  var got = _.strLinesNumber( '' );
+  var expected = '1 : ';
+  test.identical( got, expected );
 
-  test.case = 'returns the object';
+  test.case = 'src - string without new line symbol';
+  var got = _.strLinesNumber( 'a' );
+  var expected = '1 : a';
+  test.identical( got, expected );
+
+  test.case = 'src - string with new line symbols';
   var got = _.strLinesNumber( 'abc\ndef\nghi' );
   var expected = '1 : abc\n2 : def\n3 : ghi';
   test.identical( got, expected );
 
-  test.case = 'returns the object';
+  test.case = 'src - string, number of strings has different rank';
+  var got = _.strLinesNumber( 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj' );
+  var expected = ' 1 : a\n 2 : b\n 3 : c\n 4 : d\n 5 : e\n 6 : f\n 7 : g\n 8 : h\n 9 : i\n10 : j';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - empty array';
   var got = _.strLinesNumber( [] );
   var expected = '';
   test.identical( got, expected );
 
-  /* - */
-
-  test.case = 'string';
-
-  /**/
-
-  got = _.strLinesNumber( '' );
-  expected = '1 : ';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strLinesNumber( 'a' );
-  expected = '1 : a';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strLinesNumber( 'a\nb' );
-  expected = '1 : a\n2 : b';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strLinesNumber( 'a\nb', 2 );
-  expected = '2 : a\n3 : b';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strLinesNumber( 'line1\nline2\nline3' );
-  expected =
-  [
-    '1 : line1',
-    '2 : line2',
-    '3 : line3',
-  ].join( '\n' );
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strLinesNumber( '\n\n' );
-  var expected =
-  [
-    '1 : ',
-    '2 : ',
-    '3 : ',
-  ].join( '\n' );
-  test.identical( got, expected );
-
-  /* - */
-
-  test.case = 'array';
-
-  /**/
-
+  test.case = 'src - array of lines without new line symbols';
   got = _.strLinesNumber( [ 'line1', 'line2', 'line3' ] );
   expected =
   [
@@ -8784,19 +9111,9 @@ function strLinesNumber( test )
     '2 : line2',
     '3 : line3',
   ].join( '\n' );
+  test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesNumber( [ 'line', 'line', 'line' ], 2 );
-  expected =
-  [
-    '2 : line',
-    '3 : line',
-    '4 : line',
-  ].join( '\n' );
-
-  /**/
-
+  test.case = 'src - array of lines with new line symbols';
   got = _.strLinesNumber( [ 'line\n', 'line\n', 'line\n' ] );
   expected =
   [
@@ -8804,438 +9121,929 @@ function strLinesNumber( test )
     '2 : line\n',
     '3 : line\n',
   ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank';
+  got = _.strLinesNumber( [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ] );
+  expected =
+  [
+    ' 1 : a',
+    ' 2 : b',
+    ' 3 : c',
+    ' 4 : d',
+    ' 5 : e',
+    ' 6 : f',
+    ' 7 : g',
+    ' 8 : h',
+    ' 9 : i',
+    '10 : j',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.close( 'arguments' );
+
+  /* - */
+
+  test.open( 'map' );
+
+  test.case = 'src - empty string';
+  var got = _.strLinesNumber( { src : '' } );
+  var expected = '1 : ';
+  test.identical( got, expected );
+
+  test.case = 'src - string without new line symbol';
+  var got = _.strLinesNumber( { src : 'a' } );
+  var expected = '1 : a';
+  test.identical( got, expected );
+
+  test.case = 'src - string with new line symbols';
+  var got = _.strLinesNumber( { src : 'abc\ndef\nghi' } );
+  var expected = '1 : abc\n2 : def\n3 : ghi';
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank';
+  var got = _.strLinesNumber( { src : 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj' } );
+  var expected = ' 1 : a\n 2 : b\n 3 : c\n 4 : d\n 5 : e\n 6 : f\n 7 : g\n 8 : h\n 9 : i\n10 : j';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - empty array';
+  var got = _.strLinesNumber( { src : [] } );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines without new line symbols';
+  got = _.strLinesNumber( { src : [ 'line1', 'line2', 'line3' ] } );
+  expected =
+  [
+    '1 : line1',
+    '2 : line2',
+    '3 : line3',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines with new line symbols';
+  got = _.strLinesNumber( { src : [ 'line\n', 'line\n', 'line\n' ] } );
+  expected =
+  [
+    '1 : line\n',
+    '2 : line\n',
+    '3 : line\n',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank';
+  got = _.strLinesNumber( { src : [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ] } );
+  expected =
+  [
+    ' 1 : a',
+    ' 2 : b',
+    ' 3 : c',
+    ' 4 : d',
+    ' 5 : e',
+    ' 6 : f',
+    ' 7 : g',
+    ' 8 : h',
+    ' 9 : i',
+    '10 : j',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.close( 'map' );
 
   /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'no arguments';
-  test.shouldThrowErrorSync( function( )
-  {
-    _.strLinesNumber();
-  } );
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strLinesNumber() );
 
-  test.case = 'argument is wrong';
-  test.shouldThrowErrorSync( function( )
-  {
-    _.strLinesNumber( 13 );
-  } );
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strLinesNumber( 'str', 2, 'extra' ) );
 
-  test.case = 'invalid  argument type';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strLinesNumber( 123 );
-  });
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.strLinesNumber( 13 ) );
 
-  test.case = 'no arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strLinesNumber();
-  });
+  test.case = 'unnacessary options in map';
+  test.shouldThrowErrorSync( () => _.strLinesNumber( { src : 'a', unnacessary : 1 } ) );
+}
 
+//
+
+function strLinesNumberZeroLine( test )
+{
+  test.open( 'arguments' );
+
+  test.case = 'src - empty string, zeroLine = 0';
+  var got = _.strLinesNumber( '', 0 );
+  var expected = '0 : ';
+  test.identical( got, expected );
+
+  test.case = 'src - string without new line symbol, zeroLine - 1';
+  var got = _.strLinesNumber( 'a', 1 );
+  var expected = '1 : a';
+  test.identical( got, expected );
+
+  test.case = 'src - string with new line symbols, zeroLine - 2';
+  var got = _.strLinesNumber( 'abc\ndef\nghi', 2 );
+  var expected = '2 : abc\n3 : def\n4 : ghi';
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank, zeroLine - 3';
+  var got = _.strLinesNumber( 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj', 3 );
+  var expected = ' 3 : a\n 4 : b\n 5 : c\n 6 : d\n 7 : e\n 8 : f\n 9 : g\n10 : h\n11 : i\n12 : j';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - empty array, zeroLine - 0';
+  var got = _.strLinesNumber( [], 0 );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines without new line symbols, zeroLine - -1';
+  got = _.strLinesNumber( [ 'line1', 'line2', 'line3' ], -1 );
+  expected =
+  [
+    '-1 : line1',
+    ' 0 : line2',
+    ' 1 : line3',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines with new line symbols, zeroLine - 2';
+  got = _.strLinesNumber( [ 'line\n', 'line\n', 'line\n' ], 2 );
+  expected =
+  [
+    '2 : line\n',
+    '3 : line\n',
+    '4 : line\n',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank, zeroLine - 3';
+  got = _.strLinesNumber( [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ], 3 );
+  expected =
+  [
+    ' 3 : a',
+    ' 4 : b',
+    ' 5 : c',
+    ' 6 : d',
+    ' 7 : e',
+    ' 8 : f',
+    ' 9 : g',
+    '10 : h',
+    '11 : i',
+    '12 : j',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.close( 'arguments' );
+
+  /* - */
+
+  test.open( 'map' );
+
+  test.case = 'src - empty string, zeroLine - 0';
+  var got = _.strLinesNumber( { src : '', zeroLine : 0 } );
+  var expected = '0 : ';
+  test.identical( got, expected );
+
+  test.case = 'src - string without new line symbol, zeroLine - 1';
+  var got = _.strLinesNumber( { src : 'a', zeroLine : 1 } );
+  var expected = '1 : a';
+  test.identical( got, expected );
+
+  test.case = 'src - string with new line symbols, zeroLine - 2';
+  var got = _.strLinesNumber( { src : 'abc\ndef\nghi', zeroLine : 2 } );
+  var expected = '2 : abc\n3 : def\n4 : ghi';
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank, zeroLine - 3';
+  var got = _.strLinesNumber( { src : 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj', zeroLine : 3 } );
+  var expected = ' 3 : a\n 4 : b\n 5 : c\n 6 : d\n 7 : e\n 8 : f\n 9 : g\n10 : h\n11 : i\n12 : j';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - empty array, zeroLine - 0';
+  var got = _.strLinesNumber( { src : [], zeroLine : 0 } );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines without new line symbols, zeroLine - -1';
+  got = _.strLinesNumber( { src : [ 'line1', 'line2', 'line3' ], zeroLine : -1 } );
+  expected =
+  [
+    '-1 : line1',
+    ' 0 : line2',
+    ' 1 : line3',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines with new line symbols, zeroLine - 2';
+  got = _.strLinesNumber( { src : [ 'line\n', 'line\n', 'line\n' ], zeroLine : 2 } );
+  expected =
+  [
+    '2 : line\n',
+    '3 : line\n',
+    '4 : line\n',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank, zeroLine - 3';
+  got = _.strLinesNumber( { src : [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ], zeroLine : 3 } );
+  expected =
+  [
+    ' 3 : a',
+    ' 4 : b',
+    ' 5 : c',
+    ' 6 : d',
+    ' 7 : e',
+    ' 8 : f',
+    ' 9 : g',
+    '10 : h',
+    '11 : i',
+    '12 : j',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.close( 'map' );
+}
+
+//
+
+function strLinesNumberZeroChar( test )
+{
+  test.case = 'src - empty string, zeroChar - 1';
+  var got = _.strLinesNumber( { src : '', zeroChar : 1 } );
+  var expected = '1 : ';
+  test.identical( got, expected );
+
+  test.case = 'src - string without new line symbol, zeroChar - 2';
+  var got = _.strLinesNumber( { src : 'a', zeroChar : 2 } );
+  var expected = '1 : a';
+  test.identical( got, expected );
+
+  test.case = 'src - string with new line symbols, zeroChar - 8';
+  var got = _.strLinesNumber( { src : 'abc\ndef\nghi', zeroChar : 8 } );
+  var expected = '3 : abc\n4 : def\n5 : ghi';
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank, zeroChar - 3';
+  var got = _.strLinesNumber( { src : 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj', zeroChar : 3 } );
+  var expected = ' 3 : a\n 4 : b\n 5 : c\n 6 : d\n 7 : e\n 8 : f\n 9 : g\n10 : h\n11 : i\n12 : j';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - empty array, zeroChar - 1';
+  var got = _.strLinesNumber( { src : [], zeroChar : 1 } );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines without new line symbols, zeroChar - 10';
+  got = _.strLinesNumber( { src : [ 'line1', 'line2', 'line3' ], zeroChar : 10 } );
+  expected =
+  [
+    '2 : line1',
+    '3 : line2',
+    '4 : line3',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines with new line symbols, zeroChar - 11';
+  got = _.strLinesNumber( { src : [ 'line\n', 'line\n', 'line\n' ], zeroChar : 11 } );
+  expected =
+  [
+    '5 : line\n',
+    '6 : line\n',
+    '7 : line\n',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank, zeroChar - 6';
+  got = _.strLinesNumber( { src : [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ], zeroChar : 6 } );
+  expected =
+  [
+    ' 4 : a',
+    ' 5 : b',
+    ' 6 : c',
+    ' 7 : d',
+    ' 8 : e',
+    ' 9 : f',
+    '10 : g',
+    '11 : h',
+    '12 : i',
+    '13 : j',
+  ].join( '\n' );
+  test.identical( got, expected );
+}
+
+//
+
+function strLinesNumberOnLine( test )
+{
+  test.open( 'only onLine' );
+
+  test.case = 'src - empty string, onLine appends number of string';
+  var got = _.strLinesNumber( { src : '', onLine : ( e, k ) => e.join( '' ) + ' ' + k } );
+  var expected = '1 :  1';
+  test.identical( got, expected );
+
+  test.case = 'src - string without new line symbol, onLine returns string';
+  var got = _.strLinesNumber( { src : 'a', onLine : ( e, k ) => e.join( '' ) } );
+  var expected = '1 : a';
+  test.identical( got, expected );
+
+  test.case = 'src - string with new line symbols, onLine returns undefined';
+  var got = _.strLinesNumber( { src : 'abc\ndef\nghi', onLine : ( e, k ) => k > 1 ? undefined : e.join( '' ) } );
+  var expected = '1 : abc';
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank, onLine check container';
+  var got = _.strLinesNumber( { src : 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj', onLine : ( e, k, c ) => c.zeroChar ? e.join( '' ) : k + ' : ' + k } );
+  var expected = '1 : 1\n2 : 2\n3 : 3\n4 : 4\n5 : 5\n6 : 6\n7 : 7\n8 : 8\n9 : 9\n10 : 10';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - empty array, onLine returns key';
+  var got = _.strLinesNumber( { src : [], onLine : ( e, k, c ) => String( k ) } );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines without new line symbols, onLine returns element';
+  got = _.strLinesNumber( { src : [ 'line1', 'line2', 'line3' ], onLine : ( e, k ) => e.join( '' ) } );
+  expected =
+  [
+    '1 : line1',
+    '2 : line2',
+    '3 : line3',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines with new line symbols, onLine returns undefined';
+  got = _.strLinesNumber( { src : [ 'line\n', 'line\n', 'line\n' ], onLine : ( e, k ) => k > 1 ? undefined : e.join( '' ) } );
+  expected =
+  [
+    '1 : line\n',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank, onLine checks container';
+  got = _.strLinesNumber( { src : [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ], onLine : ( e, k, c ) => c.zeroChar ? e.join( '' ) : k + ' : ' + k } );
+  expected =
+  [
+    '1 : 1',
+    '2 : 2',
+    '3 : 3',
+    '4 : 4',
+    '5 : 5',
+    '6 : 6',
+    '7 : 7',
+    '8 : 8',
+    '9 : 9',
+    '10 : 10',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.close( 'only onLine' );
+
+  /* - */
+
+  test.open( 'onLine and zeroLine' );
+
+  test.case = 'src - empty string, onLine appends number of string, zeroLine - 2';
+  var got = _.strLinesNumber( { src : '', zeroLine : 2, onLine : ( e, k ) => e.join( '' ) + ' ' + k } );
+  var expected = '2 :  2';
+  test.identical( got, expected );
+
+  test.case = 'src - string without new line symbol, onLine returns string, zeroLine - 2';
+  var got = _.strLinesNumber( { src : 'a', zeroLine : 2, onLine : ( e, k ) => e.join( '' ) } );
+  var expected = '2 : a';
+  test.identical( got, expected );
+
+  test.case = 'src - string with new line symbols, onLine returns undefined, zeroLine - 2 ';
+  var got = _.strLinesNumber( { src : 'abc\ndef\nghi', zeroLine : 2, onLine : ( e, k ) => k > 2 ? undefined : e.join( '' ) } );
+  var expected = '2 : abc';
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank, onLine check container, zeroLine - 2';
+  var got = _.strLinesNumber( { src : 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj', zeroLine : 2, onLine : ( e, k, c ) => c.zeroChar ? e.join( '' ) : k + ' : ' + k } );
+  var expected = '2 : 2\n3 : 3\n4 : 4\n5 : 5\n6 : 6\n7 : 7\n8 : 8\n9 : 9\n10 : 10\n11 : 11';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - empty array, onLine returns key, zeroLine - 2';
+  var got = _.strLinesNumber( { src : [], zeroLine : 2, onLine : ( e, k, c ) => String( k ) } );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines without new line symbols, onLine returns element, zeroLine - 2';
+  got = _.strLinesNumber( { src : [ 'line1', 'line2', 'line3' ], zeroLine : 2, onLine : ( e, k ) => e.join( '' ) } );
+  expected =
+  [
+    '2 : line1',
+    '3 : line2',
+    '4 : line3',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines with new line symbols, onLine returns undefined, zeroLine - 2';
+  got = _.strLinesNumber( { src : [ 'line\n', 'line\n', 'line\n' ], zeroLine : 2, onLine : ( e, k ) => k > 2 ? undefined : e.join( '' ) } );
+  expected =
+  [
+    '2 : line\n',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank, onLine checks container, zeroLine - 2';
+  got = _.strLinesNumber( { src : [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ], zeroLine : 2, onLine : ( e, k, c ) => c.zeroChar ? e.join( '' ) : k + ' : ' + k } );
+  expected =
+  [
+    '2 : 2',
+    '3 : 3',
+    '4 : 4',
+    '5 : 5',
+    '6 : 6',
+    '7 : 7',
+    '8 : 8',
+    '9 : 9',
+    '10 : 10',
+    '11 : 11'
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.close( 'onLine and zeroLine' );
+
+  /* - */
+
+  test.open( 'onLine and zeroChar' );
+
+  test.case = 'src - empty string, onLine appends number of string, zeroChar - 2';
+  var got = _.strLinesNumber( { src : '', zeroChar : 2, onLine : ( e, k ) => e.join( '' ) + ' ' + k } );
+  var expected = '1 :  1';
+  test.identical( got, expected );
+
+  test.case = 'src - string without new line symbol, onLine returns string, zeroChar - 2';
+  var got = _.strLinesNumber( { src : 'a', zeroChar : 2, onLine : ( e, k ) => e.join( '' ) } );
+  var expected = '1 : a';
+  test.identical( got, expected );
+
+  test.case = 'src - string with new line symbols, onLine returns undefined, zeroChar - 5';
+  var got = _.strLinesNumber( { src : 'abc\ndef\nghi', zeroChar : 5, onLine : ( e, k ) => k > 2 ? undefined : e.join( '' ) } );
+  var expected = '2 : abc';
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank, onLine check container, zeroChar - 3';
+  var got = _.strLinesNumber( { src : 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj', zeroChar : 2, onLine : ( e, k, c ) => c.zeroChar ? e.join( '' ) : k + ' : ' + k } );
+  var expected = ' 2 : a\n 3 : b\n 4 : c\n 5 : d\n 6 : e\n 7 : f\n 8 : g\n 9 : h\n10 : i\n11 : j';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'src - empty array, onLine returns key, zeroChar - 2';
+  var got = _.strLinesNumber( { src : [], zeroChar : 2, onLine : ( e, k, c ) => String( k ) } );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines without new line symbols, onLine returns element, zeroChar -5 ';
+  got = _.strLinesNumber( { src : [ 'line1', 'line2', 'line3' ], zeroChar : 5, onLine : ( e, k ) => e.join( '' ) } );
+  expected =
+  [
+    '2 : line1',
+    '3 : line2',
+    '4 : line3',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - array of lines with new line symbols, onLine returns undefined, zeroChar - 5';
+  got = _.strLinesNumber( { src : [ 'line\n', 'line\n', 'line\n' ], zeroChar : 5, onLine : ( e, k ) => k > 3 ? undefined : e.join( '' ) } );
+  expected =
+  [
+    '3 : line\n',
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.case = 'src - string, number of strings has different rank, onLine checks container, zeroChar - 2';
+  got = _.strLinesNumber( { src : [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ], zeroChar : 2, onLine : ( e, k, c ) => c.zeroChar ? e.join( '' ) : k + ' : ' + k } );
+  expected =
+  [
+    ' 2 : a',
+    ' 3 : b',
+    ' 4 : c',
+    ' 5 : d',
+    ' 6 : e',
+    ' 7 : f',
+    ' 8 : g',
+    ' 9 : h',
+    '10 : i',
+    '11 : j'
+  ].join( '\n' );
+  test.identical( got, expected );
+
+  test.close( 'onLine and zeroChar' );
 }
 
 //
 
 function strLinesSelect( test )
 {
-  var got, expected;
+  test.case = 'src - empty line, range - 1';
+  var got = _.strLinesSelect( '', 1 );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - single line, range - 1';
+  var got = _.strLinesSelect( 'abc', 1 );
+  var expected = 'abc';
+  test.identical( got, expected );
+
+  test.case = 'src -single line, range - 0';
+  var got = _.strLinesSelect( 'abc', 0 );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - multiline, range - 1';
   var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, 1 );
+  var expected = 'a';
+  test.identical( got, expected );
+
+  test.case = 'src - multiline, range - 2';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, 2 );
+  var expected = 'b';
+  test.identical( got, expected );
+
+  test.case = 'src - multiline, range - negative number';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, -1 );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - multiline, range - number > lines number';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, 99 );
+  var expected = '';
+  test.identical( got, expected );
 
   /* */
 
-  test.case = 'single line selection';
-
-  /**/
-
-  got = _.strLinesSelect( '', 1 );
-  expected = '';
+  test.case = 'src - multiline, range - number1 < number2';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, 1, 2 );
+  var expected = 'a';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect( 'abc', 1 );
-  expected = 'abc';
+  test.case = 'src - multiline, range - number1 === number2';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, 1, 1 );
+  var expected = '';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect( 'abc', 0 );
-  expected = '';
+  test.case = 'src - multiline, range - number1 > number2';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, 2, 1 );
+  var expected = '';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect( src, 1 );
-  expected = 'a';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strLinesSelect( src, 2 );
-  expected = 'b';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strLinesSelect( src, -1 );
-  expected = '';
-  test.identical( got, expected );
-
-  /* line number bigger then actual count of lines */
-
-  got = _.strLinesSelect( src, 99 );
-  expected = '';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strLinesSelect( src, 1, 2 );
-  expected = 'a';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strLinesSelect( src, [ 1, 2 ] );
-  expected = 'a';
-  test.identical( got, expected );
-
-  /**/
-
-  got = _.strLinesSelect( src, [ -1, 2 ] );
-  expected = 'a';
+  test.case = 'src - multiline, range - number1 is negative, number2 is positive';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, -1, 2 );
+  var expected = 'a';
   test.identical( got, expected );
 
   /* - */
 
-  test.case = 'multiline selection';
-
-  /**/
-
-  got = _.strLinesSelect( src, [ -1, -1 ] );
-  expected = '';
+  test.case = 'src - multiline, range[ 0 ] < range[ 1 ]';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, [ 1, 2 ] );
+  var expected = 'a';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect( '', [ 1, 3 ] );
-  expected = '';
+  test.case = 'src - empty line, range[ 0 ] < range[ 1 ]';
+  var got = _.strLinesSelect( '', [ 1, 3 ] );
+  var expected = '';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect( src, [ 1, 3 ] );
-  expected = 'a\nb';
+  test.case = 'src - multiline, range[ 0 ] is negative, range[ 1 ] is negative';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, [ -1, -1 ] );
+  var expected = '';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect( src, [ -1, 2 ] );
-  expected = 'a';
+  test.case = 'src - multiline, range[ 0 ] is negative, range[ 1 ] is positive';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, [ -1, 2 ] );
+  var expected = 'a';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect( src, [ 1, 4 ] );
-  expected = 'a\nb\nc';
+  test.case = 'src - multiline, range[ 0 ] < range[ 1 ]';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, [ 1, 3 ] );
+  var expected = 'a\nb';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect( src, [ 99, 4 ] );
-  expected = '';
+  test.case = 'src - multiline, range[ 0 ] < range[ 1 ], range[ 1 ] > lines number';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, [ 1, 4 ] );
+  var expected = 'a\nb\nc';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect( src, [ 1, 99 ] );
-  expected = src;
+  test.case = 'src - multiline, range[ 0 ] > range[ 1 ]';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, [ 99, 4 ] );
+  var expected = '';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect( src, [ 2, 5 ] );
-  expected = 'b\nc\nd';
+  test.case = 'src - multiline, range[ 0 ] is less then 1, range[ 1 ] > lines length';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, [ 0, 99 ] );
+  var expected = 'a\nb\nc\nd';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect({ /*ttt*/src, range : [ 2, 5 ], zero : 4 });
-  expected = 'a';
+  test.case = 'src - multiline, range[ 0 ] is less then 1, range[ 1 ] > lines length, zeroLine - 4';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect({ src, range : [ 2, 5 ], zeroLine : 4 });
+  var expected = 'a';
   test.identical( got, expected );
 
   /* - */
 
-  test.case = 'selection without range provided, selectMode : center';
+  test.open('selectMode : center' );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'line - 2, numberOfLines - 3, zeroLine - 1';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 2,
     numberOfLines : 3,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
-  expected = 'a\nb\nc';
+  var expected = 'a\nb\nc';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'line - 1, numberOfLines - 3, zeroLine - 1';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 3,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
-  expected = 'a\nb';
+  var expected = 'a\nb';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'line - 1, numberOfLines - 1, zeroLine - 1';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 1,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
-  expected = 'a';
+  var expected = 'a';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'line - 1, numberOfLines - 99, zeroLine - 1';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 99,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
-  expected = src;
+  var expected = src;
   test.identical( got, expected );
 
-  /**/
-
+  test.case = 'line - 1, numberOfLines - -1, zeroLine - 1';
   var src = 'a\nb\nc\nd';
-  got = _.strLinesSelect
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : -1,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
-  expected = '';
+  var expected = '';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'line - 0, numberOfLines - 1, zeroLine - 1';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 0,
     numberOfLines : 1,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
-  expected = '';
+  var expected = '';
   test.identical( got, expected );
 
-  got = _.strLinesSelect
+  test.case = 'line - 0, numberOfLines - 1, zeroLine - 1';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
     src : '',
     line : 1,
     numberOfLines : 1,
     selectMode : 'center',
-    zero : 1
+    zeroLine : 1
   });
-  expected = '';
+  var expected = '';
   test.identical( got, expected );
+
+  test.close( 'selectMode : center' );
 
   /* - */
 
-  test.case = 'selection without range provided, selectMode : begin';
+  test.open( 'selectMode : begin' );
 
-  /*two lines from begining of the string*/
-
-  got = _.strLinesSelect
+  test.case = 'line - 1, numberOfLines - 2, zeroLine - 1';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 2,
     selectMode : 'begin',
-    zero : 1
+    zeroLine : 1
   });
-  expected = 'a\nb';
+  var expected = 'a\nb';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'line - -1, numberOfLines - 2, zeroLine - 1';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : -1,
     numberOfLines : 2,
     selectMode : 'begin',
-    zero : 1
+    zeroLine : 1
   });
-  expected = '';
+  var expected = '';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'line - 1, numberOfLines - 0, zeroLine - 1';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 0,
     selectMode : 'begin',
-    zero : 1
+    zeroLine : 1
   });
-  expected = '';
+  var expected = '';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'line - 1, numberOfLines - 99, zeroLine - 1';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 99,
     selectMode : 'begin',
-    zero : 1
+    zeroLine : 1
   });
-  expected = src;
+  var expected = src;
   test.identical( got, expected );
 
-  /* zero > range[ 0 ] */
-
-  got = _.strLinesSelect
+  test.case = 'line - 1, numberOfLines - 5, zeroLine - 2';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 5,
     selectMode : 'begin',
-    zero : 2
+    zeroLine : 2
   });
-  expected = src;
+  var expected = src;
   test.identical( got, expected );
+
+  test.close( 'selectMode : begin' );
 
   /* - */
 
-  test.case = 'selection without range provided, selectMode : end';
+  test.open( 'selectMode : end' );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'line - 4, numberOfLines - 2';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 4,
     numberOfLines : 2,
     selectMode : 'end'
   });
-  expected = 'c\nd';
+  var expected = 'c\nd';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'line - -1, numberOfLines - 2';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : -1,
     numberOfLines : 2,
     selectMode : 'end'
   });
-  expected = '';
+  var expected = '';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'line - -1, numberOfLines - 2';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 0,
     selectMode : 'end'
   });
-  expected = '';
+  var expected = '';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'line - -1, numberOfLines - 99';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 99,
     selectMode : 'end'
   });
-  expected = 'a';
+  var expected = 'a';
   test.identical( got, expected );
 
-  /* zero > range[ 0 ] */
-
-  got = _.strLinesSelect
+  test.case = 'line - 1, numberOfLines - 5, zeroLine - 2';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     line : 1,
     numberOfLines : 5,
     selectMode : 'end',
-    zero : 2
+    zeroLine : 2
   });
-  expected = '';
+  var expected = '';
   test.identical( got, expected );
+
+  test.close( 'selectMode : end' );
 
   /* - */
 
-  test.case = 'custom new line'
-  var src2 = 'a b c d'
-
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'new line, delimteter exists';
+  var src = 'a b c d';
+  var got = _.strLinesSelect
   ({
-    src : src2,
+    src : src,
     range : [ 1, 3 ],
     delimteter : ' '
   });
-  expected = 'a b';
+  var expected = 'a b';
   test.identical( got, expected );
 
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'new line, delimteter not exists';
+  var src = 'a b c d';
+  var got = _.strLinesSelect
   ({
-    src : src2,
+    src : src,
     range : [ 1, 3 ],
     delimteter : 'x'
   });
-  expected = src2;
+  var expected = 'a b c d';
   test.identical( got, expected );
 
-  /* - */
-
-  test.case = 'number'
-
-  /**/
-
-  got = _.strLinesSelect
+  test.case = 'numbering';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect
   ({
-    /*ttt*/src,
+    src,
     range : [ 1, 3 ],
-    number : 1
+    numbering : 1
   });
-  expected = '1 : a\n2 : b';
+  var expected = '  1 : a\n* 2 : b';
   test.identical( got, expected );
 
-  /* - */
+  /* */
 
   var src =
   `Lorem
@@ -9245,14 +10053,10 @@ function strLinesSelect( test )
   adipisicing
   elit`;
 
-  /* - */
-
   test.case = 'first line';
   var got = _.strLinesSelect( src, 1 );
   var expected = 'Lorem';
   test.identical( got, expected );
-
-  /* - */
 
   test.case = 'first two lines';
   var got = _.strLinesSelect( src, 1, 3 );
@@ -9261,8 +10065,6 @@ function strLinesSelect( test )
   ipsum dolor`;
   test.identical( got, expected );
 
-  /* - */
-
   test.case = 'range as array';
   var got = _.strLinesSelect( src, [ 1, 3 ] );
   var expected =
@@ -9270,63 +10072,343 @@ function strLinesSelect( test )
   ipsum dolor`;
   test.identical( got, expected );
 
-
-
   test.case = 'custom new line';
   var src2 ='Lorem||ipsum dolor||sit amet||consectetur'
-  var got = _.strLinesSelect( { src : src2, range : [ 3, 5 ], zero : 1, delimteter : '||' } );
+  var got = _.strLinesSelect( { src : src2, range : [ 3, 5 ], zeroLine : 1, delimteter : '||' } );
   var expected = `sit amet||consectetur`;
   test.identical( got, expected );
-
-  /* - */
 
   test.case = 'empty line, out of range';
   var got = _.strLinesSelect( { src : '', range : [ 1, 1 ] } );
   var expected = '';
   test.identical( got, expected );
 
-  /* - */
-
   test.case = 'empty line';
   var got = _.strLinesSelect( { src : '', range : [ 0, 1 ] } );
   var expected = '';
   test.identical( got, expected );
-
-  /* - */
 
   test.case = 'incorrect range';
   var got = _.strLinesSelect( { src :  src, range : [ 2, 1 ] } );
   var expected = '';
   test.identical( got, expected );
 
-  /**/
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'invalid first argument type';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strLinesSelect( 1, 1 );
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strLinesSelect() );
 
-  test.case = 'invalid second argument type';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strLinesSelect( 'lorem\nipsum\n', 'second'  );
-  });
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strLinesSelect( 'a\nb\nc', 1, 2, 'extra' ) );
 
-  test.case = 'no arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strLinesSelect( );
-  });
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.strLinesSelect( 1, 1 ) );
+
+  test.case = 'wrong type of range';
+  test.shouldThrowErrorSync( () => _.strLinesSelect( 'lorem\nipsum\n', 'second' ) );
 
   test.case = 'unknown property provided';
-  test.shouldThrowErrorSync( function()
-  {
-    _.strLinesSelect( { src : 'lorem\nipsum\n', range : [ 0, 1 ], x : 1 } );
+  test.shouldThrowErrorSync( () => _.strLinesSelect( { src : 'lorem\nipsum\n', range : [ 0, 1 ], x : 1 } ) );
+}
+
+//
+
+function strLinesSelectHighlighting( test )
+{
+  test.case = 'numbering - 0, highlighting - undefined';
+  var src = 'a\nb\nc\nd\ne';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    numbering : 0,
   });
+  var expected = 'a\nb\nc\nd';
+  test.identical( got, expected );
+
+  test.case = 'numbering - 1, highlighting - undefined';
+  var src = 'a\nb\nc\nd\ne';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    numbering : 1,
+  });
+  var expected = '  0 : a\n  1 : b\n* 2 : c\n  3 : d';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'numbering - 0, highlighting - 0';
+  var src = 'a\nb\nc\nd\ne';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    numbering : 0,
+    highlighting : 0,
+  });
+  var expected = 'a\nb\nc\nd';
+  test.identical( got, expected );
+
+  test.case = 'numbering - 1, highlighting - 0';
+  var src = 'a\nb\nc\nd\ne';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    numbering : 1,
+    highlighting : 0
+  });
+  var expected = '0 : a\n1 : b\n2 : c\n3 : d';
+  test.identical( got, expected );
+
+  /* */
+
+  test.case = 'numbering - 0, highlighting - 1';
+  var src = 'a\nb\nc\nd\ne';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    numbering : 0,
+    highlighting : 1,
+  });
+  var expected = 'a\nb\nc\nd';
+  test.identical( got, expected );
+
+  test.case = 'numbering - 1, highlighting - 1';
+  var src = 'a\nb\nc\nd\ne';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    numbering : 1,
+    highlighting : 1
+  });
+  var expected = '  0 : a\n  1 : b\n* 2 : c\n  3 : d';
+  test.identical( got, expected );
+
+  test.case = 'line - 9, numbering - 1, highlighting - 1';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 9,
+    numbering : 1,
+    highlighting : 1
+  });
+  var expected = '   8 : h\n*  9 : i\n  10 : j';
+  test.identical( got, expected );
+
+  test.case = 'line - 10, numbering - 1, highlighting - 1';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 10,
+    numbering : 1,
+    highlighting : 1
+  });
+  var expected = '   9 : i\n* 10 : j';
+  test.identical( got, expected );
+
+  test.case = 'line - 9, numberOfLines - 2, numbering - 1, highlighting - 1';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    numberOfLines : 2,
+    line : 9,
+    numbering : 1,
+    highlighting : 1
+  });
+  var expected = '  8 : h\n* 9 : i';
+  test.identical( got, expected );
+
+  test.case = 'line - 9, range - [ 1, 4 ], numbering - 1, highlighting - 1';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    range : [ 1, 4 ],
+    line : 2,
+    numbering : 1,
+    highlighting : 1
+  });
+  var expected = '  1 : a\n* 2 : b\n  3 : c';
+  test.identical( got, expected );
+
+  test.case = 'line - 10, numberOfLines - 3, numbering - 1, highlighting - 1, selectMode - end';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    numberOfLines : 3,
+    line : 10,
+    numbering : 1,
+    highlighting : 1,
+    selectMode : 'end'
+  });
+  var expected = '   8 : h\n   9 : i\n* 10 : j';
+  test.identical( got, expected );
+
+  test.case = 'line - 7, numberOfLines - 2, numbering - 1, highlighting - 1, selectMode - begin';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    numberOfLines : 2,
+    line : 7,
+    numbering : 1,
+    highlighting : 1,
+    selectMode : 'begin'
+  });
+  var expected = '* 7 : g\n  8 : h';
+  test.identical( got, expected );
+}
+
+//
+
+function strLinesSelectZeroLine( test )
+{
+  test.case = 'zeroLine - undefined, line - 2';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 2,
+  });
+  var expected = 'a\nb\nc';
+  test.identical( got, expected );
+
+  /* - */
+
+  test.open( 'without numbering' );
+
+  test.case = 'zeroLine - 1, line - 2';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 2,
+    zeroLine : 1
+  });
+  var expected = 'a\nb\nc';
+  test.identical( got, expected );
+
+  test.case = 'zeroLine - 4, line - 5';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 5,
+    zeroLine : 4
+  });
+  var expected = 'a\nb\nc';
+  test.identical( got, expected );
+
+  test.case = 'zeroLine - 4, line - 3';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 3,
+    zeroLine : 4
+  });
+  var expected = 'a';
+  test.identical( got, expected );
+
+  test.case = 'zeroLine - 4, line - 3, selectMode - begin';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 3,
+    zeroLine : 4,
+    selectMode : 'begin'
+  });
+  var expected = 'a\nb';
+  test.identical( got, expected );
+
+  test.case = 'zeroLine - 4, line - 3, selectMode - end';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 3,
+    zeroLine : 4,
+    selectMode : 'end'
+  });
+  var expected = '';
+  test.identical( got, expected );
+
+  test.close( 'without numbering' );
+
+  /* - */
+
+  test.open( 'with numbering' );
+
+  test.case = 'zeroLine - 1, line - 2';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 2,
+    zeroLine : 1,
+    numbering : 1
+  });
+  var expected = '  1 : a\n* 2 : b\n  3 : c';
+  test.identical( got, expected );
+
+  test.case = 'zeroLine - 4, line - 5';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 5,
+    zeroLine : 4,
+    numbering : 1
+  });
+  var expected = '  4 : a\n* 5 : b\n  6 : c';
+  test.identical( got, expected );
+
+  test.case = 'zeroLine - 4, line - 3';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 3,
+    zeroLine : 4,
+    numbering : 1
+  });
+  var expected = '  2 : a';
+  test.identical( got, expected );
+
+  test.case = 'zeroLine - 4, line - 3, selectMode - begin';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 3,
+    zeroLine : 4,
+    numbering : 1,
+    selectMode : 'begin'
+  });
+  var expected = '* 3 : a\n  4 : b';
+  test.identical( got, expected );
+
+  test.case = 'zeroLine - 4, line - 3, selectMode - end';
+  var src = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj';
+  var got = _.strLinesSelect
+  ({
+    src : src,
+    line : 3,
+    zeroLine : 4,
+    numbering : 1,
+    selectMode : 'end'
+  });
+  var expected = '  1 : ';
+  test.identical( got, expected );
+
+  test.close( 'with numbering' );
 
 }
 
@@ -9349,12 +10431,8 @@ ghij
 
   test.open( 'Range is a number' );
 
-  /*  */
-
-  test.open( 'numberOfLines : 0' );
-
+  test.case = 'numberOfLines : 0';
   var crange = 6;
-  var sub = _.strSub( srcStr, [ crange, crange + 1 ] );
 
   var expectedSplits =
   [
@@ -9374,15 +10452,10 @@ ghij
   test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
-  test.identical( sub, 'd' );
 
-  test.close( 'numberOfLines : 0' );
+  /* */
 
-  /*  */
-
-  test.open( 'numberOfLines : 1' );
-
+  test.case = 'numberOfLines : 1';
   var crange = 6;
 
   var expectedSplits =
@@ -9400,16 +10473,12 @@ ghij
     numberOfLines : 1,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
 
-  test.close( 'numberOfLines : 1' );
+  /* */
 
-  /*  */
-
-  test.open( 'numberOfLines : 2' );
-
+  test.case = 'numberOfLines : 2';
   var crange = 6;
 
   var expectedSplits =
@@ -9427,16 +10496,12 @@ ghij
     numberOfLines : 2,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
 
-  test.close( 'numberOfLines : 2' );
+  /* */
 
-  /*  */
-
-  test.open( 'numberOfLines : 8 ( > all lines )' );
-
+  test.case = 'numberOfLines : 8 ( > all lines )';
   var crange = 6;
 
   var expectedSplits =
@@ -9454,16 +10519,12 @@ ghij
     numberOfLines : 8,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
 
-  test.close( 'numberOfLines : 8 ( > all lines )' );
+  /* */
 
-  /*  */
-
-  test.open( 'NaN range' );
-
+  test.case = 'NaN range';
   var crange = NaN;
 
   var expectedSplits =
@@ -9481,13 +10542,8 @@ ghij
     numberOfLines : 8,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-
-  test.close( 'NaN range' );
-
-  /*  */
 
   test.close( 'Range is a number' );
 
@@ -9495,10 +10551,7 @@ ghij
 
   test.open( 'aligned range, single line' );
 
-  /*  */
-
-  test.open( 'numberOfLines not defined ( = 3 )' );
-
+  test.case = 'numberOfLines not defined ( = 3 )';
   var crange = [ 3, 5 ];
 
   var expectedSplits =
@@ -9516,16 +10569,12 @@ ghij
     numberOfLines : undefined,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
 
-  test.close( 'numberOfLines not defined ( = 3 )' );
+  /* */
 
-  /*  */
-
-  test.open( 'numberOfLines : NaN' );
-
+  test.case = 'numberOfLines : NaN';
   var crange = [ 3, 5 ];
 
   var expectedSplits =
@@ -9543,16 +10592,12 @@ ghij
     numberOfLines : NaN,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
 
-  test.close( 'numberOfLines : NaN' );
+  /* */
 
-  /*  */
-
-  test.open( 'numberOfLines : null' );
-
+  test.case = 'numberOfLines : null';
   var crange = [ 3, 5 ];
 
   var expectedSplits =
@@ -9570,18 +10615,13 @@ ghij
     numberOfLines : null,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
 
-  test.close( 'numberOfLines : null' );
+  /* */
 
-  /*  */
-
-  test.open( 'numberOfLines : 0' );
-
-  var crange = [ 6,9 ];
-  var sub = _.strSub( srcStr,crange );
+  test.case = 'numberOfLines : 0';
+  var crange = [ 6, 9 ];
 
   var expectedSplits =
   [
@@ -9598,20 +10638,13 @@ ghij
     numberOfLines : 0,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
-  test.identical( sub, 'def' );
 
-  test.close( 'numberOfLines : 0' );
+  /* */
 
-  /*  */
-
-  test.open( 'numberOfLines : 1' );
-
-  var crange = [ 6,9 ];
-  var sub = _.strSub( srcStr,crange );
+  test.case = 'numberOfLines : 1';
+  var crange = [ 6, 9 ];
 
   var expectedSplits =
   [
@@ -9628,20 +10661,13 @@ ghij
     numberOfLines : 1,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
-  test.identical( sub, 'def' );
-
-  test.close( 'numberOfLines : 1' );
 
   /* */
 
-  test.open( 'numberOfLines : 2' );
-
-  var crange = [ 6,9 ];
-  var sub = _.strSub( srcStr,crange );
+  test.case = 'numberOfLines : 2';
+  var crange = [ 6, 9 ];
 
   var expectedSplits =
   [
@@ -9658,20 +10684,13 @@ ghij
     numberOfLines : 2,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
-  test.identical( sub, 'def' );
-
-  test.close( 'numberOfLines : 2' );
 
   /* */
 
-  test.open( 'numberOfLines : 3' );
-
-  var crange = [ 6,9 ];
-  var sub = _.strSub( srcStr,crange );
+  test.case = 'numberOfLines : 3';
+  var crange = [ 6, 9 ];
 
   var expectedSplits =
   [
@@ -9688,20 +10707,15 @@ ghij
     numberOfLines : 3,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
-  test.identical( sub, 'def' );
-
-  test.close( 'numberOfLines : 3' );
 
   /* */
 
-  test.open( 'numberOfLines : 4' );
+  test.case = 'numberOfLines : 4';
 
-  var crange = [ 6,9 ];
-  var sub = _.strSub( srcStr,crange );
+  var crange = [ 6, 9 ];
+  var sub = _.strOnly( srcStr,crange );
 
   var expectedSplits =
   [
@@ -9718,15 +10732,8 @@ ghij
     numberOfLines : 4,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
-  test.identical( sub, 'def' );
-
-  test.close( 'numberOfLines : 4' );
-
-  /* - */
 
   test.close( 'aligned range, single line' );
 
@@ -9734,12 +10741,8 @@ ghij
 
   test.open( 'not aligned range, several lines' );
 
-  /*  */
-
-  test.open( 'numberOfLines : 0' );
-
-  var crange = [ 4,11 ];
-  var sub = _.strSub( srcStr,crange );
+  test.case = 'numberOfLines : 0';
+  var crange = [ 4, 11 ];
 
   var expectedSplits =
   [
@@ -9756,20 +10759,13 @@ ghij
     numberOfLines : 0,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
-  test.identical( sub, 'c\ndef\ng' );
 
-  test.close( 'numberOfLines : 0' );
+  /* */
 
-  /*  */
-
-  test.open( 'numberOfLines : 1' );
-
-  var crange = [ 4,11 ];
-  var sub = _.strSub( srcStr,crange );
+  test.case = 'numberOfLines : 1';
+  var crange = [ 4, 11 ];
 
   var expectedSplits =
   [
@@ -9786,20 +10782,13 @@ ghij
     numberOfLines : 1,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
-  test.identical( sub, 'c\ndef\ng' );
-
-  test.close( 'numberOfLines : 1' );
 
   /* */
 
-  test.open( 'numberOfLines : 2' );
-
-  var crange = [ 4,11 ];
-  var sub = _.strSub( srcStr,crange );
+  test.case = 'numberOfLines : 2';
+  var crange = [ 4, 11 ];
 
   var expectedSplits =
   [
@@ -9816,20 +10805,13 @@ ghij
     numberOfLines : 2,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
-  test.identical( sub, 'c\ndef\ng' );
-
-  test.close( 'numberOfLines : 2' );
 
   /* */
 
-  test.open( 'numberOfLines : 3' );
-
-  var crange = [ 4,11 ];
-  var sub = _.strSub( srcStr,crange );
+  test.case = 'numberOfLines : 3';
+  var crange = [ 4, 11 ];
 
   var expectedSplits =
   [
@@ -9846,20 +10828,13 @@ ghij
     numberOfLines : 3,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
-  test.identical( sub, 'c\ndef\ng' );
-
-  test.close( 'numberOfLines : 3' );
 
   /* */
 
-  test.open( 'numberOfLines : 4' );
-
+  test.case = 'numberOfLines : 4';
   var crange = [ 4,11 ];
-  var sub = _.strSub( srcStr,crange );
 
   var expectedSplits =
   [
@@ -9876,24 +10851,12 @@ ghij
     numberOfLines : 4,
   });
 
-  test.will = 'check strLinesNearest';
   test.identical( got.splits, expectedSplits );
   test.identical( got.spans, expectedSpans );
-  test.will = 'check strSub';
-  test.identical( sub, 'c\ndef\ng' );
-
-  test.close( 'numberOfLines : 4' );
-
-  /* - */
 
   test.close( 'not aligned range, several lines' );
 
-  debugger;
-
-  console.log( 'done1' );
-  logger.log( 'done2' );
-
-  /* */
+  /* - */
 
   if( !Config.debug )
   return;
@@ -9930,7 +10893,7 @@ ghij
 
   test.close( 'Wrong range' );
 
-  /*  */
+  /* -  */
 
   test.open( 'Wrong src' );
 
@@ -9978,7 +10941,7 @@ ghij
 
   test.close( 'Wrong src' );
 
-  /*  */
+  /* - */
 
   test.open( 'Wrong arg' );
 
@@ -9998,9 +10961,7 @@ ghij
   test.shouldThrowErrorSync( () =>  _.strLinesNearest(  ));
   test.shouldThrowErrorSync( () =>  _.strLinesNearest( o, o ));
 
-
   test.close( 'Wrong arg' );
-
 }
 
 //
@@ -10107,7 +11068,7 @@ ghij
   test.case = 'single line in the middle'; /* */
 
   var crange = [ 3,5 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 2,3 ] );
   test.identical( sub, 'bc' );
@@ -10115,7 +11076,7 @@ ghij
   test.case = 'line in the middle with NL'; /* */
 
   var crange = [ 3,6 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 2,4 ] );
   test.identical( sub, 'bc\n' );
@@ -10123,7 +11084,7 @@ ghij
   test.case = 'single line in the beginning'; /* */
 
   var crange = [ 1,2 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 1,2 ] );
   test.identical( sub, 'a' );
@@ -10131,7 +11092,7 @@ ghij
   test.case = 'line in the beginning with NL'; /* */
 
   var crange = [ 1,3 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 1,3 ] );
   test.identical( sub, 'a\n' );
@@ -10139,7 +11100,7 @@ ghij
   test.case = 'single line in the end'; /* */
 
   var crange = [ 10,14 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 4,5 ] );
   test.identical( sub, 'ghij' );
@@ -10147,7 +11108,7 @@ ghij
   test.case = 'line in the end with NL'; /* */
 
   var crange = [ 10,15 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 4,6 ] );
   test.identical( sub, 'ghij\n' );
@@ -10155,7 +11116,7 @@ ghij
   test.case = 'not aligned range with multiple lines'; /* */
 
   var crange = [ 4,11 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 2,5 ] );
   test.identical( sub, 'c\ndef\ng' );
@@ -10163,7 +11124,7 @@ ghij
   test.case = 'empty line in the beginning'; /* */
 
   var crange = [ 0,0 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 0,1 ] );
   test.identical( sub, '' );
@@ -10171,7 +11132,7 @@ ghij
   test.case = 'empty line in the end'; /* */
 
   var crange = [ 15,15 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 5,6 ] );
   test.identical( sub, '' );
@@ -10192,7 +11153,7 @@ ghij`
   test.case = 'single line in the middle'; /* */
 
   var crange = [ 2,4 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 1,2 ] );
   test.identical( sub, 'bc' );
@@ -10200,7 +11161,7 @@ ghij`
   test.case = 'line in the middle with NL'; /* */
 
   var crange = [ 2,5 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 1,3 ] );
   test.identical( sub, 'bc\n' );
@@ -10208,7 +11169,7 @@ ghij`
   test.case = 'single line in the beginning'; /* */
 
   var crange = [ 0,1 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 0,1 ] );
   test.identical( sub, 'a' );
@@ -10216,7 +11177,7 @@ ghij`
   test.case = 'line in the beginning with NL'; /* */
 
   var crange = [ 0,2 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 0,2 ] );
   test.identical( sub, 'a\n' );
@@ -10224,7 +11185,7 @@ ghij`
   test.case = 'single line in the end'; /* */
 
   var crange = [ 9,13 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 3,4 ] );
   test.identical( sub, 'ghij' );
@@ -10232,7 +11193,7 @@ ghij`
   test.case = 'line in the end with NL'; /* */
 
   var crange = [ 9,14 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 3,4 ] );
   test.identical( sub, 'ghij' );
@@ -10240,7 +11201,7 @@ ghij`
   test.case = 'not aligned range with multiple lines'; /* */
 
   var crange = [ 3,10 ];
-  var sub = _.strSub( srcStr,crange );
+  var sub = _.strOnly( srcStr,crange );
   var lrange = _.strLinesRangeWithCharRange( srcStr, crange );
   test.identical( lrange, [ 1,4 ] );
   test.identical( sub, 'c\ndef\ng' );
@@ -10249,12 +11210,14 @@ ghij`
 
 }
 
-//
+// --
+// test suite definition
+// --
 
 var Self =
 {
 
-  name : 'Tools.base.StrBasic',
+  name : 'Tools.base.Str.base',
   silencing : 1,
   enabled : 1,
 
@@ -10267,13 +11230,13 @@ var Self =
 
     // replacer
 
-    strRemoveBegin,
-    strRemoveEnd,
+    // strRemoveBegin,
+    // strRemoveEnd,
     strRemove,
 
-    strReplaceBegin,
-    strReplaceEnd,
-    strReplace,
+    // strReplaceBegin,
+    // strReplaceEnd,
+    // strReplace,
 
     strPrependOnce,
     strAppendOnce,
@@ -10285,6 +11248,7 @@ var Self =
     strCommonLeft,
     strCommonRight,
     strRandom,
+    strAlphabetFromRange,
 
     // formatter
 
@@ -10319,7 +11283,8 @@ var Self =
 
     // extractor
 
-    strSub,
+    strOnlySingle,
+    strOnly,
     strExtractInlined,
     strExtractInlinedStereo,
     strUnjoin,
@@ -10336,10 +11301,16 @@ var Self =
     strIndentation,
     strLinesStrip,
     strLinesNumber,
+    strLinesNumberZeroLine,
+    strLinesNumberZeroChar,
+    strLinesNumberOnLine,
     strLinesSelect,
+    strLinesSelectHighlighting,
+    strLinesSelectZeroLine,
     strLinesNearest,
     strLinesCount,
     strLinesRangeWithCharRange,
+
   }
 
 }

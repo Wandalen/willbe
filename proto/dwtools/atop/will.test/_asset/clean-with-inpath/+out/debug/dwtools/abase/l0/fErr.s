@@ -28,7 +28,7 @@ let Self = _global_.wTools;
 //
 // //
 //
-// function diagnosticStackRemoveBegin( stack, include, exclude )
+// function diagnosticStackRemoveLeft( stack, include, exclude )
 // {
 //   return stack;
 // }
@@ -60,7 +60,7 @@ function diagnosticLocation( o )
   else if( _.errIs( o ) )
   o = { error : o, level : 0 }
   else if( o === undefined )
-  o = { stack : _.diagnosticStack([ 1, Infinity ]) };
+  o = { stack : _.introspector.stack([ 1, Infinity ]) };
 
   /* */
 
@@ -116,11 +116,11 @@ function diagnosticLocation( o )
   {
     if( o.error )
     {
-      o.stack = _.diagnosticStack( o.error, undefined );
+      o.stack = _.introspector.stack( o.error, undefined );
     }
     else
     {
-      o.stack = _.diagnosticStack();
+      o.stack = _.introspector.stack();
       o.level += 1;
     }
   }
@@ -352,7 +352,7 @@ diagnosticLocation.defaults =
  *
  * function function3()
  * {
- *   stack = _.diagnosticStack();
+ *   stack = _.introspector.stack();
  * }
  *
  * function1();
@@ -498,7 +498,7 @@ function diagnosticStack( stack, range )
 
 //
 
-function diagnosticStackRemoveBegin( stack, include, exclude )
+function diagnosticStackRemoveLeft( stack, include, exclude )
 {
   if( arguments.length !== 3 )
   throw Error( 'Expects two arguments' );
@@ -578,7 +578,7 @@ function errIs( src )
 
 //
 
-function errIsRefined( src )
+function errIsStandard( src )
 {
   if( _.errIs( src ) === false )
   return false;
@@ -817,7 +817,7 @@ function _err( o )
         fallBackMessage = fallBackMessage || arg.constructor.name;
         errors.push( arg );
 
-        o.location = _.diagnosticLocation({ error : arg, location : o.location });
+        o.location = _.introspector.location({ error : arg, location : o.location });
         o.args[ a ] = _.errOriginalMessage( arg )
 
       }
@@ -836,7 +836,7 @@ function _err( o )
     {
       let arg = o.args[ a ];
       if( !_.primitiveIs( arg ) && _.objectLike( arg ) )
-      o.location = _.diagnosticLocation({ error : arg, location : o.location });
+      o.location = _.introspector.location({ error : arg, location : o.location });
     }
 
     o.location = o.location || Object.create( null );
@@ -855,7 +855,7 @@ function _err( o )
       result = new Error( originalMessage + '\n' );
       if( !o.stack )
       {
-        o.stack = _.diagnosticStack( result, [ o.level, Infinity ] );
+        o.stack = _.introspector.stack( result, [ o.level, Infinity ] );
         if( !o.stack || o.stack.indexOf( '\n' ) === -1 )
         if( o.location.full )
         o.stack = o.location.full;
@@ -878,19 +878,19 @@ function _err( o )
       {
         // debugger;
         // o.stack = result.stack;
-        o.stack = _.diagnosticStack( result.stack );
-        // o.stack = _.diagnosticStack( result.stack, [ o.level, Infinity ] );
+        o.stack = _.introspector.stack( result.stack );
+        // o.stack = _.introspector.stack( result.stack, [ o.level, Infinity ] );
       }
       else
       {
         // debugger;
-        o.stack = _.diagnosticStack([ o.level, Infinity ]);
+        o.stack = _.introspector.stack([ o.level, Infinity ]);
       }
 
     }
 
-    if( ( o.stackRemobeBeginInclude || o.stackRemobeBeginExclude ) && o.stack )
-    o.stack = _.diagnosticStackRemoveBegin( o.stack, o.stackRemobeBeginInclude || null, o.stackRemobeBeginExclude || null );
+    if( ( o.stackRemovingBeginIncluding || o.stackRemovingBeginExcluding ) && o.stack )
+    o.stack = _.introspector.stackRemoveLeft( o.stack, o.stackRemovingBeginIncluding || null, o.stackRemovingBeginExcluding || null );
 
     if( !o.stack )
     o.stack = o.fallBackStack;
@@ -899,9 +899,9 @@ function _err( o )
     o.stack = o.stack + '\n';
 
     if( o.stack && !stackCondensed )
-    stackCondensed = _.diagnosticStackCondense( o.stack );
+    stackCondensed = _.introspector.stackCondense( o.stack );
 
-    o.location = _.diagnosticLocation
+    o.location = _.introspector.location
     ({
       error : result,
       stack : o.stack,
@@ -922,7 +922,7 @@ function _err( o )
 
   function catchesForm()
   {
-    let floc = _.diagnosticLocation({ level : o.level });
+    let floc = _.introspector.location({ level : o.level });
     if( !floc.service || floc.service === 1 )
     catches = '    caught at ' + floc.fullWithRoutine + '\n' + catches;
   }
@@ -936,7 +936,7 @@ function _err( o )
     if( result.sourceCode === undefined )
     {
       let c = '';
-      // o.location = _.diagnosticLocation
+      // o.location = _.introspector.location
       // ({
       //   error : result,
       //   stack : o.stack,
@@ -1065,7 +1065,7 @@ function _err( o )
       else
       result += ' = Message\n' + originalMessage + '\n';
       if( o.condensingStack )
-      result += '\n = Condensed calls stack\n' + stackCondensed + '';
+      result += '\n = Beautified calls stack\n' + stackCondensed + '';
       else
       result += '\n = Functions stack\n' + o.stack + '';
       result += '\n = Catches stack\n' + catches + '\n';
@@ -1219,8 +1219,8 @@ _err.defaults =
 {
   /* to make catch stack work properly it should be 1 */
   level : 1,
-  stackRemobeBeginInclude : null,
-  stackRemobeBeginExclude : null,
+  stackRemovingBeginIncluding : null,
+  stackRemovingBeginExcluding : null,
   usingSourceCode : 1,
   condensingStack : 1,
   debugging : null,
@@ -1305,7 +1305,7 @@ function errAttend( err )
 
   _.assert( arguments.length === 1 );
 
-  if( !_.errIsRefined( err ) )
+  if( !_.errIsStandard( err ) )
   err = _._err
   ({
     args : arguments,
@@ -1317,7 +1317,7 @@ function errAttend( err )
   try
   {
 
-    let value = Config.debug ? _.diagnosticStack([ 1, Infinity ]) : true;
+    let value = Config.debug ? _.introspector.stack([ 1, Infinity ]) : true;
     Object.defineProperty( err, 'attended',
     {
       enumerable : false,
@@ -1344,7 +1344,7 @@ function errLogEnd( err )
 
   _.assert( arguments.length === 1 );
 
-  if( !_.errIsRefined( err ) )
+  if( !_.errIsStandard( err ) )
   err = _._err
   ({
     args : arguments,
@@ -1356,7 +1356,7 @@ function errLogEnd( err )
   try
   {
 
-    let value = Config.debug ? _.diagnosticStack([ 1, Infinity ]) : true;
+    let value = Config.debug ? _.introspector.stack([ 1, Infinity ]) : true;
     Object.defineProperty( err, 'logged',
     {
       enumerable : false,
@@ -1781,7 +1781,7 @@ function sureOwnNoConstructor( ins )
   _.sure( _.objectLikeOrRoutine( ins ) );
   // let args = _.longSlice( arguments );
   let args = Array.prototype.slice.call( arguments );
-  args[ 0 ] = _.isOwnNoConstructor( ins );
+  args[ 0 ] = _.ownNoConstructor( ins );
   _.sure.apply( _, args );
 }
 
@@ -2000,7 +2000,7 @@ function assertOwnNoConstructor( ins )
   _.assert( _.objectLikeOrRoutine( ins ) );
   // let args = _.longSlice( arguments );
   let args = Array.prototype.slice.call( arguments );
-  args[ 0 ] = _.isOwnNoConstructor( ins );
+  args[ 0 ] = _.ownNoConstructor( ins );
 
   if( args.length === 1 )
   args.push( () => 'Entity should not own constructor, but own ' + _.toStrShort( ins ) );
@@ -2067,14 +2067,14 @@ let Routines =
 
   diagnosticLocation,
   diagnosticStack,
-  diagnosticStackRemoveBegin,
+  diagnosticStackRemoveLeft,
   diagnosticStackCondense,
   diagnosticCode,
 
   // error
 
   errIs,
-  errIsRefined,
+  errIsStandard,
   errIsAttended,
   errIsLogged,
   errOriginalMessage,

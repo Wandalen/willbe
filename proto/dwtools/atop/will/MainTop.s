@@ -274,8 +274,9 @@ function _commandsMake()
 
     'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       h : 'Run shell command on the module.' },
     'do' :                              { e : _.routineJoin( will, will.commandDo ),                          h : 'Run JS script on the module.' },
-    'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
     'call' :                            { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
+    'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
+    'hooks list' :                      { e : _.routineJoin( will, will.commandHooksList ),                   h : 'List available hooks.' },
     'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
     'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
     'export' :                          { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
@@ -1554,7 +1555,7 @@ function commandModuleNewWith( e )
   let path = will.fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let time = _.timeNow();
+  let time = _.time.now();
   let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
   let execPath = e.argument;
 
@@ -1571,7 +1572,7 @@ function commandModuleNewWith( e )
   .then( ( arg ) =>
   {
     if( will.verbosity >= 2 )
-    logger.log( `Done ${_.color.strFormat( 'hook::' + e.argument, 'entity' )} in ${_.timeSpent( time )}` );
+    logger.log( `Done ${_.color.strFormat( 'hook::' + e.argument, 'entity' )} in ${_.time.spent( time )}` );
     return arg;
   });
 
@@ -1623,7 +1624,7 @@ function commandDo( e )
   let path = will.fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let time = _.timeNow();
+  let time = _.time.now();
   let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
   let execPath = e.argument;
 
@@ -1640,7 +1641,7 @@ function commandDo( e )
   .then( ( arg ) =>
   {
     if( will.verbosity >= 2 )
-    logger.log( `Done ${_.color.strFormat( e.argument, 'code' )} in ${_.timeSpent( time )}` );
+    logger.log( `Done ${_.color.strFormat( e.argument, 'code' )} in ${_.time.spent( time )}` );
     return arg;
   });
 
@@ -1663,7 +1664,7 @@ function commandHookCall( e )
   let path = will.fileProvider.path;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let time = _.timeNow();
+  let time = _.time.now();
   let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
   let execPath = e.argument;
 
@@ -1674,13 +1675,12 @@ function commandHookCall( e )
     onEach : handleEach,
     commandRoutine : commandHookCall,
     withOut : 0,
-    // withDisabledModules : 0,
     withInvalid : 1,
   })
   .then( ( arg ) =>
   {
     if( will.verbosity >= 2 )
-    logger.log( `Done ${_.color.strFormat( 'hook::' + e.argument, 'entity' )} in ${_.timeSpent( time )}` );
+    logger.log( `Done ${_.color.strFormat( 'hook::' + e.argument, 'entity' )} in ${_.time.spent( time )}` );
     return arg;
   });
 
@@ -1696,11 +1696,20 @@ function commandHookCall( e )
 
 }
 
-/*
-Puppeteer test sample equivalent to Spectron sample you may see here
-https://bitbucket.org/stoneridgetechnology/encore.electron/src/development/test/PuppeteerSample.test.ss
+//
 
-*/
+function commandHooksList( e )
+{
+  let will = this.form();
+  let logger = will.logger;
+
+  will.hooksReload();
+  logger.log( 'Found hooks' );
+  logger.up();
+  will.hooksList();
+  logger.down();
+
+}
 
 //
 
@@ -1945,7 +1954,6 @@ function commandWith( e )
 
   will._commandsBegin( commandWith );
 
-  debugger;
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
   if( !isolated )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
@@ -2255,6 +2263,7 @@ let Extend =
   commandShell,
   commandDo,
   commandHookCall,
+  commandHooksList,
   commandClean,
   commandSubmodulesClean,
   commandBuild,

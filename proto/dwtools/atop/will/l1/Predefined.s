@@ -38,7 +38,7 @@ function stepRoutineDelete( frame )
   let path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
-  let time = _.timeNow();
+  let time = _.time.now();
   let verbosity = step.verbosityWithDelta( -1 );
 
   beginLog();
@@ -87,7 +87,7 @@ function stepRoutineDelete( frame )
     if( !verbosity )
     return;
 
-    let spentTime = _.timeNow() - time;
+    let spentTime = _.time.now() - time;
     let groupsMap = path.group({ keys : o2.filter.filePath, vals : o2.result });
     let textualReport = path.groupTextualReport
     ({
@@ -121,7 +121,7 @@ function stepRoutineReflect( frame )
   let path = fileProvider.path;
   let logger = will.logger;
   let opts = _.mapExtend( null, step.opts );
-  let time = _.timeNow();
+  let time = _.time.now();
   let verbosity = step.verbosityWithDelta( -1 );
 
   _.assert( !!opts.reflector, 'Expects option reflector' );
@@ -179,7 +179,7 @@ function stepRoutineReflect( frame )
 
     _.assert( opts.src.isPaired() );
     let mtr = opts.src.moveTextualReport();
-    logger.log( ' + ' + reflector.decoratedQualifiedName + ' reflected ' + opts.result.length + ' file(s) ' + mtr + ' in ' + _.timeSpent( time ) );
+    logger.log( ' + ' + reflector.decoratedQualifiedName + ' reflected ' + opts.result.length + ' file(s) ' + mtr + ' in ' + _.time.spent( time ) );
 
   }
 
@@ -523,7 +523,7 @@ function stepRoutineView( frame )
 
   if( opts.delay )
   {
-    _.timeOut( opts.delay, () =>
+    _.time.out( opts.delay, () =>
     {
       view( filePath );
     });

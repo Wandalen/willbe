@@ -250,7 +250,7 @@ function perform( o )
   let logger = will.logger;
   let isExport = build.isExport();
   let con = new _.Consequence().take( null );
-  let time = _.timeNow();
+  let time = _.time.now();
 
   will.readingEnd();
 
@@ -318,7 +318,7 @@ function perform( o )
         withFiles = 'with ' + total + ' file(s)';
         // withFiles = 'with ' + o.run.exported.exportedFilesPath.path.length + ' file(s)';
       }
-      logger.log( ( isExport ? 'Exported' : 'Built' ), build.decoratedAbsoluteName, withFiles, 'in', _.timeSpent( time ) );
+      logger.log( ( isExport ? 'Exported' : 'Built' ), build.decoratedAbsoluteName, withFiles, 'in', _.time.spent( time ) );
       if( logger.verbosity >= 2 )
       logger.log();
     }

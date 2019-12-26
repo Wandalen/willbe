@@ -219,7 +219,7 @@ function form()
   will.formAssociates();
 
   if( !will.environmentPath )
-  will.environmentPath = will.environmentPathDetermine( will.fileProvider.path.current() );
+  will.environmentPath = will.environmentPathFind( will.fileProvider.path.current() );
   if( !will.withPath )
   will.withPath = will.fileProvider.path.join( will.fileProvider.path.current(), './' );
 
@@ -538,7 +538,7 @@ function environmentPathSet( src )
 
 //
 
-function environmentPathDetermine( dirPath )
+function environmentPathFind( dirPath )
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -2462,7 +2462,7 @@ function modulesDownload_body( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let time = _.timeNow();
+  let time = _.time.now();
   let downloadedLengthWas = 0;
 
   if( !o.downloadedContainer )
@@ -2616,7 +2616,7 @@ function modulesDownload_body( o )
     }
     else
     {
-      logger.log( ' + ' + o.downloadedContainer.length + '/' + total + ' submodule(s)' + ofModule + ' were ' + phrase + ' in ' + _.timeSpent( time ) );
+      logger.log( ' + ' + o.downloadedContainer.length + '/' + total + ' submodule(s)' + ofModule + ' were ' + phrase + ' in ' + _.time.spent( time ) );
     }
     logger.rend({ verbosity : -2 });
 
@@ -2965,7 +2965,7 @@ function modulesClean( o )
   o = _.routineOptions( modulesClean, arguments );
 
   if( o.beginTime === null )
-  o.beginTime = _.timeNow();
+  o.beginTime = _.time.now();
 
   let o2 = _.mapOnly( o, will.modulesFor.defaults );
   o2.onEachModule = handleEach;
@@ -3159,7 +3159,7 @@ function modulesVerify_body( o )
   let ready = new _.Consequence().take( null );
   let verifiedNumber = 0;
   let totalNumber = 0;
-  let time = _.timeNow();
+  let time = _.time.now();
 
   o = _.assertRoutineOptions( modulesVerify_body, arguments );
   // _.assert( _.arrayIs( o.doneContainer ) );
@@ -3194,7 +3194,7 @@ function modulesVerify_body( o )
       ofModule = ` of ${module.decoratedAbsoluteName} `;
     }
 
-    logger.log( `${verifiedNumber} / ${totalNumber} submodule(s)${ofModule}were verified in ${_.timeSpent( time )}` );
+    logger.log( `${verifiedNumber} / ${totalNumber} submodule(s)${ofModule}were verified in ${_.time.spent( time )}` );
     logger.down();
 
     return arg;
@@ -3269,7 +3269,7 @@ let modulesVerify = _.routineFromPreAndBody( modulesVerify_pre, modulesVerify_bo
 //   let logger = will.logger;
 //   let totalNumber = _.mapKeys( module.submoduleMap ).length;
 //   let verifiedNumber = 0;
-//   let time = _.timeNow();
+//   let time = _.time.now();
 //
 //   _.assert( module.preformed > 0  );
 //   _.assert( arguments.length === 1 );
@@ -3292,7 +3292,7 @@ let modulesVerify = _.routineFromPreAndBody( modulesVerify_pre, modulesVerify_bo
 //   {
 //     if( o.asMap )
 //     return { verifiedNumber, totalNumber };
-//     logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.timeSpent( time ) );
+//     logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.time.spent( time ) );
 //     logger.down();
 //     return verifiedNumber === totalNumber;
 //   })
@@ -4216,7 +4216,7 @@ function _willfilesReadBegin()
   _.assert( arguments.length === 0 );
   _.assert( will.mainOpener === null || will.mainOpener instanceof will.ModuleOpener );
 
-  will.willfilesReadBeginTime = will.willfilesReadBeginTime || _.timeNow();
+  will.willfilesReadBeginTime = will.willfilesReadBeginTime || _.time.now();
 
 }
 
@@ -4254,7 +4254,7 @@ function _willfilesReadLog()
   _.assert( arguments.length === 0 );
   _.assert( !will.willfilesReadEndTime );
 
-  will.willfilesReadEndTime = will.willfilesReadEndTime || _.timeNow();
+  will.willfilesReadEndTime = will.willfilesReadEndTime || _.time.now();
 
   if( will.verbosity >= 2 )
   {
@@ -4263,7 +4263,7 @@ function _willfilesReadLog()
     {
       total += _.arrayIs( willf.filePath ) ? willf.filePath.length : 1
     });
-    let spent = _.timeSpentFormat( will.willfilesReadEndTime - will.willfilesReadBeginTime );
+    let spent = _.time.spentFormat( will.willfilesReadEndTime - will.willfilesReadBeginTime );
     logger.log( ' . Read', total, 'willfile(s) in', spent, '\n' );
   }
 
@@ -4309,6 +4309,8 @@ function WillfilesFind( o )
   _.assert( _.boolIs( o.recursive ) );
   _.assert( o.recursive === false );
   _.assert( !path.isGlobal( path.fromGlob( o.commonPath ) ), 'Expects local path' );
+
+  debugger;
 
   if( !o.tracing )
   return findFor( o.commonPath );
@@ -4663,7 +4665,7 @@ function cleanLog( o )
   o.explanation = ' - Clean deleted ';
 
   if( !o.spentTime )
-  o.spentTime = _.timeNow() - o.beginTime;
+  o.spentTime = _.time.now() - o.beginTime;
 
   let textualReport = path.groupTextualReport
   ({
@@ -4784,6 +4786,23 @@ function hooksReload()
     _.assert( !hooks[ hook.name ], () => `Redefinition of hook::${name}` );
     hooks[ hook.name ] = hook;
   });
+
+}
+
+//
+
+function hooksList()
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  for( let h in will.hooks )
+  {
+    let hook = will.hooks[ h ];
+    logger.log( `${hook.name} at ${_.color.strFormat( hook.file.absolute, 'path' )}` );
+  }
 
 }
 
@@ -5411,7 +5430,7 @@ let Extend =
 
   hooksPathGet,
   environmentPathSet,
-  environmentPathDetermine,
+  environmentPathFind,
 
   // etc
 
@@ -5537,6 +5556,7 @@ let Extend =
   // hooks
 
   hooksReload,
+  hooksList,
   hookItNew,
   hookItFrom,
   hookCall,

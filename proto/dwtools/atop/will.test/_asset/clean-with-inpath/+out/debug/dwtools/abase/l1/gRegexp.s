@@ -187,28 +187,6 @@ let _floor = Math.floor;
 
 //
 
-/**
- * Escapes special characters with a slash ( \ ). Supports next set of characters : .*+?^=! :${}()|[]/\
- *
- * @example
- * _.regexpEscape( 'Hello. How are you?' );
- * // returns "Hello\. How are you\?"
- *
- * @param {String} src Regexp string
- * @returns {String} Escaped string
- * @function regexpEscape
- * @memberof wTools
- */
-
-function regexpEscape( src )
-{
-  _.assert( _.strIs( src ) );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  return src.replace( /([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1" );
-}
-
-//
-
 let regexpsEscape = null;
 
 //
@@ -343,7 +321,11 @@ function regexpsSources( o )
     if( _.regexpIs( src ) )
     {
       o.sources[ s ] = src.source;
-      _.assert( o.flags === null || src.flags === o.flags, () => 'All RegExps should have flags field with the same value ' + _.strQuote( src.flags ) + ' != ' + _.strQuote( o.flags ) );
+      _.assert
+      (
+        o.flags === null || src.flags === o.flags,
+        () => `All RegExps should have flags field with the same value "${ src.flags }" != "${ o.flags }"`
+      );
       if( o.flags === null )
       o.flags = src.flags;
     }
@@ -522,9 +504,9 @@ regexpsAtLeastFirst.defaults =
  * @param {String[]} [options.but=null] a list of words,from each will consist regexp
  * @param {boolean} [options.atLeastOne=true] indicates whether search matches at least once
  * @param {...String} [words] a list of words, from each will consist regexp. This arguments can be used instead
- * options object.
+ * options map.
  * @returns {RegExp} Result regexp
- * @throws {Error} If passed arguments are not strings or options object.
+ * @throws {Error} If passed arguments are not strings or options map.
  * @throws {Error} If options contains any different from 'but' or 'atLeastOnce' properties.
  * @function regexpsNone
  * @memberof wTools
@@ -845,9 +827,6 @@ let Routines =
 {
 
   // regexp
-
-  regexpEscape,
-  regexpsEscape : _.routineVectorize_functor( regexpEscape ),
 
   regexpArrayMake,
   regexpFrom,

@@ -2,9 +2,6 @@
 
 'use strict';
 
-/*
-*/
-
 if( typeof module !== 'undefined' )
 {
   let _ = require( '../../Tools.s' );
@@ -20,6 +17,19 @@ if( typeof module !== 'undefined' )
 var _global = _global_;
 var _ = _global_.wTools;
 
+/*
+qqq : implement test checking "will .call link" links files ".dot1" ".dot2"
+xxx : should work
+  > local-will .imply withOut:0 .with * .call GitStatus
+  not only
+  > local-will .imply withOut:0 ; .with * .call GitStatus 
+xxx : find solution
+  > git push --tags
+  fatal: TaskCanceledException encountered.
+  A task was canceled.
+  bash: /dev/tty: No such device or address
+*/
+
 // --
 // context
 // --
@@ -28,9 +38,9 @@ function onSuiteBegin()
 {
   let self = this;
 
-  self.suitePath = _.path.pathDirTempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
-  self.assetDirPath = _.path.join( __dirname, '_asset' );
-  self.repoDirPath = _.path.join( self.assetDirPath, '_repo' );
+  self.suiteTempPath = _.path.pathDirTempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
+  self.suiteAssetsOriginalPath = _.path.join( __dirname, '_asset' );
+  self.repoDirPath = _.path.join( self.suiteAssetsOriginalPath, '_repo' );
 
   self.find = _.fileProvider.filesFinder
   ({
@@ -72,8 +82,8 @@ function onSuiteBegin()
 function onSuiteEnd()
 {
   let self = this;
-  _.assert( _.strHas( self.suitePath, '/willbe-' ) )
-  _.path.pathDirTempClose( self.suitePath );
+  _.assert( _.strHas( self.suiteTempPath, '/willbe-' ) )
+  _.path.pathDirTempClose( self.suiteTempPath );
 }
 
 //
@@ -85,10 +95,10 @@ function assetFor( test, name )
 
   a.test = test;
   a.name = name;
-  a.originalAssetPath = _.path.join( self.assetDirPath, name );
+  a.originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, name );
   a.originalAbs = self.abs_functor( a.originalAssetPath );
   a.originalRel = self.rel_functor( a.originalAssetPath );
-  a.routinePath = _.path.join( self.suitePath, test.name );
+  a.routinePath = _.path.join( self.suiteTempPath, test.name );
   a.abs = self.abs_functor( a.routinePath );
   a.rel = self.rel_functor( a.routinePath );
   a.will = new _.Will;
@@ -151,6 +161,30 @@ function rel_functor( routinePath )
   }
 }
 
+//
+
+function ReplaceSetsAreIdentical()
+{
+  _.include( 'wIntrospector' );
+
+  let file = _.introspector.thisFile().refine();
+
+  logger.log( file.productExportInfo() );
+
+  debugger;
+  file.product.nodes.map( null, ( node ) =>
+  {
+    let found = file.nodeSearch( node, 'setsAreIdentical' );
+    if( _.mapKeys( found ).length )
+    debugger;
+  });
+  debugger;
+
+  file.arrange();
+}
+
+ReplaceSetsAreIdentical();
+
 // --
 // tests
 // --
@@ -158,7 +192,7 @@ function rel_functor( routinePath )
 function preCloneRepos( test )
 {
   let self = this;
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
@@ -181,8 +215,8 @@ function preCloneRepos( test )
 function buildSimple( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'simple' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'simple' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( './' );
@@ -244,8 +278,8 @@ function openNamedFast( test )
 {
   let self = this;
   let assetName = 'two-exported/super';
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'super' );
@@ -436,8 +470,8 @@ function openNamedForming( test )
 {
   let self = this;
   let assetName = 'two-exported/super';
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'super' );
@@ -661,8 +695,8 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
 {
   let self = this;
   let assetName = 'two-exported/super';
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'super' );
@@ -805,8 +839,8 @@ function openSkippingSubButAttachedWillfiles( test )
 {
   let self = this;
   let assetName = 'two-exported/super';
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'super' );
@@ -970,8 +1004,8 @@ function openAnon( test )
 {
   let self = this;
   let assetName = 'two-anon-exported/.';
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-anon-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-anon-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( './' );
@@ -1111,8 +1145,8 @@ function openOutNamed( test )
 {
   let self = this;
   let assetName = 'two-exported/super.out/supermodule';
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let moduleDirPath = abs( 'super.out' );
@@ -1255,8 +1289,8 @@ function openCurruptedUnknownField( test )
 {
   let self = this;
   let assetName = 'corrupted-infile-unknown-field/sub';
-  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-infile-unknown-field' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-infile-unknown-field' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'sub' );
@@ -1394,8 +1428,8 @@ function openCurruptedUnknownField( test )
 function openerClone( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'super' );
@@ -1636,8 +1670,8 @@ openerClone.timeOut = 130000;
 function moduleClone( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'super' );
@@ -1977,8 +2011,8 @@ test
 function exportSeveralExports( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'inconsistent-outfile' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'inconsistent-outfile' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let subInPath = abs( 'sub' );
@@ -2237,8 +2271,8 @@ function exportSeveralExports( test )
 function exportSuper( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let superInPath = abs( 'super' );
@@ -2578,8 +2612,8 @@ function exportSuper( test )
 function exportSuperIn( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-in-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-in-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let superInPath = abs( 'super' );
@@ -3025,8 +3059,8 @@ test
 function exportDefaultPath( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'export-default-path' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-default-path' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outDirPath = abs( 'out' );
@@ -3263,8 +3297,8 @@ test
 function exportOutdated( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'inconsistent-outfile' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'inconsistent-outfile' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let subInPath = abs( 'sub' );
@@ -3415,8 +3449,8 @@ test
 function exportRecursive( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'resolve-path-of-submodules-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let inPath = abs( 'ab/' );
@@ -3503,8 +3537,8 @@ test
 function exportDotless( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-dotless-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-dotless-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let inPath = abs( './' );
@@ -3630,8 +3664,8 @@ test
 function exportDotlessSingle( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-dotless-single-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-dotless-single-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let inPath = abs( './' );
@@ -3755,8 +3789,8 @@ test
 function exportStepOpts( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'export-step-opts' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-step-opts' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let inPath = abs( 'a' );
@@ -3923,8 +3957,8 @@ test
 function exportRecursiveUsingSubmodule( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let inPath = abs( 'super' );
@@ -4034,8 +4068,8 @@ function exportRecursiveUsingSubmodule( test )
 function exportSteps( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let inPath = abs( 'super' );
@@ -4201,8 +4235,8 @@ test
 function exportCourrputedOutfileUnknownSection( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-outfile-unknown-section' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-outfile-unknown-section' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let subInPath = abs( 'sub' );
@@ -4312,8 +4346,8 @@ test
 function exportCourruptedOutfileSyntax( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-outfile-syntax' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-outfile-syntax' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let subInPath = abs( 'sub' );
@@ -4421,8 +4455,8 @@ test
 function exportCourruptedSubmodulesDisabled( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-submodules-disabled' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-submodules-disabled' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let superInPath = abs( 'super' );
@@ -4558,8 +4592,8 @@ function exportCourruptedSubmodulesDisabled( test )
 function exportCourrputedSubmoduleOutfileUnknownSection( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-submodule-outfile-unknown-section' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-submodule-outfile-unknown-section' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let superInPath = abs( 'super' );
@@ -4739,8 +4773,8 @@ test
 function exportCourrputedSubmoduleOutfileFormatVersion( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-submodule-outfile-format-version' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-submodule-outfile-format-version' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let superInPath = abs( 'super' );
@@ -4913,8 +4947,8 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 function exportsResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'corrupted-submodule-outfile-unknown-section' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-submodule-outfile-unknown-section' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let superInPath = abs( 'super' );
@@ -4972,8 +5006,8 @@ function exportsResolve( test )
 function buildsResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'super' );
@@ -5103,8 +5137,8 @@ buildsResolve.timeOut = 130000;
 function trivialResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'make' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'make' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'v1' );
@@ -5171,8 +5205,8 @@ function trivialResolve( test )
 function detailedResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let inPath = abs( 'super' );
@@ -5234,8 +5268,8 @@ function detailedResolve( test )
 function reflectorResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'composite-reflector' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'composite-reflector' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( './' );
@@ -5643,8 +5677,8 @@ function reflectorResolve( test )
 function reflectorInheritedResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'reflect-inherit' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-inherit' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( './' );
@@ -5889,8 +5923,8 @@ function reflectorInheritedResolve( test )
 function superResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-in-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-in-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'super' );
@@ -6017,8 +6051,8 @@ superResolve.timeOut = 130000;
 function pathsResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'super' );
@@ -6567,8 +6601,8 @@ pathsResolve.timeOut = 130000;
 function pathsResolveImportIn( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'two-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'super' );
@@ -7310,9 +7344,9 @@ pathsResolveImportIn.timeOut = 130000;
 function pathsResolveOfSubmodules( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
-  let repoPath = _.path.join( self.suitePath, '_repo' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-local-repos' );
+  let repoPath = _.path.join( self.suiteTempPath, '_repo' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = abs( '.module' );
@@ -7406,9 +7440,9 @@ pathsResolveOfSubmodules.timeOut = 130000;
 function pathsResolveOfSubmodulesAndOwn( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'resolve-path-of-submodules-exported' );
-  let repoPath = _.path.join( self.suitePath, '_repo' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'resolve-path-of-submodules-exported' );
+  let repoPath = _.path.join( self.suiteTempPath, '_repo' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let submodulesPath = abs( '.module' );
@@ -7483,8 +7517,8 @@ pathsResolveOfSubmodulesAndOwn.timeOut = 300000;
 function pathsResolveOutFileOfExports( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'export-multiple-exported' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple-exported' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let outSuperDirPath = abs( 'super.out' );
@@ -8287,8 +8321,8 @@ pathsResolveOutFileOfExports.timeOut = 130000;
 function pathsResolveComposite( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'composite-path' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'composite-path' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( './' );
@@ -8404,8 +8438,8 @@ pathsResolveComposite.timeOut = 130000;
 function pathsResolveComposite2( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'path-composite' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'path-composite' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'Proto' );
@@ -8467,8 +8501,8 @@ pathsResolveComposite2.timeOut = 130000;
 function pathsResolveArray( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'make' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'make' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'v1' );
@@ -8709,8 +8743,8 @@ relative resolved path absolutized if pathResolving:1
 function pathsResolveFailing( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'export-with-submodules' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( 'ab/' );
@@ -9040,9 +9074,9 @@ function modulesEachDuplicates( test )
 function submodulesResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-local-repos' );
-  let repoPath = _.path.join( self.suitePath, '_repo' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-local-repos' );
+  let repoPath = _.path.join( self.suiteTempPath, '_repo' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( './' );
@@ -9166,9 +9200,9 @@ submodulesResolve.timeOut = 300000;
 function submodulesDeleteAndDownload( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-del-download' );
-  let repoPath = _.path.join( self.suitePath, '_repo' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-del-download' );
+  let repoPath = _.path.join( self.suiteTempPath, '_repo' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( './' );
@@ -9401,8 +9435,8 @@ submodulesDeleteAndDownload.timeOut = 300000;
 function customLogger( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'simple' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'simple' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let modulePath = abs( './' );
@@ -9478,8 +9512,8 @@ function customLogger( test )
 function resourcePathRemote( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'export-informal' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-informal' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
   let informalPath = abs( './module/' );
@@ -9542,8 +9576,8 @@ function resourcePathRemote( test )
 function moduleIsNotValid( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.assetDirPath, 'submodules-download-errors' );
-  let routinePath = _.path.join( self.suitePath, test.name );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-download-errors' );
+  let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let modulePath = abs( './good' );
   let downloadPath = abs( './.module/PathBasic' );
@@ -9624,8 +9658,8 @@ var Self =
 
   context :
   {
-    suitePath : null,
-    assetDirPath : null,
+    suiteTempPath : null,
+    suiteAssetsOriginalPath : null,
     repoDirPath : null,
     find : null,
     findAll : null,

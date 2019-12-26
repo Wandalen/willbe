@@ -118,7 +118,7 @@ function toStr( src, opts )
 
   _.assert( arguments.length === 1 || arguments.length === 2 );
 
-  result = _.str( src );
+  result = _.toStrSimple( src );
 
   return result;
 }
@@ -132,7 +132,7 @@ toStr.routines = toStr;
  * Return in one string value of all arguments.
  *
  * @example
- * let args = _.str( 'test2' );
+ * let args = _.toStrSimple( 'test2' );
  *
  * @return {string}
  * If no arguments return empty string

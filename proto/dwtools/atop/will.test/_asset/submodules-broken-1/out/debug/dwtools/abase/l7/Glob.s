@@ -11,7 +11,7 @@ if( typeof module !== 'undefined' )
 
   let _ = require( '../../Tools.s' );
 
-  require( '../l3/PathBasic.s' );
+  require( '../l2/PathBasic.s' );
 
   _.include( 'wStringsExtra' );
 
@@ -1672,7 +1672,7 @@ module[ 'exports' ] = Self;
 if( typeof module !== 'undefined' )
 {
 
-  require( '../l3/PathBasic.s' );
+  require( '../l2/PathBasic.s' );
 
 }
 
