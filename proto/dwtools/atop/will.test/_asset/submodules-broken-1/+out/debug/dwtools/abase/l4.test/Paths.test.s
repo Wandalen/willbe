@@ -9,6 +9,9 @@ if( typeof module !== 'undefined' )
 
   _.include( 'wTesting' );
   _.include( 'wStringer' );
+  _.include( 'wColor' );
+
+  // _.include( 'wFiles' );
 
   require( '../l3/PathsBasic.s' );
 
@@ -544,6 +547,7 @@ function reroot( test )
 
 function resolve( test )
 {
+
   test.case = 'paths resolve';
 
   var got = _.paths.resolve( 'c', [ '/a', 'b' ] );
@@ -611,10 +615,23 @@ function resolve( test )
   test.identical( got, expected );
 
   var got = _.paths.resolve( '..' );
-  var expected = '/..';
+  var expected = _.path.join( _.path.current(), '..' );
   test.identical( got, expected );
 
-  //
+  // if( _.module.isIncluded( 'wFiles' ) )
+  // {
+  //   var got = _.paths.resolve( '..' );
+  //   var expected = '/..';
+  //   test.identical( got, expected );
+  // }
+  // else
+  // {
+  //   var got = _.paths.resolve( '..' );
+  //   var expected = '/..';
+  //   test.identical( got, expected );
+  // }
+
+  /* */
 
   test.case = 'scalar + array with single argument';
 
@@ -637,11 +654,16 @@ function resolve( test )
     _.path.join( _.path.current(), 'b' ),
     _.path.join( _.path.current(), 'b' ),
     _.path.join( _.path.dir( _.path.current() ), 'b' ),
-    '/..'
+    _.path.dir( _.path.current() ),
   ];
   test.identical( got, expected );
 
-  //
+  // test.case = 'empty';
+  // var expected = [];
+  // var got = _.paths.resolve();
+  // test.identical( got, expected );
+
+  /* */
 
   if( !Config.debug )
   return
@@ -649,8 +671,8 @@ function resolve( test )
   test.case = 'arrays with different length';
   test.shouldThrowErrorOfAnyKind( () => _.paths.resolve( [ '/b', '.c' ], [ '/b' ] ) );
 
-  // test.case = 'empty';
-  // test.shouldThrowErrorOfAnyKind( () => _.paths.resolve() );
+  test.case = 'empty';
+  test.shouldThrowErrorOfAnyKind( () => _.paths.resolve() );
 
   test.case = 'inner arrays';
   test.shouldThrowErrorOfAnyKind( () => _.paths.resolve( [ '/b', '.c' ], [ '/b', [ 'x' ] ] ) );
@@ -1654,65 +1676,64 @@ function moveTextualReport( test )
   var expected = '/a : . <- .';
   var dst = '/a';
   var src = '/a';
-  debugger;
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.case = 'different, absolute, with common';
   var expected = '/a/ : ./dst <- ./src';
   var dst = '/a/dst';
   var src = '/a/src';
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.case = 'different, absolute, without common';
   var expected = '/b/dst <- /a/src';
   var dst = '/b/dst';
   var src = '/a/src';
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.case = 'same, relative';
   var expected = 'a/src : . <- .';
   var dst = 'a/src';
   var src = 'a/src';
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.case = 'different, relative, with common';
   var expected = 'a/ : ./dst <- ./src';
   var dst = 'a/dst';
   var src = 'a/src';
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.case = 'different, relative, without common';
   var expected = 'b/dst <- a/src';
   var dst = 'b/dst';
   var src = 'a/src';
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.case = 'same, relative dotted';
   var expected = 'a/src : . <- .';
   var dst = './a/src';
   var src = './a/src';
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.case = 'different, relative dotted, with common';
   var expected = 'a/ : ./dst <- ./src';
   var dst = './a/dst';
   var src = './a/src';
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.case = 'different, relative dotted, without common';
   var expected = './b/dst <- ./a/src';
   var dst = './b/dst';
   var src = './a/src';
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.close( 'locals' );
 
@@ -1723,35 +1744,35 @@ function moveTextualReport( test )
   var dst = null;
   var src = null;
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.case = 'dst relative, src null';
   var expected = './a/dst <- {null}';
   var dst = './a/dst';
   var src = null;
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.case = 'src relative, dst null';
   var expected = '{null} <- ./a/src';
   var src = './a/src';
   var dst = null;
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.case = 'src absolute, dst null';
   var expected = '/{null} <- /a/src';
   var src = '/a/src';
   var dst = null;
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.case = 'dst absolute, src null';
   var expected = '/a/dst <- /{null}';
   var dst = '/a/dst';
   var src = null;
   var got = _.path.moveTextualReport( dst, src );
-  test.identical( got, expected );
+  test.identical( _.ct.strip( got ), expected );
 
   test.close( 'null' );
 

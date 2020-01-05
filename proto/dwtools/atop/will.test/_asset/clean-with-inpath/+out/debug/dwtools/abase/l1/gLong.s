@@ -174,12 +174,11 @@ longDuplicate.defaults =
  */
 
 /*
-qqq : routine longOnce requires good test coverage and documentation
-Dmytro : covered and extended documentation.
+qqq : routine longOnce requires good test coverage and documentation | Dmytro : covered and extended documentation.
 */
 
 /*
-qqq2 : implement routine longOnce_. ask how
+qqq2 : implement routine longOnce_. ask how | Dmytro : implemented
 */
 
 function longOnce( dstLong, onEvaluate )
@@ -211,6 +210,107 @@ function longOnce( dstLong, onEvaluate )
   result[ j++ ] = dstLong[ i ];
 
   _.assert( j === length );
+
+  return result;
+}
+
+//
+
+function longOnce_( dstLong, srcLong, onEvaluate )
+{
+  _.assert( dstLong === null || _.longIs( dstLong ), 'Expects Long' );
+
+  if( dstLong === null )
+  {
+    if( _.longIs( srcLong ) )
+    dstLong = _.longMakeUndefined( srcLong, 0 );
+    else 
+    return [];
+  }
+  if( arguments.length === 1 )
+  {
+    srcLong = dstLong;
+  }
+  else if( arguments.length === 2 )
+  {
+    if( _.routineIs( srcLong ) )
+    {
+      onEvaluate = srcLong;
+      srcLong = dstLong;
+    }
+  }
+  else if( arguments.length !== 3 )
+  _.assert( 0 );
+
+  _.assert( _.longIs( srcLong ) );
+
+  let result;
+
+  if( dstLong === srcLong )
+  {
+    if( !dstLong.length )
+    return dstLong;
+
+    if( _.arrayIs( dstLong ) )
+    return _.arrayRemoveDuplicates( dstLong, onEvaluate );
+
+    let length = dstLong.length;
+
+    for( let i = 0; i < dstLong.length; i++ )
+    if( _.longLeftIndex( dstLong, dstLong[ i ], i + 1, onEvaluate ) !== -1 )
+    length--;
+
+    if( length === dstLong.length )
+    return dstLong;
+
+    result = _.longMakeUndefined( dstLong, length );
+    result[ 0 ] = dstLong[ 0 ];
+
+    let j = 1;
+    for( let i = 1; i < dstLong.length && j < length; i++ )
+    if( _.longRightIndex( result, dstLong[ i ], j - 1, onEvaluate ) === -1 )
+    result[ j++ ] = dstLong[ i ];
+
+    _.assert( j === length );    
+  }
+  else 
+  {
+    if( _.arrayIs( dstLong ) )
+    {
+      result = _.arrayAppendArrayOnce( dstLong, srcLong, onEvaluate );
+    }
+    else 
+    {
+      let length = srcLong.length + dstLong.length;
+
+      for( let i = 0; i < srcLong.length; i++ )
+      if( _.longLeftIndex( dstLong, srcLong[ i ], onEvaluate ) !== -1 || _.longLeftIndex( srcLong, srcLong[ i ], i + 1, onEvaluate ) !== -1 )
+      length--;
+
+      if( length === dstLong.length )
+      return dstLong;
+
+      result = _.longMakeUndefined( dstLong, length );
+      
+      for( let i = 0; i < dstLong.length; i++ )
+      result[ i ] = dstLong[ i ]
+
+      let offset = dstLong.length;
+      for( let i = dstLong.length; i < result.length;  )
+      {
+        if( _.longLeftIndex( result, srcLong[ i - offset ], onEvaluate ) === -1 )
+        {
+          result[ i ] = srcLong[ i - offset ];
+          i++; 
+        }
+        else 
+        {
+          offset--;          
+        }
+      }
+    }
+  }
+
 
   return result;
 }
@@ -1600,8 +1700,7 @@ function longPut( dstArray, dstOffset )
  */
 
 /*
-qqq : routine longFill requires good test coverage and documentation
-Dmytro : extended documentation, extended coverage
+qqq : routine longFill requires good test coverage and documentation | Dmytro : extended documentation, extended coverage
 */
 
 function longFill( result, value, range )
@@ -2916,6 +3015,7 @@ let Routines =
 
   longDuplicate,
   longOnce, /* xxx : review */
+  longOnce_, /* !!! : use instead of longOnce */
 
   longHasUniques,
   longAreRepeatedProbe,

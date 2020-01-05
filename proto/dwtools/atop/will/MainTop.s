@@ -2304,7 +2304,7 @@ if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
 wTools[ Self.shortName ] = Self;
 
-// _.process.exitHandlerRepair();
+// _.process._exitHandlerRepair();
 if( !module.parent )
 Self.Exec();
 
