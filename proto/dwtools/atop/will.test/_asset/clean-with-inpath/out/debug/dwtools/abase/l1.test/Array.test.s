@@ -7180,6 +7180,340 @@ function longOnce( test )
 
 //
 
+function longOnce_( test )
+{
+  /* constructors */
+
+  var array = ( src ) => _.arrayMake( src );
+  var unroll = ( src ) => _.unrollMake( src );
+  var argumentsArray = ( src ) => src === null ? _.argumentsArrayMake( [] ) : _.argumentsArrayMake( src );
+  var bufferTyped = function( buf )
+  {
+    let name = buf.name;
+    return { [ name ] : function( src ){ return new buf( src ) } } [ name ];
+  };
+
+  /* callbacks */
+
+  var evaluator = ( e ) => _.mapIs( e ) ? e.v : e;
+  var equalizer = function( e1, e2 )
+  {
+    e1 = _.mapIs( e1 ) ? e1.v : e1;
+    e2 = _.mapIs( e2 ) ? e2.v : e2;
+    return e1 === e2;
+  }
+
+  /* lists */
+
+  var listTyped =
+  [
+    I8x,
+    // U8x,
+    // U8ClampedX,
+    // I16x,
+    U16x,
+    // I32x,
+    // U32x,
+    F32x,
+    F64x,
+  ];
+  var listDst =
+  [
+    array,
+    unroll,
+    argumentsArray,
+  ];
+
+  for( let i in listTyped )
+  listDst.push( bufferTyped( listTyped[ i ] ) );
+
+  var listOnEvaluate =
+  [
+    evaluator,
+    equalizer,
+  ]
+
+  /* only dst */
+
+  for( let d in listDst )
+  {
+    test.open( 'dst = ' + listDst[ d ].name );
+    dstOnly( listDst[ d ] );
+    test.close( 'dst = ' + listDst[ d ].name );
+  }
+
+  /* dst and onEvaluate, src in test cases */
+
+  let i = 0;
+  while( !_.bufferTypedIs( listDst[ i ]( 0 ) ) )
+  {
+    test.open( 'dst = ' + listDst[ i ].name );
+
+    for( let d = 0; d < listOnEvaluate.length; d++ )
+    {
+      test.open( 'onEvaluate = ' + listOnEvaluate[ d ].name );
+      dstAndOnEvaluate( listDst[ i ], listOnEvaluate[ d ] );
+      test.close( 'onEvaluate = ' + listOnEvaluate[ d ].name );
+    }
+
+    test.close( 'dst = ' + listDst[ i ].name );
+
+    i++
+  }
+
+  /* test routines */
+
+  function dstOnly( makeDst )
+  {
+    test.case = 'dst - null, src - undefined';
+    var dst = null;
+    var got = _.longOnce_( dst );
+    var expected = [];
+    test.identical( got, expected );
+
+    test.case = 'dst - long from null, src - undefined';
+    var dst = makeDst( null );
+    var got = _.longOnce_( dst );
+    var expected = makeDst( null );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'dst.length - 0, src - undefined';
+    var dst = makeDst( [] );
+    var got = _.longOnce_( dst );
+    var expected = makeDst( [] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'dst.length - 1, src - undefined';
+    var dst = makeDst( [ 1 ] );
+    var got = _.longOnce_( dst );
+    var expected = makeDst( [ 1 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'dst.length > 1, no duplicates, src - undefined';
+    var dst = makeDst( [ 1, 2, 3, 4, 5 ] );
+    var got = _.longOnce_( dst );
+    var expected = makeDst( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    test.case = 'dst.length > 1, duplicates, src - undefined';
+    var dst = makeDst( [ 1, 2, 2, 1, 5, 3, 4, 5, 5, 3 ] );
+    var got = _.longOnce_( dst );
+    var expected = _.argumentsArrayIs( dst ) ? array( [ 1, 2, 5, 3, 4 ] ) : makeDst( [ 1, 2, 5, 3, 4 ] );
+    test.identical( got, expected );
+    if( !_.argumentsArrayIs( dst ) && !_.bufferAnyIs( dst ) )
+    test.is( got === dst );
+
+    /* */
+
+    test.case = 'dst - null, src - empty ' + makeDst.name;
+    var dst = null;
+    var src = makeDst( null );
+    var got = _.longOnce_( dst, src );
+    var expected = makeDst( null );
+    test.equivalent( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'dst - null, src - ' + makeDst.name + ' without duplicates';
+    var dst = null;
+    var src = makeDst( [ 1, 2, 3, 4, 5 ] )
+    var got = _.longOnce_( dst, src );
+    var expected = makeDst( [ 1, 2, 3, 4, 5 ] );
+    test.equivalent( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'dst - null, src - ' + makeDst.name + ' with duplicates';
+    var dst = null;
+    var src = makeDst( [ 1, 2, 3, 4, 5, 1, 2, 3, 4, 5  ] )
+    var got = _.longOnce_( dst, src );
+    var expected = makeDst( [ 1, 2, 3, 4, 5 ] );
+    test.equivalent( got, expected );
+    test.is( got !== dst );
+
+    /* */
+
+    test.case = 'dst - empty' + makeDst.name + ' src - empty ' + makeDst.name;
+    var dst = makeDst( [] );
+    var src = makeDst( null );
+    var got = _.longOnce_( dst, src );
+    var expected = makeDst( null );
+    test.equivalent( got, expected );
+    test.is( got === dst );
+
+    test.case = 'dst - empty ' + makeDst.name + ', src - ' + makeDst.name + ' with duplicates';
+    var dst = makeDst( [] );
+    var src = makeDst( [ 0, 0, 0 ] )
+    var got = _.longOnce_( dst, src );
+    var expected = makeDst( [ 0 ] );
+    test.equivalent( got, expected );
+    test.is( _.arrayIs( dst ) ? got === dst : got !== dst );
+
+    test.case = 'dst - with duplicates, src - empty ' + makeDst.name;
+    var dst = makeDst( [ 0, 0, 0 ] );
+    var src = makeDst( [] )
+    var got = _.longOnce_( dst, src );
+    var expected = makeDst( [ 0, 0, 0 ] );
+    test.equivalent( got, expected );
+    test.is( got === dst );
+
+    test.case = 'dst and src is almost identical';
+    var dst = makeDst( [ 0, 0, 0 ] );
+    var src = makeDst( [ 0, 0, 0 ] )
+    var got = _.longOnce_( dst, src );
+    var expected = makeDst( [ 0, 0, 0 ] );
+    test.equivalent( got, expected );
+    test.is( got === dst );
+
+    test.case = 'dst - ' + makeDst.name + ' with, duplicates, src - ' + makeDst.name + ' without duplicates';
+    var dst = makeDst( [ 0, 0, 0 ] );
+    var src = makeDst( [ 1, 2, 3, 4, 5 ] )
+    var got = _.longOnce_( dst, src );
+    var expected = makeDst( [ 0, 0, 0, 1, 2, 3, 4, 5 ] );
+    test.equivalent( got, expected );
+    test.is( _.arrayIs( dst ) ? got === dst : got !== dst );
+
+    test.case = 'dst - ' + makeDst.name + ' with, duplicates, src - ' + makeDst.name + ' with duplicates';
+    var dst = makeDst( [ 0, 0, 0 ] );
+    var src = makeDst( [ 1, 2, 3, 4, 5, 0, 0, 1, 2, 3, 4, 5 ] )
+    var got = _.longOnce_( dst, src );
+    var expected = makeDst( [ 0, 0, 0, 1, 2, 3, 4, 5 ] );
+    test.equivalent( got, expected );
+    test.is( _.arrayIs( dst ) ? got === dst : got !== dst );
+  }
+
+  /* - */
+
+  function dstAndOnEvaluate( makeDst, onEvaluate )
+  {
+    var result = ( dst, src ) =>
+
+    test.case = 'dst has duplicates, src - undefined';
+    var dst = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 } ] );
+    var got = _.longOnce_( dst, onEvaluate );
+    var expected = _.argumentsArrayIs( dst ) ?
+    array( [ { v : 1 }, { v : 2 }, { v : 3 } ] ) : makeDst( [ { v : 1 }, { v : 2 }, { v : 3 } ] );
+    test.identical( got, expected );
+    test.is( _.arrayIs( dst ) ? got === dst : got !== dst );
+
+    test.case = 'dst has not duplicates, src - undefined';
+    var dst = makeDst( [ 5, 6, { v : 1 }, { v : 2 }, { v : 3 } ] );
+    var got = _.longOnce_( dst, onEvaluate );
+    var expected = makeDst( [ 5, 6, { v : 1 }, { v : 2 }, { v : 3 } ] );
+    test.identical( got, expected );
+    test.is( got === dst );
+
+    /* */
+
+    test.case = 'dst - null, src - undefined';
+    var dst = null;
+    var got = _.longOnce_( dst, onEvaluate );
+    var expected = [];
+    test.equivalent( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'dst - null, src - empty ' + makeDst.name;
+    var dst = null;
+    var src = makeDst( null );
+    var got = _.longOnce_( dst, src, onEvaluate );
+    var expected = makeDst( null );
+    test.equivalent( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'dst - null, src - ' + makeDst.name + ' without duplicates';
+    var dst = null;
+    var src = makeDst( [ { v : 1 }, { v : 2 }, { v : 3 } ] );
+    var got = _.longOnce_( dst, src, onEvaluate );
+    var expected = makeDst( [ { v : 1 }, { v : 2 }, { v : 3 } ] );
+    test.equivalent( got, expected );
+    test.is( got !== dst );
+
+    test.case = 'dst - null, src - ' + makeDst.name + ' with duplicates';
+    var dst = null;
+    var src = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 } ] );
+    var got = _.longOnce_( dst, src, onEvaluate );
+    var expected = makeDst( [ { v : 1 }, { v : 2 }, { v : 3 } ] );
+    test.equivalent( got, expected );
+    test.is( got !== dst );
+
+    /* */
+
+    test.case = 'dst - empty' + makeDst.name + ' src - empty ' + makeDst.name;
+    var dst = makeDst( [] );
+    var src = makeDst( null );
+    var got = _.longOnce_( dst, src, onEvaluate );
+    var expected = makeDst( null );
+    test.equivalent( got, expected );
+    test.is( got === dst );
+
+    test.case = 'dst - empty ' + makeDst.name + ', src - ' + makeDst.name + ' with duplicates';
+    var dst = makeDst( [] );
+    var src = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 } ] );
+    var got = _.longOnce_( dst, src, onEvaluate );
+    var expected = makeDst( [ { v : 1 }, { v : 2 }, { v : 3 } ] );
+    test.equivalent( got, expected );
+    test.is( _.arrayIs( dst ) ? got === dst : got !== dst );
+
+    test.case = 'dst - with duplicates, src - empty ' + makeDst.name;
+    var dst = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 } ] );
+    var src = makeDst( [] );
+    var got = _.longOnce_( dst, src, onEvaluate );
+    var expected = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 } ] );
+    test.equivalent( got, expected );
+    test.is( got === dst );
+
+    test.case = 'dst and src is almost identical';
+    var dst = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 } ] );
+    var src = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 } ] );
+    var got = _.longOnce_( dst, src, onEvaluate );
+    var expected = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 } ] );
+    test.equivalent( got, expected );
+    test.is( got === dst );
+
+    test.case = 'dst - ' + makeDst.name + ' with, duplicates, src - ' + makeDst.name + ' without duplicates';
+    var dst = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 } ] );
+    var src = makeDst( [ { v : 4 }, { v : 5 } ] );
+    var got = _.longOnce_( dst, src, onEvaluate );
+    var expected = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 }, { v : 4 }, { v : 5 } ] );
+    test.equivalent( got, expected );
+    test.is( _.arrayIs( dst ) ? got === dst : got !== dst );
+
+    test.case = 'dst - ' + makeDst.name + ' with, duplicates, src - ' + makeDst.name + ' with duplicates';
+    var dst = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 } ] );
+    var src = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 4 } ] );
+    var got = _.longOnce_( dst, src, onEvaluate );
+    var expected = makeDst( [ { v : 1 }, { v : 2 }, { v : 1 }, { v : 2 }, { v : 1 }, { v : 3 }, { v : 4 } ] );
+    test.equivalent( got, expected );
+    test.is( _.arrayIs( dst ) ? got === dst : got !== dst );
+  }
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.longOnce_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.longOnce_( [ 1, 2 ], [ 1, 3 ], ( a, b ) => a === b, 'extra' ) );
+
+  test.case = 'wrong dst type';
+  test.shouldThrowErrorSync( () => _.longOnce_( 'wrong' ) );
+
+  test.case = 'wrong src type';
+  test.shouldThrowErrorSync( () => _.longOnce_( [ 1, 2 ], 'wrong' ) );
+  test.shouldThrowErrorSync( () => _.longOnce_( [ 1, 2 ], { a : 1 } ) );
+
+  test.case = 'onEvaluate is not a routine';
+  test.shouldThrowErrorSync( () => _.longOnce_( [ 1, 2 ], [ 1, 3 ], 'wrong' ) );
+  test.shouldThrowErrorSync( () => _.longOnce_( [ 1, 2 ], [ 1, 3 ], [ 1, 2, 3 ] ) );
+}
+
+//
+
 function longSelectWithIndices( test )
 {
 
@@ -10218,6 +10552,245 @@ function longHasNone( test )
   test.case = 'evaluator is not a routine';
   test.shouldThrowErrorSync( () => _.longHasNone( [ 1, 2, 3, false ], 2, 3 ) );
 };
+
+//
+
+function longHasDepth( test ) 
+{
+  test.case = 'check null';
+  var got = _.longHasDepth( null );
+  test.identical( got, false );
+
+  test.case = 'check undefined';
+  var got = _.longHasDepth( undefined );
+  test.identical( got, false );
+
+  test.case = 'check _.nothing';
+  var got = _.longHasDepth( _.nothing );
+  test.identical( got, false );
+
+  test.case = 'check false';
+  var got = _.longHasDepth( false );
+  test.identical( got, false );
+
+  test.case = 'check NaN';
+  var got = _.longHasDepth( NaN );
+  test.identical( got, false );
+
+  test.case = 'check Symbol';
+  var got = _.longHasDepth( Symbol() );
+  test.identical( got, false );
+
+  test.case = 'check map';
+  var got = _.longHasDepth( {} );
+  test.identical( got, false );
+
+  test.case = 'check pure map';
+  var got = _.longHasDepth( Object.create( null ) );
+  test.identical( got, false );
+
+  test.case = 'check Set';
+  var got = _.longHasDepth( new Set( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check Map';
+  var got = _.longHasDepth( new Map( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check BufferRaw';
+  var got = _.longHasDepth( new BufferRaw() );
+  test.identical( got, false );
+
+  test.case = 'check number';
+  var got = _.longHasDepth( 3 );
+  test.identical( got, false );
+
+  test.case = 'check bigInt';
+  var got = _.longHasDepth( 1n );
+  test.identical( got, false );
+
+  test.case = 'check string';
+  var got = _.longHasDepth( 'str' );
+  test.identical( got, false );
+
+  test.case = 'check array';
+  var got = _.longHasDepth( [ null ] );
+  test.identical( got, false );
+
+  test.case = 'check map';
+  var got = _.longHasDepth( { '' : null } );
+  test.identical( got, false );
+
+  test.case = 'check instance of constructor';
+  var Constr = function()
+  {
+    this.x = 1;
+    return this;
+  };
+  var src = new Constr();
+  var got = _.longHasDepth( src );
+  test.identical( got, false );
+
+  if( Config.interpreter === 'njs' )
+  {
+    test.case = 'BufferNode';
+    var got = _.longHasDepth( BufferNode.alloc( 0 ) );
+    test.identical( got, false );
+  }
+
+  /* - */
+
+  test.open( 'empty long, level - default' );
+
+  test.case = 'array';
+  var got = _.longHasDepth( [] );
+  test.identical( got, false );
+
+  test.case = 'arguments array';
+  var got = _.longHasDepth( _.argumentsArrayMake( [] ) );
+  test.identical( got, false );
+
+  test.case = 'unroll';
+  var got = _.longHasDepth( _.unrollMake( [] ) );
+  test.identical( got, false );
+
+  test.case = 'BufferTyped';
+  var got = _.longHasDepth( new U8x() );
+  test.identical( got, false );
+
+  test.close( 'empty long, level - default' );
+
+  /* - */
+
+  test.open( 'empty long, level - 0' );
+
+  test.case = 'array';
+  var got = _.longHasDepth( [], 0 );
+  test.identical( got, true );
+
+  test.case = 'arguments array';
+  var got = _.longHasDepth( _.argumentsArrayMake( [] ), 0 );
+  test.identical( got, true );
+
+  test.case = 'unroll';
+  var got = _.longHasDepth( _.unrollMake( [] ), 0 );
+  test.identical( got, true );
+
+  test.case = 'BufferTyped';
+  var got = _.longHasDepth( new U16x(), 0 );
+  test.identical( got, true );
+
+  test.close( 'empty long, level - 0' );
+
+  /* - */
+
+  test.open( 'flat long, level - default' );
+
+  test.case = 'array';
+  var got = _.longHasDepth( [ 1, 2, 3 ] );
+  test.identical( got, false );
+
+  test.case = 'arguments array';
+  var got = _.longHasDepth( _.argumentsArrayMake( [ 1, 2, 3 ] ) );
+  test.identical( got, false );
+
+  test.case = 'unroll';
+  var got = _.longHasDepth( _.unrollMake( [ 1, 2, 3 ] ) );
+  test.identical( got, false );
+
+  test.case = 'BufferTyped';
+  var got = _.longHasDepth( new U32x( [ 1, 2, 3 ] ) );
+  test.identical( got, false );
+
+  test.close( 'flat long, level - default' );
+
+  /* - */
+
+  test.open( 'flat long, level - -1' );
+
+  test.case = 'array';
+  var got = _.longHasDepth( [ 1, 2, 3 ], -1 );
+  test.identical( got, true );
+
+  test.case = 'arguments array';
+  var got = _.longHasDepth( _.argumentsArrayMake( [ 1, 2, 3 ] ), -1 );
+  test.identical( got, true );
+
+  test.case = 'unroll';
+  var got = _.longHasDepth( _.unrollMake( [ 1, 2, 3 ] ), -1 );
+  test.identical( got, true );
+
+  test.case = 'BufferTyped';
+  var got = _.longHasDepth( new I8x( [ 1, 2, 3 ] ), -1 );
+  test.identical( got, true );
+
+  test.close( 'flat long, level - -1' );
+
+  /* - */
+
+  test.open( 'long with nested levels, level - default' );
+
+  test.case = 'array';
+  var got = _.longHasDepth( [ [ 1, [ 2 ] ], [ 3 ] ] );
+  test.identical( got, true );
+
+  test.case = 'arguments array';
+  var got = _.longHasDepth( _.argumentsArrayMake( [ [ 1, [ 2 ] ], [ 3 ] ] ) );
+  test.identical( got, true );
+
+  test.case = 'unroll';
+  var got = _.longHasDepth( _.unrollMake( [ [ 1, [ 2 ] ], [ 3 ] ] ) );
+  test.identical( got, true );
+
+  test.close( 'long with nested levels, level - default' );
+
+  /* - */
+
+  test.open( 'long with nested levels, level - 2' );
+
+  test.case = 'array';
+  var got = _.longHasDepth( [ [ 1, [ 2 ] ], [ 3 ] ], 2 );
+  test.identical( got, true );
+
+  test.case = 'arguments array';
+  var got = _.longHasDepth( _.argumentsArrayMake( [ [ 1, [ 2 ] ], [ 3 ] ] ), 2 );
+  test.identical( got, true );
+
+  test.case = 'unroll';
+  var got = _.longHasDepth( _.unrollMake( [ [ 1, [ 2 ] ], [ 3 ] ] ), 2 );
+  test.identical( got, true );
+
+  test.close( 'long with nested levels, level - 2' );
+
+  /* - */
+
+  test.open( 'long with nested levels, level - 3' );
+
+  test.case = 'array';
+  var got = _.longHasDepth( [ [ 1, [ 2 ] ], [ 3 ] ], 3 );
+  test.identical( got, false );
+
+  test.case = 'arguments array';
+  var got = _.longHasDepth( _.argumentsArrayMake( [ [ 1, [ 2 ] ], [ 3 ] ] ), 3 );
+  test.identical( got, false );
+
+  test.case = 'unroll';
+  var got = _.longHasDepth( _.unrollMake( [ [ 1, [ 2 ] ], [ 3 ] ] ), 3 );
+  test.identical( got, false );
+
+  test.close( 'long with nested levels, level - 3' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without argument';
+  test.shouldThrowErrorSync( () => _.longHasDepth() );
+
+  test.case = 'level is not an integer';
+  test.shouldThrowErrorSync( () => _.longHasDepth( [ 1, [ 2 ] ], 1.001 ) );
+}
 
 //
 
@@ -38658,6 +39231,1671 @@ function arraySetContainNone_( test )
 
 //
 
+function arraySetContainSetsAll( test )
+{
+  test.open( 'array' );
+
+  test.case = 'src1 - empty array, src2 - empty array';
+  var src1 = [];
+  var src2 = [];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - empty array, src2 - array with empty arrays';
+  var src1 = [];
+  var src2 = [ [], [], [] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - empty array, src2 - filled array';
+  var src1 = [];
+  var src2 = [ [ 0, 1 ], [ 'str', '' ], [ undefined, null, false ] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - empty array';
+  var src1 = [ 0, 1, 'str', '', undefined, null, false ];
+  var src2 = [];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - array with empty arrays';
+  var src1 = [ 0, 1, 'str', '', undefined, null, false ];
+  var src2 = [ [], [], [] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content';
+  var src1 = [ 0, 1, 'str', '', undefined, null, false ];
+  var src2 = [ [ 0, 1 ], [ 'str', '' ], [ undefined, null, false ] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content';
+  var src1 = [ -1, 1, 'str', '', undefined, null, false ];
+  var src2 = [ [ 0, 1 ], [ 'str', '' ], [ undefined, null, false ] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], [ [ undefined ], [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], [ [ undefined ], [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 } ], [ { a : 1 } ], [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : -1 } ], [ { a : 1 } ], [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, one evaluator';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], [ [ undefined ], [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, one evaluator';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], [ [ undefined ], [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, one evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 } ], [ { a : 1 } ], [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e.a );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, one evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : -1 } ], [ { a : 1 } ], [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e.a );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, two evaluators';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ], [ undefined ] ], [ [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, two evaluators';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], [ [ undefined ], [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, two evaluators';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, two evaluators';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : -1 }, { a : 1 } ], [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, fromIndex and evaluator';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], [ [ undefined ], [ null ] ], [ [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, 3, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, fromIndex and evaluator';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], [ [ undefined ], [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, 7, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, fromIndex and evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], [ { a : 'src' } ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, 2, ( e ) => e.a );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, fromIndex and evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : -1 }, { a : 1 } ], [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, 3, ( e ) => e.a );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, equalizer';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], [ [ undefined ], [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, equalizer';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], [ [ undefined ], [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, equalizer';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 } ], [ { a : 1 } ], [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, equalizer';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, false );
+
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'Set' );
+
+  test.case = 'src1 - empty Set, src2 - empty Set';
+  var src1 = new Set( [] );
+  var src2 = new Set( [] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - empty Set, src2 - Set with empty arrays and Sets';
+  var src1 = new Set( [] );
+  var src2 = new Set( [ [], [], new Set( [] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - empty Set, src2 - filled Set';
+  var src1 = new Set( [] );
+  var src2 = new Set( [ [ 0, 1 ], [ 'str', '' ], new Set( [ undefined, null, false ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - empty Set';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = new Set( [] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - Set with empty arrays and Sets';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = new Set( [ [], [], new Set( [] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = new Set( [ [ 0, 1 ], [ 'str', '' ], new Set( undefined, null, false ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content';
+  var src1 = new Set( [ -1, 1, 'str', '', undefined, null, false ] );
+  var src2 = new Set( [ [ 0, 1 ], [ 'str', '', undefined ], new Set( null, false ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], new Set( [ undefined ], [ null ], [ false ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], new Set( [ undefined ], [ null ], [ false ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : -1 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, one evaluator';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, one evaluator';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], [ [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, one evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e.a );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, one evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : -1 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e.a );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, two evaluators';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], new Set( [ [ undefined ], [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, two evaluators';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, two evaluators';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, two evaluators';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : -1 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, 3, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, 6, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'src' } ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, 2, ( e ) => e.a );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : -1 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, 3, ( e ) => e.a );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, equalizer';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, equalizer';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], [ [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, equalizer';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, equalizer';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : -1 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, false );
+
+  test.close( 'Set' );
+
+  /* - */
+
+  test.open( 'mixed' );
+
+  test.case = 'src1 - empty array, src2 - empty Set';
+  var src1 = [];
+  var src2 = new Set( [] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - empty array, src2 - Set with empty arrays and Sets';
+  var src1 = [];
+  var src2 = new Set( [ [], [], new Set() ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - empty Set, src2 - filled array';
+  var src1 = new Set( [] );
+  var src2 = [ [ 0, 1 ], new Set( [ 'str', '' ] ), [ undefined, null, false ] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - empty array';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = [];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - array with empty array and Sets';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = [ [], new Set(), [] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content';
+  var src1 = [ 0, 1, 'str', '', undefined, null, false ];
+  var src2 = new Set( [ [ 0, 1, 'str' ], new Set( [ '', undefined, null ] ), [ false ] ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content';
+  var src1 = new Set( [ -1, 1, 'str', '', undefined, null, false ] );
+  var src2 = [ [ 0, 1 ], new Set( [ 'str', '', undefined, null ] ), [ false ] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ [ [ 0 ], [ 1 ] ], new Set( [ [ 'str' ], [ '' ], [ undefined ] ] ), [ [ null ], [ false ] ] ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ [ [ 0 ], [ 1 ] ], new Set( [ [ 'str' ], [ '' ], [ undefined ] ] ), [ [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : -1 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2 );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled array, identical content, complex data, one evaluator';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], [ [ '' ], [ undefined ], [ null ] ], new Set( [ [ false ] ] ) ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled Set, not identical content, complex data, one evaluator';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], [ [ '' ], [ undefined ], [ null ] ], new Set( [ [ false ] ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, identical content, complex data, one evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e.a );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled Set, not identical content, complex data, one evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : -1 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e.a );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data, two evaluators';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ] ] ), new Set( [ [ 'str' ], [ '' ], [ undefined ] ] ), [ [ null ], [ false ] ] ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data, two evaluators';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), new Set( [ [ '' ], [ undefined ] ] ), [ [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data, two evaluators';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data, two evaluators';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = [ new Set( [ { a : -1 }, { a : 1 } ] ), [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled array, identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], [ [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ];
+  var got = _.arraySetContainSetsAll( src1, src2, 3, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, not identical content, complex data, fromIndex and evaluator';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ]  ] )] );
+  var got = _.arraySetContainSetsAll( src1, src2, 7, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'src' } ] ) ];
+  var got = _.arraySetContainSetsAll( src1, src2, 2, ( e ) => e.a );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, not identical content, complex data, fromIndex and evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : -1 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsAll( src1, src2, 3, ( e ) => e.a );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data, equalizer';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ] ] ), [ [ null ], [ false ] ] ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data, equalizer';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ] ] ), [ [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data, equalizer';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAll( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data, equalizer';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = [ [ { a :  -1}, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsAll( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, false );
+
+  test.close( 'mixed' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsAll() );
+
+  test.case = 'one argument';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsAll( [ 1, 2 ] ) );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsAll( [ 1, 2 ], new Set( [] ), ( e ) => e, ( ins ) => ins, 'extra' ) );
+
+  test.case = 'wrong type of src1';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsAll( 'wrong', new Set( [] ) ) );
+
+  test.case = 'wrong type of src2';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsAll( new Set( [] ), 'wrong' ) );
+}
+
+//
+
+function arraySetContainSetsAny( test )
+{
+  test.open( 'array' );
+
+  test.case = 'src1 - empty array, src2 - empty array';
+  var src1 = [];
+  var src2 = [];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - empty array, src2 - array with empty arrays and Sets';
+  var src1 = [];
+  var src2 = [ [], new Set(), [] ];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - empty array, src2 - filled array';
+  var src1 = [];
+  var src2 = [ [ 0, 1 ], new Set( [ 'str', '', undefined ] ), [ null, false ] ];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - empty array';
+  var src1 = [ 0, 1, 'str', '', undefined, null, false ];
+  var src2 = [];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - array with empty arrays and Sets';
+  var src1 = [ 0, 1, 'str', '', undefined, null, false ];
+  var src2 = [ [], new Set(), [] ];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content';
+  var src1 = [ 0, 1, 'str', '', undefined, null, false ];
+  var src2 = [ [ 0, 1 ], new Set( [ 'str', '', undefined ] ), [ null, false ] ];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content';
+  var src1 = [ -1, 1, 'str', '', undefined, null, false ];
+  var src2 = [ [ 0, 1, 'str' ], new Set( [ '', undefined ] ), [ null, false ] ];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, one evaluator';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], new Set( [ [ 'str' ], [ '' ], [ undefined ] ] ), [ [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, one evaluator';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, one evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e.a );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, one evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e.a );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, two evaluators';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, two evaluators';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, two evaluators';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, two evaluators';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, fromIndex and evaluator';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), new Set( [ [ false ] ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2, 3, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, fromIndex and evaluator';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ], [ null ] ], [ [ false ] ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, 7, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, fromIndex and evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'src' } ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, 2, ( e ) => e.a );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, fromIndex and evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2, 3, ( e ) => e.a );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, equalizer';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], [ [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, equalizer';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], new Set( [ [ 'str' ], [ '' ] ] ), [ [ undefined ], [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, equalizer';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, equalizer';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, false );
+
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'Set' );
+
+  test.case = 'src1 - empty Set, src2 - empty Set';
+  var src1 = new Set( [] );
+  var src2 = new Set( [] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - empty Set, src2 - Set with empty arrays and Sets';
+  var src1 = new Set( [] );
+  var src2 = new Set( [ [], new Set(), [] ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - empty Set, src2 - filled Set';
+  var src1 = new Set( [] );
+  var src2 = new Set( [ [ 0, 1, 'str' ], new Set( [ '', undefined, null ] ), new Set( [ false ] ) ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - empty Set';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = new Set( [] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - Set with empty arrays and Sets';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = new Set( [ [], new Set(), [] ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = new Set( [ [ 0, 1, 'str' ], new Set( [ '', undefined, null ] ), [ false ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content';
+  var src1 = new Set( [ -1, 1, 'str', '', undefined, null, false ] );
+  var src2 = new Set( [ new Set( [ 0, 1, 'str' ] ), [ '', undefined, null ], [ false ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], [ [ null ], [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], [ [ null ], [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, one evaluator';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ], [ null ] ], [ [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, one evaluator';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, one evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e.a );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, one evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e.a );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, two evaluators';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, two evaluators';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ], [ null ] ], [ [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, two evaluators';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, two evaluators';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ], [ null ] ], [ [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, 3, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, 7, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'src' } ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, 2, ( e ) => e.a );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAny( src1, src2, 3, ( e ) => e.a );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, equalizer';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, equalizer';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ], [ null ] ], [ [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, equalizer';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, equalizer';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' }  ]] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, false );
+
+  test.close( 'Set' );
+
+  /* - */
+
+  test.open( 'mixed' );
+
+  test.case = 'src1 - empty array, src2 - empty Set';
+  var src1 = [];
+  var src2 = new Set( [] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - empty array, src2 - Set with empty arrays and Sets';
+  var src1 = [];
+  var src2 = new Set( [ [], new Set(), [] ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - empty Set, src2 - filled array';
+  var src1 = new Set( [] );
+  var src2 = [ [ 0, 1, 'str' ], new Set( [ '', undefined, null ] ), [ false ] ];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - empty array';
+  var src1 = new Set( [ new Set( [ 0, 1, 'str' ] ), [ '', undefined, null ], [ false ] ] );
+  var src2 = [];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content';
+  var src1 = [ 0, 1, 'str', '', undefined, null, false ];
+  var src2 = new Set( [ new Set( [ 0, 1, 'str' ] ), [ '', undefined, null ], [ false ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content';
+  var src1 = new Set( [ -1, 1, 'str', '', undefined, null, false ] );
+  var src2 = [ [ 0, 1, 'str', '' ], new Set( [ undefined, null, false ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ], [ null ] ], [ [ false ] ] ];
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAny( src1, src2 );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled array, identical content, complex data, one evaluator';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled Set, not identical content, complex data, one evaluator';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ], [ null ] ], [ [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled array, identical content, complex data, one evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e.a );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled Set, not identical content, complex data, one evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e.a );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data, two evaluators';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data, two evaluators';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data, two evaluators';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data, two evaluators';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled array, identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ], [ null ] ], new Set( [ [ false ] ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2, 3, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled Set, not identical content, complex data, fromIndex and evaluator';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), new Set( [ [ false ] ] ) ] );
+  var got = _.arraySetContainSetsAny( src1, src2, 7, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'src' } ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2, 2, ( e ) => e.a );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, not identical content, complex data, fromIndex and evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, 3, ( e ) => e.a );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data, equalizer';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ], [ null ] ], [ [ false ] ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data, equalizer';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), new Set( [ [ false ] ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data, equalizer';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsAny( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data, equalizer';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsAny( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, false );
+
+  test.close( 'mixed' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsAny() );
+
+  test.case = 'one argument';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsAny( [ 1, 2 ] ) );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsAny( [ 1, 2 ], new Set( [] ), ( e ) => e, ( ins ) => ins, 'extra' ) );
+
+  test.case = 'wrong type of src1';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsAny( 'wrong', new Set( [] ) ) );
+
+  test.case = 'wrong type of src2';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsAny( new Set( [] ), 'wrong' ) );
+}
+
+//
+
+function arraySetContainSetsNone( test )
+{
+  test.open( 'array' );
+
+  test.case = 'src1 - empty array, src2 - empty array';
+  var src1 = [];
+  var src2 = [];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - empty array, src2 - array with empty arrays and Sets';
+  var src1 = [];
+  var src2 = [ [], new Set(), [] ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - empty array, src2 - filled array';
+  var src1 = [];
+  var src2 = [ [ 0, 1 ], new Set( [ 'str', '', undefined ] ), [ null, false ] ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - empty array';
+  var src1 = [ 0, 1, 'str', '', undefined, null, false ];
+  var src2 = [];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - array with empty arrays and Sets';
+  var src1 = [ 0, 1, 'str', '', undefined, null, false ];
+  var src2 = [ new Set(), [], new Set() ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content';
+  var src1 = [ 0, 1, 'str', '', undefined, null, false ];
+  var src2 = [ [ 0, 1, 'str' ], new Set( [ '', undefined, null ] ), [ false ] ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content';
+  var src1 = [ -1, 1, 'str', '', undefined, null, false ];
+  var src2 = [ [ 0, 1, 'str' ], new Set( [ '', undefined, null ] ), [ false ] ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), new Set( [ [ false ] ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ], [ null ] ], [ [ false ] ] ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, one evaluator';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, one evaluator';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ], [ null ] ], new Set( [ [ false ] ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, one evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e.a );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, one evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e.a );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, two evaluators';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ] ] ), new Set( [ [ null ], [ false ] ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, two evaluators';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], [ [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, two evaluators';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, two evaluators';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, fromIndex and evaluator';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ] ] ), new Set( [ [ null ], [ false ] ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, 3, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, fromIndex and evaluator';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), new Set( [ [ '' ], [ undefined ] ] ), [ [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsNone( src1, src2, 7, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, fromIndex and evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'src' } ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, 2, ( e ) => e.a );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, fromIndex and evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsNone( src1, src2, 3, ( e ) => e.a );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, equalizer';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, equalizer';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = [ [ [ 0 ], [ 1 ] ], [ [ 'str' ], [ '' ] ], new Set( [ [ undefined ], [ null ], [ false ] ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, identical content, complex data, equalizer';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled array, not identical content, complex data, equalizer';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, true );
+
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'Set' );
+
+  test.case = 'src1 - empty Set, src2 - empty Set';
+  var src1 = new Set( [] );
+  var src2 = new Set( [] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - empty Set, src2 - Set without arrays and Sets';
+  var src1 = new Set( [] );
+  var src2 = new Set( [ [], new Set(), [], new Set() ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - empty Set, src2 - filled Set';
+  var src1 = new Set( [] );
+  var src2 = new Set( [ new Set( [ 0, 1, 'str' ] ), [ '', undefined, null ], new Set( [ false ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - empty Set';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = new Set( [] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - Set with empty arrays and Sets';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = new Set( [ new Set(), [], new Set() ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = new Set( [ [ 0, 1, 'str' ], new Set( [ '', undefined, null ] ), [ false ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content';
+  var src1 = new Set( [ -1, 1, 'str', '', undefined, null, false ] );
+  var src2 = new Set( [ new Set( [ 0, 1, 'str' ] ), [ '', undefined, null ], new Set( [ false ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), [ [ false ] ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, one evaluator';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ], [ null ] ], new Set( [ [ false ] ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, one evaluator';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ], [ null ] ] ), new Set( [ [ false ] ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, one evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e.a );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, one evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e.a );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, two evaluators';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ] ] ), new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, two evaluators';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ] ] ), [ [ null ], [ false ] ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, two evaluators';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, two evaluators';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, 3, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ] ] ), new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, 7, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'src' } ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, 2, ( e ) => e.a );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2, 3, ( e ) => e.a );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, equalizer';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, equalizer';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], [ [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, identical content, complex data, equalizer';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled Set, not identical content, complex data, equalizer';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, true );
+
+  test.close( 'Set' );
+
+  /* - */
+
+  test.open( 'mixed' );
+
+  test.case = 'src1 - empty array, src2 - empty Set';
+  var src1 = [];
+  var src2 = new Set( [] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - empty array, src2 - Set with empty arrays and Sets';
+  var src1 = [];
+  var src2 = new Set( [ new Set(), [], new Set() ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - empty Set, src2 - filled array';
+  var src1 = new Set( [] );
+  var src2 = [ [ 0, 1, 'str' ], new Set( [ '', undefined ] ), new Set( [ null, false ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - empty array';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = [];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - array with empty arrays and Sets';
+  var src1 = new Set( [ 0, 1, 'str', '', undefined, null, false ] );
+  var src2 = [ [], new Set(), [] ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content';
+  var src1 = [ 0, 1, 'str', '', undefined, null, false ];
+  var src2 = new Set( [ new Set( [ 0, 1, 'str' ] ), [ '', undefined, null ], new Set( [ false ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content';
+  var src1 = new Set( [ -1, 1, 'str', '', undefined, null, false ] );
+  var src2 = [ new Set( [ 0, 1, 'str' ] ), [ '', undefined ], [ null, false ] ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], [ [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], [ [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = new Set( [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2 );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled array, identical content, complex data, one evaluator';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ] ] ), new Set( [ [ null ], [ false ] ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, not identical content, complex data, one evaluator';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled Set, src2 - filled array, identical content, complex data, one evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e.a );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, not identical content, complex data, one evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e.a );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data, two evaluators';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], [ [ null ], [ false ] ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data, two evaluators';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ] ] ), [ [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e[ 0 ], ( ins ) => 5 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data, two evaluators';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data, two evaluators';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e ) => e.a, ( ins ) => ins.b );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled Set, src2 - filled array, identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], [ [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsNone( src1, src2, 3, ( e ) => e[ 0 ] );
+  test.identical( got, false );
+
+  test.case = 'src1 - filled array, src2 - filled Set, not identical content, complex data, fromIndex and evaluator';
+  var src1 = [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ] ] ), new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, 7, ( e ) => e[ 0 ] );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled array, identical content, complex data, fromIndex and evaluator';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'src' } ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, 2, ( e ) => e.a );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled Set, not identical content, complex data, fromIndex and evaluator';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2, 3, ( e ) => e.a );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data, equalizer';
+  var src1 = [ [ 0 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ];
+  var src2 = new Set( [ [ [ 0 ], [ 1 ], [ 'str' ] ], new Set( [ [ '' ], [ undefined ] ] ), new Set( [ [ null ], [ false ] ] ) ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data, equalizer';
+  var src1 = new Set( [ [ -1 ], [ 1 ], [ 'str' ], [ '' ], [ undefined ], [ null ], [ false ] ] );
+  var src2 = [ new Set( [ [ 0 ], [ 1 ], [ 'str' ] ] ), [ [ '' ], [ undefined ] ], [ [ null ], [ false ] ] ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e, ins ) => e[ 0 ] > 5 );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled array, src2 - filled Set, identical content, complex data, equalizer';
+  var src1 = [ { a : 0 }, { a : 1 }, { a : 'str' } ];
+  var src2 = new Set( [ new Set( [ { a : 0 }, { a : 1 } ] ), [ { a : 'str' } ] ] );
+  var got = _.arraySetContainSetsNone( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, true );
+
+  test.case = 'src1 - filled Set, src2 - filled array, not identical content, complex data, equalizer';
+  var src1 = new Set( [ { a : 0 }, { a : 1 }, { a : 'str' } ] );
+  var src2 = [ [ { a : 0 }, { a : 1 } ], new Set( [ { a : 'str' } ] ) ];
+  var got = _.arraySetContainSetsNone( src1, src2, ( e, ins ) => e.a === e.b );
+  test.identical( got, true );
+
+  test.close( 'mixed' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsNone() );
+
+  test.case = 'one argument';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsNone( [ 1, 2 ] ) );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsNone( [ 1, 2 ], new Set( [] ), ( e ) => e, ( ins ) => ins, 'extra' ) );
+
+  test.case = 'wrong type of src1';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsNone( 'wrong', new Set( [] ) ) );
+
+  test.case = 'wrong type of src2';
+  test.shouldThrowErrorSync( () => _.arraySetContainSetsNone( new Set( [] ), 'wrong' ) );
+}
+
+//
+
 function arraySetIdentical( test )
 {
 
@@ -39473,6 +41711,7 @@ var Self =
     longMask,
 
     longOnce,
+    longOnce_,
     longSelectWithIndices,
 
     // array manipulator
@@ -39516,6 +41755,7 @@ var Self =
     longHasAny,
     longHasAll,
     longHasNone,
+    longHasDepth,
 
     // array transformer
 
@@ -39743,6 +41983,10 @@ var Self =
     arraySetContainAny_,
     arraySetContainNone_,
     arraySetIdentical,
+
+    arraySetContainSetsAll,
+    arraySetContainSetsAny,
+    arraySetContainSetsNone,
 
     arraySetLeft,
     arraySetRight,

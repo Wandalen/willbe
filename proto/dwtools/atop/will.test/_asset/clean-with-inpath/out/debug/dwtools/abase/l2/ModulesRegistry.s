@@ -95,7 +95,7 @@ let wArraySparse =
 
 let wAppBasic =
 {
-  sourcePath : sourcePath( 'abase/l4/ProcessBasic.s', 'wappbasic' ),
+  sourcePath : sourcePath( 'abase/l4_process/Basic.s', 'wappbasic' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.process && !!_global.wTools.process.start },
 }
 
@@ -761,7 +761,7 @@ module[ 'exports' ] = _;
 - wEqualer -> wEqualer
 - wPathBasic -> wPathBasic
 - wUriBasic -> wUriBasic
-- wAppBasic -> wAppBasic
+- wAppBasic -> wProcessBasic
 - wEntityBasic -> wEntityBasic
 - wWebUriBasic -> wWebUriBasic
 - wRoutineBasic -> wRoutineBasic

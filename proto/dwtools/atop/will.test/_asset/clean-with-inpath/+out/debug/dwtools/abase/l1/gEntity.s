@@ -202,7 +202,7 @@ let Routines =
   lengthOf : entityLength,
 
   uncountableSize, /* qqq : implement coverage | Dmytro : covered */
-  entitySize, /* qqq : implement coverage | Dmytro : coverage is extended, need clarification about long like and iterable entities */
+  entitySize, /* qqq : implement coverage | Dmytro : coverage is extended */
   sizeOf : entitySize,
 
 }

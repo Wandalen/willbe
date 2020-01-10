@@ -3925,7 +3925,7 @@ function reflectNpmModules( test )
   /* - */
 
   a.ready
-  
+
   .then( () =>
   {
     a.reflect();
@@ -3933,16 +3933,16 @@ function reflectNpmModules( test )
   })
 
   /* */
-  
+
   a.start( '.build' )
 
   .then( ( got ) =>
   {
     test.case = 'reflect exported npm modules';
-    
+
     test.identical( got.exitCode, 0 );
 
-    var exp = 
+    var exp =
     [
       '.',
       './out',
@@ -3964,7 +3964,7 @@ function reflectNpmModules( test )
 
     return null;
   })
-  
+
   /*  */
 
   return a.ready;
@@ -17912,26 +17912,26 @@ function submodulesDownloadNpm( test )
   /* - */
 
   a.ready
-  
+
   .then( () =>
   {
     versions[ 'Tools' ] = _.npm.versionRemoteRetrive( 'npm:///wTools' );
     versions[ 'Path' ] = _.npm.versionRemoteRetrive( 'npm:///wpathbasic@alpha' );
     versions[ 'Uri' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wuribasic#0.6.131' );
-    
+
     a.reflect();
-    
+
     return null;
   })
 
   /* */
-  
+
   a.start( '.submodules.download' )
 
   .then( ( got ) =>
   {
     test.case = 'download npm modules';
-    
+
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'Path', 'Path.will.yml', 'Tools', 'Tools.will.yml', 'Uri', 'Uri.will.yml' ];
@@ -17943,37 +17943,37 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, 'was downloaded' ), 3 );
     test.identical( _.strCount( got.output, '+ 3/3 submodule(s) of module::supermodule were downloaded' ), 1 );
-    
+
     test.identical( _.strCount( got.output, `module::Tools was downloaded version ${versions['Tools']}` ), 1 );
     test.identical( _.strCount( got.output, `module::Path was downloaded version ${versions['Path']}` ), 1 );
     test.identical( _.strCount( got.output, `module::Uri was downloaded version ${versions['Uri']}` ), 1 );
-    
+
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Tools` ), 1 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Path` ), 1 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Uri` ), 1 );
-    
+
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Tools' ) );
     test.identical( version, versions[ 'Tools' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Uri' ) );
     test.identical( version, versions[ 'Uri' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Path' ) );
     test.identical( version, versions[ 'Path' ] )
-    
+
     test.is( a.fileProvider.fileExists( a.abs( '.module/Tools/Tools.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Uri/Uri.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Path/Path.out.will.yml' ) ) )
-    
+
     return null;
   })
-  
+
   /*  */
-  
+
   a.start( '.submodules.download' )
 
   .then( ( got ) =>
-  { 
+  {
     test.case = 'second run of .submodules.download';
-    
+
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'Path', 'Path.will.yml', 'Tools', 'Tools.will.yml', 'Uri', 'Uri.will.yml' ];
@@ -17985,49 +17985,49 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::supermodule were downloaded' ), 1 );
-    
+
     test.identical( _.strCount( got.output, `module::Tools was downloaded version ${versions['Tools']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Path was downloaded version ${versions['Path']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Uri was downloaded version ${versions['Uri']}` ), 0 );
-    
+
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Tools` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Path` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Uri` ), 0 );
-    
+
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Tools' ) );
     test.identical( version, versions[ 'Tools' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Uri' ) );
     test.identical( version, versions[ 'Uri' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Path' ) );
     test.identical( version, versions[ 'Path' ] )
-    
+
     test.is( a.fileProvider.fileExists( a.abs( '.module/Tools/Tools.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Uri/Uri.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Path/Path.out.will.yml' ) ) )
-    
+
     return null;
   })
-  
+
   /*  */
-  
-  .then( () => 
-  { 
+
+  .then( () =>
+  {
     test.case = 'change origin of first submodule and run .submodules.download';
-    
+
     let willFile = a.fileProvider.fileRead( willFilePath );
     willFile = _.strReplace( willFile, 'npm:///wTools', 'npm:///wprocedure' );
     a.fileProvider.fileWrite( willFilePath, willFile );
-    
+
     filesBefore = self.find( a.abs( '.module/Tools' ) );
-    
+
     return null;
   })
-  
+
   a.start( '.submodules.download' )
-  
+
   .then( ( got ) =>
-  { 
-    
+  {
+
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'Path', 'Path.will.yml', 'Tools', 'Tools.will.yml', 'Uri', 'Uri.will.yml' ];
@@ -18038,40 +18038,40 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 7 );
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::supermodule were downloaded' ), 1 );
-    
+
     test.identical( _.strCount( got.output, `module::Tools was downloaded version ${versions['Tools']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Path was downloaded version ${versions['Path']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Uri was downloaded version ${versions['Uri']}` ), 0 );
-    
+
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Tools` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Path` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Uri` ), 0 );
-    
+
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Tools' ) );
     test.identical( version, versions[ 'Tools' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Uri' ) );
     test.identical( version, versions[ 'Uri' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Path' ) );
     test.identical( version, versions[ 'Path' ] )
-    
+
     test.is( a.fileProvider.fileExists( a.abs( '.module/Tools/Tools.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Uri/Uri.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Path/Path.out.will.yml' ) ) )
-    
+
     var files = self.find( a.abs( '.module/Tools' ) );
     test.identical( files,filesBefore );
-    
+
     return null;
   })
-  .then( () => 
-  { 
+  .then( () =>
+  {
     let willFile = a.fileProvider.fileRead( willFilePath );
     willFile = _.strReplace( willFile, 'npm:///wprocedure', 'npm:///wTools' );
     a.fileProvider.fileWrite( willFilePath, willFile );
-    
+
     return null;
   })
-  
+
   /*  */
 
   return a.ready;
@@ -18088,30 +18088,30 @@ function submodulesDownloadUpdateNpm( test )
   let versions = {}
   let willFilePath = a.abs( '.will.yml' );
   let filesBefore = null;
-  
+
   /* - */
 
   a.ready
-  
+
   .then( () =>
   {
     versions[ 'Tools' ] = _.npm.versionRemoteRetrive( 'npm:///wTools' );
     versions[ 'Path' ] = _.npm.versionRemoteRetrive( 'npm:///wpathbasic@alpha' );
     versions[ 'Uri' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wuribasic#0.6.131' );
-    
+
     a.reflect();
-    
+
     return null;
   })
 
   /* */
-  
+
   a.start( '.submodules.update' )
 
   .then( ( got ) =>
   {
     test.case = 'download npm modules';
-    
+
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'Path', 'Path.will.yml', 'Tools', 'Tools.will.yml', 'Uri', 'Uri.will.yml' ];
@@ -18123,50 +18123,50 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, 'were updated' ), 1 );
     test.identical( _.strCount( got.output, '+ 3/3 submodule(s) of module::supermodule were updated' ), 1 );
-    
+
     test.identical( _.strCount( got.output, `module::Tools was updated to version ${versions['Tools']}` ), 1 );
     test.identical( _.strCount( got.output, `module::Path was updated to version ${versions['Path']}` ), 1 );
     test.identical( _.strCount( got.output, `module::Uri was updated to version ${versions['Uri']}` ), 1 );
-    
+
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Tools` ), 1 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Path` ), 1 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Uri` ), 1 );
-    
+
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Tools' ) );
     test.identical( version, versions[ 'Tools' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Uri' ) );
     test.identical( version, versions[ 'Uri' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Path' ) );
     test.identical( version, versions[ 'Path' ] )
-    
+
     test.is( a.fileProvider.fileExists( a.abs( '.module/Tools/Tools.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Uri/Uri.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Path/Path.out.will.yml' ) ) )
-    
+
     return null;
   })
-  
+
   /*  */
-  
+
   .then( ( got ) =>
-  { 
+  {
     let willFile = a.fileProvider.fileRead( willFilePath );
     willFile = _.strReplace( willFile, '@alpha', '@beta' );
     willFile = _.strReplace( willFile, '#0.6.131', '#0.6.122' );
     a.fileProvider.fileWrite( willFilePath, willFile );
-    
+
     versions[ 'Path' ] = _.npm.versionRemoteRetrive( 'npm:///wpathbasic@beta' );
     versions[ 'Uri' ] = '0.6.122'
-    
+
     return null;
   })
-  
+
   a.start( '.submodules.update' )
 
   .then( ( got ) =>
-  { 
+  {
     test.case = 'second run of .submodules.update';
-    
+
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'Path', 'Path.will.yml', 'Tools', 'Tools.will.yml', 'Uri', 'Uri.will.yml' ];
@@ -18178,37 +18178,37 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, 'were updated' ), 1 );
     test.identical( _.strCount( got.output, '+ 2/3 submodule(s) of module::supermodule were updated' ), 1 );
-    
+
     test.identical( _.strCount( got.output, `module::Tools was updated to version ${versions['Tools']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Path was updated to version ${versions['Path']}` ), 1 );
     test.identical( _.strCount( got.output, `module::Uri was updated to version ${versions['Uri']}` ), 1 );
-    
+
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Tools` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Path` ), 1 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Uri` ), 1 );
-    
+
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Tools' ) );
     test.identical( version, versions[ 'Tools' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Uri' ) );
     test.identical( version, versions[ 'Uri' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Path' ) );
     test.identical( version, versions[ 'Path' ] )
-    
+
     test.is( a.fileProvider.fileExists( a.abs( '.module/Tools/Tools.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Uri/Uri.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Path/Path.out.will.yml' ) ) )
-    
+
     return null;
   })
-  
+
   /*  */
-  
+
   a.start( '.submodules.update' )
 
   .then( ( got ) =>
-  { 
+  {
     test.case = 'third run of .submodules.update';
-    
+
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'Path', 'Path.will.yml', 'Tools', 'Tools.will.yml', 'Uri', 'Uri.will.yml' ];
@@ -18220,72 +18220,72 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, 'were updated' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::supermodule were updated' ), 1 );
-    
+
     test.identical( _.strCount( got.output, `module::Tools was updated to version ${versions['Tools']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Path was updated to version ${versions['Path']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Uri was updated to version ${versions['Uri']}` ), 0 );
-    
+
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Tools` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Path` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Uri` ), 0 );
-    
+
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Tools' ) );
     test.identical( version, versions[ 'Tools' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Uri' ) );
     test.identical( version, versions[ 'Uri' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Path' ) );
     test.identical( version, versions[ 'Path' ] )
-    
+
     test.is( a.fileProvider.fileExists( a.abs( '.module/Tools/Tools.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Uri/Uri.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Path/Path.out.will.yml' ) ) )
-    
+
     return null;
   })
-  
+
   /*  */
-  
-  .then( () => 
+
+  .then( () =>
   {
     test.case = 'change origin of first submodule and run .submodules.update';
-    
+
     let willFile = a.fileProvider.fileRead( willFilePath );
     willFile = _.strReplace( willFile, 'npm:///wTools', 'npm:///wprocedure' );
     a.fileProvider.fileWrite( willFilePath, willFile );
-    
+
     filesBefore = self.find( a.abs( '.module' ) );
-    
+
     return null;
   })
-  
+
   a.startNonThrowing( '.submodules.update' )
-  
+
   .then( ( got ) =>
-  { 
+  {
     test.notIdentical( got.exitCode, 1 );
-    
+
     var files = self.find( a.abs( '.module' ) );
     test.identical( files,filesBefore );
-    
+
     test.identical( _.strCount( got.output, 'opener::Tools is already downloaded, but has different origin url: wTools , expected url: wprocedure' ), 1 );
-    
+
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 7 );
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::supermodule were updated' ), 0 );
-    
+
     test.identical( _.strCount( got.output, `module::Tools was updated to version ${versions['Tools']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Path was updated to version ${versions['Path']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Uri was updated to version ${versions['Uri']}` ), 0 );
-    
+
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Tools` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Path` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Uri` ), 0 );
-    
+
     return null;
   })
-  
-  .then( () => 
+
+  .then( () =>
   {
     let willFile = a.fileProvider.fileRead( willFilePath );
     willFile = _.strReplace( willFile, 'npm:///wprocedure', 'npm:///wTools' );
@@ -19692,30 +19692,30 @@ function versionsAgreeNpm( test )
   let versions = {}
   let willFilePath = a.abs( '.will.yml' );
   let filesBefore = null;
-  
+
   /* - */
 
   a.ready
-  
+
   .then( () =>
   {
     versions[ 'Tools' ] = _.npm.versionRemoteRetrive( 'npm:///wTools' );
     versions[ 'Path' ] = _.npm.versionRemoteRetrive( 'npm:///wpathbasic@alpha' );
     versions[ 'Uri' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wuribasic#0.6.131' );
-    
+
     a.reflect();
-    
+
     return null;
   })
 
   /* */
-  
+
   a.start( '.submodules.versions.agree' )
 
   .then( ( got ) =>
   {
     test.case = 'agree npm modules';
-    
+
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'Path', 'Path.will.yml', 'Tools', 'Tools.will.yml', 'Uri', 'Uri.will.yml' ];
@@ -19727,50 +19727,50 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, 'were agreed' ), 1 );
     test.identical( _.strCount( got.output, '+ 3/3 submodule(s) of module::supermodule were agreed' ), 1 );
-    
+
     test.identical( _.strCount( got.output, `module::Tools was agreed with version ${versions['Tools']}` ), 1 );
     test.identical( _.strCount( got.output, `module::Path was agreed with version ${versions['Path']}` ), 1 );
     test.identical( _.strCount( got.output, `module::Uri was agreed with version ${versions['Uri']}` ), 1 );
-    
+
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Tools` ), 1 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Path` ), 1 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Uri` ), 1 );
-    
+
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Tools' ) );
     test.identical( version, versions[ 'Tools' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Uri' ) );
     test.identical( version, versions[ 'Uri' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Path' ) );
     test.identical( version, versions[ 'Path' ] )
-    
+
     test.is( a.fileProvider.fileExists( a.abs( '.module/Tools/Tools.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Uri/Uri.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Path/Path.out.will.yml' ) ) )
-    
+
     return null;
   })
-  
+
   /*  */
-  
+
   .then( ( got ) =>
-  { 
+  {
     let willFile = a.fileProvider.fileRead( willFilePath );
     willFile = _.strReplace( willFile, '@alpha', '@beta' );
     willFile = _.strReplace( willFile, '#0.6.131', '#0.6.122' );
     a.fileProvider.fileWrite( willFilePath, willFile );
-    
+
     versions[ 'Path' ] = _.npm.versionRemoteRetrive( 'npm:///wpathbasic@beta' );
     versions[ 'Uri' ] = '0.6.122'
-    
+
     return null;
   })
-  
+
   a.start( '.submodules.versions.agree' )
 
   .then( ( got ) =>
-  { 
+  {
     test.case = 'second run of .submodules.versions.agree';
-    
+
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'Path', 'Path.will.yml', 'Tools', 'Tools.will.yml', 'Uri', 'Uri.will.yml' ];
@@ -19781,37 +19781,37 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 11 );
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, '+ 2/3 submodule(s) of module::supermodule were agreed' ), 1 );
-    
+
     test.identical( _.strCount( got.output, `module::Tools was agreed with version ${versions['Tools']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Path was agreed with version ${versions['Path']}` ), 1 );
     test.identical( _.strCount( got.output, `module::Uri was agreed with version ${versions['Uri']}` ), 1 );
-    
+
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Tools` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Path` ), 1 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Uri` ), 1 );
-    
+
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Tools' ) );
     test.identical( version, versions[ 'Tools' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Uri' ) );
     test.identical( version, versions[ 'Uri' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Path' ) );
     test.identical( version, versions[ 'Path' ] )
-    
+
     test.is( a.fileProvider.fileExists( a.abs( '.module/Tools/Tools.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Uri/Uri.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Path/Path.out.will.yml' ) ) )
-    
+
     return null;
   })
-  
+
   /*  */
-  
+
   a.start( '.submodules.versions.agree' )
 
   .then( ( got ) =>
-  { 
+  {
     test.case = 'third run of .submodules.versions.agree';
-    
+
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'Path', 'Path.will.yml', 'Tools', 'Tools.will.yml', 'Uri', 'Uri.will.yml' ];
@@ -19822,50 +19822,50 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 7 );
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::supermodule were agreed' ), 1 );
-    
+
     test.identical( _.strCount( got.output, `module::Tools was agreed with version ${versions['Tools']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Path was agreed with version ${versions['Path']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Uri was agreed with version ${versions['Uri']}` ), 0 );
-    
+
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Tools` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Path` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Uri` ), 0 );
-    
+
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Tools' ) );
     test.identical( version, versions[ 'Tools' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Uri' ) );
     test.identical( version, versions[ 'Uri' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Path' ) );
     test.identical( version, versions[ 'Path' ] )
-    
+
     test.is( a.fileProvider.fileExists( a.abs( '.module/Tools/Tools.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Uri/Uri.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Path/Path.out.will.yml' ) ) )
-    
+
     return null;
   })
-  
+
   /*  */
-  
-  .then( () => 
+
+  .then( () =>
   {
     test.case = 'change origin of first submodule and run .submodules.versions.agree';
-    
+
     let willFile = a.fileProvider.fileRead( willFilePath );
     willFile = _.strReplace( willFile, 'npm:///wTools', 'npm:///wprocedure' );
     a.fileProvider.fileWrite( willFilePath, willFile );
-    
+
     versions[ 'Procedure' ] = _.npm.versionRemoteRetrive( 'npm:///wprocedure' );
-    
+
     return null;
   })
-  
+
   a.start( '.submodules.versions.agree' )
-  
+
   .then( ( got ) =>
-  { 
+  {
     test.case = 'third run of .submodules.versions.agree';
-    
+
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'Path', 'Path.will.yml', 'Tools', 'Tools.will.yml', 'Uri', 'Uri.will.yml' ];
@@ -19876,27 +19876,27 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 9 );
     test.identical( _.strCount( got.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( got.output, '+ 1/3 submodule(s) of module::supermodule were agreed' ), 1 );
-    
+
     test.identical( _.strCount( got.output, `module::Tools was agreed with version ${versions['Procedure']}` ), 1 );
     test.identical( _.strCount( got.output, `module::Path was agreed with version ${versions['Path']}` ), 0 );
     test.identical( _.strCount( got.output, `module::Uri was agreed with version ${versions['Uri']}` ), 0 );
-    
+
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Tools` ), 1 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Path` ), 0 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::Uri` ), 0 );
-    
+
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Tools' ) );
     test.identical( version, versions[ 'Procedure' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Uri' ) );
     test.identical( version, versions[ 'Uri' ] )
     var version = _.npm.versionLocalRetrive( a.abs( '.module/Path' ) );
     test.identical( version, versions[ 'Path' ] )
-    
+
     test.is( a.fileProvider.fileExists( a.abs( '.module/Tools/Tools.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Uri/Uri.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/Path/Path.out.will.yml' ) ) )
-    
-    var exp = 
+
+    var exp =
     [
       '.',
       './dwtools',
@@ -19905,23 +19905,23 @@ function versionsAgreeNpm( test )
       './dwtools/abase/l8',
       './dwtools/abase/l8/Procedure.s'
     ];
-    var files = self.find( a.abs( '.module/Tools/proto' ) ); 
+    var files = self.find( a.abs( '.module/Tools/proto' ) );
     test.identical( files,exp );
-    
+
     return null;
   })
-  
-  .then( () => 
+
+  .then( () =>
   {
     let willFile = a.fileProvider.fileRead( willFilePath );
     willFile = _.strReplace( willFile, 'npm:///wprocedure', 'npm:///wTools' );
     a.fileProvider.fileWrite( willFilePath, willFile );
-    
+
     a.reflect();
-    
+
     return null;
   })
-  
+
   /*  */
 
   return a.ready;

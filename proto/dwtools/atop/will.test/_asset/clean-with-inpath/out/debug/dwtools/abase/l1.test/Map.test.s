@@ -801,92 +801,384 @@ mapMakeBugWithArray.description =
 
 function objectSetWithKeys( test )
 {
-  test.case = 'dstMap is null or empty';
+  test.open( 'dst is null or empty map' );
 
-  var got = _.objectSetWithKeys( null, [], 2  );
+  test.case = 'dstMap - null, src - empty array, val - 2';
+  var dst = null;
+  var got = _.objectSetWithKeys( dst, [], 2 );
   test.identical( got, {} );
+  test.is( got !== dst );
 
-  var got = _.objectSetWithKeys( {}, [], 2  );
+  test.case = 'dstMap - empty map, src - empty array, val - 2';
+  var dst = {};
+  var got = _.objectSetWithKeys( dst, [], 2 );
   test.identical( got, {} );
+  test.is( got === dst );
 
-  var got = _.objectSetWithKeys( null, 'a', 2  );
+  test.case = 'dstMap - null, src - string, val - 2';
+  var dst = null;
+  var got = _.objectSetWithKeys( dst, 'a', 2 );
   test.identical( got, { 'a' : 2 } );
+  test.is( got !== dst );
 
-  var got = _.objectSetWithKeys( {}, 'a', 2  );
+  test.case = 'dstMap - empty map, src - string, val - 2';
+  var dst = {};
+  var got = _.objectSetWithKeys( dst, 'a', 2 );
   test.identical( got, { 'a' : 2 } );
+  test.is( got === dst );
 
-  var got = _.objectSetWithKeys( null, [ 'a', 'b' ], 2  );
+  test.case = 'dstMap - null, src - array of strings, val - 2';
+  var dst = null;
+  var got = _.objectSetWithKeys( dst, [ 'a', 'b' ], 2 );
   test.identical( got, { 'a' : 2, 'b' : 2 } );
+  test.is( got !== dst );
 
-  var got = _.objectSetWithKeys( {}, [ 'a', 'b' ], 2  );
+  test.case = 'dstMap - empty map, src - array of strings, val - 2';
+  var dst = {};
+  var got = _.objectSetWithKeys( dst, [ 'a', 'b' ], 2 );
   test.identical( got, { 'a' : 2, 'b' : 2 } );
+  test.is( got === dst );
 
-  var got = _.objectSetWithKeys( {}, [ 1, 2 ], 2  );
+  test.case = 'dstMap - empty map, src - array of numbers, val - 2';
+  var dst = {};
+  var got = _.objectSetWithKeys( dst, [ 1, 2 ], 2 );
   test.identical( got, { 1 : 2, 2 : 2 } );
+  test.is( got === dst );
 
-  test.case = 'dstMap is not null';
+  test.close( 'dst is null or empty map' );
 
-  var got = _.objectSetWithKeys( { 'a' : 2 }, 'a', 'abc'  );
-  test.identical( got, { 'a' : 'abc' } );
+  /* - */
 
-  var got = _.objectSetWithKeys( { 'a' : 2 }, 'b', 3  );
-  test.identical( got, { 'a' : 2, 'b' : 3 } );
+  test.open( 'dst is filled  map' );
 
-  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], 3 );
-  test.identical( got, { 'a' : 2, 'b' : 3, 'c' : 3 } );
+  test.case = 'src - empty array, val - 2';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeys( dst, [], 2 );
+  test.identical( got, { a : 1, b : 2 } );
+  test.is( got === dst );
 
-  var got = _.objectSetWithKeys( { 0 : 0 }, [ 1, 2 ], 2  );
-  test.identical( got, { 0 : 0, 1 : 2, 2 : 2 } );
+  test.case = 'src - string, new key, val - 2';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeys( dst, 'd', 2 );
+  test.identical( got, { a : 1, b : 2, d : 2 } );
+  test.is( got === dst );
 
-  test.case = 'val is array';
+  test.case = 'src - string, replace value, val - 2';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeys( dst, 'a', 2 );
+  test.identical( got, { a : 2, b : 2 } );
+  test.is( got === dst );
 
-  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], [ 3 ] );
-  test.identical( got, { 'a' : 2, 'b' : [ 3 ], 'c' : [ 3 ] } );
+  test.case = 'src - array of strings, new keys, val - 2';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeys( dst, [ 'c', 'd' ], 2 );
+  test.identical( got, { 'a' : 1, 'b' : 2, 'c' : 2, 'd' : 2 } );
+  test.is( got === dst );
 
-  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], [ 3, 'aa' ] );
-  test.identical( got, { 'a' : 2, 'b' : [ 3, 'aa' ], 'c' : [ 3, 'aa' ] } );
+  test.case = 'src - array of strings, replace values, val - 3';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeys( dst, [ 'a', 'b' ], 3 );
+  test.identical( got, { 'a' : 3, 'b' : 3 } );
+  test.is( got === dst );
 
-  var got = _.objectSetWithKeys( { 0 : 0 }, [ 0, 2 ], [ 3, 'aa' ]  );
-  test.identical( got, { 0 : [ 3, 'aa' ], 2 : [ 3, 'aa' ] } );
+  /* */
 
-  test.case = 'val is object';
+  test.case = 'src - empty array, val - undefined';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeys( dst, [], undefined );
+  test.identical( got, { a : 1, b : 2 } );
+  test.is( got === dst );
 
-  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], { 'cc' : 1 } );
-  test.identical( got, { 'a' : 2, 'b' : { 'cc' : 1 }, 'c' : { 'cc' : 1 } } );
+  test.case = 'src - string, new key, val - undefined';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeys( dst, 'd', undefined );
+  test.identical( got, { a : 1, b : 2 } );
+  test.is( got === dst );
 
-  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ 'b', 'c' ], { 'd' : undefined } );
-  test.identical( got, { 'a' : 2, 'b' : { 'd' : undefined }, 'c' : { 'd' : undefined } } );
+  test.case = 'src - string, replace value, val - 2';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeys( dst, 'a', undefined );
+  test.identical( got, { b : 2 } );
+  test.is( got === dst );
 
-  var got = _.objectSetWithKeys( { 0 : 0 }, [ 0, 2 ], { 3 : 'aa' } );
-  test.identical( got, { 0 : { 3 : 'aa' }, 2 : { 3 : 'aa' } } );
+  test.case = 'src - array of strings, new keys, val - 2';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeys( dst, [ 'c', 'd' ], undefined );
+  test.identical( got, { 'a' : 1, 'b' : 2 } );
+  test.is( got === dst );
 
-  test.case = 'src has null or undefined values';
+  test.case = 'src - array of strings, replace values, val - 3';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeys( dst, [ 'a', 'b' ], undefined );
+  test.identical( got, {} );
+  test.is( got === dst );
 
-  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ null, 'c' ], 'aa' );
-  test.identical( got, { 'a' : 2, 'b' : 1, 'c' : 'aa', null : 'aa' } );
-
-  var got = _.objectSetWithKeys( { 'a' : 2, 'b' : 1, 'c' : 'a' }, [ undefined, 'c' ], 'aa' );
-  test.identical( got, { 'a' : 2, 'b' : 1, 'c' : 'aa', undefined : 'aa' } );
+  test.close( 'dst is filled  map' );
 
   /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'no arguments'
+  test.case = 'without arguments'
   test.shouldThrowErrorSync( () => _.objectSetWithKeys() );
 
-  test.case = 'too many arguments'
+  test.case = 'not enough arguments'
+  test.shouldThrowErrorSync( () => _.objectSetWithKeys( {} ) );
+  test.shouldThrowErrorSync( () => _.objectSetWithKeys( {}, 'a' ) );
+
+  test.case = 'extra arguments'
   test.shouldThrowErrorSync( () => _.objectSetWithKeys( {}, 'a', 'a', 1 ) );
 
   test.case = 'dstMap is not object or null'
   test.shouldThrowErrorSync( () => _.objectSetWithKeys( [], 'a', 'a' ) );
 
   test.case = 'src is not array of strings or string'
-
   test.shouldThrowErrorSync( () => _.objectSetWithKeys( { 'a' : 1 }, 1, 'a' ) );
-
   test.shouldThrowErrorSync( () => _.objectSetWithKeys( { 'a' : 1 }, { 'k' : 2 }, 'a' ) );
+}
+
+//
+
+function objectSetWithKeyStrictly( test )
+{
+  test.open( 'dst is null or empty map' );
+
+  test.case = 'dstMap - null, src - empty array, val - 2';
+  var dst = null;
+  var got = _.objectSetWithKeyStrictly( dst, [], 2 );
+  test.identical( got, {} );
+  test.is( got !== dst );
+
+  test.case = 'dstMap - empty map, src - empty array, val - 2';
+  var dst = {};
+  var got = _.objectSetWithKeyStrictly( dst, [], 2 );
+  test.identical( got, {} );
+  test.is( got === dst );
+
+  test.case = 'dstMap - null, src - string, val - 2';
+  var dst = null;
+  var got = _.objectSetWithKeyStrictly( dst, 'a', 2 );
+  test.identical( got, { 'a' : 2 } );
+  test.is( got !== dst );
+
+  test.case = 'dstMap - empty map, src - string, val - 2';
+  var dst = {};
+  var got = _.objectSetWithKeyStrictly( dst, 'a', 2 );
+  test.identical( got, { 'a' : 2 } );
+  test.is( got === dst );
+
+  test.case = 'dstMap - null, src - array of strings, val - 2';
+  var dst = null;
+  var got = _.objectSetWithKeyStrictly( dst, [ 'a', 'b' ], 2 );
+  test.identical( got, { 'a' : 2, 'b' : 2 } );
+  test.is( got !== dst );
+
+  test.case = 'dstMap - empty map, src - array of strings, val - 2';
+  var dst = {};
+  var got = _.objectSetWithKeyStrictly( dst, [ 'a', 'b' ], 2 );
+  test.identical( got, { 'a' : 2, 'b' : 2 } );
+  test.is( got === dst );
+
+  test.case = 'dstMap - empty map, src - array of numbers, val - 2';
+  var dst = {};
+  var got = _.objectSetWithKeyStrictly( dst, [ 1, 2 ], 2 );
+  test.identical( got, { 1 : 2, 2 : 2 } );
+  test.is( got === dst );
+
+  test.close( 'dst is null or empty map' );
+
+  /* - */
+
+  test.open( 'dst is filled  map' );
+
+  test.case = 'src - empty array, val - 2';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeyStrictly( dst, [], 2 );
+  test.identical( got, { a : 1, b : 2 } );
+  test.is( got === dst );
+
+  test.case = 'src - string, new key, val - 2';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeyStrictly( dst, 'd', 2 );
+  test.identical( got, { a : 1, b : 2, d : 2 } );
+  test.is( got === dst );
+
+  test.case = 'src - string, replace value, val - 2';
+  var dst = { a : 2, b : 2 };
+  var got = _.objectSetWithKeyStrictly( dst, 'a', 2 );
+  test.identical( got, { a : 2, b : 2 } );
+  test.is( got === dst );
+
+  test.case = 'src - array of strings, new keys, val - 2';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeyStrictly( dst, [ 'c', 'd' ], 2 );
+  test.identical( got, { 'a' : 1, 'b' : 2, 'c' : 2, 'd' : 2 } );
+  test.is( got === dst );
+
+  test.case = 'src - array of strings, replace values, val - 3';
+  var dst = { a : 3, b : 3 };
+  var got = _.objectSetWithKeyStrictly( dst, [ 'a', 'b' ], 3 );
+  test.identical( got, { 'a' : 3, 'b' : 3 } );
+  test.is( got === dst );
+
+  /* */
+
+  test.case = 'src - empty array, val - undefined';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeyStrictly( dst, [], undefined );
+  test.identical( got, { a : 1, b : 2 } );
+  test.is( got === dst );
+
+  test.case = 'src - string, new key, val - undefined';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeyStrictly( dst, 'd', undefined );
+  test.identical( got, { a : 1, b : 2 } );
+  test.is( got === dst );
+
+  test.case = 'src - string, replace value, val - 2';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeyStrictly( dst, 'a', undefined );
+  test.identical( got, { b : 2 } );
+  test.is( got === dst );
+
+  test.case = 'src - array of strings, new keys, val - 2';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeyStrictly( dst, [ 'c', 'd' ], undefined );
+  test.identical( got, { 'a' : 1, 'b' : 2 } );
+  test.is( got === dst );
+
+  test.case = 'src - array of strings, replace values, val - 3';
+  var dst = { a : 1, b : 2 };
+  var got = _.objectSetWithKeyStrictly( dst, [ 'a', 'b' ], undefined );
+  test.identical( got, {} );
+  test.is( got === dst );
+
+  test.close( 'dst is filled  map' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments'
+  test.shouldThrowErrorSync( () => _.objectSetWithKeyStrictly() );
+
+  test.case = 'not enough arguments'
+  test.shouldThrowErrorSync( () => _.objectSetWithKeyStrictly( {} ) );
+  test.shouldThrowErrorSync( () => _.objectSetWithKeyStrictly( {}, 'a' ) );
+
+  test.case = 'extra arguments'
+  test.shouldThrowErrorSync( () => _.objectSetWithKeyStrictly( {}, 'a', 'a', 1 ) );
+
+  test.case = 'dstMap is not object or null'
+  test.shouldThrowErrorSync( () => _.objectSetWithKeyStrictly( [], 'a', 'a' ) );
+
+  test.case = 'src is not array of strings or string'
+  test.shouldThrowErrorSync( () => _.objectSetWithKeyStrictly( { 'a' : 1 }, 1, 'a' ) );
+  test.shouldThrowErrorSync( () => _.objectSetWithKeyStrictly( { 'a' : 1 }, { 'k' : 2 }, 'a' ) );
+
+  test.case = 'dstMap has value not identical to val'
+  test.shouldThrowErrorSync( () => _.objectSetWithKeyStrictly( { 'a' : 1 }, 1, 'a' ) );
+}
+
+//
+
+function mapDelete( test ) 
+{
+  test.case = 'dstMap - empty map';
+  var dst = {};
+  var got = _.mapDelete( dst );
+  test.identical( got, {} );
+  test.is( got === dst );
+
+  test.case = 'dstMap - filled map';
+  var dst = { a : 1, 1 : 2, c : 3 };
+  var got = _.mapDelete( dst );
+  test.identical( got, {} );
+  test.is( got === dst );
+
+  test.case = 'dstMap - empty map, ins - empty map';
+  var dst = {};
+  var ins = {};
+  var got = _.mapDelete( dst, ins );
+  test.identical( got, {} );
+  test.is( got === dst );
+
+  test.case = 'dstMap - empty map, ins - filled map';
+  var dst = {};
+  var ins = { a : 1, b : 2 };
+  var got = _.mapDelete( dst, ins );
+  test.identical( got, {} );
+  test.is( got === dst );
+
+  test.case = 'dstMap - filled map, ins - empty map';
+  var dst = { a : 1, 1 : 2, c : 3 };
+  var ins = {};
+  var got = _.mapDelete( dst, ins );
+  test.identical( got, { a : 1, 1 : 2, c : 3 } );
+  test.is( got === dst );
+
+  test.case = 'dstMap - filled map, ins - filled map, not equal keys';
+  var dst = { a : 1, 1 : 2, c : 3 };
+  var ins = { 2 : 6, d : 'e' };
+  var got = _.mapDelete( dst, ins );
+  test.identical( got, { a : 1, 1 : 2, c : 3 } );
+  test.is( got === dst );
+
+  test.case = 'dstMap - filled map, ins - filled map, equal keys exists';
+  var dst = { a : 1, 1 : 2, c : 3 };
+  var ins = { a : 6, c : 'e', f : [] };
+  var got = _.mapDelete( dst, ins );
+  test.identical( got, { 1 : 2 } );
+  test.is( got === dst );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.mapDelete() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.mapDelete( { a : 1 }, { b : 2 }, { c : 'extra' } ) );
+
+  test.case = 'wrong type of dstMap';
+  test.shouldThrowErrorSync( () => _.mapDelete( 'wrong', { b : 2 } ) );
+  test.shouldThrowErrorSync( () => _.mapDelete( undefined, { b : 2 } ) );
+}
+
+//
+
+function mapEmpty( test ) 
+{
+  test.case = 'dstMap - empty map';
+  var dst = {};
+  var got = _.mapEmpty( dst );
+  test.identical( got, {} );
+  test.is( got === dst );
+
+  test.case = 'dstMap - filled map';
+  var dst = { a : 1, 1 : 2, c : 3 };
+  var got = _.mapEmpty( dst );
+  test.identical( got, {} );
+  test.is( got === dst );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.mapEmpty() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.mapEmpty( { a : 1 }, { c : 'extra' } ) );
+
+  test.case = 'wrong type of dstMap';
+  test.shouldThrowErrorSync( () => _.mapEmpty( 'wrong', { b : 2 } ) );
+  test.shouldThrowErrorSync( () => _.mapEmpty( undefined, { b : 2 } ) );
 }
 
 // --
@@ -1167,6 +1459,89 @@ function mapKeyWithIndex( test )
     _.mapKeyWithIndex( 'wrong argumetns' );
   });
 
+}
+
+//
+
+function mapToArray( test )
+{
+  test.case = 'src - empty map';
+  var got = _.mapToArray( {} );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - empty array';
+  var got = _.mapToArray( [] );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - filled map';
+  var got = _.mapToArray( { a : 7, b : 13 } );
+  var expected = [ [ 'a', 7 ], [ 'b', 13 ] ];
+  test.identical( got, expected );
+
+  test.case = 'src - filled map'
+  var got = _.mapToArray( { a : 3, b : 13, 1 : 7 } );
+  var expected = [ [ '1', 7 ], [ 'a', 3 ], [ 'b', 13 ] ];
+  test.identical( got, expected );
+
+  test.case = 'src - array with literal key';
+  var arrObj = [];
+  arrObj[ 'k' ] = 1;
+  var got = _.mapToArray( arrObj );
+  var expected = [ [ 'k', 1 ] ];
+  test.identical( got, expected );
+
+  test.case = 'src - Date object';
+  var got = _.mapToArray( new Date );
+  var expected = [];
+  test.identical( got, expected );
+
+  test.case = 'src - map prototyped by another map';
+  var a = { a : 1 };
+  var b = { b : 2 };
+  Object.setPrototypeOf( a, b );
+  var got = _.mapToArray( a );
+  var expected = [ [ 'a', 1 ], [ 'b', 2 ] ];
+  test.identical( got, expected );
+
+  test.case = 'src - map prototyped by another map, own pairs';
+  var a = { a : 1 };
+  var b = { b : 2 };
+  Object.setPrototypeOf( a, b );
+  var got = _.mapToArray.call( { own : 1 }, a );
+  var expected = [ [ 'a', 1 ], [ 'b', 2 ] ];
+  test.identical( got, expected );
+
+  test.case = 'src - map prototyped by another map, own pairs, not enumerable property';
+  var a = { a : 1 };
+  var b = { b : 2 };
+  Object.setPrototypeOf( a, b );
+  Object.defineProperty( a, 'k', { enumerable : 0, value : 3 } );
+  var got = _.mapToArray.call( { enumerable : 0, own : 1 }, a );
+  var expected = [ [ 'a', 1 ], [ 'b', 2 ] ];
+  test.identical( got, expected );
+
+  test.case = 'src - map prototyped by another map, own pairs disable, not enumerable property';
+  var a = { a : 1 };
+  var b = { b : 2 };
+  Object.setPrototypeOf( a, b );
+  Object.defineProperty( a, 'k', { enumerable : 0, value : 3 } );
+  var got = _.mapToArray.call( { enumerable : 0, own : 0 }, a );
+  var expected = [ [ 'a', 1 ], [ 'b', 2 ] ];
+  test.identical( got, expected );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without argument';
+  test.shouldThrowErrorSync( () => _.mapToArray() );
+
+  test.case = 'wrong type of src';
+  test.shouldThrowErrorSync( () => _.mapToArray( 1 ) );
+  test.shouldThrowErrorSync( () => _.mapToArray( 'wrong' ) );
 }
 
 //
@@ -3302,162 +3677,195 @@ function mapButConditional( test )
 
 function mapBut( test )
 {
+  test.open( 'srcMap - map' );
 
-  test.case = 'empty src map'; /* */
+  test.case = 'srcMap - empty map, butMap - empty map';
+  var srcMap = {};
+  var screenMap = {};
+  var got = _.mapBut( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, {} );
 
+  test.case = 'srcMap - empty map, butMap - empty array';
+  var srcMap = {};
+  var screenMap = [];
+  var got = _.mapBut( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty map, butMap - filled map';
   var srcMap = {};
   var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
-  var srcMapCopy = _.mapExtend( null, srcMap );
-  var screenMapCopy = _.mapExtend( null, screenMap );
   var got = _.mapBut( srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
   test.is( got !== srcMap );
-  test.identical( srcMap, srcMapCopy );
-  test.identical( screenMap, screenMapCopy );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
 
-  test.case = 'empty src array'; /* */
+  test.case = 'srcMap - empty map, butMap - filled array';
+  var srcMap = {};
+  var screenMap = [ 'a', 0, 'b', 1 ];
+  var got = _.mapBut( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [ 'a', 0, 'b', 1 ] );
 
+  test.case = 'srcMap - filled map, butMap - filled map, not identical keys';
+  var srcMap = { aa : 1, bb : 2, cc : 3 };
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapBut( srcMap, screenMap );
+  var expected = { aa : 1, bb : 2, cc : 3 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { aa : 1, bb : 2, cc : 3 } );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  // test.case = 'srcMap - filled map, butMap - filled array, not identical keys';
+  // var srcMap = { aa : 1, bb : 2, cc : 3 };
+  // var screenMap = [ 'a', 0, 'b', 1 ];
+  // var got = _.mapBut( srcMap, screenMap );
+  // var expected = { aa : 1, bb : 2, cc : 3 };
+  // test.identical( got, expected );
+  // test.is( got !== srcMap );
+  // test.identical( srcMap, { aa : 1, bb : 2, cc : 3 } );
+  // test.identical( screenMap, [ 'a', 0, 'b', 1 ] );
+  
+  test.case = 'srcMap - filled map, butMap - filled map, has identical keys';
+  var srcMap = { a : 1, b : 2, cc : 3 };
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapBut( srcMap, screenMap );
+  var expected = { cc : 3 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 1, b : 2, cc : 3 } );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  // test.case = 'srcMap - filled map, butMap - filled array, has identical keys';
+  // var srcMap = { a : 1, b : 2, cc : 3 };
+  // var screenMap = [ 'a', 0, 'b', 1 ];
+  // var got = _.mapBut( srcMap, screenMap );
+  // var expected = { cc : 3 };
+  // test.identical( got, expected );
+  // test.is( got !== srcMap );
+  // test.identical( srcMap, { a : 1, b : 2, cc : 3 } );
+  // test.identical( screenMap, [ 'a', 0, 'b', 1 ] );
+
+  test.close( 'srcMap - map' );
+
+  /* - */
+
+  test.open( 'srcMap - array' );
+
+  test.case = 'srcMap - empty map, butMap - empty map';
+  var srcMap = [];
+  var screenMap = {};
+  var got = _.mapBut( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty map, butMap - empty array';
+  var srcMap = [];
+  var screenMap = [];
+  var got = _.mapBut( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty map, butMap - filled map';
   var srcMap = [];
   var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
-  var srcMapCopy = srcMap.slice();
-  var screenMapCopy = _.mapExtend( null, screenMap );
   var got = _.mapBut( srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
   test.is( got !== srcMap );
-  test.identical( srcMap, srcMapCopy );
-  test.identical( screenMap, screenMapCopy );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
 
-  test.case = 'empty screen'; /* */
-
-  var srcMap = { d : 'name', c : 33, a : 'abc' };
-  var screenMap = {};
-  var srcMapCopy = _.mapExtend( null, srcMap );
-  var screenMapCopy = _.mapExtend( null, screenMap );
+  test.case = 'srcMap - empty map, butMap - filled array';
+  var srcMap = [];
+  var screenMap = [ 'a', 0, 'b', 1 ];
   var got = _.mapBut( srcMap, screenMap );
-  var expected = { d : 'name', c : 33, a : 'abc' };
+  var expected = {};
   test.identical( got, expected );
   test.is( got !== srcMap );
-  test.identical( srcMap, srcMapCopy );
-  test.identical( screenMap, screenMapCopy );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [ 'a', 0, 'b', 1 ] );
 
-  test.case = 'trivial'; /* */
-
-  var srcMap = { d : 'name', c : 33, a : 'abc' };
+  test.case = 'srcMap - filled map, butMap - filled map, not identical keys';
+  var srcMap = [ 'a', 0, 'b', 1 ];
   var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
-  var srcMapCopy = _.mapExtend( null, srcMap );
-  var screenMapCopy = _.mapExtend( null, screenMap );
   var got = _.mapBut( srcMap, screenMap );
-  var expected = {};
+  var expected = { 0 : 'a', 1 : 0, 2 : 'b', 3 : 1 };
   test.identical( got, expected );
   test.is( got !== srcMap );
-  test.identical( srcMap, srcMapCopy );
-  test.identical( screenMap, screenMapCopy );
+  test.identical( srcMap, [ 'a', 0, 'b', 1 ] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
 
-  var srcMap = { d : 'name', c : 33, a : 'abc', x : 13 };
-  var screenMap = { b : 77, c : 3, d : 'name' };
-  var srcMapCopy = _.mapExtend( null, srcMap );
-  var screenMapCopy = _.mapExtend( null, screenMap );
+  // test.case = 'srcMap - filled map, butMap - filled array, not identical keys';
+  // var srcMap = [ 'a', 0, 'b', 1 ];
+  // var screenMap = [ 'a', 'b', 'c', 'd' ];
+  // var got = _.mapBut( srcMap, screenMap );
+  // var expected = { 0 : 'a', 1 : 0, 2 : 'b', 3 : 1 };
+  // test.identical( got, expected );
+  // test.is( got !== srcMap );
+  // test.identical( srcMap, [ 'a', 0, 'b', 1 ] );
+  // test.identical( screenMap, [ 'a', 'b', 'c', 'd' ] );
+  
+  test.case = 'srcMap - filled map, butMap - filled map, has identical keys';
+  var srcMap = [ 'a', 0, 'b', 1 ];
+  var screenMap = { 1 : 13, 3 : 77, c : 3, d : 'name' };
   var got = _.mapBut( srcMap, screenMap );
-  var expected = { a : 'abc', x : 13 };
+  var expected = { 0 : 'a', 2 : 'b' };
   test.identical( got, expected );
   test.is( got !== srcMap );
-  test.identical( srcMap, srcMapCopy );
-  test.identical( screenMap, screenMapCopy );
+  test.identical( srcMap, [ 'a', 0, 'b', 1 ] );
+  test.identical( screenMap, { 1 : 13, 3 : 77, c : 3, d : 'name' } );
 
-  test.case = 'several screens'; /* */
+  // test.case = 'srcMap - filled map, butMap - filled array, has identical keys';
+  // var srcMap = [ 'a', 0, 'b', 1 ]
+  // var screenMap = [ 'a', 3, 'b', 1 ];
+  // var got = _.mapBut( srcMap, screenMap );
+  // var expected = { 0 : 'a', 2 : 'b' };
+  // test.identical( got, expected );
+  // test.is( got !== srcMap );
+  // test.identical( srcMap, [ 'a', 0, 'b', 1 ] );
+  // test.identical( screenMap, [ 'a', 3, 'b', 1 ] );
+  
+  test.close( 'srcMap - array' );
 
-  var srcMap = { d : 'name', c : 33, a : 'abc' };
-  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
-  var srcMapCopy = _.mapExtend( null, srcMap );
-  var screenMapCopy = screenMap.slice();
-  var got = _.mapBut( srcMap, screenMap );
-  var expected = {};
-  test.identical( got, expected );
-  test.is( got !== srcMap );
-  test.identical( srcMap, srcMapCopy );
-  test.identical( screenMap, screenMapCopy );
-
-  test.case = 'several srcs'; /* */
-
-  var srcMap = [ { a : 1 }, { b : 1 }, { c : 1 } ];
-  var screenMap = { a : 2, b : 2, d : 2 };
-  var srcMapCopy = srcMap.slice();
-  var screenMapCopy = _.mapExtend( null, screenMap );
-  var got = _.mapBut( srcMap, screenMap );
-  var expected = { 0 : { a : 1 }, 1 : { b : 1 }, 2 : { c : 1 } };
-  test.identical( got, expected );
-  test.is( got !== srcMap );
-  test.identical( srcMap, srcMapCopy );
-  test.identical( screenMap, screenMapCopy );
-
-  test.case = 'several srcs and screens'; /* */
-
-  var srcMap = [ { a : 1 }, { b : 1 }, { c : 1 } ];
-  var screenMap = [ { 0 : 2 }, { 1 : 2 }, { d : 2 } ];
-  var srcMapCopy = srcMap.slice();
-  var screenMapCopy = screenMap.slice();
-  var got = _.mapBut( srcMap, screenMap );
-  var expected = { 2 : { c : 1 } };
-  test.identical( got, expected );
-  test.is( got !== srcMap );
-  test.identical( srcMap, srcMapCopy );
-  test.identical( screenMap, screenMapCopy );
-
-  /* */
+  /* - */
 
   if( !Config.debug )
   return;
 
-  test.case = 'no arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.mapBut();
-  });
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.mapBut() );
 
-  test.case = 'wrong type of arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.mapBut( 'wrong arguments' );
-  });
+  test.case = 'not enough arguments';
+  test.shouldThrowErrorSync( () => _.mapBut( { a : 1 } ) );
 
-  test.case = 'only src map';
-  test.shouldThrowErrorSync( function()
-  {
-    _.mapBut( srcMap );
-  });
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.mapBut( [], [], {} ) );
 
   test.case = 'first argument is not an object-like';
-  test.shouldThrowErrorSync( function()
-  {
-    _.mapBut( 3, [] );
-  });
+  test.shouldThrowErrorSync( () => _.mapBut( 3, [] ) );
 
   test.case = 'second argument is not an object-like';
-  test.shouldThrowErrorSync( function()
-  {
-    _.mapBut( [], '' );
-  });
-
-  test.case = 'redundant arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.mapBut( [], [], {} );
-  });
-
-  test.case = 'wrong type of arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.mapBut( {}, 'wrong arguments' );
-  });
-
-  test.case = 'wrong type of arguments';
-  test.shouldThrowErrorSync( function()
-  {
-    _.mapBut( 'wrong arguments', {} );
-  });
-
+  test.shouldThrowErrorSync( () => _.mapBut( [], '' ) );
 }
 
 //
@@ -3849,6 +4257,504 @@ function mapContain( test )
     _.mapContain( {}, {}, 'redundant argument' );
   });
 
+}
+
+//
+
+function objectSatisfy( test ) 
+{
+  test.open( 'default option' );
+
+  test.case = 'template === src, values - undefined';
+  var template = { a : undefined, b : undefined, c : undefined };
+  var src = template;
+  var got = _.objectSatisfy( template, src );
+  test.identical( got, true );
+
+  test.case = 'template === src';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = template;
+  var got = _.objectSatisfy( template, src );
+  test.identical( got, true );
+
+  test.case = 'src is not an object';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = 'wrong';
+  var got = _.objectSatisfy( template, src );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : 3 };
+  var got = _.objectSatisfy( template, src );
+  test.identical( got, true );
+
+  test.case = 'template is object, src not identical to template';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : undefined, d : 3 };
+  var got = _.objectSatisfy( template, src );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template, values is objects, without identicalWith';
+  var template = { a : { val : 1 }, b : 2, c : 3 };
+  var src = { a : { val : 1 }, b : 2, c : 3 };
+  var got = _.objectSatisfy( template, src );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template, values is objects, with identicalWith';
+  var identicalWith = () => true;
+  var template = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var src = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var got = _.objectSatisfy( template, src );
+  test.identical( got, true );
+
+  /* */
+
+  test.case = 'template === src, values - undefined';
+  var template = { a : undefined, b : undefined, c : undefined };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src } );
+  test.identical( got, true );
+
+  test.case = 'template === src';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src } );
+  test.identical( got, true );
+
+  test.case = 'src is not an object';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = 'wrong';
+  var got = _.objectSatisfy( { template : template, src : src } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src } );
+  test.identical( got, true );
+
+  test.case = 'template is object, src not identical to template';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : undefined, d : 3 };
+  var got = _.objectSatisfy( { template : template, src : src } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template, values is objects, without identicalWith';
+  var template = { a : { val : 1 }, b : 2, c : 3 };
+  var src = { a : { val : 1 }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template, values is objects, with identicalWith';
+  var identicalWith = () => true;
+  var template = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var src = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src } );
+  test.identical( got, true );
+
+  test.close( 'default option' );
+
+  /* - */
+
+  test.open( 'levels - 0' );
+
+  test.case = 'template === src, values - undefined';
+  var template = { a : undefined, b : undefined, c : undefined };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template === src';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0 } );
+  test.identical( got, true );
+
+  test.case = 'src is not an object';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = 'wrong';
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template, without identicalWith';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : undefined, d : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template, without identicalWith';
+  var template = { a : 1, b : 2, c : 3, identicalWith : identicalWith };
+  var src = { a : 1, b : 2, c : 3, identicalWith : identicalWith };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template is object, src not identical to template, values is objects, without identicalWith';
+  var template = { a : { val : 1 }, b : 2, c : 3 };
+  var src = { a : { val : 1 }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template, values is objects, with identicalWith';
+  var identicalWith = () => true;
+  var template = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var src = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0 } );
+  test.identical( got, false );
+
+  test.close( 'levels - 0' );
+
+  /* - */
+
+  test.open( 'levels - -1' );
+
+  test.case = 'template === src, values - undefined';
+  var template = { a : undefined, b : undefined, c : undefined };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1 } );
+  test.identical( got, true );
+
+  test.case = 'template === src';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1 } );
+  test.identical( got, true );
+
+  test.case = 'src is not an object';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = 'wrong';
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template, without identicalWith';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : undefined, d : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template, without identicalWith';
+  var template = { a : 1, b : 2, c : 3, identicalWith : identicalWith };
+  var src = { a : 1, b : 2, c : 3, identicalWith : identicalWith };
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template, values is objects, without identicalWith';
+  var template = { a : { val : 1 }, b : 2, c : 3 };
+  var src = { a : { val : 1 }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template, values is objects, with identicalWith';
+  var identicalWith = () => true;
+  var template = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var src = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1 } );
+  test.identical( got, false );
+
+  test.close( 'levels - -1' );
+
+  /* - */
+
+  test.open( 'levels - 2' );
+
+  test.case = 'template === src, values - undefined';
+  var template = { a : undefined, b : undefined, c : undefined };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2 } );
+  test.identical( got, true );
+
+  test.case = 'template === src';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2 } );
+  test.identical( got, true );
+
+  test.case = 'src is not an object';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = 'wrong';
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template, without identicalWith';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2 } );
+  test.identical( got, true );
+
+  test.case = 'template is object, src not identical to template';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : undefined, d : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template, without identicalWith';
+  var template = { a : 1, b : 2, c : 3, identicalWith : identicalWith };
+  var src = { a : 1, b : 2, c : 3, identicalWith : identicalWith };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2 } );
+  test.identical( got, true );
+
+  test.case = 'template is object, src not identical to template, values is objects, without identicalWith';
+  var template = { a : { val : 1 }, b : 2, c : 3 };
+  var src = { a : { val : 1 }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2 } );
+  test.identical( got, true );
+
+  test.case = 'template is object, src not identical to template, values is objects, with identicalWith';
+  var identicalWith = () => true;
+  var template = { a : { val : { identicalWith : identicalWith } }, b : 2, c : 3 };
+  var src = { a : { val : { identicalWith : identicalWith } }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2 } );
+  test.identical( got, true );
+
+  test.close( 'levels - 2' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.objectSatisfy() );
+
+  test.case = 'o.template is not an object or a routine';
+  test.shouldThrowErrorSync( () => _.objectSatisfy( 'wrong', { a : 2 } ) );
+  test.shouldThrowErrorSync( () => _.objectSatisfy( { template : 'wrong', src : { a : 2 } } ) );
+
+  test.case = 'o.src is undefined';
+  test.shouldThrowErrorSync( () => _.objectSatisfy( { a : 2 }, undefined ) );
+  test.shouldThrowErrorSync( () => _.objectSatisfy( { template : { a : 2 }, src : undefined } ) );
+
+  test.case = 'map o has wrong fields';
+  test.shouldThrowErrorSync( () => _.objectSatisfy( { template : { a : 2 }, wrong : { a : 2 } } ) );
+}
+
+//
+
+function objectSatisfyOptionStrict( test )
+{
+  test.open( 'default option levels' );
+
+  test.case = 'template === src, values - undefined';
+  var template = { a : undefined, b : undefined, c : undefined };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template === src';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'src is not an object';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = 'wrong';
+  var got = _.objectSatisfy( { template : template, src : src, strict : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template is object, src not identical to template';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : undefined, d : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template is object, src not identical to template, values is objects, without identicalWith';
+  var template = { a : { val : 1 }, b : 2, c : 3 };
+  var src = { a : { val : 1 }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, strict : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template, values is objects, with identicalWith';
+  var identicalWith = () => true;
+  var template = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var src = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, strict : 0 } );
+  test.identical( got, true );
+
+  test.close( 'default option levels' );
+
+  /* - */
+
+  test.open( 'levels - 0' );
+
+  test.case = 'template === src, values - undefined';
+  var template = { a : undefined, b : undefined, c : undefined };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template === src';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'src is not an object';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = 'wrong';
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0, strict : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template, without identicalWith';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0, strict : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : undefined, d : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0, strict : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template, without identicalWith';
+  var template = { a : 1, b : 2, c : 3, identicalWith : identicalWith };
+  var src = { a : 1, b : 2, c : 3, identicalWith : identicalWith };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template is object, src not identical to template, values is objects, without identicalWith';
+  var template = { a : { val : 1 }, b : 2, c : 3 };
+  var src = { a : { val : 1 }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0, strict : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template, values is objects, with identicalWith';
+  var identicalWith = () => true;
+  var template = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var src = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 0, strict : 0 } );
+  test.identical( got, false );
+
+  test.close( 'levels - 0' );
+
+  /* - */
+
+  test.open( 'levels - -1' );
+
+  test.case = 'template === src, values - undefined';
+  var template = { a : undefined, b : undefined, c : undefined };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template === src';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'src is not an object';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = 'wrong';
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1, strict : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template, without identicalWith';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1, strict : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : undefined, d : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1, strict : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template, without identicalWith';
+  var template = { a : 1, b : 2, c : 3, identicalWith : identicalWith };
+  var src = { a : 1, b : 2, c : 3, identicalWith : identicalWith };
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1, strict : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template, values is objects, without identicalWith';
+  var template = { a : { val : 1 }, b : 2, c : 3 };
+  var src = { a : { val : 1 }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1, strict : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src not identical to template, values is objects, with identicalWith';
+  var identicalWith = () => true;
+  var template = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var src = { a : { val : 1, identicalWith : identicalWith }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : -1, strict : 0 } );
+  test.identical( got, false );
+
+  test.close( 'levels - -1' );
+
+  /* - */
+
+  test.open( 'levels - 2' );
+
+  test.case = 'template === src, values - undefined';
+  var template = { a : undefined, b : undefined, c : undefined };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template === src';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = template;
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'src is not an object';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = 'wrong';
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2, strict : 0 } );
+  test.identical( got, false );
+
+  test.case = 'template is object, src identical to template, without identicalWith';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template is object, src not identical to template';
+  var template = { a : 1, b : 2, c : 3 };
+  var src = { a : 1, b : 2, c : undefined, d : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template is object, src identical to template, without identicalWith';
+  var template = { a : 1, b : 2, c : 3, identicalWith : identicalWith };
+  var src = { a : 1, b : 2, c : 3, identicalWith : identicalWith };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template is object, src not identical to template, values is objects, without identicalWith';
+  var template = { a : { val : 1 }, b : 2, c : 3 };
+  var src = { a : { val : 1 }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2, strict : 0 } );
+  test.identical( got, true );
+
+  test.case = 'template is object, src not identical to template, values is objects, with identicalWith';
+  var identicalWith = () => true;
+  var template = { a : { val : { identicalWith : identicalWith } }, b : 2, c : 3 };
+  var src = { a : { val : { identicalWith : identicalWith } }, b : 2, c : 3 };
+  var got = _.objectSatisfy( { template : template, src : src, levels : 2, strict : 0 } );
+  test.identical( got, true );
+
+  test.close( 'levels - 2' );
 }
 
 //
@@ -6301,6 +7207,9 @@ var Self =
     // map manipulator
 
     objectSetWithKeys,
+    objectSetWithKeyStrictly,
+    mapDelete,
+    mapEmpty,
 
     // map convert
 
@@ -6309,6 +7218,7 @@ var Self =
     mapFirstPair,
     mapValWithIndex,
     mapKeyWithIndex,
+    mapToArray,
     mapToStr,
 
     // map properties
@@ -6356,6 +7266,9 @@ var Self =
 
     mapsAreIdentical,
     mapContain,
+    
+    objectSatisfy,
+    objectSatisfyOptionStrict,
 
     mapOwnKey,
 

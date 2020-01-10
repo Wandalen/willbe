@@ -308,10 +308,17 @@ diagnosticEachElementComparator.defaults =
 
 //
 
-function diagnosticStructureGenerate( o )
+function diagnosticStructureGenerate_pre( routine, args ) 
 {
+  _.assert( args.length === 0 || args.length === 1 );
+  
+  let o;
+  if( args.length === 1 ) 
+  o = args[ 0 ];
+  else
+  o = Object.create( null );  
 
-  o = _.routineOptions( diagnosticStructureGenerate, arguments );
+  o = _.routineOptions( diagnosticStructureGenerate, o );
 
   if( o.arrayLength === null )
   o.arrayLength = o.defaultLength;
@@ -378,10 +385,98 @@ function diagnosticStructureGenerate( o )
   if( o.hashMapComplexity === null )
   o.hashMapComplexity = from( o.containerComplexity );
 
-  _.assert( arguments.length === 0 || arguments.length === 1 )
   _.assert( _.numberIs( o.depth ) );
 
-  /* qqq : implement pre */
+  function from( complexity, min )
+  {
+    if( min === undefined )
+    return complexity;
+
+    if( complexity >= min )
+    return complexity;
+
+    return 0;
+  }
+
+  return o;
+}
+
+//
+
+function diagnosticStructureGenerate_body( o )
+{
+
+  // o = _.routineOptions( diagnosticStructureGenerate, arguments );
+
+  // if( o.arrayLength === null )
+  // o.arrayLength = o.defaultLength;
+  // if( o.mapLength === null )
+  // o.mapLength = o.defaultLength;
+  // if( o.hashMapLength === null )
+  // o.hashMapLength = o.defaultLength;
+  // if( o.setLength === null )
+  // o.setLength = o.defaultLength;
+
+  // if( o.stringSize === null )
+  // o.stringSize = o.defaultSize;
+  // if( o.bufferSize === null )
+  // o.bufferSize = o.defaultSize;
+  // if( o.regexpSize === null )
+  // o.regexpSize = o.defaultSize;
+
+  // if( o.primitiveComplexity === null )
+  // o.primitiveComplexity = from( o.defaultComplexity );
+
+  // if( o.nullComplexity === null )
+  // o.nullComplexity = from( o.primitiveComplexity );
+  // if( o.undefinedComplexity === null )
+  // o.undefinedComplexity = from( o.primitiveComplexity );
+  // if( o.booleanComplexity === null )
+  // o.booleanComplexity = from( o.primitiveComplexity );
+  // if( o.stringComplexity === null )
+  // o.stringComplexity = from( o.primitiveComplexity );
+  // if( o.bigIntComplexity === null )
+  // o.bigIntComplexity = from( o.primitiveComplexity );
+
+  // if( o.numberComplexity === null )
+  // o.numberComplexity = from( o.primitiveComplexity );
+  // if( o.numberInfinityComplexity === null )
+  // o.numberInfinityComplexity = from( o.numberComplexity );
+  // if( o.numberNanComplexity === null )
+  // o.numberNanComplexity = from( o.numberComplexity );
+  // if( o.numberSignedZeroComplexity === null )
+  // o.numberSignedZeroComplexity = from( o.numberComplexity );
+
+  // if( o.objectComplexity === null )
+  // o.objectComplexity = from( o.defaultComplexity );
+  // if( o.dateComplexity === null )
+  // o.dateComplexity = from( o.objectComplexity );
+  // if( o.regexpComplexity === null )
+  // o.regexpComplexity = from( o.objectComplexity );
+  // if( o.bufferNodeComplexity === null )
+  // o.bufferNodeComplexity = from( o.objectComplexity );
+  // if( o.bufferRawComplexity === null )
+  // o.bufferRawComplexity = from( o.objectComplexity );
+  // if( o.bufferBytesComplexity === null )
+  // o.bufferBytesComplexity = from( o.objectComplexity );
+
+  // if( o.containerComplexity === null )
+  // o.containerComplexity = from( o.defaultComplexity );
+  // if( o.recursionComplexity === null )
+  // o.recursionComplexity = from( o.containerComplexity );
+  // if( o.arrayComplexity === null )
+  // o.arrayComplexity = from( o.containerComplexity );
+  // if( o.mapComplexity === null )
+  // o.mapComplexity = from( o.containerComplexity );
+  // if( o.setComplexity === null )
+  // o.setComplexity = from( o.containerComplexity );
+  // if( o.hashMapComplexity === null )
+  // o.hashMapComplexity = from( o.containerComplexity );
+  //
+  // _.assert( arguments.length === 0 || arguments.length === 1 )
+  // _.assert( _.numberIs( o.depth ) );
+
+  // /* qqq : implement pre | Dmytro : implemented */
 
   /**/
 
@@ -587,16 +682,16 @@ function diagnosticStructureGenerate( o )
 
   /* */
 
-  function from( complexity, min )
-  {
-    if( min === undefined )
-    return complexity;
+  // function from( complexity, min )
+  // {
+  //   if( min === undefined )
+  //   return complexity;
 
-    if( complexity >= min )
-    return complexity;
+  //   if( complexity >= min )
+  //   return complexity;
 
-    return 0;
-  }
+  //   return 0;
+  // }
 
 /*
 
@@ -641,7 +736,7 @@ function diagnosticStructureGenerate( o )
 
 }
 
-diagnosticStructureGenerate.defaults =
+diagnosticStructureGenerate_body.defaults =
 {
 
   structure : null,
@@ -692,6 +787,10 @@ diagnosticStructureGenerate.defaults =
   hashMapComplexity : null,
 
 }
+
+//
+
+let diagnosticStructureGenerate = _.routineFromPreAndBody( diagnosticStructureGenerate_pre, diagnosticStructureGenerate_body );
 
 // --
 // checker
