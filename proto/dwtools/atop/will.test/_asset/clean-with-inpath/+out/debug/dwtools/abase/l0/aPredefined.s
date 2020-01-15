@@ -99,6 +99,7 @@ Self.__GLOBAL_WHICH__ = _global.__GLOBAL_WHICH__;
 
 Self.def = Symbol.for( 'def' );
 Self.nothing = Symbol.for( 'nothing' );
+Self.anything = Symbol.for( 'anything' );
 Self.maybe = Symbol.for( 'maybe' );
 Self.unknown = Symbol.for( 'unknown' );
 Self.dont = Symbol.for( 'dont' );
