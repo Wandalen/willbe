@@ -6,7 +6,7 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
   let configPath = _.path.join( it.junction.dirPath, 'package.json' );
-  let wasconfigPath = _.path.join( it.junction.dirPath, 'was.package.json' );
+  let wasСonfigPath = _.path.join( it.junction.dirPath, 'was.package.json' );
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
@@ -21,8 +21,11 @@ function onModule( it )
   if( !o.tag )
   throw _.errBrief( 'Expects option tag' );
 
-  if( !_.fileProvider.fileExists( wasconfigPath ) )
-  throw _.errBrief( `Does not have ${wasconfigPath}` );
+  if( !_.fileProvider.fileExists( wasСonfigPath ) )
+  throw _.errBrief( `Does not have ${wasСonfigPath}` );
+
+  if( !isEnabled( it, wasСonfigPath ) )
+  return;
 
   if( o.verbosity )
   logger.log( `Publishing ${it.junction.nameWithLocationGet()}` );
@@ -30,32 +33,36 @@ function onModule( it )
   if( o.dry )
   return;
 
-  if( !isEnabled( it, wasconfigPath ) )
-  return;
+  let bumped = _.npm.bump
+  ({
+    dry : o.dry,
+    configPath : wasСonfigPath,
+    verbosity : o.verbosity - 4,
+  });
+
+  {
+    let it2 = it.will.hookItNew( it );
+    it2.request.subject = `-am "version ${bumped.config.version}"`
+    it2.request.original = it2.request.subject;
+    it2.will.hooks.GitSync.call( it2 );
+  }
 
   _.assert( _.path.isTrailed( it.junction.localPath ), 'not tested' );
 
   it.start( 'will .export' );
 
-  let bumped = _.npm.bump
-  ({
-    dry : o.dry,
-    configPath : wasconfigPath,
-    verbosity : o.verbosity - 4,
-  });
-
-  let activeconfigPath = wasconfigPath;
+  let activeСonfigPath = wasСonfigPath;
   if( !o.dry )
   {
-    _.fileProvider.fileCopy( configPath, wasconfigPath );
-    activeconfigPath = configPath;
+    _.fileProvider.fileCopy( configPath, wasСonfigPath );
+    activeСonfigPath = configPath;
   }
 
   _.npm.fixate
   ({
     dry : o.dry,
     localPath : it.junction.dirPath,
-    configPath : activeconfigPath,
+    configPath : activeСonfigPath,
     tag : o.tag,
     onDependency,
     verbosity : o.verbosity - 2,
