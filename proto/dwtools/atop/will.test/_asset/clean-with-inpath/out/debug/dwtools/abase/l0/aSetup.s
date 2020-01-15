@@ -47,7 +47,6 @@ function _errUncaughtHandler2( err, kind )
   console.error( errStr );
   console.error( err ? err.stack : '' );
   console.error( postfix );
-  debugger;
 
   processExit();
 
