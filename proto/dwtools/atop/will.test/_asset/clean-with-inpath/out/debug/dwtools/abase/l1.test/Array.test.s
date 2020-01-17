@@ -7511,6 +7511,7 @@ function longOnce_( test )
   test.shouldThrowErrorSync( () => _.longOnce_( [ 1, 2 ], [ 1, 3 ], 'wrong' ) );
   test.shouldThrowErrorSync( () => _.longOnce_( [ 1, 2 ], [ 1, 3 ], [ 1, 2, 3 ] ) );
 }
+longOnce_.timeOut = 20000;
 
 //
 

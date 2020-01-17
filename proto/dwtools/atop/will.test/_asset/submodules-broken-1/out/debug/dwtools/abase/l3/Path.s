@@ -738,17 +738,7 @@ function hasSymbolBase( srcPath )
 // transformer
 // --
 
-function from( src )
-{
 
-  _.assert( arguments.length === 1, 'Expects single argument' );
-
-  if( _.strIs( src ) )
-  return src;
-  else
-  _.assert( 0, 'Expects string, but got ' + _.strType( src ) );
-
-}
 //
 // //
 //
@@ -1064,62 +1054,6 @@ function withoutExt( path )
 //
 
 /**
- * Replaces existing path extension on passed in `ext` parameter. If path has no extension,adds passed extension
-    to path.
- * @example
- * wTools.changeExt( '/foo/bar/baz.txt', 'text' ); // '/foo/bar/baz.text'
- * @param {string} path Path string
- * @param {string} ext
- * @returns {string}
- * @throws {Error} If passed argument is not string
- * @function changeExt
- * @memberof module:Tools/PathBasic.wTools.path
- */
-
-// qqq : extend tests
-
-function changeExt( path, ext )
-{
-
-  if( arguments.length === 2 )
-  {
-    _.assert( _.strIs( ext ) );
-  }
-  else if( arguments.length === 3 )
-  {
-    let sub = arguments[ 1 ];
-    let ext = arguments[ 2 ];
-
-    _.assert( _.strIs( sub ) );
-    _.assert( _.strIs( ext ) );
-
-    let cext = this.ext( path );
-
-    if( cext !== sub )
-    return path;
-  }
-  else _.assert( 'Expects 2 or 3 arguments' );
-
-  if( ext === '' )
-  return this.withoutExt( path );
-  else
-  return this.withoutExt( path ) + '.' + ext;
-
-}
-
-//
-
-function _pathsChangeExt( src )
-{
-  _.assert( _.longIs( src ) );
-  _.assert( src.length === 2 );
-
-  return changeExt.apply( this,src );
-}
-
-//
-
-/**
  * Returns file extension of passed `path` string.
  * If there is no '.' in the last portion of the path returns an empty string.
  * @example
@@ -1153,7 +1087,7 @@ function ext( path )
 //
 
 /*
-qqq : not covered by tests
+qqq : not covered by tests | Dmytro : covered
 */
 
 function exts( path )
@@ -1169,6 +1103,66 @@ function exts( path )
   exts = _.entityFilter( exts , ( e ) => !e ? undefined : e.toLowerCase() );
 
   return exts;
+}
+
+//
+
+/**
+ * Replaces existing path extension on passed in `ext` parameter. If path has no extension,adds passed extension
+    to path.
+ * @example
+ * wTools.changeExt( '/foo/bar/baz.txt', 'text' ); // '/foo/bar/baz.text'
+ * @param {string} path Path string
+ * @param {string} ext
+ * @returns {string}
+ * @throws {Error} If passed argument is not string
+ * @function changeExt
+ * @memberof module:Tools/PathBasic.wTools.path
+ */
+
+// qqq : extend tests | Dmytro : coverage is extended
+
+function changeExt( path, ext )
+{
+
+  if( arguments.length === 2 )
+  {
+    _.assert( _.strIs( ext ) );
+  }
+  else if( arguments.length === 3 )
+  {
+    let sub = arguments[ 1 ];
+    // let ext = arguments[ 2 ]; // Dmytro : it's local variable, uses in assertion below and has no sense in routine
+    ext = arguments[ 2 ];
+
+    _.assert( _.strIs( sub ) );
+    _.assert( _.strIs( ext ) );
+
+    let cext = this.ext( path );
+
+    if( cext !== sub )
+    return path;
+  }
+  else
+  {
+    _.assert( 0, 'Expects 2 or 3 arguments' );
+  }
+
+  if( ext === '' )
+  return this.withoutExt( path );
+  else
+  return this.withoutExt( path ) + '.' + ext;
+
+}
+
+//
+
+function _pathsChangeExt( src )
+{
+  _.assert( _.longIs( src ) );
+  _.assert( src.length === 2 );
+
+  return changeExt.apply( this,src );
 }
 
 // --
@@ -1682,6 +1676,20 @@ function current()
   _.assert( arguments.length === 0 );
   // return this._hereStr;
   return this._upStr;
+}
+
+//
+
+function from( src )
+{
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+
+  if( _.strIs( src ) )
+  return src;
+  else
+  _.assert( 0, 'Expects string, but got ' + _.strType( src ) );
+
 }
 
 // --
@@ -2400,8 +2408,8 @@ let Routines =
   // _isDotted,
   // isDotted,
   // isTrailed,
-
   isGlob,
+
   hasSymbolBase,
 
   // begins,
@@ -2422,7 +2430,6 @@ let Routines =
 
   // transformer
 
-  from,
 
   // _dot,
   // dot,
@@ -2437,10 +2444,10 @@ let Routines =
   name,
   fullName,
 
-  withoutExt,
-  changeExt,
   ext,
   exts,
+  withoutExt,
+  changeExt,
 
   // joiner
 
@@ -2461,6 +2468,7 @@ let Routines =
 
   // relator
 
+  from,
   _relative,
   relative,
   relativeCommon,

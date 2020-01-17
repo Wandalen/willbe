@@ -457,7 +457,7 @@ let wYamlTools =
 
 let wSchema =
 {
-  sourcePath : sourcePath( 'amid/schema/Top.s', 'wSchema' ),
+  sourcePath : sourcePath( 'amid/l1/schema/IncludeMid.s', 'wSchema' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.schema },
 }
 

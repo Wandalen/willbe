@@ -588,8 +588,9 @@ strIsolateRightOrAll_body.defaults =
   * - substring between delimeters {-begin-} and {-end-}.
   * - delimeter {-end-}.
   * - substring from end of delimeter {-end-} to end of source line.
-  * If routine does not find part between {-begin-} and {-end-} delimeters, then routine transform unused parts to empty
-  * strings. So, finally routine returns the array with source string concluded between empty strings: [ '', '', {-src-}, '', '' ].
+  * If routine does not find part between {-begin-} and {-end-} delimeters, then routine transform begin and end substrings to empty
+  * strings and delimeters to undefined.
+  * So, finally routine returns the array with source string: [ '', undefined, {-src-}, undefined, '' ].
   *
   * @param { String } src - The source string.
   * @param { String|Array } begin - String or array of strings to find begin of split part in the source string.
@@ -605,11 +606,11 @@ strIsolateRightOrAll_body.defaults =
   *
   * @example
   * _.strIsolateInsideLeftSignle( 'cabdcdc', 'f', 'd' );
-  * // returns [ '', '', 'cabdcdc', '', '' ]
+  * // returns [ '', undefined, 'cabdcdc', undefined, '' ]
   *
   * @example
   * _.strIsolateInsideLeftSignle( 'cabdcdc', 'a', 'f' );
-  * // returns [ '', '', 'cabdcdc', '', '' ]
+  * // returns [ '', undefined, 'cabdcdc', undefined, '' ]
   *
   * @example
   * _.strIsolateInsideLeftSignle( 'cabdcdc', [ 'f', 'b' ], 'd' );
@@ -710,7 +711,8 @@ function strIsolateInsideLeftSignle( src, begin, end )
 
   function notFound()
   {
-    return [ '', '', src, '', '' ];
+    // return [ '', '', src, '', '' ];
+    return [ '', undefined, src, undefined, '' ];
   }
 }
 
@@ -725,8 +727,9 @@ function strIsolateInsideLeftSignle( src, begin, end )
   * - substring between delimeters {-begin-} and {-end-}.
   * - delimeter {-end-}.
   * - substring from end of delimeter {-end-} to end of source line.
-  * If routine does not find part between {-begin-} and {-end-} delimeters, then routine transform unused parts to empty
-  * strings. So, finally routine returns the array with source string concluded between empty strings: [ '', '', {-src-}, '', '' ].
+  * If routine does not find part between {-begin-} and {-end-} delimeters, then routine transform begin and end substrings to empty
+  * strings and delimeters to undefined.
+  * So, finally routine returns the array with source string: [ '', undefined, {-src-}, undefined, '' ].
   *
   * @param { String|Array } src - The source string or vector of source strings. If {-src-} is a vector, then routine returns vector 
   * with resulted arrays. Otherwise, routine returns only one resulted array for scalar source string.
@@ -743,11 +746,11 @@ function strIsolateInsideLeftSignle( src, begin, end )
   *
   * @example
   * _.strIsolateInsideLeft( 'cabdcdc', 'f', 'd' );
-  * // returns [ '', '', 'cabdcdc', '', '' ]
+  * // returns [ '', undefined, 'cabdcdc', undefined, '' ]
   *
   * @example
   * _.strIsolateInsideLeftSignle( 'cabdcdc', 'a', 'f' );
-  * // returns [ '', '', 'cabdcdc', '', '' ]
+  * // returns [ '', undefined, 'cabdcdc', undefined, '' ]
   *
   * @example
   * _.strIsolateInsideLeft( 'cabdcdc', [ 'f', 'b' ], 'd' );

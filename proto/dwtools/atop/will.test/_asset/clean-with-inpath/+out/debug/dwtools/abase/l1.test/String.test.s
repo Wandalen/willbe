@@ -7883,7 +7883,7 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'nothing found';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', 'cc', 'dd' );
   test.identical( got, expected );
 
@@ -7948,22 +7948,22 @@ function strIsolateInsideLeft( test )
   /* */
 
   test.case = 'no entry';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', [], [] );
   test.identical( got, expected );
 
   test.case = 'not found';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', 'dd', 'dd' );
   test.identical( got, expected );
 
   test.case = 'not found begin';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', 'dd', '' );
   test.identical( got, expected );
 
   test.case = 'not found end';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', '', 'dd' );
   test.identical( got, expected );
 
@@ -7978,7 +7978,7 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'empty src';
-  var expected = [ '', '', '', '', '' ];
+  var expected = [ '', undefined, '', undefined, '' ];
   var got = _.strIsolateInsideLeft( '', 'aa', 'bb' );
   test.identical( got, expected );
 
@@ -7999,7 +7999,7 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'end smeared';
-  var expected = [ '', '', 'xaax_xaax_xbbx_xbbx_xccx_xccx', '', '' ];
+  var expected = [ '', undefined, 'xaax_xaax_xbbx_xbbx_xccx_xccx', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'xaax_xaax_xbbx_xbbx_xccx_xccx', /c\w/, /d\w/ );
   test.identical( got, expected );
   var expected = [ 'xaax_xaax_xbbx_xbbx_x', 'cc', 'x_xccx', '', '' ];
@@ -8017,7 +8017,7 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'end';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', /c+/, /d+/ );
   test.identical( got, expected );
   var expected = [ 'aa_aa_bb_bb_', 'cc', '_cc', '', '' ];
@@ -8085,22 +8085,22 @@ function strIsolateInsideLeft( test )
   /* */
 
   test.case = 'no entry';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', [], [] );
   test.identical( got, expected );
 
   test.case = 'not found';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', /d+/, /d+/ );
   test.identical( got, expected );
 
   test.case = 'not found begin';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', /d+/, new RegExp( '' ) );
   test.identical( got, expected );
 
   test.case = 'not found end';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', new RegExp( '' ), /d+/ );
   test.identical( got, expected );
 
@@ -8115,7 +8115,7 @@ function strIsolateInsideLeft( test )
   test.identical( got, expected );
 
   test.case = 'empty src';
-  var expected = [ '', '', '', '', '' ];
+  var expected = [ '', undefined, '', undefined, '' ];
   var got = _.strIsolateInsideLeft( '', /a+/, /b+/ );
   test.identical( got, expected );
 
@@ -8159,7 +8159,7 @@ function strIsolateInsideLeftPairs( test )
   test.identical( got, expected );
 
   test.case = 'string, nothing found';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', 'aaa' );
   test.identical( got, expected );
 
@@ -8174,7 +8174,7 @@ function strIsolateInsideLeftPairs( test )
   test.identical( got, expected );
 
   test.case = 'empty array delimeter';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', [] );
   test.identical( got, expected );
 
@@ -8194,7 +8194,7 @@ function strIsolateInsideLeftPairs( test )
   test.identical( got, expected );
 
   test.case = 'nothing found';
-  var expected = [ '', '', 'aa_aa_bb_bb_cc_cc', '', '' ];
+  var expected = [ '', undefined, 'aa_aa_bb_bb_cc_cc', undefined, '' ];
   var got = _.strIsolateInsideLeft( 'aa_aa_bb_bb_cc_cc', [ [ 'cc', 'dd' ], [ 'aa', 'dd' ] ] );
   test.identical( got, expected );
 
@@ -10721,6 +10721,7 @@ function strSplit( test )
 
   test.open( 'empty' );
 
+  debugger;
   var got = _.strSplit( '', '' );
   var expected = [];
   test.identical( got, expected );
@@ -11658,9 +11659,7 @@ function strSplit( test )
   var o = _.mapExtend( null, op );
   o.src = '"a b" "" c';
   o.delimeter = [ '', 'a b', ' ', '', ' c' ];
-  debugger;
   var got = _.strSplit( o );
-  debugger;
   var expected = [ '"a b"', '""', 'c' ];
   test.identical( got, expected );
 
@@ -12496,256 +12495,951 @@ function strSplit( test )
   var expected = [ '', 'aa', 'bb', '', 'cc', '"', '' ];
   test.identical( got, expected );
 
-  /* - */
-
   test.close( 'complex' );
-
 }
 
 //
 
-function strSplitInlined( test )
+function strSplitInlinedDefaultOptions( test )
 {
+  test.open( 'arguments' );
 
-  function onInlined( part )
-  {
-    var temp = part.split( ':' )
-    if( temp.length === 2 )
-    {
-      return temp;
-    }
-    return undefined;
-  }
-
-  /* */
-
-  test.case = 'empty';
+  test.case = 'srcStr - empty string';
   var srcStr = '';
   var got = _.strSplitInlined( srcStr );
   var expected = [ '' ];
   test.identical( got, expected );
 
-  /* */
-
-  test.case = 'without inlined text';
-  var srcStr = 'a';
+  test.case = 'srcStr - without default delimeter, delimeter - default';
+  var srcStr = 'a b c d e';
   var got = _.strSplitInlined( srcStr );
-  var expected = [ 'a' ];
+  var expected = [ 'a b c d e' ];
   test.identical( got, expected );
 
-  /* */
+  test.case = 'srcStr - without default delimeter, delimeter - space';
+  var srcStr = 'a b c d e';
+  var got = _.strSplitInlined( srcStr, ' ' );
+  var expected = [ 'a', [ 'b' ], 'c', [ 'd' ], 'e' ];
+  test.identical( got, expected );
 
-  test.case = 'default options';
+  test.case = 'srcStr - without default delimeter, delimeter - space, not closed delimeter';
+  var srcStr = 'a b c d';
+  var got = _.strSplitInlined( srcStr, ' ' );
+  var expected = [ 'a', [ 'b' ], 'c d' ];
+  test.identical( got, expected );
+
+  test.case = 'srcStr - string with default delimeter, delimeter - default';
   var srcStr = 'ab#cd#ef';
   var got = _.strSplitInlined( srcStr );
   var expected = [ 'ab', [ 'cd' ], 'ef' ];
   test.identical( got, expected );
 
-  /* */
-
-  test.case = 'trivial case';
-  var srcStr = 'this #background:red#is#background:default# text and is not';
-  var got = _.strSplitInlined({ src : srcStr, onInlined,  });
-  var expected =
-  [
-    'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and is not'
-  ];
+  test.case = 'srcStr - string with default delimeter, delimeter - default, not closed delimeter';
+  var srcStr = 'ab#cd#ef#gh';
+  var got = _.strSplitInlined( srcStr );
+  var expected = [ 'ab', [ 'cd' ], 'ef#gh' ];
   test.identical( got, expected );
 
-  /* */
+  test.case = 'srcStr - string with default delimeter, delimeter - space';
+  var srcStr = 'ab#cd#ef';
+  var got = _.strSplitInlined( srcStr, ' ' );
+  var expected = [ 'ab#cd#ef' ];
+  test.identical( got, expected );
+
+  test.close( 'arguments' );
+
+  /* - */
+
+  test.open( 'default' );
+
+  test.case = 'full split, closing delimeter';
+  var srcStr = 'this #background:red#is#background:default# text and is not';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    'this ', [ 'background:red' ], 'is', [ 'background:default' ], ' text and is not'
+  ];
+  test.identical( got, expected );
 
   test.case = 'openning delimeter # does not have closing';
   var srcStr = 'this #background:red#is#background:default# text and # is not';
-  var got = _.strSplitInlined({ src : srcStr, onInlined,  });
+  var got = _.strSplitInlined( { src : srcStr } );
   var expected =
   [
-    'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not'
+    'this ', [ 'background:red' ], 'is', [ 'background:default' ], ' text and # is not'
   ];
   test.identical( got, expected );
-
-  /* */
 
   test.case = 'two inlined substrings is not in fact inlined';
   var srcStr = '#simple # text #background:red#is#background:default# text and # is not#';
-  var got = _.strSplitInlined({ src : srcStr, onInlined,  });
+  var got = _.strSplitInlined( { src : srcStr } );
   var expected =
   [
-    '#simple # text ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not#'
+    '', [ 'simple ' ], ' text ', [ 'background:red' ], 'is', [ 'background:default' ], ' text and ', [ ' is not' ], ''
   ];
   test.identical( got, expected );
-
-  /* */
 
   test.case = 'inlined at the beginning and false inlined';
   var srcStr = '#background:red#i#s#background:default##text';
-  var got = _.strSplitInlined({ src : srcStr, onInlined,  });
+  var got = _.strSplitInlined( { src : srcStr } );
   var expected =
   [
-    '', [ 'background', 'red' ], 'i#s', [ 'background', 'default' ], '#text'
+    '', [ 'background:red' ], 'i', [ 's' ], 'background:default', [ '' ], 'text'
   ];
   test.identical( got, expected );
-
-  /* */
 
   test.case = 'inlined at the beginning and the end';
   var srcStr = '#background:red#i#s#background:default#';
-  var got = _.strSplitInlined({ src : srcStr, onInlined,  });
+  var got = _.strSplitInlined( { src : srcStr } );
   var expected =
   [
-    '', [ 'background', 'red' ], 'i#s', [ 'background', 'default' ], ''
+    '', [ 'background:red' ], 'i', [ 's' ], 'background:default#',
   ];
   test.identical( got, expected );
 
-  /* */
-
-  test.case = 'inlined at the beginning and the end with preservingEmpty:0';
-  var srcStr = '#background:red#i#s#background:default#';
-  var got = _.strSplitInlined({ src : srcStr, onInlined, preservingEmpty : 0 });
-  var expected =
-  [
-    [ 'background', 'red' ], 'i#s', [ 'background', 'default' ],
-  ];
-  test.identical( got, expected );
-
-  /* */
-
-  test.case = 'wrapped by inlined text';
-  var srcStr = '#background:red#text#background:default#';
-  var got = _.strSplitInlined({ src : srcStr, onInlined,  } );
-  var expected =
-  [
-    '', [ 'background', 'red' ], 'text', [ 'background', 'default' ], '',
-  ];
-  test.identical( got, expected );
-
-  /* */ //
-
-  test.case = 'preservingEmpty:0, no empty';
-  var srcStr = '#inline1#ordinary#inline2#';
-  var got = _.strSplitInlined({ src : srcStr, preservingEmpty : 0 });
-  var expected =
-  [
-    [ 'inline1' ], 'ordinary', [ 'inline2' ],
-  ];
-  test.identical( got, expected );
-
-  /* */
-
-  test.case = 'preservingEmpty:0, empty left';
+  test.case = 'empty string left';
   var srcStr = '##ordinary#inline2#';
-  var got = _.strSplitInlined({ src : srcStr, preservingEmpty : 0 });
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '', [ '' ], 'ordinary', [ 'inline2' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string right';
+  var srcStr = '#inline1#ordinary##';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '', [ 'inline1' ], 'ordinary', [ '' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string middle';
+  var srcStr = '#inline1##inline2#';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '', [ 'inline1' ], '', [ 'inline2' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty all';
+  var srcStr = '####';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected = [ '', [ '' ], '', [ '' ], '' ];
+  test.identical( got, expected );
+
+  test.close( 'default' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.strSplitInlined() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.strSplitInlined( 'abc', '##','extra' ) );
+
+  test.case = 'wrong type of srcStr';
+  test.shouldThrowErrorSync( () => _.strSplitInlined( [ 'abc' ], '' ) );
+  test.shouldThrowErrorSync( () => _.strSplitInlined( { 'a' : 'b' }, '' ) );
+
+  test.case = 'wrong type of delimeter';
+  test.shouldThrowErrorSync( () => _.strSplitInlined( 'abc', new U8x() ) );
+  test.shouldThrowErrorSync( () => _.strSplitInlined( 'abc', {} ) );
+
+  test.case = 'wrong type of map o';
+  test.shouldThrowErrorSync( () => _.strSplitInlined( [ 'abc', '' ] ) );
+  test.shouldThrowErrorSync( () => _.strSplitInlined( { 'abc' : '' } ) );
+}
+
+//
+
+function strSplitInlinedOptionDelimeter( test ) 
+{
+  test.case = 'full split, closing delimeter';
+  var srcStr = 'this background:red is background:default text and is not';
+  var got = _.strSplitInlined( { src : srcStr, delimeter : ' ' } );
+  var expected =
+  [
+    'this', [ 'background:red' ], 'is', [ 'background:default' ], 'text', [ 'and' ], 'is not'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'openning delimeter # does not have closing';
+  var srcStr = 'this background:red is background:default text and is not ';
+  var got = _.strSplitInlined( { src : srcStr, delimeter : ' ' } );
+  var expected =
+  [
+    'this', [ 'background:red' ], 'is', [ 'background:default' ], 'text', [ 'and' ], 'is', [ 'not' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'two inlined substrings is not in fact inlined';
+  var srcStr = ' simple text background:red is background:default text and is not ';
+  var got = _.strSplitInlined( { src : srcStr, delimeter : ' ' } );
+  var expected =
+  [
+    '', [ 'simple' ], 'text', [ 'background:red' ], 'is', [ 'background:default' ], 'text', [ 'and' ], 'is', [ 'not' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and false inlined';
+  var srcStr = ' background:red i s background:default  text';
+  var got = _.strSplitInlined( { src : srcStr, delimeter : ' ' } );
+  var expected =
+  [
+    '', [ 'background:red' ], 'i', [ 's' ], 'background:default', [ '' ], 'text'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and the end';
+  var srcStr = ' background:red i s background:default ';
+  var got = _.strSplitInlined( { src : srcStr, delimeter : ' ' } );
+  var expected =
+  [
+    '', [ 'background:red' ], 'i', [ 's' ], 'background:default ',
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string left';
+  var srcStr = '  ordinary inline2 ';
+  var got = _.strSplitInlined( { src : srcStr, delimeter : ' ' } );
+  var expected =
+  [
+    '', [ '' ], 'ordinary', [ 'inline2' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string right';
+  var srcStr = ' inline1 ordinary  ';
+  var got = _.strSplitInlined( { src : srcStr, delimeter : ' ' } );
+  var expected =
+  [
+    '', [ 'inline1' ], 'ordinary', [ '' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string middle';
+  var srcStr = ' inline1  inline2 ';
+  var got = _.strSplitInlined( { src : srcStr, delimeter : ' ' } );
+  var expected =
+  [
+    '', [ 'inline1' ], '', [ 'inline2' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty all';
+  var srcStr = '    ';
+  var got = _.strSplitInlined( { src : srcStr, delimeter : ' ' } );
+  var expected = [ '', [ '' ], '', [ '' ], '' ];
+  test.identical( got, expected );
+}
+
+//
+
+function strSplitInlinedOptionStripping( test )
+{
+  test.open( 'stripping - 0' );
+
+  test.case = 'full split, closing delimeter';
+  var srcStr = 'this  # \nbackground:red\t# is # background:default   #  text  and  is not \n';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    'this  ', [ ' \nbackground:red\t' ], ' is ', [ ' background:default   ' ], '  text  and  is not \n'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'openning delimeter # does not have closing';
+  var srcStr = 'this  # \nbackground:red\t# is # background:default   #  text  and  #  is not\n';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    'this  ', [ ' \nbackground:red\t' ], ' is ', [ ' background:default   ' ], '  text  and  #  is not\n'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'two inlined substrings is not in fact inlined';
+  var srcStr = '\n#\n\t simple  # \n\t\rtext #  background:red  #  is  #  background:default  # text and # is not   #';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '\n', [ '\n\t simple  ' ], ' \n\t\rtext ', [ '  background:red  ' ], '  is  ', [ '  background:default  ' ], ' text and ', [ ' is not   ' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and false inlined';
+  var srcStr = '   # \t\tbackground:red  # \n\ni  #  s  #background:default  #\n\r\t  #  text\n';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '   ', [ ' \t\tbackground:red  ' ], ' \n\ni  ', [ '  s  ' ], 'background:default  ', [ '\n\r\t  ' ], '  text\n'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and the end';
+  var srcStr = '  #  background:red  #  i  #  s  #   background:default  #  ';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '  ', [ '  background:red  ' ], '  i  ', [ '  s  ' ], '   background:default  #  ',
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string left';
+  var srcStr = '  #  #\n\nordinary\t\t#\ninline2 # ';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '  ', [ '  ' ], '\n\nordinary\t\t', [ '\ninline2 ' ], ' '
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string right';
+  var srcStr = '\t#\ninline1\r#\tordinary\n#\r#\t';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '\t', [ '\ninline1\r' ], '\tordinary\n', [ '\r' ], '\t'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string middle';
+  var srcStr = '  #  inline1  #  #  inline2  #';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '  ', [ '  inline1  ' ], '  ', [ '  inline2  ' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty all';
+  var srcStr = '\n#\n#\n#\n#\r';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected = [ '\n', [ '\n' ], '\n', [ '\n' ], '\r' ];
+  test.identical( got, expected );
+
+  test.close( 'stripping - 0' );
+
+  /* - */
+  
+  test.open( 'stripping - 1' );
+
+  test.case = 'full split, closing delimeter';
+  var srcStr = 'this  # \nbackground:red\t# is # background:default   #  text  and  is not \n';
+  var got = _.strSplitInlined( { src : srcStr, stripping : 1 } );
+  var expected =
+  [
+    'this', [ 'background:red' ], 'is', [ 'background:default' ], 'text  and  is not'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'openning delimeter # does not have closing';
+  var srcStr = 'this  # \nbackground:red\t# is # background:default   #  text  and  #  is not\n';
+  var got = _.strSplitInlined( { src : srcStr, stripping : 1 } );
+  var expected =
+  [
+    'this', [ 'background:red' ], 'is', [ 'background:default' ], 'text  and#is not'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'two inlined substrings is not in fact inlined';
+  var srcStr = '\n#\n\t simple  # \n\t\rtext #  background:red  #  is  #  background:default  # text and # is not   #';
+  var got = _.strSplitInlined( { src : srcStr, stripping : 1 } );
+  var expected =
+  [
+    '', [ 'simple' ], 'text', [ 'background:red' ], 'is', [ 'background:default' ], 'text and', [ 'is not' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and false inlined';
+  var srcStr = '   # \t\tbackground:red  # \n\ni  #  s  #background:default  #\n\r\t  #  text\n';
+  var got = _.strSplitInlined( { src : srcStr, stripping : 1 } );
+  var expected =
+  [
+    '', [ 'background:red' ], 'i', [ 's' ], 'background:default', [ '' ], 'text'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and the end';
+  var srcStr = '  #  background:red  #  i  #  s  #   background:default  #  ';
+  var got = _.strSplitInlined( { src : srcStr, stripping : 1 } );
+  var expected =
+  [
+    '', [ 'background:red' ], 'i', [ 's' ], 'background:default#',
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string left';
+  var srcStr = '  #  #\n\nordinary\t\t#\ninline2 # ';
+  var got = _.strSplitInlined( { src : srcStr, stripping : 1 } );
+  var expected =
+  [
+    '', [ '' ], 'ordinary', [ 'inline2' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string right';
+  var srcStr = '\t#\ninline1\r#\tordinary\n#\r#\t';
+  var got = _.strSplitInlined( { src : srcStr, stripping : 1 } );
+  var expected =
+  [
+    '', [ 'inline1' ], 'ordinary', [ '' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string middle';
+  var srcStr = '  #  inline1  #  #  inline2  #';
+  var got = _.strSplitInlined( { src : srcStr, stripping : 1 } );
+  var expected =
+  [
+    '', [ 'inline1' ], '', [ 'inline2' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty all';
+  var srcStr = '\n#\n#\n#\n#\r';
+  var got = _.strSplitInlined( { src : srcStr, stripping : 1 } );
+  var expected = [ '', [ '' ], '', [ '' ], '' ];
+  test.identical( got, expected );
+
+  test.close( 'stripping - 1' );
+}
+
+//
+
+function strSplitInlinedOptionQuoting( test )
+{
+  test.open( 'quoting - 0' );
+
+  test.case = 'full split, closing delimeter';
+  var srcStr = 'this "#"background:red"#"is"#"background:default"#" text and is not';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    'this "', [ '"background:red"' ], '"is"', [ '"background:default"' ], '" text and is not'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'openning delimeter # does not have closing';
+  var srcStr = 'this "#"background:red"#"is"#"background:default"#" text and "#" is not';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    'this "', [ '"background:red"' ], '"is"', [ '"background:default"' ], '" text and "#" is not'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'two inlined substrings is not in fact inlined';
+  var srcStr = '"#"simple "#" text "#"background:red"#"is"#"background:default"#" text and "#" is not"#"';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '"', [ '"simple "' ], '" text "', [ '"background:red"' ], '"is"', [ '"background:default"' ], '" text and "', [ '" is not"' ], '"'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and false inlined';
+  var srcStr = '"#"background:red"#"i"#"s"#"background:default"#""#"text';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '"', [ '"background:red"' ], '"i"', [ '"s"' ], '"background:default"', [ '""' ], '"text'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and the end';
+  var srcStr = '"#"background:red"#"i"#"s"#"background:default"#"';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '"', [ '"background:red"' ], '"i"', [ '"s"' ], '"background:default"#"',
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string left';
+  var srcStr = '"#""#"ordinary"#"inline2"#"';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '"', [ '""' ], '"ordinary"', [ '"inline2"' ], '"'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string right';
+  var srcStr = '"#"inline1"#"ordinary"#""#"';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '"', [ '"inline1"' ], '"ordinary"', [ '""' ], '"'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string middle';
+  var srcStr = '"#"inline1"#""#"inline2"#"';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected =
+  [
+    '"', [ '"inline1"' ], '""', [ '"inline2"' ], '"'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty all';
+  var srcStr = '"#""#""#""#"';
+  var got = _.strSplitInlined( { src : srcStr } );
+  var expected = [ '"', [ '""' ], '""', [ '""' ], '"' ];
+  test.identical( got, expected );
+
+  test.close( 'quoting - 0' );
+
+  /* - */
+  
+  test.open( 'quoting - 1' );
+
+  test.case = 'full split, closing delimeter';
+  var srcStr = 'this "#"background:red"#"is"#"background:default"#" text and is not';
+  var got = _.strSplitInlined( { src : srcStr, quoting : 1 } );
+  var expected =
+  [
+   'this "#"background:red"#"is"#"background:default"#" text and is not' 
+  ];
+  test.identical( got, expected );
+
+  test.case = 'openning delimeter # does not have closing';
+  var srcStr = 'this "#"background:red"#"is"#"background:default"#" text and "#" is not';
+  var got = _.strSplitInlined( { src : srcStr, quoting : 1 } );
+  var expected =
+  [
+   'this "#"background:red"#"is"#"background:default"#" text and "#" is not' 
+  ];
+  test.identical( got, expected );
+
+  test.case = 'two inlined substrings is not in fact inlined';
+  var srcStr = '"#"simple "#" text "#"background:red"#"is"#"background:default"#" text and "#" is not"#"';
+  var got = _.strSplitInlined( { src : srcStr, quoting : 1 } );
+  var expected =
+  [
+   '"#"simple "#" text "#"background:red"#"is"#"background:default"#" text and "#" is not"#"' 
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and false inlined';
+  var srcStr = '"#"background:red"#"i"#"s"#"background:default"#""#"text';
+  var got = _.strSplitInlined( { src : srcStr, quoting : 1 } );
+  var expected =
+  [
+   '"#"background:red"#"i"#"s"#"background:default"#""#"text' 
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and the end';
+  var srcStr = '"#"background:red"#"i"#"s"#"background:default"#"';
+  var got = _.strSplitInlined( { src : srcStr, quoting : 1 } );
+  var expected =
+  [
+    '"#"background:red"#"i"#"s"#"background:default"#"',
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string left';
+  var srcStr = '"#""#"ordinary"#"inline2"#"';
+  var got = _.strSplitInlined( { src : srcStr, quoting : 1 } );
+  var expected =
+  [
+   '"#""#"ordinary"#"inline2"#"' 
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string right';
+  var srcStr = '"#"inline1"#"ordinary"#""#"';
+  var got = _.strSplitInlined( { src : srcStr, quoting : 1 } );
+  var expected =
+  [
+   '"#"inline1"#"ordinary"#""#"' 
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string middle';
+  var srcStr = '"#"inline1"#""#"inline2"#"';
+  var got = _.strSplitInlined( { src : srcStr, quoting : 1 } );
+  var expected =
+  [
+   '"#"inline1"#""#"inline2"#"' 
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty all';
+  var srcStr = '"#""#""#""#"';
+  var got = _.strSplitInlined( { src : srcStr, quoting : 1 } );
+  var expected = [ '"#""#""#""#"' ];
+  test.identical( got, expected );
+
+  test.close( 'quoting - 1' );
+}
+
+//
+
+function strSplitInlinedOptionPreservingEmpty( test ) 
+{
+  test.case = 'full split, closing delimeter';
+  var srcStr = 'this #background:red#is#background:default# text and is not';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0 } );
+  var expected =
+  [
+    'this ', [ 'background:red' ], 'is', [ 'background:default' ], ' text and is not'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'openning delimeter # does not have closing';
+  var srcStr = 'this #background:red#is#background:default# text and # is not';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0 } );
+  var expected =
+  [
+    'this ', [ 'background:red' ], 'is', [ 'background:default' ], ' text and # is not'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'two inlined substrings is not in fact inlined';
+  var srcStr = '#simple # text #background:red#is#background:default# text and # is not#';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0 } );
+  var expected =
+  [
+    [ 'simple ' ], ' text ', [ 'background:red' ], 'is', [ 'background:default' ], ' text and ', [ ' is not' ]
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and false inlined';
+  var srcStr = '#background:red#i#s#background:default##text';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0 } );
+  var expected =
+  [
+    [ 'background:red' ], 'i', [ 's' ], 'background:default', [ '' ], 'text'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and the end';
+  var srcStr = '#background:red#i#s#background:default#';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0 } );
+  var expected =
+  [
+    [ 'background:red' ], 'i', [ 's' ], 'background:default#',
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string left';
+  var srcStr = '##ordinary#inline2#';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0 } );
   var expected =
   [
     [ '' ], 'ordinary', [ 'inline2' ],
   ];
   test.identical( got, expected );
 
-  /* */
-
-  test.case = 'preservingEmpty:0, empty right';
+  test.case = 'empty string right';
   var srcStr = '#inline1#ordinary##';
-  var got = _.strSplitInlined({ src : srcStr, preservingEmpty : 0 });
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0 } );
   var expected =
   [
-    [ 'inline1' ], 'ordinary', [ '' ],
+    [ 'inline1' ], 'ordinary', [ '' ]
   ];
   test.identical( got, expected );
 
-  /* */
-
-  test.case = 'preservingEmpty:0, empty middle';
+  test.case = 'empty string middle';
   var srcStr = '#inline1##inline2#';
-  var got = _.strSplitInlined({ src : srcStr, preservingEmpty : 0 });
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0 } );
   var expected =
   [
     [ 'inline1' ], [ 'inline2' ],
   ];
   test.identical( got, expected );
 
-  /* */
-
-  test.case = 'preservingEmpty:0, empty all';
+  test.case = 'empty all';
   var srcStr = '####';
-  var got = _.strSplitInlined({ src : srcStr, preservingEmpty : 0 });
-  var expected = [ [ '' ],[ '' ] ];
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0 } );
+  var expected = [ [ '' ], [ '' ] ];
   test.identical( got, expected );
+}
 
-  /* */
+//
 
-  test.case = 'preservingEmpty:0, empty all';
-  var srcStr = '';
-  var got = _.strSplitInlined({ src : srcStr, preservingEmpty : 0 });
-  var expected = [];
-  test.identical( got, expected );
+function strSplitInlinedOptionOnInlined( test ) 
+{
+  var onInlined = function( part )
+  {
+    var temp = part.split( ':' );
 
-  /* */ //
+    if( temp.length === 2 )
+    return temp;
 
-  test.case = 'preservingEmpty:0, onInlined:null no empty';
-  var srcStr = '#inline1#ordinary#inline2#';
-  var got = _.strSplitInlined({ src : srcStr, preservingEmpty : 0, onInlined:null });
+    return undefined;
+  };
+
+  /* - */
+
+  test.case = 'full split, closing delimeter';
+  var srcStr = 'this #background:red#is#background:default# text and is not';
+  var got = _.strSplitInlined( { src : srcStr, onInlined : onInlined } );
   var expected =
   [
-    'inline1', 'ordinary', 'inline2',
+    'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and is not'
   ];
   test.identical( got, expected );
 
-  /* */
+  test.case = 'openning delimeter # does not have closing';
+  var srcStr = 'this #background:red#is#background:default# text and # is not';
+  var got = _.strSplitInlined( { src : srcStr, onInlined : onInlined } );
+  var expected =
+  [
+    'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not'
+  ];
+  test.identical( got, expected );
 
-  test.case = 'preservingEmpty:0, onInlined:null, empty left';
+  test.case = 'two inlined substrings is not in fact inlined';
+  var srcStr = '#simple # text #background:red#is#background:default# text and # is not#';
+  var got = _.strSplitInlined( { src : srcStr, onInlined : onInlined } );
+  var expected =
+  [
+    '#simple # text ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not#'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and false inlined';
+  var srcStr = '#background:red#i#s#background:default##text';
+  var got = _.strSplitInlined( { src : srcStr, onInlined : onInlined } );
+  var expected =
+  [
+    '', [ 'background', 'red' ], 'i#s', [ 'background', 'default' ], '#text'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and the end';
+  var srcStr = '#background:red#i#s#background:default#';
+  var got = _.strSplitInlined( { src : srcStr, onInlined : onInlined } );
+  var expected =
+  [
+    '', [ 'background', 'red' ], 'i#s', [ 'background', 'default' ], ''
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string left';
   var srcStr = '##ordinary#inline2#';
-  var got = _.strSplitInlined({ src : srcStr, preservingEmpty : 0, onInlined:null });
+  var got = _.strSplitInlined( { src : srcStr, onInlined : onInlined } );
+  var expected =
+  [
+    '##ordinary#inline2#'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string right';
+  var srcStr = '#inline1#ordinary##';
+  var got = _.strSplitInlined( { src : srcStr, onInlined : onInlined } );
+  var expected =
+  [
+    '#inline1#ordinary##'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string middle';
+  var srcStr = '#inline1##inline2#';
+  var got = _.strSplitInlined( { src : srcStr, onInlined : onInlined } );
+  var expected =
+  [
+    '#inline1##inline2#'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty all';
+  var srcStr = '####';
+  var got = _.strSplitInlined( { src : srcStr, onInlined : onInlined } );
+  var expected = [ '####' ];
+  test.identical( got, expected );
+}
+
+//
+
+function strSplitInlinedCombineOnInlinedAndPreservingEmpty( test ) 
+{
+  var onInlined = function( part )
+  {
+    var temp = part.split( ':' );
+
+    if( temp.length === 2 )
+    return temp;
+
+    return undefined;
+  };
+
+  /* - */
+
+  test.open( 'preservingEmpty - 0, onInlined' );
+
+  test.case = 'full split, closing delimeter';
+  var srcStr = 'this #background:red#is#background:default# text and is not';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : onInlined } );
+  var expected =
+  [
+    'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and is not'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'openning delimeter # does not have closing';
+  var srcStr = 'this #background:red#is#background:default# text and # is not';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : onInlined } );
+  var expected =
+  [
+    'this ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'two inlined substrings is not in fact inlined';
+  var srcStr = '#simple # text #background:red#is#background:default# text and # is not#';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : onInlined } );
+  var expected =
+  [
+    '#simple # text ', [ 'background', 'red' ], 'is', [ 'background', 'default' ], ' text and # is not#'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and false inlined';
+  var srcStr = '#background:red#i#s#background:default##text';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : onInlined } );
+  var expected =
+  [
+    [ 'background', 'red' ], 'i#s', [ 'background', 'default' ], '#text'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and the end';
+  var srcStr = '#background:red#i#s#background:default#';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : onInlined } );
+  var expected =
+  [
+    [ 'background', 'red' ], 'i#s', [ 'background', 'default' ],
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string left';
+  var srcStr = '##ordinary#inline2#';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : onInlined } );
+  var expected =
+  [
+    '##ordinary#inline2#',
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string right';
+  var srcStr = '#inline1#ordinary##';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : onInlined } );
+  var expected =
+  [
+    '#inline1#ordinary##'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string middle';
+  var srcStr = '#inline1##inline2#';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : onInlined } );
+  var expected =
+  [
+    '#inline1##inline2#'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty all';
+  var srcStr = '####';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : onInlined } );
+  var expected = [ '####' ];
+  test.identical( got, expected );
+
+  test.close( 'preservingEmpty - 0, onInlined' );
+
+  /* - */
+
+  test.open( 'preservingEmpty - 0, onInlined - null' );
+
+  test.case = 'full split, closing delimeter';
+  var srcStr = 'this #background:red#is#background:default# text and is not';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : null } );
+  var expected =
+  [
+    'this ', 'background:red', 'is', 'background:default', ' text and is not'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'openning delimeter # does not have closing';
+  var srcStr = 'this #background:red#is#background:default# text and # is not';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : null } );
+  var expected =
+  [
+    'this ', 'background:red', 'is', 'background:default', ' text and # is not'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'two inlined substrings is not in fact inlined';
+  var srcStr = '#simple # text #background:red#is#background:default# text and # is not#';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : null } );
+  var expected =
+  [
+    'simple ', ' text ', 'background:red', 'is', 'background:default', ' text and ', ' is not'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and false inlined';
+  var srcStr = '#background:red#i#s#background:default##text';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : null } );
+  var expected =
+  [
+    'background:red', 'i', 's', 'background:default', 'text'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'inlined at the beginning and the end';
+  var srcStr = '#background:red#i#s#background:default#';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : null } );
+  var expected =
+  [
+    'background:red', 'i', 's', 'background:default#'
+  ];
+  test.identical( got, expected );
+
+  test.case = 'empty string left';
+  var srcStr = '##ordinary#inline2#';
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : null } );
   var expected =
   [
     'ordinary', 'inline2',
   ];
   test.identical( got, expected );
 
-  /* */
-
-  test.case = 'preservingEmpty:0, onInlined:null, empty right';
+  test.case = 'empty string right';
   var srcStr = '#inline1#ordinary##';
-  var got = _.strSplitInlined({ src : srcStr, preservingEmpty : 0, onInlined:null });
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : null } );
   var expected =
   [
-    'inline1', 'ordinary',
+    'inline1', 'ordinary'
   ];
   test.identical( got, expected );
 
-  /* */
-
-  test.case = 'preservingEmpty:0, onInlined:null, empty middle';
+  test.case = 'empty string middle';
   var srcStr = '#inline1##inline2#';
-  var got = _.strSplitInlined({ src : srcStr, preservingEmpty : 0, onInlined:null });
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : null } );
   var expected =
   [
-    'inline1', 'inline2',
+    'inline1', 'inline2'
   ];
   test.identical( got, expected );
 
-  /* */
-
-  test.case = 'preservingEmpty:0, onInlined:null, empty all';
+  test.case = 'empty all';
   var srcStr = '####';
-  var got = _.strSplitInlined({ src : srcStr, preservingEmpty : 0, onInlined:null });
+  var got = _.strSplitInlined( { src : srcStr, preservingEmpty : 0, onInlined : null } );
   var expected = [];
   test.identical( got, expected );
 
-  /* */
-
-  test.case = 'preservingEmpty:0, onInlined:null, empty all';
-  var srcStr = '';
-  var got = _.strSplitInlined({ src : srcStr, preservingEmpty : 0, onInlined:null });
-  var expected = [];
-  test.identical( got, expected );
-
-  /* */
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'too many arguments';
-  test.shouldThrowErrorSync( () => { debugger; _.strSplitInlined( '',{},'' ) } );
-
+  test.close( 'preservingEmpty - 0, onInlined - null' );
 }
 
 //
@@ -12883,7 +13577,14 @@ var Self =
     strSplitFastRegexp,
     strSplit,
 
-    strSplitInlined,
+    strSplitInlinedDefaultOptions,
+    strSplitInlinedOptionDelimeter,
+    strSplitInlinedOptionStripping,
+    strSplitInlinedOptionQuoting,
+    strSplitInlinedOptionPreservingEmpty,
+    strSplitInlinedOptionOnInlined,
+    strSplitInlinedCombineOnInlinedAndPreservingEmpty,
+
     strSplitInlinedStereo,
 
   }
