@@ -21,7 +21,7 @@ var _global = _global_;
 var _ = _global_.wTools;
 
 /*
-qqq : fix style problems and non-style problems in the test
+qqq : fix style problems and non-style problems in the test | Dmytro : fixed
 */
 
 // --
@@ -47,6 +47,8 @@ function refine( test )
   ];
   test.identical( _.paths.refine( src ), expected );
 
+  /* */
+
   test.case = 'windows path';
   var src =
   [
@@ -65,6 +67,8 @@ function refine( test )
     '/C/temp//foo/bar/../../.'
   ];
   test.identical( _.paths.refine( src ), expected );
+
+  /* */
 
   test.case = 'empty path';
   var src =
@@ -91,6 +95,8 @@ function refine( test )
   ];
   test.identical( _.paths.refine( src ), expected );
 
+  /* */
+
   test.case = 'path with "." in the middle';
   var src =
   [
@@ -107,6 +113,8 @@ function refine( test )
     '/foo/././bar/././baz/'
   ];
   test.identical( _.paths.refine( src ), expected );
+
+  /* */
 
   test.case = 'path with "." in the beginning';
   var src =
@@ -129,6 +137,8 @@ function refine( test )
   ];
   test.identical( _.paths.refine( src ), expected );
 
+  /* */
+
   test.case = 'path with "." in the end';
   var src =
   [
@@ -150,6 +160,8 @@ function refine( test )
   ];
   test.identical( _.paths.refine( src ), expected );
 
+  /* */
+
   test.case = 'path with ".." in the middle';
   var src =
   [
@@ -166,6 +178,8 @@ function refine( test )
     '/foo/../../bar/../../baz/'
   ];
   test.identical( _.paths.refine( src ), expected );
+
+  /* */
 
   test.case = 'path with ".." in the beginning';
   var src =
@@ -188,6 +202,8 @@ function refine( test )
   ];
   test.identical( _.paths.refine( src ), expected );
 
+  /* */
+
   test.case = 'path with ".." in the end';
   var src =
   [
@@ -209,7 +225,7 @@ function refine( test )
   ];
   test.identical( _.paths.refine( src ), expected );
 
-  //
+  /* - */
 
   if( !Config.debug )
   return;
@@ -241,6 +257,8 @@ function normalize( test )
   ];
   test.identical( _.paths.normalize( src ), expected );
 
+  /* */
+
   test.case = 'windows path';
   var src =
   [
@@ -257,6 +275,8 @@ function normalize( test )
     '/C/temp/'
   ];
   test.identical( _.paths.normalize( src ), expected );
+
+  /* */
 
   test.case = 'empty path';
   var src =
@@ -283,6 +303,8 @@ function normalize( test )
   ];
   test.identical( _.paths.normalize( src ), expected );
 
+  /* */
+
   test.case = 'path with "." in the middle';
   var src =
   [
@@ -301,6 +323,8 @@ function normalize( test )
     '/foo/.x./baz/'
   ];
   test.identical( _.paths.normalize( src ), expected );
+
+  /* */
 
   test.case = 'path with combination of "." and ".." in the middle';
   var src =
@@ -321,7 +345,7 @@ function normalize( test )
   ];
   test.identical( _.paths.normalize( src ), expected );
 
-  //
+  /* - */
 
   if( !Config.debug )
   return;
@@ -346,7 +370,7 @@ function dot( test )
   var expected = [ '', 'a', '.', '.a', 'a', '..', '..a', '../a', 'a', '/a' ];
   test.identical( _.paths.undot( src ), expected );
 
-  //
+  /* - */
 
   if( !Config.debug )
   return;
@@ -372,7 +396,7 @@ function undot( test )
   var expected = { '' : 1, 'a' : 1, '.' : 1, '.a': 1, '..': 1, '..a': 1, '../a': 1 };
   test.identical( _.paths.undot( src ), expected );
 
-  //
+  /* - */
 
   if( !Config.debug )
   return;
@@ -381,6 +405,364 @@ function undot( test )
   test.shouldThrowErrorSync( () => _.paths.undot() );
   test.shouldThrowErrorSync( () => _.paths.undot( [ 1 ] ) );
   test.shouldThrowErrorSync( () => _.paths.undot( true ) );
+}
+
+//
+
+function dir( test )
+{
+  test.case = 'simple absolute path';
+  test.identical( _.paths.dir( [ '/foo' ] ), [ '/' ] );
+
+  test.case = 'absolute path : nested dirs';
+  var src =
+  [
+    '/foo/bar/baz/text.txt',
+    '/aa/bb',
+    '/aa/bb/',
+    '/aa',
+    '/'
+  ];
+  var expected =
+  [
+    '/foo/bar/baz',
+    '/aa',
+    '/aa/',
+    '/',
+    '/..'
+  ];
+  test.identical( _.paths.dir( src ), expected );
+
+  test.case = 'relative path : nested dirs';
+  var src =
+  [
+    'aa/bb',
+    'aa',
+    '.',
+    '..'
+  ];
+  var expected =
+  [
+    'aa',
+    '.',
+    '..',
+    '../..'
+  ];
+  test.identical( _.paths.dir( src ), expected );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'no argument';
+  test.shouldThrowErrorOfAnyKind( () => _.paths.dir() );
+
+  test.case = 'inner array';
+  test.shouldThrowErrorOfAnyKind( () => _.paths.dir( [ './a/../b', [ 'a/b/c' ] ]) );
+
+  test.case = 'two arguments';
+  test.shouldThrowErrorOfAnyKind( () => _.paths.dir( [ '/aa/b' ], [ 'b/c' ] ) );
+
+  test.case = 'not a string, empty string';
+  test.shouldThrowErrorOfAnyKind( () => _.paths.dir( [ 'aa/bb', 1 ] ) );
+  test.shouldThrowErrorOfAnyKind( () => _.paths.dir( [ '' ] ) );
+}
+
+//
+
+function prefixGet( test )
+{
+  test.case = 'get path without ext';
+  var src =
+  [
+    '',
+    'some.txt',
+    '/foo/bar/baz.asdf',
+    '/foo/bar/.baz',
+    '/foo.coffee.md',
+    '/foo/bar/baz'
+  ];
+  var expected =
+  [
+    '',
+    'some',
+    '/foo/bar/baz',
+    '/foo/bar/',
+    '/foo',
+    '/foo/bar/baz'
+  ];
+  test.identical( _.paths.prefixGet( src ), expected );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'incorrect input';
+  test.shouldThrowErrorSync( () => _.paths.prefixGet() );
+  test.shouldThrowErrorSync( () => _.paths.prefixGet( [ 'aa/bb/file.txt',  1 ] ) );
+
+  test.case = 'inner array';
+  test.shouldThrowErrorSync( () => _.paths.prefixGet( [ 'a/b/file.txt', [ '/a/d/file.js' ] ] ) );
+
+  test.case = 'two arguments';
+  test.shouldThrowErrorSync( () => _.paths.prefixGet( [ 'a/b/file.txt' ], [ 'a/c/file.js' ] ) );
+}
+
+//
+
+function name( test )
+{
+  test.case = 'get paths name';
+  var src =
+  [
+    '',
+    'some.txt',
+    '/foo/bar/baz.asdf',
+    '/foo/bar/.baz',
+    '/foo.coffee.md',
+    '/foo/bar/baz'
+  ];
+  var expected =
+  [
+    '',
+    'some',
+    'baz',
+    '',
+    'foo.coffee',
+    'baz'
+  ];
+  test.identical( _.paths.name( src ), expected );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'incorrect input';
+  test.shouldThrowErrorSync( () => _.paths.name() );
+  test.shouldThrowErrorSync( () => _.paths.name( [ 'aa/bb/file.txt',  1 ] ) );
+
+  test.case = 'inner array';
+  test.shouldThrowErrorSync( () => _.paths.name( [ 'a/b/file.txt', [ '/a/d/file.js' ] ] ) );
+
+  test.case = 'two arguments';
+  test.shouldThrowErrorSync( () => _.paths.name( [ 'a/b/file.txt' ], [ 'a/c/file.js' ] ) );
+}
+
+//
+
+function fullName( test )
+{
+  test.case = 'get paths name with extension';
+  var src =
+  [
+    '',
+    'some.txt',
+    '/foo/bar/baz.asdf',
+    '/foo/bar/.baz',
+    '/foo.coffee.md',
+    '/foo/bar/baz'
+  ];
+  var expected =
+  [
+    '',
+    'some.txt',
+    'baz.asdf',
+    '.baz',
+    'foo.coffee.md',
+    'baz'
+  ];
+  test.identical( _.paths.fullName( src ), expected );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'incorrect input';
+  test.shouldThrowErrorSync( () => _.paths.fullName() );
+  test.shouldThrowErrorSync( () => _.paths.fullName( [ 'aa/bb/file.txt',  1 ] ) );
+
+  test.case = 'inner array';
+  test.shouldThrowErrorSync( () => _.paths.fullName( [ 'a/b/file.txt', [ '/a/d/file.js' ] ] ) );
+
+  test.case = 'two arguments';
+  test.shouldThrowErrorSync( () => _.paths.fullName( [ 'a/b/file.txt' ], [ 'a/c/file.js' ] ) );
+}
+
+//
+
+function ext( test )
+{
+  test.case = 'absolute path : nested dirs';
+  var src =
+  [
+    'some.txt',
+    '/foo/bar/baz.asdf',
+    '/foo/bar/.baz',
+    '/foo.coffee.md',
+    '/foo/bar/baz',
+    '/foo/bar/baz/'
+  ];
+  var expected =
+  [
+    'txt',
+    'asdf',
+    '',
+    'md',
+    '',
+    ''
+  ];
+  test.identical( _.paths.ext( src ), expected );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'incorrect input';
+  test.shouldThrowErrorSync( () => _.paths.ext() );
+  test.shouldThrowErrorSync( () => _.paths.ext( [ 'aa/bb/file',  1 ] ) );
+
+  test.case = 'inner array';
+  test.shouldThrowErrorSync( () => _.paths.ext( [ 'file.txt', [ 'file.js' ] ] ) );
+
+  test.case = 'two arguments';
+  test.shouldThrowErrorSync( () => _.paths.ext( [ 'file.txt' ], [ 'file.js' ] ) );
+}
+
+//
+
+function withoutExt( test )
+{
+  test.case = 'get paths without extension';
+  var src =
+  [
+    '',
+    'some.txt',
+    '/foo/bar/baz.asdf',
+    '/foo/bar/.baz',
+    '/foo.coffee.md',
+    '/foo/bar/baz',
+    './foo/.baz',
+    './.baz',
+    '.baz.txt',
+    './baz.txt',
+    './foo/baz.txt',
+    './foo/',
+    'baz',
+    'baz.a.b'
+  ];
+  var expected =
+  [
+    '',
+    'some',
+    '/foo/bar/baz',
+    '/foo/bar/.baz',
+    '/foo.coffee',
+    '/foo/bar/baz',
+    './foo/.baz',
+    './.baz',
+    '.baz',
+    './baz',
+    './foo/baz',
+    './foo/',
+    'baz',
+    'baz.a'
+  ];
+  test.identical( _.paths.withoutExt( src ), expected );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'incorrect input';
+  test.shouldThrowErrorSync( () => _.paths.withoutExt() );
+  test.shouldThrowErrorSync( () => _.paths.withoutExt( [ 'aa/bb/file.txt',  1 ] ) );
+
+  test.case = 'inner array';
+  test.shouldThrowErrorSync( () => _.paths.withoutExt( [ 'a/b/file.txt', [ '/a/d/file.js' ] ] ) );
+
+  test.case = 'two arguments';
+  test.shouldThrowErrorSync( () => _.paths.withoutExt( [ 'a/b/file.txt' ], [ 'a/c/file.js' ] ) );
+}
+
+//
+
+function changeExt( test )
+{
+  test.case = 'change paths extension ';
+  var src =
+  [
+    'some.txt',
+    'some.txt',
+    '/foo/bar/baz.asdf',
+    '/foo/bar/.baz',
+    '/foo.coffee.md',
+    '/foo/bar/baz',
+    '/foo/baz.bar/some.md',
+    './foo/.baz',
+    './.baz',
+    '.baz',
+    './baz',
+    './foo/baz',
+    './foo/'
+  ];
+  var ext =
+  [
+    '',
+    'json',
+    'txt',
+    'sh',
+    'min',
+    'txt',
+    'txt',
+    'txt',
+    'txt',
+    'txt',
+    'txt',
+    'txt',
+    'txt'
+  ];
+  var expected =
+  [
+    'some',
+    'some.json',
+    '/foo/bar/baz.txt',
+    '/foo/bar/.baz.sh',
+    '/foo.coffee.min',
+    '/foo/bar/baz.txt',
+    '/foo/baz.bar/some.txt',
+    './foo/.baz.txt',
+    './.baz.txt',
+    '.baz.txt',
+    './baz.txt',
+    './foo/baz.txt',
+    './foo/.txt'
+  ];
+  test.identical( _.paths.changeExt( src, ext ), expected );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'not argument';
+  test.shouldThrowErrorSync( () => _.paths.changeExt() );
+
+  test.case = 'argument is not string';
+  test.shouldThrowErrorSync( () => _.paths.changeExt( [ 1 ], [ 'txt' ] ) );
+  test.shouldThrowErrorSync( () => _.paths.changeExt( [ 'a/b/file.txt' ], [ 1 ] ) );
+  test.shouldThrowErrorSync( () => _.paths.changeExt( [ 'a/b/file.txt' ], [ 'txt' ], [ 1 ] ) );
+
+  test.case = 'many arguments';
+  test.shouldThrowErrorSync( () => _.paths.changeExt( [ 'a/b/file.txt' ], [ 'txt' ], [ 'sh' ], [ 'arg' ] ) );
+
+  test.case = 'inner array';
+  test.shouldThrowErrorSync( () => _.paths.changeExt( [ 'a/b.txt', [ 'ab.txt'] ], [ 'txt' ] ) );
 }
 
 //
@@ -461,7 +843,7 @@ function join( test )
   var expected = [ '/a/b' ];
   test.identical( got, expected );
 
-  //
+  /* - */
 
   if( !Config.debug )
   return;
@@ -528,7 +910,7 @@ function reroot( test )
   var expected = [ '/a/b' ];
   test.identical( got, expected );
 
-  //
+  /* - */
 
   if( !Config.debug )
   return;
@@ -634,19 +1016,16 @@ function resolve( test )
   /* */
 
   test.case = 'scalar + array with single argument';
-
   var got = _.paths.resolve( '/a', [ 'b/..' ] );
   var expected = [ '/a' ];
   test.identical( got, expected );
 
   test.case = 'array + array with single arguments';
-
   var got = _.paths.resolve( [ '/a' ], [ 'b/../' ] );
   var expected = [ '/a/' ];
   test.identical( got, expected );
 
   test.case = 'single array';
-
   var got = _.paths.resolve( [ '/a', 'b', './b', '../b', '..' ] );
   var expected =
   [
@@ -658,12 +1037,7 @@ function resolve( test )
   ];
   test.identical( got, expected );
 
-  // test.case = 'empty';
-  // var expected = [];
-  // var got = _.paths.resolve();
-  // test.identical( got, expected );
-
-  /* */
+  /* - */
 
   if( !Config.debug )
   return
@@ -676,352 +1050,6 @@ function resolve( test )
 
   test.case = 'inner arrays';
   test.shouldThrowErrorOfAnyKind( () => _.paths.resolve( [ '/b', '.c' ], [ '/b', [ 'x' ] ] ) );
-}
-
-//
-
-function dir( test )
-{
-  test.case = 'simple absolute path';
-  test.identical( _.paths.dir( [ '/foo' ] ), [ '/' ] );
-
-  test.case = 'absolute path : nested dirs';
-  var src =
-  [
-    '/foo/bar/baz/text.txt',
-    '/aa/bb',
-    '/aa/bb/',
-    '/aa',
-    '/'
-  ];
-  var expected =
-  [
-    '/foo/bar/baz',
-    '/aa',
-    '/aa/',
-    '/',
-    '/..'
-  ];
-  test.identical( _.paths.dir( src ), expected );
-
-  test.case = 'relative path : nested dirs';
-  var src =
-  [
-    'aa/bb',
-    'aa',
-    '.',
-    '..'
-  ];
-  var expected =
-  [
-    'aa',
-    '.',
-    '..',
-    '../..'
-  ];
-  test.identical( _.paths.dir( src ), expected );
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'no argument';
-  test.shouldThrowErrorOfAnyKind( () => _.paths.dir() );
-
-  test.case = 'inner array';
-  test.shouldThrowErrorOfAnyKind( () => _.paths.dir( [ './a/../b', [ 'a/b/c' ] ]) );
-
-  test.case = 'two arguments';
-  test.shouldThrowErrorOfAnyKind( () => _.paths.dir( [ '/aa/b' ], [ 'b/c' ] ) );
-
-  test.case = 'not a string, empty string';
-  test.shouldThrowErrorOfAnyKind( () => _.paths.dir( [ 'aa/bb', 1 ] ) );
-  test.shouldThrowErrorOfAnyKind( () => _.paths.dir( [ '' ] ) );
-
-}
-
-//
-
-function prefixGet( test )
-{
-  test.case = 'get path without ext';
-  var src =
-  [
-    '',
-    'some.txt',
-    '/foo/bar/baz.asdf',
-    '/foo/bar/.baz',
-    '/foo.coffee.md',
-    '/foo/bar/baz'
-  ];
-  var expected =
-  [
-    '',
-    'some',
-    '/foo/bar/baz',
-    '/foo/bar/',
-    '/foo',
-    '/foo/bar/baz'
-  ];
-  test.identical( _.paths.prefixGet( src ), expected );
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'incorrect input';
-  test.shouldThrowErrorSync( () => _.paths.prefixGet() );
-  test.shouldThrowErrorSync( () => _.paths.prefixGet( [ 'aa/bb/file.txt',  1 ] ) );
-
-  test.case = 'inner array';
-  test.shouldThrowErrorSync( () => _.paths.prefixGet( [ 'a/b/file.txt', [ '/a/d/file.js' ] ] ) );
-
-  test.case = 'two arguments';
-  test.shouldThrowErrorSync( () => _.paths.prefixGet( [ 'a/b/file.txt' ], [ 'a/c/file.js' ] ) );
-}
-
-//
-
-function name( test )
-{
-  test.case = 'get paths name';
-  var src =
-  [
-    '',
-    'some.txt',
-    '/foo/bar/baz.asdf',
-    '/foo/bar/.baz',
-    '/foo.coffee.md',
-    '/foo/bar/baz'
-  ];
-  var expected =
-  [
-    '',
-    'some',
-    'baz',
-    '',
-    'foo.coffee',
-    'baz'
-  ];
-  test.identical( _.paths.name( src ), expected );
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'incorrect input';
-  test.shouldThrowErrorSync( () => _.paths.name() );
-  test.shouldThrowErrorSync( () => _.paths.name( [ 'aa/bb/file.txt',  1 ] ) );
-
-  test.case = 'inner array';
-  test.shouldThrowErrorSync( () => _.paths.name( [ 'a/b/file.txt', [ '/a/d/file.js' ] ] ) );
-
-  test.case = 'two arguments';
-  test.shouldThrowErrorSync( () => _.paths.name( [ 'a/b/file.txt' ], [ 'a/c/file.js' ] ) );
-}
-
-function fullName( test )
-{
-  test.case = 'get paths name with extension';
-  var src =
-  [
-    '',
-    'some.txt',
-    '/foo/bar/baz.asdf',
-    '/foo/bar/.baz',
-    '/foo.coffee.md',
-    '/foo/bar/baz'
-  ];
-  var expected =
-  [
-    '',
-    'some.txt',
-    'baz.asdf',
-    '.baz',
-    'foo.coffee.md',
-    'baz'
-  ];
-  test.identical( _.paths.fullName( src ), expected );
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'incorrect input';
-  test.shouldThrowErrorSync( () => _.paths.fullName() );
-  test.shouldThrowErrorSync( () => _.paths.fullName( [ 'aa/bb/file.txt',  1 ] ) );
-
-  test.case = 'inner array';
-  test.shouldThrowErrorSync( () => _.paths.fullName( [ 'a/b/file.txt', [ '/a/d/file.js' ] ] ) );
-
-  test.case = 'two arguments';
-  test.shouldThrowErrorSync( () => _.paths.fullName( [ 'a/b/file.txt' ], [ 'a/c/file.js' ] ) );
-}
-
-//
-
-function withoutExt( test )
-{
-  test.case = 'get paths without extension';
-  var src =
-  [
-    '',
-    'some.txt',
-    '/foo/bar/baz.asdf',
-    '/foo/bar/.baz',
-    '/foo.coffee.md',
-    '/foo/bar/baz',
-    './foo/.baz',
-    './.baz',
-    '.baz.txt',
-    './baz.txt',
-    './foo/baz.txt',
-    './foo/',
-    'baz',
-    'baz.a.b'
-  ];
-  var expected =
-  [
-    '',
-    'some',
-    '/foo/bar/baz',
-    '/foo/bar/.baz',
-    '/foo.coffee',
-    '/foo/bar/baz',
-    './foo/.baz',
-    './.baz',
-    '.baz',
-    './baz',
-    './foo/baz',
-    './foo/',
-    'baz',
-    'baz.a'
-  ];
-  test.identical( _.paths.withoutExt( src ), expected );
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'incorrect input';
-  test.shouldThrowErrorSync( () => _.paths.withoutExt() );
-  test.shouldThrowErrorSync( () => _.paths.withoutExt( [ 'aa/bb/file.txt',  1 ] ) );
-
-  test.case = 'inner array';
-  test.shouldThrowErrorSync( () => _.paths.withoutExt( [ 'a/b/file.txt', [ '/a/d/file.js' ] ] ) );
-
-  test.case = 'two arguments';
-  test.shouldThrowErrorSync( () => _.paths.withoutExt( [ 'a/b/file.txt' ], [ 'a/c/file.js' ] ) );
-
-}
-
-//
-
-function changeExt( test )
-{
-  test.case = 'change paths extension ';
-  var src =
-  [
-    'some.txt',
-    'some.txt',
-    '/foo/bar/baz.asdf',
-    '/foo/bar/.baz',
-    '/foo.coffee.md',
-    '/foo/bar/baz',
-    '/foo/baz.bar/some.md',
-    './foo/.baz',
-    './.baz',
-    '.baz',
-    './baz',
-    './foo/baz',
-    './foo/'
-  ];
-  var ext =
-  [
-    '',
-    'json',
-    'txt',
-    'sh',
-    'min',
-    'txt',
-    'txt',
-    'txt',
-    'txt',
-    'txt',
-    'txt',
-    'txt',
-    'txt'
-  ];
-  var expected =
-  [
-    'some',
-    'some.json',
-    '/foo/bar/baz.txt',
-    '/foo/bar/.baz.sh',
-    '/foo.coffee.min',
-    '/foo/bar/baz.txt',
-    '/foo/baz.bar/some.txt',
-    './foo/.baz.txt',
-    './.baz.txt',
-    '.baz.txt',
-    './baz.txt',
-    './foo/baz.txt',
-    './foo/.txt'
-  ];
-  test.identical( _.paths.changeExt( src, ext ), expected );
-
-  //
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'not argument';
-  test.shouldThrowErrorSync( () => _.paths.changeExt() );
-
-  test.case = 'argument is not string';
-  test.shouldThrowErrorSync( () => _.paths.changeExt( [ 1 ], [ 'txt' ] ) );
-  test.shouldThrowErrorSync( () => _.paths.changeExt( [ 'a/b/file.txt' ], [ 1 ] ) );
-  test.shouldThrowErrorSync( () => _.paths.changeExt( [ 'a/b/file.txt' ], [ 'txt' ], [ 1 ] ) );
-
-  test.case = 'many arguments';
-  test.shouldThrowErrorSync( () => _.paths.changeExt( [ 'a/b/file.txt' ], [ 'txt' ], [ 'sh' ], [ 'arg' ] ) );
-
-  test.case = 'inner array';
-  test.shouldThrowErrorSync( () => _.paths.changeExt( [ 'a/b.txt', [ 'ab.txt'] ], [ 'txt' ] ) );
-}
-
-//
-
-function ext( test )
-{
-  test.case = 'absolute path : nested dirs';
-  var src =
-  [
-    'some.txt',
-    '/foo/bar/baz.asdf',
-    '/foo/bar/.baz',
-    '/foo.coffee.md',
-    '/foo/bar/baz',
-    '/foo/bar/baz/'
-  ];
-  var expected =
-  [
-    'txt',
-    'asdf',
-    '',
-    'md',
-    '',
-    ''
-  ];
-  test.identical( _.paths.ext( src ), expected );
-
-  if( !Config.debug )
-  return;
-
-  test.case = 'incorrect input';
-  test.shouldThrowErrorSync( () => _.paths.ext() );
-  test.shouldThrowErrorSync( () => _.paths.ext( [ 'aa/bb/file',  1 ] ) );
-
-  test.case = 'inner array';
-  test.shouldThrowErrorSync( () => _.paths.ext( [ 'file.txt', [ 'file.js' ] ] ) );
-
-  test.case = 'two arguments';
-  test.shouldThrowErrorSync( () => _.paths.ext( [ 'file.txt' ], [ 'file.js' ] ) );
 }
 
 //
@@ -1047,7 +1075,7 @@ function from( test )
   var got = _.path.s.from( [] );
   test.identical( got, expected );
 
-  //
+  /* - */
 
   if( !Config.debug )
   return;
@@ -1057,14 +1085,13 @@ function from( test )
   test.shouldThrowErrorSync( () => _.path.s.from( [ 0 ] ) );
   test.shouldThrowErrorSync( () => _.path.s.from( [ 'a/b' ], [ 'b/c'] ) );
   test.shouldThrowErrorSync( () => _.path.s.from( null ) );
-  //test.shouldThrowErrorSync( () => _.path.s.from( {} ) );
 }
 
 //
 
 function relative( test )
 {
-  test.case = 'relative to array of paths'; /* */
+  test.case = 'relative to array of paths'; 
   var from = '/foo/bar/baz/asdf/quux/dir1/dir2';
   var to =
   [
@@ -1076,7 +1103,7 @@ function relative( test )
   var expected = [ '.', '../', '../../', 'dir3' ];
   test.identical( _.paths.relative( from, to), expected );
 
-  //
+  /* */
 
   test.case = 'works like relative';
 
@@ -1088,7 +1115,7 @@ function relative( test )
   var expected = _.path.relative( '/foo/bar/baz/asdf/quux', '/foo/bar/baz/asdf/quux/new1' );
   test.identical( got, expected );
 
-  //
+  /* - */
 
   if( !Config.debug )
   return;
@@ -1327,6 +1354,8 @@ function common( test )
   var got = _.path.s.common( '.', './../..', '..' );
   test.identical( got, '../..' );
 
+  /* - */
+
   if( !Config.debug )
   return;
 
@@ -1364,7 +1393,7 @@ function commonVectors( test )
   var src = [ '/a1', [ '/a1/b' , '/a1/b2/c' ], [ '/a1/b1' , '/a1/b2/c' ], '/a1' ];
   test.identical( _.paths.common.apply( _.paths, src ), [ '/a1' , '/a1' ] );
 
-  //
+  /* - */
 
   if( !Config.debug )
   return;
@@ -1472,9 +1501,7 @@ function groupTextualReport( test )
     verbosity : 5
   }
 
-  debugger;
   var got = _.path.groupTextualReport( _.mapExtend( null, defaults, o ) );
-  debugger;
   var expected =
 `
   '/a'
@@ -1656,7 +1683,7 @@ function commonTextualReport( test )
 
   test.close( 'map' );
 
-  /*  */
+  /* - */
 
   if( !Config.debug )
   return
@@ -1677,6 +1704,7 @@ function moveTextualReport( test )
   var dst = '/a';
   var src = '/a';
   var got = _.path.moveTextualReport( dst, src );
+  debugger;
   test.identical( _.ct.strip( got ), expected );
 
   test.case = 'different, absolute, with common';
@@ -1775,8 +1803,6 @@ function moveTextualReport( test )
   test.identical( _.ct.strip( got ), expected );
 
   test.close( 'null' );
-
-
 }
 
 // --
@@ -1800,17 +1826,17 @@ var Self =
     dot,
     undot,
 
-    join,
-    reroot,
-    resolve,
-
     dir,
     prefixGet,
     name,
     fullName,
+    ext,
     withoutExt,
     changeExt,
-    ext,
+
+    join,
+    reroot,
+    resolve,
 
     from,
     relative,

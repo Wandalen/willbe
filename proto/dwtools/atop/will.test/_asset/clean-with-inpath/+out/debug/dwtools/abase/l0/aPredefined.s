@@ -98,6 +98,8 @@ Self.__GLOBAL_WHICH__ = _global.__GLOBAL_WHICH__;
 // special tokens
 
 Self.def = Symbol.for( 'def' );
+Self.null = Symbol.for( 'null' );
+Self.undefined = Symbol.for( 'undefined' );
 Self.nothing = Symbol.for( 'nothing' );
 Self.anything = Symbol.for( 'anything' );
 Self.maybe = Symbol.for( 'maybe' );

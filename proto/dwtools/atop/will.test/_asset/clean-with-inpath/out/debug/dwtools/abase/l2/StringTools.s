@@ -501,18 +501,22 @@ function _strRemoved( srcStr, insStr )
 */
 
 /*
-qqq : extend coverage of routines strRemove, strReplace
-      make sure tests cover regexp cases
+qqq : extend coverage of routines strRemove, strReplace, make sure tests cover regexp cases | Dmytro : coverage is extended
 */
 
 function strRemove( srcStr, insStr )
 {
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( _.longIs( srcStr ) || _.strLike( srcStr ), () => 'Expects string or array of strings {-srcStr-}, but got ' + _.strType( srcStr ) );
-  _.assert( _.longIs( insStr ) || _.strLike( insStr ), () => 'Expects string/regexp or array of strings/regexps {-begin-}' );
+
+  if( _.longIs( insStr ) )
+  for( let i = 0 ; i < insStr.length ; i++ )
+  _.assert( _.strIs( insStr[ i ] ) || _.regexpIs( insStr[ i ] ), () => 'Expects string/regexp or array of strings/regexps' );
+  else
+  _.assert( _.strIs( insStr ) || _.regexpIs( insStr ), () => 'Expects string/regexp or array of strings/regexps' );
+  //_.assert( _.longIs( insStr ) || _.strLike( insStr ), () => 'Expects string/regexp or array of strings/regexps {-begin-}' );
 
   let result = [];
-  let srcIsArray = _.longIs( srcStr );
 
   if( _.strIs( srcStr ) && !_.longIs( srcStr ) )
   return _._strRemoved( srcStr, insStr );
@@ -525,7 +529,7 @@ function strRemove( srcStr, insStr )
     result[ s ] = _._strRemoved( src, insStr );
   }
 
-  if( !srcIsArray )
+  if( !_.longIs( srcStr ) )
   return result[ 0 ];
 
   return result;
@@ -3154,8 +3158,7 @@ strSplitChunks.defaults =
 //
 
 /*
-qqq : cover it by test
-Dmytro : covered,
+qqq : cover it by test | Dmytro : covered,
 maybe, routine needs assertion
 _.assert( arguments.length === 1, 'Expects one argument' );
 if assertion will be accepted, then test.case = 'a few arguments' will throw error
@@ -4020,12 +4023,11 @@ function strJoinPath( srcs, joiner )
  */
 
 /*
-qqq : cover routine strConcat and extend it. ask how to
-Dmytro : routine covered and documented, not extended
+qqq : cover routine strConcat and extend it. ask how to | Dmytro : routine covered and documented, not extended
 */
 
 /*
-  qqq : does not work properly, remove indentation, but should not
+  qqq : does not work properly, remove indentation, but should not | Dmytro : fixed, all comments below
   srcs :
 [
   'b',
@@ -4035,7 +4037,6 @@ Dmytro : routine covered and documented, not extended
 `
 ]
 
-Dmytro : fixed, all comments below
 */
 
 function strConcat( srcs, o )
@@ -4260,6 +4261,74 @@ function strIndentation( src, tab )
 
 //
 
+/**
+ * Routine strLinesBut() replaces a range {-range-} of lines in source string {-src-} to new
+ * values in {-ins-} parameter.
+ *
+ * @param { String|Long } src - Source string or array of strings.
+ * If {-src-} is a String, then it split to parts using delimeter '\n'.
+ * @param { Range|Number } range - Range of lines to be replaced.
+ * If {-range-} is a Number, then routine replace only one line defined by value of {-range-}.
+ * @param { String|Long } ins - String or array of strings to be inserted in source string.
+ * If {-ins-} is a Long, then elements of Long concatenates using delimeter '\n'.
+ * If range[ 0 ] or range[ 1 ] is less than zero, then routine count lines from the end of {-src-}.
+ *
+ * @example
+ * _.strLinesBut( 'ab \n bc \n cd \n de', 1 );
+ * // returns 'ab \n cd \n de'
+ *
+ * @example
+ * _.strLinesBut( 'ab \n bc \n cd \n de', -1 );
+ * // returns 'ab \n bc \n cd '
+ *
+ * @example
+ * _.strLinesBut( 'ab \n bc \n cd \n de', [ 1, 4 ], '' );
+ * // returns 'ab '
+ *
+ * @example
+ * _.strLinesBut( 'ab \n bc \n cd \n de', [ 1, -1 ], '' );
+ * // returns 'ab \n de'
+ *
+ * @example
+ * _.strLinesBut( 'ab \n bc \n cd \n de', 1, ' some \n string ' );
+ * // returns 'ab \n some \n string \n cd \n de'
+ *
+ * @example
+ * _.strLinesBut( 'ab \n bc \n cd \n de', -1, ' some \n string ' );
+ * // returns 'ab \n bc \n cd \n some \n string '
+ *
+ * @example
+ * _.strLinesBut( 'ab \n bc \n cd \n de', [ 1, 4 ], [ ' some ', ' string' ] );
+ * // returns 'ab \n some \n string'
+ *
+ * @example
+ * _.strLinesBut( 'ab \n bc \n cd \n de', [ 1, -1 ], [ ' some ', ' string' ] );
+ * // returns 'ab \n some \n string\n de'
+ *
+ * @example
+ * _.strLinesBut( [ 'ab ', ' bc ', ' cd ', ' de' ], 1, ' some \n string ' );
+ * // returns 'ab \n some \n string \n cd \n de'
+ *
+ * @example
+ * _.strLinesBut( [ 'ab ', ' bc ', ' cd ', ' de' ], -1, ' some \n string ' );
+ * // returns 'ab \n bc \n cd \n some \n string '
+ *
+ * @example
+ * _.strLinesBut( [ 'ab ', ' bc ', ' cd ', ' de' ], [ 1, 4 ], [ ' some ', ' string' ] );
+ * // returns 'ab \n some \n string'
+ *
+ * @example
+ * _.strLinesBut( [ 'ab ', ' bc ', ' cd ', ' de' ], [ 1, -1 ], [ ' some ', ' string' ] );
+ * // returns 'ab \n some \n string\n de'
+ *
+ * @returns { String } - Returns string concatenated from original source string and inserted values.
+ * @function strLinesBut
+ * @throws { Exception } If arguments.length is less then two or more then three.
+ * @throws { Exception } If {-src-} is not a String or a Long.
+ * @throws { Exception } If {-ins-} is not a String, not a Long, not undefined.
+ * @memberof wTools
+ */
+
 function strLinesBut( src, range, ins )
 {
 
@@ -4269,7 +4338,7 @@ function strLinesBut( src, range, ins )
   _.assert( arguments.length === 2 || arguments.length === 3 );
   _.assert( _.longIs( src ) );
   _.assert( ins === undefined || _.strIs( ins ) || _.longIs( ins ) );
-  _.assert( !_.longIs( ins ), 'not implemented' );
+  // _.assert( !_.longIs( ins ), 'not implemented' );
 
   if( _.numberIs( range ) )
   {
@@ -4283,22 +4352,108 @@ function strLinesBut( src, range, ins )
 
   _.assert( _.rangeIs( range ) );
 
-  /* qqq : should work
+  /*
+    qqq : should work | Dmytro : works
     _.strLinesBut( _.strLinesBut( got1, 0 ), -1 )
   */
 
-  /* qqq : implement not implemented
+  /*
+    qqq : implement not implemented | Dmytro : implemented
   */
 
-  if( ins )
-  {
-    _.assert( _.strIs( ins ) );
-    return _.longBut( src, range, [ ins ] ).join( '\n' );
-  }
+  if( _.longIs( ins ) )
+  return _.longBut( src, range, ins ).join( '\n' );
+  else if( _.strIs( ins ) )
+  return _.longBut( src, range, [ ins ] ).join( '\n' );
   else
-  {
-    return _.longBut( src, range ).join( '\n' );
-  }
+  return _.longBut( src, range ).join( '\n' );
+
+  // if( ins )
+  // {
+  //   _.assert( _.strIs( ins ) );
+  //   return _.longBut( src, range, [ ins ] ).join( '\n' );
+  // }
+  // else
+  // {
+  //   return _.longBut( src, range ).join( '\n' );
+  // }
+
+}
+
+//
+
+/**
+ * Routine strLinesOnly() selects a range {-range-} of lines in source string {-src-} and returns
+ * new string joined from it.
+ *
+ * @param { String|Long } src - Source string or array of strings.
+ * If {-src-} is a String, then it split to parts using delimeter '\n'.
+ * @param { Range|Number } range - Range of lines to be selected.
+ * If {-range-} is a Number, then routine selects only one line defined by value of {-range-}.
+ * If range[ 0 ] or range[ 1 ] is less than zero, then routine count lines from the end of {-src-}.
+ *
+ * @example
+ * _.strLinesOnly( 'ab \n bc \n cd \n de', 1 );
+ * // returns ' bc '
+ *
+ * @example
+ * _.strLinesOnly( 'ab \n bc \n cd \n de', -1 );
+ * // returns ' de'
+ *
+ * @example
+ * _.strLinesOnly( 'ab \n bc \n cd \n de', [ 1, 4 ] );
+ * // returns ' bc \n cd \n de'
+ *
+ * @example
+ * _.strLinesOnly( 'ab \n bc \n cd \n de', [ 1, -1 ] );
+ * // returns ' bc \n cd '
+ *
+ * @example
+ * _.strLinesOnly( [ 'ab ', ' bc ', ' cd ', ' de' ], 1 );
+ * // returns ' bc '
+ *
+ * @example
+ * _.strLinesOnly( [ 'ab ', ' bc ', ' cd ', ' de' ], -1 );
+ * // returns ' de'
+ *
+ * @example
+ * _.strLinesOnly( [ 'ab ', ' bc ', ' cd ', ' de' ], [ 1, 4 ] );
+ * // returns ' bc \n cd \n de'
+ *
+ * @example
+ * _.strLinesOnly( [ 'ab ', ' bc ', ' cd ', ' de' ], [ 1, -1 ] );
+ * // returns ' bc \n cd '
+ *
+ * @returns { String } - Returns a range of lines from source string concatenated by new line symbol.
+ * @function strLinesOnly
+ * @throws { Exception } If arguments.length is less then two or more then three.
+ * @throws { Exception } If {-src-} is not a String or a Long.
+ * @memberof wTools
+ */
+
+function strLinesOnly( src, range )
+{
+
+  if( _.strIs( src ) )
+  src = src.split( '\n' );
+
+  _.assert( arguments.length === 2 );
+  _.assert( _.longIs( src ) );
+
+  if( _.numberIs( range ) )
+  range = [ range, range + 1 ];
+  if( range[ 0 ] < 0 )
+  range[ 0 ] = src.length >= -range[ 0 ] ? src.length + range[ 0 ] : 0
+  if( range[ 1 ] < 0 )
+  range[ 1 ] = src.length + range[ 1 ];
+
+  _.assert( _.rangeIs( range ) );
+
+  let result = [];
+  for( let i = range[ 0 ]; i < range[ 1 ] && i < src.length; i++ ) 
+  result[ i - range[ 0 ] ] = src[ i ];
+
+  return result.join( '\n' );
 
 }
 
@@ -5144,7 +5299,7 @@ let Proto =
   strOnly, //: _.vectorize( strOnlySingle ), /* qqq : cover and document | Dmytro : covered and documented */
   strButSingle,
   strBut, // : _.vectorize( strButSingle ), /* qqq : cover and document | Dmytro : covered and documented */
-  strUnjoin, /* qqq : document me */
+  strUnjoin, /* qqq : document me | Dmytro : documented */
 
   // joiner
 
@@ -5156,11 +5311,11 @@ let Proto =
   // liner
 
   strIndentation,
-  strLinesBut, /* qqq : implement, document and cover */
-  // strLinesOnly, /* qqq : implement, document and cover */
+  strLinesBut, /* qqq : implement, document and cover | Dmytro : extended, documented, covered */
+  strLinesOnly, /* qqq : implement, document and cover | Dmytro : implemented, documented, covered */
   strLinesSplit,
   strLinesJoin,
-  strLinesStrip, /* qqq : test coverage */
+  strLinesStrip, /* qqq : test coverage | Dmytro : covered a time ago */
   strLinesNumber,
   strLinesSelect,
   strLinesNearest, /* qqq : check coverage | Dmytro : checked, improved formatting */

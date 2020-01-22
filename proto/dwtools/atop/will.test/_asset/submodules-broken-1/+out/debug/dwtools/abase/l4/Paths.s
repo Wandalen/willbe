@@ -636,6 +636,18 @@ let PathsExtension =
   onlyTrail : _vectorizeOnly( 'trail' ),
   onlyDetrail : _vectorizeOnly( 'detrail' ),
 
+  // path cut off
+
+  dir : _vectorize( 'dir' ),
+  dirFirst : _vectorize( 'dirFirst' ),
+  prefixGet : _vectorize( 'prefixGet' ),
+  name : _vectorize( 'name' ),
+  fullName : _vectorize( 'fullName' ),
+  ext : _vectorize( 'ext' ),
+  exts : _vectorize( 'exts' ),
+  withoutExt : _vectorize( 'withoutExt' ),
+  changeExt : _vectorize( 'changeExt', 2 ),
+
   // joiner
 
   join : _vectorize( 'join', Infinity ),
@@ -645,17 +657,7 @@ let PathsExtension =
   resolve : _vectorize( 'resolve', Infinity ),
   joinNames : _vectorize( 'joinNames', Infinity ),
 
-  // path cut off
-
-  dir : _vectorize( 'dir' ),
-  dirFirst : _vectorize( 'dirFirst' ),
-  prefixGet : _vectorize( 'prefixGet' ),
-  name : _vectorize( 'name' ),
-  fullName : _vectorize( 'fullName' ),
-  withoutExt : _vectorize( 'withoutExt' ),
-  changeExt : _vectorize( 'changeExt', 2 ),
-  ext : _vectorize( 'ext' ),
-  exts : _vectorize( 'exts' ),
+  //
 
   onlyDir : _vectorizeOnly( 'dir' ),
   onlyPrefixGet : _vectorizeOnly( 'prefixGet' ),
