@@ -13211,8 +13211,8 @@ function exportCourrputedOutfileUnknownSection( test )
 
     var outfile = _.fileProvider.fileConfigRead( outFilePath );
     outfile = outfile.module[ 'sub.out' ];
-    var exported = _.mapKeys( _.select( outfile, 'exported/*' ) );
-    var exp = [ 'export.debug' ];
+    var exported = _.setFrom( _.mapKeys( _.select( outfile, 'exported/*' ) ) );
+    var exp = _.setFrom( [ 'export.debug' ] );
     test.identical( exported, exp );
 
     test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
@@ -13275,8 +13275,8 @@ function exportCourruptedOutfileSyntax( test )
 
     var outfile = _.fileProvider.fileConfigRead( outFilePath );
     outfile = outfile.module[ 'sub.out' ]
-    var exported = _.mapKeys( _.select( outfile, 'exported/*' ) );
-    var exp = [ 'export.debug' ];
+    var exported = _.setFrom( _.mapKeys( _.select( outfile, 'exported/*' ) ) );
+    var exp = _.setFrom( [ 'export.debug' ] );
     test.identical( exported, exp );
 
     test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
@@ -13324,8 +13324,8 @@ function exportCourruptedSubmodulesDisabled( test )
     test.identical( files, [ '.', './supermodule.out.will.yml' ] );
 
     var outfile = _.fileProvider.fileConfigRead( outFilePath );
-    var exported = _.mapKeys( _.select( outfile.module[ outfile.root[ 0 ] ], 'exported/*' ) );
-    var exp = [ 'export.debug' ];
+    var exported = _.setFrom( _.mapKeys( _.select( outfile.module[ outfile.root[ 0 ] ], 'exported/*' ) ) );
+    var exp = _.setFrom( [ 'export.debug' ] );
     test.identical( exported, exp );
 
     test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
@@ -13371,8 +13371,8 @@ function exportDisabledModule( test )
     test.identical( files, exp );
 
     var outfile = _.fileProvider.fileConfigRead( outFilePath );
-    var exp = [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ];
-    var got = _.mapKeys( outfile.module );
+    var exp = _.setFrom( [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ] );
+    var got = _.setFrom( _.mapKeys( outfile.module ) );
     test.identical( got, exp );
 
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
@@ -13402,8 +13402,8 @@ function exportDisabledModule( test )
     test.identical( files, exp );
 
     var outfile = _.fileProvider.fileConfigRead( outFilePath );
-    var exp = [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ];
-    var got = _.mapKeys( outfile.module );
+    var exp = _.setFrom( [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ] );
+    var got = _.setFrom( _.mapKeys( outfile.module ) );
     test.identical( got, exp );
 
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
@@ -13459,8 +13459,8 @@ function exportDisabledModule( test )
     test.identical( files, exp );
 
     var outfile = _.fileProvider.fileConfigRead( outFilePath );
-    var exp = [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ];
-    var got = _.mapKeys( outfile.module );
+    var exp = _.setFrom( [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ] );
+    var got = _.setFrom( _.mapKeys( outfile.module ) );
     test.identical( got, exp );
 
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
@@ -13527,8 +13527,8 @@ function exportOutdated( test )
 
     var outfile = _.fileProvider.fileConfigRead( outFilePath );
     outfile = outfile.module[ 'sub.out' ];
-    var exported = _.mapKeys( _.select( outfile, 'exported/*' ) );
-    var exp = [ 'export.debug' ];
+    var exported = _.setFrom( _.mapKeys( _.select( outfile, 'exported/*' ) ) );
+    var exp = _.setFrom( [ 'export.debug' ] );
     test.identical( exported, exp );
 
     test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
@@ -13558,8 +13558,8 @@ function exportOutdated( test )
 
     var outfile = _.fileProvider.fileConfigRead( outFilePath );
     outfile = outfile.module[ 'sub.out' ];
-    var exported = _.mapKeys( _.select( outfile, 'exported/*' ) );
-    var exp = [ 'export.' ];
+    var exported = _.setFrom( _.mapKeys( _.select( outfile, 'exported/*' ) ) );
+    var exp = _.setFrom( [ 'export.' ] );
     test.identical( exported, exp );
 
     test.identical( _.strCount( got.output, '. Read 2 willfile(s)' ), 1 );
