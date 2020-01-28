@@ -6167,7 +6167,7 @@ function pathsResolve( test )
       'super.out/release'
     ]
     var got = resolved;
-    test.setsAreIdentical( got, _.filter( abs( expected ), ( p ) => p ? _.path.s.nativize( p ) : p ) );
+    test.identical( _.setFrom( got ), _.setFrom( _.filter( abs( expected ), ( p ) => p ? _.path.s.nativize( p ) : p ) ) );
 
     test.case = 'path::* - implicit'; /* */
     var resolved = opener.openedModule.resolve( 'path::*' );
@@ -6194,7 +6194,7 @@ function pathsResolve( test )
       'super.out/release'
     ]
     var got = resolved;
-    test.setsAreIdentical( rel( got ), expected );
+    test.identical( _.setFrom( rel( got ) ), _.setFrom( expected ) );
 
     test.case = 'path::* - pu:1 mvu:1 pr:in'; /* */
     var resolved = opener.openedModule.resolve
@@ -8955,12 +8955,12 @@ function modulesEach( test )
     test.description = 'withPeers : 1, withStem : 1, recursive : 2';
     var exp = [ 'super', 'sub', 'sub.out/sub.out', 'super.out/supermodule.out' ];
     var got = opener.openedModule.modulesEach({ withPeers : 1, withStem : 1, recursive : 2 })
-    test.setsAreIdentical( a.rel( _.select( got, '*/commonPath' ) ), exp );
+    test.identical( _.setFrom( a.rel( _.select( got, '*/commonPath' ) ) ), _.setFrom( exp ) );
 
     test.description = 'peerModule, withPeers : 1, withStem : 1, recursive : 2';
     var exp = [ 'super', 'sub', 'sub.out/sub.out', 'super.out/supermodule.out' ];
     var got = opener.openedModule.peerModule.modulesEach({ withPeers : 1, withStem : 1, recursive : 2 })
-    test.setsAreIdentical( a.rel( _.select( got, '*/commonPath' ) ), exp );
+    test.identical( _.setFrom( a.rel( _.select( got, '*/commonPath' ) ) ), _.setFrom( exp ) );
 
     opener.finit();
     return null;
