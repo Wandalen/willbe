@@ -9260,8 +9260,8 @@ function submodulesDeleteAndDownload( test )
     {
 
       var exp = [ './', '.module/Tools/out/wTools.out', '.module/Tools/', '.module/PathBasic/out/wPathBasic.out', '.module/PathBasic/' ];
-      test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-      test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+      test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+      test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
 
       test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
       var willfilesArray =
@@ -9315,7 +9315,7 @@ function submodulesDeleteAndDownload( test )
       //   'hd://./.module/Tools',
       //   './.module/PathBasic/'
       // ]
-      // test.setsAreIdentical( _.select( will.openersArray, '*/commonPath' ), abs( exp ) );
+      // test.identical( _.setFrom( _.select( will.openersArray, '*/commonPath' ) ), _.setFrom( abs( exp ) ) );
       //
       // var exp =
       // [
@@ -9337,7 +9337,7 @@ function submodulesDeleteAndDownload( test )
       //   'hd://./.module/Tools',
       //   './.module/PathBasic/'
       // ]
-      // test.setsAreIdentical( _.select( will.openersArray, '*/localPath' ), abs( exp ) );
+      // test.identical( _.setFrom( _.select( will.openersArray, '*/localPath' ) ), _.setFrom( abs( exp ) ) );
       //
       // var exp =
       // [
@@ -9364,7 +9364,7 @@ function submodulesDeleteAndDownload( test )
       // // test.is( _.strHas( remotePath[ 2 ], '/_repo/PathBasic?out=out/wPathBasic.out.will#master' ) );
       // exp[ 1 ] = remotePath[ 1 ];
       // exp[ 2 ] = remotePath[ 2 ];
-      // test.setsAreIdentical( remotePath, abs( exp ) );
+      // test.identical( _.setFrom( remotePath ), _.setFrom( abs( exp ) ) );
       // debugger;
       //
       // will.openersArray.map( ( opener ) =>
@@ -9405,15 +9405,15 @@ function submodulesDeleteAndDownload( test )
       opener.finit();
 
       test.description = 'no garbage left';
-      test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
-      test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
-      test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
-      test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
-      test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
-      test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
-      test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
-      test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
-      test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+      test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
       if( err )
       throw err;
@@ -9476,15 +9476,15 @@ function customLogger( test )
       opener.finit();
 
       test.description = 'no garbage left';
-      test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
-      test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
-      test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
-      test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
-      test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
-      test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
-      test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
-      test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
-      test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+      test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
       let output = loggerOutput.join( '\n' );
       test.is( _.strHas( output, /Building .*module::customLogger \/ build::debug.*/ ) );
