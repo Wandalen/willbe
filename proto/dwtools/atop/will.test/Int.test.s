@@ -183,7 +183,7 @@ function ReplaceSetsAreIdentical()
   file.arrange();
 }
 
-ReplaceSetsAreIdentical();
+// ReplaceSetsAreIdentical();
 
 // --
 // tests
@@ -254,15 +254,15 @@ function buildSimple( test )
       opener.finit();
 
       test.description = 'no garbage left';
-      test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
-      test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
-      test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
-      test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
-      test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
-      test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
-      test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
-      test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
-      test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+      test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
       if( err )
       throw err;
@@ -352,8 +352,8 @@ function openNamedFast( test )
     test.is( opener1.openedModule === opener2.openedModule );
 
     var exp = [ 'super' ];
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
 
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml' ];
@@ -365,11 +365,11 @@ function openNamedFast( test )
     opener1.finit();
 
     var exp = [ 'super' ];
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'sub.out/sub.out', 'super' ];
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
@@ -380,15 +380,15 @@ function openNamedFast( test )
     opener2.finit();
 
     test.description = 'no garbage left';
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
-    test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
     return arg;
   });
@@ -432,7 +432,7 @@ function openNamedFast( test )
     test.identical( opener.commonPath, abs( 'super' ) );
     test.identical( opener.willfilesPath, abs( [ './super.ex.will.yml', './super.im.will.yml' ] ) );
     test.identical( opener.willfilesArray.length, 2 );
-    test.setsAreIdentical( _.mapKeys( opener.willfileWithRoleMap ), [ 'import', 'export' ] );
+    test.identical( _.setFrom( _.mapKeys( opener.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
     test.identical( opener.openedModule.qualifiedName, 'module::supermodule' );
     test.identical( opener.openedModule.absoluteName, 'module::supermodule' );
@@ -446,19 +446,19 @@ function openNamedFast( test )
     test.identical( opener.openedModule.commonPath, abs( 'super' ) );
     test.identical( opener.openedModule.willfilesPath, abs( [ './super.ex.will.yml', './super.im.will.yml' ] ) );
     test.identical( opener.openedModule.willfilesArray.length, 2 );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.willfileWithRoleMap ), [ 'import', 'export' ] );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
     test.is( !!opener.openedModule.about );
     test.identical( opener.openedModule.about.name, 'supermodule' );
     test.identical( opener.openedModule.pathMap, pathMap );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.submoduleMap ), [ 'Submodule' ] );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.submoduleMap ) ), _.setFrom( [ 'Submodule' ] ) );
     var got = _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e );
-    test.setsAreIdentical( got, [ 'reflect.submodules.', 'reflect.submodules.debug' ] );
+    test.identical( _.setFrom( got ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
 
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
-    test.setsAreIdentical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.exportedMap ), [] );
+    test.identical( _.setFrom( steps ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] ) );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'debug', 'release', 'export.', 'export.debug' ] ) );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.exportedMap ) ), _.setFrom( [] ) );
 
   }
 
@@ -580,8 +580,8 @@ function openNamedForming( test )
     test.identical( stager.stageStatePerformed( 'formed' ), true );
 
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
@@ -593,8 +593,8 @@ function openNamedForming( test )
     opener1.finit();
 
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
@@ -606,15 +606,15 @@ function openNamedForming( test )
     opener2.finit();
 
     test.description = 'no garbage left';
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
-    test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
     return arg;
   });
@@ -658,7 +658,7 @@ function openNamedForming( test )
     test.identical( opener.commonPath, abs( 'super' ) );
     test.identical( opener.willfilesPath, abs( [ './super.ex.will.yml', './super.im.will.yml' ] ) );
     test.identical( opener.willfilesArray.length, 2 );
-    test.setsAreIdentical( _.mapKeys( opener.willfileWithRoleMap ), [ 'import', 'export' ] );
+    test.identical( _.setFrom( _.mapKeys( opener.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
     test.identical( opener.openedModule.qualifiedName, 'module::supermodule' );
     test.identical( opener.openedModule.absoluteName, 'module::supermodule' );
@@ -672,18 +672,18 @@ function openNamedForming( test )
     test.identical( opener.openedModule.commonPath, abs( 'super' ) );
     test.identical( opener.openedModule.willfilesPath, abs( [ './super.ex.will.yml', './super.im.will.yml' ] ) );
     test.identical( opener.openedModule.willfilesArray.length, 2 );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.willfileWithRoleMap ), [ 'import', 'export' ] );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
     test.is( !!opener.openedModule.about );
     test.identical( opener.openedModule.about.name, 'supermodule' );
     test.identical( opener.openedModule.pathMap, pathMap );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.submoduleMap ), [ 'Submodule' ] );
-    test.setsAreIdentical( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug' ] );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.submoduleMap ) ), _.setFrom( [ 'Submodule' ] ) );
+    test.identical( _.setFrom( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ) ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
 
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
-    test.setsAreIdentical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.exportedMap ), [] );
+    test.identical( _.setFrom( steps ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug' ] ) );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'debug', 'release', 'export.', 'export.debug' ] ) );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.exportedMap ) ), _.setFrom( [] ) );
 
   }
 
@@ -791,8 +791,8 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
     test.is( opener1.openedModule === opener2.openedModule );
 
     var exp = [ 'super', 'sub.out/sub.out', 'sub' ];
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
@@ -804,11 +804,11 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
     opener1.finit();
 
     var exp = [ 'super', 'sub.out/sub.out', 'sub' ];
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'sub.out/sub.out', 'sub', 'super' ];
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
@@ -818,15 +818,15 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
     opener2.finit();
 
     test.description = 'no garbage left';
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
-    test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
     return arg;
   }
@@ -953,11 +953,11 @@ function openSkippingSubButAttachedWillfiles( test )
     test.is( opener1.openedModule === opener2.openedModule );
 
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super' ];
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
@@ -968,11 +968,11 @@ function openSkippingSubButAttachedWillfiles( test )
     opener1.finit();
 
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super' ];
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
@@ -983,15 +983,15 @@ function openSkippingSubButAttachedWillfiles( test )
     opener2.finit();
 
     test.description = 'no garbage left';
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
-    test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
     return arg;
   }
@@ -1102,13 +1102,13 @@ function openAnon( test )
     test.identical( opener.absoluteName, 'opener::supermodule' );
     test.identical( opener.dirPath, abs( '.' ) );
     test.identical( opener.commonPath, abs( '.' ) + '/' );
-    test.setsAreIdentical( opener.willfilesPath, abs([ '.im.will.yml', '.ex.will.yml' ]) );
+    test.identical( _.setFrom( opener.willfilesPath ), _.setFrom( abs([ '.im.will.yml', '.ex.will.yml' ]) ) );
     test.identical( opener.fileName, 'openAnon' );
     test.identical( opener.aliasName, null );
     test.identical( opener.localPath, abs( './' ) );
     test.identical( opener.remotePath, null );
     test.identical( opener.willfilesArray.length, 2 );
-    test.setsAreIdentical( _.mapKeys( opener.willfileWithRoleMap ), [ 'import', 'export' ] );
+    test.identical( _.setFrom( _.mapKeys( opener.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
     test.identical( opener.openedModule.qualifiedName, 'module::supermodule' );
     test.identical( opener.openedModule.absoluteName, 'module::supermodule' );
@@ -1116,24 +1116,24 @@ function openAnon( test )
     test.identical( opener.openedModule.dirPath, abs( '.' ) );
     test.identical( opener.openedModule.outPath, abs( 'super.out' ) );
     test.identical( opener.openedModule.commonPath, abs( './' ) );
-    test.setsAreIdentical( opener.openedModule.willfilesPath, abs([ '.im.will.yml', '.ex.will.yml' ]) );
+    test.identical( _.setFrom( opener.openedModule.willfilesPath ), _.setFrom( abs([ '.im.will.yml', '.ex.will.yml' ]) ) );
     test.identical( opener.openedModule.localPath, abs( './' ) );
     test.identical( opener.openedModule.remotePath, null );
     test.identical( opener.openedModule.currentRemotePath, null );
     test.identical( opener.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
     test.identical( opener.openedModule.willfilesArray.length, 2 );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.willfileWithRoleMap ), [ 'import', 'export' ] );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
     test.is( !!opener.openedModule.about );
     test.identical( opener.openedModule.about.name, 'supermodule' );
     test.identical( opener.openedModule.pathMap, pathMap );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.submoduleMap ), [ 'Submodule' ] );
-    test.setsAreIdentical( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug' ] );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.submoduleMap ) ), _.setFrom( [ 'Submodule' ] ) );
+    test.identical( _.setFrom( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ) ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
 
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
-    test.setsAreIdentical( steps, [ 'export.', 'export.debug', 'reflect.submodules.', 'reflect.submodules.debug' ] );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.buildMap ), [ 'export.', 'export.debug', 'debug', 'release' ] );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.exportedMap ), [] );
+    test.identical( _.setFrom( steps ), _.setFrom( [ 'export.', 'export.debug', 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'export.', 'export.debug', 'debug', 'release' ] ) );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.exportedMap ) ), _.setFrom( [] ) );
 
   }
 
@@ -1271,13 +1271,13 @@ function openOutNamed( test )
     test.identical( opener.openedModule.willfilesArray.length, 1 );
     test.identical( _.mapKeys( opener.openedModule.willfileWithRoleMap ), [ 'single' ] );
     test.identical( _.mapKeys( opener.openedModule.submoduleMap ), [ 'Submodule' ] );
-    test.setsAreIdentical( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] );
+    test.identical( _.setFrom( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ) ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] ) );
 
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
-    test.setsAreIdentical( steps, [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] );
+    test.identical( _.setFrom( steps ), _.setFrom( [ 'reflect.submodules.', 'reflect.submodules.debug', 'export.', 'export.debug', 'exported.export.debug', 'exported.files.export.debug', 'exported.export.', 'exported.files.export.' ] ) );
 
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.buildMap ), [ 'debug', 'release', 'export.', 'export.debug' ] );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.exportedMap ), [ 'export.', 'export.debug' ] );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'debug', 'release', 'export.', 'export.debug' ] ) );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.exportedMap ) ), _.setFrom( [ 'export.', 'export.debug' ] ) );
 
   }
 
@@ -1319,8 +1319,8 @@ function openCurruptedUnknownField( test )
     check( opener );
 
     var exp = [ 'sub' ];
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
@@ -1331,15 +1331,15 @@ function openCurruptedUnknownField( test )
     opener.finit();
 
     test.description = 'no garbage left';
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
-    test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
     return null;
   })
@@ -1390,7 +1390,7 @@ function openCurruptedUnknownField( test )
     test.identical( opener.commonPath, abs( 'sub' ) );
     test.identical( opener.willfilesPath, abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ) );
     test.identical( opener.willfilesArray.length, 2 );
-    test.setsAreIdentical( _.mapKeys( opener.willfileWithRoleMap ), [ 'import', 'export' ] );
+    test.identical( _.setFrom( _.mapKeys( opener.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
     test.identical( opener.openedModule.qualifiedName, 'module::sub' );
     test.identical( opener.openedModule.absoluteName, 'module::sub' );
@@ -1403,7 +1403,7 @@ function openCurruptedUnknownField( test )
     test.identical( opener.openedModule.commonPath, abs( 'sub' ) );
     test.identical( opener.openedModule.willfilesPath, abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ) );
     test.identical( opener.openedModule.willfilesArray.length, 2 );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.willfileWithRoleMap ), [ 'import', 'export' ] );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
     test.is( !opener.isValid() );
     test.is( !opener.openedModule.isValid() );
@@ -1411,13 +1411,13 @@ function openCurruptedUnknownField( test )
     test.is( !!opener.openedModule.about );
     test.identical( opener.openedModule.about.name, 'sub' );
     test.identical( opener.openedModule.pathMap, pathMap );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.submoduleMap ), [] );
-    test.setsAreIdentical( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ), [] );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.submoduleMap ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( _.filter( _.mapKeys( opener.openedModule.reflectorMap ), ( e, k ) => _.strHas( e, 'predefined.' ) ? undefined : e ) ), _.setFrom( [] ) );
 
     let steps = _.select( opener.openedModule.resolve({ selector : 'step::*', criterion : { predefined : 0 } }), '*/name' );
-    test.setsAreIdentical( steps, [ 'export.', 'export.debug' ] );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.buildMap ), [ 'export.', 'export.debug' ] );
-    test.setsAreIdentical( _.mapKeys( opener.openedModule.exportedMap ), [] );
+    test.identical( _.setFrom( steps ), _.setFrom( [ 'export.', 'export.debug' ] ) );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'export.', 'export.debug' ] ) );
+    test.identical( _.setFrom( _.mapKeys( opener.openedModule.exportedMap ) ), _.setFrom( [] ) );
 
   }
 
@@ -1477,7 +1477,7 @@ function openerClone( test )
 
     test.description = 'elements';
     test.identical( opener2.willfilesArray.length, 0 );
-    test.setsAreIdentical( _.mapKeys( opener2.willfileWithRoleMap ), [] );
+    test.identical( _.setFrom( _.mapKeys( opener2.willfileWithRoleMap ) ), _.setFrom( [] ) );
     test.is( !!opener.openedModule );
     test.is( opener2.openedModule === null );
 
@@ -1501,7 +1501,7 @@ function openerClone( test )
 
     test.description = 'elements';
     test.identical( opener2.willfilesArray.length, 0 );
-    test.setsAreIdentical( _.mapKeys( opener2.willfileWithRoleMap ), [] );
+    test.identical( _.setFrom( _.mapKeys( opener2.willfileWithRoleMap ) ), _.setFrom( [] ) );
     test.is( !!opener.openedModule );
     test.is( opener2.openedModule === null );
 
@@ -1562,7 +1562,7 @@ function openerClone( test )
 
     test.description = 'elements';
     test.identical( opener2.willfilesArray.length, 0 );
-    test.setsAreIdentical( _.mapKeys( opener2.willfileWithRoleMap ), [] );
+    test.identical( _.setFrom( _.mapKeys( opener2.willfileWithRoleMap ) ), _.setFrom( [] ) );
     test.is( !!opener.openedModule );
     test.is( opener2.openedModule === null );
 
@@ -1596,7 +1596,7 @@ function openerClone( test )
 
     test.description = 'elements';
     test.identical( opener2.willfilesArray.length, 0 );
-    test.setsAreIdentical( _.mapKeys( opener2.willfileWithRoleMap ), [] );
+    test.identical( _.setFrom( _.mapKeys( opener2.willfileWithRoleMap ) ), _.setFrom( [] ) );
     test.is( !!opener.openedModule );
     test.is( opener2.openedModule === null );
 
@@ -1646,15 +1646,15 @@ function openerClone( test )
     opener.finit();
 
     test.description = 'no garbage left';
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
-    test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
     return arg;
   });
@@ -1748,11 +1748,11 @@ function moduleClone( test )
 
     test.description = 'instances';
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super2.out/super.out' ];
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super2.out/sub.out/sub.out', 'super2.out/super.out' ];
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
@@ -1762,7 +1762,7 @@ function moduleClone( test )
 
     test.description = 'elements';
     test.identical( opener2.willfilesArray.length, 0 );
-    test.setsAreIdentical( _.mapKeys( opener2.willfileWithRoleMap ), [] );
+    test.identical( _.setFrom( _.mapKeys( opener2.willfileWithRoleMap ) ), _.setFrom( [] ) );
     test.is( opener.openedModule instanceof _.Will.Module );
     test.is( opener2.openedModule instanceof _.Will.Module );
     test.is( opener.openedModule !== opener2.openedModule );
@@ -1813,11 +1813,11 @@ function moduleClone( test )
 
     test.description = 'instances';
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub', 'super2.out/super.out' ];
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
@@ -1827,7 +1827,7 @@ function moduleClone( test )
 
     test.description = 'elements';
     test.identical( opener2.willfilesArray.length, 0 );
-    test.setsAreIdentical( _.mapKeys( opener2.willfileWithRoleMap ), [] );
+    test.identical( _.setFrom( _.mapKeys( opener2.willfileWithRoleMap ) ), _.setFrom( [] ) );
     test.is( opener.openedModule instanceof _.Will.Module );
     test.is( opener2.openedModule === null );
     test.is( opener.openedModule !== opener2.openedModule );
@@ -1871,11 +1871,11 @@ function moduleClone( test )
 
     test.description = 'instances';
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), exp );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'super', 'sub.out/sub.out', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), exp );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml', 'super.out/supermodule.out.will.yml', 'sub.out/sub.out.will.yml', 'sub.ex.will.yml', 'sub.im.will.yml' ];
     test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
@@ -1885,7 +1885,7 @@ function moduleClone( test )
 
     test.description = 'elements';
     test.identical( opener2.willfilesArray.length, 0 );
-    test.setsAreIdentical( _.mapKeys( opener2.willfileWithRoleMap ), [] );
+    test.identical( _.setFrom( _.mapKeys( opener2.willfileWithRoleMap ) ), _.setFrom( [] ) );
     test.is( opener.openedModule === null );
     test.is( opener2.openedModule === null );
     test.is( !module.finitedIs() );
@@ -1928,15 +1928,15 @@ function moduleClone( test )
     test.is( err === undefined );
 
     test.description = 'no garbage left';
-    test.setsAreIdentical( rel( _.select( will.modulesArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.moduleWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.select( will.openersArray, '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ), [] );
-    test.setsAreIdentical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), [] );
-    test.setsAreIdentical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), [] );
-    test.setsAreIdentical( _.mapKeys( will.moduleWithNameMap ), [] );
+    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
     return arg;
   });
@@ -1973,7 +1973,7 @@ function moduleClone( test )
 
     test.is( module1 !== module2 );
     test.is( module1[ mapName ] !== module2[ mapName ] );
-    test.setsAreIdentical( _.mapKeys( module1[ mapName ] ), _.mapKeys( module2[ mapName ] ) );
+    test.identical( _.setFrom( _.mapKeys( module1[ mapName ] ) ), _.setFrom( _.mapKeys( module2[ mapName ] ) ) );
     for( var k in module1[ mapName ] )
     {
       var resource1 = module1[ mapName ][ k ];
