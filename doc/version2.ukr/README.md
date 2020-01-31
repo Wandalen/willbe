@@ -6,381 +6,530 @@
 
 ## Концепції
 
-<details><summary><a href="./concept/WillFile.md">
-      Конфігураційний <code>вілфайл</code>
+<details>
+  <summary><a href="./concept/WillFile.md">
+    Конфігураційний <code>вілфайл</code>
   </a></summary>
-  Конфігураційний файл для опису та збірки модуля. Кожен формальний модуль має такий файл.
+    Конфігураційний файл для опису та збірки модуля. Кожен формальний модуль має такий файл.
 </details>
-<details><summary><a href="./concept/WillFileNamedAndSplit.md#Іменований-вілфайл">
-      Іменований <code>вілфайл</code>
+
+<details>
+  <summary><a href="./concept/WillFileNamedAndSplit.md#Іменований-вілфайл">
+    Іменований <code>вілфайл</code>
   </a></summary>
-  Вид <code>вілфайла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній директорії.
+    Вид <code>вілфайла</code>, що має не стандартне ім'я файлу. Дозволяє мати більше одного модуля із різними іменами файлів в одній директорії.
 </details>
-<details><summary><a href="./concept/WillFileNamedAndSplit.md#Спліт-вілфайл">
-      Спліт <code>вілфайл</code>
+
+<details>
+  <summary><a href="./concept/WillFileNamedAndSplit.md#Спліт-вілфайл">
+    Спліт <code>вілфайл</code>
   </a></summary>
-  Розділення <code>вілфайла</code> на два файла - для імпорту та експорту модуля. Дозволяє розробнику розділити дані для побудови модуля і дані для використання цього модуля іншими модулями.
+    Розділення <code>вілфайла</code> на два файла - для імпорту та експорту модуля. Дозволяє розробнику розділити дані для побудови модуля і дані для використання цього модуля іншими модулями.
 </details>
-<details><summary><a href="./concept/WillFileExported.md#експортований-вілфайл-out-вілфайл">
-      Експортований <code>вілфайл</code> (<code>out-вілфайл</code>)
+
+<details>
+  <summary><a href="./concept/WillFileExported.md#експортований-вілфайл-out-вілфайл">
+    Експортований <code>вілфайл</code> (<code>out-вілфайл</code>)
   </a></summary>
-  <code>Out-вілфайл</code> - різновид <code>вілфайла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-вілфайл</code>.
+    <code>Out-вілфайл</code> - різновид <code>вілфайла</code> згенерованого утилітою при експортуванні модуля. Інші модулі можуть використати даний модуль імортувавши його <code>out-вілфайл</code>.
 </details>
-<details><summary><a href="./concept/Structure.md#Ресурси">
-      Ресурси
+
+<details>
+  <summary><a href="./concept/Structure.md#Ресурси">
+    Ресурси
   </a></summary>
-  Структурна і функціональна одиниця <code>вілфайла</code>. Ресурси одного типу зібрані в одній секції.
+    Структурна і функціональна одиниця <code>вілфайла</code>. Ресурси одного типу зібрані в одній секції.
 </details>
-<details><summary><a href="./concept/Structure.md#Тип-ресурсу">
-      Тип ресурсу
+
+<details>
+  <summary><a href="./concept/Structure.md#Тип-ресурсу">
+    Тип ресурсу
   </a></summary>
-  Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утилітою по-різному.
+    Функціональність пов'язана із групою ресурсів, обмежена призначенням. Приклад того які бувать типи ресурів: шлях, підмодуль, крок, збірка. Кожен тип ресурів має власне призначення і обробляється утилітою по-різному.
 </details>
-<details><summary><a href="./concept/Inheritance.md">
-      Наслідування
+
+<details>
+  <summary><a href="./concept/Inheritance.md">
+    Наслідування
   </a></summary>
-  Принцип опису модуля, згідно якого ресурс <code>вілфайла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
+    Принцип опису модуля, згідно якого ресурс <code>вілфайла</code> здатний використовувати (наслідувати) значення полів інших ресурсів того ж типу.
 </details>
-<details><summary><a href="./concept/ResourcePath.md#Ресурс-шлях">
-      Ресурс шлях
+
+<details>
+  <summary><a href="./concept/ResourcePath.md#Ресурс-шлях">
+    Ресурс шлях
   </a></summary>
-  Ресурс для визначення файлової структури модуля, що містить шляхи до файлів. Шляхи розміщаються в секції <code>path</code>.
+    Ресурс для визначення файлової структури модуля, що містить шляхи до файлів. Шляхи розміщаються в секції <code>path</code>.
 </details>
-<details><summary><a href="./concept/ResourceReflector.md#Ресурс-рефлектор">
-      Ресурс рефлектор
+
+<details>
+  <summary><a href="./concept/ResourceReflector.md#Ресурс-рефлектор">
+    Ресурс рефлектор
   </a></summary>
-  Ресурс секції <code>reflector</code>, спосіб опису множини файлів для виконання якоїсь операції над ними.
+    Ресурс секції <code>reflector</code>, спосіб опису множини файлів для виконання якоїсь операції над ними.
 </details>
-<details><summary><a href="./concept/ReflectorFileFilter.md">
-      Файлові фільтри
+
+<details>
+  <summary><a href="./concept/ReflectorFileFilter.md">
+    Файлові фільтри
   </a></summary>
-  Спосіб опису умов відбору необхідних для виконання деякої операції файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
+    Спосіб опису умов відбору необхідних для виконання деякої операції файлів. Рефлектор містить два фільтра файлів: <code>src</code> та <code>dst</code>.
 </details>
-<details><summary><a href="./concept/ResourceReflector.md#Мапа-шляхів">
-      Мапа шляхів
+
+<details>
+  <summary><a href="./concept/ResourceReflector.md#Мапа-шляхів">
+    Мапа шляхів
   </a></summary>
-  Поле рефлектора та спосіб опису множини файлів, котрий дозволяє включити в неї безліч файлів і виключити із неї не потрібні файли за допомогою умов виключення та ґлобів. рефлектора.
+    Поле рефлектора та спосіб опису множини файлів, котрий дозволяє включити в неї безліч файлів і виключити із неї не потрібні файли за допомогою умов виключення та ґлобів. рефлектора.
 </details>
-<details><summary><a href="./concept/ResourceStep.md#Ресурс крок">
-      Ресурс крок
+
+<details>
+  <summary><a href="./concept/ResourceStep.md#Ресурс крок">
+    Ресурс крок
   </a></summary>
-  Інструкції по побудові модуля. Описують операції та бажаний результат. Збірки складаються із кроків.
+    Інструкції по побудові модуля. Описують операції та бажаний результат. Збірки складаються із кроків.
 </details>
-<details><summary><a href="./concept/ResourceBuild.md#Ресурс-збірка">
-      Ресурс збірка
+
+<details>
+  <summary><a href="./concept/ResourceBuild.md#Ресурс-збірка">
+    Ресурс збірка
   </a></summary>
-  Послідовність і умови виконання процедур побудови модуля. При виконанні команди <code>will .build</code> розробник має вказати збірку, яку хоче зібрати, однозначно вибравши одну по імені або по умовам вибірки.
+    Послідовність і умови виконання процедур побудови модуля. При виконанні команди <code>will .build</code> розробник має вказати збірку, яку хоче зібрати, однозначно вибравши одну по імені або по умовам вибірки.
 </details>
-<details><summary><a href="./concept/ResourceBuild.md#Ресурс-експорт">
-      Ресурс експорт
+
+<details>
+  <summary><a href="./concept/ResourceBuild.md#Ресурс-експорт">
+    Ресурс експорт
   </a></summary>
-  Особливий вид збірки необхідний для використання даного модуля іншими розробниками та модулями. Результатом експортування модуля є згенеровані файли, зокерма <code>out-will-file</code> та архів.
+    Особливий вид збірки необхідний для використання даного модуля іншими розробниками та модулями. Результатом експортування модуля є згенеровані файли, зокерма <code>out-will-file</code> та архів.
 </details>
-<details><summary><a href="./concept/Structure.md#Секція-вілфайла">
-      Секція <code>вілфайла</code>
+
+<details>
+  <summary><a href="./concept/Structure.md#Секція-вілфайла">
+    Секція <code>вілфайла</code>
   </a></summary>
-  Вища структурна одиниця <code>вілфайла</code>, яка складається з ресурсів одного типу або полів, що описують даний модуль.
+    Вища структурна одиниця <code>вілфайла</code>, яка складається з ресурсів одного типу або полів, що описують даний модуль.
 </details>
-<details><summary><a href="./concept/SectionAbout.md">
-      Секція <code>about</code>
+
+<details>
+  <summary><a href="./concept/SectionAbout.md">
+    Секція <code>about</code>
   </a></summary>
-  Секція містить описову інформація про модуль.
+    Секція містить описову інформація про модуль.
 </details>
-<details><summary><a href="./concept/ResourcePath.md#Секція-path">
-      Секція <code>path</code>
+
+<details>
+  <summary><a href="./concept/ResourcePath.md#Секція-path">
+    Секція <code>path</code>
   </a></summary>
-  Секція містить перелік шляхів модуля для швидкого орієнтування в його файловій структурі.
+    Секція містить перелік шляхів модуля для швидкого орієнтування в його файловій структурі.
 </details>
-<details><summary><a href="./concept/SectionSubmodule.md">
-      Секція <code>submodule</code>
+
+<details>
+  <summary><a href="./concept/SectionSubmodule.md">
+    Секція <code>submodule</code>
   </a></summary>
-  Секція містить інформацію про підмодулі.
+    Секція містить інформацію про підмодулі.
 </details>
-<details><summary><a href="./concept/ResourceReflector.md#Секція-reflector">
-      Секція <code>reflector</code>
+
+<details>
+  <summary><a href="./concept/ResourceReflector.md#Секція-reflector">
+    Секція <code>reflector</code>
   </a></summary>
-  Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
+    Секція містить рефлектори - ресурси для виконання операцій над групами файлів.
 </details>
-<details><summary><a href="./concept/ResourceStep.md#Секція-step">
-      Секція <code>step</code>
+
+<details>
+  <summary><a href="./concept/ResourceStep.md#Секція-step">
+    Секція <code>step</code>
   </a></summary>
-  Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля.
+    Секція містить кроки, які можуть бути застосовані збіркою для побудови модуля.
 </details>
-<details><summary><a href="./concept/ResourceBuild.md#Секція-build">
-      Секція <code>build</code>
+
+<details>
+  <summary><a href="./concept/ResourceBuild.md#Секція-build">
+    Секція <code>build</code>
   </a></summary>
-  Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля.
+    Ресурси секції (збірки) описують послідовність і умови виконання процедур створення модуля.
 </details>
-<details><summary><a href="./concept/SectionExported.md">
-      Секція <code>exported</code>
+
+<details>
+  <summary><a href="./concept/SectionExported.md">
+    Секція <code>exported</code>
   </a></summary>
-  Секція <code>out-вілфайла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
+    Секція <code>out-вілфайла</code>, програмно генерується при експортуванні модуля, містить перелік всіх експортованих файлів та використовується при імпортуванні даного модуля іншим.
 </details>
-<details><summary><a href="./concept/Module.md#Модуль">
-      Модуль
+
+<details>
+  <summary><a href="./concept/Module.md#Модуль">
+    Модуль
   </a></summary>
-  Модулем називається сукупність файлів, які описані в <code>вілфайлi</code>.
+    Модулем називається сукупність файлів, які описані в <code>вілфайлi</code>.
 </details>
-<details><summary><a href="./concept/Module.md#Підмодуль">
-      Підмодуль
+
+<details>
+  <summary><a href="./concept/Module.md#Підмодуль">
+    Підмодуль
   </a></summary>
-  Окремий модуль з власним конфігураційним <code>вілфайлом</code>, який використовується іншим модулем (супермодулем).
+    Окремий модуль з власним конфігураційним <code>вілфайлом</code>, який використовується іншим модулем (супермодулем).
 </details>
-<details><summary><a href="./concept/Module.md#Супермодуль">
-      Супермодуль
+
+<details>
+  <summary><a href="./concept/Module.md#Супермодуль">
+    Супермодуль
   </a></summary>
-  Модуль, який включає в себе інші модулі (підмодулі).
+    Модуль, який включає в себе інші модулі (підмодулі).
 </details>
-<details><summary><a href="./concept/SubmodulesLocalAndRemote.md#Локальний-підмодуль">
-      Локальний підмодуль
+
+<details>
+  <summary><a href="./concept/SubmodulesLocalAndRemote.md#Локальний-підмодуль">
+    Локальний підмодуль
   </a></summary>
-  Підмодуль, який розташовується на машині користувача.
+    Підмодуль, який розташовується на машині користувача.
 </details>
-<details><summary><a href="./concept/SubmodulesLocalAndRemote.md#Віддалений-підмодуль">
-      Віддалений підмодуль
+
+<details>
+  <summary><a href="./concept/SubmodulesLocalAndRemote.md#Віддалений-підмодуль">
+    Віддалений підмодуль
   </a></summary>
-  Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину.
+    Модуль, який знаходиться на віддаленому сервері, для використання завантажується на локальну машину.
 </details>
-<details><summary><a href="./concept/SubmoduleInformal.md">
-      Неформальний підмодуль
+
+<details>
+  <summary><a href="./concept/SubmoduleInformal.md">
+    Неформальний підмодуль
   </a></summary>
-  Група файлів, що не розповсюджується із <code>вілфайлом</code>. Для такого підмодуля можливо створити <code>вілфайл</code> та експортувати його самостійно.
+    Група файлів, що не розповсюджується із <code>вілфайлом</code>. Для такого підмодуля можливо створити <code>вілфайл</code> та експортувати його самостійно.
 </details>
-<details><summary><a href="./concept/ModuleCurrent.md">
-      Поточний модуль
+
+<details>
+  <summary><a href="./concept/ModuleCurrent.md">
+    Поточний модуль
   </a></summary>
-  Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної директорії або із пари файлів <code>.im.will.yml</code> та <code>.ex.will.yml</code>.
+    Модуль відносно якого виконуються операції. За замовчуванням цей модуль завантажується із файла <code>.will.yml</code> поточної директорії або із пари файлів <code>.im.will.yml</code> та <code>.ex.will.yml</code>.
 </details>
-<details><summary><a href="./concept/Command.md#Команда">
-      Команда
+
+<details>
+  <summary><a href="./concept/Command.md#Команда">
+    Команда
   </a></summary>
-  Рядок що містить фразу для позначення наміру розробника і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейс командного рядка розробником.
+    Рядок що містить фразу для позначення наміру розробника і дії, котрі будуть виконані утилітою по її введенні. Вводиться в інтерфейс командного рядка розробником.
 </details>
-<details><summary><a href="./concept/Command.md#Фраза">
-      Фраза
+
+<details>
+  <summary><a href="./concept/Command.md#Фраза">
+    Фраза
   </a></summary>
-  Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта.
+    Слово або декілька слів, відокремлених крапкою, позначає команду, яку має виконати утиліта.
 </details>
-<details><summary><a href="./concept/Selector.md#Селектор">
-      Селектор
+
+<details>
+  <summary><a href="./concept/Selector.md#Селектор">
+    Селектор
   </a></summary>
-  Рядок-посилання на ресурс або декілька ресурсів модуля.
+    Рядок-посилання на ресурс або декілька ресурсів модуля.
 </details>
-<details><summary><a href="./concept/Selector.md#Селектор-з-ґлобом">
-      Селектор з ґлобом
+
+<details>
+  <summary><a href="./concept/Selector.md#Селектор-з-ґлобом">
+    Селектор з ґлобом
   </a></summary>
-  Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби.
+    Селектор, який для вибору ресурсу використовує пошукові шаблони - ґлоби.
 </details>
-<details><summary><a href="./concept/Selector.md#Ґлоб-з-ассертом">
-      Ґлоб з ассертом  
+
+<details>
+  <summary><a href="./concept/Selector.md#Ґлоб-з-ассертом">
+    Ґлоб з ассертом  
   </a></summary>
-  Спеціальна синтаксична конструкція, що додається до ґлоба для обмеження кількості ресурсів, що мають бути знайдені селектором із цим ґлобом.
+    Спеціальна синтаксична конструкція, що додається до ґлоба для обмеження кількості ресурсів, що мають бути знайдені селектором із цим ґлобом.
 </details>
-<details><summary><a href="./concept/Criterions.md">
-      Критеріони
+
+<details>
+  <summary><a href="./concept/Criterions.md">
+    Критеріони
   </a></summary>
-  Елемент порівняння для відбору ресурсів.
+    Елемент порівняння для відбору ресурсів.
 </details>
 
 ## Туторіали
 
-<details><summary><a href="./tutorial/Abstract.md">
-      Загальна інформація
+<details>
+  <summary><a href="./tutorial/Abstract.md">
+    Загальна інформація
   </a></summary>
-  Загальна інформація. Чим утиліта <code>willbe</code> є і чим вона не являється.
+    Загальна інформація. Чим утиліта <code>willbe</code> є і чим вона не являється.
 </details>
-<details><summary><a href="./tutorial/Installation.md">
-      Встановлення
+
+<details>
+  <summary><a href="./tutorial/Installation.md">
+    Встановлення
   </a></summary>
-  Процедура встановлення утиліти <code>willbe</code>.
+    Процедура встановлення утиліти <code>willbe</code>.
 </details>
-<details><summary><a href="./tutorial/CLI.md">
-      Інтерфейс командного рядка
+
+<details>
+  <summary><a href="./tutorial/CLI.md">
+    Інтерфейс командного рядка
   </a></summary>
-  Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code>. Застосування команд <code>.help</code> та <code>.list</code>.
+    Як користуватися інтерфейсом командного рядка утиліти <code>willbe</code>. Застосування команд <code>.help</code> та <code>.list</code>.
 </details>
-<details><summary><a href="./tutorial/HelloWorld.md">
-      Модуль "Hello, World!"
+
+<details>
+  <summary><a href="./tutorial/HelloWorld.md">
+    Модуль "Hello, World!"
   </a></summary>
-  Створення модуля "Hello, World!". Завантаження віддаленого підмодуля.
+    Створення модуля "Hello, World!". Завантаження віддаленого підмодуля.
 </details>
-<details><summary><a href="./tutorial/CommandSubmodulesFixate.md">
-      Команда <code>.submodules.fixate</code>
+
+<details>
+  <summary><a href="./tutorial/CommandSubmodulesFixate.md">
+    Команда <code>.submodules.fixate</code>
   </a></summary>
-  Команда встановлення версії підмодулів в <code>вілфайлі</code> його автоматизовним перезаписом.
+    Команда встановлення версії підмодулів в <code>вілфайлі</code> його автоматизовним перезаписом.
 </details>
-<details><summary><a href="./tutorial/CommandSubmodulesUpgrade.md">
-      Команда <code>.submodules.upgrade</code>
+
+<details>
+  <summary><a href="./tutorial/CommandSubmodulesUpgrade.md">
+    Команда <code>.submodules.upgrade</code>
   </a></summary>
-  Команда апгрейду версій підмодулів автоматизовним перезаписом <code>вілфайла</code>.
+    Команда апгрейду версій підмодулів автоматизовним перезаписом <code>вілфайла</code>.
 </details>
-<details><summary><a href="./tutorial/CommandSubmodulesUpdate.md">
-      Команда <code>.submodules.update</code>
+
+<details>
+  <summary><a href="./tutorial/CommandSubmodulesUpdate.md">
+    Команда <code>.submodules.update</code>
   </a></summary>
-  Команда оновлення віддалених підмодулів.
+    Команда оновлення віддалених підмодулів.
 </details>
-<details><summary><a href="./tutorial/CommandSubmodulesClean.md">
-      Команда <code>.submodules.clean</code>
+
+<details>
+  <summary><a href="./tutorial/CommandSubmodulesClean.md">
+    Команда <code>.submodules.clean</code>
   </a></summary>
-  Команда очищення модуля від тимчасових та завантажених підмодулів.
+    Команда очищення модуля від тимчасових та завантажених підмодулів.
 </details>
-<details><summary><a href="./tutorial/Build.md">
-      Побудова модуля командою <code>.build</code>
+
+<details>
+  <summary><a href="./tutorial/Build.md">
+    Побудова модуля командою <code>.build</code>
   </a></summary>
-  Побудова модуля через запуск однієї із його збірок.
+    Побудова модуля через запуск однієї із його збірок.
 </details>
-<details><summary><a href="./tutorial/StepSubmodules.md">
-      Вбудовані кроки для підмодулів
+
+<details>
+  <summary><a href="./tutorial/StepSubmodules.md">
+    Вбудовані кроки для підмодулів
   </a></summary>
-  Як користуватись вбудованими кроками для роботи з віддаленими підмодулями.
+    Як користуватись вбудованими кроками для роботи з віддаленими підмодулями.
 </details>
-<details><summary><a href="./tutorial/Criterions.md">
-      Критеріони
+
+<details>
+  <summary><a href="./tutorial/Criterions.md">
+    Критеріони
   </a></summary>
-  Як використовувати критеріони для відбору ресурсів.
+    Як використовувати критеріони для відбору ресурсів.
 </details>
-<details><summary><a href="./tutorial/CriterionDefault.md">
-      Збірка модуля за замовчуванням
+
+<details>
+  <summary><a href="./tutorial/CriterionDefault.md">
+    Збірка модуля за замовчуванням
   </a></summary>
-  Як побудувати збірку, що запускається без явного указання аргумента команди <code>.build</code>.
+    Як побудувати збірку, що запускається без явного указання аргумента команди <code>.build</code>.
 </details>
-<details><summary><a href="./tutorial/WillFileMinimization.md">
-      Мінімізація <code>вілфайла</code>
+
+<details>
+  <summary><a href="./tutorial/WillFileMinimization.md">
+    Мінімізація <code>вілфайла</code>
   </a></summary>
-  Як мінімізувати <code>вілфайл</code> за допомогою розгортання критеріонами із множинними значеннями.
+    Як мінімізувати <code>вілфайл</code> за допомогою розгортання критеріонами із множинними значеннями.
 </details>
-<details><summary><a href="./tutorial/ModuleExport.md">
-      Експортування модуля
+
+<details>
+  <summary><a href="./tutorial/ModuleExport.md">
+    Експортування модуля
   </a></summary>
-  Експортування модуля для перевикористання його іншим розробником або модулем.
+    Експортування модуля для перевикористання його іншим розробником або модулем.
 </details>
-<details><summary><a href="./tutorial/SubmodulesLocal.md">
-      Імпорт локального підмодуля
+
+<details>
+  <summary><a href="./tutorial/SubmodulesLocal.md">
+    Імпорт локального підмодуля
   </a></summary>
-  Використання локального підмодуля із іншого модуля (супермодуля).
+    Використання локального підмодуля із іншого модуля (супермодуля).
 </details>
-<details><summary><a href="./tutorial/SelectorsWithGlob.md">
-      Селектори із ґлобами
+
+<details>
+  <summary><a href="./tutorial/SelectorsWithGlob.md">
+    Селектори із ґлобами
   </a></summary>
-  Як користуватись селекторами з ґлобами.
+    Як користуватись селекторами з ґлобами.
 </details>
-<details><summary><a href="./tutorial/AssertionUsing.md">
-      Як користуватись ассертами
+
+<details>
+  <summary><a href="./tutorial/AssertionUsing.md">
+    Як користуватись ассертами
   </a></summary>
-  Як ассерти допомогають зменшити кількість помилок при розробці.
+    Як ассерти допомогають зменшити кількість помилок при розробці.
 </details>
-<details><summary><a href="./tutorial/WillFileSplit.md">
-      Розділені <code>вілфайли</code>
+
+<details>
+  <summary><a href="./tutorial/WillFileSplit.md">
+    Розділені <code>вілфайли</code>
   </a></summary>
-  Як створити та використовувати модуль із розділеними <code>вілфайлами</code>.
+    Як створити та використовувати модуль із розділеними <code>вілфайлами</code>.
 </details>
-<details><summary><a href="./tutorial/WillFileNamed.md">
-      Команда <code>.with</code> та іменований <code>вілфайл</code>
+
+<details>
+  <summary><a href="./tutorial/WillFileNamed.md">
+    Команда <code>.with</code> та іменований <code>вілфайл</code>
   </a></summary>
-  Як використовувати команду <code>.with</code>? Що таке іменований <code>вілфайл</code>?
+    Як використовувати команду <code>.with</code>? Що таке іменований <code>вілфайл</code>?
 </details>
-<details><summary><a href="./tutorial/CommandEach.md">
-      Як користуватись командою <code>.each</code>
+
+<details>
+  <summary><a href="./tutorial/CommandEach.md">
+    Як користуватись командою <code>.each</code>
   </a></summary>
-  Команда <code>.each</code> для виконання одної дії для багатьох модулів чи підмодулів.
+    Команда <code>.each</code> для виконання одної дії для багатьох модулів чи підмодулів.
 </details>
-<details><summary><a href="./tutorial/CommandShell.md">
-      Команда <code>.shell</code>
+
+<details>
+  <summary><a href="./tutorial/CommandShell.md">
+    Команда <code>.shell</code>
   </a></summary>
-  Команда для виклику зовнішніх програм утилітою <code>willbe</code> для вибраних модулів чи підмодулів.
+    Команда для виклику зовнішніх програм утилітою <code>willbe</code> для вибраних модулів чи підмодулів.
 </details>
-<details><summary><a href="./tutorial/StepJS.md">
-      Використання <code>JavaScript</code> файлів утилітою <code>willbe</code>
+
+<details>
+  <summary><a href="./tutorial/StepJS.md">
+    Використання <code>JavaScript</code> файлів утилітою <code>willbe</code>
   </a></summary>
-  Як використовувати <code>JavaScript</code> файли в утиліті <code>willbe</code> для виконання складних сценаріїв побудови.
+    Як використовувати <code>JavaScript</code> файли в утиліті <code>willbe</code> для виконання складних сценаріїв побудови.
 </details>
-<details><summary><a href="./tutorial/CommandSet.md">
+
+<details>
+  <summary><a href="./tutorial/CommandSet.md">
     Команда <code>.set</code>
 </a></summary>
-  Як користуватись командою <code>.set</code> для зміни станів утиліти, наприклад, для зміни рівня вербальності.
+    Як користуватись командою <code>.set</code> для зміни станів утиліти, наприклад, для зміни рівня вербальності.
 </details>
-<details><summary><a href="./tutorial/SelectorComposite.md">
-      Складні селектори
+
+<details>
+  <summary><a href="./tutorial/SelectorComposite.md">
+    Складні селектори
   </a></summary>
-  Використання складних селекторів для відбору ресурсів із підмодулів.
+    Використання складних селекторів для відбору ресурсів із підмодулів.
 </details>
-<details><summary><a href="./tutorial/CommandsListSearch.md">
-      Перелік ресурсів застосовуючи фільтри та ґлоби
+
+<details>
+  <summary><a href="./tutorial/CommandsListSearch.md">
+    Перелік ресурсів застосовуючи фільтри та ґлоби
   </a></summary>
-  Як побудувати запит до утиліти та отримати перелік ресурсів застосовуючи фільтри та ґлоби.
+    Як побудувати запит до утиліти та отримати перелік ресурсів застосовуючи фільтри та ґлоби.
 </details>
-<details><summary><a href="./tutorial/ReflectorUsing.md">
-      Копіювання файлів за допомогою рефлектора
+
+<details>
+  <summary><a href="./tutorial/ReflectorUsing.md">
+    Копіювання файлів за допомогою рефлектора
   </a></summary>
-  Копіювання файлів за допомогою рефлектора, поле <code>recursive</code> рефлектора.
+    Копіювання файлів за допомогою рефлектора, поле <code>recursive</code> рефлектора.
 </details>
-<details><summary><a href="./tutorial/ReflectorMapPaths.md">
-      Мапа шляхів. Використання ґлобів для фільтрування файлів
+
+<details>
+  <summary><a href="./tutorial/ReflectorMapPaths.md">
+    Мапа шляхів. Використання ґлобів для фільтрування файлів
   </a></summary>
-  Як формуються шляхи рефлекторів та як управляти доступом до файлів і директорій в рефлекторі.
+    Як формуються шляхи рефлекторів та як управляти доступом до файлів і директорій в рефлекторі.
 </details>
-<details><summary><a href="./tutorial/ReflectorFilters.md">
-      Фільтри рефлектора
+
+<details>
+  <summary><a href="./tutorial/ReflectorFilters.md">
+    Фільтри рефлектора
   </a></summary>
-  Використання фільтрів рефлектора для відбору файлів для копіювання.
+    Використання фільтрів рефлектора для відбору файлів для копіювання.
 </details>
-<details><summary><a href="./tutorial/ReflectorMasks.md">
-      Маски рефлектора
+
+<details>
+  <summary><a href="./tutorial/ReflectorMasks.md">
+    Маски рефлектора
   </a></summary>
-  Використання масок рефлектора для відбору файлів для копіювання.
+    Використання масок рефлектора для відбору файлів для копіювання.
 </details>
-<details><summary><a href="./tutorial/ReflectorTimeFilters.md">
-      Часові фільтри рефлектора
+
+<details>
+  <summary><a href="./tutorial/ReflectorTimeFilters.md">
+    Часові фільтри рефлектора
   </a></summary>
-  Як користуватись фільтрами відбору файлів по часу.
+    Як користуватись фільтрами відбору файлів по часу.
 </details>
-<details><summary><a href="./tutorial/ReflectorsPredefined.md">
-      Вбудовані рефлектори
+
+<details>
+  <summary><a href="./tutorial/ReflectorsPredefined.md">
+    Вбудовані рефлектори
   </a></summary>
-  Використання вбудованих рефлекторів для розбиття на версію для відлагодження і для релізу. Побудова мультизбірок.
+    Використання вбудованих рефлекторів для розбиття на версію для відлагодження і для релізу. Побудова мультизбірок.
 </details>
-<details><summary><a href="./tutorial/ResourceInheritance.md">
-      Наслідування ресурсів
+
+<details>
+  <summary><a href="./tutorial/ResourceInheritance.md">
+    Наслідування ресурсів
   </a></summary>
-  Як користуватись наслідуванням ресурсів для перевикористання даних.
+    Як користуватись наслідуванням ресурсів для перевикористання даних.
 </details>
-<details><summary><a href="./tutorial/StepView.md">
-      Вбудований крок <code>file.view</code>
+
+<details>
+  <summary><a href="./tutorial/StepView.md">
+    Вбудований крок <code>file.view</code>
   </a></summary>
-  Використання вбудованого кроку <code>file.view</code> для перегляду файлів.
+    Використання вбудованого кроку <code>file.view</code> для перегляду файлів.
 </details>
-<details><summary><a href="./tutorial/StepTranspile.md">
-      Транспіляція
+
+<details>
+  <summary><a href="./tutorial/StepTranspile.md">
+    Транспіляція
   </a></summary>
-  Використання вбудованого кроку <code>files.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
+    Використання вбудованого кроку <code>files.transpile</code> для транспіляції <code>JavaScript</code> файлів або їх конкатенації.
 </details>
-<details><summary><a href="./tutorial/WillbeAsMake.md">
-      Компіляція С програми
+
+<details>
+  <summary><a href="./tutorial/WillbeAsMake.md">
+    Компіляція С програми
   </a></summary>
-  Використання утиліти <code>willbe</code> для компіляції С програми.
+    Використання утиліти <code>willbe</code> для компіляції С програми.
 </details>
-<details><summary><a href="./tutorial/SubmoduleInformal.md">
-      Неформальні підмодулі
+
+<details>
+  <summary><a href="./tutorial/SubmoduleInformal.md">
+    Неформальні підмодулі
   </a></summary>
-  Імпортування неформальних підмодулів.
+    Імпортування неформальних підмодулів.
 </details>
-<details><summary><a href="./tutorial/SubmoduleInformal.md#Крок-submodulesreload">
-      Крок <code>.submodules.reload</code>
+
+<details>
+  <summary><a href="./tutorial/SubmoduleInformal.md#Крок-submodulesreload">
+    Крок <code>.submodules.reload</code>
   </a></summary>
-  Виконання динамічного оновлення статусу неформальних підмодулів.
+    Виконання динамічного оновлення статусу неформальних підмодулів.
 </details>
-<details><summary><a href="./tutorial/CommandClean.md">
-      Команда очистки <code>.clean</code>
+
+<details>
+  <summary><a href="./tutorial/CommandClean.md">
+    Команда очистки <code>.clean</code>
   </a></summary>
-  Використання команди <code>.clean</code> для очистки згенерованих та тимчасових файлів.
+    Використання команди <code>.clean</code> для очистки згенерованих та тимчасових файлів.
 </details>
-<details><summary><a href="./tutorial/FunctionPlatform.md">
-      Побудова платформозалежних модулів
+
+<details>
+  <summary><a href="./tutorial/FunctionPlatform.md">
+    Побудова платформозалежних модулів
   </a></summary>
-  Використання функції визначення операційної системи для побудови платформозалежних модулів.
+    Використання функції визначення операційної системи для побудови платформозалежних модулів.
 </details>
-<details><summary><a href="./tutorial/FunctionStringJoin.md">
-      Обробка масивів рядкових значень в ресурсах <code>вілфайла</code>
+
+<details>
+  <summary><a href="./tutorial/FunctionStringJoin.md">
+    Обробка масивів рядкових значень в ресурсах <code>вілфайла</code>
   </a></summary>
-  Як використовувати функцію об'єднання масивів рядкових значень в <code>вілфайлі</code>.
+    Як використовувати функцію об'єднання масивів рядкових значень в <code>вілфайлі</code>.
 </details>
+
