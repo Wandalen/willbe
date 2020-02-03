@@ -449,7 +449,7 @@ function longOnce_( dstLong, srcLong, onEvaluate )
 //   return dstLong;
 // }
 
-// /* qqq : not optimal, no redundant copy */
+// /* qqq : not optimal, no redundant copy | Dmytro : commented out, implemented in new routine */
 // /*
 // function longOnce( dstLong, onEvaluate )
 // {

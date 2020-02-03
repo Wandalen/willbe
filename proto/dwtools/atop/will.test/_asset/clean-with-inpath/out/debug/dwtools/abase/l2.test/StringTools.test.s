@@ -2139,8 +2139,7 @@ function strUnicodeEscape( test )
 // stripper
 //--
 
-/* qqq : uncover it please
-Dmytro : test routines strStrip() and strStripLeft(), strStripRight uncovered */
+/* qqq : uncover it please | Dmytro : test routines strStrip() and strStripLeft(), strStripRight uncovered */
 
 function strStrip( test )
 {
@@ -5391,48 +5390,48 @@ function strConcat( test )
 // liner
 //--
 
-function strIndentation( test )
+function strLinesIndentation( test )
 {
   /* string */
 
   test.case = 'empty line';
-  var got = _.strIndentation( '', '_' );
+  var got = _.strLinesIndentation( '', '_' );
   var expected = '';
   test.identical( got, expected );
 
   test.case = 'no new lines';
-  var got = _.strIndentation( 'abc', '_' );
+  var got = _.strLinesIndentation( 'abc', '_' );
   var expected = 'abc';
   test.identical( got, expected );
 
   test.case = 'multiline';
-  var got = _.strIndentation( 'a\nb', '_' );
+  var got = _.strLinesIndentation( 'a\nb', '_' );
   var expected = 'a\n_b';
   test.identical( got, expected );
 
   test.case = 'tab before first and each new line';
-  var got = _.strIndentation( '\na\nb\nc', '_' );
+  var got = _.strLinesIndentation( '\na\nb\nc', '_' );
   var expected = '\n_a\n_b\n_c';
   test.identical( got, expected );
 
   test.case = 'tabs count = new lines count + 1 for first line';
-  var got = _.strIndentation( '\n\n\n', '_' );
+  var got = _.strLinesIndentation( '\n\n\n', '_' );
   var expected = '\n_\n_\n_';
   test.identical( got, expected );
 
-  var got = _.strIndentation( 'a\nb\nc','\t' );
+  var got = _.strLinesIndentation( 'a\nb\nc','\t' );
   var expected = 'a\n\tb\n\tc';
   test.identical( got, expected );
 
   /* array */
 
   test.case = 'array';
-  var got = _.strIndentation( [ 'a', 'b', 'c' ], '_' );
+  var got = _.strLinesIndentation( [ 'a', 'b', 'c' ], '_' );
   var expected = 'a\n_b\n_c';
   test.identical( got, expected );
 
   var arr = [ 'a\nb', 'b\nc', 'c\nd' ];
-  var got = _.strIndentation( arr.join( '\n' ), '_' );
+  var got = _.strLinesIndentation( arr.join( '\n' ), '_' );
   var expected = 'a\n_b\n_b\n_c\n_c\n_d';
   test.identical( got, expected );
 
@@ -5442,16 +5441,16 @@ function strIndentation( test )
   return;
 
   test.case = 'without arguments';
-  test.shouldThrowErrorSync( () => _.strIndentation() );
+  test.shouldThrowErrorSync( () => _.strLinesIndentation() );
 
   test.case = 'extra arguments';
-  test.shouldThrowErrorSync( () => _.strIndentation( 'one','two','three' ) );
+  test.shouldThrowErrorSync( () => _.strLinesIndentation( 'one','two','three' ) );
 
   test.case = 'first argument type is wrong';
-  test.shouldThrowErrorSync( () => _.strIndentation( 12, 'two' ) );
+  test.shouldThrowErrorSync( () => _.strLinesIndentation( 12, 'two' ) );
 
   test.case = 'second argument type is wrong';
-  test.shouldThrowErrorSync( () => _.strIndentation( 'one', 12 ) );
+  test.shouldThrowErrorSync( () => _.strLinesIndentation( 'one', 12 ) );
 }
 
 //
@@ -9003,7 +9002,7 @@ var Self =
 
     // liner
 
-    strIndentation,
+    strLinesIndentation,
     strLinesBut,
     strLinesOnly,
     strLinesStrip,

@@ -294,12 +294,11 @@ function longIs( test )
 
 //
 
-/* qqq : implement  */
+/* qqq : implement | Dmytro : implemented */
 
-/* qqq : longMake and longMakeUndefined are ugly, please rewrite them from scratch */
+/* qqq : longMake and longMakeUndefined are ugly, please rewrite them from scratch | Dmytro : implemented */
 
-/* qqq : tell me how to improve test routine longMake */
-/* Dmytro : test routines longMake and longMakeUndefined improved by using test subroutine and automatically created test groups */
+/* qqq : tell me how to improve test routine longMake | Dmytro : test routines longMake and longMakeUndefined improved by using test subroutine and automatically created test groups */
 
 function longMake( test )
 {
@@ -624,8 +623,7 @@ function _longMakeOfLength( test )
 //
 
 /*
-qqq : implement
-Dmytro : implemented
+qqq : implement | Dmytro : implemented
 */
 
 function longMakeUndefined( test )
@@ -794,8 +792,7 @@ function longMakeUndefined( test )
 //
 
 /*
-qqq : implement Zeroed routine and test routine
-Dmytro : routine longMakeZeroed and its test routine is implemented
+qqq : implement Zeroed routine and test routine | Dmytro : routine longMakeZeroed and its test routine is implemented
 */
 
 function longMakeZeroed( test )
@@ -967,8 +964,7 @@ function longMakeZeroed( test )
 }
 
 /*
-qqq : improve, add exception checking ceases
-Dmytro : improved, added exception checking casesS
+qqq : improve, add exception checking ceases | Dmytro : improved, added exception checking casesS
 */
 
 function longSlice( test )
@@ -1244,8 +1240,7 @@ longSlice.timeOut = 20000;
 //
 
 /*
-qqq : please ask how to improve test routine longBut.
-Dmytro : improved by using given clarifications
+qqq : please ask how to improve test routine longBut | Dmytro : improved by using given clarifications
 */
 
 function longBut( test )
@@ -11021,6 +11016,51 @@ function arraySlice( test )
   test.shouldThrowErrorSync( () => _.arraySlice( 'wrong' ) );
   test.shouldThrowErrorSync( () => _.arraySlice( _.argumentsArrayMake( [ 1, 2 ] ) ) );
   test.shouldThrowErrorSync( () => _.arraySlice( new F32x( 2 ) ) );
+}
+
+//
+
+function arrayEmpty( test ) 
+{
+  test.case = 'empty array';
+  var src = [];
+  var got = _.arrayEmpty( src );
+  test.identical( got, [] );
+  test.is( got === src );
+
+  test.case = 'filled array';
+  var src = [ 1, undefined, null, false, [], {}, new Set(), '', 'str' ];
+  var got = _.arrayEmpty( src );
+  test.identical( got, [] );
+  test.is( got === src );
+
+  test.case = 'empty unroll';
+  var src = _.unrollMake( [] );
+  var got = _.arrayEmpty( src );
+  test.identical( got, [] );
+  test.is( got === src );
+
+  test.case = 'filled unroll';
+  var src = _.unrollMake( [ 1, undefined, null, false, [], {}, new Set(), '', 'str' ] );
+  var got = _.arrayEmpty( src );
+  test.identical( got, [] );
+  test.is( got === src );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.arrayEmpty() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.arrayEmpty( [], [] ) );
+
+  test.case = 'wrong type of dstArray';
+  test.shouldThrowErrorSync( () => _.arrayEmpty( _.argumentsArrayMake( [] ) ) );
+  test.shouldThrowErrorSync( () => _.arrayEmpty( new U8x( 10 ) ) );
+  test.shouldThrowErrorSync( () => _.arrayEmpty( 'str' ) );
 }
 
 //
@@ -41761,6 +41801,8 @@ var Self =
     // array transformer
 
     arraySlice,
+    arrayEmpty,
+
     arrayBut,
     arrayButInplace,
     arrayBut_,

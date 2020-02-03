@@ -47,7 +47,7 @@ function form3()
   if( build.formed === 3 )
   return build;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( build.formed === 2 );
 
   /* begin */
@@ -360,7 +360,7 @@ function archiveFilePathFor()
   // let inFileDirPath = hd.path.dir( inExportFile.filePath );
   let inFileDirPath = inExportFile.dirPath;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( _.strDefined( build.name ), 'Build should have name' );
   _.assert( _.strDefined( module.about.name ), 'Module should have name, declare about.name' );
   _.assert( inExportFile instanceof will.Willfile );

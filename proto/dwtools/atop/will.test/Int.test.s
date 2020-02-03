@@ -1766,10 +1766,10 @@ function moduleClone( test )
     test.is( opener.openedModule instanceof _.Will.Module );
     test.is( opener2.openedModule instanceof _.Will.Module );
     test.is( opener.openedModule !== opener2.openedModule );
-    test.is( !module.finitedIs() );
-    test.is( !opener.finitedIs() );
-    test.is( !module2.finitedIs() );
-    test.is( !opener2.finitedIs() );
+    test.is( !module.isFinited() );
+    test.is( !opener.isFinited() );
+    test.is( !module2.isFinited() );
+    test.is( !opener2.isFinited() );
     test.is( module.isUsed() );
     test.is( opener.isUsed() );
     test.is( module2.isUsed() );
@@ -1831,10 +1831,10 @@ function moduleClone( test )
     test.is( opener.openedModule instanceof _.Will.Module );
     test.is( opener2.openedModule === null );
     test.is( opener.openedModule !== opener2.openedModule );
-    test.is( !module.finitedIs() );
-    test.is( !opener.finitedIs() );
-    test.is( module2.finitedIs() );
-    test.is( !opener2.finitedIs() );
+    test.is( !module.isFinited() );
+    test.is( !opener.isFinited() );
+    test.is( module2.isFinited() );
+    test.is( !opener2.isFinited() );
     test.is( module.isUsed() );
     test.is( opener.isUsed() );
     test.is( !module2.isUsed() );
@@ -1888,10 +1888,10 @@ function moduleClone( test )
     test.setsAreIdentical( _.mapKeys( opener2.willfileWithRoleMap ), [] );
     test.is( opener.openedModule === null );
     test.is( opener2.openedModule === null );
-    test.is( !module.finitedIs() );
-    test.is( !opener.finitedIs() );
-    test.is( module2.finitedIs() );
-    test.is( opener2.finitedIs() );
+    test.is( !module.isFinited() );
+    test.is( !opener.isFinited() );
+    test.is( module2.isFinited() );
+    test.is( opener2.isFinited() );
     test.is( module.isUsed() );
     test.is( !opener.isUsed() );
     test.is( !module2.isUsed() );
@@ -2066,8 +2066,8 @@ function exportSeveralExports( test )
     test.description = 'finit';
     module.finit();
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
 
     test.description = 'should be only 1 error, because 1 attempt to open corrupted outwillfile, 2 times in the list, because for different openers';
     test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 2 );
@@ -2128,8 +2128,8 @@ function exportSeveralExports( test )
     test.description = 'finit';
     module.finit();
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
     test.identical( will.openersErrorsArray.length, 0 );
 
     test.description = 'no garbage left';
@@ -2185,8 +2185,8 @@ function exportSeveralExports( test )
 
     test.description = 'finit';
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
     test.identical( will.openersErrorsArray.length, 0 );
 
     test.description = 'no garbage left';
@@ -2242,8 +2242,8 @@ function exportSeveralExports( test )
 
     test.description = 'finit';
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
     test.identical( will.openersErrorsArray.length, 0 );
 
     test.description = 'no garbage left';
@@ -3350,8 +3350,8 @@ function exportOutdated( test )
 
     test.description = 'finit';
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
 
     test.description = '1st attempt to open sub.out on opening, 2nd attempt to open sub.out on exporing';
     test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 2 );
@@ -3411,8 +3411,8 @@ function exportOutdated( test )
 
     test.description = 'finit';
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
 
     test.description = 'first attempt on opening, second attempt on exporting';
     test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 2 );
@@ -4306,8 +4306,8 @@ function exportCourrputedOutfileUnknownSection( test )
 
     test.description = 'finit';
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
 
     test.description = '1st attempt to open sub.out on opening, 2nd attempt to open sub.out on exporing';
     test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 2 );
@@ -4416,8 +4416,8 @@ function exportCourruptedOutfileSyntax( test )
 
     test.description = 'finit';
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
 
     test.description = '1st attempt to open sub.out on opening, 2nd attempt to open sub.out on exporing';
     test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 2 );
@@ -4560,8 +4560,8 @@ function exportCourruptedSubmodulesDisabled( test )
 
     test.description = 'finit';
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
 
     test.description = '1st attempt to open sub.out on opening, 2nd attempt to open sub.out on exporing';
     test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 2 );
@@ -4638,8 +4638,8 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
 
     test.description = 'finit';
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
 
     test.description = 'should be only 2 errors, 1 attempt to open corrupted sub.out and 2 attempts to open super.out which does not exist';
     test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 3 );
@@ -4726,8 +4726,8 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
 
     test.description = 'finit';
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
 
     test.description = '2 attempts to open super.out, 2 attempts to open sub.out, but the same instance';
     test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 4 );
@@ -4819,8 +4819,8 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 
     test.description = 'finit';
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
 
     test.description = '2 attempts to open corrupted sub.out and 2 attempts to open super.out which does not exist';
     test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 4 );
@@ -4907,8 +4907,8 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 
     test.description = 'finit';
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
 
     test.description = 'unique errors';
     test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 5 );
@@ -9543,8 +9543,8 @@ function resourcePathRemote( test )
     let module = opener.openedModule;
     test.description = 'finit';
     opener.finit();
-    test.is( module.finitedIs() );
-    test.is( opener.finitedIs() );
+    test.is( module.isFinited() );
+    test.is( opener.isFinited() );
 
     return null;
   })

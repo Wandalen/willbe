@@ -1566,7 +1566,7 @@ function error_functor( name, onMake )
       }
       else
       {
-        _.assert( arguments.length === 0 );
+        _.assert( arguments.length === 0, 'Expects no arguments' );
         return this;
       }
     }

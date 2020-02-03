@@ -318,7 +318,7 @@ function cloneDerivative()
 
   let resource2 = resource.clone();
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   resource2.module = resource.module;
   resource2.willf = resource.willf;
@@ -341,7 +341,7 @@ function unform()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( resource.formed );
 
   if( resource.original && !resource.phantom )
@@ -404,7 +404,7 @@ function form1()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !resource.formed );
   _.assert( !!will );
   _.assert( !!module );
@@ -643,7 +643,7 @@ function form3()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( resource.formed === 2 );
 
   /* begin */

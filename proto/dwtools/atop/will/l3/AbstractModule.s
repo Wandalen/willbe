@@ -60,7 +60,7 @@ function isUsedManually()
   let module = this;
   let will = module.will;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   // xxx yyy
   // if( !module.isAuto )
@@ -314,7 +314,7 @@ function _remotePathAdopt()
   let module = this;
   let will = module.will;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( _.strDefined( module.remotePath ) );
   _.assert( _.strDefined( module.downloadPath ) );
   _.assert( _.strBegins( module.localPath, module.downloadPath ) );
@@ -403,7 +403,7 @@ function remotePathEachAdoptCurrent()
   let module = this;
   let will = module.will;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   module._remotePathAdopt();
 
@@ -594,7 +594,7 @@ function _willfilesRelease( willfilesArray )
   {
     let willf = willfilesArray[ i ];
     module.willfileUnregister( willf );
-    _.assert( !willf.finitedIs() );
+    _.assert( !willf.isFinited() );
     if( !willf.isUsed() )
     willf.finit();
   }
@@ -611,7 +611,7 @@ function repoIsRemote( remotePath )
   let path = fileProvider.path;
 
   _.assert( !!module.willfilesPath || !!module.dirPath );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   if( remotePath === undefined )
   remotePath = module.remotePath ? path.common( module.remotePath ) : module.commonPath;

@@ -107,7 +107,7 @@ function form1()
   if( resource.formed && resource === module[ resource.MapName ][ resource.name ] )
   return resource;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( resource.formed === 0 );
 
   if( !resource.original )
@@ -147,7 +147,7 @@ function form2()
   if( resource.formed >= 2 )
   return resource;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( resource.formed === 1 );
 
   if( _.arrayIs( resource.path ) )
@@ -171,7 +171,7 @@ function form3()
   if( resource.formed >= 3 )
   return resource;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( resource.formed === 2 );
 
   if( resource.writable && !resource.criterion.predefined )

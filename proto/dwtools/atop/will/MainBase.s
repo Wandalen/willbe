@@ -196,7 +196,7 @@ function unform()
 {
   let will = this;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!will.formed );
 
   /* begin */
@@ -223,7 +223,7 @@ function form()
   if( !will.withPath )
   will.withPath = will.fileProvider.path.join( will.fileProvider.path.current(), './' );
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !will.formed );
   _.assert( _.path.is( will.environmentPath ) );
 
@@ -238,7 +238,7 @@ function formAssociates()
   let will = this;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !will.formed );
   _.assert( !!logger );
   _.assert( logger.verbosity === will.verbosity );
@@ -572,7 +572,7 @@ function _verbosityChange()
 {
   let will = this;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !will.fileProvider || will.fileProvider.logger !== will.logger );
 
   if( will.fileProvider )
@@ -827,7 +827,7 @@ function versionGet()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let packageJsonPath = path.join( __dirname, '../../../../package.json' );
   let packageJson =  fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
@@ -1008,7 +1008,7 @@ function instanceDefaultsReset()
   let will = this;
   let FieldsOfTightGroups = will.FieldsOfTightGroups;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   for( let d in will.OpeningDefaults )
   {
@@ -4144,7 +4144,7 @@ function openersErrorsRemoveOf( opener )
 function openersErrorsRemoveAll()
 {
   let will = this;
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   will.openersErrorsArray.splice( 0, will.openersErrorsArray.length );
   _.mapDelete( will.openersErrorsMap );
 }
@@ -4160,7 +4160,7 @@ function readingReset()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   will.willfilesReadBeginTime = null;
   will.willfilesReadEndTime = null;
@@ -4177,7 +4177,7 @@ function readingBegin()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   if( will.willfilesReadBeginTime )
   return will;
@@ -4196,7 +4196,7 @@ function readingEnd()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!will.mainOpener );
 
   will._willfilesReadEnd( will.mainOpener ? will.mainOpener.openedModule : null );
@@ -4213,7 +4213,7 @@ function _willfilesReadBegin()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( will.mainOpener === null || will.mainOpener instanceof will.ModuleOpener );
 
   will.willfilesReadBeginTime = will.willfilesReadBeginTime || _.time.now();
@@ -4251,7 +4251,7 @@ function _willfilesReadLog()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !will.willfilesReadEndTime );
 
   will.willfilesReadEndTime = will.willfilesReadEndTime || _.time.now();
@@ -4309,8 +4309,6 @@ function WillfilesFind( o )
   _.assert( _.boolIs( o.recursive ) );
   _.assert( o.recursive === false );
   _.assert( !path.isGlobal( path.fromGlob( o.commonPath ) ), 'Expects local path' );
-
-  debugger;
 
   if( !o.tracing )
   return findFor( o.commonPath );
@@ -4422,7 +4420,7 @@ function WillfilesFind( o )
       return { [ it.src ] : it.dst };
     });
 
-    debugger;
+    // debugger;
     let files = fileProvider.filesFind( o2 );
 
     let files2 = [];
@@ -4760,7 +4758,7 @@ function hooksReload()
   let logger = will.logger;
   let hooks = will._.hooks = will._.hooks || Object.create( null );
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( path.is( will.environmentPath ) );
 
   let hooksFiles = fileProvider.filesFind

@@ -106,7 +106,7 @@ function form1()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( relation.module instanceof will.Module );
 
   /* */
@@ -161,7 +161,7 @@ function form3()
     }
   }
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( relation.formed === 2 );
   _.assert( _.strIs( relation.path ), 'not tested' );
   _.sure( _.strIs( relation.path ) || _.arrayIs( relation.path ), 'Path resource should have "path" field' );

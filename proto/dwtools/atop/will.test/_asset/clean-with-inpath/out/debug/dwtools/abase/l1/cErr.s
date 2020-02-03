@@ -557,6 +557,11 @@ function diagnosticStructureGenerate_body( o )
       struct[ 'bigInt.big' ] = BigInt( 1 ) << BigInt( 100 );
     }
 
+    if( o.regexpComplexity )
+    {
+      struct[ 'regexp.defined' ] = new RegExp( _.strRandom( o.regexpSize ) );
+    }
+
     if( o.regexpComplexity >= 2 )
     {
       struct[ 'regexp.simple1'] = /ab|cd/,
@@ -747,7 +752,7 @@ diagnosticStructureGenerate_body.defaults =
   // breadth : 4,
   stringSize : null,
   bufferSize : null,
-  regexpSize : null, /* qqq : not used! */
+  regexpSize : null, /* qqq : not used! | Dmytro : used in struct[ 'regexp.defined' ] similar to 'string.defined' */
   defaultSize : 50,
 
   arrayLength : null,

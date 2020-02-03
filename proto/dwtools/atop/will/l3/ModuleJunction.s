@@ -28,7 +28,7 @@ function finit()
 {
   let junction = this;
   let will = junction.will;
-  _.assert( !junction.finitedIs() );
+  _.assert( !junction.isFinited() );
 
   _.each( junction.modules, ( module ) => junction._moduleRemove( module ) );
   _.each( junction.openers, ( opener ) => junction._moduleRemove( opener ) );
@@ -103,9 +103,9 @@ function reform()
 
   junction.formed = -1;
 
-  _.assert( !junction.finitedIs() );
+  _.assert( !junction.isFinited() );
 
-  if( junction.finitedIs() )
+  if( junction.isFinited() )
   return;
 
   associationsAdd();
@@ -116,7 +116,7 @@ function reform()
   // debugger;
 
   junction.mergeMaybe( 1 );
-  if( junction.finitedIs() )
+  if( junction.isFinited() )
   {
     return false;
   }
@@ -246,15 +246,15 @@ function reform()
   function finitedRemove()
   {
 
-    if( junction.module && junction.module.finitedIs() )
+    if( junction.module && junction.module.isFinited() )
     debugger;
-    if( junction.module && junction.module.finitedIs() )
+    if( junction.module && junction.module.isFinited() )
     junction._remove( junction.module );
-    if( junction.opener && junction.opener.finitedIs() )
+    if( junction.opener && junction.opener.isFinited() )
     debugger;
-    if( junction.opener && junction.opener.finitedIs() )
+    if( junction.opener && junction.opener.isFinited() )
     junction._remove( junction.opener );
-    if( junction.relation && junction.relation.finitedIs() )
+    if( junction.relation && junction.relation.isFinited() )
     junction._remove( junction.relation );
 
   }
@@ -265,11 +265,11 @@ function reform()
   {
 
     if( junction.module )
-    _.assert( !junction.module.finitedIs() );
+    _.assert( !junction.module.isFinited() );
     if( junction.opener )
-    _.assert( !junction.opener.finitedIs() );
+    _.assert( !junction.opener.isFinited() );
     if( junction.relation )
-    _.assert( !junction.relation.finitedIs() );
+    _.assert( !junction.relation.isFinited() );
 
     _.assert
     (
@@ -370,7 +370,7 @@ function reform()
 
   function peerAssign( junction, junction2 )
   {
-    _.assert( !junction.finitedIs() );
+    _.assert( !junction.isFinited() );
 
     if( junction2.peer && junction2.peer !== junction )
     {
@@ -406,8 +406,8 @@ function reform()
     {
       _.assert( junction.peer === junction2 || junction.peer === null );
       _.assert( junction2.peer === junction || junction2.peer === null );
-      _.assert( !junction.finitedIs() );
-      _.assert( !junction2.finitedIs() );
+      _.assert( !junction.isFinited() );
+      _.assert( !junction2.isFinited() );
       junction.peer = junction2;
       junction2.peer = junction;
       return;
@@ -461,8 +461,8 @@ function mergeIn( junction2 )
   let will = junction.will;
   let objects = [];
 
-  _.assert( !junction.finitedIs() );
-  _.assert( !junction2.finitedIs() );
+  _.assert( !junction.isFinited() );
+  _.assert( !junction2.isFinited() );
   _.assert( arguments.length === 1 );
 
   /* xxx : use junction.objects */
@@ -476,7 +476,7 @@ function mergeIn( junction2 )
   if( junction.peer )
   {
     let peer = junction.peer;
-    _.assert( !peer.finitedIs() );
+    _.assert( !peer.isFinited() );
     junction.peer = null;
     peer.peer = null;
 
@@ -488,14 +488,14 @@ function mergeIn( junction2 )
     else
     {
       peer.mergeIn( junction2.peer );
-      _.assert( peer.finitedIs() );
+      _.assert( peer.isFinited() );
       _.assert( peer.peer === null );
     }
 
   }
 
-  _.assert( !junction.finitedIs() );
-  _.assert( !junction2.finitedIs() );
+  _.assert( !junction.isFinited() );
+  _.assert( !junction2.isFinited() );
 
   junction.reform();
 
@@ -505,16 +505,16 @@ function mergeIn( junction2 )
   }
   else
   {
-    if( !junction.finitedIs() )
+    if( !junction.isFinited() )
     junction.finit();
   }
 
-  _.assert( junction.finitedIs() );
-  _.assert( !junction2.finitedIs() );
+  _.assert( junction.isFinited() );
+  _.assert( !junction2.isFinited() );
 
   junction2.reform(); /* yyy */
 
-  if( junction.finitedIs() )
+  if( junction.isFinited() )
   return true;
   return false;
 }
@@ -566,11 +566,11 @@ function mergeMaybe( usingPath )
   }
 
   _.assert( !reset );
-  _.assert( !junction2 || !junction2.finitedIs() );
+  _.assert( !junction2 || !junction2.isFinited() );
 
-  if( !junction.finitedIs() )
+  if( !junction.isFinited() )
   junction.assertIntegrityVerify();
-  if( junction2 && !junction2.finitedIs() )
+  if( junction2 && !junction2.isFinited() )
   junction2.assertIntegrityVerify();
 
   return junction2 || false;
@@ -745,7 +745,7 @@ function From( o )
   if( junction.formed !== -1 )
   junction = junction.reform();
 
-  _.assert( !junction || !junction.finitedIs() );
+  _.assert( !junction || !junction.isFinited() );
 
   return junction;
 
@@ -1376,7 +1376,7 @@ function ownSomething()
 {
   let junction = this;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   if( junction.modules.length )
   return true;
@@ -1394,7 +1394,7 @@ function isUsed()
 {
   let junction = this;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   if( junction.ownSomething() )
   return true;

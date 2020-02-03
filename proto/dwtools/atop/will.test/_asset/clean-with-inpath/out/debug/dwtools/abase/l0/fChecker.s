@@ -456,7 +456,7 @@ let Inspector = null;
 
 function processIsDebugged()
 {
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   
   if( typeof process === 'undefined' )
   return false;

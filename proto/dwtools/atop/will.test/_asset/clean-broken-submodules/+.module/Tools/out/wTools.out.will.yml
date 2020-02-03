@@ -737,7 +737,7 @@ function vectorAdapterIs( test )
 
 //
 
-function constructorIsVector( test ) 
+function constructorIsVector( test )
 {
   test.case = 'without argument';
   var got = _.constructorIsVector();
@@ -837,7 +837,7 @@ function constructorIsVector( test )
 
 //
 
-function spaceIs( test ) 
+function spaceIs( test )
 {
   test.case = 'without argument';
   var got = _.spaceIs();
@@ -972,7 +972,7 @@ function spaceIs( test )
 
 //
 
-function constructorIsSpace( test ) 
+function constructorIsSpace( test )
 {
   test.case = 'without argument';
   var got = _.constructorIsSpace();
@@ -1107,7 +1107,7 @@ function constructorIsSpace( test )
 
 //
 
-function consequenceIs( test ) 
+function consequenceIs( test )
 {
   test.case = 'without argument';
   var got = _.consequenceIs();
@@ -1230,7 +1230,7 @@ function consequenceIs( test )
   var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
   var got = _.consequenceIs( src );
   test.identical( got, false );
-  
+
   if( _.Consequence )
   {
     test.case = 'instance of Consequence';
@@ -1365,7 +1365,7 @@ function consequenceLike( test )
   var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
   var got = _.consequenceLike( src );
   test.identical( got, true );
-  
+
   if( _.Consequence )
   {
     test.case = 'instance of Consequence';
@@ -1377,7 +1377,7 @@ function consequenceLike( test )
 
 //
 
-function promiseIs( test ) 
+function promiseIs( test )
 {
   test.case = 'without argument';
   var got = _.promiseIs();
@@ -1500,7 +1500,7 @@ function promiseIs( test )
   var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
   var got = _.promiseIs( src );
   test.identical( got, true );
-  
+
   if( _.Consequence )
   {
     test.case = 'instance of Consequence';
@@ -1518,7 +1518,7 @@ function promiseIs( test )
 
 //
 
-function promiseLike( test ) 
+function promiseLike( test )
 {
   test.case = 'without argument';
   var got = _.promiseLike();
@@ -1659,7 +1659,7 @@ function promiseLike( test )
 
 //
 
-function typeOf( test ) 
+function typeOf( test )
 {
   test.open( 'one argument' );
 
@@ -1929,7 +1929,7 @@ function typeOf( test )
 
 //
 
-function isPrototypeOf( test ) 
+function isPrototypeOf( test )
 {
   test.open( 'subPrototype === superPrototype' );
 
@@ -2165,7 +2165,7 @@ function isPrototypeOf( test )
   /* - */
 
   test.open( 'two objects' );
-  
+
   test.case = 'subPrototype - Object.prototype, superPrototype - simple map';
   var src = {};
   var got = _.isPrototypeOf( Object.prototype, src );
@@ -2291,7 +2291,7 @@ function isPrototypeOf( test )
 
 //
 
-function prototypeHas( test ) 
+function prototypeHas( test )
 {
   test.open( 'subPrototype === superPrototype' );
 
@@ -2527,7 +2527,7 @@ function prototypeHas( test )
   /* - */
 
   test.open( 'two objects' );
-  
+
   test.case = 'superPrototype - Object.prototype, subPrototype - simple map';
   var src = {};
   var got = _.prototypeHas( Object.prototype, src );
@@ -2667,7 +2667,7 @@ function prototypeHas( test )
 
 //
 
-function prototypeIs( test ) 
+function prototypeIs( test ) /* qqq : merge test wProto/prototypeIs in this one */
 {
   test.case = 'check null';
   var got = _.prototypeIs( null );
@@ -2823,7 +2823,7 @@ function prototypeIs( test )
 
 //
 
-function prototypeIsStandard( test ) 
+function prototypeIsStandard( test )  /* qqq : merge test wProto/prototypeIsStandard in this one */
 {
   test.case = 'check null';
   var got = _.prototypeIsStandard( null );
@@ -2980,7 +2980,7 @@ function prototypeIsStandard( test )
 
 //
 
-function constructorIs( test ) 
+function constructorIs( test )
 {
   test.case = 'check null';
   var got = _.constructorIs( null );
@@ -3133,7 +3133,7 @@ function constructorIs( test )
 
 //
 
-function instanceIs( test ) 
+function instanceIs( test )
 {
   test.case = 'check null';
   var got = _.instanceIs( null );
@@ -3286,7 +3286,7 @@ function instanceIs( test )
 
 //
 
-function instanceLike( test ) 
+function instanceLike( test )
 {
   test.case = 'check null';
   var got = _.instanceLike( null );
@@ -3439,7 +3439,7 @@ function instanceLike( test )
 
 //
 
-function consoleIs( test ) 
+function consoleIs( test )
 {
   test.case = 'check null';
   var got = _.consoleIs( null );
@@ -3580,7 +3580,7 @@ function consoleIs( test )
   test.identical( got, false );
 
   if( _.Logger )
-  {    
+  {
     test.case = 'instance of Logger';
     var src = new _.Logger();
     var got = _.consoleIs( src );
@@ -3595,7 +3595,7 @@ function consoleIs( test )
 
 //
 
-function loggerIs( test ) 
+function loggerIs( test )
 {
   test.case = 'check null';
   var got = _.loggerIs( null );
@@ -3736,7 +3736,7 @@ function loggerIs( test )
   test.identical( got, false );
 
   if( _.Logger )
-  {    
+  {
     test.case = 'instance of Logger';
     var src = new _.Logger();
     var got = _.loggerIs( src );
@@ -3746,7 +3746,7 @@ function loggerIs( test )
 
 //
 
-function processIs( test ) 
+function processIs( test )
 {
   test.case = 'check null';
   var got = _.processIs( null );
@@ -3887,7 +3887,7 @@ function processIs( test )
   test.identical( got, false );
 
   if( _.Logger )
-  {    
+  {
     test.case = 'instance of Logger';
     var src = new _.Logger();
     var got = _.processIs( src );
@@ -3902,7 +3902,7 @@ function processIs( test )
 
 //
 
-function procedureIs( test ) 
+function procedureIs( test )
 {
   test.case = 'check null';
   var got = _.procedureIs( null );
@@ -4043,7 +4043,7 @@ function procedureIs( test )
   test.identical( got, false );
 
   if( _.Logger )
-  {    
+  {
     test.case = 'instance of Logger';
     var src = new _.Logger();
     var got = _.procedureIs( src );
@@ -4068,7 +4068,7 @@ function procedureIs( test )
 
 //
 
-function definitionIs( test ) 
+function definitionIs( test )
 {
   test.case = 'check null';
   var got = _.definitionIs( null );
@@ -4209,7 +4209,7 @@ function definitionIs( test )
   test.identical( got, false );
 
   if( _.Logger )
-  {    
+  {
     test.case = 'instance of Logger';
     var src = new _.Logger();
     var got = _.definitionIs( src );
@@ -4220,7 +4220,7 @@ function definitionIs( test )
   var src = process;
   var got = _.definitionIs( src );
   test.identical( got, false );
-  
+
   _.include( 'wProto' )
   if( _.Definition )
   {

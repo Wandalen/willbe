@@ -2113,6 +2113,7 @@ function _DefineGenerate( original, kind )
   {
     [ original.name ] : function()
     {
+      // debugger;
       let definition = _.define[ kind ]({ ini : arguments, routine : original });
       _.assert( _.definitionIs( definition ) );
       return definition;
@@ -2126,6 +2127,7 @@ function _DefineGenerate( original, kind )
 
   routine.originalFunctor = original;
 
+  // debugger;
   _.assert( _.routineIs( _.define[ kind ] ) );
 
   return routine;

@@ -17,17 +17,21 @@ let Self = Object.create( Parent );
 // handler
 // --
 
-function _onSelector( selector )
+function _onSelectorReplicate( selector )
 {
   let it = this;
   let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
 
-  let result = Parent._onSelector.call( it, selector );
+  let result = Parent._onSelectorReplicate.call( it, selector );
 
   if( resolver._selectorIs( selector ) )
   return result;
+
+  debugger;
+  // return;
+  // xxx
 
   if( rop.prefixlessAction === 'default' && !it.composite )
   {
@@ -397,6 +401,7 @@ function _resourceMapSelect()
       throw _.ErrorLooking( 'No resource map', _.strQuote( it.parsedSelector.full ) );
     }
 
+    it.iterable = null;
     it.srcChanged();
   }
 
@@ -905,6 +910,7 @@ function _functionOsGetUp()
   it.src = os;
   it.dst = os;
   it.selector = undefined;
+  it.iterable = null;
   it.selectorChanged();
   it.srcChanged();
 }
@@ -932,7 +938,7 @@ function _functionThisUp()
   it.isFunction = it.selector;
   it.src = [ currentThis ];
   it.selector = 0;
-
+  it.iterable = null;
   it.selectorChanged();
   it.srcChanged();
 }
@@ -1417,7 +1423,7 @@ let Extend =
 
   // handler
 
-  _onSelector,
+  _onSelectorReplicate,
   _onSelectorDown,
   _onUpBegin,
   _onUpEnd,

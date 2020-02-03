@@ -39,7 +39,7 @@ function exec()
   will.formAssociates();
 
   _.assert( _.instanceIs( will ) );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let logger = will.logger;
   let fileProvider = will.fileProvider;
@@ -237,7 +237,7 @@ function _commandsMake()
   let appArgs = _.process.args();
 
   _.assert( _.instanceIs( will ) );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let commands =
   {
@@ -346,7 +346,7 @@ function _commandsEnd( command )
     will.currentOpenerChange( null );
 
     if( will.currentOpeners )
-    will.currentOpeners.forEach( ( opener ) => opener.finitedIs() ? null : opener.finit() );
+    will.currentOpeners.forEach( ( opener ) => opener.isFinited() ? null : opener.finit() );
     will.currentOpeners = null;
 
     if( will.beeping )
@@ -625,7 +625,7 @@ function _commandCleanLike( o )
     let ready2 = new _.Consequence().take( null );
     let it2 = _.mapExtend( null, o );
 
-    _.assert( arguments.length === 0 );
+    _.assert( arguments.length === 0, 'Expects no arguments' );
     _.assert( _.arrayIs( will.currentOpeners ) );
     it2.openers = will.currentOpeners;
     it2.roots = will.modulesOnlyRoots( it2.openers );

@@ -57,7 +57,7 @@ function finit()
   if( will.verosity >= 5 )
   logger.log( module.qualifiedName, 'finit.begin' );
 
-  _.assert( !module.finitedIs() );
+  _.assert( !module.isFinited() );
 
   try
   {
@@ -65,7 +65,7 @@ function finit()
     if( module.peerModule )
     {
       let peerModule = module.peerModule;
-      _.assert( !peerModule.finitedIs() );
+      _.assert( !peerModule.isFinited() );
       _.assert( peerModule.peerModule === module );
       peerModule.peerModule = null;
       module.peerModule = null;
@@ -320,7 +320,7 @@ function clone()
 {
   let module = this;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let result = module.cloneExtending({});
 
@@ -380,8 +380,8 @@ function outModuleMake( o )
     _.assert( moduleWas.peerModule === null );
     _.assert( module.peerModule === null );
     moduleWas.finit();
-    _.assert( moduleWas.finitedIs() );
-    _.assert( !module.finitedIs() );
+    _.assert( moduleWas.isFinited() );
+    _.assert( !module.isFinited() );
     moduleWas = null;
   }
 
@@ -568,7 +568,7 @@ function outModuleOpen( o )
       }
     }
 
-    if( err && !opener2.finitedIs() )
+    if( err && !opener2.isFinited() )
     {
       opener2.peerModule = null;
       if( opener2.openedModule )
@@ -588,7 +588,7 @@ function outModuleOpen( o )
         throw err2;
       }
 
-      _.assert( !module.finitedIs() );
+      _.assert( !module.isFinited() );
     }
 
     if( err )
@@ -611,14 +611,14 @@ function outModuleOpenOrMake( o )
   o = _.routineOptions( outModuleOpenOrMake, arguments );
   o.willfilesPath = o.willfilesPath || module.outfilePathGet();
 
-  _.assert( !module.finitedIs() );
+  _.assert( !module.isFinited() );
 
   return module.outModuleOpen()
   .then( ( outModule ) =>
   {
 
     _.assert( outModule === null || outModule.isOut );
-    _.assert( !module.finitedIs() );
+    _.assert( !module.isFinited() );
 
     if( !outModule )
     return module.outModuleMake( o );
@@ -640,12 +640,12 @@ function unform()
   let will = module.will;
   let junction = will.junctionOf( module );
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   if( module.peerModule )
   {
     let peerModule = module.peerModule;
-    _.assert( !peerModule.finitedIs() );
+    _.assert( !peerModule.isFinited() );
     _.assert( peerModule.peerModule === module );
     peerModule.peerModule = null;
     module.peerModule = null;
@@ -693,7 +693,7 @@ function preform()
   let will = module.will;
   let con = new _.Consequence().take( null );
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !module.preformReady.resourcesCount() )
   _.assert( !module.preformed );
   _.assert( !module.stager.stageStateEnded( 'preformed' ) );
@@ -715,7 +715,7 @@ function _preform()
 
   /* */
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!module.will );
   _.assert( module.repo instanceof _.Will.Repository );
 
@@ -750,7 +750,7 @@ function _preform()
 
     module.assertIsValidIntegrity();
 
-    _.assert( arguments.length === 0 );
+    _.assert( arguments.length === 0, 'Expects no arguments' );
     _.assert( !!module.will );
     _.assert( will.moduleWithIdMap[ module.id ] === module );
     _.assert( module.dirPath === null || _.strDefined( module.dirPath ) );
@@ -773,7 +773,7 @@ function predefinedForm()
   let will = module.will;
   let Predefined = will.Predefined;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( module.predefinedFormed === 0 );
   module.predefinedFormed = 1;
 
@@ -1611,8 +1611,8 @@ function reopen()
   let name = module.absoluteName;
   let commonPath = module.commonPath;
 
-  _.assert( !module.finitedIs() );
-  _.assert( arguments.length === 0 );
+  _.assert( !module.isFinited() );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let junction = will.junctionReform( module );
   if( junction.openers.length !== 1 )
@@ -1627,8 +1627,8 @@ function reopen()
     debugger;
     if( err )
     throw _.err( err, `\nFailed to reopen ${name} at ${commonPath}` );
-    _.assert( module.finitedIs() );
-    _.assert( !module2.finitedIs() );
+    _.assert( module.isFinited() );
+    _.assert( !module2.isFinited() );
     // module.finit();
     return module2;
   });
@@ -1646,8 +1646,8 @@ function close()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( !module.finitedIs() );
-  _.assert( arguments.length === 0 );
+  _.assert( !module.isFinited() );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   // /* update openers first, maybe */
   //
@@ -1718,7 +1718,7 @@ function willfilesOpen()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   module.stager.stageStatePausing( 'opened', 0 );
   module.stager.tick();
@@ -1737,7 +1737,7 @@ function _willfilesOpen()
   let logger = will.logger;
   let con = new _.Consequence().take( null );
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( _.boolLike( module.isOut ), 'Expects defined {- module.isOut -}' );
   _.sure
   (
@@ -1987,7 +1987,7 @@ function _attachedWillfilesForm()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!module );
   _.assert( !!will );
   _.assert( !!fileProvider );
@@ -2123,7 +2123,7 @@ function exportAuto()
   debugger;
   _.assert( 'not implemented' );
 
-  // _.assert( arguments.length === 0 );
+  // _.assert( arguments.length === 0, 'Expects no arguments' );
   // _.assert( !!module.submoduleAssociation );
   // _.assert( !!module.submoduleAssociation.autoExporting );
   // _.assert( !module.pickedWillfileData );
@@ -2264,12 +2264,12 @@ function exportedMake( o )
 
   o = _.routineOptions( exportedMake, arguments );
   _.assert( o.build instanceof _.Will.Build );
-  _.assert( !module.finitedIs() );
+  _.assert( !module.isFinited() );
 
   if( !module.isOut )
   {
     _.assert( _.mapKeys( module.exportedMap ).length === 0 );
-    _.assert( !module.finitedIs() );
+    _.assert( !module.isFinited() );
 
     if( module.peerModule && !module.peerModule.isValid() )
     {
@@ -2282,7 +2282,7 @@ function exportedMake( o )
       _.assert( peerModule.peerModule === null );
     }
 
-    _.assert( !module.finitedIs() );
+    _.assert( !module.isFinited() );
 
     if( !module.peerModule )
     {
@@ -2675,7 +2675,7 @@ function submodulesAreDownloaded( o )
   let result = Object.create( null );
 
   o = _.routineOptions( submodulesAreDownloaded, arguments );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
@@ -2714,7 +2714,7 @@ function submodulesAllAreDownloaded( o )
   let result = Object.create( null );
 
   o = _.routineOptions( submodulesAllAreDownloaded, arguments );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
@@ -2743,7 +2743,7 @@ function submodulesAreValid( o )
 
   o = _.routineOptions( submodulesAreValid, arguments );
   // _.assert( module === module.rootModule );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
@@ -2785,7 +2785,7 @@ function submodulesAllAreValid( o )
 
   o = _.routineOptions( submodulesAllAreValid, arguments );
   // _.assert( module === module.rootModule );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let o2 = _.mapExtend( null, o );
   o2.outputFormat = '*/relation';
@@ -2810,7 +2810,7 @@ function submodulesClean()
   let logger = will.logger;
 
   _.assert( module.preformed > 0  );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let result = module.clean
   ({
@@ -3816,7 +3816,7 @@ function submodulesForm()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   module.stager.stageStatePausing( 'subModulesFormed', 0 );
   module.stager.tick();
@@ -3834,7 +3834,7 @@ function _subModulesForm()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!module );
   _.assert( !!will );
   _.assert( !!fileProvider );
@@ -3999,7 +3999,7 @@ function _peerModulesForm()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!will.formed );
   _.assert( !!module.preformed );
 
@@ -4198,7 +4198,7 @@ function resourcesForm()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   module.stager.stageStatePausing( 'resourcesFormed', 0 );
   module.stager.tick();
@@ -4247,7 +4247,7 @@ function _resourcesFormAct()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!module );
   _.assert( !!will );
   _.assert( !!fileProvider );
@@ -5004,7 +5004,7 @@ function outfilePathGet()
 {
   let module = this;
   let will = module.will;
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   return _.Will.OutfilePathFor( module.outPath, module.about.name );
 }
 
@@ -6267,7 +6267,7 @@ function willfilesResolve()
 {
   let module = this;
   let will = module.will;
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let result = module.willfilesArray.slice();
   for( let m in module.submoduleMap )
@@ -6291,7 +6291,7 @@ function optionsForOpenerExport()
 {
   let module = this;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let fields =
   {
@@ -7107,7 +7107,7 @@ function assertIsValidIntegrity()
   {
     if( !( opener instanceof _.Will.ModuleOpener ) )
     return;
-    _.assert( !opener.finitedIs() );
+    _.assert( !opener.isFinited() );
     _.assert( opener.openedModule === module );
     _.assert( opener.peerModule === module.peerModule );
     _.assert( _.entityIdentical( opener.__.willfilesPath, module.willfilesPath ) );
@@ -7123,7 +7123,7 @@ function assertIsValidIntegrity()
   _.each( module.superRelations, ( relation ) =>
   {
     _.assert( !!relation.opener );
-    _.assert( !relation.finitedIs() );
+    _.assert( !relation.isFinited() );
     _.assert
     (
         _.longHas( module.userArray, relation.opener )

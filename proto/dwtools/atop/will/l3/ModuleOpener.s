@@ -29,7 +29,7 @@ function finit()
   let opener = this;
   let will = opener.will;
 
-  _.assert( !opener.finitedIs() );
+  _.assert( !opener.isFinited() );
 
   opener.unform();
 
@@ -155,7 +155,7 @@ function clone()
 {
   let opener = this;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let result = opener.cloneExtending({});
 
@@ -230,7 +230,7 @@ function preform()
 
   /* */
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!opener.will );
   _.assert( _.strsAreAll( opener.willfilesPath ) || _.strIs( opener.dirPath ), 'Expects willfilesPath or dirPath' );
   _.assert( opener.formed === 0 );
@@ -249,7 +249,7 @@ function preform()
 
   /* */
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!opener.will );
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
   _.assert( opener.dirPath === null || _.strDefined( opener.dirPath ) );
@@ -443,7 +443,7 @@ function _willfilesFind()
   let logger = will.logger;
   let result = [];
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   try
   {
@@ -486,8 +486,8 @@ function close()
   let logger = will.logger;
   let module = opener.openedModule;
 
-  _.assert( !opener.finitedIs() );
-  _.assert( arguments.length === 0 );
+  _.assert( !opener.isFinited() );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( opener.formed >= 0 );
 
   if( module )
@@ -807,9 +807,9 @@ function reopen()
   let willfilesPath = _.make( opener.willfilesPath );
   let willf = opener.willfilesArray[ 0 ];
 
-  _.assert( !opener.finitedIs() );
+  _.assert( !opener.isFinited() );
   opener.close();
-  _.assert( !opener.finitedIs() );
+  _.assert( !opener.isFinited() );
   opener.willfilesPath = willfilesPath;
   _.assert( opener.error === null );
   _.assert( opener.searching !== 'exact' || _.entityIdentical( opener.willfilesPath, willfilesPath ) );
@@ -850,12 +850,12 @@ function moduleAdopt( module )
   let opener = this;
   let will = opener.will;
 
-  _.assert( !module.finitedIs() );
+  _.assert( !module.isFinited() );
   _.assert( opener.openedModule === null );
   _.assert( arguments.length === 1 );
   _.assert( module instanceof _.Will.Module );
-  _.assert( !opener.finitedIs() );
-  _.assert( !module.finitedIs() );
+  _.assert( !opener.isFinited() );
+  _.assert( !module.isFinited() );
 
   if( opener && !opener.isValid() )
   {
@@ -1761,7 +1761,7 @@ function _repoDownload( o )
   {
     let ready = new _.Consequence().take( null );
     let junction = will.junctionFrom( opener );
-    _.assert( !junction.finitedIs() );
+    _.assert( !junction.isFinited() );
 
     junction.reform();
 

@@ -6953,7 +6953,7 @@ function mapOnlyTwoArguments_( test )
   var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
   var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
   var got = _.mapOnly_( srcMap, screenMap );
-  var expected = { a : 'abc', c : 33 };
+  var expected = { a : 'abc', c : 33, d : 'name' };
   test.identical( got, expected );
   test.is( got !== srcMap );
   test.identical( srcMap, [ { a : 'abc' }, { c : 33 }, { d : 'name' } ] );
@@ -7025,118 +7025,110 @@ function mapOnlyDstMapNull_( test )
   test.case = 'srcMap - empty map, screenMap - empty map';
   var srcMap = {};
   var screenMap = {};
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
-  test.is( got === srcMap );
+  test.is( got !== srcMap );
   test.identical( srcMap, {} );
   test.identical( screenMap, {} );
 
   test.case = 'srcMap - empty map, screenMap - empty array';
   var srcMap = {};
   var screenMap = [];
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
-  test.is( got === srcMap );
+  test.is( got !== srcMap );
   test.identical( srcMap, {} );
   test.identical( screenMap, [] );
 
   test.case = 'srcMap - empty map, screenMap - map';
   var srcMap = {};
   var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
-  test.is( got === srcMap );
+  test.is( got !== srcMap );
   test.identical( srcMap, {} );
   test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
 
   test.case = 'srcMap - empty map, screenMap - array';
   var srcMap = {};
   var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
-  test.is( got === srcMap );
+  test.is( got !== srcMap );
   test.identical( srcMap, {} );
   test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
 
   test.case = 'screenMap - empty map';
   var srcMap = { d : 'name', c : 33, a : 'abc' };
   var screenMap = {};
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
-  test.is( got === srcMap );
-  test.identical( srcMap, {} );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { d : 'name', c : 33, a : 'abc' } );
   test.identical( screenMap, {} );
 
   test.case = 'screenMap - empty array';
   var srcMap = { d : 'name', c : 33, a : 'abc' };
   var screenMap = [];
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
-  test.identical( got, expected );
-  test.is( got === srcMap );
-  test.identical( srcMap, {} );
-  test.identical( screenMap, [] );
-
-  test.case = 'only srcMap';
-  var srcMap = { d : 'name', c : 33, a : 'abc' };
-  var got = _.mapOnly_( srcMap );
-  var expected = { d : 'name', c : 33, a : 'abc' };
   test.identical( got, expected );
   test.is( got !== srcMap );
   test.identical( srcMap, { d : 'name', c : 33, a : 'abc' } );
+  test.identical( screenMap, [] );
 
   test.case = 'all keys in srcMap exists in screenMap - map';
   var srcMap = { d : 'name', c : 33, a : 'abc' };
   var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = { a : 'abc', c : 33, d : 'name' };
   test.identical( got, expected );
-  test.is( got === srcMap );
+  test.is( got !== srcMap );
   test.identical( srcMap, { d : 'name', c : 33, a : 'abc' } );
   test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
 
   test.case = 'all keys in srcMap exists in screenMap - array';
   var srcMap = { d : 'name', c : 33, a : 'abc' };
   var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = { a : 'abc', c : 33, d : 'name' };
   test.identical( got, expected );
-  test.is( got === srcMap );
+  test.is( got !== srcMap );
   test.identical( srcMap, { d : 'name', c : 33, a : 'abc' } );
   test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
 
   test.case = 'none keys in srcMap exists in screenMap - map';
   var srcMap = { d : 'name', c : 33, a : 'abc' };
   var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
-  test.is( got === srcMap );
-  test.identical( srcMap, {} );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { d : 'name', c : 33, a : 'abc' } );
   test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
 
   test.case = 'none keys in srcMap exists in screenMap - array';
   var srcMap = { d : 'name', c : 33, a : 'abc' };
   var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
-  test.is( got === srcMap );
-  test.identical( srcMap, {} );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { d : 'name', c : 33, a : 'abc' } );
   test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
 
   test.case = 'srcMap has numerical keys, screenMap has not primitives';
   var srcMap = { 0 : 'name', 1 : 33, 2 : 'abc' };
   var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = { 2 : 'abc', 1 : 33, 0 : 'name' };
   test.identical( got, expected );
-  test.is( got === srcMap );
+  test.is( got !== srcMap );
   test.identical( srcMap, { 0 : 'name', 1 : 33, 2 : 'abc' } );
   test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
 
@@ -7149,7 +7141,7 @@ function mapOnlyDstMapNull_( test )
   test.case = 'srcMap - empty array, screenMap - empty map';
   var srcMap = [];
   var screenMap = {};
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
   test.is( got !== srcMap );
@@ -7159,7 +7151,7 @@ function mapOnlyDstMapNull_( test )
   test.case = 'srcMap - empty array, screenMap - empty array';
   var srcMap = [];
   var screenMap = [];
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
   test.is( got !== srcMap );
@@ -7169,7 +7161,7 @@ function mapOnlyDstMapNull_( test )
   test.case = 'srcMap - empty array, screenMap - map';
   var srcMap = [];
   var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
   test.is( got !== srcMap );
@@ -7179,7 +7171,7 @@ function mapOnlyDstMapNull_( test )
   test.case = 'srcMap - empty array, screenMap - array';
   var srcMap = [];
   var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
   test.is( got !== srcMap );
@@ -7189,7 +7181,7 @@ function mapOnlyDstMapNull_( test )
   test.case = 'screenMap - empty map';
   var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
   var screenMap = {};
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
   test.is( got !== srcMap );
@@ -7199,25 +7191,17 @@ function mapOnlyDstMapNull_( test )
   test.case = 'screenMap - empty array';
   var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
   var screenMap = [];
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
   test.is( got !== srcMap );
   test.identical( srcMap, [ { a : 'abc' }, { c : 33 }, { d : 'name' } ] );
   test.identical( screenMap, [] );
 
-  test.case = 'only srcMap';
-  var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
-  var got = _.mapOnly_( srcMap );
-  var expected = { a : 'abc', c : 33, d : 'name' };
-  test.identical( got, expected );
-  test.is( got !== srcMap );
-  test.identical( srcMap, [ { a : 'abc' }, { c : 33 }, { d : 'name' } ] );
-
   test.case = 'all keys in srcMap exists in screenMap - map';
   var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
   var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = { a : 'abc', c : 33, d : 'name' };
   test.identical( got, expected );
   test.is( got !== srcMap );
@@ -7227,8 +7211,8 @@ function mapOnlyDstMapNull_( test )
   test.case = 'all keys in srcMap exists in screenMap - array';
   var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
   var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
-  var got = _.mapOnly_( srcMap, screenMap );
-  var expected = { a : 'abc', c : 33 };
+  var got = _.mapOnly_( null, srcMap, screenMap );
+  var expected = { a : 'abc', c : 33, d : 'name' };
   test.identical( got, expected );
   test.is( got !== srcMap );
   test.identical( srcMap, [ { a : 'abc' }, { c : 33 }, { d : 'name' } ] );
@@ -7237,7 +7221,7 @@ function mapOnlyDstMapNull_( test )
   test.case = 'none keys in srcMap exists in screenMap - map';
   var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
   var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
   test.is( got !== srcMap );
@@ -7247,7 +7231,7 @@ function mapOnlyDstMapNull_( test )
   test.case = 'none keys in srcMap exists in screenMap - array';
   var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
   var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = {};
   test.identical( got, expected );
   test.is( got !== srcMap );
@@ -7257,11 +7241,1922 @@ function mapOnlyDstMapNull_( test )
   test.case = 'srcMap has numerical keys, screenMap has not primitives';
   var srcMap = [ { 0 : 'name' }, { 1 : 33 }, { 2 : 'abc' } ];
   var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
-  var got = _.mapOnly_( srcMap, screenMap );
+  var got = _.mapOnly_( null, srcMap, screenMap );
   var expected = { 2 : 'abc', 1 : 33, 0 : 'name' };
   test.identical( got, expected );
   test.is( got !== srcMap );
   test.identical( srcMap, [ { 0 : 'name' }, { 1 : 33 }, { 2 : 'abc' } ] );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - long' );
+}
+
+//
+
+function mapOnlyDstMapMap_( test )
+{
+  test.open( 'srcMap - map' );
+
+  test.case = 'srcMap - empty map, screenMap - empty map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = {};
+  var screenMap = {};
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty map, screenMap - empty array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = {};
+  var screenMap = [];
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty map, screenMap - map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = {};
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty map, screenMap - array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = {};
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = { d : 'name', c : 33, a : 'abc' };
+  var screenMap = {};
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { d : 'name', c : 33, a : 'abc' } );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = { d : 'name', c : 33, a : 'abc' };
+  var screenMap = [];
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { d : 'name', c : 33, a : 'abc' } );
+  test.identical( screenMap, [] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = { d : 'name', c : 33, a : 'abc' };
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2, c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { d : 'name', c : 33, a : 'abc' } );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = { d : 'name', c : 33, a : 'abc' };
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2, c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { d : 'name', c : 33, a : 'abc' } );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = { d : 'name', c : 33, a : 'abc' };
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { d : 'name', c : 33, a : 'abc' } );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = { d : 'name', c : 33, a : 'abc' };
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { d : 'name', c : 33, a : 'abc' } );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = { 0 : 'name', 1 : 33, 2 : 'abc' };
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2, 2 : 'abc', 1 : 33, 0 : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { 0 : 'name', 1 : 33, 2 : 'abc' } );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - map' );
+
+  /* - */
+
+  test.open( 'srcMap - long' );
+
+  test.case = 'srcMap - empty array, screenMap - empty map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [];
+  var screenMap = {};
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty array, screenMap - empty array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [];
+  var screenMap = [];
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty array, screenMap - map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty array, screenMap - array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
+  var screenMap = {};
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, { c : 33 }, { d : 'name' } ] );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
+  var screenMap = [];
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, { c : 33 }, { d : 'name' } ] );
+  test.identical( screenMap, [] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2, c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, { c : 33 }, { d : 'name' } ] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2, c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, { c : 33 }, { d : 'name' } ] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, { c : 33 }, { d : 'name' } ] );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, { c : 33 }, { d : 'name' } ];
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, { c : 33 }, { d : 'name' } ] );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { 0 : 'name' }, { 1 : 33 }, { 2 : 'abc' } ];
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnly_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2, 2 : 'abc', 1 : 33, 0 : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { 0 : 'name' }, { 1 : 33 }, { 2 : 'abc' } ] );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - long' );
+}
+
+//
+
+function mapOnlyOwnTwoArguments_( test )
+{
+  test.open( 'srcMap - map' );
+
+  test.case = 'srcMap - null, screenMap - empty map';
+  var srcMap = null;
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty map, screenMap - empty map';
+  var srcMap = {};
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - null, screenMap - empty array';
+  var srcMap = null;
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty map, screenMap - empty array';
+  var srcMap = {};
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - null, screenMap - map';
+  var srcMap = null;
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty map, screenMap - map';
+  var srcMap = {};
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - null, screenMap - array';
+  var srcMap = null;
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'srcMap - empty map, screenMap - array';
+  var srcMap = {};
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [] );
+
+  test.case = 'only srcMap';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var got = _.mapOnlyOwn_( srcMap );
+  var expected = { a : 'abc' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = { a : 'abc' };
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = { a : 'abc' };
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap[ 2 ] = 'abc';
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = { 2 : 'abc' };
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, { 2 : 'abc' } );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - map' );
+
+  /* - */
+
+  test.open( 'srcMap - long' );
+
+  test.case = 'srcMap - empty array, screenMap - empty map';
+  var srcMap = [];
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty array, screenMap - empty array';
+  var srcMap = [];
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty array, screenMap - map';
+  var srcMap = [];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty array, screenMap - array';
+  var srcMap = [];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, [] );
+
+  test.case = 'only srcMap';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var got = _.mapOnlyOwn_( srcMap );
+  var expected = { a : 'abc' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = { a : 'abc' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = { a : 'abc' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnlyOwn_( srcMap, screenMap );
+  var expected = { a : 'abc' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - long' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.mapOnlyOwn_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.mapOnlyOwn_( {}, {}, {}, {} ) );
+
+  test.case = 'wrong type of srcMap';
+  test.shouldThrowErrorSync( () => _.mapOnlyOwn_( 'wrong' ) );
+  test.shouldThrowErrorSync( () => _.mapOnlyOwn_( 'wrong', {} ) );
+  test.shouldThrowErrorSync( () => _.mapOnlyOwn_( {}, 2, [] ) );
+
+  test.case = 'wrong type of dstMap';
+  test.shouldThrowErrorSync( () => _.mapOnlyOwn_( 'wrong', {}, {} ) );
+  test.shouldThrowErrorSync( () => _.mapOnlyOwn_( 2, {}, {} ) );
+
+  test.case = 'wrong type of screenMap';
+  test.shouldThrowErrorSync( () => _.mapOnlyOwn_( [], '' ) );
+  test.shouldThrowErrorSync( () => _.mapOnlyOwn_( {}, [], '' ) );
+}
+
+//
+
+function mapOnlyOwnDstMapNull_( test )
+{
+  test.open( 'srcMap - map' );
+
+  test.case = 'srcMap - empty map, screenMap - empty map';
+  var srcMap = {};
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty map, screenMap - empty array';
+  var srcMap = {};
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty map, screenMap - map';
+  var srcMap = {};
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty map, screenMap - array';
+  var srcMap = {};
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, [] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = { a : 'abc' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = { a : 'abc' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap[ 2 ] = 'abc';
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = { 2 : 'abc' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { 2 : 'abc' } );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - map' );
+
+  /* - */
+
+  test.open( 'srcMap - long' );
+
+  test.case = 'srcMap - empty array, screenMap - empty map';
+  var srcMap = [];
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty array, screenMap - empty array';
+  var srcMap = [];
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty array, screenMap - map';
+  var srcMap = [];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty array, screenMap - array';
+  var srcMap = [];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, [] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = { a : 'abc' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = { a : 'abc' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnlyOwn_( null, srcMap, screenMap );
+  var expected = { a : 'abc' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - long' );
+}
+
+//
+
+function mapOnlyOwnDstMapMap_( test )
+{
+  test.open( 'srcMap - map' );
+
+  test.case = 'srcMap - empty map, screenMap - empty map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = {};
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty map, screenMap - empty array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = {};
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty map, screenMap - map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = {};
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty map, screenMap - array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = {};
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, [] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { a : 'abc' } );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap[ 2 ] = 'abc';
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { 2 : 'abc', a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { 2 : 'abc' } );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - map' );
+
+  /* - */
+
+  test.open( 'srcMap - long' );
+
+  test.case = 'srcMap - empty array, screenMap - empty map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [];
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty array, screenMap - empty array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [];
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty array, screenMap - map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty array, screenMap - array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = {};
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [];
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, [] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 1, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var dstMap = { a : 1, b : 2 };
+  var srcMap = [ { a : 'abc' }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnlyOwn_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc' }, {}, {} ] );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - long' );
+}
+
+//
+
+function mapOnlyComplementingTwoArguments_( test )
+{
+  test.open( 'srcMap - map' );
+
+  test.case = 'srcMap - null, screenMap - empty map';
+  var srcMap = null;
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty map, screenMap - empty map';
+  var srcMap = {};
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - null, screenMap - empty array';
+  var srcMap = null;
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty map, screenMap - empty array';
+  var srcMap = {};
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - null, screenMap - map';
+  var srcMap = null;
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty map, screenMap - map';
+  var srcMap = {};
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - null, screenMap - array';
+  var srcMap = null;
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'srcMap - empty map, screenMap - array';
+  var srcMap = {};
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = { a : 'abc', b : undefined, c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, { a : 'abc', b : undefined, c : 33, d : 'name' } );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = { a : 'abc', b : undefined, c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, { a : 'abc', b : undefined, c : 33, d : 'name' } );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap[ 2 ] = 'abc';
+  srcMap.b = undefined;
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = { 2 : 'abc', b : undefined, c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got === srcMap );
+  test.identical( srcMap, { 2 : 'abc', b : undefined, c : 33, d : 'name' } );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - map' );
+
+  /* - */
+
+  test.open( 'srcMap - long' );
+
+  test.case = 'srcMap - empty array, screenMap - empty map';
+  var srcMap = [];
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty array, screenMap - empty array';
+  var srcMap = [];
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty array, screenMap - map';
+  var srcMap = [];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty array, screenMap - array';
+  var srcMap = [];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, [] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = { a : 'abc', c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = { a : 'abc', c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( srcMap, screenMap );
+  var expected = { a : 'abc', c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - long' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.mapOnlyComplementing_() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.mapOnlyComplementing_( {}, {}, {}, {} ) );
+
+  test.case = 'wrong type of srcMap';
+  test.shouldThrowErrorSync( () => _.mapOnlyComplementing_( 'wrong' ) );
+  test.shouldThrowErrorSync( () => _.mapOnlyComplementing_( 'wrong', {} ) );
+  test.shouldThrowErrorSync( () => _.mapOnlyComplementing_( {}, 2, [] ) );
+
+  test.case = 'wrong type of dstMap';
+  test.shouldThrowErrorSync( () => _.mapOnlyComplementing_( 'wrong', {}, {} ) );
+  test.shouldThrowErrorSync( () => _.mapOnlyComplementing_( 2, {}, {} ) );
+
+  test.case = 'wrong type of screenMap';
+  test.shouldThrowErrorSync( () => _.mapOnlyComplementing_( [], '' ) );
+  test.shouldThrowErrorSync( () => _.mapOnlyComplementing_( {}, [], '' ) );
+}
+
+//
+
+function mapOnlyComplementingDstMapNull_( test )
+{
+  test.open( 'srcMap - map' );
+
+  test.case = 'srcMap - empty map, screenMap - empty map';
+  var srcMap = {};
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty map, screenMap - empty array';
+  var srcMap = {};
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty map, screenMap - map';
+  var srcMap = {};
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty map, screenMap - array';
+  var srcMap = {};
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc', b : undefined } );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc', b : undefined } );
+  test.identical( screenMap, [] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = { a : 'abc', c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc', b : undefined } );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = { a : 'abc', c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc', b : undefined } );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc', b : undefined } );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { a : 'abc', b : undefined } );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var srcMap = Object.create( { d : undefined, c : 33 } );
+  srcMap[ 2 ] = 'abc';
+  srcMap.b = undefined;
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = { 2 : 'abc', c : 33 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, { 2 : 'abc', b : undefined } );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - map' );
+
+  /* - */
+
+  test.open( 'srcMap - long' );
+
+  test.case = 'srcMap - empty array, screenMap - empty map';
+  var srcMap = [];
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty array, screenMap - empty array';
+  var srcMap = [];
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty array, screenMap - map';
+  var srcMap = [];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty array, screenMap - array';
+  var srcMap = [];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, [] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = { a : 'abc', c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = { a : 'abc', c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = {};
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : undefined } ) ];
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( null, srcMap, screenMap );
+  var expected = { a : 'abc', c : 33 };
+  test.identical( got, expected );
+  test.is( got !== srcMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - long' );
+}
+
+//
+
+function mapOnlyComplementingDstMapMap_( test )
+{
+  test.open( 'srcMap - map' );
+
+  test.case = 'srcMap - empty map, screenMap - empty map';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = {};
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty map, screenMap - empty array';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = {};
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty map, screenMap - map';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = {};
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty map, screenMap - array';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = {};
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, {} );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { a : 'abc', b : undefined } );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { a : 'abc', b : undefined } );
+  test.identical( screenMap, [] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2, c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { a : 'abc', b : undefined } );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2, c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { a : 'abc', b : undefined } );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { a : 'abc', b : undefined } );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = Object.create( { d : 'name', c : 33 } );
+  srcMap.a = 'abc';
+  srcMap.b = undefined;
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { a : 'abc', b : undefined } );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var dstMap = { 2 : undefined, b : 2 };
+  var srcMap = Object.create( { d : undefined, c : 33 } );
+  srcMap[ 2 ] = 'abc';
+  srcMap.b = undefined;
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { 2 : 'abc', b : 2, c : 33 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, { 2 : 'abc', b : undefined } );
+  test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
+
+  test.close( 'srcMap - map' );
+
+  /* - */
+
+  test.open( 'srcMap - long' );
+
+  test.case = 'srcMap - empty array, screenMap - empty map';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = [];
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, {} );
+
+  test.case = 'srcMap - empty array, screenMap - empty array';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = [];
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [] );
+
+  test.case = 'srcMap - empty array, screenMap - map';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = [];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'srcMap - empty array, screenMap - array';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = [];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'screenMap - empty map';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = {};
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, {} );
+
+  test.case = 'screenMap - empty array';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [];
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, [] );
+
+  test.case = 'all keys in srcMap exists in screenMap - map';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = { a : 13, b : 77, c : 3, d : 'name' };
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2, c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, { a : 13, b : 77, c : 3, d : 'name' } );
+
+  test.case = 'all keys in srcMap exists in screenMap - array';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2, c : 33, d : 'name' };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, [ 'a', '13', { b : 77 }, 'c', '3', { d : 'name' } ] );
+
+  test.case = 'none keys in srcMap exists in screenMap - map';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = { aa : 13, bb : 77, cc : 3, dd : 'name' };
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, { aa : 13, bb : 77, cc : 3, dd : 'name' } );
+
+  test.case = 'none keys in srcMap exists in screenMap - array';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : 'name' } ) ];
+  var screenMap = [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ];
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : undefined, b : 2 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
+  test.identical( screenMap, [ 'aa', '13', { bb : 77 }, 'cc', '3', { dd : 'name' } ] );
+
+  test.case = 'srcMap has numerical keys, screenMap has not primitives';
+  var dstMap = { a : undefined, b : 2 };
+  var srcMap = [ { a : 'abc', b : undefined }, Object.create( { c : 33 } ), Object.create( { d : undefined } ) ];
+  var screenMap = [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ];
+  var got = _.mapOnlyComplementing_( dstMap, srcMap, screenMap );
+  var expected = { a : 'abc', b : 2, c : 33 };
+  test.identical( got, expected );
+  test.is( got === dstMap );
+  test.identical( srcMap, [ { a : 'abc', b : undefined }, {}, {} ] );
   test.identical( screenMap, [ { a : 13 }, { b : 77 }, { c : 3 }, { d : 'name' } ] );
 
   test.close( 'srcMap - long' );
@@ -10476,6 +12371,16 @@ var Self =
     mapOnly,
 
     mapOnlyTwoArguments_,
+    mapOnlyDstMapNull_,
+    mapOnlyDstMapMap_,
+
+    mapOnlyOwnTwoArguments_,
+    mapOnlyOwnDstMapNull_,
+    mapOnlyOwnDstMapMap_,
+
+    mapOnlyComplementingTwoArguments_,
+    mapOnlyComplementingDstMapNull_,
+    mapOnlyComplementingDstMapMap_,
 
     _mapOnly,
 

@@ -198,7 +198,7 @@ function _verify()
   _.assert( exported.inModule && !exported.inModule.isOut );
   _.assert( exported.outModule && exported.outModule.isOut );
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!inModule );
   _.assert( !!will );
   _.assert( !!hd );
@@ -476,7 +476,7 @@ function _performExportedReflectors()
   let path = hub.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!outModule );
   _.assert( !!will );
   _.assert( !!hd );
@@ -753,7 +753,7 @@ function _performArchive()
   let build = inModule.buildMap[ exported.name ];
 
   _.assert( exported.archiveFilePath === null );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( _.boolLike( exported.tar ) );
 
   /* archiveFilePath */

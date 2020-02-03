@@ -149,7 +149,7 @@ function form1()
   if( reflector.formed >= 1 )
   return reflector;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !reflector.formed );
   _.assert( !!will );
   _.assert( !!module );
@@ -277,7 +277,7 @@ function form3()
   if( reflector.formed === 3 )
   return reflector;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( reflector.formed === 2 );
 
   /* begin */

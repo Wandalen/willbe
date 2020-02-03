@@ -1673,7 +1673,7 @@ function split( path )
 
 function current()
 {
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   // return this._hereStr;
   return this._upStr;
 }

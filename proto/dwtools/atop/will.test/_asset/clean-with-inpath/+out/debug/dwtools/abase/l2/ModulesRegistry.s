@@ -29,6 +29,12 @@ function sourcePath( filePath, name )
 
 // base / l2
 
+let wBlueprint =
+{
+  sourcePath : sourcePath( 'abase/l2_blueprint/Include.s', 'wBlueprint' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.blueprint },
+}
+
 let wEntityBasic =
 {
   sourcePath : sourcePath( 'abase/l2/EntityBasic.s', 'wentitybasic' ),
@@ -592,6 +598,7 @@ let Modules =
 
   // base / l2
 
+  wBlueprint,
   wEntityBasic,
   wLooker,
   wPathBasic,

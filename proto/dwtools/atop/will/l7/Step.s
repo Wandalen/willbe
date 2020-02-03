@@ -59,7 +59,7 @@ function form2()
   if( step.formed >= 2 )
   return step;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( step.formed === 1 );
   _.assert( _.objectIs( step.opts ) || step.opts === null );
 
@@ -128,7 +128,7 @@ function form3()
   if( step.formed >= 3 )
   return step;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( step.formed === 2 );
   _.assert( _.routineIs( step.stepRoutine ), () => step.qualifiedName + ' does not have {- stepRoutine -}. Failed to deduce it, try specifying "inherit" field explicitly' );
   _.assert( step.stepRoutine.stepOptions !== undefined, () => 'Field {- stepRoutine -} of ' + step.qualifiedName + ' deos not have defined {- stepOptions -}' );

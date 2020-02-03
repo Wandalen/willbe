@@ -339,7 +339,7 @@ function status( o )
   {
 
     // _.assert( !!repo.willfilesPath || !!repo.dirPath );
-    _.assert( arguments.length === 0 );
+    _.assert( arguments.length === 0, 'Expects no arguments' );
     _.assert( _.boolIs( repo.isRepository ) );
 
     if( !repo.isRepository )
@@ -376,7 +376,7 @@ function status( o )
   {
 
     // _.assert( !!repo.willfilesPath || !!repo.dirPath );
-    _.assert( arguments.length === 0 );
+    _.assert( arguments.length === 0, 'Expects no arguments' );
     _.assert( _.boolIs( repo.isRepository ) );
 
     if( !repo.isRepository )
@@ -413,7 +413,7 @@ function status( o )
   function safeToDeleteReform()
   {
 
-    _.assert( arguments.length === 0 );
+    _.assert( arguments.length === 0, 'Expects no arguments' );
     _.assert( _.boolIs( repo.isRepository ) );
     _.assert( _.boolIs( repo.hasLocalChanges ) );
     _.assert( _.boolIs( repo.hasFiles ) );
@@ -835,7 +835,7 @@ function repoIsRemote( remotePath )
 //   let path = fileProvider.path;
 //
 //   _.assert( !!repo.willfilesPath || !!repo.dirPath );
-//   _.assert( arguments.length === 0 );
+//   _.assert( arguments.length === 0, 'Expects no arguments' );
 //
 //   // let remoteProvider = will.vcsProviderFor( repo.remotePath );
 //   // return remoteProvider.hasLocalChanges( repo.downloadPath );
@@ -979,7 +979,7 @@ function repoLocalVersion()
   let path = fileProvider.path;
 
   // _.assert( !!repo.willfilesPath || !!repo.dirPath );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   debugger;
   let remoteProvider = will.vcsProviderFor( repo.downloadPath );
@@ -997,7 +997,7 @@ function repoLatestVersion()
   let path = fileProvider.path;
 
   // _.assert( !!repo.willfilesPath || !!repo.dirPath );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   debugger;
   let remoteProvider = will.vcsProviderFor( repo.downloadPath );

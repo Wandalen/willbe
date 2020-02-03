@@ -58,7 +58,7 @@ function unform()
   let run = frame.run;
   let module = run.module;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( frame.formed );
 
   return frame;
@@ -78,7 +78,7 @@ function form()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !frame.formed );
   _.assert( !!will );
   _.assert( !!module );

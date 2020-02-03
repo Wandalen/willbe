@@ -4162,23 +4162,23 @@ strConcat.defaults =
  *
  * @param { String/Array } src - Source string to parse or array of lines( not array of texts ).
  * With line we mean it does not have eol. Otherwise please join the array to let the routine to resplit the text,
- * like that: _.strIndentation( array.join( '\n' ), '_' ).
+ * like that: _.strLinesIndentation( array.join( '\n' ), '_' ).
  * @param { String } tab - Indentation character.
  * @returns { String } Returns indented string.
  *
  * @example
- *  _.strIndentation( 'abc', '_' )
+ *  _.strLinesIndentation( 'abc', '_' )
  * // returns '_abc'
  *
  * @example
- * _.strIndentation( 'a\nb\nc', '_' )
+ * _.strLinesIndentation( 'a\nb\nc', '_' )
  * // returns
  * // _a
  * // _b
  * // _c
  *
  * @example
- * _.strIndentation( [ 'a', 'b', 'c' ], '_' )
+ * _.strLinesIndentation( [ 'a', 'b', 'c' ], '_' )
  * // returns
  * // _a
  * // _b
@@ -4186,14 +4186,14 @@ strConcat.defaults =
  *
  * @example
  * let array = [ 'a\nb', 'c\nd' ];
- * _.strIndentation( array.join( '\n' ), '_' )
+ * _.strLinesIndentation( array.join( '\n' ), '_' )
  * // returns
  * // _a
  * // _b
  * // _c
  * // _d
  *
- * @method strIndentation
+ * @method strLinesIndentation
  * @throws { Exception } Throw an exception if( src ) is not a String or Array.
  * @throws { Exception } Throw an exception if( tab ) is not a String.
  * @throws { Exception } Throw an exception if( arguments.length ) is not a equal 2.
@@ -4201,12 +4201,15 @@ strConcat.defaults =
  *
  */
 
-function strIndentation( src, tab )
+function strLinesIndentation( src, tab )
 {
 
   _.assert( _.strIs( src ) || _.arrayIs( src ), 'Expects src as string or array' );
-  _.assert( _.strIs( tab ), 'Expects string tab' );
+  _.assert( _.strIs( tab ) || _.numberIs( tab ), 'Expects string tab' ); /* qqq2 : cover please */
   _.assert( arguments.length === 2, 'Expects two arguments' );
+
+  if( _.numberIs( tab ) )
+  tab = _.strDup( ' ', tab );
 
   if( _.strIs( src ) )
   {
@@ -4233,7 +4236,7 @@ function strIndentation( src, tab )
 
 // //
 //
-// function strIndentationButFirst( src, tab )
+// function strLinesIndentationButFirst( src, tab )
 // {
 //
 //   _.assert( _.strIs( src ) || _.arrayIs( src ), 'Expects src as string or array' );
@@ -4450,7 +4453,7 @@ function strLinesOnly( src, range )
   _.assert( _.rangeIs( range ) );
 
   let result = [];
-  for( let i = range[ 0 ]; i < range[ 1 ] && i < src.length; i++ ) 
+  for( let i = range[ 0 ]; i < range[ 1 ] && i < src.length; i++ )
   result[ i - range[ 0 ] ] = src[ i ];
 
   return result.join( '\n' );
@@ -4913,7 +4916,7 @@ strLinesSelect.defaults =
 
 }
 
-/* qqq :
+/* qqq : | Dmytro : covered
 - cover option highlighting | Dmytro : covered
 - cover option zeroLine | Dmytro : covered
 */
@@ -5310,7 +5313,7 @@ let Proto =
 
   // liner
 
-  strIndentation,
+  strLinesIndentation,
   strLinesBut, /* qqq : implement, document and cover | Dmytro : extended, documented, covered */
   strLinesOnly, /* qqq : implement, document and cover | Dmytro : implemented, documented, covered */
   strLinesSplit,

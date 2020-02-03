@@ -117,7 +117,7 @@ function unform()
   let openedModule = willf.openedModule;
   let storageWillfile = willf.storageWillfile;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!willf.formed );
 
   /* begin */
@@ -151,7 +151,7 @@ function form()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!will );
   _.assert( !!will.formed );
   _.assert( !!fileProvider );
@@ -185,7 +185,7 @@ function form()
 function preform()
 {
   _.assert( !!this.will );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   let willf = this;
   let will = willf.will;
@@ -217,7 +217,7 @@ function _registerForm()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( willf.formed === 0 );
   _.assert( !!will );
   _.assert( !!fileProvider );
@@ -260,7 +260,7 @@ function _inPathsForm()
   if( willf.formed > 1 )
   return;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!will );
   _.assert( !!will.formed );
   _.assert( willf.formed === 1 );
@@ -323,7 +323,7 @@ function _read()
   return true;
 
   _.assert( willf.formed === 2 );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!will );
   _.assert( !!fileProvider );
   _.assert( !!logger );
@@ -425,7 +425,7 @@ function _open()
   return true;
 
   _.assert( willf.formed === 3 );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!will );
   _.assert( !!fileProvider );
   _.assert( !!logger );
@@ -671,7 +671,7 @@ function _importToModule()
   let structure = willf.structure;
 
   _.assert( willf.formed === 4 );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!will );
   _.assert( !!fileProvider );
   _.assert( !!logger );
@@ -844,7 +844,7 @@ function peerWillfilesOpen()
   let will = willf.will;
   let peerWillfiles = willf.peerWillfiles;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   if( peerWillfiles )
   return peerWillfiles;
@@ -985,7 +985,7 @@ function hashGet()
   if( willf.formed < 3 )
   willf._read()
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   if( willf.hash )
   return willf.hash;
@@ -1026,7 +1026,7 @@ function hashFullGet()
 {
   let willf = this;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( _.bufferAnyIs( willf.data ) && _.numberIs( willf.data.byteLength ), `Willfile does not have data to get its hash` );
 
   let descriptor = Object.create( null );
@@ -1137,7 +1137,7 @@ function isConsistent( opening )
   let result;
 
   _.assert( _.boolLike( willf.isOut ) );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
 
   if( !willf.isOut )
   return end( true );
@@ -1192,7 +1192,7 @@ function _attachedModulesOpen()
   let structure = willf.structure;
 
   _.assert( _.mapIs( structure ) );
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.strIs( willf.filePath );
 
   if( !willf.structure.module )
@@ -1275,7 +1275,7 @@ function exists()
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( willf.formed >= 2 );
 
   if( !willf._found )
@@ -1299,8 +1299,8 @@ function isUsed()
 {
   let willf = this;
 
-  _.assert( arguments.length === 0 );
-  _.assert( !willf.finitedIs() );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
+  _.assert( !willf.isFinited() );
 
   if( willf.openers.length !== 0 )
   return true;
