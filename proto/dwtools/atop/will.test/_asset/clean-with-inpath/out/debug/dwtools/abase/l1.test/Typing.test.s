@@ -4221,6 +4221,7 @@ function definitionIs( test )
   var got = _.definitionIs( src );
   test.identical( got, false );
 
+  /* qqq2 : ask */
   _.include( 'wProto' )
   if( _.Definition )
   {

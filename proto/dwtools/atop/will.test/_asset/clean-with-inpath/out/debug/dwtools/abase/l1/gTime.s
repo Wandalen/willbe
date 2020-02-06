@@ -524,7 +524,7 @@ function rarely_functor( perTime, routine )
 
 //
 
-function once( delay, onBegin, onEnd )
+function once( delay, onBegin, onEnd ) /* qqq : cover by test */
 {
   let con = _.Consequence ? new _.Consequence({ sourcePath : 2 }) : undefined;
   let taken = false;
