@@ -284,13 +284,13 @@ let wRegexpObject =
 let wColor =
 {
   sourcePath : sourcePath( 'amid/color/Color.s', 'wColor' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.ColorMap },
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.color && !!_global.wTools.color.ColorMap },
 }
 
 let wColor256 =
 {
   sourcePath : sourcePath( 'amid/color/Color256.s', 'wColor256' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.ColorMap && Object.keys( _global.wTools.ColorMap ).length > 100 },
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.color.ColorMap && Object.keys( _global.wTools.color.ColorMap ).length > 100 },
 }
 
 let wChangeTransactor =

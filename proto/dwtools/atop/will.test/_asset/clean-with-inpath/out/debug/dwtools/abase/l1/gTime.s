@@ -526,7 +526,7 @@ function rarely_functor( perTime, routine )
 
 function once( delay, onBegin, onEnd ) /* qqq : cover by test */
 {
-  let con = _.Consequence ? new _.Consequence({ sourcePath : 2 }) : undefined;
+  let con = _.Consequence ? new _.Consequence({ /* sourcePath : 2 */ }) : undefined;
   let taken = false;
   let options;
   let optionsDefault =
@@ -550,7 +550,7 @@ function once( delay, onBegin, onEnd ) /* qqq : cover by test */
     _.assert( 2 <= arguments.length && arguments.length <= 3 );
   }
 
-  _.assert( 0, 'not tested' );
+  // _.assert( 0, 'not tested' );
   _.assert( delay >= 0 );
   _.assert( _.primitiveIs( onBegin ) || _.routineIs( onBegin ) || _.objectIs( onBegin ) );
   _.assert( _.primitiveIs( onEnd ) || _.routineIs( onEnd ) || _.objectIs( onEnd ) );
