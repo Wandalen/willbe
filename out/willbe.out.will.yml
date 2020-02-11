@@ -6,14 +6,8 @@ consistency:
     hash: 046b16d5fda9a4efda9bf329afc39376
     size: 2260
   ../.im.will.yml: &ref_1
-    hash: f96b2c3485ccfb6b16313b47b82d99e5
-    size: 6834
-  ../.module/wResolver.will.yml: &ref_7
-    hash: 6956737ed69582e1179e8db6a6ec2792
-    size: 413
-  ../.module/wResolver/wResolver.out.will.yml: &ref_8
-    hash: 281b813ac101ea166210028ee2f7dcf7
-    size: 4471
+    hash: 6b3eda85ac3b767101b905fba56894da
+    size: 6862
 module:
   willbe.out:
     about:
@@ -2686,7 +2680,7 @@ module:
       wResolver:
         path: 'npm:///wresolver'
         autoExporting: 0
-        enabled: 1
+        enabled: 0
       wResolverExtra:
         path: 'npm:///wresolverextra'
         autoExporting: 0
@@ -3533,7 +3527,7 @@ module:
       wResolver:
         path: 'npm:///wresolver'
         autoExporting: 0
-        enabled: 1
+        enabled: 0
       wResolverExtra:
         path: 'npm:///wresolverextra'
         autoExporting: 0
@@ -4116,196 +4110,5 @@ module:
         hash: 046b16d5fda9a4efda9bf329afc39376
         size: 2260
       ../.im.will.yml:
-        hash: f96b2c3485ccfb6b16313b47b82d99e5
-        size: 6834
-  ../.module/wResolver:
-    about:
-      name: wResolver
-      org: noorg
-      enabled: 1
-    path:
-      out:
-        path: .
-      module.willfiles:
-        criterion:
-          predefined: 1
-        path: ../wResolver.will.yml
-      module.original.willfiles:
-        criterion:
-          predefined: 1
-        path: ../wResolver.will.yml
-      module.peer.willfiles:
-        criterion:
-          predefined: 1
-        path: wResolver.out.will.yml
-      module.peer.in:
-        criterion:
-          predefined: 1
-        path: .
-      module.common:
-        criterion:
-          predefined: 1
-        path: .
-      download:
-        criterion:
-          predefined: 1
-        path: .
-      in:
-        path: wResolver
-    submodule: {}
-    reflector:
-      files:
-        src:
-          filePath:
-            'path::in': ''
-          maskAll:
-            includeAny:
-              - ./proto/dwtools/abase/l6
-              - ./proto/dwtools/Tools.s
-        mandatory: 1
-    step:
-      export:
-        opts:
-          export: 'reflector::files'
-          tar: 0
-        inherit:
-          - module.export
-      files:
-        opts:
-          reflector: 'reflector::files*'
-        inherit:
-          - files.reflect
-    build:
-      export:
-        steps: 'step::export'
-        criterion:
-          default: 1
-          export: 1
-    consistency:
-      ../.module/wResolver.will.yml: *ref_7
-      ../.module/wResolver/wResolver.out.will.yml: *ref_8
-  ../.module/wResolver/wResolver.out:
-    about:
-      name: wResolver
-      org: noorg
-      enabled: 1
-    path:
-      module.willfiles:
-        criterion:
-          predefined: 1
-        path: wResolver.out.will.yml
-      module.common:
-        criterion:
-          predefined: 1
-        path: wResolver.out
-      out:
-        path: .
-      module.original.willfiles:
-        criterion:
-          predefined: 1
-        path: ../wResolver.will.yml
-      module.peer.willfiles:
-        criterion:
-          predefined: 1
-        path: ../wResolver.will.yml
-      module.peer.in:
-        criterion:
-          predefined: 1
-        path: .
-      download:
-        criterion:
-          predefined: 1
-        path: .
-      in:
-        path: .
-      exported.dir.export:
-        criterion:
-          generated: 1
-          default: 1
-          export: 1
-        path: .
-      exported.files.export:
-        criterion:
-          generated: 1
-          default: 1
-          export: 1
-        path:
-          - proto/dwtools/Tools.s
-          - proto/dwtools/abase/l6
-          - proto/dwtools/abase/l6/Resolver.s
-    submodule: {}
-    reflector:
-      files:
-        src:
-          filePath:
-            'path::in': ''
-          maskAll:
-            includeAny:
-              - ./proto/dwtools/abase/l6
-              - ./proto/dwtools/Tools.s
-        mandatory: 1
-      exported.export:
-        src:
-          filePath:
-            .: ''
-          prefixPath: .
-          maskAll:
-            includeAny:
-              - !<tag:yaml.org,2002:js/regexp> /\.\/proto\/dwtools\/abase\/l6/
-              - !<tag:yaml.org,2002:js/regexp> /\.\/proto\/dwtools\/Tools\.s/
-        mandatory: 1
-        criterion:
-          generated: 1
-          default: 1
-          export: 1
-      exported.files.export:
-        src:
-          filePath:
-            'path::exported.files.export': ''
-          basePath: .
-          prefixPath: 'path::exported.dir.export'
-          recursive: 0
-        recursive: 0
-        mandatory: 1
-        criterion:
-          generated: 1
-          default: 1
-          export: 1
-    step:
-      export:
-        opts:
-          export: 'reflector::files'
-          tar: 0
-        inherit:
-          - module.export
-      files:
-        opts:
-          reflector: 'reflector::files*'
-        inherit:
-          - files.reflect
-    build:
-      export:
-        steps: 'step::export'
-        criterion:
-          default: 1
-          export: 1
-    exported:
-      export:
-        version: 0.0.0
-        recursive: 0
-        withIntegrated: 2
-        tar: 0
-        exportedReflector: 'reflector::exported.export'
-        exportedFilesReflector: 'reflector::exported.files.export'
-        exportedDirPath: 'path::exported.dir.export'
-        exportedFilesPath: 'path::exported.files.export'
-        criterion:
-          default: 1
-          export: 1
-    consistency:
-      ../.module/wResolver/wResolver.out.will.yml:
-        hash: 281b813ac101ea166210028ee2f7dcf7
-        size: 4471
-      ../.module/wResolver.will.yml:
-        hash: 6956737ed69582e1179e8db6a6ec2792
-        size: 413
+        hash: 6b3eda85ac3b767101b905fba56894da
+        size: 6862
