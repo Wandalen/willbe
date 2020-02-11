@@ -2,15 +2,18 @@ format: outwillfile-2.0
 root:
   - willbe.out
 consistency:
-  willbe.out.will.yml: &ref_0
-    hash: de801e6470bda84b288b0b110420a11d
-    size: 169536
-  ../.ex.will.yml: &ref_1
+  ../.ex.will.yml: &ref_0
     hash: 046b16d5fda9a4efda9bf329afc39376
     size: 2260
-  ../.im.will.yml: &ref_2
-    hash: f08ac5c86e7787044931876698566930
-    size: 6782
+  ../.im.will.yml: &ref_1
+    hash: f96b2c3485ccfb6b16313b47b82d99e5
+    size: 6834
+  ../.module/wResolver.will.yml: &ref_7
+    hash: 6956737ed69582e1179e8db6a6ec2792
+    size: 413
+  ../.module/wResolver/wResolver.out.will.yml: &ref_8
+    hash: 281b813ac101ea166210028ee2f7dcf7
+    size: 4471
 module:
   willbe.out:
     about:
@@ -19,27 +22,27 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@willbe.so>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts:
+      npm.scripts: &ref_5
         test: 'wtest .run proto/** v:5'
         docgen: wdocgen .build proto
         single-process-will: node proto/dwtools/atop/will/Exec
         debug-will: node proto/dwtools/atop/will/ExecDebug
         unrestricted-will: node proto/dwtools/atop/will/ExecUnrestricted
         will: node proto/dwtools/atop/will/ExecUnrestricted
-      npm.bin:
+      npm.bin: &ref_6
         single-process-will: proto/dwtools/atop/will/Exec
         debug-will: proto/dwtools/atop/will/ExecDebug
         unrestricted-will: proto/dwtools/atop/will/ExecUnrestricted
@@ -2683,6 +2686,10 @@ module:
       wResolver:
         path: 'npm:///wresolver'
         autoExporting: 0
+        enabled: 1
+      wResolverExtra:
+        path: 'npm:///wresolverextra'
+        autoExporting: 0
         enabled: 0
       wCommandsAggregator:
         path: 'npm:///wcommandsaggregator'
@@ -3233,24 +3240,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          reflector: 'reflector::exported.proto.export*'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          reflector: 'reflector::exported.files.proto.export*'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -3339,9 +3328,8 @@ module:
           content: proto
           export: 1
     consistency:
-      willbe.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: willbe
@@ -3349,31 +3337,14 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters:
-        - njs >= 8.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - wTools
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@willbe.so>
-        - Volodymyr M. <volodymyr.migdal@gmail.com>
-        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
+      contributors: *ref_4
       npm.name: willbe
-      npm.scripts:
-        test: 'wtest .run proto/** v:5'
-        docgen: wdocgen .build proto
-        single-process-will: node proto/dwtools/atop/will/Exec
-        debug-will: node proto/dwtools/atop/will/ExecDebug
-        unrestricted-will: node proto/dwtools/atop/will/ExecUnrestricted
-        will: node proto/dwtools/atop/will/ExecUnrestricted
-      npm.bin:
-        single-process-will: proto/dwtools/atop/will/Exec
-        debug-will: proto/dwtools/atop/will/ExecDebug
-        unrestricted-will: proto/dwtools/atop/will/ExecUnrestricted
-        will: proto/dwtools/atop/will/ExecUnrestricted
+      npm.scripts: *ref_5
+      npm.bin: *ref_6
     path:
       module.willfiles:
         criterion:
@@ -3561,6 +3532,10 @@ module:
         enabled: 0
       wResolver:
         path: 'npm:///wresolver'
+        autoExporting: 0
+        enabled: 1
+      wResolverExtra:
+        path: 'npm:///wresolverextra'
         autoExporting: 0
         enabled: 0
       wCommandsAggregator:
@@ -4141,6 +4116,196 @@ module:
         hash: 046b16d5fda9a4efda9bf329afc39376
         size: 2260
       ../.im.will.yml:
-        hash: f08ac5c86e7787044931876698566930
-        size: 6782
-      willbe.out.will.yml: *ref_0
+        hash: f96b2c3485ccfb6b16313b47b82d99e5
+        size: 6834
+  ../.module/wResolver:
+    about:
+      name: wResolver
+      org: noorg
+      enabled: 1
+    path:
+      out:
+        path: .
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: ../wResolver.will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path: ../wResolver.will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: wResolver.out.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: .
+      module.common:
+        criterion:
+          predefined: 1
+        path: .
+      download:
+        criterion:
+          predefined: 1
+        path: .
+      in:
+        path: wResolver
+    submodule: {}
+    reflector:
+      files:
+        src:
+          filePath:
+            'path::in': ''
+          maskAll:
+            includeAny:
+              - ./proto/dwtools/abase/l6
+              - ./proto/dwtools/Tools.s
+        mandatory: 1
+    step:
+      export:
+        opts:
+          export: 'reflector::files'
+          tar: 0
+        inherit:
+          - module.export
+      files:
+        opts:
+          reflector: 'reflector::files*'
+        inherit:
+          - files.reflect
+    build:
+      export:
+        steps: 'step::export'
+        criterion:
+          default: 1
+          export: 1
+    consistency:
+      ../.module/wResolver.will.yml: *ref_7
+      ../.module/wResolver/wResolver.out.will.yml: *ref_8
+  ../.module/wResolver/wResolver.out:
+    about:
+      name: wResolver
+      org: noorg
+      enabled: 1
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: wResolver.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: wResolver.out
+      out:
+        path: .
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path: ../wResolver.will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: ../wResolver.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: .
+      download:
+        criterion:
+          predefined: 1
+        path: .
+      in:
+        path: .
+      exported.dir.export:
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+        path: .
+      exported.files.export:
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+        path:
+          - proto/dwtools/Tools.s
+          - proto/dwtools/abase/l6
+          - proto/dwtools/abase/l6/Resolver.s
+    submodule: {}
+    reflector:
+      files:
+        src:
+          filePath:
+            'path::in': ''
+          maskAll:
+            includeAny:
+              - ./proto/dwtools/abase/l6
+              - ./proto/dwtools/Tools.s
+        mandatory: 1
+      exported.export:
+        src:
+          filePath:
+            .: ''
+          prefixPath: .
+          maskAll:
+            includeAny:
+              - !<tag:yaml.org,2002:js/regexp> /\.\/proto\/dwtools\/abase\/l6/
+              - !<tag:yaml.org,2002:js/regexp> /\.\/proto\/dwtools\/Tools\.s/
+        mandatory: 1
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+      exported.files.export:
+        src:
+          filePath:
+            'path::exported.files.export': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          generated: 1
+          default: 1
+          export: 1
+    step:
+      export:
+        opts:
+          export: 'reflector::files'
+          tar: 0
+        inherit:
+          - module.export
+      files:
+        opts:
+          reflector: 'reflector::files*'
+        inherit:
+          - files.reflect
+    build:
+      export:
+        steps: 'step::export'
+        criterion:
+          default: 1
+          export: 1
+    exported:
+      export:
+        version: 0.0.0
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.export'
+        exportedFilesReflector: 'reflector::exported.files.export'
+        exportedDirPath: 'path::exported.dir.export'
+        exportedFilesPath: 'path::exported.files.export'
+        criterion:
+          default: 1
+          export: 1
+    consistency:
+      ../.module/wResolver/wResolver.out.will.yml:
+        hash: 281b813ac101ea166210028ee2f7dcf7
+        size: 4471
+      ../.module/wResolver.will.yml:
+        hash: 6956737ed69582e1179e8db6a6ec2792
+        size: 413
