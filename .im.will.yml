@@ -60,6 +60,7 @@ submodule :
     enabled : 0 # submodule
   wResolver :
     path : npm:///wresolver
+    enabled : 0 # submodule
   wResolverExtra :
     path : npm:///wresolverextra
     enabled : 0 # submodule
