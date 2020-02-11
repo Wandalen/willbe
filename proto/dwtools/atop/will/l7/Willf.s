@@ -714,6 +714,9 @@ function _importToModule()
 
     /* */
 
+    // if( _.strHas( willf.filePath, "super.im.will.yml" ) )
+    // debugger;
+
     willf._resourcesImport( will.PathResource, mstructure.path );
     if( willf.isOut ) /* xxx */
     willf._resourcesImport( will.Exported, mstructure.exported );

@@ -5944,7 +5944,7 @@ function superResolve( test )
     // _.fileProvider.filesDelete( abs( 'super.out' ) );
     // _.fileProvider.filesDelete( abs( 'sub.out' ) );
     opener = will.openerMakeManual({ willfilesPath : modulePath });
-    debugger;
+    // debugger;
     return opener.open({ all : 1 });
   })
 
@@ -5952,17 +5952,20 @@ function superResolve( test )
   {
 
     test.case = 'build::*';
-    var resolved = opener.openedModule.resolve( 'build::*' );
+    var resolved = opener.openedModule.resolve( 'build::*' ); debugger;
     test.identical( resolved.length, 4 );
 
     test.case = '*::*a*';
+    debugger;
     var resolved = opener.openedModule.resolve
     ({
       selector : '*::*a*',
       pathUnwrapping : 0,
       missingAction : 'undefine',
     });
+    debugger;
     test.identical( resolved.length, 18 );
+    debugger;
 
     test.case = '*::*a*/qualifiedName';
     var exp =

@@ -68,6 +68,9 @@ function MakeFor_body( o )
   o2.resource.module = o.module;
   o2.resource.name = o.name;
 
+  // if( o2.resource.name && _.strHas( o2.resource.name, 'reflect.submodules' ) )
+  // debugger;
+
   if( o2.Importing === null )
   o2.Importing = 1;
   if( o2.IsOut === null )

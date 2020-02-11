@@ -64,7 +64,7 @@ function _onSelectorDown()
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
 
-  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.select.composite )
+  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolver.composite )
   {
 
     for( let d = 0 ; d < it.dst.length ; d++ )
@@ -257,10 +257,10 @@ function _statusPreUpdate()
     );
   }
 
-  debugger;
+  // debugger;
   if( it.src instanceof will.Module )
   {
-    debugger;
+    // debugger;
     it.currentModule = it.src;
   }
   else if( it.src instanceof will.ModulesRelation )
@@ -1085,6 +1085,9 @@ function resolve_body( o )
     baseModule : o.baseModule,
   });
 
+  if( _.longIs( o.selector ) && o.selector[ 0 ] === 1 )
+  debugger;
+
   return Parent.resolveQualified.body.call( resolver, o );
 }
 
@@ -1132,7 +1135,7 @@ function _resolveQualifiedAct( o )
 
   try
   {
-    debugger;
+    // debugger;
     result = Parent._resolveQualifiedAct.call( resolver, o );
     // result = Parent._resolveQualifiedAct.call( resolver, o );
   }
