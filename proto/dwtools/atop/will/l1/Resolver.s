@@ -359,6 +359,9 @@ function _resourceMapSelect()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
+  // if( _.strIs( it.selector ) && _.strHas( it.selector, '*' ) && it.parsedSelector.kind === '*' )
+  // debugger;
+
   if( it.selector === undefined || it.selector === null )
   return;
 
@@ -393,8 +396,9 @@ function _resourceMapSelect()
 
     if( _.strIs( kind ) && path.isGlob( kind ) )
     {
-      it.selectorArray.splice( it.logicalLevel-1, 1, '*', it.selector );
-      it.selector = it.selectorArray[ it.logicalLevel-1 ];
+      it.selectorArray.splice( it.absoluteLevel, 1, '*', it.selector );
+      it.selector = it.selectorArray[ it.absoluteLevel ];
+      _.assert( it.selector !== undefined );
       it.selectorChanged();
     }
 

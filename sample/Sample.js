@@ -8,14 +8,9 @@ var src =
   },
 }
 
-var resolved = _.resolver.resolve
-({
-  src : src,
-  selector : 'dir/val1',
-});
-
+var resolved = _.resolver.resolve( src, 'dir/val1' )
 console.log( resolved );
 
 /*
-`Hello`
+log : `Hello`
 */

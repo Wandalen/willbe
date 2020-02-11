@@ -195,6 +195,7 @@ function declareAll( knowns )
       if( !basePath )
       {
         basePath = _.path.dir( _.introspector.location({ level : 1 }).filePath );
+        /* Transforms global path into local, required to make _.include work in a browser */
         if( _global_.Config.interpreter === 'browser' )
         if( typeof _starter_ !== 'undefined' )
         {
