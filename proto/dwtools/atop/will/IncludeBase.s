@@ -9,6 +9,7 @@ if( typeof module !== 'undefined' )
 
   _.include( 'wSelector' );
   _.include( 'wResolver' );
+  _.include( 'wResolverExtra' );
   _.include( 'wCopyable' );
   _.include( 'wAppBasic' );
   _.include( 'wLogger' );

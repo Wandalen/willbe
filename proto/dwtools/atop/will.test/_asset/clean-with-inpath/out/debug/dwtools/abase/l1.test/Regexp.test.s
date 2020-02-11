@@ -88,6 +88,262 @@ function regexpIdentical( test )
 
 //
 
+function regexpMaybeFrom( test ) 
+{
+  test.open( 'default options, without options map' );
+
+  test.case = 'srcStr - empty string';
+  var src = '';
+  var got = _.regexpMaybeFrom( src );
+  test.identical( got, /(?:)/g );
+
+  test.case = 'srcStr - simple string';
+  var src = 'abc';
+  var got = _.regexpMaybeFrom( src );
+  test.identical( got, /abc/g );
+
+  test.case = 'srcStr - string similar to regexp';
+  var src = '[abc]$';
+  var got = _.regexpMaybeFrom( src );
+  test.identical( got, /\[abc\]\$/g );
+
+  test.case = 'srcStr - string with regexp';
+  var src = '/[abc]$/g';
+  var got = _.regexpMaybeFrom( src );
+  test.identical( got, /\/\[abc\]\$\/g/g );
+
+  test.case = 'srcStr - string with three regexps without flags';
+  var src = '/[abc]//\s//\d$/';
+  var got = _.regexpMaybeFrom( src );
+  test.identical( got, /\/\[abc\]sd\$\//g );
+
+  test.case = 'srcStr - string with spaces';
+  var src = 'a b c $';
+  var got = _.regexpMaybeFrom( src );
+  test.identical( got, /a\s*b\s*c\s*\$/g );
+
+  /* */
+
+  test.case = 'srcStr - simple regexp';
+  var src = /abc/;
+  var got = _.regexpMaybeFrom( src );
+  test.identical( got, /abc/ );
+
+  test.case = 'srcStr - regexp with flags';
+  var src = /[abc]$/gm;
+  var got = _.regexpMaybeFrom( src );
+  test.identical( got, /[abc]$/gm ); 
+
+  test.close( 'default options, without options map' );
+
+  /* - */
+
+  test.open( 'default options, options map' );
+
+  test.case = 'srcStr - empty string';
+  var src = '';
+  var got = _.regexpMaybeFrom( { srcStr : src } );
+  test.identical( got, /(?:)/g );
+
+  test.case = 'srcStr - simple string';
+  var src = 'abc';
+  var got = _.regexpMaybeFrom( { srcStr : src } );
+  test.identical( got, /abc/g );
+
+  test.case = 'srcStr - string similar to regexp';
+  var src = '[abc]$';
+  var got = _.regexpMaybeFrom( { srcStr : src } );
+  test.identical( got, /\[abc\]\$/g );
+
+  test.case = 'srcStr - string with regexp';
+  var src = '/[abc]$/g';
+  var got = _.regexpMaybeFrom( { srcStr : src } );
+  test.identical( got, /\/\[abc\]\$\/g/g );
+
+  test.case = 'srcStr - string with three regexps without flags';
+  var src = '/[abc]//\s//\d$/';
+  var got = _.regexpMaybeFrom( { srcStr : src } );
+  test.identical( got, /\/\[abc\]sd\$\//g );
+
+  test.case = 'srcStr - string with spaces';
+  var src = 'a b c $';
+  var got = _.regexpMaybeFrom( { srcStr : src } );
+  test.identical( got, /a\s*b\s*c\s*\$/g );
+
+  /* */
+
+  test.case = 'srcStr - simple regexp';
+  var src = /abc/;
+  var got = _.regexpMaybeFrom( { srcStr : src } );
+  test.identical( got, /abc/ );
+
+  test.case = 'srcStr - regexp with flags';
+  var src = /[abc]$/gm;
+  var got = _.regexpMaybeFrom( { srcStr : src } );
+  test.identical( got, /[abc]$/gm ); 
+
+  test.close( 'default options, options map' );
+
+  /* - */
+
+  test.open( 'not default flags' );
+
+  test.case = 'srcStr - empty string';
+  var src = '';
+  var got = _.regexpMaybeFrom( { srcStr : src, flags : '' } );
+  test.identical( got, /(?:)/ );
+
+  test.case = 'srcStr - simple string';
+  var src = 'abc';
+  var got = _.regexpMaybeFrom( { srcStr : src, flags : '' } );
+  test.identical( got, /abc/ );
+
+  test.case = 'srcStr - string similar to regexp';
+  var src = '[abc]$';
+  var got = _.regexpMaybeFrom( { srcStr : src, flags : 'gm' } );
+  test.identical( got, /\[abc\]\$/gm );
+
+  test.case = 'srcStr - string with regexp';
+  var src = '/[abc]$/g';
+  var got = _.regexpMaybeFrom( { srcStr : src, flags : '' } );
+  test.identical( got, /\/\[abc\]\$\/g/ );
+
+  test.case = 'srcStr - string with three regexps without flags';
+  var src = '/[abc]//\s//\d$/';
+  var got = _.regexpMaybeFrom( { srcStr : src, flags : 'gm' } );
+  test.identical( got, /\/\[abc\]sd\$\//gm );
+
+  test.case = 'srcStr - string with spaces';
+  var src = 'a b c $';
+  var got = _.regexpMaybeFrom( { srcStr : src, flags : '' } );
+  test.identical( got, /a\s*b\s*c\s*\$/ );
+
+  /* */
+
+  test.case = 'srcStr - simple regexp';
+  var src = /abc/;
+  var got = _.regexpMaybeFrom( { srcStr : src, flags : 'gm' } );
+  test.identical( got, /abc/ );
+
+  test.case = 'srcStr - regexp with flags';
+  var src = /[abc]$/gm;
+  var got = _.regexpMaybeFrom( { srcStr : src, flags : '' } );
+  test.identical( got, /[abc]$/gm ); 
+
+  test.close( 'not default flags' );
+
+  /* - */
+
+  test.open( 'toleratingSpaces - 0' );
+
+  test.case = 'srcStr - empty string';
+  var src = '';
+  var got = _.regexpMaybeFrom( { srcStr : src, toleratingSpaces : 0 } );
+  test.identical( got, /(?:)/g );
+
+  test.case = 'srcStr - simple string';
+  var src = 'a b c';
+  var got = _.regexpMaybeFrom( { srcStr : src, toleratingSpaces : 0 } );
+  test.identical( got, /a b c/g );
+
+  test.case = 'srcStr - string similar to regexp';
+  var src = '[ a  b  c ]  $';
+  var got = _.regexpMaybeFrom( { srcStr : src, toleratingSpaces : 0 } );
+  test.identical( got, /\[ a  b  c \]  \$/g );
+
+  test.case = 'srcStr - string with regexp';
+  var src = '/ [ a b c ] $ /   g';
+  var got = _.regexpMaybeFrom( { srcStr : src, toleratingSpaces : 0 } );
+  test.identical( got, /\/ \[ a b c \] \$ \/   g/g );
+
+  test.case = 'srcStr - string with three regexps without flags';
+  var src = '/ [ a b c ] // \ s // \ d $/';
+  var got = _.regexpMaybeFrom( { srcStr : src, toleratingSpaces : 0 } );
+  test.identical( got, /\/ \[ a b c \]   s   d \$\//g );
+
+  /* */
+
+  test.case = 'srcStr - simple regexp';
+  var src = /a b c/;
+  var got = _.regexpMaybeFrom( { srcStr : src, flags : 'gm' } );
+  test.identical( got, /a b c/ );
+
+  test.case = 'srcStr - regexp with flags';
+  var src = /[ a b c ] $/gm;
+  var got = _.regexpMaybeFrom( { srcStr : src, flags : '' } );
+  test.identical( got, /[ a b c ] $/gm ); 
+
+  test.close( 'toleratingSpaces - 0' );
+
+  /* - */
+
+  test.open( 'stringWithRegexp - 0' );
+
+  test.case = 'srcStr - empty string';
+  var src = '';
+  var got = _.regexpMaybeFrom( { srcStr : src, stringWithRegexp : 0 } );
+  test.identical( got, /(?:)/g );
+
+  test.case = 'srcStr - simple string';
+  var src = 'abc';
+  var got = _.regexpMaybeFrom( { srcStr : src, stringWithRegexp : 0 } );
+  test.identical( got, /abc/g );
+
+  test.case = 'srcStr - string similar to regexp';
+  var src = '[abc]$';
+  var got = _.regexpMaybeFrom( { srcStr : src, stringWithRegexp : 0 } );
+  test.identical( got, /\[abc\]\$/g );
+
+  test.case = 'srcStr - string with regexp';
+  var src = '/[abc]$/g';
+  var got = _.regexpMaybeFrom( { srcStr : src, stringWithRegexp : 0 } );
+  test.identical( got, /\/\[abc\]\$\/g/g );
+
+  test.case = 'srcStr - string with three regexps without flags';
+  var src = '/[abc]//\s//\d$/';
+  var got = _.regexpMaybeFrom( { srcStr : src, stringWithRegexp : 0 } );
+  test.identical( got, /\/\[abc\]\/\/s\/\/d\$\//g );
+
+  test.case = 'srcStr - string with spaces';
+  var src = 'a b c $';
+  var got = _.regexpMaybeFrom( { srcStr : src, stringWithRegexp : 0 } );
+  test.identical( got, /a\s*b\s*c\s*\$/g );
+
+  /* */
+
+  test.case = 'srcStr - simple regexp';
+  var src = /abc/;
+  var got = _.regexpMaybeFrom( { srcStr : src, stringWithRegexp : 0 } );
+  test.identical( got, /abc/ );
+
+  test.case = 'srcStr - regexp with flags';
+  var src = /[abc]$/gm;
+  var got = _.regexpMaybeFrom( { srcStr : src, stringWithRegexp : 0 } );
+  test.identical( got, /[abc]$/gm ); 
+
+  test.close( 'stringWithRegexp - 0' );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.regexpMaybeFrom() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.regexpMaybeFrom( 'abc', 'wrong' ) );
+
+  test.case = 'wrong type of srcStr';
+  test.shouldThrowErrorSync( () => _.regexpMaybeFrom( 1 ) );
+  test.shouldThrowErrorSync( () => _.regexpMaybeFrom( { srcStr : [] } ) );
+
+  test.case = 'unknown option in map options';
+  test.shouldThrowErrorSync( () => _.regexpMaybeFrom( { srcStr : 'a', range : [ 1, 2 ] } ) );
+}
+
+//
+
 function regexpsSources( test )
 {
   var context = this;
@@ -1722,6 +1978,8 @@ var Self =
   {
 
     regexpIdentical,
+
+    regexpMaybeFrom,
 
     regexpsSources,
     regexpsJoin,

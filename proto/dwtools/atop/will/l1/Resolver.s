@@ -10,28 +10,29 @@ if( typeof module !== 'undefined' )
 }
 
 let _ = _global_.wTools;
-let Parent = _.Resolver;
+let Parent = _.resolver;
 let Self = Object.create( Parent );
 
 // --
 // handler
 // --
 
-function _onSelectorReplicate( selector )
+// function _onSelectorReplicate( selector )
+function _onSelectorReplicate( o )
 {
   let it = this;
   let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
+  let selector = o.selector;
 
-  let result = Parent._onSelectorReplicate.call( it, selector );
+  let result = Parent._onSelectorReplicate.call( it, o );
 
   if( resolver._selectorIs( selector ) )
   return result;
 
-  debugger;
-  // return;
-  // xxx
+  if( result === undefined && o.counter > 0 )
+  return;
 
   if( rop.prefixlessAction === 'default' && !it.composite )
   {
@@ -256,8 +257,10 @@ function _statusPreUpdate()
     );
   }
 
+  debugger;
   if( it.src instanceof will.Module )
   {
+    debugger;
     it.currentModule = it.src;
   }
   else if( it.src instanceof will.ModulesRelation )
@@ -1052,7 +1055,7 @@ function resolve_pre( routine, args )
   if( o.Resolver === null || o.Resolver === undefined )
   o.Resolver = Self;
 
-  Parent.resolve.pre.call( resolver, routine, args );
+  Parent.resolveQualified.pre.call( resolver, routine, args );
 
   _.assert( _.longHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), () => 'Unknown value of option path resolving ' + o.pathResolving );
   _.assert( !o.defaultResourceKind || !_.path.isGlob( o.defaultResourceKind ), () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( o.defaultResourceKind ) );
@@ -1082,10 +1085,10 @@ function resolve_body( o )
     baseModule : o.baseModule,
   });
 
-  return Parent.resolve.body.call( resolver, o );
+  return Parent.resolveQualified.body.call( resolver, o );
 }
 
-var defaults = resolve_body.defaults = Object.create( Parent.resolve.body.defaults );
+var defaults = resolve_body.defaults = Object.create( Parent.resolveQualified.body.defaults );
 
 defaults.currentThis = null;
 defaults.currentContext = null;
@@ -1107,7 +1110,7 @@ defaults.missingAction = 'undefine';
 
 //
 
-function _resolveAct( o )
+function _resolveQualifiedAct( o )
 {
   let resolver = this;
   let module = o.baseModule;
@@ -1129,7 +1132,9 @@ function _resolveAct( o )
 
   try
   {
-    result = Parent._resolveAct.call( resolver, o );
+    debugger;
+    result = Parent._resolveQualifiedAct.call( resolver, o );
+    // result = Parent._resolveQualifiedAct.call( resolver, o );
   }
   catch( err )
   {
@@ -1140,7 +1145,7 @@ function _resolveAct( o )
   return result;
 }
 
-var defaults = _resolveAct.defaults = Object.create( resolve.defaults )
+var defaults = _resolveQualifiedAct.defaults = Object.create( resolve.defaults )
 
 defaults.visited = null;
 
@@ -1415,7 +1420,7 @@ let submodulesResolve = _.routineFromPreAndBody( resolve.pre, submodulesResolve_
 // --
 
 let functionSymbol = Symbol.for( 'function' );
-let Extend =
+let Extension =
 {
 
   name : 'wWillResolver',
@@ -1469,7 +1474,7 @@ let Extend =
   resolveContextPrepare,
   resolve,
   resolveMaybe,
-  _resolveAct,
+  _resolveQualifiedAct,
 
   // wraps
 
@@ -1482,7 +1487,7 @@ let Extend =
 
 }
 
-_.mapExtend( Self, Extend );
+_.mapExtend( Self, Extension );
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;

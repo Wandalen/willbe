@@ -22,7 +22,7 @@ qqq : implement test checking "will .call link" links files ".dot1" ".dot2"
 xxx : should work
   > local-will .imply withOut:0 .with * .call GitStatus
   not only
-  > local-will .imply withOut:0 ; .with * .call GitStatus 
+  > local-will .imply withOut:0 ; .with * .call GitStatus
 xxx : find solution
   > git push --tags
   fatal: TaskCanceledException encountered.
@@ -161,29 +161,29 @@ function rel_functor( routinePath )
   }
 }
 
+// //
 //
-
-function ReplaceSetsAreIdentical()
-{
-  _.include( 'wIntrospector' );
-
-  let file = _.introspector.thisFile().refine();
-
-  logger.log( file.productExportInfo() );
-
-  debugger;
-  file.product.nodes.map( null, ( node ) =>
-  {
-    let found = file.nodeSearch( node, 'setsAreIdentical' );
-    if( _.mapKeys( found ).length )
-    debugger;
-  });
-  debugger;
-
-  file.arrange();
-}
-
-// ReplaceSetsAreIdentical();
+// function ReplaceSetsAreIdentical()
+// {
+//   _.include( 'wIntrospector' );
+//
+//   let file = _.introspector.thisFile().refine();
+//
+//   logger.log( file.productExportInfo() );
+//
+//   debugger;
+//   file.product.nodes.map( null, ( node ) =>
+//   {
+//     let found = file.nodeSearch( node, 'setsAreIdentical' );
+//     if( _.mapKeys( found ).length )
+//     debugger;
+//   });
+//   debugger;
+//
+//   file.arrange();
+// }
+//
+// // ReplaceSetsAreIdentical();
 
 // --
 // tests

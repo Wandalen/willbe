@@ -232,24 +232,25 @@ function regexpMaybeFrom( o )
   _.routineOptions( regexpMaybeFrom, o );
 
   let result = o.srcStr;
+  let strips;
 
   if( _.strIs( result ) )
   {
 
     if( o.stringWithRegexp )
     {
-
       let optionsExtract =
       {
         delimeter : '//',
         src : result,
       }
-      let strips = _.strSplitInlined( optionsExtract );
-
+      // let strips = _.strSplitInlined( optionsExtract ); // Dmytro : it's local variable
+      strips = _.strSplitInlined( optionsExtract );
     }
     else
     {
-      let strips = [ result ];
+      // let strips = [ result ]; // Dmytro : it's local variable
+      strips = [ result ];
     }
 
     for( let s = 0 ; s < strips.length ; s++ )
@@ -282,7 +283,7 @@ regexpMaybeFrom.defaults =
 
 //
 
-let regexpsMaybeFrom = null;
+let regexpsMaybeFrom = _.routineVectorize_functor( { routine : regexpMaybeFrom, select : 'srcStr' } );
 
 //
 
@@ -821,7 +822,7 @@ let Routines =
   regexpFrom,
 
   regexpMaybeFrom,
-  regexpsMaybeFrom : _.routineVectorize_functor({ routine : regexpMaybeFrom, select : 'srcStr' }),
+  regexpsMaybeFrom,
 
   regexpsSources,
   regexpsJoin,

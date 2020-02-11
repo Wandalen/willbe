@@ -157,22 +157,30 @@ let wProcessWatcher =
 
 // base / l6
 
+let wResolver =
+{
+  sourcePath : sourcePath( 'abase/l6/Resolver.s', 'wresolver' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.resolver; },
+}
+
 let wEqualer =
 {
   sourcePath : sourcePath( 'abase/l6/Equaler.s', 'wequaler' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools._equalIt },
 }
 
-let wResolver =
-{
-  sourcePath : sourcePath( 'abase/l6/Resolver.s', 'wresolver' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Resolver; },
-}
-
 let wSelectorExtra =
 {
   sourcePath : sourcePath( 'abase/l6/SelectorExtra.s', 'wselectorextra' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.entityProbe; },
+}
+
+// base / l7
+
+let wResolverExtra =
+{
+  sourcePath : sourcePath( 'abase/l7/ResolverExtra.s', 'wresolverextra' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.resolver && !!_global.wTools.resolveQualified; },
 }
 
 // base / l7_mixin
@@ -290,7 +298,7 @@ let wColor =
 let wColor256 =
 {
   sourcePath : sourcePath( 'amid/color/Color256.s', 'wColor256' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.color.ColorMap && Object.keys( _global.wTools.color.ColorMap ).length > 100 },
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.color && !!_global.wTools.color.ColorMap && Object.keys( _global.wTools.color.ColorMap ).length > 100 },
 }
 
 let wChangeTransactor =
@@ -630,9 +638,13 @@ let Modules =
 
   // base / l6
 
-  wEqualer,
   wResolver,
+  wEqualer,
   wSelectorExtra,
+
+  // base / l7
+
+  wResolverExtra,
 
   // base / l7_mixin
 

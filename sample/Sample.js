@@ -9,7 +9,7 @@ var src =
   val2 : 'here',
 }
 
-let resolved = _.Resolver.resolve
+let resolved = _.resolver.resolve
 ({
   src : src,
   selector : '{::dir/val1} from {::val2}!',
