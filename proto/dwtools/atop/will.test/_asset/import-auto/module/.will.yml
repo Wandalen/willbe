@@ -1,21 +1,24 @@
 about :
 
-  name : Proto.informal
+  name : Proto
   version : 0.1.0
 
 path :
 
-  in : ..
+  in : .
   out : out
-  remote : 'git+https:///github.com/Wandalen/wProto.git/#70fcc0c31996758b86f85aea1ae58e0e8c2cb8a7'
-  download : '.module/{about::name}'
-  export : '{path::download}/proto/**'
+  remote : 'git+hd://../_repo/Proto'
+  # remote : 'git+https:///github.com/Wandalen/wProto.git'
+  # git:///git@bitbucket.org:group/repo.git/out/Repo#master
+  local : '.module/Proto'
+  export : '{path::local}/proto/**'
+  temp : out
 
 reflector :
 
   download :
     src : path::remote
-    dst : path::download
+    dst : path::local
 
 step :
 

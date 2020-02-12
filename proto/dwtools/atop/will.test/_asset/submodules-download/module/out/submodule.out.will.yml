@@ -3,26 +3,26 @@ root:
   - submodule.out
 consistency:
   ../submodule.will.yml: &ref_0
-    hash: 965c345126f9c11cf6ef908f52844530
+    hash: ec22dc7262302c7912a304e8afb407fd
     size: 393
   ../.module/Tools/.ex.will.yml: &ref_1
-    hash: 7c4ae4afeea4576d150a13a07f1c362c
-    size: 2104
+    hash: 742015b531952d05816c35ee9f9ff3ca
+    size: 2109
   ../.module/Tools/.im.will.yml: &ref_2
-    hash: 080c8f06e6f29dfc75f4078b0b921fcd
-    size: 5195
+    hash: e0b9ac504d07fa8723c98f50459f4829
+    size: 5603
   ../.module/Tools/out/wTools.out.will.yml: &ref_3
-    hash: 9918961a68cb661ee38f58263964f376
-    size: 43391
+    hash: 028ee71b8288f8b8457ae98e07c56463
+    size: 45195
   ../.module/Proto/.ex.will.yml: &ref_4
     hash: 82bb441a25d7921c033e7a75d402c3d4
     size: 1991
   ../.module/Proto/.im.will.yml: &ref_5
-    hash: 676aa293abc42e9f89c4a7cfdf81007b
-    size: 4919
+    hash: 9a9fd1f83c6347611464c699fac74bd5
+    size: 5053
   ../.module/Proto/out/wProto.out.will.yml: &ref_6
-    hash: 459f6ea86fd46653275431d2c882821e
-    size: 39409
+    hash: 5900f88941ff8d2d896801ca282e7da0
+    size: 40540
 module:
   submodule.out:
     about:
@@ -54,20 +54,19 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       in:
         path: .
       out:
         path: .
       exported.dir.export:
         criterion:
+          generated: 1
           default: 1
           export: 1
         path: ..
       exported.files.export:
         criterion:
+          generated: 1
           default: 1
           export: 1
         path:
@@ -115,9 +114,9 @@ module:
           - ../.module/Proto/.git/objects/info
           - ../.module/Proto/.git/objects/pack
           - >-
-            ../.module/Proto/.git/objects/pack/pack-fb646973d5dfe0785e8fed1e31692bd3ee83dd45.idx
+            ../.module/Proto/.git/objects/pack/pack-548a97cb563b48188b0624888cf82cd1cdbf5d47.idx
           - >-
-            ../.module/Proto/.git/objects/pack/pack-fb646973d5dfe0785e8fed1e31692bd3ee83dd45.pack
+            ../.module/Proto/.git/objects/pack/pack-548a97cb563b48188b0624888cf82cd1cdbf5d47.pack
           - ../.module/Proto/.git/refs
           - ../.module/Proto/.git/refs/heads
           - ../.module/Proto/.git/refs/heads/master
@@ -137,14 +136,13 @@ module:
           - ../.module/Proto/proto/dwtools/abase/l3_proto/l1/Define.s
           - ../.module/Proto/proto/dwtools/abase/l3_proto/l1/Proto.s
           - ../.module/Proto/proto/dwtools/abase/l3_proto/l1/Workpiece.s
-          - ../.module/Proto/proto/dwtools/abase/l3_proto/l3
-          - ../.module/Proto/proto/dwtools/abase/l3_proto/l3/Accessor.s
-          - ../.module/Proto/proto/dwtools/abase/l3_proto/l3/Class.s
-          - ../.module/Proto/proto/dwtools/abase/l3_proto/l3/Complex.s
-          - ../.module/Proto/proto/dwtools/abase/l3_proto/l3/Like.s
+          - ../.module/Proto/proto/dwtools/abase/l3_proto/l5
+          - ../.module/Proto/proto/dwtools/abase/l3_proto/l5/Accessor.s
+          - ../.module/Proto/proto/dwtools/abase/l3_proto/l5/Class.s
+          - ../.module/Proto/proto/dwtools/abase/l3_proto/l5/Like.s
           - ../.module/Proto/proto/dwtools/abase/l3_proto.test
+          - ../.module/Proto/proto/dwtools/abase/l3_proto.test/Blueprint.test.s
           - ../.module/Proto/proto/dwtools/abase/l3_proto.test/Class.test.s
-          - ../.module/Proto/proto/dwtools/abase/l3_proto.test/Complex.test.s
           - ../.module/Proto/proto/dwtools/abase/l3_proto.test/Like.test.s
           - ../.module/Proto/proto/dwtools/abase/l3_proto.test/Proto.test.s
           - ../.module/Proto/sample
@@ -192,9 +190,9 @@ module:
           - ../.module/Tools/.git/objects/info
           - ../.module/Tools/.git/objects/pack
           - >-
-            ../.module/Tools/.git/objects/pack/pack-8bcfab23621cf74f3c37efa80c677a728166bfa2.idx
+            ../.module/Tools/.git/objects/pack/pack-1df1f6ba28810f4f2b272c4d72aa81724371201a.idx
           - >-
-            ../.module/Tools/.git/objects/pack/pack-8bcfab23621cf74f3c37efa80c677a728166bfa2.pack
+            ../.module/Tools/.git/objects/pack/pack-1df1f6ba28810f4f2b272c4d72aa81724371201a.pack
           - ../.module/Tools/.git/refs
           - ../.module/Tools/.git/refs/heads
           - ../.module/Tools/.git/refs/heads/master
@@ -225,6 +223,17 @@ module:
           - ../.module/Tools/doc/junior.introduction.ua.md
           - ../.module/Tools/doc/Types.md
           - ../.module/Tools/doc/WillfFromNpm.txt
+          - ../.module/Tools/doc/eng
+          - ../.module/Tools/doc/eng/README.md
+          - ../.module/Tools/doc/eng/concept
+          - ../.module/Tools/doc/eng/concept/Modularity.md
+          - ../.module/Tools/doc/eng/concept/TypePrimitive.md
+          - ../.module/Tools/doc/eng/concept/TypeUnroll.md
+          - ../.module/Tools/doc/eng/tutorial
+          - ../.module/Tools/doc/eng/tutorial/ErrorHandling.md
+          - ../.module/Tools/doc/eng/tutorial/MechanismsOfCatchingErrors.md
+          - ../.module/Tools/doc/eng/tutorial/RoutineFromPreAndBody.md
+          - ../.module/Tools/doc/eng/tutorial/TimeMeasurement.md
           - ../.module/Tools/doc/img
           - ../.module/Tools/doc/img/1.png
           - ../.module/Tools/doc/img/2.1.png
@@ -232,6 +241,20 @@ module:
           - ../.module/Tools/doc/img/3.png
           - ../.module/Tools/doc/img/5.png
           - ../.module/Tools/doc/img/6.png
+          - ../.module/Tools/doc/img/errorsHandling
+          - ../.module/Tools/doc/img/errorsHandling/CallsStackArguments.png
+          - ../.module/Tools/doc/img/errorsHandling/CatchingUncaught.png
+          - ../.module/Tools/doc/img/errorsHandling/Errors.html
+          - ../.module/Tools/doc/img/errorsHandling/ErrorsHandling.drawio
+          - ../.module/Tools/doc/img/modularity
+          - ../.module/Tools/doc/img/modularity/Communication.png
+          - ../.module/Tools/doc/img/modularity/CPU-versus-GPU-architecture.png
+          - ../.module/Tools/doc/img/modularity/Distribution.png
+          - ../.module/Tools/doc/img/modularity/LearningCurve.png
+          - ../.module/Tools/doc/img/modularity/Modularity.drawio
+          - ../.module/Tools/doc/img/modularity/Modularization.png
+          - ../.module/Tools/doc/img/modularity/RestrictingChain.png
+          - ../.module/Tools/doc/img/modularity/TheSystem.png
           - ../.module/Tools/doc/reference
           - ../.module/Tools/doc/reference/component_NameTools.s.html
           - ../.module/Tools/doc/reference/component_StringTools.s.html
@@ -273,36 +296,30 @@ module:
           - ../.module/Tools/doc/reference/styles/jsdoc-default.css
           - ../.module/Tools/doc/reference/styles/prettify-jsdoc.css
           - ../.module/Tools/doc/reference/styles/prettify-tomorrow.css
-          - ../.module/Tools/doc/version.eng
-          - ../.module/Tools/doc/version.eng/README.md
-          - ../.module/Tools/doc/version.eng/concept
-          - ../.module/Tools/doc/version.eng/concept/TypePrimitive.md
-          - ../.module/Tools/doc/version.eng/concept/TypeUnroll.md
-          - ../.module/Tools/doc/version.eng/tuturial
-          - ../.module/Tools/doc/version.eng/tuturial/RoutineFromPreAndBody.md
-          - ../.module/Tools/doc/version.ukr
-          - ../.module/Tools/doc/version.ukr/README.md
-          - ../.module/Tools/doc/version.ukr/concept
-          - ../.module/Tools/doc/version.ukr/concept/Buffer.md
-          - ../.module/Tools/doc/version.ukr/concept/Equalizer.md
-          - ../.module/Tools/doc/version.ukr/concept/Evaluator.md
-          - ../.module/Tools/doc/version.ukr/concept/RoutineInput.md
-          - ../.module/Tools/doc/version.ukr/concept/TypeIndexed.md
-          - ../.module/Tools/doc/version.ukr/concept/TypePrimitive.md
-          - ../.module/Tools/doc/version.ukr/concept/TypeUnroll.md
-          - ../.module/Tools/doc/version.ukr/concept/Vector.md
-          - ../.module/Tools/doc/version.ukr/etc
-          - ../.module/Tools/doc/version.ukr/etc/Array.md
-          - ../.module/Tools/doc/version.ukr/tutorial
-          - >-
-            ../.module/Tools/doc/version.ukr/tutorial/ConventionCallbecksInArray.md
-          - >-
-            ../.module/Tools/doc/version.ukr/tutorial/ConventionDefaultsMapInRoutine.md
-          - ../.module/Tools/doc/version.ukr/tutorial/ConventionDstArgInArray.md
-          - ../.module/Tools/doc/version.ukr/tutorial/ConventionNamingInArray.md
-          - ../.module/Tools/doc/version.ukr/tutorial/RoutineFromPreAndBody.md
-          - ../.module/Tools/doc/version.ukr/tutorial/Vectorize.md
-          - ../.module/Tools/doc/version.ukr/tutorial/VectorizeOptions.md
+          - ../.module/Tools/doc/ukr
+          - ../.module/Tools/doc/ukr/README.md
+          - ../.module/Tools/doc/ukr/concept
+          - ../.module/Tools/doc/ukr/concept/Buffer.md
+          - ../.module/Tools/doc/ukr/concept/Equalizer.md
+          - ../.module/Tools/doc/ukr/concept/Evaluator.md
+          - ../.module/Tools/doc/ukr/concept/RoutineInput.md
+          - ../.module/Tools/doc/ukr/concept/TypeIndexed.md
+          - ../.module/Tools/doc/ukr/concept/TypePrimitive.md
+          - ../.module/Tools/doc/ukr/concept/TypeUnroll.md
+          - ../.module/Tools/doc/ukr/concept/Vector.md
+          - ../.module/Tools/doc/ukr/etc
+          - ../.module/Tools/doc/ukr/etc/Array.md
+          - ../.module/Tools/doc/ukr/tutorial
+          - ../.module/Tools/doc/ukr/tutorial/ConventionCallbecksInArray.md
+          - ../.module/Tools/doc/ukr/tutorial/ConventionDefaultsMapInRoutine.md
+          - ../.module/Tools/doc/ukr/tutorial/ConventionDstArgInArray.md
+          - ../.module/Tools/doc/ukr/tutorial/ConventionNamingInArray.md
+          - ../.module/Tools/doc/ukr/tutorial/EmbeddedModules.md
+          - ../.module/Tools/doc/ukr/tutorial/RoutineFromPreAndBody.md
+          - ../.module/Tools/doc/ukr/tutorial/TimeMeasurement.md
+          - ../.module/Tools/doc/ukr/tutorial/Timer.md
+          - ../.module/Tools/doc/ukr/tutorial/Vectorize.md
+          - ../.module/Tools/doc/ukr/tutorial/VectorizeOptions.md
           - ../.module/Tools/out
           - ../.module/Tools/out/wTools.out.will.yml
           - ../.module/Tools/proto
@@ -315,83 +332,114 @@ module:
           - ../.module/Tools/proto/dwtools/abase/l0
           - ../.module/Tools/proto/dwtools/abase/l0/l1
           - ../.module/Tools/proto/dwtools/abase/l0/l1/Predefined.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l1/Setup.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l2
+          - ../.module/Tools/proto/dwtools/abase/l0/l2/Setup.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iBool.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iBuffer.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l3/iContainer.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l3/iCt.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iEntity.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iErr.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iFunctional.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l3/iIntrospector.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iLong.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iMap.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l3/iModule.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iNumber.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l3/iProcess.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iRange.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iRegexp.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iRoutine.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l3/iSet.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iStr.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iTime.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iType.s
           - ../.module/Tools/proto/dwtools/abase/l0/l3/iUnroll.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fBool.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fBuffer.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fContainer.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fCt.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fEntity.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fErr.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fEvent.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fFunctional.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fIntrospector.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fLong.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fMap.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fModule.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fNumber.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fPath.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fProcess.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fRange.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fRegexp.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fRoutine.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fSet.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fSorted.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fStr.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fTime.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l5/fUnroll.s
           - ../.module/Tools/proto/dwtools/abase/l0/l6
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fBool.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fBuffer.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fContainerAdapter.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fEntity.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fErr.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fFunctional.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fLong.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fMap.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fNumber.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fRange.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fRegexp.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fRoutine.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fStr.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fTime.s
-          - ../.module/Tools/proto/dwtools/abase/l0/l6/fUnroll.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l6/ContainerAdapter.s
           - ../.module/Tools/proto/dwtools/abase/l0/l7
           - ../.module/Tools/proto/dwtools/abase/l0/l7/ArrayDescriptor.s
           - ../.module/Tools/proto/dwtools/abase/l0/l7/Compose.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l7/ContainerAdapterArray.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l7/ContainerAdapterSet.s
           - ../.module/Tools/proto/dwtools/abase/l0/l7/Field.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gBool.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gBuffer.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l8/gContainer.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l8/gCt.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gEntity.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gErr.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gFunctional.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l8/gIntrospector.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gLong.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gMap.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l8/gModule.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gNumber.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gPair.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l8/gProcess.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gRange.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gRegexp.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gRoutine.s
+          - ../.module/Tools/proto/dwtools/abase/l0/l8/gSet.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gStr.s
           - ../.module/Tools/proto/dwtools/abase/l0/l8/gTime.s
           - ../.module/Tools/proto/dwtools/abase/l0/l9
           - ../.module/Tools/proto/dwtools/abase/l0/l9/Setup.s
           - ../.module/Tools/proto/dwtools/abase/l0.test
           - ../.module/Tools/proto/dwtools/abase/l0.test/Buffer.test.s
+          - ../.module/Tools/proto/dwtools/abase/l0.test/Container.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/ContainerAdapter.test.s
-          - ../.module/Tools/proto/dwtools/abase/l0.test/Diagnostics.test.s
+          - ../.module/Tools/proto/dwtools/abase/l0.test/Ct.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/Entity.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/Err.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/Functional.test.s
+          - ../.module/Tools/proto/dwtools/abase/l0.test/Introspector.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/Long.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/Map.test.s
+          - ../.module/Tools/proto/dwtools/abase/l0.test/Module.test.s
+          - ../.module/Tools/proto/dwtools/abase/l0.test/Number.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/Pair.test.s
+          - ../.module/Tools/proto/dwtools/abase/l0.test/Path.test.s
+          - ../.module/Tools/proto/dwtools/abase/l0.test/Range.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/Regexp.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/Routine.test.s
+          - ../.module/Tools/proto/dwtools/abase/l0.test/Sorted.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/Str.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/Time.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/Typing.test.s
           - ../.module/Tools/proto/dwtools/abase/l0.test/Unroll.test.s
           - ../.module/Tools/proto/dwtools/abase/l1
-          - ../.module/Tools/proto/dwtools/abase/l1/IncludeTools.s
           - ../.module/Tools/proto/dwtools/abase/l1/ModulesRegistry.s
           - ../.module/Tools/proto/dwtools/abase/l1/NameTools.s
           - ../.module/Tools/proto/dwtools/abase/l1/StrBasic.s
           - ../.module/Tools/proto/dwtools/abase/l1.test
-          - ../.module/Tools/proto/dwtools/abase/l1.test/StrBasic.test.s
+          - ../.module/Tools/proto/dwtools/abase/l1.test/Str.test.s
           - ../.module/Tools/sample
           - ../.module/Tools/sample/Experiment.js
           - ../.module/Tools/sample/Sample.html
@@ -411,6 +459,7 @@ module:
           - ../.module/Tools/sample/StrExtractStrips.js
           - ../.module/Tools/sample/String.toStr.js
           - ../.module/Tools/sample/strTable.js
+          - ../.module/Tools/sample/VectorizeAccess.js
           - ../.module/Tools/sample/conventionCallbecksInArray
           - >-
             ../.module/Tools/sample/conventionCallbecksInArray/ArrayCountElement.js
@@ -425,20 +474,37 @@ module:
           - ../.module/Tools/sample/conventionNamingInArray
           - ../.module/Tools/sample/conventionNamingInArray/ArrayFamily.js
           - ../.module/Tools/sample/conventionNamingInArray/package.json
+          - ../.module/Tools/sample/errorHandling
+          - ../.module/Tools/sample/errorHandling/AssertionTrivial.js
+          - ../.module/Tools/sample/errorHandling/AssertionType.js
+          - ../.module/Tools/sample/errorHandling/AsyncStack1.js
+          - ../.module/Tools/sample/errorHandling/AsyncStack2.js
+          - ../.module/Tools/sample/errorHandling/AsyncStack3.js
+          - ../.module/Tools/sample/errorHandling/Attend.js
+          - ../.module/Tools/sample/errorHandling/Brief.js
+          - ../.module/Tools/sample/errorHandling/Deasync.js
+          - ../.module/Tools/sample/errorHandling/DevelopmentWithAssertions.js
+          - ../.module/Tools/sample/errorHandling/Once.js
+          - ../.module/Tools/sample/errorHandling/Simplest.js
+          - ../.module/Tools/sample/errorHandling/Stack.js
+          - ../.module/Tools/sample/errorHandling/TddInferior.js
+          - ../.module/Tools/sample/errorHandling/ThrowsStack.js
           - ../.module/Tools/sample/routineFromPreAndBody
           - ../.module/Tools/sample/routineFromPreAndBody/Name.js
           - ../.module/Tools/sample/routineFromPreAndBody/package.json
+          - ../.module/Tools/sample/time
+          - ../.module/Tools/sample/time/TimeMeasurement.js
           - ../.module/Tools/sample/vectorize
           - ../.module/Tools/sample/vectorize/package.json
           - ../.module/Tools/sample/vectorize/Sum.js
           - ../.module/Tools/sample/vectorize/Vectorize.js
     submodule:
       Tools:
-        path: 'git+https:///github.com/Wandalen/wTools.git/#master'
+        path: 'git+https:///github.com/Wandalen/wTools.git/@master'
         autoExporting: 0
         enabled: 1
       Proto:
-        path: 'git+https:///github.com/Wandalen/wProto.git/#master'
+        path: 'git+https:///github.com/Wandalen/wProto.git/@master'
         autoExporting: 0
         enabled: 1
     reflector:
@@ -449,6 +515,7 @@ module:
           prefixPath: ..
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           export: 1
       exported.files.export:
@@ -461,6 +528,7 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           export: 1
     step:
@@ -522,20 +590,17 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       in:
         path: .
       out:
         path: out
     submodule:
       Tools:
-        path: 'git+https:///github.com/Wandalen/wTools.git/#master'
+        path: 'git+https:///github.com/Wandalen/wTools.git/@master'
         autoExporting: 0
         enabled: 1
       Proto:
-        path: 'git+https:///github.com/Wandalen/wProto.git/#master'
+        path: 'git+https:///github.com/Wandalen/wProto.git/@master'
         autoExporting: 0
         enabled: 1
     reflector: {}
@@ -555,7 +620,7 @@ module:
           export: 1
     consistency:
       ../submodule.will.yml:
-        hash: 965c345126f9c11cf6ef908f52844530
+        hash: ec22dc7262302c7912a304e8afb407fd
         size: 393
   ../.module/Tools/:
     about:
@@ -563,8 +628,8 @@ module:
       org: noorg
       description: >-
         Collection of general purpose tools for solving problems. Fundamentally
-        extend JavaScript without corrupting it, so may be used solely or in
-        conjunction with another module of such kind.
+        extend JavaScript without spoiling namespace, so may be used solely or
+        in conjunction with another module of such kind.
       enabled: 1
       version: 0.9.0
       interpreters:
@@ -621,10 +686,6 @@ module:
         criterion:
           predefined: 1
         path: .
-      remote:
-        criterion:
-          predefined: 1
-        path: 'git+https:///github.com/Wandalen/wTools.git#master'
       repository:
         path: 'git+https:///github.com/Wandalen/wTools.git'
       origins:
@@ -638,13 +699,17 @@ module:
       out:
         path: out
       temp:
-        path: 'path::out'
+        path:
+          - 'path::out'
+          - package-lock.json
+          - package.json
+          - node_modules
       proto:
-        path: ./proto
+        path: proto
       export:
         path: '{path::proto}/**'
       doc:
-        path: ./doc
+        path: doc
       out.raw.debug:
         criterion:
           debug: debug
@@ -669,33 +734,36 @@ module:
           raw: compiled
           content: prime
         path: '{path::out}/release'
+      entry:
+        path: dwtools/abase/Layer2.s
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: proto/dwtools/abase/Layer2.s
+          content: proto
+        path: 'proto/{path::entry}'
       entry.proto.only.tests:
         criterion:
           tests: only.tests
         path: proto/**/*.test.*
-      entry.out.raw.debug.debug:
+      entry.out.raw.debug:
         criterion:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/Layer2.s'
-      entry.out.raw.debug.release:
+        path: '{path::out.*=1}/source/{path::entry}'
+      entry.out.raw.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/Layer2.s'
-      entry.out.compiled.debug.debug:
+        path: '{path::out.*=1}/source/{path::entry}'
+      entry.out.compiled.debug:
         criterion:
           debug: debug
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
-      entry.out.compiled.debug.release:
+      entry.out.compiled.release:
         criterion:
           debug: release
           raw: compiled
@@ -888,6 +956,7 @@ module:
         criterion:
           debug: debug
           raw: raw
+          content: prime
         inherit:
           - npm.generate
       npm.generate.release.raw:
@@ -898,6 +967,7 @@ module:
         criterion:
           debug: release
           raw: raw
+          content: prime
         inherit:
           - npm.generate
       npm.generate.debug.compiled:
@@ -908,6 +978,7 @@ module:
         criterion:
           debug: debug
           raw: compiled
+          content: prime
         inherit:
           - npm.generate
       npm.generate.release.compiled:
@@ -918,6 +989,16 @@ module:
         criterion:
           debug: release
           raw: compiled
+          content: prime
+        inherit:
+          - npm.generate
+      npm.generate.proto:
+        opts:
+          entryPath: 'path::entry.proto.no.tests'
+          packagePath: package.json
+          filesPath: '{path::proto}/**'
+        criterion:
+          content: proto
         inherit:
           - npm.generate
       clean.out.debug.raw.no.tests.prime:
@@ -1263,20 +1344,42 @@ module:
           debug: release
           raw: compiled
           content: prime
-      npm:
+      npm.debug.raw:
         steps:
           - npm.generate.*=1
         criterion:
           debug: debug
           raw: raw
-          content: npm
+      npm.release.raw:
+        steps:
+          - npm.generate.*=1
+        criterion:
+          debug: release
+          raw: raw
+      npm.debug.compiled:
+        steps:
+          - npm.generate.*=1
+        criterion:
+          debug: debug
+          raw: compiled
+      npm.release.compiled:
+        steps:
+          - npm.generate.*=1
+        criterion:
+          debug: release
+          raw: compiled
+      npm.proto:
+        steps:
+          - npm.generate.proto
+        criterion:
+          conent: proto
       all:
         steps:
           - 'build::debug'
           - 'build::compiled.debug'
           - 'build::raw.release'
           - 'build::release'
-          - 'build::npm'
+          - 'build::npm.*=5'
     consistency:
       ../.module/Tools/.ex.will.yml: *ref_1
       ../.module/Tools/.im.will.yml: *ref_2
@@ -1287,8 +1390,8 @@ module:
       org: noorg
       description: >-
         Collection of general purpose tools for solving problems. Fundamentally
-        extend JavaScript without corrupting it, so may be used solely or in
-        conjunction with another module of such kind.
+        extend JavaScript without spoiling namespace, so may be used solely or
+        in conjunction with another module of such kind.
       enabled: 1
       version: 0.9.0
       interpreters:
@@ -1345,10 +1448,6 @@ module:
         criterion:
           predefined: 1
         path: ..
-      remote:
-        criterion:
-          predefined: 1
-        path: 'git+https:///github.com/Wandalen/wTools.git/out/wTools.out#master'
       repository:
         path: 'git+https:///github.com/Wandalen/wTools.git'
       origins:
@@ -1358,15 +1457,15 @@ module:
       bugtracker:
         path: 'https:///github.com/Wandalen/wTools/issues'
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: .
       temp:
-        path: 'path::out'
+        path:
+          - 'path::out'
+          - ../package-lock.json
+          - ../package.json
+          - ../node_modules
       proto:
         path: ../proto
       export:
@@ -1397,33 +1496,36 @@ module:
           raw: compiled
           content: prime
         path: '{path::out}/release'
+      entry:
+        path: ../dwtools/abase/Layer2.s
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: ../proto/dwtools/abase/Layer2.s
+          content: proto
+        path: '../proto/{path::entry}'
       entry.proto.only.tests:
         criterion:
           tests: only.tests
         path: ../proto/**/*.test.*
-      entry.out.raw.debug.debug:
+      entry.out.raw.debug:
         criterion:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/Layer2.s'
-      entry.out.raw.debug.release:
+        path: '{path::out.*=1}/source/{path::entry}'
+      entry.out.raw.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/Layer2.s'
-      entry.out.compiled.debug.debug:
+        path: '{path::out.*=1}/source/{path::entry}'
+      entry.out.compiled.debug:
         criterion:
           debug: debug
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
-      entry.out.compiled.debug.release:
+      entry.out.compiled.release:
         criterion:
           debug: release
           raw: compiled
@@ -1431,11 +1533,13 @@ module:
         path: '{path::out.*=}/source/Index.s'
       exported.dir.proto.export:
         criterion:
+          generated: 1
           content: proto
           export: 1
         path: ../proto
       exported.files.proto.export:
         criterion:
+          generated: 1
           content: proto
           export: 1
         path:
@@ -1449,83 +1553,114 @@ module:
           - ../proto/dwtools/abase/l0
           - ../proto/dwtools/abase/l0/l1
           - ../proto/dwtools/abase/l0/l1/Predefined.s
-          - ../proto/dwtools/abase/l0/l1/Setup.s
+          - ../proto/dwtools/abase/l0/l2
+          - ../proto/dwtools/abase/l0/l2/Setup.s
           - ../proto/dwtools/abase/l0/l3
           - ../proto/dwtools/abase/l0/l3/iBool.s
           - ../proto/dwtools/abase/l0/l3/iBuffer.s
+          - ../proto/dwtools/abase/l0/l3/iContainer.s
+          - ../proto/dwtools/abase/l0/l3/iCt.s
           - ../proto/dwtools/abase/l0/l3/iEntity.s
           - ../proto/dwtools/abase/l0/l3/iErr.s
           - ../proto/dwtools/abase/l0/l3/iFunctional.s
+          - ../proto/dwtools/abase/l0/l3/iIntrospector.s
           - ../proto/dwtools/abase/l0/l3/iLong.s
           - ../proto/dwtools/abase/l0/l3/iMap.s
+          - ../proto/dwtools/abase/l0/l3/iModule.s
           - ../proto/dwtools/abase/l0/l3/iNumber.s
+          - ../proto/dwtools/abase/l0/l3/iProcess.s
           - ../proto/dwtools/abase/l0/l3/iRange.s
           - ../proto/dwtools/abase/l0/l3/iRegexp.s
           - ../proto/dwtools/abase/l0/l3/iRoutine.s
+          - ../proto/dwtools/abase/l0/l3/iSet.s
           - ../proto/dwtools/abase/l0/l3/iStr.s
           - ../proto/dwtools/abase/l0/l3/iTime.s
           - ../proto/dwtools/abase/l0/l3/iType.s
           - ../proto/dwtools/abase/l0/l3/iUnroll.s
+          - ../proto/dwtools/abase/l0/l5
+          - ../proto/dwtools/abase/l0/l5/fBool.s
+          - ../proto/dwtools/abase/l0/l5/fBuffer.s
+          - ../proto/dwtools/abase/l0/l5/fContainer.s
+          - ../proto/dwtools/abase/l0/l5/fCt.s
+          - ../proto/dwtools/abase/l0/l5/fEntity.s
+          - ../proto/dwtools/abase/l0/l5/fErr.s
+          - ../proto/dwtools/abase/l0/l5/fEvent.s
+          - ../proto/dwtools/abase/l0/l5/fFunctional.s
+          - ../proto/dwtools/abase/l0/l5/fIntrospector.s
+          - ../proto/dwtools/abase/l0/l5/fLong.s
+          - ../proto/dwtools/abase/l0/l5/fMap.s
+          - ../proto/dwtools/abase/l0/l5/fModule.s
+          - ../proto/dwtools/abase/l0/l5/fNumber.s
+          - ../proto/dwtools/abase/l0/l5/fPath.s
+          - ../proto/dwtools/abase/l0/l5/fProcess.s
+          - ../proto/dwtools/abase/l0/l5/fRange.s
+          - ../proto/dwtools/abase/l0/l5/fRegexp.s
+          - ../proto/dwtools/abase/l0/l5/fRoutine.s
+          - ../proto/dwtools/abase/l0/l5/fSet.s
+          - ../proto/dwtools/abase/l0/l5/fSorted.s
+          - ../proto/dwtools/abase/l0/l5/fStr.s
+          - ../proto/dwtools/abase/l0/l5/fTime.s
+          - ../proto/dwtools/abase/l0/l5/fUnroll.s
           - ../proto/dwtools/abase/l0/l6
-          - ../proto/dwtools/abase/l0/l6/fBool.s
-          - ../proto/dwtools/abase/l0/l6/fBuffer.s
-          - ../proto/dwtools/abase/l0/l6/fContainerAdapter.s
-          - ../proto/dwtools/abase/l0/l6/fEntity.s
-          - ../proto/dwtools/abase/l0/l6/fErr.s
-          - ../proto/dwtools/abase/l0/l6/fFunctional.s
-          - ../proto/dwtools/abase/l0/l6/fLong.s
-          - ../proto/dwtools/abase/l0/l6/fMap.s
-          - ../proto/dwtools/abase/l0/l6/fNumber.s
-          - ../proto/dwtools/abase/l0/l6/fRange.s
-          - ../proto/dwtools/abase/l0/l6/fRegexp.s
-          - ../proto/dwtools/abase/l0/l6/fRoutine.s
-          - ../proto/dwtools/abase/l0/l6/fStr.s
-          - ../proto/dwtools/abase/l0/l6/fTime.s
-          - ../proto/dwtools/abase/l0/l6/fUnroll.s
+          - ../proto/dwtools/abase/l0/l6/ContainerAdapter.s
           - ../proto/dwtools/abase/l0/l7
           - ../proto/dwtools/abase/l0/l7/ArrayDescriptor.s
           - ../proto/dwtools/abase/l0/l7/Compose.s
+          - ../proto/dwtools/abase/l0/l7/ContainerAdapterArray.s
+          - ../proto/dwtools/abase/l0/l7/ContainerAdapterSet.s
           - ../proto/dwtools/abase/l0/l7/Field.s
           - ../proto/dwtools/abase/l0/l8
           - ../proto/dwtools/abase/l0/l8/gBool.s
           - ../proto/dwtools/abase/l0/l8/gBuffer.s
+          - ../proto/dwtools/abase/l0/l8/gContainer.s
+          - ../proto/dwtools/abase/l0/l8/gCt.s
           - ../proto/dwtools/abase/l0/l8/gEntity.s
           - ../proto/dwtools/abase/l0/l8/gErr.s
           - ../proto/dwtools/abase/l0/l8/gFunctional.s
+          - ../proto/dwtools/abase/l0/l8/gIntrospector.s
           - ../proto/dwtools/abase/l0/l8/gLong.s
           - ../proto/dwtools/abase/l0/l8/gMap.s
+          - ../proto/dwtools/abase/l0/l8/gModule.s
           - ../proto/dwtools/abase/l0/l8/gNumber.s
           - ../proto/dwtools/abase/l0/l8/gPair.s
+          - ../proto/dwtools/abase/l0/l8/gProcess.s
           - ../proto/dwtools/abase/l0/l8/gRange.s
           - ../proto/dwtools/abase/l0/l8/gRegexp.s
           - ../proto/dwtools/abase/l0/l8/gRoutine.s
+          - ../proto/dwtools/abase/l0/l8/gSet.s
           - ../proto/dwtools/abase/l0/l8/gStr.s
           - ../proto/dwtools/abase/l0/l8/gTime.s
           - ../proto/dwtools/abase/l0/l9
           - ../proto/dwtools/abase/l0/l9/Setup.s
           - ../proto/dwtools/abase/l0.test
           - ../proto/dwtools/abase/l0.test/Buffer.test.s
+          - ../proto/dwtools/abase/l0.test/Container.test.s
           - ../proto/dwtools/abase/l0.test/ContainerAdapter.test.s
-          - ../proto/dwtools/abase/l0.test/Diagnostics.test.s
+          - ../proto/dwtools/abase/l0.test/Ct.test.s
           - ../proto/dwtools/abase/l0.test/Entity.test.s
           - ../proto/dwtools/abase/l0.test/Err.test.s
           - ../proto/dwtools/abase/l0.test/Functional.test.s
+          - ../proto/dwtools/abase/l0.test/Introspector.test.s
           - ../proto/dwtools/abase/l0.test/Long.test.s
           - ../proto/dwtools/abase/l0.test/Map.test.s
+          - ../proto/dwtools/abase/l0.test/Module.test.s
+          - ../proto/dwtools/abase/l0.test/Number.test.s
           - ../proto/dwtools/abase/l0.test/Pair.test.s
+          - ../proto/dwtools/abase/l0.test/Path.test.s
+          - ../proto/dwtools/abase/l0.test/Range.test.s
           - ../proto/dwtools/abase/l0.test/Regexp.test.s
           - ../proto/dwtools/abase/l0.test/Routine.test.s
+          - ../proto/dwtools/abase/l0.test/Sorted.test.s
           - ../proto/dwtools/abase/l0.test/Str.test.s
           - ../proto/dwtools/abase/l0.test/Time.test.s
           - ../proto/dwtools/abase/l0.test/Typing.test.s
           - ../proto/dwtools/abase/l0.test/Unroll.test.s
           - ../proto/dwtools/abase/l1
-          - ../proto/dwtools/abase/l1/IncludeTools.s
           - ../proto/dwtools/abase/l1/ModulesRegistry.s
           - ../proto/dwtools/abase/l1/NameTools.s
           - ../proto/dwtools/abase/l1/StrBasic.s
           - ../proto/dwtools/abase/l1.test
-          - ../proto/dwtools/abase/l1.test/StrBasic.test.s
+          - ../proto/dwtools/abase/l1.test/Str.test.s
           - ../proto/dwtools/amid
           - ../proto/dwtools/atop
     submodule:
@@ -1713,6 +1848,7 @@ module:
           prefixPath: ../proto
         mandatory: 1
         criterion:
+          generated: 1
           content: proto
           export: 1
       exported.files.proto.export:
@@ -1725,6 +1861,7 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
+          generated: 1
           content: proto
           export: 1
     step:
@@ -1763,6 +1900,7 @@ module:
         criterion:
           debug: debug
           raw: raw
+          content: prime
         inherit:
           - npm.generate
       npm.generate.release.raw:
@@ -1773,6 +1911,7 @@ module:
         criterion:
           debug: release
           raw: raw
+          content: prime
         inherit:
           - npm.generate
       npm.generate.debug.compiled:
@@ -1783,6 +1922,7 @@ module:
         criterion:
           debug: debug
           raw: compiled
+          content: prime
         inherit:
           - npm.generate
       npm.generate.release.compiled:
@@ -1793,6 +1933,16 @@ module:
         criterion:
           debug: release
           raw: compiled
+          content: prime
+        inherit:
+          - npm.generate
+      npm.generate.proto:
+        opts:
+          entryPath: 'path::entry.proto.no.tests'
+          packagePath: package.json
+          filesPath: '{path::proto}/**'
+        criterion:
+          content: proto
         inherit:
           - npm.generate
       clean.out.debug.raw.no.tests.prime:
@@ -2082,6 +2232,7 @@ module:
         opts:
           reflector: 'reflector::exported.proto.export*'
         criterion:
+          generated: 1
           content: proto
           export: 1
         inherit:
@@ -2090,6 +2241,7 @@ module:
         opts:
           reflector: 'reflector::exported.files.proto.export*'
         criterion:
+          generated: 1
           content: proto
           export: 1
         inherit:
@@ -2154,20 +2306,42 @@ module:
           debug: release
           raw: compiled
           content: prime
-      npm:
+      npm.debug.raw:
         steps:
           - npm.generate.*=1
         criterion:
           debug: debug
           raw: raw
-          content: npm
+      npm.release.raw:
+        steps:
+          - npm.generate.*=1
+        criterion:
+          debug: release
+          raw: raw
+      npm.debug.compiled:
+        steps:
+          - npm.generate.*=1
+        criterion:
+          debug: debug
+          raw: compiled
+      npm.release.compiled:
+        steps:
+          - npm.generate.*=1
+        criterion:
+          debug: release
+          raw: compiled
+      npm.proto:
+        steps:
+          - npm.generate.proto
+        criterion:
+          conent: proto
       all:
         steps:
           - 'build::debug'
           - 'build::compiled.debug'
           - 'build::raw.release'
           - 'build::release'
-          - 'build::npm'
+          - 'build::npm.*=5'
     exported:
       proto.export:
         version: 0.9.0
@@ -2182,15 +2356,13 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.module/Tools/out/wTools.out.will.yml:
-        hash: 9918961a68cb661ee38f58263964f376
-        size: 43391
+      ../.module/Tools/out/wTools.out.will.yml: *ref_3
       ../.module/Tools/.ex.will.yml:
-        hash: 7c4ae4afeea4576d150a13a07f1c362c
-        size: 2104
+        hash: 742015b531952d05816c35ee9f9ff3ca
+        size: 2109
       ../.module/Tools/.im.will.yml:
-        hash: 080c8f06e6f29dfc75f4078b0b921fcd
-        size: 5195
+        hash: e0b9ac504d07fa8723c98f50459f4829
+        size: 5603
   ../.module/Proto/:
     about:
       name: wProto
@@ -2252,10 +2424,6 @@ module:
         criterion:
           predefined: 1
         path: .
-      remote:
-        criterion:
-          predefined: 1
-        path: 'git+https:///github.com/Wandalen/wProto.git#master'
       repository:
         path: 'git+https:///github.com/Wandalen/wProto.git'
       origins:
@@ -2269,13 +2437,17 @@ module:
       out:
         path: out
       temp:
-        path: 'path::out'
+        path:
+          - 'path::out'
+          - package-lock.json
+          - package.json
+          - node_modules
       proto:
-        path: ./proto
+        path: proto
       export:
         path: '{path::proto}/**'
       doc:
-        path: ./doc
+        path: doc
       out.raw.debug:
         criterion:
           debug: debug
@@ -2335,6 +2507,10 @@ module:
     submodule:
       wTools:
         path: 'npm:///wTools'
+        autoExporting: 0
+        enabled: 0
+      wBlueprint:
+        path: 'npm:///wblueprint'
         autoExporting: 0
         enabled: 0
       Self:
@@ -2959,10 +3135,6 @@ module:
         criterion:
           predefined: 1
         path: ..
-      remote:
-        criterion:
-          predefined: 1
-        path: 'git+https:///github.com/Wandalen/wProto.git/out/wProto.out#master'
       repository:
         path: 'git+https:///github.com/Wandalen/wProto.git'
       origins:
@@ -2972,15 +3144,15 @@ module:
       bugtracker:
         path: 'https:///github.com/Wandalen/wProto/issues'
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: .
       temp:
-        path: 'path::out'
+        path:
+          - 'path::out'
+          - ../package-lock.json
+          - ../package.json
+          - ../node_modules
       proto:
         path: ../proto
       export:
@@ -3045,11 +3217,13 @@ module:
         path: '{path::out.*=}/source/Index.s'
       exported.dir.proto.export:
         criterion:
+          generated: 1
           content: proto
           export: 1
         path: ../proto
       exported.files.proto.export:
         criterion:
+          generated: 1
           content: proto
           export: 1
         path:
@@ -3057,20 +3231,36 @@ module:
           - ../proto/dwtools
           - ../proto/dwtools/Tools.s
           - ../proto/dwtools/abase
+          - ../proto/dwtools/abase/-l3_proto
+          - ../proto/dwtools/abase/-l3_proto/Include.s
+          - ../proto/dwtools/abase/-l3_proto/l1
+          - ../proto/dwtools/abase/-l3_proto/l1/Define.s
+          - ../proto/dwtools/abase/-l3_proto/l1/Proto.s
+          - ../proto/dwtools/abase/-l3_proto/l1/Workpiece.s
+          - ../proto/dwtools/abase/-l3_proto/l3
+          - ../proto/dwtools/abase/-l3_proto/l3/Accessor.s
+          - ../proto/dwtools/abase/-l3_proto/l3/Blueprint.s
+          - ../proto/dwtools/abase/-l3_proto/l3/Class.s
+          - ../proto/dwtools/abase/-l3_proto/l3/Construction.s
+          - ../proto/dwtools/abase/-l3_proto/l3/Like.s
+          - ../proto/dwtools/abase/-l3_proto.test
+          - ../proto/dwtools/abase/-l3_proto.test/Class.test.s
+          - ../proto/dwtools/abase/-l3_proto.test/Complex.test.s
+          - ../proto/dwtools/abase/-l3_proto.test/Like.test.s
+          - ../proto/dwtools/abase/-l3_proto.test/Proto.test.s
           - ../proto/dwtools/abase/l3_proto
           - ../proto/dwtools/abase/l3_proto/Include.s
           - ../proto/dwtools/abase/l3_proto/l1
           - ../proto/dwtools/abase/l3_proto/l1/Define.s
           - ../proto/dwtools/abase/l3_proto/l1/Proto.s
           - ../proto/dwtools/abase/l3_proto/l1/Workpiece.s
-          - ../proto/dwtools/abase/l3_proto/l3
-          - ../proto/dwtools/abase/l3_proto/l3/Accessor.s
-          - ../proto/dwtools/abase/l3_proto/l3/Class.s
-          - ../proto/dwtools/abase/l3_proto/l3/Complex.s
-          - ../proto/dwtools/abase/l3_proto/l3/Like.s
+          - ../proto/dwtools/abase/l3_proto/l5
+          - ../proto/dwtools/abase/l3_proto/l5/Accessor.s
+          - ../proto/dwtools/abase/l3_proto/l5/Class.s
+          - ../proto/dwtools/abase/l3_proto/l5/Like.s
           - ../proto/dwtools/abase/l3_proto.test
+          - ../proto/dwtools/abase/l3_proto.test/Blueprint.test.s
           - ../proto/dwtools/abase/l3_proto.test/Class.test.s
-          - ../proto/dwtools/abase/l3_proto.test/Complex.test.s
           - ../proto/dwtools/abase/l3_proto.test/Like.test.s
           - ../proto/dwtools/abase/l3_proto.test/Proto.test.s
           - ../proto/dwtools/amid
@@ -3078,6 +3268,10 @@ module:
     submodule:
       wTools:
         path: 'npm:///wTools'
+        autoExporting: 0
+        enabled: 0
+      wBlueprint:
+        path: 'npm:///wblueprint'
         autoExporting: 0
         enabled: 0
       Self:
@@ -3246,6 +3440,7 @@ module:
           prefixPath: ../proto
         mandatory: 1
         criterion:
+          generated: 1
           content: proto
           export: 1
       exported.files.proto.export:
@@ -3258,6 +3453,7 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
+          generated: 1
           content: proto
           export: 1
     step:
@@ -3615,6 +3811,7 @@ module:
         opts:
           reflector: 'reflector::exported.proto.export*'
         criterion:
+          generated: 1
           content: proto
           export: 1
         inherit:
@@ -3623,6 +3820,7 @@ module:
         opts:
           reflector: 'reflector::exported.files.proto.export*'
         criterion:
+          generated: 1
           content: proto
           export: 1
         inherit:
@@ -3715,12 +3913,10 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.module/Proto/out/wProto.out.will.yml:
-        hash: 459f6ea86fd46653275431d2c882821e
-        size: 39409
+      ../.module/Proto/out/wProto.out.will.yml: *ref_6
       ../.module/Proto/.ex.will.yml:
         hash: 82bb441a25d7921c033e7a75d402c3d4
         size: 1991
       ../.module/Proto/.im.will.yml:
-        hash: 676aa293abc42e9f89c4a7cfdf81007b
-        size: 4919
+        hash: 9a9fd1f83c6347611464c699fac74bd5
+        size: 5053
