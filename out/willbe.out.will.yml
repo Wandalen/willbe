@@ -2040,6 +2040,21 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/export-disabled-module
           - >-
             ../proto/dwtools/atop/will.test/_asset/export-disabled-module/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/export-implicit
+          - ../proto/dwtools/atop/will.test/_asset/export-implicit/explicit
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-implicit/explicit/will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-implicit/explicit/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-implicit/explicit/proto/File.js
+          - ../proto/dwtools/atop/will.test/_asset/export-implicit/implicit
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-implicit/implicit/will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-implicit/implicit/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/export-implicit/implicit/proto/File.js
           - ../proto/dwtools/atop/will.test/_asset/export-informal
           - ../proto/dwtools/atop/will.test/_asset/export-informal/.will.yml
           - ../proto/dwtools/atop/will.test/_asset/export-informal/module
@@ -2579,6 +2594,7 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/import-auto/Informal.im.will.yml
           - ../proto/dwtools/atop/will.test/_asset/import-auto/module
+          - ../proto/dwtools/atop/will.test/_asset/import-auto/module/.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/import-auto/module/Proto.will.yml
           - ../proto/dwtools/atop/will.test/_asset/import-auto/module/.module
@@ -2602,6 +2618,10 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/import-path-local/.module
           - >-
             ../proto/dwtools/atop/will.test/_asset/import-path-local/.module/Tools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/import-path-local/.module/Tools/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/import-path-local/.module/Tools/.im.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/import-path-local/.module/Tools/out
           - >-
@@ -2756,6 +2776,8 @@ module:
             ../proto/dwtools/atop/will.test/_asset/reflect-nothing-from-submodules/proto
           - >-
             ../proto/dwtools/atop/will.test/_asset/reflect-nothing-from-submodules/proto/Single.s
+          - ../proto/dwtools/atop/will.test/_asset/reflect-npm-modules
+          - ../proto/dwtools/atop/will.test/_asset/reflect-npm-modules/.will.yml
           - ../proto/dwtools/atop/will.test/_asset/reflect-remote-git
           - >-
             ../proto/dwtools/atop/will.test/_asset/reflect-remote-git/.im.will.yml
