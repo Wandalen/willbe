@@ -8634,8 +8634,6 @@ function cleanNoBuild( test )
   let rel = self.rel_functor( routinePath );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let outPath = _.path.join( routinePath, 'out' );
-
-
   let ready = new _.Consequence().take( null );
   let start = _.process.starter
   ({
@@ -8661,25 +8659,26 @@ function cleanNoBuild( test )
     return null;
   })
 
-  start({ execPath : '.clean' })
-  .then( ( got ) =>
-  {
-    test.case = '.clean';
-    test.identical( got.exitCode, 0 );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
-    return null;
-  })
-
-  /* - */
-
-  start({ execPath : '.clean -- badarg' })
-  .then( ( got ) =>
-  {
-    test.case = '.clean -- badarg';
-    test.notIdentical( got.exitCode, 0 );
-    test.is( !_.strHas( got.output, 'Clean deleted' ) );
-    return null;
-  })
+  // xxx
+  // start({ execPath : '.clean' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.clean';
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // start({ execPath : '.clean -- badarg' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.clean -- badarg';
+  //   test.notIdentical( got.exitCode, 0 );
+  //   test.is( !_.strHas( got.output, 'Clean deleted' ) );
+  //   return null;
+  // })
 
   /* - */
 
