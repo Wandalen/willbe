@@ -75,6 +75,12 @@ function onSuiteBegin()
     outputFormat : 'relative',
   });
 
+  let reposDownload = require( './ReposDownload.s' );
+  return reposDownload().then( () =>
+  {
+    _.assert( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'Tools' ) ) );
+    return null;
+  })
 }
 
 //
@@ -198,9 +204,9 @@ function preCloneRepos( test )
   let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
-  let reposDownload = require( './ReposDownload.s' );
+  // let reposDownload = require( './ReposDownload.s' );
+  // ready.then( () => reposDownload() )
 
-  ready.then( () => reposDownload() )
   ready.then( () =>
   {
     test.is( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'Tools' ) ) );

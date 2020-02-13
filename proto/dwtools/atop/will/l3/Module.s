@@ -6384,7 +6384,9 @@ function infoExportPaths( paths )
 
   // paths = module.pathsRelative({ basePath : module.dirPath, filePath : paths, onlyLocal : 1 });
 
+  debugger;
   result += '\n' + _.toStrNice( paths ) + '';
+  debugger;
 
   result += '\n\n';
 

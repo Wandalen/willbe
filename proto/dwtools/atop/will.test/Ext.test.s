@@ -218,9 +218,9 @@ function preCloneRepos( test )
   // let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   let ready = new _.Consequence().take( null )
 
-  let reposDownload = require( './ReposDownload.s' );
+  // let reposDownload = require( './ReposDownload.s' );
+  // ready.then( () => reposDownload() )
 
-  ready.then( () => reposDownload() )
   ready.then( () =>
   {
     test.is( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'Tools' ) ) );
@@ -7387,7 +7387,6 @@ function listSingleModule( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-
   let ready = new _.Consequence().take( null )
 
   let start = _.process.starter
@@ -7404,40 +7403,41 @@ function listSingleModule( test )
 
   /* - */
 
-  start({ execPath : '.resources.list' })
-  .then( ( got ) =>
-  {
-    test.case = 'list';
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `name : 'single'` ) );
-    test.is( _.strHas( got.output, `description : 'Module for testing'` ) );
-    test.is( _.strHas( got.output, `version : '0.0.1'` ) );
-    return null;
-  })
-
-  /* - */
-
-  start({ execPath : '.about.list' })
-  .then( ( got ) =>
-  {
-    test.case = '.about.list'
-
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, `name : 'single'` ));
-    test.is( _.strHas( got.output, `description : 'Module for testing'` ));
-    test.is( _.strHas( got.output, `version : '0.0.1'` ));
-    test.is( _.strHas( got.output, `enabled : 1` ));
-    test.is( _.strHas( got.output, `interpreters :` ));
-    test.is( _.strHas( got.output, `'nodejs >= 8.0.0'` ));
-    test.is( _.strHas( got.output, `'chrome >= 60.0.0'` ));
-    test.is( _.strHas( got.output, `'firefox >= 60.0.0'` ));
-    test.is( _.strHas( got.output, `'nodejs >= 8.0.0'` ));
-    test.is( _.strHas( got.output, `keywords :` ));
-    test.is( _.strHas( got.output, `'wTools'` ));
-
-    return null;
-  })
+  // start({ execPath : '.resources.list' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'list';
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( _.strHas( got.output, `name : 'single'` ) );
+  //   test.is( _.strHas( got.output, `description : 'Module for testing'` ) );
+  //   test.is( _.strHas( got.output, `version : '0.0.1'` ) );
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // start({ execPath : '.about.list' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.about.list'
+  //
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   test.is( _.strHas( got.output, `name : 'single'` ));
+  //   test.is( _.strHas( got.output, `description : 'Module for testing'` ));
+  //   test.is( _.strHas( got.output, `version : '0.0.1'` ));
+  //   test.is( _.strHas( got.output, `enabled : 1` ));
+  //   test.is( _.strHas( got.output, `interpreters :` ));
+  //   test.is( _.strHas( got.output, `'nodejs >= 8.0.0'` ));
+  //   test.is( _.strHas( got.output, `'chrome >= 60.0.0'` ));
+  //   test.is( _.strHas( got.output, `'firefox >= 60.0.0'` ));
+  //   test.is( _.strHas( got.output, `'nodejs >= 8.0.0'` ));
+  //   test.is( _.strHas( got.output, `keywords :` ));
+  //   test.is( _.strHas( got.output, `'wTools'` ));
+  //
+  //   return null;
+  // })
+  // xxx
 
   /* - */
 
@@ -7458,254 +7458,254 @@ function listSingleModule( test )
 
   /* - */
 
-  start({ execPath : '.paths.list predefined:1' })
-  .then( ( got ) =>
-  {
-    test.case = '.paths.list predefined:1';
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, `module.willfiles :` ) );
-    test.is( _.strHas( got.output, `module.peer.willfiles :` ) );
-    test.is( _.strHas( got.output, `module.dir : /` ) );
-    test.is( _.strHas( got.output, `module.common : /` ) );
-    test.is( _.strHas( got.output, `local : /` ) );
-    test.is( _.strHas( got.output, `will :` ) );
-    test.is( !_.strHas( got.output, `proto : proto` ) );
-    test.is( !_.strHas( got.output, `in : .` ) );
-    test.is( !_.strHas( got.output, `out : out` ) );
-    test.is( !_.strHas( got.output, `out.debug : out/debug` ) );
-    test.is( !_.strHas( got.output, `out.release : out/release` ) );
-    test.identical( _.strCount( got.output, ':' ), 12 );
-
-    return null;
-  })
-
-  /* - */
-
-  start({ execPath : '.paths.list predefined:0' })
-  .then( ( got ) =>
-  {
-    test.case = '.paths.list predefined:0';
-    test.identical( got.exitCode, 0 );
-
-    test.is( !_.strHas( got.output, `module.willfiles :` ) );
-    test.is( !_.strHas( got.output, `module.peer.willfiles :` ) );
-    test.is( !_.strHas( got.output, `module.dir : .` ) );
-    test.is( !_.strHas( got.output, `module.common : ./` ) );
-    test.is( !_.strHas( got.output, `local : .` ) );
-    test.is( !_.strHas( got.output, `will :` ) );
-    test.is( _.strHas( got.output, `proto : proto` ) );
-    test.is( _.strHas( got.output, `in : .` ) );
-    test.is( _.strHas( got.output, `out : out` ) );
-    test.is( _.strHas( got.output, `out.debug : out/debug` ) );
-    test.is( _.strHas( got.output, `out.release : out/release` ) );
-    test.identical( _.strCount( got.output, ':' ), 6 );
-
-    return null;
-  })
-
-  /* - */
-
-  start({ execPath : '.submodules.list' })
-  .then( ( got ) =>
-  {
-    test.case = 'submodules list'
-    test.identical( got.exitCode, 0 );
-    test.is( got.output.length );
-    return null;
-  })
-
-  /* - */
-
-  start({ execPath : '.reflectors.list' })
-  .then( ( got ) =>
-  {
-    test.case = 'reflectors.list'
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, 'reflector::reflect.proto.' ) );
-    test.is( _.strHas( got.output, `path::proto : path::out.*=1` ) );
-    // test.is( _.strHas( got.output, `. : .` ) );
-    // test.is( _.strHas( got.output, `prefixPath : proto` ) );
-    // test.is( _.strHas( got.output, `prefixPath : out/release` ) );
-
-    test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
-    test.is( _.strHas( got.output, `path::proto : path::out.*=1` ) );
-    // test.is( _.strHas( got.output, `. : .` ) );
-    // test.is( _.strHas( got.output, `prefixPath : proto` ) );
-    // test.is( _.strHas( got.output, `prefixPath : out/debug` ) );
-
-    return null;
-  })
-
-  /* - */
-
-  start({ execPath : '.steps.list' })
-  .then( ( got ) =>
-  {
-    test.case = 'steps.list'
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'step::reflect.proto.' ))
-    test.is( _.strHas( got.output, 'step::reflect.proto.debug' ))
-    test.is( _.strHas( got.output, 'step::reflect.proto.raw' ))
-    test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ))
-    test.is( _.strHas( got.output, 'step::export.proto' ))
-
-    return null;
-  })
-
-  /* - */
-
-  start({ execPath : '.builds.list' })
-  .then( ( got ) =>
-  {
-    test.case = '.builds.list'
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'build::debug.raw' ));
-    test.is( _.strHas( got.output, 'build::debug.compiled' ));
-    test.is( _.strHas( got.output, 'build::release.raw' ));
-    test.is( _.strHas( got.output, 'build::release.compiled' ));
-    test.is( _.strHas( got.output, 'build::all' ));
-
-    return null;
-  })
-
-  /* - */
-
-  start({ execPath : '.exports.list' })
-  .then( ( got ) =>
-  {
-    test.case = '.exports.list'
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'build::proto.export' ));
-    test.is( _.strHas( got.output, 'steps : ' ));
-    test.is( _.strHas( got.output, 'build::debug.raw' ));
-    test.is( _.strHas( got.output, 'step::export.proto' ));
-
-    return null;
-  })
-
-  /* - */ /* To test output by command with glob and criterion args*/
-
-  start({ execPath : '.resources.list *a* predefined:0' })
-  .then( ( got ) =>
-  {
-    test.case = 'resources list globs negative';
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'path::out.release' ) );
-    test.is( _.strHas( got.output, 'step::reflect.proto.raw' ) );
-    test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ) );
-    test.is( _.strHas( got.output, 'build::debug.raw' ) );
-    test.is( _.strHas( got.output, 'build::release.raw' ) );
-    test.is( _.strHas( got.output, 'build::release.compiled' ) );
-    test.is( _.strHas( got.output, 'build::all' ) );
-    test.identical( _.strCount( got.output, '::' ), 21 );
-
-    return null;
-  })
-
-  start({ execPath : '.resources.list *p* debug:1' })
-  .then( ( got ) =>
-  {
-    test.case = 'resources list globs negative';
-    test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'reflector::predefined.debug.v1'  ) );
-    test.is( !_.strHas( got.output, 'reflector::predefined.debug.v2'  ) );
-    test.is( _.strHas( got.output, 'reflector::reflect.proto.debug' ) );
-    test.is( _.strHas( got.output, 'step::reflect.proto.debug' ) );
-    test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ) );
-    test.is( _.strHas( got.output, 'step::export.proto' ) );
-    test.is( _.strHas( got.output, 'build::debug.compiled' ) );
-    test.is( _.strHas( got.output, 'build::proto.export' ) );
-    test.identical( _.strCount( got.output, '::' ), 22 );
-
-    return null;
-  })
-
-  /* Glob using positive test */
-  start({ execPath : '.resources.list *proto*' })
-  .then( ( got ) =>
-  {
-    test.case = '.resources.list *proto*';
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
-    // test.is( _.strHas( got.output, `. : .` ) );
-
-    test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
-    test.is( _.strHas( got.output, `files.reflect` ) );
-
-    test.is( _.strHas( got.output, 'build::proto.export'  ) );
-    test.is( _.strHas( got.output, `step::export.proto` ) );
-
-    return null;
-  })
-
-  /* Glob and criterion using negative test */
-  start({ execPath : '.resources.list *proto* debug:0' })
-  .then( ( got ) =>
-  {
-    test.case = 'globs and criterions negative';
-    test.identical( got.exitCode, 0 );
-    test.is( !_.strHas( got.output, `out.debug : './out/debug'` ) );
-    test.is( !_.strHas( got.output, `reflector::reflect.proto.debug` ) );
-    test.is( !_.strHas( got.output, 'step::reflect.proto.debug'  ) );
-    test.is( !_.strHas( got.output, 'build::debug.raw'  ) );
-
-    return null;
-  })
-
-  /* Glob and criterion using positive test */
-  start({ execPath : '.resources.list *proto* debug:0 predefined:0' })
-  .then( ( got ) =>
-  {
-    test.case = 'globs and criterions positive';
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, 'path::proto'  ) );
-
-    test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
-    // test.is( _.strHas( got.output, `. : .` ) );
-
-    test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
-    test.is( _.strHas( got.output, `files.reflect` ) );
-
-    test.identical( _.strCount( got.output, '::' ), 12 );
-
-    return null;
-  })
-
-  /* Glob and two criterions using negative test */
-  start({ execPath : '.resources.list * debug:1 raw:0 predefined:0' })
-  .then( ( got ) =>
-  {
-    test.case = '.resources.list * debug:1 raw:0 predefined:0';
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, `path::out.debug` ) );
-    test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
-    test.is( _.strHas( got.output, `step::reflect.proto.debug` ) );
-    test.is( _.strHas( got.output, `step::export.proto` ) );
-    test.is( _.strHas( got.output, `build::debug.compiled` ) );
-    test.is( _.strHas( got.output, `build::proto.export` ) );
-    test.identical( _.strCount( got.output, '::' ), 20 );
-
-    return null;
-  })
-
-  /* Glob and two criterion using positive test */
-  start({ execPath : '.resources.list * debug:0 raw:1' })
-  .then( ( got ) =>
-  {
-    test.case = '.resources.list * debug:0 raw:1';
-    test.identical( got.exitCode, 0 );
-
-    test.is( _.strHas( got.output, 'step::reflect.proto.raw'  ) );
-    test.is( _.strHas( got.output, 'build::release.raw'  ) );
-    test.identical( _.strCount( got.output, '::' ), 7 );
-
-    return null;
-  })
+  // start({ execPath : '.paths.list predefined:1' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.paths.list predefined:1';
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   test.is( _.strHas( got.output, `module.willfiles :` ) );
+  //   test.is( _.strHas( got.output, `module.peer.willfiles :` ) );
+  //   test.is( _.strHas( got.output, `module.dir : /` ) );
+  //   test.is( _.strHas( got.output, `module.common : /` ) );
+  //   test.is( _.strHas( got.output, `local : /` ) );
+  //   test.is( _.strHas( got.output, `will :` ) );
+  //   test.is( !_.strHas( got.output, `proto : proto` ) );
+  //   test.is( !_.strHas( got.output, `in : .` ) );
+  //   test.is( !_.strHas( got.output, `out : out` ) );
+  //   test.is( !_.strHas( got.output, `out.debug : out/debug` ) );
+  //   test.is( !_.strHas( got.output, `out.release : out/release` ) );
+  //   test.identical( _.strCount( got.output, ':' ), 12 );
+  //
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // start({ execPath : '.paths.list predefined:0' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.paths.list predefined:0';
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   test.is( !_.strHas( got.output, `module.willfiles :` ) );
+  //   test.is( !_.strHas( got.output, `module.peer.willfiles :` ) );
+  //   test.is( !_.strHas( got.output, `module.dir : .` ) );
+  //   test.is( !_.strHas( got.output, `module.common : ./` ) );
+  //   test.is( !_.strHas( got.output, `local : .` ) );
+  //   test.is( !_.strHas( got.output, `will :` ) );
+  //   test.is( _.strHas( got.output, `proto : proto` ) );
+  //   test.is( _.strHas( got.output, `in : .` ) );
+  //   test.is( _.strHas( got.output, `out : out` ) );
+  //   test.is( _.strHas( got.output, `out.debug : out/debug` ) );
+  //   test.is( _.strHas( got.output, `out.release : out/release` ) );
+  //   test.identical( _.strCount( got.output, ':' ), 6 );
+  //
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // start({ execPath : '.submodules.list' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'submodules list'
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( got.output.length );
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // start({ execPath : '.reflectors.list' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'reflectors.list'
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   test.is( _.strHas( got.output, 'reflector::reflect.proto.' ) );
+  //   test.is( _.strHas( got.output, `path::proto : path::out.*=1` ) );
+  //   // test.is( _.strHas( got.output, `. : .` ) );
+  //   // test.is( _.strHas( got.output, `prefixPath : proto` ) );
+  //   // test.is( _.strHas( got.output, `prefixPath : out/release` ) );
+  //
+  //   test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
+  //   test.is( _.strHas( got.output, `path::proto : path::out.*=1` ) );
+  //   // test.is( _.strHas( got.output, `. : .` ) );
+  //   // test.is( _.strHas( got.output, `prefixPath : proto` ) );
+  //   // test.is( _.strHas( got.output, `prefixPath : out/debug` ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // start({ execPath : '.steps.list' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'steps.list'
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( _.strHas( got.output, 'step::reflect.proto.' ))
+  //   test.is( _.strHas( got.output, 'step::reflect.proto.debug' ))
+  //   test.is( _.strHas( got.output, 'step::reflect.proto.raw' ))
+  //   test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ))
+  //   test.is( _.strHas( got.output, 'step::export.proto' ))
+  //
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // start({ execPath : '.builds.list' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.builds.list'
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( _.strHas( got.output, 'build::debug.raw' ));
+  //   test.is( _.strHas( got.output, 'build::debug.compiled' ));
+  //   test.is( _.strHas( got.output, 'build::release.raw' ));
+  //   test.is( _.strHas( got.output, 'build::release.compiled' ));
+  //   test.is( _.strHas( got.output, 'build::all' ));
+  //
+  //   return null;
+  // })
+  //
+  // /* - */
+  //
+  // start({ execPath : '.exports.list' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.exports.list'
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( _.strHas( got.output, 'build::proto.export' ));
+  //   test.is( _.strHas( got.output, 'steps : ' ));
+  //   test.is( _.strHas( got.output, 'build::debug.raw' ));
+  //   test.is( _.strHas( got.output, 'step::export.proto' ));
+  //
+  //   return null;
+  // })
+  //
+  // /* - */ /* To test output by command with glob and criterion args*/
+  //
+  // start({ execPath : '.resources.list *a* predefined:0' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'resources list globs negative';
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( _.strHas( got.output, 'path::out.release' ) );
+  //   test.is( _.strHas( got.output, 'step::reflect.proto.raw' ) );
+  //   test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ) );
+  //   test.is( _.strHas( got.output, 'build::debug.raw' ) );
+  //   test.is( _.strHas( got.output, 'build::release.raw' ) );
+  //   test.is( _.strHas( got.output, 'build::release.compiled' ) );
+  //   test.is( _.strHas( got.output, 'build::all' ) );
+  //   test.identical( _.strCount( got.output, '::' ), 21 );
+  //
+  //   return null;
+  // })
+  //
+  // start({ execPath : '.resources.list *p* debug:1' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'resources list globs negative';
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( _.strHas( got.output, 'reflector::predefined.debug.v1'  ) );
+  //   test.is( !_.strHas( got.output, 'reflector::predefined.debug.v2'  ) );
+  //   test.is( _.strHas( got.output, 'reflector::reflect.proto.debug' ) );
+  //   test.is( _.strHas( got.output, 'step::reflect.proto.debug' ) );
+  //   test.is( _.strHas( got.output, 'step::reflect.proto.debug.raw' ) );
+  //   test.is( _.strHas( got.output, 'step::export.proto' ) );
+  //   test.is( _.strHas( got.output, 'build::debug.compiled' ) );
+  //   test.is( _.strHas( got.output, 'build::proto.export' ) );
+  //   test.identical( _.strCount( got.output, '::' ), 22 );
+  //
+  //   return null;
+  // })
+  //
+  // /* Glob using positive test */
+  // start({ execPath : '.resources.list *proto*' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.resources.list *proto*';
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
+  //   // test.is( _.strHas( got.output, `. : .` ) );
+  //
+  //   test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
+  //   test.is( _.strHas( got.output, `files.reflect` ) );
+  //
+  //   test.is( _.strHas( got.output, 'build::proto.export'  ) );
+  //   test.is( _.strHas( got.output, `step::export.proto` ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* Glob and criterion using negative test */
+  // start({ execPath : '.resources.list *proto* debug:0' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'globs and criterions negative';
+  //   test.identical( got.exitCode, 0 );
+  //   test.is( !_.strHas( got.output, `out.debug : './out/debug'` ) );
+  //   test.is( !_.strHas( got.output, `reflector::reflect.proto.debug` ) );
+  //   test.is( !_.strHas( got.output, 'step::reflect.proto.debug'  ) );
+  //   test.is( !_.strHas( got.output, 'build::debug.raw'  ) );
+  //
+  //   return null;
+  // })
+  //
+  // /* Glob and criterion using positive test */
+  // start({ execPath : '.resources.list *proto* debug:0 predefined:0' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = 'globs and criterions positive';
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   test.is( _.strHas( got.output, 'path::proto'  ) );
+  //
+  //   test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
+  //   // test.is( _.strHas( got.output, `. : .` ) );
+  //
+  //   test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
+  //   test.is( _.strHas( got.output, `files.reflect` ) );
+  //
+  //   test.identical( _.strCount( got.output, '::' ), 12 );
+  //
+  //   return null;
+  // })
+  //
+  // /* Glob and two criterions using negative test */
+  // start({ execPath : '.resources.list * debug:1 raw:0 predefined:0' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.resources.list * debug:1 raw:0 predefined:0';
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   test.is( _.strHas( got.output, `path::out.debug` ) );
+  //   test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
+  //   test.is( _.strHas( got.output, `step::reflect.proto.debug` ) );
+  //   test.is( _.strHas( got.output, `step::export.proto` ) );
+  //   test.is( _.strHas( got.output, `build::debug.compiled` ) );
+  //   test.is( _.strHas( got.output, `build::proto.export` ) );
+  //   test.identical( _.strCount( got.output, '::' ), 20 );
+  //
+  //   return null;
+  // })
+  //
+  // /* Glob and two criterion using positive test */
+  // start({ execPath : '.resources.list * debug:0 raw:1' })
+  // .then( ( got ) =>
+  // {
+  //   test.case = '.resources.list * debug:0 raw:1';
+  //   test.identical( got.exitCode, 0 );
+  //
+  //   test.is( _.strHas( got.output, 'step::reflect.proto.raw'  ) );
+  //   test.is( _.strHas( got.output, 'build::release.raw'  ) );
+  //   test.identical( _.strCount( got.output, '::' ), 7 );
+  //
+  //   return null;
+  // })
 
   return ready;
 }
@@ -8472,6 +8472,9 @@ function cleanBroken2( test )
 
     test.identical( got.exitCode, 0 );
 
+    /* agree/update/download should not count as update of module if no change was done */
+    test.identical( _.strCount( got.output, 'was updated' ), 0 );
+    test.identical( _.strCount( got.output, 'to version' ), 0 );
     test.is( !_.strHas( got.output, /Module module::submodules \/ opener::PathBasic is not downloaded, but file at .*/ ) );
     test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were updated' ) );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );

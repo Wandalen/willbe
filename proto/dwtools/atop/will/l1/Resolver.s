@@ -1089,8 +1089,8 @@ function resolve_body( o )
     baseModule : o.baseModule,
   });
 
-  if( _.longIs( o.selector ) && o.selector[ 0 ] === 1 )
-  debugger;
+  // if( _.longIs( o.selector ) && o.selector[ 0 ] === 1 )
+  // debugger;
 
   return Parent.resolveQualified.body.call( resolver, o );
 }
