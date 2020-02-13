@@ -7,7 +7,7 @@ path :
 
   in : ..
   out : out
-  remote2 : 'git+https:///github.com/Wandalen/wUriBasic.git'
+  remote2 : 'git+https:///github.com/Wandalen/wUriBasic.git/'
   download2 : '.module/{about::name}'
   export : '{path::download2}/proto/**'
 

@@ -15059,10 +15059,10 @@ exportOutResourceWithoutGeneratedCriterion.timeOut = 100000;
 
 //
 
-function exportWillAndOut( test )
+function exportImplicit( test )
 {
   let self = this;
-  let a = self.assetFor( test, 'export-will-and-out' ); xxx
+  let a = self.assetFor( test, 'export-implicit' );
 
   /* - */
 
@@ -15070,23 +15070,183 @@ function exportWillAndOut( test )
 
   .then( () =>
   {
-    test.case = '.with c .export.recursive';
+    test.case = '.with explicit/ .export';
     a.reflect();
     return null;
   })
 
-  a.start( '.with c .clean recursive:2' )
-  a.start( '.with c .export.recursive' )
+  a.start( '.with explicit/ .clean' )
+  a.start( '.with explicit/ .export' )
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Exported module::explicit / build::export with 4 file(s)' ), 1 );
 
-    var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var exp = [ '.', './explicit.out.will.yml', './will.yml', './proto', './proto/File.js' ];
+    var files = self.find( a.abs( 'explicit' ) );
     test.identical( files, exp );
 
-    test.identical( _.strCount( got.output, '+ 6/7 submodule(s) of module::c were downloaded' ), 1 );
+    var outfile = _.fileProvider.fileConfigRead( a.abs( 'explicit/explicit.out.will.yml' ) );
+
+    /* */
+
+    var exp = [ 'export' ];
+    var got = _.mapKeys( outfile.module[ './' ].build );
+    test.identical( got, exp );
+    var exp = [];
+    var got = _.mapKeys( outfile.module[ './' ].step );
+    test.identical( got, exp );
+    var exp =
+    [
+      'in',
+      'out',
+      'module.willfiles',
+      'module.original.willfiles',
+      'module.peer.willfiles',
+      'module.peer.in',
+      'module.common',
+      'download',
+      'export'
+    ];
+    var got = _.mapKeys( outfile.module[ './' ].path );
+    test.identical( got, exp );
+    var exp = [];
+    var got = _.mapKeys( outfile.module[ './' ].reflector );
+    test.identical( got, exp );
+
+    /* */
+
+    var exp = [ 'export' ];
+    var got = _.mapKeys( outfile.module[ 'explicit.out' ].exported );
+    test.identical( got, exp );
+    var exp = [ 'export' ];
+    var got = _.mapKeys( outfile.module[ 'explicit.out' ].build );
+    test.identical( got, exp );
+    var exp = [];
+    var got = _.mapKeys( outfile.module[ 'explicit.out' ].step );
+    test.identical( got, exp );
+    var exp =
+    [
+      'module.willfiles',
+      'module.common',
+      'in',
+      'out',
+      'module.original.willfiles',
+      'module.peer.willfiles',
+      'module.peer.in',
+      'download',
+      'export',
+      'exported.dir.export',
+      'exported.files.export'
+    ];
+    var got = _.mapKeys( outfile.module[ 'explicit.out' ].path );
+    test.identical( got, exp );
+    var exp = [ 'exported.export', 'exported.files.export' ];
+    var got = _.mapKeys( outfile.module[ 'explicit.out' ].reflector );
+    test.identical( got, exp );
+
+    /* */
+
+    var exp = [ '.', 'will.yml', 'proto', 'proto/File.js' ];
+    var got = outfile.module[ 'explicit.out' ].path[ 'exported.files.export' ].path;
+    test.identical( got, exp );
+
+    /* */
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with implicit/ .export';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with implicit/ .clean' )
+  a.start( '.with implicit/ .export' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Exported module::implicit / build::export with 4 file(s)' ), 1 );
+
+    var exp = [ '.', './implicit.out.will.yml', './will.yml', './proto', './proto/File.js' ];
+    var files = self.find( a.abs( 'implicit' ) );
+    test.identical( files, exp );
+
+    var outfile = _.fileProvider.fileConfigRead( a.abs( 'implicit/implicit.out.will.yml' ) );
+    debugger;
+
+    /* */
+
+    var exp = [ 'export' ];
+    var got = _.mapKeys( outfile.module[ './' ].build );
+    test.identical( got, exp );
+    var exp = [];
+    var got = _.mapKeys( outfile.module[ './' ].step );
+    test.identical( got, exp );
+    var exp =
+    [
+      'in',
+      'out',
+      'module.willfiles',
+      'module.original.willfiles',
+      'module.peer.willfiles',
+      'module.peer.in',
+      'module.common',
+      'download',
+      'export'
+    ];
+    var got = _.mapKeys( outfile.module[ './' ].path );
+    test.identical( got, exp );
+    var exp = [];
+    var got = _.mapKeys( outfile.module[ './' ].reflector );
+    test.identical( got, exp );
+
+    /* */
+
+    var exp = [ 'export' ];
+    var got = _.mapKeys( outfile.module[ 'implicit.out' ].exported );
+    test.identical( got, exp );
+    var exp = [ 'export' ];
+    var got = _.mapKeys( outfile.module[ 'implicit.out' ].build );
+    test.identical( got, exp );
+    var exp = [];
+    var got = _.mapKeys( outfile.module[ 'implicit.out' ].step );
+    test.identical( got, exp );
+    var exp =
+    [
+      'module.willfiles',
+      'module.common',
+      'in',
+      'out',
+      'module.original.willfiles',
+      'module.peer.willfiles',
+      'module.peer.in',
+      'download',
+      'export',
+      'exported.dir.export',
+      'exported.files.export'
+    ];
+    var got = _.mapKeys( outfile.module[ 'implicit.out' ].path );
+    test.identical( got, exp );
+    var exp = [ 'exported.export', 'exported.files.export' ];
+    var got = _.mapKeys( outfile.module[ 'implicit.out' ].reflector );
+    test.identical( got, exp );
+
+    /* */
+
+    var exp = [ '.', 'will.yml', 'proto', 'proto/File.js' ];
+    var got = outfile.module[ 'implicit.out' ].path[ 'exported.files.export' ].path;
+    test.identical( got, exp );
+
+    /* */
 
     return null;
   })
@@ -15095,9 +15255,9 @@ function exportWillAndOut( test )
 
   return a.ready;
 
-} /* end of function exportWillAndOut */
+} /* end of function exportImplicit */
 
-exportWillAndOut.timeOut = 300000;
+exportImplicit.timeOut = 300000;
 
 //
 
@@ -15108,6 +15268,9 @@ function exportAuto( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
+
+  /* qqq : use assetFor */
+  /* xxx qqq : replace _.path.join( modulePath */
 
   let outPath = _.path.join( routinePath, 'out' );
   let submodulesPath = _.path.join( routinePath, '.module' );
@@ -22004,7 +22167,7 @@ var Self =
     exportHierarchyRemote,
     exportWithDisabled,
     exportOutResourceWithoutGeneratedCriterion,
-    exportWillAndOut,
+    exportImplicit,
     /* xxx : implement same test for hierarchy-remote and irregular */
     /* xxx : implement clean tests */
     /* xxx : refactor ** clean */

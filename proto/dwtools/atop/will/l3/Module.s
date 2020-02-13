@@ -767,6 +767,80 @@ function _preform()
 
 //
 
+function upform( o )
+{
+  let module = this;
+  let will = module.will;
+
+  o = _.routineOptions( upform, arguments );
+  module.optionsFormingForward( o );
+
+  // debugger;
+
+  if( o.attachedWillfilesFormed )
+  if( !module.stager.stageStatePerformed( 'attachedWillfilesFormed' ) )
+  module.stager.stageReset( 'attachedWillfilesFormed' );
+
+  if( o.peerModulesFormed )
+  if( !module.stager.stageStatePerformed( 'peerModulesFormed' ) )
+  module.stager.stageReset( 'peerModulesFormed' );
+
+  if( o.subModulesFormed )
+  if( !module.stager.stageStatePerformed( 'subModulesFormed' ) )
+  module.stager.stageReset( 'subModulesFormed' );
+
+  if( o.resourcesFormed )
+  if( !module.stager.stageStatePerformed( 'resourcesFormed' ) )
+  module.stager.stageReset( 'resourcesFormed' );
+
+  module.stager.tick();
+  return module.ready;
+}
+
+var defaults = upform.defaults = _.mapExtend( null, Parent.prototype.optionsFormingForward.defaults );
+defaults.all = 1;
+
+// {
+//   all : 1,
+//   attachedWillfilesFormed : null,
+//   peerModulesFormed : null,
+//   subModulesFormed : null,
+//   resourcesFormed : null,
+// }
+
+//
+
+function reform_( o ) /* xxx */
+{
+  let module = this;
+  let will = module.will;
+
+  o = _.routineOptions( reform_, arguments );
+  module.optionsFormingForward( o );
+
+  if( o.attachedWillfilesFormed )
+  module.stager.stageReset( 'attachedWillfilesFormed' );
+
+  if( o.peerModulesFormed )
+  module.stager.stageReset( 'peerModulesFormed' );
+
+  if( o.subModulesFormed )
+  module.stager.stageReset( 'subModulesFormed' );
+
+  if( o.resourcesFormed )
+  module.stager.stageReset( 'resourcesFormed' );
+
+  module.stager.tick();
+  return module.ready;
+}
+
+var defaults = reform_.defaults = _.mapExtend( null, Parent.prototype.optionsFormingForward.defaults );
+defaults.all = 0;
+
+// --
+// predefined
+// --
+
 function predefinedForm()
 {
   let module = this;
@@ -1139,227 +1213,261 @@ function predefinedForm()
         - !!js/regexp '/\.experiment($|\.|\/)/i'
 */
 
-  /* - */
-
-  function prepare( defaults, o )
-  {
-
-    let commonDefaults =
-    {
-      module : module,
-      writable : 0,
-      exportable : 0,
-      importableFromIn : 0,
-      importableFromOut : 0,
-      predefined : 1,
-    }
-
-    if( defaults === null )
-    defaults = Object.create( null );
-    _.mapSupplement( defaults, commonDefaults );
-
-    o.criterion = o.criterion || Object.create( null );
-
-    if( o.importable !== undefined && o.importable !== null )
-    {
-      if( o.importableFromIn === undefined || o.importableFromIn === null )
-      o.importableFromIn = o.importable;
-      if( o.importableFromOut === undefined || o.importableFromOut === null )
-      o.importableFromOut = o.importable;
-    }
-
-    _.mapSupplement( o, defaults );
-    _.mapSupplement( o.criterion, defaults.criterion );
-
-    if( o.predefined )
-    {
-      o.criterion.predefined = 1;
-    }
-
-    delete o.predefined;
-    delete o.importable;
-
-    _.assert( o.criterion !== defaults.criterion );
-    _.assert( arguments.length === 2 );
-
-    return o;
-  }
+  // /* - */
+  //
+  // function prepare( defaults, o )
+  // {
+  //
+  //   let commonDefaults =
+  //   {
+  //     module : module,
+  //     writable : 0,
+  //     exportable : 0,
+  //     importableFromIn : 0,
+  //     importableFromOut : 0,
+  //     predefined : 1,
+  //   }
+  //
+  //   if( defaults === null )
+  //   defaults = Object.create( null );
+  //   _.mapSupplement( defaults, commonDefaults );
+  //
+  //   o.criterion = o.criterion || Object.create( null );
+  //
+  //   if( o.importable !== undefined && o.importable !== null )
+  //   {
+  //     if( o.importableFromIn === undefined || o.importableFromIn === null )
+  //     o.importableFromIn = o.importable;
+  //     if( o.importableFromOut === undefined || o.importableFromOut === null )
+  //     o.importableFromOut = o.importable;
+  //   }
+  //
+  //   _.mapSupplement( o, defaults );
+  //   _.mapSupplement( o.criterion, defaults.criterion );
+  //
+  //   if( o.predefined )
+  //   {
+  //     o.criterion.predefined = 1;
+  //   }
+  //
+  //   delete o.predefined;
+  //   delete o.importable;
+  //
+  //   _.assert( o.criterion !== defaults.criterion );
+  //   _.assert( arguments.length === 2 );
+  //
+  //   return o;
+  // }
 
   /* */
 
   function path( o )
   {
 
-    let defaults =
-    {
-      importableFromIn : 0,
-      importableFromOut : 1,
-    }
+    return module.predefinedPathMake( o );
 
-    o = prepare( defaults, o );
-
-    _.assert( arguments.length === 1 );
-
-    let result = module.pathResourceMap[ o.name ];
-    if( result )
-    {
-      let criterion = o.criterion;
-      delete o.criterion;
-      result.copy( o );
-      _.mapExtend( result.criterion, criterion );
-    }
-    else
-    {
-      result = new will.PathResource( o );
-    }
-
-    // if( result.importableFromIn )
+    // let defaults =
     // {
-    //   logger.log( `${result.qualifiedName} is importable from in` );
-    //   debugger;
+    //   importableFromIn : 0,
+    //   importableFromOut : 1,
     // }
-
-    result.form1();
-
-    _.assert( !!result.writable === !!o.writable );
-
-    return result;
+    //
+    // o = prepare( defaults, o );
+    //
+    // _.assert( arguments.length === 1 );
+    //
+    // let result = module.pathResourceMap[ o.name ];
+    // if( result )
+    // {
+    //   let criterion = o.criterion;
+    //   delete o.criterion;
+    //   result.copy( o );
+    //   _.mapExtend( result.criterion, criterion );
+    // }
+    // else
+    // {
+    //   result = new will.PathResource( o );
+    // }
+    //
+    // result.form1();
+    //
+    // _.assert( !!result.writable === !!o.writable );
+    //
+    // return result;
   }
 
   /* */
 
   function step( o )
   {
-    if( module.stepMap[ o.name ] )
-    return module.stepMap[ o.name ].form1();
 
-    // let defaults =
-    // {
-    //   module : module,
-    //   writable : 0,
-    //   exportable : 0,
-    //   importableFromIn : 0,
-    //   importableFromOut : 0,
-    //   // criterion :
-    //   // {
-    //   //   predefined : 1,
-    //   // }
-    // }
+    return module.predefinedStepMake( o );
 
-    o = prepare( null, o );
-
-    _.assert( arguments.length === 1 );
-
-    let result = new will.Step( o ).form1();
-    result.writable = 0;
-    return result;
+    // if( module.stepMap[ o.name ] )
+    // return module.stepMap[ o.name ].form1();
+    //
+    // o = prepare( null, o );
+    //
+    // _.assert( arguments.length === 1 );
+    //
+    // let result = new will.Step( o ).form1();
+    // result.writable = 0;
+    // return result;
   }
 
   /* */
 
   function reflector( o )
   {
-    if( module.reflectorMap[ o.name ] )
-    return module.reflectorMap[ o.name ].form1();
-
-    // let defaults =
-    // {
-    //   module : module,
-    //   writable : 0,
-    //   exportable : 0,
-    //   importableFromIn : 0,
-    //   importableFromOut : 0,
-    //   criterion :
-    //   {
-    //     predefined : 1,
-    //   }
-    // }
-
-    let o2 = Object.create( null );
-    o2.resource = o;
-
-    o = prepare( null, o2.resource );
-
-    _.assert( !!o2.resource.criterion );
-    _.assert( arguments.length === 1 );
-
-    let result = will.Reflector.MakeForEachCriterion( o2 );
-    return result;
+    return module.predefinedReflectorMake( o );
+    // if( module.reflectorMap[ o.name ] )
+    // return module.reflectorMap[ o.name ].form1();
+    //
+    // let o2 = Object.create( null );
+    // o2.resource = o;
+    //
+    // o = prepare( null, o2.resource );
+    //
+    // _.assert( !!o2.resource.criterion );
+    // _.assert( arguments.length === 1 );
+    //
+    // let result = will.Reflector.MakeForEachCriterion( o2 );
+    // return result;
   }
 
 }
 
 //
 
-function upform( o )
+function _predefinedOptionsPrepare( defaults, o )
 {
   let module = this;
   let will = module.will;
 
-  o = _.routineOptions( upform, arguments );
-  module.optionsFormingForward( o );
+  let commonDefaults =
+  {
+    module : module,
+    writable : 0,
+    exportable : 0,
+    importableFromIn : 0,
+    importableFromOut : 0,
+    predefined : 1,
+  }
 
-  // debugger;
+  if( defaults === null )
+  defaults = Object.create( null );
+  _.mapSupplement( defaults, commonDefaults );
 
-  if( o.attachedWillfilesFormed )
-  if( !module.stager.stageStatePerformed( 'attachedWillfilesFormed' ) )
-  module.stager.stageReset( 'attachedWillfilesFormed' );
+  o.criterion = o.criterion || Object.create( null );
 
-  if( o.peerModulesFormed )
-  if( !module.stager.stageStatePerformed( 'peerModulesFormed' ) )
-  module.stager.stageReset( 'peerModulesFormed' );
+  if( o.importable !== undefined && o.importable !== null )
+  {
+    if( o.importableFromIn === undefined || o.importableFromIn === null )
+    o.importableFromIn = o.importable;
+    if( o.importableFromOut === undefined || o.importableFromOut === null )
+    o.importableFromOut = o.importable;
+  }
 
-  if( o.subModulesFormed )
-  if( !module.stager.stageStatePerformed( 'subModulesFormed' ) )
-  module.stager.stageReset( 'subModulesFormed' );
+  _.mapSupplement( o, defaults );
+  _.mapSupplement( o.criterion, defaults.criterion );
 
-  if( o.resourcesFormed )
-  if( !module.stager.stageStatePerformed( 'resourcesFormed' ) )
-  module.stager.stageReset( 'resourcesFormed' );
+  if( o.predefined )
+  {
+    o.criterion.predefined = 1;
+  }
 
-  module.stager.tick();
-  return module.ready;
+  delete o.predefined;
+  delete o.importable;
+
+  _.assert( o.criterion !== defaults.criterion );
+  _.assert( arguments.length === 2 );
+
+  return o;
 }
-
-var defaults = upform.defaults = _.mapExtend( null, Parent.prototype.optionsFormingForward.defaults );
-defaults.all = 1;
-
-// {
-//   all : 1,
-//   attachedWillfilesFormed : null,
-//   peerModulesFormed : null,
-//   subModulesFormed : null,
-//   resourcesFormed : null,
-// }
 
 //
 
-function reform_( o )
+function predefinedPathMake( o )
 {
   let module = this;
   let will = module.will;
 
-  o = _.routineOptions( reform_, arguments );
-  module.optionsFormingForward( o );
+  let defaults =
+  {
+    importableFromIn : 0,
+    importableFromOut : 1,
+  }
 
-  if( o.attachedWillfilesFormed )
-  module.stager.stageReset( 'attachedWillfilesFormed' );
+  o = module._predefinedOptionsPrepare( defaults, o );
 
-  if( o.peerModulesFormed )
-  module.stager.stageReset( 'peerModulesFormed' );
+  _.assert( arguments.length === 1 );
 
-  if( o.subModulesFormed )
-  module.stager.stageReset( 'subModulesFormed' );
+  let result = module.pathResourceMap[ o.name ];
+  if( result )
+  {
+    let criterion = o.criterion;
+    delete o.criterion;
+    result.copy( o );
+    _.mapExtend( result.criterion, criterion );
+  }
+  else
+  {
+    result = new will.PathResource( o );
+  }
 
-  if( o.resourcesFormed )
-  module.stager.stageReset( 'resourcesFormed' );
+  result.form1();
 
-  module.stager.tick();
-  return module.ready;
+  _.assert( !!result.writable === !!o.writable );
+
+  return result;
 }
 
-var defaults = reform_.defaults = _.mapExtend( null, Parent.prototype.optionsFormingForward.defaults );
-defaults.all = 0;
+//
+
+function predefinedStepMake( o )
+{
+  let module = this;
+  let will = module.will;
+
+  // if( o.name === 'files.delete' )
+  // debugger;
+
+  if( module.stepMap[ o.name ] )
+  return module.stepMap[ o.name ].form1();
+
+  o = module._predefinedOptionsPrepare( null, o );
+
+  _.assert( module === o.module );
+  _.assert( arguments.length === 1 );
+
+  // debugger;
+  let result = new will.Step( o ).form1();
+  result.writable = 0;
+  return result;
+}
+
+//
+
+function predefinedReflectorMake( o )
+{
+  let module = this;
+  let will = module.will;
+
+  if( module.reflectorMap[ o.name ] )
+  return module.reflectorMap[ o.name ].form1();
+
+  let o2 = Object.create( null );
+  o2.resource = o;
+
+  o = module._predefinedOptionsPrepare( null, o2.resource );
+  // o = prepare( null, o2.resource );
+
+  _.assert( !!o2.resource.criterion );
+  _.assert( arguments.length === 1 );
+
+  let result = will.Reflector.MakeForEachCriterion( o2 );
+  return result;
+}
 
 // --
 // relator
@@ -1766,6 +1874,43 @@ function _willfilesOpen()
 
   /* */
 
+  con.then( ( arg ) =>
+  {
+    /* add default export step and build if defined none such */
+    if( _.lengthOf( module.buildMap ) !== 0 )
+    return arg;
+    if( _.mapVals( module.stepMap ).filter( ( step ) => !step.criterion.predefined ).length !== 0 )
+    return arg;
+
+    let o2 =
+    {
+      module : module,
+      name : 'export',
+      criterion :
+      {
+        export : 1,
+        default : 1,
+      },
+      steps : [ 'step::module.export' ],
+    }
+    let resource2 = new will.Build( o2 ).form1();
+
+    if( module.pathResourceMap.export || module.reflectorMap.export )
+    return arg;
+
+    let o3 =
+    {
+      module : module,
+      name : 'export',
+      path : '**',
+    }
+    let resource3 = new will.PathResource( o3 ).form1();
+
+    return arg;
+  });
+
+  /* */
+
   con.finally( ( err, arg ) =>
   {
     if( err )
@@ -1787,12 +1932,8 @@ function _willfilesOpenEnd()
   let will = module.will;
   let logger = will.logger;
 
-  // if( module.id === 273 )
-  // debugger;
-
   if( module.stager.isValid() )
   {
-    // debugger;
     module.peerModuleFromJunction();
   }
 
@@ -1808,7 +1949,6 @@ function _willfilesReadBegin()
   let logger = will.logger;
 
   will._willfilesReadBegin();
-  // module.willfilesReadBeginTime = _.time.now();
 
   return null;
 }
@@ -1823,14 +1963,6 @@ function _willfilesReadEnd()
 
   will._willfilesReadEnd( module );
 
-  // if( will.verbosity >= 2 )
-  // if( module === module.rootModule && !module.original )
-  // {
-  //   if( !module.willfilesReadTimeReported )
-  //   logger.log( ' . Read', module.willfilesResolve().length, 'willfile(s) in', _.time.spent( module.willfilesReadBeginTime ), '\n' );
-  //   module.willfilesReadTimeReported = 1;
-  // }
-
   return null;
 }
 
@@ -1843,14 +1975,6 @@ function willfileUnregister( willf )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-
-  // if( willf.storageModule === module )
-  // {
-  //   _.assert( willf.storageModule !== willf.openedModule );
-  //   _.arrayRemoveOnceStrictly( module.storedWillfilesArray, willf );
-  //   willf.storageModule = null;
-  //   return;
-  // }
 
   _.assert( willf.openedModule === module || willf.openedModule === null );
   willf.openedModule = null;
@@ -1876,13 +2000,6 @@ function willfileRegister( willf )
     willf.forEach( ( willf ) => module.willfileRegister( willf ) );
     return;
   }
-
-  // if( willf.storageModule === module )
-  // {
-  //   _.assert( willf.storageModule !== willf.openedModule );
-  //   _.arrayAppendOnceStrictly( module.storedWillfilesArray, willf );
-  //   return;
-  // }
 
   _.assert( willf.openedModule === null || willf.openedModule === module );
   willf.openedModule = module;
@@ -4667,7 +4784,6 @@ function pathsRebase( o )
 
   if( o.inPath === o.exInPath )
   {
-    debugger;
     module.inPath = o.inPath
     return;
   }
@@ -7371,9 +7487,16 @@ let Extend =
   unform,
   preform,
   _preform,
-  predefinedForm,
   upform,
   reform_,
+
+  // predefined
+
+  predefinedForm,
+  _predefinedOptionsPrepare,
+  predefinedPathMake,
+  predefinedStepMake,
+  predefinedReflectorMake,
 
   // relator
 

@@ -631,8 +631,6 @@ function _readLog( reading, failed )
     let storagePath = _.color.strFormat( path.s.relative( _.arrayAs( willf.filePath ), willf.storagePath ), 'path' );
     for( let f = 0 ; f < filePath.length ; f++ )
     {
-      // if( failed )
-      // debugger;
       if( failed === 2 )
       logger.log( ` ! Outdated . ${filePath[ f ]} from ${storagePath[ f ]}` );
       else if( failed )
@@ -645,8 +643,6 @@ function _readLog( reading, failed )
   {
     for( let f = 0 ; f < filePath.length ; f++ )
     {
-      // if( failed )
-      // debugger;
       if( failed === 2 )
       logger.log( ` ! Outdated . ${filePath[ f ]}` );
       else if( failed )
@@ -714,9 +710,6 @@ function _importToModule()
 
     /* */
 
-    // if( _.strHas( willf.filePath, "super.im.will.yml" ) )
-    // debugger;
-
     willf._resourcesImport( will.PathResource, mstructure.path );
     if( willf.isOut ) /* xxx */
     willf._resourcesImport( will.Exported, mstructure.exported );
@@ -732,8 +725,6 @@ function _importToModule()
   }
   catch( err )
   {
-    // debugger;
-    // err = _.err( err, `\nFailed to import willfile ${willf.filePath}` );
     throw _.err( err, `\nFailed to import willfile ${willf.filePath}` );
   }
 
