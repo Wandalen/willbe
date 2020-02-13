@@ -6,7 +6,7 @@ about :
 
 submodule :
 
-  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will@master
 
 path :
 
