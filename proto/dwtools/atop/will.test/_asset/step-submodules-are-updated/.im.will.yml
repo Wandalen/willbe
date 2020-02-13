@@ -1,7 +1,7 @@
 
 submodule :
 
-  local : git+hd://./module/?out=out/local.out.will#master
+  local : git+hd://./module/?out=out/local.out.will@master
 
 path :
 

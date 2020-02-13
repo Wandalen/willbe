@@ -19054,7 +19054,7 @@ function subModulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch';
     var read = _.fileProvider.fileRead( _.path.join( routinePath, '.im.will.yml' ) );
-    read = _.strReplace( read, '8fa27d72fe02d5e496b26e16669970a69d71fdb1', 'master' )
+    read = _.strReplace( read, '#8fa27d72fe02d5e496b26e16669970a69d71fdb1', '@master' )
     _.fileProvider.fileWrite( _.path.join( routinePath, '.im.will.yml' ), read );
     return null;
   })
@@ -19153,7 +19153,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.case = 'switch master to dev';
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ]= _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#master', '#dev' );
+    willFile.submodule[ 'willbe-experiment' ]= _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
@@ -19171,7 +19171,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.case = 'switch dev to detached state';
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#dev', '#' + detachedVersion );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@dev', '#' + detachedVersion );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
@@ -19189,7 +19189,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.case = 'switch detached state to master';
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#' + detachedVersion, '#master' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#' + detachedVersion, '@master' );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
@@ -19207,7 +19207,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.case = 'master has local change, cause conflict when switch to dev';
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#master', '#dev' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     let filePath = _.path.join( submodulesPath, 'willbe-experiment/File.js' );
     _.fileProvider.fileWrite({ filePath, data : 'master' });
@@ -19258,7 +19258,7 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#master', '#dev' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
@@ -19979,7 +19979,7 @@ function stepSubmodulesDownload( test )
   {
     test.case = 'list'
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master` ) );
+    test.is( _.strHas( got.output, `git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will@master` ) );
     return null;
   })
 
@@ -20208,7 +20208,7 @@ function stepSubmodulesAreUpdated( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules were downloaded in' ) );
-    test.is( _.strHas( got.output, '! Submodule relation::local is not up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule module::local is not up to date' ) );
     // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -20226,7 +20226,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule relation::local does not have files' ) );
+    test.is( _.strHas( got.output, '! Submodule module::local does not have files' ) );
     // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -20244,7 +20244,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule relation::local does not have files' ) );
+    test.is( _.strHas( got.output, '! Submodule module::local does not have files' ) );
     // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -20262,7 +20262,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule relation::local has different origin url' ) );
+    test.is( _.strHas( got.output, '! Submodule module::local has different origin url' ) );
     // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
@@ -20280,7 +20280,7 @@ function stepSubmodulesAreUpdated( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '! Submodule relation::local is not up to date' ) );
+    test.is( _.strHas( got.output, '! Submodule module::local is not up to date' ) );
     // test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules are up to date' ) );
     return null;
   })
