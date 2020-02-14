@@ -2,7 +2,7 @@
 submodule :
 
   # PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will#master
-  PathBasic : git+hd://../_repo/Proto/
+  Proto : git+hd://../_repo/Proto/
 
 path :
 
