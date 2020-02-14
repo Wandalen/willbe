@@ -5219,9 +5219,9 @@ function hookPrepare( test )
   test.is( true );
 
   let config = _.fileProvider.fileConfigUserRead();
-  let user = config.about.user;
   if( !config || !config.about || !config.about[ 'github.token' ] )
   return null;
+  let user = config.about.user;
 
   /* - */
 
