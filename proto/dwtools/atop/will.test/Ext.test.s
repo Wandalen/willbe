@@ -7257,18 +7257,18 @@ function modulesTreeDisabledAndCorrupted( test )
     let exp =
 
 `+-- module::many
- | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git#master
+ | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git@master
  | | +-- module::wFiles - path::remote:=npm:///wFiles
  | | +-- module::wCloner - path::remote:=npm:///wcloner
  | | +-- module::wStringer - path::remote:=npm:///wstringer
  | | +-- module::wTesting - path::remote:=npm:///wTesting
  | | +-- module::wSelector - path::remote:=npm:///wselector
  | | +-- module::wTools
- | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git#master
+ | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git@master
  | | +-- module::wTools - path::remote:=npm:///wTools
  | | +-- module::wFiles - path::remote:=npm:///wFiles
  | | +-- module::wTesting - path::remote:=npm:///wTesting
- | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git#master
+ | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git@master
  |   +-- module::wTools - path::remote:=npm:///wTools
  |   +-- module::wPathBasic - path::remote:=npm:///wpathbasic
  |   +-- module::wArraySorted - path::remote:=npm:///warraysorted
