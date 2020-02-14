@@ -3944,19 +3944,20 @@ function reflectNpmModules( test )
 
     var exp =
     [
-      '.',
-      './out',
-      './out/wUriBasic.out.will.yml',
-      './proto',
-      './proto/dwtools',
-      './proto/dwtools/Tools.s',
-      './proto/dwtools/abase',
-      './proto/dwtools/abase/l3',
-      './proto/dwtools/abase/l3/PathBasic.s',
-      './proto/dwtools/abase/l4',
-      './proto/dwtools/abase/l4/PathsBasic.s',
-      './proto/dwtools/abase/l4/Uri.s',
-      './proto/dwtools/abase/l5',
+      '.', 
+      './out', 
+      './out/wUriBasic.out.will.yml', 
+      './proto', 
+      './proto/dwtools', 
+      './proto/dwtools/Tools.s', 
+      './proto/dwtools/abase', 
+      './proto/dwtools/abase/l2', 
+      './proto/dwtools/abase/l2/PathBasic.s', 
+      './proto/dwtools/abase/l3', 
+      './proto/dwtools/abase/l3/PathsBasic.s', 
+      './proto/dwtools/abase/l4', 
+      './proto/dwtools/abase/l4/Uri.s', 
+      './proto/dwtools/abase/l5', 
       './proto/dwtools/abase/l5/Uris.s'
     ]
     var files = self.find( a.abs( 'out' ) )
