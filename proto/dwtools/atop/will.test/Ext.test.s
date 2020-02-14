@@ -4654,6 +4654,7 @@ function withDoInfo( test )
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    mode : 'spawn',
     outputGraying : 1,
     throwingExitCode : 1,
     ready : ready,
@@ -4803,6 +4804,7 @@ function withDoStatus( test )
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
+    mode : 'spawn',
     outputCollecting : 1,
     outputGraying : 1,
     throwingExitCode : 1,
@@ -4974,6 +4976,7 @@ function hookCallInfo( test )
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
+    mode : 'spawn',
     outputCollecting : 1,
     outputGraying : 1,
     throwingExitCode : 1,
@@ -8997,6 +9000,7 @@ function cleanRecursive( test )
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
+    mode : 'spawn',
     outputCollecting : 1,
     outputGraying : 1,
     ready : ready,
