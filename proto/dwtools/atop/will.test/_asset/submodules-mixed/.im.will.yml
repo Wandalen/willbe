@@ -1,8 +1,8 @@
 
 submodule :
 
-  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master
-  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will#master
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will@master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will@master
   UriBasic : out/UriBasic.informal.out
   Proto : out/Proto.informal.out
 

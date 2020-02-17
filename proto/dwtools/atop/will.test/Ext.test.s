@@ -2785,26 +2785,25 @@ function reflectGetPath( test )
 
     var expected =
     [
-      '.',
-      './debug',
-      './debug/dwtools',
-      './debug/dwtools/Tools.s',
-      './debug/dwtools/abase',
-      './debug/dwtools/abase/l3_proto',
-      './debug/dwtools/abase/l3_proto/Include.s',
-      './debug/dwtools/abase/l3_proto/l1',
-      './debug/dwtools/abase/l3_proto/l1/Define.s',
-      './debug/dwtools/abase/l3_proto/l1/Proto.s',
-      './debug/dwtools/abase/l3_proto/l1/Workpiece.s',
-      './debug/dwtools/abase/l3_proto/l3',
-      './debug/dwtools/abase/l3_proto/l3/Accessor.s',
-      './debug/dwtools/abase/l3_proto/l3/Class.s',
-      './debug/dwtools/abase/l3_proto/l3/Complex.s',
-      './debug/dwtools/abase/l3_proto/l3/Like.s',
-      './debug/dwtools/abase/l3_proto.test',
-      './debug/dwtools/abase/l3_proto.test/Class.test.s',
-      './debug/dwtools/abase/l3_proto.test/Complex.test.s',
-      './debug/dwtools/abase/l3_proto.test/Like.test.s',
+      '.', 
+      './debug', 
+      './debug/dwtools', 
+      './debug/dwtools/Tools.s', 
+      './debug/dwtools/abase', 
+      './debug/dwtools/abase/l3_proto', 
+      './debug/dwtools/abase/l3_proto/Include.s', 
+      './debug/dwtools/abase/l3_proto/l1', 
+      './debug/dwtools/abase/l3_proto/l1/Define.s', 
+      './debug/dwtools/abase/l3_proto/l1/Proto.s', 
+      './debug/dwtools/abase/l3_proto/l1/Workpiece.s', 
+      './debug/dwtools/abase/l3_proto/l5', 
+      './debug/dwtools/abase/l3_proto/l5/Accessor.s', 
+      './debug/dwtools/abase/l3_proto/l5/Class.s', 
+      './debug/dwtools/abase/l3_proto/l5/Like.s', 
+      './debug/dwtools/abase/l3_proto.test', 
+      './debug/dwtools/abase/l3_proto.test/Blueprint.test.s', 
+      './debug/dwtools/abase/l3_proto.test/Class.test.s', 
+      './debug/dwtools/abase/l3_proto.test/Like.test.s', 
       './debug/dwtools/abase/l3_proto.test/Proto.test.s'
     ]
     var files = self.find( outPath );
@@ -3944,19 +3943,20 @@ function reflectNpmModules( test )
 
     var exp =
     [
-      '.',
-      './out',
-      './out/wUriBasic.out.will.yml',
-      './proto',
-      './proto/dwtools',
-      './proto/dwtools/Tools.s',
-      './proto/dwtools/abase',
-      './proto/dwtools/abase/l3',
-      './proto/dwtools/abase/l3/PathBasic.s',
-      './proto/dwtools/abase/l4',
-      './proto/dwtools/abase/l4/PathsBasic.s',
-      './proto/dwtools/abase/l4/Uri.s',
-      './proto/dwtools/abase/l5',
+      '.', 
+      './out', 
+      './out/wUriBasic.out.will.yml', 
+      './proto', 
+      './proto/dwtools', 
+      './proto/dwtools/Tools.s', 
+      './proto/dwtools/abase', 
+      './proto/dwtools/abase/l2', 
+      './proto/dwtools/abase/l2/PathBasic.s', 
+      './proto/dwtools/abase/l3', 
+      './proto/dwtools/abase/l3/PathsBasic.s', 
+      './proto/dwtools/abase/l4', 
+      './proto/dwtools/abase/l4/Uri.s', 
+      './proto/dwtools/abase/l5', 
       './proto/dwtools/abase/l5/Uris.s'
     ]
     var files = self.find( a.abs( 'out' ) )
@@ -4653,6 +4653,7 @@ function withDoInfo( test )
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
     outputCollecting : 1,
+    mode : 'spawn',
     outputGraying : 1,
     throwingExitCode : 1,
     ready : ready,
@@ -4802,6 +4803,7 @@ function withDoStatus( test )
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
+    mode : 'spawn',
     outputCollecting : 1,
     outputGraying : 1,
     throwingExitCode : 1,
@@ -4973,6 +4975,7 @@ function hookCallInfo( test )
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
+    mode : 'spawn',
     outputCollecting : 1,
     outputGraying : 1,
     throwingExitCode : 1,
@@ -5215,9 +5218,9 @@ function hookPrepare( test )
   test.is( true );
 
   let config = _.fileProvider.fileConfigUserRead();
-  let user = config.about.user;
   if( !config || !config.about || !config.about[ 'github.token' ] )
   return null;
+  let user = config.about.user;
 
   /* - */
 
@@ -7253,18 +7256,18 @@ function modulesTreeDisabledAndCorrupted( test )
     let exp =
 
 `+-- module::many
- | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git#master
+ | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git@master
  | | +-- module::wFiles - path::remote:=npm:///wFiles
  | | +-- module::wCloner - path::remote:=npm:///wcloner
  | | +-- module::wStringer - path::remote:=npm:///wstringer
  | | +-- module::wTesting - path::remote:=npm:///wTesting
  | | +-- module::wSelector - path::remote:=npm:///wselector
  | | +-- module::wTools
- | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git#master
+ | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git@master
  | | +-- module::wTools - path::remote:=npm:///wTools
  | | +-- module::wFiles - path::remote:=npm:///wFiles
  | | +-- module::wTesting - path::remote:=npm:///wTesting
- | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git#master
+ | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git@master
  |   +-- module::wTools - path::remote:=npm:///wTools
  |   +-- module::wPathBasic - path::remote:=npm:///wpathbasic
  |   +-- module::wArraySorted - path::remote:=npm:///warraysorted
@@ -8996,6 +8999,7 @@ function cleanRecursive( test )
   ({
     execPath : 'node ' + self.willPath,
     currentPath : routinePath,
+    mode : 'spawn',
     outputCollecting : 1,
     outputGraying : 1,
     ready : ready,
