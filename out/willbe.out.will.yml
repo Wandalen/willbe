@@ -265,9 +265,9 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/objects/info
           - ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/objects/pack
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/objects/pack/pack-6fe0ab402e8db037cc0e71c62bef4729e66ad58e.idx
+            ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/objects/pack/pack-70019dc94686862b6e57235554a04c2eb8ea8170.idx
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/objects/pack/pack-6fe0ab402e8db037cc0e71c62bef4729e66ad58e.pack
+            ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/objects/pack/pack-70019dc94686862b6e57235554a04c2eb8ea8170.pack
           - ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/refs
           - ../proto/dwtools/atop/will.test/_asset/_repo/Color/.git/refs/heads
           - >-
@@ -366,9 +366,9 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/objects/pack
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/objects/pack/pack-02124c315ebcd9ad1ed2e2871b30f7dc47bf00c1.idx
+            ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/objects/pack/pack-b58a33555953a6146713a7e4870ca19d222fb45a.idx
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/objects/pack/pack-02124c315ebcd9ad1ed2e2871b30f7dc47bf00c1.pack
+            ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/objects/pack/pack-b58a33555953a6146713a7e4870ca19d222fb45a.pack
           - ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/refs
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/PathBasic/.git/refs/heads
@@ -490,9 +490,9 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/objects/pack
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/objects/pack/pack-70ce2b57c3ff443435a239695ac669961afe5bc1.idx
+            ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/objects/pack/pack-65c777604086bb4beb58c3e0a1c6c96c42324e78.idx
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/objects/pack/pack-70ce2b57c3ff443435a239695ac669961afe5bc1.pack
+            ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/objects/pack/pack-65c777604086bb4beb58c3e0a1c6c96c42324e78.pack
           - ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/refs
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Procedure/.git/refs/heads
@@ -581,9 +581,9 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/objects/info
           - ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/objects/pack
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/objects/pack/pack-e93f161bdeda6f540f92f370c9a9b78770b2c0ca.idx
+            ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/objects/pack/pack-0d38fac36aa1f1f3b1bb0dcfd78cee28c3931c6c.idx
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/objects/pack/pack-e93f161bdeda6f540f92f370c9a9b78770b2c0ca.pack
+            ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/objects/pack/pack-0d38fac36aa1f1f3b1bb0dcfd78cee28c3931c6c.pack
           - ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/refs
           - ../proto/dwtools/atop/will.test/_asset/_repo/Proto/.git/refs/heads
           - >-
@@ -697,9 +697,9 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/objects/info
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/objects/pack
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/objects/pack/pack-44de4361970a0a8894ad40a67b9c6e36d3521645.idx
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/objects/pack/pack-61504ddbaa74fc44a12b485bd43ba35eaee603d7.idx
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/objects/pack/pack-44de4361970a0a8894ad40a67b9c6e36d3521645.pack
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/objects/pack/pack-61504ddbaa74fc44a12b485bd43ba35eaee603d7.pack
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/refs
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/.git/refs/heads
           - >-
@@ -741,24 +741,6 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/Types.md
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/WillfFromNpm.txt
-          - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/eng
-          - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/eng/README.md
-          - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/eng/concept
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/eng/concept/Modularity.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/eng/concept/TypePrimitive.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/eng/concept/TypeUnroll.md
-          - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/eng/tutorial
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/eng/tutorial/ErrorHandling.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/eng/tutorial/MechanismsOfCatchingErrors.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/eng/tutorial/RoutineFromPreAndBody.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/eng/tutorial/TimeMeasurement.md
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/1.png
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/2.1.png
@@ -766,34 +748,6 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/3.png
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/5.png
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/6.png
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/errorsHandling
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/errorsHandling/CallsStackArguments.png
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/errorsHandling/CatchingUncaught.png
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/errorsHandling/Errors.html
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/errorsHandling/ErrorsHandling.drawio
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/modularity
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/modularity/Communication.png
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/modularity/CPU-versus-GPU-architecture.png
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/modularity/Distribution.png
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/modularity/LearningCurve.png
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/modularity/Modularity.drawio
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/modularity/Modularization.png
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/modularity/RestrictingChain.png
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/img/modularity/TheSystem.png
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/reference
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/reference/component_NameTools.s.html
@@ -865,49 +819,60 @@ module:
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/reference/styles/prettify-jsdoc.css
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/reference/styles/prettify-tomorrow.css
-          - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr
-          - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/README.md
-          - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/concept
+          - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.eng
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/concept/Buffer.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.eng/README.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/concept/Equalizer.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.eng/concept
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/concept/Evaluator.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.eng/concept/TypePrimitive.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/concept/RoutineInput.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.eng/concept/TypeUnroll.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/concept/TypeIndexed.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.eng/tuturial
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/concept/TypePrimitive.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.eng/tuturial/RoutineFromPreAndBody.md
+          - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/concept/TypeUnroll.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/README.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/concept/Vector.md
-          - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/etc
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/concept
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/etc/Array.md
-          - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/tutorial
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/concept/Buffer.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/tutorial/ConventionCallbecksInArray.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/concept/Equalizer.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/tutorial/ConventionDefaultsMapInRoutine.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/concept/Evaluator.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/tutorial/ConventionDstArgInArray.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/concept/RoutineInput.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/tutorial/ConventionNamingInArray.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/concept/TypeIndexed.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/tutorial/EmbeddedModules.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/concept/TypePrimitive.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/tutorial/RoutineFromPreAndBody.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/concept/TypeUnroll.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/tutorial/TimeMeasurement.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/concept/Vector.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/tutorial/Timer.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/etc
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/tutorial/Vectorize.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/etc/Array.md
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/ukr/tutorial/VectorizeOptions.md
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/tutorial
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/tutorial/ConventionCallbecksInArray.md
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/tutorial/ConventionDefaultsMapInRoutine.md
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/tutorial/ConventionDstArgInArray.md
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/tutorial/ConventionNamingInArray.md
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/tutorial/RoutineFromPreAndBody.md
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/tutorial/Vectorize.md
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/doc/version.ukr/tutorial/VectorizeOptions.md
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/out
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/out/wTools.out.will.yml
@@ -930,9 +895,7 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l1/Predefined.s
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l2
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l2/Setup.s
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l1/Setup.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3
           - >-
@@ -940,35 +903,23 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iBuffer.s
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iContainer.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iCt.s
-          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iEntity.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iErr.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iFunctional.s
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iIntrospector.s
-          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iLong.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iMap.s
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iModule.s
-          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iNumber.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iProcess.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iRange.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iRegexp.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iRoutine.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iSet.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iStr.s
           - >-
@@ -978,67 +929,43 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l3/iUnroll.s
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fBool.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fBuffer.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fContainer.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fCt.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fEntity.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fErr.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fEvent.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fFunctional.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fIntrospector.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fLong.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fMap.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fModule.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fNumber.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fPath.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fProcess.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fRange.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fRegexp.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fRoutine.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fSet.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fSorted.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fStr.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fTime.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l5/fUnroll.s
-          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/ContainerAdapter.s
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fBool.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fBuffer.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fContainerAdapter.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fEntity.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fErr.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fFunctional.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fLong.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fMap.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fNumber.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fRange.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fRegexp.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fRoutine.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fStr.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fTime.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l6/fUnroll.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l7
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l7/ArrayDescriptor.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l7/Compose.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l7/ContainerAdapterArray.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l7/ContainerAdapterSet.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l7/Field.s
           - >-
@@ -1048,37 +975,25 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gBuffer.s
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gContainer.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gCt.s
-          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gEntity.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gErr.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gFunctional.s
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gIntrospector.s
-          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gLong.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gMap.s
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gModule.s
-          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gNumber.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gPair.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gProcess.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gRange.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gRegexp.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gRoutine.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gSet.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0/l8/gStr.s
           - >-
@@ -1092,11 +1007,9 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Buffer.test.s
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Container.test.s
-          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/ContainerAdapter.test.s
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Ct.test.s
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Diagnostics.test.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Entity.test.s
           - >-
@@ -1104,27 +1017,15 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Functional.test.s
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Introspector.test.s
-          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Long.test.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Map.test.s
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Module.test.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Number.test.s
-          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Pair.test.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Path.test.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Range.test.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Regexp.test.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Routine.test.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Sorted.test.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l0.test/Str.test.s
           - >-
@@ -1136,6 +1037,8 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l1
           - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l1/IncludeTools.s
+          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l1/ModulesRegistry.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l1/NameTools.s
@@ -1144,7 +1047,7 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l1.test
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l1.test/Str.test.s
+            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/proto/dwtools/abase/l1.test/StrBasic.test.s
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/Experiment.js
@@ -1179,8 +1082,6 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/strTable.js
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/VectorizeAccess.js
-          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/conventionCallbecksInArray
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/conventionCallbecksInArray/ArrayCountElement.js
@@ -1205,44 +1106,11 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/conventionNamingInArray/package.json
           - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/AssertionTrivial.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/AssertionType.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/AsyncStack1.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/AsyncStack2.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/AsyncStack3.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/Attend.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/Brief.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/Deasync.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/DevelopmentWithAssertions.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/Once.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/Simplest.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/Stack.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/TddInferior.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/errorHandling/ThrowsStack.js
-          - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/routineFromPreAndBody
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/routineFromPreAndBody/Name.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/routineFromPreAndBody/package.json
-          - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/time
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/time/TimeMeasurement.js
           - ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/vectorize
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/vectorize/package.json
@@ -1250,6 +1118,115 @@ module:
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/vectorize/Sum.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/_repo/Tools/sample/vectorize/Vectorize.js
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.ex.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.gitattributes
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.gitignore
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.im.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.travis.yml
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/LICENSE
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/package.json
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/README.md
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/was.package.json
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/config
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/description
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/HEAD
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/index
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/packed-refs
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/hooks
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/hooks/applypatch-msg.sample
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/hooks/commit-msg.sample
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/hooks/fsmonitor-watchman.sample
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/hooks/post-update.sample
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/hooks/pre-applypatch.sample
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/hooks/pre-commit.sample
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/hooks/pre-push.sample
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/hooks/pre-rebase.sample
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/hooks/pre-receive.sample
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/hooks/prepare-commit-msg.sample
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/hooks/update.sample
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/info
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/info/exclude
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/logs
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/logs/HEAD
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/logs/refs
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/logs/refs/heads
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/logs/refs/heads/master
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/logs/refs/remotes
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/logs/refs/remotes/origin
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/logs/refs/remotes/origin/HEAD
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/objects
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/objects/info
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/objects/pack
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/objects/pack/pack-f738c1dfe356155cbeda6301399360d9d4fe14e1.idx
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/objects/pack/pack-f738c1dfe356155cbeda6301399360d9d4fe14e1.pack
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/refs
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/refs/heads
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/refs/heads/master
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/refs/remotes
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/refs/remotes/origin
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/refs/remotes/origin/HEAD
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/.git/refs/tags
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/out
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/out/wUriBasic.out.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/proto
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/proto/dwtools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/proto/dwtools/Tools.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/proto/dwtools/abase
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/proto/dwtools/abase/l4
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/proto/dwtools/abase/l4/Uri.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/proto/dwtools/abase/l4.test
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/proto/dwtools/abase/l4.test/Uri.test.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/proto/dwtools/abase/l5
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/proto/dwtools/abase/l5/Uris.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/proto/dwtools/abase/l5.test
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/proto/dwtools/abase/l5.test/Uris.test.s
+          - ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/sample
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/sample/Sample.html
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/_repo/UriBasic/sample/Sample.js
           - ../proto/dwtools/atop/will.test/_asset/broken-out
           - ../proto/dwtools/atop/will.test/_asset/broken-out/module1
           - >-

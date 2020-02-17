@@ -27,8 +27,7 @@ function onModule( it )
     if( config && config.about && config.path.remoteRepository )
     {
       _.mapSupplement( config, it );
-      remotePath = _.resolver.resolve
-      // remotePath = _.Resolver.resolve // xxx
+      remotePath = _.resolver.resolveQualified
       ({
         src : config,
         selector : config.path.remoteRepository,
