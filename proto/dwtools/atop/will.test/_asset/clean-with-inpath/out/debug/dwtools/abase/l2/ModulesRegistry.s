@@ -403,6 +403,12 @@ let wIntrospector =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.introspector && !!_global.wTools.thisFile },
 }
 
+let wPersistent =
+{
+  sourcePath : sourcePath( 'amid/l3/persistent/Include.s', 'wpersistent' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.persistent },
+}
+
 let wNameMapper =
 {
   sourcePath : sourcePath( 'amid/l5_mapper/NameMapper.s', 'wnamemapper' ),
@@ -697,6 +703,7 @@ let Modules =
   wStateSession,
   wStager,
   wIntrospector,
+  wPersistent,
 
   wNameMapper,
   wTemplateTreeResolver,
@@ -713,6 +720,7 @@ let Modules =
   wGitTools,
   wNpmTools,
   wYamlTools,
+
 
   wSchema,
   wScriptLauncher,

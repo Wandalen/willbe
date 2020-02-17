@@ -10,6 +10,47 @@ let Self = _global_.wTools;
 // routine
 // --
 
+function routineCallButOnly( context, routine, o, but, only )
+{
+
+  if( _.routineIs( routine ) || _.strIs( routine ) )
+  {
+
+    _.assert( arguments.length === 3 || arguments.length === 4 || arguments.length === 5 );
+    _.assert( _.mapIs( o ) );
+
+    if( _.strIs( routine ) )
+    routine = context[ routine ];
+
+  }
+  else
+  {
+
+    routine = arguments[ 0 ];
+    o = arguments[ 1 ];
+    but = arguments[ 2 ];
+    only = arguments[ 3 ];
+
+    _.assert( arguments.length === 2 || arguments.length === 3 || arguments.length === 4 );
+    _.assert( _.mapIs( o ) );
+
+  }
+
+  _.assert( _.routineIs( routine ) );
+
+  if( !only )
+  only = routine.defaults
+
+  if( but )
+  o = _.mapBut( o, but )
+  if( only )
+  o = _.mapOnly( o, only )
+
+  return routine.call( context, o );
+}
+
+//
+
 function _routinesComposeWithSingleArgument_pre( routine, args )
 {
   let o = _.routinesCompose.pre.call( this, routine, args );
@@ -145,6 +186,8 @@ let Fields =
 
 let Routines =
 {
+
+  routineCallButOnly, /* qqq2 : cover please */
 
   routinesComposeReturningLast,
   routinesComposeAll,

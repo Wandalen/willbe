@@ -5135,7 +5135,7 @@ function hookGitMake( test )
   if( !config || !config.about || !config.about[ 'github.token' ] )
   return null;
   let user = config.about.user;
- 
+
 
   /* - */
 
