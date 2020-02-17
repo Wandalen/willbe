@@ -956,18 +956,7 @@ function spaceIs( test )
   var got = _.spaceIs( src );
   test.identical( got, false );
 
-  test.case = '';
-  if( _.Space )
-  {
-    var buffer = new U8x( [ 1, 2, 3, 4, 5 ] );
-    var src = new _.Space
-    ({
-      buffer : buffer,
-      dims : [ 3,1 ],
-    });
-    var got = _.spaceIs( src );
-    test.identical( got, true );
-  }
+  // instance of _.Space tested in wMathSpace
 }
 
 //
@@ -1091,18 +1080,7 @@ function constructorIsSpace( test )
   var got = _.constructorIsSpace( src );
   test.identical( got, false );
 
-  if( _.Space )
-  {
-    test.case = 'instance of Space';
-    var buffer = new U8x( [ 1, 2, 3, 4, 5 ] );
-    var src = new _.Space
-    ({
-      buffer : buffer,
-      dims : [ 3,1 ],
-    });
-    var got = _.constructorIsSpace( src );
-    test.identical( got, true );
-  }
+  // instance of _.Space tested in wMathSpace
 }
 
 //
@@ -1231,13 +1209,7 @@ function consequenceIs( test )
   var got = _.consequenceIs( src );
   test.identical( got, false );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.consequenceIs( src );
-    test.identical( got, true );
-  }
+  // instance of _.Consequence tested in module wConsequence
 }
 
 //
@@ -1366,13 +1338,7 @@ function consequenceLike( test )
   var got = _.consequenceLike( src );
   test.identical( got, true );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.consequenceLike( src );
-    test.identical( got, true );
-  }
+  // instance of _.Consequence tested in module wConsequence
 }
 
 //
@@ -1500,14 +1466,6 @@ function promiseIs( test )
   var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
   var got = _.promiseIs( src );
   test.identical( got, true );
-
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.promiseIs( src );
-    test.identical( got, false );
-  }
 
   test.case = 'function _Promise';
   var _Promise = function Promise(){};
@@ -1642,14 +1600,6 @@ function promiseLike( test )
   var got = _.promiseLike( src );
   test.identical( got, true );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.promiseLike( src );
-    test.identical( got, false );
-  }
-
   test.case = 'function _Promise';
   var _Promise = function Promise(){};
   var src = new _Promise();
@@ -1768,15 +1718,6 @@ function typeOf( test )
   test.identical( got, src.constructor );
   test.identical( got.name, 'Promise' );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.typeOf( src );
-    test.identical( got, src.constructor );
-    test.identical( got.name, 'wConsequence' );
-  }
-
   test.case = 'function _Promise';
   var _Promise = function Promise(){};
   var src = new _Promise();
@@ -1894,14 +1835,6 @@ function typeOf( test )
   var src1 = new Promise( ( resolve, reject ) => { return resolve( 1 ) } );
   var got = _.typeOf( src, src1.constructor );
   test.identical( got, true );
-
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.typeOf( src, src.constructor );
-    test.identical( got, true );
-  }
 
   test.case = 'function _Promise';
   var _Promise = function Promise(){};
@@ -2029,14 +1962,6 @@ function isPrototypeOf( test )
   var got = _.isPrototypeOf( src, src );
   test.identical( got, true );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.isPrototypeOf( src, src );
-    test.identical( got, true );
-  }
-
   test.case = 'function _Promise';
   var _Promise = function Promise(){};
   var src = new _Promise();
@@ -2144,14 +2069,6 @@ function isPrototypeOf( test )
   var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
   var got = _.isPrototypeOf( false, src );
   test.identical( got, false );
-
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.isPrototypeOf( src, null );
-    test.identical( got, false );
-  }
 
   test.case = 'function _Promise';
   var _Promise = function Promise(){};
@@ -2391,14 +2308,6 @@ function prototypeHas( test )
   var got = _.prototypeHas( src, src );
   test.identical( got, true );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.prototypeHas( src, src );
-    test.identical( got, true );
-  }
-
   test.case = 'function _Promise';
   var _Promise = function Promise(){};
   var src = new _Promise();
@@ -2506,14 +2415,6 @@ function prototypeHas( test )
   var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
   var got = _.prototypeHas( false, src );
   test.identical( got, false );
-
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.prototypeHas( src, null );
-    test.identical( got, false );
-  }
 
   test.case = 'function _Promise';
   var _Promise = function Promise(){};
@@ -2667,7 +2568,7 @@ function prototypeHas( test )
 
 //
 
-function prototypeIs( test ) /* qqq : merge test wProto/prototypeIs in this one */
+function prototypeIs( test ) /* qqq : merge test wProto/prototypeIs in this one | Dmytro : routine extended by cases from wProto */
 {
   test.case = 'check null';
   var got = _.prototypeIs( null );
@@ -2761,6 +2662,64 @@ function prototypeIs( test ) /* qqq : merge test wProto/prototypeIs in this one 
   var got = _.prototypeIs( { 'constructor' : 1 } );
   test.identical( got, true );
 
+  /* */
+
+  test.case = 'check regexp';
+  var got = _.prototypeIs( /x/ );
+  test.identical( got, false );
+
+  test.case = 'check Date constructor';
+  var got = _.prototypeIs( Date );
+  test.identical( got, false );
+
+  test.case = 'check instance of Date constructor';
+  var got = _.prototypeIs( new Date() );
+  test.identical( got, false );
+
+  test.case = 'check function';
+  var got = _.prototypeIs( function(){} );
+  test.identical( got, false );
+
+  test.case = 'check instance of function';
+  var got = _.prototypeIs( new ( function(){} )() );
+  test.identical( got, false );
+
+  test.case = 'check this.constructor';
+  var got = _.prototypeIs( Self.constructor );
+  test.identical( got, false );
+
+  test.case = 'check Self';
+  var got = _.prototypeIs( Self );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'check prototype of array';
+  var got = _.prototypeIs( Object.getPrototypeOf( [] ) );
+  test.identical( got, true );
+
+  test.case = 'check prototype of regexp';
+  var got = _.prototypeIs( Object.getPrototypeOf( /x/ ) );
+  test.identical( got, true );
+
+  test.case = 'check prototype of Date instance';
+  var got = _.prototypeIs( Object.getPrototypeOf( new Date() ) );
+  test.identical( got, true );
+
+  test.case = 'check prototype of BufferTyped instance';
+  var got = _.prototypeIs( Object.getPrototypeOf( new F32x() ) );
+  test.identical( got, true );
+
+  test.case = 'check prototype of function instance';
+  var got = _.prototypeIs( Object.getPrototypeOf( new (function(){})() ) );
+  test.identical( got, true );
+
+  test.case = 'check prototype of Self';
+  var got = _.prototypeIs( Object.getPrototypeOf( Self ) );
+  test.identical( got, true );
+
+  /* */
+
   test.case = 'check map with property constructor';
   var src = Object.create( null );
   src.constructor = false;
@@ -2796,14 +2755,6 @@ function prototypeIs( test ) /* qqq : merge test wProto/prototypeIs in this one 
   var got = _.prototypeIs( src );
   test.identical( got, false );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.prototypeIs( src );
-    test.identical( got, false );
-  }
-
   test.case = 'function _Promise';
   var src = function Promise(){};
   var got = _.prototypeIs( src );
@@ -2823,7 +2774,7 @@ function prototypeIs( test ) /* qqq : merge test wProto/prototypeIs in this one 
 
 //
 
-function prototypeIsStandard( test )  /* qqq : merge test wProto/prototypeIsStandard in this one */
+function prototypeIsStandard( test )  /* qqq : merge test wProto/prototypeIsStandard in this one | Dmytro : routine extended by cases from wProto */
 {
   test.case = 'check null';
   var got = _.prototypeIsStandard( null );
@@ -2921,6 +2872,64 @@ function prototypeIsStandard( test )  /* qqq : merge test wProto/prototypeIsStan
   var got = _.prototypeIsStandard( { 'constructor' : 1, 'Composes' : 1 } );
   test.identical( got, true );
 
+  /* */
+
+  test.case = 'check regexp';
+  var got = _.prototypeIsStandard( /x/ );
+  test.identical( got, false );
+
+  test.case = 'check Date constructor';
+  var got = _.prototypeIsStandard( Date );
+  test.identical( got, false );
+
+  test.case = 'check instance of Date constructor';
+  var got = _.prototypeIsStandard( new Date() );
+  test.identical( got, false );
+
+  test.case = 'check function';
+  var got = _.prototypeIsStandard( function(){} );
+  test.identical( got, false );
+
+  test.case = 'check instance of function';
+  var got = _.prototypeIsStandard( new ( function(){} )() );
+  test.identical( got, false );
+
+  test.case = 'check this.constructor';
+  var got = _.prototypeIsStandard( Self.constructor );
+  test.identical( got, false );
+
+  test.case = 'check Self';
+  var got = _.prototypeIsStandard( Self );
+  test.identical( got, false );
+
+  /* */
+
+  test.case = 'check prototype of array';
+  var got = _.prototypeIsStandard( Object.getPrototypeOf( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check prototype of regexp';
+  var got = _.prototypeIsStandard( Object.getPrototypeOf( /x/ ) );
+  test.identical( got, false );
+
+  test.case = 'check prototype of Date instance';
+  var got = _.prototypeIsStandard( Object.getPrototypeOf( new Date() ) );
+  test.identical( got, false );
+
+  test.case = 'check prototype of BufferTyped instance';
+  var got = _.prototypeIsStandard( Object.getPrototypeOf( new F32x() ) );
+  test.identical( got, false );
+
+  test.case = 'check prototype of function instance';
+  var got = _.prototypeIsStandard( Object.getPrototypeOf( new (function(){})() ) );
+  test.identical( got, false );
+
+  test.case = 'check prototype of Self';
+  var got = _.prototypeIsStandard( Object.getPrototypeOf( Self ) );
+  test.identical( got, true );
+
+  /* */
+
   test.case = 'check pure map with property constructor';
   var src = Object.create( null );
   src.constructor = false;
@@ -2963,14 +2972,6 @@ function prototypeIsStandard( test )  /* qqq : merge test wProto/prototypeIsStan
   var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
   var got = _.prototypeIsStandard( src );
   test.identical( got, false );
-
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.prototypeIsStandard( src );
-    test.identical( got, false );
-  }
 
   test.case = 'function _Promise';
   var src = function Promise(){};
@@ -3117,14 +3118,6 @@ function constructorIs( test )
   var got = _.constructorIs( src );
   test.identical( got, false );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.constructorIs( src );
-    test.identical( got, false );
-  }
-
   test.case = 'function _Promise';
   var src = function Promise(){};
   var got = _.constructorIs( src );
@@ -3269,14 +3262,6 @@ function instanceIs( test )
   var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
   var got = _.instanceIs( src );
   test.identical( got, true );
-
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.instanceIs( src );
-    test.identical( got, true );
-  }
 
   test.case = 'function _Promise';
   var src = function Promise(){};
@@ -3423,14 +3408,6 @@ function instanceLike( test )
   var got = _.instanceLike( src );
   test.identical( got, false );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.instanceLike( src );
-    test.identical( got, true );
-  }
-
   test.case = 'function _Promise';
   var src = function Promise(){};
   var got = _.instanceLike( src );
@@ -3566,31 +3543,312 @@ function consoleIs( test )
   var got = _.consoleIs( src );
   test.identical( got, false );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.consoleIs( src );
-    test.identical( got, false );
-  }
-
   test.case = 'function _Promise';
   var src = function Promise(){};
   var got = _.consoleIs( src );
   test.identical( got, false );
 
-  if( _.Logger )
-  {
-    test.case = 'instance of Logger';
-    var src = new _.Logger();
-    var got = _.consoleIs( src );
-    test.identical( got, false );
-  }
-
   test.case = 'check console';
   var src = console;
   var got = _.consoleIs( src );
   test.identical( got, true );
+
+  /* - */
+
+  if( !Config.debug )
+  return;
+
+  test.case = 'without arguments';
+  test.shouldThrowErrorSync( () => _.consoleIs() );
+
+  test.case = 'extra arguments';
+  test.shouldThrowErrorSync( () => _.consoleIs( console, console ) );
+
+  // instance of _.Logger tested in module wLogger
+}
+
+//
+
+function printerIs( test )
+{
+  test.case = 'check null';
+  var got = _.printerIs( null );
+  test.identical( got, false );
+
+  test.case = 'check undefined';
+  var got = _.printerIs( undefined );
+  test.identical( got, false );
+
+  test.case = 'check _.nothing';
+  var got = _.printerIs( _.nothing );
+  test.identical( got, false );
+
+  test.case = 'check zero';
+  var got = _.printerIs( 0 );
+  test.identical( got, false );
+
+  test.case = 'check empty string';
+  var got = _.printerIs( '' );
+  test.identical( got, false );
+
+  test.case = 'check false';
+  var got = _.printerIs( false );
+  test.identical( got, false );
+
+  test.case = 'check NaN';
+  var got = _.printerIs( NaN );
+  test.identical( got, false );
+
+  test.case = 'check Symbol';
+  var got = _.printerIs( Symbol() );
+  test.identical( got, false );
+
+  test.case = 'check empty array';
+  var got = _.printerIs( [] );
+  test.identical( got, false );
+
+  test.case = 'check empty arguments array';
+  var got = _.printerIs( _.argumentsArrayMake( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check empty unroll';
+  var got = _.printerIs( _.unrollMake( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check empty map';
+  var got = _.printerIs( {} );
+  test.identical( got, false );
+
+  test.case = 'check empty pure map';
+  var got = _.printerIs( Object.create( null ) );
+  test.identical( got, false );
+
+  test.case = 'check empty Set';
+  var got = _.printerIs( new Set( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check empty Map';
+  var got = _.printerIs( new Map( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check empty BufferRaw';
+  var got = _.printerIs( new BufferRaw() );
+  test.identical( got, false );
+
+  test.case = 'check empty BufferTyped';
+  var got = _.printerIs( new U8x() );
+  test.identical( got, false );
+
+  test.case = 'check number';
+  var got = _.printerIs( 3 );
+  test.identical( got, false );
+
+  test.case = 'check bigInt';
+  var got = _.printerIs( 1n );
+  test.identical( got, false );
+
+  test.case = 'check object Number';
+  var got = _.printerIs( new Number( 2 ) );
+  test.identical( got, false );
+
+  test.case = 'check string';
+  var got = _.printerIs( 'str' );
+  test.identical( got, false );
+
+  test.case = 'check not empty array';
+  var got = _.printerIs( [ null ] );
+  test.identical( got, false );
+
+  test.case = 'check map with properties constructor and Composes';
+  var got = _.printerIs( { 'constructor' : 1, 'Composes' : 1 } );
+  test.identical( got, false );
+
+  test.case = 'check pure map with properties constructor and Composes';
+  var src = Object.create( null );
+  src.constructor = false;
+  src.Composes = 1;
+  var got = _.printerIs( src );
+  test.identical( got, false );
+
+  test.case = 'check instance of constructor';
+  var Constr = function()
+  {
+    this.x = 1;
+    return this;
+  };
+  var src = new Constr();
+  src.constructor = true;
+  src.Composes = true;
+  var got = _.printerIs( src );
+  test.identical( got, false );
+
+  test.case = 'check constructor';
+  var Constr = function()
+  {
+    this.x = 1;
+    return this;
+  };
+  var got = _.printerIs( Constr );
+  test.identical( got, false );
+
+  test.case = 'instance of Promise';
+  var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
+  var got = _.printerIs( src );
+  test.identical( got, false );
+
+  test.case = 'function _Promise';
+  var src = function Promise(){};
+  var got = _.printerIs( src );
+  test.identical( got, false );
+
+  test.case = 'check console';
+  var src = console;
+  var got = _.printerIs( src );
+  test.identical( got, false );
+
+  // instance of _.Logger tested in module wLogger
+}
+
+//
+
+function printerLike( test )
+{
+  test.case = 'check null';
+  var got = _.printerLike( null );
+  test.identical( got, false );
+
+  test.case = 'check undefined';
+  var got = _.printerLike( undefined );
+  test.identical( got, false );
+
+  test.case = 'check _.nothing';
+  var got = _.printerLike( _.nothing );
+  test.identical( got, false );
+
+  test.case = 'check zero';
+  var got = _.printerLike( 0 );
+  test.identical( got, false );
+
+  test.case = 'check empty string';
+  var got = _.printerLike( '' );
+  test.identical( got, false );
+
+  test.case = 'check false';
+  var got = _.printerLike( false );
+  test.identical( got, false );
+
+  test.case = 'check NaN';
+  var got = _.printerLike( NaN );
+  test.identical( got, false );
+
+  test.case = 'check Symbol';
+  var got = _.printerLike( Symbol() );
+  test.identical( got, false );
+
+  test.case = 'check empty array';
+  var got = _.printerLike( [] );
+  test.identical( got, false );
+
+  test.case = 'check empty arguments array';
+  var got = _.printerLike( _.argumentsArrayMake( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check empty unroll';
+  var got = _.printerLike( _.unrollMake( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check empty map';
+  var got = _.printerLike( {} );
+  test.identical( got, false );
+
+  test.case = 'check empty pure map';
+  var got = _.printerLike( Object.create( null ) );
+  test.identical( got, false );
+
+  test.case = 'check empty Set';
+  var got = _.printerLike( new Set( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check empty Map';
+  var got = _.printerLike( new Map( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check empty BufferRaw';
+  var got = _.printerLike( new BufferRaw() );
+  test.identical( got, false );
+
+  test.case = 'check empty BufferTyped';
+  var got = _.printerLike( new U8x() );
+  test.identical( got, false );
+
+  test.case = 'check number';
+  var got = _.printerLike( 3 );
+  test.identical( got, false );
+
+  test.case = 'check bigInt';
+  var got = _.printerLike( 1n );
+  test.identical( got, false );
+
+  test.case = 'check object Number';
+  var got = _.printerLike( new Number( 2 ) );
+  test.identical( got, false );
+
+  test.case = 'check string';
+  var got = _.printerLike( 'str' );
+  test.identical( got, false );
+
+  test.case = 'check not empty array';
+  var got = _.printerLike( [ null ] );
+  test.identical( got, false );
+
+  test.case = 'check map with properties constructor and Composes';
+  var got = _.printerLike( { 'constructor' : 1, 'Composes' : 1 } );
+  test.identical( got, false );
+
+  test.case = 'check pure map with properties constructor and Composes';
+  var src = Object.create( null );
+  src.constructor = false;
+  src.Composes = 1;
+  var got = _.printerLike( src );
+  test.identical( got, false );
+
+  test.case = 'check instance of constructor';
+  var Constr = function()
+  {
+    this.x = 1;
+    return this;
+  };
+  var src = new Constr();
+  src.constructor = true;
+  src.Composes = true;
+  var got = _.printerLike( src );
+  test.identical( got, false );
+
+  test.case = 'check constructor';
+  var Constr = function()
+  {
+    this.x = 1;
+    return this;
+  };
+  var got = _.printerLike( Constr );
+  test.identical( got, false );
+
+  test.case = 'instance of Promise';
+  var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
+  var got = _.printerLike( src );
+  test.identical( got, false );
+
+  test.case = 'function _Promise';
+  var src = function Promise(){};
+  var got = _.printerLike( src );
+  test.identical( got, false );
+
+  test.case = 'check console';
+  var src = console;
+  var got = _.printerLike( src );
+  test.identical( got, true );
+
+  // instance of _.Logger tested in module wLogger
 }
 
 //
@@ -3722,26 +3980,17 @@ function loggerIs( test )
   var got = _.loggerIs( src );
   test.identical( got, false );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.loggerIs( src );
-    test.identical( got, false );
-  }
-
   test.case = 'function _Promise';
   var src = function Promise(){};
   var got = _.loggerIs( src );
   test.identical( got, false );
 
-  if( _.Logger )
-  {
-    test.case = 'instance of Logger';
-    var src = new _.Logger();
-    var got = _.loggerIs( src );
-    test.identical( got, true );
-  }
+  test.case = 'check console';
+  var src = console;
+  var got = _.loggerIs( src );
+  test.identical( got, false );
+
+  // instance of _.Logger tested in module wLogger
 }
 
 //
@@ -3873,26 +4122,10 @@ function processIs( test )
   var got = _.processIs( src );
   test.identical( got, false );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.processIs( src );
-    test.identical( got, false );
-  }
-
   test.case = 'function _Promise';
   var src = function Promise(){};
   var got = _.processIs( src );
   test.identical( got, false );
-
-  if( _.Logger )
-  {
-    test.case = 'instance of Logger';
-    var src = new _.Logger();
-    var got = _.processIs( src );
-    test.identical( got, false );
-  }
 
   test.case = 'check process';
   var src = process;
@@ -4029,41 +4262,17 @@ function procedureIs( test )
   var got = _.procedureIs( src );
   test.identical( got, false );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.procedureIs( src );
-    test.identical( got, false );
-  }
-
   test.case = 'function _Promise';
   var src = function Promise(){};
   var got = _.procedureIs( src );
   test.identical( got, false );
-
-  if( _.Logger )
-  {
-    test.case = 'instance of Logger';
-    var src = new _.Logger();
-    var got = _.procedureIs( src );
-    test.identical( got, false );
-  }
 
   test.case = 'check process';
   var src = process;
   var got = _.procedureIs( src );
   test.identical( got, false );
 
-  if( _.Procedure )
-  {
-    test.case = 'instance of Procedure';
-    var src = new _.Procedure();
-    src.begin();
-    var got = _.procedureIs( src );
-    test.identical( got, true );
-    src.end();
-  }
+  // instance of _.Procedure tested in module wProcedure
 }
 
 //
@@ -4195,41 +4404,161 @@ function definitionIs( test )
   var got = _.definitionIs( src );
   test.identical( got, false );
 
-  if( _.Consequence )
-  {
-    test.case = 'instance of Consequence';
-    var src = new _.Consequence().take( 0 );
-    var got = _.definitionIs( src );
-    test.identical( got, false );
-  }
-
   test.case = 'function _Promise';
   var src = function Promise(){};
   var got = _.definitionIs( src );
   test.identical( got, false );
-
-  if( _.Logger )
-  {
-    test.case = 'instance of Logger';
-    var src = new _.Logger();
-    var got = _.definitionIs( src );
-    test.identical( got, false );
-  }
 
   test.case = 'check process';
   var src = process;
   var got = _.definitionIs( src );
   test.identical( got, false );
 
-  /* qqq2 : ask */
-  _.include( 'wProto' )
-  if( _.Definition )
+  /* qqq2 : ask | Dmytro : instances of another modules tested outside of module wTools */
+
+  // instance of _.Definition tested in module wBlueprint
+}
+
+//
+
+function traitIs( test )
+{
+  test.case = 'check null';
+  var got = _.traitIs( null );
+  test.identical( got, false );
+
+  test.case = 'check undefined';
+  var got = _.traitIs( undefined );
+  test.identical( got, false );
+
+  test.case = 'check _.nothing';
+  var got = _.traitIs( _.nothing );
+  test.identical( got, false );
+
+  test.case = 'check zero';
+  var got = _.traitIs( 0 );
+  test.identical( got, false );
+
+  test.case = 'check empty string';
+  var got = _.traitIs( '' );
+  test.identical( got, false );
+
+  test.case = 'check false';
+  var got = _.traitIs( false );
+  test.identical( got, false );
+
+  test.case = 'check NaN';
+  var got = _.traitIs( NaN );
+  test.identical( got, false );
+
+  test.case = 'check Symbol';
+  var got = _.traitIs( Symbol() );
+  test.identical( got, false );
+
+  test.case = 'check empty array';
+  var got = _.traitIs( [] );
+  test.identical( got, false );
+
+  test.case = 'check empty arguments array';
+  var got = _.traitIs( _.argumentsArrayMake( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check empty unroll';
+  var got = _.traitIs( _.unrollMake( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check empty map';
+  var got = _.traitIs( {} );
+  test.identical( got, false );
+
+  test.case = 'check empty pure map';
+  var got = _.traitIs( Object.create( null ) );
+  test.identical( got, false );
+
+  test.case = 'check empty Set';
+  var got = _.traitIs( new Set( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check empty Map';
+  var got = _.traitIs( new Map( [] ) );
+  test.identical( got, false );
+
+  test.case = 'check empty BufferRaw';
+  var got = _.traitIs( new BufferRaw() );
+  test.identical( got, false );
+
+  test.case = 'check empty BufferTyped';
+  var got = _.traitIs( new U8x() );
+  test.identical( got, false );
+
+  test.case = 'check number';
+  var got = _.traitIs( 3 );
+  test.identical( got, false );
+
+  test.case = 'check bigInt';
+  var got = _.traitIs( 1n );
+  test.identical( got, false );
+
+  test.case = 'check object Number';
+  var got = _.traitIs( new Number( 2 ) );
+  test.identical( got, false );
+
+  test.case = 'check string';
+  var got = _.traitIs( 'str' );
+  test.identical( got, false );
+
+  test.case = 'check not empty array';
+  var got = _.traitIs( [ null ] );
+  test.identical( got, false );
+
+  test.case = 'check map with properties constructor and Composes';
+  var got = _.traitIs( { 'constructor' : 1, 'Composes' : 1 } );
+  test.identical( got, false );
+
+  test.case = 'check pure map with properties constructor and Composes';
+  var src = Object.create( null );
+  src.constructor = false;
+  src.Composes = 1;
+  var got = _.traitIs( src );
+  test.identical( got, false );
+
+  test.case = 'check instance of constructor';
+  var Constr = function()
   {
-    test.case = 'instance of Definition';
-    var src = new _.Definition( { ini : 1 } );
-    var got = _.definitionIs( src );
-    test.identical( got, true );
-  }
+    this.x = 1;
+    return this;
+  };
+  var src = new Constr();
+  src.constructor = true;
+  src.Composes = true;
+  var got = _.traitIs( src );
+  test.identical( got, false );
+
+  test.case = 'check constructor';
+  var Constr = function()
+  {
+    this.x = 1;
+    return this;
+  };
+  var got = _.traitIs( Constr );
+  test.identical( got, false );
+
+  test.case = 'instance of Promise';
+  var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
+  var got = _.traitIs( src );
+  test.identical( got, false );
+
+  test.case = 'function _Promise';
+  var src = function Promise(){};
+  var got = _.traitIs( src );
+  test.identical( got, false );
+
+  test.case = 'check process';
+  var src = process;
+  var got = _.traitIs( src );
+  test.identical( got, false );
+
+  // instance of _.trait tested in module wBlueprint
 }
 
 //
@@ -4295,10 +4624,13 @@ var Self =
     instanceLike,
 
     consoleIs,
+    printerIs,
+    printerLike,
     loggerIs,
     processIs,
     procedureIs,
     definitionIs,
+    traitIs,
 
     objectLike,
 

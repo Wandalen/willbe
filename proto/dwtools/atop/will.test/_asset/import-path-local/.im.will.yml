@@ -2,7 +2,7 @@
 submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/
-  # PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will#master
+  # PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will@master
 
 path :
 

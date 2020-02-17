@@ -1,7 +1,7 @@
 
 submodule :
 
-  Starter : git+https:///github.com/Wandalen/wStarter.git/out/wStarter#master
+  Starter : git+https:///github.com/Wandalen/wStarter.git/out/wStarter@master
 
 path :
 

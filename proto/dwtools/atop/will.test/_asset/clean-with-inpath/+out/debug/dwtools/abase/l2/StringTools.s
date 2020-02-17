@@ -4204,9 +4204,9 @@ strConcat.defaults =
 function strLinesIndentation( src, tab )
 {
 
-  _.assert( _.strIs( src ) || _.arrayIs( src ), 'Expects src as string or array' );
-  _.assert( _.strIs( tab ) || _.numberIs( tab ), 'Expects string tab' ); /* qqq2 : cover please */
   _.assert( arguments.length === 2, 'Expects two arguments' );
+  _.assert( _.strIs( src ) || _.arrayIs( src ), 'Expects src as string or array' );
+  _.assert( _.strIs( tab ) || _.numberIs( tab ), 'Expects tab as string or number' ); /* qqq2 : cover please | Dmytro : covered */
 
   if( _.numberIs( tab ) )
   tab = _.strDup( ' ', tab );

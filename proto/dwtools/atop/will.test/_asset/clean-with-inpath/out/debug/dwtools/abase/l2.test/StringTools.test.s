@@ -5392,19 +5392,29 @@ function strConcat( test )
 
 function strLinesIndentation( test )
 {
-  /* string */
+  test.open( 'src - string, tab - string' );
 
   test.case = 'empty line';
   var got = _.strLinesIndentation( '', '_' );
   var expected = '';
   test.identical( got, expected );
 
-  test.case = 'no new lines';
+  test.case = 'string without new line symbol';
   var got = _.strLinesIndentation( 'abc', '_' );
   var expected = 'abc';
   test.identical( got, expected );
 
-  test.case = 'multiline';
+  test.case = 'string with new line symbol at the end';
+  var got = _.strLinesIndentation( 'abc\n', '_' );
+  var expected = 'abc\n_';
+  test.identical( got, expected );
+
+  test.case = 'string with new line symbol at the start';
+  var got = _.strLinesIndentation( '\nabc', '_' );
+  var expected = '\n_abc';
+  test.identical( got, expected );
+
+  test.case = 'new line symbol at the mid';
   var got = _.strLinesIndentation( 'a\nb', '_' );
   var expected = 'a\n_b';
   test.identical( got, expected );
@@ -5414,26 +5424,155 @@ function strLinesIndentation( test )
   var expected = '\n_a\n_b\n_c';
   test.identical( got, expected );
 
-  test.case = 'tabs count = new lines count + 1 for first line';
+  test.case = 'only new line symbols';
   var got = _.strLinesIndentation( '\n\n\n', '_' );
   var expected = '\n_\n_\n_';
   test.identical( got, expected );
 
+  test.case = 'tab - special symbol';
   var got = _.strLinesIndentation( 'a\nb\nc','\t' );
   var expected = 'a\n\tb\n\tc';
   test.identical( got, expected );
 
-  /* array */
+  test.close( 'src - string, tab - string' );
 
-  test.case = 'array';
-  var got = _.strLinesIndentation( [ 'a', 'b', 'c' ], '_' );
-  var expected = 'a\n_b\n_c';
+  /* - */
+
+  test.open( 'src - string, tab - number' );
+
+  test.case = 'empty line';
+  var got = _.strLinesIndentation( '', 2 );
+  var expected = '';
   test.identical( got, expected );
 
-  var arr = [ 'a\nb', 'b\nc', 'c\nd' ];
-  var got = _.strLinesIndentation( arr.join( '\n' ), '_' );
-  var expected = 'a\n_b\n_b\n_c\n_c\n_d';
+  test.case = 'string without new line symbol';
+  var got = _.strLinesIndentation( 'abc', 2 );
+  var expected = 'abc';
   test.identical( got, expected );
+
+  test.case = 'string with new line symbol at the end';
+  var got = _.strLinesIndentation( 'abc\n', 2 );
+  var expected = 'abc\n  ';
+  test.identical( got, expected );
+
+  test.case = 'string with new line symbol at the start';
+  var got = _.strLinesIndentation( '\nabc', 2 );
+  var expected = '\n  abc';
+  test.identical( got, expected );
+
+  test.case = 'new line symbol at the mid';
+  var got = _.strLinesIndentation( 'a\nb', 2 );
+  var expected = 'a\n  b';
+  test.identical( got, expected );
+
+  test.case = 'tab before first and each new line';
+  var got = _.strLinesIndentation( '\na\nb\nc', 2 );
+  var expected = '\n  a\n  b\n  c';
+  test.identical( got, expected );
+
+  test.case = 'only new line symbols';
+  var got = _.strLinesIndentation( '\n\n\n', 2 );
+  var expected = '\n  \n  \n  ';
+  test.identical( got, expected );
+
+  test.case = 'tab - negative number';
+  var got = _.strLinesIndentation( 'a\nb\nc', -1 );
+  var expected = 'a\nb\nc';
+  test.identical( got, expected );
+
+  test.close( 'src - string, tab - number' );
+
+  /* - */
+
+  test.open( 'src - array, tab - string' );
+
+  test.case = 'single empty string';
+  var got = _.strLinesIndentation( [ '' ], '_' );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'single string';
+  var got = _.strLinesIndentation( [ 'abc' ], '_' );
+  var expected = 'abc';
+  test.identical( got, expected );
+
+  test.case = 'last element - empty string';
+  var got = _.strLinesIndentation( [ 'abc', '' ], '_' );
+  var expected = 'abc\n_';
+  test.identical( got, expected );
+
+  test.case = 'first element - empty string';
+  var got = _.strLinesIndentation( [ '', 'abc' ], '_' );
+  var expected = '\n_abc';
+  test.identical( got, expected );
+
+  test.case = 'two strings';
+  var got = _.strLinesIndentation( [ 'a', 'b' ], '_' );
+  var expected = 'a\n_b';
+  test.identical( got, expected );
+
+  test.case = 'first element - empty string';
+  var got = _.strLinesIndentation( [ '', 'a', 'b', 'c' ], '_' );
+  var expected = '\n_a\n_b\n_c';
+  test.identical( got, expected );
+
+  test.case = 'only empty strings';
+  var got = _.strLinesIndentation( [ '', '', '', '' ], '_' );
+  var expected = '\n_\n_\n_';
+  test.identical( got, expected );
+
+  test.case = 'tab - special symbol';
+  var got = _.strLinesIndentation( [ 'a', 'b', 'c' ],'\t' );
+  var expected = 'a\n\tb\n\tc';
+  test.identical( got, expected );
+
+  test.close( 'src - array, tab - string' );
+
+  /* - */
+
+  test.open( 'src - array, tab - number' );
+
+  test.case = 'single empty string';
+  var got = _.strLinesIndentation( [ '' ], 2 );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'single string';
+  var got = _.strLinesIndentation( [ 'abc' ], 2 );
+  var expected = 'abc';
+  test.identical( got, expected );
+
+  test.case = 'last element - empty string';
+  var got = _.strLinesIndentation( [ 'abc', '' ], 2 );
+  var expected = 'abc\n  ';
+  test.identical( got, expected );
+
+  test.case = 'first element - empty string';
+  var got = _.strLinesIndentation( [ '', 'abc' ], 2 );
+  var expected = '\n  abc';
+  test.identical( got, expected );
+
+  test.case = 'two strings';
+  var got = _.strLinesIndentation( [ 'a', 'b' ], 2 );
+  var expected = 'a\n  b';
+  test.identical( got, expected );
+
+  test.case = 'first element - empty string';
+  var got = _.strLinesIndentation( [ '', 'a', 'b', 'c' ], 2 );
+  var expected = '\n  a\n  b\n  c';
+  test.identical( got, expected );
+
+  test.case = 'only empty strings';
+  var got = _.strLinesIndentation( [ '', '', '', '' ], 2 );
+  var expected = '\n  \n  \n  ';
+  test.identical( got, expected );
+
+  test.case = 'tab - negative number';
+  var got = _.strLinesIndentation( [ 'a', 'b', 'c' ], -1 );
+  var expected = 'a\nb\nc';
+  test.identical( got, expected );
+
+  test.close( 'src - array, tab - number' );
 
   /* - */
 
@@ -5446,11 +5585,11 @@ function strLinesIndentation( test )
   test.case = 'extra arguments';
   test.shouldThrowErrorSync( () => _.strLinesIndentation( 'one','two','three' ) );
 
-  test.case = 'first argument type is wrong';
+  test.case = 'wrong type of src';
   test.shouldThrowErrorSync( () => _.strLinesIndentation( 12, 'two' ) );
 
-  test.case = 'second argument type is wrong';
-  test.shouldThrowErrorSync( () => _.strLinesIndentation( 'one', 12 ) );
+  test.case = 'wrong type of tab';
+  test.shouldThrowErrorSync( () => _.strLinesIndentation( 'one', [] ) );
 }
 
 //

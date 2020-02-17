@@ -365,12 +365,15 @@ function diagnosticStructureGenerate_pre( routine, args )
   o.dateComplexity = from( o.objectComplexity );
   if( o.regexpComplexity === null )
   o.regexpComplexity = from( o.objectComplexity );
+
+  if( o.bufferComplexity === null )
+  o.bufferComplexity = from( o.objectComplexity );
   if( o.bufferNodeComplexity === null )
-  o.bufferNodeComplexity = from( o.objectComplexity );
+  o.bufferNodeComplexity = from( o.bufferComplexity );
   if( o.bufferRawComplexity === null )
-  o.bufferRawComplexity = from( o.objectComplexity );
+  o.bufferRawComplexity = from( o.bufferComplexity );
   if( o.bufferBytesComplexity === null )
-  o.bufferBytesComplexity = from( o.objectComplexity );
+  o.bufferBytesComplexity = from( o.bufferComplexity );
 
   if( o.containerComplexity === null )
   o.containerComplexity = from( o.defaultComplexity );
@@ -796,6 +799,98 @@ diagnosticStructureGenerate_body.defaults =
 }
 
 //
+
+/**
+ * Routine diagnosticStructureGenerate generates structure with different data types in provided options map {-o-}. The final resulted structure almost defined by 
+ * property {-o.defaultComplexity-} of options map {-o-} and other separate options.
+ * If routine calls without arguments, then routine returns new map with structure that generates from default parameters.
+ *
+ * @param { Map } o - The options map. Options map includes next options:
+ *
+ * @param { Number } o.defaultComplexity - The complexity of data types, options of which is not defined directly. Default value - 2.
+ *
+ * @param { Number } o.primitiveComplexity - The default complexity for primitives. If option is not defined, then it inherits {-o.defaultComplexity-}. 
+ * @param { Number } o.nullComplexity - Option for enabling generating of null. To generate null, it should be 2 or more.
+ * @param { Number } o.undefinedComplexity - Option for enabling generating of undefined. To generate undefined, it should be 3 or more.
+ * @param { Number } o.booleanComplexity - Option for enabling generating of boolean values. To generate true and false, it should be 1 or more.
+ * @param { Number } o.stringComplexity - Option for enabling generating of string. To generate random string with {-o.stringSize-} length
+ * and empty string, it should be 1 or more.
+ * @param { Number } o.bigIntComplexity - Option for enabling generating of bigInt numbers. To generate bigInt zero, small and big value, it should be 3 or more.
+ * @param { Number } o.numberComplexity - Option for enabling generating of numbers. To generate zero and small value, it should be 1. If option is 2 or more,
+ * then routine generates big value.
+ * @param { Number } o.numberInfinityComplexity - Option for enabling generating of Infinity values. To generate positive and negative Infinity,
+ * it should be 2 or more.
+ * @param { Number } o.numberNanComplexity - Option for enabling generating of NaN. To generate NaN, it should be 2 or more.
+ * @param { Number } o.numberSignedZeroComplexity - Option for enabling generating of signed zero values. To generate positive and negative zero,
+ * it should be 3 or more.
+ *
+ * @param { Number } o.objectComplexity - The default complexity for Date, RegExp and buffers. If option is not defined, then it inherits {-o.defaultComplexity-}. 
+ * @param { Number } o.dateComplexity - Option for enabling generating of Date instances. To generate Date instance with current date and with fixed date,
+ * it should be 3 or more. 
+ * @param { Number } o.regexpComplexity - Option for enabling generating of regexps. To generate simple regexps, it should be 2. To generate complex 
+ * regexps it should be 3 or more.
+ * @param { Number } o.bufferComplexity - The default complexity for buffers ( raw, typed, view, node ). If option is not defined,
+ * then it inherits {-o.objectComplexity-} 
+ * @param { Number } o.bufferNodeComplexity - Option for enabling generating of BufferNode. To generate BufferNode, it should be 4 or more.
+ * @param { Number } o.bufferRawComplexity - Option for enabling generating of BufferRaw. To generate BufferRaw it should be 3 or more.
+ * @param { Number } o.bufferBytesComplexity - Option for enabling generating of typed U8x buffer. To generate BufferBytes, it should be 3 or more.
+
+ * @param { Number } o.containerComplexity - The default complexity array, map, Set, HashMap and recursion. If option is not defined, then
+ * it inherits {-o.defaultComplexity-}.  
+ * @param { Number } o.recursionComplexity - Option for enabling generating field with recursive link to current structure. To generate link,
+ * it should be 2 or more.  
+ * @param { Number } o.arrayComplexity - Option for enabling generating of array. To generate flat array, it should be 2. If option set to 3 or more,
+ * then routine generated array with nested arrays. Depth of nesting defines by option {-o.depth-}.
+ * @param { Number } o.mapComplexity - Option for enabling generating of map. To generate map, it should be 1 or more.
+ * @param { Number } o.setComplexity - Option for enabling generating of Set. To generate Set, it should be 3 or more.
+ * @param { Number } o.hashMapComplexity - Option for enabling generating of HashMap. To generate HashMap, it should be 4 or more.
+ *
+ * @param { Number } o.depth - Defines maximal generated level of nesting for complex data structure. Default value - 1.
+ * @param { Number } defaultSize - The default size of generated string, buffer, regexp. Default value - 50.
+ * @param { Number } o.stringSize - The length of generated string.
+ * @param { Number } o.bufferSize - The length of generated buffer ( raw, typed, view, node ).
+ * @param { Number } o.regexpSize - The length of generated regexp.  
+ * @param { Number } o.defaultLength - The default length for generated array, map, HashMap, Set. Default value - 4.
+ * @param { Number } o.arrayLength - The length of generated array.
+ * @param { Number } o.mapLength - The length of generated map.
+ * @param { Number } o.hashMapLength - The length of generated HashMap.
+ * @param { Number } o.setLength - The length of generated Set.
+ *
+ * @example
+ * _.diagnosticStructureGenerate()
+ * //returns
+ * // [Object: null prototype] 
+ * // { 
+ * //   structure: [Object: null prototype]
+ * //   {
+ * //     // generated structure
+ * //   },
+ * //   depth: 1,
+ * //   stringSize: 50,
+ * //   bufferSize: 50,
+ * //   regexpSize: 50,
+ * //   defaultSize: 50,
+ * //   arrayLength: 4,
+ * //   mapLength: 4,
+ * //   hashMapLength: 4,
+ * //   setLength: 4,
+ * //   defaultLength: 4,
+ * //   defaultComplexity: 2,
+ * //   primitiveComplexity: 2,
+ * //   nullComplexity: 2,
+ * //   undefinedComplexity: 2,
+ * //   booleanComplexity: 2,
+ * //   ...
+ * //   // other options
+ * // }
+ *
+ * @returns { Map } - Returns map with diagnostic data types of defined complexity.
+ * @function diagnosticStructureGenerate
+ * @throws { Error } If arguments.length is more then one.
+ * @throws { Error } If options map {-o-} is not mapLike.
+ * @throws { Error } If options map {-o-} has unknown options.
+ * @memberof wTools
+ */
 
 let diagnosticStructureGenerate = _.routineFromPreAndBody( diagnosticStructureGenerate_pre, diagnosticStructureGenerate_body );
 

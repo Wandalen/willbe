@@ -2785,25 +2785,25 @@ function reflectGetPath( test )
 
     var expected =
     [
-      '.', 
-      './debug', 
-      './debug/dwtools', 
-      './debug/dwtools/Tools.s', 
-      './debug/dwtools/abase', 
-      './debug/dwtools/abase/l3_proto', 
-      './debug/dwtools/abase/l3_proto/Include.s', 
-      './debug/dwtools/abase/l3_proto/l1', 
-      './debug/dwtools/abase/l3_proto/l1/Define.s', 
-      './debug/dwtools/abase/l3_proto/l1/Proto.s', 
-      './debug/dwtools/abase/l3_proto/l1/Workpiece.s', 
-      './debug/dwtools/abase/l3_proto/l5', 
-      './debug/dwtools/abase/l3_proto/l5/Accessor.s', 
-      './debug/dwtools/abase/l3_proto/l5/Class.s', 
-      './debug/dwtools/abase/l3_proto/l5/Like.s', 
-      './debug/dwtools/abase/l3_proto.test', 
-      './debug/dwtools/abase/l3_proto.test/Blueprint.test.s', 
-      './debug/dwtools/abase/l3_proto.test/Class.test.s', 
-      './debug/dwtools/abase/l3_proto.test/Like.test.s', 
+      '.',
+      './debug',
+      './debug/dwtools',
+      './debug/dwtools/Tools.s',
+      './debug/dwtools/abase',
+      './debug/dwtools/abase/l3_proto',
+      './debug/dwtools/abase/l3_proto/Include.s',
+      './debug/dwtools/abase/l3_proto/l1',
+      './debug/dwtools/abase/l3_proto/l1/Define.s',
+      './debug/dwtools/abase/l3_proto/l1/Proto.s',
+      './debug/dwtools/abase/l3_proto/l1/Workpiece.s',
+      './debug/dwtools/abase/l3_proto/l5',
+      './debug/dwtools/abase/l3_proto/l5/Accessor.s',
+      './debug/dwtools/abase/l3_proto/l5/Class.s',
+      './debug/dwtools/abase/l3_proto/l5/Like.s',
+      './debug/dwtools/abase/l3_proto.test',
+      './debug/dwtools/abase/l3_proto.test/Blueprint.test.s',
+      './debug/dwtools/abase/l3_proto.test/Class.test.s',
+      './debug/dwtools/abase/l3_proto.test/Like.test.s',
       './debug/dwtools/abase/l3_proto.test/Proto.test.s'
     ]
     var files = self.find( outPath );
@@ -3943,20 +3943,20 @@ function reflectNpmModules( test )
 
     var exp =
     [
-      '.', 
-      './out', 
-      './out/wUriBasic.out.will.yml', 
-      './proto', 
-      './proto/dwtools', 
-      './proto/dwtools/Tools.s', 
-      './proto/dwtools/abase', 
-      './proto/dwtools/abase/l2', 
-      './proto/dwtools/abase/l2/PathBasic.s', 
-      './proto/dwtools/abase/l3', 
-      './proto/dwtools/abase/l3/PathsBasic.s', 
-      './proto/dwtools/abase/l4', 
-      './proto/dwtools/abase/l4/Uri.s', 
-      './proto/dwtools/abase/l5', 
+      '.',
+      './out',
+      './out/wUriBasic.out.will.yml',
+      './proto',
+      './proto/dwtools',
+      './proto/dwtools/Tools.s',
+      './proto/dwtools/abase',
+      './proto/dwtools/abase/l2',
+      './proto/dwtools/abase/l2/PathBasic.s',
+      './proto/dwtools/abase/l3',
+      './proto/dwtools/abase/l3/PathsBasic.s',
+      './proto/dwtools/abase/l4',
+      './proto/dwtools/abase/l4/Uri.s',
+      './proto/dwtools/abase/l5',
       './proto/dwtools/abase/l5/Uris.s'
     ]
     var files = self.find( a.abs( 'out' ) )
@@ -5436,6 +5436,7 @@ hookLink.description =
 - same files are hardlinked
 - same files from different modules are not hardlinked
 `
+hookLink.timeOut = 300000;
 
 //
 
@@ -15272,10 +15273,6 @@ function exportAuto( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-
-  /* qqq : use assetFor */
-  /* xxx qqq : replace _.path.join( modulePath */
-
   let outPath = _.path.join( routinePath, 'out' );
   let submodulesPath = _.path.join( routinePath, '.module' );
   let ready = new _.Consequence().take( null );
@@ -15411,45 +15408,51 @@ Test redownloading of currupted remote submodules.
 
 function importPathLocal( test )
 {
+  // let self = this;
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'import-path-local' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // let submodulesPath = _.path.join( routinePath, '.module' );
+  // let outPath = _.path.join( routinePath, 'out' );
+  // let ready = new _.Consequence().take( null );
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'import-path-local' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
+  let a = self.assetFor( test, 'import-path-local' );
 
-  let ready = new _.Consequence().take( null );
+  /* qqq : use assetFor */
+  /* xxx qqq : replace _.path.join( modulePath */
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : ready,
+  // })
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = 'export submodule';
 
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    _.fileProvider.filesDelete( outPath );
+    // _.fileProvider.filesDelete( routinePath );
+    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
+    _.fileProvider.filesDelete( a.abs( 'out' ) );
 
     return null;
   })
 
-  start({ execPath : '.build' })
+  // a.start({ execPath : '.build' })
+  a.start({ execPath : '.build' })
 
   .then( ( got ) =>
   {
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.contains( files, [ '.', './debug', './debug/WithSubmodules.s', './debug/dwtools', './debug/dwtools/Tools.s' ] );
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /Built .*module::submodules \/ build::debug\.raw.* in/ ), 1 );
@@ -15459,7 +15462,7 @@ function importPathLocal( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 importPathLocal.timeOut = 200000;
@@ -16616,7 +16619,7 @@ function submodulesDownloadSwitchBranch( test )
   {
     test.case = 'switch master to dev';
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#master', '#dev' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '#dev' );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
@@ -16652,7 +16655,7 @@ function submodulesDownloadSwitchBranch( test )
   {
     test.case = 'switch detached state to master';
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#9ce409887df0754760a1cbdce249b0fa5f08152e', '#master' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#9ce409887df0754760a1cbdce249b0fa5f08152e', '@master' );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
@@ -19012,7 +19015,7 @@ submodulesVersionsAgreeWrongOrigin.timeOut = 300000;
 //
 
 /*
-  Informal module has submodule willbe-experiment#master
+  Informal module has submodule willbe-experiment@master
   Supermodule has informal module and willbe-experiment#dev in submodules list
   First download of submodules works fine.
   After updating submodules of supermodule, branch dev of willbe-experiment is changed to master.
@@ -20517,7 +20520,7 @@ function upgradeDryDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -20570,7 +20573,7 @@ function upgradeDryDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -20625,7 +20628,7 @@ function upgradeDryDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -20680,7 +20683,7 @@ function upgradeDryDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -20767,7 +20770,7 @@ function upgradeDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -20826,7 +20829,7 @@ function upgradeDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -20995,7 +20998,7 @@ function upgradeDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -21054,7 +21057,7 @@ function upgradeDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -21135,7 +21138,7 @@ function upgradeDetachedExperiment( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /! .*upgradeDetached\/\.module\/Tools\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -21192,7 +21195,7 @@ function fixateDryDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 1 );
@@ -21245,7 +21248,7 @@ function fixateDryDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 0 );
@@ -21300,7 +21303,7 @@ function fixateDryDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 0 );
@@ -21355,7 +21358,7 @@ function fixateDryDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be fixated/ ), 1 );
@@ -21442,7 +21445,7 @@ function fixateDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 1 );
@@ -21501,7 +21504,7 @@ function fixateDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
@@ -21611,7 +21614,7 @@ function fixateDetached( test )
     test.identical( _.strCount( got.output, /will be fixated/ ), 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* was fixated to version/ ), 0 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 0 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
@@ -21670,7 +21673,7 @@ function fixateDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 0 );
@@ -21729,7 +21732,7 @@ function fixateDetached( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.#master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( got.output, /! .*fixateDetached\/\.module\/Tools\/\.im\.will\.yml.* was not fixated/ ), 1 );
@@ -21960,7 +21963,7 @@ function resourcesFormReflectorsExperiment( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'module::old-out-file / submodule::Starter' ) );
-    test.is( _.strHas( got.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter#master' ) );
+    test.is( _.strHas( got.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter@master' ) );
     test.is( _.strHas( got.output, 'autoExporting : 0' ) );
     test.is( _.strHas( got.output, 'enabled : 1' ) );
     test.is( _.strHas( got.output, "Exported builds : [ 'proto.export' ]" ) );
@@ -22001,7 +22004,7 @@ function resourcesFormReflectorsExperiment( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'module::new-out-file / submodule::Starter' ) );
-    test.is( _.strHas( got.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter#master' ) );
+    test.is( _.strHas( got.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter@master' ) );
     test.is( _.strHas( got.output, 'autoExporting : 0' ) );
     test.is( _.strHas( got.output, 'enabled : 1' ) );
     test.is( _.strHas( got.output, "Exported builds : [ 'proto.export' ]" ) );

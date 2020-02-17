@@ -4534,9 +4534,9 @@ function exportCourruptedSubmodulesDisabled( test )
     // var exp = [];
     var exp =
     [
-      'git+https:///github.com/X1/X1.git#master',
-      'git+https:///github.com/X2/X2.git#master',
-      'git+https:///github.com/X3/X3.git#master',
+      'git+https:///github.com/X1/X1.git@master',
+      'git+https:///github.com/X2/X2.git@master',
+      'git+https:///github.com/X3/X3.git@master',
     ];
     var remotePath = _.filter( got, ( e ) => e.remotePath );
     test.identical( remotePath, exp );
@@ -7376,10 +7376,6 @@ function pathsResolveOfSubmodules( test )
   ready.then( ( arg ) =>
   {
     let module = opener.openedModule;
-    // let builds = opener.openedModule.buildsResolve({ name : 'debug.raw' });
-    // test.identical( builds.length, 1 );
-    // let build = builds[ 0 ];
-    // return build.perform();
     return module.modulesBuild({ criterion : { debug : 1 }, downloading : 1 });
   })
 
@@ -9124,7 +9120,7 @@ function submodulesResolve( test )
     test.identical( submodule.opener.dirPath, abs( '.module/Tools/out' ) );
     test.identical( submodule.opener.localPath, abs( '.module/Tools/out/wTools.out' ) );
     test.identical( submodule.opener.commonPath, abs( '.module/Tools/out/wTools.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will#master' ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will@master' ) );
 
     // test.is( !submodule.hasFiles );
     test.is( !submodule.opener.repo.hasFiles );
@@ -9161,7 +9157,7 @@ function submodulesResolve( test )
     test.identical( submodule.opener.dirPath, abs( '.module/Tools/out' ) );
     test.identical( submodule.opener.localPath, abs( '.module/Tools/out/wTools.out' ) );
     test.identical( submodule.opener.commonPath, abs( '.module/Tools/out/wTools.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will#master' ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will@master' ) );
 
     test.identical( submodule.opener.openedModule.name, 'wTools' );
     test.identical( submodule.opener.openedModule.resourcesFormed, 8 );
@@ -9170,8 +9166,8 @@ function submodulesResolve( test )
     test.identical( submodule.opener.openedModule.dirPath, abs( '.module/Tools/out' ) );
     test.identical( submodule.opener.openedModule.localPath, abs( '.module/Tools/out/wTools.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, abs( '.module/Tools/out/wTools.out' ) );
-    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will#master' ) );
-    test.identical( submodule.opener.openedModule.currentRemotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will#master' ) );
+    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will@master' ) );
+    test.identical( submodule.opener.openedModule.currentRemotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will@master' ) );
     debugger;
 
     test.case = 'mask, single module';
@@ -9345,26 +9341,26 @@ function submodulesDeleteAndDownload( test )
       // var exp =
       // [
       //   null,
-      //   'git+hd://../_repo/Tools?out=out/wTools.out.will#master',
-      //   'git+hd://../_repo/PathBasic?out=out/wPathBasic.out.will#master',
+      //   'git+hd://../_repo/Tools?out=out/wTools.out.will@master',
+      //   'git+hd://../_repo/PathBasic?out=out/wPathBasic.out.will@master',
       //   'npm:///wFiles',
       //   'npm:///wcloner',
       //   'npm:///wstringer',
       //   'npm:///wTesting',
       //   'npm:///wselector',
       //   null, /* xxx : should be not null */
-      //   'git+hd://../_repo/Tools?out:./#master',
+      //   'git+hd://../_repo/Tools?out:./@master',
       //   'npm:///wFiles',
       //   'npm:///wcloner',
       //   'npm:///wstringer',
       //   'npm:///wTesting',
       //   'npm:///wselector',
       //   null, /* xxx : should be not null */
-      //   'git+hd://../_repo/PathBasic?out:./#master'
+      //   'git+hd://../_repo/PathBasic?out:./@master'
       // ]
       // var remotePath = _.select( will.openersArray, '*/remotePath' );
-      // // test.is( _.strHas( remotePath[ 1 ], '/_repo/Tools?out=out/wTools.out.will#master' ) );
-      // // test.is( _.strHas( remotePath[ 2 ], '/_repo/PathBasic?out=out/wPathBasic.out.will#master' ) );
+      // // test.is( _.strHas( remotePath[ 1 ], '/_repo/Tools?out=out/wTools.out.will@master' ) );
+      // // test.is( _.strHas( remotePath[ 2 ], '/_repo/PathBasic?out=out/wPathBasic.out.will@master' ) );
       // exp[ 1 ] = remotePath[ 1 ];
       // exp[ 2 ] = remotePath[ 2 ];
       // test.identical( _.setFrom( remotePath ), _.setFrom( abs( exp ) ) );

@@ -1618,7 +1618,7 @@ function commonTextualReport( test )
 
   test.close( 'locals' );
 
-  /*  */
+  /* - */
 
   test.open( 'map' );
 
@@ -1704,7 +1704,6 @@ function moveTextualReport( test )
   var dst = '/a';
   var src = '/a';
   var got = _.path.moveTextualReport( dst, src );
-  debugger;
   test.identical( _.ct.strip( got ), expected );
 
   test.case = 'different, absolute, with common';
@@ -1764,6 +1763,8 @@ function moveTextualReport( test )
   test.identical( _.ct.strip( got ), expected );
 
   test.close( 'locals' );
+
+  /* - */
 
   test.open( 'null' );
 

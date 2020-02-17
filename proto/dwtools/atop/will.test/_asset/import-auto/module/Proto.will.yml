@@ -9,7 +9,7 @@ path :
   out : .module
   remote : 'git+hd://../_repo/Proto'
   # remote : 'git+https:///github.com/Wandalen/wProto.git'
-  # git:///git@bitbucket.org:group/repo.git/out/Repo#master
+  # git:///git@bitbucket.org:group/repo.git/out/Repo@master
   download : '.module/Proto'
   export : '{path::download}/proto/**'
   temp : out

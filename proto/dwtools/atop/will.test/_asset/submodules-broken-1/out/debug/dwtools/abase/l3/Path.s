@@ -1211,7 +1211,7 @@ function join_body( o )
   for( let a = o.paths.length-1 ; a >= 0 ; a-- )
   {
     let src = o.paths[ a ];
-    _.assert( _.strIs( src ) || src === null, () => 'Expects strings as path arguments, but #' + a + ' argument is ' + _.strType( src ) );
+    _.assert( _.strIs( src ) || src === null, () => `Expects strings as path arguments, but #${a} argument is ${_.strType( src )}` );
   }
 
   /* */
@@ -2274,7 +2274,8 @@ function common()
   for( let s = 0 ; s < paths.length ; s++ )
   {
     if( _.mapIs( paths[ s ] ) )
-    paths.splice( s, 1, _.mapKeys( paths[ s ] ) );
+    _.longBut_( paths, [ s, s + 1 ], _.mapKeys( paths[ s ] ) );
+    // paths.splice( s, 1, _.mapKeys( paths[ s ] ) ); // Dmytro : can use it if unroll array returned by mapKeys() 
   }
 
   _.assert( _.strsAreAll( paths ) );

@@ -10,8 +10,8 @@ path :
 
 submodule :
 
-  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will#master
-  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will#master
+  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will@master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic.out.will@master
 
 step :
 
