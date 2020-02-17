@@ -1,13 +1,13 @@
 
 submodule :
 
-  Tools : git+https:///github.com/Wandalen/wTools.git/#master
-  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/#master
-  PathTools : git+https:///github.com/Wandalen/wPathTools.git/#master
-  # Proto : git+https:///github.com/Wandalen/wProto.git/#master
-  # UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/#master
-  # Procedure : git+https:///github.com/Wandalen/wProcedure.git/#master
-  # Color : git+https:///github.com/Wandalen/wColor.git/#master
+  Tools : git+https:///github.com/Wandalen/wTools.git/@master
+  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/@master
+  PathTools : git+https:///github.com/Wandalen/wPathTools.git/@master
+  # Proto : git+https:///github.com/Wandalen/wProto.git/@master
+  # UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/@master
+  # Procedure : git+https:///github.com/Wandalen/wProcedure.git/@master
+  # Color : git+https:///github.com/Wandalen/wColor.git/@master
 
 path :
 
