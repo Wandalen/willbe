@@ -256,7 +256,7 @@ function singleModuleWithSpaceTrivial( test )
 
   // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
   
-  _.fileProvider.filesReflect( { reflectMap : { [ a.originalAssetPath ] : _.path.join( a.routinePath, 'single with space' ) } } );
+  _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : _.path.join( a.routinePath, 'single with space' ) } }); // Dmytro : not used a.reflect() because it has no parameters
   a.start({ execPath : '.with "single with space/" .resources.list' })
 
   .then( ( got ) =>
@@ -281,37 +281,39 @@ singleModuleWithSpaceTrivial.timeOut = 200000;
 function make( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'make' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let filePath = _.path.join( routinePath, '.' );
+  let a = self.assetFor( test, 'make' );
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'make' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // let filePath = _.path.join( routinePath, '.' );
 
-  let ready = new _.Consequence().take( null );
+  // let ready = new _.Consequence().take( null );
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : ready,
+  // })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with v1 .build'
-    _.fileProvider.filesDelete( _.fileProvider.path.join( filePath, 'out/Produced.js2' ) );
-    _.fileProvider.filesDelete( _.fileProvider.path.join( filePath, 'out/Produced.txt2' ) );
+    _.fileProvider.filesDelete( _.fileProvider.path.join( a.routinePath, 'out/Produced.js2' ) );
+    _.fileProvider.filesDelete( _.fileProvider.path.join( a.routinePath, 'out/Produced.txt2' ) );
     return null;
   })
 
-  start({ execPath : '.with v1 .build' })
+  a.start({ execPath : '.with v1 .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -329,12 +331,12 @@ function make( test )
     }
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
-    var files = self.find( filePath );
+    var files = self.find( a.routinePath );
     test.identical( files, [ '.', './v1.will.yml', './v2.will.yml', './file', './file/File.js', './file/File.test.js', './file/Produce.js', './file/Src1.txt', './file/Src2.txt', './out', './out/Produced.js2', './out/Produced.txt2', './out/shouldbe.txt' ] );
     return null;
   })
 
-  start({ execPath : '.with v1 .build' })
+  a.start({ execPath : '.with v1 .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -352,23 +354,23 @@ function make( test )
     }
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
-    var files = self.find( filePath );
+    var files = self.find( a.routinePath );
     test.identical( files, [ '.', './v1.will.yml', './v2.will.yml', './file', './file/File.js', './file/File.test.js', './file/Produce.js', './file/Src1.txt', './file/Src2.txt', './out', './out/Produced.js2', './out/Produced.txt2', './out/shouldbe.txt' ] );
     return null;
   })
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with v2 .build'
-    _.fileProvider.filesDelete( _.fileProvider.path.join( filePath, 'out/Produced.js2' ) );
-    _.fileProvider.filesDelete( _.fileProvider.path.join( filePath, 'out/Produced.txt2' ) );
+    _.fileProvider.filesDelete( _.fileProvider.path.join( a.routinePath, 'out/Produced.js2' ) );
+    _.fileProvider.filesDelete( _.fileProvider.path.join( a.routinePath, 'out/Produced.txt2' ) );
     return null;
   })
 
-  start({ execPath : '.with v2 .build' })
+  a.start({ execPath : '.with v2 .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -386,12 +388,12 @@ function make( test )
     }
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
-    var files = self.find( filePath );
+    var files = self.find( a.routinePath );
     test.identical( files, [ '.', './v1.will.yml', './v2.will.yml', './file', './file/File.js', './file/File.test.js', './file/Produce.js', './file/Src1.txt', './file/Src2.txt', './out', './out/Produced.js2', './out/Produced.txt2', './out/shouldbe.txt' ] );
     return null;
   })
 
-  start({ execPath : '.with v2 .build' })
+  a.start({ execPath : '.with v2 .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -409,14 +411,14 @@ function make( test )
     }
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
-    var files = self.find( filePath );
+    var files = self.find( a.routinePath );
     test.identical( files, [ '.', './v1.will.yml', './v2.will.yml', './file', './file/File.js', './file/File.test.js', './file/Produce.js', './file/Src1.txt', './file/Src2.txt', './out', './out/Produced.js2', './out/Produced.txt2', './out/shouldbe.txt' ] );
     return null;
   })
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
