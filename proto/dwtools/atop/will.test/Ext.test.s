@@ -236,7 +236,9 @@ function preCloneRepos( test )
 function singleModuleWithSpaceTrivial( test )
 {
   let self = this;
+
   let a = self.assetFor( test, 'single with space' );
+  _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : _.path.join( a.routinePath, 'single with space' ) } }); // Dmytro : not used a.reflect() because it has no parameters
   // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'single with space' );
   // let routinePath = _.path.join( self.suiteTempPath, test.name, 'single with space' );
   // let abs = self.abs_functor( routinePath );
@@ -256,8 +258,8 @@ function singleModuleWithSpaceTrivial( test )
 
   // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
   
-  _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : _.path.join( a.routinePath, 'single with space' ) } }); // Dmytro : not used a.reflect() because it has no parameters
-  a.start({ execPath : '.with "single with space/" .resources.list' })
+
+a.start({ execPath : '.with "single with space/" .resources.list' })
 
   .then( ( got ) =>
   {
@@ -281,7 +283,9 @@ singleModuleWithSpaceTrivial.timeOut = 200000;
 function make( test )
 {
   let self = this;
+
   let a = self.assetFor( test, 'make' );
+  a.reflect();
   // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'make' );
   // let routinePath = _.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
@@ -300,7 +304,6 @@ function make( test )
   // })
 
   // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-  a.reflect();
 
   /* - */
 
@@ -430,35 +433,37 @@ Test transpilation of JS files.
 function transpile( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'transpile' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
+  let a = self.assetFor( test, 'transpile' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'transpile' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
 
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
+  // let ready = new _.Consequence().take( null );
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : ready,
+  // })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build debug'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  start({ execPath : '.build debug' })
+  a.start({ execPath : '.build debug' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -470,14 +475,14 @@ function transpile( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build compiled.debug'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  start({ execPath : '.build compiled.debug' })
+  a.start({ execPath : '.build compiled.debug' })
   .then( ( got ) =>
   {
 
@@ -510,14 +515,14 @@ function transpile( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build raw.release'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  start({ execPath : '.build raw.release' })
+  a.start({ execPath : '.build raw.release' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -529,14 +534,14 @@ function transpile( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build release';
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  start({ execPath : '.build release' })
+  a.start({ execPath : '.build release' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -557,14 +562,14 @@ function transpile( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build all'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
-  start({ execPath : '.build all' })
+  a.start({ execPath : '.build all' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -575,7 +580,7 @@ function transpile( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 transpile.timeOut = 200000;
