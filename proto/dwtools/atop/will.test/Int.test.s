@@ -10244,17 +10244,17 @@ function repoStatusForDeletedRepo( test )
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
     var status = 
     {
-      'dirExists' : repo1a._.dirExists,
-      'hasFiles' : repo1a._.hasFiles,
-      'isRepository' :  repo1a._.isRepository,
-      'hasLocalChanges' :  repo1a._.hasLocalChanges,
-      'hasLocalUncommittedChanges' :  repo1a._.hasLocalUncommittedChanges,
-      'isUpToDate' :  repo1a._.isUpToDate,
-      'remoteIsValid' :  repo1a._.remoteIsValid,
-      'safeToDelete' :  repo1a._.safeToDelete,
-      'downloadRequired' :  repo1a._.downloadRequired,
-      'updateRequired' :  repo1a._.updateRequired,
-      'agreeRequired' :  repo1a._.agreeRequired
+      'dirExists' : repo1._.dirExists,
+      'hasFiles' : repo1._.hasFiles,
+      'isRepository' :  repo1._.isRepository,
+      'hasLocalChanges' :  repo1._.hasLocalChanges,
+      'hasLocalUncommittedChanges' :  repo1._.hasLocalUncommittedChanges,
+      'isUpToDate' :  repo1._.isUpToDate,
+      'remoteIsValid' :  repo1._.remoteIsValid,
+      'safeToDelete' :  repo1._.safeToDelete,
+      'downloadRequired' :  repo1._.downloadRequired,
+      'updateRequired' :  repo1._.updateRequired,
+      'agreeRequired' :  repo1._.agreeRequired
     }
     var expected = 
     {
@@ -10943,6 +10943,180 @@ function repoStatusLocalChanges( test )
   return a.ready;
 }
 
+//
+
+function repoStatusLocalUncommittedChanges( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'submodules' );
+  let will = new _.Will();
+  let opener;
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open();
+  })
+  
+  /*  */
+
+  .tap( () => test.open( 'repo has local uncommitted changes' ) )
+  
+  .then( () => 
+  {  
+    test.description = 'repo::ModuleForTesting1 has local uncommitted changes'
+    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    let con = opener.openedModule.subModulesDownload();
+    con.then( () => 
+    {
+      var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+      return repo1.status({ all : 1, invalidating : 1 }) 
+    })
+    con.then( () => 
+    {
+      _.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.js' ), data : '' })
+      return null;
+    })
+    _.process.start
+    ({ 
+      execPath : 'git add sample/Sample.js',
+      currentPath : a.abs( '.module/ModuleForTesting1' ),
+      outputPiping : 0,
+      ready : con,
+    })
+    return con;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 has local uncommitted changes, all:1, invalidating:0'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 1, invalidating : 0 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    {
+      'dirExists' : true,
+      'hasFiles' : true,
+      'isRepository' : true,
+      'hasLocalChanges' : false,
+      'hasLocalUncommittedChanges' : false,
+      'isUpToDate' : true,
+      'remoteIsValid' : true,
+      'safeToDelete' : true,
+      'downloadRequired' : false,
+      'updateRequired' : false,
+      'agreeRequired' : false
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'invalidating:0, check only for uncommitted changes'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 0, invalidating : 0, hasLocalUncommittedChanges : 1 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    {
+      'isRepository' : true,
+      'hasLocalUncommittedChanges' : false
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'invalidating:1, check only for uncommitted changes'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 0, invalidating : 1, hasLocalUncommittedChanges : 1 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    {
+      'isRepository' : true,
+      'hasLocalUncommittedChanges' : true
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 has local uncommitted changes, all:1, invalidating:1'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 1, invalidating : 1 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    {
+      'dirExists' : true,
+      'hasFiles' : true,
+      'isRepository' : true,
+      'hasLocalChanges' : true,
+      'hasLocalUncommittedChanges' : true,
+      'isUpToDate' : true,
+      'remoteIsValid' : true,
+      'safeToDelete' : false,
+      'downloadRequired' : false,
+      'updateRequired' : false,
+      'agreeRequired' : false
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'all : 0, invalidating : 0'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 0, invalidating : 0 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp = {}
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  .tap( () => test.close( 'repo has local uncommitted changes' ) )
+  
+  /* */
+  
+  .finally( ( err, arg ) =>
+  {
+    test.identical( err, undefined );
+    opener.close();
+    return null;
+  })
+
+  return a.ready;
+}
+
 // --
 // define class
 // --
@@ -11035,9 +11209,9 @@ var Self =
     repoStatusForOutdatedRepo,
     repoStatusForInvalidRepo,
     repoStatusLocalChanges,
-
-  }
-
+    repoStatusLocalUncommittedChanges
+    
+  },
 }
 
 // --

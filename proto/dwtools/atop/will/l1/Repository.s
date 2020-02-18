@@ -185,13 +185,13 @@ function status( o )
     if( o.invalidating || repo._.isRepository === null )
     ready.also( isRepositoryReform );
 
-    if( o.hasLocalChanges )
-    if( o.invalidating || repo._.hasLocalChanges === null )
+    if( o.hasLocalChanges || o.hasLocalUncommittedChanges )
+    if( o.invalidating || repo._.hasLocalChanges === null || repo._.hasLocalUncommittedChanges === null )
     ready.also( hasLocalChangesReform );
 
-    if( o.hasLocalUncommittedChanges )
-    if( o.invalidating || repo._.hasLocalUncommittedChanges === null )
-    ready.also( hasLocalUncommittedChangesReform );
+    // if( o.hasLocalUncommittedChanges )
+    // if( o.invalidating || repo._.hasLocalUncommittedChanges === null )
+    // ready.also( hasLocalUncommittedChangesReform );
 
     if( o.isUpToDate )
     if( o.invalidating || repo._.isUpToDate === null )
@@ -296,7 +296,7 @@ function status( o )
 
     _.assert( arguments.length === 0, 'Expects no arguments' );
     _.assert( _.boolIs( repo.isRepository ) );
-
+    
     if( o.invalidating && o.isRepository )
     {
       if( !repo.isRepository )
@@ -310,20 +310,35 @@ function status( o )
       if( !isRepository )
       return end( false );
     }
-
-    let result = vcs.hasLocalChanges
+    
+    let status = vcs.statusLocal
     ({
       localPath : repo.downloadPath,
-      unpushed : 1,
+      uncommitted : 1,
+      detailing : o.hasLocalUncommittedChanges,
+      unpushed : o.hasLocalChanges,
+      explaining : 0,
       sync : 1,
     });
-
-    return end( result );
+    
+    return end( status );
 
     function end( result )
-    {
-      _.assert( _.boolIs( result ) );
-      repo._.hasLocalChanges = result;
+    { 
+      if( _.boolIs( result ) )
+      { 
+        repo._.hasLocalChanges = result;
+        if( o.hasLocalUncommittedChanges )
+        repo._.hasLocalUncommittedChanges = result;
+      }
+      else
+      { 
+        _.assert( _.objectIs( status ) );
+        repo._.hasLocalChanges = result.status;
+        repo._.hasLocalUncommittedChanges = result.uncommitted;
+        result = result.status;
+      }
+      
       return result;
     }
 
