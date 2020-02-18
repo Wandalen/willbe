@@ -10217,7 +10217,7 @@ function repoStatus( test )
 
 //
 
-function repoStatusExtended( test )
+function repoStatusForDeletedRepo( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
@@ -10356,6 +10356,405 @@ function repoStatusExtended( test )
     })
   })
   
+  /* */
+  
+  .finally( ( err, arg ) =>
+  {
+    test.identical( err, undefined );
+    opener.close();
+    return null;
+  })
+
+  return a.ready;
+}
+
+//
+
+function repoStatusForOutdatedRepo( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'submodules' );
+  let will = new _.Will();
+  let opener;
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open();
+  })
+
+  /* remote path refers to master, local repo is in detached state */
+  
+  .tap( () => test.open( 'repo is not up to date' ) )
+  
+  .then( () => 
+  {  
+    test.description = 'repo::ModuleForTesting1 is not up to date'
+    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    let con = opener.openedModule.subModulesDownload();
+    con.then( () => 
+    {
+      var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+      return repo1.status({ all : 1, invalidating : 1 }) 
+    })
+    _.process.start
+    ({ 
+      execPath : 'git checkout HEAD~1',
+      currentPath : a.abs( '.module/ModuleForTesting1' ),
+      outputPiping : 0,
+      ready : con,
+    })
+    return con;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 is not up to date, all:1, invalidating:0'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 1, invalidating : 0 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    {
+      'dirExists' : true,
+      'hasFiles' : true,
+      'isRepository' : true,
+      'hasLocalChanges' : false,
+      'hasLocalUncommittedChanges' : false,
+      'isUpToDate' : true,
+      'remoteIsValid' : true,
+      'safeToDelete' : true,
+      'downloadRequired' : false,
+      'updateRequired' : false,
+      'agreeRequired' : false
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 is not up to date, all:1, invalidating:1'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 1, invalidating : 1 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    {
+      'dirExists' : true,
+      'hasFiles' : true,
+      'isRepository' : true,
+      'hasLocalChanges' : false,
+      'hasLocalUncommittedChanges' : false,
+      'isUpToDate' : false,
+      'remoteIsValid' : true,
+      'safeToDelete' : true,
+      'downloadRequired' : false,
+      'updateRequired' : true,
+      'agreeRequired' : true
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 is not up to date, all:1, invalidating:0'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 1, invalidating : 0 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    {
+      'dirExists' : true,
+      'hasFiles' : true,
+      'isRepository' : true,
+      'hasLocalChanges' : false,
+      'hasLocalUncommittedChanges' : false,
+      'isUpToDate' : false,
+      'remoteIsValid' : true,
+      'safeToDelete' : true,
+      'downloadRequired' : false,
+      'updateRequired' : true,
+      'agreeRequired' : true
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 is not up to date, all:0'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 0, invalidating : 0 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp = {}
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 is not up to date, all:0, invalidating:0, isUpToDate:1'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 0, invalidating : 0, isUpToDate : 1 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    { 
+      'isRepository' : true,
+      'isUpToDate' : false
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  .tap( () => test.close( 'repo is not up to date' ) )
+  
+  /* */
+  
+  .finally( ( err, arg ) =>
+  {
+    test.identical( err, undefined );
+    opener.close();
+    return null;
+  })
+
+  return a.ready;
+}
+
+//
+
+function repoStatusLocalChanges( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'submodules' );
+  let will = new _.Will();
+  let opener;
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open();
+  })
+
+  /* remote path refers to master, repo has local changes */
+  
+  .tap( () => test.open( 'repo has local changes' ) )
+  
+  .then( () => 
+  {  
+    test.description = 'repo::ModuleForTesting1 has local changes'
+    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    let con = opener.openedModule.subModulesDownload();
+    con.then( () => 
+    {
+      var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+      return repo1.status({ all : 1, invalidating : 1 }) 
+    })
+    con.then( () => 
+    {
+      _.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.js' ), data : '' })
+      return null;
+    });
+    return con;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 has local changes, all:1, invalidating:0'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 1, invalidating : 0 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    {
+      'dirExists' : true,
+      'hasFiles' : true,
+      'isRepository' : true,
+      'hasLocalChanges' : false,
+      'hasLocalUncommittedChanges' : false,
+      'isUpToDate' : true,
+      'remoteIsValid' : true,
+      'safeToDelete' : true,
+      'downloadRequired' : false,
+      'updateRequired' : false,
+      'agreeRequired' : false
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 has local changes, all:1, invalidating:1'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 1, invalidating : 1 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    {
+      'dirExists' : true,
+      'hasFiles' : true,
+      'isRepository' : true,
+      'hasLocalChanges' : true,
+      'hasLocalUncommittedChanges' : true,
+      'isUpToDate' : true,
+      'remoteIsValid' : true,
+      'safeToDelete' : false,
+      'downloadRequired' : false,
+      'updateRequired' : false,
+      'agreeRequired' : false
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 has local changes, all:1, invalidating:0'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 1, invalidating : 0 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    {
+      'dirExists' : true,
+      'hasFiles' : true,
+      'isRepository' : true,
+      'hasLocalChanges' : true,
+      'hasLocalUncommittedChanges' : true,
+      'isUpToDate' : true,
+      'remoteIsValid' : true,
+      'safeToDelete' : false,
+      'downloadRequired' : false,
+      'updateRequired' : false,
+      'agreeRequired' : false
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 is not up to date, all:0'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 0, invalidating : 0 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp = {}
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 is not up to date, all:0, invalidating:0, hasLocalChanges:1'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 0, invalidating : 0, hasLocalChanges : 1 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    { 
+      'isRepository' : true,
+      'hasLocalChanges' : true
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 is not up to date, all:0, invalidating:0, hasLocalUncommittedChanges:1'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 0, invalidating : 0, hasLocalUncommittedChanges : 1 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    { 
+      'isRepository' : true,
+      'hasLocalUncommittedChanges' : true
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  //
+  
+  //
+  
+  .then( () => 
+  { 
+    test.description = 'repo::ModuleForTesting1 is not up to date, all:0, invalidating:0, hasLocalUncommittedChanges:1'
+    var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo1.status({ all : 0, invalidating : 0, hasLocalChanges : 1, hasLocalUncommittedChanges : 1 }) 
+  })
+  .then( ( status ) =>
+  {
+    var exp =
+    { 
+      'isRepository' : true,
+      'hasLocalChanges' : true,
+      'hasLocalUncommittedChanges' : true
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+  
+  .tap( () => test.close( 'repo has local changes' ) )
+  
+  /* */
+  
   .finally( ( err, arg ) =>
   {
     test.identical( err, undefined );
@@ -10454,7 +10853,9 @@ var Self =
     moduleIsNotValid,
 
     repoStatus,
-    repoStatusExtended
+    repoStatusForDeletedRepo,
+    repoStatusForOutdatedRepo,
+    repoStatusLocalChanges,
 
   }
 
