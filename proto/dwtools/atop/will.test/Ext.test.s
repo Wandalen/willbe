@@ -2785,29 +2785,19 @@ function reflectGetPath( test )
 
     var expected =
     [
-      '.',
-      './debug',
-      './debug/dwtools',
-      './debug/dwtools/Tools.s',
-      './debug/dwtools/abase',
-      './debug/dwtools/abase/l3_proto',
-      './debug/dwtools/abase/l3_proto/Include.s',
-      './debug/dwtools/abase/l3_proto/l1',
-      './debug/dwtools/abase/l3_proto/l1/Define.s',
-      './debug/dwtools/abase/l3_proto/l1/Proto.s',
-      './debug/dwtools/abase/l3_proto/l1/Workpiece.s',
-      './debug/dwtools/abase/l3_proto/l5',
-      './debug/dwtools/abase/l3_proto/l5/Accessor.s',
-      './debug/dwtools/abase/l3_proto/l5/Class.s',
-      './debug/dwtools/abase/l3_proto/l5/Like.s',
-      './debug/dwtools/abase/l3_proto.test',
-      './debug/dwtools/abase/l3_proto.test/Blueprint.test.s',
-      './debug/dwtools/abase/l3_proto.test/Class.test.s',
-      './debug/dwtools/abase/l3_proto.test/Like.test.s',
-      './debug/dwtools/abase/l3_proto.test/Proto.test.s'
+     '.',
+     './debug',
+     './debug/dwtools',
+     './debug/dwtools/abase',
+     './debug/dwtools/abase/l3',
+     './debug/dwtools/abase/l3/Include.s',
+     './debug/dwtools/abase/l3/l3',
+     './debug/dwtools/abase/l3/l3/ModuleForTesting12.s',
+     './debug/dwtools/abase/l3.test',
+     './debug/dwtools/abase/l3.test/ModuleForTesting12.test.s' 
     ]
     var files = self.find( outPath );
-    test.gt( files.length, 13 );
+    test.gt( files.length, 4 );
     test.identical( files, expected );
 
     return null;
