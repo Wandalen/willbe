@@ -590,35 +590,38 @@ transpile.timeOut = 200000;
 function moduleNewDotless( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-dotless-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let ready = new _.Consequence().take( null );
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  })
+  let a = self.assetFor( test, 'two-dotless-exported' );
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-dotless-exported' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // let ready = new _.Consequence().take( null );
+
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   throwingExitCode : 0,
+  //   ready : ready,
+  // })
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.module.new'
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+   // _.fileProvider.filesDelete( routinePath );
+    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    a.reflect(); 
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
     return null;
-  })
-  start({ execPath : '.module.new' })
+  });
+  a.startNonThrowing({ execPath : '.module.new', currentPath : a.routinePath })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -634,10 +637,10 @@ function moduleNewDotless( test )
       './sub/ex.will.yml',
       './sub/im.will.yml'
     ]
-    var files = self.find( routinePath );
+    var files = self.find( a.routinePath );
     test.identical( files, exp );
 
-    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new module::moduleNewDotless at' ), 1 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 1 );
     test.identical( _.strCount( got.output, 'already exists!' ), 1 );
@@ -646,18 +649,18 @@ function moduleNewDotless( test )
   })
 
   /* - */
-
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.module.new some'
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    // _.fileProvider.filesDelete( routinePath );
+    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    a.reflect();
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
     return null;
   })
-  start({ execPath : '.module.new some' })
+  a.startNonThrowing({ execPath : '.module.new some' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -674,7 +677,7 @@ function moduleNewDotless( test )
       './sub/ex.will.yml',
       './sub/im.will.yml'
     ]
-    var files = self.find( routinePath );
+    var files = self.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -684,7 +687,7 @@ function moduleNewDotless( test )
 
     return null;
   })
-  start({ execPath : '.with some .about.list' })
+  a.startNonThrowing({ execPath : '.with some .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -697,17 +700,18 @@ function moduleNewDotless( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.module.new some/'
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+   // _.fileProvider.filesDelete( routinePath );
+    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    a.reflect(); 
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
     return null;
   })
-  start({ execPath : '.module.new some/' })
+  a.startNonThrowing({ execPath : '.module.new some/' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -725,7 +729,7 @@ function moduleNewDotless( test )
       './sub/ex.will.yml',
       './sub/im.will.yml'
     ]
-    var files = self.find( routinePath );
+    var files = self.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -735,7 +739,7 @@ function moduleNewDotless( test )
 
     return null;
   })
-  start({ execPath : '.with some/ .about.list' })
+  a.startNonThrowing({ execPath : '.with some/ .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -748,17 +752,18 @@ function moduleNewDotless( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.module.new ../dir1/dir2/some/'
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+    // _.fileProvider.filesDelete( routinePath );
+    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    a.reflect();
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
     return null;
   })
-  start({ execPath : '.module.new ../dir1/dir2/some/' })
+  a.startNonThrowing({ execPath : '.module.new ../dir1/dir2/some/' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -774,11 +779,11 @@ function moduleNewDotless( test )
       './sub/ex.will.yml',
       './sub/im.will.yml'
     ]
-    var files = self.find( routinePath );
+    var files = self.find( a.routinePath );
     test.identical( files, exp );
 
     var exp = [ '.', './dir2', './dir2/some', './dir2/some/will.yml' ]
-    var files = self.find( routinePath + '/../dir1' );
+    var files = self.find( a.routinePath + '/../dir1' );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -788,7 +793,7 @@ function moduleNewDotless( test )
 
     return null;
   })
-  start({ execPath : '.with ../dir1/dir2/some/ .about.list' })
+  a.startNonThrowing({ execPath : '.with ../dir1/dir2/some/ .about.list' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -796,13 +801,13 @@ function moduleNewDotless( test )
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
-    _.fileProvider.filesDelete( routinePath + '/../dir1' );
+    _.fileProvider.filesDelete( a.routinePath + '/../dir1' );
     return null;
   })
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 moduleNewDotless.timeOut = 200000;
