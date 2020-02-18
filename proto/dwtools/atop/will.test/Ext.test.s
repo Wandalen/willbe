@@ -52,7 +52,6 @@ var _ = _global_.wTools;
 function onSuiteBegin()
 {
   let self = this;
-debugger;
   self.suiteTempPath = _.path.pathDirTempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
   self.suiteAssetsOriginalPath = _.path.join( __dirname, '_asset' );
   self.repoDirPath = _.path.join( self.suiteAssetsOriginalPath, '_repo' );
@@ -237,26 +236,28 @@ function preCloneRepos( test )
 function singleModuleWithSpaceTrivial( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'single with space' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name, 'single with space' );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
+  let a = self.assetFor( test, 'single with space' );
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'single with space' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name, 'single with space' );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // let submodulesPath = _.path.join( routinePath, '.module' );
 
-  let ready = new _.Consequence().take( null )
+  // let ready = new _.Consequence().take( null )
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : _.path.dir( routinePath ),
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : _.path.dir( routinePath ),
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : ready
+  // })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
-  start({ execPath : '.with "single with space/" .resources.list' })
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  
+  _.fileProvider.filesReflect( { reflectMap : { [ a.originalAssetPath ] : _.path.join( a.routinePath, 'single with space' ) } } );
+  a.start({ execPath : '.with "single with space/" .resources.list' })
 
   .then( ( got ) =>
   {
@@ -268,7 +269,7 @@ function singleModuleWithSpaceTrivial( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 singleModuleWithSpaceTrivial.timeOut = 200000;
