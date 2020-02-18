@@ -4699,7 +4699,7 @@ function cleanDelete( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  o = _.routineOptions( cleanDelete, arguments );
+  o = _.routineOptions( cleanDelete, arguments ); debugger;
 
   will.readingEnd();
 
