@@ -9144,7 +9144,6 @@ function submodulesResolve( test )
     test.case = 'trivial';
     var submodule = opener.openedModule.submodulesResolve({ selector : 'Tools' });
     test.is( submodule instanceof will.ModulesRelation );
-    // test.is( submodule.hasFiles );
     test.is( submodule.opener.repo.hasFiles );
     test.is( submodule.opener.repo === submodule.opener.openedModule.repo );
     test.is( !!submodule.opener );
@@ -9167,6 +9166,7 @@ function submodulesResolve( test )
     test.identical( submodule.opener.openedModule.localPath, abs( '.module/Tools/out/wTools.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, abs( '.module/Tools/out/wTools.out' ) );
     test.identical( submodule.opener.openedModule.remotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will@master' ) );
+    debugger;
     test.identical( submodule.opener.openedModule.currentRemotePath, _.uri.join( repoPath, 'git+hd://Tools?out=out/wTools.out.will@master' ) );
     debugger;
 
@@ -9641,6 +9641,99 @@ function moduleIsNotValid( test )
   return ready;
 }
 
+//
+
+function repoStatus( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'submodules' );
+  let will = new _.Will();
+  let opener;
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open();
+  })
+
+  .then( () => opener.openedModule.subModulesDownload() )
+
+  .then( () =>
+  {
+    var repo = opener.openedModule.submoduleMap.ModuleForTesting1a.opener.repo;
+    return repo.status({ all : 1, invalidating : 1 });
+  })
+
+  .then( ( status ) =>
+  {
+
+    test.description = 'status of repo::ModuleForTesting1a'
+    var exp =
+    {
+      'dirExists' : true,
+      'hasFiles' : true,
+      'isRepository' : true,
+      'hasLocalChanges' : false,
+      'hasLocalUncommittedChanges' : false,
+      'isUpToDate' : true,
+      'remoteIsValid' : true,
+      'safeToDelete' : true,
+      'downloadRequired' : false,
+      'updateRequired' : false,
+      'agreeRequired' : false
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+
+  .then( () =>
+  {
+
+    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+
+    var exp = [ 'ModuleForTesting1a' ];
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var repo = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
+    return repo.status({ all : 1, invalidating : 1 });
+  })
+
+  .then( ( status ) =>
+  {
+
+    var exp =
+    {
+      'dirExists' : false,
+      'hasFiles' : false,
+      'isRepository' : false,
+      'hasLocalChanges' : false,
+      'hasLocalUncommittedChanges' : false,
+      'isUpToDate' : false,
+      'remoteIsValid' : false,
+      'safeToDelete' : true,
+      'downloadRequired' : true,
+      'updateRequired' : true,
+      'agreeRequired' : true
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+
+  .finally( ( err, arg ) =>
+  {
+    test.identical( err, undefined );
+    opener.close();
+    return null;
+  })
+
+  return a.ready;
+}
+
 // --
 // define class
 // --
@@ -9726,7 +9819,9 @@ var Self =
 
     customLogger,
     resourcePathRemote,
-    moduleIsNotValid
+    moduleIsNotValid,
+
+    repoStatus,
 
   }
 
