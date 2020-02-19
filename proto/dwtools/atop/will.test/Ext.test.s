@@ -2312,27 +2312,6 @@ function openExportClean( test )
   a.reflect();
   _.fileProvider.filesDelete({ filePath : _.path.join( a.routinePath, 'out' ) });
 
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'open' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-// 
-//   let outPath = _.path.join( routinePath, 'out' );
-// 
-//   let ready = new _.Consequence().take( null );
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     throwingExitCode : 1,
-//     ready : ready,
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-//   _.fileProvider.filesDelete({ filePath : outPath })
-
   /* - */
 
   a.start( '".with . .export ; .clean"' )
@@ -2379,31 +2358,18 @@ function openExportClean( test )
 function reflectNothingFromSubmodules( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-nothing-from-submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
+  let a = self.assetFor( test, 'reflect-nothing-from-submodules' );
 
-  let outDebugPath = _.path.join( routinePath, 'out/debug' );
-  let outPath = _.path.join( routinePath, 'out' );
-  let outWillPath = _.path.join( routinePath, 'out/reflect-nothing-from-submodules.out.will.yml' );
-  let ready = new _.Consequence().take( null )
+  let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  let outWillPath = _.path.join( a.routinePath, 'out/reflect-nothing-from-submodules.out.will.yml' );
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  a.reflect();
   _.fileProvider.filesDelete( outDebugPath );
 
   /* - */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.export'
     _.fileProvider.filesDelete( outDebugPath );
@@ -2416,7 +2382,7 @@ function reflectNothingFromSubmodules( test )
     Throws error if none submodule is defined
   */
 
-  start({ execPath : '.export' })
+  a.start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -2503,7 +2469,7 @@ function reflectNothingFromSubmodules( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 reflectNothingFromSubmodules.timeOut = 200000;
