@@ -34,14 +34,14 @@ function reposRedownload()
   // clone( 'Tools', '8fa27d72fe02d5e496b26e16669970a69d71fdb1' );
   // clone( 'UriBasic', 'd7022e6dcd5ab7f2d71aeb740d41a65dfaabdecf' );
 
-  clone( 'ModuleForTesting1', '4688ca387496a5d973ecce385bb6abefd184847e' ); // Tools
-  clone( 'ModuleForTesting1a', '4444f2a6edea7e545bb42fbe3b9f47b89ff0c32a' ); // Color
-  clone( 'ModuleForTesting1b', '4adeb4fbace13c15a7fe82fee56240e4fe0abbc4' );
-  clone( 'ModuleForTesting2', '080a7e2596e32ba0313bbe9260494df34f6fc49d' ); // PathBasic
-  clone( 'ModuleForTesting2a', '87f8b8d301d4f5321442aa8012d63dc86bec7123' );
-  clone( 'ModuleForTesting2b', '839fa7bb9bdb27e71cbfce203e4d80268456913f' ); // UriBasic
-  clone( 'ModuleForTesting12', '5490549c4289cd870a41784b985990668b4a9ab3' ); // Proto
-  clone( 'ModuleForTesting12ab', '9a837375d2ab7cc8c91d38b706f42c16e0b022fd' ); // Procedure
+  clone( 'ModuleForTesting1', 'c5442a937219bc21f2f082e23aeb1c3e71406fd9' ); // Tools
+  clone( 'ModuleForTesting1a', '3ab5bd8bf672538571f2378e11be7f47e6e58414' ); // Color
+  clone( 'ModuleForTesting1b', 'a6a8a6e4fa650c034e8a0ae2cc85a74f3031a01a' );
+  clone( 'ModuleForTesting2', '99532759700d85ff17d6cb68aa692642727513fb' ); // PathBasic
+  clone( 'ModuleForTesting2a', '5bd7ebfbe9e95f37de3468013087d87eb0bc1f3d' );
+  clone( 'ModuleForTesting2b', '60e5b51fbb0853fd2f3b90b15fe6c93ae1d82745' ); // UriBasic
+  clone( 'ModuleForTesting12', 'be2c704e5cb4ee2b80a067b6ee9bf3217e72b770' ); // Proto
+  clone( 'ModuleForTesting12ab', 'e5e33c19dbbdbcbc7605a4fd542d39de3b011645' ); // Procedure
 
   return ready;
 }
