@@ -4119,30 +4119,6 @@ function reflectorMasks( test )
   let a = self.assetFor( test, 'reflector-masks' );
   let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflector-masks' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let outPath = _.path.join( routinePath, 'out' );
-// 
-// 
-//   test.description = 'should handle correct files';
-// 
-//   let ready = new _.Consequence().take( null );
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-// 
-//   /* - */
-// 
-//   _.fileProvider.filesDelete( routinePath );
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -4194,47 +4170,42 @@ reflectorMasks.timeOut = 200000;
 function withDoInfo( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
+  let a = self.assetFor( test, 'dos' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
 
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    mode : 'spawn',
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+//   let start = _.process.starter  // Dmytro : save it for comparison. Object a has start() method and other, but none has mode `spawn`.
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     mode : 'spawn',
+//     outputGraying : 1,
+//     throwingExitCode : 1,
+//     ready : ready,
+//   })
 
   /* - */
 
-  start( '.clean' )
-  start( '.export' )
+  a.start( '.clean' )
+  a.start( '.export' )
   .then( ( got ) =>
   {
     test.case = 'setup';
-    _.fileProvider.fileAppend( _.path.join( routinePath, 'will.yml' ), '\n' );
+    _.fileProvider.fileAppend( _.path.join( a.routinePath, 'will.yml' ), '\n' );
 
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/proto' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/dos.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathBasic' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathTools' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/Tools' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/dos.out.will.yml' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/PathBasic' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/PathTools' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/Tools' ) ) );
 
     return null;
   })
 
   /* - */
 
-  start( '.hook.call info.js' )
+  a.start( '.hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.hook.call info.js';
@@ -4249,7 +4220,7 @@ function withDoInfo( test )
 
   /* - */
 
-  start( '.with . .hook.call info.js' )
+  a.start( '.with . .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.with . .hook.call info.js';
@@ -4264,7 +4235,7 @@ function withDoInfo( test )
 
   /* - */
 
-  start( '.with * .hook.call info.js' )
+  a.start( '.with * .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.with . .hook.call info.js';
@@ -4279,7 +4250,7 @@ function withDoInfo( test )
 
   /* - */
 
-  start( '.with ** .hook.call info.js' )
+  a.start( '.with ** .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.with . .hook.call info.js';
@@ -4294,7 +4265,7 @@ function withDoInfo( test )
 
   /* - */
 
-  start( '.imply withOut:0 ; .with ** .hook.call info.js' )
+  a.start( '.imply withOut:0 ; .with ** .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
@@ -4309,7 +4280,7 @@ function withDoInfo( test )
 
   /* - */
 
-  start( '.imply withIn:0 ; .with ** .hook.call info.js' )
+  a.start( '.imply withIn:0 ; .with ** .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.imply withIn:0 ; .with ** .hook.call info.js';
@@ -4325,7 +4296,7 @@ function withDoInfo( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 
 } /* end of function withDoInfo */
 
