@@ -3165,26 +3165,8 @@ function reflectRemoteHttp( test )
   let self = this;
   let a = self.assetFor( test, 'reflect-remote-http' );
   a.reflect();
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-remote-http' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let submodulesPath = _.path.join( routinePath, 'module' );
-// 
-//   let ready = new _.Consequence().take( null )
-//   let outPath = _.path.join( routinePath, 'out' );
-//   let localFilePath = _.path.join( routinePath, 'out/Tools.s' );
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+
+  /* - */
 
   a.ready.then( () =>
   {
@@ -3211,38 +3193,41 @@ reflectRemoteHttp.timeOut = 200000;
 function reflectWithOptions( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-with-options' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let filePath = _.path.join( routinePath, 'file' );
-
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  });
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'reflect-with-options' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-with-options' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let filePath = _.path.join( routinePath, 'file' );
+// 
+//   let outPath = _.path.join( routinePath, 'out' );
+//   let ready = new _.Consequence().take( null );
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     throwingExitCode : 0,
+//     ready : ready,
+//   });
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with mandatory .build variant1';
     return null;
   })
 
-  start({ execPath : '.with mandatory .clean' })
-  start({ execPath : '.with mandatory .build variant1' })
+  a.startNonThrowing({ execPath : '.with mandatory .clean' })
+  a.startNonThrowing({ execPath : '.with mandatory .build variant1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -3254,15 +3239,15 @@ function reflectWithOptions( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with mandatory .build variant2';
     return null;
   })
 
-  start({ execPath : '.with mandatory .clean' })
-  start({ execPath : '.with mandatory .build variant2' })
+  a.startNonThrowing({ execPath : '.with mandatory .clean' })
+  a.startNonThrowing({ execPath : '.with mandatory .build variant2' })
   .finally( ( err, got ) =>
   {
     test.is( !err );
@@ -3278,15 +3263,15 @@ function reflectWithOptions( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with mandatory .build variant3';
     return null;
   })
 
-  start({ execPath : '.with mandatory .clean' })
-  start({ execPath : '.with mandatory .build variant3' })
+  a.startNonThrowing({ execPath : '.with mandatory .clean' })
+  a.startNonThrowing({ execPath : '.with mandatory .build variant3' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -3298,7 +3283,7 @@ function reflectWithOptions( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
