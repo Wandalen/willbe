@@ -2069,35 +2069,38 @@ withMixed.timeOut = 300000;
 function eachMixed( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-git' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let ready = new _.Consequence().take( null );
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  });
+  let a = self.assetFor( test, 'submodules-git' );
+  a.reflect();
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-git' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // let ready = new _.Consequence().take( null );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : ready,
+  // });
+
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.each submodule::*/path::download .shell "git status"'
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.build' })
-  start({ execPath : '.each submodule::*/path::download .shell "git status"' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.build' })
+  a.start({ execPath : '.each submodule::*/path::download .shell "git status"' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -2125,16 +2128,16 @@ function eachMixed( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.each submodule:: .shell ls'
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.build' })
-  start({ execPath : '.each submodule:: .shell ls -al' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.build' })
+  a.start({ execPath : '.each submodule:: .shell ls -al' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -2158,7 +2161,7 @@ function eachMixed( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 eachMixed.timeOut = 300000;
