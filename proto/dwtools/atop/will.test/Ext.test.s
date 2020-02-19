@@ -2274,31 +2274,33 @@ tab should not be accumulated in the output
 function eachBrokenCommand( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules-few' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    mode : 'spawn',
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-  _.fileProvider.filesDelete({ filePath : outPath })
+  let a = self.assetFor( test, 'export-with-submodules-few' );
+  a.reflect();
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules-few' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+// 
+//   let outPath = _.path.join( routinePath, 'out' );
+// 
+//   let ready = new _.Consequence().take( null );
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     throwingExitCode : 0,
+//     mode : 'spawn',
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  _.fileProvider.filesDelete({ filePath : _.path.join( a.routinePath, 'out' ) });
 
   /* - */
 
-  start( `.each */* .resource.list path::module.common` )
+  a.startNonThrowing( `.each */* .resource.list path::module.common` )
   .finally( ( err, got ) =>
   {
     test.case = '.each */* .resource.list path::module.common';
@@ -2313,7 +2315,7 @@ function eachBrokenCommand( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function eachBrokenCommand */
 
 //
