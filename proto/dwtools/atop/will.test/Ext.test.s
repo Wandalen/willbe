@@ -2809,24 +2809,6 @@ function reflectComposite( test )
   let a = self.assetFor( test, 'composite-reflector' );
   a.reflect();
   let outPath = _.path.join( a.routinePath, 'out' );
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'composite-reflector' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let outPath = _.path.join( routinePath, 'out' );
-// 
-//   let ready = new _.Consequence().take( null )
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* */
 
@@ -3041,36 +3023,23 @@ reflectComposite.timeOut = 200000;
 function reflectRemoteGit( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-remote-git' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, 'module' );
+  let a = self.assetFor( test, 'reflect-remote-git' );
+  a.reflect();
 
-  let ready = new _.Consequence().take( null )
-  let local1Path = _.path.join( routinePath, 'PathBasic' );
-  let local2Path = _.path.join( routinePath, 'Looker' );
-  let local3Path = _.path.join( routinePath, 'Proto' );
+  let local1Path = _.path.join( a.routinePath, 'PathBasic' );
+  let local2Path = _.path.join( a.routinePath, 'Looker' );
+  let local3Path = _.path.join( a.routinePath, 'Proto' );
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
+  /* - */
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build download.* variant:1'
     _.fileProvider.filesDelete( local1Path );
     return null;
   })
 
-  start({ execPath : '.build download.* variant:1' })
+  a.start({ execPath : '.build download.* variant:1' })
   .then( ( arg ) => validate1( arg ) )
 
   /* */
@@ -3082,7 +3051,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  start({ execPath : '.build download.* variant:2' })
+  a.start({ execPath : '.build download.* variant:2' })
   .then( ( arg ) => validate1( arg ) )
 
   /* */
@@ -3094,7 +3063,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  start({ execPath : '.build download.* variant:3' })
+  a.start({ execPath : '.build download.* variant:3' })
   .then( ( arg ) => validate1( arg ) )
 
   /* */
@@ -3106,7 +3075,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  start({ execPath : '.build download.* variant:4' })
+  a.start({ execPath : '.build download.* variant:4' })
   .then( ( arg ) => validate1( arg ) )
 
   /* */
@@ -3118,7 +3087,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  start({ execPath : '.build download.* variant:5' })
+  a.start({ execPath : '.build download.* variant:5' })
   .then( ( arg ) => validate1( arg ) )
 
   /* */
@@ -3130,7 +3099,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  start({ execPath : '.build download.* variant:6' })
+  a.start({ execPath : '.build download.* variant:6' })
   .then( ( arg ) => validate1( arg ) )
 
   /* */
@@ -3142,7 +3111,7 @@ function reflectRemoteGit( test )
     return null;
   })
 
-  start({ execPath : '.build download.* variant:7' })
+  a.start({ execPath : '.build download.* variant:7' })
   .then( ( arg ) => validate2( arg ) )
 
   /* */
@@ -3157,7 +3126,7 @@ function reflectRemoteGit( test )
 
   /* */
 
-  return ready;
+  return a.ready;
 
   /* */
 
