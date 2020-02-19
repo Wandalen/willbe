@@ -2276,26 +2276,6 @@ function eachBrokenCommand( test )
   let self = this;
   let a = self.assetFor( test, 'export-with-submodules-few' );
   a.reflect();
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules-few' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-// 
-//   let outPath = _.path.join( routinePath, 'out' );
-// 
-//   let ready = new _.Consequence().take( null );
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     throwingExitCode : 0,
-//     mode : 'spawn',
-//     ready : ready,
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
   _.fileProvider.filesDelete({ filePath : _.path.join( a.routinePath, 'out' ) });
 
   /* - */
@@ -2328,30 +2308,34 @@ function eachBrokenCommand( test )
 function openExportClean( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'open' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
+  let a = self.assetFor( test, 'open' );
+  a.reflect();
+  _.fileProvider.filesDelete({ filePath : _.path.join( a.routinePath, 'out' ) });
 
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-  _.fileProvider.filesDelete({ filePath : outPath })
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'open' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+// 
+//   let outPath = _.path.join( routinePath, 'out' );
+// 
+//   let ready = new _.Consequence().take( null );
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     throwingExitCode : 1,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+//   _.fileProvider.filesDelete({ filePath : outPath })
 
   /* - */
 
-  start( '".with . .export ; .clean"' )
+  a.start( '".with . .export ; .clean"' )
   .then( ( got ) =>
   {
     test.case = '.with . .export ; .clean';
@@ -2377,7 +2361,7 @@ function openExportClean( test )
       './proto/File.debug.js',
       './proto/File.release.js'
     ]
-    var got = self.find( routinePath );
+    var got = self.find( a.routinePath );
     test.identical( got, exp );
 
     return null;
@@ -2385,7 +2369,7 @@ function openExportClean( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function openExportClean */
 
 // --
