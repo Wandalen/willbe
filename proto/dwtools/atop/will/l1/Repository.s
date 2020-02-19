@@ -58,9 +58,6 @@ function init( o )
     repo.copy( o );
   }
 
-  // if( repo.id === 339 )
-  // debugger;
-
 }
 
 // --
@@ -79,28 +76,13 @@ function statusInvalidate( o )
     o[ k ] = o.all;
   }
 
-  // if( repo.isRemote === false )
-  // {
-  //   for( let k in o )
-  //   {
-  //     if( k === 'all' )
-  //     continue;
-  //     if( o[ k ] )
-  //     // repo._repoStatusPut( k, repo.LocalDefaults[ k ] );
-  //     repo._[ k ] = repo.LocalDefaults[ k ];
-  //   }
-  // }
-  // else
-  // {
-    for( let k in o )
-    {
-      if( k === 'all' )
-      continue;
-      if( o[ k ] )
-      // repo._repoStatusPut( k, null );
-      repo._[ k ] = null;
-    }
-  // }
+  for( let k in o )
+  {
+    if( k === 'all' )
+    continue;
+    if( o[ k ] )
+    repo._[ k ] = null;
+  }
 
 }
 
@@ -172,6 +154,7 @@ function status( o )
     _.assert( !!vcs );
     _.assert( !!remoteProvider );
   }
+
   if( repo.isRemote === false || _.longHasNone( vcs.protocols, [ 'git','npm' ] ) )
   {
 
@@ -184,7 +167,6 @@ function status( o )
         _.assert( _.boolIs( repo.LocalDefaults[ k ] ) );
         repo._[ k ] = repo.LocalDefaults[ k ];
       }
-      // repo._repoStatusPut( k, repo.LocalDefaults[ k ] );
     }
 
   }
@@ -267,29 +249,16 @@ function status( o )
   {
 
     _.assert( _.strDefined( repo.downloadPath ) );
-    // _.assert( !!repo.willfilesPath );
     _.assert( repo.isRemote === true );
-
-    // let remoteProvider = will.vcsProviderFor( repo.remotePath );
-    // _.assert( !!remoteProvider.isVcs );
-
-    // let result = remoteProvider.hasFiles
-    // ({
-    //   localPath : repo.downloadPath,
-    // });
 
     if( !fileProvider.isDir( repo.downloadPath ) )
     return end( false );
-
-    // _.assert( !_.consequenceIs( result ) );
 
     return end( true );
 
     function end( result )
     {
       _.assert( _.boolLike( result ) );
-      // result = !!result;
-      // repo._repoStatusPut( 'hasFiles', result );
       repo._.dirExists = result;
       return result;
     }
@@ -302,31 +271,18 @@ function status( o )
   {
 
     _.assert( _.strDefined( repo.downloadPath ) );
-    // _.assert( !!repo.willfilesPath );
     _.assert( repo.isRemote === true );
-
-    // let remoteProvider = will.vcsProviderFor( repo.remotePath );
-    // _.assert( !!remoteProvider.isVcs );
-
-    // let result = remoteProvider.hasFiles
-    // ({
-    //   localPath : repo.downloadPath,
-    // });
 
     if( !fileProvider.isDir( repo.downloadPath ) )
     return end( false );
     if( fileProvider.dirIsEmpty( repo.downloadPath ) )
     return end( false );
 
-    // _.assert( !_.consequenceIs( result ) );
-
     return end( true );
 
     function end( result )
     {
       _.assert( _.boolLike( result ) );
-      // result = !!result;
-      // repo._repoStatusPut( 'hasFiles', result );
       repo._.hasFiles = result;
       return result;
     }
@@ -338,20 +294,12 @@ function status( o )
   function hasLocalChangesReform()
   {
 
-    // _.assert( !!repo.willfilesPath || !!repo.dirPath );
     _.assert( arguments.length === 0, 'Expects no arguments' );
     _.assert( _.boolIs( repo.isRepository ) );
 
     if( !repo.isRepository )
     return end( false );
 
-    // let vcs = will.vcsToolsFor( repo.remotePath );
-    // if( !_.longHas( vcs.protocols, 'git' ) )
-    // return end( false );
-
-    // qqq : use remoteProvider
-    // let remoteProvider = will.vcsProviderFor( repo.remotePath );
-    // return remoteProvider.hasLocalChanges( repo.downloadPath );
     let result = vcs.hasLocalChanges
     ({
       localPath : repo.downloadPath,
@@ -370,25 +318,17 @@ function status( o )
 
   }
 
-  //
+  /* */
 
   function hasLocalUncommittedChangesReform()
   {
 
-    // _.assert( !!repo.willfilesPath || !!repo.dirPath );
     _.assert( arguments.length === 0, 'Expects no arguments' );
     _.assert( _.boolIs( repo.isRepository ) );
 
     if( !repo.isRepository )
     return end( false );
 
-    // let vcs = will.vcsToolsFor( repo.remotePath );
-    // if( !_.longHas( vcs.protocols, 'git' ) )
-    // return end( false );
-
-    // qqq : use remoteProvider
-    // let remoteProvider = will.vcsProviderFor( repo.remotePath );
-    // return remoteProvider.hasLocalChanges( repo.downloadPath );
     let result = vcs.hasLocalChanges
     ({
       localPath : repo.downloadPath,
@@ -437,15 +377,15 @@ function status( o )
   function isRepositoryReform()
   {
 
+    logger.log( 'isRepositoryReform', repo.downloadPath );
+
     _.assert( _.strDefined( repo.downloadPath ) );
-    // _.assert( !!repo.willfilesPath );
     _.assert( repo.isRemote === true );
-    
-    // let remoteProvider = will.vcsProviderFor( repo.remotePath );
-    // _.assert( !!remoteProvider.isVcs );
-    
-    // let vcs = will.vcsToolsFor( repo.remotePath );
-    if( _.longHasNone( vcs.protocols, [ 'git', 'npm' ] ) ) /* xxx qqq */
+
+    if( _.longHasNone( vcs.protocols, [ 'git', 'npm' ] ) ) /* xxx qqq : ? */
+    return end( false );
+
+    if( !repo.dirExists )
     return end( false );
 
     let result = vcs.isRepository
@@ -454,26 +394,9 @@ function status( o )
       sync : 1,
     });
 
-    // let result = _.git.isRepository
-    // ({
-    //   localPath : repo.downloadPath,
-    // });
-
     _.assert( !_.consequenceIs( result ) );
 
     return end( result );
-
-    // if( !result )
-    // return end( result );
-
-    // return _.Consequence.From( result )
-    // .finally( ( err, arg ) =>
-    // {
-    //   end( arg );
-    //   if( err )
-    //   throw err;
-    //   return arg;
-    // });
 
     function end( result )
     {
@@ -490,14 +413,11 @@ function status( o )
   {
 
     _.assert( _.strDefined( repo.downloadPath ) );
-    // _.assert( !!repo.willfilesPath );
     _.assert( repo.isRemote === true );
     _.assert( _.boolIs( repo.isRepository ) );
 
     if( !repo.isRepository )
     return end( false );
-
-    // let remoteProvider = will.vcsProviderFor( repo.remotePath );
 
     _.assert( !!remoteProvider.isVcs );
     let result = remoteProvider.isUpToDate
@@ -506,9 +426,6 @@ function status( o )
       localPath : repo.downloadPath,
       verbosity : will.verbosity - 3,
     });
-
-    // if( !result )
-    // return end( result );
 
     return _.Consequence.From( result )
     .finally( ( err, arg ) =>
@@ -522,7 +439,6 @@ function status( o )
     {
       _.assert( _.boolIs( result ) )
       repo._.isUpToDate = result;
-      // repo._repoStatusPut( 'isUpToDate', result );
       return result;
     }
 
@@ -539,7 +455,6 @@ function status( o )
     if( !repo.isRepository )
     return end( false );
 
-    // let remoteProvider = repo.will.vcsProviderFor( repo.remotePath );
     let result = remoteProvider.hasRemote
     ({
       localPath : repo.downloadPath,
@@ -552,7 +467,6 @@ function status( o )
     {
       _.assert( _.boolIs( result ) );
       repo._.remoteIsValid = result;
-      // repo._repoStatusPut( 'remoteIsValid', result );
       return result;
     }
   }
@@ -562,9 +476,8 @@ function status( o )
   function downloadRequiredReform()
   {
     _.assert( _.boolIs( repo.hasFiles ) );
-    let result = !repo.hasFiles;
+    let result = !repo.dirExists || !repo.hasFiles;
     repo._.downloadRequired = result;
-    // repo._repoStatusPut( 'downloadRequired', !repo.hasFiles );
     return result;
   }
 
@@ -575,9 +488,8 @@ function status( o )
     _.assert( _.boolIs( repo.isRepository ) );
     _.assert( _.boolIs( repo.remoteIsValid ) );
     _.assert( _.boolIs( repo.isUpToDate ) );
-    let result = !repo.isRepository || !repo.remoteIsValid || !repo.isUpToDate;
+    let result = !repo.dirExists || !repo.isRepository || !repo.remoteIsValid || !repo.isUpToDate;
     repo._.updateRequired = result;
-    // repo._repoStatusPut( 'updateRequired', !repo.isRepository || !repo.remoteIsValid || !repo.isUpToDate );
     return result;
   }
 
@@ -588,77 +500,10 @@ function status( o )
     _.assert( _.boolIs( repo.isRepository ) );
     _.assert( _.boolIs( repo.remoteIsValid ) );
     _.assert( _.boolIs( repo.isUpToDate ) );
-    let result = !repo.isRepository || !repo.remoteIsValid || !repo.isUpToDate;
+    let result = !repo.dirExists || !repo.isRepository || !repo.remoteIsValid || !repo.isUpToDate;
     repo._.agreeRequired = result;
-    // repo._repoStatusPut( 'agreeRequired', !repo.isRepository || !repo.remoteIsValid || !repo.isUpToDate );
     return result;
   }
-
-  // function _repoIsFresh( o )
-  // {
-  //   let opener = this;
-  //   let ready = _.Consequence().take( null );
-  //
-  //   ready
-  //   .then( () =>
-  //   {
-  //     if( o.mode === 'download' )
-  //     return hasFilesRepositoryReform();
-  //     else if( o.mode === 'update' )
-  //     return isUpdatedRepositoryReform();
-  //     else if( o.mode === 'agree' )
-  //     return isUpdatedRepositoryReform();
-  //   })
-  //   .then( function()
-  //   {
-  //     let downloading = false;
-  //     if( o.mode === 'download' )
-  //     downloading = !opener.hasFiles;
-  //     else if( o.mode === 'update' )
-  //     downloading = !opener.isUpToDate || !opener.isRepository;
-  //     else if( o.mode === 'agree' )
-  //     downloading = !opener.isUpToDate || !opener.isRepository;
-  //     _.assert( _.boolLike( downloading ) );
-  //     return !!downloading;
-  //   })
-  //   .then( ( downloading ) =>
-  //   {
-  //     if( !downloading )
-  //     if( o.mode === 'update' || o.mode === 'agree' )
-  //     {
-  //       let gitProvider = opener.will.will.vcsProviderFor( opener.remotePath );
-  //       let result = gitProvider.hasRemote
-  //       ({
-  //         localPath : opener.downloadPath,
-  //         remotePath : opener.remotePath
-  //       });
-  //       downloading = !result.remoteIsValid;
-  //     }
-  //     return !downloading;
-  //   })
-  //
-  //   return ready;
-  //
-  //   /*  */
-  //
-  //   function isUpdatedRepositoryReform()
-  //   {
-  //     let con = new _.Consequence().take( null );
-  //     con.then( () => opener.repoIsGoodReform() )
-  //     con.then( () => opener.repoIsUpToDateReform() )
-  //     return con;
-  //   }
-  //
-  //   /* */
-  //
-  //   function hasFilesRepositoryReform()
-  //   {
-  //     let con = new _.Consequence().take( null );
-  //     con.then( () => opener.repoHasFilesReform() )
-  //     return con;
-  //   }
-  //
-  // }
 
 }
 
@@ -686,16 +531,6 @@ function _statusGetter_functor( fieldName )
   }
 }
 
-// //
-//
-// function _repoStatusPut( fieldName, src )
-// {
-//   let repo = this;
-//   debugger;
-//   repo._[ fieldName ] = src;
-//   return src;
-// }
-
 //
 
 function repoIsRemote( remotePath )
@@ -705,11 +540,7 @@ function repoIsRemote( remotePath )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  // _.assert( !!repo.willfilesPath || !!repo.dirPath );
   _.assert( arguments.length === 1 );
-
-  // if( !repo.superRelation )
-  // return end( false );
 
   if( remotePath === undefined )
   remotePath = repo.remotePath ? repo.remotePath : repo.downloadPath;
@@ -718,256 +549,7 @@ function repoIsRemote( remotePath )
   _.assert( !!remoteProvider );
 
   return !!remoteProvider.isVcs;
-
-  // if( remoteProvider.isVcs )
-  // return end( true );
-  //
-  // return end( false );
-
-  /* */
-
-  // function end( result )
-  // {
-  //   repo.isRemote = result;
-  //   return result;
-  // }
 }
-
-//
-// //
-//
-// function repoIsGoodReform()
-// {
-//   let repo = this;
-//   let will = repo.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//
-//   _.assert( _.strDefined( repo.downloadPath ) );
-//   _.assert( !!repo.willfilesPath );
-//   _.assert( repo.isRemote === true );
-//
-//   // let remoteProvider = will.vcsProviderFor( repo.remotePath );
-//   // _.assert( !!remoteProvider.isVcs );
-//
-//   let result = _.git.isRepository
-//   ({
-//     localPath : repo.downloadPath,
-//   });
-//
-//   _.assert( !_.consequenceIs( result ) );
-//
-//   // if( !result )
-//   // return end( result );
-//
-//   return _.Consequence.From( result )
-//   .finally( ( err, arg ) =>
-//   {
-//     end( arg );
-//     if( err )
-//     throw err;
-//     return arg;
-//   });
-//
-//   /* */
-//
-//   function end( result )
-//   {
-//     repo.isRepository = !!result;
-//     return result;
-//   }
-//
-// }
-
-// //
-//
-// function repoIsUpToDateReform()
-// {
-//   let repo = this;
-//   let will = repo.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//
-//   _.assert( _.strDefined( repo.downloadPath ) );
-//   _.assert( !!repo.willfilesPath );
-//   _.assert( repo.isRemote === true );
-//
-//   let remoteProvider = will.vcsProviderFor( repo.remotePath );
-//
-//   _.assert( !!remoteProvider.isVcs );
-//
-//   let result = remoteProvider.isUpToDate
-//   ({
-//     remotePath : repo.remotePath,
-//     localPath : repo.downloadPath,
-//     verbosity : will.verbosity - 3,
-//   });
-//
-//   // if( !result )
-//   // return end( result );
-//
-//   return _.Consequence.From( result )
-//   .finally( ( err, arg ) =>
-//   {
-//     end( arg );
-//     if( err )
-//     throw err;
-//     return arg;
-//   });
-//
-//   /* */
-//
-//   function end( result )
-//   {
-//     repo.isUpToDate = !!result;
-//     return result;
-//   }
-//
-// }
-
-// //
-//
-// function repoHasLocalChanges()
-// {
-//   let repo = this;
-//   let will = repo.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//
-//   _.assert( !!repo.willfilesPath || !!repo.dirPath );
-//   _.assert( arguments.length === 0, 'Expects no arguments' );
-//
-//   // let remoteProvider = will.vcsProviderFor( repo.remotePath );
-//   // return remoteProvider.hasLocalChanges( repo.downloadPath );
-//   return _.git.hasLocalChanges
-//   ({
-//     localPath : repo.downloadPath,
-//     unpushed : 1,
-//     sync : 1,
-//   });
-// }
-
-// //
-//
-// function repoHasFilesReform()
-// {
-//   let repo = this;
-//   let will = repo.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//
-//   _.assert( _.strDefined( repo.downloadPath ) );
-//   _.assert( !!repo.willfilesPath );
-//   _.assert( repo.isRemote === true );
-//
-//   let remoteProvider = will.vcsProviderFor( repo.remotePath );
-//   _.assert( !!remoteProvider.isVcs );
-//
-//   let result = remoteProvider.hasFiles
-//   ({
-//     localPath : repo.downloadPath,
-//   });
-//
-//   _.assert( !_.consequenceIs( result ) );
-//
-//   if( _.boolLike( result ) )
-//   return end( result );
-//
-//   return _.Consequence.From( result )
-//   .finally( ( err, arg ) =>
-//   {
-//     end( arg );
-//     if( err )
-//     throw err;
-//     return arg;
-//   });
-//
-//   /* */
-//
-//   function end( result )
-//   {
-//     _.assert( _.boolLike( result ) );
-//     result = !!result;
-//     repo.hasFiles = result;
-//     return result;
-//   }
-//
-// }
-
-//
-
-// function _repoIsFresh( o )
-// {
-//   let opener = this;
-//   let ready = _.Consequence().take( null );
-//
-//   ready
-//   .then( () =>
-//   {
-//     if( o.mode === 'download' )
-//     return hasFilesRepositoryReform();
-//     else if( o.mode === 'update' )
-//     return isUpdatedRepositoryReform();
-//     else if( o.mode === 'agree' )
-//     return isUpdatedRepositoryReform();
-//   })
-//   .then( function()
-//   {
-//     let downloading = false;
-//     if( o.mode === 'download' )
-//     downloading = !opener.hasFiles;
-//     else if( o.mode === 'update' )
-//     downloading = !opener.isUpToDate || !opener.isRepository;
-//     else if( o.mode === 'agree' )
-//     downloading = !opener.isUpToDate || !opener.isRepository;
-//     _.assert( _.boolLike( downloading ) );
-//     return !!downloading;
-//   })
-//   .then( ( downloading ) =>
-//   {
-//     if( !downloading )
-//     if( o.mode === 'update' || o.mode === 'agree' )
-//     {
-//       let gitProvider = opener.will.will.vcsProviderFor( opener.remotePath );
-//       let result = gitProvider.hasRemote
-//       ({
-//         localPath : opener.downloadPath,
-//         remotePath : opener.remotePath
-//       });
-//       downloading = !result.remoteIsValid;
-//     }
-//
-//     return !downloading;
-//   })
-//
-//   /*  */
-//
-//   function isUpdatedRepositoryReform()
-//   {
-//     let con = new _.Consequence().take( null );
-//     con.then( () => opener.repoIsGoodReform() )
-//     con.then( () => opener.repoIsUpToDateReform() )
-//     return con;
-//   }
-//
-//   /* */
-//
-//   function hasFilesRepositoryReform()
-//   {
-//     let con = new _.Consequence().take( null );
-//     con.then( () => opener.repoHasFilesReform() )
-//     /* qqq : check */
-//     // con.then( () => opener.repoIsGoodReform() )
-//     return con;
-//   }
-//
-//   return ready;
-// }
-//
-// _repoIsFresh.defaults =
-// {
-//   mode : 'download',
-// }
 
 //
 
@@ -978,7 +560,6 @@ function repoLocalVersion()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  // _.assert( !!repo.willfilesPath || !!repo.dirPath );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   debugger;
@@ -996,7 +577,6 @@ function repoLatestVersion()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  // _.assert( !!repo.willfilesPath || !!repo.dirPath );
   _.assert( arguments.length === 0, 'Expects no arguments' );
 
   debugger;
@@ -1067,16 +647,6 @@ let LocalDefaults =
 
 let Composes =
 {
-
-  // hasFiles : null,
-  // isRepository : null,
-  // remoteIsValid : null,
-  // hasLocalChanges : null,
-  // isUpToDate : null,
-  // downloadRequired : null,
-  // updateRequired : null,
-  // agreeRequired : null,
-
 }
 
 let Aggregates =
@@ -1177,15 +747,8 @@ let Extend =
 
   statusInvalidate,
   status,
-  // _repoStatusPut,
 
   repoIsRemote,
-  // repoIsGoodReform,
-  // repoIsUpToDateReform,
-  // repoHasLocalChanges,
-  // repoHasFilesReform,
-  // _repoIsFresh,
-
   repoLocalVersion,
   repoLatestVersion,
 

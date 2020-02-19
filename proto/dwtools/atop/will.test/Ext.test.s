@@ -8987,6 +8987,67 @@ cleanDisabledModule.description =
 
 //
 
+/* qqq : replace without changing semantics. ask */
+function testXxx( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'hierarchy-remote' );
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = '.with * .clean recursive:1';
+    a.reflect();
+    return null;
+  })
+
+  a.start( '.with ** .submodules.download recursive:2' )
+  a.start( '.with * .clean recursive:1' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    test.identical( files, exp );
+
+    var exp = [ 'PathBasic', 'PathTools' ];
+    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    test.identical( files, exp );
+
+    var exp = null;
+    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    test.identical( files, exp );
+
+    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 26 );
+    test.identical( _.strCount( got.output, '. Read 26 willfile(s)' ), 1 );
+    test.identical( _.strCount( got.output, ' at .' ), 7 );
+    test.identical( _.strCount( got.output, ' at ' ), 9 );
+    test.identical( _.strCount( got.output, '- Clean deleted' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+} /* end of function testXxx */
+
+testXxx.timeOut = 1000000;
+
+//
+
+/* qqq : replace without changing semantics. ask */
 function cleanHierarchyRemote( test )
 {
   let self = this;
