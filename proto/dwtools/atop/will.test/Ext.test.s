@@ -2413,28 +2413,29 @@ eachList.timeOut = 300000;
 function eachBrokenIll( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'each-broken' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
 
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'each-broken' );
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'each-broken' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  //
+  // let ready = new _.Consequence().take( null );
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   throwingExitCode : 0,
+  //   ready : ready,
+  // })
+  //
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  start({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
+  a.start({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
@@ -2449,7 +2450,7 @@ function eachBrokenIll( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 eachBrokenIll.description =
@@ -8975,7 +8976,7 @@ function cleanWithInPath( test )
   ready
   .then( ( got ) =>
   {
-    test.case = '.with module/Proto .clean';
+    test.case = '.with module/ModuleForTesting12 .clean';
 
     _.fileProvider.filesDelete( routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
@@ -8985,16 +8986,16 @@ function cleanWithInPath( test )
   })
 
 
-  start({ execPath : '.with module/Proto .clean' })
-
-  .then( ( got ) =>
+  start({ execPath : '.with module/ModuleForTesting12 .clean' })
+debugger;
+  ready.then( ( got ) =>
   {
 
     var expectedFiles =
     [
       '.',
       './module',
-      './module/Proto.will.yml',
+      './module/ModuleForTesting12.will.yml',
       './module/.module',
       './module/.module/ForGit.txt',
       './module/out',
