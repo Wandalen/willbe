@@ -1998,36 +1998,39 @@ openEach.timeOut = 300000;
 function withMixed( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-mixed' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let filePath = _.path.join( routinePath, 'file' );
 
-  let ready = new _.Consequence().take( null );
+  let a = self.assetFor( test, 'submodules-mixed' );
+  a.reflect();
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-mixed' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // let filePath = _.path.join( routinePath, 'file' );
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  });
+  // let ready = new _.Consequence().take( null );
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   throwingExitCode : 0,
+  //   ready : ready,
+  // });
+
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with module .build'
     return null;
   })
 
-  start({ execPath : '.with module .build' })
+  a.startNonThrowing({ execPath : '.with module .build' })
   .then( ( got ) =>
   {
     test.is( got.exitCode !== 0 );
@@ -2039,14 +2042,14 @@ function withMixed( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with . .build'
     return null;
   })
 
-  start({ execPath : '.with . .export' })
+  a.startNonThrowing({ execPath : '.with . .export' })
   .then( ( got ) =>
   {
     test.is( got.exitCode === 0 );
@@ -2056,7 +2059,7 @@ function withMixed( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 withMixed.timeOut = 300000;
