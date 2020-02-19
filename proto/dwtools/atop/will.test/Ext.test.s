@@ -4502,47 +4502,42 @@ withDoCommentOut.description =
 function hookCallInfo( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
+  let a = self.assetFor( test, 'dos' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.start = _.process.starter // Dmytro : assetFor has not mode 'spawn' in subroutines
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     mode : 'spawn',
     outputCollecting : 1,
     outputGraying : 1,
     throwingExitCode : 1,
-    ready : ready,
-  })
+    ready : a.ready,
+  });
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  a.reflect();
 
   /* - */
 
-  start( '.clean' )
-  start( '.export' )
+  a.start( '.clean' )
+  a.start( '.export' )
   .then( ( got ) =>
   {
     test.case = 'setup';
-    _.fileProvider.fileAppend( _.path.join( routinePath, 'will.yml' ), '\n' );
+    _.fileProvider.fileAppend( _.path.join( a.routinePath, 'will.yml' ), '\n' );
 
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/proto' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/dos.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathBasic' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathTools' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/Tools' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/dos.out.will.yml' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/PathBasic' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/PathTools' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/Tools' ) ) );
 
     return null;
   })
 
   /* - */
 
-  start( '.hook.call info.js' )
+  a.start( '.hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.hook.call info.js';
@@ -4557,7 +4552,7 @@ function hookCallInfo( test )
 
   /* - */
 
-  start( '.with . .hook.call info.js' )
+  a.start( '.with . .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.with . .hook.call info.js';
@@ -4572,7 +4567,7 @@ function hookCallInfo( test )
 
   /* - */
 
-  start( '.with * .hook.call info.js' )
+  a.start( '.with * .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.with . .hook.call info.js';
@@ -4587,7 +4582,7 @@ function hookCallInfo( test )
 
   /* - */
 
-  start( '.with ** .hook.call info.js' )
+  a.start( '.with ** .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.with . .hook.call info.js';
@@ -4602,7 +4597,7 @@ function hookCallInfo( test )
 
   /* - */
 
-  start( '.imply withOut:0 ; .with ** .hook.call info.js' )
+  a.start( '.imply withOut:0 ; .with ** .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.imply withOut:0 ; .with ** .hook.call info.js';
@@ -4617,7 +4612,7 @@ function hookCallInfo( test )
 
   /* - */
 
-  start( '.imply withIn:0 ; .with ** .hook.call info.js' )
+  a.start( '.imply withIn:0 ; .with ** .hook.call info.js' )
   .then( ( got ) =>
   {
     test.case = '.imply withIn:0 ; .with ** .hook.call info.js';
@@ -4633,7 +4628,7 @@ function hookCallInfo( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function hookCallInfo */
 
 hookCallInfo.timeOut = 300000;
