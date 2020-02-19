@@ -4116,34 +4116,38 @@ reflectComplexInherit.timeOut = 300000;
 function reflectorMasks( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflector-masks' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
-
-  test.description = 'should handle correct files';
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  let a = self.assetFor( test, 'reflector-masks' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflector-masks' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let outPath = _.path.join( routinePath, 'out' );
+// 
+// 
+//   test.description = 'should handle correct files';
+// 
+//   let ready = new _.Consequence().take( null );
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   /* - */
+// 
+//   _.fileProvider.filesDelete( routinePath );
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
-  /* - */
-
-  start({ execPath : '.clean' })
-  start({ execPath : '.build copy.' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.build copy.' })
 
   .then( ( got ) =>
   {
@@ -4160,8 +4164,8 @@ function reflectorMasks( test )
 
   /* - */
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.build copy.debug' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.build copy.debug' })
 
   .then( ( got ) =>
   {
@@ -4178,7 +4182,7 @@ function reflectorMasks( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 reflectorMasks.timeOut = 200000;
