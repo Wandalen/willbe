@@ -3335,28 +3335,31 @@ function reflectWithSelectorInDstFilter( test )
 function reflectSubmodulesWithCriterion( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-with-criterion' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out/debug' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'submodules-with-criterion' );
+  let outPath = _.path.join( a.routinePath, 'out/debug' );
+  a.reflect();
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-with-criterion' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let outPath = _.path.join( routinePath, 'out/debug' );
+// 
+//   let ready = new _.Consequence().take( null );
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'setup'
@@ -3364,13 +3367,13 @@ function reflectSubmodulesWithCriterion( test )
     return null;
   })
 
-  start({ execPath : '.with module/A .export' })
-  start({ execPath : '.with module/B .export' })
+  a.start({ execPath : '.with module/A .export' })
+  a.start({ execPath : '.with module/B .export' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( routinePath );
+    var files = self.find( a.routinePath );
     var expected =
     [
       '.',
@@ -3392,7 +3395,7 @@ function reflectSubmodulesWithCriterion( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'reflect only A'
@@ -3400,7 +3403,7 @@ function reflectSubmodulesWithCriterion( test )
     return null;
   })
 
-  start({ execPath : '.build A' })
+  a.start({ execPath : '.build A' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -3412,7 +3415,7 @@ function reflectSubmodulesWithCriterion( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'reflect only B'
@@ -3420,7 +3423,7 @@ function reflectSubmodulesWithCriterion( test )
     return null;
   })
 
-  start({ execPath : '.build B' })
+  a.start({ execPath : '.build B' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -3432,7 +3435,7 @@ function reflectSubmodulesWithCriterion( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
