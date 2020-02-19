@@ -2206,23 +2206,6 @@ function eachBrokenIll( test )
 
   let a = self.assetFor( test, 'each-broken' );
   a.reflect();
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'each-broken' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  //
-  // let ready = new _.Consequence().take( null );
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   throwingExitCode : 0,
-  //   ready : ready,
-  // })
-  //
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -2258,28 +2241,12 @@ utility should not try to open non-willfiles
 function eachBrokenNon( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'open-non-willfile' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'open-non-willfile' );
+  a.reflect();
 
   /* - */
 
-  start({ args : '.each */* .paths.list' })
+  a.startNonThrowing({ args : '.each */* .paths.list' })
   .finally( ( err, got ) =>
   {
     test.case = '.each */* .paths.list';
@@ -2294,7 +2261,7 @@ function eachBrokenNon( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
