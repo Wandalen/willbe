@@ -4316,41 +4316,55 @@ withDoInfo.description =
 function withDoStatus( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-  let startWill = _.process.starter
+  let a = self.assetFor( test, 'dos' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  let startWill = _.process.starter // Dmytro : not exists in assetFor 
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     mode : 'spawn',
     outputCollecting : 1,
     outputGraying : 1,
     throwingExitCode : 1,
-    ready : ready,
+    ready : a.ready,
   })
-  let start = _.process.starter
-  ({
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : ready,
-  })
+
+  // let self = this;
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  //
+  // let outPath = _.path.join( routinePath, 'out' );
+  // let ready = new _.Consequence().take( null );
+  // let startWill = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   mode : 'spawn',
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   throwingExitCode : 1,
+  //   ready : ready,
+  // })
+  // let start = _.process.starter
+  // ({
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   throwingExitCode : 1,
+  //   ready : ready,
+  // })
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = 'setup';
-
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    start({ execPath : 'git init', currentPath : _.path.join( routinePath, 'disabled' ) });
+    a.reflect();
+    // start({ execPath : 'git init', currentPath : _.path.join( routinePath, 'disabled' ) });
+    a.shell({ execPath : 'git init', currentPath : _.path.join( a.routinePath, 'disabled' ) });
 
     return null;
   })
@@ -4363,11 +4377,11 @@ function withDoStatus( test )
   {
     test.case = 'setup';
 
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/proto' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'out/dos.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathBasic' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/PathTools' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module/Tools' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/dos.out.will.yml' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/PathBasic' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/PathTools' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/Tools' ) ) );
 
     return null;
   })
@@ -4389,10 +4403,10 @@ function withDoStatus( test )
 
   .then( ( got ) =>
   {
-    test.case = 'changs';
-    _.fileProvider.fileAppend( _.path.join( routinePath, '.module/Tools/README.md' ), '\n' );
-    _.fileProvider.fileAppend( _.path.join( routinePath, '.module/PathTools/README.md' ), '\nx' );
-    _.fileProvider.fileAppend( _.path.join( routinePath, '.module/PathTools/LICENSE' ), '\n' );
+    test.case = 'changes';
+    _.fileProvider.fileAppend( _.path.join( a.routinePath, '.module/Tools/README.md' ), '\n' );
+    _.fileProvider.fileAppend( _.path.join( a.routinePath, '.module/PathTools/README.md' ), '\nx' );
+    _.fileProvider.fileAppend( _.path.join( a.routinePath, '.module/PathTools/LICENSE' ), '\n' );
     return null;
   })
 
@@ -4413,7 +4427,7 @@ function withDoStatus( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function withDoStatus */
 
 withDoStatus.timeOut = 300000;
