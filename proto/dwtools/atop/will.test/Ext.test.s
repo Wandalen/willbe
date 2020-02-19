@@ -3163,46 +3163,45 @@ reflectRemoteGit.timeOut = 200000;
 function reflectRemoteHttp( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-remote-http' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, 'module' );
+  let a = self.assetFor( test, 'reflect-remote-http' );
+  a.reflect();
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-remote-http' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let submodulesPath = _.path.join( routinePath, 'module' );
+// 
+//   let ready = new _.Consequence().take( null )
+//   let outPath = _.path.join( routinePath, 'out' );
+//   let localFilePath = _.path.join( routinePath, 'out/Tools.s' );
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
-  let ready = new _.Consequence().take( null )
-  let outPath = _.path.join( routinePath, 'out' );
-  let localFilePath = _.path.join( routinePath, 'out/Tools.s' );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build download'
-    _.fileProvider.filesDelete( outPath );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out' ) );
     return null;
   })
 
-  // debugger;
-  // start({ execPath : '.builds.list' })
-  start({ execPath : '.build download' })
+  a.start({ execPath : '.build download' })
   .then( ( arg ) =>
   {
-    debugger;
-    test.is( _.fileProvider.isTerminal( localFilePath ) );
-    test.gt( _.fileProvider.fileSize( localFilePath ), 200 );
+    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/Tools.s' ) ) );
+    test.gt( _.fileProvider.fileSize( _.path.join( a.routinePath, 'out/Tools.s' ) ), 200 );
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 reflectRemoteHttp.timeOut = 200000;
