@@ -1906,28 +1906,31 @@ openWith.timeOut = 300000;
 function openEach( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'open' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, 'module' );
 
-  let ready = new _.Consequence().take( null )
+  let a = self.assetFor( test, 'open' );
+  a.reflect();
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'open' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // let submodulesPath = _.path.join( routinePath, 'module' );
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
+  // let ready = new _.Consequence().take( null )
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : ready
+  // })
+
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -1935,20 +1938,20 @@ function openEach( test )
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.each . .export' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.each . .export' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( routinePath, 'out' ) );
+    var files = self.find( _.path.join( a.routinePath, 'out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1956,7 +1959,7 @@ function openEach( test )
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -1964,20 +1967,20 @@ function openEach( test )
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.each doc/. .export' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.each doc/. .export' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( routinePath, 'out' ) );
+    var files = self.find( _.path.join( a.routinePath, 'out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( routinePath, 'doc.out' ) );
+    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( routinePath, 'doc/out' ) );
+    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = self.find( _.path.join( routinePath, 'doc/doc.out' ) );
+    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
@@ -1985,7 +1988,7 @@ function openEach( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 openEach.timeOut = 300000;
