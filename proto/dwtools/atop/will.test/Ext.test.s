@@ -2243,31 +2243,33 @@ function withList( test )
 function eachList( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'each-list' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
 
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
-  /* - */
-
-  start({ args : '.clean' })
+  let a = self.assetFor( test, 'each-list' );
+  a.reflect();
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'each-list' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // 
+  // let ready = new _.Consequence().take( null );
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : ready,
+  // })
+  //
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  start({ args : '.each . .resources.list about::name' })
+  a.start({ args : '.clean' })
+
+  /* - */
+
+  a.start({ args : '.each . .resources.list about::name' })
   .finally( ( err, got ) =>
   {
     test.case = '.each . .resources.list about::name';
@@ -2296,7 +2298,7 @@ function eachList( test )
 
   /* - */
 
-  start({ args : '.imply v:1 ; .each . .resources.list about::name' })
+  a.start({ args : '.imply v:1 ; .each . .resources.list about::name' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply v:1 ; .each . .resources.list about::name';
@@ -2326,7 +2328,7 @@ function eachList( test )
 
   /* - */
 
-  start({ args : '.imply v:1 ; .each . .resources.list path::module.common' })
+  a.start({ args : '.imply v:1 ; .each . .resources.list path::module.common' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply v:1 ; .each . .resources.list path::module.common';
@@ -2335,22 +2337,22 @@ function eachList( test )
 
     test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Module at' ), 0 );
-    test.identical( _.strCount( got.output, routinePath ), 6 );
+    test.identical( _.strCount( got.output, a.routinePath ), 6 );
     test.identical( _.strLinesCount( got.output ), 8 );
 
-    test.identical( _.strCount( got.output, routinePath + '/' ), 6 );
-    test.identical( _.strCount( got.output, routinePath + '/a' ), 2 );
-    test.identical( _.strCount( got.output, routinePath + '/ab-named' ), 1 );
-    test.identical( _.strCount( got.output, routinePath + '/b' ), 2 );
-    test.identical( _.strCount( got.output, routinePath + '/bc-named' ), 1 );
-    test.identical( _.strCount( got.output, routinePath + '/c' ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath + '/' ), 6 );
+    test.identical( _.strCount( got.output, a.routinePath + '/a' ), 2 );
+    test.identical( _.strCount( got.output, a.routinePath + '/ab-named' ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath + '/b' ), 2 );
+    test.identical( _.strCount( got.output, a.routinePath + '/bc-named' ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath + '/c' ), 1 );
 
     return null;
   })
 
   /* - */
 
-  start({ args : '.imply v:1 ; .each * .resources.list path::module.common' })
+  a.start({ args : '.imply v:1 ; .each * .resources.list path::module.common' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply v:1 ; .each * .resources.list path::module.common';
@@ -2359,22 +2361,22 @@ function eachList( test )
 
     test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Module at' ), 0 );
-    test.identical( _.strCount( got.output, routinePath ), 6 );
+    test.identical( _.strCount( got.output, a.routinePath ), 6 );
     test.identical( _.strLinesCount( got.output ), 8 );
 
-    test.identical( _.strCount( got.output, routinePath + '/' ), 6 );
-    test.identical( _.strCount( got.output, routinePath + '/a' ), 2 );
-    test.identical( _.strCount( got.output, routinePath + '/ab-named' ), 1 );
-    test.identical( _.strCount( got.output, routinePath + '/b' ), 2 );
-    test.identical( _.strCount( got.output, routinePath + '/bc-named' ), 1 );
-    test.identical( _.strCount( got.output, routinePath + '/c' ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath + '/' ), 6 );
+    test.identical( _.strCount( got.output, a.routinePath + '/a' ), 2 );
+    test.identical( _.strCount( got.output, a.routinePath + '/ab-named' ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath + '/b' ), 2 );
+    test.identical( _.strCount( got.output, a.routinePath + '/bc-named' ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath + '/c' ), 1 );
 
     return null;
   })
 
   /* - */
 
-  start({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
+  a.start({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
@@ -2383,25 +2385,25 @@ function eachList( test )
 
     test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Module at' ), 0 );
-    test.identical( _.strCount( got.output, routinePath ), 9 );
+    test.identical( _.strCount( got.output, a.routinePath ), 9 );
     test.identical( _.strLinesCount( got.output ), 11 );
 
-    test.identical( _.strCount( got.output, routinePath + '/' ), 9 );
-    test.identical( _.strCount( got.output, routinePath + '/a' ), 5 );
-    test.identical( _.strCount( got.output, routinePath + '/ab-named' ), 1 );
-    test.identical( _.strCount( got.output, routinePath + '/b' ), 2 );
-    test.identical( _.strCount( got.output, routinePath + '/bc-named' ), 1 );
-    test.identical( _.strCount( got.output, routinePath + '/c' ), 1 );
-    test.identical( _.strCount( got.output, routinePath + '/aabc' ), 1 );
-    test.identical( _.strCount( got.output, routinePath + '/ab' ), 3 );
-    test.identical( _.strCount( got.output, routinePath + '/abac' ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath + '/' ), 9 );
+    test.identical( _.strCount( got.output, a.routinePath + '/a' ), 5 );
+    test.identical( _.strCount( got.output, a.routinePath + '/ab-named' ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath + '/b' ), 2 );
+    test.identical( _.strCount( got.output, a.routinePath + '/bc-named' ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath + '/c' ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath + '/aabc' ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath + '/ab' ), 3 );
+    test.identical( _.strCount( got.output, a.routinePath + '/abac' ), 1 );
 
     return null;
   })
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 eachList.timeOut = 300000;
