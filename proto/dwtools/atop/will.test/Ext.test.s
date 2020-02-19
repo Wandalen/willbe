@@ -3916,28 +3916,13 @@ reflectInherit.timeOut = 300000;
 function reflectInheritSubmodules( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-inherit-submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  });
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'reflect-inherit-submodules' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'setup'
@@ -3945,18 +3930,18 @@ function reflectInheritSubmodules( test )
     return null;
   })
 
-  start({ execPath : '.each module .export' })
+  a.start({ execPath : '.each module .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( routinePath );
+    var files = self.find( a.routinePath );
     test.identical( files, [ '.', './a.will.yml', './b.will.yml', './c.will.yml', './submodule1.out.will.yml', './submodule2.out.will.yml', './submodule3.out.will.yml', './submodule4.out.will.yml', './module', './module/submodule1.will.yml', './module/submodule2.will.yml', './module/submodule3.will.yml', './module/submodule4.will.yml', './module/proto', './module/proto/File1.s', './module/proto/File2.s', './module/proto1', './module/proto1/File1.s', './module/proto2', './module/proto2/File2.s' ] );
     return null;
   })
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with a .build'
@@ -3964,20 +3949,18 @@ function reflectInheritSubmodules( test )
     return null;
   })
 
-  start({ execPath : '.with a .build' })
+  a.start({ execPath : '.with a .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
     test.identical( files, [ '.', './debug', './debug/File1.s', './debug/File2.s' ] );
-    // var read = _.fileProvider.fileRead( _.path.join( outPath, 'debug' ) );
-    // test.equivalent( read, 'console.log( \'File2.s\' );' );
     return null;
   })
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with b .build'
@@ -3985,7 +3968,7 @@ function reflectInheritSubmodules( test )
     return null;
   })
 
-  start({ execPath : '.with b .build' })
+  a.start({ execPath : '.with b .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -3996,7 +3979,7 @@ function reflectInheritSubmodules( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with c .build'
@@ -4004,7 +3987,7 @@ function reflectInheritSubmodules( test )
     return null;
   })
 
-  start({ execPath : '.with c .build' })
+  a.start({ execPath : '.with c .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -4015,7 +3998,7 @@ function reflectInheritSubmodules( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
