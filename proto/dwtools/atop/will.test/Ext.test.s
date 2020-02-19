@@ -2563,23 +2563,6 @@ function reflectSubdir( test )
   let a = self.assetFor( test, 'reflect-subdir' );
   let outPath = _.path.join( a.routinePath, 'out' );
 
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-subdir' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-// 
-//   let outPath = _.path.join( routinePath, 'out' );
-//   let ready = new _.Consequence().take( null );
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-
   /* - */
 
   a.ready
@@ -2728,54 +2711,40 @@ reflectSubdir.timeOut = 200000;
 function reflectSubmodulesWithBase( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-submodules-with-base' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
+  let a = self.assetFor( test, 'reflect-submodules-with-base' );
+  let outPath = _.path.join( a.routinePath, 'out' );
 
-  let outPath = _.path.join( routinePath, 'out' );
-  let submodule1OutFilePath = _.path.join( routinePath, 'submodule1.out.will.yml' );
-  let submodule2OutFilePath = _.path.join( routinePath, 'submodule2.out.will.yml' );
-  let ready = new _.Consequence().take( null )
+  /* - */
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  ready
+  a.ready
   .then( () =>
   {
-    test.case = 'setup'
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    test.case = 'setup';
+    a.reflect();
     return null;
   })
 
   /* */
 
-  start({ execPath : '.each module .export' })
+  a.start({ execPath : '.each module .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.isTerminal( submodule1OutFilePath ) );
-    test.is( _.fileProvider.isTerminal( submodule2OutFilePath ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'submodule1.out.will.yml' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'submodule2.out.will.yml' ) ) );
     return got;
   })
 
   /* */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = 'variant 0, src basePath : ../..'
     _.fileProvider.filesDelete( outPath )
     return null;
   });
 
-  start({ execPath : '.build variant:0' })
+  a.start({ execPath : '.build variant:0' })
 
   .then( ( got ) =>
   {
@@ -2798,23 +2767,28 @@ function reflectSubmodulesWithBase( test )
 
   /* */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = 'variant 1, src basePath : "{submodule::*/exported::*=1/path::exported.dir*=1}/../.."'
     _.fileProvider.filesDelete( outPath )
     return null;
   });
 
-  start({ execPath : '.build variant:1' })
+  a.start({ execPath : '.build variant:1' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
-    var expected =
-    [ '.', './debug', './debug/module', './debug/module/proto', './debug/module/proto/File1.s', './debug/module/proto/File2.s' ];
-    // [ '.', './debug', './debug/proto', './debug/proto/File1.s', './debug/proto/File2.s' ]
-
+    var expected = 
+    [ 
+      '.', 
+      './debug', 
+      './debug/module', 
+      './debug/module/proto', 
+      './debug/module/proto/File1.s', 
+      './debug/module/proto/File2.s' 
+    ];
     var files = self.find( outPath );
     test.identical( files, expected );
     return got;
@@ -2822,7 +2796,7 @@ function reflectSubmodulesWithBase( test )
 
   /* */
 
-  return ready;
+  return a.ready;
 }
 
 reflectSubmodulesWithBase.timeOut = 150000;
