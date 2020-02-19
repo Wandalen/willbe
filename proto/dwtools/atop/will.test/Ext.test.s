@@ -4647,23 +4647,26 @@ hookCallInfo.description =
 function hookGitMake( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'submodules-with-criterion' );
+  a.reflect();
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+// 
+//   let ready = new _.Consequence().take( null );
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     throwingExitCode : 1,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   test.is( true );
 
@@ -4675,12 +4678,12 @@ function hookGitMake( test )
 
   /* - */
 
-  start({ execPath : '.module.new New2/' })
+  a.start({ execPath : '.module.new New2/' })
 
   .then( ( got ) =>
   {
     var exp = [ '.', './will.yml' ];
-    var files = self.find( _.path.join( routinePath, 'New2' ) );
+    var files = self.find( _.path.join( a.routinePath, 'New2' ) );
     test.identical( files, exp );
 
     return _.git.repositoryDelete
@@ -4690,7 +4693,7 @@ function hookGitMake( test )
     });
   })
 
-  start({ execPath : '.with New2/ .hook.call GitMake v:3' })
+  a.start({ execPath : '.with New2/ .hook.call GitMake v:3' })
 
   .then( ( got ) =>
   {
@@ -4705,13 +4708,13 @@ function hookGitMake( test )
     test.identical( _.strCount( got.output, `> ` ), 2 );
 
     var exp = [ '.', './will.yml' ];
-    var files = self.find( _.path.join( routinePath, 'New2' ) );
+    var files = self.find( _.path.join( a.routinePath, 'New2' ) );
     test.identical( files, exp );
 
     return null;
   })
 
-  .then( ( got ) =>
+  .then( ( got ) => // Dmytro : maybe, this code is unnecessary now
   {
     debugger;
     return null;
@@ -4719,7 +4722,7 @@ function hookGitMake( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 
 } /* end of function hookGitMake */
 
