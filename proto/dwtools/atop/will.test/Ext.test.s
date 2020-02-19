@@ -2479,68 +2479,53 @@ reflectNothingFromSubmodules.timeOut = 200000;
 function reflectGetPath( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-get-path' );
+  let a = self.assetFor( test, 'reflect-get-path' );
   let repoPath = _.path.join( self.suiteTempPath, '_repo' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, 'module' );
+  let outPath = _.path.join( a.routinePath, 'out' );
 
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
+  a.reflect();
   _.fileProvider.filesDelete( repoPath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
   _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
 
   /* - */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build debug1'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.build debug1' })
+  a.start({ execPath : '.build debug1' })
   .then( ( arg ) => validate( arg ) )
 
   /* - */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build debug2'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.build debug2' })
+  a.start({ execPath : '.build debug2' })
   .then( ( arg ) => validate( arg ) )
 
   /* - */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build debug3'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.build debug3' })
+  a.start({ execPath : '.build debug3' })
   .then( ( arg ) => validate( arg ) )
 
   /* - */
 
-  return ready;
+  return a.ready;
 
   function validate( arg )
   {
