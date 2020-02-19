@@ -211,16 +211,7 @@ function rel_functor( routinePath )
 function preCloneRepos( test )
 {
   let self = this;
-
   let a = self.assetFor( test, '_repo' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  // let ready = new _.Consequence().take( null )
-
-  // let reposDownload = require( './ReposDownload.s' );
-  // ready.then( () => reposDownload() )
 
   a.ready.then( () =>
   {
@@ -236,30 +227,10 @@ function preCloneRepos( test )
 function singleModuleWithSpaceTrivial( test )
 {
   let self = this;
-
   let a = self.assetFor( test, 'single with space' );
   _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : _.path.join( a.routinePath, 'single with space' ) } }); // Dmytro : not used a.reflect() because it has no parameters
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'single with space' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name, 'single with space' );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let submodulesPath = _.path.join( routinePath, '.module' );
 
-  // let ready = new _.Consequence().take( null )
-
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : _.path.dir( routinePath ),
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready
-  // })
-
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-  
-
-a.start({ execPath : '.with "single with space/" .resources.list' })
+  a.start({ execPath : '.with "single with space/" .resources.list' })
 
   .then( ( got ) =>
   {
@@ -283,27 +254,8 @@ singleModuleWithSpaceTrivial.timeOut = 200000;
 function make( test )
 {
   let self = this;
-
   let a = self.assetFor( test, 'make' );
   a.reflect();
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'make' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let filePath = _.path.join( routinePath, '.' );
-
-  // let ready = new _.Consequence().take( null );
-
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // })
-
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -436,23 +388,6 @@ function transpile( test )
   let a = self.assetFor( test, 'transpile' );
   let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'transpile' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-
-  // let ready = new _.Consequence().take( null );
-
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // })
-
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -590,23 +525,7 @@ transpile.timeOut = 200000;
 function moduleNewDotless( test )
 {
   let self = this;
-
   let a = self.assetFor( test, 'two-dotless-exported' );
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-dotless-exported' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let ready = new _.Consequence().take( null );
-
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   throwingExitCode : 0,
-  //   ready : ready,
-  // })
 
   /* - */
 
@@ -614,8 +533,6 @@ function moduleNewDotless( test )
   .then( () =>
   {
     test.case = '.module.new'
-   // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect(); 
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -653,8 +570,6 @@ function moduleNewDotless( test )
   .then( () =>
   {
     test.case = '.module.new some'
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -704,8 +619,6 @@ function moduleNewDotless( test )
   .then( () =>
   {
     test.case = '.module.new some/'
-   // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect(); 
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -756,8 +669,6 @@ function moduleNewDotless( test )
   .then( () =>
   {
     test.case = '.module.new ../dir1/dir2/some/'
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -817,23 +728,7 @@ moduleNewDotless.timeOut = 200000;
 function moduleNewDotlessSingle( test )
 {
   let self = this;
-
   let a = self.assetFor( test, 'two-dotless-single-exported' );
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-dotless-single-exported' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let ready = new _.Consequence().take( null );
-
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   throwingExitCode : 0,
-  //   ready : ready,
-  // })
 
   /* - */
 
@@ -841,8 +736,6 @@ function moduleNewDotlessSingle( test )
   .then( () =>
   {
     test.case = '.module.new'
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -870,8 +763,6 @@ function moduleNewDotlessSingle( test )
   .then( () =>
   {
     test.case = '.module.new some'
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -919,8 +810,6 @@ function moduleNewDotlessSingle( test )
   .then( () =>
   {
     test.case = '.module.new some/'
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -969,8 +858,6 @@ function moduleNewDotlessSingle( test )
   .then( () =>
   {
     test.case = '.module.new ../dir1/dir2/some/'
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -1019,23 +906,7 @@ moduleNewDotlessSingle.timeOut = 200000;
 function moduleNewNamed( test )
 {
   let self = this;
-
   let a = self.assetFor( test, 'two-exported' )
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let ready = new _.Consequence().take( null );
-  //
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   throwingExitCode : 0,
-  //   ready : ready,
-  // })
 
   /* - */
 
@@ -1043,8 +914,6 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.module.new super'
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -1082,8 +951,6 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.with some .module.new'
-   // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect(); 
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -1132,8 +999,6 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.with some/ .module.new'
-   // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect(); 
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -1183,8 +1048,6 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.with some .module.new some2'
-   // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect(); 
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -1234,8 +1097,6 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.module.new'
-   // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect(); 
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -1284,8 +1145,6 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.module.new super/'
-   // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect(); 
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -1335,8 +1194,6 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.module.new some'
-   // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect(); 
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -1385,8 +1242,6 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.module.new some/'
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -1436,8 +1291,6 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.module.new ../dir1/dir2/some/'
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
@@ -1496,27 +1349,8 @@ moduleNewNamed.timeOut = 200000;
 function openWith( test )
 {
   let self = this;
-
   let a = self.assetFor( test, 'open' );
   a.reflect();
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'open' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let submodulesPath = _.path.join( routinePath, 'module' );
-
-  // let ready = new _.Consequence().take( null )
-
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready
-  // })
-
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -1612,8 +1446,6 @@ function openWith( test )
   .then( () =>
   {
     test.case = '.with doc .export -- deleted doc.will.yml'
-   // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect(); 
     _.fileProvider.fileDelete( _.path.join( a.routinePath, 'doc.ex.will.yml' ) );
     _.fileProvider.fileDelete( _.path.join( a.routinePath, 'doc.im.will.yml' ) );
@@ -1635,8 +1467,6 @@ function openWith( test )
     var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
     test.identical( files, [] );
 
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect();
 
     return null;
@@ -1801,8 +1631,6 @@ function openWith( test )
   {
     test.case = '.with doc/ .export -- deleted doc/.will.yml'
 
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect();
     _.fileProvider.fileDelete( _.path.join( a.routinePath, 'doc/.ex.will.yml' ) );
     _.fileProvider.fileDelete( _.path.join( a.routinePath, 'doc/.im.will.yml' ) );
@@ -1829,8 +1657,6 @@ function openWith( test )
     var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
     test.identical( files, [] );
 
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     a.reflect();
 
     return null;
@@ -1906,27 +1732,8 @@ openWith.timeOut = 300000;
 function openEach( test )
 {
   let self = this;
-
   let a = self.assetFor( test, 'open' );
   a.reflect();
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'open' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let submodulesPath = _.path.join( routinePath, 'module' );
-
-  // let ready = new _.Consequence().take( null )
-
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready
-  // })
-
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -2171,25 +1978,8 @@ eachMixed.timeOut = 300000;
 function withList( test )
 {
   let self = this;
-
   let a = self.assetFor( test, 'export-with-submodules' );
   a.reflect();
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-
-  // let ready = new _.Consequence().take( null );
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // })
-
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -2415,6 +2205,7 @@ function eachBrokenIll( test )
   let self = this;
 
   let a = self.assetFor( test, 'each-broken' );
+  a.reflect();
   // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'each-broken' );
   // let routinePath = _.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
@@ -2435,7 +2226,7 @@ function eachBrokenIll( test )
 
   /* - */
 
-  a.start({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
+  a.startNonThrowing({ args : '.imply v:1 ; .each */* .resources.list path::module.common' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply v:1 ; .each */* .resources.list path::module.common';
