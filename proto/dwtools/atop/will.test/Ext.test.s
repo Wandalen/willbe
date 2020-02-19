@@ -3338,24 +3338,6 @@ function reflectSubmodulesWithCriterion( test )
   let a = self.assetFor( test, 'submodules-with-criterion' );
   let outPath = _.path.join( a.routinePath, 'out/debug' );
   a.reflect();
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-with-criterion' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let outPath = _.path.join( routinePath, 'out/debug' );
-// 
-//   let ready = new _.Consequence().take( null );
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -3443,28 +3425,13 @@ function reflectSubmodulesWithCriterion( test )
 function reflectSubmodulesWithPluralCriterionManualExport( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-submodules-with-plural-criterion' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'reflect-submodules-with-plural-criterion' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'reflect informal submodule, manual export'
@@ -3472,11 +3439,11 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
     return null;
   })
 
-  start({ execPath : '.each module .export' })
+  a.start({ execPath : '.each module .export' })
 
   // fails with error on first run
 
-  start({ execPath : '.build variant1' })
+  a.start({ execPath : '.build variant1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -3486,7 +3453,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 //
