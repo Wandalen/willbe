@@ -3524,7 +3524,6 @@ function reflectNpmModules( test )
   /* */
 
   a.start( '.build' )
-
   .then( ( got ) =>
   {
     test.case = 'reflect exported npm modules';
@@ -3582,43 +3581,49 @@ reflectNpmModules.timeOut = 150000;
 function relfectSubmodulesWithNotExistingFile( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-reflect-with-not-existing' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-  // let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  _.assert( _.fileProvider.fileExists( abs( routinePath, 'module/moduleB/proto/amid/File.txt' ) ) );
-  _.fileProvider.fileDelete( abs( routinePath, 'module/moduleB/proto/amid/File.txt' ) );
+  let a = self.assetFor( test, 'submodules-reflect-with-not-existing' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+  _.assert( _.fileProvider.fileExists( a.abs( a.routinePath, 'module/moduleB/proto/amid/File.txt' ) ) );
+  _.fileProvider.fileDelete( a.abs( a.routinePath, 'module/moduleB/proto/amid/File.txt' ) );
+  // let self = this;
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-reflect-with-not-existing' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // let outPath = _.path.join( routinePath, 'out' );
+  // // let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  // let ready = new _.Consequence().take( null );
+  // 
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : ready,
+  // })
+  // 
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  // _.assert( _.fileProvider.fileExists( abs( routinePath, 'module/moduleB/proto/amid/File.txt' ) ) );
+  // _.fileProvider.fileDelete( abs( routinePath, 'module/moduleB/proto/amid/File.txt' ) );
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'setup';
     return null;
   })
 
-  start({ execPath : '.clean recursive:2' })
-  start({ execPath : '.with module/moduleA/ .export' })
-  start({ execPath : '.with module/moduleB/ .export' })
+  a.start({ execPath : '.clean recursive:2' })
+  a.start({ execPath : '.with module/moduleA/ .export' })
+  a.start({ execPath : '.with module/moduleB/ .export' })
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'reflect submodules'
@@ -3647,36 +3652,36 @@ function relfectSubmodulesWithNotExistingFile( test )
       './module/moduleB/proto',
       './module/moduleB/proto/amid'
     ]
-    var files = self.find( routinePath );
+    var files = self.find( a.routinePath );
     test.identical( files, exp );
 
     return null;
   })
 
-  ready
+  a.ready
   .finally( ( err, arg ) =>
   {
     test.is( err === undefined );
     if( err )
     logger.log( err );
-    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 ); // Dmytro : got is not defined
     return arg || null;
   })
 
-  start({ execPath : '.build' })
+  a.start({ execPath : '.build' })
 
-  ready
+  a.ready
   .finally( ( err, arg ) =>
   {
     test.is( _.errIs( err ) );
-    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 ); // Dmytro : got is not defined
     logger.log( err );
     if( err )
     throw err;
     return arg;
   })
 
-  return test.shouldThrowErrorAsync( ready );
+  return test.shouldThrowErrorAsync( a.ready );
 }
 
 //
