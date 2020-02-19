@@ -3196,26 +3196,6 @@ function reflectWithOptions( test )
   let a = self.assetFor( test, 'reflect-with-options' );
   let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-with-options' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let filePath = _.path.join( routinePath, 'file' );
-// 
-//   let outPath = _.path.join( routinePath, 'out' );
-//   let ready = new _.Consequence().take( null );
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     throwingExitCode : 0,
-//     ready : ready,
-//   });
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -3291,25 +3271,9 @@ function reflectWithOptions( test )
 function reflectWithSelectorInDstFilter( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-selecting-dst' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let filePath = _.path.join( routinePath, 'file' );
-
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  });
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'reflect-selecting-dst' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
 
   /*
     reflect.proto:
@@ -3325,7 +3289,7 @@ function reflectWithSelectorInDstFilter( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build debug';
@@ -3333,7 +3297,7 @@ function reflectWithSelectorInDstFilter( test )
     return null;
   })
 
-  start({ execPath : '.build debug' })
+  a.start({ execPath : '.build debug' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -3344,7 +3308,7 @@ function reflectWithSelectorInDstFilter( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build release';
@@ -3352,7 +3316,7 @@ function reflectWithSelectorInDstFilter( test )
     return null;
   })
 
-  start({ execPath : '.build release' })
+  a.start({ execPath : '.build release' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -3363,7 +3327,7 @@ function reflectWithSelectorInDstFilter( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
