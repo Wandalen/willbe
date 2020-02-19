@@ -4006,37 +4006,23 @@ function reflectInheritSubmodules( test )
 function reflectComplexInherit( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  let a = self.assetFor( test, 'export-with-submodules' );
+  let outPath = _.path.join( a.routinePath, 'out' );
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with ab/ .build';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect(); 
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.with a .export' })
-  start({ execPath : '.with b .export' })
-  start({ execPath : '.with ab/ .build' })
+  a.start({ execPath : '.with a .export' })
+  a.start({ execPath : '.with b .export' })
+  a.start({ execPath : '.with ab/ .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -4069,20 +4055,20 @@ function reflectComplexInherit( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with abac/ .build';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.with a .export' })
-  start({ execPath : '.with b .export' })
-  start({ execPath : '.with c .export' })
-  start({ execPath : '.with ab/ .export' })
-  start({ execPath : '.with abac/ .build' })
+  a.start({ execPath : '.with a .export' })
+  a.start({ execPath : '.with b .export' })
+  a.start({ execPath : '.with c .export' })
+  a.start({ execPath : '.with ab/ .export' })
+  a.start({ execPath : '.with abac/ .build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -4120,7 +4106,7 @@ function reflectComplexInherit( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function reflectComplexInherit */
 
 reflectComplexInherit.timeOut = 300000;
