@@ -3461,28 +3461,13 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
 function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-submodules-with-plural-criterion' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'reflect-submodules-with-plural-criterion' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'reflect informal submodule exported using steps, two builds in a row'
@@ -3490,9 +3475,9 @@ function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
     return null;
   })
 
-  //first run works
+  // first run works
 
-  start({ execPath : '.build variant2' })
+  a.start({ execPath : '.build variant2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -3502,9 +3487,9 @@ function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
     return null;
   })
 
-  //second run fails
+  // second run fails
 
-  start({ execPath : '.build variant2' })
+  a.start({ execPath : '.build variant2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -3514,7 +3499,7 @@ function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 reflectSubmodulesWithPluralCriterionEmbeddedExport.timeOut = 300000;
