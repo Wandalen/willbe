@@ -2806,35 +2806,38 @@ reflectSubmodulesWithBase.timeOut = 150000;
 function reflectComposite( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'composite-reflector' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'composite-reflector' );
+  a.reflect();
+  let outPath = _.path.join( a.routinePath, 'out' );
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'composite-reflector' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let outPath = _.path.join( routinePath, 'out' );
+// 
+//   let ready = new _.Consequence().take( null )
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build out* variant:0'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.build out* variant:0' })
+  a.start({ execPath : '.build out* variant:0' })
   .then( ( arg ) =>
   {
     var expected =
@@ -2858,14 +2861,14 @@ function reflectComposite( test )
 
   /* */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build out* variant:1'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.build out* variant:1' })
+  a.start({ execPath : '.build out* variant:1' })
   .then( ( arg ) =>
   {
     var expected =
@@ -2889,14 +2892,14 @@ function reflectComposite( test )
 
   /* */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build out* variant:2'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.build out* variant:2' })
+  a.start({ execPath : '.build out* variant:2' })
   .then( ( arg ) =>
   {
     var expected =
@@ -2920,14 +2923,14 @@ function reflectComposite( test )
 
   /* */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build out* variant:3'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.build out* variant:3' })
+  a.start({ execPath : '.build out* variant:3' })
   .then( ( arg ) =>
   {
     var expected =
@@ -2951,14 +2954,14 @@ function reflectComposite( test )
 
   /* */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build out* variant:4'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.build out* variant:4' })
+  a.start({ execPath : '.build out* variant:4' })
   .then( ( arg ) =>
   {
     var expected =
@@ -2972,14 +2975,14 @@ function reflectComposite( test )
 
   /* */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build out* variant:5'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.build out* variant:5' })
+  a.start({ execPath : '.build out* variant:5' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ];
@@ -2992,14 +2995,14 @@ function reflectComposite( test )
 
   /* */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build out* variant:6'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.build out* variant:6' })
+  a.start({ execPath : '.build out* variant:6' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ];
@@ -3011,14 +3014,14 @@ function reflectComposite( test )
 
   /* */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build out* variant:7'
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.build out* variant:7' })
+  a.start({ execPath : '.build out* variant:7' })
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ]
@@ -3028,7 +3031,7 @@ function reflectComposite( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 reflectComposite.timeOut = 200000;
