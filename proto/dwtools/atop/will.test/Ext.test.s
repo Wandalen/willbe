@@ -2171,27 +2171,29 @@ eachMixed.timeOut = 300000;
 function withList( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
 
+  let a = self.assetFor( test, 'export-with-submodules' );
+  a.reflect();
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
 
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  // let ready = new _.Consequence().take( null );
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : ready,
+  // })
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  start({ args : '.with . .resources.list about::name' })
+  a.start({ args : '.with . .resources.list about::name' })
   .finally( ( err, got ) =>
   {
     test.case = '.with . .resources.list about::name';
@@ -2205,7 +2207,7 @@ function withList( test )
 
   /* - */
 
-  start({ args : '.with . .resources.list about::description' })
+  a.start({ args : '.with . .resources.list about::description' })
   .finally( ( err, got ) =>
   {
     test.case = '.with . .resources.list about::description';
@@ -2219,21 +2221,21 @@ function withList( test )
 
   /* - */
 
-  start({ args : '.with . .resources.list path::module.dir' })
+  a.start({ args : '.with . .resources.list path::module.dir' })
   .finally( ( err, got ) =>
   {
     test.case = '.with . .resources.list path::module.dir';
     test.is( !err );
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'withList/.will.yml' ), 1 );
-    test.identical( _.strCount( got.output, routinePath ), 2 );
+    test.identical( _.strCount( got.output, a.routinePath ), 2 );
     test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     return null;
   })
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
