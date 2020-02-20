@@ -4733,23 +4733,26 @@ hookGitMake.timeOut = 300000;
 function hookPrepare( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'submodules-with-criterion' );
+  a.reflect();
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+// 
+//   let ready = new _.Consequence().take( null );
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     throwingExitCode : 1,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   test.is( true );
 
@@ -4760,11 +4763,11 @@ function hookPrepare( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     var exp = [];
-    var files = self.find( _.path.join( routinePath, 'New2' ) );
+    var files = self.find( _.path.join( a.routinePath, 'New2' ) );
     test.identical( files, exp );
     return _.git.repositoryDelete
     ({
@@ -4810,7 +4813,7 @@ function hookPrepare( test )
       './sample/Sample.html',
       './sample/Sample.js'
     ]
-    var files = self.find( _.path.join( routinePath, 'New2' ) );
+    var files = self.find( _.path.join( a.routinePath, 'New2' ) );
     test.identical( files, exp );
 
     return null;
@@ -4824,11 +4827,11 @@ function hookPrepare( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     var exp = [];
-    var files = self.find( _.path.join( routinePath, 'New3/New4' ) );
+    var files = self.find( _.path.join( a.routinePath, 'New3/New4' ) );
     test.identical( files, exp );
     return _.git.repositoryDelete
     ({
@@ -4837,7 +4840,7 @@ function hookPrepare( test )
     });
   })
 
-  start({ execPath : '.with New3/New4 .module.new.with prepare v:3' })
+  a.start({ execPath : '.with New3/New4 .module.new.with prepare v:3' })
 
   .then( ( got ) =>
   {
@@ -4874,7 +4877,7 @@ function hookPrepare( test )
       './sample/Sample.html',
       './sample/Sample.js'
     ]
-    var files = self.find( _.path.join( routinePath, 'New3' ) );
+    var files = self.find( _.path.join( a.routinePath, 'New3' ) );
     test.identical( files, exp );
 
     return null;
@@ -4888,7 +4891,7 @@ function hookPrepare( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 
 } /* end of function hookPrepare */
 
