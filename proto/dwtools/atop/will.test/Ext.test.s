@@ -4647,7 +4647,7 @@ hookCallInfo.description =
 function hookGitMake( test )
 {
   let self = this;
-  let a = self.assetFor( test, 'submodules-with-criterion' );
+  let a = self.assetFor( test, 'dos' );
   a.reflect();
 //   let self = this;
 //   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
@@ -4733,26 +4733,26 @@ hookGitMake.timeOut = 300000;
 function hookPrepare( test )
 {
   let self = this;
-  let a = self.assetFor( test, 'submodules-with-criterion' );
+  let a = self.assetFor( test, 'dos' );
   a.reflect();
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-// 
-//   let ready = new _.Consequence().take( null );
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     throwingExitCode : 1,
-//     ready : ready,
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  // let self = this;
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // 
+  // let ready = new _.Consequence().take( null );
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   throwingExitCode : 1,
+  //   ready : ready,
+  // })
+  // 
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   test.is( true );
 
@@ -5447,32 +5447,24 @@ hookGitSyncArguments.description =
 function verbositySet( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
+  let a = self.assetFor( test, 'submodules' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
     mode : 'spawn',
-    ready : ready,
+    ready : a.ready,
   })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
-  ready
+  a.reflect();
 
   /* - */
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.imply verbosity:3 ; .build' })
+  a.ready
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.imply verbosity:3 ; .build' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply verbosity:3 ; .build';
@@ -5483,8 +5475,8 @@ function verbositySet( test )
     test.is( _.strHas( got.output, '.imply verbosity:3 ; .build' ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::Tools' ) );
-    test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::PathBasic' ) );
+    test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::ModuleForTesting1' ) );
+    test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::ModuleForTesting1a' ) );
     test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
@@ -5501,8 +5493,8 @@ function verbositySet( test )
 
   /* - */
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.imply verbosity:2 ; .build' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.imply verbosity:2 ; .build' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply verbosity:2 ; .build';
@@ -5531,8 +5523,8 @@ function verbositySet( test )
 
   /* - */
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.imply verbosity:1 ; .build' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.imply verbosity:1 ; .build' })
   .finally( ( err, got ) =>
   {
     test.case = '.imply verbosity:1 ; .build';
@@ -5561,7 +5553,7 @@ function verbositySet( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 verbositySet.timeOut = 300000;
