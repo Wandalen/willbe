@@ -5579,25 +5579,6 @@ function verbosityStepDelete( test )
     mode : 'spawn',
     ready : a.ready,
   })
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'verbosity-step-delete' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let outPath = _.path.join( routinePath, 'out' );
-//   let modulePath = _.path.join( routinePath, 'module' );
-// 
-//   let ready = new _.Consequence().take( null )
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     mode : 'spawn',
-//     ready : ready
-//   })
 
   /* - */
 
@@ -5878,35 +5859,28 @@ verbosityStepDelete.timeOut = 200000;
 function verbosityStepPrintName( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'verbosity-step-print-name' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
+  let a = self.assetFor( test, 'verbosity-step-print-name' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
     mode : 'spawn',
-    ready : ready,
+    ready : a.ready,
   })
 
   /* - */
 
-  ready
+  a.ready
   .then( ( arg ) =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     return arg;
   })
 
-  start({ execPath : '.imply v:4 ; .build' })
+  a.start({ execPath : '.imply v:4 ; .build' })
 
   .then( ( got ) =>
   {
@@ -5932,15 +5906,14 @@ function verbosityStepPrintName( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( arg ) =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     return arg;
   })
 
-  start({ execPath : '.imply v:3 ; .build' })
+  a.start({ execPath : '.imply v:3 ; .build' })
 
   .then( ( got ) =>
   {
@@ -5966,15 +5939,14 @@ function verbosityStepPrintName( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( arg ) =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     return arg;
   })
 
-  start({ execPath : '.imply v:2 ; .build' })
+  a.start({ execPath : '.imply v:2 ; .build' })
 
   .then( ( got ) =>
   {
@@ -6000,15 +5972,14 @@ function verbosityStepPrintName( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( arg ) =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     return arg;
   })
 
-  start({ execPath : '.imply v:1 ; .build' })
+  a.start({ execPath : '.imply v:1 ; .build' })
 
   .then( ( got ) =>
   {
@@ -6047,7 +6018,7 @@ shell.step
   Built module::verbosity-step-print-name / build::debug in 0.643s
 */
 
-  return ready;
+  return a.ready;
 } /* end of function verbosityStepPrintName */
 
 //
