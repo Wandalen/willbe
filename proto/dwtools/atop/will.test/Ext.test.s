@@ -6096,30 +6096,21 @@ function modulesTreeDotless( test )
 function modulesTreeLocal( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
+  let a = self.assetFor( test, 'export-with-submodules' );
+  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
-    outputGraying : 1,
     mode : 'spawn',
-    ready : ready,
+    ready : a.ready,
   })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  // _.fileProvider.filesDelete( outSuperDirPath );
-  // _.fileProvider.filesDelete( outSubDirPath );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -6127,7 +6118,7 @@ function modulesTreeLocal( test )
     return null;
   })
 
-  start({ execPath : '.imply v:1 ; .with */* .modules.tree' })
+  a.start({ execPath : '.imply v:1 ; .with */* .modules.tree' })
 
   .then( ( got ) =>
   {
@@ -6169,7 +6160,7 @@ Command ".imply v:1 ; .with */* .modules.tree"
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function modulesTreeLocal */
 
 //
