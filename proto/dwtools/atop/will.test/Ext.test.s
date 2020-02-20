@@ -5945,8 +5945,8 @@ function verbositySet( test )
     test.is( _.strHas( got.output, '.imply verbosity:3 ; .build' ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::Tools' ) );
-    test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::PathBasic' ) );
+    test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::ModuleForTesting1' ) );
+    test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::ModuleForTesting1a' ) );
     test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
