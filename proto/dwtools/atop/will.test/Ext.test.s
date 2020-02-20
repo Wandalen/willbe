@@ -6429,27 +6429,27 @@ function modulesTreeHierarchyRemoteDownloaded( test )
   })
   a.reflect();
   _.fileProvider.filesDelete( _.path.join( a.routinePath, '.module' ) );
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'hierarchy-remote' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let submodulesPath = _.path.join( routinePath, '.module' );
-// 
-//   let ready = new _.Consequence().take( null );
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     outputGraying : 1,
-//     mode : 'spawn',
-//     ready : ready,
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  // let self = this;
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'hierarchy-remote' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // let submodulesPath = _.path.join( routinePath, '.module' );
+  // 
+  // let ready = new _.Consequence().take( null );
+  // 
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   outputGraying : 1,
+  //   mode : 'spawn',
+  //   ready : ready,
+  // })
+  // 
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -6568,33 +6568,44 @@ cls && local-will .with group1/group10/a0 .clean recursive:2 && local-will .with
 function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'hierarchy-remote' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
+  let a = self.assetFor( test, 'hierarchy-remote' );
+  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
-    outputGraying : 1,
     mode : 'spawn',
-    ready : ready,
+    ready : a.ready,
   })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  _.fileProvider.filesDelete( submodulesPath );
+  a.reflect();  // let self = this;
+  _.fileProvider.filesDelete( _.path.join( a.routinePath, '.module' ) );
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'hierarchy-remote' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // let submodulesPath = _.path.join( routinePath, '.module' );
+  // 
+  // let ready = new _.Consequence().take( null );
+  // 
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   outputGraying : 1,
+  //   mode : 'spawn',
+  //   ready : ready,
+  // })
+  // 
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
-  start({ execPath : '.with group1/group10/a0 .export' })
-  start({ execPath : '.with group1/a .export' })
-  start({ execPath : '.with * .modules.tree withRemotePath:1' })
+  a.start({ execPath : '.with group1/group10/a0 .export' })
+  a.start({ execPath : '.with group1/a .export' })
+  a.start({ execPath : '.with * .modules.tree withRemotePath:1' })
 
   .then( ( got ) =>
   {
@@ -6704,7 +6715,7 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function modulesTreeHierarchyRemotePartiallyDownloaded */
 
 modulesTreeHierarchyRemotePartiallyDownloaded.timeOut = 300000;
