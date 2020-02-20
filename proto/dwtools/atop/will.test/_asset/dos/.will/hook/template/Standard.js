@@ -415,7 +415,7 @@ node_js:
   - '9'
   - '10'
   - '12'
-  - 'lts/*'
+  - 'node'
 script:
   - npm test
 cache:

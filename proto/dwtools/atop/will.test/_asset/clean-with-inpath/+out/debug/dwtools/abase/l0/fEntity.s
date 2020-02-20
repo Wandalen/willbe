@@ -107,7 +107,7 @@ function eachSample( o )
 
   /* */
 
-  let keys = _.longIs( o.sets ) ? _.arrayFromRange([ 0, o.sets.length ]) : _.mapKeys( o.sets );
+  let keys = _.longIs( o.sets ) ? _.longFromRange([ 0, o.sets.length ]) : _.mapKeys( o.sets );
   if( o.result && !_.arrayIs( o.result ) )
   o.result = [];
   let len = [];

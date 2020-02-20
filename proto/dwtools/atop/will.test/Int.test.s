@@ -116,6 +116,7 @@ function assetFor( test, name )
   {
     _.fileProvider.filesDelete( a.routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.abs( '_repo' ) } });
   }
 
   _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
@@ -9090,11 +9091,11 @@ function submodulesResolve( test )
   ready
   .then( () =>
   {
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesDelete( repoPath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
-  _.fileProvider.filesDelete( outDirPath );
+    _.fileProvider.filesDelete( routinePath );
+    _.fileProvider.filesDelete( repoPath );
+    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
+    _.fileProvider.filesDelete( outDirPath );
     opener = will.openerMakeManual({ willfilesPath : modulePath });
 
     will.prefer
@@ -9643,6 +9644,64 @@ function moduleIsNotValid( test )
 
 //
 
+function isRepositoryReformSeveralTimes( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'submodules' );
+  let will = new _.Will();
+  let opener;
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open();
+  })
+
+  .then( () => opener.openedModule.subModulesDownload() )
+
+  .then( () =>
+  {
+    var repo = opener.openedModule.submoduleMap.ModuleForTesting1a.opener.repo;
+    return repo.status({ all : 1, invalidating : 0 });
+  })
+
+  .then( ( status ) =>
+  {
+
+    test.description = 'status of repo::ModuleForTesting1a'
+    var exp =
+    {
+      'dirExists' : true,
+      'hasFiles' : true,
+      'isRepository' : true,
+      'hasLocalChanges' : false,
+      'hasLocalUncommittedChanges' : false,
+      'isUpToDate' : true,
+      'remoteIsValid' : true,
+      'safeToDelete' : true,
+      'downloadRequired' : false,
+      'updateRequired' : false,
+      'agreeRequired' : false
+    }
+    test.identical( status, exp );
+
+    return null;
+  })
+
+  .finally( ( err, arg ) =>
+  {
+    test.identical( err, undefined );
+    opener.close();
+    return null;
+  })
+
+  return a.ready;
+}
+
+//
+
 function repoStatus( test )
 {
   let self = this;
@@ -9821,6 +9880,7 @@ var Self =
     resourcePathRemote,
     moduleIsNotValid,
 
+    isRepositoryReformSeveralTimes,
     repoStatus,
 
   }

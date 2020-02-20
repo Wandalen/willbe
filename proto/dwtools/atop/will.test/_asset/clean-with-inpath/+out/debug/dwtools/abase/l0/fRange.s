@@ -210,7 +210,7 @@ function rangeClamp( dstRange, clampRange )
 
 //
 
-function rangeNumberElements( range, increment )
+function rangeCountElements( range, increment )
 {
 
   _.assert( _.rangeIs( range ) );
@@ -313,7 +313,7 @@ let Routines =
   rangeFromSingle,
 
   rangeClamp,
-  rangeNumberElements,
+  rangeCountElements,
   rangeFirstGet,
   rangeLastGet,
 

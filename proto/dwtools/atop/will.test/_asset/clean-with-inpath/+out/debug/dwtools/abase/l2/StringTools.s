@@ -1050,7 +1050,7 @@ function strAlphabetFromRange( range )
   range[ 0 ] = range[ 0 ].charCodeAt( 0 );
   if( _.strIs( range[ 1 ] ) )
   range[ 1 ] = range[ 1 ].charCodeAt( 0 );
-  let result = String.fromCharCode( ... _.arrayFromRange([ range[ 0 ], range[ 1 ] ]) );
+  let result = String.fromCharCode( ... _.longFromRange([ range[ 0 ], range[ 1 ] ]) );
   return result;
 }
 

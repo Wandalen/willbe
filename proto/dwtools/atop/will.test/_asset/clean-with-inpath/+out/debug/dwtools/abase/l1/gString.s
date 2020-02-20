@@ -577,12 +577,10 @@ strIsolateRightOrAll_body.defaults =
 
 //
 
-/* qqq : update doc of strIsolateInsideLeftSignle | Dmytro : updated */
-
 /**
   * Routine strIsolateInsideLeftSignle() split source strings {-src-} into parts separated by delimeters {-begin-} and {-end-}. Routine returns
   * an array with parts of source string {-src-}.
-  * The array contains of five parts: 
+  * The array contains of five parts:
   * - substring from start of source string to begin of first delimeter {-begin-}.
   * - delimeter {-begin-}.
   * - substring between delimeters {-begin-} and {-end-}.
@@ -721,7 +719,7 @@ function strIsolateInsideLeftSignle( src, begin, end )
 /**
   * Routine strIsolateInsideLeft() split source strings of vector {-src-} into parts separated by delimeters {-begin-} and {-end-}. Routine
   * returns a vector with arrays. Each array of vector corresponds to element of vector {-src-}.
-  * Each array contains of five parts: 
+  * Each array contains of five parts:
   * - substring from start of source string to begin of first delimeter {-begin-}.
   * - delimeter {-begin-}.
   * - substring between delimeters {-begin-} and {-end-}.
@@ -731,7 +729,7 @@ function strIsolateInsideLeftSignle( src, begin, end )
   * strings and delimeters to undefined.
   * So, finally routine returns the array with source string: [ '', undefined, {-src-}, undefined, '' ].
   *
-  * @param { String|Array } src - The source string or vector of source strings. If {-src-} is a vector, then routine returns vector 
+  * @param { String|Array } src - The source string or vector of source strings. If {-src-} is a vector, then routine returns vector
   * with resulted arrays. Otherwise, routine returns only one resulted array for scalar source string.
   * @param { String|Array } begin - String or array of strings to find begin of split part in the source string.
   * @param { String|Array } end - String or array of strings to find end of split part in the source source.
@@ -828,7 +826,6 @@ let Routines =
   // strIsolateInsideOrNone,
   strIsolateInsideLeftSignle,
   strIsolateInsideLeft,
-  /* qqq : implement, cover and document routine strIsolateInsideLeft* | Dmytro : it implemented and covered a time ago. Routine is documented */
 
 }
 

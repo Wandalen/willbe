@@ -10,6 +10,7 @@ if( typeof module !== 'undefined' && module !== null )
 
   require( './l0/l2/Setup.s' );
 
+  require( './l0/l3/iArray.s' );
   require( './l0/l3/iBool.s' );
   require( './l0/l3/iBuffer.s' );
   require( './l0/l3/iContainer.s' );
@@ -32,6 +33,7 @@ if( typeof module !== 'undefined' && module !== null )
   require( './l0/l3/iType.s' );
   require( './l0/l3/iUnroll.s' );
 
+  require( './l0/l5/fArray.s' );
   require( './l0/l5/fBool.s' );
   require( './l0/l5/fBuffer.s' );
   require( './l0/l5/fContainer.s' );
@@ -48,6 +50,7 @@ if( typeof module !== 'undefined' && module !== null )
   require( './l0/l5/fPath.s' );
   require( './l0/l5/fProcess.s' );
   require( './l0/l5/fRange.s' );
+  require( './l0/l5/fRangeOld.s' );
   require( './l0/l5/fRegexp.s' );
   require( './l0/l5/fRoutine.s' );
   require( './l0/l5/fSorted.s' );
@@ -57,13 +60,14 @@ if( typeof module !== 'undefined' && module !== null )
   require( './l0/l5/fUnroll.s' );
 
   require( './l0/l6/ContainerAdapter.s' );
+  require( './l0/l6/LongDescriptor.s' );
 
-  require( './l0/l7/ArrayDescriptor.s' );
   require( './l0/l7/Compose.s' );
   require( './l0/l7/ContainerAdapterArray.s' );
   require( './l0/l7/ContainerAdapterSet.s' );
   require( './l0/l7/Field.s' );
 
+  require( './l0/l8/gArray.s' );
   require( './l0/l8/gBool.s' );
   require( './l0/l8/gBuffer.s' );
   require( './l0/l8/gContainer.s' );

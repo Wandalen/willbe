@@ -8,7 +8,7 @@ let Self = _global.wTools;
 
 _.assert( !_.Array );
 _.assert( !_.array );
-_.assert( !_.withArray );
+_.assert( !_.withDefaultLong );
 
 //
 
@@ -16,20 +16,20 @@ function _arrayNameSpaceApplyTo( dst,def )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( !_.mapOwnKey( dst,'withArray' ) );
+  _.assert( !_.mapOwnKey( dst,'withDefaultLong' ) );
   _.assert( !_.mapOwnKey( dst,'array' ) );
-  _.assert( !!ArrayNameSpaces[ def ] );
+  _.assert( !!LongDescriptors[ def ] );
 
-  dst.withArray = Object.create( null );
+  dst.withDefaultLong = Object.create( null );
 
-  for( let d in ArrayNameSpaces )
+  for( let d in LongDescriptors )
   {
-    dst.withArray[ d ] = Object.create( dst );
-    _.mapExtend( dst.withArray[ d ], ArrayNameSpaces[ d ] );
+    dst.withDefaultLong[ d ] = Object.create( dst );
+    _.mapExtend( dst.withDefaultLong[ d ], LongDescriptors[ d ] );
   }
 
-  dst.array = dst.withArray[ def ];
-  dst.ArrayNameSpaces = ArrayNameSpaces;
+  dst.array = dst.withDefaultLong[ def ];
+  dst.LongDescriptors = LongDescriptors;
 
 }
 
@@ -76,7 +76,7 @@ function makeSimilar( src,length )
  * // returns instance of Array
  *
  * @example
- * _.withArray.Float32.makeArrayOfLength(1);
+ * _.withDefaultLong.Fx.makeArrayOfLength(1);
  * // returns instance of F32x
  *
  * @function makeArrayOfLength
@@ -109,7 +109,7 @@ function makeArrayOfLength( length )
  * // returns Array [ 0,0 ]
  *
  * @example
- * _.withArray.Float32.makeArrayOfLength( 2 );
+ * _.withDefaultLong.Fx.makeArrayOfLength( 2 );
  * // returns F32x [ 0,0 ]
  *
  * @function makeArrayOfLengthZeroed
@@ -143,13 +143,13 @@ function makeArrayOfLengthZeroed( length )
  * @param {} src Source array.
  *
  * @example
- * let src =  _.withArray.Float32.makeArrayOfLength( 2 );
+ * let src =  _.withDefaultLong.Fx.makeArrayOfLength( 2 );
  * _.array.arrayFromCoercing( src );
  * // returns Array [ 0,0 ]
  *
  * @example
  * let src =  _.array.makeArrayOfLength( 2 );
- * _.withArray.Float32.arrayFromCoercing( src );
+ * _.withDefaultLong.Fx.arrayFromCoercing( src );
  * // returns F32x [ 0,0 ]
  *
  * @example
@@ -198,9 +198,9 @@ let Extend =
 }
 
 _.mapExtend( nameSpace, Extend );
-_.assert( !ArrayNameSpaces[ ArrayName ] );
+_.assert( !LongDescriptors[ ArrayName ] );
 
-ArrayNameSpaces[ ArrayName ] = nameSpace;
+LongDescriptors[ ArrayName ] = nameSpace;
 
 return nameSpace;
 
@@ -365,7 +365,7 @@ let _ArrayNameSpaces =
 
 _.assert( !_.Array );
 _.assert( !_.array );
-_.assert( !_.withArray );
+_.assert( !_.withDefaultLong );
 
 // debugger;
 
@@ -375,7 +375,7 @@ _.assert( !_.withArray );
  * @memberof wTools
  */
 
-let ArrayNameSpaces = Object.create( null );
+let LongDescriptors = Object.create( null );
 
 _._arrayNameSpaceApplyTo = _arrayNameSpaceApplyTo;
 
@@ -388,13 +388,13 @@ _arrayNameSpaceApplyTo( _,'Array' );
 
 _.assert( !_.Array );
 
-_.assert( _.mapOwnKey( _,'withArray' ) );
+_.assert( _.mapOwnKey( _,'withDefaultLong' ) );
 _.assert( _.mapOwnKey( _,'array' ) );
 _.assert( _.mapOwnKey( _.array,'array' ) );
-_.assert( !_.mapOwnKey( _.array,'withArray' ) );
-_.assert( !!_.array.withArray );
+_.assert( !_.mapOwnKey( _.array,'withDefaultLong' ) );
+_.assert( !!_.array.withDefaultLong );
 
-_.assert( _.objectIs( _.withArray ) );
+_.assert( _.objectIs( _.withDefaultLong ) );
 _.assert( _.objectIs( _.array ) );
 _.assert( _.routineIs( _.array.makeArrayOfLength ) );
 

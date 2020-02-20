@@ -377,7 +377,10 @@ function status( o )
   function isRepositoryReform()
   {
 
-    logger.log( 'isRepositoryReform', repo.downloadPath );
+    // if( repo.downloadPath && _.strEnds( repo.downloadPath, 'ModuleForTesting1a' ) )
+    // {
+    //   logger.log( 'isRepositoryReform', repo.downloadPath ); debugger;
+    // }
 
     _.assert( _.strDefined( repo.downloadPath ) );
     _.assert( repo.isRemote === true );
