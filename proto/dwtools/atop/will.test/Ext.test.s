@@ -6725,32 +6725,23 @@ modulesTreeHierarchyRemotePartiallyDownloaded.timeOut = 300000;
 function modulesTreeDisabledAndCorrupted( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'many-few' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
+  let a = self.assetFor( test, 'many-few' );
+  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
-    outputGraying : 1,
     mode : 'spawn',
-    ready : ready,
+    ready : a.ready,
   })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  a.reflect();
 
   /* - */
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.submodules.download' })
-  start({ execPath : '.with ** .modules.tree withRemotePath:1' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.submodules.download' })
+  a.start({ execPath : '.with ** .modules.tree withRemotePath:1' })
 
   .then( ( got ) =>
   {
@@ -6789,7 +6780,7 @@ function modulesTreeDisabledAndCorrupted( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function modulesTreeDisabledAndCorrupted */
 
 modulesTreeDisabledAndCorrupted.timeOut = 300000;
