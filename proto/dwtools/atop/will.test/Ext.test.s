@@ -5568,49 +5568,61 @@ verbositySet.timeOut = 300000;
 function verbosityStepDelete( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'verbosity-step-delete' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-  let modulePath = _.path.join( routinePath, 'module' );
-
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
+  let a = self.assetFor( test, 'verbosity-step-delete' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
     mode : 'spawn',
-    ready : ready
+    ready : a.ready,
   })
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'verbosity-step-delete' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let outPath = _.path.join( routinePath, 'out' );
+//   let modulePath = _.path.join( routinePath, 'module' );
+// 
+//   let ready = new _.Consequence().take( null )
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     mode : 'spawn',
+//     ready : ready
+//   })
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.build files.delete.vd';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect(); 
     return null;
   })
 
-  start({ execPath : '.build files.delete.vd' })
+  a.start({ execPath : '.build files.delete.vd' })
 
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.vd.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -5618,21 +5630,21 @@ function verbosityStepDelete( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.build files.delete.v0';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     return null;
   })
 
-  start({ execPath : '.build files.delete.v0' })
+  a.start({ execPath : '.build files.delete.v0' })
 
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
@@ -5640,7 +5652,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, /- .*step::files.delete.v0.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, 'Deleted' ), 0 );
 
-    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -5648,28 +5660,28 @@ function verbosityStepDelete( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.build files.delete.v1';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     return null;
   })
 
-  start({ execPath : '.build files.delete.v1' })
+  a.start({ execPath : '.build files.delete.v1' })
 
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v1.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -5677,28 +5689,28 @@ function verbosityStepDelete( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.build files.delete.v3';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     return null;
   })
 
-  start({ execPath : '.build files.delete.v3' })
+  a.start({ execPath : '.build files.delete.v3' })
 
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 1 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 1 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 1 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v3.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -5706,21 +5718,21 @@ function verbosityStepDelete( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.imply v:0 ; .build files.delete.vd';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     return null;
   })
 
-  start({ execPath : '.imply v:0 ; .build files.delete.vd' })
+  a.start({ execPath : '.imply v:0 ; .build files.delete.vd' })
 
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
@@ -5728,7 +5740,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, /- .*step::files.delete.vd.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strLinesCount( got.output ), 2 );
 
-    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -5736,28 +5748,28 @@ function verbosityStepDelete( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.imply v:8 ; .build files.delete.v0';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     return null;
   })
 
-  start({ execPath : '.imply v:8 ; .build files.delete.v0' })
+  a.start({ execPath : '.imply v:8 ; .build files.delete.v0' })
 
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v0.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 0 );
 
-    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -5765,28 +5777,28 @@ function verbosityStepDelete( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.imply v:9 ; .build files.delete.v0';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     return null;
   })
 
-  start({ execPath : '.imply v:9 ; .build files.delete.v0' })
+  a.start({ execPath : '.imply v:9 ; .build files.delete.v0' })
 
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 1 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 1 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 1 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v0.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -5794,28 +5806,28 @@ function verbosityStepDelete( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.imply v:1 ; .build files.delete.v3';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     return null;
   })
 
-  start({ execPath : '.imply v:1 ; .build files.delete.v3' })
+  a.start({ execPath : '.imply v:1 ; .build files.delete.v3' })
 
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v3.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -5823,28 +5835,28 @@ function verbosityStepDelete( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.imply v:2 ; .build files.delete.v3';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     return null;
   })
 
-  start({ execPath : '.imply v:2 ; .build files.delete.v3' })
+  a.start({ execPath : '.imply v:2 ; .build files.delete.v3' })
 
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'proto' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 1 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 1 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 1 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v3.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = self.find( _.path.join( routinePath, 'proto' ) );
+    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -5852,7 +5864,7 @@ function verbosityStepDelete( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 verbosityStepDelete.timeOut = 200000;
