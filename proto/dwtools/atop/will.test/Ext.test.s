@@ -5449,7 +5449,8 @@ function verbositySet( test )
   let self = this;
   let a = self.assetFor( test, 'submodules' );
   let outPath = _.path.join( a.routinePath, 'out' );
-  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
+  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : a.routinePath,
@@ -5570,7 +5571,8 @@ function verbosityStepDelete( test )
   let self = this;
   let a = self.assetFor( test, 'verbosity-step-delete' );
   let outPath = _.path.join( a.routinePath, 'out' );
-  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
+  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : a.routinePath,
@@ -5861,7 +5863,8 @@ function verbosityStepPrintName( test )
   let self = this;
   let a = self.assetFor( test, 'verbosity-step-print-name' );
   let outPath = _.path.join( a.routinePath, 'out' );
-  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
+  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : a.routinePath,
@@ -6027,7 +6030,8 @@ function modulesTreeDotless( test )
 {
   let self = this;
   let a = self.assetFor( test, 'two-dotless-single-exported' );
-  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
+  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : a.routinePath,
@@ -6097,7 +6101,8 @@ function modulesTreeLocal( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-with-submodules' );
-  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
+  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : a.routinePath,
@@ -6169,7 +6174,8 @@ function modulesTreeHierarchyRemote( test )
 {
   let self = this;
   let a = self.assetFor( test, 'hierarchy-remote' );
-  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
+  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : a.routinePath,
@@ -6418,7 +6424,8 @@ function modulesTreeHierarchyRemoteDownloaded( test )
 {
   let self = this;
   let a = self.assetFor( test, 'hierarchy-remote' );
-  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
+  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : a.routinePath,
@@ -6569,7 +6576,8 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 {
   let self = this;
   let a = self.assetFor( test, 'hierarchy-remote' );
-  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
+  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : a.routinePath,
@@ -6726,7 +6734,8 @@ function modulesTreeDisabledAndCorrupted( test )
 {
   let self = this;
   let a = self.assetFor( test, 'many-few' );
-  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
+  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     currentPath : a.routinePath,
@@ -6801,27 +6810,12 @@ function help( test )
     throwingExitCode : 0,
   })
 
-//   let self = this;
-// 
-//   let ready = new _.Consequence().take( null )
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//     throwingExitCode : 0,
-//   })
-
   /* */
 
   a.ready
   .then( ( got ) =>
   {
-
     test.case = 'simple run without args'
-
     return null;
   })
 
@@ -6840,9 +6834,7 @@ function help( test )
   a.ready
   .then( ( got ) =>
   {
-
     test.case = 'simple run without args'
-
     return null;
   })
 
@@ -6894,27 +6886,40 @@ function help( test )
 function listSingleModule( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'single' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
+  let a = self.assetFor( test, 'single' );
+  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
     mode : 'spawn',
-    ready : ready
+    ready : a.ready,
   })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  a.reflect();
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'single' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let ready = new _.Consequence().take( null )
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     mode : 'spawn',
+//     ready : ready
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  start({ execPath : '.resources.list' })
+  a.start({ execPath : '.resources.list' })
   .then( ( got ) =>
   {
     test.case = 'list';
@@ -6927,7 +6932,7 @@ function listSingleModule( test )
 
   /* - */
 
-  start({ execPath : '.about.list' })
+  a.start({ execPath : '.about.list' })
   .then( ( got ) =>
   {
     test.case = '.about.list'
@@ -6951,7 +6956,7 @@ function listSingleModule( test )
 
   /* - */
 
-  start({ execPath : '.paths.list' })
+  a.start({ execPath : '.paths.list' })
   .then( ( got ) =>
   {
     test.case = '.paths.list';
@@ -6968,7 +6973,7 @@ function listSingleModule( test )
 
   /* - */
 
-  start({ execPath : '.paths.list predefined:1' })
+  a.start({ execPath : '.paths.list predefined:1' })
   .then( ( got ) =>
   {
     test.case = '.paths.list predefined:1';
@@ -6992,7 +6997,7 @@ function listSingleModule( test )
 
   /* - */
 
-  start({ execPath : '.paths.list predefined:0' })
+  a.start({ execPath : '.paths.list predefined:0' })
   .then( ( got ) =>
   {
     test.case = '.paths.list predefined:0';
@@ -7016,7 +7021,7 @@ function listSingleModule( test )
 
   /* - */
 
-  start({ execPath : '.submodules.list' })
+  a.start({ execPath : '.submodules.list' })
   .then( ( got ) =>
   {
     test.case = 'submodules list'
@@ -7027,7 +7032,7 @@ function listSingleModule( test )
 
   /* - */
 
-  start({ execPath : '.reflectors.list' })
+  a.start({ execPath : '.reflectors.list' })
   .then( ( got ) =>
   {
     test.case = 'reflectors.list'
@@ -7035,22 +7040,15 @@ function listSingleModule( test )
 
     test.is( _.strHas( got.output, 'reflector::reflect.proto.' ) );
     test.is( _.strHas( got.output, `path::proto : path::out.*=1` ) );
-    // test.is( _.strHas( got.output, `. : .` ) );
-    // test.is( _.strHas( got.output, `prefixPath : proto` ) );
-    // test.is( _.strHas( got.output, `prefixPath : out/release` ) );
-
     test.is( _.strHas( got.output, `reflector::reflect.proto.debug` ) );
     test.is( _.strHas( got.output, `path::proto : path::out.*=1` ) );
-    // test.is( _.strHas( got.output, `. : .` ) );
-    // test.is( _.strHas( got.output, `prefixPath : proto` ) );
-    // test.is( _.strHas( got.output, `prefixPath : out/debug` ) );
 
     return null;
   })
 
   /* - */
 
-  start({ execPath : '.steps.list' })
+  a.start({ execPath : '.steps.list' })
   .then( ( got ) =>
   {
     test.case = 'steps.list'
@@ -7066,7 +7064,7 @@ function listSingleModule( test )
 
   /* - */
 
-  start({ execPath : '.builds.list' })
+  a.start({ execPath : '.builds.list' })
   .then( ( got ) =>
   {
     test.case = '.builds.list'
@@ -7082,7 +7080,7 @@ function listSingleModule( test )
 
   /* - */
 
-  start({ execPath : '.exports.list' })
+  a.start({ execPath : '.exports.list' })
   .then( ( got ) =>
   {
     test.case = '.exports.list'
@@ -7097,7 +7095,7 @@ function listSingleModule( test )
 
   /* - */ /* To test output by command with glob and criterion args*/
 
-  start({ execPath : '.resources.list *a* predefined:0' })
+  a.start({ execPath : '.resources.list *a* predefined:0' })
   .then( ( got ) =>
   {
     test.case = 'resources list globs negative';
@@ -7114,7 +7112,7 @@ function listSingleModule( test )
     return null;
   })
 
-  start({ execPath : '.resources.list *p* debug:1' })
+  a.start({ execPath : '.resources.list *p* debug:1' })
   .then( ( got ) =>
   {
     test.case = 'resources list globs negative';
@@ -7133,14 +7131,13 @@ function listSingleModule( test )
   })
 
   /* Glob using positive test */
-  start({ execPath : '.resources.list *proto*' })
+  a.start({ execPath : '.resources.list *proto*' })
   .then( ( got ) =>
   {
     test.case = '.resources.list *proto*';
     test.identical( got.exitCode, 0 );
 
     test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
-    // test.is( _.strHas( got.output, `. : .` ) );
 
     test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
     test.is( _.strHas( got.output, `files.reflect` ) );
@@ -7152,7 +7149,7 @@ function listSingleModule( test )
   })
 
   /* Glob and criterion using negative test */
-  start({ execPath : '.resources.list *proto* debug:0' })
+  a.start({ execPath : '.resources.list *proto* debug:0' })
   .then( ( got ) =>
   {
     test.case = 'globs and criterions negative';
@@ -7166,7 +7163,7 @@ function listSingleModule( test )
   })
 
   /* Glob and criterion using positive test */
-  start({ execPath : '.resources.list *proto* debug:0 predefined:0' })
+  a.start({ execPath : '.resources.list *proto* debug:0 predefined:0' })
   .then( ( got ) =>
   {
     test.case = 'globs and criterions positive';
@@ -7175,7 +7172,6 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, 'path::proto'  ) );
 
     test.is( _.strHas( got.output, 'reflector::reflect.proto.'  ) );
-    // test.is( _.strHas( got.output, `. : .` ) );
 
     test.is( _.strHas( got.output, 'step::reflect.proto.'  ) );
     test.is( _.strHas( got.output, `files.reflect` ) );
@@ -7186,7 +7182,7 @@ function listSingleModule( test )
   })
 
   /* Glob and two criterions using negative test */
-  start({ execPath : '.resources.list * debug:1 raw:0 predefined:0' })
+  a.start({ execPath : '.resources.list * debug:1 raw:0 predefined:0' })
   .then( ( got ) =>
   {
     test.case = '.resources.list * debug:1 raw:0 predefined:0';
@@ -7204,7 +7200,7 @@ function listSingleModule( test )
   })
 
   /* Glob and two criterion using positive test */
-  start({ execPath : '.resources.list * debug:0 raw:1' })
+  a.start({ execPath : '.resources.list * debug:0 raw:1' })
   .then( ( got ) =>
   {
     test.case = '.resources.list * debug:0 raw:1';
@@ -7217,7 +7213,7 @@ function listSingleModule( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 listSingleModule.timeOut = 200000;
