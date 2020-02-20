@@ -2,10 +2,13 @@ format: outwillfile-2.0
 root:
   - willbe.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  willbe.out.will.yml: &ref_0
+    hash: 5bb505a7a41a2c2e7751126ceac955a8
+    size: 249160
+  ../.ex.will.yml: &ref_1
     hash: 046b16d5fda9a4efda9bf329afc39376
     size: 2260
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: 6b3eda85ac3b767101b905fba56894da
     size: 6862
 module:
@@ -16,27 +19,27 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters: &ref_2
+      interpreters:
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors: &ref_4
+      contributors:
         - Kostiantyn Wandalen <wanalen@willbe.so>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts: &ref_5
+      npm.scripts:
         test: 'wtest .run proto/** v:5'
         docgen: wdocgen .build proto
         single-process-will: node proto/dwtools/atop/will/Exec
         debug-will: node proto/dwtools/atop/will/ExecDebug
         unrestricted-will: node proto/dwtools/atop/will/ExecUnrestricted
         will: node proto/dwtools/atop/will/ExecUnrestricted
-      npm.bin: &ref_6
+      npm.bin:
         single-process-will: proto/dwtools/atop/will/Exec
         debug-will: proto/dwtools/atop/will/ExecDebug
         unrestricted-will: proto/dwtools/atop/will/ExecUnrestricted
@@ -4276,6 +4279,24 @@ module:
           content: prime
         inherit:
           - files.transpile
+      exported.proto.export:
+        opts:
+          reflector: 'reflector::exported.proto.export*'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          reflector: 'reflector::exported.files.proto.export*'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -4364,8 +4385,9 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      willbe.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: willbe
@@ -4373,14 +4395,31 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - njs >= 8.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors: *ref_4
+      contributors:
+        - Kostiantyn Wandalen <wanalen@willbe.so>
+        - Volodymyr M. <volodymyr.migdal@gmail.com>
+        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts: *ref_5
-      npm.bin: *ref_6
+      npm.scripts:
+        test: 'wtest .run proto/** v:5'
+        docgen: wdocgen .build proto
+        single-process-will: node proto/dwtools/atop/will/Exec
+        debug-will: node proto/dwtools/atop/will/ExecDebug
+        unrestricted-will: node proto/dwtools/atop/will/ExecUnrestricted
+        will: node proto/dwtools/atop/will/ExecUnrestricted
+      npm.bin:
+        single-process-will: proto/dwtools/atop/will/Exec
+        debug-will: proto/dwtools/atop/will/ExecDebug
+        unrestricted-will: proto/dwtools/atop/will/ExecUnrestricted
+        will: proto/dwtools/atop/will/ExecUnrestricted
     path:
       module.willfiles:
         criterion:
@@ -5154,3 +5193,6 @@ module:
       ../.im.will.yml:
         hash: 6b3eda85ac3b767101b905fba56894da
         size: 6862
+      willbe.out.will.yml:
+        hash: 5bb505a7a41a2c2e7751126ceac955a8
+        size: 249160
