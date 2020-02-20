@@ -2309,6 +2309,8 @@ function modulesFor_body( o )
 
     ready.then( () =>
     {
+      if( !o.onEachVisitedObject && !o.onEachModule )
+      return null;
       let ready = new _.Consequence().take( null );
       objects.forEach( ( object ) => ready.then( () => objectAction( object ) ) );
       return ready;
@@ -2316,6 +2318,8 @@ function modulesFor_body( o )
 
     ready.then( () =>
     {
+      if( !o.onEachJunction )
+      return null;
       let ready = new _.Consequence().take( null );
       let junctions = _.longOnce( will.junctionsFrom( objects ) );
       junctions.forEach( ( junction ) => ready.then( () => junctionAction( junction ) ) );
@@ -2350,10 +2354,11 @@ function modulesFor_body( o )
   {
     _.assert( will.ObjectIs( object ) );
     let ready = new _.Consequence().take( null );
+    let junction = object.toJunction();
 
-    if( o.onEachObject )
+    if( o.onEachVisitedObject )
     {
-      let junction = object.toJunction();
+      // let junction = object.toJunction();
       let objects = [ object ];
 
       objects.forEach( ( object ) =>
@@ -2362,11 +2367,11 @@ function modulesFor_body( o )
         return null;
         visitedObjectSet.add( object );
 
-        if( o.onEachObject )
+        if( o.onEachVisitedObject )
         {
           let o3 = _.mapExtend( null, o );
           o3.object = object;
-          ready.then( () => o.onEachObject( object, o3 ) );
+          ready.then( () => o.onEachVisitedObject( object, o3 ) );
         }
 
       });
@@ -2374,7 +2379,7 @@ function modulesFor_body( o )
 
     if( o.onEachModule )
     {
-      let junction = object.toJunction();
+      // let junction = object.toJunction();
       let objects = [ object ];
       _.arrayAppendArrayOnce( objects, junction.modules );
 
@@ -2433,7 +2438,7 @@ defaults.nodesGroup = null;
 defaults.modules = null;
 defaults.onEachJunction = null;
 defaults.onEachModule = null;
-defaults.onEachObject = null;
+defaults.onEachVisitedObject = null;
 
 delete defaults.outputFormat;
 delete defaults.onUp;
@@ -2968,6 +2973,7 @@ function modulesClean( o )
   let path = fileProvider.path;
   let logger = will.logger;
   let files = Object.create( null );
+  let visitedObjectSet = new Set;
 
   o = _.routineOptions( modulesClean, arguments );
 
@@ -2975,7 +2981,8 @@ function modulesClean( o )
   o.beginTime = _.time.now();
 
   let o2 = _.mapOnly( o, will.modulesFor.defaults );
-  o2.onEachModule = handleEach;
+  // o2.onEachModule = handleEach;
+  o2.onEachVisitedObject = handleEach;
 
   return will.modulesFor( o2 )
   .then( ( arg ) =>
@@ -3000,6 +3007,13 @@ function modulesClean( o )
 
   function handleEach( module, op )
   {
+    // debugger;
+    module = module.toModule();
+    if( !( module instanceof _.Will.Module ) )
+    return null;
+    if( visitedObjectSet.has( module ) )
+    return null;
+    visitedObjectSet.add( module );
     let o3 = _.mapOnly( o, module.cleanWhatSingle.defaults );
     o3.files = files;
     return module.cleanWhatSingle( o3 );
@@ -3176,7 +3190,7 @@ function modulesVerify_body( o )
   ready.then( () =>
   {
     let o2 = _.mapOnly( o, will.modulesFor.defaults );
-    o2.onEachObject = moduleVerify;
+    o2.onEachVisitedObject = moduleVerify;
     debugger;
     return will.modulesFor( o2 );
   })
@@ -4429,6 +4443,7 @@ function WillfilesFind( o )
 
     // debugger;
     let files = fileProvider.filesFind( o2 );
+    // debugger;
 
     let files2 = [];
     files.forEach( ( file ) =>

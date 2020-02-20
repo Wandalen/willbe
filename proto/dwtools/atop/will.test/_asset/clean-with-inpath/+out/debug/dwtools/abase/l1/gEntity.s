@@ -142,6 +142,8 @@ function uncountableSize( src )
  * @memberof wTools
 */
 
+/* qqq : review */
+
 function entitySize( src )
 {
   let result = 0;
@@ -157,7 +159,10 @@ function entitySize( src )
     _.look( src, onEach );
   }
 
+  if( _.look )
   return result;
+
+  return NaN;
 
   function onEach( e, k, it )
   {
@@ -198,11 +203,11 @@ let Fields =
 let Routines =
 {
 
-  entityLength, /* qqq : implement coverage | Dmytro : coverage is extended */
+  entityLength,
   lengthOf : entityLength,
 
-  uncountableSize, /* qqq : implement coverage | Dmytro : covered */
-  entitySize, /* qqq : implement coverage | Dmytro : coverage is extended */
+  uncountableSize,
+  entitySize, 
   sizeOf : entitySize,
 
 }

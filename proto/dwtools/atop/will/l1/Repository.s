@@ -144,7 +144,7 @@ function status( o )
     o.hasFiles = true;
   }
 
-  if( o.isUpToDate || o.remoteIsValid || o.hasLocalChanges )
+  if( o.isUpToDate || o.remoteIsValid || o.hasLocalChanges || o.hasLocalUncommittedChanges )
   {
     o.isRepository = true;
   }
@@ -185,13 +185,13 @@ function status( o )
     if( o.invalidating || repo._.isRepository === null )
     ready.also( isRepositoryReform );
 
-    if( o.hasLocalChanges )
-    if( o.invalidating || repo._.hasLocalChanges === null )
+    if( o.hasLocalChanges || o.hasLocalUncommittedChanges )
+    if( o.invalidating || repo._.hasLocalChanges === null || repo._.hasLocalUncommittedChanges === null )
     ready.also( hasLocalChangesReform );
 
-    if( o.hasLocalUncommittedChanges )
-    if( o.invalidating || repo._.hasLocalUncommittedChanges === null )
-    ready.also( hasLocalUncommittedChangesReform );
+    // if( o.hasLocalUncommittedChanges )
+    // if( o.invalidating || repo._.hasLocalUncommittedChanges === null )
+    // ready.also( hasLocalUncommittedChangesReform );
 
     if( o.isUpToDate )
     if( o.invalidating || repo._.isUpToDate === null )
@@ -296,23 +296,49 @@ function status( o )
 
     _.assert( arguments.length === 0, 'Expects no arguments' );
     _.assert( _.boolIs( repo.isRepository ) );
-
-    if( !repo.isRepository )
-    return end( false );
-
-    let result = vcs.hasLocalChanges
+    
+    if( o.invalidating && o.isRepository )
+    {
+      if( !repo.isRepository )
+      return end( false );
+    }
+    else
+    { 
+      let isRepository = vcs.isRepository({ localPath : repo.downloadPath, sync : 1 });
+      if( repo._.isRepository === null )
+      repo._.isRepository = isRepository;
+      if( !isRepository )
+      return end( false );
+    }
+    
+    let status = vcs.statusLocal
     ({
       localPath : repo.downloadPath,
-      unpushed : 1,
+      uncommitted : 1,
+      detailing : o.hasLocalUncommittedChanges,
+      unpushed : o.hasLocalChanges,
+      explaining : 0,
       sync : 1,
     });
-
-    return end( result );
+    
+    return end( status );
 
     function end( result )
-    {
-      _.assert( _.boolIs( result ) );
-      repo._.hasLocalChanges = result;
+    { 
+      if( _.boolIs( result ) )
+      { 
+        repo._.hasLocalChanges = result;
+        if( o.hasLocalUncommittedChanges )
+        repo._.hasLocalUncommittedChanges = result;
+      }
+      else
+      { 
+        _.assert( _.objectIs( status ) );
+        repo._.hasLocalChanges = result.status;
+        repo._.hasLocalUncommittedChanges = result.uncommitted;
+        result = result.status;
+      }
+      
       return result;
     }
 
@@ -325,9 +351,20 @@ function status( o )
 
     _.assert( arguments.length === 0, 'Expects no arguments' );
     _.assert( _.boolIs( repo.isRepository ) );
-
-    if( !repo.isRepository )
-    return end( false );
+    
+    if( o.invalidating && o.isRepository )
+    {
+      if( !repo.isRepository )
+      return end( false );
+    }
+    else
+    { 
+      let isRepository = vcs.isRepository({ localPath : repo.downloadPath, sync : 1 });
+      if( repo._.isRepository === null )
+      repo._.isRepository = isRepository;
+      if( !isRepository )
+      return end( false );
+    }
 
     let result = vcs.hasLocalChanges
     ({
@@ -377,7 +414,10 @@ function status( o )
   function isRepositoryReform()
   {
 
-    logger.log( 'isRepositoryReform', repo.downloadPath );
+    // if( repo.downloadPath && _.strEnds( repo.downloadPath, 'ModuleForTesting1a' ) )
+    // {
+    //   logger.log( 'isRepositoryReform', repo.downloadPath ); debugger;
+    // }
 
     _.assert( _.strDefined( repo.downloadPath ) );
     _.assert( repo.isRemote === true );
@@ -476,8 +516,22 @@ function status( o )
   function downloadRequiredReform()
   {
     _.assert( _.boolIs( repo.hasFiles ) );
-    let result = !repo.dirExists || !repo.hasFiles;
+    
+    let result;
+    
+    if( o.invalidating && ( o.dirExists || o.hasFiles ) )
+    {
+      result = !repo.dirExists || !repo.hasFiles;
+    }
+    else
+    { 
+      result = !fileProvider.isDir( repo.downloadPath );
+      if( !result )
+      result = fileProvider.dirIsEmpty( repo.downloadPath );
+    }
+    
     repo._.downloadRequired = result;
+    
     return result;
   }
 

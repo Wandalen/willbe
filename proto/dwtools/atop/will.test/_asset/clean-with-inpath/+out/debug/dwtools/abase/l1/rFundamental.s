@@ -132,7 +132,7 @@
 // _.assert( !Self.Array );
 //
 // // _.assert( !Self.array );
-// // _.assert( !Self.withArray );
+// // _.assert( !Self.withDefaultLong );
 // // _.assert( _.objectIs( _.strIsolateBeginOrAll ) )
 // // _.assert( _.objectIs( _.regexpsEscape ) );
 //

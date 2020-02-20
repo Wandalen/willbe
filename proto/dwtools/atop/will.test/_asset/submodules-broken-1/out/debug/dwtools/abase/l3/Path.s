@@ -2275,7 +2275,7 @@ function common()
   {
     if( _.mapIs( paths[ s ] ) )
     _.longBut_( paths, [ s, s + 1 ], _.mapKeys( paths[ s ] ) );
-    // paths.splice( s, 1, _.mapKeys( paths[ s ] ) ); // Dmytro : can use it if unroll array returned by mapKeys() 
+    // paths.splice( s, 1, _.mapKeys( paths[ s ] ) ); // Dmytro : can use it if unroll array returned by mapKeys()
   }
 
   _.assert( _.strsAreAll( paths ) );

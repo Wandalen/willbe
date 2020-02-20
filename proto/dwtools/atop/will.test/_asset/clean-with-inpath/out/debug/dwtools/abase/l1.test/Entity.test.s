@@ -8,6 +8,14 @@ if( typeof module !== 'undefined' )
   let _ = require( '../Layer2.s' );
   _.include( 'wTesting' );
 
+  try
+  {
+    _.include( 'wLooker' );
+  }
+  catch( err )
+  {
+  }
+
 }
 
 var _global = _global_;
@@ -18,7 +26,7 @@ var Self = {};
 // tests
 // --
 
-function entityMakeConstructing( test ) 
+function entityMakeConstructing( test )
 {
   test.case = 'null';
   var got = _.entityMakeConstructing( null );
@@ -169,9 +177,9 @@ function entityMakeConstructing( test )
 
   test.case = 'instance of constructor';
   var Constr = function( src )
-  { 
-    this.x = src || 1; 
-    return this; 
+  {
+    this.x = src || 1;
+    return this;
   };
   var src = new Constr( 2 );
   var got = _.entityMakeConstructing( src );
@@ -179,9 +187,9 @@ function entityMakeConstructing( test )
 
   test.case = 'instance of constructor, length';
   var Constr = function( src )
-  { 
-    this.x = src || 1; 
-    return this; 
+  {
+    this.x = src || 1;
+    return this;
   };
   var src = new Constr( 2 );
   var got = _.entityMakeConstructing( src, 2 );
@@ -206,7 +214,7 @@ function entityMakeConstructing( test )
 
 //
 
-function entityMakeEmpty( test ) 
+function entityMakeEmpty( test )
 {
   test.case = 'null';
   var got = _.entityMakeEmpty( null );
@@ -336,14 +344,14 @@ function entityMakeEmpty( test )
   test.shouldThrowErrorSync( () => _.entityMakeEmpty( [], 1 ) );
 
   test.case = 'unknown type of entity';
-  test.shouldThrowErrorSync( () => _.entityMakeEmpty( new BufferRaw() ) );  
+  test.shouldThrowErrorSync( () => _.entityMakeEmpty( new BufferRaw() ) );
   var Constr = function(){ this.x = 1; return this };
   test.shouldThrowErrorSync( () => _.entityMakeEmpty( new Constr() ) );
 }
 
 //
 
-function entityMakeUndefined( test ) 
+function entityMakeUndefined( test )
 {
   test.case = 'null';
   var got = _.entityMakeUndefined( null );
@@ -538,12 +546,12 @@ function entityMakeUndefined( test )
   test.case = 'unknown type of entity';
   test.shouldThrowErrorSync( () => _.entityMakeUndefined( new BufferRaw() ) );
   var Constr = function(){ this.x = 1; return this };
-  test.shouldThrowErrorSync( () => _.entityMakeUndefined( new Constr() ) ); 
+  test.shouldThrowErrorSync( () => _.entityMakeUndefined( new Constr() ) );
 }
 
 //
 
-function entityMake( test ) 
+function entityMake( test )
 {
   test.case = 'null';
   var got = _.entityMake( null );
@@ -709,7 +717,7 @@ function entityMake( test )
   test.shouldThrowErrorSync( () => _.entityMake( [], 1 ) );
 
   test.case = 'unknown type of entity';
-  test.shouldThrowErrorSync( () => _.entityMake( new BufferRaw() ) );  
+  test.shouldThrowErrorSync( () => _.entityMake( new BufferRaw() ) );
   var Constr = function(){ this.x = 1; return this };
   test.shouldThrowErrorSync( () => _.entityMake( new Constr() ) );
 }
@@ -1375,6 +1383,8 @@ function uncountableSize( test )
 
 //
 
+/* zzz : find better solution instead of `_.look ?` */
+
 function entitySize( test )
 {
   test.case = 'undefined';
@@ -1425,21 +1435,22 @@ function entitySize( test )
 
   test.case = 'empty array';
   var got = _.entitySize( [] );
-  test.identical( got, 0 );
+  var exp = _.look ? 0 : NaN;
+  test.identical( got, exp );
 
   test.case = 'array';
   var got = _.entitySize( [ 3, undefined, 34 ] );
-  var exp = _.look ? 24 : 0;
+  var exp = _.look ? 24 : NaN;
   test.identical( got, exp );
 
   test.case = 'argumentsArray';
   var got = _.entitySize( _.argumentsArrayMake( [ 1, null, 4 ] ) );
-  var exp = _.look ? 24 : 0;
+  var exp = _.look ? 24 : NaN;
   test.identical( got, exp );
 
   test.case = 'unroll';
   var got = _.entitySize( _.argumentsArrayMake( [ 1, 2, 'str' ] ) );
-  var exp = _.look ? 19 : 0;
+  var exp = _.look ? 19 : NaN;
   test.identical( got, exp );
 
   test.case = 'BufferTyped';
@@ -1463,17 +1474,17 @@ function entitySize( test )
 
   test.case = 'Set';
   var got = _.entitySize( new Set( [ 1, 2, undefined, 4 ] ) );
-  var exp = _.look ? 32 : 0;
+  var exp = _.look ? 32 : NaN;
   test.identical( got, exp );
 
   test.case = 'map';
   var got = _.entitySize( { a : 1, b : 2, c : 'str' } );
-  var exp = _.look ? 22 : 0;
+  var exp = _.look ? 19 : NaN;
   test.identical( got, exp );
 
   test.case = 'HashMap';
   var got = _.entitySize( new Map( [ [ undefined, undefined ], [ 1, 2 ], [ '', 'str' ] ] ) );
-  var exp = _.look ? 35 : 0;
+  var exp = _.look ? 19 : NaN;
   test.identical( got, exp );
 
   test.case = 'function';
@@ -1502,7 +1513,7 @@ function entitySize( test )
       }
   });
   var got = _.entitySize( src );
-  var exp = _.look ? 14 : 0;
+  var exp = _.look ? 5 : NaN;
   test.identical( got, exp );
 
   /* - */

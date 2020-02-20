@@ -22,12 +22,13 @@ let will = _.process.starter
   outputGraying : 1,
   ready : ready,
   throwingExitCode : 0,
+  deasync : 1,
 })
 
 let reposDownload = require( `./ReposDownload.s` );
 
 ready.then( () => _.fileProvider.filesDelete( repoDirPath ) );
-ready.then( () => reposRedownload() );
+ready.then( () => reposDownload() );
 
 var asset = `two-exported`;
 del( `${asset}/*.out/**` );
@@ -65,7 +66,7 @@ will( `.with ${asset}/ .export debug:1` );
 copy( `${asset}/+sub.out`, `${asset}/sub.out` );
 copy( `${asset}/+super.out`, `${asset}/super.out` );
 
-var asset = `${asset}`;
+var asset = `two-anon-exported`;
 del( `${asset}/*.out/**` );
 will( `.with ${asset}/sub/ .export debug:0` );
 will( `.with ${asset}/sub/ .export debug:1` );

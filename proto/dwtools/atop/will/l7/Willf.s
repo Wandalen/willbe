@@ -340,7 +340,7 @@ function _read()
     if( !willf.structure )
     if( !willf.exists() )
     {
-      // debugger;
+      debugger;
       throw _.errBrief( `Found no willfile at ${willf.filePath}` );
     }
 
@@ -509,6 +509,8 @@ function _open()
 
     if( !willf.isConsistent() )
     {
+      debugger;
+      willf.isConsistent();
       inconsistent = 1;
       let peerWillfilesPath = willf.peerWillfilesPathGet();
       peerWillfilesPath = _.arrayAs( peerWillfilesPath );

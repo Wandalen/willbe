@@ -552,6 +552,7 @@ function outModuleOpen( o )
     {
       err = _.err( err, `\nFailed to read exported out-willfile ${opener2.willfilesPath} to extend it` );
       let requireVerbosity = 5;
+      /* xxx : refactor */
       if( _.strIs( err.originalMessage ) )
       if( !_.strHas( err.originalMessage, 'Found no willfile at' ) )
       if( !_.strHas( err.originalMessage, 'Found no out-willfile' ) )
@@ -5769,6 +5770,10 @@ function cleanWhatSingle( o )
   if( o.files === null )
   o.files = Object.create( null );
   o.files[ '/' ] = o.files[ '/' ] || [];
+
+  // logger.log( 'cleanWhatSingle', module.commonPath );
+  // if( _.strHas( module.commonPath, 'group10' ) )
+  // debugger;
 
   /* submodules */
 

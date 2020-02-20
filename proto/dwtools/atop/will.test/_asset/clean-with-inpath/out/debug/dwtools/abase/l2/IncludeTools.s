@@ -435,7 +435,7 @@ function includeAny()
 
 //
 
-/* xxx : reimplement */
+/* zzz : reimplement */
 function isIncluded( src )
 {
   var descriptor = _.module.knownModulesByName.get( src );
@@ -566,7 +566,7 @@ var ModuleExtension =
 
   // use
 
-  /* xxx qqq : comment out maybe !!! */
+  /* zzz : comment out maybe !!! */
 
   usePath,
   usePathGlobally,

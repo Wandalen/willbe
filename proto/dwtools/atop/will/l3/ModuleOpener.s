@@ -463,7 +463,7 @@ function _willfilesFind()
   if( !opener.error )
   if( opener.willfilesArray.length === 0 )
   {
-    let err;
+    let err; debugger;
     if( opener.superRelation )
     err = _.errBrief( 'Found no out-willfile for',  opener.superRelation.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
     else
@@ -1410,15 +1410,15 @@ function _repoDownload( o )
     return filesDownload();
   })
   .then( function( arg )
-  { 
+  {
     /*
       create will module for npm module after download
     */
-   
+
     vcsTool = will.vcsToolsFor( opener.repo.remotePath );
     if( downloading && !o.dry && vcsTool === _.npm )
     moduleNpmCreate();
-    
+
     /* qqq : make optimal status updating after module is downloaded */
     if( downloading && !o.dry )
     openersReform();
@@ -1432,11 +1432,11 @@ function _repoDownload( o )
     return null;
   })
   .then( function( arg )
-  { 
+  {
     /*
       export npm module after download
     */
-   
+
     if( downloading && !o.dry && vcsTool === _.npm )
     return opener.openedModule.moduleExport();
     return null;
@@ -1823,27 +1823,27 @@ function _repoDownload( o )
       return arg;
     })
   }
-  
+
   /* */
-  
+
   function moduleNpmCreate()
-  { 
+  {
     let willFilePath = path.join( path.dir( opener.repo.downloadPath ), opener.aliasName + '.will.yml' );
-    
+
     let packageJsonPath = path.join( opener.repo.downloadPath, 'package.json' );
     let packageJson = fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
     let includeAny = path.s.dot( packageJson.files );
-    
-    let willFile = 
+
+    let willFile =
 `
 about :
 
   name : ${opener.aliasName}
-  
+
 path :
-  
+
   in : ${opener.aliasName}
-  
+
 reflector :
 
   files :
@@ -1851,14 +1851,14 @@ reflector :
        filePath : path::in
        maskAll :
          includeAny : [ ${includeAny.join( ', ' )} ]
-  
+
 step :
 
   export :
     inherit : module.export
     export : reflector::files
     tar : 0
-  
+
 build :
 
   export :
@@ -2062,27 +2062,17 @@ function _filePathChanged2( o )
   if( o.commonPath )
   {
     opener._.commonPath = o.commonPath;
-    // if( opener.isRemote === false ) /* yyy */
-    // debugger;
 
     if( o.localPath )
     {
       _.assert( _.strIs( o.localPath ) && !path.isGlobal( o.localPath ) );
       opener._.localPath = o.localPath;
     }
-
-    // if( opener.repo )
-    // debugger;
-    // if( opener.repo && opener.repo.isRemote === false )
-    // debugger;
-    // if( opener.repo && opener.repo.isRemote === false )
-    // opener._.localPath = o.commonPath;
   }
 
   if( !o.isIdentical )
   if( opener.willfilesPath && opener.commonPath && opener.formed >= 2 )
   {
-    // if( !opener.superRelation || opener.superRelation.enabled ) /* ttt */
     will.junctionReform( opener );
   }
 
@@ -2111,7 +2101,6 @@ function remotePathSet( src )
   let module = opener.openedModule;
   let will = opener.will;
 
-  // debugger;
   if( opener.__.remotePath === src )
   {
     debugger;
@@ -2119,7 +2108,6 @@ function remotePathSet( src )
     return;
   }
 
-  // debugger;
   opener.remotePathPut( src );
   if( opener.openedModule )
   {
@@ -2252,7 +2240,6 @@ let _dirPathPut = sharedFieldPut_functor( 'dirPath' );
 let _commonPathPut = sharedFieldPut_functor( 'commonPath' );
 let _downloadPathPut = sharedFieldPut_functor( 'downloadPath' );
 let _localPathPut = sharedFieldPut_functor( 'localPath' );
-// let remotePathPut = sharedFieldPut_functor( 'remotePath' );
 
 // --
 // name
@@ -2300,7 +2287,6 @@ function aliasNameSet( src )
 {
   let opener = this;
   opener[ aliasNameSymbol ] = src;
-  // opener._.aliasName = src;
   opener._nameChanged();
 }
 
@@ -2352,8 +2338,6 @@ function errorSet( err )
 
   opener[ errorSymbol ] = err;
 
-  // if( will && err )
-  // debugger;
   if( will && err )
   {
     let r = Object.create( null );
@@ -2399,16 +2383,12 @@ function isMainSet( src )
   _.assert( src === null || _.boolLike( src ) );
   _.assert( will.mainOpener === null || will.mainOpener === opener || !src );
 
-  // if( src )
-  // debugger;
-
   if( src )
   will.mainOpener = opener;
   else if( will.mainOpener === opener )
   will.mainOpener = null;
 
   return src;
-  // return opener.mainOpener === opener;
 }
 
 //
@@ -2452,14 +2432,7 @@ function accessorSet_functor( fieldName )
 
 }
 
-// let isRemoteGet = accessorGet_functor( 'isRemote' );
-// let isUpToDateGet = accessorGet_functor( 'isUpToDate' );
-// let isRepositoryGet = accessorGet_functor( 'isRepository' );
 let isOutGet = accessorGet_functor( 'isOut' );
-
-// let isRemoteSet = accessorSet_functor( 'isRemote' );
-// let isUpToDateSet = accessorSet_functor( 'isUpToDate' );
-// let isRepositorySet = accessorGet_functor( 'isRepository' );
 let isOutSet = accessorSet_functor( 'isOut' );
 
 // --
@@ -2604,8 +2577,6 @@ let Accessors =
   absoluteName : { getter : absoluteNameGet, readOnly : 1 },
   qualifiedName : { getter : qualifiedNameGet, combining : 'rewrite', readOnly : 1 },
 
-  // isRemote : { getter : isRemoteGet, setter : isRemoteSet },
-  // isUpToDate : { getter : isUpToDateGet, setter : isUpToDateSet },
   isOut : { getter : isOutGet, setter : isOutSet },
   isMain : { getter : isMainGet, setter : isMainSet },
 
@@ -2734,13 +2705,7 @@ let Extend =
   isPreformed,
   isMainGet,
   isMainSet,
-  // isRemoteGet,
-  // isUpToDateGet,
-  // isRepositoryGet,
   isOutGet,
-
-  // isRemoteSet,
-  // isUpToDateSet,
   isOutSet,
 
   // export
@@ -2769,14 +2734,17 @@ _.classDeclare
 
 Self.prototype[ Symbol.toStringTag ] = Object.prototype.toString;
 
-if( typeof module !== 'undefined' && module !== null )
-module[ 'exports' ] = _global_.wTools;
-
+/* xxx : refactor tree of files */
 _.staticDeclare
 ({
   prototype : _.Will.prototype,
   name : Self.shortName,
   value : Self,
 });
+
+//
+
+if( typeof module !== 'undefined' && module !== null )
+module[ 'exports' ] = _global_.wTools;
 
 })();

@@ -35,7 +35,7 @@ if( _global_.__GLOBAL_WHICH__ === 'real' )
   // if( _global_.wBase )
   // {
   //   if( _global_.wTools.usePath )
-  //   _global_.wTools.usePath( __dirname + '/../..' ); /* xxx : remove later */
+  //   _global_.wTools.usePath( __dirname + '/../..' ); /* zzz : remove later */
   //   module[ 'exports' ] = _global_.wBase;
   //   return;
   // }

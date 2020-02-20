@@ -7,30 +7,21 @@ let _ = _global_.wTools;
 let Self = _global_.wTools;
 
 // --
-// range
+// implementation
 // --
 
 // --
-// fields
+// extension
 // --
 
-let Fields =
-{
-}
-
-// --
-// routines
-// --
-
-let Routines =
+let Extension =
 {
 
 }
 
 //
 
-Object.assign( Self, Routines );
-Object.assign( Self, Fields );
+_.mapSupplement( Self, Extension );
 
 // --
 // export

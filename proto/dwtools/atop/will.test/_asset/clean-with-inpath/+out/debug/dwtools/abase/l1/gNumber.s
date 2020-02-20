@@ -219,7 +219,7 @@ function numberRandom( range )
  * // log -2
  *
  * @returns { Number } - Returns a random integer number.
- * @function intRandom 
+ * @function intRandom
  * @throws { Error } If arguments.length is less or more then one.
  * @throws { Error } If range {-range-} is not a Number or not a Range.
  * @memberof wTools
@@ -296,13 +296,13 @@ function numbersMake( src,length )
   if( _.arrayLike( src ) )
   {
     _.assert( src.length === length );
-    result = _.array.makeArrayOfLength( length );
+    result = this.longMakeUndefined( length );
     for( let i = 0 ; i < length ; i++ )
     result[ i ] = src[ i ];
   }
   else
   {
-    result = _.array.makeArrayOfLength( length );
+    result = this.longMakeUndefined( length );
     for( let i = 0 ; i < length ; i++ )
     result[ i ] = src;
   }
@@ -327,7 +327,8 @@ function numbersFromNumber( src,length )
     return src;
   }
 
-  let result = _.array.makeArrayOfLength( length );
+  // debugger; /* xxx2 : test */
+  let result = this.longMakeUndefined( length );
   for( let i = 0 ; i < length ; i++ )
   result[ i ] = src;
 
@@ -411,13 +412,13 @@ let Routines =
   numbersTotal,
 
   numberFrom,
-  numbersFrom, /* qqq : add test coverage | Dmytro : covered */
+  numbersFrom,
   numberFromStr,
 
   numbersSlice,
 
-  numberRandom, /* qqq : cover and document please | Dmytro : covered and documented */
-  intRandom, /* qqq : cover and document please | Dmytro : covered and documented */
+  numberRandom,
+  intRandom,
   intRandomBut, /* dubious */
 
   numbersMake,

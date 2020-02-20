@@ -409,84 +409,10 @@ function diagnosticStructureGenerate_pre( routine, args )
 function diagnosticStructureGenerate_body( o )
 {
 
-  // o = _.routineOptions( diagnosticStructureGenerate, arguments );
-
-  // if( o.arrayLength === null )
-  // o.arrayLength = o.defaultLength;
-  // if( o.mapLength === null )
-  // o.mapLength = o.defaultLength;
-  // if( o.hashMapLength === null )
-  // o.hashMapLength = o.defaultLength;
-  // if( o.setLength === null )
-  // o.setLength = o.defaultLength;
-
-  // if( o.stringSize === null )
-  // o.stringSize = o.defaultSize;
-  // if( o.bufferSize === null )
-  // o.bufferSize = o.defaultSize;
-  // if( o.regexpSize === null )
-  // o.regexpSize = o.defaultSize;
-
-  // if( o.primitiveComplexity === null )
-  // o.primitiveComplexity = from( o.defaultComplexity );
-
-  // if( o.nullComplexity === null )
-  // o.nullComplexity = from( o.primitiveComplexity );
-  // if( o.undefinedComplexity === null )
-  // o.undefinedComplexity = from( o.primitiveComplexity );
-  // if( o.booleanComplexity === null )
-  // o.booleanComplexity = from( o.primitiveComplexity );
-  // if( o.stringComplexity === null )
-  // o.stringComplexity = from( o.primitiveComplexity );
-  // if( o.bigIntComplexity === null )
-  // o.bigIntComplexity = from( o.primitiveComplexity );
-
-  // if( o.numberComplexity === null )
-  // o.numberComplexity = from( o.primitiveComplexity );
-  // if( o.numberInfinityComplexity === null )
-  // o.numberInfinityComplexity = from( o.numberComplexity );
-  // if( o.numberNanComplexity === null )
-  // o.numberNanComplexity = from( o.numberComplexity );
-  // if( o.numberSignedZeroComplexity === null )
-  // o.numberSignedZeroComplexity = from( o.numberComplexity );
-
-  // if( o.objectComplexity === null )
-  // o.objectComplexity = from( o.defaultComplexity );
-  // if( o.dateComplexity === null )
-  // o.dateComplexity = from( o.objectComplexity );
-  // if( o.regexpComplexity === null )
-  // o.regexpComplexity = from( o.objectComplexity );
-  // if( o.bufferNodeComplexity === null )
-  // o.bufferNodeComplexity = from( o.objectComplexity );
-  // if( o.bufferRawComplexity === null )
-  // o.bufferRawComplexity = from( o.objectComplexity );
-  // if( o.bufferBytesComplexity === null )
-  // o.bufferBytesComplexity = from( o.objectComplexity );
-
-  // if( o.containerComplexity === null )
-  // o.containerComplexity = from( o.defaultComplexity );
-  // if( o.recursionComplexity === null )
-  // o.recursionComplexity = from( o.containerComplexity );
-  // if( o.arrayComplexity === null )
-  // o.arrayComplexity = from( o.containerComplexity );
-  // if( o.mapComplexity === null )
-  // o.mapComplexity = from( o.containerComplexity );
-  // if( o.setComplexity === null )
-  // o.setComplexity = from( o.containerComplexity );
-  // if( o.hashMapComplexity === null )
-  // o.hashMapComplexity = from( o.containerComplexity );
-  //
-  // _.assert( arguments.length === 0 || arguments.length === 1 )
-  // _.assert( _.numberIs( o.depth ) );
-
-  // /* qqq : implement pre | Dmytro : implemented */
-
   /**/
 
   o.structure = structureMake( 0 );
   o.size = _.entitySize( o.structure );
-
-  // console.log( 'entitySize:', _.strMetricFormatBytes( o.size ) );
 
   return o;
 
@@ -495,7 +421,6 @@ function diagnosticStructureGenerate_body( o )
   function structureMake( level )
   {
     let struct = Object.create( null );
-    // let string = _.strDup( 'a', o.stringSize );
 
     if( !( level <= o.depth ) )
     {
@@ -595,7 +520,8 @@ function diagnosticStructureGenerate_body( o )
     }
 
     // let bufferSrc = _.longFillTimes( [], o.bufferSize || o.defaultSize, 0 );
-    let bufferSrc = _.arrayRandom( [], [ 0, 1 ], [ 0, o.bufferSize ] );
+    let bufferSrc = _.longRandom( [], [ 0, 1 ], [ 0, o.bufferSize ] );
+    /* qqq : suspicious! */
 
     if( o.bufferNodeComplexity >= 4 )
     if( typeof BufferNode !== 'undefined' )
@@ -606,17 +532,6 @@ function diagnosticStructureGenerate_body( o )
 
     if( o.bufferBytesComplexity >= 3 )
     struct[ 'buffer.bytes'] = new U8x( bufferSrc );
-
-    // if( o.map || o.structure ) // xxx
-    // if( o.mapComplexity )
-    // {
-    //   // let map = struct[ 'map' ] = { 0 : string, 1 : 1, 2 : true  }; xxx
-    //   // if( o.mapLength )
-    //   // xxx
-    //   debugger;
-    //   let map = struct[ 'map' ] = { 0 : string, 1 : 1, true : true  };
-    //   struct[ 'map.simple' ] = mapFor( map, [ 0, 1 << 25 ] );
-    // }
 
     if( o.arrayComplexity )
     struct[ 'array.simple' ] = _.longFill( [], 0, [ 0, o.arrayLength ] )
@@ -653,11 +568,20 @@ function diagnosticStructureGenerate_body( o )
       // let map = struct[ 'mapComplex' ] = { 0 : '1', 1 : { b : 2 }, 2 : [ 1, 2, 3 ] };
       // if( o.mapLength )
       // struct[ 'map.complex' ] = mapFor( map, [ 0, 3 ] );
-      // xxx
       struct[ 'map' ] = Object.create( null );
       for( let m = 0 ; m < o.mapLength ; m++ )
       struct[ 'map' ][ 'element' + m ] = structureMake( level+1 );
     }
+
+    // if( o.map || o.structure )
+    // if( o.mapComplexity )
+    // {
+    //   // let map = struct[ 'map' ] = { 0 : string, 1 : 1, 2 : true  };
+    //   // if( o.mapLength )
+    //   debugger;
+    //   let map = struct[ 'map' ] = { 0 : string, 1 : 1, true : true  };
+    //   struct[ 'map.simple' ] = mapFor( map, [ 0, 1 << 25 ] );
+    // }
 
     if( level < o.depth )
     {
@@ -757,7 +681,7 @@ diagnosticStructureGenerate_body.defaults =
   random : 1,
   stringSize : null,
   bufferSize : null,
-  regexpSize : null, /* qqq : not used! | Dmytro : used in struct[ 'regexp.defined' ] similar to 'string.defined' */
+  regexpSize : null,
   defaultSize : 50,
 
   arrayLength : null,
@@ -801,7 +725,7 @@ diagnosticStructureGenerate_body.defaults =
 //
 
 /**
- * Routine diagnosticStructureGenerate generates structure with different data types in provided options map {-o-}. The final resulted structure almost defined by 
+ * Routine diagnosticStructureGenerate generates structure with different data types in provided options map {-o-}. The final resulted structure almost defined by
  * property {-o.defaultComplexity-} of options map {-o-} and other separate options.
  * If routine calls without arguments, then routine returns new map with structure that generates from default parameters.
  *
@@ -809,7 +733,7 @@ diagnosticStructureGenerate_body.defaults =
  *
  * @param { Number } o.defaultComplexity - The complexity of data types, options of which is not defined directly. Default value - 2.
  *
- * @param { Number } o.primitiveComplexity - The default complexity for primitives. If option is not defined, then it inherits {-o.defaultComplexity-}. 
+ * @param { Number } o.primitiveComplexity - The default complexity for primitives. If option is not defined, then it inherits {-o.defaultComplexity-}.
  * @param { Number } o.nullComplexity - Option for enabling generating of null. To generate null, it should be 2 or more.
  * @param { Number } o.undefinedComplexity - Option for enabling generating of undefined. To generate undefined, it should be 3 or more.
  * @param { Number } o.booleanComplexity - Option for enabling generating of boolean values. To generate true and false, it should be 1 or more.
@@ -824,21 +748,21 @@ diagnosticStructureGenerate_body.defaults =
  * @param { Number } o.numberSignedZeroComplexity - Option for enabling generating of signed zero values. To generate positive and negative zero,
  * it should be 3 or more.
  *
- * @param { Number } o.objectComplexity - The default complexity for Date, RegExp and buffers. If option is not defined, then it inherits {-o.defaultComplexity-}. 
+ * @param { Number } o.objectComplexity - The default complexity for Date, RegExp and buffers. If option is not defined, then it inherits {-o.defaultComplexity-}.
  * @param { Number } o.dateComplexity - Option for enabling generating of Date instances. To generate Date instance with current date and with fixed date,
- * it should be 3 or more. 
- * @param { Number } o.regexpComplexity - Option for enabling generating of regexps. To generate simple regexps, it should be 2. To generate complex 
+ * it should be 3 or more.
+ * @param { Number } o.regexpComplexity - Option for enabling generating of regexps. To generate simple regexps, it should be 2. To generate complex
  * regexps it should be 3 or more.
  * @param { Number } o.bufferComplexity - The default complexity for buffers ( raw, typed, view, node ). If option is not defined,
- * then it inherits {-o.objectComplexity-} 
+ * then it inherits {-o.objectComplexity-}
  * @param { Number } o.bufferNodeComplexity - Option for enabling generating of BufferNode. To generate BufferNode, it should be 4 or more.
  * @param { Number } o.bufferRawComplexity - Option for enabling generating of BufferRaw. To generate BufferRaw it should be 3 or more.
  * @param { Number } o.bufferBytesComplexity - Option for enabling generating of typed U8x buffer. To generate BufferBytes, it should be 3 or more.
 
  * @param { Number } o.containerComplexity - The default complexity array, map, Set, HashMap and recursion. If option is not defined, then
- * it inherits {-o.defaultComplexity-}.  
+ * it inherits {-o.defaultComplexity-}.
  * @param { Number } o.recursionComplexity - Option for enabling generating field with recursive link to current structure. To generate link,
- * it should be 2 or more.  
+ * it should be 2 or more.
  * @param { Number } o.arrayComplexity - Option for enabling generating of array. To generate flat array, it should be 2. If option set to 3 or more,
  * then routine generated array with nested arrays. Depth of nesting defines by option {-o.depth-}.
  * @param { Number } o.mapComplexity - Option for enabling generating of map. To generate map, it should be 1 or more.
@@ -849,7 +773,7 @@ diagnosticStructureGenerate_body.defaults =
  * @param { Number } defaultSize - The default size of generated string, buffer, regexp. Default value - 50.
  * @param { Number } o.stringSize - The length of generated string.
  * @param { Number } o.bufferSize - The length of generated buffer ( raw, typed, view, node ).
- * @param { Number } o.regexpSize - The length of generated regexp.  
+ * @param { Number } o.regexpSize - The length of generated regexp.
  * @param { Number } o.defaultLength - The default length for generated array, map, HashMap, Set. Default value - 4.
  * @param { Number } o.arrayLength - The length of generated array.
  * @param { Number } o.mapLength - The length of generated map.
@@ -859,8 +783,8 @@ diagnosticStructureGenerate_body.defaults =
  * @example
  * _.diagnosticStructureGenerate()
  * //returns
- * // [Object: null prototype] 
- * // { 
+ * // [Object: null prototype]
+ * // {
  * //   structure: [Object: null prototype]
  * //   {
  * //     // generated structure
@@ -974,7 +898,7 @@ let ErrorAbort = _.error_functor( 'ErrorAbort' );
 // declare
 // --
 
-/* xxx : move into independent module */
+/* zzz : move into independent module or namespace */
 
 let error =
 {

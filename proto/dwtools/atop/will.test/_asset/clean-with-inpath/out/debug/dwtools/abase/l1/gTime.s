@@ -352,7 +352,7 @@ let out = _.routineFromPreAndBody( out_pre, out_body );
  * @memberof wTools
  */
 
-/* xxx : remove the body, use out_body */
+/* zzz : remove the body, use out_body */
 function outError_body( o )
 {
   _.assert( _.routineIs( _.Consequence ) );
@@ -370,7 +370,6 @@ function outError_body( o )
   if( Config.debug )
   con.tag = 'TimeOutError';
 
-  // debugger;
   con.finally( function outError( err, arg )
   {
     if( err )
@@ -387,7 +386,6 @@ function outError_body( o )
     });
 
     throw err;
-    // return _.Consequence().error( err );
   });
 
   return con;
@@ -416,14 +414,6 @@ function _errTimeOut( o )
     asyncCallsStack : o.procedure ? [ o.procedure.stack() ] : [],
     reason : o.reason,
   });
-
-  // Object.defineProperty( err, 'reason',
-  // {
-  //   enumerable : false,
-  //   configurable : false,
-  //   writable : false,
-  //   value : o.reason,
-  // });
 
   if( o.consequnce )
   Object.defineProperty( err, 'consequnce',
@@ -517,14 +507,14 @@ function rarely_functor( perTime, routine )
 //     clearInterval( id );
 //     // if( err )
 //     // clearInterval( id );
-//     /* xxx */
+//     /* zzz */
 //   }
 //
 // }
 
 //
 
-function once( delay, onBegin, onEnd ) /* qqq : cover by test */
+function once( delay, onBegin, onEnd )
 {
   let con = _.Consequence ? new _.Consequence({ /* sourcePath : 2 */ }) : undefined;
   let taken = false;
@@ -616,7 +606,7 @@ let Routines =
 
   rarely_functor, /* check */
   // periodic, /* dubious */
-  once, /* dubious */
+  once, /* qqq : cover by light test */
 
 }
 
