@@ -6790,21 +6790,33 @@ modulesTreeDisabledAndCorrupted.timeOut = 300000;
 function help( test )
 {
   let self = this;
-
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
+  let a = self.assetFor( test, '' );
+  /* Dmytro : not needs currentPath in starter */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
     outputCollecting : 1,
     outputGraying : 1,
-    ready : ready,
+    ready : a.ready,
     throwingExitCode : 0,
   })
 
+//   let self = this;
+// 
+//   let ready = new _.Consequence().take( null )
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//     throwingExitCode : 0,
+//   })
+
   /* */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
 
@@ -6813,7 +6825,7 @@ function help( test )
     return null;
   })
 
-  start( '' )
+  a.start( '' )
 
   .then( ( got ) =>
   {
@@ -6825,7 +6837,7 @@ function help( test )
 
   /* */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
 
@@ -6834,7 +6846,7 @@ function help( test )
     return null;
   })
 
-  start( '.' )
+  a.start( '.' )
 
   .then( ( got ) =>
   {
@@ -6846,7 +6858,7 @@ function help( test )
 
   /* */
 
-  start({ execPath : '.help' })
+  a.start({ execPath : '.help' })
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -6856,7 +6868,7 @@ function help( test )
 
   /* */
 
-  start({ execPath : '.' })
+  a.start({ execPath : '.' })
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -6866,7 +6878,7 @@ function help( test )
 
   /* */
 
-  start({ args : [] })
+  a.start({ args : [] })
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
@@ -6874,7 +6886,7 @@ function help( test )
     return op;
   })
 
-  return ready;
+  return a.ready;
 }
 
 //
