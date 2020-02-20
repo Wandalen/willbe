@@ -6026,37 +6026,21 @@ shell.step
 function modulesTreeDotless( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-dotless-single-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let inPath = abs( './' );
-  let outSuperDirPath = abs( 'super.out' );
-  let outSubDirPath = abs( 'sub.out' );
-  let outSuperTerminalPath = abs( 'super.out/supermodule.out.will.yml' );
-  let outSubTerminalPath = abs( 'sub.out/sub.out.will.yml' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
+  let a = self.assetFor( test, 'two-dotless-single-exported' );
+  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
-    outputGraying : 1,
     mode : 'spawn',
-    ready : ready,
+    ready : a.ready,
   })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  // _.fileProvider.filesDelete( outSuperDirPath );
-  // _.fileProvider.filesDelete( outSubDirPath );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -6064,7 +6048,7 @@ function modulesTreeDotless( test )
     return null;
   })
 
-  start({ execPath : '.imply v:1 ; .modules.tree withLocalPath:1' })
+  a.start({ execPath : '.imply v:1 ; .modules.tree withLocalPath:1' })
 
   .then( ( got ) =>
   {
@@ -6079,17 +6063,17 @@ function modulesTreeDotless( test )
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
     test.case = '.modules.tree withLocalPath:1'
-    _.fileProvider.filesDelete( outSuperDirPath );
-    _.fileProvider.filesDelete( outSubDirPath );
+    _.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    _.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     return null;
   })
 
-  start({ execPath : '.modules.tree withLocalPath:1' })
+  a.start({ execPath : '.modules.tree withLocalPath:1' })
 
   .then( ( got ) =>
   {
@@ -6104,7 +6088,7 @@ function modulesTreeDotless( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function modulesTreeDotless */
 
 //
