@@ -6168,31 +6168,22 @@ Command ".imply v:1 ; .with */* .modules.tree"
 function modulesTreeHierarchyRemote( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'hierarchy-remote' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
+  let a = self.assetFor( test, 'hierarchy-remote' );
+  a.start = _.process.starter // Dmytro : assetFor has not starter with 'spawn' mode
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
-    outputGraying : 1,
     mode : 'spawn',
-    ready : ready,
+    ready : a.ready,
   })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  _.fileProvider.filesDelete( submodulesPath );
+  a.reflect();
+  _.fileProvider.filesDelete( _.path.join( a.routinePath, '.module' ) );
 
   /* - */
 
-  start({ execPath : '.with * .modules.tree' })
+  a.start({ execPath : '.with * .modules.tree' })
 
   .then( ( got ) =>
   {
@@ -6236,7 +6227,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  start({ execPath : '.with * .modules.tree withRemotePath:1' })
+  a.start({ execPath : '.with * .modules.tree withRemotePath:1' })
 
   .then( ( got ) =>
   {
@@ -6280,7 +6271,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  start({ execPath : '.with * .modules.tree withLocalPath:1' })
+  a.start({ execPath : '.with * .modules.tree withLocalPath:1' })
 
   .then( ( got ) =>
   {
@@ -6304,7 +6295,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  start({ execPath : '.with ** .modules.tree' })
+  a.start({ execPath : '.with ** .modules.tree' })
 
   .then( ( got ) =>
   {
@@ -6348,7 +6339,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  start({ execPath : '.with ** .modules.tree withRemotePath:1' })
+  a.start({ execPath : '.with ** .modules.tree withRemotePath:1' })
 
   .then( ( got ) =>
   {
@@ -6392,7 +6383,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  start({ execPath : '.with ** .modules.tree withLocalPath:1' })
+  a.start({ execPath : '.with ** .modules.tree withLocalPath:1' })
 
   .then( ( got ) =>
   {
@@ -6416,7 +6407,7 @@ function modulesTreeHierarchyRemote( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function modulesTreeHierarchyRemote */
 
 modulesTreeHierarchyRemote.timeOut = 300000;
