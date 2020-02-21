@@ -9957,31 +9957,38 @@ buildDetached.timeOut = 300000;
 function exportSingle( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'single' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
+  let a = self.assetFor( test, 'single' );
+  let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  let outWillPath = _.path.join( a.routinePath, 'out/single.out.will.yml' );
+  a.reflect();
 
-  let outDebugPath = _.path.join( routinePath, 'out/debug' );
-  let outPath = _.path.join( routinePath, 'out' );
-  let outWillPath = _.path.join( routinePath, 'out/single.out.will.yml' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'single' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+// 
+//   let outDebugPath = _.path.join( routinePath, 'out/debug' );
+//   let outPath = _.path.join( routinePath, 'out' );
+//   let outWillPath = _.path.join( routinePath, 'out/single.out.will.yml' );
+//   let ready = new _.Consequence().take( null );
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( outDebugPath );
 
   /* - */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.export'
     _.fileProvider.filesDelete( outDebugPath );
@@ -9989,7 +9996,7 @@ function exportSingle( test )
     return null;
   })
 
-  start({ execPath : '.export' })
+  a.start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -10020,14 +10027,12 @@ function exportSingle( test )
   .then( () =>
   {
     test.case = '.export.proto'
-    let outDebugPath = _.path.join( routinePath, 'out/debug' );
-    let outPath = _.path.join( routinePath, 'out' );
     _.fileProvider.filesDelete( outDebugPath );
     _.fileProvider.filesDelete( outPath );
     return null;
   })
 
-  start({ execPath : '.export proto.export' })
+  a.start({ execPath : '.export proto.export' })
 
   .then( ( got ) =>
   {
@@ -10058,7 +10063,7 @@ function exportSingle( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 exportSingle.timeOut = 200000;
