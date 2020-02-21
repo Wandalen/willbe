@@ -7208,25 +7208,6 @@ function listWithSubmodulesSimple( test )
   let self = this;
   let a = self.assetFor( test, 'submodules' );
   a.reflect();
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let submodulesPath = _.path.join( routinePath, '.module' );
-// 
-//   let ready = new _.Consequence().take( null )
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   a.start({ execPath : '.resources.list' })
 
@@ -7250,41 +7231,25 @@ listWithSubmodulesSimple.timeOut = 200000;
 function listWithSubmodules( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'submodules' );
+  a.reflect();
 
   /* - */
 
-  start({ execPath : '.submodules.list' })
+  a.start({ execPath : '.submodules.list' })
 
   .then( ( got ) =>
   {
     test.case = '.submodules.list'
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'relation::Tools' ) );
-    test.is( _.strHas( got.output, 'relation::PathBasic' ) );
+    test.is( _.strHas( got.output, 'relation::ModuleForTesting1' ) );
+    test.is( _.strHas( got.output, 'relation::ModuleForTesting1a' ) );
     return null;
   })
 
   /* - */
 
-  start({ execPath : '.reflectors.list' })
+  a.start({ execPath : '.reflectors.list' })
 
   .then( ( got ) =>
   {
@@ -7297,7 +7262,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  start({ execPath : '.steps.list' })
+  a.start({ execPath : '.steps.list' })
 
   .then( ( got ) =>
   {
@@ -7315,7 +7280,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  start({ execPath : '.builds.list' })
+  a.start({ execPath : '.builds.list' })
 
   .then( ( got ) =>
   {
@@ -7331,7 +7296,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  start({ execPath : '.exports.list' })
+  a.start({ execPath : '.exports.list' })
 
   .then( ( got ) =>
   {
@@ -7347,7 +7312,7 @@ function listWithSubmodules( test )
 
   /* - */
 
-  start({ execPath : '.about.list' })
+  a.start({ execPath : '.about.list' })
 
   .then( ( got ) =>
   {
@@ -7382,7 +7347,7 @@ function listWithSubmodules( test )
   //   return null;
   // })
 
-  return ready;
+  return a.ready;
 } /* end of function listWithSubmodules */
 
 listWithSubmodules.timeOut = 200000;
