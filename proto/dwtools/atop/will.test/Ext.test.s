@@ -14500,38 +14500,18 @@ importOutWithDeletedSource.timeOut = 200000;
 function shellWithCriterion( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'step-shell-with-criterion' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
+  let a = self.assetFor( test, 'step-shell-with-criterion' );
+  a.reflect();
 
   /* Checks if start step supports plural criterion and which path is selected using current value of criterion */
 
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
   /* - */
 
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
-  /* - */
-
-  start({ execPath : '.build A' })
+  a.start({ execPath : '.build A' })
 
   .then( ( got ) =>
   {
     test.description = 'should execute file A.js';
-
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Executed-A.js' ) );
 
@@ -14540,12 +14520,11 @@ function shellWithCriterion( test )
 
   /* - */
 
-  start({ execPath : '.build B' })
+  a.start({ execPath : '.build B' })
 
   .then( ( got ) =>
   {
     test.description = 'should execute file B.js';
-
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Executed-B.js' ) );
 
@@ -14554,7 +14533,7 @@ function shellWithCriterion( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 shellWithCriterion.timeOut = 200000;
