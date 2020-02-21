@@ -9889,38 +9889,42 @@ buildSubmodules.timeOut = 300000;
 function buildDetached( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let filePath = _.path.join( routinePath, 'file' );
-  let modulePath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
+  let a = self.assetFor( test, 'submodules-detached' );
+  a.reflect();
 
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  });
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let filePath = _.path.join( routinePath, 'file' );
+//   let modulePath = _.path.join( routinePath, '.module' );
+//   let outPath = _.path.join( routinePath, 'out' );
+// 
+//   let ready = new _.Consequence().take( null );
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   });
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build'
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.build' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9932,10 +9936,10 @@ function buildDetached( test )
     test.is( _.strHas( got.output, /\.module\/Proto\.informal <- git\+https:\/\/github\.com\/Wandalen\/wProto\.git#70fcc0c31996758b86f85aea1ae58e0e8c2cb8a7/ ) );
     test.is( _.strHas( got.output, /\.module\/UriBasic\.informal <- git\+https:\/\/github\.com\/Wandalen\/wUriBasic\.git/ ) );
 
-    var files = _.fileProvider.dirRead( modulePath );
+    var files = _.fileProvider.dirRead( _.path.join( a.routinePath, '.module' ) );
     test.identical( files, [ /* 'Color', */ 'PathBasic', 'Procedure.informal', 'Proto.informal', 'Tools', 'UriBasic.informal' ] );
 
-    var files = _.fileProvider.dirRead( outPath );
+    var files = _.fileProvider.dirRead( _.path.join( a.routinePath, 'out' ) );
     test.identical( files, [ 'debug', 'Procedure.informal.out.will.yml', 'Proto.informal.out.will.yml', 'UriBasic.informal.out.will.yml' ] );
 
     return null;
@@ -9943,7 +9947,7 @@ function buildDetached( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 buildDetached.timeOut = 300000;
