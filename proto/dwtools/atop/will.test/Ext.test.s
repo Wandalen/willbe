@@ -10054,25 +10054,6 @@ function exportItself( test )
   let a = self.assetFor( test, 'export-itself' );
   a.reflect();
 
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-itself' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-// 
-//   let ready = new _.Consequence().take( null );
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
   /* - */
 
   a.ready.then( () =>
@@ -10114,30 +10095,15 @@ exportItself.timeOut = 100000;
 function exportNonExportable( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-  _.fileProvider.filesDelete( _.path.join( routinePath, 'out' ) );
-  _.fileProvider.filesDelete( _.path.join( routinePath, 'super.out' ) );
+  let a = self.assetFor( test, 'two-exported' );
+  a.reflect();
+  _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out' ) );
+  _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
 
   /* - */
 
-  start({ execPath : '.with super .clean' })
-  start({ args : [ '.with super .export debug:1' ], throwingExitCode : 0 })
+  a.start({ execPath : '.with super .clean' })
+  a.start({ args : [ '.with super .export debug:1' ], throwingExitCode : 0 })
 
   .then( ( got ) =>
   {
@@ -10155,7 +10121,7 @@ function exportNonExportable( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 //
