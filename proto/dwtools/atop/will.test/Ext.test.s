@@ -4389,7 +4389,18 @@ function withDoStatus( test )
 
   /* - */
 
-  startWill( '.with ** .do .will/hook/Status.js' )
+  startWill( '.hooks.list' )
+  .then( ( got ) =>
+  {
+    test.case = 'hooks list';
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '/status.js' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  startWill( '.with ** .do .will/hook/status.js' )
   .then( ( got ) =>
   {
     test.case = 'no changes';
@@ -4411,7 +4422,7 @@ function withDoStatus( test )
     return null;
   })
 
-  startWill( '.with ** .do .will/hook/Status.js' )
+  startWill( '.with ** .do .will/hook/status.js' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
