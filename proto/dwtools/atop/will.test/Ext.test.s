@@ -9621,35 +9621,20 @@ cleanSubmodulesHierarchyRemoteDry.timeOut = 1000000;
 function buildSingleModule( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'single' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let outDebugPath = _.path.join( routinePath, 'out/debug' );
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'single' );
+  let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
+  a.reflect();
 
   /* - */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.build'
     _.fileProvider.filesDelete( outDebugPath );
     return null;
   })
 
-  start({ execPath : '.build' })
+  a.start({ execPath : '.build' })
 
   .then( ( got ) =>
   {
@@ -9670,12 +9655,12 @@ function buildSingleModule( test )
   .then( () =>
   {
     test.case = '.build debug.raw'
-    let outDebugPath = _.path.join( routinePath, 'out/debug' );
+    let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
     _.fileProvider.filesDelete( outDebugPath );
     return null;
   })
 
-  start({ execPath : '.build debug.raw' })
+  a.start({ execPath : '.build debug.raw' })
 
   .then( ( got ) =>
   {
@@ -9695,12 +9680,12 @@ function buildSingleModule( test )
   .then( () =>
   {
     test.case = '.build release.raw'
-    let outDebugPath = _.path.join( routinePath, 'out/release' );
+    let outDebugPath = _.path.join( a.routinePath, 'out/release' );
     _.fileProvider.filesDelete( outDebugPath );
     return null;
   })
 
-  start({ execPath : '.build release.raw' })
+  a.start({ execPath : '.build release.raw' })
 
   .then( ( got ) =>
   {
@@ -9717,12 +9702,12 @@ function buildSingleModule( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build wrong'
-    let buildOutDebugPath = _.path.join( routinePath, 'out/debug' );
-    let buildOutReleasePath = _.path.join( routinePath, 'out/release' );
+    let buildOutDebugPath = _.path.join( a.routinePath, 'out/debug' );
+    let buildOutReleasePath = _.path.join( a.routinePath, 'out/release' );
     _.fileProvider.filesDelete( buildOutDebugPath );
     _.fileProvider.filesDelete( buildOutReleasePath );
     var o =
@@ -9730,7 +9715,7 @@ function buildSingleModule( test )
       args : [ '.build wrong' ],
       ready : null,
     }
-    return test.shouldThrowErrorOfAnyKind( () => start( o ) )
+    return test.shouldThrowErrorOfAnyKind( () => a.start( o ) )
     .then( ( got ) =>
     {
       test.is( o.exitCode !== 0 );
@@ -9744,7 +9729,7 @@ function buildSingleModule( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 buildSingleModule.timeOut = 200000;
