@@ -8138,48 +8138,51 @@ cleanSubmodules.timeOut = 300000;
 function cleanMixed( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-mixed' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-  let modulePath = _.path.join( routinePath, 'module' );
-
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'submodules-mixed' );
+  a.reflect();
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-mixed' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let outPath = _.path.join( routinePath, 'out' );
+//   let modulePath = _.path.join( routinePath, 'module' );
+// 
+//   let ready = new _.Consequence().take( null )
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.clean';
     return null;
   })
 
-  start({ execPath : '.build' })
-  start({ execPath : '.clean' })
+  a.start({ execPath : '.build' })
+  a.start({ execPath : '.clean' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '- Clean deleted' ) ); debugger;
 
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'out' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'out' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
 
     var expected = [ '.', './Proto.informal.will.yml', './UriBasic.informal.will.yml' ];
-    var files = self.find( _.path.join( routinePath, 'module' ) );
+    var files = self.find( _.path.join( a.routinePath, 'module' ) );
     test.identical( files, expected );
 
     return null;
@@ -8187,7 +8190,7 @@ function cleanMixed( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 cleanMixed.timeOut = 200000;
