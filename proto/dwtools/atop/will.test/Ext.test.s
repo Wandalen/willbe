@@ -10750,37 +10750,21 @@ exportMixed.timeOut = 300000;
 function exportSecond( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-second' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-  let modulePath = _.path.join( routinePath, 'module' );
-
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'export-second' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.export';
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.export' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -10789,12 +10773,12 @@ function exportSecond( test )
     test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
     test.identical( _.strCount( got.output, 'Exported module::ExportSecond / build::export with 6 file(s) in' ), 1 );
 
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/ExportSecond.out.will.yml' ) ) );
 
-    var files = self.find( _.path.join( routinePath, 'out' ) );
+    var files = self.find( outPath );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( a.routinePath, 'out/ExportSecond.out.will.yml' ) );
 
     outfile = outfile.module[ 'ExportSecond.out' ]
 
@@ -10986,15 +10970,15 @@ function exportSecond( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.export';
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.export' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -11003,12 +10987,12 @@ function exportSecond( test )
     test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
     test.identical( _.strCount( got.output, 'Exported module::ExportSecond / build::export with 6 file(s) in' ), 1 );
 
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/ExportSecond.out.will.yml' ) ) );
 
-    var files = self.find( _.path.join( routinePath, 'out' ) );
+    var files = self.find( outPath );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
+    var outfile = _.fileProvider.fileConfigRead( _.path.join( a.routinePath, 'out/ExportSecond.out.will.yml' ) );
 
     outfile = outfile.module[ 'ExportSecond.out' ]
 
@@ -11200,7 +11184,7 @@ function exportSecond( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 exportSecond.timeOut = 300000;
