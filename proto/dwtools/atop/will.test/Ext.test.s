@@ -7458,35 +7458,17 @@ function listSteps( test )
 function clean( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'clean' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
-
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath + '',
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  let a = self.assetFor( test, 'clean' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
 
   /* - */
 
-  start
-  ({
-    args : [ '.with NoTemp .build' ]
-  })
+  a.start({ args : [ '.with NoTemp .build' ] });
 
   var files;
-  ready
+  a.ready
   .then( () =>
   {
     files = self.findAll( submodulesPath );
@@ -7494,29 +7476,29 @@ function clean( test )
     return files;
   })
 
-  start({ execPath : '.with NoTemp .clean' })
+  a.start({ execPath : '.with NoTemp .clean' })
   .then( ( got ) =>
   {
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted ' + files.length + ' file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* phantom problem ? */
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) ); /* phantom problem ? */
     return null;
   })
 
-  start({ execPath : '.with NoTemp .clean' })
+  a.start({ execPath : '.with NoTemp .clean' })
   .then( ( got ) =>
   {
     test.case = '.with NoTemp .clean -- second';
     test.identical( got.exitCode, 0 );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
     return null;
   })
 
   /* - */
 
   var files = [];
-  ready
+  a.ready
   .then( () =>
   {
     _.fileProvider.filesDelete( outPath );
@@ -7524,20 +7506,20 @@ function clean( test )
     return null;
   })
 
-  start({ execPath : '.with NoBuild .clean' })
+  a.start({ execPath : '.with NoBuild .clean' })
   .then( ( got ) =>
   {
     test.case = '.with NoBuild .clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted ' + 0 + ' file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
     return null;
   })
 
   /* - */
 
   var files = [];
-  ready
+  a.ready
   .then( () =>
   {
     _.fileProvider.filesDelete( outPath );
@@ -7545,21 +7527,21 @@ function clean( test )
     return null;
   })
 
-  start({ execPath : '.with Build .build' })
-  start({ execPath : '.with Vector .clean' })
+  a.start({ execPath : '.with Build .build' })
+  a.start({ execPath : '.with Vector .clean' })
   .then( ( got ) =>
   {
     test.case = '.with NoBuild .clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '- Clean deleted 2 file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'out' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'out' ) ) );
     return null;
   })
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 clean.timeOut = 300000;
