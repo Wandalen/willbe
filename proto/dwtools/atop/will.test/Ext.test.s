@@ -7940,7 +7940,9 @@ function cleanHdBug( test )
   .then( () =>
   {
     test.case = '.with z .clean recursive:2';
-    a.reflect();
+    /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
+    _.fileProvider.filesDelete( a.routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } }); 
     return null;
   })
 
@@ -8189,6 +8191,7 @@ function cleanWithInPath( test )
   .then( ( got ) =>
   {
     test.case = '.with module/ModuleForTesting12 .clean';
+    /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
     _.fileProvider.filesDelete( a.routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
     hadFiles = self.find( a.routinePath + '/out' ).length + self.find( a.routinePath + '/.module' ).length;
@@ -8238,30 +8241,24 @@ cleanWithInPath.timeOut = 200000;
 function cleanRecursive( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'hierarchy-remote' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
+  let a = self.assetFor( test, 'hierarchy-remote' );
+  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    mode : 'spawn',
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
-    ready : ready,
+    mode : 'spawn',
+    ready : a.ready,
   })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
+  _.fileProvider.filesDelete( a.routinePath );
+  _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -8269,12 +8266,12 @@ function cleanRecursive( test )
     return null;
   })
 
-  start( '.with ** .clean' )
-  start( '.with group1/group10/a0 .export' )
-  start( '.with group1/a .export' )
-  start( '.with group1/b .export' )
-  start( '.with group2/c .export' )
-  start( '.with z .export' )
+  a.start( '.with ** .clean' )
+  a.start( '.with group1/group10/a0 .export' )
+  a.start( '.with group1/a .export' )
+  a.start( '.with group1/b .export' )
+  a.start( '.with group2/c .export' )
+  a.start( '.with z .export' )
 
   .then( ( got ) =>
   {
@@ -8288,7 +8285,7 @@ function cleanRecursive( test )
     return null;
   })
 
-  start( '.with z .clean recursive:2' )
+  a.start( '.with z .clean recursive:2' )
 
   .then( ( got ) =>
   {
@@ -8309,7 +8306,7 @@ function cleanRecursive( test )
       './group2',
       './group2/c.will.yml'
     ]
-    var files = self.find( routinePath );
+    var files = self.find( a.routinePath );
     test.identical( files, exp );
 
     return null;
@@ -8317,7 +8314,7 @@ function cleanRecursive( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function cleanRecursive */
 
 cleanRecursive.timeOut = 500000;
