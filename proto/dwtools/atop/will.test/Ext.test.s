@@ -12092,29 +12092,13 @@ exportDoc.timeOut = 200000;
 function exportImport( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let outPath = _.path.join( routinePath, 'super.out' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'two-exported' );
+  let outPath = _.path.join( a.routinePath, 'super.out' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -12123,8 +12107,8 @@ function exportImport( test )
     return null;
   })
 
-  start({ execPath : '.with super .export debug:0' })
-  start({ execPath : '.with super .export debug:1' })
+  a.start({ execPath : '.with super .export debug:0' })
+  a.start({ execPath : '.with super .export debug:1' })
 
   .then( ( got ) =>
   {
@@ -12136,7 +12120,7 @@ function exportImport( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 exportImport.timeOut = 200000;
