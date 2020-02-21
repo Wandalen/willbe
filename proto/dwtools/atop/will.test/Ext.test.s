@@ -12045,44 +12045,27 @@ function exportBroken( test )
 function exportDoc( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple-doc' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let subOutPath = _.path.join( routinePath, 'out' );
-  let supOutPath = _.path.join( routinePath, 'doc.out' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  let a = self.assetFor( test, 'export-multiple-doc' );
+  let subOutPath = _.path.join( a.routinePath, 'out' );
+  let supOutPath = _.path.join( a.routinePath, 'doc.out' );
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = 'export submodule';
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     _.fileProvider.filesDelete( subOutPath );
     _.fileProvider.filesDelete( supOutPath );
 
     return null;
   })
 
-  start({ execPath : '.with . .export export.doc' })
-  start({ execPath : '.with . .export export.debug' })
-  start({ execPath : '.with . .export export.' })
-  start({ execPath : '.with doc .build doc:1' })
+  a.start({ execPath : '.with . .export export.doc' })
+  a.start({ execPath : '.with . .export export.debug' })
+  a.start({ execPath : '.with . .export export.' })
+  a.start({ execPath : '.with doc .build doc:1' })
 
   .then( ( got ) =>
   {
@@ -12099,7 +12082,7 @@ function exportDoc( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 exportDoc.timeOut = 200000;
