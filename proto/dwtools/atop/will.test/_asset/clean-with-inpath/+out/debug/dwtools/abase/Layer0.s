@@ -66,6 +66,7 @@ if( typeof module !== 'undefined' && module !== null )
   require( './l0/l7/ContainerAdapterArray.s' );
   require( './l0/l7/ContainerAdapterSet.s' );
   require( './l0/l7/Field.s' );
+  require( './l0/l7/LongContext.s' );
 
   require( './l0/l8/gArray.s' );
   require( './l0/l8/gBool.s' );

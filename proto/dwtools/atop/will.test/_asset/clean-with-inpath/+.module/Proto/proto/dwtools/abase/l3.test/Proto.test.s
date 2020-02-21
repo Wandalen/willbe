@@ -352,6 +352,125 @@ function accessor( test )
 
 //
 
+function accessorOptionReadOnly( test )
+{
+
+  /* */
+
+  test.case = 'control, str';
+
+  var dst =
+  {
+    aGet : function() { return 'a1' },
+  };
+
+  var exp = { 'a' : 'a1', 'aGet' : dst.aGet }
+  _.accessor.declare
+  ({
+    object : dst,
+    names : { a : 'a' },
+    prime : 0,
+  });
+  test.identical( dst, exp );
+
+  /* */
+
+  test.case = 'control, map';
+
+  var dst =
+  {
+    aGet : function() { return 'a1' },
+  };
+
+  var exp = { 'a' : 'a1', 'aGet' : dst.aGet }
+  _.accessor.declare
+  ({
+    object : dst,
+    names : { a : {} },
+    prime : 0,
+  });
+  test.identical( dst, exp );
+
+  /* */
+
+  test.case = 'read only explicitly, value in descriptor';
+
+  var dst =
+  {
+  };
+
+  var exp = { 'a' : 'a1' }
+  _.accessor.declare
+  ({
+    object : dst,
+    names : { a : { readOnly : 1, getter : 'a1' } },
+    prime : 0,
+  });
+  test.identical( dst, exp );
+  test.shouldThrowErrorSync( () => dst.a = 'a1' );
+
+  /* */
+
+  test.case = 'read only explicitly, value in object';
+
+  var dst =
+  {
+    a : 'a1',
+  };
+
+  var exp = { 'a' : 'a1' }
+  _.accessor.declare
+  ({
+    object : dst,
+    names : { a : { readOnly : 1 } },
+    prime : 0,
+  });
+  test.identical( dst, exp );
+  test.shouldThrowErrorSync( () => dst.a = 'a1' );
+
+  /* */
+
+  test.case = 'read only implicitly, value in object';
+
+  var dst =
+  {
+    a : 'a1',
+  };
+
+  var exp = { 'a' : 'a1' }
+  _.accessor.declare
+  ({
+    object : dst,
+    names : { a : { setter : false } },
+    prime : 0,
+  });
+  test.identical( dst, exp );
+  test.shouldThrowErrorSync( () => dst.a = 'a1' );
+
+  /* */
+
+  test.case = 'read only implicitly, value in descriptor';
+
+  var dst =
+  {
+  };
+
+  var exp = { 'a' : 'a1' }
+  _.accessor.declare
+  ({
+    object : dst,
+    names : { a : { setter : false, getter : 'a1' } },
+    prime : 0,
+  });
+  test.identical( dst, exp );
+  test.shouldThrowErrorSync( () => dst.a = 'a1' );
+
+  /* */
+
+}
+
+//
+
 function accessorIsClean( test )
 {
 
@@ -1272,6 +1391,7 @@ var Self =
     prototypeIsStandard,
 
     accessor,
+    accessorOptionReadOnly,
     accessorIsClean,
 
     accessorForbid,

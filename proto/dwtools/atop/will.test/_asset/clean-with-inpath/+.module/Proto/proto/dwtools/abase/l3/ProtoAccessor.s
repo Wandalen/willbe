@@ -506,14 +506,29 @@ function _declareAct( o )
 
   /* define accessor */
 
-  Object.defineProperty( o.object, o.name,
+  _.assert( getterSetter.get !== undefined );
+
+  if( _.routineIs( getterSetter.get ) )
   {
-    set : getterSetter.set,
-    get : getterSetter.get,
-    enumerable : !!o.enumerable,
-    configurable : !!o.configurable,
-    // configurable : o.combining === 'append',
-  });
+    Object.defineProperty( o.object, o.name,
+    {
+      set : getterSetter.set,
+      get : getterSetter.get,
+      enumerable : !!o.enumerable,
+      configurable : !!o.configurable,
+    });
+  }
+  else
+  {
+    // debugger;
+    _.assert( getterSetter.set === undefined );
+    Object.defineProperty( o.object, o.name,
+    {
+      value : getterSetter.get,
+      enumerable : !!o.enumerable,
+      configurable : !!o.configurable,
+    });
+  }
 
   /* forbid underscore field */
 

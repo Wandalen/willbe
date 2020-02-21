@@ -116,7 +116,7 @@ function assetFor( test, name )
   {
     _.fileProvider.filesDelete( a.routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
-    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.abs( '_repo' ) } });
+    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.path.join( self.suiteTempPath, '_repo' ) } });
   }
 
   _.assert( a.fileProvider.isDir( a.originalAssetPath ) );
@@ -2057,7 +2057,7 @@ function exportSeveralExports( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var outfile = _.fileProvider.configRead( subOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2119,7 +2119,7 @@ function exportSeveralExports( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var outfile = _.fileProvider.configRead( subOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2177,7 +2177,7 @@ function exportSeveralExports( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var outfile = _.fileProvider.configRead( subOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2234,7 +2234,7 @@ function exportSeveralExports( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var outfile = _.fileProvider.configRead( subOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2381,7 +2381,7 @@ function exportSuper( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var outfile = _.fileProvider.configRead( subOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2475,7 +2475,7 @@ function exportSuper( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( superOutFilePath );
+    var outfile = _.fileProvider.configRead( superOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2540,7 +2540,7 @@ function exportSuper( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( superOutFilePath );
+    var outfile = _.fileProvider.configRead( superOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2818,7 +2818,7 @@ function exportSuperIn( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var outfile = _.fileProvider.configRead( subOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2915,7 +2915,7 @@ function exportSuperIn( test )
     test.identical( files, exp );
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( superOutFilePath );
+    var outfile = _.fileProvider.configRead( superOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2978,7 +2978,7 @@ function exportSuperIn( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( superOutFilePath );
+    var outfile = _.fileProvider.configRead( superOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub.out/sub.out', '../sub', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3101,7 +3101,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( outDirPath, 'path.out.will' ) );
+    var outfile = _.fileProvider.configRead( _.path.join( outDirPath, 'path.out.will' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3141,7 +3141,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( outDirPath, 'reflector.out.will' ) );
+    var outfile = _.fileProvider.configRead( _.path.join( outDirPath, 'reflector.out.will' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3342,7 +3342,7 @@ function exportOutdated( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var outfile = _.fileProvider.configRead( subOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3403,7 +3403,7 @@ function exportOutdated( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var outfile = _.fileProvider.configRead( subOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3500,7 +3500,7 @@ function exportRecursive( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( outTerminalPath );
+    var outfile = _.fileProvider.configRead( outTerminalPath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'module-ab.out', '../../a', '../module-a.out', '../../b', '../module-b.out', '../../ab/' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3623,7 +3623,7 @@ function exportDotless( test )
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = _.fileProvider.fileConfigRead( outSuperTerminalPath );
+    var outfile = _.fileProvider.configRead( outSuperTerminalPath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub/', '../sub.out/sub.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3632,7 +3632,7 @@ function exportDotless( test )
     test.identical( _.setFrom( exported ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = _.fileProvider.fileConfigRead( outSubTerminalPath );
+    var outfile = _.fileProvider.configRead( outSubTerminalPath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub/' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3748,7 +3748,7 @@ function exportDotlessSingle( test )
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = _.fileProvider.fileConfigRead( outSuperTerminalPath );
+    var outfile = _.fileProvider.configRead( outSuperTerminalPath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../sub/', '../sub.out/sub.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3757,7 +3757,7 @@ function exportDotlessSingle( test )
     test.identical( _.setFrom( exported ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = _.fileProvider.fileConfigRead( outSubTerminalPath );
+    var outfile = _.fileProvider.configRead( outSubTerminalPath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub/' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3862,7 +3862,7 @@ function exportStepOpts( test )
     test.identical( got.opts, exp );
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( outTerminalPath );
+    var outfile = _.fileProvider.configRead( outTerminalPath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'module-a.out', '../a' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4032,7 +4032,7 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = _.fileProvider.fileConfigRead( outSuperTerminalPath );
+    var outfile = _.fileProvider.configRead( outSuperTerminalPath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../', '../sub.out/submodule.out', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4041,7 +4041,7 @@ function exportRecursiveUsingSubmodule( test )
     test.identical( _.setFrom( exported ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = _.fileProvider.fileConfigRead( outSubTerminalPath );
+    var outfile = _.fileProvider.configRead( outSubTerminalPath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'submodule.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4158,7 +4158,7 @@ function exportSteps( test )
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = _.fileProvider.fileConfigRead( outSuperTerminalPath );
+    var outfile = _.fileProvider.configRead( outSuperTerminalPath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../', '../sub.out/submodule.out', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4170,7 +4170,7 @@ function exportSteps( test )
     test.identical( _.setFrom( steps ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = _.fileProvider.fileConfigRead( outSubTerminalPath );
+    var outfile = _.fileProvider.configRead( outSubTerminalPath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'submodule.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4296,7 +4296,7 @@ function exportCourrputedOutfileUnknownSection( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var outfile = _.fileProvider.configRead( subOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4406,7 +4406,7 @@ function exportCourruptedOutfileSyntax( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var outfile = _.fileProvider.configRead( subOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4552,7 +4552,7 @@ function exportCourruptedSubmodulesDisabled( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( superOutFilePath );
+    var outfile = _.fileProvider.configRead( superOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4700,7 +4700,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
     test.is( err === undefined );
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var outfile = _.fileProvider.configRead( subOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4881,7 +4881,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
     test.is( err === undefined );
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.fileConfigRead( subOutFilePath );
+    var outfile = _.fileProvider.configRead( subOutFilePath );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -9612,7 +9612,7 @@ function moduleIsNotValid( test )
     opener.close();
 
     let outWillFilePath = _.path.join( downloadPath, 'out/wPathBasic.out.will.yml' );
-    let outWillFile = _.fileProvider.fileConfigRead( outWillFilePath );
+    let outWillFile = _.fileProvider.configRead( outWillFilePath );
     outWillFile.section = { field : 'value' };
     _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
 

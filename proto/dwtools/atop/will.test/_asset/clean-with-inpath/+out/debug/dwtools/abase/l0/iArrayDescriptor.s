@@ -12,7 +12,7 @@ _.assert( !_.withDefaultLong );
 
 //
 
-function _arrayNameSpaceApplyTo( dst,def )
+function _longDescriptorApplyTo( dst,def )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -72,7 +72,7 @@ function makeSimilar( src,length )
  * @param {Number} length Lengthof new array.
  *
  * @example
- * _.array.makeArrayOfLength(1);
+ * _.long.longMake(1);
  * // returns instance of Array
  *
  * @example
@@ -105,7 +105,7 @@ function makeArrayOfLength( length )
  * @param {Number} length Lengthof new array.
  *
  * @example
- * _.array.makeArrayOfLengthZeroed( 2 );
+ * _.long.longMakeZeroed( 2 );
  * // returns Array [ 0,0 ]
  *
  * @example
@@ -148,12 +148,12 @@ function makeArrayOfLengthZeroed( length )
  * // returns Array [ 0,0 ]
  *
  * @example
- * let src =  _.array.makeArrayOfLength( 2 );
+ * let src =  _.long.longMake( 2 );
  * _.withDefaultLong.Fx.arrayFromCoercing( src );
  * // returns F32x [ 0,0 ]
  *
  * @example
- * let src =  _.array.makeArrayOfLength( 2 );
+ * let src =  _.long.longMake( 2 );
  * _.array.arrayFromCoercing( src );
  * // returns src
  *
@@ -377,12 +377,12 @@ _.assert( !_.withDefaultLong );
 
 let LongDescriptors = Object.create( null );
 
-_._arrayNameSpaceApplyTo = _arrayNameSpaceApplyTo;
+_._longDescriptorApplyTo = _longDescriptorApplyTo;
 
 for( let d = 0 ; d < _ArrayNameSpaces.length ; d++ )
 _declare( _ArrayNameSpaces[ d ] );
 
-_arrayNameSpaceApplyTo( _,'Array' );
+_longDescriptorApplyTo( _,'Array' );
 
 // debugger;
 
@@ -396,7 +396,7 @@ _.assert( !!_.array.withDefaultLong );
 
 _.assert( _.objectIs( _.withDefaultLong ) );
 _.assert( _.objectIs( _.array ) );
-_.assert( _.routineIs( _.array.makeArrayOfLength ) );
+_.assert( _.routineIs( _.long.longMake ) );
 
 // --
 // export

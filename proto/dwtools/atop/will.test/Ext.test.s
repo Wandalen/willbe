@@ -18,7 +18,7 @@ if( typeof module !== 'undefined' )
 
 - Test check line is short. Use variables to reach that.
 
-    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var outfile = _.fileProvider.configRead( outFilePath );
     var exp = [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ];
     var got = _.mapKeys( outfile.module );
     test.identical( got, exp );
@@ -131,7 +131,7 @@ function assetFor( test, name )
   {
     _.fileProvider.filesDelete( a.routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
-    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.abs( '_repo' ) } });
+    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.path.join( self.suiteTempPath, '_repo' ) } });
   }
 
   a.shell = _.process.starter
@@ -2635,7 +2635,7 @@ function reflectNothingFromSubmodules( test )
     test.identical( files, [ '.', './reflect-nothing-from-submodules.out.will.yml', './debug', './debug/Single.s' ] );
 
     test.is( _.fileProvider.fileExists( outWillPath ) )
-    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    var outfile = _.fileProvider.configRead( outWillPath );
 
     outfile = outfile.module[ 'reflect-nothing-from-submodules.out' ]
 
@@ -4925,7 +4925,7 @@ function withDoCommentOut( test )
   .then( ( got ) =>
   {
     a.reflect();
-    var outfile = _.fileProvider.fileConfigRead( a.abs( 'execution_section/will.yml' ) );
+    var outfile = _.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
     test.is( !!outfile.execution );
     return null;
   })
@@ -4934,7 +4934,7 @@ function withDoCommentOut( test )
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'Comment out "execution" in module::execution_section at' ), 1 );
-    var outfile = _.fileProvider.fileConfigRead( a.abs( 'execution_section/will.yml' ) );
+    var outfile = _.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
     test.is( !outfile.execution );
     return null;
   })
@@ -4945,7 +4945,7 @@ function withDoCommentOut( test )
   .then( ( got ) =>
   {
     a.reflect();
-    var outfile = _.fileProvider.fileConfigRead( a.abs( 'execution_section/will.yml' ) );
+    var outfile = _.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
     test.is( !!outfile.execution );
     return null;
   })
@@ -4954,7 +4954,7 @@ function withDoCommentOut( test )
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'Comment out "execution" in module::execution_section at' ), 1 );
-    var outfile = _.fileProvider.fileConfigRead( a.abs( 'execution_section/will.yml' ) );
+    var outfile = _.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
     test.is( !!outfile.execution );
     return null;
   })
@@ -5146,7 +5146,7 @@ function hookGitMake( test )
 
   test.is( true );
 
-  let config = _.fileProvider.fileConfigUserRead();
+  let config = _.fileProvider.configUserRead();
   if( !config || !config.about || !config.about[ 'github.token' ] )
   return null;
   let user = config.about.user;
@@ -5229,7 +5229,7 @@ function hookPrepare( test )
 
   test.is( true );
 
-  let config = _.fileProvider.fileConfigUserRead();
+  let config = _.fileProvider.configUserRead();
   if( !config || !config.about || !config.about[ 'github.token' ] )
   return null;
   let user = config.about.user;
@@ -5887,13 +5887,9 @@ function hookGitSyncArguments( test )
 
   originalShell( 'git commit -am second' );
 
-  // _global_.debugger = 1;
-  debugger;
-  a.startNonThrowing( '.with clone/ .call GitSync -am "second commit"' ) /* xxx qqq : make it working */
-  // a.startNonThrowing( '.with clone/ .call GitSync -am "second"' )
+  a.startNonThrowing( '.with clone/ .call GitSync -am "second commit"' )
   .then( ( got ) =>
   {
-    debugger;
     test.description = 'conflict';
     test.notIdentical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'has local changes' ), 0 );
@@ -10813,7 +10809,7 @@ function exportSingle( test )
     test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s' ] );
 
     test.is( _.fileProvider.fileExists( outWillPath ) )
-    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    var outfile = _.fileProvider.configRead( outWillPath );
     outfile = outfile.module[ outfile.root[ 0 ] ];
 
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
@@ -10851,7 +10847,7 @@ function exportSingle( test )
     test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s'  ] );
 
     test.is( _.fileProvider.fileExists( outWillPath ) )
-    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    var outfile = _.fileProvider.configRead( outWillPath );
     outfile = outfile.module[ outfile.root[ 0 ] ];
 
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
@@ -11020,7 +11016,7 @@ function exportInformal( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './Proto.informal.out.will.yml' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( outPath, './Proto.informal.out.will.yml' ) );
+    var outfile = _.fileProvider.configRead( _.path.join( outPath, './Proto.informal.out.will.yml' ) );
     outfile = outfile.module[ 'Proto.informal.out' ];
     var expected =
     {
@@ -11097,7 +11093,7 @@ function exportInformal( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './Proto.informal.out.will.yml' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( outPath, './Proto.informal.out.will.yml' ) );
+    var outfile = _.fileProvider.configRead( _.path.join( outPath, './Proto.informal.out.will.yml' ) );
     outfile = outfile.module[ 'Proto.informal.out' ];
     var expected =
     {
@@ -11175,7 +11171,7 @@ function exportInformal( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './UriBasic.informal.out.will.yml' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( outPath, './UriBasic.informal.out.will.yml' ) );
+    var outfile = _.fileProvider.configRead( _.path.join( outPath, './UriBasic.informal.out.will.yml' ) );
     outfile = outfile.module[ 'UriBasic.informal.out' ];
     var expected =
     {
@@ -11294,7 +11290,7 @@ function exportWithReflector( test )
 
     // var reflectors =
 
-    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    var outfile = _.fileProvider.configRead( outWillPath );
 
     debugger;
 
@@ -11407,7 +11403,7 @@ function exportMixed( test )
     var files = _.fileProvider.dirRead( modulePath );
     test.identical( files, expected );
 
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) );
+    var outfile = _.fileProvider.configRead( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) );
     outfile = outfile.module[ 'Proto.informal.out' ];
     var expected =
     {
@@ -11665,7 +11661,7 @@ function exportSecond( test )
     var files = self.find( _.path.join( routinePath, 'out' ) );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
+    var outfile = _.fileProvider.configRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
 
     outfile = outfile.module[ 'ExportSecond.out' ]
 
@@ -11879,7 +11875,7 @@ function exportSecond( test )
     var files = self.find( _.path.join( routinePath, 'out' ) );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
+    var outfile = _.fileProvider.configRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
 
     outfile = outfile.module[ 'ExportSecond.out' ]
 
@@ -12191,7 +12187,7 @@ function exportMultiple( test )
     test.is( _.strHas( got.output, 'submodule.debug.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
-    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    var outfile = _.fileProvider.configRead( outWillPath );
 
     outfile = outfile.module[ 'submodule.out' ];
 
@@ -12395,7 +12391,7 @@ function exportMultiple( test )
     test.is( !_.strHas( outfileData, _.path.join( routinePath, '../..' ) ) );
     test.is( !_.strHas( outfileData, _.path.nativize( _.path.join( routinePath, '../..' ) ) ) );
 
-    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    var outfile = _.fileProvider.configRead( outWillPath );
     outfile = outfile.module[ 'submodule.out' ]
     var exported =
     {
@@ -12920,7 +12916,7 @@ function exportBroken( test )
     test.is( _.strHas( got.output, 'submodule.debug.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
-    var outfile = _.fileProvider.fileConfigRead( outWillPath );
+    var outfile = _.fileProvider.configRead( outWillPath );
     outfile = outfile.module[ 'submodule.out' ];
 
     var exported =
@@ -13228,7 +13224,7 @@ function exportCourrputedOutfileUnknownSection( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var outfile = _.fileProvider.configRead( outFilePath );
     outfile = outfile.module[ 'sub.out' ];
     var exported = _.setFrom( _.mapKeys( _.select( outfile, 'exported/*' ) ) );
     var exp = _.setFrom( [ 'export.debug' ] );
@@ -13292,7 +13288,7 @@ function exportCourruptedOutfileSyntax( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var outfile = _.fileProvider.configRead( outFilePath );
     outfile = outfile.module[ 'sub.out' ]
     var exported = _.setFrom( _.mapKeys( _.select( outfile, 'exported/*' ) ) );
     var exp = _.setFrom( [ 'export.debug' ] );
@@ -13342,7 +13338,7 @@ function exportCourruptedSubmodulesDisabled( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './supermodule.out.will.yml' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var outfile = _.fileProvider.configRead( outFilePath );
     var exported = _.setFrom( _.mapKeys( _.select( outfile.module[ outfile.root[ 0 ] ], 'exported/*' ) ) );
     var exp = _.setFrom( [ 'export.debug' ] );
     test.identical( exported, exp );
@@ -13389,7 +13385,7 @@ function exportDisabledModule( test )
     var files = _.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
 
-    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var outfile = _.fileProvider.configRead( outFilePath );
     var exp = _.setFrom( [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ] );
     var got = _.setFrom( _.mapKeys( outfile.module ) );
     test.identical( got, exp );
@@ -13420,7 +13416,7 @@ function exportDisabledModule( test )
     var files = _.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
 
-    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var outfile = _.fileProvider.configRead( outFilePath );
     var exp = _.setFrom( [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ] );
     var got = _.setFrom( _.mapKeys( outfile.module ) );
     test.identical( got, exp );
@@ -13477,7 +13473,7 @@ function exportDisabledModule( test )
     var files = _.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
 
-    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var outfile = _.fileProvider.configRead( outFilePath );
     var exp = _.setFrom( [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ] );
     var got = _.setFrom( _.mapKeys( outfile.module ) );
     test.identical( got, exp );
@@ -13544,7 +13540,7 @@ function exportOutdated( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var outfile = _.fileProvider.configRead( outFilePath );
     outfile = outfile.module[ 'sub.out' ];
     var exported = _.setFrom( _.mapKeys( _.select( outfile, 'exported/*' ) ) );
     var exp = _.setFrom( [ 'export.debug' ] );
@@ -13575,7 +13571,7 @@ function exportOutdated( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
-    var outfile = _.fileProvider.fileConfigRead( outFilePath );
+    var outfile = _.fileProvider.configRead( outFilePath );
     outfile = outfile.module[ 'sub.out' ];
     var exported = _.setFrom( _.mapKeys( _.select( outfile, 'exported/*' ) ) );
     var exp = _.setFrom( [ 'export.' ] );
@@ -15035,7 +15031,7 @@ function exportOutResourceWithoutGeneratedCriterion( test )
     var files = _.fileProvider.dirRead( a.abs( 'out' ) )
     test.identical( files, exp );
 
-    var outfile = _.fileProvider.fileConfigRead( a.abs( 'out/wChangeTransactor.out.will.yml' ) );
+    var outfile = _.fileProvider.configRead( a.abs( 'out/wChangeTransactor.out.will.yml' ) );
     var exp =
     [
       'module.willfiles',
@@ -15103,7 +15099,7 @@ function exportImplicit( test )
     var files = self.find( a.abs( 'explicit' ) );
     test.identical( files, exp );
 
-    var outfile = _.fileProvider.fileConfigRead( a.abs( 'explicit/explicit.out.will.yml' ) );
+    var outfile = _.fileProvider.configRead( a.abs( 'explicit/explicit.out.will.yml' ) );
 
     /* */
 
@@ -15196,7 +15192,7 @@ function exportImplicit( test )
     var files = self.find( a.abs( 'implicit' ) );
     test.identical( files, exp );
 
-    var outfile = _.fileProvider.fileConfigRead( a.abs( 'implicit/implicit.out.will.yml' ) );
+    var outfile = _.fileProvider.configRead( a.abs( 'implicit/implicit.out.will.yml' ) );
     debugger;
 
     /* */
@@ -15528,7 +15524,7 @@ function importLocalRepo( test )
     test.identical( _.strCount( got.output, /\+ reflector::download reflected .* file\(s\)/ ), 1 );
     test.identical( _.strCount( got.output, /Write out willfile .*\/.module\/Proto.out.will.yml/ ), 1 );
 
-    var outfile = _.fileProvider.fileConfigRead( _.path.join( modulePath, 'Proto.out.will.yml' ) );
+    var outfile = _.fileProvider.configRead( _.path.join( modulePath, 'Proto.out.will.yml' ) );
     outfile = outfile.module[ 'Proto.out' ]
 
     var expectedReflector =
@@ -17261,7 +17257,7 @@ function submodulesDownloadThrowing( test )
   .then( () =>
   {
     let inWillFilePath = _.path.join( downloadPath, '.im.will.yml' );
-    let inWillFile = _.fileProvider.fileConfigRead( inWillFilePath );
+    let inWillFile = _.fileProvider.configRead( inWillFilePath );
     inWillFile.section = { field : 'value' };
     _.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile,encoding : 'yml' });
     return null;
@@ -18667,7 +18663,7 @@ function submodulesUpdateThrowing( test )
   .then( () =>
   {
     let inWillFilePath = _.path.join( downloadPath, '.im.will.yml' );
-    let inWillFile = _.fileProvider.fileConfigRead( inWillFilePath );
+    let inWillFile = _.fileProvider.configRead( inWillFilePath );
     inWillFile.section = { field : 'value' };
     _.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile,encoding : 'yml' });
     return null;
@@ -22111,6 +22107,7 @@ var Self =
     hookGitPullConflict,
     hookGitSyncColflict,
     hookGitSyncArguments,
+    hookPublish,
 
     verbositySet,
     verbosityStepDelete,
