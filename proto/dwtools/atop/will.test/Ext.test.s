@@ -7975,23 +7975,6 @@ function cleanNoBuild( test )
   let submodulesPath = _.path.join( a.routinePath, '.module' );
   let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'clean' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let ready = new _.Consequence().take( null );
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath + ' .with NoBuild',
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     throwingExitCode : 0,
-//     ready : ready,
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
@@ -8037,32 +8020,14 @@ cleanNoBuild.timeOut = 200000;
 function cleanDry( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'clean' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
-
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath + ' .with NoTemp',
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  let a = self.assetFor( test, 'clean' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
 
   /* - */
 
-  start
-  ({
-    args : [ '.submodules.update' ],
-  })
+  a.start({ args : [ '.with NoTemp .submodules.update' ] })
 
   .then( ( got ) =>
   {
@@ -8072,10 +8037,7 @@ function cleanDry( test )
     return null;
   })
 
-  start
-  ({
-    args : [ '.build' ],
-  })
+  a.start({ args : [ '.with NoTemp .build' ] })
   .then( ( got ) =>
   {
     test.is( _.strHas( got.output, '+ 0/2 submodule(s) of module::submodules were downloaded in' ) );
@@ -8084,7 +8046,7 @@ function cleanDry( test )
 
   var wasFiles;
 
-  start({ execPath : '.clean dry:1' })
+  a.start({ execPath : '.with NoTemp .clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -8098,16 +8060,16 @@ function cleanDry( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) + ' at ' ) );
     test.is( _.strHas( got.output, 'Clean will delete ' + String( files.length ) + ' file(s)' ) );
-    test.is( _.fileProvider.isDir( _.path.join( routinePath, '.module' ) ) ); /* phantom problem ? */
-    test.is( _.fileProvider.isDir( _.path.join( routinePath, 'out' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) );
+    test.is( _.fileProvider.isDir( _.path.join( a.routinePath, '.module' ) ) ); /* phantom problem ? */
+    test.is( _.fileProvider.isDir( _.path.join( a.routinePath, 'out' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) );
 
     return null;
   })
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 cleanDry.timeOut = 300000;
