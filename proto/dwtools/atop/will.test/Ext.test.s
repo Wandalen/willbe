@@ -7862,37 +7862,18 @@ cleanBroken2.timeOut = 200000;
 function cleanBrokenSubmodules( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'clean-broken-submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
-
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  let a = self.assetFor( test, 'clean-broken-submodules' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  let outPath = _.path.join( a.routinePath, 'out' );
 
   /* - */
 
-  ready
-
-  /* - */
+  a.ready
 
   .then( ( got ) =>
   {
     test.case = 'setup';
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
+    a.reflect();
     var files = self.find( submodulesPath );
     test.identical( files.length, 4 );
     var files = self.find( outPath );
@@ -7903,7 +7884,7 @@ function cleanBrokenSubmodules( test )
 
   /* - */
 
-  start({ execPath : '.clean dry:1' })
+  a.start({ execPath : '.clean dry:1' })
   .then( ( got ) =>
   {
     test.case = '.clean dry:1';
@@ -7922,7 +7903,7 @@ function cleanBrokenSubmodules( test )
 
   /* - */
 
-  start({ execPath : '.clean' })
+  a.start({ execPath : '.clean' })
   .then( ( got ) =>
   {
     test.case = '.clean';
@@ -7940,7 +7921,7 @@ function cleanBrokenSubmodules( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 cleanBrokenSubmodules.timeOut = 200000;
