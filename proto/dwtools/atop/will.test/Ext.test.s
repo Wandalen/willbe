@@ -10423,9 +10423,6 @@ function exportWithReflector( test )
 
     var files = self.find( outPath );
     test.identical( files, [ '.', './export-with-reflector.out.will.yml' ] );
-
-    // var reflectors =
-
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
 
     return null;
@@ -10441,27 +10438,12 @@ exportWithReflector.timeOut = 200000;
 function exportToRoot( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-to-root' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'export-to-root' );
+  a.reflect();
 
   /* - */
 
-  start({ execPath : '.export' })
+  a.start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -10470,11 +10452,11 @@ function exportToRoot( test )
     test.is( _.strHas( got.output, /Exporting .*module::export-to-root \/ build::proto\.export.*/ ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported .*module::export-to-root \/ build::proto\.export.* in/ ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, 'export-to-root.out.will.yml' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'export-to-root.out.will.yml' ) ) )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 exportToRoot.timeOut = 200000;
