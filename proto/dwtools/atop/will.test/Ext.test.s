@@ -11934,39 +11934,22 @@ exportImportMultiple.timeOut = 200000;
 function exportBroken( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple-broken' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
+  let a = self.assetFor( test, 'export-multiple-broken' );
+  let outPath = _.path.join( a.routinePath, 'out' );
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  });
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.export debug:1';
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
 
     return null;
   })
 
-  debugger;
-  start({ execPath : '.export debug:1' })
+  a.start({ execPath : '.export debug:1' })
 
   .then( ( got ) =>
   {
@@ -12054,7 +12037,7 @@ function exportBroken( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 //
