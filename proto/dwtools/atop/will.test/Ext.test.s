@@ -12583,33 +12583,16 @@ function exportWholeModule( test )
 function exportRecursive( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'resolve-path-of-submodules-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let inPath = abs( 'ab/' );
-  let outTerminalPath = abs( 'out/ab/module-ab.out.will.yml' );
-  let outDirPath = abs( 'out' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  let a = self.assetFor( test, 'resolve-path-of-submodules-exported' );
+  let inPath = a.abs( 'ab/' );
+  let outTerminalPath = a.abs( 'out/ab/module-ab.out.will.yml' );
+  let outDirPath = a.abs( 'out' );
+  a.reflect();
   _.fileProvider.filesDelete( outDirPath );
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -12617,7 +12600,7 @@ function exportRecursive( test )
     return null;
   })
 
-  start({ execPath : '.with ab/ .export.recursive' })
+  a.start({ execPath : '.with ab/ .export.recursive' })
 
   .then( ( got ) =>
   {
@@ -12637,7 +12620,7 @@ function exportRecursive( test )
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -12645,7 +12628,7 @@ function exportRecursive( test )
     return null;
   })
 
-  start({ execPath : '.with ab/ .export.recursive' })
+  a.start({ execPath : '.with ab/ .export.recursive' })
 
   .then( ( got ) =>
   {
@@ -12665,7 +12648,7 @@ function exportRecursive( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function exportRecursive */
 
 //
