@@ -12183,32 +12183,13 @@ function exportCourrputedOutfileUnknownSection( test )
 {
   let self = this;
   let a = self.assetFor( test, 'corrupted-outfile-unknown-section' );
+  let outPath = _.path.join( a.routinePath, 'sub.out' );
+  let outFilePath = _.path.join( a.routinePath, 'sub.out/sub.out.will.yml' );
   a.reflect();
-
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-outfile-unknown-section' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-// 
-//   let outPath = _.path.join( routinePath, 'sub.out' );
-//   let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
-//   let ready = new _.Consequence().take( null );
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -12216,7 +12197,7 @@ function exportCourrputedOutfileUnknownSection( test )
     return null;
   })
 
-  start( '.with sub .export debug:1' )
+  a.start( '.with sub .export debug:1' )
 
   .then( ( got ) =>
   {
@@ -12242,7 +12223,7 @@ function exportCourrputedOutfileUnknownSection( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function exportCourrputedOutfileUnknownSection */
 
 //
@@ -12250,29 +12231,14 @@ function exportCourrputedOutfileUnknownSection( test )
 function exportCourruptedOutfileSyntax( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-outfile-syntax' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let outPath = _.path.join( routinePath, 'sub.out' );
-  let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'corrupted-outfile-syntax' );
+  let outPath = _.path.join( a.routinePath, 'sub.out' );
+  let outFilePath = _.path.join( a.routinePath, 'sub.out/sub.out.will.yml' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -12280,7 +12246,7 @@ function exportCourruptedOutfileSyntax( test )
     return null;
   })
 
-  start( '.with sub .export debug:1' )
+  a.start( '.with sub .export debug:1' )
 
   .then( ( got ) =>
   {
@@ -12306,7 +12272,7 @@ function exportCourruptedOutfileSyntax( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function exportCourruptedOutfileSyntax */
 
 //
