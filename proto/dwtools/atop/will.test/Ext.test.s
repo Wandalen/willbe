@@ -8140,26 +8140,6 @@ function cleanMixed( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-mixed' );
   a.reflect();
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-mixed' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let outPath = _.path.join( routinePath, 'out' );
-//   let modulePath = _.path.join( routinePath, 'module' );
-// 
-//   let ready = new _.Consequence().take( null )
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -8200,43 +8180,25 @@ cleanMixed.timeOut = 200000;
 function cleanWithInPath( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'clean-with-inpath' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-  let modulePath = _.path.join( routinePath, '.module' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  let a = self.assetFor( test, 'clean-with-inpath' );
 
   /* - */
 
   var hadFiles;
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.with module/ModuleForTesting12 .clean';
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    hadFiles = self.find( routinePath + '/out' ).length + self.find( routinePath + '/.module' ).length;
+    _.fileProvider.filesDelete( a.routinePath );
+    _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+    hadFiles = self.find( a.routinePath + '/out' ).length + self.find( a.routinePath + '/.module' ).length;
 
     return null;
   })
 
 
-  start({ execPath : '.with module/ModuleForTesting12 .clean' })
-debugger;
-  ready.then( ( got ) =>
+  a.start({ execPath : '.with module/ModuleForTesting12 .clean' })
+  a.ready.then( ( got ) =>
   {
 
     var expectedFiles =
@@ -8251,7 +8213,7 @@ debugger;
       './proto',
       './proto/WithSubmodules.s'
     ]
-    var files = self.find({ filePath : { [ routinePath ] : '', '+**' : 0 } });
+    var files = self.find({ filePath : { [ a.routinePath ] : '', '+**' : 0 } });
     test.identical( files, expectedFiles );
 
     test.identical( got.exitCode, 0 ); debugger;
@@ -8262,7 +8224,7 @@ debugger;
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 cleanWithInPath.timeOut = 200000;
