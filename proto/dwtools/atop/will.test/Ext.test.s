@@ -11244,25 +11244,6 @@ function exportMultiple( test )
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
   a.reflect();
 
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let submodulesPath = _.path.join( routinePath, '.module' );
-//   let outPath = _.path.join( routinePath, 'out' );
-//   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
-// 
-//   let ready = new _.Consequence().take( null );
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   });
-
   /* - */
 
   a.ready
@@ -11771,42 +11752,24 @@ exportMultiple.timeOut = 200000;
 function exportImportMultiple( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
-  let out2Path = _.path.join( routinePath, 'super.out' );
-  let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  let a = self.assetFor( test, 'export-multiple' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  let out2Path = _.path.join( a.routinePath, 'super.out' );
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = 'export submodule';
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     _.fileProvider.filesDelete( outPath );
 
     return null;
   })
 
-  start({ execPath : '.with . .export debug:0' })
-  start({ execPath : '.with . .export debug:1' })
+  a.start({ execPath : '.with . .export debug:0' })
+  a.start({ execPath : '.with . .export debug:1' })
 
   .then( ( got ) =>
   {
@@ -11821,17 +11784,16 @@ function exportImportMultiple( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.with super .export debug:0';
-
     _.fileProvider.filesDelete( out2Path );
 
     return null;
   })
 
-  start({ execPath : '.with super .export debug:0' })
+  a.start({ execPath : '.with super .export debug:0' })
 
   .then( ( got ) =>
   {
@@ -11846,14 +11808,14 @@ function exportImportMultiple( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.with super .clean dry:1';
     return null;
   })
 
-  start({ execPath : '.with super .clean dry:1' })
+  a.start({ execPath : '.with super .clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -11869,14 +11831,14 @@ function exportImportMultiple( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.with super .clean';
     return null;
   })
 
-  start({ execPath : '.with super .clean' })
+  a.start({ execPath : '.with super .clean' })
 
   .then( ( got ) =>
   {
@@ -11891,7 +11853,7 @@ function exportImportMultiple( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.with super .export debug:0 ; .with super .export debug:1';
@@ -11901,8 +11863,8 @@ function exportImportMultiple( test )
     return null;
   })
 
-  start({ execPath : '.with super .export debug:0' })
-  start({ execPath : '.with super .export debug:1' })
+  a.start({ execPath : '.with super .export debug:0' })
+  a.start({ execPath : '.with super .export debug:1' })
 
   .then( ( got ) =>
   {
@@ -11917,14 +11879,14 @@ function exportImportMultiple( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.with super .clean dry:1';
     return null;
   })
 
-  start({ execPath : '.with super .clean dry:1' })
+  a.start({ execPath : '.with super .clean dry:1' })
 
   .then( ( got ) =>
   {
@@ -11940,14 +11902,14 @@ function exportImportMultiple( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.with super .clean';
     return null;
   })
 
-  start({ execPath : '.with super .clean' })
+  a.start({ execPath : '.with super .clean' })
 
   .then( ( got ) =>
   {
@@ -11962,7 +11924,7 @@ function exportImportMultiple( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 exportImportMultiple.timeOut = 200000;
