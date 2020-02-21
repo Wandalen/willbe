@@ -14201,27 +14201,10 @@ Test redownloading of currupted remote submodules.
 
 function importPathLocal( test )
 {
-  // let self = this;
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'import-path-local' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let submodulesPath = _.path.join( routinePath, '.module' );
-  // let outPath = _.path.join( routinePath, 'out' );
-  // let ready = new _.Consequence().take( null );
   let self = this;
   let a = self.assetFor( test, 'import-path-local' );
 
   /* xxx : replace _.path.join( modulePath */
-
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // })
 
   /* - */
 
@@ -14264,41 +14247,47 @@ importPathLocal.timeOut = 200000;
 function importLocalRepo( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'import-auto' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let repoPath = _.path.join( self.suiteTempPath, '_repo' );
-  let outPath = _.path.join( routinePath, 'out' );
-  let modulePath = _.path.join( routinePath, '.module' );
+  let a = self.assetFor( test, 'import-auto' );
+  let modulePath = _.path.join( a.routinePath, '.module' );
+  a.reflect();
 
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'import-auto' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let repoPath = _.path.join( self.suiteTempPath, '_repo' );
+//   let outPath = _.path.join( routinePath, 'out' );
+//   let modulePath = _.path.join( routinePath, '.module' );
+// 
+//   let ready = new _.Consequence().take( null );
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.with module/Proto .export';
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
+    
+    a.reflect();
+    // _.fileProvider.filesDelete( a.routinePath );
+    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    // _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
 
     return null;
   })
 
-  start({ execPath : '.with module/Proto .clean' })
-  start({ execPath : '.with module/Proto .export' })
+  a.start({ execPath : '.with module/Proto .clean' })
+  a.start({ execPath : '.with module/Proto .export' })
 
   .then( ( got ) =>
   {
@@ -14434,7 +14423,7 @@ function importLocalRepo( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 importLocalRepo.timeOut = 200000;
