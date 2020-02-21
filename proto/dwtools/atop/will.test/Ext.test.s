@@ -7594,40 +7594,21 @@ cleanSingleModule.timeOut = 200000;
 function cleanBroken1( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-broken-1' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
-  let outDebugPath = _.path.join( routinePath, 'out/debug' );
-
+  let a = self.assetFor( test, 'submodules-broken-1' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
+  a.reflect();
 
   test.description = 'should handle currputed willfile properly';
 
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
   /* - */
 
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
-  ready
-
-  /* - */
+  a.ready
 
   .then( ( got ) =>
   {
     test.case = '.clean ';
-
     var files = self.find( submodulesPath );
     test.identical( files.length, 4 );
 
@@ -7636,42 +7617,40 @@ function cleanBroken1( test )
 
   /* - */
 
-  start({ execPath : '.clean dry:1' })
+  a.start({ execPath : '.clean dry:1' })
 
   .then( ( got ) =>
   {
     test.case = '.clean dry:1';
 
     var files = self.find( submodulesPath );
-
     test.identical( files.length, 4 );
-
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) + ' at ' ) );
     test.is( _.strHas( got.output, 'Clean will delete ' + String( files.length ) + ' file(s)' ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) );
 
     return null;
   })
 
   /* - */
 
-  start({ execPath : '.clean' })
+  a.start({ execPath : '.clean' })
 
   .then( ( got ) =>
   {
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* filesDelete issue? */
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) ); /* filesDelete issue? */
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) );
     return null;
   })
 
   /* */
 
-  start({ execPath : '.export' })
+  a.start({ execPath : '.export' })
   .then( ( got ) =>
   {
     test.case = '.export';
@@ -7679,7 +7658,7 @@ function cleanBroken1( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
-    var files = self.find( outDebugPath ); debugger;
+    var files = self.find( outDebugPath ); 
     test.gt( files.length, 9 );
 
     var files = _.fileProvider.dirRead( outPath );
@@ -7690,19 +7669,16 @@ function cleanBroken1( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
+    a.reflect();
     return null;
   });
 
   /* */
 
-  start({ execPath : '.export' })
+  a.start({ execPath : '.export' })
   .then( ( got ) =>
   {
     test.case = '.export';
@@ -7721,7 +7697,7 @@ function cleanBroken1( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 cleanBroken1.timeOut = 200000;
