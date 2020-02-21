@@ -44,7 +44,7 @@ function onConfigGet( it )
   if( /^w[A-Z]/.test( shortName ) )
   shortName = shortName.substring( 1 );
 
-  let config = _.fileProvider.fileConfigUserRead();
+  let config = _.fileProvider.configUserRead();
   _.mapSupplementRecursive( result, config );
 
   result.package =

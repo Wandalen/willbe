@@ -49,7 +49,7 @@ function isEnabled( localPath )
 {
   if( !_.strEnds( _.path.fullName( localPath ), '.json' ) )
   localPath = _.path.join( localPath, 'package.json' );
-  let config = _.fileProvider.fileConfigRead( localPath );
+  let config = _.fileProvider.configRead( localPath );
   if( !config.name )
   return false;
   if( config.enabled !== undefined && !config.enabled )

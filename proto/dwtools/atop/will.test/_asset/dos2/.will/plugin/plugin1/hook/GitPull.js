@@ -25,7 +25,7 @@ function onModule( it )
     return null;
   }
 
-  let config = _.fileProvider.fileConfigUserRead();
+  let config = _.fileProvider.configUserRead();
   let provider = _.FileFilter.Archive();
   provider.archive.basePath = it.opener.dirPath;
   if( config && config.path && config.path.link )
