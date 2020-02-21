@@ -12130,29 +12130,12 @@ exportImport.timeOut = 200000;
 function exportBrokenNoreflector( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-broken-noreflector' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'export-broken-noreflector' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -12160,7 +12143,7 @@ function exportBrokenNoreflector( test )
     return null;
   })
 
-  start({ execPath : '.with submodule .reflectors.list predefined:0' })
+  a.start({ execPath : '.with submodule .reflectors.list predefined:0' })
 
   .then( ( got ) =>
   {
@@ -12171,8 +12154,8 @@ function exportBrokenNoreflector( test )
     return null;
   })
 
-  start({ execPath : '.with module/submodule .export' })
-  start({ execPath : '.with submodule .reflectors.list predefined:0' })
+  a.start({ execPath : '.with module/submodule .export' })
+  a.start({ execPath : '.with submodule .reflectors.list predefined:0' })
 
   .then( ( got ) =>
   {
@@ -12184,7 +12167,7 @@ function exportBrokenNoreflector( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 } /* end of function exportBrokenNoreflector */
 
 exportBrokenNoreflector.description =
