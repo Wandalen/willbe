@@ -13333,29 +13333,12 @@ exportRewritesOutFile.timeOut = 60000;
 function exportWithRemoteSubmodules( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'hierarchy-remote' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'hierarchy-remote' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -13363,15 +13346,15 @@ function exportWithRemoteSubmodules( test )
     return null;
   })
 
-  start( '.with group1/group10/a0 .clean' )
-  start( '.with group1/a .clean' )
-  start( '.with group1/b .clean' )
-  start( '.with group2/c .clean' )
-  start( '.with group1/group10/a0 .export' )
-  start( '.with group1/a .export' )
-  start( '.with group1/b .export' )
-  start( '.with group2/c .export' )
-  start( '.with z .export' )
+  a.start( '.with group1/group10/a0 .clean' )
+  a.start( '.with group1/a .clean' )
+  a.start( '.with group1/b .clean' )
+  a.start( '.with group2/c .clean' )
+  a.start( '.with group1/group10/a0 .export' )
+  a.start( '.with group1/a .export' )
+  a.start( '.with group1/b .export' )
+  a.start( '.with group2/c .export' )
+  a.start( '.with z .export' )
 
   .then( ( got ) =>
   {
@@ -13387,7 +13370,7 @@ function exportWithRemoteSubmodules( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function exportWithRemoteSubmodules */
 
 exportWithRemoteSubmodules.timeOut = 300000;
