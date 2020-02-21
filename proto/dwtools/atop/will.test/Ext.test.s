@@ -12656,36 +12656,14 @@ function exportRecursive( test )
 function exportRecursiveUsingSubmodule( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let inPath = abs( 'super' );
-  let outSuperDirPath = abs( 'super.out' );
-  let outSubDirPath = abs( 'sub.out' );
-  let outSuperTerminalPath = abs( 'super.out/supermodule.out.will.yml' );
-  let outSubTerminalPath = abs( 'sub.out/submodule.out.will.yml' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  _.fileProvider.filesDelete( outSuperDirPath );
-  _.fileProvider.filesDelete( outSubDirPath );
+  let a = self.assetFor( test, 'export-multiple-exported' );
+  a.reflect();
+  _.fileProvider.filesDelete( a.abs( 'super.out' ) );
+  _.fileProvider.filesDelete( a.abs( 'sub.out' ) );
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -12693,7 +12671,7 @@ function exportRecursiveUsingSubmodule( test )
     return null;
   })
 
-  start({ execPath : '.with super .export.recursive debug:1' })
+  a.start({ execPath : '.with super .export.recursive debug:1' })
 
   .then( ( got ) =>
   {
@@ -12721,7 +12699,7 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/debug',
       './super.out/debug/File.debug.js'
     ]
-    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    var files = self.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::submodule / build::export.debug with 2 file(s)' ), 1 );
@@ -12732,7 +12710,7 @@ function exportRecursiveUsingSubmodule( test )
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -12740,7 +12718,7 @@ function exportRecursiveUsingSubmodule( test )
     return null;
   })
 
-  start({ execPath : '.with super .export.recursive debug:1' })
+  a.start({ execPath : '.with super .export.recursive debug:1' })
 
   .then( ( got ) =>
   {
@@ -12768,7 +12746,7 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/debug',
       './super.out/debug/File.debug.js'
     ]
-    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    var files = self.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::submodule / build::export.debug with 2 file(s)' ), 1 );
@@ -12779,7 +12757,7 @@ function exportRecursiveUsingSubmodule( test )
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -12787,7 +12765,7 @@ function exportRecursiveUsingSubmodule( test )
     return null;
   })
 
-  start({ execPath : '.with super .export.recursive debug:0' })
+  a.start({ execPath : '.with super .export.recursive debug:0' })
 
   .then( ( got ) =>
   {
@@ -12821,7 +12799,7 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/release',
       './super.out/release/File.release.js'
     ]
-    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    var files = self.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::submodule / build::export. with 2 file(s)' ), 1 );
@@ -12832,7 +12810,7 @@ function exportRecursiveUsingSubmodule( test )
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -12840,7 +12818,7 @@ function exportRecursiveUsingSubmodule( test )
     return null;
   })
 
-  start({ execPath : '.with super .export.recursive debug:0' })
+  a.start({ execPath : '.with super .export.recursive debug:0' })
 
   .then( ( got ) =>
   {
@@ -12874,7 +12852,7 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/release',
       './super.out/release/File.release.js'
     ]
-    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    var files = self.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::submodule / build::export. with 2 file(s)' ), 1 );
@@ -12885,7 +12863,7 @@ function exportRecursiveUsingSubmodule( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function exportRecursiveUsingSubmodule */
 
 exportRecursiveUsingSubmodule.timeOut = 300000;
