@@ -12468,29 +12468,14 @@ exportDisabledModule.description =
 function exportOutdated( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'inconsistent-outfile' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let outPath = _.path.join( routinePath, 'sub.out' );
-  let outFilePath = _.path.join( routinePath, 'sub.out/sub.out.will.yml' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'inconsistent-outfile' );
+  let outPath = _.path.join( a.routinePath, 'sub.out' );
+  let outFilePath = _.path.join( a.routinePath, 'sub.out/sub.out.will.yml' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -12498,7 +12483,7 @@ function exportOutdated( test )
     return null;
   })
 
-  start( '.with sub .export debug:1' )
+  a.start( '.with sub .export debug:1' )
 
   .then( ( got ) =>
   {
@@ -12521,15 +12506,15 @@ function exportOutdated( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'export release, but input willfile is changed';
-    _.fileProvider.fileAppend( _.path.join( routinePath, 'sub.ex.will.yml' ), '\n' );
+    _.fileProvider.fileAppend( _.path.join( a.routinePath, 'sub.ex.will.yml' ), '\n' );
     return null;
   })
 
-  start( '.with sub .export debug:0' )
+  a.start( '.with sub .export debug:0' )
 
   .then( ( got ) =>
   {
@@ -12555,7 +12540,7 @@ function exportOutdated( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function exportOutdated */
 
 //
