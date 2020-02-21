@@ -7551,43 +7551,27 @@ clean.timeOut = 300000;
 function cleanSingleModule( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'single' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let ready = new _.Consequence().take( null )
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
+  let a = self.assetFor( test, 'single' );
+  a.reflect();
 
   /* - */
 
-  start({ execPath : [ '.build', '.clean' ] })
+  a.start({ execPath : [ '.build', '.clean' ] })
 
   .then( ( got ) =>
   {
-    debugger;
     test.case = '.clean '
     test.identical( got[ 0 ].exitCode, 0 );
     test.identical( got[ 1 ].exitCode, 0 );
     test.is( _.strHas( got[ 1 ].output, 'Clean deleted 0 file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
     return null;
   })
 
   /* - */
 
-  start({ execPath : [ '.build', '.clean dry:1' ] })
+  a.start({ execPath : [ '.build', '.clean dry:1' ] })
 
   .then( ( got ) =>
   {
@@ -7600,7 +7584,7 @@ function cleanSingleModule( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 cleanSingleModule.timeOut = 200000;
