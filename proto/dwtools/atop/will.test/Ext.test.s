@@ -7707,42 +7707,22 @@ cleanBroken1.timeOut = 200000;
 function cleanBroken2( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-broken-2' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
-  let outDebugPath = _.path.join( routinePath, 'out/debug' );
-
+  let a = self.assetFor( test, 'submodules-broken-2' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
+  a.reflect();
 
   test.description = 'should handle currputed willfile properly';
 
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
   /* - */
 
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
-  ready
-
-  /* - */
+  a.ready
 
   .then( ( got ) =>
   {
     test.case = '.clean ';
-
     var files = self.find( submodulesPath );
-
     test.identical( files.length, 4 );
 
     return null;
@@ -7750,41 +7730,39 @@ function cleanBroken2( test )
 
   /* - */
 
-  start({ execPath : '.clean dry:1' })
+  a.start({ execPath : '.clean dry:1' })
 
   .then( ( got ) =>
   {
     test.case = '.clean dry:1';
 
     var files = self.find( submodulesPath );
-
     test.identical( files.length, 4 );
-
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) );
 
     return null;
   })
 
   /* - */
 
-  start({ execPath : '.clean' })
+  a.start({ execPath : '.clean' })
 
   .then( ( got ) =>
   {
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* filesDelete issue? */
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) ); /* filesDelete issue? */
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) );
     return null;
   })
 
   /* */
 
-  start({ execPath : '.export' })
+  a.start({ execPath : '.export' })
   .then( ( got ) =>
   {
     test.case = '.export';
@@ -7803,19 +7781,16 @@ function cleanBroken2( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
+    a.reflect();
     return null;
   });
 
   /* */
 
-  start({ execPath : '.export', throwingExitCode : 0 })
+  a.start({ execPath : '.export', throwingExitCode : 0 })
   .then( ( got ) =>
   {
     test.case = '.export';
@@ -7843,18 +7818,15 @@ function cleanBroken2( test )
 
   /* */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
+    a.reflect();
     return null;
   });
 
-  start({ execPath : '.submodules.versions.agree' })
-  start({ execPath : '.export', throwingExitCode : 0 })
+  a.start({ execPath : '.submodules.versions.agree' })
+  a.start({ execPath : '.export', throwingExitCode : 0 })
   .then( ( got ) =>
   {
     test.case = '.export agree1';
@@ -7880,7 +7852,7 @@ function cleanBroken2( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 cleanBroken2.timeOut = 200000;
