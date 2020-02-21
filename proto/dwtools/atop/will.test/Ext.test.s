@@ -7971,49 +7971,52 @@ function cleanHdBug( test )
 function cleanNoBuild( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'clean' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath + ' .with NoBuild',
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  let a = self.assetFor( test, 'clean' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'clean' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let ready = new _.Consequence().take( null );
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath + ' .with NoBuild',
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     throwingExitCode : 0,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
-  start({ execPath : '.clean' })
+  a.startNonThrowing({ execPath : '.with NoBuild .clean' })
   .then( ( got ) =>
   {
     test.case = '.clean -- second';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted ' + 0 + ' file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* phantom problem ? */
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) ); /* phantom problem ? */
     return null;
   })
 
-  start({ execPath : '.clean' })
+  a.startNonThrowing({ execPath : '.with NoBuild .clean' })
   .then( ( got ) =>
   {
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
     return null;
   })
 
   /* - */
 
-  start({ execPath : '.clean -- badarg' })
+  a.startNonThrowing({ execPath : '.with NoBuild .clean -- badarg' })
   .then( ( got ) =>
   {
     test.case = '.clean -- badarg';
@@ -8024,7 +8027,7 @@ function cleanNoBuild( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 cleanNoBuild.timeOut = 200000;
