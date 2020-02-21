@@ -13165,36 +13165,14 @@ exportDotlessSingle.timeOut = 300000;
 function exportTracing( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-dotless-single-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let inPath = abs( './' );
-  let outSuperDirPath = abs( 'super.out' );
-  let outSubDirPath = abs( 'sub.out' );
-  let outSuperTerminalPath = abs( 'super.out/supermodule.out.will.yml' );
-  let outSubTerminalPath = abs( 'sub.out/sub.out.will.yml' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath + '/proto',
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  _.fileProvider.filesDelete( outSuperDirPath );
-  _.fileProvider.filesDelete( outSubDirPath );
+  let a = self.assetFor( test, 'two-dotless-single-exported' );
+  a.reflect();
+  _.fileProvider.filesDelete( a.abs( 'super.out' ) );
+  _.fileProvider.filesDelete( a.abs( 'sub.out' ) );
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -13202,7 +13180,7 @@ function exportTracing( test )
     return null;
   })
 
-  start({ execPath : '.export.recursive debug:1' })
+  a.startNonThrowing({ execPath : '.export.recursive debug:1', currentPath : a.routinePath + '/proto' })
 
   .then( ( got ) =>
   {
@@ -13228,7 +13206,7 @@ function exportTracing( test )
       './super.out/debug/File.debug.js',
       './super.out/debug/File.release.js'
     ]
-    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    var files = self.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in' ), 1 );
@@ -13239,7 +13217,7 @@ function exportTracing( test )
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -13247,7 +13225,7 @@ function exportTracing( test )
     return null;
   })
 
-  start({ execPath : '.with . .export.recursive debug:1' })
+  a.startNonThrowing({ execPath : '.with . .export.recursive debug:1', currentPath : a.routinePath + '/proto' })
 
   .finally( ( err, op ) =>
   {
@@ -13260,7 +13238,7 @@ function exportTracing( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function exportTracing */
 
 exportTracing.timeOut = 300000;
