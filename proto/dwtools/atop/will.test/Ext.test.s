@@ -11194,30 +11194,13 @@ exportSecond.timeOut = 300000;
 function exportSubmodules( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let outDebugPath = _.path.join( routinePath, 'out/debug' );
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'submodules' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -11226,19 +11209,19 @@ function exportSubmodules( test )
     return null;
   })
 
-  return start({ execPath : '.export' })
+  return a.start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/debug/dwtools/abase/l0/l1/Predefined.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/debug/dwtools/abase/l2/PathBasic.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/submodules.out.will.yml' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/debug/dwtools/abase/l1/l1/ModuleForTesting1.s' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/debug/dwtools/abase/l2/l2/ModuleForTesting1a.s' ) ) );
+    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/submodules.out.will.yml' ) ) );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
     var files = self.find( outPath );
-    test.is( files.length > 60 );
+    test.is( files.length > 10 );
 
     var files = _.fileProvider.dirRead( outPath );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
@@ -11246,7 +11229,7 @@ function exportSubmodules( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 exportSubmodules.timeOut = 200000;
