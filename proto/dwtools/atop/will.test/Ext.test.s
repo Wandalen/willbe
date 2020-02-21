@@ -13373,7 +13373,7 @@ function exportWithRemoteSubmodules( test )
   return a.ready;
 } /* end of function exportWithRemoteSubmodules */
 
-exportWithRemoteSubmodules.timeOut = 300000;
+exportWithRemoteSubmodules.timeOut = 400000;
 exportWithRemoteSubmodules.description =
 `
 check there is no annoying information about lack of remote submodules of submodules
@@ -14058,28 +14058,32 @@ exportImplicit.timeOut = 300000;
 function exportAuto( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-auto' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let ready = new _.Consequence().take( null );
+  let a = self.assetFor( test, 'export-auto' );
+  a.reflect();
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-auto' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let outPath = _.path.join( routinePath, 'out' );
+//   let submodulesPath = _.path.join( routinePath, '.module' );
+//   let ready = new _.Consequence().take( null );
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -14087,9 +14091,9 @@ function exportAuto( test )
     return null;
   })
 
-  start( '.clean' )
-  start( '.with submodule/* .export' )
-  start( '.with manual .export' )
+  a.start( '.clean' )
+  a.start( '.with submodule/* .export' )
+  a.start( '.with manual .export' )
 
   .then( ( got ) =>
   {
@@ -14121,7 +14125,7 @@ function exportAuto( test )
       './submodule/local.will.yml',
       './submodule/remote.will.yml'
     ]
-    var files = self.find( routinePath );
+    var files = self.find( a.routinePath );
     test.contains( files, exp );
 
     return null;
@@ -14129,7 +14133,7 @@ function exportAuto( test )
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -14137,8 +14141,8 @@ function exportAuto( test )
     return null;
   })
 
-  start( '.clean' )
-  start( '.with auto .export.recursive' )
+  a.start( '.clean' )
+  a.start( '.with auto .export.recursive' )
 
   .then( ( got ) =>
   {
@@ -14170,7 +14174,7 @@ function exportAuto( test )
       './submodule/local.will.yml',
       './submodule/remote.will.yml'
     ]
-    var files = self.find( routinePath );
+    var files = self.find( a.routinePath );
     test.contains( files, exp );
 
     return null;
@@ -14178,7 +14182,7 @@ function exportAuto( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function exportAuto */
 
 exportAuto.timeOut = 300000;
