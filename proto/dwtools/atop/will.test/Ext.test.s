@@ -9792,29 +9792,13 @@ function buildSingleStep( test )
 function buildSubmodules( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
-  ready
+  let a = self.assetFor( test, 'submodules' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
 
   /* - */
+
+  a.ready
 
   .then( () =>
   {
@@ -9823,19 +9807,19 @@ function buildSubmodules( test )
     return null;
   })
 
-  start({ execPath : '.build' })
+  a.start({ execPath : '.build' })
   .finally( ( err, got ) =>
   {
     test.is( !err );
     test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     var files = self.find( outPath );
-    test.gt( files.length, 60 );
+    test.gt( files.length, 10 );
     return null;
   })
 
   /* - */
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
   .then( () =>
   {
     test.case = '.build'
@@ -9843,7 +9827,7 @@ function buildSubmodules( test )
     return null;
   })
 
-  start({ execPath : '.build' })
+  a.start({ execPath : '.build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -9872,14 +9856,14 @@ function buildSubmodules( test )
     var o =
     {
       execPath : 'node ' + self.willPath,
-      currentPath : routinePath,
+      currentPath : a.routinePath,
       outputCollecting : 1,
-    outputGraying : 1,
+      outputGraying : 1,
       args : [ '.build wrong' ]
     }
 
-    let buildOutDebugPath = _.path.join( routinePath, 'out/debug' );
-    let buildOutReleasePath = _.path.join( routinePath, 'out/release' );
+    let buildOutDebugPath = _.path.join( a.routinePath, 'out/debug' );
+    let buildOutReleasePath = _.path.join( a.routinePath, 'out/release' );
 
     return test.shouldThrowErrorOfAnyKind( _.process.start( o ) )
     .then( ( got ) =>
@@ -9895,7 +9879,7 @@ function buildSubmodules( test )
 
   });
 
-  return ready;
+  return a.ready;
 }
 
 buildSubmodules.timeOut = 300000;
