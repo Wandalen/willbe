@@ -11239,39 +11239,43 @@ exportSubmodules.timeOut = 200000;
 function exportMultiple( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
+  let a = self.assetFor( test, 'export-multiple' );
+  let outPath = _.path.join( a.routinePath, 'out' );
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
+  a.reflect();
 
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  });
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let submodulesPath = _.path.join( routinePath, '.module' );
+//   let outPath = _.path.join( routinePath, 'out' );
+//   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
+// 
+//   let ready = new _.Consequence().take( null );
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   });
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.export debug:1';
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     _.fileProvider.filesDelete( outPath );
 
     return null;
   })
 
-  start({ execPath : '.export debug:1' })
+  a.start({ execPath : '.export debug:1' })
 
   .then( ( got ) =>
   {
@@ -11456,21 +11460,19 @@ function exportMultiple( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = '.export debug:1';
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
     _.fileProvider.filesDelete( outPath );
 
     return null;
   })
 
-  start({ execPath : '.export debug:1' })
-  start({ execPath : '.export debug:0' })
-  start({ execPath : '.export debug:0' })
+  a.start({ execPath : '.export debug:1' })
+  a.start({ execPath : '.export debug:0' })
+  a.start({ execPath : '.export debug:0' })
 
   .then( ( got ) =>
   {
@@ -11488,8 +11490,8 @@ function exportMultiple( test )
 
     var outfileData = _.fileProvider.fileRead( outWillPath );
     test.is( outfileData.length > 1000 );
-    test.is( !_.strHas( outfileData, _.path.join( routinePath, '../..' ) ) );
-    test.is( !_.strHas( outfileData, _.path.nativize( _.path.join( routinePath, '../..' ) ) ) );
+    test.is( !_.strHas( outfileData, _.path.join( a.routinePath, '../..' ) ) );
+    test.is( !_.strHas( outfileData, _.path.nativize( _.path.join( a.routinePath, '../..' ) ) ) );
 
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
     outfile = outfile.module[ 'submodule.out' ]
@@ -11759,7 +11761,7 @@ function exportMultiple( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 exportMultiple.timeOut = 200000;
