@@ -13248,29 +13248,18 @@ exportTracing.timeOut = 300000;
 function exportRewritesOutFile( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-rewrites-out-file' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
+  let a = self.assetFor( test, 'export-rewrites-out-file' );
+  let outFilePath = _.path.join( a.routinePath, 'out/export-rewrites-out-file.out.will.yml' );
+  let willFilePath = _.path.join( a.routinePath, '.will.yml' );
+  let willSingleExportFilePath = _.path.join( a.routinePath, '.will.single-export.yml' );
+  let willCopyFilePath = _.path.join( a.routinePath, 'copy.will.yml' );
 
-  let ready = new _.Consequence().take( null );
-  let outFilePath = _.path.join( routinePath, 'out/export-rewrites-out-file.out.will.yml' );
-  let willFilePath = _.path.join( routinePath, '.will.yml' );
-  let willSingleExportFilePath = _.path.join( routinePath, '.will.single-export.yml' );
-  let willCopyFilePath = _.path.join( routinePath, 'copy.will.yml' );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  a.reflect();
   _.fileProvider.fileCopy( willCopyFilePath, willFilePath );
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -13278,7 +13267,7 @@ function exportRewritesOutFile( test )
     return null;
   })
 
-  start({ execPath : '.export export1' })
+  a.start({ execPath : '.export export1' })
 
   .then( ( got ) =>
   {
@@ -13299,7 +13288,7 @@ function exportRewritesOutFile( test )
     return null;
   })
 
-  start({ execPath : '.export export1' })
+  a.start({ execPath : '.export export1' })
 
   .then( ( got ) =>
   {
@@ -13320,7 +13309,7 @@ function exportRewritesOutFile( test )
     return null;
   })
 
-  start({ execPath : '.export export1' })
+  a.start({ execPath : '.export export1' })
 
   .then( ( got ) =>
   {
@@ -13334,10 +13323,10 @@ function exportRewritesOutFile( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
-exportRewritesOutFile.timeOut = 30000;
+exportRewritesOutFile.timeOut = 60000;
 
 //
 
