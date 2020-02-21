@@ -9962,28 +9962,6 @@ function exportSingle( test )
   let outPath = _.path.join( a.routinePath, 'out' );
   let outWillPath = _.path.join( a.routinePath, 'out/single.out.will.yml' );
   a.reflect();
-
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'single' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-// 
-//   let outDebugPath = _.path.join( routinePath, 'out/debug' );
-//   let outPath = _.path.join( routinePath, 'out' );
-//   let outWillPath = _.path.join( routinePath, 'out/single.out.will.yml' );
-//   let ready = new _.Consequence().take( null );
-// 
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   _.fileProvider.filesDelete( outDebugPath );
 
   /* - */
@@ -10073,41 +10051,45 @@ exportSingle.timeOut = 200000;
 function exportItself( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-itself' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
+  let a = self.assetFor( test, 'export-itself' );
+  a.reflect();
 
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-itself' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+// 
+//   let ready = new _.Consequence().take( null );
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.export'
     return null;
   })
 
-  start( '.with v1 .clean' )
-  start( '.with v1 .submodules.download' )
-  start( '.with v1 .export' )
+  a.start( '.with v1 .clean' )
+  a.start( '.with v1 .submodules.download' )
+  a.start( '.with v1 .export' )
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( routinePath );
+    var files = self.find( a.routinePath );
     test.gt( files.length, 250 );
 
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
@@ -10118,8 +10100,10 @@ function exportItself( test )
 
   /* */
 
-  return ready;
+  return a.ready;
 }
+
+exportItself.timeOut = 100000;
 
 //
 
