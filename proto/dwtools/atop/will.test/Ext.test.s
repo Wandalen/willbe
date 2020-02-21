@@ -130,7 +130,7 @@ function assetFor( test, name )
   {
     _.fileProvider.filesDelete( a.routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
-    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.abs( '_repo' ) } });
+    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.path.join( self.suiteTempPath, '_repo' ) } }); 
   }
 
   a.shell = _.process.starter
@@ -7940,9 +7940,7 @@ function cleanHdBug( test )
   .then( () =>
   {
     test.case = '.with z .clean recursive:2';
-    /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
-    _.fileProvider.filesDelete( a.routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } }); 
+    a.reflect(); 
     return null;
   })
 
@@ -8191,9 +8189,7 @@ function cleanWithInPath( test )
   .then( ( got ) =>
   {
     test.case = '.with module/ModuleForTesting12 .clean';
-    /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
-    _.fileProvider.filesDelete( a.routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+    a.reflect(); 
     hadFiles = self.find( a.routinePath + '/out' ).length + self.find( a.routinePath + '/.module' ).length;
 
     return null;
@@ -10402,31 +10398,16 @@ exportInformal.description =
 function exportWithReflector( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-reflector' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let outDebugPath = _.path.join( routinePath, 'out/debug' );
-  let outPath = _.path.join( routinePath, 'out' );
-  let outWillPath = _.path.join( routinePath, 'out/export-with-reflector.out.will.yml' );
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'export-with-reflector' );
+  let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  let outWillPath = _.path.join( a.routinePath, 'out/export-with-reflector.out.will.yml' );
+  a.reflect();
   _.fileProvider.filesDelete( outDebugPath );
 
   /* - */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = '.export'
     _.fileProvider.filesDelete( outDebugPath );
@@ -10434,7 +10415,7 @@ function exportWithReflector( test )
     return null;
   })
 
-  start({ execPath : '.export' })
+  a.start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
@@ -10447,12 +10428,10 @@ function exportWithReflector( test )
 
     var outfile = _.fileProvider.fileConfigRead( outWillPath );
 
-    debugger;
-
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 exportWithReflector.timeOut = 200000;
