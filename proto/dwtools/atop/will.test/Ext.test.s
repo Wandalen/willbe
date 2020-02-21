@@ -14437,41 +14437,24 @@ importLocalRepo.timeOut = 200000;
 function importOutWithDeletedSource( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-  let modulePath = _.path.join( routinePath, '.module' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  let a = self.assetFor( test, 'export-with-submodules' );
+  let outPath = _.path.join( a.routinePath, 'out' );
 
   /* - */
 
-  ready
+  a.ready
   .then( ( got ) =>
   {
     test.case = 'export first';
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    a.reflect();
 
     return null;
   })
 
-  start({ args : '.clean' })
-  start({ args : '.with a .export' })
-  start({ args : '.with b .export' })
-  start({ args : '.with ab-named .export' })
+  a.start({ args : '.clean' })
+  a.start({ args : '.with a .export' })
+  a.start({ args : '.with b .export' })
+  a.start({ args : '.with ab-named .export' })
 
   .then( ( got ) =>
   {
@@ -14481,15 +14464,15 @@ function importOutWithDeletedSource( test )
     var files = self.find( outPath );
     test.identical( files, exp );
 
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'a.will.yml' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'b.will.yml' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'ab' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'ab-named.will.yml' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'a.will.yml' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'b.will.yml' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'ab' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'ab-named.will.yml' ) );
 
     return null;
   })
 
-  start({ args : '.with out/module-ab-named .modules.list' })
+  a.start({ args : '.with out/module-ab-named .modules.list' })
 
   .then( ( got ) =>
   {
@@ -14507,7 +14490,7 @@ function importOutWithDeletedSource( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 importOutWithDeletedSource.timeOut = 200000;
