@@ -7357,32 +7357,24 @@ listWithSubmodules.timeOut = 200000;
 function listSteps( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let outPath = _.path.join( routinePath, 'out' );
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
+  let a = self.assetFor( test, 'submodules' );
+  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
     mode : 'spawn',
-    ready : ready,
+    ready : a.ready,
   })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
-  ready
+  a.reflect();
 
   /* - */
 
-  start({ execPath : '.steps.list' })
+  a.ready
+
+  a.start({ execPath : '.steps.list' })
   .finally( ( err, got ) =>
   {
     test.case = '.steps.list';
@@ -7401,7 +7393,7 @@ function listSteps( test )
 
   /* - */
 
-  start({ execPath : '.steps.list *' })
+  a.start({ execPath : '.steps.list *' })
   .finally( ( err, got ) =>
   {
     test.case = '.steps.list';
@@ -7420,7 +7412,7 @@ function listSteps( test )
 
   /* - */
 
-  start({ execPath : '.steps.list *proto*' })
+  a.start({ execPath : '.steps.list *proto*' })
   .finally( ( err, got ) =>
   {
     test.case = '.steps.list';
@@ -7439,7 +7431,7 @@ function listSteps( test )
 
   /* - */
 
-  start({ execPath : '.steps.list *proto* debug:1' })
+  a.start({ execPath : '.steps.list *proto* debug:1' })
   .finally( ( err, got ) =>
   {
     test.case = '.steps.list';
@@ -7458,7 +7450,7 @@ function listSteps( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
