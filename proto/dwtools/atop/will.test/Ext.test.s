@@ -8079,36 +8079,20 @@ cleanDry.timeOut = 300000;
 function cleanSubmodules( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'clean' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
-
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath + ' .with NoTemp',
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  let a = self.assetFor( test, 'clean' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  a.reflect();
 
   /* */
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.with NoTemp .submodules.update' })
   .then( ( got ) =>
   {
     test.case = '.submodules.update'
     test.identical( got.exitCode, 0 );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
 
     var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
     test.is( files.length );
@@ -8122,7 +8106,7 @@ function cleanSubmodules( test )
   /* */
 
   var files;
-  ready
+  a.ready
   .then( () =>
   {
     files = self.findAll( submodulesPath );
@@ -8131,20 +8115,20 @@ function cleanSubmodules( test )
 
   /* */
 
-  start({ execPath : '.submodules.clean' })
+  a.start({ execPath : '.with NoTemp .submodules.clean' })
   .then( ( got ) =>
   {
     test.case = '.submodules.clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `${files.length}` ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* phantom problem ? */
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) );
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) ); /* phantom problem ? */
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) );
     return null;
   })
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 cleanSubmodules.timeOut = 300000;
