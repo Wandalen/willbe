@@ -9739,40 +9739,22 @@ buildSingleModule.timeOut = 200000;
 function buildSingleStep( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'step-shell' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, 'module' );
-
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'step-shell' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
     test.case = '.build debug1'
-    let outDebugPath = _.path.join( routinePath, 'out/debug' );
-    let outPath = _.path.join( routinePath, 'out' );
-    _.fileProvider.filesDelete( outDebugPath );
-    _.fileProvider.filesDelete( outPath );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out/debug' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out' ) );
     return null;
   })
 
-  start({ execPath : '.build debug1' })
+  a.start({ execPath : '.build debug1' })
 
   .then( ( got ) =>
   {
@@ -9782,19 +9764,17 @@ function buildSingleStep( test )
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
     test.case = '.build debug2'
-    let outDebugPath = _.path.join( routinePath, 'out/debug' );
-    let outPath = _.path.join( routinePath, 'out' );
-    _.fileProvider.filesDelete( outDebugPath );
-    _.fileProvider.filesDelete( outPath );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out/debug' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out' ) );
     return null;
   })
 
-  start({ execPath : '.build debug2' })
+  a.start({ execPath : '.build debug2' })
 
   .then( ( got ) =>
   {
@@ -9804,7 +9784,7 @@ function buildSingleStep( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
