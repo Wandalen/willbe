@@ -10129,35 +10129,40 @@ function exportNonExportable( test )
 function exportInformal( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-mixed' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
+  let a = self.assetFor( test, 'submodules-mixed' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
 
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  });
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-mixed' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let outPath = _.path.join( routinePath, 'out' );
+//   let ready = new _.Consequence().take( null );
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   });
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with module/Proto.informal .export'
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.with module/Proto.informal .export' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.with module/Proto.informal .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10227,14 +10232,14 @@ function exportInformal( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with module/Proto.informal .export -- second'
     return null;
   })
 
-  start({ execPath : '.with module/Proto.informal .export' })
+  a.start({ execPath : '.with module/Proto.informal .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10304,15 +10309,15 @@ function exportInformal( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.with module/UriBasic.informal .export'
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.with module/UriBasic.informal .export' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.with module/UriBasic.informal .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -10382,7 +10387,7 @@ function exportInformal( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 exportInformal.timeOut = 300000;
