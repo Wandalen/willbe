@@ -114,19 +114,19 @@ function spaceIs( src )
 {
   if( !src )
   return false;
-  if( !_.Space )
+  if( !_.Matrix )
   return false;
-  if( src instanceof _.Space )
+  if( src instanceof _.Matrix )
   return true;
 }
 
 //
 
-function constructorIsSpace( src )
+function constructorIsMatrix( src )
 {
-  if( !_.Space )
+  if( !_.Matrix )
   return false;
-  if( src === _.Space )
+  if( src === _.Matrix )
   return true;
   return false;
 }
@@ -525,7 +525,7 @@ let Routines =
   vectorAdapterIs,
   constructorIsVector,
   spaceIs,
-  constructorIsSpace,
+  constructorIsMatrix,
 
   consequenceIs,
   consequenceLike,

@@ -315,6 +315,26 @@ function accessor( test )
   var expected = 5;
   test.identical( got, expected );
 
+  /* */
+
+  test.case = 'has constructor only';
+  var dst = { constructor : function(){}, };
+  var exp = { 'constructor' : dst.constructor, 'a' : 'a1' };
+  _.accessor.declare( dst, { a : 'a' } );
+  dst[ Symbol.for( 'a' ) ] = 'a1';
+  test.identical( dst, exp );
+
+  /* */
+
+  test.case = 'has Composes only';
+  var dst = { Composes : {}, };
+  var exp = { Composes : dst.Composes, 'a' : 'a1' };
+  _.accessor.declare( dst, { a : 'a' } );
+  dst[ Symbol.for( 'a' ) ] = 'a1';
+  test.identical( dst, exp );
+
+  /* - */
+
   if( !Config.debug )
   return;
 
@@ -334,18 +354,6 @@ function accessor( test )
   test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( {}, [] );
-  });
-
-  test.case = 'does not have Composes'; /**/
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.accessor.declare( { constructor : function(){}, },{ a : 'a' } );
-  });
-
-  test.case = 'does not have constructor'; /**/
-  test.shouldThrowErrorOfAnyKind( function()
-  {
-    _.accessor.declare( { Composes : {}, },{ a : 'a' } );
   });
 
 }
@@ -542,6 +550,97 @@ function accessorIsClean( test )
 }
 
 // accessorIsClean.timeOut = 300000;
+
+//
+
+function accessorDeducingPrime( test )
+{
+
+  /* */
+
+  test.case = '_.accessor.declare';
+
+  var proto = Object.create( null );
+  proto.a = 'a1';
+  proto.abcGet = function()
+  {
+    return 'abc1';
+  }
+
+  var dst = Object.create( proto );
+  dst.b = 'b2';
+
+  var exp = { 'b' : 'b2', 'abc' : 'abc1' }
+  var names = { abc : 'abc' }
+  var o2 =
+  {
+    object : dst,
+    names : names,
+  }
+  _.accessor.declare( o2 );
+
+  test.identical( o2.prime, null );
+  test.identical( o2.strict, 1 );
+  test.identical( dst, exp );
+
+  /* */
+
+  test.case = '_.accessor.readOnly';
+
+  var proto = Object.create( null );
+  proto.a = 'a1';
+  proto.abcGet = function()
+  {
+    return 'abc1';
+  }
+
+  var dst = Object.create( proto );
+  dst.b = 'b2';
+
+  var exp = { 'b' : 'b2', 'abc' : 'abc1' }
+  var names = { abc : 'abc' }
+  var o2 =
+  {
+    object : dst,
+    names : names,
+  }
+  _.accessor.readOnly( o2 );
+
+  test.identical( o2.prime, null );
+  test.identical( o2.strict, 1 );
+  test.identical( dst, exp );
+
+  /* */
+
+  test.case = '_.accessor.forbid';
+
+  var proto = Object.create( null );
+  proto.a = 'a1';
+  proto.abcGet = function()
+  {
+    return 'abc1';
+  }
+
+  var dst = Object.create( proto );
+  dst.b = 'b2';
+
+  var exp = { 'b' : 'b2' }
+  var names = { abc : 'abc' }
+  var o2 =
+  {
+    object : dst,
+    names : names,
+  }
+  _.accessor.forbid( o2 );
+
+  test.identical( o2.prime, 0 );
+  test.identical( o2.strict, 0 );
+  test.identical( dst, exp );
+  test.shouldThrowErrorSync( () => dst.abc );
+
+  /* */
+
+}
 
 //
 
@@ -774,6 +873,39 @@ function forbids( test )
 }
 
 // forbids.timeOut = 300000;
+
+//
+
+function forbidWithoutConstructor( test )
+{
+
+  /* */
+
+  test.case = 'basic';
+
+  var proto = Object.create( null );
+  proto.a = 'a1';
+
+  var dst = Object.create( proto );
+  dst.b = 'b2';
+
+  var exp = { 'b' : 'b2' }
+
+  debugger;
+  var names = { abc : 'abc' }
+  _.accessor.forbid
+  ({
+    object : dst,
+    names : names,
+  });
+  debugger;
+
+  test.identical( dst, exp );
+  test.shouldThrowErrorSync( () => dst.abc = 'abc' );
+
+  /* */
+
+}
 
 //
 
@@ -1393,10 +1525,12 @@ var Self =
     accessor,
     accessorOptionReadOnly,
     accessorIsClean,
+    accessorDeducingPrime,
 
     accessorForbid,
     accessorReadOnly,
     forbids,
+    forbidWithoutConstructor,
 
     propertyConstant,
 

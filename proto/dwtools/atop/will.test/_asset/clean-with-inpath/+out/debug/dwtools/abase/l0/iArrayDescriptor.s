@@ -76,14 +76,14 @@ function makeSimilar( src,length )
  * // returns instance of Array
  *
  * @example
- * _.withDefaultLong.Fx.makeArrayOfLength(1);
+ * _.withDefaultLong.Fx.Make/*makeArrayOfLength*/(1);
  * // returns instance of F32x
  *
- * @function makeArrayOfLength
+ * @function Make/*makeArrayOfLength*/
  * @memberof wTools."wTools.array"
  */
 
-function makeArrayOfLength( length )
+function Make/*makeArrayOfLength*/( length )
 {
 
   if( length === undefined )
@@ -109,15 +109,15 @@ function makeArrayOfLength( length )
  * // returns Array [ 0,0 ]
  *
  * @example
- * _.withDefaultLong.Fx.makeArrayOfLength( 2 );
+ * _.withDefaultLong.Fx.Make/*makeArrayOfLength*/( 2 );
  * // returns F32x [ 0,0 ]
  *
- * @function makeArrayOfLengthZeroed
+ * @function Make/*makeArrayOfLength*/Zeroed
  * @memberof wTools."wTools.array"
  */
 
 
-function makeArrayOfLengthZeroed( length )
+function Make/*makeArrayOfLength*/Zeroed( length )
 {
   if( length === undefined )
   length = 0;
@@ -143,7 +143,7 @@ function makeArrayOfLengthZeroed( length )
  * @param {} src Source array.
  *
  * @example
- * let src =  _.withDefaultLong.Fx.makeArrayOfLength( 2 );
+ * let src =  _.withDefaultLong.Fx.Make/*makeArrayOfLength*/( 2 );
  * _.array.arrayFromCoercing( src );
  * // returns Array [ 0,0 ]
  *
@@ -187,8 +187,8 @@ let Extend =
 {
 
   makeSimilar,
-  makeArrayOfLength,
-  makeArrayOfLengthZeroed,
+  Make/*makeArrayOfLength*/,
+  Make/*makeArrayOfLength*/Zeroed,
 
   arrayFrom : arrayFromCoercing,
   arrayFromCoercing,

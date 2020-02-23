@@ -1001,28 +1001,28 @@ function longFromRangeWithNumberOfSteps( range , numberOfSteps )
 // --
 
 /**
- * The longSelectWithIndices() routine selects elements from (srcArray) by indexes of (indicesArray).
+ * The longShrinkWithIndices() routine selects elements from (srcArray) by indexes of (indicesArray).
  *
  * @param { longIs } srcArray - Values for the new array.
  * @param { ( longIs | object ) } [ indicesArray = indicesArray.indices ] - Indexes of elements from the (srcArray) or options map.
  *
  * @example
- * _.longSelectWithIndices( [ 1, 2, 3, 4, 5 ], [ 2, 3, 4 ] );
+ * _.longShrinkWithIndices( [ 1, 2, 3, 4, 5 ], [ 2, 3, 4 ] );
  * // returns [ 3, 4, 5 ]
  *
  * @example
- * _.longSelectWithIndices( [ 1, 2, 3 ], [ 4, 5 ] );
+ * _.longShrinkWithIndices( [ 1, 2, 3 ], [ 4, 5 ] );
  * // returns [ undefined, undefined ]
  *
  * @returns { longIs } - Returns a new array with the length equal (indicesArray.length) and elements from (srcArray).
    If there is no element with necessary index than the value will be undefined.
- * @function longSelectWithIndices
+ * @function longShrinkWithIndices
  * @throws { Error } If passed arguments is not array like object.
  * @throws { Error } If the atomsPerElement property is not equal to 1.
  * @memberof wTools
  */
 
-function longSelectWithIndices( srcArray, indicesArray )
+function longShrinkWithIndices( srcArray, indicesArray )
 {
   let atomsPerElement = 1;
 
@@ -1754,7 +1754,7 @@ let Routines =
 
   // long transformer
 
-  longSelectWithIndices,
+  longShrinkWithIndices,
 
   // long mutator
 
