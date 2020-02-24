@@ -183,19 +183,19 @@ function idWithGuid()
 
 //
 
-// function idWithGuid() 
+// function idWithGuid()
 // {
 //   let guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
-//     
+//
 //   return guid.replace( /[xy]/g, replaceSymbol );
-//   
+//
 //   /* */
-//   
+//
 //   function replaceSymbol( sym )
 //   {
 //     let r = Math.random() * 16 | 0;
 //     return ( sym === 'x' ? r : ( r & 0x3 | 0x8 ) ).toString( 16 );
-//   }  
+//   }
 // }
 
 //
@@ -214,21 +214,21 @@ function idWithGuid()
  * @memberof wTools
  */
 
-function idWithTimeGuid() 
+function idWithTimeGuid()
 {
-  let guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+  let guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'; /* qqq : ask */
   let date = _.time.now();
-    
+
   return guid.replace( /[xy]/g, replaceSymbol );
-  
+
   /* */
-  
+
   function replaceSymbol( sym )
   {
     let r = ( date + Math.random() * 16 ) % 16 | 0;
     date = Math.floor( date / 16 );
     return ( sym === 'x' ? r : ( r & 0x3 | 0x8 ) ).toString( 16 );
-  }  
+  }
 }
 
 //

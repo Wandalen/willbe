@@ -187,7 +187,7 @@ let Fields =
 let Routines =
 {
 
-  routineCallButOnly, /* qqq2 : cover please */
+  routineCallButOnly, /* qqq : cover please */
 
   routinesComposeReturningLast,
   routinesComposeAll,
