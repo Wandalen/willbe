@@ -15068,28 +15068,33 @@ submodulesDownloadUpdate.timeOut = 300000;
 function submodulesDownloadUpdateDry( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
+  let a = self.assetFor( test, 'submodules-detached' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  a.reflect();
 
-
-  let ready = new _.Consequence().take( null )
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let submodulesPath = _.path.join( routinePath, '.module' );
+// 
+// 
+//   let ready = new _.Consequence().take( null )
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.download dry:1';
@@ -15097,7 +15102,7 @@ function submodulesDownloadUpdateDry( test )
     return null;
   })
 
-  start({ execPath : '.submodules.download dry:1' })
+  a.start({ execPath : '.submodules.download dry:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15112,7 +15117,7 @@ function submodulesDownloadUpdateDry( test )
 
   /* */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.download dry:1 -- after download';
@@ -15120,8 +15125,8 @@ function submodulesDownloadUpdateDry( test )
     return null;
   })
 
-  start({ execPath : '.submodules.download' })
-  start({ execPath : '.submodules.download dry:1' })
+  a.start({ execPath : '.submodules.download' })
+  a.start({ execPath : '.submodules.download dry:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15133,7 +15138,7 @@ function submodulesDownloadUpdateDry( test )
 
   /* */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.update dry:1';
@@ -15141,7 +15146,7 @@ function submodulesDownloadUpdateDry( test )
     return null;
   })
 
-  start({ execPath : '.submodules.update dry:1' })
+  a.start({ execPath : '.submodules.update dry:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15156,7 +15161,7 @@ function submodulesDownloadUpdateDry( test )
 
   /* */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.update dry:1 -- after update';
@@ -15164,8 +15169,8 @@ function submodulesDownloadUpdateDry( test )
     return null;
   })
 
-  start({ execPath : '.submodules.update' })
-  start({ execPath : '.submodules.update dry:1' })
+  a.start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update dry:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15177,7 +15182,7 @@ function submodulesDownloadUpdateDry( test )
 
   /* */
 
-  return ready;
+  return a.ready;
 }
 
 submodulesDownloadUpdateDry.timeOut = 300000;
