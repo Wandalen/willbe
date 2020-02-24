@@ -14854,27 +14854,12 @@ functionThisCriterion.timeOut = 200000;
 function submodulesDownloadSingle( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'single' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'single' );
+  a.reflect();
 
   /* - */
 
-  start({ execPath : '.submodules.download' })
+  a.start({ execPath : '.submodules.download' })
 
   .then( ( got ) =>
   {
@@ -14886,47 +14871,47 @@ function submodulesDownloadSingle( test )
 
   /* - */
 
-  start({ execPath : '.submodules.download' })
+  a.start({ execPath : '.submodules.download' })
 
   .then( ( got ) =>
   {
     test.case = '.submodules.download'
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::single were downloaded in' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
     return null;
   })
 
   /* - */
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
 
   .then( ( got ) =>
   {
     test.case = '.submodules.update'
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::single were updated in' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
     return null;
   })
 
   /* - */
 
-  start({ execPath : '.submodules.clean' })
+  a.start({ execPath : '.submodules.clean' })
 
   .then( ( got ) =>
   {
     test.case = '.submodules.clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted 0 file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
     return null;
   })
 
-  return ready;
+  return a.ready;
 
 }
 
