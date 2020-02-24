@@ -2204,7 +2204,7 @@ function commandPackageInstall( e )
     let o = Object.create( null );
     
     if( tool === 'choco' )
-    {
+    { 
       chocoInstallHandle( o, parsed );
     }
     else if( tool === 'apt' )
@@ -2220,24 +2220,72 @@ function commandPackageInstall( e )
   }
   
   function chocoInstallHandle( o, parsed )
-  {
+  { 
+    if( process.platform !== 'win32' )
+    throw _.err( 'Package manager choco is available only on Windows platform.' )
+      
     o.execPath = 'choco install -y' + parsed.longPath
     if( parsed.hash )
     o.execPath += ' --version=' + parsed.hash;
   }
   
   function aptInstallHandle( o, parsed )
-  { 
-    let installExec = 'sudo apt install ' + parsed.longPath;
-    if( parsed.hash )
-    installExec += '=' + parsed.hash;
+  {  
+    if( process.platform !== 'linux' )
+    throw _.errBrief( 'This installation method is avaiable only on Linux platform.' )
     
-    o.execPath = 
-    [ 
-      // 'sudo apt update',
-      // 'sudo apt upgrade', 
-      installExec
-    ]
+    let linuxInfo = linuxDistroInfo();
+    let linuxId = /ID="(.*)"/g.exec( linuxInfo );
+    if( !linuxId )
+    throw _.err( 'Failed to get Linux distribution name' );
+    
+    let distroName = linuxId[ 1 ].toLowerCase();
+    
+    if( distroName === 'centos' )
+    {
+      o.execPath = 'sudo yum install ' + parsed.longPath;
+      if( parsed.hash )
+      installExec += '-' + parsed.hash;
+      
+      o.execPath = installExec;
+    }
+    else if( distroName === 'ubuntu' )
+    {
+      let installExec = 'sudo apt install ' + parsed.longPath;
+      if( parsed.hash )
+      installExec += '=' + parsed.hash;
+      
+      o.execPath = 
+      [ 
+        // 'sudo apt update',
+        // 'sudo apt upgrade', 
+          installExec
+      ]
+    }
+    else
+    {
+      throw _.err( `Unsupported Linux distribution: ${distroName}` )
+    }
+  }
+  
+  function linuxDistroInfo()
+  { 
+    try
+    {
+      let result = _.process.start
+      ({ 
+        execPath : 'cat /etc/*-release', 
+        outputCollecting : 1,
+        sync : 1,
+        outputPiping : 0, 
+        inputMirroring : 0 
+      })
+      return result.output;
+    }
+    catch( err )
+    {
+      throw _.err( 'Failed to get information about Linux distribution. Reason:\n', err );
+    }
   }
 }
 
