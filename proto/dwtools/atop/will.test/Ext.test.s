@@ -15897,41 +15897,23 @@ submodulesDownloadThrowing.timeOut = 300000;
 function submodulesDownloadStepAndCommand( test )
 {
   let self = this;
-  let originalDirPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-download' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-  let localRepoPath = _.path.join( routinePath, 'module' );
-  let ready = new _.Consequence().take( null );
-  let downloadPath = _.path.join( routinePath, '.module/PathBasic' );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  })
-
-  let start2 = _.process.starter
+  let a = self.assetFor( test, 'submodules-download' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  let localRepoPath = _.path.join( a.routinePath, 'module' );
+  let downloadPath = _.path.join( a.routinePath, '.module/PathBasic' );
+  a.startNonThrowing2 = _.process.starter
   ({
     currentPath : localRepoPath,
     outputCollecting : 1,
     outputGraying : 1,
-    outputGraying : 1,
     throwingExitCode : 0,
-    ready : ready,
+    ready : a.ready,
   })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalDirPath ] : routinePath } });
+  a.reflect();
 
   /* submodules.download step downloads submodules recursively, but should not */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -15939,10 +15921,10 @@ function submodulesDownloadStepAndCommand( test )
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
-  start2( 'git init' )
-  start2( 'git add .' )
-  start2( 'git commit -m init' )
-  start({ execPath : '.build' })
+  a.startNonThrowing2( 'git init' )
+  a.startNonThrowing2( 'git add .' )
+  a.startNonThrowing2( 'git commit -m init' )
+  a.startNonThrowing({ execPath : '.build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15961,10 +15943,10 @@ function submodulesDownloadStepAndCommand( test )
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
-  start2( 'git init' )
-  start2( 'git add .' )
-  start2( 'git commit -m init' )
-  start({ execPath : '.submodules.download' })
+  a.startNonThrowing2( 'git init' )
+  a.startNonThrowing2( 'git add .' )
+  a.startNonThrowing2( 'git commit -m init' )
+  a.startNonThrowing({ execPath : '.submodules.download' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15977,7 +15959,7 @@ function submodulesDownloadStepAndCommand( test )
 
   /*  */
 
-  return ready;
+  return a.ready;
 }
 
 //
