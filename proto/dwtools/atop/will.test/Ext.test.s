@@ -14922,28 +14922,13 @@ submodulesDownloadSingle.timeOut = 200000;
 function submodulesDownloadUpdate( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-
-  let ready = new _.Consequence().take( null )
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  let a = self.assetFor( test, 'submodules' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  a.reflect();
 
   /* */
 
-  ready
+  a.ready
 
   /* */
 
@@ -14954,7 +14939,7 @@ function submodulesDownloadUpdate( test )
     return null;
   })
 
-  start({ execPath : '.submodules.download' })
+  a.start({ execPath : '.submodules.download' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14964,8 +14949,8 @@ function submodulesDownloadUpdate( test )
 
     test.is( files.length > 30 );
 
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1a' ) ) )
     return null;
   })
 
@@ -14976,20 +14961,20 @@ function submodulesDownloadUpdate( test )
     test.case = '.submodules.download - again';
     return null;
   })
-  start({ execPath : '.submodules.download' })
+  a.start({ execPath : '.submodules.download' })
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/2 submodule(s) of module::submodules were downloaded' ) );
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1a' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
 
-    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
+    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1' ) );
     test.is( files.length > 3 );
 
-    var files = self.find( _.path.join( submodulesPath, 'PathBasic' ) );
+    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1a' ) );
     test.is( files.length > 3 );
 
     return null;
@@ -15003,20 +14988,20 @@ function submodulesDownloadUpdate( test )
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1a' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
 
-    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
+    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1' ) );
     test.is( files.length );
 
-    var files = self.find( _.path.join( submodulesPath, 'PathBasic' ) );
+    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1a' ) );
     test.is( files.length );
 
     return null;
@@ -15029,20 +15014,20 @@ function submodulesDownloadUpdate( test )
     test.case = '.submodules.update - again';
     return null;
   })
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/2 submodule(s) of module::submodules were updated in' ) );
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, 'modules' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1a' ) ) )
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
 
-    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
+    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1' ) );
     test.is( files.length );
 
-    var files = self.find( _.path.join( submodulesPath, 'PathBasic' ) );
+    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1a' ) );
     test.is( files.length );
 
     return null;
@@ -15052,7 +15037,7 @@ function submodulesDownloadUpdate( test )
 
   var files;
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.clean';
@@ -15060,20 +15045,20 @@ function submodulesDownloadUpdate( test )
     return files;
   })
 
-  start({ execPath : '.submodules.clean' })
+  a.start({ execPath : '.submodules.clean' })
   .then( ( got ) =>
   {
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `${files.length}` ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( routinePath, '.module' ) ) ); /* phantom problem ? */
+    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) ); /* phantom problem ? */
 
     return null;
   })
 
   /* */
 
-  return ready;
+  return a.ready;
 }
 
 submodulesDownloadUpdate.timeOut = 300000;
