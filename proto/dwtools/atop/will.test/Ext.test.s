@@ -15072,26 +15072,6 @@ function submodulesDownloadUpdateDry( test )
   let submodulesPath = _.path.join( a.routinePath, '.module' );
   a.reflect();
 
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let submodulesPath = _.path.join( routinePath, '.module' );
-// 
-// 
-//   let ready = new _.Consequence().take( null )
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-// 
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
   /* */
 
   a.ready
@@ -15192,39 +15172,44 @@ submodulesDownloadUpdateDry.timeOut = 300000;
 function submodulesDownloadSwitchBranch( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-update-switch-branch' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let submodulesPath = _.path.join( routinePath, '.module' );
+  let a = self.assetFor( test, 'submodules-update-switch-branch' );
+  let willfilePath = _.path.join( a.routinePath, '.will.yml' );
+  a.reflect();
 
-  let experimentModulePath = _.path.join( submodulesPath, 'experiment' );
-  let willfilePath = _.path.join( routinePath, '.will.yml' );
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-update-switch-branch' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let submodulesPath = _.path.join( routinePath, '.module' );
+// 
+//   let experimentModulePath = _.path.join( submodulesPath, 'experiment' );
+//   let willfilePath = _.path.join( routinePath, '.will.yml' );
+// 
+//   let ready = new _.Consequence().take( null )
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
-  let ready = new _.Consequence().take( null )
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
-  ready
+  a.ready
 
   .then( () =>
   {
     test.case = 'setup repo';
 
     let con = new _.Consequence().take( null );
-    let repoPath = _.path.join( routinePath, 'experiment' );
-    let repoSrcFiles = _.path.join( routinePath, 'src' );
-    let clonePath = _.path.join( routinePath, 'cloned' );
-    _.fileProvider.dirMake( repoPath );
+    let repoPath = _.path.join( a.routinePath, 'experiment' );
+    let repoSrcFiles = _.path.join( a.routinePath, 'src' );
+    let clonePath = _.path.join( a.routinePath, 'cloned' );
+    _.fileProvider.dirMake( a.repoPath );
 
     let start = _.process.starter
     ({
-      currentPath : routinePath,
+      currentPath : a.routinePath,
       outputCollecting : 1,
       ready : con,
     })
@@ -15253,7 +15238,7 @@ function submodulesDownloadSwitchBranch( test )
     return null;
   })
 
-  start({ execPath : '.submodules.download' })
+  a.start({ execPath : '.submodules.download' })
 
   .then( () =>
   {
@@ -15272,7 +15257,7 @@ function submodulesDownloadSwitchBranch( test )
     return null;
   })
 
-  start({ execPath : '.submodules.download' })
+  a.start({ execPath : '.submodules.download' })
 
   .then( () =>
   {
@@ -15290,7 +15275,7 @@ function submodulesDownloadSwitchBranch( test )
     return null;
   })
 
-  start({ execPath : '.submodules.download' })
+  a.start({ execPath : '.submodules.download' })
 
   .then( () =>
   {
@@ -15308,7 +15293,7 @@ function submodulesDownloadSwitchBranch( test )
     return null;
   })
 
-  start({ execPath : '.submodules.download' })
+  a.start({ execPath : '.submodules.download' })
 
   .then( () =>
   {
@@ -15317,7 +15302,7 @@ function submodulesDownloadSwitchBranch( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 submodulesDownloadSwitchBranch.timeOut = 300000;
