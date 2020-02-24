@@ -11,7 +11,7 @@ function onModule( it )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  let config = _.fileProvider.fileConfigUserRead();
+  let config = _.fileProvider.configUserRead();
   let token = null;
   if( config.about && config.about[ 'github.token' ] )
   token = config.about[ 'github.token' ];

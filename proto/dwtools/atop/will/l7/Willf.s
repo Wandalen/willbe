@@ -362,7 +362,7 @@ function _read()
         verbosity : 0,
       });
 
-      // willf.data = fileProvider.fileConfigRead
+      // willf.data = fileProvider.configRead
       // ({
       //   filePath : willf.filePath,
       //   // verbosity : will.verbosity-2,
@@ -1277,7 +1277,7 @@ function exists()
   if( !willf._found )
   {
 
-    willf._found = fileProvider.fileConfigFind({ filePath : willf.filePath });
+    willf._found = fileProvider.configFind({ filePath : willf.filePath });
     _.assert( willf._found.length === 0 || willf._found.length === 1 );
     if( willf._found.length )
     {

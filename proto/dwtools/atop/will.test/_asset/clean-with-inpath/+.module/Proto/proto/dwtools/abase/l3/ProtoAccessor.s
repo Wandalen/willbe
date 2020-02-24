@@ -63,7 +63,7 @@ let AccessorDefaults =
 
   strict : 1,
   preserveValues : 1,
-  prime : 1,
+  prime : null,
   combining : null,
 
   readOnly : 0,
@@ -423,9 +423,12 @@ function _declareAct( o )
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.name ) );
   _.assertRoutineOptions( _declareAct, arguments );
+  _.assert( _.longHas( [ null, 'rewrite', 'supplement' ], o.combining ), 'not tested' );
 
-  if( o.combining === 'append' )
-  debugger;
+  if( o.prime === null )
+  o.prime = _.prototypeIsStandard( o.object );
+
+  _.assert( _.boolLike( o.prime ) );
 
   /* */
 
@@ -506,14 +509,29 @@ function _declareAct( o )
 
   /* define accessor */
 
-  Object.defineProperty( o.object, o.name,
+  _.assert( getterSetter.get !== undefined );
+
+  if( _.routineIs( getterSetter.get ) )
   {
-    set : getterSetter.set,
-    get : getterSetter.get,
-    enumerable : !!o.enumerable,
-    configurable : !!o.configurable,
-    // configurable : o.combining === 'append',
-  });
+    Object.defineProperty( o.object, o.name,
+    {
+      set : getterSetter.set,
+      get : getterSetter.get,
+      enumerable : !!o.enumerable,
+      configurable : !!o.configurable,
+    });
+  }
+  else
+  {
+    // debugger;
+    _.assert( getterSetter.set === undefined );
+    Object.defineProperty( o.object, o.name,
+    {
+      value : getterSetter.get,
+      enumerable : !!o.enumerable,
+      configurable : !!o.configurable,
+    });
+  }
 
   /* forbid underscore field */
 
@@ -534,7 +552,8 @@ function _declareAct( o )
       names : forbiddenName,
       message : [ m ],
       prime : 0,
-      strict : 1,
+      // strict : 1,
+      strict : 0,
     });
 
   }
@@ -690,24 +709,24 @@ function declare_body( o )
   _.assert( !_.primitiveIs( o.object ) );
   _.assert( !_.primitiveIs( o.methods ) );
 
-  if( o.strict )
-  {
-
-    let has =
-    {
-      constructor : 'constructor',
-    }
-
-    _.assertMapOwnAll( o.object, has );
-    _.accessor.forbid
-    ({
-      object : o.object,
-      names : _.DefaultForbiddenNames,
-      prime : 0,
-      strict : 0,
-    });
-
-  }
+  // if( o.strict )
+  // {
+  //
+  //   let has =
+  //   {
+  //     constructor : 'constructor',
+  //   }
+  //
+  //   _.assertMapOwnAll( o.object, has );
+  //   _.accessor.forbid
+  //   ({
+  //     object : o.object,
+  //     names : _.DefaultForbiddenNames,
+  //     prime : 0,
+  //     strict : 0,
+  //   });
+  //
+  // }
 
   _.assert( _.objectLikeOrRoutine( o.object ), () => 'Expects object {-object-}, but got ' + _.toStrShort( o.object ) );
   _.assert( _.objectIs( o.names ), () => 'Expects object {-names-}, but got ' + _.toStrShort( o.names ) );
@@ -802,8 +821,8 @@ function forbid_body( o )
   if( _.objectIs( o.names ) )
   o.names = _.mapExtend( null, o.names );
 
-  if( o.combining === 'rewrite' && o.strict === undefined )
-  o.strict = 0;
+  // if( o.combining === 'rewrite' && o.strict === undefined )
+  // o.strict = 0;
 
   if( o.prime === null )
   o.prime = _.prototypeIsStandard( o.object );
@@ -815,7 +834,10 @@ function forbid_body( o )
 
   /* message */
 
-  let _constructor = o.object.constructor || Object.getPrototypeOf( o.object );
+  // if( o.names && o.names.abc )
+  // debugger;
+  // let _constructor = o.object.constructor || Object.getPrototypeOf( o.object ); // yyy
+  let _constructor = o.object.constructor || null;
   _.assert( _.routineIs( _constructor ) || _constructor === null );
   _.assert( _constructor === null || _.strIs( _constructor.name ) || _.strIs( _constructor._name ), 'object should have name' );
   if( !o.protoName )
@@ -857,20 +879,34 @@ function forbid_body( o )
 
   }
 
+  _.assert( !o.strict );
+  _.assert( !o.prime );
+
   o.strict = 0;
   o.prime = 0;
 
   return _.accessor.declare.body( _.mapOnly( o, _.accessor.declare.body.defaults ) );
 }
 
-var defaults = forbid_body.defaults = Object.create( declare.body.defaults );
+// var defaults = forbid_body.defaults = Object.create( declare.body.defaults );
 
-defaults.preserveValues = 0;
-defaults.enumerable = 0;
-defaults.prime = null;
-defaults.strict = 1;
-defaults.combining = 'rewrite';
-defaults.message = null;
+var defaults = forbid_body.defaults =
+{
+
+  ... _.mapExtend( null, declare.body.defaults ),
+
+  preserveValues : 0,
+  enumerable : 0,
+  combining : 'rewrite',
+  message : null,
+
+  prime : 0,
+  strict : 0,
+
+}
+
+// delete defaults.strict;
+// delete defaults.prime;
 
 let forbid = _.routineFromPreAndBody( _declare_pre, forbid_body );
 
@@ -2159,18 +2195,7 @@ let Forbids =
 // define
 // --
 
-let Fields =
-{
-
-  AccessorDefaults,
-  Combining,
-  DefaultAccessorsMap,
-
-}
-
-//
-
-let Routines =
+let Extension =
 {
 
   // getter / setter generator
@@ -2202,6 +2227,12 @@ let Routines =
   readOnly,
   has,
   suiteMakerFrom_functor,
+
+  // fields
+
+  AccessorDefaults,
+  Combining,
+  DefaultAccessorsMap,
 
 }
 
@@ -2251,8 +2282,7 @@ let Suite =
 // --
 
 _.accessor = _.accessor || Object.create( null );
-_.mapExtend( _.accessor, Routines );
-_.mapExtend( _.accessor, Fields );
+_.mapExtend( _.accessor, Extension );
 
 _.accessor.forbid( _, Forbids );
 _.accessor.forbid( _.accessor, Forbids );

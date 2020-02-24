@@ -23,7 +23,7 @@ function onModule( it )
   try
   {
 
-    let config = _.fileProvider.fileConfigUserRead();
+    let config = _.fileProvider.configUserRead();
     if( config && config.about && config.path.remoteRepository )
     {
       _.mapSupplement( config, it );

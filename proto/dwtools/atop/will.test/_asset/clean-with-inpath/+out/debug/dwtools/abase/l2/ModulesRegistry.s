@@ -537,13 +537,13 @@ let wMathScalar =
 
 let wMathVector =
 {
-  sourcePath : sourcePath( 'amath/l3_vector/Main.s', 'wmathvector' ),
+  sourcePath : sourcePath( 'amath/l3_vector/Include.s', 'wmathvector' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.vector },
 }
 
 let wMathSpace =
 {
-  sourcePath : sourcePath( 'amath/l5_space/Main.s', 'wmathspace' ),
+  sourcePath : sourcePath( 'amath/l5_matrix/Include.s', 'wmathspace' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Space },
 }
 

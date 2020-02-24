@@ -13,7 +13,7 @@ function onModule( it )
   _.routineOptions( onModule, o );
 
   let fileProvider = new _.FileFilter.Archive();
-  let config = _.fileProvider.fileConfigUserRead();
+  let config = _.fileProvider.configUserRead();
 
   /* basePath */
 
