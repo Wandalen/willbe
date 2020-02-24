@@ -7090,11 +7090,14 @@ function _remoteChanged()
   {
     let remoteProvider = fileProvider.providerForPath( module.remotePath );
     _.assert( !!remoteProvider.isVcs );
-    let version = remoteProvider.versionLocalRetrive( module.downloadPath );
-    if( version )
+    let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, detailing : 1 });
+    if( result.version )
     {
       let remotePath = _.uri.parseConsecutive( module.remotePath );
-      remotePath.hash = version;
+      if( result.isBranch )
+      remotePath.tag = result.version;
+      else
+      remotePath.hash = result.version;
       module.pathResourceMap[ 'current.remote' ].path = _.uri.str( remotePath );
     }
   }
