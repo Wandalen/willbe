@@ -289,6 +289,8 @@ function _commandsMake()
 
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
+    
+    'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),                  h : 'Use "package install" to install target package.' },
 
   }
 
@@ -2151,6 +2153,94 @@ function commandEach( e )
 
 }
 
+//
+
+function commandPackageInstall( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'shell',
+    onEach : handleEach,
+    commandRoutine : commandShell,
+  });
+
+  function handleEach( it )
+  {
+    let logger = will.logger;
+    
+    let parsed = _.uri.parseConsecutive( e.argument );
+    let tool  = parsed.protocol;
+    
+    parsed.protocol = null;
+    parsed.longPath = _.path.normalize( parsed.longPath );
+    parsed.longPath = _.strRemoveBegin( parsed.longPath, '/' );
+    
+    if( parsed.tag )
+    { 
+      let appNameAndVersion = _.uri.str( parsed );
+      throw _.err( `Expects application and version in format "app#version", but got: "${appNameAndVersion}"` )
+    }
+    
+    _.assert( !parsed.tag, `Expects application and version in format "app#version", but got: "${appName}"` )
+    
+    if( tool === 'package' )
+    {
+      let toolForPlatformMap = 
+      {
+        'win32' : 'choco',
+        'darwin' : 'brew',
+        'linux' : 'apt'
+      }
+      tool = toolForPlatformMap[ process.platform ];
+      if( !tool )
+      throw _.err( `Unsupported platform: ${process.platform}` )
+    }
+    
+    let o = Object.create( null );
+    
+    if( tool === 'choco' )
+    {
+      chocoInstallHandle( o, parsed );
+    }
+    else if( tool === 'apt' )
+    { 
+      aptInstallHandle( o, parsed );
+    }
+    else
+    {
+      throw _.err( `Unsupported application installation tool: ${tool}` )
+    }
+    
+    return it.opener.openedModule.shell( o );
+  }
+  
+  function chocoInstallHandle( o, parsed )
+  {
+    o.execPath = 'choco install -y' + parsed.longPath
+    if( parsed.hash )
+    o.execPath += ' --version=' + parsed.hash;
+  }
+  
+  function aptInstallHandle( o, parsed )
+  { 
+    let installExec = 'sudo apt install ' + parsed.longPath;
+    if( parsed.hash )
+    installExec += '=' + parsed.hash;
+    
+    o.execPath = 
+    [ 
+      // 'sudo apt update',
+      // 'sudo apt upgrade', 
+      installExec
+    ]
+  }
+}
+
 // --
 // relations
 // --
@@ -2276,6 +2366,8 @@ let Extend =
 
   commandWith,
   commandEach,
+  
+  commandPackageInstall,
 
   // relation
 
