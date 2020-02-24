@@ -14762,35 +14762,20 @@ console.log( 'File1.js' );
 function functionPlatform( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'function-platform' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'function-platform' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build'
     return null;
   })
-  start({ execPath : '.clean' })
-  start({ execPath : '.build' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.build' })
   .then( ( got ) =>
   {
     var Os = require( 'os' );
@@ -14814,7 +14799,7 @@ function functionPlatform( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
