@@ -14811,31 +14811,12 @@ function functionPlatform( test )
 function functionThisCriterion( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'step-shell-using-criterion-value' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  let a = self.assetFor( test, 'step-shell-using-criterion-value' );
+  a.reflect();
 
   /* - */
 
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
-  /* - */
-
-  start({ execPath : '.build debug' })
+  a.start({ execPath : '.build debug' })
 
   .then( ( got ) =>
   {
@@ -14849,7 +14830,7 @@ function functionThisCriterion( test )
 
   /* - */
 
-  start({ execPath : '.build release' })
+  a.start({ execPath : '.build release' })
 
   .then( ( got ) =>
   {
@@ -14863,7 +14844,7 @@ function functionThisCriterion( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 functionThisCriterion.timeOut = 200000;
