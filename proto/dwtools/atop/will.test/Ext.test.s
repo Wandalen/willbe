@@ -17275,43 +17275,34 @@ submodulesUpdateThrowing.timeOut = 300000;
 function submodulesAgreeThrowing( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-download-errors' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let ready = new _.Consequence().take( null );
-  let downloadPath = _.path.join( routinePath, '.module/PathBasic' );
+  let a = self.assetFor( test, 'submodules-download-errors' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  let downloadPath = _.path.join( a.routinePath, '.module/PathBasic' );
   let filePath = _.path.join( downloadPath, 'file' );
   let filesBefore;
-
-  let start = _.process.starter
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
-    outputGraying : 1,
     throwingExitCode : 0,
-    ready : ready,
-  })
-
-  let start2 = _.process.starter
+    mode : 'spawn',
+    ready : a.ready,
+  });
+  a.startNonThrowing = _.process.starter
   ({
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
-    outputGraying : 1,
     throwingExitCode : 0,
-    ready : ready,
+    ready : a.ready,
   })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -17319,7 +17310,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
-  start({ execPath : '.with bad .submodules.versions.agree' })
+  a.start({ execPath : '.with bad .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -17337,7 +17328,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  start({ execPath : '.with bad .submodules.versions.agree' })
+  a.start({ execPath : '.with bad .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -17355,7 +17346,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  start({ execPath : '.with good .submodules.versions.agree' })
+  a.start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17378,7 +17369,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.fileWrite( filePath,filePath );
     return null;
   })
-  start({ execPath : '.with bad .submodules.versions.agree' })
+  a.start({ execPath : '.with bad .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -17398,7 +17389,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.fileWrite( filePath,filePath );
     return null;
   })
-  start({ execPath : '.with good .submodules.versions.agree' })
+  a.start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17420,7 +17411,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.fileWrite( downloadPath,downloadPath );
     return null;
   })
-  start({ execPath : '.with bad .submodules.versions.agree' })
+  a.start({ execPath : '.with bad .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -17438,7 +17429,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.fileWrite( downloadPath,downloadPath );
     return null;
   })
-  start({ execPath : '.with good .submodules.versions.agree' })
+  a.start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17459,8 +17450,8 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  start2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
-  start({ execPath : '.with good .submodules.versions.agree' })
+  a.startNonThrowing({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
+  a.start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17481,14 +17472,14 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  start({ execPath : '.with good .submodules.versions.agree' })
-  start2( 'git -C .module/PathBasic reset --hard HEAD~1' )
+  a.start({ execPath : '.with good .submodules.versions.agree' })
+  a.startNonThrowing( 'git -C .module/PathBasic reset --hard HEAD~1' )
   .then( () =>
   {
     _.fileProvider.fileWrite( _.path.join( downloadPath, 'was.package.json' ), 'was.package.json' );
     return null;
   })
-  start({ execPath : '.with good .submodules.versions.agree' })
+  a.start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -17506,12 +17497,12 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  start({ execPath : '.with good .submodules.versions.agree' })
-  start2( 'git -C .module/PathBasic reset --hard HEAD~1' )
-  start2( 'git -C .module/PathBasic commit -m unpushed --allow-empty' )
-  start2( 'git -C .module/PathBasic remote remove origin' )
-  start2( 'git -C .module/PathBasic remote add origin https://github.com/Wandalen/wTools.git' )
-  start({ execPath : '.with good .submodules.versions.agree' })
+  a.start({ execPath : '.with good .submodules.versions.agree' })
+  a.startNonThrowing( 'git -C .module/PathBasic reset --hard HEAD~1' )
+  a.startNonThrowing( 'git -C .module/PathBasic commit -m unpushed --allow-empty' )
+  a.startNonThrowing( 'git -C .module/PathBasic remote remove origin' )
+  a.startNonThrowing( 'git -C .module/PathBasic remote add origin https://github.com/Wandalen/wTools.git' )
+  a.start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -17522,7 +17513,7 @@ function submodulesAgreeThrowing( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 submodulesAgreeThrowing.timeOut = 300000;
