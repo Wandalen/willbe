@@ -14546,31 +14546,12 @@ shellWithCriterion.timeOut = 200000;
 function shellVerbosity( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'step-shell-verbosity' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outPath = _.path.join( routinePath, 'out' );
-
-
-  let ready = new _.Consequence().take( null );
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+  let a = self.assetFor( test, 'step-shell-verbosity' );
+  a.reflect();
 
   /* - */
 
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
-  /* - */
-
-  start({ execPath : '.build verbosity.0' })
+  a.start({ execPath : '.build verbosity.0' })
 
   .then( ( got ) =>
   {
@@ -14578,7 +14559,7 @@ function shellVerbosity( test )
 
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 0 );
-    test.identical( _.strCount( got.output, routinePath ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath ), 1 );
     test.identical( _.strCount( got.output, 'message from shell' ), 0 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
@@ -14587,7 +14568,7 @@ function shellVerbosity( test )
 
   /* - */
 
-  start({ execPath : '.build verbosity.1' })
+  a.start({ execPath : '.build verbosity.1' })
 
   .then( ( got ) =>
   {
@@ -14595,7 +14576,7 @@ function shellVerbosity( test )
 
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
-    test.identical( _.strCount( got.output, routinePath ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath ), 1 );
     test.identical( _.strCount( got.output, 'message from shell' ), 1 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
@@ -14604,7 +14585,7 @@ function shellVerbosity( test )
 
   /* - */
 
-  start({ execPath : '.build verbosity.2' })
+  a.start({ execPath : '.build verbosity.2' })
 
   .then( ( got ) =>
   {
@@ -14612,7 +14593,7 @@ function shellVerbosity( test )
 
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
-    test.identical( _.strCount( got.output, routinePath ), 1 );
+    test.identical( _.strCount( got.output, a.routinePath ), 1 );
     test.identical( _.strCount( got.output, 'message from shell' ), 2 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
@@ -14621,7 +14602,7 @@ function shellVerbosity( test )
 
   /* - */
 
-  start({ execPath : '.build verbosity.3' })
+  a.start({ execPath : '.build verbosity.3' })
 
   .then( ( got ) =>
   {
@@ -14629,7 +14610,7 @@ function shellVerbosity( test )
 
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
-    test.identical( _.strCount( got.output, routinePath ), 2 );
+    test.identical( _.strCount( got.output, a.routinePath ), 2 );
     test.identical( _.strCount( got.output, 'message from shell' ), 2 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 0 );
 
@@ -14638,7 +14619,7 @@ function shellVerbosity( test )
 
   /* - */
 
-  start({ execPath : '.build verbosity.5' })
+  a.start({ execPath : '.build verbosity.5' })
 
   .then( ( got ) =>
   {
@@ -14646,7 +14627,7 @@ function shellVerbosity( test )
 
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'node -e "console.log( \'message from shell\' )"' ), 1 );
-    test.identical( _.strCount( got.output, routinePath ), 2 );
+    test.identical( _.strCount( got.output, a.routinePath ), 2 );
     test.identical( _.strCount( got.output, 'message from shell' ), 2 );
     test.identical( _.strCount( got.output, 'Process returned error code 0' ), 1 );
 
@@ -14655,7 +14636,7 @@ function shellVerbosity( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
@@ -20843,7 +20824,7 @@ var Self =
     hookGitPullConflict,
     hookGitSyncColflict,
     hookGitSyncArguments,
-    hookPublish,
+    // hookPublish, /* Dmytro : not exists */
 
     verbositySet,
     verbosityStepDelete,
