@@ -15706,43 +15706,24 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 function submodulesDownloadThrowing( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-download-errors' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let ready = new _.Consequence().take( null );
-  let downloadPath = _.path.join( routinePath, '.module/PathBasic' );
+  let a = self.assetFor( test, 'submodules-download-errors' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  let downloadPath = _.path.join( a.routinePath, '.module/PathBasic' );
   let filePath = _.path.join( downloadPath, 'file' );
   let filesBefore;
-
-  let start = _.process.starter
+  a.startNonThrowing2 = _.process.starter
   ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
-    outputGraying : 1,
     throwingExitCode : 0,
-    ready : ready,
+    ready : a.ready,
   })
-
-  let start2 = _.process.starter
-  ({
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
 
   .then( () =>
   {
@@ -15750,7 +15731,7 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.filesDelete( submodulesPath );
     return null;
   })
-  start({ execPath : '.with bad .submodules.download' })
+  a.startNonThrowing({ execPath : '.with bad .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -15769,7 +15750,7 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  start({ execPath : '.with bad .submodules.download' })
+  a.startNonThrowing({ execPath : '.with bad .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -15789,7 +15770,7 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  start({ execPath : '.with good .submodules.download' })
+  a.startNonThrowing({ execPath : '.with good .submodules.download' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15810,10 +15791,10 @@ function submodulesDownloadThrowing( test )
     test.case = 'error if download path exists and it is not a empty dir';
     _.fileProvider.filesDelete( submodulesPath );
     _.fileProvider.dirMake( downloadPath );
-    _.fileProvider.fileWrite( filePath,filePath );
+    _.fileProvider.fileWrite( filePath, filePath );
     return null;
   })
-  start({ execPath : '.with good .submodules.download' })
+  a.startNonThrowing({ execPath : '.with good .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -15830,10 +15811,10 @@ function submodulesDownloadThrowing( test )
   {
     test.case = 'error if download path exists and its terminal';
     _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.fileWrite( downloadPath,downloadPath );
+    _.fileProvider.fileWrite( downloadPath, downloadPath );
     return null;
   })
-  start({ execPath : '.with good .submodules.download' })
+  a.startNonThrowing({ execPath : '.with good .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -15852,13 +15833,13 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  start2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
+  a.startNonThrowing2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
   .then( () =>
   {
     filesBefore = self.find( downloadPath );
     return null;
   })
-  start({ execPath : '.with good .submodules.download' })
+  a.startNonThrowing({ execPath : '.with good .submodules.download' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -15872,7 +15853,7 @@ function submodulesDownloadThrowing( test )
 
   //
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'downloaded, change in file to make module not valid, error expected';
@@ -15880,7 +15861,7 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  start({ execPath : '.with good .submodules.download' })
+  a.startNonThrowing({ execPath : '.with good .submodules.download' })
   .then( () =>
   {
     let inWillFilePath = _.path.join( downloadPath, '.im.will.yml' );
@@ -15894,7 +15875,7 @@ function submodulesDownloadThrowing( test )
     filesBefore = self.find( downloadPath );
     return null;
   })
-  start({ execPath : '.with good .submodules.download' })
+  a.startNonThrowing({ execPath : '.with good .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -15906,7 +15887,7 @@ function submodulesDownloadThrowing( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 submodulesDownloadThrowing.timeOut = 300000;
