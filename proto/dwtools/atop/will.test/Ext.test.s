@@ -17523,43 +17523,23 @@ submodulesAgreeThrowing.timeOut = 300000;
 function submodulesVersionsAgreeWrongOrigin( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-download-errors' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
-  let ready = new _.Consequence().take( null );
-  let downloadPath = _.path.join( routinePath, '.module/PathBasic' );
+  let a = self.assetFor( test, 'submodules-download-errors' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  let downloadPath = _.path.join( a.routinePath, '.module/PathBasic' );
   let filePath = _.path.join( downloadPath, 'file' );
-  let filesBefore;
-
-  let start = _.process.starter
+  a.startNonThrowing2 = _.process.starter
   ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
-    outputGraying : 1,
     throwingExitCode : 0,
-    ready : ready,
-  })
-
-  let start2 = _.process.starter
-  ({
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+    ready : a.ready,
+  });
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'donwloaded repo has different origin, should be deleted and downloaded again';
@@ -17568,8 +17548,8 @@ function submodulesVersionsAgreeWrongOrigin( test )
     return null;
   })
 
-  start2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
-  start({ execPath : '.with good .submodules.versions.agree' })
+  a.startNonThrowing2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
+  a.startNonThrowing({ execPath : '.with good .submodules.versions.agree' })
 
   .then( ( got ) =>
   {
@@ -17584,7 +17564,7 @@ function submodulesVersionsAgreeWrongOrigin( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 submodulesVersionsAgreeWrongOrigin.timeOut = 300000;
