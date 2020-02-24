@@ -14644,35 +14644,19 @@ function shellVerbosity( test )
 function functionStringsJoin( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'function-strings-join' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  let outPath = _.path.join( routinePath, 'out' );
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  let a = self.assetFor( test, 'function-strings-join' );
+  a.reflect();
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build strings.join'
     return null;
   })
-  start({ execPath : '.clean' })
-  start({ execPath : '.build strings.join' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.build strings.join' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14688,7 +14672,7 @@ function functionStringsJoin( test )
 console.log( 'File3.js' );
 console.log( 'File1.js' );
 `
-    var read = _.fileProvider.fileRead( _.path.join( routinePath, 'out1.js' ) );
+    var read = _.fileProvider.fileRead( _.path.join( a.routinePath, 'out1.js' ) );
     test.identical( read, expected );
 
     return null;
@@ -14696,14 +14680,14 @@ console.log( 'File1.js' );
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build multiply'
     return null;
   })
-  start({ execPath : '.clean' })
-  start({ execPath : '.build multiply' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.build multiply' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14718,7 +14702,7 @@ console.log( 'File1.js' );
 `console.log( 'File3.js' );
 console.log( 'File1.js' );
 `
-    var read = _.fileProvider.fileRead( _.path.join( routinePath, 'out2.js' ) );
+    var read = _.fileProvider.fileRead( _.path.join( a.routinePath, 'out2.js' ) );
     test.identical( read, expected );
 
     return null;
@@ -14726,14 +14710,14 @@ console.log( 'File1.js' );
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build echo1'
     return null;
   })
-  start({ execPath : '.clean' })
-  start({ execPath : '.build echo1' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.build echo1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14749,14 +14733,14 @@ console.log( 'File1.js' );
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.build echo2'
     return null;
   })
-  start({ execPath : '.clean' })
-  start({ execPath : '.build echo2' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.build echo2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -14770,7 +14754,7 @@ console.log( 'File1.js' );
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
