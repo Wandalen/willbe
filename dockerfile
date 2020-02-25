@@ -18,6 +18,5 @@ RUN apt-get update --fix-missing && \
 
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
-COPY . /app
-RUN cd /app && npm i
+ADD . /app
 CMD node /app/sample/packageInstall.js
