@@ -2229,24 +2229,20 @@ function commandPackageInstall( e )
     if( process.platform !== 'linux' )
     throw _.errBrief( 'This installation method is avaiable only on Linux platform.' )
     
-    let linuxInfo = linuxDistroInfo();
-    let linuxId = /ID="(.*)"/g.exec( linuxInfo );
-    if( !linuxId )
-    throw _.err( 'Failed to get Linux distribution name' );
+    let linuxInfo = linuxInfoGet();
+    let distroName = linuxInfo.dist.toLowerCase();
     
-    let distroName = linuxId[ 1 ].toLowerCase();
-    
-    if( distroName === 'centos' )
+    if( _.strHas( distroName, 'centos' ) )
     {
-      o.execPath = 'sudo yum install ' + parsed.longPath;
+      o.execPath = 'yum install ' + parsed.longPath;
       if( parsed.hash )
       installExec += '-' + parsed.hash;
       
       o.execPath = installExec;
     }
-    else if( distroName === 'ubuntu' )
+    else if( _.strHas( distroName, 'ubuntu' ) )
     {
-      let installExec = 'sudo apt install ' + parsed.longPath;
+      let installExec = 'apt install ' + parsed.longPath;
       if( parsed.hash )
       installExec += '=' + parsed.hash;
       
@@ -2263,19 +2259,15 @@ function commandPackageInstall( e )
     }
   }
   
-  function linuxDistroInfo()
+  function linuxInfoGet()
   { 
     try
     {
-      let result = _.process.start
-      ({ 
-        execPath : 'cat /etc/*-release', 
-        outputCollecting : 1,
-        sync : 1,
-        outputPiping : 0, 
-        inputMirroring : 0 
-      })
-      return result.output;
+      let getos = require( 'getos' );
+      let con = new _.Consequence();
+      getos( con.tolerantCallback() )
+      con.deasyncWait();
+      return con.sync();
     }
     catch( err )
     {

@@ -62,7 +62,8 @@
     "wyamltools" : "", 
     "tar" : "", 
     "gitconfiglocal" : "", 
-    "open" : ""
+    "open" : "",
+    "getos": ""
   }, 
   "devDependencies" : { "wTesting" : "" }, 
   "keywords" : [ "wTools" ]
