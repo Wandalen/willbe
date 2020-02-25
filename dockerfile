@@ -10,7 +10,7 @@ ENV NVM_DIR /root/.nvm
 ENV NODE_VERSION 10.15.3
 
 RUN apt-get update --fix-missing && \
-	apt-get install -y curl git && \
+	apt-get install -y curl git devscripts && \
 	# Install: nvm, node and npm
 	curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash && \
 	source $NVM_DIR/nvm.sh && \
