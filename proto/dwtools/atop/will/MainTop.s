@@ -2285,8 +2285,14 @@ function commandPackageLocalVersions( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-
-  let parsed = _.uri.parseConsecutive( e.argument );
+  
+  let isolated = _.strIsolateLeftOrAll( e.argument, ' ' );
+  
+  let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
+  let options = _.strStructureParse( isolated[ 2 ] );
+  
+  _.assertMapHasOnly( options, commandPackageLocalVersions.commandProperties, `Command does not expect options:` );
+  
   let tool  = parsed.protocol;
   
   parsed.protocol = null;
@@ -2362,6 +2368,10 @@ function commandPackageLocalVersions( e )
   }
 }
 
+commandPackageLocalVersions.commandProperties = 
+{
+}
+
 //
 
 function commandPackageRemoteVersions( e )
@@ -2374,6 +2384,8 @@ function commandPackageRemoteVersions( e )
   
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
   let options = _.strStructureParse( isolated[ 2 ] )
+  
+  _.assertMapHasOnly( options, commandPackageRemoteVersions.commandProperties, `Command does not expect options:` );
   
   let tool  = parsed.protocol;
   
@@ -2479,7 +2491,7 @@ function commandPackageRemoteVersions( e )
 }
 commandPackageRemoteVersions.commandProperties =
 {
-  all : 'Gets verions of package from remote archive',
+  all : 'Gets verions of package from remote archive.',
 }
 
 // --
