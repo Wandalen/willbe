@@ -2210,11 +2210,15 @@ function commandPackageInstall( e )
   
   if( tool === 'choco' )
   { 
-    chocoInstallHandle( o, parsed );
+    chocoInstallHandle();
   }
   else if( tool === 'apt' )
   { 
-    aptInstallHandle( o, parsed );
+    aptInstallHandle();
+  }
+  else if( tool === 'brew' )
+  { 
+    brewInstallHandle();
   }
   else
   {
@@ -2240,7 +2244,7 @@ function commandPackageInstall( e )
   
   /*  */
   
-  function chocoInstallHandle( o, parsed )
+  function chocoInstallHandle()
   { 
     if( process.platform !== 'win32' )
     throw _.err( 'Package manager choco is available only on Windows platform.' )
@@ -2250,7 +2254,7 @@ function commandPackageInstall( e )
     o.execPath += ' --version=' + parsed.hash;
   }
   
-  function aptInstallHandle( o, parsed )
+  function aptInstallHandle()
   {  
     if( process.platform !== 'linux' )
     throw _.errBrief( 'This installation method is avaiable only on Linux platform.' )
@@ -2298,6 +2302,13 @@ function commandPackageInstall( e )
       throw _.err( 'Failed to get information about Linux distribution. Reason:\n', err );
     }
   }
+  
+  function brewInstallHandle()
+  {
+    o.execPath = 'brew install ' + parsed.longPath
+    if( parsed.hash )
+    o.execPath += '@' + parsed.hash;
+  }
 }
 
 commandPackageInstall.commandProperties = 
@@ -2342,11 +2353,11 @@ function commandPackageLocalVersions( e )
   }
   else if( platform === 'win32' )
   {
-    
+    localVersionsWindows();
   }
   else if( platform === 'darwin' )
   {
-    
+    localVersionsDarwin();
   }
   else 
   {
@@ -2401,6 +2412,29 @@ function commandPackageLocalVersions( e )
     }
     _.process.start( o );
   }
+  
+  function localVersionsWindows()
+  {
+    let execPath = 'choco list --all --local-only ' + parsed.longPath;
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0 
+    }
+    _.process.start( o );
+  }
+  
+  function localVersionsDarwin()
+  {
+    let execPath = 'brew list --versions ' + parsed.longPath;
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0 
+    }
+    _.process.start( o );
+  }
+  
 }
 
 commandPackageLocalVersions.commandProperties = 
@@ -2444,11 +2478,11 @@ function commandPackageRemoteVersions( e )
   }
   else if( platform === 'win32' )
   {
-    
+    remoteVersionsWindows();
   }
   else if( platform === 'darwin' )
   {
-    
+    remoteVersionsDarwin();
   }
   else 
   {
@@ -2530,6 +2564,29 @@ function commandPackageRemoteVersions( e )
     })
     return !_.strHas( result.output, 'is not installed' );
   }
+  
+  function remoteVersionsWindows()
+  { 
+    let execPath = 'choco list --all ' + parsed.longPath;
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0 
+    }
+    _.process.start( o );
+  }
+  
+  function remoteVersionsDarwin()
+  { 
+    //Vova: lists only versions known for current version of brew
+    let execPath = 'brew search ' + parsed.longPath;
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0 
+    }
+    _.process.start( o );
+  }
 }
 commandPackageRemoteVersions.commandProperties =
 {
@@ -2571,6 +2628,14 @@ function commandPackageVersion( e )
   {
     localVersionLinux();
   }
+  else if( platform === 'win32' )
+  {
+    localVersionWindows();
+  }
+  else if( platform === 'darwin' )
+  {
+    localVersionDarwin();
+  }
   else 
   {
     throw _.err( `Unsupported platform: ${process.platform}` )
@@ -2600,33 +2665,54 @@ function commandPackageVersion( e )
   {
     let linuxInfo = linuxInfoGet();
     let distroName = linuxInfo.dist.toLowerCase();
+    let execPath;
     
     if( _.strHas( distroName, 'ubuntu' ) )
     {
-      let execPath = 'dpkg -s ' + parsed.longPath + ' | grep Version';
-      let o = 
-      { 
-        execPath, ready, 
-        inputMirroring : 0,
-        throwingExitCode : 0
-      }
-      _.process.start( o );
+      execPath = 'dpkg -s ' + parsed.longPath + ' | grep Version';
     }
     else if( _.strHas( distroName, 'centos' ) )
     {
-      let execPath = 'rpm -q ' + parsed.longPath;
-      let o = 
-      { 
-        execPath, ready, 
-        inputMirroring : 0,
-        throwingExitCode : 0
-      }
-      _.process.start( o );
+      execPath = 'rpm -q ' + parsed.longPath;
     }
     else
     {
       throw _.err( `Unsupported Linux distribution: ${distroName}` )
     }
+    
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0,
+      throwingExitCode : 0
+    }
+    _.process.start( o );
+  }
+  
+  function localVersionWindows()
+  {
+    let execPath = 'choco list --local-only ' + parsed.longPath
+    
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0,
+      throwingExitCode : 0
+    }
+    _.process.start( o );
+  }
+  
+  function localVersionDarwin()
+  {
+    let execPath = 'brew list --versions ' + parsed.longPath
+    
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0,
+      throwingExitCode : 0
+    }
+    _.process.start( o );
   }
 }
 
