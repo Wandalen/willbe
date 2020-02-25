@@ -2163,8 +2163,14 @@ function commandPackageInstall( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
+  
+  let isolated = _.strIsolateLeftOrAll( e.argument, ' ' );
+  
+  let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
+  let options = _.strStructureParse( isolated[ 2 ] );
+  
+  _.assertMapHasOnly( options, commandPackageInstall.commandProperties, `Command does not expect options:` );
 
-  let parsed = _.uri.parseConsecutive( e.argument );
   let tool  = parsed.protocol;
   
   parsed.protocol = null;
@@ -2197,8 +2203,10 @@ function commandPackageInstall( e )
   
   let o = Object.create( null );
   
-  o.outputPiping = 1;
+  o.throwingExitCode = 0;
   o.stdio = 'inherit';
+  o.ready = ready;
+  o.outputCollecting = 1;
   
   if( tool === 'choco' )
   { 
@@ -2213,7 +2221,22 @@ function commandPackageInstall( e )
     throw _.err( `Unsupported application installation tool: ${tool}` )
   }
   
-  return _.process.start( o );
+  if( options.sudo )
+  o.execPath = 'sudo ' + o.execPath;
+  
+  _.process.start( o );
+  
+  ready.then( ( got ) => 
+  {
+    if( got.exitCode !== 0 )
+    {
+      _.strHas( got.output, 'You need to be root' )
+      throw _.errBrief( 'You need to be root to install the package. Run this command with option "sudo:1".' )
+    }
+    return got;
+  })
+  
+  return ready;
   
   /*  */
   
@@ -2239,9 +2262,7 @@ function commandPackageInstall( e )
     {
       o.execPath = 'yum install ' + parsed.longPath;
       if( parsed.hash )
-      installExec += '-' + parsed.hash;
-      
-      o.execPath = installExec;
+      o.execPath += '-' + parsed.hash;
     }
     else if( _.strHas( distroName, 'ubuntu' ) )
     {
@@ -2277,6 +2298,11 @@ function commandPackageInstall( e )
       throw _.err( 'Failed to get information about Linux distribution. Reason:\n', err );
     }
   }
+}
+
+commandPackageInstall.commandProperties = 
+{
+  sudo : 'Install package with privileges of superuser.'
 }
 
 //
@@ -2351,21 +2377,29 @@ function commandPackageLocalVersions( e )
   {
     let linuxInfo = linuxInfoGet();
     let distroName = linuxInfo.dist.toLowerCase();
+    let execPath;
     
     if( _.strHas( distroName, 'ubuntu' ) )
     {
-      let execPath = 'apt list --installed ' + parsed.longPath;
-      let o = 
-      { 
-        execPath, ready, 
-        inputMirroring : 0 
-      }
-      _.process.start( o );
+      execPath = 'apt list --installed ' + parsed.longPath;
+    }
+    else if( _.strHas( distroName, 'centos' ) )
+    {
+      execPath = 'yum list installed ' + parsed.longPath;
     }
     else
     {
       throw _.err( `Unsupported Linux distribution: ${distroName}` )
     }
+    
+    /* */
+    
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0 
+    }
+    _.process.start( o );
   }
 }
 
@@ -2445,10 +2479,11 @@ function commandPackageRemoteVersions( e )
   {
     let linuxInfo = linuxInfoGet();
     let distroName = linuxInfo.dist.toLowerCase();
+    let execPath;
     
     if( _.strHas( distroName, 'ubuntu' ) )
     { 
-      let execPath = 'apt-cache madison ' + parsed.longPath;
+      execPath = 'apt-cache madison ' + parsed.longPath;
       
       if( options.all )
       { 
@@ -2462,18 +2497,24 @@ function commandPackageRemoteVersions( e )
           logger.warn( 'Package rmadison is required, but it is not installed.\nRun: "sudo apt-get install -y devscripts" and try again.' )
         }
       }
-      
-      let o = 
-      { 
-        execPath, ready, 
-        inputMirroring : 0 
-      }
-      _.process.start( o );
+    }
+    else if( _.strHas( distroName, 'centos' ) )
+    {
+      execPath = 'yum list --showduplicates' + parsed.longPath;
     }
     else
     {
       throw _.err( `Unsupported Linux distribution: ${distroName}` )
     }
+    
+    /* */
+    
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0 
+    }
+    _.process.start( o );
   }
   
   function isInstalled( packageName )
@@ -2563,6 +2604,17 @@ function commandPackageVersion( e )
     if( _.strHas( distroName, 'ubuntu' ) )
     {
       let execPath = 'dpkg -s ' + parsed.longPath + ' | grep Version';
+      let o = 
+      { 
+        execPath, ready, 
+        inputMirroring : 0,
+        throwingExitCode : 0
+      }
+      _.process.start( o );
+    }
+    else if( _.strHas( distroName, 'centos' ) )
+    {
+      let execPath = 'rpm -q ' + parsed.longPath;
       let o = 
       { 
         execPath, ready, 
