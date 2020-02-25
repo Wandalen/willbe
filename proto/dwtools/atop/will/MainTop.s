@@ -2566,7 +2566,8 @@ function commandPackageVersion( e )
       let o = 
       { 
         execPath, ready, 
-        inputMirroring : 0 
+        inputMirroring : 0,
+        throwingExitCode : 0
       }
       _.process.start( o );
     }
