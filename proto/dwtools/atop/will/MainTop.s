@@ -2194,6 +2194,9 @@ function commandPackageInstall( e )
   
   let o = Object.create( null );
   
+  o.outputPiping = 1;
+  o.stdio = 'inherit';
+  
   if( tool === 'choco' )
   { 
     chocoInstallHandle( o, parsed );
