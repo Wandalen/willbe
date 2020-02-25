@@ -25,6 +25,8 @@ about :
     debug-will : node proto/dwtools/atop/will/ExecDebug
     unrestricted-will : node proto/dwtools/atop/will/ExecUnrestricted
     will : node proto/dwtools/atop/will/ExecUnrestricted
+    docker-build : docker image build -t willbe .
+    docker-run : docker run --rm willbe
   npm.bin :
     single-process-will : proto/dwtools/atop/will/Exec
     debug-will : proto/dwtools/atop/will/ExecDebug

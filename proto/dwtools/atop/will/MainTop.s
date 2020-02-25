@@ -290,7 +290,9 @@ function _commandsMake()
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
     
-    'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),                  h : 'Use "package install" to install target package.' },
+    'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              h : 'Use "package install" to install target package.' },
+    'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        h : 'Use "package local versions" to get list of package versions avaiable locally' },
+    'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),        h : 'Use "package local versions" to get list of package versions avaiable locally' },
 
   }
 
@@ -2276,6 +2278,209 @@ function commandPackageInstall( e )
   }
 }
 
+//
+
+function commandPackageLocalVersions( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+
+  let parsed = _.uri.parseConsecutive( e.argument );
+  let tool  = parsed.protocol;
+  
+  parsed.protocol = null;
+  parsed.longPath = _.path.normalize( parsed.longPath );
+  parsed.longPath = _.strRemoveBegin( parsed.longPath, '/' );
+  
+  if( parsed.tag )
+  { 
+    let appNameAndVersion = _.uri.str( parsed );
+    throw _.err( `Expects application and version in format "app#version", but got: "${appNameAndVersion}"` )
+  }
+  
+  _.assert( !parsed.tag, `Expects application and version in format "app#version", but got: "${parsed.longPath}"` )
+  
+  let platform = process.platform;
+  
+  if( platform === 'linux' )
+  {
+    localVersionsLinux();
+  }
+  else if( platform === 'win32' )
+  {
+    
+  }
+  else if( platform === 'darwin' )
+  {
+    
+  }
+  else 
+  {
+    throw _.err( `Unsupported platform: ${process.platform}` )
+  }
+  
+  return ready;
+  
+  /*  */
+  
+  function linuxInfoGet()
+  { 
+    try
+    {
+      let getos = require( 'getos' );
+      let con = new _.Consequence();
+      getos( con.tolerantCallback() )
+      con.deasyncWait();
+      return con.sync();
+    }
+    catch( err )
+    {
+      throw _.err( 'Failed to get information about Linux distribution. Reason:\n', err );
+    }
+  }
+  
+  function localVersionsLinux()
+  {
+    let linuxInfo = linuxInfoGet();
+    let distroName = linuxInfo.dist.toLowerCase();
+    
+    if( _.strHas( distroName, 'ubuntu' ) )
+    {
+      let execPath = 'apt list --installed ' + parsed.longPath;
+      let o = 
+      { 
+        execPath, ready, 
+        inputMirroring : 0 
+      }
+      _.process.start( o );
+    }
+    else
+    {
+      throw _.err( `Unsupported Linux distribution: ${distroName}` )
+    }
+  }
+}
+
+//
+
+function commandPackageRemoteVersions( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  
+  let isolated = _.strIsolateLeftOrAll( e.argument, ' ' );
+  
+  let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
+  let options = _.strStructureParse( isolated[ 2 ] )
+  
+  let tool  = parsed.protocol;
+  
+  parsed.protocol = null;
+  parsed.longPath = _.path.normalize( parsed.longPath );
+  parsed.longPath = _.strRemoveBegin( parsed.longPath, '/' );
+  
+  if( parsed.tag )
+  { 
+    let appNameAndVersion = _.uri.str( parsed );
+    throw _.err( `Expects application and version in format "app#version", but got: "${appNameAndVersion}"` )
+  }
+  
+  _.assert( !parsed.tag, `Expects application and version in format "app#version", but got: "${parsed.longPath}"` )
+  
+  let platform = process.platform;
+  
+  if( platform === 'linux' )
+  {
+    remoteVersionsLinux();
+  }
+  else if( platform === 'win32' )
+  {
+    
+  }
+  else if( platform === 'darwin' )
+  {
+    
+  }
+  else 
+  {
+    throw _.err( `Unsupported platform: ${process.platform}` )
+  }
+  
+  return ready;
+  
+  /*  */
+  
+  function linuxInfoGet()
+  { 
+    try
+    {
+      let getos = require( 'getos' );
+      let con = new _.Consequence();
+      getos( con.tolerantCallback() )
+      con.deasyncWait();
+      return con.sync();
+    }
+    catch( err )
+    {
+      throw _.err( 'Failed to get information about Linux distribution. Reason:\n', err );
+    }
+  }
+  
+  function remoteVersionsLinux()
+  {
+    let linuxInfo = linuxInfoGet();
+    let distroName = linuxInfo.dist.toLowerCase();
+    
+    if( _.strHas( distroName, 'ubuntu' ) )
+    { 
+      let execPath = 'apt-cache madison ' + parsed.longPath;
+      
+      if( options.all )
+      { 
+        let rmadisonIsInstalled = isInstalled( 'devscripts' );
+        if( rmadisonIsInstalled )
+        { 
+          execPath = 'rmadison ' + parsed.longPath;
+        }
+        else
+        {
+          logger.warn( 'Package rmadison is required, but its not installed. Run: "sudo apt-get install -y devscripts" and try again.' )
+        }
+      }
+      
+      let o = 
+      { 
+        execPath, ready, 
+        inputMirroring : 0 
+      }
+      _.process.start( o );
+    }
+    else
+    {
+      throw _.err( `Unsupported Linux distribution: ${distroName}` )
+    }
+  }
+  
+  function isInstalled( packageName )
+  {
+    var result = _.process.start
+    ({ 
+      execPath : 'dpkg -s ' + packageName, 
+      outputCollecting : 1, 
+      outputPiping : 0, 
+      inputMirroring : 0,
+      sync : 1
+    })
+    return !_.strHas( result.output, 'is not installed' );
+  }
+}
+commandPackageRemoteVersions.commandProperties =
+{
+  all : 'Gets verions of package from remote archive',
+}
+
 // --
 // relations
 // --
@@ -2403,6 +2608,9 @@ let Extend =
   commandEach,
   
   commandPackageInstall,
+  commandPackageLocalVersions,
+  commandPackageRemoteVersions,
+  // commandPackageVersion,
 
   // relation
 
