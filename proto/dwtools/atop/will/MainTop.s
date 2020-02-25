@@ -2230,7 +2230,7 @@ function commandPackageInstall( e )
   {
     if( got.exitCode !== 0 )
     {
-      _.strHas( got.output, 'You need to be root' )
+      if( _.strHas( got.output, 'You need to be root' ) )
       throw _.errBrief( 'You need to be root to install the package. Run this command with option "sudo:1".' )
     }
     return got;
@@ -2260,7 +2260,7 @@ function commandPackageInstall( e )
     
     if( _.strHas( distroName, 'centos' ) )
     {
-      o.execPath = 'yum install ' + parsed.longPath;
+      o.execPath = 'yum install -y ' + parsed.longPath;
       if( parsed.hash )
       o.execPath += '-' + parsed.hash;
     }
@@ -2500,7 +2500,7 @@ function commandPackageRemoteVersions( e )
     }
     else if( _.strHas( distroName, 'centos' ) )
     {
-      execPath = 'yum list --showduplicates' + parsed.longPath;
+      execPath = 'yum list --showduplicates ' + parsed.longPath;
     }
     else
     {
