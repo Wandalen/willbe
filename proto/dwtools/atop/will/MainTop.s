@@ -2446,7 +2446,7 @@ function commandPackageRemoteVersions( e )
         }
         else
         {
-          logger.warn( 'Package rmadison is required, but its not installed. Run: "sudo apt-get install -y devscripts" and try again.' )
+          logger.warn( 'Package rmadison is required, but it is not installed.\nRun: "sudo apt-get install -y devscripts" and try again.' )
         }
       }
       
@@ -2471,6 +2471,7 @@ function commandPackageRemoteVersions( e )
       outputCollecting : 1, 
       outputPiping : 0, 
       inputMirroring : 0,
+      throwingExitCode : 0,
       sync : 1
     })
     return !_.strHas( result.output, 'is not installed' );
