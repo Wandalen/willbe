@@ -22025,96 +22025,6 @@ function resourcesFormReflectorsExperiment( test )
   return ready;
 }
 
-//
-
-function packageInstall( test )
-{
-  let self = this;
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  
-  if( !process.env[ 'TRAVIS' ] )
-  {
-    test.is( true );
-    return
-  }
-
-  let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
-  let ready = new _.Consequence().take( null );
-  
-  _.fileProvider.dirMake( routinePath )
-
-  let start = _.process.starter
-  ({
-    execPath : execUnrestrictedPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    throwingExitCode : 0,
-    outputGraying : 1,
-    mode : 'fork',
-    ready : ready
-  });
-  
-  start( '.package.install package:///git#2.11.0' )
-  .then( ( got ) => 
-  {
-    test.identical( got.exitCode, 0 );
-    return null;
-  })
-  
-  // start( '.package.install package://git#2.11.0' )
-  // .then( ( got ) => 
-  // {
-  //   test.identical( got.exitCode, 0 );
-  //   return null;
-  // })
-  
-  // start( '.package.install :///git#2.11.0' )
-  // .then( ( got ) => 
-  // {
-  //   test.identical( got.exitCode, 0 );
-  //   return null;
-  // })
-  
-  // start( '.package.install git#2.11.0' )
-  // .then( ( got ) => 
-  // {
-  //   test.identical( got.exitCode, 0 );
-  //   return null;
-  // })
-  
-  // if( process.platform === 'win32' )
-  // {
-  //   start( '.package.install choco:///git#2.11.0' )
-  //   .then( ( got ) => 
-  //   {
-  //     test.identical( got.exitCode, 0 );
-  //     return null;
-  //   })
-  // }
-  
-  // if( process.platform === 'darwin' )
-  // {
-  //   start( '.package.install brew:///git#2.11.0' )
-  //   .then( ( got ) => 
-  //   {
-  //     test.identical( got.exitCode, 0 );
-  //     return null;
-  //   })
-  // }
-  
-  // if( process.platform === 'linux' )
-  // {
-  //   start( '.package.install apt:///git#2.11.0' )
-  //   .then( ( got ) => 
-  //   {
-  //     test.identical( got.exitCode, 0 );
-  //     return null;
-  //   })
-  // }
-  
-  return ready;
-}
-
 // --
 // declare
 // --
@@ -22328,10 +22238,6 @@ var Self =
     // runWillbe, // zzz : help to fix, please
 
     // resourcesFormReflectorsExperiment, // xxx : look
-    
-    
-    packageInstall
-
   }
 
 }
