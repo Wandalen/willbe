@@ -1,13 +1,28 @@
 
 sudo: false
 language: node_js
+services:
+  - docker
 os:
   - linux
   - osx
   - windows
 node_js:
+  - '10'
   - '12'
+  - 'node'
 script:
-  - 'node proto/dwtools/atop/will.test/Ext.test.s r:packageInstall v:7'
+  - npm test
+  
+jobs:
+  include:
+    - stage: test package.* commands on ubuntu
+      script: 
+        - docker image build -t willbe-ubuntu -f ./docker/centos.dockerfile .
+        - docker run --rm willbe-ubuntu node /app/proto/dwtools/atop/will.test/Ext.Package.test.s r:"*"
+    - stage: test package.* commands on centos
+      script: 
+        - docker image build -t willbe-centos -f ./docker/centos.dockerfile .
+        - docker run --rm willbe-centos node /app/proto/dwtools/atop/will.test/Ext.Package.test.s r:"*"
 cache:
   npm: false
