@@ -18,10 +18,12 @@ jobs:
   include:
     - stage: test package.* commands on ubuntu
       script: 
+        - npm install
         - docker image build -t willbe-ubuntu -f ./docker/centos.dockerfile .
         - docker run --rm willbe-ubuntu node /app/proto/dwtools/atop/will.test/Ext.Package.test.s r:"*"
     - stage: test package.* commands on centos
       script: 
+        - npm install
         - docker image build -t willbe-centos -f ./docker/centos.dockerfile .
         - docker run --rm willbe-centos node /app/proto/dwtools/atop/will.test/Ext.Package.test.s r:"*"
 cache:
