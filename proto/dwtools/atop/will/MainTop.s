@@ -2162,7 +2162,6 @@ function commandPackageInstall( e )
 {
   let will = this;
   let logger = will.logger;
-  let ready = new _.Consequence().take( null );
   
   let isolated = _.strIsolateLeftOrAll( e.argument, ' ' );
   
@@ -2203,10 +2202,11 @@ function commandPackageInstall( e )
   
   let o = Object.create( null );
   
-  o.throwingExitCode = 0;
-  o.stdio = 'inherit';
-  o.ready = ready;
+  o.throwingExitCode = 1;
+  o.stdio = [ 'inherit', 'pipe', 'pipe' ];
+  o.outputPiping = 1;
   o.outputCollecting = 1;
+  o.inputMirroring = 0;
   
   if( tool === 'choco' )
   { 
@@ -2228,19 +2228,16 @@ function commandPackageInstall( e )
   if( options.sudo )
   o.execPath = 'sudo ' + o.execPath;
   
-  _.process.start( o );
-  
-  ready.then( ( got ) => 
-  {
-    if( got.exitCode !== 0 )
-    {
-      if( _.strHas( got.output, 'You need to be root' ) )
-      throw _.errBrief( 'You need to be root to install the package. Run this command with option "sudo:1".' )
-    }
-    return got;
-  })
-  
-  return ready;
+  return _.process.start( o )
+  // .then( () => 
+  // {
+  //   if( o.exitCode !== 0 )
+  //   {
+  //     if( _.strHas( o.output, 'You need to be root' ) )
+  //     throw _.errBrief( 'You need to be root to install the package. Run this command with option "sudo:1".' )
+  //   }
+  //   return null;
+  // })
   
   /*  */
   
@@ -2249,7 +2246,8 @@ function commandPackageInstall( e )
     if( process.platform !== 'win32' )
     throw _.err( 'Package manager choco is available only on Windows platform.' )
       
-    o.execPath = 'choco install -y ' + parsed.longPath
+    o.execPath = 'choco install -y' + options.reinstall ? ' --force ' : ' ';
+    o.execPath += parsed.longPath;
     if( parsed.hash )
     o.execPath += ' --version=' + parsed.hash;
   }
@@ -2263,14 +2261,20 @@ function commandPackageInstall( e )
     let distroName = linuxInfo.dist.toLowerCase();
     
     if( _.strHas( distroName, 'centos' ) )
-    {
-      o.execPath = 'yum install -y ' + parsed.longPath;
+    { 
+      o.execPath = 'yum';
+      o.execPath += options.reinstall ? ' reinstall ' : ' install ';
+      o.execPath += ' -y ';
+      o.execPath += parsed.longPath;
       if( parsed.hash )
       o.execPath += '-' + parsed.hash;
     }
     else if( _.strHas( distroName, 'ubuntu' ) )
     {
-      let installExec = 'apt install ' + parsed.longPath;
+      let installExec = 'apt-get install -y ';
+      if( options.reinstall )
+      installExec += '--reinstall '
+      installExec += parsed.longPath;
       if( parsed.hash )
       installExec += '=' + parsed.hash;
       
@@ -2305,7 +2309,8 @@ function commandPackageInstall( e )
   
   function brewInstallHandle()
   {
-    o.execPath = 'brew install ' + parsed.longPath
+    o.execPath = 'brew install' + options.reinstall ? ' --force ' : ' ';
+    o.execPath += parsed.longPath;
     if( parsed.hash )
     o.execPath += '@' + parsed.hash;
   }
@@ -2313,7 +2318,8 @@ function commandPackageInstall( e )
 
 commandPackageInstall.commandProperties = 
 {
-  sudo : 'Install package with privileges of superuser.'
+  sudo : 'Install package with privileges of superuser.',
+  reinstall : 'Force package manager to reinstall the package.'
 }
 
 //
@@ -2408,7 +2414,8 @@ function commandPackageLocalVersions( e )
     let o = 
     { 
       execPath, ready, 
-      inputMirroring : 0 
+      inputMirroring : 0,
+      throwingExitCode : 0, 
     }
     _.process.start( o );
   }
@@ -2534,7 +2541,10 @@ function commandPackageRemoteVersions( e )
     }
     else if( _.strHas( distroName, 'centos' ) )
     {
-      execPath = 'yum list --showduplicates ' + parsed.longPath;
+      execPath = 'yum list ';
+      if( options.all )
+      execPath += '--showduplicates ';
+      execPath += parsed.longPath;
     }
     else
     {
