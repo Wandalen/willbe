@@ -28,8 +28,8 @@
     "debug-will" : "node proto/dwtools/atop/will/ExecDebug", 
     "unrestricted-will" : "node proto/dwtools/atop/will/ExecUnrestricted", 
     "will" : "node proto/dwtools/atop/will/ExecUnrestricted",
-    "docker-build-centos" : "docker image build -t willbe-centos -f centos.dockerfile .",
-    "docker-build-ubuntu" : "docker image build -t willbe-ubuntu -f ubuntu.dockerfile .",
+    "docker-build-centos" : "docker image build -t willbe-centos -f ./docker/centos.dockerfile .",
+    "docker-build-ubuntu" : "docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .",
     "docker-run-centos" : "docker run --rm willbe-centos",
     "docker-run-ubuntu" : "docker run --rm willbe-ubuntu"
   }, 
