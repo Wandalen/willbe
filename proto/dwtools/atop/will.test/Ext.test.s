@@ -18727,28 +18727,40 @@ versionsAgreeNpm.timeOut = 300000;
 function stepSubmodulesDownload( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'step-submodules-download' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-  _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
-  _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
-
-
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
+  let a = self.assetFor( test, 'step-submodules-download' );
+  a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
     verbosity : 3,
-    ready : ready
+    ready : a.ready
   })
+  a.reflect();
 
+  // let self = this;
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'step-submodules-download' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  //
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  // _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
+  // _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
+  //
+  // let ready = new _.Consequence().take( null )
+  //
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   verbosity : 3,
+  //   ready : ready
+  // })
+  //
   // /* - */
   //
   // start()
@@ -18763,7 +18775,7 @@ function stepSubmodulesDownload( test )
 
   /* - */
 
-  start({ execPath : '.resources.list' })
+  a.start({ execPath : '.resources.list' })
 
   .then( ( got ) =>
   {
@@ -18778,18 +18790,18 @@ function stepSubmodulesDownload( test )
   .then( () =>
   {
     test.case = 'build'
-    _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, '.module' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out/debug' ) );
     return null;
   })
 
-  start({ execPath : '.build' })
+  a.start({ execPath : '.build' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.gt( self.find( _.path.join( routinePath, '.module/Tools' ) ).length, 70 );
-    test.gt( self.find( _.path.join( routinePath, 'out/debug' ) ).length, 50 );
+    test.gt( self.find( _.path.join( a.routinePath, '.module/Tools' ) ).length, 70 );
+    test.gt( self.find( _.path.join( a.routinePath, 'out/debug' ) ).length, 50 );
     return null;
   })
 
@@ -18798,26 +18810,26 @@ function stepSubmodulesDownload( test )
   .then( () =>
   {
     test.case = 'export'
-    _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
-    _.fileProvider.filesDelete( _.path.join( routinePath, 'out/Download.out.will.yml' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, '.module' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out/debug' ) );
+    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out/Download.out.will.yml' ) );
     return null;
   })
 
-  start({ execPath : '.export' })
+  a.start({ execPath : '.export' })
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.gt( self.find( _.path.join( routinePath, '.module/Tools' ) ).length, 85 );
-    test.gt( self.find( _.path.join( routinePath, 'out/debug' ) ).length, 50 );
-    test.is( _.fileProvider.isTerminal( _.path.join( routinePath, 'out/Download.out.will.yml' ) ) );
+    test.gt( self.find( _.path.join( a.routinePath, '.module/Tools' ) ).length, 85 );
+    test.gt( self.find( _.path.join( a.routinePath, 'out/debug' ) ).length, 50 );
+    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/Download.out.will.yml' ) ) );
     return null;
   })
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 stepSubmodulesDownload.timeOut = 300000;
