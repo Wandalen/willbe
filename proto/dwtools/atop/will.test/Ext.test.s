@@ -17718,36 +17718,41 @@ function submodulesDownloadedUpdate( test )
 function subModulesUpdate( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-update' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
+  let a = self.assetFor( test, 'submodules-update' );
+  a.reflect();
 
-
-  let ready = new _.Consequence().take( null )
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-update' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let submodulesPath = _.path.join( routinePath, '.module' );
+// 
+// 
+//   let ready = new _.Consequence().take( null )
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* */
 
-  ready
+  debugger;
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.update';
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17760,14 +17765,14 @@ function subModulesUpdate( test )
 
   /* */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.update -- second';
     return null;
   })
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17780,7 +17785,7 @@ function subModulesUpdate( test )
 
   /* */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.update -- after patch';
@@ -17790,7 +17795,7 @@ function subModulesUpdate( test )
     return null;
   })
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17803,14 +17808,14 @@ function subModulesUpdate( test )
 
   /* */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.update -- second';
     return null;
   })
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -17823,7 +17828,7 @@ function subModulesUpdate( test )
 
   /* */
 
-  return ready;
+  return a.ready;
 }
 
 subModulesUpdate.timeOut = 300000;
