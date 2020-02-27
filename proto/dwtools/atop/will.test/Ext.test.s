@@ -18916,43 +18916,57 @@ stepWillbeVersionCheck.timeOut = 15000;
 function stepSubmodulesAreUpdated( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'step-submodules-are-updated' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let localModulePath = _.path.join( routinePath, 'module' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    throwingExitCode : 0,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  let start2 = _.process.starter
+  let a = self.assetFor( test, 'step-submodules-are-updated' );
+  let localModulePath = _.path.join( a.routinePath, 'module' );
+  a.start2 = _.process.starter
   ({
     currentPath : localModulePath,
     outputCollecting : 1,
     outputGraying : 1,
-    ready : ready,
+    ready : a.ready,
   })
+  a.reflect();
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'step-submodules-are-updated' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let localModulePath = _.path.join( routinePath, 'module' );
+// 
+//   let ready = new _.Consequence().take( null );
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     throwingExitCode : 0,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   let start2 = _.process.starter
+//   ({
+//     currentPath : localModulePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
-  ready.then( () =>
+  /* - */
+
+  a.ready.then( () =>
   {
     test.case = 'setup';
     return null;
   })
 
-  start( '.with ./module/ .export' )
-  start2( 'git init' )
-  start2( 'git add -fA .' )
-  start2( 'git commit -m init' )
-  start2( 'git commit --allow-empty -m test' )
+  a.startNonThrowing( '.with ./module/ .export' )
+  a.start2( 'git init' )
+  a.start2( 'git add -fA .' )
+  a.start2( 'git commit -m init' )
+  a.start2( 'git commit --allow-empty -m test' )
 
   /* */
 
@@ -18962,7 +18976,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  start( '.build' )
+  a.startNonThrowing( '.build' )
 
   .then( ( got ) =>
   {
@@ -18980,7 +18994,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  start( '.build' )
+  a.startNonThrowing( '.build' )
 
   .then( ( got ) =>
   {
@@ -18998,9 +19012,9 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  start2( 'git commit --allow-empty -m test' )
+  a.start2( 'git commit --allow-empty -m test' )
 
-  start( '.build' )
+  a.startNonThrowing( '.build' )
 
   .then( ( got ) =>
   {
@@ -19019,7 +19033,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  start( '.build debug2' )
+  a.startNonThrowing( '.build debug2' )
 
   .then( ( got ) =>
   {
@@ -19037,7 +19051,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  start( '.build debug3' )
+  a.startNonThrowing( '.build debug3' )
 
   .then( ( got ) =>
   {
@@ -19055,7 +19069,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  start( '.build debug4' )
+  a.startNonThrowing( '.build debug4' )
 
   .then( ( got ) =>
   {
@@ -19073,7 +19087,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  start( '.build debug5' )
+  a.startNonThrowing( '.build debug5' )
 
   .then( ( got ) =>
   {
@@ -19091,7 +19105,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  start( '.build debug6' )
+  a.startNonThrowing( '.build debug6' )
 
   .then( ( got ) =>
   {
@@ -19100,7 +19114,7 @@ function stepSubmodulesAreUpdated( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 stepSubmodulesAreUpdated.timeOut = 300000;
