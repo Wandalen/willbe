@@ -18294,51 +18294,74 @@ function submodulesVerify( test )
 function versionsAgree( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'command-versions-agree' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let localModulePathSrc = _.path.join( routinePath, 'module' );
-  let localModulePathDst = _.path.join( routinePath, '.module/local' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    throwingExitCode : 0,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  let start2 = _.process.starter
+  let a = self.assetFor( test, 'command-versions-agree' );
+  let localModulePathSrc = _.path.join( a.routinePath, 'module' );
+  let localModulePathDst = _.path.join( a.routinePath, '.module/local' );
+  a.start2 = _.process.starter
   ({
     currentPath : localModulePathSrc,
     outputCollecting : 1,
     outputGraying : 1,
-    ready : ready,
+    ready : a.ready,
   })
 
-  let start3 = _.process.starter
+  a.start3 = _.process.starter
   ({
     currentPath : localModulePathDst,
     outputCollecting : 1,
     outputGraying : 1,
-    ready : ready,
+    ready : a.ready,
   })
+  a.reflect();
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'command-versions-agree' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let localModulePathSrc = _.path.join( routinePath, 'module' );
+//   let localModulePathDst = _.path.join( routinePath, '.module/local' );
+// 
+//   let ready = new _.Consequence().take( null );
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     throwingExitCode : 0,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   let start2 = _.process.starter
+//   ({
+//     currentPath : localModulePathSrc,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   let start3 = _.process.starter
+//   ({
+//     currentPath : localModulePathDst,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
-  ready.then( () =>
+  /* - */
+
+  a.ready.then( () =>
   {
     test.case = 'setup';
     return null;
   })
 
-  start( '.with ./module/ .export' )
-  start2( 'git init' )
-  start2( 'git add -fA .' )
-  start2( 'git commit -m init' )
+  a.startNonThrowing( '.with ./module/ .export' )
+  a.start2( 'git init' )
+  a.start2( 'git add -fA .' )
+  a.start2( 'git commit -m init' )
 
   /* */
 
@@ -18348,7 +18371,7 @@ function versionsAgree( test )
     return null;
   })
 
-  start( '.submodules.versions.agree' )
+  a.startNonThrowing( '.submodules.versions.agree' )
 
   .then( ( got ) =>
   {
@@ -18365,7 +18388,7 @@ function versionsAgree( test )
     return null;
   })
 
-  start( '.submodules.versions.agree' )
+  a.start( '.submodules.versions.agree' )
 
   .then( ( got ) =>
   {
@@ -18382,15 +18405,15 @@ function versionsAgree( test )
     return null;
   })
 
-  start3( 'git commit --allow-empty -m test' )
-  start( '.submodules.versions.agree' )
+  a.start3( 'git commit --allow-empty -m test' )
+  a.startNonThrowing( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
-  start3( 'git status' )
+  a.start3( 'git status' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -18406,8 +18429,8 @@ function versionsAgree( test )
     return null;
   })
 
-  start2( 'git commit --allow-empty -m test' )
-  start( '.submodules.versions.agree' )
+  a.start2( 'git commit --allow-empty -m test' )
+  a.startNonThrowing( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -18416,7 +18439,7 @@ function versionsAgree( test )
     test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
-  start3( 'git status' )
+  a.start3( 'git status' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -18432,9 +18455,9 @@ function versionsAgree( test )
     return null;
   })
 
-  start3( 'git reset --hard origin' )
-  start2( 'git commit --allow-empty -m test2' )
-  start( '.submodules.versions.agree' )
+  a.start3( 'git reset --hard origin' )
+  a.start2( 'git commit --allow-empty -m test2' )
+  a.startNonThrowing( '.submodules.versions.agree' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -18442,7 +18465,7 @@ function versionsAgree( test )
     test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules were agreed in' ) );
     return null;
   })
-  start3( 'git status' )
+  a.start3( 'git status' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -18450,7 +18473,7 @@ function versionsAgree( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 //
