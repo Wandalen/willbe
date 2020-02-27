@@ -18128,51 +18128,73 @@ subModulesUpdateSwitchBranch.timeOut = 300000;
 function submodulesVerify( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'command-versions-verify' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let localModulePathSrc = _.path.join( routinePath, 'module' );
-  let localModulePathDst = _.path.join( routinePath, '.module/local' );
-
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    throwingExitCode : 0,
-    ready : ready,
-  })
-
-  let start2 = _.process.starter
+  let a = self.assetFor( test, 'command-versions-verify' );
+  let localModulePathSrc = _.path.join( a.routinePath, 'module' );
+  let localModulePathDst = _.path.join( a.routinePath, '.module/local' );
+  a.start2 = _.process.starter
   ({
     currentPath : localModulePathSrc,
     outputCollecting : 1,
     outputGraying : 1,
-    ready : ready,
-  })
-
-  let start3 = _.process.starter
+    ready : a.ready,
+  });
+  a.start3 = _.process.starter
   ({
     currentPath : localModulePathDst,
     outputCollecting : 1,
     outputGraying : 1,
-    ready : ready,
-  })
+    ready : a.ready,
+  });
+  a.reflect();
 
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'command-versions-verify' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let localModulePathSrc = _.path.join( routinePath, 'module' );
+//   let localModulePathDst = _.path.join( routinePath, '.module/local' );
+// 
+//   let ready = new _.Consequence().take( null );
+// 
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     throwingExitCode : 0,
+//     ready : ready,
+//   })
+// 
+//   let start2 = _.process.starter
+//   ({
+//     currentPath : localModulePathSrc,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   let start3 = _.process.starter
+//   ({
+//     currentPath : localModulePathDst,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+ 
+  /* - */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = 'setup';
     return null;
   })
 
-  start( '.with ./module/ .export' )
-  start2( 'git init' )
-  start2( 'git add -fA .' )
-  start2( 'git commit -m init' )
+  a.startNonThrowing( '.with ./module/ .export' )
+  a.start2( 'git init' )
+  a.start2( 'git add -fA .' )
+  a.start2( 'git commit -m init' )
 
   /* */
 
@@ -18182,7 +18204,7 @@ function submodulesVerify( test )
     return null;
   })
 
-  start( '.submodules.versions.verify' )
+  a.startNonThrowing( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -18199,8 +18221,8 @@ function submodulesVerify( test )
     return null;
   })
 
-  start( '.submodules.download' )
-  start( '.submodules.versions.verify' )
+  a.startNonThrowing( '.submodules.download' )
+  a.startNonThrowing( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -18217,7 +18239,7 @@ function submodulesVerify( test )
     return null;
   })
 
-  start( '.submodules.versions.verify' )
+  a.startNonThrowing( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -18234,9 +18256,9 @@ function submodulesVerify( test )
     return null;
   })
 
-  start3( 'git commit --allow-empty -m test' )
+  a.start3( 'git commit --allow-empty -m test' )
 
-  start( '.submodules.versions.verify' )
+  a.startNonThrowing( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -18253,9 +18275,9 @@ function submodulesVerify( test )
     return null;
   })
 
-  start3( 'git checkout -b testbranch' )
+  a.start3( 'git checkout -b testbranch' )
 
-  start( '.submodules.versions.verify' )
+  a.startNonThrowing( '.submodules.versions.verify' )
 
   .then( ( got ) =>
   {
@@ -18264,7 +18286,7 @@ function submodulesVerify( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 //
