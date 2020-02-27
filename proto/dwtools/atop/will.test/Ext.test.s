@@ -20455,38 +20455,64 @@ function runWillbe( test )
 {
 
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'run-willbe' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-
+  let a = self.assetFor( test, 'run-willbe' );
   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
-  let ready = new _.Consequence().take( null );
 
-  let fork = _.process.starter
+  a.fork = _.process.starter
   ({
     // execPath : 'node',
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
-    ready : ready,
+    ready : a.ready,
     mode : 'fork',
   });
-
-  let start = _.process.starter
+  a.start = _.process.starter
   ({
-    currentPath : routinePath,
+    currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
     mode : 'fork',
-    ready : ready,
+    ready : a.ready,
     mode : 'shell',
   });
 
-  ready
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'run-willbe' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+// 
+//   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
+//   let ready = new _.Consequence().take( null );
+// 
+//   let fork = _.process.starter
+//   ({
+//     // execPath : 'node',
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//     mode : 'fork',
+//   });
+// 
+//   let start = _.process.starter
+//   ({
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     mode : 'fork',
+//     ready : ready,
+//     mode : 'shell',
+//   });
+  
+  /* - */
+
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    a.reflect();
+    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     return null;
   })
 
@@ -20497,7 +20523,7 @@ function runWillbe( test )
     test.case = 'execUnrestricted: terminate utility during heavy load of will files, should be terminated';
     let o = { args : [ execUnrestrictedPath, '.submodules.list' ], ready : null };
 
-    let con = fork( o );
+    let con = a.fork( o );
 
     o.process.stdout.on( 'data', ( data ) =>
     {
@@ -20536,7 +20562,7 @@ function runWillbe( test )
   {
     test.case = 'Exec: terminate utility during heavy load of will files, should fail'
     let o = { execPath : 'node', args : [ execPath, '.submodules.list' ], ready : null };
-    let con = start( o );
+    let con = a.start( o );
 
     o.process.stdout.on( 'data', ( data ) =>
     {
@@ -20571,7 +20597,7 @@ function runWillbe( test )
 
   /* */
 
-  return ready;
+  return a.ready;
 }
 
 //
