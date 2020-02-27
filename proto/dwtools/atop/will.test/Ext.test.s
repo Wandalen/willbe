@@ -19379,28 +19379,32 @@ upgradeDryDetached.timeOut = 500000;
 function upgradeDetached( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let filePath = _.path.join( routinePath, 'file' );
-  let modulePath = _.path.join( routinePath, '.module' );
-  let outPath = _.path.join( routinePath, 'out' );
+  let a = self.assetFor( test, 'submodules-detached' );
+  a.reflect();
 
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  });
+  // let self = this;
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
+  // let filePath = _.path.join( routinePath, 'file' );
+  // let modulePath = _.path.join( routinePath, '.module' );
+  // let outPath = _.path.join( routinePath, 'out' );
+  //
+  // let ready = new _.Consequence().take( null );
+  //
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : ready,
+  // });
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after full update';
@@ -19408,9 +19412,9 @@ function upgradeDetached( test )
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.export' })
-  start({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.export' })
+  a.start({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -19456,20 +19460,21 @@ function upgradeDetached( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:0 -- after full update';
 
-    _.fileProvider.filesDelete({ filePath : routinePath })
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    a.reflect();
+    // _.fileProvider.filesDelete({ filePath : routinePath })
+    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.export' })
-  start({ execPath : '.submodules.upgrade dry:0 negative:0' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.export' })
+  a.start({ execPath : '.submodules.upgrade dry:0 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -19515,14 +19520,14 @@ function upgradeDetached( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after full update, second';
     return null;
   })
 
-  start({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  a.start({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -19568,14 +19573,14 @@ function upgradeDetached( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:0 -- after full update, second';
     return null;
   })
 
-  start({ execPath : '.submodules.upgrade dry:0 negative:0' })
+  a.start({ execPath : '.submodules.upgrade dry:0 negative:0' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -19625,20 +19630,21 @@ function upgradeDetached( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after informal update';
 
-    _.fileProvider.filesDelete({ filePath : routinePath })
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    a.reflect();
+    // _.fileProvider.filesDelete({ filePath : routinePath })
+    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.each module .export' })
-  start({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.each module .export' })
+  a.start({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -19684,20 +19690,21 @@ function upgradeDetached( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after formal update';
 
-    _.fileProvider.filesDelete({ filePath : routinePath })
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    a.reflect();
+    // _.fileProvider.filesDelete({ filePath : routinePath })
+    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
 
-  start({ execPath : '.clean' })
-  start({ execPath : '.submodules.update' })
-  start({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  a.start({ execPath : '.clean' })
+  a.start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -19743,7 +19750,7 @@ function upgradeDetached( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 upgradeDetached.timeOut = 500000;
