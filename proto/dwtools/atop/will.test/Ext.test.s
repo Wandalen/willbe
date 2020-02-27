@@ -19760,32 +19760,36 @@ upgradeDetached.timeOut = 500000;
 function upgradeDetachedExperiment( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached-single' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
+  let a = self.assetFor( test, 'submodules-detached-single' );
 
-  let ready = new _.Consequence().take( null );
-
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  });
+  // let self = this;
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached-single' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  //
+  // let ready = new _.Consequence().take( null );
+  //
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + self.willPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : ready,
+  // });
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after download';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    a.reflect();
+    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     return null;
   })
 
-  start({ execPath : '.submodules.download' })
-  start({ execPath : '.submodules.upgrade dry:0 negative:1' })
+  a.start({ execPath : '.submodules.download' })
+  a.start({ execPath : '.submodules.upgrade dry:0 negative:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -19800,7 +19804,7 @@ function upgradeDetachedExperiment( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 upgradeDetachedExperiment.experimental = 1;
