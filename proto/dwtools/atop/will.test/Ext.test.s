@@ -17838,33 +17838,40 @@ subModulesUpdate.timeOut = 300000;
 function subModulesUpdateSwitchBranch( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-update-switch-branch' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
-
+  let a = self.assetFor( test, 'submodules-update-switch-branch' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  let willfilePath = _.path.join( a.routinePath, '.will.yml' );
   let experimentModulePath = _.path.join( submodulesPath, 'willbe-experiment' );
-  let willfilePath = _.path.join( routinePath, '.will.yml' );
   let detachedVersion;
 
-  let ready = new _.Consequence().take( null )
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  let start2 = _.process.starter
-  ({
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-update-switch-branch' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let submodulesPath = _.path.join( routinePath, '.module' );
+// 
+//   let experimentModulePath = _.path.join( submodulesPath, 'willbe-experiment' );
+//   let willfilePath = _.path.join( routinePath, '.will.yml' );
+//   let detachedVersion;
+// 
+//   let ready = new _.Consequence().take( null )
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   let start2 = _.process.starter
+//   ({
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
 
   /* */
 
@@ -17876,7 +17883,7 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -17894,7 +17901,7 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -17912,7 +17919,7 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -17930,7 +17937,7 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -17952,7 +17959,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let con = start({ execPath : '.submodules.update', ready : null });
+    let con = a.start({ execPath : '.submodules.update', ready : null });
     return test.shouldThrowErrorAsync( con );
   })
 
@@ -17960,7 +17967,7 @@ function subModulesUpdateSwitchBranch( test )
   ({
     execPath : 'git status',
     currentPath : experimentModulePath,
-    ready : ready,
+    ready : a.ready,
     outputCollecting : 1
   })
 
@@ -17975,7 +17982,7 @@ function subModulesUpdateSwitchBranch( test )
 
   /**/
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = 'master has new commit, changing branch to dev';
     return null;
@@ -17983,13 +17990,13 @@ function subModulesUpdateSwitchBranch( test )
 
   begin()
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
 
   _.process.start
   ({
     execPath : 'git commit --allow-empty -m commitofmaster',
     currentPath : experimentModulePath,
-    ready : ready
+    ready : a.ready
   })
   .then( () =>
   {
@@ -17999,7 +18006,7 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
 
   .then( () =>
   {
@@ -18010,7 +18017,7 @@ function subModulesUpdateSwitchBranch( test )
 
   /**/
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     test.case = 'master and remote master have new commits';
     return null;
@@ -18018,20 +18025,23 @@ function subModulesUpdateSwitchBranch( test )
 
   begin()
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
 
   _.process.start
   ({
     execPath : 'git commit --allow-empty -m emptycommit',
     currentPath : experimentModulePath,
-    ready : ready
+    ready : a.ready
   })
 
-  start2( 'git -C cloned checkout master' )
-  start2( 'git -C cloned commit --allow-empty -m test' )
-  start2( 'git -C cloned push' )
+  // start2( 'git -C cloned checkout master' )
+  // start2( 'git -C cloned commit --allow-empty -m test' )
+  // start2( 'git -C cloned push' )
+  a.shell( 'git -C cloned checkout master' )
+  a.shell( 'git -C cloned commit --allow-empty -m test' )
+  a.shell( 'git -C cloned push' )
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
 
   _.process.start
   ({
@@ -18039,7 +18049,7 @@ function subModulesUpdateSwitchBranch( test )
     currentPath : experimentModulePath,
     outputCollecting : 1,
     outputGraying : 1,
-    ready : ready,
+    ready : a.ready,
   })
 
   .then( ( got ) =>
@@ -18051,30 +18061,29 @@ function subModulesUpdateSwitchBranch( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 
   /* */
 
   function begin()
   {
-    ready
+    a.ready
     .then( () =>
     {
       test.case = 'setup repo';
 
       let con = new _.Consequence().take( null );
-      let repoPath = _.path.join( routinePath, 'experiment' );
-      let repoSrcFiles = _.path.join( routinePath, 'src' );
-      let clonePath = _.path.join( routinePath, 'cloned' );
+      let repoPath = _.path.join( a.routinePath, 'experiment' );
+      let repoSrcFiles = _.path.join( a.routinePath, 'src' );
+      let clonePath = _.path.join( a.routinePath, 'cloned' );
 
-      _.fileProvider.filesDelete( routinePath );
-      _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+      a.reflect();
 
       _.fileProvider.dirMake( repoPath );
 
       let start = _.process.starter
       ({
-        currentPath : routinePath,
+        currentPath : a.routinePath,
         outputCollecting : 1,
         ready : con,
       })
@@ -18106,7 +18115,7 @@ function subModulesUpdateSwitchBranch( test )
       return con;
     })
 
-    return ready;
+    return a.ready;
   }
 
 }
