@@ -17582,36 +17582,40 @@ submodulesVersionsAgreeWrongOrigin.timeOut = 300000;
 function submodulesDownloadedUpdate( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-downloaded-update' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = _.path.join( routinePath, '.module' );
+  let a = self.assetFor( test, 'submodules-downloaded-update' );
+  a.reflect();
 
-
-  let ready = new _.Consequence().take( null )
-  let start = _.process.starter
-  ({
-    execPath : 'node ' + self.willPath,
-    currentPath : routinePath,
-    outputCollecting : 1,
-    outputGraying : 1,
-    ready : ready,
-  })
-
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+//   let self = this;
+//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-downloaded-update' );
+//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let abs = self.abs_functor( routinePath );
+//   let rel = self.rel_functor( routinePath );
+//   let submodulesPath = _.path.join( routinePath, '.module' );
+// 
+// 
+//   let ready = new _.Consequence().take( null )
+//   let start = _.process.starter
+//   ({
+//     execPath : 'node ' + self.willPath,
+//     currentPath : routinePath,
+//     outputCollecting : 1,
+//     outputGraying : 1,
+//     ready : ready,
+//   })
+// 
+//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'setup';
     return null;
   })
 
-  start({ execPath : '.each module .export' })
-  start({ execPath : '.submodules.download' })
+  a.start({ execPath : '.each module .export' })
+  a.start({ execPath : '.submodules.download' })
 
   .then( ( got ) =>
   {
@@ -17631,8 +17635,8 @@ function submodulesDownloadedUpdate( test )
   _.process.start
   ({
     execPath : 'git -C .module/willbe-experiment rev-parse --abbrev-ref HEAD',
-    currentPath : routinePath,
-    ready : ready,
+    currentPath : a.routinePath,
+    ready : a.ready,
     outputCollecting : 1,
     outputGraying : 1,
   })
@@ -17648,8 +17652,8 @@ function submodulesDownloadedUpdate( test )
   _.process.start
   ({
     execPath : 'git -C module/.module/willbe-experiment rev-parse --abbrev-ref HEAD',
-    currentPath : routinePath,
-    ready : ready,
+    currentPath : a.routinePath,
+    ready : a.ready,
     outputCollecting : 1,
     outputGraying : 1,
   })
@@ -17670,13 +17674,13 @@ function submodulesDownloadedUpdate( test )
     return got;
   })
 
-  start({ execPath : '.submodules.update' })
+  a.start({ execPath : '.submodules.update' })
 
   _.process.start
   ({
     execPath : 'git -C .module/willbe-experiment rev-parse --abbrev-ref HEAD',
-    currentPath : routinePath,
-    ready : ready,
+    currentPath : a.routinePath,
+    ready : a.ready,
     outputCollecting : 1,
     outputGraying : 1,
   })
@@ -17692,8 +17696,8 @@ function submodulesDownloadedUpdate( test )
   _.process.start
   ({
     execPath : 'git -C module/.module/willbe-experiment rev-parse --abbrev-ref HEAD',
-    currentPath : routinePath,
-    ready : ready,
+    currentPath : a.routinePath,
+    ready : a.ready,
     outputCollecting : 1,
     outputGraying : 1,
   })
@@ -17706,7 +17710,7 @@ function submodulesDownloadedUpdate( test )
     return got;
   })
 
-  return ready;
+  return a.ready;
 }
 
 //
