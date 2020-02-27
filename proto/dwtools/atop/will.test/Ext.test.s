@@ -18839,13 +18839,11 @@ stepSubmodulesDownload.timeOut = 300000;
 function stepWillbeVersionCheck( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'step-willbe-version-check' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
+  let a = self.assetFor( test, 'step-willbe-version-check' );
+
+  let assetDstPath = _.path.join( a.routinePath, 'asset' );
   let willbeRootPath = _.path.join( __dirname, '../../../..' );
-
-  let assetDstPath = _.path.join( routinePath, 'asset' );
-  let willbeDstPath = _.path.join( routinePath, 'willbe' );
-
+  let willbeDstPath = _.path.join( a.routinePath, 'willbe' );
   let nodeModulesSrcPath = _.path.join( willbeRootPath, 'node_modules' );
   let nodeModulesDstPath = _.path.join( willbeDstPath, 'node_modules' );
 
@@ -18866,25 +18864,23 @@ function stepWillbeVersionCheck( test )
     src : { prefixPath : willbeRootPath },
     dst : { prefixPath : willbeDstPath },
   })
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : assetDstPath } })
+  _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : assetDstPath } });
   _.fileProvider.softLink( nodeModulesDstPath, nodeModulesSrcPath );
 
   let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/Exec' ) );
-  let ready = new _.Consequence().take( null )
-
-  let start = _.process.starter
+  a.start = _.process.starter
   ({
     execPath : 'node ' + execPath,
     currentPath : assetDstPath,
     outputCollecting : 1,
     throwingExitCode : 0,
     verbosity : 3,
-    ready : ready
+    ready : a.ready
   })
 
-  /* */
+  /* - */
 
-  start( '.build' )
+  a.start( '.build' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -18901,7 +18897,7 @@ function stepWillbeVersionCheck( test )
     return null;
   })
 
-  start( '.build' )
+  a.start( '.build' )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
@@ -18910,7 +18906,7 @@ function stepWillbeVersionCheck( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 stepWillbeVersionCheck.timeOut = 15000;
