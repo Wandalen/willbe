@@ -216,10 +216,10 @@ function idWithGuid()
 
 function idWithTimeGuid()
 {
-  let guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'; /* qqq : ask */
+  let guid = '$$$$$$$$-$$$$-4$$$-y$$$-$$$$$$$$$$$$'; /* qqq : ask */
   let date = _.time.now();
 
-  return guid.replace( /[xy]/g, replaceSymbol );
+  return guid.replace( /[$y]/g, replaceSymbol );
 
   /* */
 
@@ -227,7 +227,7 @@ function idWithTimeGuid()
   {
     let r = ( date + Math.random() * 16 ) % 16 | 0;
     date = Math.floor( date / 16 );
-    return ( sym === 'x' ? r : ( r & 0x3 | 0x8 ) ).toString( 16 );
+    return ( sym === '$' ? r : ( r & 0x3 | 0x8 ) ).toString( 16 );
   }
 }
 

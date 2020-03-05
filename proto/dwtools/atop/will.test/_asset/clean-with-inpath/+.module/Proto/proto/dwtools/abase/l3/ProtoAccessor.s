@@ -480,6 +480,8 @@ function _declareAct( o )
     if( o2.methods === o2.object )
     o2.methods = Object.create( null );
     o2.object = null;
+    
+    delete o2.name;
 
     if( getterSetter.set )
     o2.methods[ '_' + o.name + 'Set' ] = getterSetter.set;
@@ -1121,9 +1123,9 @@ function supplement( dst, src )
     let accessor = src._Accessors[ a ];
 
     if( _.objectIs( accessor ) )
-    supplement( name, accessor );
+    supplement( a, accessor );
     else for( let i = 0 ; i < accessor.length ; i++ )
-    supplement( name, accessor[ i ] );
+    supplement( a, accessor[ i ] );
 
   }
 

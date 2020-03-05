@@ -1503,6 +1503,164 @@ function callable( test )
 
 }
 
+//
+
+function accessorSupplement( test )
+{
+  test.case = 'supplement Beta with accessor "a" declared on Alpha'
+  var Alpha = function _Alpha(){}
+  _.classDeclare
+  ({
+    cls : Alpha,
+    parent : null,
+    extend :
+    { 
+      Composes : {},
+    }
+  });
+  _.accessor.declare( Alpha.prototype, { a : 'a' } );
+  
+  var Beta = function _Beta(){}
+  _.classDeclare
+  ({
+    cls : Beta,
+    parent : null,
+    extend :
+    {
+      Accessors : {}
+    }
+  });
+  _.accessor.supplement( Beta.prototype,Alpha.prototype );
+  
+  var x = new Beta();
+  x.a = 2;
+  test.identical( x.a, 2 );
+  
+  test.case = 'supplement Beta with accessor "a" declared on Alpha, Beta has accessor "b"'
+  var Alpha = function _Alpha(){}
+  _.classDeclare
+  ({
+    cls : Alpha,
+    parent : null,
+    extend :
+    { 
+      Composes : {},
+    }
+  });
+  _.accessor.declare( Alpha.prototype, { a : 'a' } );
+  
+  var Beta = function _Beta(){}
+  _.classDeclare
+  ({
+    cls : Beta,
+    parent : null,
+    extend :
+    {
+      Accessors : {}
+    }
+  });
+  _.accessor.declare( Beta.prototype, { b : 'b' } );
+  
+  _.accessor.supplement( Beta.prototype,Alpha.prototype );
+  
+  var x = new Beta();
+  x.a = 2;
+  x.b = 4;
+  test.identical( x.a, 2 );
+  test.identical( x.b, 4 );
+    
+  //
+  
+  test.case = 'supplement Beta with accessors of Alpha, both have same accessor'
+  var Alpha = function _Alpha(){}
+  _.classDeclare
+  ({
+    cls : Alpha,
+    parent : null,
+    extend :
+    { 
+      Composes : {},
+    }
+  });
+  _.accessor.declare( Alpha.prototype, { a : 'a' } );
+  
+  var Beta = function _Beta(){}
+  _.classDeclare
+  ({
+    cls : Beta,
+    parent : null,
+    extend :
+    {
+      _aGet : function()
+      {
+        return this[ Symbol.for( 'a' ) ] * 2;
+      },
+      Accessors : {}
+    }
+  });
+  _.accessor.declare( Beta.prototype, { a : 'a' } );
+  
+  _.accessor.supplement( Beta.prototype,Alpha.prototype );
+  
+  var x = new Beta();
+  x.a = 2;
+  test.identical( x.a, 4 );
+  
+  //
+  
+  test.case = 'Alpha: a, b - getter, c - setter, Beta: a - getter'
+  var Alpha = function _Alpha(){}
+  _.classDeclare
+  ({
+    cls : Alpha,
+    parent : null,
+    extend :
+    { 
+      _bGet : function()
+      {
+        return this[ Symbol.for( 'b' ) ] * 2;
+      },
+      _cSet : function( src )
+      {
+        this[ Symbol.for( 'c' ) ] = src * 2;
+      },
+      Composes : {},
+    }
+  });
+  _.accessor.declare( Alpha.prototype, { a : 'a' } );
+  _.accessor.declare( Alpha.prototype, { b : 'b' } );
+  _.accessor.declare( Alpha.prototype, { c : 'c' } );
+  
+  var Beta = function _Beta(){}
+  _.classDeclare
+  ({
+    cls : Beta,
+    parent : null,
+    extend :
+    {
+      _aGet : function()
+      {
+        return this[ Symbol.for( 'a' ) ] * 2;
+      },
+      Accessors : {}
+    }
+  });
+  
+  _.accessor.declare( Beta.prototype, { a : 'a' } );
+  _.accessor.supplement( Beta.prototype,Alpha.prototype );
+  
+  var x = new Beta();
+  x.a = 2;
+  x.b = 3;
+  x.c = 4;
+  test.identical( x[ Symbol.for( 'a' ) ], 2 );
+  test.identical( x[ Symbol.for( 'b' ) ], 3 );
+  test.identical( x[ Symbol.for( 'c' ) ], 8 );
+  test.identical( x.a, 4 );
+  test.identical( x.b, 6 );
+  test.identical( x.c, 8 );
+}
+
 // --
 // declare
 // --
@@ -1535,6 +1693,8 @@ var Self =
     propertyConstant,
 
     callable,
+    
+    accessorSupplement
 
   },
 

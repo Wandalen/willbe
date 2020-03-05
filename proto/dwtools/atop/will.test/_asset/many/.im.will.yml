@@ -56,7 +56,7 @@ submodule :
 
   MathScalar : git+https:///github.com/Wandalen/wMathScalar.git/@master
   MathVector : git+https:///github.com/Wandalen/wMathVector.git/@master
-  MathSpace : git+https:///github.com/Wandalen/wMathSpace.git/@master
+  MathMatrix : git+https:///github.com/Wandalen/wMathMatrix.git/@master
   MathConcepts : git+https:///github.com/Wandalen/wMathConcepts.git/@master
 
 path :
