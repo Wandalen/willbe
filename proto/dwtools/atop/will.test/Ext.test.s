@@ -22107,7 +22107,7 @@ var Self =
     hookGitPullConflict,
     hookGitSyncColflict,
     hookGitSyncArguments,
-    hookPublish,
+    // hookPublish,//Vova: xxx: doesn't exist
 
     verbositySet,
     verbosityStepDelete,
@@ -22238,7 +22238,6 @@ var Self =
     // runWillbe, // zzz : help to fix, please
 
     // resourcesFormReflectorsExperiment, // xxx : look
-
   }
 
 }
