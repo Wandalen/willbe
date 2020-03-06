@@ -532,19 +532,25 @@ let wBitmask =
 let wMathScalar =
 {
   sourcePath : sourcePath( 'amath/l1/Scalar.s', 'wmathscalar' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.clamp },
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.math && !!_global.wTools.math.clamp },
 }
 
 let wMathVector =
 {
   sourcePath : sourcePath( 'amath/l3_vector/Include.s', 'wmathvector' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.vector },
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.avector && !!_global.wTools.avector.abs },
 }
 
-let wMathSpace =
+let wMathMatrix =
 {
-  sourcePath : sourcePath( 'amath/l5_matrix/Include.s', 'wmathspace' ),
+  sourcePath : sourcePath( 'amath/l5_matrix/Include.s', 'wmathmatrix' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Space },
+}
+
+let wMathGeometric =
+{
+  sourcePath : sourcePath( 'amath/l6/Geometric.s', 'wmathgeometric' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.math.d2TriPointInside },
 }
 
 let wMathConcepts =
@@ -738,7 +744,8 @@ let Modules =
 
   wMathScalar,
   wMathVector,
-  wMathSpace,
+  wMathMatrix,
+  wMathGeometric,
   wMathConcepts,
 
   // top

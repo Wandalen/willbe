@@ -5165,12 +5165,12 @@ copy
     var exp =
 `
 original/f.txt
-copy
-<<<<<<< HEAD
+copy 
+ <<<<<<< HEAD
 clone
 =======
 original
->>>>>>>
+ >>>>>>>
 `
     var orignalRead1 = _.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -5180,11 +5180,11 @@ original
 `
 original/f.txt
 copy
-<<<<<<< HEAD
+ <<<<<<< HEAD
 clone
 =======
 original
->>>>>>>
+ >>>>>>>
 `
     var orignalRead2 = _.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -5335,11 +5335,11 @@ copy
 `
 original/f.txt
 copy
-<<<<<<< HEAD
+ <<<<<<< HEAD
 clone
 =======
 original
->>>>>>>
+ >>>>>>>
 `
     var orignalRead1 = _.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
@@ -5349,11 +5349,11 @@ original
 `
 original/f.txt
 copy
-<<<<<<< HEAD
+ <<<<<<< HEAD
 clone
 =======
 original
->>>>>>>
+ >>>>>>>
 `
     var orignalRead2 = _.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
@@ -20795,7 +20795,7 @@ var Self =
     hookGitPullConflict,
     hookGitSyncColflict,
     hookGitSyncArguments,
-    // hookPublish, /* Dmytro : not exists */
+    // hookPublish,//Vova: xxx: doesn't exist
 
     verbositySet,
     verbosityStepDelete,
@@ -20926,7 +20926,6 @@ var Self =
     // runWillbe, // zzz : help to fix, please
 
     // resourcesFormReflectorsExperiment, // xxx : look
-
   }
 
 }

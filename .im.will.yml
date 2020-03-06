@@ -85,6 +85,9 @@ submodule :
   open :
     path : npm:///open
     enabled : 0 # submodule
+  getos :
+    path : npm:///getos
+    enabled : 0 # submodule
   wTesting :
     path : npm:///wTesting
     enabled : 0 # submodule

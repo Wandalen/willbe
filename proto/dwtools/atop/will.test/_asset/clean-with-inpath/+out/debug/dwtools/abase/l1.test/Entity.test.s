@@ -97,25 +97,25 @@ function entityMakeConstructing( test )
   var got = _.entityMakeConstructing( [ null, undefined, 1, 2 ], 2 );
   test.identical( got, [ undefined, undefined ] );
 
-  test.case = 'empty arguments array';
-  var got = _.entityMakeConstructing( _.argumentsArrayMake( [] ) );
-  test.identical( got, [] );
-  test.is( _.arrayIs( got ) );
-
-  test.case = 'empty arguments array, length';
-  var got = _.entityMakeConstructing( _.argumentsArrayMake( [] ), 4 );
-  test.identical( got, [ undefined, undefined, undefined, undefined ] );
-  test.is( _.arrayIs( got ) );
-
-  test.case = 'not empty argumentsArray';
-  var got = _.entityMakeConstructing( _.argumentsArrayMake( [ null, undefined, 1, 2 ] ) );
-  test.identical( got, [ null, undefined, 1, 2 ] );
-  test.is( _.arrayIs( got ) );
-
-  test.case = 'not empty argumentsArray, length';
-  var got = _.entityMakeConstructing( _.argumentsArrayMake( [ null, undefined, 1, 2 ] ), 2 );
-  test.identical( got, [ null, undefined ] );
-  test.is( _.arrayIs( got ) );
+  // test.case = 'empty arguments array';
+  // var got = _.entityMakeConstructing( _.argumentsArrayMake( [] ) );
+  // test.identical( got, [] );
+  // test.is( _.arrayIs( got ) );
+  //
+  // test.case = 'empty arguments array, length';
+  // var got = _.entityMakeConstructing( _.argumentsArrayMake( [] ), 4 );
+  // test.identical( got, [ undefined, undefined, undefined, undefined ] );
+  // test.is( _.arrayIs( got ) );
+  //
+  // test.case = 'not empty argumentsArray';
+  // var got = _.entityMakeConstructing( _.argumentsArrayMake( [ null, undefined, 1, 2 ] ) );
+  // test.identical( got, [ null, undefined, 1, 2 ] );
+  // test.is( _.arrayIs( got ) );
+  //
+  // test.case = 'not empty argumentsArray, length';
+  // var got = _.entityMakeConstructing( _.argumentsArrayMake( [ null, undefined, 1, 2 ] ), 2 );
+  // test.identical( got, [ null, undefined ] );
+  // test.is( _.arrayIs( got ) );
 
   test.case = 'empty unroll';
   var got = _.entityMakeConstructing( _.unrollMake( [] ) );
@@ -137,13 +137,13 @@ function entityMakeConstructing( test )
   test.identical( got, [ null, undefined ] );
   test.is( !_.unrollIs( got ) && _.arrayIs( got ) );
 
-  test.case = 'BufferTyped';
-  var got = _.entityMakeConstructing( new U8x( 10 ) );
-  test.identical( got, new U8x( 10 ) );
-
-  test.case = 'BufferTyped, length';
-  var got = _.entityMakeConstructing( new U8x( 10 ), 4 );
-  test.identical( got, new U8x( 4 ) );
+  // test.case = 'BufferTyped';
+  // var got = _.entityMakeConstructing( new U8x( 10 ) );
+  // test.identical( got, new U8x( 10 ) );
+  //
+  // test.case = 'BufferTyped, length';
+  // var got = _.entityMakeConstructing( new U8x( 10 ), 4 );
+  // test.identical( got, new U8x( 4 ) );
 
   test.case = 'empty map';
   var got = _.entityMakeConstructing( {} );
@@ -210,6 +210,552 @@ function entityMakeConstructing( test )
   test.shouldThrowErrorSync( () => _.entityMakeConstructing( new Set( [ 1, 'str', false ] ) ) );
   test.shouldThrowErrorSync( () => _.entityMakeConstructing( new Map( [ [ 'a', 1 ], [ 'b', 2 ] ] ) ) );
   test.shouldThrowErrorSync( () => _.entityMakeConstructing( new BufferRaw() ) );
+}
+
+//
+
+function entityMakeConstructingArgumentsArray( test )
+{
+  test.case = 'src = empty long, not ins';
+  var src = _.argumentsArrayMake( [] );
+  var got = _.entityMakeConstructing( src );
+  var expected = _.longDescriptor.make( [] );
+  test.identical( got, expected );
+
+  test.case = 'src = long, not ins';
+  var src = _.argumentsArrayMake( [ 1, 2, 3 ] );
+  var got = _.entityMakeConstructing( src );
+  var expected = _.longDescriptor.make( [ 1, 2, 3 ] );
+  test.identical( got, expected );
+  test.is( got !== src );
+
+  test.case = 'src = empty long, ins = null';
+  var src = _.argumentsArrayMake( [] );
+  var got = _.entityMakeConstructing( src, null );
+  var expected = _.longDescriptor.make( 0 );
+  test.identical( got, expected );
+  test.is( got !== src );
+
+  test.case = 'src = empty long, ins = number';
+  var src = _.argumentsArrayMake( [] );
+  var got = _.entityMakeConstructing( src, 2 );
+  var expected = _.longDescriptor.make( 2 );
+  test.identical( got, expected );
+  test.is( got !== src );
+
+  test.case = 'src = long, ins = number, ins < src.length';
+  var src = _.argumentsArrayMake( [ 1, 2, 3 ] );
+  var got = _.entityMakeConstructing( src, 2 );
+  var expected = _.longDescriptor.make( [ 1, 2 ] );
+  test.identical( got, expected );
+  test.is( got !== src );
+
+  test.case = 'src = long with an element, ins = empty array';
+  var src = new F64x( 10 );
+  var got = _.entityMakeConstructing( src, [] );
+  var expected = new F64x( 0 );
+  test.identical( got, expected );
+  test.is( got !== src );
+
+  test.case = 'src = long, ins = number, ins > src.length';
+  var src = _.argumentsArrayMake( [ 1, 2, 3 ] );
+  var got = _.entityMakeConstructing( src, 4 );
+  var expected = _.longDescriptor.make( [ 1, 2, 3, undefined ] );
+  test.identical( got, expected );
+  test.is( got !== src );
+
+  test.case = 'src = long, ins = array, ins.length > src.length';
+  var src = _.argumentsArrayMake( [ 0, 1 ] );
+  var ins = [ 1, 2, 3 ];
+  var got = _.entityMakeConstructing( src, ins );
+  var expected = _.longDescriptor.make( [ 1, 2, 3 ] );
+  test.identical( got, expected );
+  test.is( got !== ins );
+  test.is( got !== src );
+
+  test.case = 'src = long, ins = array, ins.length === src.length'
+  var src = _.argumentsArrayMake( 5 );
+  var ins = [ 1, 2, 3, 4, 5 ];
+  var got = _.entityMakeConstructing( src, ins );
+  var expected = _.longDescriptor.make( [ 1, 2, 3, 4, 5 ] );
+  test.identical( got, expected );
+  test.is( got !== src );
+}
+
+//
+
+function entityMakeConstructingBufferTyped( test )
+{
+  var list =
+  [
+    I8x,
+    U16x,
+    U16x,
+    F32x,
+  ];
+
+  /* tests */
+
+  for( let t = 0; t < list.length; t++ )
+  {
+    test.open( list[ t ].name );
+    testRun( list[ t ] );
+    test.close( list[ t ].name );
+  }
+
+  /* test subroutine */
+
+  function testRun( long )
+  {
+    test.case = 'src = empty long, not ins';
+    var src = new long( [] );
+    var got = _.entityMakeConstructing( src );
+    var expected = _.longDescriptor.make( [] );
+    test.identical( got, expected );
+
+    test.case = 'src = long, not ins';
+    var src = new long( [ 1, 2, 3 ] );
+    var got = _.entityMakeConstructing( src );
+    var expected = _.longDescriptor.make( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( src.constructor.name !== got.constructor.name ); 
+
+    test.case = 'src = empty long, ins = null';
+    var src = new long( [] );
+    var got = _.entityMakeConstructing( src, null );
+    var expected = new long( 0 );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( src.constructor.name === got.constructor.name );
+
+    test.case = 'src = empty long, ins = number';
+    var src = new long( [] );
+    var got = _.entityMakeConstructing( src, 2 );
+    var expected = new long( 2 );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( src.constructor.name === got.constructor.name );
+
+    test.case = 'src = long, ins = number, ins < src.length';
+    var src = new long( [ 1, 2, 3 ] );
+    var got = _.entityMakeConstructing( src, 2 );
+    var expected = new long( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( src.constructor.name === got.constructor.name );
+
+    test.case = 'src = long with an element, ins = empty array';
+    var src = new F64x( 10 );
+    var got = _.entityMakeConstructing( src, [] );
+    var expected = new F64x( 0 );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'src = long, ins = number, ins > src.length';
+    var src = new long( [ 1, 2, 3 ] );
+    var got = _.entityMakeConstructing( src, 4 );
+    var expected = new long( [ 1, 2, 3, 0 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( src.constructor.name === got.constructor.name );
+
+    test.case = 'src = long, ins = array, ins.length > src.length';
+    var src = new long( [ 0, 1 ] );
+    var ins = [ 1, 2, 3 ];
+    var got = _.entityMakeConstructing( src, ins );
+    var expected = new long( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== ins );
+    test.is( got !== src );
+    test.is( src.constructor.name === got.constructor.name );
+
+    test.case = 'src = long, ins = array, ins.length === src.length'
+    var src = new long( 5 );
+    var ins = [ 1, 2, 3, 4, 5 ];
+    var got = _.entityMakeConstructing( src, ins );
+    var expected = new long( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( src.constructor.name === got.constructor.name );
+  }
+}
+
+//
+
+function entityMakeConstructingLongDescriptor( test )
+{
+  let times = 4;
+  for( let e in _.LongDescriptors )
+  {
+    let name = _.LongDescriptors[ e ].name;
+    let descriptor = _.withDefaultLong[ name ];
+
+    test.open( `descriptor - ${ name }` );
+    testRun( descriptor );
+    test.close( `descriptor - ${ name }` );
+
+    if( times < 1 )
+    break;
+    times--;
+  }
+
+  /* - */
+
+  function testRun( descriptor )
+  {
+    test.case = 'null';
+    var got = descriptor.entityMakeConstructing( null );
+    test.identical( got, null );
+
+    test.case = 'undefined';
+    var got = descriptor.entityMakeConstructing( undefined );
+    test.identical( got, undefined );
+
+    test.case = 'zero';
+    var got = descriptor.entityMakeConstructing( 0 );
+    test.identical( got, 0 );
+
+    test.case = 'number';
+    var got = descriptor.entityMakeConstructing( 3 );
+    test.identical( got, 3 );
+
+    test.case = 'bigInt';
+    var got = descriptor.entityMakeConstructing( 1n );
+    test.identical( got, 1n );
+
+    test.case = 'empty string';
+    var got = descriptor.entityMakeConstructing( '' );
+    test.identical( got, '' );
+
+    test.case = 'string';
+    var got = descriptor.entityMakeConstructing( 'str' );
+    test.identical( got, 'str' );
+
+    test.case = 'false';
+    var got = descriptor.entityMakeConstructing( false );
+    test.identical( got, false );
+
+    test.case = 'NaN';
+    var got = descriptor.entityMakeConstructing( NaN );
+    test.identical( got, NaN );
+
+    test.case = 'Symbol';
+    var src = Symbol();
+    var got = descriptor.entityMakeConstructing( src );
+    test.identical( got, src );
+
+    test.case = '_.null';
+    var got = descriptor.entityMakeConstructing( _.null );
+    test.identical( got, null );
+
+    test.case = '_.undefined';
+    var got = descriptor.entityMakeConstructing( _.undefined );
+    test.identical( got, undefined );
+
+    test.case = '_.nothing';
+    var got = descriptor.entityMakeConstructing( _.nothing );
+    test.identical( got, _.nothing );
+
+    test.case = 'empty array';
+    var got = descriptor.entityMakeConstructing( [] );
+    test.identical( got, [] );
+
+    test.case = 'empty array, length';
+    var got = descriptor.entityMakeConstructing( [], 4 );
+    test.identical( got, [ undefined, undefined, undefined, undefined ] );
+
+    test.case = 'not empty array';
+    var got = descriptor.entityMakeConstructing( [ null, undefined, 1, 2 ] );
+    test.identical( got, [ undefined, undefined, undefined, undefined ] );
+
+    test.case = 'not empty array, length';
+    var got = descriptor.entityMakeConstructing( [ null, undefined, 1, 2 ], 2 );
+    test.identical( got, [ undefined, undefined ] );
+
+    test.case = 'empty unroll';
+    var got = descriptor.entityMakeConstructing( _.unrollMake( [] ) );
+    test.identical( got, [] );
+    test.is( !_.unrollIs( got ) && _.arrayIs( got ) );
+
+    test.case = 'empty unroll, length';
+    var got = descriptor.entityMakeConstructing( _.unrollMake( [] ), 4 );
+    test.identical( got, [ undefined, undefined, undefined, undefined ] );
+    test.is( !_.unrollIs( got ) && _.arrayIs( got ) );
+
+    test.case = 'not empty unroll';
+    var got = descriptor.entityMakeConstructing( _.unrollMake( [ null, undefined, 1, 2 ] ) );
+    test.identical( got, [ undefined, undefined, undefined, undefined ] );
+    test.is( !_.unrollIs( got ) && _.arrayIs( got ) );
+
+    test.case = 'not empty unroll, length';
+    var got = descriptor.entityMakeConstructing( _.unrollMake( [ null, undefined, 1, 2 ] ), 2 );
+    test.identical( got, [ undefined, undefined ] );
+    test.is( !_.unrollIs( got ) && _.arrayIs( got ) );
+
+    test.case = 'empty map';
+    var got = descriptor.entityMakeConstructing( {} );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'empty map, length';
+    var got = descriptor.entityMakeConstructing( {}, 4 );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'not empty map';
+    var got = descriptor.entityMakeConstructing( { '' : null } );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'not empty map, length';
+    var got = descriptor.entityMakeConstructing( { '' : null }, 4 );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'empty pure map';
+    var got = descriptor.entityMakeConstructing( Object.create( null ) );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'empty pure map, length';
+    var got = descriptor.entityMakeConstructing( Object.create( null ) );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'instance of constructor';
+    var Constr = function( src )
+    {
+      this.x = src || 1;
+      return this;
+    };
+    var src = new Constr( 2 );
+    var got = descriptor.entityMakeConstructing( src );
+    test.identical( got, new Constr() );
+
+    test.case = 'instance of constructor, length';
+    var Constr = function( src )
+    {
+      this.x = src || 1;
+      return this;
+    };
+    var src = new Constr( 2 );
+    var got = descriptor.entityMakeConstructing( src, 2 );
+    test.identical( got, new Constr() );
+
+    /* - */
+
+    if( Config.debug )
+    {
+      test.case = 'without arguments';
+      test.shouldThrowErrorSync( () => descriptor.entityMakeConstructing() );
+
+      test.case = 'extra arguments';
+      test.shouldThrowErrorSync( () => descriptor.entityMakeConstructing( [], 1, 1 ) );
+
+      test.case = 'unknown type of entity';
+      test.shouldThrowErrorSync( () => descriptor.entityMakeConstructing( new Set( [ 1, 'str', false ] ) ) );
+      test.shouldThrowErrorSync( () => descriptor.entityMakeConstructing( new Map( [ [ 'a', 1 ], [ 'b', 2 ] ] ) ) );
+      test.shouldThrowErrorSync( () => descriptor.entityMakeConstructing( new BufferRaw() ) );
+    } 
+  } 
+}
+
+//
+
+function entityMakeConstructingArgumentsArrayLongDescriptor( test )
+{
+  let times = 4;
+  for( let e in _.LongDescriptors )
+  {
+    let name = _.LongDescriptors[ e ].name;
+    let descriptor = _.withDefaultLong[ name ];
+
+    test.open( `descriptor - ${ name }` );
+    testRun( descriptor );
+    test.close( `descriptor - ${ name }` );
+
+    if( times < 1 )
+    break;
+    times--;
+  }
+
+  /* - */
+
+  function testRun( descriptor )
+  {
+    test.case = 'src = empty long, not ins';
+    var src = _.argumentsArrayMake( [] );
+    var got = descriptor.entityMakeConstructing( src );
+    var expected = descriptor.longDescriptor.make( [] );
+    test.identical( got, expected );
+
+    test.case = 'src = long, not ins';
+    var src = _.argumentsArrayMake( [ 1, 2, 3 ] );
+    var got = descriptor.entityMakeConstructing( src );
+    var expected = descriptor.longDescriptor.make( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+
+    test.case = 'src = empty long, ins = null';
+    var src = _.argumentsArrayMake( [] );
+    var got = descriptor.entityMakeConstructing( src, null );
+    var expected = descriptor.longDescriptor.make( 0 );
+    test.identical( got, expected );
+
+    test.case = 'src = empty long, ins = number';
+    var src = _.argumentsArrayMake( [] );
+    var got = descriptor.entityMakeConstructing( src, 2 );
+    var expected = descriptor.longDescriptor.make( 2 );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'src = long, ins = number, ins < src.length';
+    var src = _.argumentsArrayMake( [ 1, 2, 3 ] );
+    var got = descriptor.entityMakeConstructing( src, 2 );
+    var expected = descriptor.longDescriptor.make( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'src = long with an element, ins = empty array';
+    var src = new F64x( 10 );
+    var got = descriptor.entityMakeConstructing( src, [] );
+    var expected = new F64x( 0 );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'src = long, ins = number, ins > src.length';
+    var src = _.argumentsArrayMake( [ 1, 2, 3 ] );
+    var got = descriptor.entityMakeConstructing( src, 4 );
+    var expected = descriptor.longDescriptor.make( [ 1, 2, 3, undefined ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'src = long, ins = array, ins.length > src.length';
+    var src = _.argumentsArrayMake( [ 0, 1 ] );
+    var ins = [ 1, 2, 3 ];
+    var got = descriptor.entityMakeConstructing( src, ins );
+    var expected = descriptor.longDescriptor.make( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== ins );
+    test.is( got !== src );
+
+    test.case = 'src = long, ins = array, ins.length === src.length'
+    var src = _.argumentsArrayMake( 5 );
+    var ins = [ 1, 2, 3, 4, 5 ];
+    var got = descriptor.entityMakeConstructing( src, ins );
+    var expected = descriptor.longDescriptor.make( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+  }
+}
+
+//
+
+function entityMakeConstructingBufferTypedLongDescriptor( test )
+{
+  var list =
+  [
+    I8x,
+    U16x,
+    U16x,
+    F32x,
+  ];
+
+  /* tests */
+
+  let times = 4;
+  for( let e in _.LongDescriptors )
+  {
+    let name = _.LongDescriptors[ e ].name;
+    let descriptor = _.withDefaultLong[ name ];
+
+    for( let i = 0; i < list.length; i++ )
+    {
+      test.open( `descriptor - ${ name }, long - ${ list[ i ].name }` );
+      testRun( descriptor, list[ i ] );
+      test.close( `descriptor - ${ name }, long - ${ list[ i ].name }` );
+    }
+
+    if( times < 1 )
+    break;
+    times--;
+  }
+
+  /* test subroutine */
+
+  function testRun( descriptor, long )
+  {
+    test.case = 'src = empty long, not ins';
+    var src = new long( [] );
+    var got = descriptor.entityMakeConstructing( src );
+    var expected = descriptor.longDescriptor.make( [] );
+    test.identical( got, expected );
+
+    test.case = 'src = long, not ins';
+    var src = new long( [ 1, 2, 3 ] );
+    var got = descriptor.entityMakeConstructing( src );
+    var expected = descriptor.longDescriptor.make( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'src = empty long, ins = null';
+    var src = new long( [] );
+    var got = descriptor.entityMakeConstructing( src, null );
+    var expected = new long( 0 );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( src.constructor.name === got.constructor.name );
+
+    test.case = 'src = empty long, ins = number';
+    var src = new long( [] );
+    var got = descriptor.entityMakeConstructing( src, 2 );
+    var expected = new long( 2 );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( src.constructor.name === got.constructor.name );
+
+    test.case = 'src = long, ins = number, ins < src.length';
+    var src = new long( [ 1, 2, 3 ] );
+    var got = descriptor.entityMakeConstructing( src, 2 );
+    var expected = new long( [ 1, 2 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( src.constructor.name === got.constructor.name );
+
+    test.case = 'src = long with an element, ins = empty array';
+    var src = new long( 10 );
+    var got = descriptor.entityMakeConstructing( src, [] );
+    var expected = new long( 0 );
+    test.identical( got, expected );
+    test.is( got !== src );
+
+    test.case = 'src = long, ins = number, ins > src.length';
+    var src = new long( [ 1, 2, 3 ] );
+    var got = descriptor.entityMakeConstructing( src, 4 );
+    var expected = new long( [ 1, 2, 3, 0 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( src.constructor.name === got.constructor.name );
+
+    test.case = 'src = long, ins = array, ins.length > src.length';
+    var src = new long( [ 0, 1 ] );
+    var ins = [ 1, 2, 3 ];
+    var got = descriptor.entityMakeConstructing( src, ins );
+    var expected = new long( [ 1, 2, 3 ] );
+    test.identical( got, expected );
+    test.is( got !== ins );
+    test.is( got !== src );
+    test.is( src.constructor.name === got.constructor.name );
+
+    test.case = 'src = long, ins = array, ins.length === src.length'
+    var src = new long( 5 );
+    var ins = [ 1, 2, 3, 4, 5 ];
+    var got = descriptor.entityMakeConstructing( src, ins );
+    var expected = new long( [ 1, 2, 3, 4, 5 ] );
+    test.identical( got, expected );
+    test.is( got !== src );
+    test.is( src.constructor.name === got.constructor.name );
+  }
 }
 
 //
@@ -297,9 +843,17 @@ function entityMakeEmpty( test )
   test.identical( got, [] );
   test.is( !_.unrollIs( got ) && _.arrayIs( got ) );
 
-  test.case = 'BufferTyped';
+  test.case = 'BufferTyped - U8x';
   var got = _.entityMakeEmpty( new U8x( 10 ) );
   test.identical( got, new U8x() );
+
+  test.case = 'BufferTyped - I16x';
+  var got = _.entityMakeEmpty( new I16x() );
+  test.identical( got, new I16x() );
+
+  test.case = 'BufferTyped - F64x';
+  var got = _.entityMakeEmpty( new F64x( [ 1, 2 ] ) );
+  test.identical( got, new F64x() );
 
   test.case = 'empty map';
   var got = _.entityMakeEmpty( {} );
@@ -347,6 +901,168 @@ function entityMakeEmpty( test )
   test.shouldThrowErrorSync( () => _.entityMakeEmpty( new BufferRaw() ) );
   var Constr = function(){ this.x = 1; return this };
   test.shouldThrowErrorSync( () => _.entityMakeEmpty( new Constr() ) );
+}
+
+//
+
+function entityMakeEmptyLongDescriptor( test )
+{
+  let times = 4;
+  for( let e in _.LongDescriptors )
+  {
+    let name = _.LongDescriptors[ e ].name;
+    let descriptor = _.withDefaultLong[ name ];
+
+    test.open( `descriptor - ${ name }` );
+    testRun( descriptor );
+    test.close( `descriptor - ${ name }` );
+
+    if( times < 1 )
+    break;
+    times--;
+  }
+
+  /* - */
+
+  function testRun( descriptor )
+  {
+    test.case = 'null';
+    var got = descriptor.entityMakeEmpty( null );
+    test.identical( got, null );
+
+    test.case = 'undefined';
+    var got = descriptor.entityMakeEmpty( undefined );
+    test.identical( got, undefined );
+
+    test.case = 'zero';
+    var got = descriptor.entityMakeEmpty( 0 );
+    test.identical( got, 0 );
+
+    test.case = 'number';
+    var got = descriptor.entityMakeEmpty( 3 );
+    test.identical( got, 3 );
+
+    test.case = 'bigInt';
+    var got = descriptor.entityMakeEmpty( 1n );
+    test.identical( got, 1n );
+
+    test.case = 'empty string';
+    var got = descriptor.entityMakeEmpty( '' );
+    test.identical( got, '' );
+
+    test.case = 'string';
+    var got = descriptor.entityMakeEmpty( 'str' );
+    test.identical( got, 'str' );
+
+    test.case = 'false';
+    var got = descriptor.entityMakeEmpty( false );
+    test.identical( got, false );
+
+    test.case = 'NaN';
+    var got = descriptor.entityMakeEmpty( NaN );
+    test.identical( got, NaN );
+
+    test.case = 'Symbol';
+    var src = Symbol();
+    var got = descriptor.entityMakeEmpty( src );
+    test.identical( got, src );
+
+    test.case = '_.null';
+    var got = descriptor.entityMakeEmpty( _.null );
+    test.identical( got, null );
+
+    test.case = '_.undefined';
+    var got = descriptor.entityMakeEmpty( _.undefined );
+    test.identical( got, undefined );
+
+    test.case = '_.nothing';
+    var got = descriptor.entityMakeEmpty( _.nothing );
+    test.identical( got, _.nothing );
+
+    test.case = 'empty array';
+    var got = descriptor.entityMakeEmpty( [] );
+    test.identical( got, [] );
+
+    test.case = 'not empty array';
+    var got = descriptor.entityMakeEmpty( [ null, undefined, 1, 2 ] );
+    test.identical( got, [] );
+
+    test.case = 'empty argumentArray';
+    var got = descriptor.entityMakeEmpty( _.argumentsArrayMake( [] ) );
+    test.identical( got, descriptor.longDescriptor.make( [] ) );
+
+    test.case = 'not empty argumentsArray';
+    var got = descriptor.entityMakeEmpty( _.argumentsArrayMake( [ null, undefined, 1, 2 ] ) );
+    test.identical( got, descriptor.longDescriptor.make( [] ) );
+
+    test.case = 'empty unroll';
+    var got = descriptor.entityMakeEmpty( _.unrollMake( [] ) );
+    test.identical( got, [] );
+    test.is( !_.unrollIs( got ) && _.arrayIs( got ) );
+
+    test.case = 'not empty unroll';
+    var got = descriptor.entityMakeEmpty( _.argumentsArrayMake( [ null, undefined, 1, 2 ] ) );
+    test.identical( got, descriptor.longDescriptor.make( [] ) );
+
+    test.case = 'BufferTyped - U8x';
+    var got = descriptor.entityMakeEmpty( new U8x( 10 ) );
+    test.identical( got, new U8x() );
+
+    test.case = 'BufferTyped - I16x';
+    var got = descriptor.entityMakeEmpty( new I16x() );
+    test.identical( got, new I16x() );
+
+    test.case = 'BufferTyped - F64x';
+    var got = descriptor.entityMakeEmpty( new F64x( [ 1, 2 ] ) );
+    test.identical( got, new F64x() );
+
+    test.case = 'empty map';
+    var got = descriptor.entityMakeEmpty( {} );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'not empty map';
+    var got = descriptor.entityMakeEmpty( { '' : null } );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'empty pure map';
+    var got = descriptor.entityMakeEmpty( Object.create( null ) );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'empty Set';
+    var got = descriptor.entityMakeEmpty( new Set( [] ) );
+    test.identical( got, new Set( [] ) );
+
+    test.case = 'Set';
+    var got = descriptor.entityMakeEmpty( new Set( [ 1, 'str', false ] ) );
+    test.identical( got, new Set( [] ) );
+
+    test.case = 'empty HashMap';
+    var got = descriptor.entityMakeEmpty( new Map( [] ) );
+    test.identical( got, new Map( [] ) );
+
+    test.case = 'HashMap';
+    var got = descriptor.entityMakeEmpty( new Map( [ [ 'a', 1 ], [ 'b', 2 ] ] ) );
+    test.identical( got, new Map( [] ) );
+
+    /* - */
+
+    if( Config.debug )
+    {
+      test.case = 'without arguments';
+      test.shouldThrowErrorSync( () => descriptor.entityMakeEmpty() );
+
+      test.case = 'extra arguments';
+      test.shouldThrowErrorSync( () => descriptor.entityMakeEmpty( [], 1 ) );
+
+      test.case = 'unknown type of entity';
+      test.shouldThrowErrorSync( () => descriptor.entityMakeEmpty( new BufferRaw() ) );
+      var Constr = function(){ this.x = 1; return this };
+      test.shouldThrowErrorSync( () => descriptor.entityMakeEmpty( new Constr() ) );
+    }
+  }
 }
 
 //
@@ -434,12 +1150,12 @@ function entityMakeUndefined( test )
 
   test.case = 'not empty argumentsArray';
   var got = _.entityMakeUndefined( _.argumentsArrayMake( [ null, undefined, 1, 2 ] ) );
-  test.identical( got, [ null, undefined, 1, 2 ] );
+  test.identical( got, [ undefined, undefined, undefined, undefined ] );
   test.is( _.arrayIs( got ) );
 
   test.case = 'not empty argumentsArray, length';
   var got = _.entityMakeUndefined( _.argumentsArrayMake( [ null, undefined, 1, 2 ] ), 2 );
-  test.identical( got, [ null, undefined ] );
+  test.identical( got, [ undefined, undefined ] );
   test.is( _.arrayIs( got ) );
 
   test.case = 'empty unroll';
@@ -453,22 +1169,30 @@ function entityMakeUndefined( test )
   test.is( !_.unrollIs( got ) && _.arrayIs( got ) );
 
   test.case = 'not empty unroll';
-  var got = _.entityMakeUndefined( _.argumentsArrayMake( [ null, undefined, 1, 2 ] ) );
-  test.identical( got, [ null, undefined, 1, 2 ] );
+  var got = _.entityMakeUndefined( _.unrollMake( [ null, undefined, 1, 2 ] ) );
+  test.identical( got, [ undefined, undefined, undefined, undefined ] );
   test.is( !_.unrollIs( got ) && _.arrayIs( got ) );
 
   test.case = 'not empty unroll, length';
-  var got = _.entityMakeUndefined( _.argumentsArrayMake( [ null, undefined, 1, 2 ] ), 2 );
-  test.identical( got, [ null, undefined ] );
+  var got = _.entityMakeUndefined( _.unrollMake( [ null, undefined, 1, 2 ] ), 2 );
+  test.identical( got, [ undefined, undefined ] );
   test.is( !_.unrollIs( got ) && _.arrayIs( got ) );
 
-  test.case = 'BufferTyped';
-  var got = _.entityMakeUndefined( new U8x( 10 ) );
-  test.identical( got, new U8x( 10 ) );
+  test.case = 'empty BufferTyped - U8x';
+  var got = _.entityMakeUndefined( new U8x() );
+  test.identical( got, _.longDescriptor.make( 0 ) );
 
-  test.case = 'BufferTyped, length';
-  var got = _.entityMakeUndefined( new U8x( 10 ), 4 );
-  test.identical( got, new U8x( 4 ) );
+  test.case = 'empty BufferTyped - I16x, length';
+  var got = _.entityMakeUndefined( new I16x(), 5 );
+  test.identical( got, new I16x( 5 ) );
+
+  test.case = 'BufferTyped - F32x';
+  var got = _.entityMakeUndefined( new F32x( 5 ) );
+  test.identical( got, _.longDescriptor.make( 5 ) );
+
+  test.case = 'BufferTyped - F32x, length';
+  var got = _.entityMakeUndefined( new F32x( 10 ), 5 );
+  test.identical( got, new F32x( 5 ) );
 
   test.case = 'empty map';
   var got = _.entityMakeUndefined( {} );
@@ -547,6 +1271,226 @@ function entityMakeUndefined( test )
   test.shouldThrowErrorSync( () => _.entityMakeUndefined( new BufferRaw() ) );
   var Constr = function(){ this.x = 1; return this };
   test.shouldThrowErrorSync( () => _.entityMakeUndefined( new Constr() ) );
+}
+
+//
+
+function entityMakeUndefinedLongDescriptor( test )
+{
+  let times = 4;
+  for( let e in _.LongDescriptors )
+  {
+    let name = _.LongDescriptors[ e ].name;
+    let descriptor = _.withDefaultLong[ name ];
+
+    test.open( `descriptor - ${ name }` );
+    testRun( descriptor );
+    test.close( `descriptor - ${ name }` );
+
+    if( times < 1 )
+    break;
+    times--;
+  }
+
+  /* - */
+
+  function testRun( descriptor )
+  {
+    test.case = 'null';
+    var got = descriptor.entityMakeUndefined( null );
+    test.identical( got, null );
+
+    test.case = 'undefined';
+    var got = descriptor.entityMakeUndefined( undefined );
+    test.identical( got, undefined );
+
+    test.case = 'zero';
+    var got = descriptor.entityMakeUndefined( 0 );
+    test.identical( got, 0 );
+
+    test.case = 'number';
+    var got = descriptor.entityMakeUndefined( 3 );
+    test.identical( got, 3 );
+
+    test.case = 'bigInt';
+    var got = descriptor.entityMakeUndefined( 1n );
+    test.identical( got, 1n );
+
+    test.case = 'empty string';
+    var got = descriptor.entityMakeUndefined( '' );
+    test.identical( got, '' );
+
+    test.case = 'string';
+    var got = descriptor.entityMakeUndefined( 'str' );
+    test.identical( got, 'str' );
+
+    test.case = 'false';
+    var got = descriptor.entityMakeUndefined( false );
+    test.identical( got, false );
+
+    test.case = 'NaN';
+    var got = descriptor.entityMakeUndefined( NaN );
+    test.identical( got, NaN );
+
+    test.case = 'Symbol';
+    var src = Symbol();
+    var got = descriptor.entityMakeUndefined( src );
+    test.identical( got, src );
+
+    test.case = '_.null';
+    var got = descriptor.entityMakeUndefined( _.null );
+    test.identical( got, null );
+
+    test.case = '_.undefined';
+    var got = descriptor.entityMakeUndefined( _.undefined );
+    test.identical( got, undefined );
+
+    test.case = '_.nothing';
+    var got = descriptor.entityMakeUndefined( _.nothing );
+    test.identical( got, _.nothing );
+
+    test.case = 'empty array';
+    var got = descriptor.entityMakeUndefined( [] );
+    test.identical( got, [] );
+
+    test.case = 'empty array, length';
+    var got = descriptor.entityMakeUndefined( [], 4 );
+    test.identical( got, [ undefined, undefined, undefined, undefined ] );
+
+    test.case = 'not empty array';
+    var got = descriptor.entityMakeUndefined( [ null, undefined, 1, 2 ] );
+    test.identical( got, [ undefined, undefined, undefined, undefined ] );
+
+    test.case = 'not empty array, length';
+    var got = descriptor.entityMakeUndefined( [ null, undefined, 1, 2 ], 2 );
+    test.identical( got, [ undefined, undefined ] );
+
+    test.case = 'empty arguments array';
+    var got = descriptor.entityMakeUndefined( _.argumentsArrayMake( [] ) );
+    test.identical( got, descriptor.longDescriptor.make( [] ) );
+
+    test.case = 'empty arguments array, length';
+    var got = descriptor.entityMakeUndefined( _.argumentsArrayMake( [] ), 4 );
+    test.identical( got, descriptor.longDescriptor.make( 4 ) );
+
+    test.case = 'not empty argumentsArray';
+    var got = descriptor.entityMakeUndefined( _.argumentsArrayMake( [ null, undefined, 1, 2 ] ) );
+    test.identical( got, descriptor.longDescriptor.make( 4 ) );
+
+    test.case = 'not empty argumentsArray, length';
+    var got = descriptor.entityMakeUndefined( _.argumentsArrayMake( [ null, undefined, 1, 2 ] ), 2 );
+    test.identical( got, descriptor.longDescriptor.make( 2 ) );
+
+    test.case = 'empty unroll';
+    var got = descriptor.entityMakeUndefined( _.unrollMake( [] ) );
+    test.identical( got, [] );
+
+    test.case = 'empty unroll, length';
+    var got = descriptor.entityMakeUndefined( _.unrollMake( [] ), 4 );
+    test.identical( got, [ undefined, undefined, undefined, undefined ] );
+
+    test.case = 'not empty unroll';
+    var got = descriptor.entityMakeUndefined( _.unrollMake( [ null, undefined, 1, 2 ] ) );
+    test.identical( got, [ undefined, undefined, undefined, undefined ] );
+
+    test.case = 'not empty unroll, length';
+    var got = descriptor.entityMakeUndefined( _.unrollMake( [ null, undefined, 1, 2 ] ), 2 );
+    test.identical( got, [ undefined, undefined ] );
+
+    test.case = 'empty BufferTyped - U8x';
+    var got = descriptor.entityMakeUndefined( new U8x() );
+    test.identical( got, descriptor.longDescriptor.make( 0 ) );
+
+    test.case = 'empty BufferTyped - I16x, length';
+    var got = descriptor.entityMakeUndefined( new I16x(), 5 );
+    test.identical( got, new I16x( 5 ) );
+
+    test.case = 'BufferTyped - F32x';
+    var got = descriptor.entityMakeUndefined( new F32x( 5 ) );
+    test.identical( got, descriptor.longDescriptor.make( 5 ) );
+
+    test.case = 'BufferTyped - F32x, length';
+    var got = descriptor.entityMakeUndefined( new F32x( 10 ), 5 );
+    test.identical( got, new F32x( 5 ) );
+
+    test.case = 'empty map';
+    var got = descriptor.entityMakeUndefined( {} );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'empty map, length';
+    var got = descriptor.entityMakeUndefined( {}, 4 );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'not empty map';
+    var got = descriptor.entityMakeUndefined( { '' : null } );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'not empty map, length';
+    var got = descriptor.entityMakeUndefined( { '' : null }, 4 );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'empty pure map';
+    var got = descriptor.entityMakeUndefined( Object.create( null ) );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'empty pure map, length';
+    var got = descriptor.entityMakeUndefined( Object.create( null ) );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+
+    test.case = 'empty Set';
+    var got = descriptor.entityMakeUndefined( new Set( [] ) );
+    test.identical( got, new Set( [] ) );
+
+    test.case = 'empty Set, length';
+    var got = descriptor.entityMakeUndefined( new Set( [] ), 4 );
+    test.identical( got, new Set( [] ) );
+
+    test.case = 'Set';
+    var got = descriptor.entityMakeUndefined( new Set( [ 1, 'str', false ] ) );
+    test.identical( got, new Set( [] ) );
+
+    test.case = 'Set, length';
+    var got = descriptor.entityMakeUndefined( new Set( [ 1, 'str', false ] ), 4 );
+    test.identical( got, new Set( [] ) );
+
+    test.case = 'empty HashMap';
+    var got = descriptor.entityMakeUndefined( new Map( [] ) );
+    test.identical( got, new Map( [] ) );
+
+    test.case = 'empty HashMap, length';
+    var got = descriptor.entityMakeUndefined( new Map( [] ), 4 );
+    test.identical( got, new Map( [] ) );
+
+    test.case = 'HashMap';
+    var got = descriptor.entityMakeUndefined( new Map( [ [ 'a', 1 ], [ 'b', 2 ] ] ) );
+    test.identical( got, new Map( [] ) );
+
+    test.case = 'HashMap, length';
+    var got = descriptor.entityMakeUndefined( new Map( [ [ 'a', 1 ], [ 'b', 2 ] ] ) );
+    test.identical( got, new Map( [] ) );
+
+    /* - */
+
+    if( Config.debug )
+    {
+      test.case = 'without arguments';
+      test.shouldThrowErrorSync( () => descriptor.entityMakeUndefined() );
+
+      test.case = 'extra arguments';
+      test.shouldThrowErrorSync( () => descriptor.entityMakeUndefined( [], 1, 1 ) );
+
+      test.case = 'unknown type of entity';
+      test.shouldThrowErrorSync( () => descriptor.entityMakeUndefined( new BufferRaw() ) );
+      var Constr = function(){ this.x = 1; return this };
+      test.shouldThrowErrorSync( () => descriptor.entityMakeUndefined( new Constr() ) );
+    }
+  }
 }
 
 //
@@ -636,20 +1580,32 @@ function entityMake( test )
   var src = _.unrollMake( [] );
   var got = _.entityMake( src );
   test.identical( got, [] );
-  test.is( _.unrollIs( got ) );
+  test.is( _.arrayIs( got ) );
   test.is( got !== src );
 
   test.case = 'not empty unroll';
   var src = _.unrollMake( [ null, undefined, 1, 2 ] );
   var got = _.entityMake( src );
   test.identical( got, [ null, undefined, 1, 2 ] );
-  test.is( _.unrollIs( got ) );
+  test.is( _.arrayIs( got ) );
   test.is( got !== src );
 
-  test.case = 'BufferTyped';
-  var src = new U8x( 10 );
+  test.case = 'empty BufferTyped - U8x';
+  var src = new U8x();
   var got = _.entityMake( src );
-  test.identical( got, new U8x( 10 ) );
+  test.identical( got, _.longDescriptor.make( [] ) );
+  test.is( got !== src );
+
+  test.case = 'not empty BufferTyped - I16x';
+  var src = new I16x( 5 );
+  var got = _.entityMake( src );
+  test.identical( got, _.longDescriptor.make( [ 0, 0, 0, 0, 0 ] ) );
+  test.is( got !== src );
+
+  test.case = 'not empty BufferTyped - F64x';
+  var src = new F64x( 5 );
+  var got = _.entityMake( src );
+  test.identical( got, _.longDescriptor.make( [ 0, 0, 0, 0, 0 ] ) );
   test.is( got !== src );
 
   test.case = 'empty map';
@@ -720,6 +1676,205 @@ function entityMake( test )
   test.shouldThrowErrorSync( () => _.entityMake( new BufferRaw() ) );
   var Constr = function(){ this.x = 1; return this };
   test.shouldThrowErrorSync( () => _.entityMake( new Constr() ) );
+}
+
+//
+
+function entityMakeLongDescriptor( test )
+{
+  let times = 4;
+  for( let e in _.LongDescriptors )
+  {
+    let name = _.LongDescriptors[ e ].name;
+    let descriptor = _.withDefaultLong[ name ];
+
+    test.open( `descriptor - ${ name }` );
+    testRun( descriptor );
+    test.close( `descriptor - ${ name }` );
+
+    if( times < 1 )
+    break;
+    times--;
+  }
+
+  /* - */
+
+  function testRun( descriptor )
+  {
+    test.case = 'null';
+    var got = descriptor.entityMake( null );
+    test.identical( got, null );
+
+    test.case = 'undefined';
+    var got = descriptor.entityMake( undefined );
+    test.identical( got, undefined );
+
+    test.case = 'zero';
+    var got = descriptor.entityMake( 0 );
+    test.identical( got, 0 );
+
+    test.case = 'number';
+    var got = descriptor.entityMake( 3 );
+    test.identical( got, 3 );
+
+    test.case = 'bigInt';
+    var got = descriptor.entityMake( 1n );
+    test.identical( got, 1n );
+
+    test.case = 'empty string';
+    var got = descriptor.entityMake( '' );
+    test.identical( got, '' );
+
+    test.case = 'string';
+    var got = descriptor.entityMake( 'str' );
+    test.identical( got, 'str' );
+
+    test.case = 'false';
+    var got = descriptor.entityMake( false );
+    test.identical( got, false );
+
+    test.case = 'NaN';
+    var got = descriptor.entityMake( NaN );
+    test.identical( got, NaN );
+
+    test.case = 'Symbol';
+    var src = Symbol();
+    var got = descriptor.entityMake( src );
+    test.identical( got, src );
+
+    test.case = '_.null';
+    var got = descriptor.entityMake( _.null );
+    test.identical( got, null );
+
+    test.case = '_.undefined';
+    var got = descriptor.entityMake( _.undefined );
+    test.identical( got, undefined );
+
+    test.case = '_.nothing';
+    var got = descriptor.entityMake( _.nothing );
+    test.identical( got, _.nothing );
+
+    test.case = 'empty array';
+    var src = [];
+    var got = descriptor.entityMake( src );
+    test.identical( got, [] );
+    test.is( got !== src );
+
+    test.case = 'not empty array';
+    var src = [ null, undefined, 1, 2 ];
+    var got = descriptor.entityMake( src );
+    test.identical( got, [ null, undefined, 1, 2 ] );
+    test.is( got !== src );
+
+    test.case = 'empty argumentArray';
+    var src = _.argumentsArrayMake( [] );
+    var got = descriptor.entityMake( src );
+    test.identical( got, descriptor.longDescriptor.make( [] ) );
+
+    test.case = 'not empty argumentsArray';
+    var src = _.argumentsArrayMake( [ null, undefined, 1, 2 ] );
+    var got = descriptor.entityMake( src );
+    test.identical( got, descriptor.longDescriptor.make( [ null, undefined, 1, 2 ] ) );
+
+    test.case = 'empty unroll';
+    var src = _.unrollMake( [] );
+    var got = descriptor.entityMake( src );
+    test.identical( got, [] );
+     test.is( got !== src );
+
+    test.case = 'not empty unroll';
+    var src = _.unrollMake( [ null, undefined, 1, 2 ] );
+    var got = descriptor.entityMake( src );
+    test.identical( got, [ null, undefined, 1, 2 ] );
+    test.is( got !== src );
+
+    test.case = 'empty BufferTyped - U8x';
+    var src = new U8x();
+    var got = descriptor.entityMake( src );
+    test.identical( got, descriptor.longDescriptor.make( [] ) );
+    test.is( got !== src );
+
+    test.case = 'not empty BufferTyped - I16x';
+    var src = new I16x( 5 );
+    var got = descriptor.entityMake( src );
+    test.identical( got, descriptor.longDescriptor.make( [ 0, 0, 0, 0, 0 ] ) );
+    test.is( got !== src );
+
+    test.case = 'not empty BufferTyped - F64x';
+    var src = new F64x( 5 );
+    var got = descriptor.entityMake( src );
+    test.identical( got, descriptor.longDescriptor.make( [ 0, 0, 0, 0, 0 ] ) );
+    test.is( got !== src );
+
+    test.case = 'empty map';
+    var src = {};
+    var got = descriptor.entityMake( src );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+    test.is( got !== src );
+
+    test.case = 'not empty map';
+    var src = { '' : null };
+    var got = descriptor.entityMake( src );
+    test.identical( got, { '' : null } );
+    test.is( _.mapIsPure( got ) );
+    test.is( got !== src );
+
+    test.case = 'empty pure map';
+    var src = Object.create( null );
+    var got = descriptor.entityMake( src );
+    test.identical( got, {} );
+    test.is( _.mapIsPure( got ) );
+    test.is( got !== src );
+
+    test.case = 'pure map';
+    var src = Object.create( null );
+    src.a = 2;
+    var got = descriptor.entityMake( src );
+    test.identical( got, { a : 2 } );
+    test.is( _.mapIsPure( got ) );
+    test.is( got !== src );
+
+    test.case = 'empty Set';
+    var src = new Set( [] );
+    var got = descriptor.entityMake( src );
+    test.identical( got, new Set( [] ) );
+    test.is( got !== src );
+
+    test.case = 'Set';
+    var src = new Set( [ 1, 'str', false ] );
+    var got = descriptor.entityMake( src );
+    test.identical( got, new Set( [ 1, 'str', false ] ) );
+    test.is( got !== src );
+
+    test.case = 'empty HashMap';
+    var src = new Map( [] );
+    var got = descriptor.entityMake( src );
+    test.identical( got, new Map( [] ) );
+    test.is( got !== src );
+
+    test.case = 'HashMap';
+    var src = new Map( [ [ 'a', 1 ], [ 'b', 2 ] ] );
+    var got = descriptor.entityMake( src );
+    test.identical( got, new Map( [ [ 'a', 1 ], [ 'b', 2 ] ] ) );
+    test.is( got !== src );
+
+    /* - */
+
+    if( Config.debug )
+    {
+      test.case = 'without arguments';
+      test.shouldThrowErrorSync( () => descriptor.entityMake() );
+
+      test.case = 'extra arguments';
+      test.shouldThrowErrorSync( () => descriptor.entityMake( [], 1 ) );
+
+      test.case = 'unknown type of entity';
+      test.shouldThrowErrorSync( () => descriptor.entityMake( new BufferRaw() ) );
+      var Constr = function(){ this.x = 1; return this };
+      test.shouldThrowErrorSync( () => descriptor.entityMake( new Constr() ) );
+    }
+  }
 }
 
 //
@@ -1541,9 +2696,20 @@ var Self =
   {
 
     entityMakeConstructing,
+    entityMakeConstructingArgumentsArray,
+    entityMakeConstructingBufferTyped,
+    entityMakeConstructingLongDescriptor,
+    entityMakeConstructingArgumentsArrayLongDescriptor,
+    entityMakeConstructingBufferTypedLongDescriptor,
+
     entityMakeEmpty,
+    entityMakeEmptyLongDescriptor,
+
     entityMakeUndefined,
+    entityMakeUndefinedLongDescriptor,
+
     entityMake,
+    entityMakeLongDescriptor,
 
     entityEntityEqualize,
 

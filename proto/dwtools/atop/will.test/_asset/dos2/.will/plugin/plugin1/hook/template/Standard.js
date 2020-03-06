@@ -43,7 +43,6 @@ if( typeof module !== 'undefined' )
   }
 
 },
-// 'staging' : { dwtools : { abase : {}, amid : {}, atop : {} } },
 
 '.im.will.yml' : //
 `
@@ -523,10 +522,10 @@ OTHER DEALINGS IN THE SOFTWARE.
   "description" : "___",
   "author" : "{{about/full.name}} <{{about/email}}>",
   "license" : "MIT",
-  "main" : "proto/dwtools/amid/___",
+  "main" : "proto/dwtools/___",
   "files" :
   [
-    "proto/dwtools/amid",
+    "proto/dwtools/___",
     "proto/dwtools/Tools.s"
   ],
   "scripts" :

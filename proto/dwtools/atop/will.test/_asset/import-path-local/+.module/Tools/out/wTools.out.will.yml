@@ -837,113 +837,113 @@ function constructorIsVector( test )
 
 //
 
-function spaceIs( test )
+function matrixIs( test )
 {
   test.case = 'without argument';
-  var got = _.spaceIs();
+  var got = _.matrixIs();
   test.identical( got, false );
 
   test.case = 'check null';
-  var got = _.spaceIs( null );
+  var got = _.matrixIs( null );
   test.identical( got, false );
 
   test.case = 'check undefined';
-  var got = _.spaceIs( undefined );
+  var got = _.matrixIs( undefined );
   test.identical( got, false );
 
   test.case = 'check _.nothing';
-  var got = _.spaceIs( _.nothing );
+  var got = _.matrixIs( _.nothing );
   test.identical( got, false );
 
   test.case = 'check zero';
-  var got = _.spaceIs( 0 );
+  var got = _.matrixIs( 0 );
   test.identical( got, false );
 
   test.case = 'check empty string';
-  var got = _.spaceIs( '' );
+  var got = _.matrixIs( '' );
   test.identical( got, false );
 
   test.case = 'check false';
-  var got = _.spaceIs( false );
+  var got = _.matrixIs( false );
   test.identical( got, false );
 
   test.case = 'check NaN';
-  var got = _.spaceIs( NaN );
+  var got = _.matrixIs( NaN );
   test.identical( got, false );
 
   test.case = 'check Symbol';
-  var got = _.spaceIs( Symbol() );
+  var got = _.matrixIs( Symbol() );
   test.identical( got, false );
 
   test.case = 'check empty array';
-  var got = _.spaceIs( [] );
+  var got = _.matrixIs( [] );
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
-  var got = _.spaceIs( _.argumentsArrayMake( [] ) );
+  var got = _.matrixIs( _.argumentsArrayMake( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
-  var got = _.spaceIs( _.unrollMake( [] ) );
+  var got = _.matrixIs( _.unrollMake( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty map';
-  var got = _.spaceIs( {} );
+  var got = _.matrixIs( {} );
   test.identical( got, false );
 
   test.case = 'check empty pure map';
-  var got = _.spaceIs( Object.create( null ) );
+  var got = _.matrixIs( Object.create( null ) );
   test.identical( got, false );
 
   test.case = 'check empty Set';
-  var got = _.spaceIs( new Set( [] ) );
+  var got = _.matrixIs( new Set( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty Map';
-  var got = _.spaceIs( new Map( [] ) );
+  var got = _.matrixIs( new Map( [] ) );
   test.identical( got, false );
 
   test.case = 'check empty BufferRaw';
-  var got = _.spaceIs( new BufferRaw() );
+  var got = _.matrixIs( new BufferRaw() );
   test.identical( got, false );
 
   test.case = 'check empty BufferTyped';
-  var got = _.spaceIs( new U8x() );
+  var got = _.matrixIs( new U8x() );
   test.identical( got, false );
 
   test.case = 'check number';
-  var got = _.spaceIs( 3 );
+  var got = _.matrixIs( 3 );
   test.identical( got, false );
 
   test.case = 'check bigInt';
-  var got = _.spaceIs( 1n );
+  var got = _.matrixIs( 1n );
   test.identical( got, false );
 
   test.case = 'check object Number';
-  var got = _.spaceIs( new Number( 2 ) );
+  var got = _.matrixIs( new Number( 2 ) );
   test.identical( got, false );
 
   test.case = 'check string';
-  var got = _.spaceIs( 'str' );
+  var got = _.matrixIs( 'str' );
   test.identical( got, false );
 
   test.case = 'check not empty array';
-  var got = _.spaceIs( [ null ] );
+  var got = _.matrixIs( [ null ] );
   test.identical( got, false );
 
   test.case = 'check not empty map';
-  var got = _.spaceIs( { '' : null } );
+  var got = _.matrixIs( { '' : null } );
   test.identical( got, false );
 
   test.case = 'check not empty map';
   var src = Object.create( null );
-  var got = _.spaceIs( src );
+  var got = _.matrixIs( src );
   test.identical( got, false );
 
   test.case = 'check not empty map';
   var src = Object.create( null );
   src.some = false;
-  var got = _.spaceIs( src );
+  var got = _.matrixIs( src );
   test.identical( got, false );
 
   test.case = 'check instance of constructor with not own property "constructor"';
@@ -953,10 +953,10 @@ function spaceIs( test )
     return this;
   };
   var src = new Constr();
-  var got = _.spaceIs( src );
+  var got = _.matrixIs( src );
   test.identical( got, false );
 
-  // instance of _.Matrix tested in wMathSpace
+  // instance of _.Matrix tested in wMathMatrix
 }
 
 //
@@ -1080,7 +1080,7 @@ function constructorIsMatrix( test )
   var got = _.constructorIsMatrix( src );
   test.identical( got, false );
 
-  // instance of _.Matrix tested in wMathSpace
+  // instance of _.Matrix tested in wMathMatrix
 }
 
 //
@@ -4414,7 +4414,8 @@ function definitionIs( test )
   var got = _.definitionIs( src );
   test.identical( got, false );
 
-  /* qqq2 : ask | Dmytro : instances of another modules tested outside of module wTools */
+  /* aaa2 : ask */
+  /* Dmytro : instances of another modules tested outside of module wTools */
 
   // instance of _.Definition tested in module wBlueprint
 }
@@ -4606,7 +4607,7 @@ var Self =
 
     vectorAdapterIs,
     constructorIsVector,
-    spaceIs,
+    matrixIs,
     constructorIsMatrix,
 
     consequenceIs,
