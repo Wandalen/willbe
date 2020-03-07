@@ -158,7 +158,7 @@ function idWithTime( prefix, postfix )
 
 //
 
-/* qqq : reimplement it more properly | Dmytro : new implementation is written below, it use futures of random RFC4122 GUIDs v4. Guids can be more complex for example https://www.npmjs.com/package/uuid */
+/* aaa : reimplement it more properly | Dmytro : new implementation is written below, it use futures of random RFC4122 GUIDs v4. Guids can be more complex for example https://www.npmjs.com/package/uuid */
 
 function idWithGuid()
 {
@@ -185,16 +185,16 @@ function idWithGuid()
 
 // function idWithGuid()
 // {
-//   let guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+//   let guid = '$$$$$$$$-$$$$-4$$$-y$$$-$$$$$$$$$$$$';
 //
-//   return guid.replace( /[xy]/g, replaceSymbol );
+//   return guid.replace( /[$y]/g, replaceSymbol );
 //
 //   /* */
 //
 //   function replaceSymbol( sym )
 //   {
 //     let r = Math.random() * 16 | 0;
-//     return ( sym === 'x' ? r : ( r & 0x3 | 0x8 ) ).toString( 16 );
+//     return ( sym === '$' ? r : ( r & 0x3 | 0x8 ) ).toString( 16 );
 //   }
 // }
 
@@ -216,7 +216,9 @@ function idWithGuid()
 
 function idWithTimeGuid()
 {
-  let guid = '$$$$$$$$-$$$$-4$$$-y$$$-$$$$$$$$$$$$'; /* qqq : ask */
+  /* aqq : ask */
+  /* Dmytro : improved, 'x' -> '$' */
+  let guid = '$$$$$$$$-$$$$-4$$$-y$$$-$$$$$$$$$$$$'; 
   let date = _.time.now();
 
   return guid.replace( /[$y]/g, replaceSymbol );

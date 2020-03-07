@@ -42,6 +42,7 @@ if( _global_.__GLOBAL_WHICH__ === 'real' )
 
   if( _global_.wBase )
   {
+    debugger;
     throw new Error( 'wTools was included several times' );
   }
 

@@ -218,9 +218,9 @@ function diagnosticEachLongType( o )
 
   // debugger;
 
-  for( let l in _.LongDescriptor )
+  for( let l in _.LongDescriptors )
   {
-    let Long = _.LongDescriptor[ l ];
+    let Long = _.LongDescriptors[ l ];
     result[ Long.name ] = o.onEach( Long.make, Long );
   }
 

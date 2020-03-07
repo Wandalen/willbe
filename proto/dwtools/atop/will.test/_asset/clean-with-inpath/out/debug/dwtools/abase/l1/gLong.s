@@ -694,7 +694,8 @@ function longFromRangeWithStep( range, step )
   _.assert( _.routineIs( this.longDescriptor.from ) );
 
   if( range[ 0 ] === range[ 1 ] )
-  return new this.longDescriptor.from();
+  return new this.longDescriptor.make();
+  // return new this.longDescriptor.from();
 
   if( range[ 0 ] < range[ 1 ] )
   {

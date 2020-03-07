@@ -501,7 +501,8 @@ function _strRemoved( srcStr, insStr )
 */
 
 /*
-qqq : extend coverage of routines strRemove, strReplace, make sure tests cover regexp cases | Dmytro : coverage is extended
+aaa : extend coverage of routines strRemove, strReplace, make sure tests cover regexp cases 
+Dmytro : coverage is extended
 */
 
 function strRemove( srcStr, insStr )
@@ -3158,7 +3159,9 @@ strSplitChunks.defaults =
 //
 
 /*
-qqq : cover it by test | Dmytro : covered,
+aaa : cover it by test 
+Dmytro : covered,
+
 maybe, routine needs assertion
 _.assert( arguments.length === 1, 'Expects one argument' );
 if assertion will be accepted, then test.case = 'a few arguments' will throw error
@@ -3221,7 +3224,10 @@ function strSplitCamel( src )
 function strOnlySingle( srcStr, range )
 {
 
-/* qqq : reference point of negative is length. implement and cover please | Dmytro : implemented a time ago*/
+/* 
+aaa : reference point of negative is length. implement and cover please 
+Dmytro : implemented a time ago
+*/
 
 // xxx
 // _.strOnly( 'abc', [ -2, -1 ] ) => 'b'
@@ -3378,7 +3384,10 @@ let strOnly = _.vectorize( strOnlySingle );
 function strButSingle( srcStr, range, ins )
 {
 
-/* qqq : reference point of negative is length. implement and cover please | Dmytro : implemented a time ago */
+/* 
+aaa : reference point of negative is length. implement and cover please 
+Dmytro : implemented a time ago
+*/
 
   if( _.numberIs( range ) )
   {
@@ -3405,7 +3414,10 @@ function strButSingle( srcStr, range, ins )
   _.assert( ins === undefined || _.strIs( ins ) || _.longIs( ins ) );
   // _.assert( !_.longIs( ins ), 'not implemented' );
 
-  /* qqq : implement for case ins is long | Dmytro : implemented, elements of long joins by spaces */
+  /* 
+     aaa : implement for case ins is long 
+     Dmytro : implemented, elements of long joins by spaces 
+  */
 
   if( _.longIs( ins ) )
   return srcStr.substring( 0, range[ 0 ] ) + ins.join( ' ' ) + srcStr.substring( range[ 1 ], srcStr.length );
@@ -4023,11 +4035,12 @@ function strJoinPath( srcs, joiner )
  */
 
 /*
-qqq : cover routine strConcat and extend it. ask how to | Dmytro : routine covered and documented, not extended
+aaa : cover routine strConcat and extend it. ask how to 
+Dmytro : routine covered and documented, not extended
 */
 
 /*
-  qqq : does not work properly, remove indentation, but should not | Dmytro : fixed, all comments below
+  aaa : does not work properly, remove indentation, but should not 
   srcs :
 [
   'b',
@@ -4037,6 +4050,8 @@ qqq : cover routine strConcat and extend it. ask how to | Dmytro : routine cover
 `
 ]
 
+
+  Dmytro : fixed, all comments below
 */
 
 function strConcat( srcs, o )
@@ -4206,7 +4221,7 @@ function strLinesIndentation( src, tab )
 
   _.assert( arguments.length === 2, 'Expects two arguments' );
   _.assert( _.strIs( src ) || _.arrayIs( src ), 'Expects src as string or array' );
-  _.assert( _.strIs( tab ) || _.numberIs( tab ), 'Expects tab as string or number' ); /* qqq2 : cover please | Dmytro : covered */
+  _.assert( _.strIs( tab ) || _.numberIs( tab ), 'Expects tab as string or number' ); /* aaa2 : cover please */ /*Dmytro : covered */
 
   if( _.numberIs( tab ) )
   tab = _.strDup( ' ', tab );
@@ -4356,12 +4371,15 @@ function strLinesBut( src, range, ins )
   _.assert( _.rangeIs( range ) );
 
   /*
-    qqq : should work | Dmytro : works
+    aaa : should work 
     _.strLinesBut( _.strLinesBut( got1, 0 ), -1 )
+
+    Dmytro : works
   */
 
   /*
-    qqq : implement not implemented | Dmytro : implemented
+    aaa : implement not implemented 
+    Dmytro : implemented
   */
 
   if( _.longIs( ins ) )
@@ -4676,9 +4694,12 @@ strLinesNumber.defaults =
 }
 
 /*
-qqq : cover zeroLine | Dmytro : covered
-qqq : cover zeroChar | Dmytro : covered
-qqq : cover onLine | Dmytro : covered
+aaa : cover zeroLine 
+Dmytro : covered
+aaa : cover zeroChar 
+Dmytro : covered
+aaa : cover onLine 
+Dmytro : covered
 */
 
 //
@@ -4916,9 +4937,11 @@ strLinesSelect.defaults =
 
 }
 
-/* qqq : | Dmytro : covered
-- cover option highlighting | Dmytro : covered
-- cover option zeroLine | Dmytro : covered
+/* aaa : 
+- cover option highlighting
+Dmytro : covered
+- cover option zeroLine
+Dmytro : covered
 */
 
 //
@@ -5243,10 +5266,10 @@ let Proto =
 
   // etc
 
-  strCommonLeft, /* qqq : document me | Dmytro : documented */
-  strCommonRight, /* qqq : document me | Dmytro : documented */
-  strRandom, /* qqq : document and extend test coverage | Dmytro : coverage is extended, routine is documented */
-  strAlphabetFromRange, /* qqq : cover and document please | Dmytro : covered and documented */
+  strCommonLeft, /* aaa : document me */ /* Dmytro : documented */
+  strCommonRight, /* aaa : document me */ /* Dmytro : documented */
+  strRandom, /* aaa : document and extend test coverage */ /* Dmytro : coverage is extended, routine is documented */
+  strAlphabetFromRange, /* aaa : cover and document please */ /* Dmytro : covered and documented */
 
   // formatter
 
@@ -5261,7 +5284,7 @@ let Proto =
   strDecapitalize,
   strEscape,
   strCodeUnicodeEscape, /* Dmytro : extended documentation */
-  strUnicodeEscape, /* qqq : document me | Dmytro : documented */
+  strUnicodeEscape, /* aaa : document me */ /* Dmytro : documented */
   strReverse,
 
   // stripper
@@ -5299,29 +5322,29 @@ let Proto =
   // extractor
 
   strOnlySingle,
-  strOnly, //: _.vectorize( strOnlySingle ), /* qqq : cover and document | Dmytro : covered and documented */
+  strOnly, //: _.vectorize( strOnlySingle ), /* aaa : cover and document */ /* Dmytro : covered and documented */
   strButSingle,
-  strBut, // : _.vectorize( strButSingle ), /* qqq : cover and document | Dmytro : covered and documented */
-  strUnjoin, /* qqq : document me | Dmytro : documented */
+  strBut, // : _.vectorize( strButSingle ), /* aaa : cover and document */ /* Dmytro : covered and documented */
+  strUnjoin, /* aaa : document me */ /* Dmytro : documented */
 
   // joiner
 
-  strDup : _.vectorize( _strDup ), /* qqq : document me | Dmytro : documented */
+  strDup : _.vectorize( _strDup ), /* aaa : document me */ /* Dmytro : documented */
   strJoin,
-  strJoinPath, /* qqq : cover and document me // Dmytro : covered and documented */
+  strJoinPath, /* aaa : cover and document me */ /* Dmytro : covered and documented */
   strConcat,
 
   // liner
 
   strLinesIndentation,
-  strLinesBut, /* qqq : implement, document and cover | Dmytro : extended, documented, covered */
-  strLinesOnly, /* qqq : implement, document and cover | Dmytro : implemented, documented, covered */
+  strLinesBut, /* aaa : implement, document and cover */ /* Dmytro : extended, documented, covered */
+  strLinesOnly, /* aaa : implement, document and cover */ /* Dmytro : implemented, documented, covered */
   strLinesSplit,
   strLinesJoin,
-  strLinesStrip, /* qqq : test coverage | Dmytro : covered a time ago */
+  strLinesStrip, /* aaa : test coverage */ /* Dmytro : covered a time ago */
   strLinesNumber,
   strLinesSelect,
-  strLinesNearest, /* qqq : check coverage | Dmytro : checked, improved formatting */
+  strLinesNearest, /* aaa : check coverage */ /* Dmytro : checked, improved formatting */
   strLinesNearestReport,
   strLinesCount,
   strLinesRangeWithCharRange,

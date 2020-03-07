@@ -8,6 +8,10 @@ _.module = _.module || Object.create( null );
 _.module.lateModules = _.module.lateModules || Object.create( null );
 let Self = _.module.lateModules;
 
+/*
+  Temporary solution.
+*/
+
 /**
  * @typedef {Object} ModulesRegistry - Map that contains info about modules, is uses by {@link wTools.include}.
  * @memberof wTools
@@ -563,8 +567,8 @@ let wMathConcepts =
 
 let wStarter =
 {
-  sourcePath : sourcePath( 'atop/starter/MainTop.s', 'wstarter' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StarterMaker },
+  sourcePath : sourcePath( 'atop/starter/Main.s', 'wstarter' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StarterMaker }, /* xxx */
 }
 
 let wTesting =

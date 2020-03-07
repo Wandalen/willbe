@@ -1653,7 +1653,7 @@ function mapKeys( test )
   /* own on */
 
   var o = { own : 1 };
-  var got = _.mapKeys.call( o, a );
+  var got = _.mapKeys.call( o, a, o );
   var expected = [ 'a' ];
   test.identical( got, expected );
 
@@ -1661,7 +1661,7 @@ function mapKeys( test )
 
   var o = { enumerable : 0, own : 0 };
   Object.defineProperty( b, 'k', { enumerable : 0 } );
-  var got = _.mapKeys.call( o, a );
+  var got = _.mapKeys.call( o, a, o );
   var expected = _.mapAllKeys( a );
   test.identical( got, expected );
 
@@ -1669,7 +1669,7 @@ function mapKeys( test )
 
   var o = { enumerable : 0, own : 1 };
   Object.defineProperty( a, 'k', { enumerable : 0 } );
-  var got = _.mapKeys.call( o, a );
+  var got = _.mapKeys.call( o, a, o );
   var expected = [ 'a', 'k' ]
   test.identical( got, expected );
 
@@ -1693,7 +1693,7 @@ function mapKeys( test )
   test.case = 'unknown option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapKeys.call( { x : 1 }, {} );
+    _.mapKeys( { x : 1 }, { 'wrong' : null } );
   });
 
 }
@@ -1752,7 +1752,7 @@ function mapOwnKeys( test )
 
   Object.defineProperty( a, 'k', { enumerable : false } );
   var o = { enumerable : 0 };
-  var got = _.mapOwnKeys.call( o, a );
+  var got = _.mapOwnKeys.call( o, a, o );
   var expected = [ 'a', 'k' ]
   test.identical( got, expected );
 
@@ -1776,7 +1776,7 @@ function mapOwnKeys( test )
   test.case = 'unknown option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapOwnKeys.call( { own : 0 }, {} );
+    _.mapOwnKeys.call( {}, { own : 0 }, { 'wrong' : null } );
   })
 
 }
@@ -1864,7 +1864,7 @@ function mapAllKeys( test )
   test.case = 'unknown option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapAllKeys.call( { own : 0 }, {} );
+    _.mapAllKeys.call( {}, { own : 0 }, { 'wrong' : null } );
   })
 
 }
@@ -1905,13 +1905,15 @@ function mapVals( test )
 
   /**/
 
-  var got = _.mapVals.call( { own : 0, enumerable : 1 }, a );
+  var o = { own : 0, enumerable : 1 };
+  var got = _.mapVals.call( o, a, o );
   var expected = [ 1, 2 ]
   test.identical( got, expected );
 
   /**/
 
-  var got = _.mapVals.call( { own : 1, enumerable : 1 }, a );
+  var o = { own : 1, enumerable : 1 };
+  var got = _.mapVals.call( o, a, o );
   var expected = [ 1 ];
   test.identical( got, expected );
 
@@ -1959,7 +1961,7 @@ function mapVals( test )
   test.case = 'wrong option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapVals.call( { a : 1 }, {} );
+    _.mapVals( { a : 1 }, { 'wrong' : null } );
   });
 
 }
@@ -2002,9 +2004,10 @@ function mapOwnVals( test )
 
   /* enumerable off */
 
+  test.case = 'enumerable - 0';
   Object.defineProperty( a, 'k', { enumerable : 0, value : 3 } );
   Object.defineProperty( b, 'y', { enumerable : 0, value : 4 } );
-  var got = _.mapOwnVals.call({ enumerable : 0 }, a );
+  var got = _.mapOwnVals( a, { enumerable : 0 } );
   var expected = [ 1, 3 ];
   test.identical( got, expected );
 
@@ -2028,7 +2031,7 @@ function mapOwnVals( test )
   test.case = 'wrong option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapOwnVals.call( { a : 1 }, {} );
+    _.mapOwnVals( { a : 1 }, { 'wrong' : null } );
   });
 
 }
@@ -2089,7 +2092,7 @@ function mapAllVals( test )
   test.case = 'wrong option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapAllVals.call( { a : 1 }, {} );
+    _.mapAllVals( { a : 1 }, { 'wrong' : null } );
   });
 
 }
@@ -2149,21 +2152,23 @@ function mapPairs( test )
 
   /* using own */
 
-  var got = _.mapPairs.call( { own : 1 }, a );
+  var got = _.mapPairs( a, { own : 1 } );
   var expected = [ [ 'a', 1 ] ];
   test.identical( got, expected );
 
   /* using enumerable off, own on */
 
   Object.defineProperty( a, 'k', { enumerable : 0, value : 3 } );
-  var got = _.mapPairs.call( { enumerable : 0, own : 1 }, a );
+  var o = { enumerable : 0, own : 1 };
+  var got = _.mapPairs.call( o, a, o );
   var expected = [ [ 'a', 1 ], [ 'k', 3 ] ];
   test.identical( got, expected );
 
   /* using enumerable off, own off */
 
   Object.defineProperty( a, 'k', { enumerable : 0, value : 3 } );
-  var got = _.mapPairs.call( { enumerable : 0, own : 0 }, a );
+  var o = { enumerable : 0, own : 0 };
+  var got = _.mapPairs.call( o, a, o );
   test.is( got.length > 2 );
   test.identical( got[ 0 ], [ 'a', 1 ] );
   test.identical( got[ 1 ], [ 'k', 3 ] );
@@ -2250,7 +2255,7 @@ function mapOwnPairs( test )
   /* using enumerable off */
 
   Object.defineProperty( a, 'k', { enumerable : 0, value : 3 } );
-  var got = _.mapOwnPairs.call( { enumerable : 0 }, a );
+  var got = _.mapOwnPairs( a, { enumerable : 0 } );
   var expected = [ [ 'a', 1 ], [ 'k', 3 ] ];
   test.identical( got, expected );
 
@@ -2396,21 +2401,23 @@ function mapProperties( test )
 
   /**/
 
-  var got = _.mapProperties.call( { own : 1, enumerable : 1 }, a );
+  var o = { own : 1, enumerable : 1 };
+  var got = _.mapProperties.call( o, a, o );
   var expected = { a : 1 };
   test.identical( got, expected );
 
   /**/
 
   Object.defineProperty( a, 'k', { enumerable : 0, value : 3 } );
-  var got = _.mapProperties.call( { enumerable : 0, own : 1 }, a );
+  var o = { enumerable : 0, own : 1 };
+  var got = _.mapProperties.call( o, a, o );
   var expected = { a : 1, k : 3 };
   test.identical( got, expected );
 
   /**/
 
   Object.defineProperty( a, 'k', { enumerable : 0, value : 3 } );
-  var got = _.mapProperties.call( { enumerable : 0, own : 0 }, a );
+  var got = _.mapProperties( a, { enumerable : 0, own : 0 } );
   test.is( Object.keys( got ).length > 3 );
   test.is( got.a === 1 );
   test.is( got.b === 2 );
@@ -2418,7 +2425,7 @@ function mapProperties( test )
 
   /**/
 
-  var got = _.mapProperties.call( { enumerable : 0, own : 0 }, new Date() );
+  var got = _.mapProperties( new Date(), { enumerable : 0, own : 0 } );
   test.is( Object.keys( got ).length );
   test.is( got.constructor.name === 'Date' );
   test.is( _.routineIs( got.getDate ) );
@@ -2450,7 +2457,7 @@ function mapProperties( test )
   test.case = 'unknown option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapProperties.call( { x : 1 }, {} );
+    _.mapProperties.call( {}, { x : 1 }, { 'wrong' : null } );
   });
 
 }
@@ -2501,7 +2508,7 @@ function mapOwnProperties( test )
   /**/
 
   Object.defineProperty( a, 'k', { enumerable : 0, value : 3 } );
-  var got = _.mapOwnProperties.call( { enumerable : 0 }, a );
+  var got = _.mapOwnProperties( a, { enumerable : 0 } );
   var expected = { a : 1, k : 3 };
   test.identical( got, expected );
 
@@ -2536,7 +2543,7 @@ function mapOwnProperties( test )
   test.case = 'unknown option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapOwnProperties.call( { x : 1 }, {} );
+    _.mapOwnProperties( { x : 1 }, { 'wrong' : null } );
   });
 
 }
@@ -2635,7 +2642,7 @@ function mapAllProperties( test )
   test.case = 'unknown option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapAllProperties.call( { x : 1 }, {} );
+    _.mapAllProperties( { x : 1 }, { 'wrong' : null } );
   });
 
 }
@@ -2692,7 +2699,8 @@ function mapRoutines( test )
   /* enumerable : 0 */
 
   Object.defineProperty( b, 'k', { enumerable : 0, value : 3 } );
-  var got = _.mapRoutines.call( { enumerable : 0 }, a );
+  var o = { enumerable : 0 };
+  var got = _.mapRoutines.call( o, a, o );
   test.is( Object.keys( got ).length > 1 )
   test.is( _.routineIs( got.c ) );
   test.is( _.routineIs( got.__defineGetter__ ) );
@@ -2702,7 +2710,7 @@ function mapRoutines( test )
   /**/
 
   a.y = function(){}
-  var got = _.mapRoutines.call( { own : 1 }, a );
+  var got = _.mapRoutines( a, { own : 1 } );
   test.is( Object.keys( got ).length === 1 )
   test.is( _.routineIs( got.y ) );
 
@@ -2722,7 +2730,8 @@ function mapRoutines( test )
   var b = { b : 2, c : function(){} };
   Object.setPrototypeOf( a, b );
   Object.defineProperty( b, 'k', { enumerable : 0, value : function(){} } );
-  var got = _.mapRoutines.call( { own : 0, enumerable : 0 }, a );
+  var o = { own : 0, enumerable : 0 };
+  var got = _.mapRoutines.call( o, a, o );
   test.is( Object.keys( got ).length > 3 )
   test.is( _.routineIs( got.y ) );
   test.is( _.routineIs( got.c ) );
@@ -2756,7 +2765,7 @@ function mapRoutines( test )
   test.case = 'unknown option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapRoutines.call( { x : 1 }, {} );
+    _.mapRoutines( { x : 1 }, { 'wrong' : null } );
   });
 
 }
@@ -2828,7 +2837,7 @@ function mapOwnRoutines( test )
   var a = {};
   var b = {};
   Object.defineProperty( a, 'k', { enumerable : 0, value : function(){} } );
-  var got = _.mapOwnRoutines.call( { enumerable : 0 }, a );
+  var got = _.mapOwnRoutines( a, { enumerable : 0 } );
   test.identical( got.k, a.k );
   test.is( _.routineIs( got.k ) );
 
@@ -2858,7 +2867,7 @@ function mapOwnRoutines( test )
   test.case = 'unknown option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapOwnRoutines.call( { x : 1 }, {} );
+    _.mapOwnRoutines( { x : 1 }, { 'wrong' : null } );
   });
 
 }
@@ -2958,7 +2967,7 @@ function mapAllRoutines( test )
   test.case = 'unknown option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapAllRoutines.call( { x : 1 }, {} );
+    _.mapAllRoutines( { x : 1 }, { 'wrong' : null } );
   });
 
 }
@@ -3018,7 +3027,7 @@ function mapFields( test )
   /* enumerable : 0 */
 
   Object.defineProperty( b, 'k', { enumerable : 0, value : 3 } );
-  var got = _.mapFields.call( { enumerable : 0 }, a );
+  var got = _.mapFields( a, { enumerable : 0 } );
   test.is( Object.keys( got ).length === 4 )
   test.identical( got.a, 1 );
   test.identical( got.b, 2 );
@@ -3027,7 +3036,7 @@ function mapFields( test )
   /**/
 
   a.y = function(){}
-  var got = _.mapFields.call( { own : 1 }, a );
+  var got = _.mapFields( a, { own : 1 } );
   test.is( Object.keys( got ).length === 1 )
   test.identical( got.a, 1 );
 
@@ -3048,7 +3057,7 @@ function mapFields( test )
   Object.setPrototypeOf( a, b );
   Object.defineProperty( b, 'k', { enumerable : 0, value : function(){} } );
   Object.defineProperty( b, 'z', { enumerable : 0, value : 3 } );
-  var got = _.mapFields.call( { enumerable : 0 }, a );
+  var got = _.mapFields( a, { enumerable : 0 } );
   test.identical( Object.keys( got ).length, 4 );
   test.identical( got.a, 1 );
   test.identical( got.b, 2 );
@@ -3080,7 +3089,7 @@ function mapFields( test )
   test.case = 'unknown option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapFields.call( { x : 1 }, {} );
+    _.mapFields( { x : 1 }, { 'wrong' : null } );
   });
 
 }
@@ -3138,7 +3147,7 @@ function mapOwnFields( test )
   /* enumerable : 0 */
 
   Object.defineProperty( a, 'y', { enumerable : 0, value : 3 } );
-  var got = _.mapOwnFields.call( { enumerable : 0 }, a );
+  var got = _.mapOwnFields( a, { enumerable : 0 } );
   test.is( Object.keys( got ).length === 3 )
   test.identical( got.a, 1 );
   test.identical( got.y, 3 );
@@ -3175,7 +3184,7 @@ function mapOwnFields( test )
   test.case = 'unknown option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapOwnFields.call( { x : 1 }, {} );
+    _.mapOwnFields( { x : 1 }, { 'wrong' : null } );
   });
 
 }
@@ -3269,7 +3278,7 @@ function mapAllFields( test )
   test.case = 'unknown option';
   test.shouldThrowErrorSync( function()
   {
-    _.mapAllFields.call( { x : 1 }, {} );
+    _.mapAllFields( { x : 1 }, { 'wrong' : null } );
   });
 
 }
