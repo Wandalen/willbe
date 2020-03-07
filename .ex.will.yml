@@ -25,6 +25,10 @@ about :
     debug-will : node proto/dwtools/atop/will/ExecDebug
     unrestricted-will : node proto/dwtools/atop/will/ExecUnrestricted
     will : node proto/dwtools/atop/will/ExecUnrestricted
+    docker-build-centos : docker image build -t willbe-centos -f ./docker/centos.dockerfile .
+    docker-build-ubuntu : docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
+    docker-run-centos : docker run --rm willbe-centos
+    docker-run-ubuntu : docker run --rm willbe-ubuntu
   npm.bin :
     single-process-will : proto/dwtools/atop/will/Exec
     debug-will : proto/dwtools/atop/will/ExecDebug

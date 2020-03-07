@@ -290,8 +290,11 @@ function _commandsMake()
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
     
-    'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),                  h : 'Use "package install" to install target package.' },
-
+    'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              h : 'Use "package install" to install target package.' },
+    'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        h : 'Use "package local versions" to get list of package versions avaiable locally' },
+    'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       h : 'Use "package remote versions" to get list of package versions avaiable in remote archive' },
+    'package version' :                 { e : _.routineJoin( will, will.commandPackageVersion ),              h : 'Use "package local version" to get version of installed package.' },
+    
   }
 
   let ca = _.CommandsAggregator
@@ -2159,99 +2162,119 @@ function commandPackageInstall( e )
 {
   let will = this;
   let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  
+  let isolated = _.strIsolateLeftOrAll( e.argument, ' ' );
+  
+  let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
+  let options = _.strStructureParse( isolated[ 2 ] );
+  
+  _.assertMapHasOnly( options, commandPackageInstall.commandProperties, `Command does not expect options:` );
 
-  return will._commandBuildLike
-  ({
-    event : e,
-    name : 'shell',
-    onEach : handleEach,
-    commandRoutine : commandShell,
-  });
-
-  function handleEach( it )
-  {
-    let logger = will.logger;
-    
-    let parsed = _.uri.parseConsecutive( e.argument );
-    let tool  = parsed.protocol;
-    
-    parsed.protocol = null;
-    parsed.longPath = _.path.normalize( parsed.longPath );
-    parsed.longPath = _.strRemoveBegin( parsed.longPath, '/' );
-    
-    if( parsed.tag )
-    { 
-      let appNameAndVersion = _.uri.str( parsed );
-      throw _.err( `Expects application and version in format "app#version", but got: "${appNameAndVersion}"` )
-    }
-    
-    _.assert( !parsed.tag, `Expects application and version in format "app#version", but got: "${appName}"` )
-    
-    if( tool === 'package' )
-    {
-      let toolForPlatformMap = 
-      {
-        'win32' : 'choco',
-        'darwin' : 'brew',
-        'linux' : 'apt'
-      }
-      tool = toolForPlatformMap[ process.platform ];
-      if( !tool )
-      throw _.err( `Unsupported platform: ${process.platform}` )
-    }
-    
-    let o = Object.create( null );
-    
-    if( tool === 'choco' )
-    { 
-      chocoInstallHandle( o, parsed );
-    }
-    else if( tool === 'apt' )
-    { 
-      aptInstallHandle( o, parsed );
-    }
-    else
-    {
-      throw _.err( `Unsupported application installation tool: ${tool}` )
-    }
-    
-    return it.opener.openedModule.shell( o );
+  let tool  = parsed.protocol;
+  
+  parsed.protocol = null;
+  parsed.longPath = _.path.normalize( parsed.longPath );
+  parsed.longPath = _.strRemoveBegin( parsed.longPath, '/' );
+  
+  if( parsed.tag )
+  { 
+    let appNameAndVersion = _.uri.str( parsed );
+    throw _.err( `Expects application and version in format "app#version", but got: "${appNameAndVersion}"` )
   }
   
-  function chocoInstallHandle( o, parsed )
+  _.assert( !parsed.tag, `Expects application and version in format "app#version", but got: "${parsed.longPath}"` )
+  
+  if( !tool )
+  tool = 'package';
+  
+  if( tool === 'package' )
+  {
+    let toolForPlatformMap = 
+    {
+      'win32' : 'choco',
+      'darwin' : 'brew',
+      'linux' : 'apt'
+    }
+    tool = toolForPlatformMap[ process.platform ];
+    if( !tool )
+    throw _.err( `Unsupported platform: ${process.platform}` )
+  }
+  
+  let o = Object.create( null );
+  
+  o.throwingExitCode = 1;
+  o.stdio = [ 'inherit', 'pipe', 'pipe' ];
+  o.outputPiping = 1;
+  o.outputCollecting = 1;
+  o.inputMirroring = 0;
+  
+  if( tool === 'choco' )
+  { 
+    chocoInstallHandle();
+  }
+  else if( tool === 'apt' )
+  { 
+    aptInstallHandle();
+  }
+  else if( tool === 'brew' )
+  { 
+    brewInstallHandle();
+  }
+  else
+  {
+    throw _.err( `Unsupported application installation tool: ${tool}` )
+  }
+  
+  if( options.sudo )
+  o.execPath = 'sudo ' + o.execPath;
+  
+  return _.process.start( o )
+  // .then( () => 
+  // {
+  //   if( o.exitCode !== 0 )
+  //   {
+  //     if( _.strHas( o.output, 'You need to be root' ) )
+  //     throw _.errBrief( 'You need to be root to install the package. Run this command with option "sudo:1".' )
+  //   }
+  //   return null;
+  // })
+  
+  /*  */
+  
+  function chocoInstallHandle()
   { 
     if( process.platform !== 'win32' )
     throw _.err( 'Package manager choco is available only on Windows platform.' )
       
-    o.execPath = 'choco install -y' + parsed.longPath
+    o.execPath = 'choco install -y' + options.reinstall ? ' --force ' : ' ';
+    o.execPath += parsed.longPath;
     if( parsed.hash )
     o.execPath += ' --version=' + parsed.hash;
   }
   
-  function aptInstallHandle( o, parsed )
+  function aptInstallHandle()
   {  
     if( process.platform !== 'linux' )
     throw _.errBrief( 'This installation method is avaiable only on Linux platform.' )
     
-    let linuxInfo = linuxDistroInfo();
-    let linuxId = /ID="(.*)"/g.exec( linuxInfo );
-    if( !linuxId )
-    throw _.err( 'Failed to get Linux distribution name' );
+    let linuxInfo = linuxInfoGet();
+    let distroName = linuxInfo.dist.toLowerCase();
     
-    let distroName = linuxId[ 1 ].toLowerCase();
-    
-    if( distroName === 'centos' )
-    {
-      o.execPath = 'sudo yum install ' + parsed.longPath;
+    if( _.strHas( distroName, 'centos' ) )
+    { 
+      o.execPath = 'yum';
+      o.execPath += options.reinstall ? ' reinstall ' : ' install ';
+      o.execPath += ' -y ';
+      o.execPath += parsed.longPath;
       if( parsed.hash )
-      installExec += '-' + parsed.hash;
-      
-      o.execPath = installExec;
+      o.execPath += '-' + parsed.hash;
     }
-    else if( distroName === 'ubuntu' )
+    else if( _.strHas( distroName, 'ubuntu' ) )
     {
-      let installExec = 'sudo apt install ' + parsed.longPath;
+      let installExec = 'apt-get install -y ';
+      if( options.reinstall )
+      installExec += '--reinstall '
+      installExec += parsed.longPath;
       if( parsed.hash )
       installExec += '=' + parsed.hash;
       
@@ -2268,25 +2291,443 @@ function commandPackageInstall( e )
     }
   }
   
-  function linuxDistroInfo()
+  function linuxInfoGet()
   { 
     try
     {
-      let result = _.process.start
-      ({ 
-        execPath : 'cat /etc/*-release', 
-        outputCollecting : 1,
-        sync : 1,
-        outputPiping : 0, 
-        inputMirroring : 0 
-      })
-      return result.output;
+      let getos = require( 'getos' );
+      let con = new _.Consequence();
+      getos( con.tolerantCallback() )
+      con.deasyncWait();
+      return con.sync();
     }
     catch( err )
     {
       throw _.err( 'Failed to get information about Linux distribution. Reason:\n', err );
     }
   }
+  
+  function brewInstallHandle()
+  {
+    o.execPath = 'brew install' + options.reinstall ? ' --force ' : ' ';
+    o.execPath += parsed.longPath;
+    if( parsed.hash )
+    o.execPath += '@' + parsed.hash;
+  }
+}
+
+commandPackageInstall.commandProperties = 
+{
+  sudo : 'Install package with privileges of superuser.',
+  reinstall : 'Force package manager to reinstall the package.'
+}
+
+//
+
+function commandPackageLocalVersions( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  
+  let isolated = _.strIsolateLeftOrAll( e.argument, ' ' );
+  
+  let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
+  let options = _.strStructureParse( isolated[ 2 ] );
+  
+  _.assertMapHasOnly( options, commandPackageLocalVersions.commandProperties, `Command does not expect options:` );
+  
+  let tool  = parsed.protocol;
+  
+  parsed.protocol = null;
+  parsed.longPath = _.path.normalize( parsed.longPath );
+  parsed.longPath = _.strRemoveBegin( parsed.longPath, '/' );
+  
+  if( parsed.tag )
+  { 
+    let appNameAndVersion = _.uri.str( parsed );
+    throw _.err( `Expects application and version in format "app#version", but got: "${appNameAndVersion}"` )
+  }
+  
+  _.assert( !parsed.tag, `Expects application and version in format "app#version", but got: "${parsed.longPath}"` )
+  
+  let platform = process.platform;
+  
+  if( platform === 'linux' )
+  {
+    localVersionsLinux();
+  }
+  else if( platform === 'win32' )
+  {
+    localVersionsWindows();
+  }
+  else if( platform === 'darwin' )
+  {
+    localVersionsDarwin();
+  }
+  else 
+  {
+    throw _.err( `Unsupported platform: ${process.platform}` )
+  }
+  
+  return ready;
+  
+  /*  */
+  
+  function linuxInfoGet()
+  { 
+    try
+    {
+      let getos = require( 'getos' );
+      let con = new _.Consequence();
+      getos( con.tolerantCallback() )
+      con.deasyncWait();
+      return con.sync();
+    }
+    catch( err )
+    {
+      throw _.err( 'Failed to get information about Linux distribution. Reason:\n', err );
+    }
+  }
+  
+  function localVersionsLinux()
+  {
+    let linuxInfo = linuxInfoGet();
+    let distroName = linuxInfo.dist.toLowerCase();
+    let execPath;
+    
+    if( _.strHas( distroName, 'ubuntu' ) )
+    {
+      execPath = 'apt list --installed ' + parsed.longPath;
+    }
+    else if( _.strHas( distroName, 'centos' ) )
+    {
+      execPath = 'yum list installed ' + parsed.longPath;
+    }
+    else
+    {
+      throw _.err( `Unsupported Linux distribution: ${distroName}` )
+    }
+    
+    /* */
+    
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0,
+      throwingExitCode : 0, 
+    }
+    _.process.start( o );
+  }
+  
+  function localVersionsWindows()
+  {
+    let execPath = 'choco list --all --local-only ' + parsed.longPath;
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0 
+    }
+    _.process.start( o );
+  }
+  
+  function localVersionsDarwin()
+  {
+    let execPath = 'brew list --versions ' + parsed.longPath;
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0 
+    }
+    _.process.start( o );
+  }
+  
+}
+
+commandPackageLocalVersions.commandProperties = 
+{
+}
+
+//
+
+function commandPackageRemoteVersions( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  
+  let isolated = _.strIsolateLeftOrAll( e.argument, ' ' );
+  
+  let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
+  let options = _.strStructureParse( isolated[ 2 ] )
+  
+  _.assertMapHasOnly( options, commandPackageRemoteVersions.commandProperties, `Command does not expect options:` );
+  
+  let tool  = parsed.protocol;
+  
+  parsed.protocol = null;
+  parsed.longPath = _.path.normalize( parsed.longPath );
+  parsed.longPath = _.strRemoveBegin( parsed.longPath, '/' );
+  
+  if( parsed.tag )
+  { 
+    let appNameAndVersion = _.uri.str( parsed );
+    throw _.err( `Expects application and version in format "app#version", but got: "${appNameAndVersion}"` )
+  }
+  
+  _.assert( !parsed.tag, `Expects application and version in format "app#version", but got: "${parsed.longPath}"` )
+  
+  let platform = process.platform;
+  
+  if( platform === 'linux' )
+  {
+    remoteVersionsLinux();
+  }
+  else if( platform === 'win32' )
+  {
+    remoteVersionsWindows();
+  }
+  else if( platform === 'darwin' )
+  {
+    remoteVersionsDarwin();
+  }
+  else 
+  {
+    throw _.err( `Unsupported platform: ${process.platform}` )
+  }
+  
+  return ready;
+  
+  /*  */
+  
+  function linuxInfoGet()
+  { 
+    try
+    {
+      let getos = require( 'getos' );
+      let con = new _.Consequence();
+      getos( con.tolerantCallback() )
+      con.deasyncWait();
+      return con.sync();
+    }
+    catch( err )
+    {
+      throw _.err( 'Failed to get information about Linux distribution. Reason:\n', err );
+    }
+  }
+  
+  function remoteVersionsLinux()
+  {
+    let linuxInfo = linuxInfoGet();
+    let distroName = linuxInfo.dist.toLowerCase();
+    let execPath;
+    
+    if( _.strHas( distroName, 'ubuntu' ) )
+    { 
+      execPath = 'apt-cache madison ' + parsed.longPath;
+      
+      if( options.all )
+      { 
+        let rmadisonIsInstalled = isInstalled( 'devscripts' );
+        if( rmadisonIsInstalled )
+        { 
+          execPath = 'rmadison ' + parsed.longPath;
+        }
+        else
+        {
+          logger.warn( 'Package rmadison is required, but it is not installed.\nRun: "sudo apt-get install -y devscripts" and try again.' )
+        }
+      }
+    }
+    else if( _.strHas( distroName, 'centos' ) )
+    {
+      execPath = 'yum list ';
+      if( options.all )
+      execPath += '--showduplicates ';
+      execPath += parsed.longPath;
+    }
+    else
+    {
+      throw _.err( `Unsupported Linux distribution: ${distroName}` )
+    }
+    
+    /* */
+    
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0 
+    }
+    _.process.start( o );
+  }
+  
+  function isInstalled( packageName )
+  {
+    var result = _.process.start
+    ({ 
+      execPath : 'dpkg -s ' + packageName, 
+      outputCollecting : 1, 
+      outputPiping : 0, 
+      inputMirroring : 0,
+      throwingExitCode : 0,
+      sync : 1
+    })
+    return !_.strHas( result.output, 'is not installed' );
+  }
+  
+  function remoteVersionsWindows()
+  { 
+    let execPath = 'choco list --all ' + parsed.longPath;
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0 
+    }
+    _.process.start( o );
+  }
+  
+  function remoteVersionsDarwin()
+  { 
+    //Vova: lists only versions known for current version of brew
+    let execPath = 'brew search ' + parsed.longPath;
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0 
+    }
+    _.process.start( o );
+  }
+}
+commandPackageRemoteVersions.commandProperties =
+{
+  all : 'Gets verions of package from remote archive.',
+}
+
+//
+
+function commandPackageVersion( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  
+  let isolated = _.strIsolateLeftOrAll( e.argument, ' ' );
+  
+  let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
+  let options = _.strStructureParse( isolated[ 2 ] );
+  
+  _.assertMapHasOnly( options, commandPackageVersion.commandProperties, `Command does not expect options:` );
+  
+  let tool  = parsed.protocol;
+  
+  parsed.protocol = null;
+  parsed.longPath = _.path.normalize( parsed.longPath );
+  parsed.longPath = _.strRemoveBegin( parsed.longPath, '/' );
+  
+  if( parsed.tag )
+  { 
+    let appNameAndVersion = _.uri.str( parsed );
+    throw _.err( `Expects application and version in format "app#version", but got: "${appNameAndVersion}"` )
+  }
+  
+  _.assert( !parsed.tag, `Expects application and version in format "app#version", but got: "${parsed.longPath}"` )
+  
+  let platform = process.platform;
+  
+  if( platform === 'linux' )
+  {
+    localVersionLinux();
+  }
+  else if( platform === 'win32' )
+  {
+    localVersionWindows();
+  }
+  else if( platform === 'darwin' )
+  {
+    localVersionDarwin();
+  }
+  else 
+  {
+    throw _.err( `Unsupported platform: ${process.platform}` )
+  }
+  
+  return ready;
+  
+  /*  */
+  
+  function linuxInfoGet()
+  { 
+    try
+    {
+      let getos = require( 'getos' );
+      let con = new _.Consequence();
+      getos( con.tolerantCallback() )
+      con.deasyncWait();
+      return con.sync();
+    }
+    catch( err )
+    {
+      throw _.err( 'Failed to get information about Linux distribution. Reason:\n', err );
+    }
+  }
+  
+  function localVersionLinux()
+  {
+    let linuxInfo = linuxInfoGet();
+    let distroName = linuxInfo.dist.toLowerCase();
+    let execPath;
+    
+    if( _.strHas( distroName, 'ubuntu' ) )
+    {
+      execPath = 'dpkg -s ' + parsed.longPath + ' | grep Version';
+    }
+    else if( _.strHas( distroName, 'centos' ) )
+    {
+      execPath = 'rpm -q ' + parsed.longPath;
+    }
+    else
+    {
+      throw _.err( `Unsupported Linux distribution: ${distroName}` )
+    }
+    
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0,
+      throwingExitCode : 0
+    }
+    _.process.start( o );
+  }
+  
+  function localVersionWindows()
+  {
+    let execPath = 'choco list --local-only ' + parsed.longPath
+    
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0,
+      throwingExitCode : 0
+    }
+    _.process.start( o );
+  }
+  
+  function localVersionDarwin()
+  {
+    let execPath = 'brew list --versions ' + parsed.longPath
+    
+    let o = 
+    { 
+      execPath, ready, 
+      inputMirroring : 0,
+      throwingExitCode : 0
+    }
+    _.process.start( o );
+  }
+}
+
+commandPackageVersion.commandProperties = 
+{
 }
 
 // --
@@ -2416,6 +2857,9 @@ let Extend =
   commandEach,
   
   commandPackageInstall,
+  commandPackageLocalVersions,
+  commandPackageRemoteVersions,
+  commandPackageVersion,
 
   // relation
 
