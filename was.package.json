@@ -1,6 +1,6 @@
 {
   "name" : "willbe", 
-  "version" : "0.5.76", 
+  "version" : "0.5.77", 
   "description" : "Utility to manage modules of complex modular systems", 
   "author" : "Kostiantyn Wandalen <wanalen@willbe.so>", 
   "contributors" : 
@@ -27,10 +27,10 @@
     "single-process-will" : "node proto/dwtools/atop/will/Exec", 
     "debug-will" : "node proto/dwtools/atop/will/ExecDebug", 
     "unrestricted-will" : "node proto/dwtools/atop/will/ExecUnrestricted", 
-    "will" : "node proto/dwtools/atop/will/ExecUnrestricted",
-    "docker-build-centos" : "docker image build -t willbe-centos -f ./docker/centos.dockerfile .",
-    "docker-build-ubuntu" : "docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .",
-    "docker-run-centos" : "docker run --rm willbe-centos",
+    "will" : "node proto/dwtools/atop/will/ExecUnrestricted", 
+    "docker-build-centos" : "docker image build -t willbe-centos -f ./docker/centos.dockerfile .", 
+    "docker-build-ubuntu" : "docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .", 
+    "docker-run-centos" : "docker run --rm willbe-centos", 
     "docker-run-ubuntu" : "docker run --rm willbe-ubuntu"
   }, 
   "repository" : { "type" : "git", "url" : "https://github.com/Wandalen/willbe.git" }, 
@@ -66,8 +66,8 @@
     "wyamltools" : "", 
     "tar" : "", 
     "gitconfiglocal" : "", 
-    "open" : "",
-    "getos": ""
+    "open" : "", 
+    "getos" : ""
   }, 
   "devDependencies" : { "wTesting" : "" }, 
   "keywords" : [ "wTools" ]

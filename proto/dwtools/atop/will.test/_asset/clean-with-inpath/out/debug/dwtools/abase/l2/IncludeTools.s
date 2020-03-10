@@ -163,7 +163,6 @@ function declare( o )
   _.module.knownModulesByName.set( o.name, o );
 
   return o;
-
 }
 
 declare.defaults =
@@ -211,7 +210,7 @@ function declareAll( knowns )
 }
 
 // --
-// require
+// include
 // --
 
 function _sourceFileIncludeSingle( src )
@@ -234,203 +233,222 @@ function _sourceFileIncludeSingle( src )
 
 }
 
+// //
+//
+// function _sourceFileInclude( src )
+// {
+//   if( arguments.length !== 1 )
+//   return _.module._sourceFileInclude( arguments );
+//
+//   if( _.longIs( src ) )
+//   {
+//     var result = [];
+//     src = _.arrayFlatten( [], src );
+//     for( var a = 0 ; a < src.length ; a++ )
+//     result[ a ] = _.module._sourceFileIncludeSingle( src[ a ] );
+//     return result;
+//   }
+//
+//   return _.module._sourceFileIncludeSingle( src );
+// }
+//
+// //
+//
+// function _sourceFileIncludeAny( src )
+// {
+//   var errors = [];
+//
+//   _.assert( arguments.length >= 1, 'Expects at least one argument' );
+//
+//   for( var a = 0 ; a < arguments.length ; a++ )
+//   {
+//     var src = arguments[ a ];
+//     var resolved;
+//
+//     _.assert( _.strIs( src ), () => `Expects string but got ${_.strType( src )}` );
+//
+//     if( src !== '' )
+//     try
+//     {
+//       resolved = _.module.__nativeInclude.resolve( src );
+//     }
+//     catch( err )
+//     {
+//       if( a !== arguments.length-1 /*&& !usingSinglePath*/ )
+//       continue;
+//     }
+//
+//     if( a === arguments.length-1 && src === '' )
+//     return;
+//
+//     var result = _.module._sourceFileIncludeSingle( resolved || arguments[ 0 ] );
+//     return result;
+//   }
+//
+//   _.assert( 0, 'unexpected' );
+// }
+//
+// // --
+// // include
+// // --
+//
+// function _includeSingle( src )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( _.strIs( src ) );
+//
+//   var descriptor = _.module.knownModulesByName.get( src );
+//
+//   if( !descriptor )
+//   {
+//     return _.module._sourceFileIncludeAny( src );
+//   }
+//
+//   /* */
+//
+//   if( descriptor.isIncluded )
+//   if( descriptor.isIncluded() )
+//   return descriptor.returned;
+//
+//   if( descriptor.status === 2 )
+//   {
+//     debugger;
+//     return descriptor.returned;
+//   }
+//
+//   var result;
+//
+//   descriptor.status = 1;
+//
+//   if( descriptor.sourcePath )
+//   {
+//     _.assert( _.arrayIs( descriptor.sourcePath ), 'include descriptor expect an array ( sourcePath ) if present' );
+//     result = _.module._sourceFileIncludeAny.apply( _, descriptor.sourcePath );
+//   }
+//   else throw _.err( 'Module does not has {- sourcePath -}.\nCant use the descriptor to include file', src );
+//
+//   descriptor.returned = result;
+//
+//   return result;
+// }
+//
+// //
+//
+// function _includeAnySingle( srcs )
+// {
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//   _.assert( _.longIs( srcs ) );
+//
+//   /* */
+//
+//   var paths = [];
+//   for( var s = 0 ; s < srcs.length ; s++ )
+//   {
+//     var src = srcs[ s ];
+//     var descriptor = _.module.knownModulesByName.get( src );
+//
+//     if( !descriptor )
+//     {
+//       paths.push({ path : src });
+//       continue;
+//     }
+//
+//     if( descriptor.isIncluded )
+//     if( descriptor.isIncluded() )
+//     return descriptor.returned;
+//
+//     var result;
+//     // if( descriptor.include )
+//     // {
+//     //   paths.push({ path : descriptor.include, descriptor }); debugger;
+//     // }
+//     // else
+//     if( descriptor.sourcePath )
+//     {
+//       _.assert( _.arrayIs( descriptor.sourcePath ), 'Module descriptor expect an array {- sourcePath -} if present' );
+//       for( var p = 0 ; p < descriptor.sourcePath.length ; p++ )
+//       paths.push({ path : descriptor.sourcePath[ p ], descriptor });
+//     }
+//     else throw _.err( 'Module does not has {- sourcePath -}.\nCant use the descriptor to include file', src );
+//
+//   }
+//
+//   /* */
+//
+//   for( var a = 0 ; a < paths.length ; a++ )
+//   {
+//     var src = paths[ a ].path;
+//
+//     if( src !== '' )
+//     try
+//     {
+//       var resolved = _.module.__nativeInclude.resolve( src );
+//       src = resolved;
+//     }
+//     catch( err )
+//     {
+//       if( a !== paths.length-1 /*&& !usingSinglePath*/ )
+//       continue;
+//     }
+//
+//     if( a === paths.length-1 && src === '' )
+//     return;
+//
+//     var result = _.module._sourceFileIncludeSingle( src );
+//     if( paths[ a ].descriptor )
+//     paths[ a ].descriptor.returned = result;
+//     return result;
+//   }
+//
+//   /* */
+//
+//   debugger;
+//   throw _.err( 'Can include none of file', srcs );
+// }
+//
+// //
+//
+// function include( src )
+// {
+//   if( arguments.length !== 1 )
+//   return _.module._includeSingle( arguments );
+//
+//   if( _.longIs( src ) )
+//   {
+//     var result = [];
+//     src = _.arrayFlatten( [], src );
+//     for( var a = 0 ; a < src.length ; a++ )
+//     result[ a ] = _.module._includeSingle( src[ a ] );
+//     return result;
+//   }
+//
+//   return _.module._includeSingle( src );
+// }
+//
+// //
+//
+// function includeAny()
+// {
+//   return _.module._includeAnySingle( arguments );
+// }
+
 //
 
-function _sourceFileInclude( src )
+function include()
 {
-  if( arguments.length !== 1 )
-  return _.module._sourceFileInclude( arguments );
-
-  if( _.longIs( src ) )
-  {
-    var result = [];
-    src = _.arrayFlatten( [], src );
-    for( var a = 0 ; a < src.length ; a++ )
-    result[ a ] = _.module._sourceFileIncludeSingle( src[ a ] );
-    return result;
-  }
-
-  return _.module._sourceFileIncludeSingle( src );
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( arguments[ 0 ] ) );
+  let resolved = _.module.resolve( ... arguments );
+  return _.module._sourceFileIncludeSingle( resolved );
 }
 
 //
 
-function _sourceFileIncludeAny( src )
+function includeFirst()
 {
-  var errors = [];
-
-  _.assert( arguments.length >= 1, 'Expects at least one argument' );
-
-  for( var a = 0 ; a < arguments.length ; a++ )
-  {
-    var src = arguments[ a ];
-    var resolved;
-
-    _.assert( _.strIs( src ), () => `Expects string but got ${_.strType( src )}` );
-
-    if( src !== '' )
-    try
-    {
-      resolved = _.module.__nativeInclude.resolve( src );
-    }
-    catch( err )
-    {
-      if( a !== arguments.length-1 /*&& !usingSinglePath*/ )
-      continue;
-    }
-
-    if( a === arguments.length-1 && src === '' )
-    return;
-
-    var result = _.module._sourceFileIncludeSingle( resolved || arguments[ 0 ] );
-    return result;
-  }
-
-  _.assert( 0, 'unexpected' );
-}
-
-// --
-// include
-// --
-
-function _includeSingle( src )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.strIs( src ) );
-
-  var descriptor = _.module.knownModulesByName.get( src );
-
-  if( !descriptor )
-  {
-    return _.module._sourceFileIncludeAny( src );
-  }
-
-  /* */
-
-  if( descriptor.isIncluded )
-  if( descriptor.isIncluded() )
-  return descriptor.returned;
-
-  if( descriptor.status === 2 )
-  {
-    debugger;
-    return descriptor.returned;
-  }
-
-  var result;
-
-  descriptor.status = 1;
-
-  if( descriptor.sourcePath )
-  {
-    _.assert( _.arrayIs( descriptor.sourcePath ), 'include descriptor expect an array ( sourcePath ) if present' );
-    result = _.module._sourceFileIncludeAny.apply( _, descriptor.sourcePath );
-  }
-  else throw _.err( 'Module does not has {- sourcePath -}.\nCant use the descriptor to include file', src );
-
-  descriptor.returned = result;
-
-  return result;
-}
-
-//
-
-function _includeAnySingle( srcs )
-{
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( _.longIs( srcs ) );
-
-  /* */
-
-  var paths = [];
-  for( var s = 0 ; s < srcs.length ; s++ )
-  {
-    var src = srcs[ s ];
-    var descriptor = _.module.knownModulesByName.get( src );
-
-    if( !descriptor )
-    {
-      paths.push({ path : src });
-      continue;
-    }
-
-    if( descriptor.isIncluded )
-    if( descriptor.isIncluded() )
-    return descriptor.returned;
-
-    var result;
-    // if( descriptor.include )
-    // {
-    //   paths.push({ path : descriptor.include, descriptor }); debugger;
-    // }
-    // else
-    if( descriptor.sourcePath )
-    {
-      _.assert( _.arrayIs( descriptor.sourcePath ), 'Module descriptor expect an array {- sourcePath -} if present' );
-      for( var p = 0 ; p < descriptor.sourcePath.length ; p++ )
-      paths.push({ path : descriptor.sourcePath[ p ], descriptor });
-    }
-    else throw _.err( 'Module does not has {- sourcePath -}.\nCant use the descriptor to include file', src );
-
-  }
-
-  /* */
-
-  for( var a = 0 ; a < paths.length ; a++ )
-  {
-    var src = paths[ a ].path;
-
-    if( src !== '' )
-    try
-    {
-      var resolved = _.module.__nativeInclude.resolve( src );
-      src = resolved;
-    }
-    catch( err )
-    {
-      if( a !== paths.length-1 /*&& !usingSinglePath*/ )
-      continue;
-    }
-
-    if( a === paths.length-1 && src === '' )
-    return;
-
-    var result = _.module._sourceFileIncludeSingle( src );
-    if( paths[ a ].descriptor )
-    paths[ a ].descriptor.returned = result;
-    return result;
-  }
-
-  /* */
-
-  debugger;
-  throw _.err( 'Can include none of file', srcs );
-}
-
-//
-
-function include( src )
-{
-  if( arguments.length !== 1 )
-  return _.module._includeSingle( arguments );
-
-  if( _.longIs( src ) )
-  {
-    var result = [];
-    src = _.arrayFlatten( [], src );
-    for( var a = 0 ; a < src.length ; a++ )
-    result[ a ] = _.module._includeSingle( src[ a ] );
-    return result;
-  }
-
-  return _.module._includeSingle( src );
-}
-
-//
-
-function includeAny()
-{
-  return _.module._includeAnySingle( arguments );
+  let resolved = _.module.resolveFirst( ... arguments );
+  if( resolved )
+  return _.module._sourceFileIncludeSingle( resolved );
 }
 
 //
@@ -489,6 +507,162 @@ _includedRegister.defaults =
   requestedSourcePath : null,
   originalModule : null,
   returned : null,
+}
+
+//
+
+function _resolve( moduleName )
+{
+  if( arguments.length > 1 )
+  {
+    let result = [];
+
+    for( let a = 0 ; a < arguments.length ; a++ )
+    {
+      let moduleName = arguments[ a ];
+
+      if( moduleName === _.optional )
+      continue;
+
+      let r = _.module._resolveFirst( moduleName );
+      if( r !== undefined )
+      result.push( r );
+    }
+
+    return result;
+  }
+
+  return _.module._resolveFirst( moduleName );
+}
+
+//
+
+function _resolveFirst()
+{
+  let sourcePaths = this._modulesToSourcePaths( arguments );
+  let resolved = this._sourceFileResolve( sourcePaths );
+  return resolved;
+}
+
+//
+
+function resolve( moduleName )
+{
+  if( arguments.length > 1 )
+  {
+    let result = [];
+
+    for( let a = 0 ; a < arguments.length ; a++ )
+    {
+      let moduleName = arguments[ a ];
+
+      if( moduleName === _.optional )
+      continue;
+
+      let r = _.module.resolveFirst( moduleName );
+      if( r !== undefined )
+      result.push( r );
+    }
+
+    return result;
+  }
+
+  return _.module.resolveFirst( moduleName );
+}
+
+//
+
+function resolveFirst()
+{
+
+  let sourcePaths = this._modulesToSourcePaths( arguments );
+  let resolved = this._sourceFileResolve( sourcePaths );
+
+  if( resolved === undefined && !_.longHas( arguments, _.optional ) )
+  {
+    debugger;
+    throw _.err
+    (
+        `Cant resolve module::${_.longSlice( arguments ).join( ' module' )}.`
+      + `\nLooked at:\n - ${sourcePaths.join( '\n - ' )}`
+    );
+  }
+
+  return resolved;
+}
+
+//
+
+function _modulesToSourcePaths( names )
+{
+  let result = [];
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.longIs( names ) );
+
+  for( let a = 0 ; a < names.length ; a++ )
+  {
+    let src = names[ a ];
+    if( src === _.optional )
+    continue;
+    _.assert( _.strDefined( src ) );
+    var descriptor = _.module.knownModulesByName.get( src );
+    if( descriptor )
+    {
+      _.assert( _.longIs( descriptor.sourcePath ) );
+      _.arrayAppendArray( result, _.arrayAs( descriptor.sourcePath ) );
+    }
+    else
+    {
+      result.push( src );
+    }
+  }
+
+  return result;
+}
+
+//
+
+function _sourceFileResolve( o )
+{
+  let result = [];
+
+  if( !_.mapIs( arguments[ 0 ] ) )
+  o = { sourcePaths : arguments[ 0 ] }
+
+  _.routineOptions( _sourceFileResolve, o );
+  _.assert( arguments.length === 1 );
+  _.assert( _.longIs( o.sourcePaths ) );
+
+  for( let a = 0 ; a < o.sourcePaths.length ; a++ )
+  {
+    let sourcePath = o.sourcePaths[ a ];
+    let resolved;
+
+    try
+    {
+      resolved = _.module.__nativeInclude.resolve( _.path.nativize( sourcePath ) );
+    }
+    catch( err )
+    {
+      continue;
+    }
+
+    result.push( resolved );
+    if( !o.all )
+    return result[ 0 ];
+  }
+
+  if( o.all )
+  return result;
+  else
+  return undefined;
+}
+
+_sourceFileResolve.defaults =
+{
+  sourcePaths : null,
+  all : 0,
 }
 
 // --
@@ -558,7 +732,8 @@ function _Setup()
 var ToolsExtension =
 {
   include,
-  includeAny,
+  includeFirst,
+  // includeAny,
 }
 
 var ModuleExtension =
@@ -578,21 +753,33 @@ var ModuleExtension =
   declare,
   declareAll,
 
-  // require
-
-  _sourceFileIncludeSingle,
-  _sourceFileInclude,
-  _sourceFileIncludeAny,
-
   // include
 
-  _includeSingle,
-  _includeAnySingle,
+  _sourceFileIncludeSingle,
+  // _sourceFileInclude,
+  // _sourceFileIncludeAny,
+  //
+  // // include
+  //
+  // _includeSingle,
+  // _includeAnySingle,
+  // include,
+  // includeAny,
+
   include,
-  includeAny,
+  includeFirst,
 
   isIncluded,
   _includedRegister,
+
+  //
+
+  _resolve,
+  _resolveFirst,
+  resolve,
+  resolveFirst,
+  _modulesToSourcePaths,
+  _sourceFileResolve,
 
   // meta
 

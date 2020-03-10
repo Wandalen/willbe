@@ -15,7 +15,7 @@ RUN apt-get update --fix-missing && \
 	curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash && \
 	source $NVM_DIR/nvm.sh && \
 	nvm install $NODE_VERSION
-	
+
 RUN apt --purge -y remove git
 
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH

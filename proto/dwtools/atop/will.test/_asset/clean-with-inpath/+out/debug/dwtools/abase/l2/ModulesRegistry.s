@@ -31,6 +31,14 @@ function sourcePath( filePath, name )
 // include map
 // --
 
+// base / l1
+
+let wTools =
+{
+  sourcePath : sourcePath( 'abase/Layer1.s', 'wTools' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.longHas },
+}
+
 // base / l2
 
 let wBlueprint =
@@ -565,10 +573,16 @@ let wMathConcepts =
 
 // top
 
+let willbe =
+{
+  sourcePath : sourcePath( 'atop/will/MainTop.s', 'willbe' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Will },
+}
+
 let wStarter =
 {
   sourcePath : sourcePath( 'atop/starter/Main.s', 'wstarter' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StarterMaker }, /* xxx */
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.StarterMaker },
 }
 
 let wTesting =
@@ -619,6 +633,10 @@ let wMaker =
 
 let Modules =
 {
+
+  // base / l1
+
+  wTools,
 
   // base / l2
 
@@ -754,6 +772,7 @@ let Modules =
 
   // top
 
+  willbe,
   wStarter,
   wTesting,
   wTranspilationStrategy,

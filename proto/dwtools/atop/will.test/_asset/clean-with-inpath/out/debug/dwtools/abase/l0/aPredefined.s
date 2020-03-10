@@ -108,6 +108,7 @@ Self.unknown = Symbol.for( 'unknown' );
 Self.dont = Symbol.for( 'dont' );
 Self.unroll = Symbol.for( 'unroll' );
 Self.self = Symbol.for( 'self' );
+Self.optional = Symbol.for( 'optional' );
 
 // type aliases
 
