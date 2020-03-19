@@ -337,6 +337,12 @@ let wCommandsConfig =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.CommandsConfig },
 }
 
+let wStxt =
+{
+  sourcePath : sourcePath( 'amid/l1/stxt/Include.s', 'wstxtparser' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.stxt && !!_global.wTools.stxt.Parser },
+}
+
 let wFiles =
 {
   sourcePath : sourcePath( 'amid/files/UseTop.s', 'wFiles' ),
@@ -419,6 +425,12 @@ let wPersistent =
 {
   sourcePath : sourcePath( 'amid/l3/persistent/Include.s', 'wpersistent' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.persistent },
+}
+
+let wRemote =
+{
+  sourcePath : sourcePath( 'amid/l3/remote/Include.s', 'wremote' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.remote },
 }
 
 let wNameMapper =
@@ -567,7 +579,7 @@ let wMathGeometric =
 
 let wMathConcepts =
 {
-  sourcePath : sourcePath( 'amath/l8/Concepts.ss', 'wmathconcepts' ),
+  sourcePath : sourcePath( 'amath/l8/Concepts.s', 'wmathconcepts' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.box },
 }
 
@@ -625,6 +637,12 @@ let wMaker =
 {
   sourcePath : sourcePath( 'atop/maker/Maker.s', 'wMaker' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Maker },
+}
+
+let wPuppet =
+{
+  sourcePath : sourcePath( 'atop/puppet/Main.s', 'wpuppet' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.puppet },
 }
 
 // --
@@ -716,6 +734,7 @@ let Modules =
   wVocabulary,
   wCommandsAggregator,
   wCommandsConfig,
+  wStxt,
 
   wFiles,
   wFilesArchive,
@@ -732,6 +751,7 @@ let Modules =
   wStager,
   wIntrospector,
   wPersistent,
+  wRemote,
 
   wNameMapper,
   wTemplateTreeResolver,
@@ -781,6 +801,7 @@ let Modules =
   wBaker,
   wBakerWithFileExecutor,
   wMaker,
+  wPuppet,
 
 }
 

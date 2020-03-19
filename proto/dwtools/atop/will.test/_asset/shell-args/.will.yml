@@ -733,6 +733,8 @@ function vectorAdapterIs( test )
   src.prototype = proto;
   var got = _.vectorAdapterIs( src );
   test.identical( got, false );
+
+  /* Dmytro : the second part of routine in module wMathVector */
 }
 
 //
@@ -833,6 +835,8 @@ function constructorIsVector( test )
   test.case = 'src.prototype is undefined';
   test.shouldThrowErrorSync( () => _.constructorIsVector( [] ) );
   test.shouldThrowErrorSync( () => _.constructorIsVector( {} ) );
+
+  /* Dmytro : the second part of routine in module wMathVector */
 }
 
 //

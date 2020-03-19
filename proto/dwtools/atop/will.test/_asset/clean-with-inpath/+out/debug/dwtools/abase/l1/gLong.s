@@ -579,7 +579,8 @@ function longRandom( o )
   if( o.value === null )
   o.value = [ 0, 1 ];
   if( _.numberIs( o.value ) )
-  o.value = [ o.value, o.value ]
+  o.value = [ 0, o.value ]
+  // o.value = [ o.value, o.value ]
 
   if( _.rangeIs( o.length ) )
   o.length = _.intRandom( o.length );
@@ -726,7 +727,8 @@ function longFromRangeWithStep( range, step )
 
     _.assert( step < 0 );
 
-    result = new this.longDescriptor.from( Math.round( range[ 0 ]-range[ 1 ] / step ) );
+    // result = new this.longDescriptor.from( Math.round( ( range[ 1 ]-range[ 0 ] ) / step ) ); // Dmytro it's more optimal, range[ 0 ] > range[ 1 ] and step < 0 so result will be positive number
+    result = new this.longDescriptor.from( Math.abs( Math.round( ( range[ 0 ]-range[ 1 ] ) / step ) ) );
 
     let i = 0;
     while( range[ 0 ] > range[ 1 ] )
@@ -1282,7 +1284,9 @@ function longSort( dstLong, srcLong, onEvaluate )
   _.assert( dstLong === null || _.longIs( dstLong ) );
 
   if( dstLong === null )
-  dstLong = _.arrayMake( srcLong )
+  dstLong = _.arrayMake( srcLong );
+  if( _.argumentsArrayIs( dstLong ) ) // Dmytro : missed
+  dstLong = this.longDescriptor.from( dstLong );
 
   if( onEvaluate === undefined )
   {

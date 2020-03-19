@@ -524,7 +524,12 @@ function _resolve( moduleName )
       if( moduleName === _.optional )
       continue;
 
-      let r = _.module._resolveFirst( moduleName );
+      let r = _.module._resolveFirst
+      ({
+        moduleNames : [ moduleName ],
+        basePath : _.path.dir( _.introspector.location({ level : 1 }).filePath ),
+        throwing : 0,
+      });
       if( r !== undefined )
       result.push( r );
     }
@@ -532,17 +537,22 @@ function _resolve( moduleName )
     return result;
   }
 
-  return _.module._resolveFirst( moduleName );
+  return _.module._resolveFirst
+  ({
+    moduleNames : moduleName,
+    basePath : _.path.dir( _.introspector.location({ level : 1 }).filePath ),
+    throwing : 0,
+  });
 }
 
+// //
 //
-
-function _resolveFirst()
-{
-  let sourcePaths = this._modulesToSourcePaths( arguments );
-  let resolved = this._sourceFileResolve( sourcePaths );
-  return resolved;
-}
+// function _resolveFirst()
+// {
+//   let sourcePaths = this._modulesToSourcePaths( arguments );
+//   let resolved = this._sourceFileResolve( sourcePaths );
+//   return resolved;
+// }
 
 //
 
@@ -559,7 +569,13 @@ function resolve( moduleName )
       if( moduleName === _.optional )
       continue;
 
-      let r = _.module.resolveFirst( moduleName );
+      // let r = _.module.resolveFirst( moduleName );
+      let r = _.module._resolveFirst
+      ({
+        moduleNames : [ moduleName ],
+        basePath : _.path.dir( _.introspector.location({ level : 1 }).filePath ),
+        throwing : 1,
+      });
       if( r !== undefined )
       result.push( r );
     }
@@ -567,28 +583,69 @@ function resolve( moduleName )
     return result;
   }
 
-  return _.module.resolveFirst( moduleName );
+  return _.module._resolveFirst
+  ({
+    moduleNames : [ moduleName ],
+    basePath : _.path.dir( _.introspector.location({ level : 1 }).filePath ),
+    throwing : 1,
+  });
+  // return _.module.resolveFirst( moduleName );
 }
 
 //
 
-function resolveFirst()
+function _resolveFirst( o )
 {
 
-  let sourcePaths = this._modulesToSourcePaths( arguments );
-  let resolved = this._sourceFileResolve( sourcePaths );
+  if( !_.mapIs( o ) )
+  o = { moduleNames : arguments }
+  _.routineOptions( _resolveFirst, o );
 
-  if( resolved === undefined && !_.longHas( arguments, _.optional ) )
+  if( o.basePath === null )
+  o.basePath = _.path.dir( _.introspector.location({ level : 1 }).filePath );
+
+  let sourcePaths = this._modulesToSourcePaths( o.moduleNames );
+  let resolved = this._sourceFileResolve({ sourcePaths, basePath : o.basePath });
+
+  if( o.throwing )
+  if( resolved === undefined && !_.longHas( o.moduleNames, _.optional ) )
   {
     debugger;
     throw _.err
     (
-        `Cant resolve module::${_.longSlice( arguments ).join( ' module' )}.`
+        `Cant resolve module::${_.longSlice( o.moduleNames ).join( ' module' )}.`
       + `\nLooked at:\n - ${sourcePaths.join( '\n - ' )}`
     );
   }
 
   return resolved;
+}
+
+_resolveFirst.defaults =
+{
+  moduleNames : null,
+  basePath : null,
+  throwing : 0,
+}
+
+// //
+//
+// function _resolveFirst()
+// {
+//   let sourcePaths = this._modulesToSourcePaths( arguments );
+//   let resolved = this._sourceFileResolve( sourcePaths );
+//   return resolved;
+// }
+
+//
+
+function resolveFirst()
+{
+  return _.module._resolveFirst
+  ({
+    moduleNames : arguments,
+    basePath : _.path.dir( _.introspector.location({ level : 1 }).filePath ),
+  });
 }
 
 //
@@ -653,6 +710,39 @@ function _sourceFileResolve( o )
     return result[ 0 ];
   }
 
+  if( o.basePath )
+  {
+    o.basePath = _.path.normalize( o.basePath );
+    let index = o.basePath.indexOf( '/dwtools/' );
+    if( index >= 0 )
+    o.basePath = o.basePath.substring( 0, index+8 );
+  }
+
+  if( o.basePath )
+  for( let a = 0 ; a < o.sourcePaths.length ; a++ )
+  {
+    let sourcePath = o.sourcePaths[ a ];
+    let resolved;
+
+    if( _.path.isAbsolute( sourcePath ) )
+    continue;
+
+    try
+    {
+      let filePath = _.path.nativize( _.path.normalize( o.basePath + '/' + sourcePath ) );
+      // debugger;
+      resolved = _.module.__nativeInclude.resolve( filePath );
+    }
+    catch( err )
+    {
+      continue;
+    }
+
+    result.push( resolved );
+    if( !o.all )
+    return result[ 0 ];
+  }
+
   if( o.all )
   return result;
   else
@@ -662,7 +752,17 @@ function _sourceFileResolve( o )
 _sourceFileResolve.defaults =
 {
   sourcePaths : null,
+  basePath : null,
   all : 0,
+}
+
+// --
+// etc
+// --
+
+function toolsPathGet()
+{
+  return _.path.normalize( __dirname + '/../../../Tools.s' );
 }
 
 // --
@@ -772,7 +872,7 @@ var ModuleExtension =
   isIncluded,
   _includedRegister,
 
-  //
+  // resolve
 
   _resolve,
   _resolveFirst,
@@ -780,6 +880,10 @@ var ModuleExtension =
   resolveFirst,
   _modulesToSourcePaths,
   _sourceFileResolve,
+
+  // etc
+
+  toolsPathGet,
 
   // meta
 
