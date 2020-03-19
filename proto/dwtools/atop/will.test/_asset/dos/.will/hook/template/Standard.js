@@ -372,11 +372,11 @@ build :
 
 'Sample.js' : //
 `
-let _ = require( 'wTools' );
+let _ = require( '{{package/lowName}}' );
 
 /**/
 
-...
+___
 
 `,
 
