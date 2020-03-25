@@ -1513,7 +1513,7 @@ module:
             ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Tools/ForGit.txt
           - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module
           - >-
-            ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/Proto.will.yml
+            ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/ModuleForTesting12.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/+.module
           - >-
