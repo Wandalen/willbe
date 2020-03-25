@@ -1,8 +1,8 @@
 
 submodule :
 
-  Tools : git+hd://../_repo/Tools?out=out/wTools.out.will@master
-  PathBasic : git+hd://../_repo/PathBasic?out=out/wPathBasic.out.will@master
+  ModuleForTesting1 : git+hd://../_repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will@master
+  ModuleForTesting2 : git+hd://../_repo/ModuleForTesting2?out=out/wModuleForTesting2.out.will@master
 
 path :
 
