@@ -4,7 +4,7 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( '../Layer2.s' );
+  let _ = require( '../Layer1.s' );
 
   _.include( 'wTesting' );
 
