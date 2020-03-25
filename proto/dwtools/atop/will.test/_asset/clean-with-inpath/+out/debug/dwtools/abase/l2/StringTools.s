@@ -501,7 +501,7 @@ function _strRemoved( srcStr, insStr )
 */
 
 /*
-aaa : extend coverage of routines strRemove, strReplace, make sure tests cover regexp cases 
+aaa : extend coverage of routines strRemove, strReplace, make sure tests cover regexp cases
 Dmytro : coverage is extended
 */
 
@@ -3159,7 +3159,7 @@ strSplitChunks.defaults =
 //
 
 /*
-aaa : cover it by test 
+aaa : cover it by test
 Dmytro : covered,
 
 maybe, routine needs assertion
@@ -3224,8 +3224,8 @@ function strSplitCamel( src )
 function strOnlySingle( srcStr, range )
 {
 
-/* 
-aaa : reference point of negative is length. implement and cover please 
+/*
+aaa : reference point of negative is length. implement and cover please
 Dmytro : implemented a time ago
 */
 
@@ -3384,8 +3384,8 @@ let strOnly = _.vectorize( strOnlySingle );
 function strButSingle( srcStr, range, ins )
 {
 
-/* 
-aaa : reference point of negative is length. implement and cover please 
+/*
+aaa : reference point of negative is length. implement and cover please
 Dmytro : implemented a time ago
 */
 
@@ -3414,9 +3414,9 @@ Dmytro : implemented a time ago
   _.assert( ins === undefined || _.strIs( ins ) || _.longIs( ins ) );
   // _.assert( !_.longIs( ins ), 'not implemented' );
 
-  /* 
-     aaa : implement for case ins is long 
-     Dmytro : implemented, elements of long joins by spaces 
+  /*
+     aaa : implement for case ins is long
+     Dmytro : implemented, elements of long joins by spaces
   */
 
   if( _.longIs( ins ) )
@@ -4035,12 +4035,12 @@ function strJoinPath( srcs, joiner )
  */
 
 /*
-aaa : cover routine strConcat and extend it. ask how to 
+aaa : cover routine strConcat and extend it. ask how to
 Dmytro : routine covered and documented, not extended
 */
 
 /*
-  aaa : does not work properly, remove indentation, but should not 
+  aaa : does not work properly, remove indentation, but should not
   srcs :
 [
   'b',
@@ -4371,14 +4371,14 @@ function strLinesBut( src, range, ins )
   _.assert( _.rangeIs( range ) );
 
   /*
-    aaa : should work 
+    aaa : should work
     _.strLinesBut( _.strLinesBut( got1, 0 ), -1 )
 
     Dmytro : works
   */
 
   /*
-    aaa : implement not implemented 
+    aaa : implement not implemented
     Dmytro : implemented
   */
 
@@ -4694,11 +4694,11 @@ strLinesNumber.defaults =
 }
 
 /*
-aaa : cover zeroLine 
+aaa : cover zeroLine
 Dmytro : covered
-aaa : cover zeroChar 
+aaa : cover zeroChar
 Dmytro : covered
-aaa : cover onLine 
+aaa : cover onLine
 Dmytro : covered
 */
 
@@ -4937,7 +4937,7 @@ strLinesSelect.defaults =
 
 }
 
-/* aaa : 
+/* aaa :
 - cover option highlighting
 Dmytro : covered
 - cover option zeroLine

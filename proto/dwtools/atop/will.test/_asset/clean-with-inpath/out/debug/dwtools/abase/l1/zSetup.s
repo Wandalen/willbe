@@ -165,16 +165,17 @@ function _setupUncaughtErrorHandler9()
 
   function _errPreBrowser( args )
   {
-    let message, sourcePath, lineno, colno, error = args;
+    let [ message, sourcePath, lineno, colno, error ] = args;
     let err = error || message;
 
+    debugger;
     if( _._err )
     err = _._err
     ({
       args : [ error ],
       level : 1,
       fallBackStack : 'at handleError @ ' + sourcePath + ':' + lineno,
-      location :
+      throwenLocation :
       {
         path : sourcePath,
         line : lineno,

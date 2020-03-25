@@ -24,14 +24,59 @@ let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 function boolFrom( src )
 {
+  let result = _.boolFromMaybe( src );
+  _.assert( _.boolIs( result ), `Cant convert ${_.strType( src )} to boolean` );
+  return result;
+}
+
+//
+
+function boolFromMaybe( src )
+{
+  if( _.boolIs( src ) )
+  {
+    return src;
+  }
+  else if( _.numberIs( src ) )
+  {
+    return !!src;
+  }
+  else if( _.strIs( src ) )
+  {
+    src = src.toLowerCase();
+    if( src == '0' )
+    return false;
+    if( src == 'false' )
+    return false;
+    if( src == '1' )
+    return true;
+    if( src == 'true' )
+    return true;
+    return src;
+  }
+  else
+  {
+    return src;
+  }
+}
+
+//
+
+function boolFromForce( src )
+{
   if( _.strIs( src ) )
   {
     src = src.toLowerCase();
-    if( src == '0' ) return false;
-    if( src == 'false' ) return false;
-    if( src == 'null' ) return false;
-    if( src == 'undefined' ) return false;
-    if( src == '' ) return false;
+    if( src == '0' )
+    return false;
+    if( src == 'false' )
+    return false;
+    if( src == 'null' )
+    return false;
+    if( src == 'undefined' )
+    return false;
+    if( src == '' )
+    return false;
     return true;
   }
   return Boolean( src );
@@ -52,7 +97,9 @@ let Fields =
 let Routines =
 {
 
-  boolFrom,
+  boolFrom, /* qqq : cover please ( not Dmytro ) */
+  boolFromMaybe, /* qqq : cover please ( not Dmytro ) */
+  boolFromForce, /* qqq : cover please ( not Dmytro ) */
 
 }
 

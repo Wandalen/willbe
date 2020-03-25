@@ -112,9 +112,32 @@ function namesCoded( namesMap )
 // id
 // --
 
-function idWithDate( prefix, postfix, fast )
+function idWithOnlyDate( prefix, postfix )
 {
   var date = new Date;
+
+  _.assert( 0 <= arguments.length && arguments.length <= 2 );
+
+  prefix = prefix ? prefix : '';
+  postfix = postfix ? postfix : '';
+
+  var d =
+  [
+    date.getFullYear(),
+    date.getMonth()+1,
+    date.getDate(),
+  ].join( '-' );
+
+  return prefix + d + postfix
+}
+
+//
+
+function idWithDateAndTime( prefix, postfix, fast )
+{
+  var date = new Date;
+
+  _.assert( 0 <= arguments.length && arguments.length <= 3 );
 
   prefix = prefix ? prefix : '';
   postfix = postfix ? postfix : '';
@@ -143,6 +166,8 @@ function idWithTime( prefix, postfix )
 {
   var date = new Date;
 
+  _.assert( 0 <= arguments.length && arguments.length <= 2 );
+
   prefix = prefix ? prefix : '';
   postfix = postfix ? postfix : '';
 
@@ -162,6 +187,8 @@ function idWithTime( prefix, postfix )
 
 function idWithGuid()
 {
+
+  _.assert( arguments.length === 0 );
 
   var result =
   [
@@ -216,10 +243,10 @@ function idWithGuid()
 
 function idWithTimeGuid()
 {
-  /* aqq : ask */
-  /* Dmytro : improved, 'x' -> '$' */
-  let guid = '$$$$$$$$-$$$$-4$$$-y$$$-$$$$$$$$$$$$'; 
+  let guid = '$$$$$$$$-$$$$-4$$$-y$$$-$$$$$$$$$$$$';
   let date = _.time.now();
+
+  _.assert( arguments.length === 0 );
 
   return guid.replace( /[$y]/g, replaceSymbol );
 
@@ -264,7 +291,8 @@ var Proto =
 
   // id
 
-  idWithDate,
+  idWithOnlyDate,
+  idWithDateAndTime,
   idWithTime,
   idWithGuid,
   idWithTimeGuid,

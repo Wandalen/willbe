@@ -93,6 +93,20 @@ function numberFromStr( src )
 
 //
 
+// function numberFromStrMaybe( src )
+function numberFromStrMaybe( src )
+{
+  _.assert( _.strIs( src ) || _.numberIs( src ) );
+  if( _.numberIs( src ) )
+  return src;
+  let parsed = Number( src );
+  if( !isNaN( parsed ) )
+  return parsed;
+  return src;
+}
+
+//
+
 function numbersSlice( src,f,l )
 {
   if( _.numberIs( src ) )
@@ -414,6 +428,7 @@ let Routines =
   numberFrom,
   numbersFrom,
   numberFromStr,
+  numberFromStrMaybe, /* qqq : cover */
 
   numbersSlice,
 

@@ -578,7 +578,7 @@ strIsolateRightOrAll_body.defaults =
 //
 
 /**
-  * Routine strIsolateInsideLeftSignle() split source strings {-src-} into parts separated by delimeters {-begin-} and {-end-}. Routine returns
+  * Routine strIsolateInsideSignle() split source strings {-src-} into parts separated by delimeters {-begin-} and {-end-}. Routine returns
   * an array with parts of source string {-src-}.
   * The array contains of five parts:
   * - substring from start of source string to begin of first delimeter {-begin-}.
@@ -595,35 +595,35 @@ strIsolateRightOrAll_body.defaults =
   * @param { String|Array } end - String or array of strings to find end of split part in the source source.
   *
   * @example
-  * _.strIsolateInsideLeftSignle( 'aabdcdd', 'a', 'd' );
+  * _.strIsolateInsideSignle( 'aabdcdd', 'a', 'd' );
   * // returns [ '', 'a', 'abdcd', 'd', '' ]
   *
   * @example
-  * _.strIsolateInsideLeftSignle( 'cabdcdc', 'a', 'd' );
+  * _.strIsolateInsideSignle( 'cabdcdc', 'a', 'd' );
   * // returns [ 'c', 'a', 'bdc', 'd', 'c' ]
   *
   * @example
-  * _.strIsolateInsideLeftSignle( 'cabdcdc', 'f', 'd' );
+  * _.strIsolateInsideSignle( 'cabdcdc', 'f', 'd' );
   * // returns [ '', undefined, 'cabdcdc', undefined, '' ]
   *
   * @example
-  * _.strIsolateInsideLeftSignle( 'cabdcdc', 'a', 'f' );
+  * _.strIsolateInsideSignle( 'cabdcdc', 'a', 'f' );
   * // returns [ '', undefined, 'cabdcdc', undefined, '' ]
   *
   * @example
-  * _.strIsolateInsideLeftSignle( 'cabdcdc', [ 'f', 'b' ], 'd' );
+  * _.strIsolateInsideSignle( 'cabdcdc', [ 'f', 'b' ], 'd' );
   * // returns [ 'ca', 'b', 'dc', 'd', 'c' ]
   *
   * @example
-  * _.strIsolateInsideLeftSignle( 'cabdcdc', 'b', [ 'f', 'd' ] );
+  * _.strIsolateInsideSignle( 'cabdcdc', 'b', [ 'f', 'd' ] );
   * // returns [ 'ca', 'b', 'dc', 'd', 'c' ]
   *
   * @example
-  * _.strIsolateInsideLeftSignle( 'cabdcdc', [ 'b', 'c' ], [ 'c', 'd' ] );
+  * _.strIsolateInsideSignle( 'cabdcdc', [ 'b', 'c' ], [ 'c', 'd' ] );
   * // returns [ 'ca', 'b', 'dcd', 'c', '' ]
   *
   * @returns { Array } - Returns array with parts of source string.
-  * @function strIsolateInsideLeftSignle
+  * @function strIsolateInsideSignle
   * @throws { Exception } If arguments.length is less then one or more then three.
   * @throws { Exception } If source string {-str-} is not a String.
   * @throws { Exception } If delimeter {-begin-} is not a String or an Array of strings.
@@ -631,7 +631,7 @@ strIsolateRightOrAll_body.defaults =
   * @memberof wTools
   */
 
-function strIsolateInsideLeftSignle( src, begin, end )
+function strIsolateInsideSignle( src, begin, end )
 {
 
   _.assert( _.strIs( src ), 'Expects string {-src-}' );
@@ -717,7 +717,7 @@ function strIsolateInsideLeftSignle( src, begin, end )
 //
 
 /**
-  * Routine strIsolateInsideLeft() split source strings of vector {-src-} into parts separated by delimeters {-begin-} and {-end-}. Routine
+  * Routine strIsolateInside() split source strings of vector {-src-} into parts separated by delimeters {-begin-} and {-end-}. Routine
   * returns a vector with arrays. Each array of vector corresponds to element of vector {-src-}.
   * Each array contains of five parts:
   * - substring from start of source string to begin of first delimeter {-begin-}.
@@ -735,44 +735,44 @@ function strIsolateInsideLeftSignle( src, begin, end )
   * @param { String|Array } end - String or array of strings to find end of split part in the source source.
   *
   * @example
-  * _.strIsolateInsideLeft( 'aabdcdd', 'a', 'd' );
+  * _.strIsolateInside( 'aabdcdd', 'a', 'd' );
   * // returns [ '', 'a', 'abdcd', 'd', '' ]
   *
   * @example
-  * _.strIsolateInsideLeft( 'cabdcdc', 'a', 'd' );
+  * _.strIsolateInside( 'cabdcdc', 'a', 'd' );
   * // returns [ 'c', 'a', 'bdc', 'd', 'c' ]
   *
   * @example
-  * _.strIsolateInsideLeft( 'cabdcdc', 'f', 'd' );
+  * _.strIsolateInside( 'cabdcdc', 'f', 'd' );
   * // returns [ '', undefined, 'cabdcdc', undefined, '' ]
   *
   * @example
-  * _.strIsolateInsideLeftSignle( 'cabdcdc', 'a', 'f' );
+  * _.strIsolateInsideSignle( 'cabdcdc', 'a', 'f' );
   * // returns [ '', undefined, 'cabdcdc', undefined, '' ]
   *
   * @example
-  * _.strIsolateInsideLeft( 'cabdcdc', [ 'f', 'b' ], 'd' );
+  * _.strIsolateInside( 'cabdcdc', [ 'f', 'b' ], 'd' );
   * // returns [ 'ca', 'b', 'dc', 'd', 'c' ]
   *
   * @example
-  * _.strIsolateInsideLeft( 'cabdcdc', 'b', [ 'f', 'd' ] );
+  * _.strIsolateInside( 'cabdcdc', 'b', [ 'f', 'd' ] );
   * // returns [ 'ca', 'b', 'dc', 'd', 'c' ]
   *
   * @example
-  * _.strIsolateInsideLeft( 'cabdcdc', [ 'b', 'c' ], [ 'c', 'd' ] );
+  * _.strIsolateInside( 'cabdcdc', [ 'b', 'c' ], [ 'c', 'd' ] );
   * // returns [ 'ca', 'b', 'dcd', 'c', '' ]
   *
   * @example
-  * _.strIsolateInsideLeft( [ 'cabdcdc', 'ddccbbaa' ], 'b', 'd' );
+  * _.strIsolateInside( [ 'cabdcdc', 'ddccbbaa' ], 'b', 'd' );
   * // returns [ [ 'ca', 'b', 'dc', 'd', 'c' ], [ '', '', 'ddccbbaa', '', '' ] ]
   *
   * @example
-  * _.strIsolateInsideLeft( [ 'cabdcdc', 'ddccbbaa' ], [ 'b', 'c' ], [ 'c', 'd' ] );
+  * _.strIsolateInside( [ 'cabdcdc', 'ddccbbaa' ], [ 'b', 'c' ], [ 'c', 'd' ] );
   * // returns [ [ 'ca', 'b', 'dcd', 'c', '' ], [ 'dd', 'c', '', 'c', 'bbaa' ] ]
   *
   * @returns { Array|ArraysVector } - If source string is a scalar, then routine returns array with parts of source string.
   * If source string is a vector, then routine returns vector of arrays.
-  * @function strIsolateInsideLeft
+  * @function strIsolateInside
   * @throws { Exception } If arguments.length is less then one or more then three.
   * @throws { Exception } If source string {-str-} is not a String.
   * @throws { Exception } If delimeter {-begin-} is not a String or an Array of strings.
@@ -780,7 +780,7 @@ function strIsolateInsideLeftSignle( src, begin, end )
   * @memberof wTools
   */
 
-function strIsolateInsideLeft( src, begin, end )
+function strIsolateInside( src, begin, end )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3 );
@@ -789,12 +789,12 @@ function strIsolateInsideLeft( src, begin, end )
   {
     let result = [];
     for( let s = 0 ; s < src.length ; s++ )
-    result[ s ] = _.strIsolateInsideLeftSignle( src[ s ], begin, end );
+    result[ s ] = _.strIsolateInsideSignle( src[ s ], begin, end );
     return result;
   }
   else
   {
-    return _.strIsolateInsideLeftSignle( src, begin, end );
+    return _.strIsolateInsideSignle( src, begin, end );
   }
 
 }
@@ -824,8 +824,8 @@ let Routines =
 
   // strIsolateInsideOrNoneSingle,
   // strIsolateInsideOrNone,
-  strIsolateInsideLeftSignle,
-  strIsolateInsideLeft,
+  strIsolateInsideSignle,
+  strIsolateInside,
 
 }
 

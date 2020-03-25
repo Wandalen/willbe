@@ -272,7 +272,7 @@ function diagnosticLocation( o )
     path = parsed[ 1 ];
 
     // if( _.strEnds( path, ')' ) )
-    // path = _.strIsolateInsideLeft( path, '(', ')' )[ 2 ];
+    // path = _.strIsolateInside( path, '(', ')' )[ 2 ];
 
     return path;
   }

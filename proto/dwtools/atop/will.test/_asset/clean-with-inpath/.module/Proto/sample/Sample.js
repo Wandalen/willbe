@@ -31,7 +31,7 @@ function init()
 {
   var self = this; /* context */
 
-  _.workpiece.initFields( self );/* extends object by fields from relationships */
+  _.workpiece.initFields( self );/* extends object by fields from relations */
 
   Object.preventExtensions( self ); /* disables object extending */
 
@@ -73,7 +73,7 @@ function staticFunction()
 }
 
 // --
-// relationships
+// relations
 // --
 
 var Composes =

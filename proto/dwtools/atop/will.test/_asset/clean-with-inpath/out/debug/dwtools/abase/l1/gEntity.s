@@ -176,6 +176,7 @@ function entitySize( src )
     if( !it.down )
     return;
 
+    /* qqq : does not work anymore! */
     if( it.down.iterable === 'map-like' || it.down.iterable === 'hash-map-like' )
     {
       result += _.uncountableSize( k );
@@ -207,7 +208,7 @@ let Routines =
   lengthOf : entityLength,
 
   uncountableSize,
-  entitySize, 
+  entitySize,
   sizeOf : entitySize,
 
 }
