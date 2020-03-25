@@ -1,7 +1,7 @@
 
 submodule :
 
-  Tools : git+hd://../_repo/Tools?out=out/wTools.out.will@master
+  ModuleForTesting1 : git+hd://../_repo/ModuleForTesting1?out=out/wModuleForTesting.out.will@master
   # Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will@master
   # Proto : .module/Proto.out.will
 
