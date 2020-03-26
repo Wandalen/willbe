@@ -96,6 +96,7 @@ function numberFromStr( src )
 // function numberFromStrMaybe( src )
 function numberFromStrMaybe( src )
 {
+  _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( _.strIs( src ) || _.numberIs( src ) );
   if( _.numberIs( src ) )
   return src;
