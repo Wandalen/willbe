@@ -180,7 +180,7 @@ function _setupUncaughtErrorHandler9()
       fallBackStack : 'at handleError @ ' + sourcePath + ':' + lineno,
       throwenLocation :
       {
-        path : sourcePath,
+        filePath : sourcePath,
         line : lineno,
         col : colno,
       },
