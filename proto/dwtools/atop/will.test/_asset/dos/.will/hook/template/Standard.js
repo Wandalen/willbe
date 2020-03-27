@@ -548,7 +548,8 @@ OTHER DEALINGS IN THE SOFTWARE.
   },
   "devDependencies" :
   {
-    "wTesting" : ""
+    "wTesting" : "",
+    "{{package/lowName}}" : "file:."
   },
   "keywords" :
   [
@@ -559,7 +560,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 'README.md' : //
 `
-# {{package/name}} [![Build Status](https://travis-ci.org/{{about/user}}/{{package/name}}.svg?branch=master)](https://travis-ci.org/{{about/user}}/{{package/name}})
+# {{package/name}} -- Experimental! [![Build Status](https://travis-ci.org/{{about/user}}/{{package/name}}.svg?branch=master)](https://travis-ci.org/{{about/user}}/{{package/name}})
 
 ___
 
