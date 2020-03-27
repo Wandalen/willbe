@@ -198,7 +198,7 @@ function declareAll( knowns )
         if( _global_.Config.interpreter === 'browser' )
         if( typeof _starter_ !== 'undefined' )
         {
-          basePath = _starter_.uri.parseConsecutive( basePath ).localWebPath;
+          basePath = _starter_.uri.parseConsecutive( basePath ).resourcePath;
           basePath = _.path.normalizeTolerant( basePath );
         }
       }
@@ -762,7 +762,7 @@ _sourceFileResolve.defaults =
 
 function toolsPathGet()
 {
-  return _.path.normalize( __dirname + '/../../../Tools.s' );
+  return _.path.normalize( __dirname + '/../../../../../dwtools/Tools.s' );
 }
 
 // --
@@ -785,10 +785,14 @@ function _Setup()
   if( typeof require === 'undefined' )
   return;
 
+  /* qqq xxx : remove that if-return branch */
   if( _global_.Config.interpreter === 'browser' )
   return;
 
+  // debugger;
   let Module = require( 'module' );
+  // debugger;
+
   let NjsResolveFilename = Module._resolveFilename;
   let NjsLoad = Module._load;
   let including = false;
