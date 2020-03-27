@@ -372,8 +372,8 @@ About
 
 Paths
   will : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
-  module.willfiles : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI/.will.yml'
-  module.dir : '/home/dmytry/Документы/UpWork/IntellectualServiceMysnyk/willbe/sample/version2/CLI'
+  module.willfiles : '/home/user/willbe/sample/version2/CLI/.will.yml'
+  module.dir : '/home/user/willbe/sample/version2/CLI'
   proto : 'proto'
   out.debug : 'out/debug'
 
@@ -415,7 +415,7 @@ build::debug
 
 - Use [the `will .` command](#command-help) to get the list of commands (phrases).
 - Use the [`will .[word]` command](#command-help) to get the list of all commands (phrases) that have the word `word`.
-- Use the [command `will .help *`](#команда-help) to get help with a specific command.
+- Use the [command `will .help *`](#command-help) to get help with a specific command.
 - If you forget the full phrase then `willbe` will list the phrases by [word](#CLI) which you remember.
 - Use the [command `will .[resource].list`](#Command-list) in order to enumerate the resources of the type `resource` of the module.
 - Use the [`will .resources.list` command](#Command-list) to enumerate all the resources of this module.

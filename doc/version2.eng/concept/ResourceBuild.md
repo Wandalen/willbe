@@ -6,7 +6,7 @@ The most important field of the build is `steps`. `steps` is a build scenario. I
 
 ### Build by default
 
-The module may have a default build. In order to make it, the [cryterion `default : 1`](Criterions.md#Використання) is used.
+The module may have a default build. In order to make it, the [cryterion `default : 1`](Criterions.md) is used.
 
 ### Example
 
@@ -49,7 +49,7 @@ build :
       - export.proto
 ```
 
-In build `export` the step `export.proto` is used to export of the files. Combination of `export` and `default` criterions allows to appointing [export build by default](Criterions.md#Використання).
+In build `export` the step `export.proto` is used to export of the files. Combination of `export` and `default` criterions allows to appointing [export build by default](Criterions.md#Criterion-of-the-build-for-the-export).
 
 ### Section <code>build</code>
 
