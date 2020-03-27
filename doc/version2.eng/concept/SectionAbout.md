@@ -21,11 +21,11 @@ The `about` section has 4 fields among which are the module name, description, v
 
 ### Resource fields of the `about` section, which can be used by default
 
-| Field          | Description                             |
-|----------------|-----------------------------------------|
-| name           | name of the module                      |
-| description    | description of the module               |
-| version        | version of the module release           |
-| enabled        | whether the module is active, by default `1` |
-| interpreters   | interpreters on which the module should run     |
-| keywords       | keywords                                |  
+| Field        | Description                                  |
+|--------------|----------------------------------------------|
+| name         | name of the module                           |
+| description  | description of the module                    |
+| version      | version of the module release                |
+| enabled      | whether the module is active, by default `1` |
+| interpreters | interpreters on which the module should run  |
+| keywords     | keywords                                     |

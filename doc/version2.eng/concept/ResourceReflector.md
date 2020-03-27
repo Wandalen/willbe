@@ -10,18 +10,18 @@ An example of a `reflector` section with a `reflector1` resource. The reflector 
 
 ### Resource fields of `reflector` section
 
-| Field          | Description                                                |
-|----------------|------------------------------------------------------------|
-| description    | Description for other  developers                          |
-| recursive      | Include files from subdirectories or not. Possible values: `0`,` 1`, `2`. The default value is `2` |
-| mandatory      | Show an error if no file is found. Possible values: `0`,` 1`. The default value is `1` |
-| filePath       | Map of the paths                                         |
-| src            | The file filters at which operation performing is needed |
-| dst            | The file filters in which recording the result of the operation is needed, if any |
-| criterion      | [Conditions](Criterions.md) of resource using            |
-| inherit        | Inheritance of the another reflector                     |
+| Field       | Description                                                                                        |
+|-------------|----------------------------------------------------------------------------------------------------|
+| description | Description for other  developers                                                                  |
+| recursive   | Include files from subdirectories or not. Possible values: `0`,` 1`, `2`. The default value is `2` |
+| mandatory   | Show an error if no file is found. Possible values: `0`,` 1`. The default value is `1`             |
+| filePath    | Map of the paths                                                                                   |
+| src         | The file filters at which operation performing is needed                                           |
+| dst         | The file filters in which recording the result of the operation is needed, if any                  |
+| criterion   | [Conditions](Criterions.md) of resource using                                                      |
+| inherit     | Inheritance of the another reflector                                                               |
 
-The fields `src` and `dst` can contain subfields which describe [file filters](ReflectorFileFilter.md).   
+The fields `src` and `dst` can contain subfields which describe [file filters](ReflectorFileFilter.md).
 
 ### Map of the paths
 
@@ -84,7 +84,7 @@ When `recursive: 1` is used, the `proto` directory and its contents will be sele
 
 By the value `recursive: 2`, all the contents of the` proto` directory of all levels of the nesting will be selected, including files in the `files` directory and the available next levels.
 
-### Fields `basePath` and `prefixPath`  
+### Fields `basePath` and `prefixPath`
 
 The `basePath`,` prefixPath` and `filePath` fields are used to specify file allocation in the `src` and `dst` filters.
 
@@ -92,7 +92,7 @@ The `basePath`,` prefixPath` and `filePath` fields are used to specify file allo
 
 `prefixPath` is a path that is added as a prefix to all reflector paths, such as `basePath` and `filePath`.
 
-### An example of forming a path with a field `prefixPath`   
+### An example of forming a path with a field `prefixPath`
 
 ```yaml
 src :
@@ -104,6 +104,6 @@ src :
 
 Prefix `./out/out.debug/` adds to each file described in `filePath` field, so the reflector selects 2 files `out/out.debug/File1.js` and` out out.debug/File2.js`
 
-### Section <code>reflector</code>  
+### Section <code>reflector</code>
 
 The section has reflectors. It is a special type of resources for operation on the groups of files.

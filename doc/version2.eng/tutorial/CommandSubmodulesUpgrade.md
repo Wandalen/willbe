@@ -20,10 +20,10 @@ submodulesUpgrade
 
 </details>
 
-To test the command, create a module with the specified file structure and enter the code in the `willfile`. 
+To test the command, create a module with the specified file structure and enter the code in the `willfile`.
 
 <details>
-    <summary><u>Код файла <code>.will.yml</code></u></summary>
+    <summary><u>Code of file <code>.will.yml</code></u></summary>
 
 ```yaml
 about :

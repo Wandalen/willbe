@@ -10,7 +10,7 @@ After [installation](<Instalation.md>) of utility `willbe` enter the [`will .` c
   <summary><u>Command output <code>will .</code></u></summary>
 
 ```
-[user@user ~]$ will .  
+[user@user ~]$ will .
 Command "."
 Ambiguity. Did you mean?
   .help - Get help.
@@ -30,7 +30,7 @@ Ambiguity. Did you mean?
   .submodules.fixate - Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.
   .submodules.upgrade - Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.
   .shell - Execute shell command on the module.
-  .clean - Clean current module. Delete genrated artifacts, temp files and downloaded submodules.
+  .clean - Clean current module. Delete generated artifacts, temp files and downloaded submodules.
   .clean.what - Find out which files will be deleted by clean command.
   .build - Build current module with spesified criterion.
   .export - Export selected the module with spesified criterion. Save output to output file and archive.
@@ -78,7 +78,7 @@ The `willbe` utility knows many commands containing the word` list` thus it outp
 
 ### Command `.help`
 
-For help on the selected command, use the syntax [`will .help [command]`](../concept/Command.md#Commands-of-the-utility-willbe).    
+For help on the selected command, use the syntax [`will .help [command]`](../concept/Command.md#Commands-of-the-utility-willbe).
 Now, enter in the terminal `will .help .build`:
 
 <details>
@@ -131,7 +131,7 @@ To get the information about all phrases containing the word `submodule`, enter 
 
 The command was incomplete, and the utility `willbe` again offered phrase variants with the specified word.
 
-### Command `.*.list`  
+### Command `.*.list`
 
 Most commands work with the `willfiles` of specific modules.
 
@@ -193,7 +193,7 @@ build :
 
 </details>
 
-Copy the code in the `.will.yml` file.  
+Copy the code in the `.will.yml` file.
 
 Utility `willbe` has the list of [commands that ends on ` .list`](../concept/Command.md#Commands-of-the-utility-willbe). They display a list of resources of the given type of the current module. Therefore, if you type one of the `.*.list` commands in the directory where` willfile `is missing, you will receive a warning about the absence of the module.
 

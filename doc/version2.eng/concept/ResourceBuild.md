@@ -16,12 +16,12 @@ The build named `copy.files` has one step `copy.proto`. Criterion `default : 1` 
 
 ### Resource fields of `build` section
 
-| Field        | Description                                                       |
-|---------------|------------------------------------------------------------------|
-| description   | description for other developers                                 |
-| criterion     | condition of module construction (see [criterion](Criterions.md)) |
-| steps         | sequence of steps to module construction                         |
-| inherit       | inheritance from another build                                   |
+| Field       | Description                                                       |
+|-------------|-------------------------------------------------------------------|
+| description | description for other developers                                  |
+| criterion   | condition of module construction (see [criterion](Criterions.md)) |
+| steps       | sequence of steps to module construction                          |
+| inherit     | inheritance from another build                                    |
 
 ### Resource export
 

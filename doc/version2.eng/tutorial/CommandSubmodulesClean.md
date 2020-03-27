@@ -11,13 +11,12 @@ The command to clear the module from the temporary and downloaded submodules.
 
 ```
  submodulesClean
-          └── .will.yml    
-
+          └── .will.yml
 ```
 
 </details>
 
-To test the command, create the file structure specified above.  
+To test the command, create the file structure specified above.
 
 <details>
     <summary><u>Code of file <code>.will.yml</code></u></summary>
@@ -32,7 +31,6 @@ submodule :
 
   Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools#master
   PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/out/wPathBasic#master
-
 ```
 
 </details>
@@ -53,7 +51,6 @@ To use the `.submodules.clean` command you need to have downloaded submodules.
    + module::Tools version 7db7bd21ac76fc495aae44cc8b1c4474ce5012a4 was downloaded in 16.504s
    . Read : /path_to_file/.module/PathBasic/out/wPathBasic.out.will.yml
    + module::PathBasic version d95a35b7ef1568df823c12efa5bd5e1f4ceec8b7 was downloaded in 5.986s
-
 ```
 
 </details>
@@ -69,14 +66,13 @@ submodulesCommands
         │      ├── PathBasic
         │      └── Tools
         └── .will.yml
-
 ```
 
 </details>
 
 Check the changes in the `submodulesClean` directory after the build. Compare file structure with the above.
 
-Utility created the `.module` directory where the `Tools` and `PathBasic` remote submodules files are downloaded.   
+Utility created the `.module` directory where the `Tools` and `PathBasic` remote submodules files are downloaded.
 
 <details>
   <summary><u>Command output <code>will .submodules.clean</code></u></summary>
@@ -85,7 +81,6 @@ Utility created the `.module` directory where the `Tools` and `PathBasic` remote
 [user@user ~]$ will .submodules.clean
 ...
  - Clean deleted 551 file(s) in 1.753s
-
 ```
 
 </details>
@@ -98,7 +93,6 @@ The `.submodules.clean` command removes the downloaded submodules and the` .modu
 ```
 submodulesCommands
         └── .will.yml
-
 ```
 
 </details>
