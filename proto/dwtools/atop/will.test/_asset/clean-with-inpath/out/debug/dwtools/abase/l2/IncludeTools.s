@@ -762,7 +762,7 @@ _sourceFileResolve.defaults =
 
 function toolsPathGet()
 {
-  return _.path.normalize( __dirname + '/../../../../../dwtools/Tools.s' );
+  return _.path.normalize( __dirname + '/../../../../dwtools/Tools.s' );
 }
 
 // --
