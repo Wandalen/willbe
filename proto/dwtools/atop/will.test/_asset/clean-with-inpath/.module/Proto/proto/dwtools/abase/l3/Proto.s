@@ -9,7 +9,7 @@
 
 /**
  * Collection of routines to define classes and relations between them.
- * @namespace Tools( module::Proto )
+ * @namespace Tools.Proto 
  * @augments wTools
  * @memberof module:Tools/base/Proto
  */
