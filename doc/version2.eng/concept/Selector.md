@@ -47,10 +47,10 @@ The algorithm performs a verification of the resources on the coincidence of the
 
 ### Use of assertions
 
-![assertions.png](../../images/assertions.png)  
+![assertions.png](../../images/assertions.png)
 
 The figure on the left shows a variant of the resource's erroneous writing. Because of the [lack of criterions](Criterions.md) in the `export.multi` step the `step::export.*=1` the selector in the  `build::export` build will choose `step::export.single` and `step::export.multi` steps, which is contrary to the developer's expectation. Thanks to assertion `= 1` the error will be localized.
 
-![assertion.message.png](../../images/assertion.message.png)  
+![assertion.message.png](../../images/assertion.message.png)
 
 Error message in resources selection for the `willfile` due to the assertion's triggering.

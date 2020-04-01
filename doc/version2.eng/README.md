@@ -123,7 +123,7 @@ A special kind of build which is required in order to use this module by other d
   <summary><a href="./concept/ResourcePath.md#Section-path">
     Section <code>path</code>
   </a></summary>
-    Section has the list of the module paths for quick orientation in its file structure.  
+    Section has the list of the module paths for quick orientation in its file structure.
 </details>
 
 <details>
@@ -250,7 +250,9 @@ A string which has phrase which describes intention of a developer and actions w
     Criterion
   </a></summary>
     Element of comparison for selection of resources.
-</details><details>
+</details>
+
+<details>
   <summary><a href="./concept/SectionAbout.md">
     Section <code>about</code>
   </a></summary>
@@ -455,6 +457,7 @@ A string which has phrase which describes intention of a developer and actions w
     Build of some builds of the module for construction of it.
 </details>
 
+<!--
 <details>
   <summary><a href="./tutorial/StepSubmodules.md">
     Predefined steps
@@ -468,6 +471,7 @@ A string which has phrase which describes intention of a developer and actions w
   </a></summary>
     How to use criterions for resource selection.
 </details>
+-->
 
 <details>
   <summary><a href="./tutorial/CriterionDefault.md">
@@ -476,6 +480,7 @@ A string which has phrase which describes intention of a developer and actions w
     How to construct the build without explicit specification of the argument for command <code>.build</code>.
 </details>
 
+<!--
 <details>
   <summary><a href="./tutorial/WillFileMinimization.md">
     Minimization of <code>willfile</code>
@@ -617,14 +622,14 @@ A string which has phrase which describes intention of a developer and actions w
 </details>
 
 <details>
-  <summary><a href="./tutorial/StepView.md">
+  <summary><a href="./tutorial/StepFileView.md">
     Predefined step <code>file.view</code>
   </a></summary>
     How to use predefined step <code>file.view</code> to view files.
 </details>
 
 <details>
-  <summary><a href="./tutorial/StepTranspile.md">
+  <summary><a href="./tutorial/StepFileTranspile.md">
     Transpilation
   </a></summary>
     Using of predefined step <code>files.transpile</code> to transpile <code>JavaScript</code> files or its concatenation.
@@ -664,4 +669,5 @@ A string which has phrase which describes intention of a developer and actions w
   </a></summary>
     How to use the function of combining string arrays in willfile <code>willfile</code>.
 </details>
+-->
 

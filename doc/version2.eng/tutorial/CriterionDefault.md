@@ -120,7 +120,6 @@ defaultBuild
      ├── package.json
      ├── package-lock.json
      └── .will.yml
-
 ```
 
 </details>

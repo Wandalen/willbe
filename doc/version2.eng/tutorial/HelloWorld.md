@@ -18,9 +18,9 @@ first               # directory, the name is arbitrary
   └── .will.yml     # configuration file
 
 ```
-</details> 
+</details>
 
-To create the first module create an empty `first` directory. In the newly created directory `first` create an empty file named `.will.yml`. 
+To create the first module create an empty `first` directory. In the newly created directory `first` create an empty file named `.will.yml`.
 
 <details>
   <summary><u>Code of the file <code>.will.yml</code></u></summary>
@@ -72,8 +72,8 @@ First construction of the module.
   <summary><u>Files structure</u></summary>
 
 ```
-first              
-  └── .will.yml     
+first
+  └── .will.yml
 
 ```
 </details>
@@ -141,15 +141,15 @@ The `will .submodules.download` command is used to download remote submodules. I
 ```
 [user@user ~]$ ls -al
 ...
-drwxr-xr-x 4 user user 4096 Мар 12 07:20 .module
--rw-r--r-- 1 user user  306 Мар  1 11:20 .will.yml
+drwxr-xr-x 4 user user 4096 Mar 12 07:20 .module
+-rw-r--r-- 1 user user  306 Mar  1 11:20 .will.yml
 
 ```
 
 ```
 [user@user ~]$ ls -al module/
 ...
-drwxr-xr-x 4 user user 4096 Мар 12 07:20 Tools
+drwxr-xr-x 4 user user 4096 Mar 12 07:20 Tools
 
 ```
 
@@ -209,9 +209,9 @@ The `about` section has a simpler form of writing.
 
 ### Summary
 
-- Constructed modules are possible to use by connecting them as submodules in the `submodule` section. 
+- Constructed modules are possible to use by connecting them as submodules in the `submodule` section.
 - Console output of resources has form `Section name::Resource name`.
 - The `about` section contains descriptive information.
 
-[Next tutorial](CommandsSubmodules.md)   
+[Next tutorial](CommandsSubmodules.md)
 [Return to content](../README.md#tutorials)

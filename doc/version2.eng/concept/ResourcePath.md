@@ -14,12 +14,12 @@ The example contains the section `path` with paths `in`, `out`, `toDelete`. The 
 
 ### Resource fields of section `path`
 
-| Field          | Description                                 |
-|----------------|---------------------------------------------|
-| path           | Path to the file                            |
-| description    | Description of the directory                |
-| criterion      | Condition of resource using (see [criterion](Criterions.md)) |
-| inherit        | Inheritance from another resource   |
+| Field       | Description                                                  |
+|-------------|--------------------------------------------------------------|
+| path        | Path to the file                                             |
+| description | Description of the directory                                 |
+| criterion   | Condition of resource using (see [criterion](Criterions.md)) |
+| inherit     | Inheritance from another resource                            |
 
 ### Predefined paths
 
@@ -35,4 +35,4 @@ The module contains next predefined paths which are available for use:
 
 ### Section <code>path</code>
 
-Section has the list of the module paths for quick orientation in its file structure.  
+Section has the list of the module paths for quick orientation in its file structure.
