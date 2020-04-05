@@ -19,9 +19,9 @@ submodule :
 
 ### Resource fields of the `submodule` section
 
-| Field          | Description                                    |
-|----------------|------------------------------------------------|
-| path           | path to submodule, may be absolute/relative, local/global |
-| description    | description for other developers                          |
-| criterion      | condition of resource using (see [criterion](Criterions.md)) |
-| inherit        | inheritance of the values of the fields of another submodule    |
+| Field       | Description                                                  |
+|-------------|--------------------------------------------------------------|
+| path        | path to submodule, may be absolute/relative, local/global    |
+| description | description for other developers                             |
+| criterion   | condition of resource using (see [criterion](Criterions.md)) |
+| inherit     | inheritance of the values of the fields of another submodule |

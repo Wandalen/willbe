@@ -24,12 +24,12 @@ The `step` section contains two steps for `export.proto`, `view`. The `export.pr
 
 ### Common fields of the step
 
-| Field          | Description                                                             |
-|----------------|------------------------------------------------------------------|
-| description    | descriptive information for other developers                          |
-| criterion      | condition of use of the resource (see [criterion](Criterions.md))     |
-| opts           | additional options can be transmitted through the map `opts`            |
-| inherit        | inheritance from other steps                       |
+| Field       | Description                                                       |
+|-------------|-------------------------------------------------------------------|
+| description | descriptive information for other developers                      |
+| criterion   | condition of use of the resource (see [criterion](Criterions.md)) |
+| opts        | additional options can be transmitted through the map `opts`      |
+| inherit     | inheritance from other steps                                      |
 
 ## Section <code>step</code>
 
@@ -38,7 +38,7 @@ The section contains steps that can be used by the build to build the module.
  the `build` scenario section to implement the build.
 
  ### List of predefined steps
- ### Predefined step `files.delete`  
+ ### Predefined step `files.delete`
 
  Designed to delete files in the specified path.
 
@@ -53,9 +53,9 @@ The section contains steps that can be used by the build to build the module.
 
  In `delete.files` step is [inherited](Inheritance.md),from `files.delete`. This step removes files by path `path::fileToDelete`.
 
-### Predefined step `files.reflect`  
+### Predefined step `files.reflect`
 
- This is the step for copying the files by means of [reflector](ResourceReflector.md#Resource-reflector).  
+ This is the step for copying the files by means of [reflector](ResourceReflector.md#Resource-reflector).
 
  Reflectors choose a set of files over which to perform some operation. The step `files.reflect` performs the copying of files from one place to another. By default, copying is performed with the storing of hard-links between a couple of files. This means that the destination file and the source file will have the same content. Furthermore any changes made to one of the files will be displayed by the operating system in another file.
 
@@ -72,7 +72,7 @@ The section contains steps that can be used by the build to build the module.
 
  The step `reflect.files` is [inherited](Inheritance.md) from `files.reflect`. To select the files, the step uses the reflector `reflect.some.files`. Level of verbal output - 3.
 
- ### Predefined step `js.run`   
+ ### Predefined step `js.run`
 
  Designed to execute JavaScript files while module constructing.
 
@@ -148,9 +148,9 @@ reflect.js.files :
 
 Move files from the `path::filesFrom` and place them in `{path :: filesTo}/file.js`.
 
-### Predefined step `module.export`  
+### Predefined step `module.export`
 
-Designed for a special type of module construction - export. The result of the construction is the generated `out-willfile` and , optionally, the archive with the exported files.  
+Designed for a special type of module construction - export. The result of the construction is the generated `out-willfile` and , optionally, the archive with the exported files.
 
 The generated `out-willfile` contains the complete information about the module and the exported files, the list of the exported files, version and so on.
 
@@ -170,7 +170,7 @@ step:                                   # Name of the section
 
 While construction, files will be exported through `path::proto` and the file archive creation is disabled.
 
-### Predefined step `file.view`  
+### Predefined step `file.view`
 
 Designed to open the local or remote files to the view by the user of the system.
 
@@ -228,7 +228,7 @@ build:                                  # Name of the section
   submodules.download:                  # Name of the build
     steps:                              # Steps - scenario of the build
     - clean
-    - submodules.download                          
+    - submodules.download
 
 ```
 

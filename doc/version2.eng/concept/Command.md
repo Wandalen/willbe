@@ -4,7 +4,7 @@ A string which has a phrase which describes the intention of a developer and act
 
 ### Phrase
 
-The word or a couple of words which are separated by a point. It specifies the command to be executed by the utility.  
+The word or a couple of words which are separated by a point. It specifies the command to be executed by the utility.
 
 A point separates the words of the phrase on the parts, it facilitates typing and reading processes.
 
