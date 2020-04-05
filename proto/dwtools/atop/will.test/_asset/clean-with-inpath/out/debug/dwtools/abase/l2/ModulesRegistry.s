@@ -129,6 +129,12 @@ let wTraverser =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.traverse },
 }
 
+let wBaseEncoder =
+{
+  sourcePath : sourcePath( 'abase/l4/Encoder.s', 'wbaseencoder' ),
+  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.encode },
+}
+
 // base / l5
 
 let wPathTools =
@@ -231,20 +237,14 @@ let wFieldsStack =
 
 let wProcedure =
 {
-  sourcePath : sourcePath( 'abase/l8/Procedure.s', 'wprocedure' ),
+  sourcePath : sourcePath( 'abase/l8_procedure/Include.s', 'wprocedure' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.procedure },
 }
 
 let wGdfStrategy =
 {
-  sourcePath : sourcePath( 'abase/l8/GdfConverter.s', 'wgdfstrategy' ),
+  sourcePath : sourcePath( 'abase/l8_gdf/GdfConverter.s', 'wgdfstrategy' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Gdf },
-}
-
-let wBaseEncoder =
-{
-  sourcePath : sourcePath( 'abase/l4/Encoder.s', 'wbaseencoder' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.encode },
 }
 
 // base / l9
@@ -679,6 +679,7 @@ let Modules =
   // base / l3
 
   wProto,
+  wStringer,
 
   // base / l4
 
@@ -689,7 +690,7 @@ let Modules =
   wAppBasic,
   wUriBasic,
   wTraverser,
-  wStringer,
+  wBaseEncoder,
 
   // base / l5
 
@@ -722,7 +723,6 @@ let Modules =
 
   wProcedure,
   wGdfStrategy,
-  wBaseEncoder,
 
   // base / l9
 
