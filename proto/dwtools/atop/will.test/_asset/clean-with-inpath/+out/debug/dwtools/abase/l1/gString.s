@@ -73,7 +73,7 @@ function strIsolate_pre( routine, args )
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
  * @throws { Exception } Throw an exception if( o.delimeter ) is not a Array or String.
  * @throws { Exception } Throw an exception if( o ) is extended by unknown property.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -419,7 +419,7 @@ strIsolate_body.defaults =
  * @throws { Exception } Throw an exception if no argument provided.
  * @throws { Exception } Throw an exception if( o ) is not a Map.
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -478,7 +478,7 @@ strIsolateLeftOrAll_body.defaults =
  * @throws { Exception } Throw an exception if no argument provided.
  * @throws { Exception } Throw an exception if( o ) is not a Map.
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -628,7 +628,7 @@ strIsolateRightOrAll_body.defaults =
   * @throws { Exception } If source string {-str-} is not a String.
   * @throws { Exception } If delimeter {-begin-} is not a String or an Array of strings.
   * @throws { Exception } If delimeter {-end-} is not a String or an Array of strings.
-  * @memberof wTools
+  * @namespace Tools
   */
 
 function strIsolateInsideSignle( src, begin, end )
@@ -777,7 +777,7 @@ function strIsolateInsideSignle( src, begin, end )
   * @throws { Exception } If source string {-str-} is not a String.
   * @throws { Exception } If delimeter {-begin-} is not a String or an Array of strings.
   * @throws { Exception } If delimeter {-end-} is not a String or an Array of strings.
-  * @memberof wTools
+  * @namespace Tools
   */
 
 function strIsolateInside( src, begin, end )

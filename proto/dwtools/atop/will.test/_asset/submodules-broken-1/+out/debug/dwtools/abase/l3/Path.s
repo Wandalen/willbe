@@ -14,7 +14,8 @@
 /**
  * @summary Collection of routines to operate paths reliably and consistently.
  * @namespace "wTools.path"
- * @memberof module:Tools/PathBasic
+ * @extends Tools
+ * @module Tools/PathBasic
  */
 
 if( typeof module !== 'undefined' )
@@ -137,7 +138,7 @@ function isElement( pathElement )
  * @param {String} filePath Source path for check
  * @returns {boolean}
  * @function isSafe
- * @memberof module:Tools/PathBasic.wTools.path
+ * @namespace Tools.path
  */
 
 function isSafe( filePath,level )
@@ -192,7 +193,7 @@ function isSafe( filePath,level )
 //  * @param {String} filePath Source path for check
 //  * @returns {boolean}
 //  * @function isRefined
-//  * @memberof module:Tools/PathBasic.wTools.path
+//  * @namespace Tools.path
 //  */
 //
 // function isRefined( path )
@@ -219,7 +220,7 @@ function isSafe( filePath,level )
 // //  * @param {String} filePath Source path for check
 // //  * @returns {boolean}
 // //  * @function isRefined
-// //  * @memberof module:Tools/PathBasic.wTools.path
+// //  * @namespace Tools.path
 // //  */
 // //
 // // function isRefined( path )
@@ -240,7 +241,7 @@ function isSafe( filePath,level )
 //  * @param {String} filePath Source path for check
 //  * @returns {boolean}
 //  * @function isNormalized
-//  * @memberof module:Tools/PathBasic.wTools.path
+//  * @namespace Tools.path
 //  */
 //
 // function isNormalized( filePath )
@@ -259,7 +260,7 @@ function isSafe( filePath,level )
 //  * @param {String} filePath Source path for check
 //  * @returns {boolean}
 //  * @function isNormalized
-//  * @memberof module:Tools/PathBasic.wTools.path
+//  * @namespace Tools.path
 //  */
 //
 // function isNormalized( filePath )
@@ -458,7 +459,7 @@ function hasSymbolBase( srcPath )
 //   * @throws {Error} If {-arguments.length-} is less or more then one.
 //   * @throws {Error} If passed argument is not a string.
 //   * @function refine
-//   * @memberof module:Tools/PathBasic.wTools.path
+//   * @namespace Tools.path
 //   */
 //
 // function refine( src )
@@ -615,7 +616,7 @@ function hasSymbolBase( srcPath )
 //  * @param {string} src path for normalization
 //  * @returns {string}
 //  * @function normalize
-//  * @memberof module:Tools/PathBasic.wTools.path
+//  * @namespace Tools.path
 //  */
 //
 // function normalize( src )
@@ -827,7 +828,7 @@ function hasSymbolBase( srcPath )
 //  * @returns {string}
 //  * @throws {Error} If argument is not string
 //  * @function dir
-//  * @memberof module:Tools/PathBasic.wTools.path
+//  * @namespace Tools.path
 //  */
 //
 // function dir_pre( routine, args )
@@ -937,7 +938,7 @@ function hasSymbolBase( srcPath )
  * @returns {string}
  * @throws {Error} If passed argument is not string.
  * @function prefixGet
- * @memberof module:Tools/PathBasic.wTools.path
+ * @namespace Tools.path
  */
 
 function prefixGet( path )
@@ -970,7 +971,7 @@ function prefixGet( path )
  * @returns {string}
  * @throws {Error} If passed argument is not string
  * @function name
- * @memberof module:Tools/PathBasic.wTools.path
+ * @namespace Tools.path
  */
 
 function name_pre( routine, args )
@@ -1032,7 +1033,7 @@ fullName.defaults.full = 1;
  * @returns {string}
  * @throws {Error} If passed argument is not string
  * @function withoutExt
- * @memberof module:Tools/PathBasic.wTools.path
+ * @namespace Tools.path
  */
 
 function withoutExt( path )
@@ -1062,7 +1063,7 @@ function withoutExt( path )
  * @returns {string} file extension
  * @throws {Error} If passed argument is not string.
  * @function ext
- * @memberof module:Tools/PathBasic.wTools.path
+ * @namespace Tools.path
  */
 
 function ext( path )
@@ -1117,7 +1118,7 @@ function exts( path )
  * @returns {string}
  * @throws {Error} If passed argument is not string
  * @function changeExt
- * @memberof module:Tools/PathBasic.wTools.path
+ * @namespace Tools.path
  */
 
 // qqq : extend tests | Dmytro : coverage is extended
@@ -1182,7 +1183,7 @@ function _pathsChangeExt( src )
  * @throws {Error} If elements of `paths` are not strings
  * @throws {Error} If o has extra parameters.
  * @function join_body
- * @memberof module:Tools/PathBasic.wTools.path
+ * @namespace Tools.path
  */
 
 function join_pre( routine, args )
@@ -1317,7 +1318,7 @@ join_body.defaults =
  * @returns {string} Result path is the concatenation of all `paths` with '/' directory delimeter.
  * @throws {Error} If one of passed arguments is not string
  * @function join
- * @memberof module:Tools/PathBasic.wTools.path
+ * @namespace Tools.path
  */
 
 let join = _.routineFromPreAndBody( join_pre, join_body );
@@ -1412,7 +1413,7 @@ function joinCross()
  * @returns {string} Result path is the concatenation of all `paths` with '/' directory delimeter.
  * @throws {Error} If one of passed arguments is not string
  * @function reroot
- * @memberof module:Tools/PathBasic.wTools.path
+ * @namespace Tools.path
  */
 
 let reroot = _.routineFromPreAndBody( join_pre, join_body );
@@ -1448,7 +1449,7 @@ reroot.defaults =
  * @param [...string] paths A sequence of paths or path segments
  * @returns {string}
  * @function resolve
- * @memberof module:Tools/PathBasic.wTools.path
+ * @namespace Tools.path
  */
 
 function resolve()
@@ -1815,7 +1816,7 @@ function from( src )
 * //'./d'
 *
 * @function _relative
-* @memberof module:Tools/PathBasic.wTools.path
+* @namespace Tools.path
 */
 
 function _relative( o )
@@ -2080,7 +2081,7 @@ _relative.defaults =
 * //'../../c/d'
 *
 * @function relative
-* @memberof module:Tools/PathBasic.wTools.path
+* @namespace Tools.path
 */
 
 function relative_pre( routine, args )

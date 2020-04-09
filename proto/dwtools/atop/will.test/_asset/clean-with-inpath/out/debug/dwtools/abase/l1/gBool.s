@@ -19,7 +19,7 @@ let _ObjectHasOwnProperty = Object.hasOwnProperty;
  * @summary Converts argument( src ) to boolean.
  * @function boolFrom
  * @param {*} src - entity to convert
- * @memberof wTools
+ * @namespace Tools
  */
 
 function boolFrom( src )

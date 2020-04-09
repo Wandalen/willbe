@@ -203,7 +203,7 @@ let regexpsEscape = null;
  * @throws {Error} Throw error with message 'unknown type of expression, expects regexp or string, but got' error
  if src not string-like ( string or regexp )
  * @function regexpFrom
- * @memberof wTools
+ * @namespace Tools
  */
 
 function regexpFrom( src, flags )
@@ -499,7 +499,7 @@ regexpsAtLeastFirst.defaults =
  * @throws {Error} If passed arguments are not strings or options map.
  * @throws {Error} If options contains any different from 'but' or 'atLeastOnce' properties.
  * @function regexpsNone
- * @memberof wTools
+ * @namespace Tools
  */
 
 function regexpsNone( o )
@@ -626,7 +626,7 @@ regexpsAll.defaults =
  * @returns {RegExp[]} Array of regexps
  * @throw {Error} if `src` in not string, regexp, or array
  * @function regexpArrayMake
- * @memberof wTools
+ * @namespace Tools
  */
 
 function regexpArrayMake( src )
@@ -672,7 +672,7 @@ function regexpArrayMake( src )
  * @throws {Error} If second argument is not string.
  * @throws {Error} If element of array is not RegExp.
  * @function regexpArrayIndex
- * @memberof wTools
+ * @namespace Tools
  */
 
 function regexpArrayIndex( arr,ins )
@@ -716,7 +716,7 @@ function regexpArrayIndex( arr,ins )
  * @returns {*} Returns the first match index, false if input array of regexp was empty or default value otherwise
  * @thows {Error} If missed one of arguments
  * @function regexpArrayAny
- * @memberof wTools
+ * @namespace Tools
  */
 
 function regexpArrayAny( arr, ins, ifEmpty )
@@ -761,7 +761,7 @@ function regexpArrayAny( arr, ins, ifEmpty )
  * @returns {*} Returns the first match index, false if input array of regexp was empty or default value otherwise
  * @thows {Error} If missed one of arguments
  * @function regexpArrayAll
- * @memberof wTools
+ * @namespace Tools
  */
 
 function regexpArrayAll( arr, ins, ifEmpty )

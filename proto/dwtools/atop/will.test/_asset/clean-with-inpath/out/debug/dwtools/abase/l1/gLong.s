@@ -50,7 +50,7 @@ let _ObjectPropertyIsEumerable = Object.propertyIsEnumerable;
  * @throws { Error } If passed arguments is less than one or more than two.
  * @throws { Error } If the first argument is not an long.
  * @throws { Error } If the second argument is not a Routine.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function longOnce( dstLong, onEvaluate )
@@ -365,7 +365,7 @@ function longNoneAreRepeated( src, onEvalutate )
  * @throws { Error } Will throw an Error if (srcArray) is not an array-like.
  * @throws { Error } Will throw an Error if (mask) is not an array-like.
  * @throws { Error } Will throw an Error if length of both (srcArray and mask) is not equal.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function longMask( srcArray, mask )
@@ -560,7 +560,7 @@ longUnmask.defaults =
  * @throws { Error } If {-range-} or {-o.range-} is not Range or not Number.
  * @throws { Error } If {-length-} or {-o.length-} is not Number or not Range.
  * @throws { Error } If {-o.onEach-} is not routine.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function longRandom( o )
@@ -635,7 +635,7 @@ longRandom.defaults =
  * @throws { Error } If passed arguments is less than one or more than one.
  * @throws { Error } If the first argument is not an array-like object.
  * @throws { Error } If the length of the (range) is not equal to the two.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function longFromRange( range )
@@ -797,7 +797,7 @@ function longFromRangeWithNumberOfSteps( range , numberOfSteps )
 //  * @returns { Object } Returns an Object.
 //  * @function longToMap
 //  * @throws { Error } Will throw an Error if (array) is not an array-like.
-//  * @memberof wTools
+//  * @namespace Tools
 //  */
 //
 // function longToMap( array )
@@ -836,7 +836,7 @@ function longFromRangeWithNumberOfSteps( range , numberOfSteps )
 //  * If (src.length) is empty, it returns the empty string.
 //  * @function longToStr
 //  * @throws { Error } Will throw an Error If (options.type) is not the number or float.
-//  * @memberof wTools
+//  * @namespace Tools
 //  */
 //
 // function longToStr( src, options )
@@ -902,7 +902,7 @@ function longFromRangeWithNumberOfSteps( range , numberOfSteps )
  * @function longShrinkWithIndices
  * @throws { Error } If passed arguments is not array like object.
  * @throws { Error } If the scalarsPerElement property is not equal to 1.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function longShrinkWithIndices( srcArray, indicesArray )
@@ -993,7 +993,7 @@ function longShuffle( dst, times )
  * @throws { Error } If the first argument in not an array.
  * @throws { Error } If the second argument is less than 0 and more than a length initial array.
  * @throws { Error } If the third argument is less than 0 and more than a length initial array.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function longSwapElements( dst, index1, index2 )
@@ -1042,7 +1042,7 @@ function longSwapElements( dst, index1, index2 )
  * @throws { Error } Will throw an Error if (arguments.length) is less than one.
  * @throws { Error } Will throw an Error if (dstArray) is not an array-like.
  * @throws { Error } Will throw an Error if (dstOffset) is not a Number.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function longPut( dstArray, dstOffset )
@@ -1105,7 +1105,7 @@ function longPut( dstArray, dstOffset )
  * @function longSupplement
  * @throws { Error } Will throw an Error if (dstArray) is not an array-like.
  * @throws { Error } Will throw an Error if (arguments[...]) is/are not the array-like.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function longSupplement( dstArray )
@@ -1185,7 +1185,7 @@ function longSupplement( dstArray )
  * @throws { Error } Will throw an Error if (screenArray) is not an array-like.
  * @throws { Error } Will throw an Error if (dstArray) is not an array-like.
  * @throws { Error } Will throw an Error if (arguments[...]) is/are not an array-like.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function longExtendScreening( screenArray, dstArray )
@@ -1266,7 +1266,7 @@ function longExtendScreening( screenArray, dstArray )
  * @throws { Error } If {-dstLong-} is not null or not a Long.
  * @throws { Error } If arguments.length === 3 and {-srcLong-} is not a Long.
  * @throws { Error } If onEvaluate.length is less then one or more then two.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function longSort( dstLong, srcLong, onEvaluate )
@@ -1373,7 +1373,7 @@ function longSort( dstLong, srcLong, onEvaluate )
 //  * @throws { Error } If passed arguments is less than one or more than two.
 //  * @throws { Error } If the first argument is not an array-like object.
 //  * @throws { Error } If the second argument is not a Routine.
-//  * @memberof wTools
+//  * @namespace Tools
 //  */
 //
 // function longSum( src, onEvaluate )

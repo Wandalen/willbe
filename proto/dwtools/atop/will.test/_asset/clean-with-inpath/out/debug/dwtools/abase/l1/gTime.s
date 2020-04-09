@@ -160,7 +160,7 @@ function readyJoin( context, routine, args )
  * @throws {Error} If ( delay ) is not a Number.
  * @throws {Error} If ( onEnd ) is not a routine or wConsequence instance.
  * @function time.out
- * @memberof wTools
+ * @namespace Tools
  */
 
 function out_pre( routine, args )
@@ -349,7 +349,7 @@ let out = _.routineFromPreAndBody( out_pre, out_body );
  * @throws {Error} If ( delay ) is not a Number.
  * @throws {Error} If ( onReady ) is not a routine or wConsequence instance.
  * @function time.outError
- * @memberof wTools
+ * @namespace Tools
  */
 
 /* zzz : remove the body, use out_body */

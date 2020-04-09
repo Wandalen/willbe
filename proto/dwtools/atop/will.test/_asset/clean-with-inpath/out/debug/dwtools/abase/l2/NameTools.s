@@ -23,7 +23,7 @@ var _arraySlice = _.longSlice;
  * @param {string} nameString - object coded name or string.
  * @return {object} nameKeyValue - name in key/value format.
  * @method nameFielded
- * @memberof wTools
+ * @namespace Tools
  */
 
 function nameFielded( nameString )
@@ -50,7 +50,7 @@ function nameFielded( nameString )
  * @param {object} nameObject - fielded name or name as string.
  * @return {object} name splitted in coded/raw fields.
  * @method nameUnfielded
- * @memberof wTools
+ * @namespace Tools
  */
 
 function nameUnfielded( nameObject )
@@ -90,7 +90,7 @@ function nameUnfielded( nameObject )
  * @param {object} namesMap - fielded names.
  * @return {object} expected map.
  * @method namesCoded
- * @memberof wTools
+ * @namespace Tools
  */
 
 function namesCoded( namesMap )
@@ -238,7 +238,7 @@ function idWithGuid()
  *
  * @return { String } - Returns GUID v4.
  * @function idWithTimeGuid
- * @memberof wTools
+ * @namespace Tools
  */
 
 function idWithTimeGuid()

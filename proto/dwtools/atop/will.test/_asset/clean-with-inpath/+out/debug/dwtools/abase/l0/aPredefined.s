@@ -7,12 +7,14 @@
  */
 
 /**
-  @module Tools/base/Fundamental - Collection of general purpose tools for solving problems. Fundamentally extend JavaScript without spoiling namespace, so may be used solely or in conjunction with another module of such kind. Tools contain hundreds of routines to operate effectively with Array, SortedArray, Map, RegExp, Buffer, Time, String, Number, Routine, Error and other fundamental types. The module provides advanced tools for diagnostics and errors handling. Use it to have a stronger foundation for the application.
+  Collection of general purpose tools for solving problems. Fundamentally extend JavaScript without spoiling namespace, so may be used solely or in conjunction with another module of such kind. Tools contain hundreds of routines to operate effectively with Array, SortedArray, Map, RegExp, Buffer, Time, String, Number, Routine, Error and other fundamental types. The module provides advanced tools for diagnostics and errors handling. Use it to have a stronger foundation for the application.
+  @module Tools/base/Fundamental
 */
 
 /**
  * wTools - Generic purpose tools of base level for solving problems in Java Script.
- * @namespace wTools
+ * @namespace Tools
+ * @module Tools/base/Fundamental
  */
 
 // global

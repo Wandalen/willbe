@@ -14,7 +14,7 @@ let Self = _.module.lateModules;
 
 /**
  * @typedef {Object} ModulesRegistry - Map that contains info about modules, is uses by {@link wTools.include}.
- * @memberof wTools
+ * @namespace Tools
  */
 
 // --

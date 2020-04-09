@@ -184,7 +184,7 @@ function strsNoneHas( srcs, ins )
  * @throws { Exception } Throw an exception if( src ) is not a String.
  * @throws { Exception } Throw an exception if( ins ) is not a String.
  * @throws { Exception } Throw an exception if( arguments.length ) is not equal 2.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -335,7 +335,7 @@ function strsLongest()
 //  * @throws { Exception } Throws a exception if( src ) is not a String.
 //  * @throws { Exception } Throws a exception if( prefix ) is not a String.
 //  * @throws { Exception } Throws a exception if( arguments.length ) is not equal 2.
-//  * @memberof wTools
+//  * @namespace Tools
 //  *
 //  */
 //
@@ -410,7 +410,7 @@ function strsLongest()
 //  * @throws { Exception } Throws a exception if( src ) is not a String.
 //  * @throws { Exception } Throws a exception if( postfix ) is not a String.
 //  * @throws { Exception } Throws a exception if( arguments.length ) is not equal 2.
-//  * @memberof wTools
+//  * @namespace Tools
 //  *
 //  */
 //
@@ -496,7 +496,7 @@ function _strRemoved( srcStr, insStr )
 * @throws { Exception } Throws a exception if( srcStr ) is not a String.
 * @throws { Exception } Throws a exception if( insStr ) is not a String or a RegExp.
 * @throws { Exception } Throws a exception if( arguments.length ) is not equal 2.
-* @memberof wTools
+* @namespace Tools
 *
 */
 
@@ -645,7 +645,7 @@ function strRemove( srcStr, insStr )
 // * @throws { Exception } Throws a exception if( insStr ) is not a String or a RegExp.
 // * @throws { Exception } Throws a exception if( subStr ) is not a String.
 // * @throws { Exception } Throws a exception if( arguments.length ) is not equal 3.
-// * @memberof wTools
+// * @namespace Tools
 // *
 // */
 //
@@ -694,7 +694,7 @@ function strRemove( srcStr, insStr )
   *
   * @returns { String } Returns result of prepending string( begin ) to source( src ) or original string.
   * @function strPrependOnce
-  * @memberof wTools
+  * @namespace Tools
   */
 
 function strPrependOnce( src, begin )
@@ -724,7 +724,7 @@ function strPrependOnce( src, begin )
   *
   * @returns {string} Returns result of appending string( end ) to source( src ) or original string.
   * @function strAppendOnce
-  * @memberof wTools
+  * @namespace Tools
   */
 
 function strAppendOnce( src, end )
@@ -757,7 +757,7 @@ function strAppendOnce( src, end )
  * @throws { Exception } Throws a exception if( sub ) is not a Array.
  * @throws { TypeError } Throws a exception if( src ) is not a String.
  * @throws { Exception } Throws a exception if( arguments.length ) is not equal 3.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -816,7 +816,7 @@ function strReplaceWords( src, ins, sub )
  * @returns { String } - Returns found common symbols.
  * @function strCommonLeft
  * @throws { Error } If {-ins-} is not a String.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -876,7 +876,7 @@ function strCommonLeft( ins )
  * @returns { String } - Returns found common symbols.
  * @function strCommonRight
  * @throws { Error } If {-ins-} is not a String.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -961,7 +961,7 @@ function strCommonRight( ins )
  * @throws { Error } If arguments.length is less or more then one.
  * @throws { Error } If options map {-o-} has unnacessary fields.
  * @throws { Error } If parameter {-length-} or option {-o.length-} is not a Number and not a Range.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -1038,7 +1038,7 @@ strRandom.defaults =
  * @throws { Error } If arguments.length is less then one.
  * @throws { Error } If range.length is less or more then two.
  * @throws { Error } If range[ 0 ] or range[ 1 ] is not a Number and not a String.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -1156,7 +1156,7 @@ function strForCall( nameOfRoutine, args, ret, o )
  * @throws { Exception } If( o.limit ) is not a Number.
  * @throws { Exception } If( o.wrap ) is not a String.
  *
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -1276,7 +1276,7 @@ function strDifference( src1, src2, o )
  * @method strCapitalize
  * @throws { Exception } Throw an exception if( src ) is not a String.
  * @throws { Exception } Throw an exception if( arguments.length ) is not equal 1.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -1334,7 +1334,7 @@ function strDecapitalize( src )
  *
  * @method strEscape
  * @throw { Exception } If( src ) is not a String.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -1464,7 +1464,7 @@ strEscape.defaults =
  * @function strCodeUnicodeEscape
  * @throws { Exception } If arguments.length is less or more then one.
  * @throws { Exception } If {-src-} is not a Number.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -1507,7 +1507,7 @@ function strCodeUnicodeEscape( code )
  * @function strUnicodeEscape
  * @throws { Exception } If arguments.length is less or more then one.
  * @throws { Exception } If {-src-} is not a String.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -1572,7 +1572,7 @@ function strReverse( srcStr )
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
  * @throws { Exception } Throw an exception if( o.stripper ) is not a String or Array.
  * @throws { Exception } Throw an exception if object( o ) has been extended by invalid property.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -1655,7 +1655,7 @@ strStrip.defaults =
  * // returns 'a '
  *
  * @method strStripLeft
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -1689,7 +1689,7 @@ strStripLeft.defaults.__proto__ = strStrip.defaults;
  * // returns ' a'
  *
  * @method strStripRight
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -1731,7 +1731,7 @@ strStripRight.defaults.__proto__ = strStrip.defaults;
  * // returns a*b*c*d*e
  *
  * @method strRemoveAllSpaces
- * @memberof wTools
+ * @namespace Tools
  *
 */
 
@@ -1771,7 +1771,7 @@ function _strRemoveAllSpaces( src, sub )
  * @method strStripEmptyLines
  * @throws { Exception } Throw an exception if( srcStr ) is not a String.
  * @throws { Exception } Throw an exception if( arguments.length ) is not equal 1.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -1821,7 +1821,7 @@ function _strStripEmptyLines( srcStr )
  * @method strSplitStrNumber
  * @throws { Exception } Throw an exception if( src ) is not a String.
  * @throws { Exception } Throw an exception if no argument provided.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -2671,7 +2671,7 @@ strSplitChunks.defaults =
 //  * @throws { Exception } Throw an exception if( o.src ) is not a String.
 //  * @throws { Exception } Throw an exception if( o.delimeter ) is not a String or an Array.
 //  * @throws { Exception } Throw an exception if object( o ) has been extended by invalid property.
-//  * @memberof wTools
+//  * @namespace Tools
 //  *
 //  */
 //
@@ -2790,7 +2790,7 @@ strSplitChunks.defaults =
 //  * @throws { Exception } Throw an exception if( o.src ) is not a String.
 //  * @throws { Exception } Throw an exception if( o.delimeter ) is not a String or an Array.
 //  * @throws { Exception } Throw an exception if object( o ) has been extended by invalid property.
-//  * @memberof wTools
+//  * @namespace Tools
 //  *
 //  */
 //
@@ -3087,7 +3087,7 @@ strSplitChunks.defaults =
 // //  * @throws { Exception } Throw an exception if( o.src ) is not a String.
 // //  * @throws { Exception } Throw an exception if( o.delimeter ) is not a String or an Array.
 // //  * @throws { Exception } Throw an exception if object( o ) has been extended by invalid property.
-// //  * @memberof wTools
+// //  * @namespace Tools
 // //  *
 // //  */
 // //
@@ -3218,7 +3218,7 @@ function strSplitCamel( src )
  * @throws { Error } If arguments.length is less or more then two.
  * @throws { Error } If {-srcStr-} is not a String.
  * @throws { Error } If {-range-} is not a Range.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function strOnlySingle( srcStr, range )
@@ -3309,7 +3309,7 @@ Dmytro : implemented a time ago
  * @throws { Error } If {-srcStr-} is not a String, not a Long.
  * @throws { Error } If {-srcStr-} is a Long and includes not a String value.
  * @throws { Error } If {-range-} is not a Range.
- * @memberof wTools
+ * @namespace Tools
  */
 
 let strOnly = _.vectorize( strOnlySingle );
@@ -3378,7 +3378,7 @@ let strOnly = _.vectorize( strOnlySingle );
  * @throws { Error } If {-srcStr-} is not a String.
  * @throws { Error } If {-range-} is not a Range.
  * @throws { Error } If {-ins-} is not a String, not a Long, not undefined.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function strButSingle( srcStr, range, ins )
@@ -3480,7 +3480,7 @@ Dmytro : implemented a time ago
  * @throws { Error } If {-srcStr-} is a Long and includes not a String value.
  * @throws { Error } If {-range-} is not a Range.
  * @throws { Error } If {-ins-} is not a String, not a Long, not undefined.
- * @memberof wTools
+ * @namespace Tools
  */
 
 let strBut = _.vectorize( strButSingle );
@@ -3525,7 +3525,7 @@ let strBut = _.vectorize( strButSingle );
  * @throws { Exception } If {-srcStr-} is not a String.
  * @throws { Exception } If {-maskArray-} is not an Array.
  * @throws { Exception } If {-maskArray-} value is not String or strUnjoin.any.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -3648,7 +3648,7 @@ _.assert( _.routineIs( strUnjoin.any ) );
  * @throws { Exception } If arguments.length is less or more then two.
  * @throws { Exception } If {-s-} is not a String or an array of strings.
  * @throws { Exception } If {-times-} is not a Number.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function _strDup( s, times )
@@ -3706,7 +3706,7 @@ function _strDup( s, times )
  * @throws { Exception } If some object from( srcs ) is not a Array, String or Number.
  * @throws { Exception } If length of arrays in srcs is different.
  * @throws { Exception } If ( joiner ) is not undefined or a string .
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -3890,7 +3890,7 @@ let strJoin = _.routineFromPreAndBody( strJoin_pre, strJoin_body );
  * @throws { Exception } If some object from ( srcs ) is not a Array, String or Number.
  * @throws { Exception } If length of arrays in ( srcs ) is different.
  * @throws { Exception } If ( joiner ) is not a string.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -4031,7 +4031,7 @@ function strJoinPath( srcs, joiner )
  * @function strConcat
  * @throws { Error } If arguments.length is less then one or more than two arguments.
  * @throws { Error } If routine strConcat does not belong module Tools.
- * @memberof wTools
+ * @namespace Tools
  */
 
 /*
@@ -4212,7 +4212,7 @@ strConcat.defaults =
  * @throws { Exception } Throw an exception if( src ) is not a String or Array.
  * @throws { Exception } Throw an exception if( tab ) is not a String.
  * @throws { Exception } Throw an exception if( arguments.length ) is not a equal 2.
- * @memberof wTools
+ * @namespace Tools
  *
  */
 
@@ -4344,7 +4344,7 @@ function strLinesIndentation( src, tab )
  * @throws { Exception } If arguments.length is less then two or more then three.
  * @throws { Exception } If {-src-} is not a String or a Long.
  * @throws { Exception } If {-ins-} is not a String, not a Long, not undefined.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function strLinesBut( src, range, ins )
@@ -4449,7 +4449,7 @@ function strLinesBut( src, range, ins )
  * @function strLinesOnly
  * @throws { Exception } If arguments.length is less then two or more then three.
  * @throws { Exception } If {-src-} is not a String or a Long.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function strLinesOnly( src, range )
@@ -4531,7 +4531,7 @@ function strLinesJoin( src )
  *
  * @method strLinesStrip
  * @throws { Exception } Throw an exception if( src ) is not a String or Array.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function strLinesStrip( src )
@@ -4604,7 +4604,7 @@ function strLinesStrip( src )
  * @method strLinesNumber
  * @throws { Exception } Throw an exception if no argument provided.
  * @throws { Exception } Throw an exception if( o.src ) is not a String or Array.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function strLinesNumber( o )
@@ -4797,7 +4797,7 @@ Dmytro : covered
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
  * @throws { Exception } Throw an exception if( o.range ) is not a Array or Number.
  * @throws { Exception } Throw an exception if( o ) is extended by unknown property.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function strLinesSelect( o )
@@ -4990,7 +4990,7 @@ Dmytro : covered
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
  * @throws { Exception } Throw an exception if( o.charsRange ) is not a Array or Number.
  * @throws { Exception } Throw an exception if( o ) is extended by unknown property.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function strLinesNearest_pre( routine, args )
@@ -5164,7 +5164,7 @@ let strLinesNearestReport = _.routineFromPreAndBody( strLinesNearest_pre, strLin
  * @method strLinesCount
  * @throws { Exception } Throw an exception if( src ) is not a String.
  * @throws { Exception } Throw an exception if no argument provided.
- * @memberof wTools
+ * @namespace Tools
  *
 */
 

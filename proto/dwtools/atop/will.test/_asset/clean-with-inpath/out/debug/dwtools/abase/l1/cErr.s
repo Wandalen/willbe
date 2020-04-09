@@ -813,7 +813,7 @@ diagnosticStructureGenerate_body.defaults =
  * @throws { Error } If arguments.length is more then one.
  * @throws { Error } If options map {-o-} is not mapLike.
  * @throws { Error } If options map {-o-} has unknown options.
- * @memberof wTools
+ * @namespace Tools
  */
 
 let diagnosticStructureGenerate = _.routineFromPreAndBody( diagnosticStructureGenerate_pre, diagnosticStructureGenerate_body );

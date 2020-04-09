@@ -166,7 +166,7 @@ function numbersSlice( src,f,l )
  * @function numberRandom
  * @throws { Error } If arguments.length is less or more then one.
  * @throws { Error } If range {-range-} is not a Number or not a Range.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function numberRandom( range )
@@ -237,7 +237,7 @@ function numberRandom( range )
  * @function intRandom
  * @throws { Error } If arguments.length is less or more then one.
  * @throws { Error } If range {-range-} is not a Number or not a Range.
- * @memberof wTools
+ * @namespace Tools
  */
 
 function intRandom( range )

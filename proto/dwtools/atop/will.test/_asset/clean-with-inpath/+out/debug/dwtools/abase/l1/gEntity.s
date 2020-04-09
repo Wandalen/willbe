@@ -38,7 +38,7 @@ let Self = _global_.wTools;
  *
  * @returns {number} Returns "length" of entity.
  * @function entityLength
- * @memberof wTools
+ * @namespace Tools
 */
 
 function entityLength( src )
@@ -81,7 +81,7 @@ function entityLength( src )
  * // returns null
  *
  * @function uncountableSize
- * @memberof wTools
+ * @namespace Tools
 */
 
 function uncountableSize( src )
@@ -139,7 +139,7 @@ function uncountableSize( src )
  * // returns null
  *
  * @function entitySize
- * @memberof wTools
+ * @namespace Tools
 */
 
 /* qqq : review */
