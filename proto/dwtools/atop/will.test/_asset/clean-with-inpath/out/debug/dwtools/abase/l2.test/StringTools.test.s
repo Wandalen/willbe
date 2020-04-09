@@ -5594,7 +5594,7 @@ function strLinesIndentation( test )
 
 //
 
-function strLinesBut( test ) 
+function strLinesBut( test )
 {
   test.open( 'src - string, range' );
 
@@ -6491,7 +6491,7 @@ function strLinesBut( test )
 
 //
 
-function strLinesOnly( test ) 
+function strLinesOnly( test )
 {
   test.open( 'src - string, range' );
 
@@ -6594,7 +6594,7 @@ function strLinesOnly( test )
   var got = _.strLinesOnly( src, [ 0, -5 ] );
   test.identical( got, '' );
 
-  test.close( 'src - string, range' ); 
+  test.close( 'src - string, range' );
 
   /* - */
 
@@ -7502,8 +7502,28 @@ function strLinesNumberOnLine( test )
 
 function strLinesSelect( test )
 {
-  test.case = 'src - empty line, range - 1';
+  test.case = 'src - empty line, range - negative number';
+  var got = _.strLinesSelect( '', -1 );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty line, range - 0';
+  var got = _.strLinesSelect( '', 0 );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - empty line, range - positive number';
   var got = _.strLinesSelect( '', 1 );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - single line, range - negative number';
+  var got = _.strLinesSelect( 'abc', -1 );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src -single line, range - 0';
+  var got = _.strLinesSelect( 'abc', 0 );
   var expected = '';
   test.identical( got, expected );
 
@@ -7512,8 +7532,20 @@ function strLinesSelect( test )
   var expected = 'abc';
   test.identical( got, expected );
 
-  test.case = 'src -single line, range - 0';
-  var got = _.strLinesSelect( 'abc', 0 );
+  test.case = 'src - single line, range - positive number, range > src.length';
+  var got = _.strLinesSelect( 'abc', 3 );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - multiline, range - negative number';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, -1 );
+  var expected = '';
+  test.identical( got, expected );
+
+  test.case = 'src - multiline, range - 0';
+  var src = 'a\nb\nc\nd';
+  var got = _.strLinesSelect( src, 0 );
   var expected = '';
   test.identical( got, expected );
 
@@ -7521,18 +7553,6 @@ function strLinesSelect( test )
   var src = 'a\nb\nc\nd';
   var got = _.strLinesSelect( src, 1 );
   var expected = 'a';
-  test.identical( got, expected );
-
-  test.case = 'src - multiline, range - 2';
-  var src = 'a\nb\nc\nd';
-  var got = _.strLinesSelect( src, 2 );
-  var expected = 'b';
-  test.identical( got, expected );
-
-  test.case = 'src - multiline, range - negative number';
-  var src = 'a\nb\nc\nd';
-  var got = _.strLinesSelect( src, -1 );
-  var expected = '';
   test.identical( got, expected );
 
   test.case = 'src - multiline, range - number > lines number';

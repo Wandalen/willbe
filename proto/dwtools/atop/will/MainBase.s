@@ -2613,7 +2613,7 @@ function modulesDownload_body( o )
     return;
 
     let ofModule = rootModule ? ' of ' + ( rootModule.toModule() ? rootModule.toModule() : rootModule ).absoluteName : '';
-    let total = ( remoteContainer.length + localContainer.length ); debugger;
+    let total = ( remoteContainer.length + localContainer.length );
     logger.rbegin({ verbosity : -2 });
     let phrase = '';
     if( o.mode === 'update' )

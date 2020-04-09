@@ -27,7 +27,7 @@ function _errUncaughtHandler2( err, kind )
   if( _.errIsAttended( err ) )
   return;
 
-  debugger;
+  // debugger;
 
   /* */
 
@@ -182,10 +182,10 @@ function _setupUncaughtErrorHandler9()
     if( _._err )
     err = _._err
     ({
-      args : [ error ],
+      args : [ error || message ],
       level : 1,
       fallBackStack : 'at handleError @ ' + sourcePath + ':' + lineno,
-      throwenLocation :
+      throwLocation :
       {
         filePath : sourcePath,
         line : lineno,

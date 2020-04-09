@@ -11531,11 +11531,11 @@ function longDuplicate( test )
 
   /* */
 
-  test.case = 'numberOfAtomsPerElement 1 numberOfDuplicatesPerElement 1';
+  test.case = 'numberOfScalarsPerElement 1 numberOfDuplicatesPerElement 1';
   var options =
   {
     src : [ 10, 20 ],
-    numberOfAtomsPerElement : 1,
+    numberOfScalarsPerElement : 1,
     numberOfDuplicatesPerElement : 1
   };
   var got = _.longDuplicate( options );
@@ -11544,11 +11544,11 @@ function longDuplicate( test )
 
   /* */
 
-  test.case = 'numberOfAtomsPerElement 1 numberOfDuplicatesPerElement 2';
+  test.case = 'numberOfScalarsPerElement 1 numberOfDuplicatesPerElement 2';
   var options =
   {
     src : [ 10, 20 ],
-    numberOfAtomsPerElement : 1,
+    numberOfScalarsPerElement : 1,
     numberOfDuplicatesPerElement : 2
   };
   var got = _.longDuplicate( options );
@@ -11557,11 +11557,11 @@ function longDuplicate( test )
 
   /* */
 
-  test.case = 'numberOfAtomsPerElement 2 numberOfDuplicatesPerElement 1';
+  test.case = 'numberOfScalarsPerElement 2 numberOfDuplicatesPerElement 1';
   var options =
   {
     src : [ 10, 20 ],
-    numberOfAtomsPerElement : 2,
+    numberOfScalarsPerElement : 2,
     numberOfDuplicatesPerElement : 1
   };
   var got = _.longDuplicate( options );
@@ -11570,11 +11570,11 @@ function longDuplicate( test )
 
   /* */
 
-  test.case = 'numberOfAtomsPerElement 2 numberOfDuplicatesPerElement 2';
+  test.case = 'numberOfScalarsPerElement 2 numberOfDuplicatesPerElement 2';
   var options =
   {
     src : [ 10, 20 ],
-    numberOfAtomsPerElement : 2,
+    numberOfScalarsPerElement : 2,
     numberOfDuplicatesPerElement : 2
   };
   var got = _.longDuplicate( options );
@@ -11588,7 +11588,7 @@ function longDuplicate( test )
   {
     src : [ 10, 20 ],
     result : [ 1, 1, 1, 1 ],
-    numberOfAtomsPerElement : 1,
+    numberOfScalarsPerElement : 1,
     numberOfDuplicatesPerElement : 2
   };
   var got = _.longDuplicate( options );
@@ -11602,7 +11602,7 @@ function longDuplicate( test )
   {
     src : [ 'abc', 'def' ],
     result : new Array( 6 ),
-    numberOfAtomsPerElement : 2,
+    numberOfScalarsPerElement : 2,
     numberOfDuplicatesPerElement : 3
   };
   var got = _.longDuplicate( options );
@@ -11616,7 +11616,7 @@ function longDuplicate( test )
   {
     src : [ 'abc', 'def' ],
     result : [],
-    numberOfAtomsPerElement : 1,
+    numberOfScalarsPerElement : 1,
     numberOfDuplicatesPerElement : 1
   };
   var got = _.longDuplicate( options );
@@ -11630,7 +11630,7 @@ function longDuplicate( test )
   {
     src : [ 'abc', 'def' ],
     result : [ 1, 2 ],
-    numberOfAtomsPerElement : 1,
+    numberOfScalarsPerElement : 1,
     numberOfDuplicatesPerElement : 1
   };
   var got = _.longDuplicate( options );
@@ -11646,7 +11646,7 @@ function longDuplicate( test )
   {
     src : [ 1, 2 ],
     result : arr,
-    numberOfAtomsPerElement : 1,
+    numberOfScalarsPerElement : 1,
     numberOfDuplicatesPerElement : 1
   };
   var got = _.longDuplicate( options );
@@ -11665,7 +11665,7 @@ function longDuplicate( test )
   test.case = 'second argument is replaced and non-existent elements from options.src is replaced undefined';
   var options = {
     src : [ 'abc', 'def', undefined ],
-    numberOfAtomsPerElement : 3,
+    numberOfScalarsPerElement : 3,
     numberOfDuplicatesPerElement : 3
   };
   var got = _.longDuplicate( options );
@@ -11693,7 +11693,7 @@ function longDuplicate( test )
   var options = {
     src : undefined,
     result : [],
-    numberOfAtomsPerElement : 3,
+    numberOfScalarsPerElement : 3,
     numberOfDuplicatesPerElement : 3
   };
   test.shouldThrowErrorSync( function()
@@ -11706,7 +11706,7 @@ function longDuplicate( test )
   {
     src : [ 10, 20 ],
     result : [],
-    numberOfAtomsPerElement : 1,
+    numberOfScalarsPerElement : 1,
     numberOfDuplicatesPerElement : 2
   };
   test.shouldThrowErrorSync( function ()
@@ -13335,7 +13335,7 @@ function longShrinkWithIndices( test )
 
   test.case = 'using object';
   var src = [ 1, 1, 2, 2, 3, 3 ];
-  var indices = { atomsPerElement : 2, indices : [ 0, 1, 2 ] }
+  var indices = { scalarsPerElement : 2, indices : [ 0, 1, 2 ] }
   var got = _.longShrinkWithIndices( src, indices );
   var expected = [ 1, 1, 2, 2, 3, 3 ];
   test.identical( got, expected );
@@ -13989,9 +13989,9 @@ function longRandom( test )
   var dst = [ 2, 2, 2 ];
   var got = _.longRandom( dst, 5, 3 );
   test.is( got === dst );
-  test.identical( got[ 0 ], 5 );
-  test.identical( got[ 1 ], 5 );
-  test.identical( got[ 2 ], 5 );
+  test.is( got[ 0 ] !== 2 && got[ 0 ] >= 0 && got[ 0 ] <= 5 );
+  test.is( got[ 1 ] !== 2 && got[ 0 ] >= 0 && got[ 0 ] <= 5 );
+  test.is( got[ 2 ] !== 2 && got[ 0 ] >= 0 && got[ 0 ] <= 5 );
 
   test.case = 'dst, range, length === null';
   var dst = [ 2, 2, 2 ];
@@ -14072,9 +14072,9 @@ function longRandom( test )
     onEach : ( value ) => _.intRandom( value ),
   });
   test.identical( got.length, 3 );
-  test.identical( got[ 0 ], 5 );
-  test.identical( got[ 1 ], 5 );
-  test.identical( got[ 2 ], 5 );
+  test.is( _.intIs( got[ 0 ] ) && got[ 0 ] >= 1 && got[ 0 ] <= 5 );
+  test.is( _.intIs( got[ 1 ] ) && got[ 1 ] >= 1 && got[ 1 ] <= 5 );
+  test.is( _.intIs( got[ 2 ] ) && got[ 2 ] >= 1 && got[ 2 ] <= 5 );
 
   test.case = 'dst, range, onEach, length > dst.length';
   var dst = [ 0, 0 ];

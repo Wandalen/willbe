@@ -371,8 +371,8 @@ function longNoneAreRepeated( src, onEvalutate )
 function longMask( srcArray, mask )
 {
 
-  let atomsPerElement = mask.length;
-  let length = srcArray.length / atomsPerElement;
+  let scalarsPerElement = mask.length;
+  let length = srcArray.length / scalarsPerElement;
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( _.longIs( srcArray ), 'longMask :', 'Expects array-like as srcArray' );
@@ -383,7 +383,7 @@ function longMask( srcArray, mask )
     'longMask :', 'Expects mask that has component for each atom of srcArray',
     _.toStr
     ({
-      'atomsPerElement' : atomsPerElement,
+      'scalarsPerElement' : scalarsPerElement,
       'srcArray.length' : srcArray.length,
     })
   );
@@ -404,7 +404,7 @@ function longMask( srcArray, mask )
   for( let m = 0 ; m < mask.length ; m++ )
   if( mask[ m ] )
   {
-    dstArray[ c ] = srcArray[ i*atomsPerElement + m ];
+    dstArray[ c ] = srcArray[ i*scalarsPerElement + m ];
     c += 1;
   }
 
@@ -428,19 +428,19 @@ function longUnmask( o )
   _.assertMapHasOnly( o, longUnmask.defaults );
   _.assert( _.longIs( o.src ), 'Expects o.src as ArrayLike' );
 
-  let atomsPerElement = o.mask.length;
+  let scalarsPerElement = o.mask.length;
 
-  let atomsPerElementPreserved = 0;
+  let scalarsPerElementPreserved = 0;
   for( let m = 0 ; m < o.mask.length ; m++ )
   if( o.mask[ m ] )
-  atomsPerElementPreserved += 1;
+  scalarsPerElementPreserved += 1;
 
-  let length = o.src.length / atomsPerElementPreserved;
+  let length = o.src.length / scalarsPerElementPreserved;
   if( Math.floor( length ) !== length )
-  throw _.err( 'longMask :', 'Expects mask that has component for each atom of o.src', _.toStr({ 'atomsPerElementPreserved' : atomsPerElementPreserved, 'o.src.length' : o.src.length  }) );
+  throw _.err( 'longMask :', 'Expects mask that has component for each atom of o.src', _.toStr({ 'scalarsPerElementPreserved' : scalarsPerElementPreserved, 'o.src.length' : o.src.length  }) );
 
-  let dstArray = _.longMakeUndefined( o.src, atomsPerElement*length );
-  // let dstArray = new o.src.constructor( atomsPerElement*length );
+  let dstArray = _.longMakeUndefined( o.src, scalarsPerElement*length );
+  // let dstArray = new o.src.constructor( scalarsPerElement*length );
 
   let e = [];
   for( let i = 0 ; i < length ; i++ )
@@ -449,7 +449,7 @@ function longUnmask( o )
     for( let m = 0, p = 0 ; m < o.mask.length ; m++ )
     if( o.mask[ m ] )
     {
-      e[ m ] = o.src[ i*atomsPerElementPreserved + p ];
+      e[ m ] = o.src[ i*scalarsPerElementPreserved + p ];
       p += 1;
     }
     else
@@ -461,7 +461,7 @@ function longUnmask( o )
     o.onEach( e, i );
 
     for( let m = 0 ; m < o.mask.length ; m++ )
-    dstArray[ i*atomsPerElement + m ] = e[ m ];
+    dstArray[ i*scalarsPerElement + m ] = e[ m ];
 
   }
 
@@ -901,17 +901,17 @@ function longFromRangeWithNumberOfSteps( range , numberOfSteps )
    If there is no element with necessary index than the value will be undefined.
  * @function longShrinkWithIndices
  * @throws { Error } If passed arguments is not array like object.
- * @throws { Error } If the atomsPerElement property is not equal to 1.
+ * @throws { Error } If the scalarsPerElement property is not equal to 1.
  * @memberof wTools
  */
 
 function longShrinkWithIndices( srcArray, indicesArray )
 {
-  let atomsPerElement = 1;
+  let scalarsPerElement = 1;
 
   if( _.objectIs( indicesArray ) )
   {
-    atomsPerElement = indicesArray.atomsPerElement || 1;
+    scalarsPerElement = indicesArray.scalarsPerElement || 1;
     indicesArray = indicesArray.indices;
   }
 
@@ -922,7 +922,7 @@ function longShrinkWithIndices( srcArray, indicesArray )
   // let result = new srcArray.constructor( indicesArray.length );
   let result = _.longMakeUndefined( srcArray, indicesArray.length );
 
-  if( atomsPerElement === 1 )
+  if( scalarsPerElement === 1 )
   for( let i = 0, l = indicesArray.length ; i < l ; i += 1 )
   {
     result[ i ] = srcArray[ indicesArray[ i ] ];
@@ -930,8 +930,8 @@ function longShrinkWithIndices( srcArray, indicesArray )
   else
   for( let i = 0, l = indicesArray.length ; i < l ; i += 1 )
   {
-    for( let a = 0 ; a < atomsPerElement ; a += 1 )
-    result[ i*atomsPerElement+a ] = srcArray[ indicesArray[ i ]*atomsPerElement+a ];
+    for( let a = 0 ; a < scalarsPerElement ; a += 1 )
+    result[ i*scalarsPerElement+a ] = srcArray[ indicesArray[ i ]*scalarsPerElement+a ];
   }
 
   return result;

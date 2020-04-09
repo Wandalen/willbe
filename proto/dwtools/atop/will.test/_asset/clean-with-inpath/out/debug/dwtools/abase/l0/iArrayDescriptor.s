@@ -51,11 +51,11 @@ nameSpace = _.mapExtend( null,nameSpace );
  * @summary Creates new array based on type of `src` array. Takes length of new array from second argument `length`.
  * @param {} src Source array
  * @param {Number} [ length ] Lengthof target array.
- * @function makeSimilar
+ * @function MakeSimilar
  * @memberof wTools."wTools.array"
  */
 
-function makeSimilar( src,length )
+function MakeSimilar( src,length )
 {
   _.assert( arguments.length === 1 || arguments.length === 2 );
 
@@ -186,7 +186,7 @@ function arrayFromCoercing( src )
 let Extend =
 {
 
-  makeSimilar,
+  MakeSimilar,
   Make/*makeArrayOfLength*/,
   Make/*makeArrayOfLength*/Zeroed,
 

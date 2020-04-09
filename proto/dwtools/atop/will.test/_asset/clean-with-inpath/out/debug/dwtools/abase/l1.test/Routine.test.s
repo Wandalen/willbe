@@ -139,7 +139,7 @@ function routineIs( test )
   var src = new Constr();
   var got = _.routineIs( src.constructor );
   test.identical( got, true );
- 
+
   test.case = 'Object';
   var got = _.routineIs( Object );
   test.identical( got, true )
@@ -159,7 +159,7 @@ function routineIs( test )
   test.case = 'async arrow routine';
   var got = _.routineIs( async () => {} );
   test.identical( got, true )
-  
+
   test.case = 'async unnamed routine';
   var got = _.routineIs( async function (){} );
   test.identical( got, true )
@@ -264,7 +264,7 @@ function routineLike( test )
   var src = new Constr();
   var got = _.routineLike( src.constructor );
   test.identical( got, true );
- 
+
   test.case = 'Object';
   var got = _.routineLike( Object );
   test.identical( got, true )
@@ -284,7 +284,7 @@ function routineLike( test )
   test.case = 'async arrow routine';
   var got = _.routineLike( async () => {} );
   test.identical( got, true )
-  
+
   test.case = 'async unnamed routine';
   var got = _.routineLike( async function (){} );
   test.identical( got, true )
@@ -767,7 +767,7 @@ function constructorJoin( test )
 
   if( !Config.debug )
   return;
-  
+
   test.case = 'without arguments';
   test.shouldThrowErrorSync( () => _.constructorJoin() );
 
@@ -809,7 +809,7 @@ function routineJoin( test )
   test.identical( gotfn.originalRoutine, testFunction2 );
   test.identical( gotfn.boundArguments, undefined );
   var got = gotfn( 2, 3 );
-  test.identical( got, 5 );  
+  test.identical( got, 5 );
 
   test.case = 'unnamed function with arguments bind : result check';
   var gotfn = _.routineJoin( undefined, testFunction3, undefined );
@@ -817,7 +817,7 @@ function routineJoin( test )
   test.identical( gotfn.originalRoutine, testFunction3 );
   test.identical( gotfn.boundArguments, undefined );
   var got = gotfn( 2, 3 );
-  test.identical( got, 6 );  
+  test.identical( got, 6 );
 
   test.case = 'unnamed function without context, check context';
   var gotfn = _.routineJoin( undefined, ( x, y ) => x + y, undefined );
@@ -833,7 +833,7 @@ function routineJoin( test )
   test.identical( gotfn.originalRoutine( 2, 3 ), ( ( x, y ) => Math.pow( x, y ) )( 2, 3 ) );
   test.identical( gotfn.boundArguments, undefined );
   var got = gotfn( 2, 3 );
-  test.identical( got, 8 );  
+  test.identical( got, 8 );
 
   test.close( 'context - undefined, args - undefined' );
 
@@ -855,7 +855,7 @@ function routineJoin( test )
   test.identical( gotfn.originalRoutine, testFunction2 );
   test.identical( gotfn.boundArguments, [ 4 ] );
   var got = gotfn( 2 );
-  test.identical( got, 6 );  
+  test.identical( got, 6 );
 
   test.case = 'unnamed function with arguments bind : result check';
   var gotfn = _.routineJoin( undefined, testFunction3, [ 4 ] );
@@ -863,7 +863,7 @@ function routineJoin( test )
   test.identical( gotfn.originalRoutine, testFunction3 );
   test.identical( gotfn.boundArguments, [ 4 ] );
   var got = gotfn( 5 );
-  test.identical( got, 10 );  
+  test.identical( got, 10 );
 
   test.case = 'unnamed function without context, check context';
   var gotfn = _.routineJoin( undefined, ( x, y ) => x + y, [ 4 ] );
@@ -879,7 +879,7 @@ function routineJoin( test )
   test.identical( gotfn.originalRoutine( 2, 3 ), ( ( x, y ) => Math.pow( x, y ) )( 2, 3 ) );
   test.identical( gotfn.boundArguments, [ 4 ] );
   var got = gotfn( 2 );
-  test.identical( got, 16 );  
+  test.identical( got, 16 );
 
   test.close( 'context - undefined, args - long' );
 
@@ -903,7 +903,7 @@ function routineJoin( test )
   test.identical( gotfn.boundContext, context );
   test.identical( gotfn.boundArguments, undefined );
   var got = gotfn( 2, 3 );
-  test.identical( got, 5 );  
+  test.identical( got, 5 );
 
   test.case = 'unnamed function with arguments bind : result check';
   var gotfn = _.routineJoin( context, testFunction3, undefined );
@@ -912,7 +912,7 @@ function routineJoin( test )
   test.identical( gotfn.boundContext, context );
   test.identical( gotfn.boundArguments, undefined );
   var got = gotfn( 2, 3 );
-  test.identical( got, 20 );  
+  test.identical( got, 20 );
 
   test.case = 'unnamed function without context, check context';
   var gotfn = _.routineJoin( context, ( x, y ) => x + y, undefined );
@@ -930,7 +930,7 @@ function routineJoin( test )
   test.identical( gotfn.boundContext, context );
   test.identical( gotfn.boundArguments, undefined );
   var got = gotfn( 2, 3 );
-  test.identical( got, 8 );  
+  test.identical( got, 8 );
 
   test.close( 'context - exists, args - undefined' );
 
@@ -954,7 +954,7 @@ function routineJoin( test )
   test.identical( gotfn.boundContext, context );
   test.identical( gotfn.boundArguments, [ 4 ] );
   var got = gotfn( 2 );
-  test.identical( got, 6 );  
+  test.identical( got, 6 );
 
   test.case = 'unnamed function with arguments bind : result check';
   var gotfn = _.routineJoin( context, testFunction3, [ 4 ] );
@@ -963,7 +963,7 @@ function routineJoin( test )
   test.identical( gotfn.boundContext, context );
   test.identical( gotfn.boundArguments, [ 4 ] );
   var got = gotfn( 5 );
-  test.identical( got, 24 );  
+  test.identical( got, 24 );
 
   test.case = 'unnamed function without context, check context';
   var gotfn = _.routineJoin( context, ( x, y ) => x + y, [ 4 ] );
@@ -981,7 +981,7 @@ function routineJoin( test )
   test.identical( gotfn.boundContext, context );
   test.identical( gotfn.boundArguments, [ 4 ] );
   var got = gotfn( 2 );
-  test.identical( got, 16 );  
+  test.identical( got, 16 );
 
   test.close( 'context - exists, args - long' );
 
@@ -1578,7 +1578,7 @@ function routineExtend( test )
   test.identical( got.body, _.routineFromPreAndBody.body );
   test.identical( got.a, [ 1 ] );
   test.identical( got.b, 'str' );
-  test.identical( got.c, {} );
+  test.identical( got.c, Object.create( { str : 'str' } ) );
   test.identical( typeof got, 'function' );
 
   test.close( 'dst is null, src has pre and body properties');
@@ -1649,7 +1649,7 @@ function routineExtend( test )
   test.identical( got.a, 0 );
   test.identical( got.b, 0 );
   test.identical( got.c, 1 );
-  test.identical( got.e, {} );
+  test.identical( got.e, Object.create( { s : 1 } ) );
 
   test.case = 'dst has properties, src map has the same properties';
   var dst = function( o )
@@ -1748,7 +1748,7 @@ function routineExtend( test )
   var got = _.routineExtend( src, src1 );
   test.identical( got.pre, _.routineFromPreAndBody.pre );
   test.identical( got.body, _.routineFromPreAndBody.body );
-  test.identical( got.b, {} );
+  test.identical( got.b, Object.create( { b : 3 } ) );
   test.is( got.a === 'str' );
   test.identical( typeof got, 'function' );
 
@@ -1769,7 +1769,7 @@ function routineExtend( test )
   test.identical( got.body, _.routinesCompose.body );
   test.identical( got.a, [ 'str' ] );
   test.identical( got.b, 'str' );
-  test.identical( got.c, {} );
+  test.identical( got.c, Object.create( { d : 2 } ) );
   test.identical( typeof got, 'function' );
 
   test.case = 'dst has map property, dst extends other map';
@@ -1789,7 +1789,9 @@ function routineExtend( test )
   test.identical( got.pre, _.routinesCompose.pre );
   test.identical( got.body, _.routinesCompose.body );
   test.identical( got.a, [ 'str' ] );
-  test.identical( got.map, { a : 'str' } );
+  var expectedMap = Object.create( { d : 2 } );
+  expectedMap.a = 'str';
+  test.identical( got.map, expectedMap );
   test.identical( got.c, {} );
   test.identical( typeof got, 'function' );
 
@@ -3802,7 +3804,7 @@ function vectorizeNone( test )
 
 //
 
-function vectorizeAccess( test ) 
+function vectorizeAccess( test )
 {
   test.open( 'get' );
 
