@@ -343,7 +343,7 @@ let wStager =
 
 let wIntrospector =
 {
-  sourcePath : sourcePath( 'amid/l3/introspector/IncludeMid.s', 'wintrospectorbasic' ),
+  sourcePath : sourcePath( 'amid/l3/introspector/IncludeMid.s', 'wintrospector' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.introspector && !!_global.wTools.thisFile },
 }
 
@@ -611,7 +611,7 @@ let wStarter =
 
 let wTesting =
 {
-  sourcePath : sourcePath( 'atop/tester/MainTop.s', 'wTesting' ),
+  sourcePath : sourcePath( 'atop/tester/Main.s', 'wTesting' ),
   isIncluded : function(){ return _realGlobal_.wTester && _realGlobal_.wTester._isReal_; },
 }
 

@@ -8,10 +8,6 @@
 */
 
 /**
- * @file Path.s.
- */
-
-/**
  * @summary Collection of routines to operate paths reliably and consistently.
  * @namespace "wTools.path"
  * @extends Tools
@@ -32,86 +28,11 @@ let _ = _global_.wTools;
 _.assert( !!_.path );
 let Self = _.path = _.path || Object.create( null );
 
-// // --
-// // meta
-// // --
-//
-// function Init()
-// {
-//   let self = this;
-//
-//   _.assert( _.strIs( self._rootStr ) );
-//   _.assert( _.strIs( self._upStr ) );
-//   _.assert( _.strIs( self._hereStr ) );
-//   _.assert( _.strIs( self._downStr ) );
-//
-//   if( !self._downUpStr )
-//   self._downUpStr = self._downStr + self._upStr; /* ../ */
-//   if( !self._hereUpStr )
-//   self._hereUpStr = self._hereStr + self._upStr; /* ./ */
-//
-//   self._rootRegSource = _.regexpEscape( self._rootStr );
-//   self._upRegSource = _.regexpEscape( self._upStr );
-//   self._downRegSource = _.regexpEscape( self._downStr );
-//   self._hereRegSource = _.regexpEscape( self._hereStr );
-//   self._downUpRegSource = _.regexpEscape( self._downUpStr );
-//   self._hereUpRegSource = _.regexpEscape( self._hereUpStr );
-//
-//   let root = self._rootRegSource;
-//   let up = self._upRegSource;
-//   let down = self._downRegSource;
-//   let here = self._hereRegSource;
-//
-//   let beginOrChar = '(?:.|^)';
-//   let butUp = `(?:(?!${up}).)+`;
-//   let notDownUp = `(?!${down}(?:${up}|$))`;
-//   let upOrBegin = `(?:^|${up})`;
-//   let upOrEnd = `(?:${up}|$)`;
-//   let splitOrUp = `(?:(?:${up}${up})|((${upOrBegin})${notDownUp}${butUp}${up}))`; /* split or / */
-//
-//   self._delDownRegexp = new RegExp( `(${beginOrChar})${splitOrUp}${down}(${upOrEnd})`, '' );
-//   self._delHereRegexp = new RegExp( up + here + '(' + up + '|$)' );
-//   self._delUpDupRegexp = /\/{2,}/g;
-//
-// }
-//
-// //
-//
-// function CloneExtending( o )
-// {
-//   _.assert( arguments.length === 1 );
-//   let result = Object.create( this )
-//   _.mapExtend( result, Parameters,o );
-//   result.Init();
-//   return result;
-// }
-
 // --
-// checker
+//
 // --
 
-// function is( path )
-// {
-//   _.assert( arguments.length === 1, 'Expects single argument' );
-//   return _.strIs( path );
-// }
-//
-// //
-//
-// function are( paths )
-// {
-//   let self = this;
-//   _.assert( arguments.length === 1, 'Expects single argument' );
-//   if( _.mapIs( paths ) )
-//   return true;
-//   if( !_.arrayIs( paths ) )
-//   return false;
-//   return paths.every( ( path ) => self.is( path ) );
-// }
-
-//
-
-/* xxx : make new version in module Files */
+/* xxx qqq : make new version in module Files. ask */
 function like( path )
 {
   _.assert( arguments.length === 1, 'Expects single argument' );
@@ -2131,8 +2052,8 @@ function _commonPair( src1, src2 )
   _.assert( _.strIs( src1 ) && _.strIs( src2 ) );
 
   let result = [];
-  let first = parsePath( src1 );
-  let second = parsePath( src2 );
+  let first = pathParse( src1 );
+  let second = pathParse( src2 );
 
   let needToSwap = first.isRelative && second.isAbsolute;
   if( needToSwap )
@@ -2159,19 +2080,17 @@ function _commonPair( src1, src2 )
 
   if( bothAbsolute )
   {
-    getCommon();
+    commonGet();
 
-    result = result.join('');
+    result = result.join( '' );
 
     if( !result.length )
     result = '/';
   }
-
-  if( bothRelative )
+  else if( bothRelative )
   {
-
     if( first.levelsDown === second.levelsDown )
-    getCommon();
+    commonGet();
 
     result = result.join('');
 
@@ -2179,9 +2098,7 @@ function _commonPair( src1, src2 )
 
     if( levelsDown > 0 )
     {
-      debugger;
       let prefix = _.longFill( [], self._downStr, levelsDown );
-      // let prefix = _.longFillTimes( [], levelsDown,self._downStr );
       prefix = prefix.join( '/' );
       result = prefix + result;
     }
@@ -2199,24 +2116,27 @@ function _commonPair( src1, src2 )
 
   /* - */
 
-  function getCommon()
+  function commonGet()
   {
-    let length = Math.min( first.splitted.length,second.splitted.length );
+    let length = Math.min( first.splitted.length, second.splitted.length );
     for( let i = 0; i < length; i++ )
     {
       if( first.splitted[ i ] === second.splitted[ i ] )
       {
         if( first.splitted[ i ] === self._upStr && first.splitted[ i + 1 ] === self._upStr )
         break;
-        else
         result.push( first.splitted[ i ] );
       }
       else
-      break;
+      {
+        break;
+      }
     }
   }
 
-  function parsePath( path )
+  /* */
+
+  function pathParse( path )
   {
     let result =
     {
@@ -2226,7 +2146,6 @@ function _commonPair( src1, src2 )
       levelsDown : 0,
     };
 
-    // result.normalized = self.normalizeTolerant( path );
     result.normalized = self.normalize( path );
     result.splitted = split( result.normalized );
     result.isAbsolute = self.isAbsolute( result.normalized );
@@ -2236,9 +2155,7 @@ function _commonPair( src1, src2 )
     if( result.splitted[ 0 ] === self._downStr )
     {
       result.levelsDown = _.longCountElement( result.splitted,self._downStr );
-      debugger;
       let substr = _.longFill( [], self._downStr, result.levelsDown ).join( '/' );
-      // let substr = _.longFillTimes( [], result.levelsDown,self._downStr ).join( '/' );
       let withoutLevels = _.strRemoveBegin( result.normalized,substr );
       result.splitted = split( withoutLevels );
       result.isRelativeDown = true;
@@ -2249,15 +2166,21 @@ function _commonPair( src1, src2 )
       result.isRelativeHereThen = true;
     }
     else
-    result.isRelativeHere = true;
+    {
+      result.isRelativeHere = true;
+    }
 
     return result;
   }
+
+  /* */
 
   function split( src )
   {
     return _.strSplitFast( { src,delimeter : [ '/' ], preservingDelimeters : 1,preservingEmpty : 1 } );
   }
+
+  /* */
 
 }
 
