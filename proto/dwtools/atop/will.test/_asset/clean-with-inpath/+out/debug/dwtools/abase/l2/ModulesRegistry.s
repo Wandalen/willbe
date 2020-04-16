@@ -343,7 +343,7 @@ let wStager =
 
 let wIntrospector =
 {
-  sourcePath : sourcePath( 'amid/l3/introspector/IncludeMid.s', 'wintrospector' ),
+  sourcePath : sourcePath( 'amid/l3/introspector/module/Full.s', 'wintrospector' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.introspector && !!_global.wTools.thisFile },
 }
 
@@ -579,7 +579,7 @@ let wMathVector =
 
 let wMathMatrix =
 {
-  sourcePath : sourcePath( 'amath/l5_matrix/Include.s', 'wmathmatrix' ),
+  sourcePath : sourcePath( 'amath/l5_matrix/module/full/Include.s', 'wmathmatrix' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Space },
 }
 
