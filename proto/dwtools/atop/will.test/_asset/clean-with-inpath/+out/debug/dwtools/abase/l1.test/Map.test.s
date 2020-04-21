@@ -322,7 +322,9 @@ function mapExtend( test )
 
   test.open( 'first argument is null' );
 
-  test.case = 'trivial'; /* */
+  /* */
+
+  test.case = 'trivial';
   var src1 = { a : 1, b : 2 };
   var src1Copy = { a : 1, b : 2 };
   var src2 = { c : 3, d : 4 };
@@ -340,7 +342,9 @@ function mapExtend( test )
   test.will = 'return not src2';
   test.is( got !== src2 );
 
-  test.case = 'rewriting'; /* */
+  /* */
+
+  test.case = 'rewriting';
   var src1 = { a : 1, b : 2 };
   var src1Copy = { a : 1, b : 2 };
   var src2 = { b : 22, c : 3, d : 4 };
@@ -364,7 +368,9 @@ function mapExtend( test )
 
   test.open( 'first argument is dst' );
 
-  test.case = 'trivial'; /* */
+  /* */
+
+  test.case = 'trivial';
   var dst = { a : 1, b : 2 };
   var src2 = { c : 3, d : 4 };
   var src2Copy = { c : 3, d : 4 };
@@ -379,7 +385,9 @@ function mapExtend( test )
   test.will = 'return not src2';
   test.is( got !== src2 );
 
-  test.case = 'rewriting'; /* */
+  /* */
+
+  test.case = 'rewriting';
   var dst = { a : 1, b : 2 };
   var src2 = { b : 22, c : 3, d : 4 };
   var src2Copy = { b : 22, c : 3, d : 4 };

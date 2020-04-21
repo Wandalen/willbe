@@ -11105,17 +11105,23 @@ function strSplit( test )
 
   test.open( 'd:" " trivial' );
 
-  test.case = ' space at the beginning'; /**/
+  /* */
+
+  test.case = ' space at the beginning';
   var got = _.strSplit( ' aa b#b cc', ' ' );
   var expected = [ '', '', 'aa', '', 'b#b', '', 'cc' ];
   test.identical( got, expected );
 
-  test.case = 'space in the end';  /**/
+  /* */
+
+  test.case = 'space in the end'; 
   var got = _.strSplit( 'aa b#b cc ', ' ' );
   var expected = [ 'aa', '', 'b#b', '', 'cc', '', '' ];
   test.identical( got, expected );
 
-  test.case = 'space on the beginning and the end';  /**/
+  /* */
+
+  test.case = 'space on the beginning and the end'; 
   var got = _.strSplit( ' aa b#b cc ', ' ' );
   var expected = [ '', '', 'aa', '', 'b#b', '', 'cc', '', '' ];
   test.identical( got, expected );
@@ -11126,17 +11132,23 @@ function strSplit( test )
 
   test.open( 'd:"#" trivial' );
 
-  test.case = ' space at the beginning'; /**/
+  /* */
+
+  test.case = ' space at the beginning';
   var got = _.strSplit( ' aa b#b cc', '#' );
   var expected = [ 'aa b', '#', 'b cc' ];
   test.identical( got, expected );
 
-  test.case = 'space in the end';  /**/
+  /* */
+
+  test.case = 'space in the end'; 
   var got = _.strSplit( 'aa b#b cc ', '#' );
   var expected = [ 'aa b', '#', 'b cc' ];
   test.identical( got, expected );
 
-  test.case = 'space on the beginning and the end';  /**/
+  /* */
+
+  test.case = 'space on the beginning and the end'; 
   var got = _.strSplit( ' aa b#b cc ', '#' );
   var expected = [ 'aa b', '#', 'b cc' ];
   test.identical( got, expected );
@@ -12351,7 +12363,9 @@ function strSplit( test )
   var expected = [ 'Test check', '', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
   test.identical( got, expected );
 
-  test.case = 's:1 q:1 pe:1 pd:1'; /* */
+  /* */
+
+  test.case = 's:1 q:1 pe:1 pd:1';
 
   var o =
   {
@@ -12376,7 +12390,9 @@ function strSplit( test )
 - A2: "There."
 `
 
-  test.case = 's:1 q:1 pe:1 pd:0 pq:1 iq:1'; /* */
+  /* */
+
+  test.case = 's:1 q:1 pe:1 pd:0 pq:1 iq:1';
 
   var o =
   {
@@ -12410,7 +12426,9 @@ function strSplit( test )
   var expected = [ '', '= Org', '', '- Q:', '"Where?"', '', '- A1:', '"Here."', '', '', '- A2:', '"There."', '', '' ];
   test.identical( got, expected );
 
-  test.case = 's:1 q:1 pe:1 pd:0 pq:0 iq:1'; /* */
+  /* */
+
+  test.case = 's:1 q:1 pe:1 pd:0 pq:0 iq:1';
 
   var o =
   {
@@ -12427,7 +12445,9 @@ function strSplit( test )
   var expected = [ '', '= Org', '', '- Q: Where?', '- A1: Here.', '', '- A2: There.', '' ];
   test.identical( got, expected );
 
-  test.case = 's:1 q:1 pe:1 pd:0 pq:0 iq:0'; /* */
+  /* */
+
+  test.case = 's:1 q:1 pe:1 pd:0 pq:0 iq:0';
 
   var o =
   {
@@ -12444,7 +12464,9 @@ function strSplit( test )
   var expected = [ '', '= Org', '', '- Q:', 'Where?', '', '- A1:', 'Here.', '', '', '- A2:', 'There.', '', '' ];
   test.identical( got, expected );
 
-  test.case = 'quoted at edges, s:1 q:1 pe:1 pd:0 pq:0 iq:0'; /**/
+  /* */
+
+  test.case = 'quoted at edges, s:1 q:1 pe:1 pd:0 pq:0 iq:0';
 
   var o =
   {
@@ -12462,7 +12484,9 @@ function strSplit( test )
   var got = _.strSplit( o );
   test.identical( got, expected );
 
-  test.case = 'quoted at edges, s:1 q:1 pe:1 pd:0 pq:0 iq:1'; /**/
+  /* */
+
+  test.case = 'quoted at edges, s:1 q:1 pe:1 pd:0 pq:0 iq:1';
 
   var o =
   {
@@ -12480,7 +12504,9 @@ function strSplit( test )
   var got = _.strSplit( o );
   test.identical( got, expected );
 
-  test.case = 'quoted at edges, s:1 q:1 pe:1 pd:0 pq:1 iq:0'; /**/
+  /* */
+
+  test.case = 'quoted at edges, s:1 q:1 pe:1 pd:0 pq:1 iq:0';
 
   var o =
   {
@@ -12498,7 +12524,9 @@ function strSplit( test )
   var got = _.strSplit( o );
   test.identical( got, expected );
 
-  test.case = 'quoted at edges, s:1 q:1 pe:1 pd:0 pq:1 iq:1'; /**/
+  /* */
+
+  test.case = 'quoted at edges, s:1 q:1 pe:1 pd:0 pq:1 iq:1';
 
   var o =
   {
@@ -12516,7 +12544,9 @@ function strSplit( test )
   var got = _.strSplit( o );
   test.identical( got, expected );
 
-  test.case = 'quoted in the middle, s:1 q:1 pe:1 pd:0 pq:1 iq:1'; /**/
+  /* */
+
+  test.case = 'quoted in the middle, s:1 q:1 pe:1 pd:0 pq:1 iq:1';
 
   var o =
   {
@@ -12534,7 +12564,9 @@ function strSplit( test )
   var got = _.strSplit( o );
   test.identical( got, expected );
 
-  test.case = 'quoted in the middle, s:1 q:1 pe:1 pd:0 pq:1 iq:0'; /**/
+  /* */
+
+  test.case = 'quoted in the middle, s:1 q:1 pe:1 pd:0 pq:1 iq:0';
 
   var o =
   {
@@ -12552,7 +12584,9 @@ function strSplit( test )
   var got = _.strSplit( o );
   test.identical( got, expected );
 
-  test.case = 'quoted in the middle, s:1 q:1 pe:1 pd:0 pq:0 iq:1'; /**/
+  /* */
+
+  test.case = 'quoted in the middle, s:1 q:1 pe:1 pd:0 pq:0 iq:1';
 
   var o =
   {
@@ -12570,7 +12604,9 @@ function strSplit( test )
   var got = _.strSplit( o );
   test.identical( got, expected );
 
-  test.case = 'quoted in the middle, s:1 q:1 pe:1 pd:0 pq:0 iq:0'; /**/
+  /* */
+
+  test.case = 'quoted in the middle, s:1 q:1 pe:1 pd:0 pq:0 iq:0';
 
   var o =
   {

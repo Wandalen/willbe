@@ -245,7 +245,9 @@ function prototypeIsStandard( t )
 function accessor( test )
 {
 
-  test.case = 'setter'; /**/
+  /* */
+
+  test.case = 'setter';
   var Alpha = function _Alpha(){}
   _.classDeclare
   ({
@@ -267,7 +269,9 @@ function accessor( test )
   var expected = 10;
   test.identical( got, expected );
 
-  test.case = 'getter'; /**/
+  /* */
+
+  test.case = 'getter';
   var Alpha = function _Alpha(){}
   _.classDeclare
   ({
@@ -289,7 +293,9 @@ function accessor( test )
   var expected = 10;
   test.identical( got, expected );
 
-  test.case = 'getter & setter'; /**/
+  /* */
+
+  test.case = 'getter & setter';
   var Alpha = function _Alpha(){}
   _.classDeclare
   ({
@@ -338,19 +344,25 @@ function accessor( test )
   if( !Config.debug )
   return;
 
-  test.case = 'empty call'; /**/
+  /* */
+
+  test.case = 'empty call';
   test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( );
   });
 
-  test.case = 'invalid first argument type'; /**/
+  /* */
+
+  test.case = 'invalid first argument type';
   test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( 1, { a : 'a' } );
   });
 
-  test.case = 'invalid second argument type'; /**/
+  /* */
+
+  test.case = 'invalid second argument type';
   test.shouldThrowErrorOfAnyKind( function()
   {
     _.accessor.declare( {}, [] );

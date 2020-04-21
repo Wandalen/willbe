@@ -1120,7 +1120,9 @@ function relative( test )
   if( !Config.debug )
   return;
 
-  test.case = 'relative to array of paths, one of paths is relative, resolving off'; /* */
+  /* */
+
+  test.case = 'relative to array of paths, one of paths is relative, resolving off';
   var from = '/foo/bar/baz/asdf/quux/dir1/dir2';
   var to =
   [
@@ -1134,7 +1136,9 @@ function relative( test )
   test.shouldThrowErrorSync( () => _.paths.relative( '/foo/bar/baz/asdf/quux' ) );
   test.shouldThrowErrorSync( () => _.paths.relative( { relative : '/foo/bar/baz/asdf/quux'} ) );
 
-  test.case = 'using map options'; /* */
+  /* */
+
+  test.case = 'using map options';
   var from = '/foo/bar/baz/asdf/quux/dir1/dir2';
   var to =
   [

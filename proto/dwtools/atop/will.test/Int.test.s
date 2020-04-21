@@ -5040,7 +5040,9 @@ function buildsResolve( test )
   ready.then( ( arg ) =>
   {
 
-    test.case = 'build::*'; /* */
+    /* */
+
+    test.case = 'build::*';
 
     var resolved = opener.openedModule.resolve({ selector : 'build::*' });
     test.identical( resolved.length, 4 );
@@ -5059,7 +5061,9 @@ function buildsResolve( test )
     var got = _.select( resolved, '*/steps' );
     test.identical( got, expected );
 
-    test.case = 'build::*, with criterion'; /* */
+    /* */
+
+    test.case = 'build::*, with criterion';
 
     var resolved = opener.openedModule.resolve({ selector : 'build::*', criterion : { debug : 1 } });
     test.identical( resolved.length, 2 );
@@ -5068,7 +5072,9 @@ function buildsResolve( test )
     var got = _.select( resolved, '*/name' );
     test.identical( _.setFrom( got ), _.setFrom( expected ) );
 
-    test.case = 'build::*, currentContext is build::export.'; /* */
+    /* */
+
+    test.case = 'build::*, currentContext is build::export.';
 
     var build = opener.openedModule.resolve({ selector : 'build::export.' });
     test.is( build instanceof will.Build );
@@ -5086,7 +5092,9 @@ function buildsResolve( test )
     var got = resolved[ 0 ].criterion;
     test.identical( got, expected );
 
-    test.case = 'build::*, currentContext is build::export.debug'; /* */
+    /* */
+
+    test.case = 'build::*, currentContext is build::export.debug';
 
     var build = opener.openedModule.resolve({ selector : 'build::export.debug' });
     var resolved = opener.openedModule.resolve({ selector : 'build::*', currentContext : build, singleUnwrapping : 0 });
@@ -5100,7 +5108,9 @@ function buildsResolve( test )
     var got = resolved[ 0 ].criterion;
     test.identical( got, expected );
 
-    test.case = 'build::*, currentContext is build::export.debug, short-cut'; /* */
+    /* */
+
+    test.case = 'build::*, currentContext is build::export.debug, short-cut';
 
     var build = opener.openedModule.resolve({ selector : 'build::export.debug' });
     var resolved = build.resolve({ selector : 'build::*', singleUnwrapping : 0 });
@@ -5110,7 +5120,9 @@ function buildsResolve( test )
     var got = _.select( resolved, '*/name' );
     test.identical( got, expected );
 
-    test.case = 'build::*, short-cut, explicit criterion'; /* */
+    /* */
+
+    test.case = 'build::*, short-cut, explicit criterion';
 
     var build = opener.openedModule.resolve({ selector : 'build::export.*', criterion : { debug : 1 } });
     var resolved = build.resolve({ selector : 'build::*', singleUnwrapping : 0, criterion : { debug : 0 } });
@@ -6146,7 +6158,9 @@ function pathsResolve( test )
   ready.then( ( arg ) =>
   {
 
-    test.case = 'nativizing'; /* */
+    /* */
+
+    test.case = 'nativizing';
     var resolved = opener.openedModule.resolve({ selector : 'path::*', pathNativizing : 1, selectorIsPath : 0 });
     var expected =
     [
@@ -6173,7 +6187,9 @@ function pathsResolve( test )
     var got = resolved;
     test.identical( _.setFrom( got ), _.setFrom( _.filter( abs( expected ), ( p ) => p ? _.path.s.nativize( p ) : p ) ) );
 
-    test.case = 'path::* - implicit'; /* */
+    /* */
+
+    test.case = 'path::* - implicit';
     var resolved = opener.openedModule.resolve( 'path::*' );
     var expected =
     [
@@ -6200,7 +6216,9 @@ function pathsResolve( test )
     var got = resolved;
     test.identical( _.setFrom( rel( got ) ), _.setFrom( expected ) );
 
-    test.case = 'path::* - pu:1 mvu:1 pr:in'; /* */
+    /* */
+
+    test.case = 'path::* - pu:1 mvu:1 pr:in';
     var resolved = opener.openedModule.resolve
     ({
       selector : 'path::*',
@@ -6232,7 +6250,9 @@ function pathsResolve( test )
     var got = resolved;
     test.identical( rel( got ), expected );
 
-    test.case = 'path::* - pu:1 mvu:1 pr:out'; /* */
+    /* */
+
+    test.case = 'path::* - pu:1 mvu:1 pr:out';
     var resolved = opener.openedModule.resolve
     ({
       selector : 'path::*',
@@ -6264,7 +6284,9 @@ function pathsResolve( test )
     var got = resolved;
     test.identical( rel( got ), expected );
 
-    test.case = 'path::* - pu:1 mvu:1 pr:null'; /* */
+    /* */
+
+    test.case = 'path::* - pu:1 mvu:1 pr:null';
     var resolved = opener.openedModule.resolve
     ({
       selector : 'path::*',
@@ -6296,7 +6318,9 @@ function pathsResolve( test )
     var got = resolved;
     test.identical( rel( got ), expected );
 
-    test.case = 'path::* - pu:0 mvu:0 pr:null'; /* */
+    /* */
+
+    test.case = 'path::* - pu:0 mvu:0 pr:null';
     var resolved = opener.openedModule.resolve
     ({
       selector : 'path::*',
@@ -6333,7 +6357,9 @@ function pathsResolve( test )
     _.any( resolved, ( e, k ) => test.is( !!e.original ) );
     test.is( _.path.isAbsolute( got.will ) );
 
-    test.case = 'path::* - pu:0 mvu:0 pr:in'; /* */
+    /* */
+
+    test.case = 'path::* - pu:0 mvu:0 pr:in';
     var resolved = opener.openedModule.resolve
     ({
       selector : 'path::*',
@@ -6364,7 +6390,9 @@ function pathsResolve( test )
     var got = _.select( resolved, '*/path' );
     test.identical( rel( got ), expected );
 
-    test.case = 'path::* - pu:0 mvu:0 pr:out'; /* */
+    /* */
+
+    test.case = 'path::* - pu:0 mvu:0 pr:out';
     var resolved = opener.openedModule.resolve
     ({
       selector : 'path::*',
@@ -6395,7 +6423,9 @@ function pathsResolve( test )
     var got = _.select( resolved, '*/path' );
     test.identical( rel( got ), expected );
 
-    test.case = 'path::* - pu:1 mvu:0 pr:null'; /* */
+    /* */
+
+    test.case = 'path::* - pu:1 mvu:0 pr:null';
     var resolved = opener.openedModule.resolve
     ({
       selector : 'path::*',
@@ -6426,7 +6456,9 @@ function pathsResolve( test )
     var got = resolved;
     test.identical( rel( got ), expected );
 
-    test.case = 'path::* - pu:1 mvu:0 pr:in'; /* */
+    /* */
+
+    test.case = 'path::* - pu:1 mvu:0 pr:in';
     var resolved = opener.openedModule.resolve
     ({
       selector : 'path::*',
@@ -6457,7 +6489,9 @@ function pathsResolve( test )
     var got = resolved;
     test.identical( rel( got ), expected );
 
-    test.case = 'path::* - pu:1 mvu:0 pr:out'; /* */
+    /* */
+
+    test.case = 'path::* - pu:1 mvu:0 pr:out';
     var resolved = opener.openedModule.resolve
     ({
       selector : 'path::*',
@@ -6488,7 +6522,9 @@ function pathsResolve( test )
     var got = resolved;
     test.identical( rel( got ), expected );
 
-    test.case = 'path::* - pu:0 mvu:1 pr:null'; /* */
+    /* */
+
+    test.case = 'path::* - pu:0 mvu:1 pr:null';
     var resolved = opener.openedModule.resolve
     ({
       selector : 'path::*',
@@ -6519,7 +6555,9 @@ function pathsResolve( test )
     var got = _.select( resolved, '*/path' );
     test.identical( rel( got ), expected );
 
-    test.case = 'path::* - pu:0 mvu:1 pr:in'; /* */
+    /* */
+
+    test.case = 'path::* - pu:0 mvu:1 pr:in';
     var resolved = opener.openedModule.resolve
     ({
       selector : 'path::*',
@@ -6550,7 +6588,9 @@ function pathsResolve( test )
     var got = _.select( resolved, '*/path' );
     test.identical( rel( got ), expected );
 
-    test.case = 'path::* - pu:0 mvu:1 pr:out'; /* */
+    /* */
+
+    test.case = 'path::* - pu:0 mvu:1 pr:out';
     var resolved = opener.openedModule.resolve
     ({
       selector : 'path::*',

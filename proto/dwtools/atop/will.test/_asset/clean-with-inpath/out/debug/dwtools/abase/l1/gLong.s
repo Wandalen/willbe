@@ -1400,17 +1400,8 @@ function longSort( dstLong, srcLong, onEvaluate )
 // fields
 // --
 
-// let unrollSymbol = Symbol.for( 'unroll' );
-
 let Fields =
 {
-
-  // ArrayType : Array,
-  //
-  // accuracy : 1e-7,
-  // accuracySqrt : 1e-4,
-  // accuracySqr : 1e-14,
-
 }
 
 // --

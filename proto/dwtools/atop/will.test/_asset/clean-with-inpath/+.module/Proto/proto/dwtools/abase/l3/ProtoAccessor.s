@@ -15,28 +15,28 @@ _.assert( _.routineIs( _nameFielded ), 'wProto needs wTools/staging/dwtools/l3/N
 
 /**
  * @summary Collection of routines for declaring accessors
- * @namespace "wTools.accessor"
+ * @namespace wTools.accessor
  * @extends Tools
  * @module Tools/base/Proto
  */
 
 /**
  * @summary Collection of routines for declaring getters
- * @namespace "wTools.accessor.getter"
+ * @namespace wTools.accessor.getter
  * @extends Tools.accessor
  * @module Tools/base/Proto
  */
 
  /**
  * @summary Collection of routines for declaring setters
- * @namespace "wTools.accessor.setter"
+ * @namespace wTools.accessor.setter
  * @extends Tools.accessor
  * @module Tools/base/Proto
  */
 
 /**
  * @summary Collection of routines for declaring getters and setters
- * @namespace "wTools.accessor.getterSetter"
+ * @namespace wTools.accessor.getterSetter
  * @extends Tools.accessor
  * @module Tools/base/Proto
  */
