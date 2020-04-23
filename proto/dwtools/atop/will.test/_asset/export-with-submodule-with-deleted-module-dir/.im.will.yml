@@ -1,0 +1,55 @@
+
+submodule :
+
+  m1 : module/m1/
+
+path :
+
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+
+  proto : './proto'
+
+reflector :
+
+  reflect.submodules :
+      inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+      dst :
+        basePath : .
+        prefixPath : "{path::out.debug}"
+
+  reflect.proto :
+    criterion :
+      debug : [ 0,1 ]
+    filePath :
+      path::proto : path::out.*=1
+    src :
+      maskAll :
+        excludeAny : [ /\.ss$/, /(^|\/)-/, /(^|\/)\.(?!$|\/)/ ]
+
+step :
+
+  clean.out :
+    inherit : files.delete
+    filePath : '{path::out.*=1}/**'
+    criterion :
+      debug : [ 0,1 ]
+      
+build :
+
+  debug.raw :
+    criterion :
+      default : 1
+      debug : 1
+      raw : 1
+    steps :
+      - reflect.submodules
+      - reflect.proto*=1
