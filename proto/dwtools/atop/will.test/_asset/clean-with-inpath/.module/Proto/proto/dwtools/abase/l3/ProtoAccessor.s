@@ -45,7 +45,7 @@ _.assert( _.routineIs( _nameFielded ), 'wProto needs wTools/staging/dwtools/l3/N
  * Accessor defaults
  * @typedef {Object} AccessorDefaults
  * @property {Boolean} [ strict=1 ]
- * @property {Boolean} [ preserveValues=1 ]
+ * @property {Boolean} [ preservingValue=1 ]
  * @property {Boolean} [ prime=1 ]
  * @property {String} [ combining=null ]
  * @property {Boolean} [ readOnly=0 ]
@@ -62,7 +62,7 @@ let AccessorDefaults =
 {
 
   strict : 1,
-  preserveValues : 1,
+  preservingValue : 1,
   prime : 1,
   combining : null,
 
@@ -285,7 +285,7 @@ function _declareAct( o )
     //   if( o.methods[ rawName + 'Get' ] === propertyDescriptor.descriptor.get )
     //   o.methods[ rawName + 'Get' ] = null;
     //
-    //   let settrGetterSecond = _propertyGetterSetterMake( o, o.methods, rawName );
+    //   let settrGetterSecond = _methodsMake( o, o.methods, rawName );
     //
     //   if( o.methods[ '_' + rawName + 'Set' ] )
     //   o.methods[ '_' + rawName + 'Set' ] = null;
@@ -316,12 +316,12 @@ function _declareAct( o )
   // if( o.getterSetter )
   // debugger;
 
-  let getterSetter = _.accessor._propertyGetterSetterMake
+  let getterSetter = _.accessor._methodsMake
   ({
     name : o.name,
     methods : o.methods,
     object : o.object,
-    preserveValues : o.preserveValues,
+    preservingValue : o.preservingValue,
     readOnly : o.readOnly,
     readOnlyProduct : o.readOnlyProduct,
     getter : o.getter,
@@ -362,7 +362,7 @@ function _declareAct( o )
   let forbiddenName = '_' + o.name;
   let fieldSymbol = Symbol.for( o.name );
 
-  if( o.preserveValues )
+  if( o.preservingValue )
   if( _ObjectHasOwnProperty.call( o.object, o.name ) )
   o.object[ fieldSymbol ] = o.object[ o.name ];
 
@@ -422,7 +422,7 @@ defaults.methods = null;
  * @property {Array} [ message=null ] - setter/getter prints this message when called.
  * @property {Boolean} [ strict=true ] - makes object field private if no getter defined but object must have own constructor.
  * @property {Boolean} [ enumerable=true ] - sets property descriptor enumerable option.
- * @property {Boolean} [ preserveValues=true ] - saves values of existing object properties.
+ * @property {Boolean} [ preservingValue=true ] - saves values of existing object properties.
  * @property {Boolean} [ prime=true ]
  * @property {String} [ combining=null ]
  * @property {Boolean} [ readOnly=false ] - if true function doesn't define setter to property.
@@ -705,7 +705,7 @@ function accessorForbid( o )
 
 var defaults = accessorForbid.defaults = Object.create( _declare.defaults );
 
-defaults.preserveValues = 0;
+defaults.preservingValue = 0;
 defaults.enumerable = 0;
 defaults.prime = null;
 defaults.strict = 1;

@@ -830,7 +830,7 @@ function _propertyGetterSetterNames( propertyName )
 
 //
 
-function _propertyGetterSetterMake( o )
+function _methodsMake( o )
 {
   let result = Object.create( null );
 
@@ -839,7 +839,7 @@ function _propertyGetterSetterMake( o )
   _.assert( _.strIs( o.name ) );
   _.assert( !o.readOnlyProduct || o.readOnly );
   _.assert( !!o.object );
-  _.assertRoutineOptions( _propertyGetterSetterMake, o );
+  _.assertRoutineOptions( _methodsMake, o );
 
   if( o.getterSetter )
   _.assertMapHasOnly( o.getterSetter, { get : null, set : null } );
@@ -865,7 +865,7 @@ function _propertyGetterSetterMake( o )
   let fieldName = '_' + o.name;
   let fieldSymbol = Symbol.for( o.name );
 
-  if( o.preserveValues )
+  if( o.preservingValue )
   if( _ObjectHasOwnProperty.call( o.methods,o.name ) )
   o.object[ fieldSymbol ] = o.object[ o.name ];
 
@@ -909,12 +909,12 @@ function _propertyGetterSetterMake( o )
   return result;
 }
 
-_propertyGetterSetterMake.defaults =
+_methodsMake.defaults =
 {
   name : null,
   object : null,
   methods : null,
-  preserveValues : 1,
+  preservingValue : 1,
   readOnly : 0,
   readOnlyProduct : 0,
   getter : null,
@@ -3281,7 +3281,7 @@ let Routines =
   propertyDescriptorForAccessor,
   propertyDescriptorGet,
   _propertyGetterSetterNames,
-  _propertyGetterSetterMake,
+  _methodsMake,
   _propertyGetterSetterGet,
 
   // proxy
