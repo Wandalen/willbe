@@ -49,7 +49,7 @@ _.assert( _.routineIs( _nameFielded ), 'wProto needs wTools/staging/dwtools/l3/N
  * Accessor defaults
  * @typedef {Object} AccessorDefaults
  * @property {Boolean} [ strict=1 ]
- * @property {Boolean} [ preserveValues=1 ]
+ * @property {Boolean} [ preservingValue=1 ]
  * @property {Boolean} [ prime=1 ]
  * @property {String} [ combining=null ]
  * @property {Boolean} [ readOnly=0 ]
@@ -66,9 +66,10 @@ let AccessorDefaults =
 {
 
   strict : 1,
-  preserveValues : 1,
+  preservingValue : 1,
   prime : null,
   combining : null,
+  addingMethods : 0,
 
   readOnly : 0,
   readOnlyProduct : 0,
@@ -77,9 +78,9 @@ let AccessorDefaults =
 
   getter : null,
   setter : null,
-  copy : null,
-  getterSetter : null,
-
+  put : null,
+  copy : null, /* xxx : remove? */
+  getterSetter : null, /* xxx : rename? */
 
 }
 
@@ -96,6 +97,8 @@ function _propertyGetterSetterNames( propertyName )
 
   result.set = '_' + propertyName + 'Set';
   result.get = '_' + propertyName + 'Get';
+  result.put = '_' + propertyName + 'Put';
+  result.copy = '_' + propertyName + 'Copy';
 
   /* xxx : use it more extensively */
 
@@ -104,7 +107,7 @@ function _propertyGetterSetterNames( propertyName )
 
 //
 
-function _propertyGetterSetterMake( o )
+function _methodsMake( o )
 {
   let result = Object.create( null );
 
@@ -112,57 +115,95 @@ function _propertyGetterSetterMake( o )
   _.assert( _.objectLikeOrRoutine( o.methods ) );
   _.assert( _.strIs( o.name ) );
   _.assert( !!o.object );
-  _.assertRoutineOptions( _propertyGetterSetterMake, o );
+  _.assertRoutineOptions( _methodsMake, o );
+
+  if( o.setter === null )
+  if( o.put === 0 || o.put === false )
+  o.setter = false;
+
+  if( o.put === null )
+  if( o.setter === 0 || o.setter === false )
+  o.put = false;
 
   if( o.getterSetter )
-  _.assertMapHasOnly( o.getterSetter, { get : null, set : null, copy : null } );
-  o.getterSetter = unfunct( o.getterSetter );
+  {
+    o.getterSetter = unfunct( o.getterSetter );
+    _.assertMapHasOnly( o.getterSetter, { get : null, set : null, copy : null } );
+  }
 
   if( o.getterSetter && o.setter === null && o.getterSetter.set )
   o.setter = o.getterSetter.set;
   if( _.boolLike( o.setter ) )
   o.setter = !!o.setter;
-  o.setter = unfunct( o.setter );
 
   if( o.getterSetter && o.getter === null && o.getterSetter.get )
   o.getter = o.getterSetter.get;
   if( _.boolLike( o.getter ) )
   o.getter = !!o.getter;
-  o.getter = unfunct( o.getter );
 
-  if( o.getter )
-  result.get = o.getter;
-  else if( o.getterSetter && o.getterSetter.get )
-  result.get = o.getterSetter.get;
-  else if( o.methods[ '' + o.name + 'Get' ] )
-  result.get = o.methods[ o.name + 'Get' ];
-  else if( o.methods[ '_' + o.name + 'Get' ] )
-  result.get = o.methods[ '_' + o.name + 'Get' ];
+  if( o.getter !== false && o.getter !== 0 )
+  {
+    if( o.getter )
+    result.get = o.getter;
+    else if( o.getterSetter && o.getterSetter.get )
+    result.get = o.getterSetter.get;
+    else if( o.methods[ '' + o.name + 'Get' ] )
+    result.get = o.methods[ o.name + 'Get' ];
+    else if( o.methods[ '_' + o.name + 'Get' ] )
+    result.get = o.methods[ '_' + o.name + 'Get' ];
+  }
 
-  if( o.setter )
-  result.set = o.setter;
-  else if( o.getterSetter && o.getterSetter.set )
-  result.set = o.getterSetter.set;
-  else if( o.methods[ '' + o.name + 'Set' ] )
-  result.set = o.methods[ o.name + 'Set' ];
-  else if( o.methods[ '_' + o.name + 'Set' ] )
-  result.set = o.methods[ '_' + o.name + 'Set' ];
+  if( o.setter !== false && o.setter !== 0 )
+  {
+    if( o.setter )
+    result.set = o.setter;
+    else if( o.getterSetter && o.getterSetter.set )
+    result.set = o.getterSetter.set;
+    else if( o.methods[ '' + o.name + 'Set' ] )
+    result.set = o.methods[ o.name + 'Set' ];
+    else if( o.methods[ '_' + o.name + 'Set' ] )
+    result.set = o.methods[ '_' + o.name + 'Set' ];
+  }
+
+  if( o.put !== false && o.put !== 0 )
+  {
+    if( o.put )
+    result.put = o.put;
+    else if( o.getterSetter && o.getterSetter.put )
+    result.put = o.getterSetter.put;
+    else if( o.methods[ '' + o.name + 'Put' ] )
+    result.put = o.methods[ o.name + 'Put' ];
+    else if( o.methods[ '_' + o.name + 'Put' ] )
+    result.put = o.methods[ '_' + o.name + 'Put' ];
+  }
 
   if( o.copy )
-  result.copy = o.copy;
-  else if( o.getterSetter && o.getterSetter.copy )
-  result.copy = o.getterSetter.copy;
-  else if( o.methods[ '' + o.name + 'Copy' ] )
-  result.copy = o.methods[ o.name + 'Copy' ];
-  else if( o.methods[ '_' + o.name + 'Copy' ] )
-  result.copy = o.methods[ '_' + o.name + 'Copy' ];
+  debugger;
+  if( o.copy !== false && o.copy !== 0 )
+  {
+    if( o.copy )
+    result.copy = o.copy;
+    else if( o.getterSetter && o.getterSetter.copy )
+    result.copy = o.getterSetter.copy;
+    else if( o.methods[ '' + o.name + 'Copy' ] )
+    result.copy = o.methods[ o.name + 'Copy' ];
+    else if( o.methods[ '_' + o.name + 'Copy' ] )
+    result.copy = o.methods[ '_' + o.name + 'Copy' ];
+  }
+
+  // if( _global_.debugger )
+  // debugger;
+  resultUnfunct( 'get' );
+  resultUnfunct( 'set' );
+  resultUnfunct( 'put', 1 );
+  resultUnfunct( 'copy', 1 );
 
   let fieldName = '_' + o.name;
   let fieldSymbol = Symbol.for( o.name );
 
-  if( o.preserveValues )
-  if( _ObjectHasOwnProperty.call( o.methods, o.name ) )
-  o.object[ fieldSymbol ] = o.object[ o.name ];
+  // if( o.preservingValue ) /* xxx : move out */
+  // if( _ObjectHasOwnProperty.call( o.methods, o.name ) )
+  // o.object[ fieldSymbol ] = o.object[ o.name ];
 
   /* copy */
 
@@ -174,6 +215,7 @@ function _propertyGetterSetterMake( o )
     if( !result.set && o.setter === null )
     result.set = function set( src )
     {
+      debugger;
       let it = _.accessor.copyIterationMake
       ({
         dstInstance : this,
@@ -187,6 +229,7 @@ function _propertyGetterSetterMake( o )
     if( !result.get && o.getter === null )
     result.get = function get()
     {
+      debugger;
       let it = _.accessor.copyIterationMake
       ({
         srcInstance : this,
@@ -200,24 +243,77 @@ function _propertyGetterSetterMake( o )
 
   /* set */
 
-  if( !result.set && o.setter === null )
-  result.set = function set( src )
+  // if( !result.set && o.setter === null )
+  // if( !result.set && o.setter === null || o.setter === true || o.setter === 1 )
+  if( !result.set )
+  if( o.setter === null || o.setter === true || o.setter === 1 )
   {
-    this[ fieldSymbol ] = src;
-    return src;
+    if( result.put )
+    result.set = result.put;
+    else
+    result.set = function set( src )
+    {
+      this[ fieldSymbol ] = src;
+      return src;
+    }
   }
+
+  // if( result.set && !result.setName )
+  // {
+  //   if( o.object[ o.name + 'Set' ] )
+  //   result.setName = o.name + 'Set';
+  //   else if( o.object[ '_' + o.name + 'Set' ] )
+  //   result.setName = '_' + o.name + 'Set';
+  //   else
+  //   result.setName = o.name + 'Set';
+  // }
 
   /* get */
 
-  if( !result.get && o.getter === null )
+  if( !result.get )
+  if( o.getter === null || o.getter === true || o.getter === 1 )
   {
-
     result.get = function get()
     {
       return this[ fieldSymbol ];
     }
-
   }
+
+  // if( result.get && !result.getName )
+  // {
+  //   if( o.object[ o.name + 'Get' ] )
+  //   result.getName = o.name + 'Get';
+  //   else if( o.object[ '_' + o.name + 'Get' ] )
+  //   result.getName = '_' + o.name + 'Get';
+  //   else
+  //   result.setName = o.name + 'Get';
+  // }
+
+  /* put */
+
+  // if( !result.put && o.put === null )
+  if( !result.put )
+  if( o.put === null || o.put === true || o.put === 1 )
+  // if( o.put === true || o.put === 1 )
+  {
+    if( result.set )
+    result.put = result.set;
+    else
+    result.put = function put( src )
+    {
+      this[ fieldSymbol ] = src;
+    }
+  }
+
+  // if( result.put && !result.putName )
+  // {
+  //   if( o.object[ o.name + 'Put' ] )
+  //   result.putName = o.name + 'Put';
+  //   else if( o.object[ '_' + o.name + 'Put' ] )
+  //   result.putName = '_' + o.name + 'Put';
+  //   else
+  //   result.setName = o.name + 'Put';
+  // }
 
   /* readOnlyProduct */
 
@@ -239,13 +335,32 @@ function _propertyGetterSetterMake( o )
   _.assert( !result.set || o.setter !== false, () => 'Field ' + _.strQuote( o.name ) + ' is read only, but setter found in' + _.toStrShort( o.methods ) );
   _.assert( !!result.set || o.setter === false, () => 'Field ' + _.strQuote( o.name ) + ' is not read only, but setter not found in' + _.toStrShort( o.methods ) );
   _.assert( !!result.get || o.getter === false, () => 'Field ' + _.strQuote( o.name ) + ' is not read only, but getter not found in' + _.toStrShort( o.methods ) );
+  _.assert( !!result.put || !o.put, () => 'Field ' + _.strQuote( o.name ) + ' putter not found in' + _.toStrShort( o.methods ) );
 
   return result;
 
   /* */
 
+  function resultUnfunct( name, checking )
+  {
+    _.assert( _.primitiveIs( name ) );
+    if( !result[ name ] )
+    return;
+    let functor = result[ name ];
+    let r = unfunct( functor );
+    // if( checking && r !== functor )
+    // {
+    // }
+    result[ name ] = r;
+    return r;
+  }
+
+  /* */
+
   function unfunct( functor )
   {
+    if( !_.routineIs( functor ) )
+    return functor;
     if( functor && functor.rubrics && _.longHas( functor.rubrics, 'functor' ) )
     {
       if( functor.defaults && functor.defaults.fieldName !== undefined )
@@ -256,24 +371,70 @@ function _propertyGetterSetterMake( o )
     return functor;
   }
 
+  /* */
+
 }
 
-_propertyGetterSetterMake.defaults =
+_methodsMake.defaults =
 {
   name : null,
   object : null,
   methods : null,
-  preserveValues : 1,
+  // preservingValue : 1,
   readOnlyProduct : 0,
   copy : null,
   setter : null,
   getter : null,
+  put : null,
   getterSetter : null,
 }
 
 //
 
-function _propertyGetterSetterGet( object, propertyName )
+function _methodsNames( o )
+{
+
+  _.routineOptions( _methodsNames, o );
+
+  if( o.anames === null )
+  o.anames = Object.create( null );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.mapIs( o.amethods ) );
+  _.assert( _.strIs( o.name ) );
+  _.assert( !!o.object );
+
+  /* get */
+
+  for( let t = 0 ; t < _.accessor.AccessorType.length ; t++ )
+  {
+    let type = _.accessor.AccessorType[ t ];
+    if( o.amethods[ type ] && !o.anames[ type ] )
+    {
+      let type2 = _.strCapitalize( type );
+      if( o.object[ o.name + type2 ] === o.amethods[ type ] )
+      o.anames[ type ] = o.name + type2;
+      else if( o.object[ '_' + o.name + type2 ] === o.amethods[ type ] )
+      o.anames[ type ] = '_' + o.name + type2;
+      else
+      o.anames[ type ] = o.name + type2;
+    }
+  }
+
+  return o.anames;
+}
+
+_methodsNames.defaults =
+{
+  object : null,
+  amethods : null,
+  anames : null,
+  name : null,
+}
+
+//
+
+function _methodsRetrieve( object, propertyName )
 {
   let result = Object.create( null );
 
@@ -284,17 +445,56 @@ function _propertyGetterSetterGet( object, propertyName )
   result.setName = object[ propertyName + 'Set' ] ? propertyName + 'Set' : '_' + propertyName + 'Set';
   result.getName = object[ propertyName + 'Get' ] ? propertyName + 'Get' : '_' + propertyName + 'Get';
   result.copyName = object[ propertyName + 'Copy' ] ? propertyName + 'Copy' : '_' + propertyName + 'Copy';
+  result.putName = object[ propertyName + 'Put' ] ? propertyName + 'Put' : '_' + propertyName + 'Put';
 
   result.set = object[ result.setName ];
   result.get = object[ result.getName ];
-  result.copy = object[ result.getName ];
+  result.copy = object[ result.copyName ];
+  result.put = object[ result.putName ];
 
   return result;
 }
 
 //
 
-function _propertyCopyGet( srcInstance, name )
+function _methodsValidate( o )
+{
+
+  _.assert( _.strIs( o.name ) );
+  _.assert( !!o.object );
+  _.routineOptions( _methodsValidate, o );
+
+  // let AccessorType = _.accessor.AccessorType;
+  let AccessorType = [ 'get', 'set' ];
+
+  for( let t = 0 ; t < AccessorType.length ; t++ )
+  {
+    let type = AccessorType[ t ];
+    if( !o.amethods[ type ] )
+    {
+      let name1 = o.name + _.strCapitalize( type );
+      let name2 = '_' + o.name + _.strCapitalize( type );
+
+      if( name1 in o.object )
+      throw _.err( `Object should not have method ${name1}, if accessor has it disabled` );
+      if( name2 in o.object )
+      throw _.err( `Object should not have method ${name1}, if accessor has it disabled` );
+
+    }
+  }
+
+}
+
+_methodsValidate.defaults =
+{
+  object : null,
+  amethods : null,
+  name : null,
+}
+
+//
+
+function _methodCopyGet( srcInstance, name )
 {
   _.assert( arguments.length === 2 );
   _.assert( _.strIs( name ) );
@@ -424,13 +624,21 @@ _register.defaults =
 function _declareAct( o )
 {
 
+  _.assertRoutineOptions( _declareAct, arguments );
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( o.name ) );
-  _.assertRoutineOptions( _declareAct, arguments );
   _.assert( _.longHas( [ null, 0, false, 'rewrite', 'supplement' ], o.combining ), 'not tested' );
 
   if( o.prime === null )
   o.prime = _.prototypeIsStandard( o.object );
+
+  if( o.setter === null )
+  if( o.put === 0 || o.put === false )
+  o.setter = false;
+
+  if( o.put === null )
+  if( o.setter === 0 || o.setter === false )
+  o.put = false;
 
   _.assert( _.boolLike( o.prime ) );
 
@@ -460,19 +668,29 @@ function _declareAct( o )
 
   /* */
 
-  let getterSetter = _.accessor._propertyGetterSetterMake
+  if( _global_.debugger )
+  debugger;
+  let amethods = _.accessor._methodsMake
   ({
     name : o.name,
     methods : o.methods,
     object : o.object,
-    preserveValues : o.preserveValues,
-    // readOnly : o.readOnly,
     readOnlyProduct : o.readOnlyProduct,
+    put : o.put,
     copy : o.copy,
     getter : o.getter,
     setter : o.readOnly ? false : o.setter,
     getterSetter : o.getterSetter,
   });
+
+  let anames;
+  if( o.prime || o.addingMethods )
+  anames = _.accessor._methodsNames
+  ({
+    object : o.object,
+    amethods : amethods,
+    name : o.name,
+  })
 
   /* */
 
@@ -487,61 +705,108 @@ function _declareAct( o )
 
     delete o2.name;
 
-    if( getterSetter.set )
-    o2.methods[ '_' + o.name + 'Set' ] = getterSetter.set;
-    if( getterSetter.get )
-    o2.methods[ '_' + o.name + 'Get' ] = getterSetter.get;
+    for( let k in amethods )
+    o2.methods[ anames[ k ] ] = amethods[ k ];
 
     _.accessor._register
     ({
       proto : o.object,
       name : o.name,
       declaratorName : 'accessor',
-      // declaratorName : null,
       declaratorArgs : [ o2 ],
       combining : o.combining,
     });
 
   }
 
-  /* */
+  if( _global_.debugger )
+  debugger;
 
   let forbiddenName = '_' + o.name;
   let fieldSymbol = Symbol.for( o.name );
 
-  if( o.preserveValues )
+  /* preservingValue */
+
+  if( o.preservingValue ) /* xxx : use put */
   if( _ObjectHasOwnProperty.call( o.object, o.name ) )
-  o.object[ fieldSymbol ] = o.object[ o.name ];
+  {
+    if( amethods.put )
+    amethods.put.call( o.object, o.object[ o.name ] );
+    else
+    o.object[ fieldSymbol ] = o.object[ o.name ];
+  }
+
+  /* addingMethods */
+
+  if( o.addingMethods )
+  {
+    for( let n in amethods )
+    {
+      o.object[ anames[ n ] ] = amethods[ n ];
+    }
+  }
 
   /* define accessor */
 
-  _.assert( getterSetter.get !== undefined );
+  _.assert( amethods.get !== undefined );
 
-  if( _.routineIs( getterSetter.get ) )
-  {
-    Object.defineProperty( o.object, o.name,
+    let o2 =
     {
-      set : getterSetter.set,
-      get : getterSetter.get,
       enumerable : !!o.enumerable,
       configurable : !!o.configurable,
-    });
-  }
-  else
-  {
-    // debugger;
-    _.assert( getterSetter.set === undefined );
-    Object.defineProperty( o.object, o.name,
+    }
+    if( _.routineIs( amethods.get ) )
     {
-      value : getterSetter.get,
-      enumerable : !!o.enumerable,
-      configurable : !!o.configurable,
-    });
-  }
+      o2.set = amethods.set;
+      o2.get = amethods.get;
+    }
+    else
+    {
+      _.assert( amethods.set === undefined );
+      o2.get = amethods.get;
+    }
+    // if( _.routineIs( amethods.put ) )
+    // o2.put = amethods.put;
+    // if( _.routineIs( amethods.copy ) )
+    // o2.copy = amethods.copy;
+
+    Object.defineProperty( o.object, o.name, o2 );
+
+  // if( _.routineIs( amethods.get ) )
+  // {
+  //   let o2 =
+  //   {
+  //     set : amethods.set,
+  //     get : amethods.get,
+  //     enumerable : !!o.enumerable,
+  //     configurable : !!o.configurable,
+  //   }
+  //   Object.defineProperty( o.object, o.name, o2 );
+  // }
+  // else
+  // {
+  //   _.assert( amethods.set === undefined );
+  //   Object.defineProperty( o.object, o.name,
+  //   {
+  //     value : amethods.get,
+  //     enumerable : !!o.enumerable,
+  //     configurable : !!o.configurable,
+  //   });
+  // }
+
+  /* validate */
+
+  if( Config.debug )
+  _.accessor._methodsValidate({ object : o.object, name : o.name, amethods });
 
   /* forbid underscore field */
 
-  if( o.strict && !propertyDescriptor.descriptor  )
+  if( o.strict && !propertyDescriptor.descriptor )
+  forbid();
+
+  /* - */
+
+  function forbid()
   {
 
     let m =
@@ -558,7 +823,6 @@ function _declareAct( o )
       names : forbiddenName,
       message : [ m ],
       prime : 0,
-      // strict : 1,
       strict : 0,
     });
 
@@ -644,7 +908,7 @@ function _declare_pre( routine, args )
  * @property {Array} [ message=null ] - setter/getter prints this message when called.
  * @property {Boolean} [ strict=true ] - makes object field private if no getter defined but object must have own constructor.
  * @property {Boolean} [ enumerable=true ] - sets property descriptor enumerable option.
- * @property {Boolean} [ preserveValues=true ] - saves values of existing object properties.
+ * @property {Boolean} [ preservingValue=true ] - saves values of existing object properties.
  * @property {Boolean} [ prime=true ]
  * @property {String} [ combining=null ]
  * @property {Boolean} [ readOnly=false ] - if true function doesn't define setter to property.
@@ -901,7 +1165,7 @@ var defaults = forbid_body.defaults =
 
   ... _.mapExtend( null, declare.body.defaults ),
 
-  preserveValues : 0,
+  preservingValue : 0,
   enumerable : 0,
   combining : 'rewrite',
   message : null,
@@ -1271,11 +1535,6 @@ function suiteMakerFrom_functor( fop )
   function pre( routine, args )
   {
     let o2 = _pre( routine, args );
-    // if( fop.getterFunctor.pre )
-    // {
-    //   let args2 = _.filter( null, args, ( e, k ) => _.structure.extendReplacing( null, e ) );
-    //   let o2 = fop.getterFunctor.pre.call( fop.getterFunctor, args2 );
-    // }
     return o2;
   }
 
@@ -1756,6 +2015,26 @@ toElementSet_functor.defaults =
 
 //
 
+function symbolPut_functor( o )
+{
+  o = _.routineOptions( symbolPut_functor, arguments );
+  let symbol = Symbol.for( o.fieldName );
+  return function put( val )
+  {
+    this[ symbol ] = val;
+    return val;
+  }
+}
+
+symbolPut_functor.defaults =
+{
+  fieldName : null,
+}
+
+symbolPut_functor.rubrics = [ 'accessor', 'put', 'functor' ];
+
+//
+
 function toElementGet_functor( o )
 {
   _.assert( 0, 'not tested' );
@@ -1798,10 +2077,10 @@ function withSymbolGet_functor( o )
   _.routineOptions( withSymbolGet_functor, o );
   _.assert( _.strDefined( o.fieldName ) );
 
-  let fieldName = o.fieldName;
+  let spaceName = o.fieldName;
   let setter = Object.create( null );
   let getter = Object.create( null );
-  let symbol = Symbol.for( fieldName );
+  let symbol = Symbol.for( spaceName );
 
   return function toStructure()
   {
@@ -1825,7 +2104,17 @@ function withSymbolGet_functor( o )
         if( method )
         return end();
 
-        let symbol = Symbol.for( fieldName );
+        if( fieldName === spaceName )
+        {
+          method = getter[ fieldName ] = function get( value )
+          {
+            return undefined;
+          }
+          return end();
+        }
+
+        debugger;
+        let symbol = _.symbolIs( fieldName ) ? fieldName : Symbol.for( fieldName );
         method = getter[ fieldName ] = function get( value )
         {
           return this[ symbol ];
@@ -1844,7 +2133,7 @@ function withSymbolGet_functor( o )
         if( method )
         return end();
 
-        let symbol = Symbol.for( fieldName );
+        let symbol = _.symbolIs( fieldName ) ? fieldName : Symbol.for( fieldName );
         method = setter[ fieldName ] = function put( value )
         {
           this[ symbol ] = value;
@@ -1882,10 +2171,10 @@ function toStructureGet_functor( o )
   _.routineOptions( toStructureGet_functor, o );
   _.assert( _.strDefined( o.fieldName ) );
 
-  let fieldName = o.fieldName;
+  let spaceName = o.fieldName;
   let setter = Object.create( null );
   let getter = Object.create( null );
-  let symbol = Symbol.for( fieldName );
+  let symbol = Symbol.for( spaceName );
 
   return function toStructure()
   {
@@ -1909,11 +2198,22 @@ function toStructureGet_functor( o )
         if( method )
         return end();
 
-        if( original.hasField( fieldName ) || Object.hasOwnProperty.call( original, symbol ) )
+        if( fieldName === spaceName )
         {
-          let symbol = Symbol.for( fieldName );
           method = getter[ fieldName ] = function get( value )
           {
+            return undefined;
+          }
+          return end();
+        }
+
+        let symbol = _.symbolIs( fieldName ) ? fieldName : Symbol.for( fieldName );
+        if( original.hasField( fieldName ) || Object.hasOwnProperty.call( original, symbol ) )
+        {
+          debugger;
+          method = getter[ fieldName ] = function get( value )
+          {
+            debugger;
             return this[ symbol ];
           }
           return end();
@@ -1957,9 +2257,9 @@ function toStructureGet_functor( o )
           return end();
         }
 
+        let symbol = _.symbolIs( fieldName ) ? fieldName : Symbol.for( fieldName );
         if( original.hasField( fieldName ) || Object.hasOwnProperty.call( original, symbol ) )
         {
-          let symbol = Symbol.for( fieldName );
           method = setter[ fieldName ] = function put( value )
           {
             this[ symbol ] = value;
@@ -1994,7 +2294,151 @@ toStructureGet_functor.defaults =
   fieldName : null,
 }
 
-toStructureGet_functor.rubrics = [ 'accessor', 'getter', 'functor' ];
+toStructureGet_functor.rubrics = [ 'accessor', 'getter', 'functor' ]; /* xxx : deprecate in favor of toValueGet_functor */
+
+//
+
+function toValueGet_functor( o )
+{
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.routineOptions( toValueGet_functor, o );
+  _.assert( _.strDefined( o.fieldName ) );
+
+  let spaceName = o.fieldName;
+  let setter = Object.create( null );
+  let getter = Object.create( null );
+  let symbol = Symbol.for( spaceName );
+
+  return function toStructure()
+  {
+    let helper = this[ symbol ];
+    if( !helper )
+    {
+      helper = this[ symbol ] = proxyMake( this );
+    }
+    return helper;
+  }
+
+  /* */
+
+  function proxyMake( original )
+  {
+    let handlers =
+    {
+      get( original, fieldName, proxy )
+      {
+        let method = getter[ fieldName ];
+        if( method )
+        return end();
+
+        if( fieldName === spaceName )
+        {
+          method = getter[ fieldName ] = function get( value )
+          {
+            return undefined;
+          }
+          return end();
+        }
+
+        if( _.symbolIs( fieldName ) )
+        {
+          let symbol = fieldName;
+          method = getter[ fieldName ] = function get( value )
+          {
+            return this[ symbol ];
+          }
+          return end();
+        }
+
+        let getName1 = '_' + fieldName + 'Get';
+        let getName2 = '' + fieldName + 'Get';
+
+        if( _.routineIs( original[ getName1 ] ) )
+        {
+          method = getter[ fieldName ] = function get( value )
+          {
+            return original[ getName1 ]();
+          }
+          return end();
+        }
+
+        if( _.routineIs( original[ getName2 ] ) )
+        {
+          method = getter[ fieldName ] = function get( value )
+          {
+            return original[ getName2 ]();
+          }
+          return end();
+        }
+
+        let symbol = Symbol.for( fieldName );
+        method = getter[ fieldName ] = function get( value )
+        {
+          return this[ symbol ];
+        }
+        return end();
+
+        function end()
+        {
+          return method.call( original );
+        }
+
+      },
+      set( original, fieldName, value, proxy )
+      {
+        let method = setter[ fieldName ];
+        if( method )
+        return end();
+
+        let putName1 = '_' + fieldName + 'Put';
+        if( original[ putName1 ] )
+        {
+          method = setter[ fieldName ] = function put( value )
+          {
+            return this[ putName1 ]( value );
+          }
+          return end();
+        }
+
+        let putName2 = fieldName + 'Put';
+        if( original[ putName2 ] )
+        {
+          method = setter[ fieldName ] = function put( value )
+          {
+            return this[ putName2 ]( value );
+          }
+          return end();
+        }
+
+        method = setter[ fieldName ] = function put( value )
+        {
+          this[ symbol ] = value;
+        }
+
+        return end();
+
+        function end()
+        {
+          method.call( original, value );
+          return true;
+        }
+      },
+    };
+
+    let proxy = new Proxy( original, handlers );
+
+    return proxy;
+  }
+
+}
+
+toValueGet_functor.defaults =
+{
+  fieldName : null,
+}
+
+toValueGet_functor.rubrics = [ 'accessor', 'getter', 'functor' ];
 
 //
 
@@ -2130,6 +2574,36 @@ let aliasGetter_functor = _.routineFromPreAndBody( alias_pre, aliasGet_functor_b
 
 let aliasSuite = suiteMakerFrom_functor( aliasGetter_functor, aliasSet_functor );
 
+// //
+//
+// function get( obj, key )
+// {
+// }
+//
+// //
+//
+// function set( obj, key, val )
+// {
+//   debugger;
+// }
+//
+// //
+//
+// function put( obj, key, val )
+// {
+//   debugger;
+//   let descriptor = _.propertyDescriptorGet( obj, key );
+//   debugger;
+//   if( !descriptor )
+//   {
+//     obj[ key ] = val;
+//     return;
+//   }
+//   if( descriptor.put )
+//   return descriptor.put.call( obj, val );
+//   obj[ key ] = val;
+// }
+
 // --
 // meta
 // --
@@ -2159,7 +2633,6 @@ function _DefineGenerate( original, kind )
   {
     [ original.name ] : function()
     {
-      // debugger;
       let definition = _.define[ kind ]({ ini : arguments, routine : original });
       _.assert( _.definitionIs( definition ) );
       return definition;
@@ -2173,7 +2646,6 @@ function _DefineGenerate( original, kind )
 
   routine.originalFunctor = original;
 
-  // debugger;
   _.assert( _.routineIs( _.define[ kind ] ) );
 
   return routine;
@@ -2183,6 +2655,7 @@ function _DefineGenerate( original, kind )
 // fields
 // --
 
+let AccessorType = [ 'get', 'set', 'put', 'copy' ];
 let Combining = [ 'rewrite', 'supplement', 'apppend', 'prepend' ];
 
 let DefaultAccessorsMap = Object.create( null );
@@ -2202,18 +2675,20 @@ let Forbids =
 }
 
 // --
-// define
+//
 // --
 
-let Extension =
+let AccessorExtension =
 {
 
   // getter / setter generator
 
   _propertyGetterSetterNames,
-  _propertyGetterSetterMake,
-  _propertyGetterSetterGet,
-  _propertyCopyGet,
+  _methodsMake,
+  _methodsNames,
+  _methodsRetrieve,
+  _methodsValidate,
+  _methodCopyGet,
 
   copyIterationMake,
 
@@ -2242,8 +2717,18 @@ let Extension =
 
   AccessorDefaults,
   Combining,
+  AccessorType,
   DefaultAccessorsMap,
 
+}
+
+//
+
+let ToolsExtension =
+{
+  // get,
+  // set,
+  // put,
 }
 
 //
@@ -2254,6 +2739,7 @@ let Getter =
   alias : aliasGetter_functor,
   toElement : toElementGet_functor,
   toStructure : toStructureGet_functor,
+  toValue : toValueGet_functor,
   withSymbol : withSymbolGet_functor,
 
 }
@@ -2279,6 +2765,15 @@ let Setter =
 
 //
 
+let Putter =
+{
+
+  symbol : symbolPut_functor,
+
+}
+
+//
+
 let Suite =
 {
 
@@ -2292,7 +2787,8 @@ let Suite =
 // --
 
 _.accessor = _.accessor || Object.create( null );
-_.mapExtend( _.accessor, Extension );
+_.mapSupplement( _, ToolsExtension );
+_.mapExtend( _.accessor, AccessorExtension );
 
 _.accessor.forbid( _, Forbids );
 _.accessor.forbid( _.accessor, Forbids );
@@ -2303,15 +2799,20 @@ _.mapExtend( _.accessor.getter, Getter );
 _.accessor.setter = _.accessor.setter || Object.create( null );
 _.mapExtend( _.accessor.setter, Setter );
 
+_.accessor.putter = _.accessor.putter || Object.create( null );
+_.mapExtend( _.accessor.putter, Putter );
+
 _.accessor.suite = _.accessor.suite || Object.create( null );
 _.mapExtend( _.accessor.suite, Suite );
 
 _.accessor.define = _.accessor.define || Object.create( null );
 _.accessor.define.getter = _DefinesGenerate( _.accessor.define.getter || null, _.accessor.getter, 'getter' );
 _.accessor.define.setter = _DefinesGenerate( _.accessor.define.setter || null, _.accessor.setter, 'setter' );
+_.accessor.define.putter = _DefinesGenerate( _.accessor.define.putter || null, _.accessor.putter, 'putter' );
 _.accessor.define.suite = _DefinesGenerate( _.accessor.define.suite || null, _.accessor.suite, 'accessor' );
 
 _.assert( _.routineIs( _.accessor.define.getter.alias ) );
+// _.assert( _.set === set );
 
 // --
 // export

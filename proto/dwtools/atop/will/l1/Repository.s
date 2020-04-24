@@ -296,21 +296,21 @@ function status( o )
 
     _.assert( arguments.length === 0, 'Expects no arguments' );
     _.assert( _.boolIs( repo.isRepository ) );
-    
+
     if( o.invalidating && o.isRepository )
     {
       if( !repo.isRepository )
       return end( false );
     }
     else
-    { 
+    {
       let isRepository = vcs.isRepository({ localPath : repo.downloadPath, sync : 1 });
       if( repo._.isRepository === null )
       repo._.isRepository = isRepository;
       if( !isRepository )
       return end( false );
     }
-    
+
     let status = vcs.statusLocal
     ({
       localPath : repo.downloadPath,
@@ -320,25 +320,25 @@ function status( o )
       explaining : 0,
       sync : 1,
     });
-    
+
     return end( status );
 
     function end( result )
-    { 
+    {
       if( _.boolIs( result ) )
-      { 
+      {
         repo._.hasLocalChanges = result;
         if( o.hasLocalUncommittedChanges )
         repo._.hasLocalUncommittedChanges = result;
       }
       else
-      { 
+      {
         _.assert( _.objectIs( status ) );
         repo._.hasLocalChanges = result.status;
         repo._.hasLocalUncommittedChanges = result.uncommitted;
         result = result.status;
       }
-      
+
       return result;
     }
 
@@ -351,14 +351,14 @@ function status( o )
 
     _.assert( arguments.length === 0, 'Expects no arguments' );
     _.assert( _.boolIs( repo.isRepository ) );
-    
+
     if( o.invalidating && o.isRepository )
     {
       if( !repo.isRepository )
       return end( false );
     }
     else
-    { 
+    {
       let isRepository = vcs.isRepository({ localPath : repo.downloadPath, sync : 1 });
       if( repo._.isRepository === null )
       repo._.isRepository = isRepository;
@@ -516,22 +516,22 @@ function status( o )
   function downloadRequiredReform()
   {
     _.assert( _.boolIs( repo.hasFiles ) );
-    
+
     let result;
-    
+
     if( o.invalidating && ( o.dirExists || o.hasFiles ) )
     {
       result = !repo.dirExists || !repo.hasFiles;
     }
     else
-    { 
+    {
       result = !fileProvider.isDir( repo.downloadPath );
       if( !result )
       result = fileProvider.dirIsEmpty( repo.downloadPath );
     }
-    
+
     repo._.downloadRequired = result;
-    
+
     return result;
   }
 

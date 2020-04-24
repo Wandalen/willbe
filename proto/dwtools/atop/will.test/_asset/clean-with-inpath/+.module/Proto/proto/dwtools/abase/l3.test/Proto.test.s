@@ -5,7 +5,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../../dwtools/Tools.s' );
+  let _ = require( '../../../dwtools/Tools.s' );
 
   _.include( 'wTesting' );
   _.include( 'wEqualer' );
@@ -491,6 +491,332 @@ function accessorOptionReadOnly( test )
 
 //
 
+function accessorOptionAddingMethods( test )
+{
+
+  /* */
+
+  test.case = 'deduce setter from put, object does not have methods, with _, addingMethods:1';
+  var methods =
+  {
+    _aGet : function() { return this.b },
+    _aPut : function( src ) { this.b = src },
+  }
+  var dst =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'a1',
+  }
+  _.accessor.declare
+  ({
+    object : dst,
+    methods,
+    names : { a : {} },
+    prime : 0,
+    strict : 0,
+    addingMethods : 0,
+  });
+  test.identical( dst, exp );
+
+  /* */
+
+  test.case = 'deduce setter from put, object has methods, addingMethods:0';
+  var dst =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aGet : function() { return this.b },
+    aPut : function( src ) { this.b = src },
+  };
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'a1',
+    aGet : dst.aGet,
+    aPut : dst.aPut,
+  }
+  _.accessor.declare
+  ({
+    object : dst,
+    names : { a : {} },
+    prime : 0,
+    strict : 0,
+    addingMethods : 0,
+  });
+  test.identical( dst, exp );
+
+  /* */
+
+  test.case = 'deduce setter from put, object has methods, addingMethods:1';
+  var dst =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aGet : function() { return this.b },
+    aPut : function( src ) { this.b = src },
+  };
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'a1',
+    aGet : dst.aGet,
+    aSet : dst.aPut,
+    aPut : dst.aPut,
+  }
+  _.accessor.declare
+  ({
+    object : dst,
+    names : { a : {} },
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  test.identical( dst, exp );
+
+  /* */
+
+  test.case = 'deduce setter from put, object has methods, with _, addingMethods:1';
+  var dst =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    _aGet : function() { return this.b },
+    _aPut : function( src ) { this.b = src },
+  };
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'a1',
+    _aGet : dst._aGet,
+    aSet : dst._aPut,
+    _aPut : dst._aPut,
+  }
+  _.accessor.declare
+  ({
+    object : dst,
+    names : { a : {} },
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  test.identical( dst, exp );
+
+  /* */
+
+  test.case = 'deduce setter from put, object does not have methods, with _, addingMethods:1';
+  var methods =
+  {
+    _aGet : function() { return this.b },
+    _aPut : function( src ) { this.b = src },
+  }
+  var dst =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'a1',
+    aGet : methods._aGet,
+    aSet : methods._aPut,
+    aPut : methods._aPut,
+  }
+  _.accessor.declare
+  ({
+    object : dst,
+    methods,
+    names : { a : {} },
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  test.identical( dst, exp );
+
+  /* */
+
+}
+
+//
+
+function accessorOptionPreserveValues( test )
+{
+
+  /* */
+
+  test.case = 'not symbol, explicit put, preservingValue : 1';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aGet : function() { return this.b },
+    aSet : function( src ) { this.b = src },
+    aPut : function( src ) { this.b = src },
+  };
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'a1',
+    aGet : object.aGet,
+    aSet : object.aSet,
+    aPut : object.aPut,
+  }
+  _.accessor.declare
+  ({
+    object,
+    names : { a : {} },
+    preservingValue : 1,
+    prime : 0,
+  });
+  test.identical( object, exp );
+
+  /* */
+
+  test.case = 'not symbol, explicit put, preservingValue : 0';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aGet : function() { return this.b },
+    aSet : function( src ) { this.b = src },
+    aPut : function( src ) { this.b = src },
+  };
+  var exp =
+  {
+    'a' : 'b1',
+    'b' : 'b1',
+    aGet : object.aGet,
+    aSet : object.aSet,
+    aPut : object.aPut,
+  }
+  _.accessor.declare
+  ({
+    object,
+    names : { a : {} },
+    preservingValue : 0,
+    prime : 0,
+  });
+  test.identical( object, exp );
+
+  /* */
+
+  test.case = 'not symbol, no put, preservingValue : 1';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aGet : function() { return this.b },
+    aSet : function( src ) { this.b = src },
+  };
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'a1',
+    aGet : object.aGet,
+    aSet : object.aSet,
+  }
+  _.accessor.declare
+  ({
+    object,
+    names : { a : {} },
+    preservingValue : 1,
+    prime : 0,
+  });
+  test.identical( object, exp );
+
+  /* */
+
+  test.case = 'not symbol, no put, preservingValue : 0';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aGet : function() { return this.b },
+    aSet : function( src ) { this.b = src },
+  };
+  var exp =
+  {
+    'a' : 'b1',
+    'b' : 'b1',
+    aGet : object.aGet,
+    aSet : object.aSet,
+  }
+  _.accessor.declare
+  ({
+    object,
+    names : { a : {} },
+    preservingValue : 0,
+    prime : 0,
+  });
+  test.identical( object, exp );
+
+  /* */
+
+  test.case = 'default getter/setter, preservingValue : 1';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  }
+  var names =
+  {
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 0,
+    preservingValue : 1,
+  });
+  test.identical( object, exp );
+
+  /* */
+
+  test.case = 'default getter/setter, preservingValue : 0';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var exp =
+  {
+    'a' : undefined,
+    'b' : 'b1',
+  }
+  var names =
+  {
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 0,
+    preservingValue : 0,
+  });
+  test.identical( object, exp );
+
+  /* */
+
+}
+
+//
+
 function accessorIsClean( test )
 {
 
@@ -515,15 +841,12 @@ function accessorIsClean( test )
     Accessors,
   }
 
-  // Extend.constructor = BasicConstructor;
-
   _.classDeclare
   ({
     cls : BasicConstructor,
     extend : Extend,
   });
 
-  debugger;
   var methods = Object.create( null );
   _.accessor.declare
   ({
@@ -531,14 +854,17 @@ function accessorIsClean( test )
     names : { f2 : { readOnly : 1 } },
     methods,
   });
-  debugger;
 
   var instance = new BasicConstructor();
 
   test.case = 'methods';
 
-  debugger;
-  test.is( _.routineIs( methods._f2Get ) );
+  var exp =
+  {
+    f2Get : methods.f2Get
+  }
+  test.identical( methods, exp );
+  test.is( _.routineIs( methods.f2Get ) );
   test.identical( _.mapKeys( methods ).length, 1 );
 
   test.case = 'inline no method';
@@ -561,8 +887,6 @@ function accessorIsClean( test )
 
 }
 
-// accessorIsClean.timeOut = 300000;
-
 //
 
 function accessorDeducingPrime( test )
@@ -579,21 +903,21 @@ function accessorDeducingPrime( test )
     return 'abc1';
   }
 
-  var dst = Object.create( proto );
-  dst.b = 'b2';
+  var object = Object.create( proto );
+  object.b = 'b2';
 
   var exp = { 'b' : 'b2', 'abc' : 'abc1' }
   var names = { abc : 'abc' }
   var o2 =
   {
-    object : dst,
+    object : object,
     names : names,
   }
   _.accessor.declare( o2 );
 
   test.identical( o2.prime, null );
   test.identical( o2.strict, 1 );
-  test.identical( dst, exp );
+  test.contains( object, exp );
 
   /* */
 
@@ -606,21 +930,21 @@ function accessorDeducingPrime( test )
     return 'abc1';
   }
 
-  var dst = Object.create( proto );
-  dst.b = 'b2';
+  var object = Object.create( proto );
+  object.b = 'b2';
 
   var exp = { 'b' : 'b2', 'abc' : 'abc1' }
   var names = { abc : 'abc' }
   var o2 =
   {
-    object : dst,
+    object : object,
     names : names,
   }
   _.accessor.readOnly( o2 );
 
   test.identical( o2.prime, null );
   test.identical( o2.strict, 1 );
-  test.identical( dst, exp );
+  test.contains( object, exp );
 
   /* */
 
@@ -633,22 +957,233 @@ function accessorDeducingPrime( test )
     return 'abc1';
   }
 
-  var dst = Object.create( proto );
-  dst.b = 'b2';
+  var object = Object.create( proto );
+  object.b = 'b2';
 
   var exp = { 'b' : 'b2' }
   var names = { abc : 'abc' }
   var o2 =
   {
-    object : dst,
+    object : object,
     names : names,
   }
   _.accessor.forbid( o2 );
 
   test.identical( o2.prime, 0 );
   test.identical( o2.strict, 0 );
-  test.identical( dst, exp );
+  test.contains( object, exp );
   test.shouldThrowErrorSync( () => dst.abc );
+
+  /* */
+
+}
+
+//
+
+function accessorUnfunct( test )
+{
+
+  /* */
+
+  test.case = 'unfunct getter';
+  var counter = 0;
+  function getter_functor( fop )
+  {
+    counter += 1;
+    var exp = { fieldName : 'a' };
+    test.identical( fop, exp );
+    return function get()
+    {
+      counter += 1;
+      return this.b;
+    }
+  }
+  getter_functor.rubrics = [ 'accessor', 'getter', 'functor' ];
+  getter_functor.defaults =
+  {
+    fieldName : null,
+  }
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aGet : getter_functor,
+  };
+  var exp =
+  {
+    'a' : 'b1',
+    'b' : 'b1',
+    aGet : object.aGet,
+  }
+  _.accessor.declare
+  ({
+    object,
+    names : { a : {} },
+    prime : 0,
+    strict : 0,
+  });
+  test.identical( object, exp );
+  test.identical( counter, 2 );
+
+  /* */
+
+  test.case = 'unfunct setter';
+  var counter = 0;
+  function setter_functor( fop )
+  {
+    counter += 1;
+    var exp = { fieldName : 'a' };
+    test.identical( fop, exp );
+    return function set( src )
+    {
+      counter += 1;
+      return this.b = src;
+    }
+  }
+  setter_functor.rubrics = [ 'accessor', 'setter', 'functor' ];
+  setter_functor.defaults =
+  {
+    fieldName : null,
+  }
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aSet : setter_functor,
+    aGet : function() { return this.b },
+  };
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'a1',
+    aSet : object.aSet,
+    aGet : object.aGet,
+  }
+  _.accessor.declare
+  ({
+    object,
+    names : { a : {} },
+    prime : 0,
+    strict : 0,
+  });
+  test.identical( object, exp );
+  test.identical( counter, 2 );
+
+  object.a = 'c';
+  var exp =
+  {
+    'a' : 'c',
+    'b' : 'c',
+    aSet : object.aSet,
+    aGet : object.aGet,
+  }
+  test.identical( object, exp );
+
+  /* */
+
+  test.case = 'unfunct putter';
+  var counter = 0;
+  function putter_functor( fop )
+  {
+    counter += 1;
+    var exp = { fieldName : 'a' };
+    test.identical( fop, exp );
+    return function set( src )
+    {
+      counter += 1;
+      return this.b = src;
+    }
+  }
+  putter_functor.rubrics = [ 'accessor', 'put', 'functor' ];
+  putter_functor.defaults =
+  {
+    fieldName : null,
+  }
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aPut : putter_functor,
+    aGet : function() { return this.b },
+  };
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'a1',
+    aPut : object.aPut,
+    aGet : object.aGet,
+  }
+  _.accessor.declare
+  ({
+    object,
+    names : { a : {} },
+    prime : 0,
+    strict : 0,
+  });
+  test.identical( object, exp );
+  test.identical( counter, 2 );
+
+  object.a = 'c';
+  var exp =
+  {
+    'a' : 'c',
+    'b' : 'c',
+    aPut : object.aPut,
+    aGet : object.aGet,
+  }
+  test.identical( object, exp );
+
+  /* */
+
+  test.case = 'unfunct suite';
+  var counter = 0;
+  function accessor_functor( fop )
+  {
+    counter += 1;
+    var exp = { fieldName : 'a' };
+    test.identical( fop, exp );
+    return {
+      get : function() { return this.b },
+      set : function set( src )
+      {
+        counter += 1;
+        return this.b = src;
+      }
+    }
+  }
+  accessor_functor.rubrics = [ 'accessor', 'functor' ];
+  accessor_functor.defaults =
+  {
+    fieldName : null,
+  }
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'a1',
+  }
+  _.accessor.declare
+  ({
+    object,
+    names : { a : {} },
+    getterSetter : accessor_functor,
+    prime : 0,
+    strict : 0,
+  });
+  test.identical( object, exp );
+  test.identical( counter, 2 );
+
+  object.a = 'c';
+  var exp =
+  {
+    'a' : 'c',
+    'b' : 'c',
+  }
+  test.identical( object, exp );
 
   /* */
 
@@ -903,17 +1438,238 @@ function forbidWithoutConstructor( test )
 
   var exp = { 'b' : 'b2' }
 
-  debugger;
   var names = { abc : 'abc' }
   _.accessor.forbid
   ({
     object : dst,
     names : names,
   });
-  debugger;
 
-  test.identical( dst, exp );
+  test.contains( dst, exp );
   test.shouldThrowErrorSync( () => dst.abc = 'abc' );
+
+  /* */
+
+}
+
+//
+
+function getterWithSymbol( test )
+{
+
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : { getter : _.accessor.getter.withSymbol, setter : false },
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_' :
+    {
+      'a' : 'a1',
+      'b' : undefined,
+      '_Get' : undefined,
+      '_' : undefined,
+      'aSet' : undefined,
+      'aGet' : undefined,
+      'aPut' : undefined
+    }
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+
+}
+
+//
+
+function getterToValue( test )
+{
+
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : { getter : _.accessor.getter.toValue, setter : false },
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_' :
+    {
+      'a' : 'a1',
+      'b' : undefined,
+      '_Get' : undefined,
+      '_' : undefined,
+      'aSet' : undefined,
+      'aGet' : undefined,
+      'aPut' : undefined
+    }
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+
+}
+
+//
+
+function putterSymbol( test )
+{
+
+  /* */
+
+  test.case = 'addingMethods : 1';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aPut : _.accessor.putter.symbol,
+    aSet : function( src ) { this[ Symbol.for( 'a' ) ] = src; this.b = src },
+    aGet : function() { return this[ Symbol.for( 'a' ) ] },
+  };
+  _.accessor.declare
+  ({
+    object,
+    names : { a : {} },
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aPut : object.aPut,
+    aSet : object.aSet,
+    aGet : object.aGet,
+  }
+  test.identical( object, exp );
+  test.is( object.aPut !== _.accessor.putter.symbol );
+
+  object.aPut( 'c' );
+  var exp =
+  {
+    'a' : 'c',
+    'b' : 'b1',
+    aPut : object.aPut,
+    aSet : object.aSet,
+    aGet : object.aGet,
+  }
+  test.identical( object, exp );
+
+  object.aSet( 'd' );
+  var exp =
+  {
+    'a' : 'd',
+    'b' : 'd',
+    aPut : object.aPut,
+    aSet : object.aSet,
+    aGet : object.aGet,
+  }
+  test.identical( object, exp );
+
+  object.a = 'e';
+  var exp =
+  {
+    'a' : 'e',
+    'b' : 'e',
+    aPut : object.aPut,
+    aSet : object.aSet,
+    aGet : object.aGet,
+  }
+  test.identical( object, exp );
+
+  /* */
+
+  // test.case = 'addingMethods : 0';
+  // var methods =
+  // {
+  //   aPut : _.accessor.putter.symbol,
+  //   aSet : function( src ) { this[ Symbol.for( 'a' ) ] = src; this.b = src },
+  //   aGet : function() { return this[ Symbol.for( 'a' ) ] },
+  // }
+  // var object =
+  // {
+  //   'a' : 'a1',
+  //   'b' : 'b1',
+  // };
+  // _.accessor.declare
+  // ({
+  //   object,
+  //   methods,
+  //   names : { a : {} },
+  //   prime : 0,
+  //   strict : 0,
+  //   addingMethods : 0,
+  // });
+  // var exp =
+  // {
+  //   'a' : 'a1',
+  //   'b' : 'b1',
+  // }
+  // test.identical( object, exp );
+  // test.is( object.aPut !== _.accessor.putter.symbol );
+  //
+  // _.put( object, 'a', 'c' );
+  // var exp =
+  // {
+  //   'a' : 'c',
+  //   'b' : 'b1',
+  // }
+  // test.identical( object, exp );
+  //
+  // _.set( object, 'a', 'd' );
+  // var exp =
+  // {
+  //   'a' : 'd',
+  //   'b' : 'd',
+  // }
+  // test.identical( object, exp );
+  //
+  // object.a = 'e';
+  // var exp =
+  // {
+  //   'a' : 'e',
+  //   'b' : 'e',
+  // }
+  // test.identical( object, exp );
 
   /* */
 
@@ -1526,12 +2282,12 @@ function accessorSupplement( test )
     cls : Alpha,
     parent : null,
     extend :
-    { 
+    {
       Composes : {},
     }
   });
   _.accessor.declare( Alpha.prototype, { a : 'a' } );
-  
+
   var Beta = function _Beta(){}
   _.classDeclare
   ({
@@ -1543,11 +2299,11 @@ function accessorSupplement( test )
     }
   });
   _.accessor.supplement( Beta.prototype,Alpha.prototype );
-  
+
   var x = new Beta();
   x.a = 2;
   test.identical( x.a, 2 );
-  
+
   test.case = 'supplement Beta with accessor "a" declared on Alpha, Beta has accessor "b"'
   var Alpha = function _Alpha(){}
   _.classDeclare
@@ -1555,12 +2311,12 @@ function accessorSupplement( test )
     cls : Alpha,
     parent : null,
     extend :
-    { 
+    {
       Composes : {},
     }
   });
   _.accessor.declare( Alpha.prototype, { a : 'a' } );
-  
+
   var Beta = function _Beta(){}
   _.classDeclare
   ({
@@ -1572,17 +2328,17 @@ function accessorSupplement( test )
     }
   });
   _.accessor.declare( Beta.prototype, { b : 'b' } );
-  
+
   _.accessor.supplement( Beta.prototype,Alpha.prototype );
-  
+
   var x = new Beta();
   x.a = 2;
   x.b = 4;
   test.identical( x.a, 2 );
   test.identical( x.b, 4 );
-    
+
   //
-  
+
   test.case = 'supplement Beta with accessors of Alpha, both have same accessor'
   var Alpha = function _Alpha(){}
   _.classDeclare
@@ -1590,12 +2346,12 @@ function accessorSupplement( test )
     cls : Alpha,
     parent : null,
     extend :
-    { 
+    {
       Composes : {},
     }
   });
   _.accessor.declare( Alpha.prototype, { a : 'a' } );
-  
+
   var Beta = function _Beta(){}
   _.classDeclare
   ({
@@ -1611,15 +2367,15 @@ function accessorSupplement( test )
     }
   });
   _.accessor.declare( Beta.prototype, { a : 'a' } );
-  
+
   _.accessor.supplement( Beta.prototype,Alpha.prototype );
-  
+
   var x = new Beta();
   x.a = 2;
   test.identical( x.a, 4 );
-  
+
   //
-  
+
   test.case = 'Alpha: a, b - getter, c - setter, Beta: a - getter'
   var Alpha = function _Alpha(){}
   _.classDeclare
@@ -1627,7 +2383,7 @@ function accessorSupplement( test )
     cls : Alpha,
     parent : null,
     extend :
-    { 
+    {
       _bGet : function()
       {
         return this[ Symbol.for( 'b' ) ] * 2;
@@ -1642,7 +2398,7 @@ function accessorSupplement( test )
   _.accessor.declare( Alpha.prototype, { a : 'a' } );
   _.accessor.declare( Alpha.prototype, { b : 'b' } );
   _.accessor.declare( Alpha.prototype, { c : 'c' } );
-  
+
   var Beta = function _Beta(){}
   _.classDeclare
   ({
@@ -1657,10 +2413,10 @@ function accessorSupplement( test )
       Accessors : {}
     }
   });
-  
+
   _.accessor.declare( Beta.prototype, { a : 'a' } );
   _.accessor.supplement( Beta.prototype,Alpha.prototype );
-  
+
   var x = new Beta();
   x.a = 2;
   x.b = 3;
@@ -1671,6 +2427,7 @@ function accessorSupplement( test )
   test.identical( x.a, 4 );
   test.identical( x.b, 6 );
   test.identical( x.c, 8 );
+
 }
 
 // --
@@ -1694,18 +2451,25 @@ var Self =
 
     accessor,
     accessorOptionReadOnly,
+    accessorOptionAddingMethods,
+    accessorOptionPreserveValues,
     accessorIsClean,
     accessorDeducingPrime,
+    accessorUnfunct,
 
     accessorForbid,
     accessorReadOnly,
     forbids,
     forbidWithoutConstructor,
 
+    getterWithSymbol,
+    getterToValue,
+    putterSymbol,
+
     propertyConstant,
 
     callable,
-    
+
     accessorSupplement
 
   },
