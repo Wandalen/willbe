@@ -420,12 +420,14 @@ function accessorOptionReadOnly( test )
   };
 
   var exp = { 'a' : 'a1' }
+  _global_.debugger = 1; debugger;
   _.accessor.declare
   ({
     object : dst,
     names : { a : { readOnly : 1, getter : 'a1' } },
     prime : 0,
   });
+  debugger;
   test.identical( dst, exp );
   test.shouldThrowErrorSync( () => dst.a = 'a1' );
 
@@ -817,6 +819,171 @@ function accessorOptionPreserveValues( test )
 
 //
 
+function accessorDeducingMethods( test )
+{
+
+  /* */
+
+  function symbolPut_functor( o )
+  {
+    o = _.routineOptions( symbolPut_functor, arguments );
+    let symbol = Symbol.for( o.fieldName );
+    return function put( val )
+    {
+      this[ symbol ] = val;
+      return val;
+    }
+  }
+
+  symbolPut_functor.defaults =
+  {
+    fieldName : null,
+  }
+
+  symbolPut_functor.rubrics = [ 'accessor', 'put', 'functor' ];
+
+  /* */
+
+  test.case = 'setter : false, putter : explicit';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    a : { setter : false, put : symbolPut_functor },
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+    preservingValue : 1,
+  });
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aPut : object.aPut,
+    aGet : object.aGet,
+  }
+  test.identical( object, exp );
+
+  test.shouldThrowErrorSync( () => object.a = 'c' );
+  test.identical( object, exp );
+
+  var exp =
+  {
+    'a' : 'd',
+    'b' : 'b1',
+    aPut : object.aPut,
+    aGet : object.aGet,
+  }
+  object.aPut( 'd' );
+  test.identical( object, exp );
+
+  /* */
+
+  test.case = 'setter : false';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    a : { setter : false },
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+    preservingValue : 1,
+  });
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aPut : object.aPut,
+    aGet : object.aGet,
+  }
+  test.identical( object, exp );
+
+  test.shouldThrowErrorSync( () => object.a = 'c' );
+  test.identical( object, exp );
+
+  var exp =
+  {
+    'a' : 'd',
+    'b' : 'b1',
+    aPut : object.aPut,
+    aGet : object.aGet,
+  }
+  object.aPut( 'd' );
+  test.identical( object, exp );
+
+  /* */
+
+  test.case = 'putter : false';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    a : { put : false },
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+    preservingValue : 1,
+  });
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    aSet : object.aSet,
+    aGet : object.aGet,
+  }
+  test.identical( object, exp );
+
+  var exp =
+  {
+    'a' : 'd',
+    'b' : 'b1',
+    aPut : object.aPut,
+    aGet : object.aGet,
+  }
+  object.aSet( 'd' );
+  test.identical( object, exp );
+
+  var exp =
+  {
+    'a' : 'e',
+    'b' : 'b1',
+    aPut : object.aPut,
+    aGet : object.aGet,
+  }
+  object.a = 'e';
+  test.identical( object, exp );
+
+  /* */
+
+}
+
+//
+
 function accessorIsClean( test )
 {
 
@@ -861,11 +1028,13 @@ function accessorIsClean( test )
 
   var exp =
   {
-    f2Get : methods.f2Get
+    f2Get : methods.f2Get,
+    f2Put : methods.f2Put,
   }
   test.identical( methods, exp );
   test.is( _.routineIs( methods.f2Get ) );
-  test.identical( _.mapKeys( methods ).length, 1 );
+  test.is( _.routineIs( methods.f2Put ) );
+  test.identical( _.mapKeys( methods ).length, 2 );
 
   test.case = 'inline no method';
 
@@ -1464,7 +1633,7 @@ function getterWithSymbol( test )
   };
   var names =
   {
-    _ : { getter : _.accessor.getter.withSymbol, setter : false },
+    _ : { getter : _.accessor.getter.withSymbol, setter : false, put : false },
     a : {},
   }
   _.accessor.declare
@@ -1512,7 +1681,7 @@ function getterToValue( test )
   };
   var names =
   {
-    _ : { getter : _.accessor.getter.toValue, setter : false },
+    _ : { getter : _.accessor.getter.toValue, setter : false, put : false },
     a : {},
   }
   _.accessor.declare
@@ -2453,6 +2622,7 @@ var Self =
     accessorOptionReadOnly,
     accessorOptionAddingMethods,
     accessorOptionPreserveValues,
+    accessorDeducingMethods,
     accessorIsClean,
     accessorDeducingPrime,
     accessorUnfunct,

@@ -117,13 +117,13 @@ function _methodsMake( o )
   _.assert( !!o.object );
   _.assertRoutineOptions( _methodsMake, o );
 
-  if( o.setter === null )
-  if( o.put === 0 || o.put === false )
-  o.setter = false;
-
-  if( o.put === null )
-  if( o.setter === 0 || o.setter === false )
-  o.put = false;
+  // if( o.setter === null )
+  // if( o.put === 0 || o.put === false )
+  // o.setter = false;
+  //
+  // if( o.put === null )
+  // if( o.setter === 0 || o.setter === false )
+  // o.put = false;
 
   if( o.getterSetter )
   {
@@ -632,13 +632,13 @@ function _declareAct( o )
   if( o.prime === null )
   o.prime = _.prototypeIsStandard( o.object );
 
-  if( o.setter === null )
-  if( o.put === 0 || o.put === false )
-  o.setter = false;
-
-  if( o.put === null )
-  if( o.setter === 0 || o.setter === false )
-  o.put = false;
+  // if( o.setter === null )
+  // if( o.put === 0 || o.put === false )
+  // o.setter = false;
+  //
+  // if( o.put === null )
+  // if( o.setter === 0 || o.setter === false )
+  // o.put = false;
 
   _.assert( _.boolLike( o.prime ) );
 
@@ -719,10 +719,9 @@ function _declareAct( o )
 
   }
 
-  if( _global_.debugger )
-  debugger;
+  // if( _global_.debugger )
+  // debugger;
 
-  let forbiddenName = '_' + o.name;
   let fieldSymbol = Symbol.for( o.name );
 
   /* preservingValue */
@@ -763,13 +762,15 @@ function _declareAct( o )
     else
     {
       _.assert( amethods.set === undefined );
-      o2.get = amethods.get;
+      o2.value = amethods.get;
     }
     // if( _.routineIs( amethods.put ) )
     // o2.put = amethods.put;
     // if( _.routineIs( amethods.copy ) )
     // o2.copy = amethods.copy;
 
+    if( _global_.debugger )
+    debugger;
     Object.defineProperty( o.object, o.name, o2 );
 
   // if( _.routineIs( amethods.get ) )
@@ -808,7 +809,7 @@ function _declareAct( o )
 
   function forbid()
   {
-
+    let forbiddenName = '_' + o.name;
     let m =
     [
       'use Symbol.for( \'' + o.name + '\' ) ',
@@ -2308,15 +2309,23 @@ function toValueGet_functor( o )
   let spaceName = o.fieldName;
   let setter = Object.create( null );
   let getter = Object.create( null );
-  let symbol = Symbol.for( spaceName );
+  // let symbol = Symbol.for( spaceName );
 
   return function toStructure()
   {
-    let helper = this[ symbol ];
-    if( !helper )
+    // let helper = this[ symbol ];
+    // if( !helper )
+    // {
+    //   helper = this[ symbol ] = proxyMake( this );
+    // }
+    let helper = proxyMake( this );
+    let o2 =
     {
-      helper = this[ symbol ] = proxyMake( this );
+      enumerable : false,
+      configurable : false,
+      value : helper
     }
+    Object.defineProperty( this, spaceName, o2 );
     return helper;
   }
 
