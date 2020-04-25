@@ -78,7 +78,8 @@ function onSuiteBegin()
   let reposDownload = require( './ReposDownload.s' );
   return reposDownload().then( () =>
   {
-    _.assert( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'Tools' ) ) );
+    _.assert( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'ModuleForTesting1' ) ) );
+    // _.assert( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'Tools' ) ) );
     return null;
   })
 }
@@ -210,7 +211,7 @@ function preCloneRepos( test )
 
   ready.then( () =>
   {
-    test.is( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'Tools' ) ) );
+    test.is( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'ModuleForTesting1' ) ) );
     return null;
   })
 
