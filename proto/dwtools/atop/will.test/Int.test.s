@@ -7433,25 +7433,25 @@ function pathsResolveOfSubmodules( test )
     var expected = path.join( routinePath );
     test.identical( resolved, expected );
 
-    test.case = 'path::in, wTools';
+    test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
     var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
-    test.case = 'path::in, wTools, through opener';
+    test.case = 'path::in, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::in' );
     var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
-    test.case = 'path::out, wTools';
+    test.case = 'path::out, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::out' );
     var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
-    test.case = 'path::out, wTools, through opener';
+    test.case = 'path::out, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::out' );
     var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
@@ -9061,7 +9061,7 @@ function modulesEachDuplicates( test )
       'z',
       'group1/a',
       '.module/ModuleForTesting1/',
-      '.module/ModuleForTesting1/out/wTools.out',
+      '.module/ModuleForTesting1/out/wModuleForTesting1.out',
     ]
     var got = _.select( got, '*/localPath' );
     test.identical( got, a.abs( exp ) );
@@ -9088,7 +9088,7 @@ function modulesEachDuplicates( test )
     [
       'group1/a',
       'group1/.module/ModuleForTesting1/',
-      'group1/.module/ModuleForTesting1/out/wTools.out',
+      'group1/.module/ModuleForTesting1/out/wModuleForTesting1.out',
     ]
     var got = _.select( got, '*/localPath' );
     test.identical( got, a.abs( exp ) );
@@ -9160,11 +9160,11 @@ function submodulesResolve( test )
     test.is( !!submodule.opener );
     test.identical( submodule.name, 'ModuleForTesting1' );
     test.identical( submodule.opener.openedModule, null );
-    test.identical( submodule.opener.willfilesPath, abs( '.module/ModuleForTesting1/out/wTools.out.will' ) );
+    test.identical( submodule.opener.willfilesPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out.will' ) );
     test.identical( submodule.opener.dirPath, abs( '.module/ModuleForTesting1/out' ) );
-    test.identical( submodule.opener.localPath, abs( '.module/ModuleForTesting1/out/wTools.out' ) );
-    test.identical( submodule.opener.commonPath, abs( '.module/ModuleForTesting1/out/wTools.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wTools.out.will@master' ) );
+    test.identical( submodule.opener.localPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.commonPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
 
     // test.is( !submodule.hasFiles );
     test.is( !submodule.opener.repo.hasFiles );
@@ -9195,23 +9195,23 @@ function submodulesResolve( test )
 
     test.identical( submodule.opener.name, 'ModuleForTesting1' );
     test.identical( submodule.opener.aliasName, 'ModuleForTesting1' );
-    test.identical( submodule.opener.fileName, 'wTools.out' );
-    test.identical( submodule.opener.willfilesPath, abs( '.module/ModuleForTesting1/out/wTools.out.will.yml' ) );
+    test.identical( submodule.opener.fileName, 'wModuleForTesting1.out' );
+    test.identical( submodule.opener.willfilesPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) );
     test.identical( submodule.opener.dirPath, abs( '.module/ModuleForTesting1/out' ) );
-    test.identical( submodule.opener.localPath, abs( '.module/ModuleForTesting1/out/wTools.out' ) );
-    test.identical( submodule.opener.commonPath, abs( '.module/ModuleForTesting1/out/wTools.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wTools.out.will@master' ) );
+    test.identical( submodule.opener.localPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.commonPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
 
-    test.identical( submodule.opener.openedModule.name, 'wTools' );
+    test.identical( submodule.opener.openedModule.name, 'wModuleForTesting1' );
     test.identical( submodule.opener.openedModule.resourcesFormed, 8 );
     test.identical( submodule.opener.openedModule.subModulesFormed, 8 );
-    test.identical( submodule.opener.openedModule.willfilesPath, abs( '.module/ModuleForTesting1/out/wTools.out.will.yml' ) );
+    test.identical( submodule.opener.openedModule.willfilesPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) );
     test.identical( submodule.opener.openedModule.dirPath, abs( '.module/ModuleForTesting1/out' ) );
-    test.identical( submodule.opener.openedModule.localPath, abs( '.module/ModuleForTesting1/out/wTools.out' ) );
-    test.identical( submodule.opener.openedModule.commonPath, abs( '.module/ModuleForTesting1/out/wTools.out' ) );
-    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wTools.out.will@master' ) );
+    test.identical( submodule.opener.openedModule.localPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.openedModule.commonPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
     debugger;
-    test.identical( submodule.opener.openedModule.currentRemotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wTools.out.will@master' ) );
+    test.identical( submodule.opener.openedModule.currentRemotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
     debugger;
 
     test.case = 'mask, single module';
@@ -9302,7 +9302,7 @@ function submodulesDeleteAndDownload( test )
     con.finally( ( err, arg ) =>
     {
 
-      var exp = [ './', '.module/ModuleForTesting1/out/wTools.out', '.module/ModuleForTesting1/', '.module/PathBasic/out/wPathBasic.out', '.module/PathBasic/' ];
+      var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/PathBasic/out/wPathBasic.out', '.module/PathBasic/' ];
       test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
       test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
 
@@ -9310,7 +9310,7 @@ function submodulesDeleteAndDownload( test )
       var willfilesArray =
       [
         '.will.yml',
-        '.module/ModuleForTesting1/out/wTools.out.will.yml',
+        '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml',
         [
           '.module/ModuleForTesting1/.ex.will.yml',
           '.module/ModuleForTesting1/.im.will.yml'
@@ -9326,7 +9326,7 @@ function submodulesDeleteAndDownload( test )
       var exp =
       [
         '.will.yml',
-        '.module/ModuleForTesting1/out/wTools.out.will.yml',
+        '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml',
         '.module/ModuleForTesting1/.ex.will.yml',
         '.module/ModuleForTesting1/.im.will.yml',
         '.module/PathBasic/out/wPathBasic.out.will.yml',
@@ -9335,13 +9335,13 @@ function submodulesDeleteAndDownload( test )
       ]
       test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
       test.identical( _.mapKeys( will.willfileWithFilePathPathMap ), abs( exp ) );
-      var exp = [ './', '.module/ModuleForTesting1/out/wTools.out', '.module/ModuleForTesting1/', '.module/PathBasic/out/wPathBasic.out', '.module/PathBasic/' ]
+      var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/PathBasic/out/wPathBasic.out', '.module/PathBasic/' ]
       test.identical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
 
       // var exp =
       // [
       //   './',
-      //   './.module/ModuleForTesting1/out/wTools.out',
+      //   './.module/ModuleForTesting1/out/wModuleForTesting1.out',
       //   './.module/PathBasic/out/wPathBasic.out',
       //   './.module/wFiles',
       //   './.module/wCloner',
@@ -9363,7 +9363,7 @@ function submodulesDeleteAndDownload( test )
       // var exp =
       // [
       //   './',
-      //   './.module/ModuleForTesting1/out/wTools.out',
+      //   './.module/ModuleForTesting1/out/wModuleForTesting1.out',
       //   './.module/PathBasic/out/wPathBasic.out',
       //   './.module/wFiles',
       //   './.module/wCloner',
@@ -9385,7 +9385,7 @@ function submodulesDeleteAndDownload( test )
       // var exp =
       // [
       //   null,
-      //   'git+hd://../_repo/ModuleForTesting1?out=out/wTools.out.will@master',
+      //   'git+hd://../_repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will@master',
       //   'git+hd://../_repo/PathBasic?out=out/wPathBasic.out.will@master',
       //   'npm:///wFiles',
       //   'npm:///wcloner',
@@ -9403,7 +9403,7 @@ function submodulesDeleteAndDownload( test )
       //   'git+hd://../_repo/PathBasic?out:./@master'
       // ]
       // var remotePath = _.select( will.openersArray, '*/remotePath' );
-      // // test.is( _.strHas( remotePath[ 1 ], '/_repo/ModuleForTesting1?out=out/wTools.out.will@master' ) );
+      // // test.is( _.strHas( remotePath[ 1 ], '/_repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
       // // test.is( _.strHas( remotePath[ 2 ], '/_repo/PathBasic?out=out/wPathBasic.out.will@master' ) );
       // exp[ 1 ] = remotePath[ 1 ];
       // exp[ 2 ] = remotePath[ 2 ];
@@ -9419,7 +9419,7 @@ function submodulesDeleteAndDownload( test )
       // var expected =
       // [
       //   './.will.yml',
-      //   './.module/ModuleForTesting1/out/wTools.out.will.yml',
+      //   './.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml',
       //   './.module/PathBasic/out/wPathBasic.out.will.yml',
       //   './.module/wFiles',
       //   './.module/wCloner',
@@ -11226,7 +11226,7 @@ function repoStatusLocalUncommittedChanges( test )
 var Self =
 {
 
-  name : 'ModuleForTesting1.atop.WillInternals',
+  name : 'Tools.atop.Willbe.Int',
   silencing : 1,
 
   onSuiteBegin : onSuiteBegin,
