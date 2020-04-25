@@ -33,7 +33,7 @@ _.assert( _.routineIs( _nameFielded ), 'wProto needs wTools/staging/dwtools/l3/N
 
 /**
  * @summary Collection of routines for declaring getters and setters
- * @namespace "wTools.accessor.getterSetter"
+ * @namespace "wTools.accessor.suite"
  * @memberof module:Tools/base/Proto
  */
 
@@ -54,7 +54,7 @@ _.assert( _.routineIs( _nameFielded ), 'wProto needs wTools/staging/dwtools/l3/N
  * @property {Boolean} [ configurable=0 ]
  * @property {Function} [ getter=null ]
  * @property {Function} [ setter=null ]
- * @property {Function} [ getterSetter=null ]
+ * @property {Function} [ suite=null ]
  * @memberof module:Tools/base/Proto.wTools.accessor
  **/
 
@@ -71,9 +71,9 @@ let AccessorDefaults =
   enumerable : 1,
   configurable : 0,
 
-  getter : null,
-  setter : null,
-  getterSetter : null,
+  get : null,
+  set : null,
+  suite : null,
 
 
 }
@@ -313,10 +313,10 @@ function _declareAct( o )
 
   /* */
 
-  // if( o.getterSetter )
+  // if( o.suite )
   // debugger;
 
-  let getterSetter = _.accessor._methodsMake
+  let suite = _.accessor._methodsMake
   ({
     name : o.name,
     methods : o.methods,
@@ -324,9 +324,9 @@ function _declareAct( o )
     preservingValue : o.preservingValue,
     readOnly : o.readOnly,
     readOnlyProduct : o.readOnlyProduct,
-    getter : o.getter,
-    setter : o.setter,
-    getterSetter : o.getterSetter,
+    get : o.get,
+    set : o.set,
+    suite : o.suite,
   });
 
   /* */
@@ -340,10 +340,10 @@ function _declareAct( o )
     o2.methods = Object.create( null );
     o2.object = null;
 
-    if( getterSetter.set )
-    o2.methods[ '_' + o.name + 'Set' ] = getterSetter.set;
-    if( getterSetter.get )
-    o2.methods[ '_' + o.name + 'Get' ] = getterSetter.get;
+    if( suite.set )
+    o2.methods[ '_' + o.name + 'Set' ] = suite.set;
+    if( suite.get )
+    o2.methods[ '_' + o.name + 'Get' ] = suite.get;
 
     _.accessor._register
     ({
@@ -370,8 +370,8 @@ function _declareAct( o )
 
   Object.defineProperty( o.object, o.name,
   {
-    set : getterSetter.set,
-    get : getterSetter.get,
+    set : suite.set,
+    get : suite.get,
     enumerable : !!o.enumerable,
     configurable : !!o.configurable,
     // configurable : o.combining === 'append',
@@ -430,7 +430,7 @@ defaults.methods = null;
  * @property {Boolean} [ configurable=false ]
  * @property {Function} [ getter=null ]
  * @property {Function} [ setter=null ]
- * @property {Function} [ getterSetter=null ]
+ * @property {Function} [ suite=null ]
  *
  * @memberof module:Tools/base/Proto.wTools.accessor
  **/
@@ -1218,7 +1218,7 @@ suiteMakerFrom_functor.defaults =
  * @param {Number} o.index
  * @param {String} o.storageName
  * @function toElement
- * @memberof module:Tools/base/Proto.wTools.accessor.getterSetter
+ * @memberof module:Tools/base/Proto.wTools.accessor.suite
  */
 
 // debugger;
@@ -1253,15 +1253,15 @@ function toElement( o )
     _.assert( _.numberIs( index ) );
     _.assert( index >= 0 );
 
-    // let getterSetter = _.accessor._propertyGetterSetterGet( o.object, n );
+    // let suite = _.accessor._propertyGetterSetterGet( o.object, n );
 
-    // if( !getterSetter.set )
+    // if( !suite.set )
     r[ aname.setName ] = function accessorToElementSet( src )
     {
       this[ storageName ][ index ] = src;
     }
 
-    // if( !getterSetter.get )
+    // if( !suite.get )
     r[ aname.getName ] = function accessorToElementGet()
     {
       return this[ storageName ][ index ];
@@ -1841,16 +1841,16 @@ let aliasAccessor = suiteMakerFrom_functor( aliasGetter_functor_body, aliasSette
 //     _.assert( _.numberIs( index ) );
 //     _.assert( index >= 0 );
 //
-//     let getterSetter = _propertyGetterSetterGet( o.object, n );
+//     let suite = _propertyGetterSetterGet( o.object, n );
 //
-//     if( !getterSetter.set )
-//     o.object[ getterSetter.setName ] = function accessorToElementSet( src )
+//     if( !suite.set )
+//     o.object[ suite.setName ] = function accessorToElementSet( src )
 //     {
 //       this[ arrayName ][ index ] = src;
 //     }
 //
-//     if( !getterSetter.get )
-//     o.object[ getterSetter.getName ] = function accessorToElementGet()
+//     if( !suite.get )
+//     o.object[ suite.getName ] = function accessorToElementGet()
 //     {
 //       return this[ arrayName ][ index ];
 //     }
@@ -1988,8 +1988,8 @@ _.mapExtend( _.accessor, Fields );
 _.accessor.forbid( _, Forbids );
 _.accessor.forbid( _.accessor, Forbids );
 
-_.accessor.getterSetter = _.accessor.getterSetter || Object.create( null );
-_.mapExtend( _.accessor.getterSetter, GetterSetter );
+_.accessor.suite = _.accessor.suite || Object.create( null );
+_.mapExtend( _.accessor.suite, GetterSetter );
 
 _.accessor.getter = _.accessor.getter || Object.create( null );
 _.mapExtend( _.accessor.getter, Getter );

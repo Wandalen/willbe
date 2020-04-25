@@ -841,22 +841,22 @@ function _methodsMake( o )
   _.assert( !!o.object );
   _.assertRoutineOptions( _methodsMake, o );
 
-  if( o.getterSetter )
-  _.assertMapHasOnly( o.getterSetter, { get : null, set : null } );
+  if( o.suite )
+  _.assertMapHasOnly( o.suite, { get : null, set : null } );
 
-  if( o.getter )
-  result.get = o.getter;
-  else if( o.getterSetter && o.getterSetter.get )
-  result.get = o.getterSetter.get;
+  if( o.get )
+  result.get = o.get;
+  else if( o.suite && o.suite.get )
+  result.get = o.suite.get;
   else if( o.methods[ '' + o.name + 'Get' ] )
   result.get = o.methods[ o.name + 'Get' ];
   else if( o.methods[ '_' + o.name + 'Get' ] )
   result.get = o.methods[ '_' + o.name + 'Get' ];
 
-  if( o.setter )
-  result.set = o.setter;
-  else if( o.getterSetter && o.getterSetter.set )
-  result.set = o.getterSetter.set;
+  if( o.set )
+  result.set = o.set;
+  else if( o.suite && o.suite.set )
+  result.set = o.suite.set;
   else if( o.methods[ '' + o.name + 'Set' ] )
   result.set = o.methods[ o.name + 'Set' ];
   else if( o.methods[ '_' + o.name + 'Set' ] )
@@ -917,9 +917,9 @@ _methodsMake.defaults =
   preservingValue : 1,
   readOnly : 0,
   readOnlyProduct : 0,
-  getter : null,
-  setter : null,
-  getterSetter : null,
+  get : null,
+  set : null,
+  suite : null,
 }
 
 //
