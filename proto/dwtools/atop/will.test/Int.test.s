@@ -8483,7 +8483,7 @@ function pathsResolveComposite2( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
-  let modulePath = abs( 'Proto' );
+  let modulePath = abs( 'Module1' );
   let will = new _.Will;
   let path = _.fileProvider.path;
   let ready = _.Consequence().take( null );
@@ -8513,10 +8513,8 @@ function pathsResolveComposite2( test )
   ready.then( ( arg ) =>
   {
     test.case = 'path::export';
-    debugger;
     var resolved = opener.openedModule.resolve({ selector : 'path::export', pathResolving : 0 });
-    debugger;
-    var expected = '.module/Proto/proto/**';
+    var expected = '.module/ModuleForTesting12/proto/**';
     test.identical( resolved, expected );
     return null;
   });
@@ -11248,50 +11246,52 @@ var Self =
   tests :
   {
 
-    preCloneRepos,
+    // preCloneRepos,
+    //
+    // buildSimple,
+    // openNamedFast,
+    // openNamedForming,
+    // openSkippingSubButAttachedWillfilesSkippingMainPeers,
+    // openSkippingSubButAttachedWillfiles,
+    // openAnon,
+    // openOutNamed,
+    // openCurruptedUnknownField,
+    // openerClone,
+    // moduleClone,
+    //
+    // exportSeveralExports,
+    // exportSuper,
+    // exportSuperIn,
+    // exportDefaultPath,
+    // exportOutdated,
+    // exportRecursive,
+    // exportDotless,
+    // exportDotlessSingle,
+    // exportStepOpts,
+    // exportRecursiveUsingSubmodule,
+    // exportSteps,
+    // exportCourrputedOutfileUnknownSection,
+    // exportCourruptedOutfileSyntax,
+    // exportCourruptedSubmodulesDisabled,
+    // exportCourrputedSubmoduleOutfileUnknownSection,
+    // exportCourrputedSubmoduleOutfileFormatVersion,
+    //
+    // exportsResolve,
+    // buildsResolve,
+    //
+    // trivialResolve,
+    // detailedResolve,
+    // reflectorResolve,
+    // reflectorInheritedResolve,
+    // superResolve,
+    // pathsResolve,
+    // pathsResolveImportIn,
+    // pathsResolveOfSubmodules,
+    // pathsResolveOfSubmodulesAndOwn,
+    // pathsResolveOutFileOfExports,
+    // pathsResolveComposite,
+    // xxx
 
-    buildSimple,
-    openNamedFast,
-    openNamedForming,
-    openSkippingSubButAttachedWillfilesSkippingMainPeers,
-    openSkippingSubButAttachedWillfiles,
-    openAnon,
-    openOutNamed,
-    openCurruptedUnknownField,
-    openerClone,
-    moduleClone,
-
-    exportSeveralExports,
-    exportSuper,
-    exportSuperIn,
-    exportDefaultPath,
-    exportOutdated,
-    exportRecursive,
-    exportDotless,
-    exportDotlessSingle,
-    exportStepOpts,
-    exportRecursiveUsingSubmodule,
-    exportSteps,
-    exportCourrputedOutfileUnknownSection,
-    exportCourruptedOutfileSyntax,
-    exportCourruptedSubmodulesDisabled,
-    exportCourrputedSubmoduleOutfileUnknownSection,
-    exportCourrputedSubmoduleOutfileFormatVersion,
-
-    exportsResolve,
-    buildsResolve,
-
-    trivialResolve,
-    detailedResolve,
-    reflectorResolve,
-    reflectorInheritedResolve,
-    superResolve,
-    pathsResolve,
-    pathsResolveImportIn,
-    pathsResolveOfSubmodules,
-    pathsResolveOfSubmodulesAndOwn,
-    pathsResolveOutFileOfExports,
-    pathsResolveComposite,
     pathsResolveComposite2,
     pathsResolveArray,
     pathsResolveResolvedPath,
