@@ -1,10 +1,10 @@
 format: willfile-1.0.0
 brokenFile : '!'
 about:
-  name: wPathBasic
+  name: wModuleForTesting2
   description: >-
     Collection of routines to operate paths in the reliable and consistent way.
-    PathBasic leverages parsing, joining, extracting, normalizing,
+    ModuleForTesting2 leverages parsing, joining, extracting, normalizing,
     nativizing, resolving paths. Use the module to get uniform experience from
     playing with paths on different platforms.
   version: 0.6.143
@@ -35,9 +35,9 @@ path:
     criterion:
       debug: 0
   repository:
-    path: 'git+https://github.com/Wandalen/wPathBasic.git'
+    path: 'git+https://github.com/Wandalen/wModuleForTesting2.git'
   bugs:
-    path: 'https://github.com/Wandalen/wPathBasic/issues'
+    path: 'https://github.com/Wandalen/wModuleForTesting2/issues'
   exported.dir.0:
     path: ./proto
     criterion:

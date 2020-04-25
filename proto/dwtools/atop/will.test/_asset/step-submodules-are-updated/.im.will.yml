@@ -18,7 +18,7 @@ path :
     criterion :
       debug : 0
   git : .module/local/.git
-  remotePath : git+https:///github.com/Wandalen/wTools.git/
+  remotePath : git+https:///github.com/Wandalen/wModuleForTesting1.git/
   downloadPath : .module/local
 
 reflector :

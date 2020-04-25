@@ -71,9 +71,9 @@ module:
         criterion:
           predefined: 1
       repository:
-        path: 'git+https:///github.com/Wandalen/wTools.git'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git'
       bugtracker:
-        path: 'https:///github.com/Wandalen/wTools/issues'
+        path: 'https:///github.com/Wandalen/wModuleForTesting1/issues'
       in:
         criterion:
           predefined: 0
@@ -917,7 +917,7 @@ module:
       module.peer.willfiles:
         criterion:
           predefined: 1
-        path: out/wTools.out.will.yml
+        path: out/wModuleForTesting1.out.will.yml
       module.common:
         criterion:
           predefined: 1
@@ -929,9 +929,9 @@ module:
         criterion:
           predefined: 1
       repository:
-        path: 'git+https:///github.com/Wandalen/wTools.git'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git'
       bugtracker:
-        path: 'https:///github.com/Wandalen/wTools/issues'
+        path: 'https:///github.com/Wandalen/wModuleForTesting1/issues'
       in:
         criterion:
           predefined: 0

@@ -1,7 +1,7 @@
 
 submodule :
 
-  Tools : .module/Tools/out/wTools.out
+  Tools : .module/Tools/out/wModuleForTesting1.out
 
 path :
 

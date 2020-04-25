@@ -10,7 +10,7 @@ submodule :
   Color : git+https:///github.com/Wandalen/wColor.git/out/wColor.out
   Procedure : git+https:///github.com/Wandalen/wProcedure.git/out/wProcedure.out.will
   Proto : git+https:///github.com/Wandalen/wProto.git/out/wProto.out
-  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/
+  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/
 
 path :
 

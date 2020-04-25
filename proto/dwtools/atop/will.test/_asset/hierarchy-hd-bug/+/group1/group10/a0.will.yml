@@ -7,7 +7,7 @@ about :
 submodule :
 
   PathTools : git+https:///github.com/Wandalen/wPathTools.git/
-  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/
+  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/
 
 path :
 

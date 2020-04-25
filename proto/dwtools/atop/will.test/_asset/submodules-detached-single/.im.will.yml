@@ -1,7 +1,7 @@
 
 submodule :
 
-  Tools : git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will@master
+  Tools : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@master
 
 path :
 

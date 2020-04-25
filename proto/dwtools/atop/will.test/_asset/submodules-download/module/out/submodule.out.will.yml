@@ -11,7 +11,7 @@ consistency:
   ../.module/Tools/.im.will.yml: &ref_2
     hash: e0b9ac504d07fa8723c98f50459f4829
     size: 5603
-  ../.module/Tools/out/wTools.out.will.yml: &ref_3
+  ../.module/Tools/out/wModuleForTesting1.out.will.yml: &ref_3
     hash: 028ee71b8288f8b8457ae98e07c56463
     size: 45195
   ../.module/Proto/.ex.will.yml: &ref_4
@@ -260,8 +260,8 @@ module:
           - ../.module/Tools/doc/reference/component_StringTools.s.html
           - ../.module/Tools/doc/reference/global.html
           - ../.module/Tools/doc/reference/index.html
-          - ../.module/Tools/doc/reference/wTools.html
-          - ../.module/Tools/doc/reference/wTools.s.html
+          - ../.module/Tools/doc/reference/wModuleForTesting1.html
+          - ../.module/Tools/doc/reference/wModuleForTesting1.s.html
           - ../.module/Tools/doc/reference/fonts
           - ../.module/Tools/doc/reference/fonts/OpenSans-Bold-webfont.eot
           - ../.module/Tools/doc/reference/fonts/OpenSans-Bold-webfont.svg
@@ -321,7 +321,7 @@ module:
           - ../.module/Tools/doc/ukr/tutorial/Vectorize.md
           - ../.module/Tools/doc/ukr/tutorial/VectorizeOptions.md
           - ../.module/Tools/out
-          - ../.module/Tools/out/wTools.out.will.yml
+          - ../.module/Tools/out/wModuleForTesting1.out.will.yml
           - ../.module/Tools/proto
           - ../.module/Tools/proto/dwtools
           - ../.module/Tools/proto/dwtools/Tools.s
@@ -500,7 +500,7 @@ module:
           - ../.module/Tools/sample/vectorize/Vectorize.js
     submodule:
       Tools:
-        path: 'git+https:///github.com/Wandalen/wTools.git/@master'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/@master'
         autoExporting: 0
         enabled: 1
       Proto:
@@ -596,7 +596,7 @@ module:
         path: out
     submodule:
       Tools:
-        path: 'git+https:///github.com/Wandalen/wTools.git/@master'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/@master'
         autoExporting: 0
         enabled: 1
       Proto:
@@ -673,7 +673,7 @@ module:
       module.peer.willfiles:
         criterion:
           predefined: 1
-        path: out/wTools.out.will.yml
+        path: out/wModuleForTesting1.out.will.yml
       module.peer.in:
         criterion:
           predefined: 1
@@ -687,13 +687,13 @@ module:
           predefined: 1
         path: .
       repository:
-        path: 'git+https:///github.com/Wandalen/wTools.git'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git'
       origins:
         path:
-          - 'git+https:///github.com/Wandalen/wTools.git'
+          - 'git+https:///github.com/Wandalen/wModuleForTesting1.git'
           - 'npm:///wtools.experiment'
       bugtracker:
-        path: 'https:///github.com/Wandalen/wTools/issues'
+        path: 'https:///github.com/Wandalen/wModuleForTesting1/issues'
       in:
         path: .
       out:
@@ -1383,8 +1383,8 @@ module:
     consistency:
       ../.module/Tools/.ex.will.yml: *ref_1
       ../.module/Tools/.im.will.yml: *ref_2
-      ../.module/Tools/out/wTools.out.will.yml: *ref_3
-  ../.module/Tools/out/wTools.out:
+      ../.module/Tools/out/wModuleForTesting1.out.will.yml: *ref_3
+  ../.module/Tools/out/wModuleForTesting1.out:
     about:
       name: wTools
       org: noorg
@@ -1449,13 +1449,13 @@ module:
           predefined: 1
         path: ..
       repository:
-        path: 'git+https:///github.com/Wandalen/wTools.git'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git'
       origins:
         path:
-          - 'git+https:///github.com/Wandalen/wTools.git'
+          - 'git+https:///github.com/Wandalen/wModuleForTesting1.git'
           - 'npm:///wtools.experiment'
       bugtracker:
-        path: 'https:///github.com/Wandalen/wTools/issues'
+        path: 'https:///github.com/Wandalen/wModuleForTesting1/issues'
       in:
         path: .
       out:
@@ -2356,7 +2356,7 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.module/Tools/out/wTools.out.will.yml: *ref_3
+      ../.module/Tools/out/wModuleForTesting1.out.will.yml: *ref_3
       ../.module/Tools/.ex.will.yml:
         hash: 742015b531952d05816c35ee9f9ff3ca
         size: 2109

@@ -11,7 +11,7 @@ if( typeof module !== 'undefined' )
 
   let _ = require( '../../../dwtools/Tools.s' );
 
-  require( '../l2/PathBasic.s' );
+  require( '../l2/ModuleForTesting2.s' );
 
   _.include( 'wStringsExtra' );
 
@@ -172,7 +172,7 @@ function globSplit( glob )
  * @throw {Error} If missed argument, or got more than one argumet
  * @throw {Error} If _glob is not string
  * @function globRegexpsForTerminalSimple
- * @memberof wTools.module:Tools/PathBasic
+ * @memberof wTools.module:Tools/ModuleForTesting2
  */
 
 function globRegexpsForTerminalSimple( _glob )
@@ -1672,7 +1672,7 @@ module[ 'exports' ] = Self;
 if( typeof module !== 'undefined' )
 {
 
-  require( '../l2/PathBasic.s' );
+  require( '../l2/ModuleForTesting2.s' );
 
 }
 

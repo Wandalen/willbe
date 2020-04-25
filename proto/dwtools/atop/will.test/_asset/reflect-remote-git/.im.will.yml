@@ -1,8 +1,8 @@
 
 path :
 
-  PathBasic.remote : git+https:///github.com/Wandalen/wPathBasic.git
-  PathBasic.local : 'PathBasic'
+  ModuleForTesting2.remote : git+https:///github.com/Wandalen/wModuleForTesting2.git
+  ModuleForTesting2.local : 'ModuleForTesting2'
 
   Looker.remote : git+https:///github.com/Wandalen/wLooker.git
   Looker.local : 'Looker'
@@ -16,52 +16,52 @@ reflector :
     criterion :
       variant : 1
     filePath :
-      path::PathBasic.remote : path::PathBasic.local
+      path::ModuleForTesting2.remote : path::ModuleForTesting2.local
 
   download.2 :
     criterion :
       variant : 2
     src :
       filePath :
-        path::PathBasic.remote : path::PathBasic.local
+        path::ModuleForTesting2.remote : path::ModuleForTesting2.local
 
   download.3 :
     criterion :
       variant : 3
     dst :
       filePath :
-        path::PathBasic.remote : path::PathBasic.local
+        path::ModuleForTesting2.remote : path::ModuleForTesting2.local
 
   download.4 :
     criterion :
       variant : 4
     src :
-      prefixPath : path::PathBasic.remote
+      prefixPath : path::ModuleForTesting2.remote
       filePath :
-        path::PathBasic.remote : path::PathBasic.local
+        path::ModuleForTesting2.remote : path::ModuleForTesting2.local
 
   download.5 :
     criterion :
       variant : 5
     src :
-      prefixPath : path::PathBasic.remote
+      prefixPath : path::ModuleForTesting2.remote
     filePath :
-      path::PathBasic.remote : path::PathBasic.local
+      path::ModuleForTesting2.remote : path::ModuleForTesting2.local
 
   download.6 :
     criterion :
       variant : 6
     src :
-      prefixPath : path::PathBasic.remote
+      prefixPath : path::ModuleForTesting2.remote
     dst :
       basePath : .
-      prefixPath : path::PathBasic.local
+      prefixPath : path::ModuleForTesting2.local
 
   download.7 :
     criterion :
       variant : 7
     filePath :
-      path::PathBasic.remote : path::PathBasic.local
+      path::ModuleForTesting2.remote : path::ModuleForTesting2.local
       path::Looker.remote : path::Looker.local
       path::Proto.remote : path::Proto.local
 

@@ -1,7 +1,7 @@
 
 submodule :
 
-  Tools : git+https:///github.com/Wandalen/wTools.git/@master
+  Tools : git+https:///github.com/Wandalen/wModuleForTesting1.git/@master
   Logger : git+https:///github.com/Wandalen/wLogger.git/@master
   LoggerToJs : git+https:///github.com/Wandalen/wLoggerToJs.git/@master
   Consequence : git+https:///github.com/Wandalen/wConsequence.git/@master

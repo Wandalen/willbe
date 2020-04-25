@@ -1,8 +1,8 @@
 
 submodule :
 
-  Tools : git+https:///github.com/Wandalen/wTools.git/@master
-  PathBasic : git+https:///github.com/Wandalen/wPathBasic.git/@master
+  Tools : git+https:///github.com/Wandalen/wModuleForTesting1.git/@master
+  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/@master
   PathTools : git+https:///github.com/Wandalen/wPathTools.git/@master
   # Proto : git+https:///github.com/Wandalen/wProto.git/@master
   # UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/@master
