@@ -1625,6 +1625,7 @@ function accessorUnfunctGetSuite( test )
     _ : { suite : get_functor },
     a : {},
   }
+
   _.accessor.declare
   ({
     object,
