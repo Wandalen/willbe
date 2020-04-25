@@ -534,7 +534,7 @@ function moduleNewDotless( test )
   .then( () =>
   {
     test.case = '.module.new'
-    a.reflect(); 
+    a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
     return null;
@@ -558,7 +558,8 @@ function moduleNewDotless( test )
     var files = self.find( a.routinePath );
     test.identical( files, exp );
 
-    test.identical( _.strCount( got.output, 'unhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new module::moduleNewDotless at' ), 1 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 1 );
     test.identical( _.strCount( got.output, 'already exists!' ), 1 );
@@ -597,6 +598,7 @@ function moduleNewDotless( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
@@ -609,6 +611,7 @@ function moduleNewDotless( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
     return null;
@@ -620,7 +623,7 @@ function moduleNewDotless( test )
   .then( () =>
   {
     test.case = '.module.new some/'
-    a.reflect(); 
+    a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
     return null;
@@ -647,6 +650,7 @@ function moduleNewDotless( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
@@ -659,6 +663,7 @@ function moduleNewDotless( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
     return null;
@@ -699,6 +704,7 @@ function moduleNewDotless( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
@@ -711,6 +717,7 @@ function moduleNewDotless( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
     _.fileProvider.filesDelete( a.routinePath + '/../dir1' );
@@ -751,6 +758,7 @@ function moduleNewDotlessSingle( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new module::moduleNewDotlessSingle at' ), 1 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 1 );
     test.identical( _.strCount( got.output, 'already exists!' ), 1 );
@@ -788,6 +796,7 @@ function moduleNewDotlessSingle( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
@@ -800,6 +809,7 @@ function moduleNewDotlessSingle( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
     return null;
@@ -836,6 +846,7 @@ function moduleNewDotlessSingle( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
@@ -848,6 +859,7 @@ function moduleNewDotlessSingle( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
     return null;
@@ -877,6 +889,7 @@ function moduleNewDotlessSingle( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
@@ -889,6 +902,7 @@ function moduleNewDotlessSingle( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
     _.fileProvider.filesDelete( a.routinePath + '/../dir1' );
@@ -939,6 +953,7 @@ function moduleNewNamed( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new module::super at' ), 1 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 1 );
     test.identical( _.strCount( got.output, 'already exists!' ), 1 );
@@ -952,7 +967,7 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.with some .module.new'
-    a.reflect(); 
+    a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
     return null;
@@ -977,6 +992,7 @@ function moduleNewNamed( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
@@ -989,6 +1005,7 @@ function moduleNewNamed( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
     return null;
@@ -1000,7 +1017,7 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.with some/ .module.new'
-    a.reflect(); 
+    a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
     return null;
@@ -1026,6 +1043,7 @@ function moduleNewNamed( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
@@ -1038,6 +1056,7 @@ function moduleNewNamed( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
     return null;
@@ -1049,7 +1068,7 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.with some .module.new some2'
-    a.reflect(); 
+    a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
     return null;
@@ -1075,6 +1094,7 @@ function moduleNewNamed( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::some2 at' ), 1 );
@@ -1087,6 +1107,7 @@ function moduleNewNamed( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some2'` ), 1 );
 
     return null;
@@ -1098,7 +1119,7 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.module.new'
-    a.reflect(); 
+    a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
     return null;
@@ -1123,6 +1144,7 @@ function moduleNewNamed( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::moduleNewNamed at' ), 1 );
@@ -1135,6 +1157,7 @@ function moduleNewNamed( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'moduleNewNamed'` ), 1 );
 
     return null;
@@ -1146,7 +1169,7 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.module.new super/'
-    a.reflect(); 
+    a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
     return null;
@@ -1172,6 +1195,7 @@ function moduleNewNamed( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::super at' ), 1 );
@@ -1184,6 +1208,7 @@ function moduleNewNamed( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'super'` ), 1 );
 
     return null;
@@ -1195,7 +1220,7 @@ function moduleNewNamed( test )
   .then( () =>
   {
     test.case = '.module.new some'
-    a.reflect(); 
+    a.reflect();
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
     _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
     return null;
@@ -1220,6 +1245,7 @@ function moduleNewNamed( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
@@ -1232,6 +1258,7 @@ function moduleNewNamed( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
     return null;
@@ -1269,6 +1296,7 @@ function moduleNewNamed( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
@@ -1281,6 +1309,7 @@ function moduleNewNamed( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
     return null;
@@ -1320,6 +1349,7 @@ function moduleNewNamed( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, 'Cant make a new' ), 0 );
     test.identical( _.strCount( got.output, 'already exists!' ), 0 );
     test.identical( _.strCount( got.output, 'Create module::some at' ), 1 );
@@ -1332,6 +1362,7 @@ function moduleNewNamed( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
     _.fileProvider.filesDelete( a.routinePath + '/../dir1' );
@@ -1447,7 +1478,7 @@ function openWith( test )
   .then( () =>
   {
     test.case = '.with doc .export -- deleted doc.will.yml'
-    a.reflect(); 
+    a.reflect();
     _.fileProvider.fileDelete( _.path.join( a.routinePath, 'doc.ex.will.yml' ) );
     _.fileProvider.fileDelete( _.path.join( a.routinePath, 'doc.im.will.yml' ) );
     return null;
@@ -1472,7 +1503,7 @@ function openWith( test )
 
     return null;
   })
-  
+
   /* - */
 
   a.ready
@@ -2041,7 +2072,7 @@ function eachList( test )
   // let routinePath = _.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
-  // 
+  //
   // let ready = new _.Consequence().take( null );
   // let start = _.process.starter
   // ({
@@ -2543,7 +2574,7 @@ function reflectGetPath( test )
      './debug/dwtools/abase/l3/l3',
      './debug/dwtools/abase/l3/l3/ModuleForTesting12.s',
      './debug/dwtools/abase/l3.test',
-     './debug/dwtools/abase/l3.test/ModuleForTesting12.test.s' 
+     './debug/dwtools/abase/l3.test/ModuleForTesting12.test.s'
     ]
     var files = self.find( outPath );
     test.gt( files.length, 4 );
@@ -2570,7 +2601,7 @@ function reflectSubdir( test )
   .then( () =>
   {
     test.case = 'setup';
-    a.reflect(); 
+    a.reflect();
     return null;
   })
   a.start({ execPath : '.each module .export' })
@@ -2781,14 +2812,14 @@ function reflectSubmodulesWithBase( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var expected = 
-    [ 
-      '.', 
-      './debug', 
-      './debug/module', 
-      './debug/module/proto', 
-      './debug/module/proto/File1.s', 
-      './debug/module/proto/File2.s' 
+    var expected =
+    [
+      '.',
+      './debug',
+      './debug/module',
+      './debug/module/proto',
+      './debug/module/proto/File1.s',
+      './debug/module/proto/File2.s'
     ];
     var files = self.find( outPath );
     test.identical( files, expected );
@@ -3595,7 +3626,7 @@ function relfectSubmodulesWithNotExistingFile( test )
   // let outPath = _.path.join( routinePath, 'out' );
   // // let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
   // let ready = new _.Consequence().take( null );
-  // 
+  //
   // let start = _.process.starter
   // ({
   //   execPath : 'node ' + self.willPath,
@@ -3604,7 +3635,7 @@ function relfectSubmodulesWithNotExistingFile( test )
   //   outputGraying : 1,
   //   ready : ready,
   // })
-  // 
+  //
   // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
   // _.assert( _.fileProvider.fileExists( abs( routinePath, 'module/moduleB/proto/amid/File.txt' ) ) );
   // _.fileProvider.fileDelete( abs( routinePath, 'module/moduleB/proto/amid/File.txt' ) );
@@ -4016,7 +4047,7 @@ function reflectComplexInherit( test )
   .then( () =>
   {
     test.case = '.with ab/ .build';
-    a.reflect(); 
+    a.reflect();
     _.fileProvider.filesDelete( outPath );
     return null;
   })
@@ -4319,7 +4350,7 @@ function withDoStatus( test )
   let self = this;
   let a = self.assetFor( test, 'dos' );
   let outPath = _.path.join( a.routinePath, 'out' );
-  let startWill = _.process.starter // Dmytro : not exists in assetFor 
+  let startWill = _.process.starter // Dmytro : not exists in assetFor
   ({
     execPath : 'node ' + self.willPath,
     currentPath : a.routinePath,
@@ -4666,7 +4697,7 @@ function hookGitMake( test )
 //   let routinePath = _.path.join( self.suiteTempPath, test.name );
 //   let abs = self.abs_functor( routinePath );
 //   let rel = self.rel_functor( routinePath );
-// 
+//
 //   let ready = new _.Consequence().take( null );
 //   let start = _.process.starter
 //   ({
@@ -4677,7 +4708,7 @@ function hookGitMake( test )
 //     throwingExitCode : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   test.is( true );
@@ -4752,7 +4783,7 @@ function hookPrepare( test )
   // let routinePath = _.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
-  // 
+  //
   // let ready = new _.Consequence().take( null );
   // let start = _.process.starter
   // ({
@@ -4763,7 +4794,7 @@ function hookPrepare( test )
   //   throwingExitCode : 1,
   //   ready : ready,
   // })
-  // 
+  //
   // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   test.is( true );
@@ -5165,7 +5196,7 @@ copy
     var exp =
 `
 original/f.txt
-copy 
+copy
  <<<<<<< HEAD
 clone
 =======
@@ -5596,7 +5627,7 @@ function verbosityStepDelete( test )
   .then( ( got ) =>
   {
     test.case = '.build files.delete.vd';
-    a.reflect(); 
+    a.reflect();
     return null;
   })
 
@@ -6450,9 +6481,9 @@ function modulesTreeHierarchyRemoteDownloaded( test )
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
   // let submodulesPath = _.path.join( routinePath, '.module' );
-  // 
+  //
   // let ready = new _.Consequence().take( null );
-  // 
+  //
   // let start = _.process.starter
   // ({
   //   execPath : 'node ' + self.willPath,
@@ -6463,7 +6494,7 @@ function modulesTreeHierarchyRemoteDownloaded( test )
   //   mode : 'spawn',
   //   ready : ready,
   // })
-  // 
+  //
   // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
@@ -6601,9 +6632,9 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
   // let submodulesPath = _.path.join( routinePath, '.module' );
-  // 
+  //
   // let ready = new _.Consequence().take( null );
-  // 
+  //
   // let start = _.process.starter
   // ({
   //   execPath : 'node ' + self.willPath,
@@ -6614,7 +6645,7 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
   //   mode : 'spawn',
   //   ready : ready,
   // })
-  // 
+  //
   // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* - */
@@ -7665,7 +7696,7 @@ function cleanBroken1( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
-    var files = self.find( outDebugPath ); 
+    var files = self.find( outDebugPath );
     test.gt( files.length, 9 );
 
     var files = _.fileProvider.dirRead( outPath );
@@ -7947,7 +7978,7 @@ function cleanHdBug( test )
   .then( () =>
   {
     test.case = '.with z .clean recursive:2';
-    a.reflect(); 
+    a.reflect();
     return null;
   })
 
@@ -8196,7 +8227,7 @@ function cleanWithInPath( test )
   .then( ( got ) =>
   {
     test.case = '.with module/ModuleForTesting12 .clean';
-    a.reflect(); 
+    a.reflect();
     hadFiles = self.find( a.routinePath + '/out' ).length + self.find( a.routinePath + '/.module' ).length;
 
     return null;
@@ -9903,9 +9934,9 @@ function buildDetached( test )
 //   let filePath = _.path.join( routinePath, 'file' );
 //   let modulePath = _.path.join( routinePath, '.module' );
 //   let outPath = _.path.join( routinePath, 'out' );
-// 
+//
 //   let ready = new _.Consequence().take( null );
-// 
+//
 //   let start = _.process.starter
 //   ({
 //     execPath : 'node ' + self.willPath,
@@ -9914,7 +9945,7 @@ function buildDetached( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   });
-// 
+//
 //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
@@ -10143,7 +10174,7 @@ function exportInformal( test )
 //   let rel = self.rel_functor( routinePath );
 //   let outPath = _.path.join( routinePath, 'out' );
 //   let ready = new _.Consequence().take( null );
-// 
+//
 //   let start = _.process.starter
 //   ({
 //     execPath : 'node ' + self.willPath,
@@ -10152,7 +10183,7 @@ function exportInformal( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   });
-// 
+//
 //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
@@ -10488,9 +10519,9 @@ function exportMixed( test )
 //   let rel = self.rel_functor( routinePath );
 //   let outPath = _.path.join( routinePath, 'out' );
 //   let modulePath = _.path.join( routinePath, 'module' );
-// 
+//
 //   let ready = new _.Consequence().take( null )
-// 
+//
 //   let start = _.process.starter
 //   ({
 //     execPath : 'node ' + self.willPath,
@@ -10499,7 +10530,7 @@ function exportMixed( test )
 //     outputGraying : 1,
 //     ready : ready
 //   })
-// 
+//
 //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
@@ -14068,7 +14099,7 @@ function exportAuto( test )
 //   let outPath = _.path.join( routinePath, 'out' );
 //   let submodulesPath = _.path.join( routinePath, '.module' );
 //   let ready = new _.Consequence().take( null );
-// 
+//
 //   let start = _.process.starter
 //   ({
 //     execPath : 'node ' + self.willPath,
@@ -14077,7 +14108,7 @@ function exportAuto( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
@@ -14258,9 +14289,9 @@ function importLocalRepo( test )
 //   let repoPath = _.path.join( self.suiteTempPath, '_repo' );
 //   let outPath = _.path.join( routinePath, 'out' );
 //   let modulePath = _.path.join( routinePath, '.module' );
-// 
+//
 //   let ready = new _.Consequence().take( null );
-// 
+//
 //   let start = _.process.starter
 //   ({
 //     execPath : 'node ' + self.willPath,
@@ -14276,7 +14307,7 @@ function importLocalRepo( test )
   .then( ( got ) =>
   {
     test.case = '.with module/Proto .export';
-    
+
     a.reflect();
     // _.fileProvider.filesDelete( a.routinePath );
     // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
@@ -15180,10 +15211,10 @@ function submodulesDownloadSwitchBranch( test )
 //   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-update-switch-branch' );
 //   let routinePath = _.path.join( self.suiteTempPath, test.name );
 //   let submodulesPath = _.path.join( routinePath, '.module' );
-// 
+//
 //   let experimentModulePath = _.path.join( submodulesPath, 'experiment' );
 //   let willfilePath = _.path.join( routinePath, '.will.yml' );
-// 
+//
 //   let ready = new _.Consequence().take( null )
 //   let start = _.process.starter
 //   ({
@@ -15192,7 +15223,7 @@ function submodulesDownloadSwitchBranch( test )
 //     outputCollecting : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   a.ready
@@ -17591,8 +17622,8 @@ function submodulesDownloadedUpdate( test )
 //   let abs = self.abs_functor( routinePath );
 //   let rel = self.rel_functor( routinePath );
 //   let submodulesPath = _.path.join( routinePath, '.module' );
-// 
-// 
+//
+//
 //   let ready = new _.Consequence().take( null )
 //   let start = _.process.starter
 //   ({
@@ -17602,7 +17633,7 @@ function submodulesDownloadedUpdate( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* */
@@ -17727,8 +17758,8 @@ function subModulesUpdate( test )
 //   let abs = self.abs_functor( routinePath );
 //   let rel = self.rel_functor( routinePath );
 //   let submodulesPath = _.path.join( routinePath, '.module' );
-// 
-// 
+//
+//
 //   let ready = new _.Consequence().take( null )
 //   let start = _.process.starter
 //   ({
@@ -17738,7 +17769,7 @@ function subModulesUpdate( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* */
@@ -17850,11 +17881,11 @@ function subModulesUpdateSwitchBranch( test )
 //   let abs = self.abs_functor( routinePath );
 //   let rel = self.rel_functor( routinePath );
 //   let submodulesPath = _.path.join( routinePath, '.module' );
-// 
+//
 //   let experimentModulePath = _.path.join( submodulesPath, 'willbe-experiment' );
 //   let willfilePath = _.path.join( routinePath, '.will.yml' );
 //   let detachedVersion;
-// 
+//
 //   let ready = new _.Consequence().take( null )
 //   let start = _.process.starter
 //   ({
@@ -17864,7 +17895,7 @@ function subModulesUpdateSwitchBranch( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   let start2 = _.process.starter
 //   ({
 //     currentPath : routinePath,
@@ -18152,9 +18183,9 @@ function submodulesVerify( test )
 //   let routinePath = _.path.join( self.suiteTempPath, test.name );
 //   let localModulePathSrc = _.path.join( routinePath, 'module' );
 //   let localModulePathDst = _.path.join( routinePath, '.module/local' );
-// 
+//
 //   let ready = new _.Consequence().take( null );
-// 
+//
 //   let start = _.process.starter
 //   ({
 //     execPath : 'node ' + self.willPath,
@@ -18164,7 +18195,7 @@ function submodulesVerify( test )
 //     throwingExitCode : 0,
 //     ready : ready,
 //   })
-// 
+//
 //   let start2 = _.process.starter
 //   ({
 //     currentPath : localModulePathSrc,
@@ -18172,7 +18203,7 @@ function submodulesVerify( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   let start3 = _.process.starter
 //   ({
 //     currentPath : localModulePathDst,
@@ -18180,9 +18211,9 @@ function submodulesVerify( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
- 
+
   /* - */
 
   a.ready.then( () =>
@@ -18319,9 +18350,9 @@ function versionsAgree( test )
 //   let routinePath = _.path.join( self.suiteTempPath, test.name );
 //   let localModulePathSrc = _.path.join( routinePath, 'module' );
 //   let localModulePathDst = _.path.join( routinePath, '.module/local' );
-// 
+//
 //   let ready = new _.Consequence().take( null );
-// 
+//
 //   let start = _.process.starter
 //   ({
 //     execPath : 'node ' + self.willPath,
@@ -18331,7 +18362,7 @@ function versionsAgree( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   let start2 = _.process.starter
 //   ({
 //     currentPath : localModulePathSrc,
@@ -18339,7 +18370,7 @@ function versionsAgree( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   let start3 = _.process.starter
 //   ({
 //     currentPath : localModulePathDst,
@@ -18347,7 +18378,7 @@ function versionsAgree( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
@@ -18931,9 +18962,9 @@ function stepSubmodulesAreUpdated( test )
 //   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'step-submodules-are-updated' );
 //   let routinePath = _.path.join( self.suiteTempPath, test.name );
 //   let localModulePath = _.path.join( routinePath, 'module' );
-// 
+//
 //   let ready = new _.Consequence().take( null );
-// 
+//
 //   let start = _.process.starter
 //   ({
 //     execPath : 'node ' + self.willPath,
@@ -18943,7 +18974,7 @@ function stepSubmodulesAreUpdated( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   let start2 = _.process.starter
 //   ({
 //     currentPath : localModulePath,
@@ -18951,7 +18982,7 @@ function stepSubmodulesAreUpdated( test )
 //     outputGraying : 1,
 //     ready : ready,
 //   })
-// 
+//
 //   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
@@ -20482,10 +20513,10 @@ function runWillbe( test )
 //   let routinePath = _.path.join( self.suiteTempPath, test.name );
 //   let abs = self.abs_functor( routinePath );
 //   let rel = self.rel_functor( routinePath );
-// 
+//
 //   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
 //   let ready = new _.Consequence().take( null );
-// 
+//
 //   let fork = _.process.starter
 //   ({
 //     // execPath : 'node',
@@ -20495,7 +20526,7 @@ function runWillbe( test )
 //     ready : ready,
 //     mode : 'fork',
 //   });
-// 
+//
 //   let start = _.process.starter
 //   ({
 //     currentPath : routinePath,
@@ -20505,7 +20536,7 @@ function runWillbe( test )
 //     ready : ready,
 //     mode : 'shell',
 //   });
-  
+
   /* - */
 
   a.ready

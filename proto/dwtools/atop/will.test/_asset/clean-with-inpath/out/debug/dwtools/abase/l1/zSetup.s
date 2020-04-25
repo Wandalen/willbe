@@ -265,7 +265,7 @@ function _setupTesterPlaceholder()
     testSuit.suiteFilePath = _.introspector.location( 1 ).filePath;
 
     if( !testSuit.suiteFileLocation )
-    testSuit.suiteFileLocation = _.introspector.location( 1 ).full;
+    testSuit.suiteFileLocation = _.introspector.location( 1 ).fileNameLineCol;
 
     _.assert( _.strDefined( testSuit.suiteFileLocation ),'Test suit expects a mandatory option ( suiteFileLocation )' );
     _.assert( _.objectIs( testSuit ) );
@@ -289,7 +289,9 @@ function _setupTesterPlaceholder()
     _realGlobal_.wTester = Object.create( null );
     _realGlobal_.wTester.test = function test( testSuitName )
     {
-      if( _.workerIs() )
+      if( _.workerIs() ) /* xxx : temp */
+      return;
+      if( Config.interpreter !== 'njs' ) /* xxx : temp. remove aster fixing starter */
       return;
       _.assert( arguments.length === 0 || arguments.length === 1 );
       _.assert( _.strIs( testSuitName ) || testSuitName === undefined, 'test : expects string {-testSuitName-}' );
