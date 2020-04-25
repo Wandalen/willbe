@@ -2563,29 +2563,29 @@ _.assert( _.longHas( _.accessor.getter.toStructure.rubrics, 'functor' ) );
 let Accessors =
 {
 
-  _ : { getter : _.accessor.getter.toStructure, readOnly : 1, strict : 0 },
+  _ : { get : _.accessor.getter.toStructure, readOnly : 1, strict : 0 },
 
-  willfilesPath : { getter : willfilesPathGet, setter : willfilesPathSet },
-  dirPath : { getter : dirPathGet, readOnly : 1 },
-  commonPath : { getter : commonPathGet, readOnly : 1 },
-  localPath : { getter : localPathGet, readOnly : 1, },
-  downloadPath : { getter : downloadPathGet, readOnly : 1 },
-  remotePath : { getter : remotePathGet, setter : remotePathSet },
+  willfilesPath : { get : willfilesPathGet, set : willfilesPathSet },
+  dirPath : { get : dirPathGet, readOnly : 1 },
+  commonPath : { get : commonPathGet, readOnly : 1 },
+  localPath : { get : localPathGet, readOnly : 1, },
+  downloadPath : { get : downloadPathGet, readOnly : 1 },
+  remotePath : { get : remotePathGet, set : remotePathSet },
 
-  name : { getter : nameGet, readOnly : 1 },
-  aliasName : { setter : aliasNameSet },
-  absoluteName : { getter : absoluteNameGet, readOnly : 1 },
-  qualifiedName : { getter : qualifiedNameGet, combining : 'rewrite', readOnly : 1 },
+  name : { get : nameGet, readOnly : 1 },
+  aliasName : { set : aliasNameSet },
+  absoluteName : { get : absoluteNameGet, readOnly : 1 },
+  qualifiedName : { get : qualifiedNameGet, combining : 'rewrite', readOnly : 1 },
 
-  isOut : { getter : isOutGet, setter : isOutSet },
-  isMain : { getter : isMainGet, setter : isMainSet },
+  isOut : { get : isOutGet, set : isOutSet },
+  isMain : { get : isMainGet, set : isMainSet },
 
   superRelation : {},
   rootModule : {},
   openedModule : {},
   peerModule : {},
 
-  error : { setter : errorSet },
+  error : { set : errorSet },
 
 }
 

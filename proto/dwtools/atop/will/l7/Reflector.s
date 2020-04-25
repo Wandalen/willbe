@@ -1914,10 +1914,10 @@ let Forbids =
 
 let Accessors =
 {
-  filePath : { setter : filePathSet, getter : filePathGet },
-  recursive : { setter : recursiveSet, getter : recursiveGet },
-  src : { setter : _.accessor.setter.copyable({ name : 'src', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
-  dst : { setter : _.accessor.setter.copyable({ name : 'dst', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
+  filePath : { set : filePathSet, get : filePathGet },
+  recursive : { set : recursiveSet, get : recursiveGet },
+  src : { set : _.accessor.setter.copyable({ name : 'src', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
+  dst : { set : _.accessor.setter.copyable({ name : 'dst', maker : _.routineJoin( _.FileRecordFilter, _.FileRecordFilter.Clone ) }) },
 }
 
 _.assert( _.routineIs( _.FileRecordFilter ) );

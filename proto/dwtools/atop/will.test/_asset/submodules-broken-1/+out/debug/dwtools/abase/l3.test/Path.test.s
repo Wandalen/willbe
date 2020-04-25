@@ -614,8 +614,8 @@ function isSafe( test )
 // function isRefined( test )
 // {
 //   /* */
-
-   test.case = 'posix path, not refined';
+//
+//   test.case = 'posix path, not refined';
 //
 //   var path = '/';
 //   var expected = true;
@@ -648,8 +648,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'posix path, refined';
+//
+//   test.case = 'posix path, refined';
 //
 //   var path = '/foo/bar//baz/asdf/quux/..';
 //   var refined = _.path.refine( path );
@@ -676,8 +676,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'winoows path, not refined';
+//
+//   test.case = 'winoows path, not refined';
 //
 //   var path = 'C:\\temp\\\\foo\\bar\\..\\';
 //   var expected = false;
@@ -710,8 +710,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'winoows path, refined';
+//
+//   test.case = 'winoows path, refined';
 //
 //   var path = 'C:\\temp\\\\foo\\bar\\..\\';
 //   var refined = _.path.refine( path );
@@ -850,8 +850,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the middle';
+//
+//   test.case = 'path with "." in the middle';
 //
 //   var path = 'foo/./bar/baz';
 //   var expected = true;
@@ -900,8 +900,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the middle';
+//
+//   test.case = 'path with ".." in the middle';
 //
 //   var path = 'foo/../bar/baz';
 //   var expected = true;
@@ -924,8 +924,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the middle,refined';
+//
+//   test.case = 'path with ".." in the middle,refined';
 //
 //   var path = 'foo/../bar/baz';
 //   var refined = _.path.refine( path );
@@ -952,8 +952,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the beginning';
+//
+//   test.case = 'path with ".." in the beginning';
 //
 //   var path = '../foo/bar';
 //   var expected = true;
@@ -1106,8 +1106,8 @@ function isSafe( test )
 // function isRefined( test )
 // {
 //   /* */
-
-   test.case = 'posix path, not refined';
+//
+//   test.case = 'posix path, not refined';
 //
 //   var path = '/';
 //   var expected = true;
@@ -1140,8 +1140,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'posix path, refined';
+//
+//   test.case = 'posix path, refined';
 //
 //   var path = '/foo/bar//baz/asdf/quux/..';
 //   var refined = _.path.refine( path );
@@ -1168,8 +1168,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'winoows path, not refined';
+//
+//   test.case = 'winoows path, not refined';
 //
 //   var path = 'C:\\temp\\\\foo\\bar\\..\\';
 //   var expected = false;
@@ -1202,8 +1202,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'winoows path, refined';
+//
+//   test.case = 'winoows path, refined';
 //
 //   var path = 'C:\\temp\\\\foo\\bar\\..\\';
 //   var refined = _.path.refine( path );
@@ -1342,8 +1342,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the middle';
+//
+//   test.case = 'path with "." in the middle';
 //
 //   var path = 'foo/./bar/baz';
 //   var expected = true;
@@ -1392,8 +1392,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the middle';
+//
+//   test.case = 'path with ".." in the middle';
 //
 //   var path = 'foo/../bar/baz';
 //   var expected = true;
@@ -1416,8 +1416,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the middle,refined';
+//
+//   test.case = 'path with ".." in the middle,refined';
 //
 //   var path = 'foo/../bar/baz';
 //   var refined = _.path.refine( path );
@@ -1444,8 +1444,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the beginning';
+//
+//   test.case = 'path with ".." in the beginning';
 //
 //   var path = '../foo/bar';
 //   var expected = true;
@@ -1601,8 +1601,8 @@ function isSafe( test )
 //   var got;
 //
 //   /* */
-
-   test.case = 'posix path';
+//
+//   test.case = 'posix path';
 //
 //   // Not normalized
 //
@@ -1639,8 +1639,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'windows path';
+//
+//   test.case = 'windows path';
 //
 //   //Not normalized
 //
@@ -1687,8 +1687,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'empty path';
+//
+//   test.case = 'empty path';
 //
 //   var path = '';
 //   var expected = true;
@@ -1721,8 +1721,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the middle';
+//
+//   test.case = 'path with "." in the middle';
 //
 //   var path = 'foo/./bar/baz';
 //   var expected = false;
@@ -1740,8 +1740,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the beginning';
+//
+//   test.case = 'path with "." in the beginning';
 //
 //   var path = './foo/bar';
 //   var expected = true;
@@ -1774,8 +1774,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the end';
+//
+//   test.case = 'path with "." in the end';
 //
 //   var path = 'foo/.bar.';
 //   var expected = true;
@@ -1793,8 +1793,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the middle';
+//
+//   test.case = 'path with ".." in the middle';
 //
 //   var path = 'foo/../bar/baz';
 //   var expected = false;
@@ -1817,8 +1817,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the beginning';
+//
+//   test.case = 'path with ".." in the beginning';
 //
 //   var path = '../../foo/bar';
 //   var expected = true;
@@ -1836,8 +1836,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the end';
+//
+//   test.case = 'path with ".." in the end';
 //
 //   var path = 'foo/..bar..';
 //   var expected = true;
@@ -1855,8 +1855,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." and "." combined';
+//
+//   test.case = 'path with ".." and "." combined';
 //
 //   var path = '/abc/./.././a/b';
 //   var expected = false;
@@ -1879,8 +1879,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." and "." combined - normalized';
+//
+//   test.case = 'path with ".." and "." combined - normalized';
 //
 //   var path = '/abc/./.././a/b';
 //   var normalized = _.path.normalize( path );
@@ -1901,8 +1901,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." and "." combined - normalized and trailed';
+//
+//   test.case = 'path with ".." and "." combined - normalized and trailed';
 //
 //   var path = '/abc/./.././a/b';
 //   var normalized = _.path.normalize( path );
@@ -1969,8 +1969,8 @@ function isSafe( test )
 //   var got;
 //
 //   /* */
-
-   test.case = 'posix path';
+//
+//   test.case = 'posix path';
 //
 //   // Not normalized
 //
@@ -2007,8 +2007,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'windows path';
+//
+//   test.case = 'windows path';
 //
 //   //Not normalized
 //
@@ -2055,8 +2055,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'empty path';
+//
+//   test.case = 'empty path';
 //
 //   var path = '';
 //   var expected = true;
@@ -2089,8 +2089,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the middle';
+//
+//   test.case = 'path with "." in the middle';
 //
 //   var path = 'foo/./bar/baz';
 //   var expected = false;
@@ -2108,8 +2108,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the beginning';
+//
+//   test.case = 'path with "." in the beginning';
 //
 //   var path = './foo/bar';
 //   var expected = true;
@@ -2137,8 +2137,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the end';
+//
+//   test.case = 'path with "." in the end';
 //
 //   var path = 'foo/.bar.';
 //   var expected = true;
@@ -2156,8 +2156,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the middle';
+//
+//   test.case = 'path with ".." in the middle';
 //
 //   var path = 'foo/../bar/baz';
 //   var expected = false;
@@ -2180,8 +2180,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the beginning';
+//
+//   test.case = 'path with ".." in the beginning';
 //
 //   var path = '../../foo/bar';
 //   var expected = true;
@@ -2199,8 +2199,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the end';
+//
+//   test.case = 'path with ".." in the end';
 //
 //   var path = 'foo/..bar..';
 //   var expected = true;
@@ -2218,8 +2218,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." and "." combined';
+//
+//   test.case = 'path with ".." and "." combined';
 //
 //   var path = '/abc/./.././a/b';
 //   var expected = false;
@@ -2242,8 +2242,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." and "." combined - normalized';
+//
+//   test.case = 'path with ".." and "." combined - normalized';
 //
 //   var path = '/abc/./.././a/b';
 //   var normalized = _.path.normalize( path );
@@ -2264,8 +2264,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." and "." combined - normalized and trailed';
+//
+//   test.case = 'path with ".." and "." combined - normalized and trailed';
 //
 //   var path = '/abc/./.././a/b';
 //   var normalized = _.path.normalize( path );
@@ -2365,8 +2365,8 @@ function isSafe( test )
 //   test.identical( got, false );
 //
 //   /* */
-
-   test.case = 'posix path';
+//
+//   test.case = 'posix path';
 //
 //   var path = '/foo/bar/baz/asdf/quux/..';
 //   var expected = true;
@@ -2374,8 +2374,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'posix path';
+//
+//   test.case = 'posix path';
 //
 //   var path = '/foo/bar//baz/asdf/quux/..';
 //   var expected = true;
@@ -2388,8 +2388,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'windows path';
+//
+//   test.case = 'windows path';
 //
 //   test.open( 'not normalized' );
 //
@@ -2429,8 +2429,8 @@ function isSafe( test )
 //   test.close( 'normalized' );
 //
 //   /* */
-
-   test.case = 'empty path';
+//
+//   test.case = 'empty path';
 //
 //   var path = '';
 //   var expected = false;
@@ -2569,8 +2569,8 @@ function isSafe( test )
 //   test.identical( got, true );
 //
 //   /* */
-
-   test.case = 'posix path';
+//
+//   test.case = 'posix path';
 //
 //   var path = '/foo/bar//baz/asdf/quux/..';
 //   var expected = false;
@@ -2583,8 +2583,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'windows path';
+//
+//   test.case = 'windows path';
 //
 //   //Not normalized
 //
@@ -2642,8 +2642,8 @@ function isSafe( test )
 //   test.close( 'not refined' );
 //
 //   /* */
-
-   test.case = 'empty path';
+//
+//   test.case = 'empty path';
 //
 //   var path = '';
 //   var expected = true;
@@ -2777,8 +2777,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'windows path';
+//
+//   test.case = 'windows path';
 //
 //   var path = 'c:/';
 //   var expected = false;
@@ -2791,8 +2791,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'windows path';
+//
+//   test.case = 'windows path';
 //   var path = '/C:/temp/foo/bar/../';
 //   var expected = false;
 //   var got = _.path.isGlobal( path );
@@ -2853,8 +2853,8 @@ function isSafe( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'windows path';
+//
+//   test.case = 'windows path';
 //
 //   var path = 'c://';
 //   var expected = true;
@@ -3672,8 +3672,8 @@ function isGlob( test )
 // {
 //
 //   /* */
-
-   test.case = 'posix path';
+//
+//   test.case = 'posix path';
 //
 //   var path = '/foo/bar//baz/asdf/quux/..';
 //   var expected = '/foo/bar//baz/asdf/quux/..';
@@ -3696,8 +3696,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'winoows path';
+//
+//   test.case = 'winoows path';
 //
 //   var path = 'C:\\\\';
 //   var expected = '/C//';
@@ -3806,8 +3806,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the middle';
+//
+//   test.case = 'path with "." in the middle';
 //
 //   var path = 'foo/./bar/baz';
 //   var expected = 'foo/./bar/baz';
@@ -3830,8 +3830,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the beginning';
+//
+//   test.case = 'path with "." in the beginning';
 //
 //   var path = './foo/bar';
 //   var expected = './foo/bar';
@@ -3864,8 +3864,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the end';
+//
+//   test.case = 'path with "." in the end';
 //
 //   var path = 'foo/bar.';
 //   var expected = 'foo/bar.';
@@ -3898,8 +3898,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the middle';
+//
+//   test.case = 'path with ".." in the middle';
 //
 //   var path = 'foo/../bar/baz';
 //   var expected = 'foo/../bar/baz';
@@ -3922,8 +3922,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the beginning';
+//
+//   test.case = 'path with ".." in the beginning';
 //
 //   var path = '../foo/bar';
 //   var expected = '../foo/bar';
@@ -3956,8 +3956,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the end';
+//
+//   test.case = 'path with ".." in the end';
 //
 //   var path = 'foo/bar..';
 //   var expected = 'foo/bar..';
@@ -3990,8 +3990,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with \\';
+//
+//   test.case = 'path with \\';
 //
 //   var path = 'foo/bar\\';
 //   var expected = 'foo/bar/';
@@ -4019,8 +4019,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with \/';
+//
+//   test.case = 'path with \/';
 //
 //   var path = 'foo/bar\/';
 //   var expected = 'foo/bar/';
@@ -4087,8 +4087,8 @@ function isGlob( test )
 // {
 //
 //   /* */
-
-   test.case = 'posix path';
+//
+//   test.case = 'posix path';
 //
 //   var path = 'a/foo/../b';
 //   var expected = 'a/b';
@@ -4176,8 +4176,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'windows path';
+//
+//   test.case = 'windows path';
 //
 //   var path = '/C:\\temp\\\\foo\\bar\\..\\';
 //   var expected = '/C:/temp//foo/';
@@ -4220,8 +4220,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'empty path';
+//
+//   test.case = 'empty path';
 //
 //   var path = '';
 //   var expected = '';
@@ -4269,8 +4269,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the middle';
+//
+//   test.case = 'path with "." in the middle';
 //
 //   var path = 'foo/./bar/baz';
 //   var expected = 'foo/bar/baz';
@@ -4298,8 +4298,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the beginning';
+//
+//   test.case = 'path with "." in the beginning';
 //
 //   var path = './foo/bar';
 //   var expected = './foo/bar';
@@ -4342,8 +4342,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the end';
+//
+//   test.case = 'path with "." in the end';
 //
 //   var path = 'foo/bar.';
 //   var expected = 'foo/bar.';
@@ -4381,8 +4381,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the middle';
+//
+//   test.case = 'path with ".." in the middle';
 //
 //   var path = 'foo/../bar/baz';
 //   var expected = 'bar/baz';
@@ -4445,8 +4445,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the beginning';
+//
+//   test.case = 'path with ".." in the beginning';
 //
 //   var path = '../foo/bar';
 //   var expected = '../foo/bar';
@@ -4494,8 +4494,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the end';
+//
+//   test.case = 'path with ".." in the end';
 //
 //   var path = 'foo/bar..';
 //   var expected = 'foo/bar..';
@@ -4548,8 +4548,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." and "." combined';
+//
+//   test.case = 'path with ".." and "." combined';
 //
 //   var path = '/abc/./../a/b';
 //   var expected = '/a/b';
@@ -4602,8 +4602,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with \/';
+//
+//   test.case = 'path with \/';
 //
 //   var path = 'foo/bar\/';
 //   var expected = 'foo/bar/';
@@ -4672,8 +4672,8 @@ function isGlob( test )
 // {
 //
 //   /* */
-
-   test.case = 'posix path';
+//
+//   test.case = 'posix path';
 //
 //   var path = '/aa/bb/cc/./';
 //   var expected = '/aa/bb/cc/';
@@ -4721,8 +4721,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'winoows path';
+//
+//   test.case = 'winoows path';
 //
 //   var path = 'C:\\temp\\\\foo\\bar\\..\\';
 //   var expected = '/C/temp/foo/';
@@ -4755,8 +4755,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'empty path';
+//
+//   test.case = 'empty path';
 //
 //   var path = '';
 //   var expected = '';
@@ -4804,8 +4804,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the middle';
+//
+//   test.case = 'path with "." in the middle';
 //
 //   var path = 'foo/./bar/baz';
 //   var expected = 'foo/bar/baz';
@@ -4833,8 +4833,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the beginning';
+//
+//   test.case = 'path with "." in the beginning';
 //
 //   var path = './foo/bar';
 //   var expected = './foo/bar';
@@ -4872,8 +4872,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the end';
+//
+//   test.case = 'path with "." in the end';
 //
 //   var path = 'foo/bar.';
 //   var expected = 'foo/bar.';
@@ -4911,8 +4911,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the middle';
+//
+//   test.case = 'path with ".." in the middle';
 //
 //   var path = 'foo/../bar/baz';
 //   var expected = 'bar/baz';
@@ -4935,8 +4935,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the beginning';
+//
+//   test.case = 'path with ".." in the beginning';
 //
 //   var path = '../foo/bar';
 //   var expected = '../foo/bar';
@@ -4969,8 +4969,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the end';
+//
+//   test.case = 'path with ".." in the end';
 //
 //   var path = 'foo/bar..';
 //   var expected = 'foo/bar..';
@@ -5018,8 +5018,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." and "." combined';
+//
+//   test.case = 'path with ".." and "." combined';
 //
 //   var path = '/abc/./../a/b';
 //   var expected = '/a/b';
@@ -5089,8 +5089,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'posix path';
+//
+//   test.case = 'posix path';
 //
 //   var path = '/aa/bb/cc/./';
 //   var expected = '/aa/bb/cc';
@@ -5143,8 +5143,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'windows path';
+//
+//   test.case = 'windows path';
 //
 //   var path = '/C:\\temp\\\\foo\\bar\\..\\';
 //   var expected = '/C:/temp//foo';
@@ -5192,8 +5192,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'empty path';
+//
+//   test.case = 'empty path';
 //
 //   var path = '';
 //   var expected = '';
@@ -5241,8 +5241,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the middle';
+//
+//   test.case = 'path with "." in the middle';
 //
 //   var path = 'foo/./bar/baz';
 //   var expected = 'foo/bar/baz';
@@ -5270,8 +5270,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the beginning';
+//
+//   test.case = 'path with "." in the beginning';
 //
 //   var path = './foo/bar';
 //   var expected = 'foo/bar';
@@ -5319,8 +5319,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the end';
+//
+//   test.case = 'path with "." in the end';
 //
 //   var path = 'foo/bar.';
 //   var expected = 'foo/bar.';
@@ -5358,8 +5358,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the middle';
+//
+//   test.case = 'path with ".." in the middle';
 //
 //   var path = 'foo/../bar/baz';
 //   var expected = 'bar/baz';
@@ -5382,8 +5382,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the beginning';
+//
+//   test.case = 'path with ".." in the beginning';
 //
 //   var path = '../foo/bar';
 //   var expected = '../foo/bar';
@@ -5416,8 +5416,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the end';
+//
+//   test.case = 'path with ".." in the end';
 //
 //   var path = 'foo/bar..';
 //   var expected = 'foo/bar..';
@@ -5465,8 +5465,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." and "." combined';
+//
+//   test.case = 'path with ".." and "." combined';
 //
 //   var path = '/abc/./../a/b';
 //   var expected = '/a/b';
@@ -5519,8 +5519,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with \/';
+//
+//   test.case = 'path with \/';
 //
 //   var path = 'foo/bar\/';
 //   var expected = 'foo/bar';
@@ -5589,8 +5589,8 @@ function isGlob( test )
 // {
 //
 //   /* */
-
-   test.case = 'posix path';
+//
+//   test.case = 'posix path';
 //
 //   var path = '/aa/bb/cc/./';
 //   var expected = '/aa/bb/cc';
@@ -5638,8 +5638,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'winoows path';
+//
+//   test.case = 'winoows path';
 //
 //   var path = 'C:\\temp\\\\foo\\bar\\..\\';
 //   var expected = '/C/temp/foo';
@@ -5672,8 +5672,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'empty path';
+//
+//   test.case = 'empty path';
 //
 //   var path = '';
 //   var expected = '';
@@ -5721,8 +5721,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the middle';
+//
+//   test.case = 'path with "." in the middle';
 //
 //   var path = 'foo/./bar/baz';
 //   var expected = 'foo/bar/baz';
@@ -5750,8 +5750,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the beginning';
+//
+//   test.case = 'path with "." in the beginning';
 //
 //   var path = './foo/bar';
 //   var expected = 'foo/bar';
@@ -5789,8 +5789,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with "." in the end';
+//
+//   test.case = 'path with "." in the end';
 //
 //   var path = 'foo/bar.';
 //   var expected = 'foo/bar.';
@@ -5828,8 +5828,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the middle';
+//
+//   test.case = 'path with ".." in the middle';
 //
 //   var path = 'foo/../bar/baz';
 //   var expected = 'bar/baz';
@@ -5852,8 +5852,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the beginning';
+//
+//   test.case = 'path with ".." in the beginning';
 //
 //   var path = '../foo/bar';
 //   var expected = '../foo/bar';
@@ -5886,8 +5886,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." in the end';
+//
+//   test.case = 'path with ".." in the end';
 //
 //   var path = 'foo/bar..';
 //   var expected = 'foo/bar..';
@@ -5935,8 +5935,8 @@ function isGlob( test )
 //   test.identical( got, expected );
 //
 //   /* */
-
-   test.case = 'path with ".." and "." combined';
+//
+//   test.case = 'path with ".." and "." combined';
 //
 //   var path = '/abc/./../a/b';
 //   var expected = '/a/b';
@@ -8932,7 +8932,7 @@ function commonMapsInArgs( test )
 var Self =
 {
 
-  name : 'Tools.base.l3.path.Basic',
+  name : 'Tools.base.l2.path.Basic',
   silencing : 1,
 
   tests :

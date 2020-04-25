@@ -183,9 +183,9 @@ let Forbids =
 
 let Accessors =
 {
-  name : { getterSetter : nameGetterSetter },
-  org : { getterSetter : orgGetterSetter },
-  enabled : { getterSetter : _.accessor.suite.alias({ container : 'values', originalName : 'enabled' }) },
+  name : { suite : nameGetterSetter },
+  org : { suite : orgGetterSetter },
+  enabled : { suite : _.accessor.suite.alias({ container : 'values', originalName : 'enabled' }) },
 }
 
 // --

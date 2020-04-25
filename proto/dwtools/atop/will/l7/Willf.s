@@ -1590,7 +1590,7 @@ let Accessors =
   data : {},
   structure : {},
   moduleStructure : { readOnly : 1 },
-  error : { setter : errorSet },
+  error : { set : errorSet },
 
 }
 

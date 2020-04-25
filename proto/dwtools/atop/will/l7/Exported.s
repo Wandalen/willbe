@@ -998,9 +998,9 @@ let Forbids =
 
 let Accessors =
 {
-  inModule : { getter : inModuleGet, setter : inModuleSet },
-  outModule : { getter : outModuleGet, setter : outModuleSet },
-  module : { getter : moduleGet, setter : moduleSet, combining : 'rewrite' },
+  inModule : { get : inModuleGet, set : inModuleSet },
+  outModule : { get : outModuleGet, set : outModuleSet },
+  module : { get : moduleGet, set : moduleSet, combining : 'rewrite' },
 }
 
 // --

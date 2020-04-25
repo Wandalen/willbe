@@ -2014,10 +2014,10 @@ let Forbids =
 
 let Accessors =
 {
-  dirPath : { getter : dirPathGet, readOnly : 1 },
-  enabled : { getter : enabledGet, readOnly : 1 },
-  isRemote : { getter : isRemoteGet, readOnly : 1 },
-  objects : { getter : objectsGet, readOnly : 1 },
+  dirPath : { get : dirPathGet, readOnly : 1 },
+  enabled : { get : enabledGet, readOnly : 1 },
+  isRemote : { get : isRemoteGet, readOnly : 1 },
+  objects : { get : objectsGet, readOnly : 1 },
 }
 
 // --

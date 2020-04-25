@@ -5,7 +5,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../../dwtools/Tools.s' );
+  let _ = require( '../../../dwtools/Tools.s' );
 
   _.include( 'wTesting' );
   _.include( 'wStringer' );
@@ -367,7 +367,7 @@ function dot( test )
 
   test.case = 'add ./ prefix to key';
   var src = [ './', './a', '.', './.a', './a', '..', './..a', '../a', 'a', '/a' ];
-  var expected = [ '', 'a', '.', '.a', 'a', '..', '..a', '../a', 'a', '/a' ];
+  var expected = [ './', 'a', '.', '.a', 'a', '..', '..a', '../a', 'a', '/a' ];
   test.identical( _.paths.undot( src ), expected );
 
   /* - */
@@ -388,12 +388,12 @@ function undot( test )
 {
   test.case = 'rm ./ prefix from path';
   var src = [ './', './a', '.', './.a', './a', '..', './..a', '../a', 'a', '/a' ];
-  var expected = [ '', 'a', '.', '.a', 'a', '..', '..a', '../a', 'a', '/a' ];
+  var expected = [ './', 'a', '.', '.a', 'a', '..', '..a', '../a', 'a', '/a' ];
   test.identical( _.paths.undot( src ), expected );
 
   test.case = 'rm ./ prefix from path';
   var src = { './' : 1, './a' : 1, '.' : 1, './.a' : 1, './a' : 1, '..' : 1, './..a' : 1, '../a' : 1 };
-  var expected = { '' : 1, 'a' : 1, '.' : 1, '.a': 1, '..': 1, '..a': 1, '../a': 1 };
+  var expected = { './' : 1, 'a' : 1, '.' : 1, '.a': 1, '..': 1, '..a': 1, '../a': 1 };
   test.identical( _.paths.undot( src ), expected );
 
   /* - */
@@ -1817,7 +1817,7 @@ function moveTextualReport( test )
 var Self =
 {
 
-  name : 'Tools.base.l4.path.basic.S',
+  name : 'Tools.base.l3.path.basic.S',
   silencing : 1,
 
   tests :

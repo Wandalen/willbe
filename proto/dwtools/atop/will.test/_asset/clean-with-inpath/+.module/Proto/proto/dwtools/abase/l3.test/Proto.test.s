@@ -2,6 +2,10 @@
 
 'use strict';
 
+/*
+xxx : split the test suite
+*/
+
 if( typeof module !== 'undefined' )
 {
 
@@ -29,9 +33,7 @@ function instanceIs( t )
   t.is( !_.instanceIs( Object.create( null ) ) );
 
   t.will = 'map';
-  debugger;
   t.is( !_.instanceIs( {} ) );
-  debugger;
 
   t.will = 'primitive';
   t.is( !_.instanceIs( 0 ) );
@@ -347,7 +349,7 @@ function accessor( test )
   /* */
 
   test.case = 'empty call';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     _.accessor.declare( );
   });
@@ -355,7 +357,7 @@ function accessor( test )
   /* */
 
   test.case = 'invalid first argument type';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     _.accessor.declare( 1, { a : 'a' } );
   });
@@ -363,7 +365,7 @@ function accessor( test )
   /* */
 
   test.case = 'invalid second argument type';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     _.accessor.declare( {}, [] );
   });
@@ -424,7 +426,7 @@ function accessorOptionReadOnly( test )
   _.accessor.declare
   ({
     object : dst,
-    names : { a : { readOnly : 1, getter : 'a1' } },
+    names : { a : { readOnly : 1, get : 'a1' } },
     prime : 0,
   });
   debugger;
@@ -463,7 +465,7 @@ function accessorOptionReadOnly( test )
   _.accessor.declare
   ({
     object : dst,
-    names : { a : { setter : false } },
+    names : { a : { set : false } },
     prime : 0,
   });
   test.identical( dst, exp );
@@ -481,7 +483,7 @@ function accessorOptionReadOnly( test )
   _.accessor.declare
   ({
     object : dst,
-    names : { a : { setter : false, getter : 'a1' } },
+    names : { a : { set : false, get : 'a1' } },
     prime : 0,
   });
   test.identical( dst, exp );
@@ -844,7 +846,7 @@ function accessorDeducingMethods( test )
 
   /* */
 
-  test.case = 'setter : false, putter : explicit';
+  test.case = 'set : false, put : explicit';
   var object =
   {
     'a' : 'a1',
@@ -852,7 +854,7 @@ function accessorDeducingMethods( test )
   };
   var names =
   {
-    a : { setter : false, put : symbolPut_functor },
+    a : { set : false, put : symbolPut_functor },
   }
   _.accessor.declare
   ({
@@ -887,7 +889,7 @@ function accessorDeducingMethods( test )
 
   /* */
 
-  test.case = 'setter : false';
+  test.case = 'set : false';
   var object =
   {
     'a' : 'a1',
@@ -895,7 +897,7 @@ function accessorDeducingMethods( test )
   };
   var names =
   {
-    a : { setter : false },
+    a : { set : false },
   }
   _.accessor.declare
   ({
@@ -930,7 +932,7 @@ function accessorDeducingMethods( test )
 
   /* */
 
-  test.case = 'putter : false';
+  test.case = 'put : false';
   var object =
   {
     'a' : 'a1',
@@ -1200,12 +1202,12 @@ function accessorUnfunct( test )
   var counter = 0;
   function setter_functor( fop )
   {
-    counter += 1;
+    counter += 1; debugger;
     var exp = { fieldName : 'a' };
     test.identical( fop, exp );
     return function set( src )
     {
-      counter += 1;
+      counter += 1; debugger;
       return this.b = src;
     }
   }
@@ -1236,7 +1238,7 @@ function accessorUnfunct( test )
     strict : 0,
   });
   test.identical( object, exp );
-  test.identical( counter, 2 );
+  test.identical( counter, 3 );
 
   object.a = 'c';
   var exp =
@@ -1247,6 +1249,7 @@ function accessorUnfunct( test )
     aGet : object.aGet,
   }
   test.identical( object, exp );
+  test.identical( counter, 4 );
 
   /* */
 
@@ -1290,7 +1293,7 @@ function accessorUnfunct( test )
     strict : 0,
   });
   test.identical( object, exp );
-  test.identical( counter, 2 );
+  test.identical( counter, 3 );
 
   object.a = 'c';
   var exp =
@@ -1301,6 +1304,7 @@ function accessorUnfunct( test )
     aGet : object.aGet,
   }
   test.identical( object, exp );
+  test.identical( counter, 4 );
 
   /* */
 
@@ -1339,7 +1343,7 @@ function accessorUnfunct( test )
   ({
     object,
     names : { a : {} },
-    getterSetter : accessor_functor,
+    suite : accessor_functor,
     prime : 0,
     strict : 0,
   });
@@ -1353,6 +1357,360 @@ function accessorUnfunct( test )
     'b' : 'c',
   }
   test.identical( object, exp );
+  test.identical( counter, 3 );
+
+  /* */
+
+}
+
+//
+
+function accessorUnfunctGetSuite( test )
+{
+
+  /* - */
+
+  function get_functor( o )
+  {
+
+    _.assert( arguments.length === 1, 'Expects single argument' );
+    _.routineOptions( get_functor, o );
+    _.assert( _.strDefined( o.fieldName ) );
+
+    if( o.accessor.configurable === null )
+    o.accessor.configurable = 1;
+    let configurable = o.accessor.configurable;
+    if( configurable === null )
+    configurable = _.accessor.AccessorPreferences.configurable;
+    _.assert( _.boolLike( configurable ) );
+
+    if( o.accessorKind === 'suite' )
+    {
+      let result =
+      {
+        get : get_functor,
+        set : false,
+        put : false,
+      }
+      return result;
+    }
+
+    return function get()
+    {
+      if( configurable )
+      {
+        let o2 =
+        {
+          enumerable : false,
+          configurable : false,
+          value : 'abc3',
+        }
+        Object.defineProperty( this, o.fieldName, o2 );
+        return 'abc2'
+      }
+      return 'abc1';
+    }
+
+  }
+
+  get_functor.defaults =
+  {
+    fieldName : null,
+    accessor : null,
+    accessorKind : null,
+  }
+
+  get_functor.rubrics = [ 'accessor', 'suite', 'getter', 'functor' ];
+
+  /* - */
+
+  test.case = 'configurable : 1, set : 0, put : 0';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : { get : get_functor, set : false, put : false, configurable : true },
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : object._Set,
+    'enumerable' : true,
+    'configurable' : true
+  }
+  test.identical( _.propertyDescriptorGet( object, '_' ).descriptor, exp );
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_' : 'abc2',
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+  var exp = { 'writable' : false, 'enumerable' : false, 'configurable' : false, value : 'abc3' }
+  test.identical( _.propertyDescriptorGet( object, '_' ).descriptor, exp );
+
+  /* */
+
+  test.case = 'configurable : 0, set : 0, put : 0';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : { get : get_functor, set : false, put : false, configurable : false },
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : undefined,
+    'enumerable' : true,
+    'configurable' : false,
+  }
+  test.identical( _.propertyDescriptorGet( object, '_' ).descriptor, exp );
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_' : 'abc1',
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : undefined,
+    'enumerable' : true,
+    'configurable' : false,
+  }
+  test.identical( _.propertyDescriptorGet( object, '_' ).descriptor, exp );
+
+  /* */
+
+  test.case = 'configurable : 0';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : { get : get_functor },
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : object._Set,
+    'enumerable' : true,
+    'configurable' : true,
+  }
+  test.identical( _.propertyDescriptorGet( object, '_' ).descriptor, exp );
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_Put' : object._Put,
+    '_Set' : object._Set,
+    '_' : 'abc2',
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+  var exp = { 'writable' : false, 'enumerable' : false, 'configurable' : false, 'value' : 'abc3' };
+  test.identical( _.propertyDescriptorGet( object, '_' ).descriptor, exp );
+
+  /* */
+
+  test.case = 'suite';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : get_functor,
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : object._Set,
+    'enumerable' : true,
+    'configurable' : true
+  }
+  test.identical( _.propertyDescriptorGet( object, '_' ).descriptor, exp );
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_Put' : object._Put,
+    '_Set' : object._Set,
+    '_' : 'abc2',
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+  var exp = { 'writable' : false, 'enumerable' : false, 'configurable' : false, 'value' : 'abc3' };
+  test.identical( _.propertyDescriptorGet( object, '_' ).descriptor, exp );
+
+  /* */
+
+  test.case = 'suite in fields';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : { suite : get_functor },
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : object._Set,
+    'enumerable' : true,
+    'configurable' : true
+  }
+  test.identical( _.propertyDescriptorGet( object, '_' ).descriptor, exp );
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_Put' : object._Put,
+    '_Set' : object._Set,
+    '_' : 'abc2',
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+  var exp = { 'writable' : false, 'enumerable' : false, 'configurable' : false, 'value' : 'abc3' };
+  test.identical( _.propertyDescriptorGet( object, '_' ).descriptor, exp );
+
+  /* */
+
+  test.case = 'suite in fields, explicit configurable';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : { suite : get_functor, configurable : false },
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : object._Set,
+    'enumerable' : true,
+    'configurable' : false
+  }
+  test.identical( _.propertyDescriptorGet( object, '_' ).descriptor, exp );
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_Put' : object._Put,
+    '_Set' : object._Set,
+    '_' : 'abc1',
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : object._Set,
+    'enumerable' : true,
+    'configurable' : false
+  }
+  test.identical( _.propertyDescriptorGet( object, '_' ).descriptor, exp );
 
   /* */
 
@@ -1390,7 +1748,7 @@ function accessorForbid( test )
   return;
 
   test.case = 'forbid get';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     var Alpha = { };
     _.accessor.forbid( Alpha, { a : 'a' } );
@@ -1398,7 +1756,7 @@ function accessorForbid( test )
   });
 
   test.case = 'forbid set';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     var Alpha = { };
     _.accessor.forbid( Alpha, { a : 'a' } );
@@ -1406,19 +1764,19 @@ function accessorForbid( test )
   });
 
   test.case = 'empty call';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     _.accessor.forbid( );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     _.accessor.forbid( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     _.accessor.forbid( {}, 1 );
   });
@@ -1440,7 +1798,7 @@ function accessorReadOnly( test )
   });
   _.accessor.readOnly( Alpha.prototype,{ a : 'a' });
   var x = new Alpha();
-  test.shouldThrowErrorOfAnyKind( () => x.a = 1 );
+  test.shouldThrowErrorSync( () => x.a = 1 );
   var descriptor = Object.getOwnPropertyDescriptor( Alpha.prototype, 'a' );
   var got = descriptor.set ? true : false;
   var expected = false;
@@ -1459,7 +1817,7 @@ function accessorReadOnly( test )
   });
   _.accessor.readOnly( Alpha.prototype, { a : 'a' } );
   var x = new Alpha( 5 );
-  test.shouldThrowErrorOfAnyKind( () => x.a = 1 );
+  test.shouldThrowErrorSync( () => x.a = 1 );
   var descriptor = Object.getOwnPropertyDescriptor( Alpha.prototype, 'a' );
   var got = !descriptor.set && x.a === 5;
   var expected = true;
@@ -1469,7 +1827,7 @@ function accessorReadOnly( test )
   return;
 
   test.case = 'readonly';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     var Alpha = { };
     _.accessor.readOnly( Alpha, { a : 'a' } );
@@ -1477,26 +1835,26 @@ function accessorReadOnly( test )
   });
 
   test.case = 'setter defined';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     var Alpha = { _aSet : function() { } };
     _.accessor.readOnly( Alpha, { a : 'a' } );
   });
 
   test.case = 'empty call';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     _.accessor.readOnly( );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     _.accessor.readOnly( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     _.accessor.readOnly( {}, [] );
   });
@@ -1531,7 +1889,7 @@ function forbids( test )
 
   if( Config.debug )
   {
-    test.shouldThrowErrorOfAnyKind( () => instance.f1 );
+    test.shouldThrowErrorSync( () => instance.f1 );
   }
 
   test.close( 'pure map' );
@@ -1580,8 +1938,8 @@ function forbids( test )
 
   if( Config.debug )
   {
-    test.shouldThrowErrorOfAnyKind( () => instance.f1 );
-    test.shouldThrowErrorOfAnyKind( () => BasicConstructor.prototype.f1 );
+    test.shouldThrowErrorSync( () => instance.f1 );
+    test.shouldThrowErrorSync( () => BasicConstructor.prototype.f1 );
   }
 
   test.close( 'with class' );
@@ -1633,7 +1991,7 @@ function getterWithSymbol( test )
   };
   var names =
   {
-    _ : { getter : _.accessor.getter.withSymbol, setter : false, put : false },
+    _ : { get : _.accessor.getter.withSymbol, set : false, put : false },
     a : {},
   }
   _.accessor.declare
@@ -1674,6 +2032,9 @@ function getterWithSymbol( test )
 function getterToValue( test )
 {
 
+  /* */
+
+  test.case = 'configurable : 1, set : 0, put : 0';
   var object =
   {
     'a' : 'a1',
@@ -1681,7 +2042,7 @@ function getterToValue( test )
   };
   var names =
   {
-    _ : { getter : _.accessor.getter.toValue, setter : false, put : false },
+    _ : { get : _.accessor.getter.toValue, set : false, put : false, configurable : true },
     a : {},
   }
   _.accessor.declare
@@ -1692,6 +2053,14 @@ function getterToValue( test )
     strict : 0,
     addingMethods : 1,
   });
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : object._Set,
+    'enumerable' : true,
+    'configurable' : true
+  }
+  test.identical( _.mapBut( _.propertyDescriptorGet( object, '_' ).descriptor, [ 'value' ] ), exp );
   var exp =
   {
     'a' : 'a1',
@@ -1705,7 +2074,6 @@ function getterToValue( test )
       'a' : 'a1',
       'b' : undefined,
       '_Get' : undefined,
-      '_' : undefined,
       'aSet' : undefined,
       'aGet' : undefined,
       'aPut' : undefined
@@ -1714,6 +2082,305 @@ function getterToValue( test )
   test.identical( object, exp );
   test.identical( object.a, exp.a );
   test.identical( object.b, exp.b );
+  var exp = { 'writable' : false, 'enumerable' : false, 'configurable' : false }
+  test.identical( _.mapBut( _.propertyDescriptorGet( object, '_' ).descriptor, [ 'value' ] ), exp );
+
+  /* */
+
+  test.case = 'configurable : 0, set : 0, put : 0';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : { get : _.accessor.getter.toValue, set : false, put : false, configurable : false },
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : undefined,
+    'enumerable' : true,
+    'configurable' : false,
+  }
+  test.identical( _.mapBut( _.propertyDescriptorGet( object, '_' ).descriptor, [ 'value' ] ), exp );
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_' :
+    {
+      'a' : 'a1',
+      'b' : undefined,
+      '_Get' : undefined,
+      'aSet' : undefined,
+      'aGet' : undefined,
+      'aPut' : undefined,
+      '_' : undefined,
+    }
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : undefined,
+    'enumerable' : true,
+    'configurable' : false,
+  }
+  test.identical( _.mapBut( _.propertyDescriptorGet( object, '_' ).descriptor, [ 'value' ] ), exp );
+
+  /* */
+
+  test.case = 'configurable : 0';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : { get : _.accessor.getter.toValue },
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : object._Set,
+    'enumerable' : true,
+    'configurable' : true,
+  }
+  test.identical( _.mapBut( _.propertyDescriptorGet( object, '_' ).descriptor, [ 'value' ] ), exp );
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_Put' : object._Put,
+    '_Set' : object._Set,
+    '_' :
+    {
+      'a' : 'a1',
+      'b' : undefined,
+      '_Get' : undefined,
+      '_Put' : undefined,
+      '_Set' : undefined,
+      'aSet' : undefined,
+      'aGet' : undefined,
+      'aPut' : undefined,
+    }
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+  var exp = { 'writable' : false, 'enumerable' : false, 'configurable' : false };
+  test.identical( _.mapBut( _.propertyDescriptorGet( object, '_' ).descriptor, [ 'value' ] ), exp );
+
+  /* */
+
+  test.case = 'suite';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : _.accessor.suite.toValue,
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : object._Set,
+    'enumerable' : true,
+    'configurable' : true
+  }
+  test.identical( _.mapBut( _.propertyDescriptorGet( object, '_' ).descriptor, [ 'value' ] ), exp );
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_Put' : object._Put,
+    '_Set' : object._Set,
+    '_' :
+    {
+      'a' : 'a1',
+      'b' : undefined,
+      '_Get' : undefined,
+      '_Put' : undefined,
+      '_Set' : undefined,
+      'aSet' : undefined,
+      'aGet' : undefined,
+      'aPut' : undefined,
+    }
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+  var exp = { 'writable' : false, 'enumerable' : false, 'configurable' : false };
+  test.identical( _.mapBut( _.propertyDescriptorGet( object, '_' ).descriptor, [ 'value' ] ), exp );
+
+  /* */
+
+  test.case = 'suite in fields';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : { suite : _.accessor.suite.toValue },
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : object._Set,
+    'enumerable' : true,
+    'configurable' : true
+  }
+  test.identical( _.mapBut( _.propertyDescriptorGet( object, '_' ).descriptor, [ 'value' ] ), exp );
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_Put' : object._Put,
+    '_Set' : object._Set,
+    '_' :
+    {
+      'a' : 'a1',
+      'b' : undefined,
+      '_Get' : undefined,
+      '_Put' : undefined,
+      '_Set' : undefined,
+      'aSet' : undefined,
+      'aGet' : undefined,
+      'aPut' : undefined,
+    }
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+  var exp = { 'writable' : false, 'enumerable' : false, 'configurable' : false };
+  test.identical( _.mapBut( _.propertyDescriptorGet( object, '_' ).descriptor, [ 'value' ] ), exp );
+
+  /* */
+
+  test.case = 'suite in fields, explicit configurable';
+  var object =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+  };
+  var names =
+  {
+    _ : { suite : _.accessor.suite.toValue, configurable : false },
+    a : {},
+  }
+  _.accessor.declare
+  ({
+    object,
+    names,
+    prime : 0,
+    strict : 0,
+    addingMethods : 1,
+  });
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : object._Set,
+    'enumerable' : true,
+    'configurable' : false
+  }
+  test.identical( _.mapBut( _.propertyDescriptorGet( object, '_' ).descriptor, [ 'value' ] ), exp );
+  var exp =
+  {
+    'a' : 'a1',
+    'b' : 'b1',
+    'aSet' : object.aSet,
+    'aGet' : object.aGet,
+    'aPut' : object.aPut,
+    '_Get' : object._Get,
+    '_Put' : object._Put,
+    '_Set' : object._Set,
+    '_' :
+    {
+      'a' : 'a1',
+      'b' : undefined,
+      '_Get' : undefined,
+      '_Put' : undefined,
+      '_Set' : undefined,
+      'aSet' : undefined,
+      'aGet' : undefined,
+      'aPut' : undefined,
+      '_' : undefined,
+    }
+  }
+  test.identical( object, exp );
+  test.identical( object.a, exp.a );
+  test.identical( object.b, exp.b );
+  var exp =
+  {
+    'get' : object._Get,
+    'set' : object._Set,
+    'enumerable' : true,
+    'configurable' : false
+  }
+  test.identical( _.mapBut( _.propertyDescriptorGet( object, '_' ).descriptor, [ 'value' ] ), exp );
+
+  /* */
 
 }
 
@@ -1889,19 +2556,19 @@ function propertyConstant( test )
   return;
 
   test.case = 'empty call';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     _.propertyConstant( );
   });
 
   test.case = 'invalid first argument type';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     _.propertyConstant( 1, { a : 'a' } );
   });
 
   test.case = 'invalid second argument type';
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
     _.propertyConstant( {}, 13 );
   });
@@ -2049,7 +2716,7 @@ function classDeclare( test )
 
   test.case = 'attempt to extend statics without order';
 
-  test.shouldThrowErrorOfAnyKind( function()
+  test.shouldThrowErrorSync( function()
   {
 
     function C3()
@@ -2626,6 +3293,7 @@ var Self =
     accessorIsClean,
     accessorDeducingPrime,
     accessorUnfunct,
+    accessorUnfunctGetSuite,
 
     accessorForbid,
     accessorReadOnly,

@@ -977,14 +977,14 @@ let Statics =
 
 let Accessors =
 {
-  isAvailable : { getter : isAvailableGet, readOnly : 1 },
-  // isDownloaded : { getter : isDownloadedGet, readOnly : 1 },
-  // isRepository : { getter : isRepositoryGet, readOnly : 1 },
-  localPath : { getter : localPathGet, readOnly : 1 },
-  remotePath : { getter : remotePathGet, readOnly : 1 },
-  opener : { setter : openerSet },
-  longPath : { getter : longPathGet },
-  path : { setter : pathSet },
+  isAvailable : { get : isAvailableGet, readOnly : 1 },
+  // isDownloaded : { get : isDownloadedGet, readOnly : 1 },
+  // isRepository : { get : isRepositoryGet, readOnly : 1 },
+  localPath : { get : localPathGet, readOnly : 1 },
+  remotePath : { get : remotePathGet, readOnly : 1 },
+  opener : { set : openerSet },
+  longPath : { get : longPathGet },
+  path : { set : pathSet },
   module : { combining : 'rewrite' },
 }
 

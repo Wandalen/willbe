@@ -765,19 +765,19 @@ let Forbids =
 let Accessors =
 {
 
-  _ : { getter : _.accessor.getter.withSymbol, readOnly : 1, strict : 0 },
+  _ : { get : _.accessor.getter.withSymbol, readOnly : 1, strict : 0 },
 
-  dirExists : { getter : _statusGetter_functor( 'dirExists' ), readOnly : 1 },
-  hasFiles : { getter : _statusGetter_functor( 'hasFiles' ), readOnly : 1 },
-  isRepository : { getter : _statusGetter_functor( 'isRepository' ), readOnly : 1 },
-  hasLocalChanges : { getter : _statusGetter_functor( 'hasLocalChanges' ), readOnly : 1 },
-  hasLocalUncommittedChanges : { getter : _statusGetter_functor( 'hasLocalUncommittedChanges' ), readOnly : 1 },
-  remoteIsValid : { getter : _statusGetter_functor( 'remoteIsValid' ), readOnly : 1 },
-  isUpToDate : { getter : _statusGetter_functor( 'isUpToDate' ), readOnly : 1 },
-  safeToDelete : { getter : _statusGetter_functor( 'safeToDelete' ), readOnly : 1 },
-  downloadRequired : { getter : _statusGetter_functor( 'downloadRequired' ), readOnly : 1 },
-  updateRequired : { getter : _statusGetter_functor( 'updateRequired' ), readOnly : 1 },
-  agreeRequired : { getter : _statusGetter_functor( 'agreeRequired' ), readOnly : 1 },
+  dirExists : { get : _statusGetter_functor( 'dirExists' ), readOnly : 1 },
+  hasFiles : { get : _statusGetter_functor( 'hasFiles' ), readOnly : 1 },
+  isRepository : { get : _statusGetter_functor( 'isRepository' ), readOnly : 1 },
+  hasLocalChanges : { get : _statusGetter_functor( 'hasLocalChanges' ), readOnly : 1 },
+  hasLocalUncommittedChanges : { get : _statusGetter_functor( 'hasLocalUncommittedChanges' ), readOnly : 1 },
+  remoteIsValid : { get : _statusGetter_functor( 'remoteIsValid' ), readOnly : 1 },
+  isUpToDate : { get : _statusGetter_functor( 'isUpToDate' ), readOnly : 1 },
+  safeToDelete : { get : _statusGetter_functor( 'safeToDelete' ), readOnly : 1 },
+  downloadRequired : { get : _statusGetter_functor( 'downloadRequired' ), readOnly : 1 },
+  updateRequired : { get : _statusGetter_functor( 'updateRequired' ), readOnly : 1 },
+  agreeRequired : { get : _statusGetter_functor( 'agreeRequired' ), readOnly : 1 },
 
   remotePath : { readOnly : 1 },
   downloadPath : { readOnly : 1 },
