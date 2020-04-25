@@ -2,6 +2,11 @@
 # docker run -it --rm willbe
 
 FROM debian:stable
+SHELL [ "/bin/bash", "-l", "-c" ]
+ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
+EXPOSE 8080
+WORKDIR /willbe
+ADD . /willbe
 
 RUN apt-get update
 RUN apt-get install git -y
@@ -15,9 +20,4 @@ RUN npm i -g willbe
 RUN npm i -g wTesting
 RUN cd /willbe && npm i
 
-SHELL [ "/bin/bash", "-l", "-c" ]
-ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
-EXPOSE 8080
-WORKDIR /willbe
-ADD . /willbe
 CMD [ "bash" ]
