@@ -89,12 +89,12 @@ function onSuiteBegin()
     outputFormat : 'relative',
   });
 
-  // let reposDownload = require( './ReposDownload.s' );
-  // return reposDownload().then( () =>
-  // {
-  //   _.assert( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'ModuleForTesting1' ) ) );
-  //   return null;
-  // })
+  let reposDownload = require( './ReposDownload.s' );
+  return reposDownload().then( () =>
+  {
+    _.assert( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'ModuleForTesting1' ) ) );
+    return null;
+  })
 }
 
 //
@@ -14091,36 +14091,36 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
   let a = self.assetFor( test, 'export-with-submodule-with-deleted-module-dir' );
 
   /* - */
-  
+
   a.ready
-  
+
   a.reflect();
-  
+
   a.start( '.with module/m1/ .export' )
 
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    
+
     test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Exported module::' ), 1 );
 
     return null;
   })
-  
+
   .then( ( got ) =>
   {
     _.fileProvider.filesDelete( a.abs( 'module/m1/.module' ) )
     test.is( !_.fileProvider.fileExists( a.abs( 'module/m1/.module' ) ) );
     return null;
   })
-  
+
   a.start( '.export' )
-  
+
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    
+
     test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     test.identical( _.strCount( got.output, 'Exported module::' ), 1 );
 
@@ -14133,7 +14133,7 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
 }/* end of function exportWithSubmoduleThatHasModuleDirDeleted */
 
 exportWithSubmoduleThatHasModuleDirDeleted.timeOut = 100000;
-exportWithSubmoduleThatHasModuleDirDeleted.description = 
+exportWithSubmoduleThatHasModuleDirDeleted.description =
 `Supermodule has single submodule. Submodule has own dependency too.
 Expected behaviour:
  - Submodule exports own files and submodule
