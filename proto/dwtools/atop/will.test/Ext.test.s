@@ -89,12 +89,12 @@ function onSuiteBegin()
     outputFormat : 'relative',
   });
 
-  let reposDownload = require( './ReposDownload.s' );
-  return reposDownload().then( () =>
-  {
-    _.assert( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'ModuleForTesting1' ) ) );
-    return null;
-  })
+  // let reposDownload = require( './ReposDownload.s' );
+  // return reposDownload().then( () =>
+  // {
+  //   _.assert( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'ModuleForTesting1' ) ) );
+  //   return null;
+  // })
 }
 
 //
@@ -14085,6 +14085,63 @@ exportImplicit.timeOut = 300000;
 
 //
 
+function exportWithSubmoduleThatHasModuleDirDeleted( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'export-with-submodule-with-deleted-module-dir' );
+
+  /* - */
+  
+  a.ready
+  
+  a.reflect();
+  
+  a.start( '.with module/m1/ .export' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 1 );
+
+    return null;
+  })
+  
+  .then( ( got ) =>
+  {
+    _.fileProvider.filesDelete( a.abs( 'module/m1/.module' ) )
+    test.is( !_.fileProvider.fileExists( a.abs( 'module/m1/.module' ) ) );
+    return null;
+  })
+  
+  a.start( '.export' )
+  
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}/* end of function exportWithSubmoduleThatHasModuleDirDeleted */
+
+exportWithSubmoduleThatHasModuleDirDeleted.timeOut = 100000;
+exportWithSubmoduleThatHasModuleDirDeleted.description = 
+`Supermodule has single submodule. Submodule has own dependency too.
+Expected behaviour:
+ - Submodule exports own files and submodule
+ - Export of supermodule works even if submodules are not downloaded recursively.
+`
+
+//
+
 function exportAuto( test )
 {
   let self = this;
@@ -20901,6 +20958,7 @@ var Self =
     exportWithDisabled,
     exportOutResourceWithoutGeneratedCriterion,
     exportImplicit,
+    exportWithSubmoduleThatHasModuleDirDeleted,
     /* xxx : implement same test for hierarchy-remote and irregular */
     /* xxx : implement clean tests */
     /* xxx : refactor ** clean */
