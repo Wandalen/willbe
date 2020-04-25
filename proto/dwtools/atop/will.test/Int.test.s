@@ -8782,7 +8782,7 @@ relative resolved path absolutized if pathResolving:1
 function pathsResolveFailing( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules' );
+  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules' ); /* xxx qqq : ! */
   let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let rel = self.rel_functor( routinePath );
@@ -9109,6 +9109,8 @@ function modulesEachDuplicates( test )
 
   return a.ready;
 } /* end of function modulesEachDuplicates */
+
+modulesEachDuplicates.timeOut = 300000;
 
 //
 

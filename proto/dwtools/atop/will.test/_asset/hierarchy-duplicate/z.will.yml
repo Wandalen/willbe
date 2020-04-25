@@ -6,7 +6,7 @@ about :
 submodule :
 
   a : group1/a
-  Tools : git+https:///github.com/Wandalen/wTools.git/
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/
 
 path :
 

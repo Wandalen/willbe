@@ -16,8 +16,8 @@ RUN apt-get install curl -y
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 RUN nvm install --lts
 
-RUN npm i -g willbe
-RUN npm i -g wTesting
+#RUN npm i -g willbe
+#RUN npm i -g wTesting
 RUN cd /willbe && npm i
 
 CMD [ "bash" ]
