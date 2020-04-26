@@ -79,7 +79,7 @@ function onModule( it )
     let it2 = it.will.hookItNew( it );
     it2.request.subject = '';
     it2.request.original = '';
-    it2.request.map = { name : bumped.config.version };
+    it2.request.map = { name : 'v' + bumped.config.version };
     it2.will.hooks.GitTag.call( it2 );
   }
 
