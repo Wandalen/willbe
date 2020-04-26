@@ -2358,6 +2358,30 @@ module:
             ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/proto/dir3.test/File.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/proto/dir3.test/File.test.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/m1
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/m1/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/m1/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/m1/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/m1/proto/dwtools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/m1/proto/dwtools/File2.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/proto/File1.js
           - ../proto/dwtools/atop/will.test/_asset/function-platform
           - >-
             ../proto/dwtools/atop/will.test/_asset/function-platform/.im.will.yml
