@@ -21,7 +21,7 @@ RUN which npm
 
 RUN npm config set user 0
 RUN npm config set unsafe-perm true
-#RUN npm i -g willbe
+#RUN npm i -g willbe@latest
 #RUN npm i -g wTesting
 RUN cd /willbe && npm i
 
