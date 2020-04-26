@@ -3,10 +3,7 @@
 -*
 *.log
 *.db
-*.sh
-*.bat
 *.tmp
-*.special
 *.out
 build
 builder
