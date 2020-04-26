@@ -5,7 +5,7 @@ FROM debian:stable
 SHELL [ "/bin/bash", "-l", "-c" ]
 # EXPOSE 8080
 # WORKDIR /willbe
-# ADD . /willbe
+ADD . /willbe
 
 RUN apt-get update
 # RUN apt-get install git -y
