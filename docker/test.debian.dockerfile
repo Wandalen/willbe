@@ -4,7 +4,7 @@
 FROM debian:stable
 SHELL [ "/bin/bash", "-l", "-c" ]
 # EXPOSE 8080
-# WORKDIR /willbe
+WORKDIR /willbe
 ADD . /willbe
 
 RUN apt-get update
