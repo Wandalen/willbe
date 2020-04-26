@@ -14404,6 +14404,129 @@ Expected behaviour:
 
 //
 
+function exportWithoutSubSubModules( test )
+{
+  let self = this;
+  let a = self.assetFor( test );
+
+  a.reflect();
+  a.start( '.with * .clean' )
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with l1 .export';
+    return null;
+  })
+
+  a.start( '.with l1 .export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml\n' ), 1 );
+    test.identical( _.strCount( op.output, '/l1.out.will.yml\n' ), 2 );
+    var exp = [ '.', './l1.out.will.yml', './l1.will.yml', './l2.will.yml', './l3.will.yml', './l4.will.yml' ];
+    var got = self.find( a.abs( '.' ) );
+    test.identical( got, exp );
+    return op;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with l2 .export';
+    return null;
+  })
+
+  a.start( '.with l2 .export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml\n' ), 1 );
+    test.identical( _.strCount( op.output, '/l1.out.will.yml\n' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml\n' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.out.will.yml\n' ), 2 );
+    var exp = [ '.', './l1.out.will.yml', './l1.will.yml', './l2.out.will.yml', './l2.will.yml', './l3.will.yml', './l4.will.yml' ];
+    var got = self.find( a.abs( '.' ) );
+    test.identical( got, exp );
+    return op;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with l3 .export';
+    a.fileProvider.fileDelete( a.abs( 'l1.out.will.yml' ) );
+    return null;
+  })
+
+  a.start( '.with l3 .export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml\n' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.out.will.yml\n' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml from ../l2.out.will.yml\n' ), 1 );
+    test.identical( _.strCount( op.output, '/l1.out.will.yml from ../l2.out.will.yml\n' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.will.yml\n' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.out.will.yml\n' ), 3 );
+    test.identical( _.strCount( op.output, '/l3.will.yml\n' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.out.will.yml\n' ), 2 );
+    var exp = [ '.', './l1.will.yml', './l2.out.will.yml', './l2.will.yml', './l3.out.will.yml', './l3.will.yml', './l4.will.yml' ];
+    var got = self.find( a.abs( '.' ) );
+    test.identical( got, exp );
+    return op;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with l4 .export';
+    a.fileProvider.fileDelete( a.abs( 'l2.out.will.yml' ) );
+    return null;
+  })
+
+  a.start( '.with l4 .export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml\n' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.out.will.yml\n' ), 0 );
+    test.identical( _.strCount( op.output, '/l1.will.yml from ../l3.out.will.yml\n' ), 1 );
+    test.identical( _.strCount( op.output, '/l1.out.will.yml from ../l3.out.will.yml\n' ), 1 );
+
+    test.identical( _.strCount( op.output, '/l2.will.yml\n' ), 0 );
+    test.identical( _.strCount( op.output, '/l2.out.will.yml\n' ), 0 );
+    test.identical( _.strCount( op.output, '/l2.will.yml from ../l3.out.will.yml\n' ), 1 );
+    test.identical( _.strCount( op.output, '/l2.out.will.yml from ../l3.out.will.yml\n' ), 1 );
+
+    test.identical( _.strCount( op.output, '/l3.will.yml\n' ), 1 );
+    test.identical( _.strCount( op.output, '/l3.out.will.yml\n' ), 5 );
+    test.identical( _.strCount( op.output, '/l4.will.yml\n' ), 1 );
+    test.identical( _.strCount( op.output, '/l4.out.will.yml\n' ), 2 );
+    var exp = [ '.', './l1.will.yml', './l2.will.yml', './l3.out.will.yml', './l3.will.yml', './l4.out.will.yml', './l4.will.yml' ];
+    var got = self.find( a.abs( '.' ) );
+    test.identical( got, exp );
+    return op;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+exportWithoutSubSubModules.timeOut = 300000;
+
+//
+
 /*
 Import out file with non-importable path local.
 Test importing of non-valid out files.
@@ -21230,6 +21353,7 @@ var Self =
     // exportAuto, // xxx : later
     exportOutdated2,
     exportWithSubmoduleThatHasModuleDirDeleted,
+    exportWithoutSubSubModules,
 
     importPathLocal,
     // importLocalRepo, /* xxx : later */

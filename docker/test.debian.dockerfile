@@ -21,8 +21,8 @@ RUN which npm
 
 RUN npm config set user 0
 RUN npm config set unsafe-perm true
-#RUN npm i -g willbe@latest
-#RUN npm i -g wTesting
+#RUN npm i -g willbe@alpha
+#RUN npm i -g wTesting@alpha
 RUN cd /willbe && npm i
 
 ENTRYPOINT [ "/bin/bash", "-lic" ]

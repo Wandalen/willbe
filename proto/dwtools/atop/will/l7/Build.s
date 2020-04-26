@@ -362,8 +362,10 @@ function archiveFilePathFor()
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( _.strDefined( build.name ), 'Build should have name' );
-  _.assert( _.strDefined( module.about.name ), 'Module should have name, declare about.name' );
   _.assert( inExportFile instanceof will.Willfile );
+
+  if( !_.strDefined( module.about.name ) )
+  throw _.errBrief( 'Module should have name, declare about.name' );
 
   let exports = module.exportsResolve();
   let criterions = build.criterionVariable( exports );

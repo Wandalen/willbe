@@ -6,8 +6,8 @@ consistency:
     hash: 735e9778054d908664fd9459f5d3d4b6
     size: 2556
   ../.im.will.yml: &ref_1
-    hash: 91485b4e09e23bfeca7155586a60a018
-    size: 7117
+    hash: 71f5100b53574520c707ac2044a756e9
+    size: 7114
 module:
   willbe.out:
     about:
@@ -4229,7 +4229,7 @@ module:
         criterion:
           content: prime
           debug: release
-      test.docker.rebuild:
+      test.docker.dock:
         opts:
           shell: docker build -t willbe.test -f docker/test.debian.dockerfile .
           build: 1
@@ -5038,7 +5038,7 @@ module:
         criterion:
           content: prime
           debug: release
-      test.docker.rebuild:
+      test.docker.dock:
         opts:
           shell: docker build -t willbe.test -f docker/test.debian.dockerfile .
           build: 1
@@ -5221,5 +5221,5 @@ module:
         hash: 735e9778054d908664fd9459f5d3d4b6
         size: 2556
       ../.im.will.yml:
-        hash: 91485b4e09e23bfeca7155586a60a018
-        size: 7117
+        hash: 71f5100b53574520c707ac2044a756e9
+        size: 7114

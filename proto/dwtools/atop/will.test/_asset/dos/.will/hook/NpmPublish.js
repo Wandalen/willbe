@@ -19,7 +19,7 @@ function onModule( it )
   return;
 
   if( !o.tag )
-  throw _.errBrief( 'Expects option tag' );
+  throw _.errBrief( 'Expects option {-tag-}' );
 
   if( !_.fileProvider.fileExists( wasСonfigPath ) )
   throw _.errBrief( `Does not have ${wasСonfigPath}` );
@@ -42,7 +42,7 @@ function onModule( it )
 
   {
     let it2 = it.will.hookItNew( it );
-    it2.request.subject = `-am "version ${bumped.config.version}"`
+    it2.request.subject = `-am ""`
     it2.request.original = it2.request.subject;
     it2.will.hooks.GitSync.call( it2 );
   }
@@ -80,6 +80,14 @@ function onModule( it )
     it2.request.subject = '';
     it2.request.original = '';
     it2.request.map = { name : bumped.config.version };
+    it2.will.hooks.GitTag.call( it2 );
+  }
+
+  {
+    let it2 = it.will.hookItNew( it );
+    it2.request.subject = '';
+    it2.request.original = '';
+    it2.request.map = { name : o.tag };
     it2.will.hooks.GitTag.call( it2 );
   }
 
