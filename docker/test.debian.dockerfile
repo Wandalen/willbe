@@ -3,7 +3,6 @@
 
 FROM debian:stable
 SHELL [ "/bin/bash", "-l", "-c" ]
-ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
 EXPOSE 8080
 WORKDIR /willbe
 ADD . /willbe
@@ -22,4 +21,6 @@ RUN npm config set unsafe-perm true
 #RUN npm i -g wTesting
 RUN cd /willbe && npm i
 
-CMD [ "npm", "test" ]
+#ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
+ENTRYPOINT [ "npm" ]
+CMD [ "test" ]
