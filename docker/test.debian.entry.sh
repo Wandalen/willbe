@@ -1,12 +1,13 @@
 #!/bin/bash
 set +e
 
-# if [ "${1#-}" != "${1}" ] || [ -z "$(command -v "${1}")" ]; then
-#   set -- node "$@"
-# fi
+if [ "${1#-}" != "${1}" ] || [ -z "$(command -v "${1}")" ]; then
+  echo "a1"
+  set -- node "$@"
+fi
 
-echo "$PATH"
-echo "$@"
+echo "PATH : $PATH"
+echo "@ : $@"
 which node
 which npm
 
