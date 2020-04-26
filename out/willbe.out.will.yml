@@ -2,15 +2,12 @@ format: outwillfile-2.0
 root:
   - willbe.out
 consistency:
-  willbe.out.will.yml: &ref_0
-    hash: 76de77ef118c0377e6cb1757b230a2bf
-    size: 249716
-  ../.ex.will.yml: &ref_1
+  ../.ex.will.yml: &ref_0
     hash: 735e9778054d908664fd9459f5d3d4b6
     size: 2556
-  ../.im.will.yml: &ref_2
-    hash: 4aa1ac31ed62b3aae2dce4cfe6d9ca4d
-    size: 6924
+  ../.im.will.yml: &ref_1
+    hash: 91485b4e09e23bfeca7155586a60a018
+    size: 7117
 module:
   willbe.out:
     about:
@@ -19,20 +16,20 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@willbe.so>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts:
+      npm.scripts: &ref_5
         test: 'wtest .run proto/** v:5'
         docgen: wdocgen .build proto
         single-process-will: node proto/dwtools/atop/will/Exec
@@ -43,7 +40,7 @@ module:
         docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
         docker-run-centos: docker run --rm willbe-centos
         docker-run-ubuntu: docker run --rm willbe-ubuntu
-      npm.bin:
+      npm.bin: &ref_6
         single-process-will: proto/dwtools/atop/will/Exec
         debug-will: proto/dwtools/atop/will/ExecDebug
         unrestricted-will: proto/dwtools/atop/will/ExecUnrestricted
@@ -3033,6 +3030,10 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/step-willbe-version-check
           - >-
             ../proto/dwtools/atop/will.test/_asset/step-willbe-version-check/.will.yaml
+          - ../proto/dwtools/atop/will.test/_asset/stepBuild
+          - ../proto/dwtools/atop/will.test/_asset/stepBuild/bad1.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/stepBuild/bad2.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/stepBuild/basic.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules
           - ../proto/dwtools/atop/will.test/_asset/submodules/.ex.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules/.im.will.yml
@@ -4228,6 +4229,14 @@ module:
         criterion:
           content: prime
           debug: release
+      test.docker.rebuild:
+        opts:
+          shell: docker build -t willbe.test -f docker/test.debian.dockerfile .
+          build: 1
+      test.docker.run:
+        opts:
+          shell: docker run --rm willbe.test
+          build: 1
       reflect.proto.debug.raw:
         opts:
           reflector: 'reflector::reflect.proto*'
@@ -4324,24 +4333,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          reflector: 'reflector::exported.proto.export*'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          reflector: 'reflector::exported.files.proto.export*'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -4430,9 +4421,8 @@ module:
           content: proto
           export: 1
     consistency:
-      willbe.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: willbe
@@ -4440,35 +4430,14 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters:
-        - njs >= 8.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - wTools
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@willbe.so>
-        - Volodymyr M. <volodymyr.migdal@gmail.com>
-        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
+      contributors: *ref_4
       npm.name: willbe
-      npm.scripts:
-        test: 'wtest .run proto/** v:5'
-        docgen: wdocgen .build proto
-        single-process-will: node proto/dwtools/atop/will/Exec
-        debug-will: node proto/dwtools/atop/will/ExecDebug
-        unrestricted-will: node proto/dwtools/atop/will/ExecUnrestricted
-        will: node proto/dwtools/atop/will/ExecUnrestricted
-        docker-build-centos: docker image build -t willbe-centos -f ./docker/centos.dockerfile .
-        docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
-        docker-run-centos: docker run --rm willbe-centos
-        docker-run-ubuntu: docker run --rm willbe-ubuntu
-      npm.bin:
-        single-process-will: proto/dwtools/atop/will/Exec
-        debug-will: proto/dwtools/atop/will/ExecDebug
-        unrestricted-will: proto/dwtools/atop/will/ExecUnrestricted
-        will: proto/dwtools/atop/will/ExecUnrestricted
+      npm.scripts: *ref_5
+      npm.bin: *ref_6
     path:
       module.willfiles:
         criterion:
@@ -5069,6 +5038,14 @@ module:
         criterion:
           content: prime
           debug: release
+      test.docker.rebuild:
+        opts:
+          shell: docker build -t willbe.test -f docker/test.debian.dockerfile .
+          build: 1
+      test.docker.run:
+        opts:
+          shell: docker run --rm willbe.test
+          build: 1
       reflect.proto.debug.raw:
         opts:
           reflector: 'reflector::reflect.proto*'
@@ -5244,6 +5221,5 @@ module:
         hash: 735e9778054d908664fd9459f5d3d4b6
         size: 2556
       ../.im.will.yml:
-        hash: 4aa1ac31ed62b3aae2dce4cfe6d9ca4d
-        size: 6924
-      willbe.out.will.yml: *ref_0
+        hash: 91485b4e09e23bfeca7155586a60a018
+        size: 7117
