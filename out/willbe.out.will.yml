@@ -2361,23 +2361,35 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted
           - >-
-            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/.ex.will.yml
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/Mandatory.will.yml
           - >-
-            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/.im.will.yml
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/Optional.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module
           - >-
-            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/m1
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/mand
           - >-
-            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/m1/.ex.will.yml
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/mand/.ex.will.yml
           - >-
-            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/m1/.im.will.yml
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/mand/.im.will.yml
           - >-
-            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/m1/proto
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/mand/proto
           - >-
-            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/m1/proto/dwtools
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/mand/proto/dwtools
           - >-
-            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/m1/proto/dwtools/File2.s
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/mand/proto/dwtools/File2.s
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/opt
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/opt/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/opt/.im.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/opt/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/opt/proto/dwtools
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/module/opt/proto/dwtools/File2.s
           - >-
             ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted/proto
           - >-
