@@ -87,7 +87,7 @@ function onModule( it )
     let it2 = it.will.hookItNew( it );
     it2.request.subject = '';
     it2.request.original = '';
-    it2.request.map = { name : o.tag, light : 1 };
+    it2.request.map = { name : o.tag };
     it2.will.hooks.GitTag.call( it2 );
   }
 

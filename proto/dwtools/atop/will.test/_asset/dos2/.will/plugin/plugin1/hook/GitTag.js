@@ -35,17 +35,26 @@ function onModule( it )
   if( o.dry )
   return;
 
-  if( o.light )
-  it.start( `git tag ${o.name}` );
-  else
-  it.start( `git tag -a ${o.name} -m "${o.description}"` );
+  _.git.tagMake
+  ({
+    localPath,
+    tag : o.name,
+    description : o.description || '',
+    light : o.light,
+    sync : 1,
+  });
+
+  // if( o.light )
+  // it.start( `git tag ${o.name}` );
+  // else
+  // it.start( `git tag -a ${o.name} -m "${o.description}"` );
 
 }
 
 onModule.defaults =
 {
   name : null,
-  description : null,
+  description : '',
   dry : 0,
   light : 0,
   verbosity : 1,
