@@ -15,6 +15,7 @@ RUN apt-get install curl -y
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 RUN nvm install --lts
 
+RUN echo ${PATH}
 RUN which node
 RUN which npm
 

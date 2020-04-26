@@ -5,4 +5,8 @@ set -e
 #   set -- node "$@"
 # fi
 
+echo "$@"
+which node
+which npm
+
 exec "$@"
