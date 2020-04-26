@@ -26,5 +26,6 @@ RUN nvm install --lts
 #CMD [ "npm", "test" ]
 #CMD [ "bash" ]
 
-ENTRYPOINT [ "/willbe/docker/test.debian.entry.sh", "info", "willbe" ]
-CMD [ "bash" ]
+# ENTRYPOINT [ "/willbe/docker/test.debian.entry.sh", "info", "willbe" ]
+ENTRYPOINT [ "/willbe/docker/test.debian.entry.sh" ]
+CMD [ "node" ]
