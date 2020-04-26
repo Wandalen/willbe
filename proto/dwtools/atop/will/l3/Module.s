@@ -6671,7 +6671,6 @@ function structureExportOut( o )
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
-  debugger;
   let found = module.modulesEach
   ({
     withPeers : 1,
@@ -6680,16 +6679,31 @@ function structureExportOut( o )
     withDisabledSubmodules : 0,
     withDisabledStem : 1,
     recursive : 2,
-    outputFormat : '*/module',
+    outputFormat : '/',
     descriptive : 1,
   });
+
+  found.result = _.longOnce( _.filter( found.result, ( junction ) =>
+  {
+    let result = junction.toModule();
+    if( !result )
+    {
+      debugger;
+      if( junction.relation && junction.relation.criterion.optional )
+      return;
+      throw _.err
+      (
+          `${junction.object.absoluteName} is not available. `
+        + `\nRemote path is ${junction.remotePath}`
+        + `\nLocal path is ${junction.localPath}`
+      );
+    }
+    return result;
+  }));
 
   let modules = [];
   found.result.forEach( ( module2 ) =>
   {
-    // if( !junction.module )
-    // debugger;
-    // if( !junction.module )
     if( !( module2 instanceof _.Will.Module ) )
     {
       debugger;
@@ -6702,15 +6716,11 @@ function structureExportOut( o )
       );
     }
     let c = 0;
-    // module.modules.forEach( ( module ) =>
-    // {
-      if( _.longHas( found.ownedObjects, module2 ) )
-      {
-        modules.push( module2 );
-        c += 1;
-      }
-    // });
-    // _.assert( c <= 1 );
+    if( _.longHas( found.ownedObjects, module2 ) )
+    {
+      modules.push( module2 );
+      c += 1;
+    }
     _.assert( c === 1 );
   });
 

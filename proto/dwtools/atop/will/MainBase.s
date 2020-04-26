@@ -2194,16 +2194,10 @@ function modulesEach_body( o )
     if( o.outputFormat === '*/module' )
     {
       return object.toModule();
-      // if( object instanceof _.Will.Module )
-      // return object;
-      // return will.junctionFrom( object ).module;
     }
     else if( o.outputFormat === '*/relation' )
     {
       return object.toRelation();
-      // if( object instanceof _.Will.ModulesRelation )
-      // return object;
-      // return will.junctionFrom( object ).relation;
     }
     else if( o.outputFormat === '*/object' )
     {
@@ -3661,11 +3655,6 @@ function junctionFrom( object )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-
-  // let result = will.junctionOf( object );
-  // if( result )
-  // return result;
-
   return _.Will.ModuleJunction.JunctionFrom( will, object );
 }
 

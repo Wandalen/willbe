@@ -14223,7 +14223,7 @@ exportAuto.description =
 
 //
 
-function exportWithSubmoduleThatHasModuleDirDeleted( test )
+function exportOutdated2( test )
 {
   let self = this;
   let a = self.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' ); /* qqq xxx : assets naming transition is required. ask */
@@ -14236,32 +14236,152 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
 
   a.start( '.with module/m1/ .export' )
 
-  .then( ( got ) =>
+  .then( ( op ) =>
   {
-    test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, 'rror' ), 0 );
-    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
-    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( got.output, 'Exported module::' ), 1 );
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'rror' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
+    test.is( a.fileProvider.fileExists( a.abs( 'module/m1/out/m1.out.will.yml' ) ) );
+    var read = a.fileProvider.fileRead( a.abs( 'module/m1/.im.will.yml' ) );
+    read += '\n\n';
+    a.fileProvider.fileWrite( a.abs( 'module/m1/.im.will.yml' ), read );
     return null;
   })
 
-  .then( ( got ) =>
+  a.start( '.with module/m1/ .export' )
+
+  .then( ( op ) =>
   {
-    _.fileProvider.filesDelete( a.abs( 'module/m1/.module' ) )
-    test.is( !_.fileProvider.fileExists( a.abs( 'module/m1/.module' ) ) );
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'rror' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
+    test.is( a.fileProvider.fileExists( a.abs( 'module/m1/out/m1.out.will.yml' ) ) );
     return null;
   })
 
-  a.start( '.export' )
+  /* - */
 
-  .then( ( got ) =>
+  return a.ready;
+}/* end of function exportOutdated2 */
+
+exportOutdated2.timeOut = 100000;
+exportOutdated2.description =
+`
+- Exporting of module with outdated outfile throws no error.
+`
+
+//
+
+function exportWithSubmoduleThatHasModuleDirDeleted( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' ); /* qqq xxx : assets naming transition is required. ask */
+
+  /* - */
+
+  a.ready
+
+  .then( ( op ) =>
   {
-    test.identical( got.exitCode, 0 );
+    test.case = 'optional';
+    a.reflect();
+    test.is( !a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
+    return op;
+  })
 
-    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( got.output, 'Exported module::' ), 1 );
+  a.start( '.with module/opt/ .export' )
 
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'rror' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
+    return null;
+  })
+
+  .then( ( op ) =>
+  {
+    _.fileProvider.filesDelete( a.abs( 'module/opt/.module' ) )
+    test.is( a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
+    return null;
+  })
+
+  a.start( '.with Optional .export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'rror' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
+    test.is( a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
+
+    var exp = [ 'Optional.out', '../Optional', '../module/opt/', '../module/opt/out/opt.out' ];
+    var outfile = _.fileProvider.configRead( a.abs( 'out/Optional.out.will.yml' ) );
+    test.identical( _.mapKeys( outfile.module ), exp );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+
+  .then( ( op ) =>
+  {
+    test.case = 'mandatory';
+    a.reflect();
+    test.is( !a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
+    return op;
+  })
+
+  a.start( '.with module/mand/ .export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'rror' ), 0 );
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( op.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
+    return null;
+  })
+
+  .then( ( op ) =>
+  {
+    _.fileProvider.filesDelete( a.abs( 'module/mand/.module' ) )
+    test.is( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
+    return null;
+  })
+
+  a.startNonThrowing( '.with Mandatory .export' )
+
+  .then( ( op ) =>
+  {
+    test.ni( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'module::Mandatory / module::mand / opener::ModuleForTesting2 is not available' ), 1 );
+    test.identical( _.strCount( op.output, 'ModuleForTesting2 is not available' ), 1 );
+    test.identical( _.strCount( op.output, 'Exported module::' ), 0 );
+    test.is( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
     return null;
   })
 
@@ -14387,8 +14507,8 @@ function importLocalRepo( test )
     test.identical( _.strCount( got.output, /\+ reflector::download reflected .* file\(s\)/ ), 1 );
     test.identical( _.strCount( got.output, /Write out willfile .*\/.module\/Proto.out.will.yml/ ), 1 );
 
-    var outfile = _.fileProvider.configRead( _.path.join( modulePath, 'Proto.out.will.yml' ) );
-    outfile = outfile.module[ 'Proto.out' ]
+    var outfile = _.fileProvider.configRead( _.path.join( modulePath, 'Proto.out.will.yml' ) ); /* qqq xxx */
+    outfile = outfile.module[ 'Proto.out' ];
 
     var expectedReflector =
     {
@@ -20964,6 +21084,7 @@ var Self =
     /* xxx : implement clean tests */
     /* xxx : refactor ** clean */
     // exportAuto, // xxx : later
+    exportOutdated2,
     exportWithSubmoduleThatHasModuleDirDeleted,
 
     importPathLocal,
