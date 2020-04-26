@@ -21,6 +21,5 @@ RUN npm config set unsafe-perm true
 #RUN npm i -g wTesting
 RUN cd /willbe && npm i
 
-#ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
-ENTRYPOINT [ "npm" ]
-CMD [ "test" ]
+ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
+CMD [ "exec", "npm", "test" ]
