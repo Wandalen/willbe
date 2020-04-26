@@ -31,6 +31,7 @@ RUN which npm
 #CMD [ "bash" ]
 
 # ENTRYPOINT [ "/willbe/docker/test.debian.entry.sh", "info", "willbe" ]
-ENTRYPOINT [ "/bin/bash", "-lic", "npm" ]
+# ENTRYPOINT [ "/bin/bash", "-lic", "npm" ]
+ENTRYPOINT [ "/bin/bash", "-lic", "/willbe/docker/test.debian.entry.sh" ]
 # ENTRYPOINT [ "/willbe/docker/test.debian.entry.sh" ]
 CMD [ "info", "willbe" ]
