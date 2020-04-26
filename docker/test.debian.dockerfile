@@ -1,5 +1,5 @@
-# docker build -t willbe -f docker/test.debian.dockerfile .
-# docker run -it --rm willbe
+# docker build -t willbe.test -f docker/test.debian.dockerfile .
+# docker run -it --rm willbe.test
 
 FROM debian:stable
 SHELL [ "/bin/bash", "-l", "-c" ]
