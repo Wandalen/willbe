@@ -305,6 +305,58 @@ stepRoutineJs.uniqueOptions =
 
 //
 
+function stepRoutineEcho( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = _.mapExtend( null, step.opts );
+
+  _.assert( arguments.length === 1 );
+  _.sure( _.strIs( opts.echo ) );
+
+  /* */
+
+  try
+  {
+    opts.echo = module.resolve
+    ({
+      selector : opts.echo,
+      prefixlessAction : 'resolved',
+      currentContext : step,
+    });
+  }
+  catch( err )
+  {
+    debugger;
+    throw _.err( err, '\nFailed to resolve echo output', _.strQuote( opts.echo ) );
+  }
+
+  /* */
+
+  logger.log( opts.echo );
+
+  /* */
+
+  return opts.echo;
+}
+
+stepRoutineEcho.stepOptions =
+{
+  echo : null,
+}
+
+stepRoutineEcho.uniqueOptions =
+{
+  echo : null,
+}
+
+//
+
 function stepRoutineShell( frame )
 {
   let step = this;
@@ -505,13 +557,23 @@ function stepRoutineView( frame )
   _.assert( _.objectIs( opts ) );
 
   debugger;
-  let filePath = step.resolve
+  let filePath = module.pathResolve
   ({
     selector : opts.filePath,
     prefixlessAction : 'resolved',
     pathNativizing : 1,
+    selectorIsPath : 1,
+    currentContext : step,
   });
-  debugger;
+
+  // debugger; xxx
+  // let filePath = step.resolve
+  // ({
+  //   selector : opts.filePath,
+  //   prefixlessAction : 'resolved',
+  //   pathNativizing : 1,
+  // });
+  // debugger;
 
   // filePath = _.strReplace( filePath, '///', '//' );
 
@@ -986,6 +1048,7 @@ let Extend =
   stepRoutineTimelapseEnd,
 
   stepRoutineJs,
+  stepRoutineEcho,
   stepRoutineShell,
   stepRoutineTranspile,
   stepRoutineView,

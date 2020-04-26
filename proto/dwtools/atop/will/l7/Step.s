@@ -24,6 +24,50 @@ Self.shortName = 'Step';
 // inter
 // --
 
+function MakeFor_body( o )
+{
+  let Cls = this;
+  let willf = o.willf;
+  let module = o.module;
+  let will = willf.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+
+  let build = o.resource.build;
+  // delete o.resource.build;
+
+  Parent.MakeFor.body.apply( Cls, arguments );
+
+  if( !build )
+  return;
+
+  let o3 = Object.create( null );
+  o3.resource = Object.create( null );
+  o3.resource.criterion = _.mapExtend( null, o.resource.criterion || {} );
+  o3.resource.steps = [ `step::${o.name}` ];
+  o3.Importing = 1;
+  o3.module = module;
+  o3.willf = willf;
+  o3.name = o.name;
+
+  if( _.strIs( build ) )
+  {
+    o3.name = build;
+  }
+
+  _.Will.Build.MakeFor( o3 );
+
+}
+
+_.routineExtend( MakeFor_body, Parent.MakeFor.body );
+
+let MakeFor = _.routineFromPreAndBody( Parent.MakeFor.pre, MakeFor_body );
+
+//
+
 function init( o )
 {
   let step = this;
@@ -31,9 +75,6 @@ function init( o )
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
   Parent.prototype.init.call( step );
-
-  // if( step.id === 179 || step.id === 181 )
-  // debugger;
 
   if( o )
   {
@@ -135,8 +176,6 @@ function form3()
 
   _.mapSupplement( step.opts, step.stepRoutine.stepOptions );
 
-  // if( step.id === 205 )
-  // debugger;
   if( step.opts && step.stepRoutine.stepOptions )
   {
     _.sureMapHasOnly( step.opts, step.stepRoutine.stepOptions, () => step.qualifiedName + ' should not have options' );
@@ -154,9 +193,7 @@ function framePerform( frame )
   let run = frame.run;
   let resource = frame.resource;
   let module = run.module;
-  // let resource = frame.resource;
   let build = run.build;
-  // let module = frame.module;
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -176,13 +213,7 @@ function framePerform( frame )
     _.assert( step.formed === 3 );
     _.assert( resource.formed === 3 );
     _.assert( resource === step );
-    // _.assert( _.mapIs( run.opts ) );
     _.assert( _.routineIs( step.stepRoutine ), () => step.qualifiedName + ' does not have step routine' );
-
-    // frame.opts = _.mapExtend( null, run.opts, step.opts );
-    // if( step.opts && step.stepRoutine.stepOptions )
-    // _.routineOptions( step.stepRoutine, frame.opts );
-    // _.routineOptions( step.stepRoutine, run.opts, step.stepRoutine.stepOptions );
 
     let result = step.stepRoutine( frame );
 
@@ -192,7 +223,6 @@ function framePerform( frame )
   })
   .catch( ( err ) =>
   {
-    // debugger;
     throw _.err( err, '\nFailed', step.decoratedAbsoluteName );
   });
 
@@ -261,10 +291,19 @@ let Restricts =
 {
 }
 
+let Medials =
+{
+  build : null,
+}
+
 let Statics =
 {
+
+  MakeFor,
+
   MapName : 'stepMap',
   KindName : 'step',
+
 }
 
 let Forbids =
@@ -289,6 +328,8 @@ let Extend =
 
   // inter
 
+  MakeFor,
+
   init,
   form2,
   form3,
@@ -305,6 +346,7 @@ let Extend =
   Aggregates,
   Associates,
   Restricts,
+  Medials,
   Statics,
   Forbids,
   Accessors,

@@ -51,6 +51,10 @@ function exec()
   {
     return ca.appArgsPerform({ appArgs });
   })
+  .then( ( arg ) =>
+  {
+    return arg;
+  })
   .catch( ( err ) =>
   {
     _.process.exitCode( -1 );
@@ -465,6 +469,7 @@ function _commandListLike( o )
   }))
   .finally( ( err, arg ) =>
   {
+    debugger;
     will._commandsEnd( o.commandRoutine );
     if( err )
     logger.log( _.errOnce( err ) );
@@ -473,6 +478,7 @@ function _commandListLike( o )
     return arg;
   });
 
+  return ready;
 }
 
 _commandListLike.defaults =

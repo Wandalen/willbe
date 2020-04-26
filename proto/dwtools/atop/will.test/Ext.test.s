@@ -113,6 +113,9 @@ function assetFor( test, name )
   let self = this;
   let a = Object.create( null );
 
+  if( !name )
+  name = test.name;
+
   a.test = test;
   a.name = name;
   a.originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, name );
@@ -19330,6 +19333,147 @@ stepSubmodulesAreUpdated.timeOut = 300000;
 
 //
 
+function stepBuild( test )
+{
+  let self = this;
+  let a = self.assetFor( test );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with basic .build build1';
+    return null;
+  })
+
+  a.start( '.with basic .build build1' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo step1' ), 1 );
+    return op;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with basic .build step1';
+    return null;
+  })
+
+  a.startNonThrowing( '.with basic .build step1' )
+
+  .then( ( op ) =>
+  {
+    test.ni( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo step1' ), 0 );
+    test.identical( _.strCount( op.output, 'echo' ), 0 );
+    test.identical( _.strCount( op.output, 'Please specify exactly one build scenario, none satisfies passed arguments' ), 1 );
+    return op;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with basic .build step2';
+    return null;
+  })
+
+  a.start( '.with basic .build step2' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo step2' ), 1 );
+    return op;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with basic .build step3a';
+    return null;
+  })
+
+  a.start( '.with basic .build step3a' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo step3' ), 1 );
+    return op;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with basic .build step3';
+    return null;
+  })
+
+  a.startNonThrowing( '.with basic .build step3' )
+
+  .then( ( op ) =>
+  {
+    test.ni( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo step3' ), 0 );
+    test.identical( _.strCount( op.output, 'echo' ), 0 );
+    test.identical( _.strCount( op.output, 'Please specify exactly one build scenario, none satisfies passed arguments' ), 1 );
+    return op;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with bad1 .resources.list';
+    return null;
+  })
+
+  a.startNonThrowing( '.with bad1 .resources.list' )
+
+  .then( ( op ) =>
+  {
+    test.ni( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'echo' ), 0 );
+    test.identical( _.strCount( op.output, 'Instance build::step2 already exists' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to make resource build::step2' ), 1 );
+    return op;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.with bad2 .resources.list';
+    return null;
+  })
+
+  a.startNonThrowing( '.with bad2 .resources.list' )
+
+  .then( ( op ) =>
+  {
+    test.ni( op.exitCode, 0 );
+    logger.log( 'op.exitCode', op.exitCode );
+    test.identical( _.strCount( op.output, 'echo' ), 0 );
+    test.identical( _.strCount( op.output, 'Instance build::step3 already exists' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to make resource build::step3' ), 1 );
+    return op;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function upgradeDryDetached( test )
 {
   let self = this;
@@ -21125,6 +21269,7 @@ var Self =
     stepSubmodulesDownload,
     stepWillbeVersionCheck,
     stepSubmodulesAreUpdated,
+    stepBuild,
 
     /* xxx : cover "will .module.new.with prepare" */
 

@@ -100,6 +100,9 @@ function assetFor( test, name )
   let self = this;
   let a = Object.create( null );
 
+  if( !name )
+  name = test.name;
+
   a.test = test;
   a.name = name;
   a.originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, name );

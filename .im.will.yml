@@ -257,6 +257,14 @@ step :
       content : prime
       debug : release
 
+  test.docker.rebuild :
+    shell : 'docker build -t willbe.test -f docker/test.debian.dockerfile .'
+    build : 1
+
+  test.docker.run :
+    shell : 'docker run --rm willbe.test'
+    build : 1
+
 build :
 
   debug :

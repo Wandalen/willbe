@@ -1,0 +1,19 @@
+
+step :
+
+  step1 :
+    echo : echo step1
+
+  step2 :
+    echo : echo step2
+    build : 1
+
+  step3 :
+    echo : echo step3
+    build : step3a
+
+build :
+
+  build1 :
+    steps :
+      - step::step1

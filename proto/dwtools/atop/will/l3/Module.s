@@ -1021,6 +1021,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'echo.output',
+    stepRoutine : Predefined.stepRoutineEcho,
+  })
+
+  step
+  ({
     name : 'shell.run',
     stepRoutine : Predefined.stepRoutineShell,
   })
