@@ -17,6 +17,7 @@ if( typeof module !== 'undefined' )
 var _global = _global_;
 var _ = _global_.wTools;
 
+
 /*
 qqq : implement test checking "will .call link" links files ".dot1" ".dot2"
 xxx : should work
