@@ -15,6 +15,9 @@ RUN apt-get install curl -y
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 RUN nvm install --lts
 
+RUN which node
+RUN which npm
+
 # RUN npm config set user 0
 # RUN npm config set unsafe-perm true
 # #RUN npm i -g willbe
