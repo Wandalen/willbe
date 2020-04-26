@@ -1,4 +1,4 @@
-# docker build -t willbe -f docker/debian.dockerfile .
+# docker build -t willbe -f docker/test.debian.dockerfile .
 # docker run -it --rm willbe
 
 FROM debian:stable
@@ -22,4 +22,4 @@ RUN npm config set unsafe-perm true
 #RUN npm i -g wTesting
 RUN cd /willbe && npm i
 
-CMD [ "bash" ]
+CMD [ "npm", "test" ]
