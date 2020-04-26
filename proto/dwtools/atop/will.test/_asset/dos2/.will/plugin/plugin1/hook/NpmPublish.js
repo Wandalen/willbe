@@ -42,7 +42,7 @@ function onModule( it )
 
   {
     let it2 = it.will.hookItNew( it );
-    it2.request.subject = `-am ""`
+    it2.request.subject = `-am "."`
     it2.request.original = it2.request.subject;
     it2.will.hooks.GitSync.call( it2 );
   }
