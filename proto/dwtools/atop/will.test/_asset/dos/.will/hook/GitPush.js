@@ -26,7 +26,7 @@ function onModule( it )
 
   it.start( `git push -u origin --all` );
   if( status.unpushedTags )
-  it.start( `git push --tags` );
+  it.start( `git push --tags -f` );
 
 }
 
