@@ -6,8 +6,8 @@ SHELL [ "/bin/bash", "-l", "-c" ]
 # EXPOSE 8080
 # WORKDIR /willbe
 # ADD . /willbe
-#
-# RUN apt-get update
+
+RUN apt-get update
 # RUN apt-get install git -y
 # RUN apt-get install python3 -y
 # RUN apt-get install build-essential -y
