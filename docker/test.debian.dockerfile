@@ -6,6 +6,7 @@ SHELL [ "/bin/bash", "-l", "-c" ]
 # EXPOSE 8080
 # WORKDIR /willbe
 # ADD . /willbe
+ADD docker/test.debian.entry.sh /test.debian.entry.sh
 
 RUN apt-get update
 # RUN apt-get install git -y
@@ -20,10 +21,11 @@ RUN nvm install --lts
 # #RUN npm i -g willbe
 # #RUN npm i -g wTesting
 # RUN cd /willbe && npm i
-#
-# #ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
-# #ENTRYPOINT [ "/bin/bash", "-l" ]
-# #CMD [ "npm", "test" ]
 
-ENTRYPOINT [ "npm", "info", "willbe" ]
-CMD [ "node" ]
+#ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
+#ENTRYPOINT [ "/bin/bash", "-l" ]
+#CMD [ "npm", "test" ]
+#CMD [ "bash" ]
+
+ENTRYPOINT [ "/test.debian.entry.sh", "info", "willbe" ]
+CMD [ "bash" ]
