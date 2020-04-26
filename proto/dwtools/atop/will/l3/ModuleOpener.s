@@ -463,7 +463,7 @@ function _willfilesFind()
   if( !opener.error )
   if( opener.willfilesArray.length === 0 )
   {
-    let err; debugger;
+    let err;
     if( opener.superRelation )
     err = _.errBrief( 'Found no out-willfile for',  opener.superRelation.qualifiedName, 'at', _.strQuote( opener.commonPath ) );
     else

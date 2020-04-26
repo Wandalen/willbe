@@ -389,7 +389,7 @@ ___
   <title>
    wTools unit test
   </title>
-  <script src="./node_modules/wTools/proto/Base.s">
+  <script src="./node_modules/wModuleForTesting1/proto/Base.s">
   </script>
   <script src="./Sample1.js">
   </script>

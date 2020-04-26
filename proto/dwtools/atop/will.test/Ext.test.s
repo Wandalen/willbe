@@ -14085,63 +14085,6 @@ exportImplicit.timeOut = 300000;
 
 //
 
-function exportWithSubmoduleThatHasModuleDirDeleted( test )
-{
-  let self = this;
-  let a = self.assetFor( test, 'export-with-submodule-with-deleted-module-dir' );
-
-  /* - */
-
-  a.ready
-
-  a.reflect();
-
-  a.start( '.with module/m1/ .export' )
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( got.output, 'Exported module::' ), 1 );
-
-    return null;
-  })
-
-  .then( ( got ) =>
-  {
-    _.fileProvider.filesDelete( a.abs( 'module/m1/.module' ) )
-    test.is( !_.fileProvider.fileExists( a.abs( 'module/m1/.module' ) ) );
-    return null;
-  })
-
-  a.start( '.export' )
-
-  .then( ( got ) =>
-  {
-    test.identical( got.exitCode, 0 );
-
-    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( got.output, 'Exported module::' ), 1 );
-
-    return null;
-  })
-
-  /* - */
-
-  return a.ready;
-}/* end of function exportWithSubmoduleThatHasModuleDirDeleted */
-
-exportWithSubmoduleThatHasModuleDirDeleted.timeOut = 100000;
-exportWithSubmoduleThatHasModuleDirDeleted.description =
-`Supermodule has single submodule. Submodule has own dependency too.
-Expected behaviour:
- - Submodule exports own files and submodule
- - Export of supermodule works even if submodules are not downloaded recursively.
-`
-
-//
-
 function exportAuto( test )
 {
   let self = this;
@@ -14276,6 +14219,64 @@ exportAuto.timeOut = 300000;
 exportAuto.description =
 `
 - auto export works similar to manual export
+`
+
+//
+
+function exportWithSubmoduleThatHasModuleDirDeleted( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' ); /* qqq xxx : assets naming transition is required. ask */
+
+  /* - */
+
+  a.ready
+
+  a.reflect();
+
+  a.start( '.with module/m1/ .export' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'rror' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 1 );
+    return null;
+  })
+
+  .then( ( got ) =>
+  {
+    _.fileProvider.filesDelete( a.abs( 'module/m1/.module' ) )
+    test.is( !_.fileProvider.fileExists( a.abs( 'module/m1/.module' ) ) );
+    return null;
+  })
+
+  a.start( '.export' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}/* end of function exportWithSubmoduleThatHasModuleDirDeleted */
+
+exportWithSubmoduleThatHasModuleDirDeleted.timeOut = 100000;
+exportWithSubmoduleThatHasModuleDirDeleted.description =
+`
+Supermodule has single submodule. Submodule has own dependency too.
+Expected behaviour:
+- Submodule exports own files and submodule
+- Export of supermodule works even if submodules are not downloaded recursively.
 `
 
 //
@@ -20808,7 +20809,7 @@ function resourcesFormReflectorsExperiment( test )
 var Self =
 {
 
-  name : 'Tools.atop.WillExternals',
+  name : 'Tools.atop.Willbe.Ext',
   silencing : 1,
 
   onSuiteBegin,
@@ -20864,6 +20865,7 @@ var Self =
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
     reflectSubmodulesWithPluralCriterionEmbeddedExport,
+    reflectNpmModules,
     // relfectSubmodulesWithNotExistingFile, // zzz : uncomment after final transition to willbe
     reflectInherit,
     reflectInheritSubmodules,
@@ -20958,12 +20960,11 @@ var Self =
     exportWithDisabled,
     exportOutResourceWithoutGeneratedCriterion,
     exportImplicit,
-    exportWithSubmoduleThatHasModuleDirDeleted,
     /* xxx : implement same test for hierarchy-remote and irregular */
     /* xxx : implement clean tests */
     /* xxx : refactor ** clean */
     // exportAuto, // xxx : later
-    reflectNpmModules,
+    exportWithSubmoduleThatHasModuleDirDeleted,
 
     importPathLocal,
     // importLocalRepo, /* xxx : later */
@@ -20980,7 +20981,7 @@ var Self =
     submodulesDownloadUpdate,
     submodulesDownloadUpdateDry,
     submodulesDownloadSwitchBranch,
-    // submodulesDownloadRecursive,
+    // submodulesDownloadRecursive, /* xxx */
     submodulesDownloadThrowing,
     submodulesDownloadStepAndCommand,
     submodulesDownloadDiffDownloadPathsRegular,
@@ -21015,6 +21016,7 @@ var Self =
     // runWillbe, // zzz : help to fix, please
 
     // resourcesFormReflectorsExperiment, // xxx : look
+
   }
 
 }

@@ -6671,6 +6671,7 @@ function structureExportOut( o )
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
+  debugger;
   let found = module.modulesEach
   ({
     withPeers : 1,
