@@ -13437,7 +13437,8 @@ function exportDiffDownloadPathsRegular( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+    var exp = [ 'PathModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    // var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -15421,9 +15422,9 @@ function submodulesDownloadUpdateDry( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    // test.is( _.strHas( got.output, / \+ .*module::Tools.* will be downloaded version .*/ ) );
-    // test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be downloaded version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ) );
-    // test.is( _.strHas( got.output, / \+ .*module::Color.* will be downloaded version .*0.3.115.*/ ) );
+    // test.is( _.strHas( got.output, / \+ .*module::ModuleForTesting1.* will be downloaded version .*/ ) );
+    // test.is( _.strHas( got.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*f152a302c437e1fabd45ef26770c4bf0a19c4a0e.*/ ) );
+    // test.is( _.strHas( got.output, / \+ .*module::ModuleForTesting1a.* will be downloaded version .*$.$.$$$.*/ ) );
     test.is( _.strHas( got.output, '+ 2/5 submodule(s) of module::submodules-detached will be downloaded' ) );
     var files = self.find( submodulesPath );
     test.is( files.length === 0 );
@@ -15447,7 +15448,7 @@ function submodulesDownloadUpdateDry( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '0/5 submodule(s) of module::submodules-detached will be downloaded' ) );
     var files = self.find( submodulesPath );
-    test.gt( files.length, 150 );
+    test.gt( files.length, 50 );
     return null;
   })
 
@@ -15491,7 +15492,7 @@ function submodulesDownloadUpdateDry( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/5 submodule(s) of module::submodules-detached will be updated' ) );
     var files = self.find( submodulesPath );
-    test.gt( files.length, 150 );
+    test.gt( files.length, 50 );
     return null;
   })
 
