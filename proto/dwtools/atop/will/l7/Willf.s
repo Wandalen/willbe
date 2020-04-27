@@ -193,6 +193,9 @@ function preform()
   let path = fileProvider.path;
   let logger = will.logger;
 
+  // if( willf.id === 259 )
+  // debugger;
+
   if( willf.formed >= 2 )
   return willf;
 
@@ -200,6 +203,9 @@ function preform()
 
   willf._registerForm();
   willf._inPathsForm();
+
+  // if( willf.id === 259 )
+  // debugger;
 
   _.assert( willf.formed === 2 );
   return willf;
@@ -376,7 +382,6 @@ function _read()
 
     _.assert( _.bufferBytesIs( willf.data ) || willf.data === null, `Something wrong with content of willfile ${willf.filePath}` );
     _.assert( _.bufferBytesIs( willf.data ) || willf.filePath !== willf.storagePath, `Something wrong with content of willfile ${willf.filePath}` );
-
     _.assert( willf.dirPath === path.detrail( path.dir( _.arrayAs( willf.filePath )[ 0 ] ) ) );
 
     // if( will.verbosity >= 3 )
@@ -417,6 +422,9 @@ function _open()
   let path = fileProvider.path;
   let logger = will.logger;
   let inconsistent = 0;
+
+  if( willf.id === 259 )
+  debugger;
 
   if( willf.formed === 2 )
   willf._read();
@@ -503,6 +511,19 @@ function _open()
       throw _.errBrief( err );
     }
 
+    if( willf.structure.consistency ) /* yyy */
+    for( let relativePath in willf.structure.consistency )
+    {
+      let absolutePath = path.join( willf.storageWillfile.dirPath, relativePath );
+      absolutePath = will.LocalPathNormalize( absolutePath );
+      let relativePath2 = path.relative( willf.storageWillfile.dirPath, absolutePath );
+      if( relativePath2 === relativePath )
+      continue;
+      _.sure( willf.structure.consistency[ relativePath2 ] === undefined || willf.structure.consistency[ relativePath2 ] === willf.structure.consistency[ relativePath ] );
+      willf.structure.consistency[ relativePath2 ] = willf.structure.consistency[ relativePath ];
+      // delete willf.structure.consistency[ relativePath ]; /* xxx : enable later */
+    }
+
     willf[ moduleStructureSymbol ] = willf.structure;
     if( willf.structure.format )
     willf[ moduleStructureSymbol ] = willf.structureOf( willf );
@@ -528,7 +549,7 @@ function _open()
     willf._readLog( 0, 0 );
 
     if( willf.structure.module )
-    willf._attachedModulesOpen();
+    willf._attachedModulesOpenWillfiles();
 
   }
   catch( err )
@@ -1101,6 +1122,9 @@ function isConsistentWith( willf2, opening )
 
     _.assert( _.strIs( filePath ) );
 
+    if( _.strEnds( filePath, '.module/wModuleForTesting1/.ex.will.yml' ) )
+    debugger;
+
     let hash1 = willf.hashFullFor( filePath );
 
     if( !hash1 )
@@ -1179,7 +1203,62 @@ function isConsistent( opening )
 // etc
 // --
 
-function _attachedModulesOpen()
+// function WillfilesPathResolve( o )
+// {
+//
+//   _.assert( arguments.length === 1, 'Expects no arguments' );
+//   _.routineOptions( WillfilesPathResolve, o );
+//
+//   /* xxx qqq : refactor and cover routine _.path.split
+//       sequence _.path.split, _.path.join should work for any path
+//   */
+//
+//   // let dirPathSplits = _.path.split( o.dirPath );
+//   // if( _.longHas( dirPathSplits, '.module' ) )
+//   // {
+//   //   let relativePathSplits = _.path.split( o.relativePath );
+//   //   if( _.longHas( relativePathSplits, '.module' ) )
+//   //   {
+//   //     debugger;
+//   //     dirPathSplits.splice( dirPathSplits.indexOf( '.module' ) );
+//   //     o.dirPath = dirPathSplits.join( '/' );
+//   //     relativePathSplits.splice( 0, relativePathSplits.indexOf( '.module' ) );
+//   //     o.relativePath = relativePathSplits.join( '/' );
+//   //   }
+//   // }
+//
+//   let result = _.path.s.join( o.dirPath, _.path.dirFirst( o.relativePath ), o.inPath, o.willfilesPath );
+//
+//   result = this.LocalPathNormalize( result );
+//
+//   // result = _.filter( result, ( r ) =>
+//   // {
+//   //   let splits = _.path.split( r );
+//   //   if( _.longCountElement( splits, '.module' ) > 1 )
+//   //   {
+//   //     // debugger; // yyy
+//   //     let f = splits.indexOf( '.module' );
+//   //     let l = splits.lastIndexOf( '.module' );
+//   //     splits.splice( f, l-f );
+//   //     r = splits.join( '/' );
+//   //   }
+//   //   return r;
+//   // });
+//
+//   return result;
+// }
+//
+// WillfilesPathResolve.defaults =
+// {
+//   dirPath : null,
+//   relativePath : null,
+//   inPath : null,
+//   willfilesPath : null,
+// }
+
+//
+
+function _attachedModulesOpenWillfiles()
 {
   let willf = this;
   let will = willf.will;
@@ -1204,7 +1283,20 @@ function _attachedModulesOpen()
 
     let inPath = willf.elementFromStructureGet( moduleStructure, 'path', 'in' ) || '.';
     let willfilesPath = willf.elementFromStructureGet( moduleStructure, 'path', 'module.willfiles' );
+
+    // willfilesPath = willf.WillfilesPathResolve
+    // ({
+    //   dirPath : willf.dirPath,
+    //   relativePath : path.dirFirst( relativePath ),
+    //   inPath,
+    //   willfilesPath
+    // });
+    // willfilesPath = path.s.join( willf.dirPath, path.dirFirst( relativePath ), inPath, willfilesPath );
+
     willfilesPath = path.s.join( willf.dirPath, path.dirFirst( relativePath ), inPath, willfilesPath );
+    // debugger;
+    willfilesPath = will.LocalPathNormalize( willfilesPath );
+    // debugger;
 
     let willfOptions =
     {
@@ -1214,6 +1306,7 @@ function _attachedModulesOpen()
       storageWillfile : willf,
     }
     let got = will.willfileFor({ willf : willfOptions, combining : 'supplement' });
+
   }
 
 }
@@ -1562,10 +1655,14 @@ let Restricts =
 
 let Statics =
 {
+
+  // WillfilesPathResolve,
+
   KnownSectionsOfIn,
   KnownSectionsOfOut,
   FormatVersion : 'outwillfile-2.0',
   HashFullFromDescriptor,
+
 }
 
 let Forbids =
@@ -1642,7 +1739,8 @@ let Extend =
 
   // etc
 
-  _attachedModulesOpen,
+  // WillfilesPathResolve,
+  _attachedModulesOpenWillfiles,
 
   structureOf,
   commonPathGet,

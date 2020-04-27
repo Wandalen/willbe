@@ -496,6 +496,32 @@ function HooksPathGet( environmentPath )
 
 //
 
+function LocalPathNormalize( localPath )
+{
+
+  _.assert( arguments.length === 1, 'Expects no arguments' );
+
+  /* xxx : find more robust solution */
+
+  localPath = _.filter( localPath, ( r ) =>
+  {
+    let splits = _.path.split( r );
+    if( _.longCountElement( splits, '.module' ) > 1 )
+    {
+      // debugger; // yyy
+      let f = splits.indexOf( '.module' );
+      let l = splits.lastIndexOf( '.module' );
+      splits.splice( f, l-f );
+      r = splits.join( '/' );
+    }
+    return r;
+  });
+
+  return localPath;
+}
+
+//
+
 function IsModuleAt( filePath )
 {
   let cls = this;
@@ -2552,7 +2578,7 @@ function modulesDownload_body( o )
       // o2.outputFormat = '/';
       o2.outputFormat = '*/object';
       o2.modules = objects;
-      o2.withPeers = 1; /* yyy */
+      o2.withPeers = 1; /* xxx */
       o2.withIn = 1;
       o2.withOut = 1;
       delete o2.nodesGroup;
@@ -4476,16 +4502,42 @@ function willfilesFind( o )
 
   will.readingBegin();
 
-  o.logger = logger;
-  o.fileProvider = fileProvider;
+  if( o.usingCache )
+  {
+    let result = [];
+    // debugger;
+    for( let i = 0 ; i < will.willfilesArray.length ; i++ )
+    {
+      let willfile = will.willfilesArray[ i ];
+      if( willfile.commonPath === o.commonPath )
+      {
+        _.each( willfile.filePath, ( filePath ) =>
+        {
+          // debugger;
+          result.push( fileProvider.record( filePath ) );
+        });
+      }
+    }
+    if( result.length )
+    {
+      debugger; /* yyy */
+      return result;
+    }
+  }
 
-  return will.WillfilesFind( o );
+  let o2 = _.mapExtend( null, o );
+  o2.logger = logger;
+  o2.fileProvider = fileProvider;
+  delete o2.usingCache;
+
+  return will.WillfilesFind( o2 );
 }
 
-willfilesFind.defaults = _.mapExtend( null, WillfilesFind.defaults );
-
-delete willfilesFind.defaults.logger;
-delete willfilesFind.defaults.fileProvider;
+willfilesFind.defaults =
+{
+  ... _.mapBut( WillfilesFind.defaults, [ 'logger', 'fileProvider' ] ),
+  usingCache : 0,
+}
 
 //
 
@@ -5384,6 +5436,7 @@ let Statics =
   OutfilePathFor,
   RemotePathAdjust,
   HooksPathGet,
+  LocalPathNormalize,
   IsModuleAt,
   WillfilesFind,
 
