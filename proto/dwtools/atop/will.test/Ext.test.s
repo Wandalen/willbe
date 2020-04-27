@@ -9655,6 +9655,38 @@ cleanSubmodulesHierarchyRemoteDry.timeOut = 1000000;
 
 //
 
+
+function cleanSpecial( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'clean-special' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+  
+  var files = _.fileProvider.dirRead( outPath );
+  var expected = [ '#dir2','@dir1' ];
+  test.identical( files, expected )
+
+  /* - */
+
+  a.start({ execPath : '.clean' })
+  .then( ( got ) =>
+  {
+    test.case = '.clean';
+    test.identical( got.exitCode, 0 );
+    test.is( !_.fileProvider.fileExists( outPath ) );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+cleanSpecial.timeOut = 300000;
+
+//
+
 function buildSingleModule( test )
 {
   let self = this;
@@ -21377,6 +21409,7 @@ var Self =
     cleanHierarchyRemoteDry,
     cleanSubmodulesHierarchyRemote,
     cleanSubmodulesHierarchyRemoteDry,
+    cleanSpecial,
 
     buildSingleModule,
     buildSingleStep,
