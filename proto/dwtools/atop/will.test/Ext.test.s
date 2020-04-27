@@ -16456,11 +16456,11 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'Color', 'PathBasic', 'Procedure', 'Proto' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'Color', 'PathBasic', 'Procedure', 'Proto' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -16480,11 +16480,11 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     test.case = 'second';
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'Color', 'PathBasic', 'Procedure', 'Proto' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'Color', 'PathBasic', 'Procedure', 'Proto' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -16539,11 +16539,11 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     test.case = 'second';
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'Color', 'PathBasic', 'Procedure', 'Proto' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'Color', 'PathBasic', 'Procedure', 'Proto' ];
+    var exp = [ 'ModuleForTesting12', 'ModuleForTesting12ab', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
