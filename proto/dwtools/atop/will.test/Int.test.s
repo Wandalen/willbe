@@ -9602,7 +9602,8 @@ function resourcePathRemote( test )
   .then( () =>
   {
     let module = opener.openedModule;
-    let informalOpener =  module.submoduleMap[ 'UriBasic' ].opener;
+    // let informalOpener =  module.submoduleMap[ 'UriBasic' ].opener;
+    let informalOpener =  module.submoduleMap[ 'ModuleForTesting2b' ].opener;
     let informalOpened = informalOpener.openedModule;
     let informalPathRemoteResource = informalOpened.pathResourceMap[ 'remote' ];
 
