@@ -18,7 +18,7 @@ about:
     - chrome >= 60.0.0
     - firefox >= 60.0.0
   keywords: &ref_1
-    - wTools
+    - wModuleForTesting1
 path:
   module.willfiles:
     criterion:
@@ -86,14 +86,14 @@ path:
     path:
       - ../proto
       - ../proto/dwtools
-      - ../proto/dwtools/Tools.s
+      - ../proto/dwtools/ModuleForTesting1.s
       - ../proto/dwtools/abase
       - ../proto/dwtools/abase/l9
       - ../proto/dwtools/abase/l9/printer
       - ../proto/dwtools/abase/l9/printer/.DS_Store
       - ../proto/dwtools/abase/l9/printer/aChainer.s
       - ../proto/dwtools/abase/l9/printer/aChainingMixin.s
-      - ../proto/dwtools/abase/l9/printer/aColoredMixin.s
+      - ../proto/dwtools/abase/l9/printer/aModuleForTesting1aedMixin.s
       - ../proto/dwtools/abase/l9/printer/PrinterBase.s
       - ../proto/dwtools/abase/l9/printer/PrinterMid.s
       - ../proto/dwtools/abase/l9/printer/PrinterTop.s
@@ -110,8 +110,8 @@ path:
       - ../proto/dwtools/abase/l9.test/printer/Chaining.test.s
       - ../proto/dwtools/abase/l9.test/printer/ChainingWithProcess.test.ss
       - ../proto/dwtools/abase/l9.test/printer/ChainingWithStream.test.ss
-      - ../proto/dwtools/abase/l9.test/printer/Color.test.js
-      - ../proto/dwtools/abase/l9.test/printer/Color.test.ss
+      - ../proto/dwtools/abase/l9.test/printer/ModuleForTesting1a.test.js
+      - ../proto/dwtools/abase/l9.test/printer/ModuleForTesting1a.test.ss
       - ../proto/dwtools/abase/l9.test/printer/Other.test.s
       - ../proto/dwtools/abase/tmp.tmp
       - ../proto/dwtools/amid
@@ -402,14 +402,14 @@ module:
         path:
           - proto
           - proto/dwtools
-          - proto/dwtools/Tools.s
+          - proto/dwtools/ModuleForTesting1.s
           - proto/dwtools/abase
           - proto/dwtools/abase/l9
           - proto/dwtools/abase/l9/printer
           - proto/dwtools/abase/l9/printer/.DS_Store
           - proto/dwtools/abase/l9/printer/aChainer.s
           - proto/dwtools/abase/l9/printer/aChainingMixin.s
-          - proto/dwtools/abase/l9/printer/aColoredMixin.s
+          - proto/dwtools/abase/l9/printer/aModuleForTesting1aedMixin.s
           - proto/dwtools/abase/l9/printer/PrinterBase.s
           - proto/dwtools/abase/l9/printer/PrinterMid.s
           - proto/dwtools/abase/l9/printer/PrinterTop.s
@@ -426,8 +426,8 @@ module:
           - proto/dwtools/abase/l9.test/printer/Chaining.test.s
           - proto/dwtools/abase/l9.test/printer/ChainingWithProcess.test.ss
           - proto/dwtools/abase/l9.test/printer/ChainingWithStream.test.ss
-          - proto/dwtools/abase/l9.test/printer/Color.test.js
-          - proto/dwtools/abase/l9.test/printer/Color.test.ss
+          - proto/dwtools/abase/l9.test/printer/ModuleForTesting1a.test.js
+          - proto/dwtools/abase/l9.test/printer/ModuleForTesting1a.test.ss
           - proto/dwtools/abase/l9.test/printer/Other.test.s
           - proto/dwtools/abase/tmp.tmp
           - proto/dwtools/amid

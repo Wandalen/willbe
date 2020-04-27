@@ -3,8 +3,8 @@ root:
   - supermodule.out
 consistency:
   supermodule.out.will.yml: &ref_0
-    hash: 4d1fa90db455952633d318e6539fa9d2
-    size: 18846
+    hash: e2a8f640612cb4e438b86fc824388d47
+    size: 18698
   ../will.yml: &ref_1
     hash: 946aa641361c58c52e78fde1c4da1e64
     size: 1212
@@ -12,12 +12,13 @@ consistency:
     hash: e218aa70565faf23aa7ef7909d139ce0
     size: 1175
   ../sub.out/sub.out.will.yml: &ref_3
-    hash: 580ce3d4d17265e65c02092e39159791
-    size: 8452
+    hash: e90096764f6ce1e1ca89a9527e2fafcc
+    size: 8292
 module:
   supermodule.out:
     about:
       name: supermodule
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -45,9 +46,6 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       proto:
         path: ../proto
       temp:
@@ -55,12 +53,8 @@ module:
           - .
           - ../sub.out
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: .
       out.debug:
         criterion:
@@ -72,6 +66,7 @@ module:
         path: release
       exported.dir.export.:
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -79,6 +74,7 @@ module:
         path: release
       exported.files.export.:
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -89,6 +85,7 @@ module:
           - release/File.release.js
       exported.dir.export.debug:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -96,6 +93,7 @@ module:
         path: debug
       exported.files.export.debug:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -137,6 +135,7 @@ module:
           prefixPath: release
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -151,6 +150,7 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -162,6 +162,7 @@ module:
           prefixPath: debug
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -176,6 +177,7 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -214,6 +216,7 @@ module:
         opts:
           reflector: 'reflector::exported.export.*'
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -224,6 +227,7 @@ module:
         opts:
           reflector: 'reflector::exported.files.export.*'
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -297,6 +301,7 @@ module:
   ../:
     about:
       name: supermodule
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -324,31 +329,24 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       proto:
-        path: ./proto
+        path: proto
       temp:
         path:
-          - ./super.out
-          - ./sub.out
+          - super.out
+          - sub.out
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
-        path: ./super.out
+        path: super.out
       out.debug:
         criterion:
           debug: 1
-        path: ./super.out/debug
+        path: super.out/debug
       out.release:
         criterion:
           debug: 0
-        path: ./super.out/release
+        path: super.out/release
     submodule:
       Submodule:
         path: ./sub/
@@ -442,11 +440,12 @@ module:
         hash: 946aa641361c58c52e78fde1c4da1e64
         size: 1212
       supermodule.out.will.yml:
-        hash: 4d1fa90db455952633d318e6539fa9d2
-        size: 18846
+        hash: e2a8f640612cb4e438b86fc824388d47
+        size: 18698
   ../sub/:
     about:
       name: sub
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -474,18 +473,11 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       proto:
         path: .
       in:
-        criterion:
-          predefined: 0
         path: ../proto
       out:
-        criterion:
-          predefined: 0
         path: ../sub.out
       out.debug:
         criterion:
@@ -606,6 +598,7 @@ module:
   ../sub.out/sub.out:
     about:
       name: sub
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -633,18 +626,11 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       proto:
         path: ../proto
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: .
       out.debug:
         criterion:
@@ -659,6 +645,7 @@ module:
           - .
       exported.dir.export.:
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -666,6 +653,7 @@ module:
         path: release
       exported.files.export.:
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -675,6 +663,7 @@ module:
           - release/File.release.js
       exported.dir.export.debug:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -682,6 +671,7 @@ module:
         path: debug
       exported.files.export.debug:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -719,6 +709,7 @@ module:
           prefixPath: release
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -733,6 +724,7 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -744,6 +736,7 @@ module:
           prefixPath: debug
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -758,6 +751,7 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -816,6 +810,7 @@ module:
         opts:
           reflector: 'reflector::exported.export.*'
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -826,6 +821,7 @@ module:
         opts:
           reflector: 'reflector::exported.files.export.*'
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -836,6 +832,7 @@ module:
         opts:
           reflector: 'reflector::exported.export.debug*'
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -846,6 +843,7 @@ module:
         opts:
           reflector: 'reflector::exported.files.export.debug*'
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1

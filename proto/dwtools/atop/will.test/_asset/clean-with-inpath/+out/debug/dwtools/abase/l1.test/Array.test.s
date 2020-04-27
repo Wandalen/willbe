@@ -8,7 +8,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wTesting' );
 }
 
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 
 //--
 // arguments array
@@ -16724,7 +16724,7 @@ function loggerProblemExperiment( test )
     Passed test checks 1 / 1
     Passed test cases 1 / 1
     Passed test routines 1 / 1
-    Test suite ( Tools/base/l1/Long ) ... in 2.745s ... failed
+    Test suite ( ModuleForTesting1/base/l1/Long ) ... in 2.745s ... failed
 
   */
 
@@ -16746,7 +16746,7 @@ function loggerProblemExperiment( test )
 var Self =
 {
 
-  name : 'Tools.base.Long',
+  name : 'ModuleForTesting1.base.Long',
   silencing : 1,
   enabled : 1,
 

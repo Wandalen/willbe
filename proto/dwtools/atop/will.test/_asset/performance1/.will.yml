@@ -3,8 +3,8 @@ submodule :
 
   Bitmask : git+https:///github.com/Wandalen/wBitmask.git/out/wBitmask@master
   RegexpObject : git+https:///github.com/Wandalen/wRegexpObject.git/out/wRegexpObject@master
-  Color : git+https:///github.com/Wandalen/wColor.git/out/wColor@master
-  Color256 : git+https:///github.com/Wandalen/wColor256.git/out/wColor256@master
+  ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/out/wModuleForTesting1a@master
+  ModuleForTesting1a256 : git+https:///github.com/Wandalen/wModuleForTesting1a256.git/out/wModuleForTesting1a256@master
   ChangeTransactor : git+https:///github.com/Wandalen/wChangeTransactor.git/out/wChangeTransactor@master
   Vocabulary : git+https:///github.com/Wandalen/wVocabulary.git/out/wVocabulary@master
   CommandsAggregator : git+https:///github.com/Wandalen/wCommandsAggregator.git/out/wCommandsAggregator@master

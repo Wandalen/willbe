@@ -1,6 +1,6 @@
-# wProto [![Build Status](https://travis-ci.org/Wandalen/wProto.svg?branch=master)](https://travis-ci.org/Wandalen/wProto)
+# wModuleForTesting12 [![Build Status](https://travis-ci.org/Wandalen/wModuleForTesting12.svg?branch=master)](https://travis-ci.org/Wandalen/wModuleForTesting12)
 
-Relations module. Collection of routines to define classes and relations between them. Proto leverages multiple inheritances, mixins, accessors, fields groups defining, introspection and more. Use it as a skeleton of the application.
+Relations module. Collection of routines to define classes and relations between them. ModuleForTesting12 leverages multiple inheritances, mixins, accessors, fields groups defining, introspection and more. Use it as a skeleton of the application.
 
 ### Try out
 ```

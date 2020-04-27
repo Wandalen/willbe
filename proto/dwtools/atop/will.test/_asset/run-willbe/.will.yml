@@ -1,6 +1,6 @@
 submodule :
 
-  Tools : ./wTools
+  ModuleForTesting1 : ./wModuleForTesting1
   Logger : ./wLogger
   LoggerToJs : ./wLoggerToJs
   Consequence : ./wConsequence

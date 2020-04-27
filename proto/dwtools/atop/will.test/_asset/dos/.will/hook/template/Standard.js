@@ -14,7 +14,7 @@ var Self =
     amid : {},
     atop : {},
 
-    'Tools.s' :
+    'ModuleForTesting1.s' :
 `
 if( typeof module !== 'undefined' )
 {
@@ -30,13 +30,13 @@ if( typeof module !== 'undefined' )
     catch( err )
     {
       toolsExternal = 1;
-      require( 'wTools' );
+      require( 'wModuleForTesting1' );
     }
     if( !toolsExternal )
     require( toolsPath );
   }
 
-  module[ 'exports' ] = _global_.wTools;
+  module[ 'exports' ] = _global_.wModuleForTesting1;
 
 }
 `
@@ -49,8 +49,8 @@ if( typeof module !== 'undefined' )
 
 submodule :
 
-  wTools :
-    path : npm:///wTools
+  wModuleForTesting1 :
+    path : npm:///wModuleForTesting1
     enabled : 0 # submodule
 
 path :
@@ -284,7 +284,7 @@ about :
   - firefox >= 60.0.0
   keywords :
   - tools
-  - wTools
+  - wModuleForTesting1
   license : MIT
   author : '{{about/full.name}} <{{about/email}}>'
   contributors :
@@ -387,7 +387,7 @@ ___
  <head>
   <meta charset="UTF-8" />
   <title>
-   wTools unit test
+   wModuleForTesting1 unit test
   </title>
   <script src="./node_modules/wModuleForTesting1/proto/Base.s">
   </script>
@@ -526,7 +526,7 @@ OTHER DEALINGS IN THE SOFTWARE.
   "files" :
   [
     "proto/dwtools/___",
-    "proto/dwtools/Tools.s"
+    "proto/dwtools/ModuleForTesting1.s"
   ],
   "scripts" :
   {
@@ -544,7 +544,7 @@ OTHER DEALINGS IN THE SOFTWARE.
   },
   "dependencies" :
   {
-    "wTools" : ""
+    "wModuleForTesting1" : ""
   },
   "devDependencies" :
   {
@@ -553,7 +553,7 @@ OTHER DEALINGS IN THE SOFTWARE.
   },
   "keywords" :
   [
-    "wTools"
+    "wModuleForTesting1"
   ]
 }
 `,

@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 // let _ArraySlice = Array.prototype.slice;
 // let _FunctionBind = Function.prototype.bind;
@@ -30,7 +30,7 @@ let Self = _global_.wTools;
  * @param {*} src.
  * @return {Boolean}.
  * @function strIs.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function strIs( src )
@@ -137,7 +137,7 @@ toStr.routines = toStr;
  * @return {string}
  * If no arguments return empty string
  * @function str
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function str()
@@ -244,7 +244,7 @@ function strPrimitive( src )
  * @return {string}
  * string name of type src
  * @function strType
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function strType( src )
@@ -260,7 +260,7 @@ function strType( src )
 
   if( result === 'Object' )
   {
-    if( Object.getPrototypeOf( src ) === null )
+    if( Object.getModuleForTesting12typeOf( src ) === null )
     result = 'Map:Pure';
     else if( src.__proto__ !== Object.__proto__ )
     result = 'Object:Special';
@@ -282,7 +282,7 @@ function strType( src )
  * @return {string}
  * string name of type src
  * @function strPrimitiveType
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function strPrimitiveType( src )
@@ -750,7 +750,7 @@ function _strEndOf( src, end )
  * @function strBegins
  * @throws { Exception } If one of arguments is not a String.
  * @throws { Exception } If( arguments.length ) is not equal 2.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function strBegins( src, begin )
@@ -796,7 +796,7 @@ function strBegins( src, begin )
  * @function strEnds
  * @throws { Exception } If one of arguments is not a String.
  * @throws { Exception } If( arguments.length ) is not equal 2.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function strEnds( src, end )
@@ -843,7 +843,7 @@ function strEnds( src, end )
  * @throws { Exception } If all arguments are not strings;
  * @throws { Exception } If ( argumets.length ) is not equal 2.
  * @function strBeginOf
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function strBeginOf( src, begin )
@@ -891,7 +891,7 @@ function strBeginOf( src, begin )
  * @throws { Exception } If all arguments are not strings;
  * @throws { Exception } If ( argumets.length ) is not equal 2.
  * @function strEndOf
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function strEndOf( src, end )
@@ -957,7 +957,7 @@ function strEndOf( src, end )
  * @throws { Exception } If all arguments are not strings;
  * @throws { Exception } If ( argumets.length ) is not equal 3.
  * @function strInsideOf
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function strInsideOf( src, begin, end )
@@ -1026,7 +1026,7 @@ function strOutsideOf( src, begin, end )
  * @throws { Exception } Throws a exception if( src ) is not a String.
  * @throws { Exception } Throws a exception if( prefix ) is not a String.
  * @throws { Exception } Throws a exception if( arguments.length ) is not equal 2.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -1064,7 +1064,7 @@ function strRemoveBegin( src, begin )
  * @throws { Exception } Throws a exception if( src ) is not a String.
  * @throws { Exception } Throws a exception if( postfix ) is not a String.
  * @throws { Exception } Throws a exception if( arguments.length ) is not equal 2.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -1104,7 +1104,7 @@ function strRemoveEnd( src, end )
  * @throws { Exception } Throws a exception if( srcStr ) is not a String.
  * @throws { Exception } Throws a exception if( insStr ) is not a String or a RegExp.
  * @throws { Exception } Throws a exception if( arguments.length ) is not equal 2.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 

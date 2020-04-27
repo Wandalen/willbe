@@ -23,7 +23,7 @@ module:
         - chrome >= 60.0.0
         - firefox >= 60.0.0
       keywords: &ref_3
-        - wTools
+        - wModuleForTesting1
         - ArrayBuffer
         - Buffer from file
         - ArrayBuffer from file
@@ -171,8 +171,8 @@ module:
         enabled: 0
         criterion:
           development: 1
-      wTools:
-        path: 'npm:///wTools'
+      wModuleForTesting1:
+        path: 'npm:///wModuleForTesting1'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -919,8 +919,8 @@ module:
         enabled: 0
         criterion:
           development: 1
-      wTools:
-        path: 'npm:///wTools'
+      wModuleForTesting1:
+        path: 'npm:///wModuleForTesting1'
         autoExporting: 0
         enabled: 0
         criterion:

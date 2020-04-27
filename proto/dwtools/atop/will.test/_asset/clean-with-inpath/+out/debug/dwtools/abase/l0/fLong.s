@@ -8,8 +8,8 @@ let _ArraySlice = Array.prototype.slice;
 let _ObjectToString = Object.prototype.toString;
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 // --
 // arguments array
@@ -171,7 +171,7 @@ function unrollAppend( dstArray )
  *
  * @returns { boolean } Returns true if {-srcMap-} is an array-like or an Array.
  * @function longIs.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function longIs( src )
@@ -225,7 +225,7 @@ function longIsPopulated( src )
  * @throws { Error } If the (length) is not a number.
  * @throws { Error } If the first argument in not an array like object.
  * @throws { Error } If the (length === undefined) and (_.numberIs(ins.length)) is not a number.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function longMakeEmpty( ins, src )
@@ -456,7 +456,7 @@ function longShallowClone()
  * @throws { Error } Will throw an Error if ( f ) is not a Number.
  * @throws { Error } Will throw an Error if ( l ) is not a Number.
  * @throws { Error } Will throw an Error if no arguments provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
 */
 
 function longSlice( array, f, l )
@@ -569,7 +569,7 @@ function longBut( src, range, ins )
  * @throws { Error } If passed arguments is less than one or more than two.
  * @throws { Error } If the first argument is not an long.
  * @throws { Error } If the second argument is not a Function.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 // function longOnce/*longRemoveDuplicates*/( dstLong, onEvaluate )
@@ -924,7 +924,7 @@ function constructorIsBuffer( src )
  *
  * @returns { boolean } Returns true if {-srcMap-} is an Array.
  * @function arrayIs
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayIs( src )
@@ -1021,7 +1021,7 @@ function constructorLikeArray( src )
  *
  * @returns { boolean } Returns true if {-srcMap-} has the property (length).
  * @function hasLength
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function hasLength( src )
@@ -1065,7 +1065,7 @@ function longHasDepth( arr )
  * @throws { Error } Will throw an Error if (arguments.length) is less or more than two.
  * @throws { Error } Will throw an Error if (src1 and src2) are not the array-like.
  * @throws { Error } Will throw an Error if (src2.length) is less or not equal to the (src1.length).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayCompare( src1, src2 )
@@ -1103,7 +1103,7 @@ function arrayCompare( src1, src2 )
  * @returns { Boolean } - Returns true if all values of the two arrays are equal. Otherwise, returns false.
  * @function arrayIdentical
  * @throws { Error } Will throw an Error if (arguments.length) is less or more than two.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayIdentical( src1, src2 )
@@ -1156,12 +1156,12 @@ function arrayHas( array, value, evaluator1, evaluator2 )
  * The arrayHasAny() routine checks if the {-srcMap-} array has at least one value of the following arguments.
  *
  * It iterates over array-like (arguments[]) copies each argument to the array (ins) by the routine
- * [arrayAs()]{@link wTools.arrayAs}
+ * [arrayAs()]{@link wModuleForTesting1.arrayAs}
  * Checks, if {-srcMap-} array has at least one value of the (ins) array.
  * If true, it returns true.
  * Otherwise, it returns false.
  *
- * @see {@link wTools.arrayAs} - See for more information.
+ * @see {@link wModuleForTesting1.arrayAs} - See for more information.
  *
  * @param { longIs } src - The source array.
  * @param {...*} arguments - One or more argument(s).
@@ -1173,7 +1173,7 @@ function arrayHas( array, value, evaluator1, evaluator2 )
  * @returns { Boolean } - Returns true, if {-srcMap-} has at least one value of the following argument(s), otherwise false is returned.
  * @function arrayHasAny
  * @throws { Error } If the first argument in not an array.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayHasAny( src )
@@ -1299,7 +1299,7 @@ function longNone( src )
  * If some argument is a long ( for example array ) then each element of the long is treated as an argument, not recursively.
  *
  * @function scalarAppend.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function scalarAppend( dst, src )
@@ -1389,7 +1389,7 @@ function scalarAppend( dst, src )
  * @throws { Error } If type of the first argument is not a number or array.
  * @throws { Error } If the second argument is less than 0.
  * @throws { Error } If (dst.length) is not equal to the (length).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 // function arrayFromNumber( dst, length )
@@ -1481,7 +1481,7 @@ function arrayFrom( src )
  * @returns { Array } - If passed null or undefined than return the empty array. If passed an array then return it.
  * Otherwise return an array which contains the element from argument.
  * @function arrayAs
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayAs( src )
@@ -1622,15 +1622,15 @@ function longRightIndex( arr, ins, evaluator1, evaluator2 )
  *
  * It creates the variable (i), assigns and calls to it the function( _.longLeftIndex( arr, ins, evaluator1 ) ),
  * that returns the index of the value (ins) in the array (arr).
- * [wTools.longLeftIndex()]{@link wTools.longLeftIndex}
+ * [wModuleForTesting1.longLeftIndex()]{@link wModuleForTesting1.longLeftIndex}
  * If (i) is more or equal to the zero, it returns the object containing the properties ({ index : i, element : arr[ i ] }).
  * Otherwise, it returns the empty object.
  *
- * @see {@link wTools.longLeftIndex} - See for more information.
+ * @see {@link wModuleForTesting1.longLeftIndex} - See for more information.
  *
  * @param { longIs } arr - Entity to check.
  * @param { * } ins - Element to locate in the array.
- * @param { wTools~compareCallback } evaluator1 - A callback function.
+ * @param { wModuleForTesting1~compareCallback } evaluator1 - A callback function.
  *
  * @example
  * // returns { index : 3, element : 'str' }
@@ -1645,7 +1645,7 @@ function longRightIndex( arr, ins, evaluator1, evaluator2 )
  * Otherwise, it returns the empty object.
  * @function longLeft
  * @throws { Error } Will throw an Error if (evaluator1) is not a Function.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function longLeft( arr, ins, evaluator1, evaluator2 )
@@ -1723,7 +1723,7 @@ function longRightDefined( arr )
  * @function arrayCountElement
  * @throws { Error } If passed arguments is less than two or more than four.
  * @throws { Error } If the first argument is not an array-like object.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayCountElement( srcArray, element, onEvaluate1, onEvaluate2 )
@@ -1766,7 +1766,7 @@ function arrayCountElement( srcArray, element, onEvaluate1, onEvaluate2 )
  * @throws { Error } If passed arguments is different than one.
  * @throws { Error } If the first argument is not an array-like object.
  * @throws { Error } If { srcArray} doesn´t contain number-like elements.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayCountTotal( srcArray )
@@ -1806,7 +1806,7 @@ function arrayCountTotal( srcArray )
  * @throws { Error } If passed arguments is less than one or more than two.
  * @throws { Error } If the first argument is not an array-like object.
  * @throws { Error } If the second argument is not a Function.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayCountUnique( src, onEvaluate )
@@ -1945,7 +1945,7 @@ function arrayPrepend( dstArray, ins )
  *
  * @param { Array } dstArray - The destination array.
  * @param { * } ins - The value to add.
- * @param { wTools~compareCallback } onEqualize - A callback function. By default, it checks the equality of two arguments.
+ * @param { wModuleForTesting1~compareCallback } onEqualize - A callback function. By default, it checks the equality of two arguments.
  *
  * @example
  * // returns [ 5, 1, 2, 3, 4 ]
@@ -1977,7 +1977,7 @@ function arrayPrepend( dstArray, ins )
  * @throws { Error } An Error if ( dstArray ) is not an Array.
  * @throws { Error } An Error if ( onEqualize ) is not an Function.
  * @throws { Error } An Error if ( arguments.length ) is not equal two or three.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependOnce( dstArray, ins, evaluator1, evaluator2 )
@@ -2002,7 +2002,7 @@ function arrayPrependOnce( dstArray, ins, evaluator1, evaluator2 )
  *
  * @param { Array } dstArray - The destination array.
  * @param { * } ins - The value to add.
- * @param { wTools~compareCallback } onEqualize - A callback function. By default, it checks the equality of two arguments.
+ * @param { wModuleForTesting1~compareCallback } onEqualize - A callback function. By default, it checks the equality of two arguments.
  *
  * @example
  * // returns [ 5, 1, 2, 3, 4 ]
@@ -2035,7 +2035,7 @@ function arrayPrependOnce( dstArray, ins, evaluator1, evaluator2 )
  * @throws { Error } An Error if ( onEqualize ) is not an Function.
  * @throws { Error } An Error if ( arguments.length ) is not equal two or three.
  * @throws { Error } An Error if ( ins ) already exists on( dstArray ).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependOnceStrictly( dstArray, ins, evaluator1, evaluator2 )
@@ -2081,7 +2081,7 @@ function arrayPrepended( dstArray, ins )
  *
  * @param { Array } dstArray - The destination array.
  * @param { * } ins - The value to add.
- * @param { wTools~compareCallback } onEqualize - A callback function. By default, it checks the equality of two arguments.
+ * @param { wModuleForTesting1~compareCallback } onEqualize - A callback function. By default, it checks the equality of two arguments.
  *
  * @example
  * // returns 0
@@ -2113,7 +2113,7 @@ function arrayPrepended( dstArray, ins )
  * @throws { Error } An Error if ( dstArray ) is not an Array.
  * @throws { Error } An Error if ( onEqualize ) is not an Function.
  * @throws { Error } An Error if ( arguments.length ) is not equal two or three.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependedOnce( dstArray, ins, evaluator1, evaluator2 )
@@ -2169,7 +2169,7 @@ function arrayPrependedOnceStrictly( dstArray, ins, evaluator1, evaluator2 )
  * @function arrayPrependElement
  * @throws { Error } An Error if ( dstArray ) is not an Array.
  * @throws { Error } An Error if ( arguments.length ) is less or more than two.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependElement( dstArray, ins )
@@ -2251,7 +2251,7 @@ function arrayPrependOnceStrictly( dstArray, ins, evaluator1, evaluator2 )
  * @function arrayPrependedElement
  * @throws { Error } An Error if ( dstArray ) is not an Array.
  * @throws { Error } An Error if ( arguments.length ) is not equal to two.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependedElement( dstArray, ins )
@@ -2319,7 +2319,7 @@ function arrayPrependedElementOnceStrictly( dstArray, ins, evaluator1, evaluator
  * @throws { Error } An Error if ( dstArray ) is not an Array.
  * @throws { Error } An Error if ( insArray ) is not an ArrayLike entity.
  * @throws { Error } An Error if ( arguments.length ) is less or more than two.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependArray( dstArray, insArray )
@@ -2342,7 +2342,7 @@ function arrayPrependArray( dstArray, insArray )
  *
  * @param { Array } dstArray - The destination array.
  * @param { ArrayLike } insArray - The source array.
- * @param { wTools~compareCallback } onEqualize - A callback function. By default, it checks the equality of two arguments.
+ * @param { wModuleForTesting1~compareCallback } onEqualize - A callback function. By default, it checks the equality of two arguments.
  *
  * @example
  * // returns [ 0, 1, 2, 3, 4 ]
@@ -2366,7 +2366,7 @@ function arrayPrependArray( dstArray, insArray )
  * @throws { Error } An Error if ( insArray ) is not an ArrayLike entity.
  * @throws { Error } An Error if ( onEqualize ) is not an Function.
  * @throws { Error } An Error if ( arguments.length ) is not equal two or three.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependArrayOnce( dstArray, insArray, evaluator1, evaluator2 )
@@ -2391,7 +2391,7 @@ function arrayPrependArrayOnce( dstArray, insArray, evaluator1, evaluator2 )
  *
  * @param { Array } dstArray - The destination array.
  * @param { ArrayLike } insArray - The source array.
- * @param { wTools~compareCallback } onEqualize - A callback function. By default, it checks the equality of two arguments.
+ * @param { wModuleForTesting1~compareCallback } onEqualize - A callback function. By default, it checks the equality of two arguments.
  *
  * @example
  * // returns [ 0, 1, 2, 3, 4 ]
@@ -2417,7 +2417,7 @@ function arrayPrependArrayOnce( dstArray, insArray, evaluator1, evaluator2 )
  * @throws { Error } An Error if ( insArray ) is not an ArrayLike entity.
  * @throws { Error } An Error if ( onEqualize ) is not an Function.
  * @throws { Error } An Error if ( arguments.length ) is not equal two or three.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependArrayOnceStrictly( dstArray, insArray, evaluator1, evaluator2 )
@@ -2472,7 +2472,7 @@ function arrayPrependArrayOnceStrictly( dstArray, insArray, evaluator1, evaluato
  * @throws { Error } An Error if ( dstArray ) is not an Array.
  * @throws { Error } An Error if ( insArray ) is not an ArrayLike entity.
  * @throws { Error } An Error if ( arguments.length ) is less or more than two.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependedArray( dstArray, insArray )
@@ -2494,7 +2494,7 @@ function arrayPrependedArray( dstArray, insArray )
  *
  * @param { Array } dstArray - The destination array.
  * @param { ArrayLike } insArray - The source array.
- * @param { wTools~compareCallback } onEqualize - A callback function. By default, it checks the equality of two arguments.
+ * @param { wModuleForTesting1~compareCallback } onEqualize - A callback function. By default, it checks the equality of two arguments.
  *
  * @example
  * // returns 3
@@ -2522,7 +2522,7 @@ function arrayPrependedArray( dstArray, insArray )
  * @throws { Error } An Error if ( insArray ) is not an ArrayLike entity.
  * @throws { Error } An Error if ( onEqualize ) is not an Function.
  * @throws { Error } An Error if ( arguments.length ) is not equal two or three.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependedArrayOnce( dstArray, insArray, evaluator1, evaluator2 )
@@ -2590,7 +2590,7 @@ function arrayPrependedArrayOnceStrictly( dstArray, insArray, evaluator1, evalua
  * @function arrayPrependArrays
  * @throws { Error } An Error if ( dstArray ) is not an Array.
  * @throws { Error } An Error if one of ( arguments ) is undefined.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependArrays( dstArray, insArray )
@@ -2631,7 +2631,7 @@ function arrayPrependArrays( dstArray, insArray )
  * @function arrayPrependArraysOnce
  * @throws { Error } An Error if ( dstArray ) is not an Array.
  * @throws { Error } An Error if one of ( arguments ) is undefined.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependArraysOnce( dstArray, insArray, evaluator1, evaluator2 )
@@ -2660,7 +2660,7 @@ function arrayPrependArraysOnce( dstArray, insArray, evaluator1, evaluator2 )
 
  * @param { Array } dstArray - The destination array.
  * @param { longIs | * } arguments[...] - Source arguments.
- * @param { wTools~compareCallback } onEqualize - A callback function that can be provided through routine`s context. By default, it checks the equality of two arguments.
+ * @param { wModuleForTesting1~compareCallback } onEqualize - A callback function that can be provided through routine`s context. By default, it checks the equality of two arguments.
  *
  * @example
  * // returns [ 5, 6, 7, 8, 1, 2, 3, 4 ]
@@ -2685,7 +2685,7 @@ function arrayPrependArraysOnce( dstArray, insArray, evaluator1, evaluator2 )
  * @throws { Error } An Error if ( dstArray ) is not an Array.
  * @throws { Error } An Error if one of ( arguments ) is undefined.
  * @throws { Error } An Error if count of added elements is not equal to count of elements from( arguments )( only first two levels inside of array are counted ).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependArraysOnceStrictly( dstArray, insArray, evaluator1, evaluator2 )
@@ -2768,7 +2768,7 @@ function arrayPrependArraysOnceStrictly( dstArray, insArray, evaluator1, evaluat
  * @returns { Array } Returns count of added elements.
  * @function arrayPrependedArrays
  * @throws { Error } An Error if ( dstArray ) is not an Array.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependedArrays( dstArray, insArray )
@@ -2825,7 +2825,7 @@ function arrayPrependedArrays( dstArray, insArray )
  * @returns { Array } Returns count of added elements.
  * @function arrayPrependedArraysOnce
  * @throws { Error } An Error if ( dstArray ) is not an Array.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayPrependedArraysOnce( dstArray, insArray, evaluator1, evaluator2 )
@@ -2998,7 +2998,7 @@ function arrayAppend( dstArray, ins )
  * @function arrayAppendOnce
  * @throws { Error } Will throw an Error if (dst) is not an Array.
  * @throws { Error } Will throw an Error if (arguments.length) is less or more than two.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayAppendOnce( dstArray, ins, evaluator1, evaluator2 )
@@ -3197,7 +3197,7 @@ function arrayAppendedElementOnceStrictly( dstArray, ins )
 * @function arrayAppendArray
 * @throws { Error } If the first argument is not an array.
 * @throws { Error } If type of the argument is equal undefined.
-* @memberof wTools
+* @memberof wModuleForTesting1
 */
 
 function arrayAppendArray( dstArray, insArray )
@@ -3239,7 +3239,7 @@ function arrayAppendArray( dstArray, insArray )
  * @function arrayAppendArrayOnce
  * @throws { Error } If the first argument is not array.
  * @throws { Error } If type of the argument is equal undefined.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayAppendArrayOnce( dstArray, insArray, evaluator1, evaluator2 )
@@ -3628,13 +3628,13 @@ function arrayRemoveElement( dstArray, ins, evaluator1, evaluator2 )
  *
  * It takes two (dstArray, ins) or three (dstArray, ins, onEvaluate) arguments,
  * checks if arguments passed two, it calls the routine
- * [arrayRemovedElementOnce( dstArray, ins )]{@link wTools.arrayRemovedElementOnce}
+ * [arrayRemovedElementOnce( dstArray, ins )]{@link wModuleForTesting1.arrayRemovedElementOnce}
  * Otherwise, if passed three arguments, it calls the routine
- * [arrayRemovedElementOnce( dstArray, ins, onEvaluate )]{@link wTools.arrayRemovedElementOnce}
- * @see  wTools.arrayRemovedElementOnce
+ * [arrayRemovedElementOnce( dstArray, ins, onEvaluate )]{@link wModuleForTesting1.arrayRemovedElementOnce}
+ * @see  wModuleForTesting1.arrayRemovedElementOnce
  * @param { Array } dstArray - The source array.
  * @param { * } ins - The value to remove.
- * @param { wTools~compareCallback } [ onEvaluate ] - The callback that compares (ins) with elements of the array.
+ * @param { wModuleForTesting1~compareCallback } [ onEvaluate ] - The callback that compares (ins) with elements of the array.
  * By default, it checks the equality of two arguments.
  *
  * @example
@@ -3652,7 +3652,7 @@ function arrayRemoveElement( dstArray, ins, evaluator1, evaluator2 )
  * @throws { Error } If the first argument is not an array.
  * @throws { Error } If passed less than two or more than three arguments.
  * @throws { Error } If the third argument is not a function.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayRemoveElementOnce( dstArray, ins, evaluator1, evaluator2 )
@@ -3714,7 +3714,7 @@ function arrayRemovedElement( dstArray, ins, evaluator1, evaluator2 )
 /**
  * The callback function to compare two values.
  *
- * @callback wTools~compareCallback
+ * @callback wModuleForTesting1~compareCallback
  * @param { * } el - The element of the array.
  * @param { * } ins - The value to compare.
  */
@@ -3728,13 +3728,13 @@ function arrayRemovedElement( dstArray, ins, evaluator1, evaluator2 )
  * that looking for the value of the (ins) in the (dstArray).
  * If true, it removes the value (ins) from (dstArray) array by corresponding index.
  * Otherwise, if passed three arguments, it calls the routine
- * [longLeftIndex( dstArray, ins, onEvaluate )]{@link wTools.longLeftIndex}
+ * [longLeftIndex( dstArray, ins, onEvaluate )]{@link wModuleForTesting1.longLeftIndex}
  * If callback function(onEvaluate) returns true, it returns the index that will be removed from (dstArray).
- * @see {@link wTools.longLeftIndex} - See for more information.
+ * @see {@link wModuleForTesting1.longLeftIndex} - See for more information.
  *
  * @param { Array } dstArray - The source array.
  * @param { * } ins - The value to remove.
- * @param { wTools~compareCallback } [ onEvaluate ] - The callback that compares (ins) with elements of the array.
+ * @param { wModuleForTesting1~compareCallback } [ onEvaluate ] - The callback that compares (ins) with elements of the array.
  * By default, it checks the equality of two arguments.
  *
  * @example
@@ -3752,7 +3752,7 @@ function arrayRemovedElement( dstArray, ins, evaluator1, evaluator2 )
  * @throws { Error } If the first argument is not an array-like.
  * @throws { Error } If passed less than two or more than three arguments.
  * @throws { Error } If the third argument is not a function.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayRemovedElementOnce( dstArray, ins, evaluator1, evaluator2 )
@@ -3914,7 +3914,7 @@ function arrayRemovedArray( dstArray, insArray )
  * If callback function(onEqualize) returns true, it returns the index that will be removed from (dstArray),
  * and then incrementing the variable (result++).
  *
- * @see wTools.longLeftIndex
+ * @see wModuleForTesting1.longLeftIndex
  *
  * @param { longIs } dstArray - The target array.
  * @param { longIs } insArray - The source array.
@@ -3939,7 +3939,7 @@ function arrayRemovedArray( dstArray, insArray )
  * @throws { Error } Will throw an Error if (dstArray) is not an array-like.
  * @throws { Error } Will throw an Error if (insArray) is not an array-like.
  * @throws { Error } Will throw an Error if (arguments.length < 2  || arguments.length > 3).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayRemovedArrayOnce( dstArray, insArray, evaluator1, evaluator2 )
@@ -4175,15 +4175,15 @@ function arrayRemovedArraysOnceStrictly( dstArray, insArray, evaluator1, evaluat
  *
  * It takes two (dstArray, ins) or three (dstArray, ins, onEvaluate) arguments,
  * checks if arguments passed two, it calls the routine
- * [arrayRemovedElement( dstArray, ins )]{@link wTools.arrayRemovedElement}
+ * [arrayRemovedElement( dstArray, ins )]{@link wModuleForTesting1.arrayRemovedElement}
  * Otherwise, if passed three arguments, it calls the routine
- * [arrayRemovedElement( dstArray, ins, onEvaluate )]{@link wTools.arrayRemovedElement}
+ * [arrayRemovedElement( dstArray, ins, onEvaluate )]{@link wModuleForTesting1.arrayRemovedElement}
  *
- * @see wTools.arrayRemovedElement
+ * @see wModuleForTesting1.arrayRemovedElement
  *
  * @param { Array } dstArray - The source array.
  * @param { * } ins - The value to remove.
- * @param { wTools~compareCallback } [ onEvaluate ] - The callback that compares (ins) with elements of the array.
+ * @param { wModuleForTesting1~compareCallback } [ onEvaluate ] - The callback that compares (ins) with elements of the array.
  * By default, it checks the equality of two arguments.
  *
  * @example
@@ -4201,7 +4201,7 @@ function arrayRemovedArraysOnceStrictly( dstArray, insArray, evaluator1, evaluat
  * @throws { Error } If the first argument is not an array-like.
  * @throws { Error } If passed less than two or more than three arguments.
  * @throws { Error } If the third argument is not a function.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayRemoveAll( dstArray, ins, evaluator1, evaluator2 )
@@ -4248,7 +4248,7 @@ function arrayRemovedAll( dstArray, ins, evaluator1, evaluator2  )
  * @throws { Error } If passed arguments is less than one or more than two.
  * @throws { Error } If the first argument is not an array.
  * @throws { Error } If the second argument is not a Function.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayRemoveDuplicates( dstArray, evaluator )
@@ -4320,7 +4320,7 @@ function arrayRemoveDuplicates( dstArray, evaluator )
  * @returns { Array } - Returns an array of the passed argument(s).
  * @function arrayFlatten
  * @throws { Error } If (arguments[...]) is an Array and has an 'undefined' element.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayFlatten( dstArray, insArray )
@@ -4919,7 +4919,7 @@ function arrayReplace( dstArray, ins, sub, evaluator1, evaluator2 )
  * @function arrayReplaceOnce
  * @throws { Error } Will throw an Error if (dstArray) is not an array.
  * @throws { Error } Will throw an Error if (arguments.length) is less than three.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayReplaceOnce( dstArray, ins, sub, evaluator1, evaluator2 )
@@ -5487,12 +5487,12 @@ function arrayReplacedAll( dstArray, ins, sub, evaluator1, evaluator2 )
  * and returns the last added index or the last replaced index of the array (dstArray).
  *
  * It creates the variable (index) assigns and calls to it the function(arrayReplaceOnce( dstArray, ins, sub ).
- * [arrayReplaceOnce( dstArray, ins, sub )]{@link wTools.arrayReplaceOnce}.
+ * [arrayReplaceOnce( dstArray, ins, sub )]{@link wModuleForTesting1.arrayReplaceOnce}.
  * Checks if (index) equal to the -1.
  * If true, it adds to an array (dstArray) a value (sub), and returns the last added index of the array (dstArray).
  * Otherwise, it returns the replaced (index).
  *
- * @see wTools.arrayReplaceOnce
+ * @see wModuleForTesting1.arrayReplaceOnce
  *
  * @param { Array } dstArray - The source array.
  * @param { * } ins - The value to change.
@@ -5517,7 +5517,7 @@ function arrayReplacedAll( dstArray, ins, sub, evaluator1, evaluator2 )
  * @function arrayUpdate
  * @throws { Error } Will throw an Error if (dstArray) is not an array-like.
  * @throws { Error } Will throw an Error if (arguments.length) is less or more than three.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function arrayUpdate( dstArray, ins, sub, evaluator1, evaluator2 )

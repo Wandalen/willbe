@@ -1,7 +1,7 @@
 
 submodule :
 
-  UriBasic : out/UriBasic.informal.out
+  ModuleForTesting2b : out/ModuleForTesting2b.informal.out
 
 path :
 

@@ -13,7 +13,7 @@ if( typeof module !== 'undefined' )
 }
 
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 
 // --
 //
@@ -12067,7 +12067,7 @@ function strSplit( test )
 
   test.open( 'complex' );
 
-  var src = 'Test check // ( Tools/base/l2/String / strSplit / delimeter:" " > space on the beginning and the end <  ) # 3 ... failed';
+  var src = 'Test check // ( ModuleForTesting1/base/l2/String / strSplit / delimeter:" " > space on the beginning and the end <  ) # 3 ... failed';
 
   test.case = 's:0 q:1 pe:1 pd:1 pq:0 iq:0';
 
@@ -12083,7 +12083,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:', ' ', '', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
+  var expected = [ 'Test check ', '/', '', '/', ' ( ModuleForTesting1', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:', ' ', '', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:0 q:1 pe:1 pd:1 pq:1 iq:0';
@@ -12100,7 +12100,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:', '" "', '', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
+  var expected = [ 'Test check ', '/', '', '/', ' ( ModuleForTesting1', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:', '" "', '', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:0 q:1 pe:1 pd:1 pq:0 iq:1';
@@ -12117,7 +12117,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter: ', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
+  var expected = [ 'Test check ', '/', '', '/', ' ( ModuleForTesting1', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter: ', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:0 q:1 pe:1 pd:1 pq:1 iq:1';
@@ -12134,7 +12134,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
+  var expected = [ 'Test check ', '/', '', '/', ' ( ModuleForTesting1', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:0 q:0 pe:0 pd:0';
@@ -12149,7 +12149,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check ', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
+  var expected = [ 'Test check ', ' ( ModuleForTesting1', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:0 q:0 pe:0 pd:1';
@@ -12164,7 +12164,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check ', '/', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
+  var expected = [ 'Test check ', '/', '/', ' ( ModuleForTesting1', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:0 q:0 pe:1 pd:0';
@@ -12179,7 +12179,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check ', '', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
+  var expected = [ 'Test check ', '', ' ( ModuleForTesting1', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:0 q:0 pe:1 pd:1';
@@ -12194,7 +12194,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check ', '/', '', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
+  var expected = [ 'Test check ', '/', '', '/', ' ( ModuleForTesting1', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:0 q:1 pe:0 pd:0';
@@ -12209,7 +12209,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check ', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
+  var expected = [ 'Test check ', ' ( ModuleForTesting1', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:0 q:1 pe:0 pd:1';
@@ -12224,7 +12224,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check ', '/', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
+  var expected = [ 'Test check ', '/', '/', ' ( ModuleForTesting1', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:0 q:1 pe:0 pd:1 pq:1';
@@ -12240,7 +12240,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check ', '/', '/', ' ( Tools', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
+  var expected = [ 'Test check ', '/', '/', ' ( ModuleForTesting1', '/', 'base', '/', 'l2', '/', 'String ', '/', ' strSplit ', '/', ' delimeter:" "', ' > ', 'space on the beginning and the end', ' < ', ' ) # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:0 q:1 pe:1 pd:0';
@@ -12255,7 +12255,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check ', '', ' ( Tools', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
+  var expected = [ 'Test check ', '', ' ( ModuleForTesting1', 'base', 'l2', 'String ', ' strSplit ', ' delimeter:" "', 'space on the beginning and the end', ' ) # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:1 q:0 pe:0 pd:0';
@@ -12270,7 +12270,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
+  var expected = [ 'Test check', '( ModuleForTesting1', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:1 q:0 pe:0 pd:1';
@@ -12285,7 +12285,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check', '/', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
+  var expected = [ 'Test check', '/', '/', '( ModuleForTesting1', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:1 q:0 pe:1 pd:0';
@@ -12300,7 +12300,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check', '', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
+  var expected = [ 'Test check', '', '( ModuleForTesting1', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:1 q:0 pe:1 pd:1';
@@ -12315,7 +12315,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check', '/', '', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
+  var expected = [ 'Test check', '/', '', '/', '( ModuleForTesting1', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:1 q:1 pe:0 pd:0';
@@ -12330,7 +12330,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
+  var expected = [ 'Test check', '( ModuleForTesting1', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:1 q:1 pe:0 pd:1';
@@ -12345,7 +12345,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check', '/', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
+  var expected = [ 'Test check', '/', '/', '( ModuleForTesting1', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
   test.identical( got, expected );
 
   test.case = 's:1 q:1 pe:1 pd:0';
@@ -12360,7 +12360,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check', '', '( Tools', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
+  var expected = [ 'Test check', '', '( ModuleForTesting1', 'base', 'l2', 'String', 'strSplit', 'delimeter:" "', 'space on the beginning and the end', ') # 3 ... failed' ];
   test.identical( got, expected );
 
   /* */
@@ -12377,7 +12377,7 @@ function strSplit( test )
     src,
   }
   var got = _.strSplit( o );
-  var expected = [ 'Test check', '/', '', '/', '( Tools', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
+  var expected = [ 'Test check', '/', '', '/', '( ModuleForTesting1', '/', 'base', '/', 'l2', '/', 'String', '/', 'strSplit', '/', 'delimeter:" "', '>', 'space on the beginning and the end', '<', ') # 3 ... failed' ];
   test.identical( got, expected );
 
   var src =
@@ -13793,7 +13793,7 @@ function strSplitInlinedStereo( test )
 var Self =
 {
 
-  name : 'Tools.base.Str',
+  name : 'ModuleForTesting1.base.Str',
   silencing : 1,
 
   tests :

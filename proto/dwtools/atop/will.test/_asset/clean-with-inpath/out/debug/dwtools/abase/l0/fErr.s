@@ -12,8 +12,8 @@
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 // --
 // stub
@@ -365,7 +365,7 @@ diagnosticLocation.defaults =
  *
  * @returns {String} Return stack trace from call point.
  * @function diagnosticStack
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function diagnosticStack( stack, range )
@@ -707,7 +707,7 @@ function errOriginalStack( err )
  * @throws {Error} Expects single argument if pass les or more than one argument
  * @throws {Error} o.args should be array like, if o.args is not array.
  * @function _err
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function _err( o )
@@ -1253,8 +1253,8 @@ _err.defaults =
  * // caught     at divide (<anonymous>:2:29)
  * // divide by zero
  * // Error
- * //   at _err (file:///.../wTools/staging/Base.s:1418:13)
- * //   at wTools.err (file:///.../wTools/staging/Base.s:1449:10)
+ * //   at _err (file:///.../wModuleForTesting1/staging/Base.s:1418:13)
+ * //   at wModuleForTesting1.err (file:///.../wModuleForTesting1/staging/Base.s:1449:10)
  * //   at divide (<anonymous>:2:29)
  * //   at <anonymous>:1:1
  *
@@ -1262,7 +1262,7 @@ _err.defaults =
  * @returns {Error} Created Error. If passed existing error as one of parameters, routine modified it and return
  * reference.
  * @function err
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function err()
@@ -1468,7 +1468,7 @@ function _errLog( err )
  concatenating them. Prints the created error.
  * If _global_.logger defined, routine will use it to print error, else uses console
  *
- * @see {@link wTools.err See err}
+ * @see {@link wModuleForTesting1.err See err}
  *
  * @example
  * function divide( x, y )
@@ -1484,15 +1484,15 @@ function _errLog( err )
  * // caught     at divide (<anonymous>:2:29)
  * // divide by zero
  * // Error
- * //   at _err (file:///.../wTools/staging/Base.s:1418:13)
- * //   at wTools.errLog (file:///.../wTools/staging/Base.s:1462:13)
+ * //   at _err (file:///.../wModuleForTesting1/staging/Base.s:1418:13)
+ * //   at wModuleForTesting1.errLog (file:///.../wModuleForTesting1/staging/Base.s:1462:13)
  * //   at divide (<anonymous>:2:29)
  * //   at <anonymous>:1:1
  *
  * @param {...String|Error} msg Accepts list of messeges/errors.
  * @returns {Error} Created Error. If passed existing error as one of parameters, routine modified it and return
  * @function errLog
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function errLog()
@@ -1792,7 +1792,7 @@ function sureOwnNoConstructor( ins )
 /**
  * Checks condition passed by argument( condition ). Works only in debug mode. Uses StackTrace level 2.
  *
- * @see {@link wTools.err err}
+ * @see {@link wModuleForTesting1.err err}
  *
  * If condition is true routine returns without exceptions, otherwise routine generates and throws exception. By default generates error with message 'Assertion fails'.
  * Also generates error using message(s) or existing error object(s) passed after first argument.
@@ -1808,8 +1808,8 @@ function sureOwnNoConstructor( ins )
  * // caught eval (<anonymous>:2:8)
  * // incorrect variable type-> number expects string
  * // Error
- * //   at _err (file:///.../wTools/staging/Base.s:3707)
- * //   at assert (file://.../wTools/staging/Base.s:4041)
+ * //   at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * //   at assert (file://.../wModuleForTesting1/staging/Base.s:4041)
  * //   at add (<anonymous>:2)
  * //   at <anonymous>:1
  *
@@ -1825,8 +1825,8 @@ function sureOwnNoConstructor( ins )
  * // caught add (<anonymous>:3:14)
  * // incorrect arguments count
  * // Error
- * //   at _err (file:///.../wTools/staging/Base.s:3707)
- * //   at assert (file://.../wTools/staging/Base.s:4035)
+ * //   at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * //   at assert (file://.../wModuleForTesting1/staging/Base.s:4035)
  * //   at add (<anonymous>:3:14)
  * //   at <anonymous>:6
  *
@@ -1842,13 +1842,13 @@ function sureOwnNoConstructor( ins )
  * // caught     at divide (<anonymous>:2:29)
  * // divide by zero
  * // Error
- * //   at _err (file:///.../wTools/staging/Base.s:1418:13)
- * //   at wTools.errLog (file://.../wTools/staging/Base.s:1462:13)
+ * //   at _err (file:///.../wModuleForTesting1/staging/Base.s:1418:13)
+ * //   at wModuleForTesting1.errLog (file://.../wModuleForTesting1/staging/Base.s:1462:13)
  * //   at divide (<anonymous>:2:29)
  * //   at <anonymous>:1:1
  * @throws {Error} If passed condition( condition ) fails.
  * @function assert
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function _assertDebugger( condition, args )
@@ -1969,7 +1969,7 @@ function assertNotTested( src )
  * @param condition Condition to check.
  * @param messages messages to print.
  * @function assertWarn
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function assertWarn( condition )
@@ -2016,7 +2016,7 @@ function assertOwnNoConstructor( ins )
  * Throwen to indicate that operation was aborted by user or other subject.
  *
  * @error ErrorAbort
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 // function ErrorAbort()
@@ -2047,7 +2047,7 @@ let stackSymbol = Symbol.for( 'stack' );
  * @property {Object} error={}
  * @property {Boolean} debuggerEnabled=!!Config.debug
  * @name ErrFields
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 let Fields =

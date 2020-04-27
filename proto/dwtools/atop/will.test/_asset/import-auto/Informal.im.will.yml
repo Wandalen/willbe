@@ -2,8 +2,8 @@
 submodule :
 
   ModuleForTesting1 : git+hd://../_repo/ModuleForTesting1?out=out/wModuleForTesting.out.will@master
-  # Tools : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@master
-  # Proto : .module/Proto.out.will
+  # ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@master
+  # ModuleForTesting12 : .module/ModuleForTesting12.out.will
 
 path :
 

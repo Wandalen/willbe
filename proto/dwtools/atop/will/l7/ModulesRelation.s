@@ -166,6 +166,9 @@ function form3()
   _.assert( _.strIs( relation.path ), 'not tested' );
   _.sure( _.strIs( relation.path ) || _.arrayIs( relation.path ), 'Path resource should have "path" field' );
 
+  if( relation.absoluteName === "module::l1 / module::wModuleForTesting12 / relation::wModuleForTesting1" )
+  debugger;
+
   if( relation.enabled )
   result = relation._openAct();
   else

@@ -14,7 +14,7 @@ about:
     - chrome >= 60.0.0
     - firefox >= 60.0.0
   keywords:
-    - wTools
+    - wModuleForTesting1
 execution:
   scripts:
     test: wtest staging
@@ -52,7 +52,7 @@ path:
     path:
       - .
       - ./dwtools
-      - ./dwtools/Tools.s
+      - ./dwtools/ModuleForTesting1.s
       - ./dwtools/abase
       - ./dwtools/abase/l3
       - ./dwtools/abase/l3/Path.s
@@ -150,7 +150,7 @@ reflector:
     filePath:
       .: true
       ./dwtools: true
-      ./dwtools/Tools.s: true
+      ./dwtools/ModuleForTesting1.s: true
       ./dwtools/abase: true
       ./dwtools/abase/l3: true
       ./dwtools/abase/l3/Path.s: true
@@ -171,7 +171,7 @@ reflector:
       filePath:
         .: true
         ./dwtools: true
-        ./dwtools/Tools.s: true
+        ./dwtools/ModuleForTesting1.s: true
         ./dwtools/abase: true
         ./dwtools/abase/l3: true
         ./dwtools/abase/l3/Path.s: true

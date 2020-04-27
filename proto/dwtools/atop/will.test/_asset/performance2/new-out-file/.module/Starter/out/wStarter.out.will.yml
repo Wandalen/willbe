@@ -12,7 +12,7 @@ about:
     - chrome >= 60.0.0
     - firefox >= 60.0.0
   keywords: &ref_1
-    - wTools
+    - wModuleForTesting1
 path:
   module.willfiles:
     criterion:
@@ -80,7 +80,7 @@ path:
     path:
       - ../proto
       - ../proto/dwtools
-      - ../proto/dwtools/Tools.s
+      - ../proto/dwtools/ModuleForTesting1.s
       - ../proto/dwtools/atop
       - ../proto/dwtools/atop/starter
       - ../proto/dwtools/atop/starter/Exec
@@ -428,7 +428,7 @@ module:
         path:
           - proto
           - proto/dwtools
-          - proto/dwtools/Tools.s
+          - proto/dwtools/ModuleForTesting1.s
           - proto/dwtools/atop
           - proto/dwtools/atop/starter
           - proto/dwtools/atop/starter/Exec

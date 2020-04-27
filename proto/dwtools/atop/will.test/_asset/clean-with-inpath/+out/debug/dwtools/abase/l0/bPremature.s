@@ -4,8 +4,8 @@
 
 let _FunctionBind = Function.prototype.bind;
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 // --
 // routine
@@ -16,7 +16,7 @@ let Self = _global_.wTools;
  * Returns true if entity ( src ) is a String.
  * @function strIs
  * @param {} src - entity to check
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function strIs( src )
@@ -31,7 +31,7 @@ function strIs( src )
  * Returns true if entity ( src ) is a Function.
  * @function routineIs
  * @param {} src - entity to check
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function routineIs( src )
@@ -45,7 +45,7 @@ function routineIs( src )
  * Returns true if entity ( src ) is an Object.
  * @function objectIs
  * @param {} src - entity to check
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function objectIs( src )
@@ -59,7 +59,7 @@ function objectIs( src )
  * Returns true if entity ( src ) is an Arguments object.
  * @function argumentsArrayIs
  * @param {} src - entity to check
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function argumentsArrayIs( src )
@@ -128,7 +128,7 @@ function objectLike( src )
  * @param {} condition - condition to check
  * @param {} msg - error message
  * @throws {Error} If condition fails. Uses second argument ( msg ) as error message.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function assert( condition, msg )
@@ -200,7 +200,7 @@ function assert( condition, msg )
  * @throws {Error} If second argument( args ) is not an Arguments array or Map.
  * @throws {Error} If third argument( defaults ) is not an Object.
  * @throws {Error} If source options map has unknown properties.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function routineOptions( routine, args, defaults )

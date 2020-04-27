@@ -13,7 +13,7 @@ about:
     - chrome >= 60.0.0
     - firefox >= 60.0.0
   keywords: &ref_1
-    - wTools
+    - wModuleForTesting1
 path:
   module.willfiles:
     criterion:
@@ -81,7 +81,7 @@ path:
     path:
       - ../proto
       - ../proto/dwtools
-      - ../proto/dwtools/Tools.s
+      - ../proto/dwtools/ModuleForTesting1.s
       - ../proto/dwtools/abase
       - ../proto/dwtools/abase/l7_mixin
       - ../proto/dwtools/abase/l7_mixin/Instancing.s
@@ -370,7 +370,7 @@ module:
         path:
           - proto
           - proto/dwtools
-          - proto/dwtools/Tools.s
+          - proto/dwtools/ModuleForTesting1.s
           - proto/dwtools/abase
           - proto/dwtools/abase/l7_mixin
           - proto/dwtools/abase/l7_mixin/Instancing.s

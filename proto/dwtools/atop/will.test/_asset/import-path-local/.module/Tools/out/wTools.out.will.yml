@@ -1,6 +1,6 @@
 format: outwillfile-2.0
 root:
-  - wTools.out
+  - wModuleForTesting1.out
 consistency:
   ../.ex.will.yml: &ref_0
     hash: e8115abbb02ec04af6fdb366955c5521
@@ -9,9 +9,9 @@ consistency:
     hash: bc612b839555420e984d984b2d8a2039
     size: 5087
 module:
-  wTools.out:
+  wModuleForTesting1.out:
     about:
-      name: wTools
+      name: wModuleForTesting1
       description: >-
         Collection of general purpose tools for solving problems. Fundamentally
         extend JavaScript without corrupting it, so may be used solely or in
@@ -28,7 +28,7 @@ module:
         - core
         - platform
         - tools
-        - wTools
+        - wModuleForTesting1
         - wBase
         - generic
       license: MIT
@@ -47,11 +47,11 @@ module:
       module.willfiles:
         criterion:
           predefined: 1
-        path: wTools.out.will.yml
+        path: wModuleForTesting1.out.will.yml
       module.common:
         criterion:
           predefined: 1
-        path: wTools.out
+        path: wModuleForTesting1.out
       module.original.willfiles:
         criterion:
           predefined: 1
@@ -159,7 +159,7 @@ module:
         path:
           - ../proto
           - ../proto/dwtools
-          - ../proto/dwtools/Tools.s
+          - ../proto/dwtools/ModuleForTesting1.s
           - ../proto/dwtools/abase
           - ../proto/dwtools/abase/Layer0.s
           - ../proto/dwtools/abase/Layer1.s
@@ -238,9 +238,9 @@ module:
           - ../proto/dwtools/abase/l0.test/Typing.test.s
           - ../proto/dwtools/abase/l0.test/Unroll.test.s
           - ../proto/dwtools/abase/l1
-          - ../proto/dwtools/abase/l1/IncludeTools.s
+          - ../proto/dwtools/abase/l1/IncludeModuleForTesting1.s
           - ../proto/dwtools/abase/l1/ModulesRegistry.s
-          - ../proto/dwtools/abase/l1/NameTools.s
+          - ../proto/dwtools/abase/l1/NameModuleForTesting1.s
           - ../proto/dwtools/abase/l1/StrBasic.s
           - ../proto/dwtools/abase/l1.test
           - ../proto/dwtools/abase/l1.test/StrBasic.test.s
@@ -271,7 +271,7 @@ module:
         enabled: 0
         criterion:
           development: 1
-      wTools:
+      wModuleForTesting1:
         path: 'hd://..'
         autoExporting: 0
         enabled: 0
@@ -882,7 +882,7 @@ module:
       ../.im.will.yml: *ref_1
   ../:
     about:
-      name: wTools
+      name: wModuleForTesting1
       description: >-
         Collection of general purpose tools for solving problems. Fundamentally
         extend JavaScript without corrupting it, so may be used solely or in
@@ -1012,7 +1012,7 @@ module:
         path:
           - proto
           - proto/dwtools
-          - proto/dwtools/Tools.s
+          - proto/dwtools/ModuleForTesting1.s
           - proto/dwtools/abase
           - proto/dwtools/abase/Layer0.s
           - proto/dwtools/abase/Layer1.s
@@ -1091,9 +1091,9 @@ module:
           - proto/dwtools/abase/l0.test/Typing.test.s
           - proto/dwtools/abase/l0.test/Unroll.test.s
           - proto/dwtools/abase/l1
-          - proto/dwtools/abase/l1/IncludeTools.s
+          - proto/dwtools/abase/l1/IncludeModuleForTesting1.s
           - proto/dwtools/abase/l1/ModulesRegistry.s
-          - proto/dwtools/abase/l1/NameTools.s
+          - proto/dwtools/abase/l1/NameModuleForTesting1.s
           - proto/dwtools/abase/l1/StrBasic.s
           - proto/dwtools/abase/l1.test
           - proto/dwtools/abase/l1.test/StrBasic.test.s
@@ -1124,7 +1124,7 @@ module:
         enabled: 0
         criterion:
           development: 1
-      wTools:
+      wModuleForTesting1:
         path: 'hd://.'
         autoExporting: 0
         enabled: 0

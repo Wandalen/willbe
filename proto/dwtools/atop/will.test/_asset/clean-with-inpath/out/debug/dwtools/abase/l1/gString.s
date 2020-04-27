@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 let _ArraySlice = Array.prototype.slice;
 let _FunctionBind = Function.prototype.bind;
@@ -42,7 +42,7 @@ function strIsolate_pre( routine, args )
 //
 
 /**
-* @typedef {object} wTools.toStrInhalfOptions
+* @typedef {object} wModuleForTesting1.toStrInhalfOptions
 * @property {string} [ o.src=null ] - Source string.
 * @property {string | array} [ o.delimeter=' ' ] - Splitter of the string.
 * @property {boolean} [ o.left=1 ] - Finds occurrence from begining of the string.
@@ -52,7 +52,7 @@ function strIsolate_pre( routine, args )
  * Finds occurrence of delimeter( o.delimeter ) in source( o.src ) and splits string in finded position by half.
  * If function finds  more then one occurrence, it separates string in the position of the last.
  *
- * @param {wTools.toStrInhalfOptions} o - Contains data and options {@link wTools.toStrInhalfOptions}.
+ * @param {wModuleForTesting1.toStrInhalfOptions} o - Contains data and options {@link wModuleForTesting1.toStrInhalfOptions}.
  * @returns {array} Returns array with separated parts of string( o.src ) or original string if nothing finded.
  *
  * @example
@@ -73,7 +73,7 @@ function strIsolate_pre( routine, args )
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
  * @throws { Exception } Throw an exception if( o.delimeter ) is not a Array or String.
  * @throws { Exception } Throw an exception if( o ) is extended by unknown property.
- * @namespace Tools
+ * @namespace ModuleForTesting1
  *
  */
 
@@ -400,7 +400,7 @@ strIsolate_body.defaults =
  * Short-cut for strIsolate function.
  * Finds occurrence of delimeter( o.delimeter ) from begining of ( o.src ) and splits string in finded position by half.
  *
- * @param {wTools.toStrInhalfOptions} o - Contains data and options {@link wTools.toStrInhalfOptions}.
+ * @param {wModuleForTesting1.toStrInhalfOptions} o - Contains data and options {@link wModuleForTesting1.toStrInhalfOptions}.
  * @returns {array} Returns array with separated parts of string( o.src ) or original string if nothing finded.
  *
  * @example
@@ -419,7 +419,7 @@ strIsolate_body.defaults =
  * @throws { Exception } Throw an exception if no argument provided.
  * @throws { Exception } Throw an exception if( o ) is not a Map.
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
- * @namespace Tools
+ * @namespace ModuleForTesting1
  *
  */
 
@@ -463,7 +463,7 @@ strIsolateLeftOrAll_body.defaults =
  * Short-cut for strIsolate function.
  * Finds occurrence of delimeter( o.delimeter ) from end of ( o.src ) and splits string in finded position by half.
  *
- * @param {wTools.toStrInhalfOptions} o - Contains data and options {@link wTools.toStrInhalfOptions}.
+ * @param {wModuleForTesting1.toStrInhalfOptions} o - Contains data and options {@link wModuleForTesting1.toStrInhalfOptions}.
  * @returns {array} Returns array with separated parts of string( o.src ) or original string if nothing finded.
  *
  * @example
@@ -478,7 +478,7 @@ strIsolateLeftOrAll_body.defaults =
  * @throws { Exception } Throw an exception if no argument provided.
  * @throws { Exception } Throw an exception if( o ) is not a Map.
  * @throws { Exception } Throw an exception if( o.src ) is not a String.
- * @namespace Tools
+ * @namespace ModuleForTesting1
  *
  */
 
@@ -628,7 +628,7 @@ strIsolateRightOrAll_body.defaults =
   * @throws { Exception } If source string {-str-} is not a String.
   * @throws { Exception } If delimeter {-begin-} is not a String or an Array of strings.
   * @throws { Exception } If delimeter {-end-} is not a String or an Array of strings.
-  * @namespace Tools
+  * @namespace ModuleForTesting1
   */
 
 function strIsolateInsideSignle( src, begin, end )
@@ -777,7 +777,7 @@ function strIsolateInsideSignle( src, begin, end )
   * @throws { Exception } If source string {-str-} is not a String.
   * @throws { Exception } If delimeter {-begin-} is not a String or an Array of strings.
   * @throws { Exception } If delimeter {-end-} is not a String or an Array of strings.
-  * @namespace Tools
+  * @namespace ModuleForTesting1
   */
 
 function strIsolateInside( src, begin, end )

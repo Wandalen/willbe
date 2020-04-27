@@ -3,8 +3,8 @@
 'use strict'; 
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 let _ArraySlice = Array.prototype.slice;
 let _FunctionBind = Function.prototype.bind;
@@ -687,7 +687,7 @@ function entityNone( src, onEach )
  * @function _filter_functor
  * @throws {exception} If no argument provided.
  * @throws {exception} If( condition ) is not a Routine or Object.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function _filter_functor( condition, levels )
@@ -725,7 +725,7 @@ function _filter_functor( condition, levels )
 
 /**
  * Function that produces an elements for entityMap result
- * @callback wTools.onEach
+ * @callback wModuleForTesting1.onEach
  * @param {*} val - The current element being processed in the entity.
  * @param {string|number} key - The index (if entity is array) or key of processed element.
  * @param {Array|Object} src - The src passed to entityMap.
@@ -743,7 +743,7 @@ function _filter_functor( condition, levels )
     return v * v
   };
 
-  let res = wTools.entityMap(numbers, sqr);
+  let res = wModuleForTesting1.entityMap(numbers, sqr);
   // [ 9, 16, 36 ]
   // numbers is still [ 3, 4, 6 ]
 
@@ -761,17 +761,17 @@ function _filter_functor( condition, levels )
     return v < sumOthers;
   }
 
-  let res = wTools.entityMap( numbers, checkSidesOfTriangle );
+  let res = wModuleForTesting1.entityMap( numbers, checkSidesOfTriangle );
  // [ true, true, true ]
  *
  * @param {ArrayLike|ObjectLike} src - Entity, on each elements of which will be called ( onEach ) function.
- * @param {wTools.onEach} onEach - Function that produces an element of the new entity.
+ * @param {wModuleForTesting1.onEach} onEach - Function that produces an element of the new entity.
  * @returns {ArrayLike|ObjectLike} New entity.
  * @thorws {Error} If number of arguments less or more than 2.
  * @thorws {Error} If( src ) is not Array or ObjectLike.
  * @thorws {Error} If( onEach ) is not function.
  * @function entityMap
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function entityMap( src, onEach )
@@ -1092,7 +1092,7 @@ function entityMake( src )
  * @param {object} dst - Destination object.
  * @param {object} src - Source object.
  * @param {routine} onRecursive - The callback function to copy each [ key, value ].
- * @see {@link wTools.mapCloneAssigning} Check this function for more info about( onRecursive ) callback.
+ * @see {@link wModuleForTesting1.mapCloneAssigning} Check this function for more info about( onRecursive ) callback.
  * @returns {object} Returns result of entities copy operation.
  *
  * @example
@@ -1116,7 +1116,7 @@ function entityMake( src )
  * @function entityAssign
  * @throws {exception} If( arguments.length ) is not equal to 3 or 2.
  * @throws {exception} If( onRecursive ) is not a Routine.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -1195,7 +1195,7 @@ function entityAssign( dst, src, onRecursive )
  * @param {object} srcContainer - Source object.
  * @param {string} name - Field name.
  * @param {mapCloneAssigning.onField} onRecursive - The callback function to copy each [ key, value ].
- * @see {@link wTools.mapCloneAssigning} Check this function for more info about( onRecursive ) callback.
+ * @see {@link wModuleForTesting1.mapCloneAssigning} Check this function for more info about( onRecursive ) callback.
  * @returns {object} Returns result of entities copy operation.
  *
  * @example
@@ -1221,7 +1221,7 @@ function entityAssign( dst, src, onRecursive )
  *
  * @function entityAssignFieldFromContainer
  * @throws {exception} If( arguments.length ) is not equal to 3 or 4.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -1255,7 +1255,7 @@ function entityAssignFieldFromContainer( dstContainer, srcContainer, name, onRec
  * @param {object} srcValue - Source value.
  * @param {string} name - Field name.
  * @param {mapCloneAssigning.onField} onRecursive - The callback function to copy each [ key, value ].
- * @see {@link wTools.mapCloneAssigning} Check this function for more info about( onRecursive ) callback.
+ * @see {@link wModuleForTesting1.mapCloneAssigning} Check this function for more info about( onRecursive ) callback.
  * @returns {object} Returns result of entity field assignment operation.
  *
  * @example
@@ -1268,7 +1268,7 @@ function entityAssignFieldFromContainer( dstContainer, srcContainer, name, onRec
  *
  * @function entityAssignField
  * @throws {exception} If( arguments.length ) is not equal to 3 or 4.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -1301,7 +1301,7 @@ function entityAssignField( dstContainer, srcValue, name, onRecursive )
 
 /**
  * The result of _entityMost routine object.
- * @typedef {Object} wTools.entityMostResult
+ * @typedef {Object} wModuleForTesting1.entityMostResult
  * @property {Number} index - Index of found element.
  * @property {String|Number} key - If the search was on map, the value of this property sets to key of found element.
  * Else if search was on array - to index of found element.
@@ -1310,12 +1310,12 @@ function entityAssignField( dstContainer, srcValue, name, onRecursive )
  */
 
 /**
- * Returns object( wTools.entityMostResult ) that contains min or max element of entity, it depends on( returnMax ).
+ * Returns object( wModuleForTesting1.entityMostResult ) that contains min or max element of entity, it depends on( returnMax ).
  *
  * @param {ArrayLike|Object} src - Source entity.
  * @param {Function} onEvaluate  - ( onEach ) function is called for each element of( src ).If undefined routine uses it own function.
  * @param {Boolean} returnMax  - If true - routine returns maximum, else routine returns minimum value from entity.
- * @returns {wTools.entityMostResult} Object with result of search.
+ * @returns {wModuleForTesting1.entityMostResult} Object with result of search.
  *
  * @example
  * //returns { index: 0, key: 0, value: 1, element: 1 }
@@ -1333,7 +1333,7 @@ function entityAssignField( dstContainer, srcValue, name, onRecursive )
  * @function _entityMost
  * @throws {Exception} If( arguments.length ) is not equal 3.
  * @throws {Exception} If( onEvaluate ) function is not implemented.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function _entityMost( src, onEvaluate, returnMax )
@@ -1420,23 +1420,23 @@ function _entityMost( src, onEvaluate, returnMax )
 //
 
 /**
- * Short-cut for _entityMost() routine. Returns object( wTools.entityMostResult ) with smallest value from( src ).
+ * Short-cut for _entityMost() routine. Returns object( wModuleForTesting1.entityMostResult ) with smallest value from( src ).
  *
  * @param {ArrayLike|Object} src - Source entity.
  * @param {Function} onEvaluate  - ( onEach ) function is called for each element of( src ).If undefined routine uses it own function.
- * @returns {wTools.entityMostResult} Object with result of search.
+ * @returns {wModuleForTesting1.entityMostResult} Object with result of search.
  *
  * @example
  *  //returns { index : 2, key : 'c', value 3: , element : 9  };
  *  let obj = { a : 25, b : 16, c : 9 };
- *  let min = wTools.entityMin( obj, Math.sqrt );
+ *  let min = wModuleForTesting1.entityMin( obj, Math.sqrt );
  *
- * @see wTools.onEach
- * @see wTools.entityMostResult
+ * @see wModuleForTesting1.onEach
+ * @see wModuleForTesting1.entityMostResult
  * @function entityMin
  * @throws {Exception} If missed arguments.
  * @throws {Exception} If passed extra arguments.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function entityMin( src, onEvaluate )
@@ -1448,23 +1448,23 @@ function entityMin( src, onEvaluate )
 //
 
 /**
- * Short-cut for _entityMost() routine. Returns object( wTools.entityMostResult ) with biggest value from( src ).
+ * Short-cut for _entityMost() routine. Returns object( wModuleForTesting1.entityMostResult ) with biggest value from( src ).
  *
  * @param {ArrayLike|Object} src - Source entity.
  * @param {Function} onEvaluate  - ( onEach ) function is called for each element of( src ).If undefined routine uses it own function.
- * @returns {wTools.entityMostResult} Object with result of search.
+ * @returns {wModuleForTesting1.entityMostResult} Object with result of search.
  *
  * @example
  *  //returns { index: 0, key: "a", value: 25, element: 25 };
  *  let obj = { a: 25, b: 16, c: 9 };
- *  let max = wTools.entityMax( obj );
+ *  let max = wModuleForTesting1.entityMax( obj );
  *
- * @see wTools.onEach
- * @see wTools.entityMostResult
+ * @see wModuleForTesting1.onEach
+ * @see wModuleForTesting1.entityMostResult
  * @function entityMax
  * @throws {Exception} If missed arguments.
  * @throws {Exception} If passed extra arguments.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function entityMax( src, onEvaluate )

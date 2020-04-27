@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 let _ArraySlice = Array.prototype.slice;
 let _FunctionBind = Function.prototype.bind;
@@ -30,7 +30,7 @@ let _ObjectHasOwnProperty = Object.hasOwnProperty;
  * @param {*} src.
  * @return {Boolean}.
  * @function objectIs
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function objectIs( src )
@@ -43,7 +43,7 @@ function objectIs( src )
   // return true;
   // if( src instanceof Object )
   // return true;
-  // let prototype = Object.getPrototypeOf( src );
+  // let prototype = Object.getModuleForTesting12typeOf( src );
   // return prototype === null;
   return _ObjectToString.call( src ) === '[object Object]';
 }
@@ -104,7 +104,7 @@ function objectLikeOrRoutine( src )
  *
  * @returns { Boolean } Returns true if {-srcMap-} is an Object, and not inherits through the prototype chain.
  * @function mapIs
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapIs( src )
@@ -113,7 +113,7 @@ function mapIs( src )
   if( !_.objectIs( src ) )
   return false;
 
-  let proto = Object.getPrototypeOf( src );
+  let proto = Object.getModuleForTesting12typeOf( src );
 
   if( proto === null )
   return true;
@@ -121,7 +121,7 @@ function mapIs( src )
   if( proto.constructor && proto.constructor.name !== 'Object' )
   return false;
 
-  if( Object.getPrototypeOf( proto ) === null )
+  if( Object.getModuleForTesting12typeOf( proto ) === null )
   return true;
 
   _.assert( proto === null || !!proto, 'unexpected' );
@@ -145,7 +145,7 @@ function mapIsPure( src )
   if( !src )
   return;
 
-  if( Object.getPrototypeOf( src ) === null )
+  if( Object.getModuleForTesting12typeOf( src ) === null )
   return true;
 
   return false;
@@ -207,7 +207,7 @@ function mapLike( src )
  * has the same values as the first object(src1).
  * @function mapsAreIdentical
  * @throws Will throw an error if ( arguments.length !== 2 ).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapsAreIdentical( src1, src2 )
@@ -257,7 +257,7 @@ function mapsAreIdentical( src1, src2 )
  * has the same values as the second object(ins).
  * @function mapContain
  * @throws Will throw an error if ( arguments.length !== 2 ).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapContain( src, ins )
@@ -306,7 +306,7 @@ function mapContain( src, ins )
  * Short-cut for _objectSatisfy() routine.
  * Checks if object( o.src ) has at least one key/value pair that is represented in( o.template ).
  * Also works with ( o.template ) as routine that check( o.src ) with own rules.
- * @param {wTools.objectSatisfyOptions} o - Default options {@link wTools.objectSatisfyOptions}.
+ * @param {wModuleForTesting1.objectSatisfyOptions} o - Default options {@link wModuleForTesting1.objectSatisfyOptions}.
  * @returns {boolean} Returns true if( o.src ) has same key/value pair(s) with( o.template )
  * or result if ( o.template ) routine call is true.
  *
@@ -328,7 +328,7 @@ function mapContain( src, ins )
  * @throws {exception} If( o.template ) is not a Object.
  * @throws {exception} If( o.template ) is not a Routine.
  * @throws {exception} If( o.src ) is undefined.
- * @memberof wTools
+ * @memberof wModuleForTesting1
 */
 
 function objectSatisfy( o )
@@ -357,7 +357,7 @@ objectSatisfy.defaults =
 
 /**
  * Default options for _objectSatisfy() routine.
- * @typedef {object} wTools.objectSatisfyOptions
+ * @typedef {object} wModuleForTesting1.objectSatisfyOptions
  * @property {object|function} [ template=null ] - Map to compare with( src ) or routine that checks each value of( src ).
  * @property {object} [ src=null ] - Source map.
  * @property {number} [ levels=256 ] - Number of levels in map structure.
@@ -368,7 +368,7 @@ objectSatisfy.defaults =
  * Checks if object( src ) has at least one key/value pair that is represented in( template ).
  * Returns true if( template ) has one or more indentical key/value pair with( src ).
  * If( template ) is provided as routine, routine uses it to check( src ).
- * @param {wTools.objectSatisfyOptions} args - Arguments list {@link wTools.objectSatisfyOptions}.
+ * @param {wModuleForTesting1.objectSatisfyOptions} args - Arguments list {@link wModuleForTesting1.objectSatisfyOptions}.
  * @returns {boolean} Returns true if( src ) has same key/value pair(s) with( template ).
  *
  * @example
@@ -385,7 +385,7 @@ objectSatisfy.defaults =
  * _._objectSatisfy( template, { y : 1 , j : 1 } );
  *
  * @function _objectSatisfy
- * @memberof wTools
+ * @memberof wModuleForTesting1
 */
 
 function _objectSatisfy( template, src, root, levels )
@@ -466,7 +466,7 @@ function mapHasKey( object, key )
  * @returns { boolean } Returns true if (object) has own property.
  * @function mapOwnKey
  * @throws { mapOwnKey } Will throw an error if the (name) is unknown.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 //
@@ -525,7 +525,7 @@ function mapOwnVal( object, val )
  * @function mapHasAll
  * @throws { Exception } Will throw an error if the ( src ) is not a ObjectLike entity.
  * @throws { Exception } Will throw an error if the ( screen ) is not a ObjectLike entity.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapHasAll( src, screen )
@@ -569,7 +569,7 @@ function mapHasAll( src, screen )
  * @function mapHasAny
  * @throws { Exception } Will throw an error if the ( src ) is not a ObjectLike entity.
  * @throws { Exception } Will throw an error if the ( screen ) is not a ObjectLike entity.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapHasAny( src, screen )
@@ -616,7 +616,7 @@ function mapHasAny( src, screen )
  * @function mapHasNone
  * @throws { Exception } Will throw an error if the ( src ) is not a ObjectLike entity.
  * @throws { Exception } Will throw an error if the ( screen ) is not a ObjectLike entity.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapHasNone( src, screen )
@@ -660,7 +660,7 @@ function mapHasNone( src, screen )
  * @function mapOwnAll
  * @throws { Exception } Will throw an error if the ( src ) is not a ObjectLike entity.
  * @throws { Exception } Will throw an error if the ( screen ) is not a ObjectLike entity.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapOwnAll( src, screen )
@@ -707,7 +707,7 @@ function mapOwnAll( src, screen )
  * @function mapOwnAny
  * @throws { Exception } Will throw an error if the ( src ) is not a map.
  * @throws { Exception } Will throw an error if the ( screen ) is not a map.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapOwnAny( src, screen )
@@ -754,7 +754,7 @@ function mapOwnAny( src, screen )
  * @function mapOwnNone
  * @throws { Exception } Will throw an error if the ( src ) is not a map.
  * @throws { Exception } Will throw an error if the ( screen ) is not a map.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapOwnNone( src, screen )
@@ -929,7 +929,7 @@ function mapHasNoUndefine( srcMap )
  * @returns { objectLike } It will return the new object filled by [ key, value ]
  * from one or more source objects.
  * @function mapMake
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapMake()
@@ -992,7 +992,7 @@ function mapShallowClone( src )
  * @throws { Error } Will throw an Error if ( o ) is not an Object,
  * if ( arguments.length > 2 ), if (key) is not a String or
  * if {-srcMap-} has not own properties.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapCloneAssigning( o )
@@ -1017,7 +1017,7 @@ function mapCloneAssigning( o )
     o.onField( o.dstMap, o.srcMap, k, o.onField );
   }
 
-  Object.setPrototypeOf( o.dstMap, Object.getPrototypeOf( o.srcMap ) );
+  Object.setModuleForTesting12typeOf( o.dstMap, Object.getModuleForTesting12typeOf( o.srcMap ) );
 
   return o.dstMap;
 }
@@ -1052,7 +1052,7 @@ mapCloneAssigning.defaults =
  * @function mapExtend
  * @throws { Error } Will throw an error if ( arguments.length < 2 ),
  * if the (dstMap) is not an Object.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapExtend( dstMap, srcMap )
@@ -1061,7 +1061,7 @@ function mapExtend( dstMap, srcMap )
   if( dstMap === null )
   dstMap = Object.create( null );
 
-  if( arguments.length === 2 && Object.getPrototypeOf( srcMap ) === null )
+  if( arguments.length === 2 && Object.getModuleForTesting12typeOf( srcMap ) === null )
   return Object.assign( dstMap, srcMap );
 
   _.assert( arguments.length >= 2, 'Expects at least two arguments' );
@@ -1073,7 +1073,7 @@ function mapExtend( dstMap, srcMap )
 
     _.assert( !_.primitiveIs( srcMap ), 'Expects non primitive' );
 
-    if( Object.getPrototypeOf( srcMap ) === null )
+    if( Object.getModuleForTesting12typeOf( srcMap ) === null )
     Object.assign( dstMap, srcMap );
     else
     for( let k in srcMap )
@@ -1094,7 +1094,7 @@ function mapsExtend( dstMap, srcMaps )
   if( dstMap === null )
   dstMap = Object.create( null );
 
-  if( srcMaps.length === 1 && Object.getPrototypeOf( srcMaps[ 0 ] ) === null )
+  if( srcMaps.length === 1 && Object.getModuleForTesting12typeOf( srcMaps[ 0 ] ) === null )
   return Object.assign( dstMap, srcMaps[ 0 ] );
 
   if( !_.arrayLike( srcMaps ) )
@@ -1110,7 +1110,7 @@ function mapsExtend( dstMap, srcMaps )
 
     _.assert( !_.primitiveIs( srcMap ), 'Expects non primitive' );
 
-    if( Object.getPrototypeOf( srcMap ) === null )
+    if( Object.getModuleForTesting12typeOf( srcMap ) === null )
     Object.assign( dstMap, srcMap );
     else for( let k in srcMap )
     {
@@ -1145,7 +1145,7 @@ function mapsExtend( dstMap, srcMaps )
  * @function mapExtendConditional
  * @throws { Error } Will throw an Error if ( arguments.length < 3 ), (filter)
  * is not a Function, (result) and (argument) are not the objects.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapExtendConditional( filter, dstMap )
@@ -1320,7 +1320,7 @@ function mapsExtendNulls( dstMap, srcMaps )
  *
  * @returns { objectLike } Returns an object with unique [ key, value ].
  * @function mapSupplement
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapSupplement( dstMap, srcMap )
@@ -1495,7 +1495,7 @@ function mapSupplementOwnFromDefinitionStrictlyPrimitives( dstMap, srcMap )
  *
  * @returns { objectLike } Returns an object filled by all unique, clone [ key, value ].
  * @function mapComplement
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 /* qqq : need to explain how undefined handled and write good documentation */
@@ -2144,7 +2144,7 @@ mapsFlatten.defaults =
  * @returns { array } Returns a list of [ [ key, value ] ... ] pairs.
  * @function mapToArray
  * @throws { Error } Will throw an Error if( arguments.length !== 1 ) or {-srcMap-} is not an object.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapToArray( src )
@@ -2181,7 +2181,7 @@ function mapToArray( src )
  *
  * @returns { string } Returns a string (result) representing the passed object {-srcMap-}.
  * @function mapToStr
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapToStr( o )
@@ -2289,7 +2289,7 @@ function _mapKeys( o )
       do
       {
         filter( proto, Object.getOwnPropertyNames( proto ) );
-        proto = Object.getPrototypeOf( proto );
+        proto = Object.getModuleForTesting12typeOf( proto );
       }
       while( proto );
     }
@@ -2318,8 +2318,8 @@ _mapKeys.defaults =
  * Unlike standard [Object.keys]{@https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/keys}
  * which accept object only mapKeys accept any object-like entity.
  *
- * @see {@link wTools.mapOwnKeys} - Similar routine taking into account own elements only.
- * @see {@link wTools.mapVals} - Similar routine returning values.
+ * @see {@link wModuleForTesting1.mapOwnKeys} - Similar routine taking into account own elements only.
+ * @see {@link wModuleForTesting1.mapVals} - Similar routine returning values.
  *
  * @example
  * // returns [ "a", "b" ]
@@ -2340,7 +2340,7 @@ _mapKeys.defaults =
  * @function mapKeys
  * @throws { Exception } Throw an exception if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapKeys( srcMap )
@@ -2393,7 +2393,7 @@ mapKeys.defaults =
  * @function mapOwnKeys
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
 */
 
 function mapOwnKeys( srcMap )
@@ -2433,17 +2433,17 @@ mapOwnKeys.defaults =
  * @param { objectLike } srcMap - The object whose properties keys are to be returned.
  *
  * @example
- * // returns [ "a", "b", "__defineGetter__", ... "isPrototypeOf" ]
+ * // returns [ "a", "b", "__defineGetter__", ... "isModuleForTesting12typeOf" ]
  * let x = { a : 1 };
  * let y = { b : 2 };
- * Object.setPrototypeOf( x, y );
+ * Object.setModuleForTesting12typeOf( x, y );
  * _.mapAllKeys( x );
  *
  * @return { array } Returns an array whose elements are strings
  * corresponding to the all properties found on the object.
  * @function mapAllKeys
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
- * @memberof wTools
+ * @memberof wModuleForTesting1
 */
 
 function mapAllKeys( srcMap )
@@ -2531,7 +2531,7 @@ _mapVals.defaults =
  * let o = { own : 1 };
  * let a = { a : 7 };
  * let b = { b : 13 };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapVals.call( o, a )
  * // returns [ 7 ]
  *
@@ -2540,7 +2540,7 @@ _mapVals.defaults =
  * @function mapVals
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapVals( srcMap )
@@ -2596,7 +2596,7 @@ mapVals.defaults =
  * @function mapOwnVals
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapOwnVals( srcMap )
@@ -2635,14 +2635,14 @@ mapOwnVals.defaults =
  * @param { objectLike } srcMap - The object whose property values are to be returned.
  *
  * @example
- * // returns [ "7", "13", function __defineGetter__(), ... function isPrototypeOf() ]
+ * // returns [ "7", "13", function __defineGetter__(), ... function isModuleForTesting12typeOf() ]
  * _.mapAllVals( { a : 7, b : 13 } );
  *
  * @returns { array } Returns an array whose elements are strings.
  * corresponding to the enumerable property values found directly upon object.
  * @function mapAllVals
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapAllVals( srcMap )
@@ -2723,7 +2723,7 @@ _mapPairs.defaults =
  * @example
  * let a = { a : 1 };
  * let b = { b : 2 };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapPairs.call( { own : 1 }, a );
  * //returns [ [ "a", 1 ] ]
  *
@@ -2731,7 +2731,7 @@ _mapPairs.defaults =
  * @function mapPairs
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapPairs( srcMap )
@@ -2776,7 +2776,7 @@ mapPairs.defaults =
  * @example
  * let a = { a : 1 };
  * let b = { b : 2 };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapOwnPairs( a );
  * //returns [ [ "a", 1 ] ]
  *
@@ -2788,7 +2788,7 @@ mapPairs.defaults =
  * @function mapOwnPairs
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapOwnPairs( srcMap )
@@ -2825,20 +2825,20 @@ mapOwnPairs.defaults =
  * @param { objectLike } srcMap - Object to get a list of [ key, value ] pairs.
  *
  * @example
- * // returns [ [ "a", 7 ], [ "b", 13 ], ... [ "isPrototypeOf", function isPrototypeOf() ] ]
+ * // returns [ [ "a", 7 ], [ "b", 13 ], ... [ "isModuleForTesting12typeOf", function isModuleForTesting12typeOf() ] ]
  * _.mapAllPairs( { a : 7, b : 13 } );
  *
  * @example
  * let a = { a : 1 };
  * let b = { b : 2 };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapAllPairs( a );
- * //returns [ [ "a", 1 ], [ "b", 2 ], ... [ "isPrototypeOf", function isPrototypeOf() ]  ]
+ * //returns [ [ "a", 1 ], [ "b", 2 ], ... [ "isModuleForTesting12typeOf", function isModuleForTesting12typeOf() ]  ]
  *
  * @returns { array } A list of [ key, value ] pairs.
  * @function mapAllPairs
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapAllPairs( srcMap )
@@ -2913,14 +2913,14 @@ _mapProperties.defaults =
  * @example
  * let a = { a : 1 };
  * let b = { b : 2 };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapProperties( a );
  * //returns { a : 1, b : 2 }
  *
  * @example
  * let a = { a : 1 };
  * let b = { b : 2 };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapProperties.call( { own : 1 }, a )
  * //returns { a : 1 }
  *
@@ -2928,7 +2928,7 @@ _mapProperties.defaults =
  * @function mapProperties
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapProperties( srcMap )
@@ -2972,7 +2972,7 @@ mapProperties.defaults =
  * @example
  * let a = { a : 1 };
  * let b = { b : 2 };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapOwnProperties( a );
  * //returns { a : 1 }
  *
@@ -2986,7 +2986,7 @@ mapProperties.defaults =
  * @function mapOwnProperties
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapOwnProperties( srcMap )
@@ -3028,7 +3028,7 @@ mapOwnProperties.defaults =
  * @example
  * let a = { a : 1 };
  * let b = { b : 2 };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapAllProperties( a );
  * //returns { a : 1, b : 2, __defineGetter__ : function...}
  *
@@ -3036,7 +3036,7 @@ mapOwnProperties.defaults =
  * @function mapAllProperties
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapAllProperties( srcMap )
@@ -3080,14 +3080,14 @@ mapAllProperties.defaults =
  * @example
  * let a = { a : 1 };
  * let b = { b : 2, f : function(){} };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapRoutines( a )
  * //returns { f : function(){} }
  *
  * @example
  * let a = { a : 1 };
  * let b = { b : 2, f : function(){} };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapRoutines.call( { own : 1 }, a )
  * //returns {}
  *
@@ -3095,7 +3095,7 @@ mapAllProperties.defaults =
  * @function mapRoutines
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 
@@ -3147,7 +3147,7 @@ mapRoutines.defaults =
  * @example
  * let a = { a : 1 };
  * let b = { b : 2, f : function(){} };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapOwnRoutines( a )
  * //returns {}
  *
@@ -3161,7 +3161,7 @@ mapRoutines.defaults =
  * @function mapOwnRoutines
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapOwnRoutines( srcMap )
@@ -3210,7 +3210,7 @@ mapOwnRoutines.defaults =
  * @example
  * let a = { a : 1 };
  * let b = { b : 2, f : function(){} };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapAllRoutines( a )
  * // returns { f : function, __defineGetter__ : function...}
  *
@@ -3219,7 +3219,7 @@ mapOwnRoutines.defaults =
  * @function mapAllRoutines
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapAllRoutines( srcMap )
@@ -3270,14 +3270,14 @@ mapAllRoutines.defaults =
  * @example
  * let a = { a : 1 };
  * let b = { b : 2, c : function(){} };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapFields( a );
  * //returns { a : 1, b : 2 }
  *
  * @example
  * let a = { a : 1, x : function(){} };
  * let b = { b : 2 };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapFields.call( { own : 1 }, a )
  * //returns { a : 1 }
  *
@@ -3285,7 +3285,7 @@ mapAllRoutines.defaults =
  * @function mapFields
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapFields( srcMap )
@@ -3333,7 +3333,7 @@ mapFields.defaults =
  * @example
  * let a = { a : 1 };
  * let b = { b : 2, c : function(){} };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapOwnFields( a );
  * //returns { a : 1 }
  *
@@ -3347,7 +3347,7 @@ mapFields.defaults =
  * @function mapOwnFields
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapOwnFields( srcMap )
@@ -3393,7 +3393,7 @@ mapOwnFields.defaults =
  * @example
  * let a = { a : 1 };
  * let b = { b : 2, c : function(){} };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapAllFields( a );
  * //returns { a : 1, b : 2, __proto__ : Object }
  *
@@ -3407,7 +3407,7 @@ mapOwnFields.defaults =
  * @function mapAllFields
  * @throws { Error } Will throw an Error if {-srcMap-} is not an objectLike entity.
  * @throws { Error } Will throw an Error if unknown option is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapAllFields( srcMap )
@@ -3464,14 +3464,14 @@ mapAllFields.defaults =
  * @example
  * let a = { a : 1 };
  * let b = { b : 2, c : function(){} };
- * Object.setPrototypeOf( a, b );
+ * Object.setModuleForTesting12typeOf( a, b );
  * _.mapOnlyPrimitives( a );
  * //returns { a : 1, b : 2 }
  *
  * @returns { object } A new map with all atomic fields from source {-srcMap-}.
  * @function mapOnlyPrimitives
  * @throws { Error } Will throw an Error if {-srcMap-} is not an Object.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapOnlyPrimitives( srcMap )
@@ -3505,7 +3505,7 @@ function mapOnlyPrimitives( srcMap )
  * @returns { Array } Returns pair [ key, value ] as array if {-srcMap-} has fields, otherwise, undefined.
  * @function mapFirstPair
  * @throws { Error } Will throw an Error if (arguments.length) less than one, if {-srcMap-} is not an object-like.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapFirstPair( srcMap )
@@ -3576,7 +3576,7 @@ function mapSelect( srcMap, keys )
  * @returns { * } Returns value of {-srcMap-} by corresponding (index).
  * @function mapValWithIndex
  * @throws { Error } Will throw an Error if( arguments.length > 2 ) or {-srcMap-} is not an Object.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapValWithIndex( srcMap, index )
@@ -3616,7 +3616,7 @@ function mapValWithIndex( srcMap, index )
  * @returns { string } Returns key of {-srcMap-} by corresponding (index).
  * @function mapKeyWithIndex
  * @throws { Error } Will throw an Error if( arguments.length > 2 ) or {-srcMap-} is not an Object.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapKeyWithIndex( srcMap, index )
@@ -3745,7 +3745,7 @@ function mapButNulls( srcMap )
  * @returns { object } Returns an object whose (values) are not equal to the arrays or objects.
  * @function mapButConditional
  * @throws { Error } Will throw an Error if {-srcMap-} is not an object.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapButConditional( fieldFilter, srcMap, butMap )
@@ -3820,7 +3820,7 @@ function mapButConditional( fieldFilter, srcMap, butMap )
  *  In debug mode it throws an error if any argument is not object like.
  * @returns { object } Returns new object made by unique keys.
  * @function mapBut
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapBut( srcMap, butMap )
@@ -3896,7 +3896,7 @@ function mapBut( srcMap, butMap )
  *  In debug mode it throws an error if any argument is not object like.
  * @returns { object } Returns new object made by unique keys.
  * @function mapButIgnoringUndefines
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapButIgnoringUndefines( srcMap, butMap )
@@ -4048,7 +4048,7 @@ function mapButIgnoringUndefines( srcMap, butMap )
  * @returns { object } Returns new (result) object with unique own keys.
  * @function mapOwnBut
  * @throws { Error } Will throw an Error if {-srcMap-} is not an object.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapOwnBut( srcMap, butMap )
@@ -4077,7 +4077,7 @@ function mapOwnBut( srcMap, butMap )
  * It takes number of objects, creates a new object by three properties
  * and calls the _mapOnly( {} ) with created object.
  *
- * @see  {@link wTools._mapOnly} - See for more information.
+ * @see  {@link wModuleForTesting1._mapOnly} - See for more information.
  *
  * @param { objectLike } screenMap - The first object.
  * @param { ...objectLike } arguments[] - One or more objects.
@@ -4090,7 +4090,7 @@ function mapOwnBut( srcMap, butMap )
  * from others objects.
  * @function mapOnly
  * @throws { Error } Will throw an Error if (arguments.length < 2) or (arguments.length !== 2).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function mapOnly( srcMaps, screenMaps )
@@ -4192,7 +4192,7 @@ function mapOnlyComplementing( srcMaps, screenMaps )
  * @function _mapOnly
  * @throws { Error } Will throw an Error if (options.dstMap or screenMap) are not objects,
  * or if (srcMaps) is not an array
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function _mapOnly( o )
@@ -4286,7 +4286,7 @@ function sureMapOwnExactly( srcMap, screenMaps, msg )
 
 /**
  * Checks if map passed by argument {-srcMap-} has only properties represented in object(s) passed after first argument. Checks all enumerable properties.
- * Works only in debug mode. Uses StackTrace level 2. {@link wTools.err See err}
+ * Works only in debug mode. Uses StackTrace level 2. {@link wModuleForTesting1.err See err}
  * If routine found some unique properties in source it generates and throws exception, otherwise returns without exception.
  * Also generates error using message passed as last argument.
  *
@@ -4297,31 +4297,31 @@ function sureMapOwnExactly( srcMap, screenMaps, msg )
  * @example
  * let a = { a : 1, c : 3 };
  * let b = { a : 2, b : 3 };
- * wTools.sureMapHasOnly( a, b );
+ * wModuleForTesting1.sureMapHasOnly( a, b );
  *
  * // caught <anonymous>:3:8
  * // Object should have no fields : c
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at sureMapHasOnly (file:///.../wTools/staging/Base.s:4188)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at sureMapHasOnly (file:///.../wModuleForTesting1/staging/Base.s:4188)
  * // at <anonymous>:3
  *
  * @example
  * let x = { d : 1 };
  * let a = Object.create( x );
  * let b = { a : 1 };
- * wTools.sureMapHasOnly( a, b, 'message' )
+ * wModuleForTesting1.sureMapHasOnly( a, b, 'message' )
  *
  * // caught <anonymous>:4:8
  * // message Object should have no fields : d
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at sureMapHasOnly (file:///.../wTools/staging/Base.s:4188)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at sureMapHasOnly (file:///.../wModuleForTesting1/staging/Base.s:4188)
  * // at <anonymous>:4
  *
  * @function sureMapHasOnly
  * @throws {Exception} If map {-srcMap-} contains unique property.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -4364,7 +4364,7 @@ function sureMapHasOnly( srcMap, screenMaps, msg )
 
 /**
  * Checks if map passed by argument {-srcMap-} has only properties represented in object(s) passed after first argument. Checks only own properties of the objects.
- * Works only in debug mode. Uses StackTrace level 2.{@link wTools.err See err}
+ * Works only in debug mode. Uses StackTrace level 2.{@link wModuleForTesting1.err See err}
  * If routine found some unique properties in source it generates and throws exception, otherwise returns without exception.
  * Also generates error using message passed as last argument.
  *
@@ -4377,36 +4377,36 @@ function sureMapHasOnly( srcMap, screenMaps, msg )
  * let a = Object.create( x );
  * a.a = 5;
  * let b = { a : 2 };
- * wTools.sureMapOwnOnly( a, b ); //no exception
+ * wModuleForTesting1.sureMapOwnOnly( a, b ); //no exception
  *
  * @example
  * let a = { d : 1 };
  * let b = { a : 2 };
- * wTools.sureMapOwnOnly( a, b );
+ * wModuleForTesting1.sureMapOwnOnly( a, b );
  *
  * // caught <anonymous>:3:10
  * // Object should have no own fields : d
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at sureMapOwnOnly (file:///.../wTools/staging/Base.s:4215)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at sureMapOwnOnly (file:///.../wModuleForTesting1/staging/Base.s:4215)
  * // at <anonymous>:3
  *
  * @example
  * let a = { x : 0, y : 2 };
  * let b = { c : 0, d : 3};
  * let c = { a : 1 };
- * wTools.sureMapOwnOnly( a, b, 'error msg' );
+ * wModuleForTesting1.sureMapOwnOnly( a, b, 'error msg' );
  *
  * // caught <anonymous>:4:8
  * // error msg Object should have no own fields : x, y
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at sureMapOwnOnly (file:///.../wTools/staging/Base.s:4215)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at sureMapOwnOnly (file:///.../wModuleForTesting1/staging/Base.s:4215)
  * // at <anonymous>:4
  *
  * @function sureMapOwnOnly
  * @throws {Exception} If map {-srcMap-} contains unique property.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -4446,7 +4446,7 @@ function sureMapOwnOnly( srcMap, screenMaps, msg )
 
 /**
  * Checks if map passed by argument {-srcMap-} has all properties represented in object passed by argument( all ). Checks all enumerable properties.
- * Works only in debug mode. Uses StackTrace level 2.{@link wTools.err See err}
+ * Works only in debug mode. Uses StackTrace level 2.{@link wModuleForTesting1.err See err}
  * If routine did not find some properties in source it generates and throws exception, otherwise returns without exception.
  * Also generates error using message passed as last argument( msg ).
  *
@@ -4458,35 +4458,35 @@ function sureMapOwnOnly( srcMap, screenMaps, msg )
  * let x = { a : 1 };
  * let a = Object.create( x );
  * let b = { a : 2 };
- * wTools.sureMapHasAll( a, b );// no exception
+ * wModuleForTesting1.sureMapHasAll( a, b );// no exception
  *
  * @example
  * let a = { d : 1 };
  * let b = { a : 2 };
- * wTools.sureMapHasAll( a, b );
+ * wModuleForTesting1.sureMapHasAll( a, b );
  *
  * // caught <anonymous>:3:10
  * // Object should have fields : a
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at sureMapHasAll (file:///.../wTools/staging/Base.s:4242)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at sureMapHasAll (file:///.../wModuleForTesting1/staging/Base.s:4242)
  * // at <anonymous>:3
  *
  * @example
  * let a = { x : 0, y : 2 };
  * let b = { x : 0, d : 3};
- * wTools.sureMapHasAll( a, b, 'error msg' );
+ * wModuleForTesting1.sureMapHasAll( a, b, 'error msg' );
  *
  * // caught <anonymous>:4:9
  * // error msg Object should have fields : d
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at sureMapHasAll (file:///.../wTools/staging/Base.s:4242)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at sureMapHasAll (file:///.../wModuleForTesting1/staging/Base.s:4242)
  * // at <anonymous>:3
  *
  * @function sureMapHasAll
  * @throws {Exception} If map {-srcMap-} not contains some properties from argument( all ).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -4517,7 +4517,7 @@ function sureMapHasAll( srcMap, all, msg )
 
 /**
  * Checks if map passed by argument {-srcMap-} has all properties represented in object passed by argument( all ). Checks only own properties of the objects.
- * Works only in Config.debug mode. Uses StackTrace level 2. {@link wTools.err See err}
+ * Works only in Config.debug mode. Uses StackTrace level 2. {@link wModuleForTesting1.err See err}
  * If routine did not find some properties in source it generates and throws exception, otherwise returns without exception.
  * Also generates error using message passed as last argument( msg ).
  *
@@ -4528,35 +4528,35 @@ function sureMapHasAll( srcMap, all, msg )
  * @example
  * let a = { a : 1 };
  * let b = { a : 2 };
- * wTools.sureMapOwnAll( a, b );// no exception
+ * wModuleForTesting1.sureMapOwnAll( a, b );// no exception
  *
  * @example
  * let a = { a : 1 };
  * let b = { a : 2, b : 2 }
- * wTools.sureMapOwnAll( a, b );
+ * wModuleForTesting1.sureMapOwnAll( a, b );
  *
  * // caught <anonymous>:3:8
  * // Object should have own fields : b
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at sureMapHasAll (file:///.../wTools/staging/Base.s:4269)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at sureMapHasAll (file:///.../wModuleForTesting1/staging/Base.s:4269)
  * // at <anonymous>:3
  *
  * @example
  * let a = { x : 0 };
  * let b = { x : 1, y : 0};
- * wTools.sureMapHasAll( a, b, 'error msg' );
+ * wModuleForTesting1.sureMapHasAll( a, b, 'error msg' );
  *
  * // caught <anonymous>:4:9
  * // error msg Object should have fields : y
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at sureMapOwnAll (file:///.../wTools/staging/Base.s:4269)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at sureMapOwnAll (file:///.../wModuleForTesting1/staging/Base.s:4269)
  * // at <anonymous>:3
  *
  * @function sureMapOwnAll
  * @throws {Exception} If map {-srcMap-} not contains some properties from argument( all ).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -4587,7 +4587,7 @@ function sureMapOwnAll( srcMap, all, msg )
 
 /**
  * Checks if map passed by argument {-srcMap-} has no properties represented in object(s) passed after first argument. Checks all enumerable properties.
- * Works only in debug mode. Uses StackTrace level 2. {@link wTools.err See err}
+ * Works only in debug mode. Uses StackTrace level 2. {@link wModuleForTesting1.err See err}
  * If routine found some properties in source it generates and throws exception, otherwise returns without exception.
  * Also generates error using message passed as last argument( msg ).
  *
@@ -4598,36 +4598,36 @@ function sureMapOwnAll( srcMap, all, msg )
  * @example
  * let a = { a : 1 };
  * let b = { b : 2 };
- * wTools.sureMapHasNone( a, b );// no exception
+ * wModuleForTesting1.sureMapHasNone( a, b );// no exception
  *
  * @example
  * let x = { a : 1 };
  * let a = Object.create( x );
  * let b = { a : 2, b : 2 }
- * wTools.sureMapHasNone( a, b );
+ * wModuleForTesting1.sureMapHasNone( a, b );
  *
  * // caught <anonymous>:4:8
  * // Object should have no fields : a
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at sureMapHasAll (file:///.../wTools/staging/Base.s:4518)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at sureMapHasAll (file:///.../wModuleForTesting1/staging/Base.s:4518)
  * // at <anonymous>:4
  *
  * @example
  * let a = { x : 0, y : 1 };
  * let b = { x : 1, y : 0 };
- * wTools.sureMapHasNone( a, b, 'error msg' );
+ * wModuleForTesting1.sureMapHasNone( a, b, 'error msg' );
  *
  * // caught <anonymous>:3:9
  * // error msg Object should have no fields : x, y
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at sureMapHasNone (file:///.../wTools/staging/Base.s:4518)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at sureMapHasNone (file:///.../wModuleForTesting1/staging/Base.s:4518)
  * // at <anonymous>:3
  *
  * @function sureMapHasNone
  * @throws {Exception} If map {-srcMap-} contains some properties from other map(s).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -4681,7 +4681,7 @@ function sureMapOwnNone( srcMap, screenMaps, msg )
 //
 
 /**
- * Checks if map passed by argument {-srcMap-} not contains undefined properties. Works only in debug mode. Uses StackTrace level 2. {@link wTools.err See err}
+ * Checks if map passed by argument {-srcMap-} not contains undefined properties. Works only in debug mode. Uses StackTrace level 2. {@link wModuleForTesting1.err See err}
  * If routine found undefined property it generates and throws exception, otherwise returns without exception.
  * Also generates error using message passed after first argument.
  *
@@ -4690,30 +4690,30 @@ function sureMapOwnNone( srcMap, screenMaps, msg )
  *
  * @example
  * let map = { a : '1', b : undefined };
- * wTools.sureMapHasNoUndefine( map );
+ * wModuleForTesting1.sureMapHasNoUndefine( map );
  *
  * // caught <anonymous>:2:8
  * // Object  should have no undefines, but has : b
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at sureMapHasNoUndefine (file:///.../wTools/staging/Base.s:4087)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at sureMapHasNoUndefine (file:///.../wModuleForTesting1/staging/Base.s:4087)
  * // at <anonymous>:2
  *
  * @example
  * let map = { a : undefined, b : '1' };
- * wTools.sureMapHasNoUndefine( map, '"map"');
+ * wModuleForTesting1.sureMapHasNoUndefine( map, '"map"');
  *
  * // caught <anonymous>:2:8
  * // Object "map" should have no undefines, but has : a
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at sureMapHasNoUndefine (file:///.../wTools/staging/Base.s:4087)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at sureMapHasNoUndefine (file:///.../wModuleForTesting1/staging/Base.s:4087)
  * // at <anonymous>:2
  *
  * @function sureMapHasNoUndefine
  * @throws {Exception} If no arguments provided.
  * @throws {Exception} If map {-srcMap-} contains undefined property.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -4768,7 +4768,7 @@ function assertMapOwnFields( srcMap, screenMaps, msg )
 
 /**
  * Checks if map passed by argument {-srcMap-} has only properties represented in object(s) passed after first argument. Checks all enumerable properties.
- * Works only in debug mode. Uses StackTrace level 2. {@link wTools.err See err}
+ * Works only in debug mode. Uses StackTrace level 2. {@link wModuleForTesting1.err See err}
  * If routine found some unique properties in source it generates and throws exception, otherwise returns without exception.
  * Also generates error using message passed as last argument.
  *
@@ -4779,31 +4779,31 @@ function assertMapOwnFields( srcMap, screenMaps, msg )
  * @example
  * let a = { a : 1, c : 3 };
  * let b = { a : 2, b : 3 };
- * wTools.assertMapHasOnly( a, b );
+ * wModuleForTesting1.assertMapHasOnly( a, b );
  *
  * // caught <anonymous>:3:8
  * // Object should have no fields : c
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at assertMapHasOnly (file:///.../wTools/staging/Base.s:4188)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at assertMapHasOnly (file:///.../wModuleForTesting1/staging/Base.s:4188)
  * // at <anonymous>:3
  *
  * @example
  * let x = { d : 1 };
  * let a = Object.create( x );
  * let b = { a : 1 };
- * wTools.assertMapHasOnly( a, b, 'message' )
+ * wModuleForTesting1.assertMapHasOnly( a, b, 'message' )
  *
  * // caught <anonymous>:4:8
  * // message Object should have no fields : d
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at assertMapHasOnly (file:///.../wTools/staging/Base.s:4188)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at assertMapHasOnly (file:///.../wModuleForTesting1/staging/Base.s:4188)
  * // at <anonymous>:4
  *
  * @function assertMapHasOnly
  * @throws {Exception} If map {-srcMap-} contains unique property.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -4818,7 +4818,7 @@ function assertMapHasOnly( srcMap, screenMaps, msg )
 
 /**
  * Checks if map passed by argument {-srcMap-} has only properties represented in object(s) passed after first argument. Checks only own properties of the objects.
- * Works only in debug mode. Uses StackTrace level 2.{@link wTools.err See err}
+ * Works only in debug mode. Uses StackTrace level 2.{@link wModuleForTesting1.err See err}
  * If routine found some unique properties in source it generates and throws exception, otherwise returns without exception.
  * Also generates error using message passed as last argument.
  *
@@ -4831,36 +4831,36 @@ function assertMapHasOnly( srcMap, screenMaps, msg )
  * let a = Object.create( x );
  * a.a = 5;
  * let b = { a : 2 };
- * wTools.assertMapOwnOnly( a, b ); //no exception
+ * wModuleForTesting1.assertMapOwnOnly( a, b ); //no exception
  *
  * @example
  * let a = { d : 1 };
  * let b = { a : 2 };
- * wTools.assertMapOwnOnly( a, b );
+ * wModuleForTesting1.assertMapOwnOnly( a, b );
  *
  * // caught <anonymous>:3:10
  * // Object should have no own fields : d
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at assertMapOwnOnly (file:///.../wTools/staging/Base.s:4215)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at assertMapOwnOnly (file:///.../wModuleForTesting1/staging/Base.s:4215)
  * // at <anonymous>:3
  *
  * @example
  * let a = { x : 0, y : 2 };
  * let b = { c : 0, d : 3};
  * let c = { a : 1 };
- * wTools.assertMapOwnOnly( a, b, 'error msg' );
+ * wModuleForTesting1.assertMapOwnOnly( a, b, 'error msg' );
  *
  * // caught <anonymous>:4:8
  * // error msg Object should have no own fields : x, y
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at assertMapOwnOnly (file:///.../wTools/staging/Base.s:4215)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at assertMapOwnOnly (file:///.../wModuleForTesting1/staging/Base.s:4215)
  * // at <anonymous>:4
  *
  * @function assertMapOwnOnly
  * @throws {Exception} If map {-srcMap-} contains unique property.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -4875,7 +4875,7 @@ function assertMapOwnOnly( srcMap, screenMaps, msg )
 
 /**
  * Checks if map passed by argument {-srcMap-} has no properties represented in object(s) passed after first argument. Checks all enumerable properties.
- * Works only in debug mode. Uses StackTrace level 2. {@link wTools.err See err}
+ * Works only in debug mode. Uses StackTrace level 2. {@link wModuleForTesting1.err See err}
  * If routine found some properties in source it generates and throws exception, otherwise returns without exception.
  * Also generates error using message passed as last argument( msg ).
  *
@@ -4886,36 +4886,36 @@ function assertMapOwnOnly( srcMap, screenMaps, msg )
  * @example
  * let a = { a : 1 };
  * let b = { b : 2 };
- * wTools.assertMapHasNone( a, b );// no exception
+ * wModuleForTesting1.assertMapHasNone( a, b );// no exception
  *
  * @example
  * let x = { a : 1 };
  * let a = Object.create( x );
  * let b = { a : 2, b : 2 }
- * wTools.assertMapHasNone( a, b );
+ * wModuleForTesting1.assertMapHasNone( a, b );
  *
  * // caught <anonymous>:4:8
  * // Object should have no fields : a
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at assertMapHasAll (file:///.../wTools/staging/Base.s:4518)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at assertMapHasAll (file:///.../wModuleForTesting1/staging/Base.s:4518)
  * // at <anonymous>:4
  *
  * @example
  * let a = { x : 0, y : 1 };
  * let b = { x : 1, y : 0 };
- * wTools.assertMapHasNone( a, b, 'error msg' );
+ * wModuleForTesting1.assertMapHasNone( a, b, 'error msg' );
  *
  * // caught <anonymous>:3:9
  * // error msg Object should have no fields : x, y
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at assertMapHasNone (file:///.../wTools/staging/Base.s:4518)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at assertMapHasNone (file:///.../wModuleForTesting1/staging/Base.s:4518)
  * // at <anonymous>:3
  *
  * @function assertMapHasNone
  * @throws {Exception} If map {-srcMap-} contains some properties from other map(s).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -4939,7 +4939,7 @@ function assertMapOwnNone( srcMap, screenMaps, msg )
 
 /**
  * Checks if map passed by argument {-srcMap-} has all properties represented in object passed by argument( all ). Checks all enumerable properties.
- * Works only in debug mode. Uses StackTrace level 2.{@link wTools.err See err}
+ * Works only in debug mode. Uses StackTrace level 2.{@link wModuleForTesting1.err See err}
  * If routine did not find some properties in source it generates and throws exception, otherwise returns without exception.
  * Also generates error using message passed as last argument( msg ).
  *
@@ -4951,35 +4951,35 @@ function assertMapOwnNone( srcMap, screenMaps, msg )
  * let x = { a : 1 };
  * let a = Object.create( x );
  * let b = { a : 2 };
- * wTools.assertMapHasAll( a, b );// no exception
+ * wModuleForTesting1.assertMapHasAll( a, b );// no exception
  *
  * @example
  * let a = { d : 1 };
  * let b = { a : 2 };
- * wTools.assertMapHasAll( a, b );
+ * wModuleForTesting1.assertMapHasAll( a, b );
  *
  * // caught <anonymous>:3:10
  * // Object should have fields : a
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at assertMapHasAll (file:///.../wTools/staging/Base.s:4242)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at assertMapHasAll (file:///.../wModuleForTesting1/staging/Base.s:4242)
  * // at <anonymous>:3
  *
  * @example
  * let a = { x : 0, y : 2 };
  * let b = { x : 0, d : 3};
- * wTools.assertMapHasAll( a, b, 'error msg' );
+ * wModuleForTesting1.assertMapHasAll( a, b, 'error msg' );
  *
  * // caught <anonymous>:4:9
  * // error msg Object should have fields : d
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at assertMapHasAll (file:///.../wTools/staging/Base.s:4242)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at assertMapHasAll (file:///.../wModuleForTesting1/staging/Base.s:4242)
  * // at <anonymous>:3
  *
  * @function assertMapHasAll
  * @throws {Exception} If map {-srcMap-} not contains some properties from argument( all ).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -4994,7 +4994,7 @@ function assertMapHasAll( srcMap, all, msg )
 
 /**
  * Checks if map passed by argument {-srcMap-} has all properties represented in object passed by argument( all ). Checks only own properties of the objects.
- * Works only in Config.debug mode. Uses StackTrace level 2. {@link wTools.err See err}
+ * Works only in Config.debug mode. Uses StackTrace level 2. {@link wModuleForTesting1.err See err}
  * If routine did not find some properties in source it generates and throws exception, otherwise returns without exception.
  * Also generates error using message passed as last argument( msg ).
  *
@@ -5005,35 +5005,35 @@ function assertMapHasAll( srcMap, all, msg )
  * @example
  * let a = { a : 1 };
  * let b = { a : 2 };
- * wTools.assertMapOwnAll( a, b );// no exception
+ * wModuleForTesting1.assertMapOwnAll( a, b );// no exception
  *
  * @example
  * let a = { a : 1 };
  * let b = { a : 2, b : 2 }
- * wTools.assertMapOwnAll( a, b );
+ * wModuleForTesting1.assertMapOwnAll( a, b );
  *
  * // caught <anonymous>:3:8
  * // Object should have own fields : b
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at assertMapHasAll (file:///.../wTools/staging/Base.s:4269)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at assertMapHasAll (file:///.../wModuleForTesting1/staging/Base.s:4269)
  * // at <anonymous>:3
  *
  * @example
  * let a = { x : 0 };
  * let b = { x : 1, y : 0};
- * wTools.assertMapHasAll( a, b, 'error msg' );
+ * wModuleForTesting1.assertMapHasAll( a, b, 'error msg' );
  *
  * // caught <anonymous>:4:9
  * // error msg Object should have fields : y
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at assertMapOwnAll (file:///.../wTools/staging/Base.s:4269)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at assertMapOwnAll (file:///.../wModuleForTesting1/staging/Base.s:4269)
  * // at <anonymous>:3
  *
  * @function assertMapOwnAll
  * @throws {Exception} If map {-srcMap-} not contains some properties from argument( all ).
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 
@@ -5047,7 +5047,7 @@ function assertMapOwnAll( srcMap, all, msg )
 //
 
 /**
- * Checks if map passed by argument {-srcMap-} not contains undefined properties. Works only in debug mode. Uses StackTrace level 2. {@link wTools.err See err}
+ * Checks if map passed by argument {-srcMap-} not contains undefined properties. Works only in debug mode. Uses StackTrace level 2. {@link wModuleForTesting1.err See err}
  * If routine found undefined property it generates and throws exception, otherwise returns without exception.
  * Also generates error using message passed after first argument.
  *
@@ -5056,30 +5056,30 @@ function assertMapOwnAll( srcMap, all, msg )
  *
  * @example
  * let map = { a : '1', b : undefined };
- * wTools.assertMapHasNoUndefine( map );
+ * wModuleForTesting1.assertMapHasNoUndefine( map );
  *
  * // caught <anonymous>:2:8
  * // Object  should have no undefines, but has : b
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at assertMapHasNoUndefine (file:///.../wTools/staging/Base.s:4087)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at assertMapHasNoUndefine (file:///.../wModuleForTesting1/staging/Base.s:4087)
  * // at <anonymous>:2
  *
  * @example
  * let map = { a : undefined, b : '1' };
- * wTools.assertMapHasNoUndefine( map, '"map"');
+ * wModuleForTesting1.assertMapHasNoUndefine( map, '"map"');
  *
  * // caught <anonymous>:2:8
  * // Object "map" should have no undefines, but has : a
  * //
- * // at _err (file:///.../wTools/staging/Base.s:3707)
- * // at assertMapHasNoUndefine (file:///.../wTools/staging/Base.s:4087)
+ * // at _err (file:///.../wModuleForTesting1/staging/Base.s:3707)
+ * // at assertMapHasNoUndefine (file:///.../wModuleForTesting1/staging/Base.s:4087)
  * // at <anonymous>:2
  *
  * @function assertMapHasNoUndefine
  * @throws {Exception} If no arguments provided.
  * @throws {Exception} If map {-srcMap-} contains undefined property.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  *
  */
 

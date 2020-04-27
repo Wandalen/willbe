@@ -9,7 +9,7 @@ if( typeof module !== 'undefined' )
 }
 
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 
 // --
 // tests
@@ -1866,89 +1866,89 @@ function typeOf( test )
 
 //
 
-function isPrototypeOf( test )
+function isModuleForTesting12typeOf( test )
 {
-  test.open( 'subPrototype === superPrototype' );
+  test.open( 'subModuleForTesting12type === superModuleForTesting12type' );
 
   test.case = 'check null';
   var src = null;
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check undefined';
   var src = undefined;
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check zero';
   var src = 0;
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check false';
   var src = false;
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check NaN';
   var src = NaN;
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, false );
 
   test.case = 'check array';
   var src = [ 1, 2 ];
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check empty arguments array';
   var src = _.argumentsArrayMake( [] );
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check empty unroll';
   var src = _.unrollMake( [] );
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check map';
   var src = { a : 2 };
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check pure map';
   var src = Object.create( null );
   src.a = 2;
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check Set';
   var src = new Set( [] );
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check HashMap';
   var src = new Map( [ [ 1, 1 ] ] );
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check BufferRaw';
   var src = new BufferRaw( 10 );
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check BufferTyped';
   var src = new U8x( [ 1, 2 ] );
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check object Number';
   var src = new Number( 2 );
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check BigIng';
   var src = 1n;
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'check instance of constructor';
@@ -1958,21 +1958,21 @@ function isPrototypeOf( test )
     return this;
   };
   var src = new Constr();
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'instance of Promise';
   var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
   test.case = 'function _Promise';
   var _Promise = function Promise(){};
   var src = new _Promise();
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, true );
 
-  test.close( 'subPrototype === superPrototype' );
+  test.close( 'subModuleForTesting12type === superModuleForTesting12type' );
 
   /* - */
 
@@ -1980,83 +1980,83 @@ function isPrototypeOf( test )
 
   test.case = 'check null';
   var src = null;
-  var got = _.isPrototypeOf( src, undefined );
+  var got = _.isModuleForTesting12typeOf( src, undefined );
   test.identical( got, false );
 
   test.case = 'check undefined';
   var src = undefined;
-  var got = _.isPrototypeOf( src, null );
+  var got = _.isModuleForTesting12typeOf( src, null );
   test.identical( got, false );
 
   test.case = 'check zero';
   var src = 0;
-  var got = _.isPrototypeOf( false, src );
+  var got = _.isModuleForTesting12typeOf( false, src );
   test.identical( got, false );
 
   test.case = 'check false';
   var src = false;
-  var got = _.isPrototypeOf( undefined, src );
+  var got = _.isModuleForTesting12typeOf( undefined, src );
   test.identical( got, false );
 
   test.case = 'check NaN';
   var src = NaN;
-  var got = _.isPrototypeOf( src, src );
+  var got = _.isModuleForTesting12typeOf( src, src );
   test.identical( got, false );
 
   test.case = 'check array';
   var src = [ 1, 2 ];
-  var got = _.isPrototypeOf( false, src );
+  var got = _.isModuleForTesting12typeOf( false, src );
   test.identical( got, false );
 
   test.case = 'check empty arguments array';
   var src = _.argumentsArrayMake( [] );
-  var got = _.isPrototypeOf( src, null );
+  var got = _.isModuleForTesting12typeOf( src, null );
   test.identical( got, false );
 
   test.case = 'check empty unroll';
   var src = _.unrollMake( [] );
-  var got = _.isPrototypeOf( 0, src );
+  var got = _.isModuleForTesting12typeOf( 0, src );
   test.identical( got, false );
 
   test.case = 'check map';
   var src = { a : 2 };
-  var got = _.isPrototypeOf( src, undefined );
+  var got = _.isModuleForTesting12typeOf( src, undefined );
   test.identical( got, false );
 
   test.case = 'check pure map';
   var src = Object.create( null );
   src.a = 2;
-  var got = _.isPrototypeOf( null, src );
+  var got = _.isModuleForTesting12typeOf( null, src );
   test.identical( got, false );
 
   test.case = 'check Set';
   var src = new Set( [] );
-  var got = _.isPrototypeOf( src, false );
+  var got = _.isModuleForTesting12typeOf( src, false );
   test.identical( got, false );
 
   test.case = 'check HashMap';
   var src = new Map( [ [ 1, 1 ] ] );
-  var got = _.isPrototypeOf( null, src );
+  var got = _.isModuleForTesting12typeOf( null, src );
   test.identical( got, false );
 
   test.case = 'check BufferRaw';
   var src = new BufferRaw( 10 );
-  var got = _.isPrototypeOf( src, undefined );
+  var got = _.isModuleForTesting12typeOf( src, undefined );
   test.identical( got, false );
 
   test.case = 'check BufferTyped';
   var src = new U8x( [ 1, 2 ] );
-  var got = _.isPrototypeOf( false, src );
+  var got = _.isModuleForTesting12typeOf( false, src );
   test.identical( got, false );
 
   test.case = 'check object Number';
   var src = new Number( 2 );
-  var got = _.isPrototypeOf( src, false );
+  var got = _.isModuleForTesting12typeOf( src, false );
   test.identical( got, false );
 
   test.case = 'check BigIng';
   var src = 1n;
-  var got = _.isPrototypeOf( null, src );
+  var got = _.isModuleForTesting12typeOf( null, src );
   test.identical( got, false );
 
   test.case = 'check instance of constructor';
@@ -2066,18 +2066,18 @@ function isPrototypeOf( test )
     return this;
   };
   var src = new Constr();
-  var got = _.isPrototypeOf( src, undefined );
+  var got = _.isModuleForTesting12typeOf( src, undefined );
   test.identical( got, false );
 
   test.case = 'instance of Promise';
   var src = new Promise( ( resolve, reject ) => { return resolve( 0 ) } );
-  var got = _.isPrototypeOf( false, src );
+  var got = _.isModuleForTesting12typeOf( false, src );
   test.identical( got, false );
 
   test.case = 'function _Promise';
   var _Promise = function Promise(){};
   var src = new _Promise();
-  var got = _.isPrototypeOf( undefined, src );
+  var got = _.isModuleForTesting12typeOf( undefined, src );
   test.identical( got, false );
 
 
@@ -2087,102 +2087,102 @@ function isPrototypeOf( test )
 
   test.open( 'two objects' );
 
-  test.case = 'subPrototype - Object.prototype, superPrototype - simple map';
+  test.case = 'subModuleForTesting12type - Object.prototype, superModuleForTesting12type - simple map';
   var src = {};
-  var got = _.isPrototypeOf( Object.prototype, src );
+  var got = _.isModuleForTesting12typeOf( Object.prototype, src );
   test.identical( got, true );
 
-  test.case = 'subPrototype - simple map, superPrototype - Object.prototype';
+  test.case = 'subModuleForTesting12type - simple map, superModuleForTesting12type - Object.prototype';
   var src = {};
-  var got = _.isPrototypeOf( src, Object.prototype );
+  var got = _.isModuleForTesting12typeOf( src, Object.prototype );
   test.identical( got, false );
 
-  test.case = 'subPrototype - simple map, superPrototype - simple map';
+  test.case = 'subModuleForTesting12type - simple map, superModuleForTesting12type - simple map';
   var src = {};
-  var got = _.isPrototypeOf( src, {} );
+  var got = _.isModuleForTesting12typeOf( src, {} );
   test.identical( got, false );
 
-  test.case = 'subPrototype - simple map, superPrototype - pure map';
+  test.case = 'subModuleForTesting12type - simple map, superModuleForTesting12type - pure map';
   var src = {};
-  var got = _.isPrototypeOf( src, Object.create( null ) );
+  var got = _.isModuleForTesting12typeOf( src, Object.create( null ) );
   test.identical( got, false );
 
-  test.case = 'subPrototype - pure map, superPrototype - simple map';
+  test.case = 'subModuleForTesting12type - pure map, superModuleForTesting12type - simple map';
   var src = {};
-  var got = _.isPrototypeOf( Object.create( null ), src );
+  var got = _.isModuleForTesting12typeOf( Object.create( null ), src );
   test.identical( got, false );
 
-  test.case = 'subPrototype - pure map, superPrototype - Object.prototype';
+  test.case = 'subModuleForTesting12type - pure map, superModuleForTesting12type - Object.prototype';
   var src = Object.create( null );
-  var got = _.isPrototypeOf( src, Object.prototype );
+  var got = _.isModuleForTesting12typeOf( src, Object.prototype );
   test.identical( got, false );
 
-  test.case = 'subPrototype - Object.prototype, superPrototype - pure map';
+  test.case = 'subModuleForTesting12type - Object.prototype, superModuleForTesting12type - pure map';
   var src = Object.create( null );
-  var got = _.isPrototypeOf( Object.prototype, src );
+  var got = _.isModuleForTesting12typeOf( Object.prototype, src );
   test.identical( got, false );
 
-  test.case = 'subPrototype - pure map, superPrototype - simple map';
+  test.case = 'subModuleForTesting12type - pure map, superModuleForTesting12type - simple map';
   var src = Object.create( null );
-  var got = _.isPrototypeOf( src, {} );
+  var got = _.isModuleForTesting12typeOf( src, {} );
   test.identical( got, false );
 
-  test.case = 'subPrototype - pure map, superPrototype - simple map';
+  test.case = 'subModuleForTesting12type - pure map, superModuleForTesting12type - simple map';
   var src = Object.create( null );
-  var got = _.isPrototypeOf( {}, src );
+  var got = _.isModuleForTesting12typeOf( {}, src );
   test.identical( got, false );
 
-  test.case = 'subPrototype - pure map, superPrototype - pure map';
+  test.case = 'subModuleForTesting12type - pure map, superModuleForTesting12type - pure map';
   var src = Object.create( null );
-  var got = _.isPrototypeOf( src, Object.create( null ) );
+  var got = _.isModuleForTesting12typeOf( src, Object.create( null ) );
   test.identical( got, false );
 
-  test.case = 'subPrototype - pure map, superPrototype - pure map from subPrototype';
+  test.case = 'subModuleForTesting12type - pure map, superModuleForTesting12type - pure map from subModuleForTesting12type';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
-  var got = _.isPrototypeOf( prototype, src );
+  var got = _.isModuleForTesting12typeOf( prototype, src );
   test.identical( got, true );
 
-  test.case = 'subPrototype - pure map from superPrototype, superPrototype - pure map';
+  test.case = 'subModuleForTesting12type - pure map from superModuleForTesting12type, superModuleForTesting12type - pure map';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
-  var got = _.isPrototypeOf( src, prototype );
+  var got = _.isModuleForTesting12typeOf( src, prototype );
   test.identical( got, false );
 
-  test.case = 'subPrototype - pure map from prototype, superPrototype - Object.prototype';
+  test.case = 'subModuleForTesting12type - pure map from prototype, superModuleForTesting12type - Object.prototype';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
-  var got = _.isPrototypeOf( src, Object.prototype );
+  var got = _.isModuleForTesting12typeOf( src, Object.prototype );
   test.identical( got, false );
 
-  test.case = 'subPrototype - Object.prototype, superPrototype - pure map from prototype';
+  test.case = 'subModuleForTesting12type - Object.prototype, superModuleForTesting12type - pure map from prototype';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
-  var got = _.isPrototypeOf( Object.prototype, src );
+  var got = _.isModuleForTesting12typeOf( Object.prototype, src );
   test.identical( got, false );
 
-  test.case = 'subPrototype - pure map from prototype, superPrototype - simple map';
+  test.case = 'subModuleForTesting12type - pure map from prototype, superModuleForTesting12type - simple map';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
-  var got = _.isPrototypeOf( src, {} );
+  var got = _.isModuleForTesting12typeOf( src, {} );
   test.identical( got, false );
 
-  test.case = 'subPrototype - simple map, superPrototype - pure map from prototype';
+  test.case = 'subModuleForTesting12type - simple map, superModuleForTesting12type - pure map from prototype';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
-  var got = _.isPrototypeOf( {}, src );
+  var got = _.isModuleForTesting12typeOf( {}, src );
   test.identical( got, false );
 
-  test.case = 'subPrototype - pure map from prototype, superPrototype - pure map';
+  test.case = 'subModuleForTesting12type - pure map from prototype, superModuleForTesting12type - pure map';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
-  var got = _.isPrototypeOf( src, Object.create( null ) );
+  var got = _.isModuleForTesting12typeOf( src, Object.create( null ) );
   test.identical( got, false );
 
-  test.case = 'subPrototype - pure map, superPrototype - pure map from prototype';
+  test.case = 'subModuleForTesting12type - pure map, superModuleForTesting12type - pure map from prototype';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
-  var got = _.isPrototypeOf( Object.create( null ), src );
+  var got = _.isModuleForTesting12typeOf( Object.create( null ), src );
   test.identical( got, false );
 
   /* */
@@ -2194,7 +2194,7 @@ function isPrototypeOf( test )
   var prototyped = function(){ this.y = 1; return this };
   prototyped.prototype = new proto2();
   var src = new prototyped();
-  var got = _.isPrototypeOf( src, proto2.prototype );
+  var got = _.isModuleForTesting12typeOf( src, proto2.prototype );
   test.identical( got, false );
 
   test.case = 'one constructor prototyped by another, prototype';
@@ -2204,7 +2204,7 @@ function isPrototypeOf( test )
   var prototyped = function(){ this.y = 1; return this };
   prototyped.prototype = new proto2();
   var src = new prototyped();
-  var got = _.isPrototypeOf( proto2.prototype, src );
+  var got = _.isModuleForTesting12typeOf( proto2.prototype, src );
   test.identical( got, true );
 
   test.close( 'two objects' );
@@ -2214,7 +2214,7 @@ function isPrototypeOf( test )
 
 function prototypeHas( test )
 {
-  test.open( 'subPrototype === superPrototype' );
+  test.open( 'subModuleForTesting12type === superModuleForTesting12type' );
 
   test.case = 'check null';
   var src = null;
@@ -2318,7 +2318,7 @@ function prototypeHas( test )
   var got = _.prototypeHas( src, src );
   test.identical( got, true );
 
-  test.close( 'subPrototype === superPrototype' );
+  test.close( 'subModuleForTesting12type === superModuleForTesting12type' );
 
   /* - */
 
@@ -2433,99 +2433,99 @@ function prototypeHas( test )
 
   test.open( 'two objects' );
 
-  test.case = 'superPrototype - Object.prototype, subPrototype - simple map';
+  test.case = 'superModuleForTesting12type - Object.prototype, subModuleForTesting12type - simple map';
   var src = {};
   var got = _.prototypeHas( Object.prototype, src );
   test.identical( got, false );
 
-  test.case = 'superPrototype - simple map, subPrototype - Object.prototype';
+  test.case = 'superModuleForTesting12type - simple map, subModuleForTesting12type - Object.prototype';
   var src = {};
   var got = _.prototypeHas( src, Object.prototype );
   test.identical( got, true );
 
-  test.case = 'superPrototype - simple map, subPrototype - simple map';
+  test.case = 'superModuleForTesting12type - simple map, subModuleForTesting12type - simple map';
   var src = {};
   var got = _.prototypeHas( src, {} );
   test.identical( got, false );
 
-  test.case = 'superPrototype - simple map, subPrototype - pure map';
+  test.case = 'superModuleForTesting12type - simple map, subModuleForTesting12type - pure map';
   var src = {};
   var got = _.prototypeHas( src, Object.create( null ) );
   test.identical( got, false );
 
-  test.case = 'superPrototype - pure map, subPrototype - simple map';
+  test.case = 'superModuleForTesting12type - pure map, subModuleForTesting12type - simple map';
   var src = {};
   var got = _.prototypeHas( Object.create( null ), src );
   test.identical( got, false );
 
-  test.case = 'superPrototype - pure map, subPrototype - Object.prototype';
+  test.case = 'superModuleForTesting12type - pure map, subModuleForTesting12type - Object.prototype';
   var src = Object.create( null );
   var got = _.prototypeHas( src, Object.prototype );
   test.identical( got, false );
 
-  test.case = 'superPrototype - Object.prototype, subPrototype - pure map';
+  test.case = 'superModuleForTesting12type - Object.prototype, subModuleForTesting12type - pure map';
   var src = Object.create( null );
   var got = _.prototypeHas( Object.prototype, src );
   test.identical( got, false );
 
-  test.case = 'superPrototype - pure map, subPrototype - simple map';
+  test.case = 'superModuleForTesting12type - pure map, subModuleForTesting12type - simple map';
   var src = Object.create( null );
   var got = _.prototypeHas( src, {} );
   test.identical( got, false );
 
-  test.case = 'superPrototype - pure map, subPrototype - simple map';
+  test.case = 'superModuleForTesting12type - pure map, subModuleForTesting12type - simple map';
   var src = Object.create( null );
   var got = _.prototypeHas( {}, src );
   test.identical( got, false );
 
-  test.case = 'superPrototype - pure map, subPrototype - pure map';
+  test.case = 'superModuleForTesting12type - pure map, subModuleForTesting12type - pure map';
   var src = Object.create( null );
   var got = _.prototypeHas( src, Object.create( null ) );
   test.identical( got, false );
 
-  test.case = 'superPrototype - pure map, subPrototype - pure map from superPrototype';
+  test.case = 'superModuleForTesting12type - pure map, subModuleForTesting12type - pure map from superModuleForTesting12type';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
   var got = _.prototypeHas( prototype, src );
   test.identical( got, false );
 
-  test.case = 'superPrototype - pure map from subPrototype, subPrototype - pure map';
+  test.case = 'superModuleForTesting12type - pure map from subModuleForTesting12type, subModuleForTesting12type - pure map';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
   var got = _.prototypeHas( src, prototype );
   test.identical( got, true );
 
-  test.case = 'superPrototype - pure map from prototype, subPrototype - Object.prototype';
+  test.case = 'superModuleForTesting12type - pure map from prototype, subModuleForTesting12type - Object.prototype';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
   var got = _.prototypeHas( src, Object.prototype );
   test.identical( got, false );
 
-  test.case = 'superPrototype - Object.prototype, subPrototype - pure map from prototype';
+  test.case = 'superModuleForTesting12type - Object.prototype, subModuleForTesting12type - pure map from prototype';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
   var got = _.prototypeHas( Object.prototype, src );
   test.identical( got, false );
 
-  test.case = 'superPrototype - pure map from prototype, subPrototype - simple map';
+  test.case = 'superModuleForTesting12type - pure map from prototype, subModuleForTesting12type - simple map';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
   var got = _.prototypeHas( src, {} );
   test.identical( got, false );
 
-  test.case = 'superPrototype - simple map, subPrototype - pure map from prototype';
+  test.case = 'superModuleForTesting12type - simple map, subModuleForTesting12type - pure map from prototype';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
   var got = _.prototypeHas( {}, src );
   test.identical( got, false );
 
-  test.case = 'superPrototype - pure map from prototype, subPrototype - pure map';
+  test.case = 'superModuleForTesting12type - pure map from prototype, subModuleForTesting12type - pure map';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
   var got = _.prototypeHas( src, Object.create( null ) );
   test.identical( got, false );
 
-  test.case = 'superPrototype - pure map, subPrototype - pure map from prototype';
+  test.case = 'superModuleForTesting12type - pure map, subModuleForTesting12type - pure map from prototype';
   var prototype = Object.create( null );
   var src = Object.create( prototype );
   var got = _.prototypeHas( Object.create( null ), src );
@@ -2572,7 +2572,7 @@ function prototypeHas( test )
 
 //
 
-function prototypeIs( test ) /* qqq : merge test wProto/prototypeIs in this one | Dmytro : routine extended by cases from wProto */
+function prototypeIs( test ) /* qqq : merge test wModuleForTesting12/prototypeIs in this one | Dmytro : routine extended by cases from wModuleForTesting12 */
 {
   test.case = 'check null';
   var got = _.prototypeIs( null );
@@ -2699,27 +2699,27 @@ function prototypeIs( test ) /* qqq : merge test wProto/prototypeIs in this one 
   /* */
 
   test.case = 'check prototype of array';
-  var got = _.prototypeIs( Object.getPrototypeOf( [] ) );
+  var got = _.prototypeIs( Object.getModuleForTesting12typeOf( [] ) );
   test.identical( got, true );
 
   test.case = 'check prototype of regexp';
-  var got = _.prototypeIs( Object.getPrototypeOf( /x/ ) );
+  var got = _.prototypeIs( Object.getModuleForTesting12typeOf( /x/ ) );
   test.identical( got, true );
 
   test.case = 'check prototype of Date instance';
-  var got = _.prototypeIs( Object.getPrototypeOf( new Date() ) );
+  var got = _.prototypeIs( Object.getModuleForTesting12typeOf( new Date() ) );
   test.identical( got, true );
 
   test.case = 'check prototype of BufferTyped instance';
-  var got = _.prototypeIs( Object.getPrototypeOf( new F32x() ) );
+  var got = _.prototypeIs( Object.getModuleForTesting12typeOf( new F32x() ) );
   test.identical( got, true );
 
   test.case = 'check prototype of function instance';
-  var got = _.prototypeIs( Object.getPrototypeOf( new (function(){})() ) );
+  var got = _.prototypeIs( Object.getModuleForTesting12typeOf( new (function(){})() ) );
   test.identical( got, true );
 
   test.case = 'check prototype of Self';
-  var got = _.prototypeIs( Object.getPrototypeOf( Self ) );
+  var got = _.prototypeIs( Object.getModuleForTesting12typeOf( Self ) );
   test.identical( got, true );
 
   /* */
@@ -2778,7 +2778,7 @@ function prototypeIs( test ) /* qqq : merge test wProto/prototypeIs in this one 
 
 //
 
-function prototypeIsStandard( test )  /* qqq : merge test wProto/prototypeIsStandard in this one | Dmytro : routine extended by cases from wProto */
+function prototypeIsStandard( test )  /* qqq : merge test wModuleForTesting12/prototypeIsStandard in this one | Dmytro : routine extended by cases from wModuleForTesting12 */
 {
   test.case = 'check null';
   var got = _.prototypeIsStandard( null );
@@ -2909,27 +2909,27 @@ function prototypeIsStandard( test )  /* qqq : merge test wProto/prototypeIsStan
   /* */
 
   test.case = 'check prototype of array';
-  var got = _.prototypeIsStandard( Object.getPrototypeOf( [] ) );
+  var got = _.prototypeIsStandard( Object.getModuleForTesting12typeOf( [] ) );
   test.identical( got, false );
 
   test.case = 'check prototype of regexp';
-  var got = _.prototypeIsStandard( Object.getPrototypeOf( /x/ ) );
+  var got = _.prototypeIsStandard( Object.getModuleForTesting12typeOf( /x/ ) );
   test.identical( got, false );
 
   test.case = 'check prototype of Date instance';
-  var got = _.prototypeIsStandard( Object.getPrototypeOf( new Date() ) );
+  var got = _.prototypeIsStandard( Object.getModuleForTesting12typeOf( new Date() ) );
   test.identical( got, false );
 
   test.case = 'check prototype of BufferTyped instance';
-  var got = _.prototypeIsStandard( Object.getPrototypeOf( new F32x() ) );
+  var got = _.prototypeIsStandard( Object.getModuleForTesting12typeOf( new F32x() ) );
   test.identical( got, false );
 
   test.case = 'check prototype of function instance';
-  var got = _.prototypeIsStandard( Object.getPrototypeOf( new (function(){})() ) );
+  var got = _.prototypeIsStandard( Object.getModuleForTesting12typeOf( new (function(){})() ) );
   test.identical( got, false );
 
   test.case = 'check prototype of Self';
-  var got = _.prototypeIsStandard( Object.getPrototypeOf( Self ) );
+  var got = _.prototypeIsStandard( Object.getModuleForTesting12typeOf( Self ) );
   test.identical( got, true );
 
   /* */
@@ -4276,7 +4276,7 @@ function procedureIs( test )
   var got = _.procedureIs( src );
   test.identical( got, false );
 
-  // instance of _.Procedure tested in module wProcedure
+  // instance of _.ModuleForTesting12ab tested in module wModuleForTesting12ab
 }
 
 //
@@ -4419,7 +4419,7 @@ function definitionIs( test )
   test.identical( got, false );
 
   /* aaa2 : ask */
-  /* Dmytro : instances of another modules tested outside of module wTools */
+  /* Dmytro : instances of another modules tested outside of module wModuleForTesting1 */
 
   // instance of _.Definition tested in module wBlueprint
 }
@@ -4595,7 +4595,7 @@ function objectLike( test )
 var Self =
 {
 
-  name : 'Tools.base.Typing',
+  name : 'ModuleForTesting1.base.Typing',
   silencing : 1,
 
   tests :
@@ -4620,7 +4620,7 @@ var Self =
     promiseLike,
 
     typeOf,
-    isPrototypeOf,
+    isModuleForTesting12typeOf,
     prototypeHas,
     prototypeIs,
     prototypeIsStandard,

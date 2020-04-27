@@ -1,4 +1,4 @@
-( function _ProtoLike_s_() {
+( function _ModuleForTesting12Like_s_() {
 
 'use strict';
 
@@ -6,12 +6,12 @@ if( typeof module !== 'undefined' )
 {
 
   // debugger;
-  // require( './Proto.s' );
+  // require( './ModuleForTesting12.s' );
 
 }
 
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 var _ObjectHasOwnProperty = Object.hasOwnProperty;
 var _nameFielded = _.nameFielded;
 
@@ -68,7 +68,7 @@ function like()
       else
       return new( _.constructorJoin( proto.constructor, arguments ) );
 
-      _.assertMapHasOnly( this,proto,'Prototype of the object ' + ( location ? 'defined at\n' + location + '\n' : '' ) + 'does not have requested fields.' );
+      _.assertMapHasOnly( this,proto,'ModuleForTesting12type of the object ' + ( location ? 'defined at\n' + location + '\n' : '' ) + 'does not have requested fields.' );
 
       _.mapComplement( this,proto );
       Object.preventExtensions( this );
@@ -118,7 +118,7 @@ function like()
   /* */
 
   helper.proto = proto;
-  helper.usingPrototype = false;
+  helper.usingModuleForTesting12type = false;
 
   Object.freeze( helper );
 
@@ -196,7 +196,7 @@ var symbolForAllClasses = Symbol.for( 'allClasses' );
 // declare
 // --
 
-var Proto =
+var ModuleForTesting12 =
 {
   is : is,
   isLike : isLike,
@@ -204,24 +204,24 @@ var Proto =
 
 _.assert( !_.construction );
 _.construction = Object.create( null );
-_.mapExtend( _.construction, Proto );
+_.mapExtend( _.construction, ModuleForTesting12 );
 
 // --
 // declare
 // --
 
-var Proto =
+var ModuleForTesting12 =
 {
   like : like,
 }
 
-_.mapExtend( _, Proto );
+_.mapExtend( _, ModuleForTesting12 );
 
 // --
 // declare
 // --
 
-var Proto =
+var ModuleForTesting12 =
 {
   name : name,
   also : also,
@@ -233,7 +233,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Proto,
+  extend : ModuleForTesting12,
 });
 
 _.accessor.readOnly

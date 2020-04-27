@@ -9,8 +9,8 @@ path :
 
 submodule :
 
-  wTools :
-    path : npm:///wTools
+  wModuleForTesting1 :
+    path : npm:///wModuleForTesting1
     enabled : 0 # submodule
   wCopyable :
     path : npm:///wCopyable
@@ -39,7 +39,7 @@ submodule :
   wFilesArchive :
     path : npm:///wfilesarchive
     enabled : 0 # submodule
-  wGitTools :
+  wGitModuleForTesting1 :
     path : npm:///wgittools
     enabled : 0 # submodule
   wFilesEncoders :

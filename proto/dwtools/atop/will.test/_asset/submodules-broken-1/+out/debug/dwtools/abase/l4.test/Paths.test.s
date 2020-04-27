@@ -5,11 +5,11 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../dwtools/ModuleForTesting1.s' );
 
   _.include( 'wTesting' );
   _.include( 'wStringer' );
-  _.include( 'wColor' );
+  _.include( 'wModuleForTesting1a' );
 
   // _.include( 'wFiles' );
 
@@ -18,7 +18,7 @@ if( typeof module !== 'undefined' )
 }
 
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 
 /*
 qqq : fix style problems and non-style problems in the test | Dmytro : fixed
@@ -1817,7 +1817,7 @@ function moveTextualReport( test )
 var Self =
 {
 
-  name : 'Tools.base.l3.path.basic.S',
+  name : 'ModuleForTesting1.base.l3.path.basic.S',
   silencing : 1,
 
   tests :

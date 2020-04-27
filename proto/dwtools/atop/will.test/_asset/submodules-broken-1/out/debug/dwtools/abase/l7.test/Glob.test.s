@@ -5,14 +5,14 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../dwtools/ModuleForTesting1.s' );
   _.include( 'wTesting' );
-  require( '../l5/PathTools.s' );
+  require( '../l5/PathModuleForTesting1.s' );
 
 }
 
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 
 // --
 // tests
@@ -728,7 +728,7 @@ function globFilterKeys( test )
 var Self =
 {
 
-  name : 'Tools.base.l3.path.Glob',
+  name : 'ModuleForTesting1.base.l3.path.Glob',
   silencing : 1,
   // verbosity : 7,
   // routine : 'relative',

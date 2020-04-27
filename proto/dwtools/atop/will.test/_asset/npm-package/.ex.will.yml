@@ -1,7 +1,7 @@
 
 about :
 
-  name : 'wTools'
+  name : 'wModuleForTesting1'
   description : 'Collection of general purpose tools for solving problems. Fundamentally extend JavaScript without corrupting it, so may be used solely or in conjunction with another module of such kind'
   version : '0.8.500'
   enabled : 1
@@ -15,7 +15,7 @@ about :
   - core
   - platform
   - tools
-  - wTools
+  - wModuleForTesting1
   - wBase
   - generic
   license : MIT

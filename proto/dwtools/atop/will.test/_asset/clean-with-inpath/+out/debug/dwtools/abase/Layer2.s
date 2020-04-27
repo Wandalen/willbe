@@ -1,4 +1,4 @@
-(function _wToolsLayer2_s_(){
+(function _wModuleForTesting1Layer2_s_(){
 
 'use strict';
 
@@ -7,16 +7,16 @@ if( typeof module !== 'undefined' && module !== null )
 
   require( './Layer1.s' );
 
-  // require( './l2/IncludeTools.s' );
-  // require( './l2/NameTools.s' );
+  // require( './l2/IncludeModuleForTesting1.s' );
+  // require( './l2/NameModuleForTesting1.s' );
   // require( './l2/StrBasic.s' );
   // require( './l2/ModulesRegistry.s' );
 
 }
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 // --
 // export

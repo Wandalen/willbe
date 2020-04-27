@@ -1,7 +1,7 @@
 
 submodule :
 
-  Tools : git+https:///github.com/Wandalen/wModuleForTesting1.git/@master
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/@master
   Logger : git+https:///github.com/Wandalen/wLogger.git/@master
   LoggerToJs : git+https:///github.com/Wandalen/wLoggerToJs.git/@master
   Consequence : git+https:///github.com/Wandalen/wConsequence.git/@master
@@ -11,7 +11,7 @@ submodule :
   FieldsStack : git+https:///github.com/Wandalen/wFieldsStack.git/@master
   Looker : git+https:///github.com/Wandalen/wLooker.git/@master
   PathFundamentals : git+https:///github.com/Wandalen/wPathFundamentals.git/@master
-  Proto : git+https:///github.com/Wandalen/wProto.git/@master
+  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/@master
   Selector : git+https:///github.com/Wandalen/wSelector.git/@master
   SelectorExtra : git+https:///github.com/Wandalen/wSelectorExtra.git/@master
 
@@ -26,7 +26,7 @@ submodule :
   WebUriFundamentals : git+https:///github.com/Wandalen/wWebUriFundamentals.git/@master
   Cloner : git+https:///github.com/Wandalen/wCloner.git/@master
   StringsExtra : git+https:///github.com/Wandalen/wStringsExtra.git/@master
-  Procedure : git+https:///github.com/Wandalen/wProcedure.git/@master
+  ModuleForTesting12ab : git+https:///github.com/Wandalen/wModuleForTesting12ab.git/@master
 
   Gdf : git+https:///github.com/Wandalen/wGdfStrategy.git/@master
   Replicator : git+https:///github.com/Wandalen/wReplicator.git/@master
@@ -36,8 +36,8 @@ submodule :
   # --
 
   RegexpObject : git+https:///github.com/Wandalen/wRegexpObject.git/@master
-  Color : git+https:///github.com/Wandalen/wColor.git/@master
-  Color256 : git+https:///github.com/Wandalen/wColor256.git/@master
+  ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/@master
+  ModuleForTesting1a256 : git+https:///github.com/Wandalen/wModuleForTesting1a256.git/@master
   ChangeTransactor : git+https:///github.com/Wandalen/wChangeTransactor.git/@master
   Vocabulary : git+https:///github.com/Wandalen/wVocabulary.git/@master
   CommandsAggregator : git+https:///github.com/Wandalen/wCommandsAggregator.git/@master

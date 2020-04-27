@@ -7,14 +7,14 @@
  */
 
 /**
-  Collection of general purpose tools for solving problems. Fundamentally extend JavaScript without spoiling namespace, so may be used solely or in conjunction with another module of such kind. Tools contain hundreds of routines to operate effectively with Array, SortedArray, Map, RegExp, Buffer, Time, String, Number, Routine, Error and other fundamental types. The module provides advanced tools for diagnostics and errors handling. Use it to have a stronger foundation for the application.
-  @module Tools/base/Fundamental
+  Collection of general purpose tools for solving problems. Fundamentally extend JavaScript without spoiling namespace, so may be used solely or in conjunction with another module of such kind. ModuleForTesting1 contain hundreds of routines to operate effectively with Array, SortedArray, Map, RegExp, Buffer, Time, String, Number, Routine, Error and other fundamental types. The module provides advanced tools for diagnostics and errors handling. Use it to have a stronger foundation for the application.
+  @module ModuleForTesting1/base/Fundamental
 */
 
 /**
- * wTools - Generic purpose tools of base level for solving problems in Java Script.
- * @namespace Tools
- * @module Tools/base/Fundamental
+ * wModuleForTesting1 - Generic purpose tools of base level for solving problems in Java Script.
+ * @namespace ModuleForTesting1
+ * @module ModuleForTesting1/base/Fundamental
  */
 
 // global
@@ -36,8 +36,8 @@ if( _global_.__GLOBAL_WHICH__ === 'real' )
 
   // if( _global_.wBase )
   // {
-  //   if( _global_.wTools.usePath )
-  //   _global_.wTools.usePath( __dirname + '/../..' ); /* zzz : remove later */
+  //   if( _global_.wModuleForTesting1.usePath )
+  //   _global_.wModuleForTesting1.usePath( __dirname + '/../..' ); /* zzz : remove later */
   //   module[ 'exports' ] = _global_.wBase;
   //   return;
   // }
@@ -45,7 +45,7 @@ if( _global_.__GLOBAL_WHICH__ === 'real' )
   if( _global_.wBase )
   {
     debugger;
-    throw new Error( 'wTools was included several times' );
+    throw new Error( 'wModuleForTesting1 was included several times' );
   }
 
 }
@@ -86,14 +86,14 @@ if( _global_._ )
   delete _global_._;
 }
 
-if( Object.hasOwnProperty.call( _global, 'wTools' ) && _global !== _realGlobal_ )
-throw Error( 'wTools was already defined' );
+if( Object.hasOwnProperty.call( _global, 'wModuleForTesting1' ) && _global !== _realGlobal_ )
+throw Error( 'wModuleForTesting1 was already defined' );
 
 //
 
-_global.wTools = Object.hasOwnProperty.call( _global, 'wTools' ) ? _global.wTools : Object.create( null );
-_realGlobal_.wTools = _realGlobal_.wTools || Object.create( null );
-let Self = _global.wTools;
+_global.wModuleForTesting1 = Object.hasOwnProperty.call( _global, 'wModuleForTesting1' ) ? _global.wModuleForTesting1 : Object.create( null );
+_realGlobal_.wModuleForTesting1 = _realGlobal_.wModuleForTesting1 || Object.create( null );
+let Self = _global.wModuleForTesting1;
 let _ = Self;
 
 Self.__GLOBAL_WHICH__ = _global.__GLOBAL_WHICH__;
@@ -144,8 +144,8 @@ _realGlobal_.HashMapWeak = WeakMap;
 // export
 // --
 
-_global[ 'wTools' ] = Self;
-_global.wTools = Self;
+_global[ 'wModuleForTesting1' ] = Self;
+_global.wModuleForTesting1 = Self;
 _global.wBase = Self;
 
 if( typeof module !== 'undefined' && module !== null )

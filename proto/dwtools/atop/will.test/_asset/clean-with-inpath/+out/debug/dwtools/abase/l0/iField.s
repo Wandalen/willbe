@@ -2,9 +2,9 @@
 
 'use strict';
 
-let Self = _global_.wTools.field = _global_.wTools.field || Object.create( null );
+let Self = _global_.wModuleForTesting1.field = _global_.wModuleForTesting1.field || Object.create( null );
 let _global = _global_;
-let _ = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
 
 let _ArraySlice = Array.prototype.slice;
 let _FunctionBind = Function.prototype.bind;

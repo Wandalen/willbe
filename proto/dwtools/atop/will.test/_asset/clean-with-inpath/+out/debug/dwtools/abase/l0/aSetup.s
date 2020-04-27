@@ -4,8 +4,8 @@
 
 let _global = _global_;
 let _realGlobal = _global._realGlobal_
-let _ = _global.wTools;
-let Self = _global.wTools.setup = _global.wTools.setup || Object.create( null );
+let _ = _global.wModuleForTesting1;
+let Self = _global.wModuleForTesting1.setup = _global.wModuleForTesting1.setup || Object.create( null );
 
 // --
 // setup

@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools.time = _global_.wTools.time || Object.create( null );
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1.time = _global_.wModuleForTesting1.time || Object.create( null );
 
 // --
 // implementation
@@ -41,7 +41,7 @@ function ready( timeOut, procedure, onReady )
   timeOut = 0;
 
   if( !procedure )
-  procedure = _.Procedure({ _stack : 1, _name : 'timeReady' });
+  procedure = _.ModuleForTesting12ab({ _stack : 1, _name : 'timeReady' });
 
   _.assert( _.procedureIs( procedure ) );
   _.assert( _.intIs( timeOut ) );
@@ -83,7 +83,7 @@ function readyJoin( context, routine, args )
   function _timeReady()
   {
     let args = arguments;
-    let procedure = _.Procedure({ _stack : 1, _name : 'timeReadyJoin' });
+    let procedure = _.ModuleForTesting12ab({ _stack : 1, _name : 'timeReadyJoin' });
     let joinedRoutine2 = _.routineSeal( this, joinedRoutine, args );
     return _.time.ready( procedure, joinedRoutine2 );
   }
@@ -93,7 +93,7 @@ function readyJoin( context, routine, args )
 
 /**
  * Routine creates timer that executes provided routine( onReady ) after some amout of time( delay ).
- * Returns wConsequence instance. {@link module:Tools/base/Consequence.wConsequence wConsequence}
+ * Returns wConsequence instance. {@link module:ModuleForTesting1/base/Consequence.wConsequence wConsequence}
  *
  * If ( onReady ) is not provided, time.out returns consequence that gives empty message after ( delay ).
  * If ( onReady ) is a routine, time.out returns consequence that gives message with value returned or error throwed by ( onReady ).
@@ -160,7 +160,7 @@ function readyJoin( context, routine, args )
  * @throws {Error} If ( delay ) is not a Number.
  * @throws {Error} If ( onEnd ) is not a routine or wConsequence instance.
  * @function time.out
- * @namespace Tools
+ * @namespace ModuleForTesting1
  */
 
 function out_pre( routine, args )
@@ -242,7 +242,7 @@ function out_body( o )
   _.assertRoutineOptions( out_body, arguments );
 
   if( o.procedure === null )
-  o.procedure = _.Procedure( 2 ).name( 'time.out' );
+  o.procedure = _.ModuleForTesting12ab( 2 ).name( 'time.out' );
   _.assert( _.procedureIs( o.procedure ) );
 
   // if( o.procedure.id === 2 )
@@ -311,7 +311,7 @@ let out = _.routineFromPreAndBody( out_pre, out_body );
 //
 
 /**
- * Routine works moslty same like {@link wTools.time.out} but has own small features:
+ * Routine works moslty same like {@link wModuleForTesting1.time.out} but has own small features:
  *  Is used to set execution time limit for async routines that can run forever or run too long.
  *  wConsequence instance returned by time.outError always give an error:
  *  - Own 'time.out' error message if ( onReady ) was not provided or it execution dont give any error.
@@ -349,7 +349,7 @@ let out = _.routineFromPreAndBody( out_pre, out_body );
  * @throws {Error} If ( delay ) is not a Number.
  * @throws {Error} If ( onReady ) is not a routine or wConsequence instance.
  * @function time.outError
- * @namespace Tools
+ * @namespace ModuleForTesting1
  */
 
 /* zzz : remove the body, use out_body */

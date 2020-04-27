@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools.compose = _global_.wTools.compose || Object.create( null );
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1.compose = _global_.wModuleForTesting1.compose || Object.create( null );
 
 let _ArraySlice = Array.prototype.slice;
 let _FunctionBind = Function.prototype.bind;

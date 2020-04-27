@@ -4,7 +4,7 @@
 
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 let _global = _global_;
-let _ = _global.wTools;
+let _ = _global.wModuleForTesting1;
 let _err = _._err;
 
 // --
@@ -29,7 +29,7 @@ _.diagnosticWatchFields
 _.diagnosticWatchFields
 ({
   target : state,
-  names : 'filterColor',
+  names : 'filterModuleForTesting1a',
 });
 
 _.diagnosticWatchFields
@@ -813,7 +813,7 @@ diagnosticStructureGenerate_body.defaults =
  * @throws { Error } If arguments.length is more then one.
  * @throws { Error } If options map {-o-} is not mapLike.
  * @throws { Error } If options map {-o-} has unknown options.
- * @namespace Tools
+ * @namespace ModuleForTesting1
  */
 
 let diagnosticStructureGenerate = _.routineFromPreAndBody( diagnosticStructureGenerate_pre, diagnosticStructureGenerate_body );
@@ -830,8 +830,8 @@ function isInstanceOrClass( _constructor, _this )
   (
     _this === _constructor ||
     _this instanceof _constructor ||
-    Object.isPrototypeOf.call( _constructor,_this ) ||
-    Object.isPrototypeOf.call( _constructor,_this.prototype )
+    Object.isModuleForTesting12typeOf.call( _constructor,_this ) ||
+    Object.isModuleForTesting12typeOf.call( _constructor,_this.prototype )
   );
   return result;
 }
@@ -905,7 +905,7 @@ let error =
   ErrorAbort,
 }
 
-let ExtendTools =
+let ExtendModuleForTesting1 =
 {
 
   // diagnosticCode,
@@ -936,7 +936,7 @@ let ExtendTools =
 }
 
 Object.assign( _.error, error );
-Object.assign( _, ExtendTools );
+Object.assign( _, ExtendModuleForTesting1 );
 
 // --
 // export

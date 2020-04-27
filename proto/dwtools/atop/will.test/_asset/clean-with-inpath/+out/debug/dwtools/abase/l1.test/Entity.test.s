@@ -19,7 +19,7 @@ if( typeof module !== 'undefined' )
 }
 
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 var Self = {};
 
 // --
@@ -2699,7 +2699,7 @@ function entitySize( test )
 var Self =
 {
 
-  name : 'Tools.base.Entity',
+  name : 'ModuleForTesting1.base.Entity',
   silencing : 1,
 
   tests :

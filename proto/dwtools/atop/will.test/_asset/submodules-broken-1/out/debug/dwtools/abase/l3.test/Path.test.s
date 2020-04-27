@@ -5,17 +5,17 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../dwtools/ModuleForTesting1.s' );
 
   _.include( 'wTesting' );
   _.include( 'wStringer' );
 
-  require( '../l2/PathBasic.s' );
+  require( '../l2/ModuleForTesting2.s' );
 
 }
 
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 
 // --
 // tests
@@ -8932,7 +8932,7 @@ function commonMapsInArgs( test )
 var Self =
 {
 
-  name : 'Tools.base.l2.path.Basic',
+  name : 'ModuleForTesting1.base.l2.path.Basic',
   silencing : 1,
 
   tests :

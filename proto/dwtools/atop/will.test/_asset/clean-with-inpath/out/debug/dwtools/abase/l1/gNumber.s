@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 let _ArrayIndexOf = Array.prototype.indexOf;
 let _ArrayLastIndexOf = Array.prototype.lastIndexOf;
@@ -166,7 +166,7 @@ function numbersSlice( src,f,l )
  * @function numberRandom
  * @throws { Error } If arguments.length is less or more then one.
  * @throws { Error } If range {-range-} is not a Number or not a Range.
- * @namespace Tools
+ * @namespace ModuleForTesting1
  */
 
 function numberRandom( range )
@@ -237,7 +237,7 @@ function numberRandom( range )
  * @function intRandom
  * @throws { Error } If arguments.length is less or more then one.
  * @throws { Error } If range {-range-} is not a Number or not a Range.
- * @namespace Tools
+ * @namespace ModuleForTesting1
  */
 
 function intRandom( range )

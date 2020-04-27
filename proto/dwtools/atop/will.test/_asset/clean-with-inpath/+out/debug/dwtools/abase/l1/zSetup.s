@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global.wTools;
-let Self = _global.wTools.setup = _global.wTools.setup || Object.create( null );
+let _ = _global.wModuleForTesting1;
+let Self = _global.wModuleForTesting1.setup = _global.wModuleForTesting1.setup || Object.create( null );
 
 // --
 // setup
@@ -310,13 +310,13 @@ function _setupTesterPlaceholder()
 
 //
 
-function _setupProcedure()
+function _setupModuleForTesting12ab()
 {
 
-  if( _realGlobal_ !== _global && _realGlobal_.wTools && _realGlobal_.wTools.setup && _realGlobal_.wTools.setup._entryProcedureStack )
-  Self._entryProcedureStack =  _realGlobal_.wTools.setup._entryProcedureStack;
+  if( _realGlobal_ !== _global && _realGlobal_.wModuleForTesting1 && _realGlobal_.wModuleForTesting1.setup && _realGlobal_.wModuleForTesting1.setup._entryModuleForTesting12abStack )
+  Self._entryModuleForTesting12abStack =  _realGlobal_.wModuleForTesting1.setup._entryModuleForTesting12abStack;
 
-  if( Self._entryProcedureStack )
+  if( Self._entryModuleForTesting12abStack )
   return;
 
   let stack = _.introspector.stack().split( '\n' );
@@ -332,7 +332,7 @@ function _setupProcedure()
     }
   }
 
-  Self._entryProcedureStack = stack.join( '\n' );
+  Self._entryModuleForTesting12abStack = stack.join( '\n' );
 }
 
 //
@@ -348,7 +348,7 @@ function _Setup9()
     _.setup._setupUncaughtErrorHandler9();
     _.setup._setupLoggerPlaceholder();
     _.setup._setupTesterPlaceholder();
-    _.setup._setupProcedure();
+    _.setup._setupModuleForTesting12ab();
   }
 
   _.assert( !!_.time && !!_.time.now );
@@ -362,7 +362,7 @@ function _Setup9()
 let Fields =
 {
 
-  _entryProcedureStack : null,
+  _entryModuleForTesting12abStack : null,
 
 }
 
@@ -375,7 +375,7 @@ let Routines =
   _setupConfig,
   _setupLoggerPlaceholder,
   _setupTesterPlaceholder,
-  _setupProcedure,
+  _setupModuleForTesting12ab,
 
   _Setup9,
 

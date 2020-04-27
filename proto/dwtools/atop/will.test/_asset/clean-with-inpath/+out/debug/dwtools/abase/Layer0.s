@@ -1,5 +1,5 @@
 //#! /usr/bin/env node
-(function _wToolsLayer0_s_(){
+(function _wModuleForTesting1Layer0_s_(){
 
 'use strict';
 
@@ -95,8 +95,8 @@ if( typeof module !== 'undefined' && module !== null )
 }
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 // --
 // export

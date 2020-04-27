@@ -28,7 +28,7 @@ module:
         - chrome >= 60.0.0
         - firefox >= 60.0.0
       keywords:
-        - wTools
+        - wModuleForTesting1
     path:
       module.willfiles:
         criterion:
@@ -109,7 +109,7 @@ module:
         path:
           - ../proto
           - ../proto/dwtools
-          - ../proto/dwtools/Tools.s
+          - ../proto/dwtools/ModuleForTesting1.s
           - ../proto/dwtools/abase
           - ../proto/dwtools/amid
           - ../proto/dwtools/amid/changes
@@ -142,7 +142,7 @@ module:
         path:
           - ../proto
           - ../proto/dwtools
-          - ../proto/dwtools/Tools.s
+          - ../proto/dwtools/ModuleForTesting1.s
           - ../proto/dwtools/abase
           - ../proto/dwtools/amid
           - ../proto/dwtools/amid/changes
@@ -409,7 +409,7 @@ module:
         - chrome >= 60.0.0
         - firefox >= 60.0.0
       keywords:
-        - wTools
+        - wModuleForTesting1
     path:
       module.willfiles:
         criterion:

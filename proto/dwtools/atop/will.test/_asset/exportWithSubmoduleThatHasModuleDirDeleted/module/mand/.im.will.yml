@@ -1,0 +1,70 @@
+
+submodule :
+
+  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/@master
+
+path :
+
+  proto : './proto'
+  temp : 'out'
+  in : '.'
+  out : 'out'
+  out.debug :
+    path : './out/debug/**'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release/**'
+    criterion :
+      debug : 0
+
+reflector :
+
+  reflect.proto :
+    inherit : predefined.*
+    criterion :
+      debug : [ 0,1 ]
+    filePath :
+      path::proto : path::out.*=1
+
+  reflect.submodules :
+    inherit : submodule::*/exported::*=1/reflector::exported.files*=1
+    dst :
+      basePath : .
+      prefixPath : "{path::out.*=1}"
+    criterion :
+      debug : 1
+
+step :
+
+  clean.out :
+    inherit : files.delete
+    filePath : '{path::out.*=1}/**'
+    criterion :
+      debug : [ 0,1 ]
+
+  test :
+    shell : wtest out.debug v:2 n:1
+    criterion :
+      test : 1
+
+build :
+
+  debug.raw.test :
+    criterion :
+      debug : 1
+      raw : 1
+      test : 1
+    steps :
+      - test
+
+  debug.raw :
+    criterion :
+      default : 1
+      debug : 1
+      raw : 1
+    steps :
+      - submodules.update
+      - clean.out.*=1
+      - reflect.proto.*=1
+      - reflect.submodules*=1

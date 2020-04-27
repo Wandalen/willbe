@@ -7,8 +7,8 @@ path :
   Looker.remote : git+https:///github.com/Wandalen/wLooker.git
   Looker.local : 'Looker'
 
-  Proto.remote : git+https:///github.com/Wandalen/wProto.git
-  Proto.local : 'Proto'
+  ModuleForTesting12.remote : git+https:///github.com/Wandalen/wModuleForTesting12.git
+  ModuleForTesting12.local : 'ModuleForTesting12'
 
 reflector :
 
@@ -63,7 +63,7 @@ reflector :
     filePath :
       path::ModuleForTesting2.remote : path::ModuleForTesting2.local
       path::Looker.remote : path::Looker.local
-      path::Proto.remote : path::Proto.local
+      path::ModuleForTesting12.remote : path::ModuleForTesting12.local
 
 step :
 

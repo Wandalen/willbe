@@ -6,9 +6,9 @@ about :
 
 submodule :
 
-  Color : git+https:///github.com/Wandalen/wColor.git/
-  Procedure : git+https:///github.com/Wandalen/wProcedure.git/out/wProcedure.out
-  Proto : git+https:///github.com/Wandalen/wProto.git/out/wProto.out.will
+  ModuleForTesting1a : git+https:///github.com/Wandalen/wModuleForTesting1a.git/
+  ModuleForTesting12ab : git+https:///github.com/Wandalen/wModuleForTesting12ab.git/out/wModuleForTesting12ab.out
+  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out.will
   ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will.yml
 
 path :

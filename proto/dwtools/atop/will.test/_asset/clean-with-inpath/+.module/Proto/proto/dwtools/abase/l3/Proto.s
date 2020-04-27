@@ -1,4 +1,4 @@
-( function _Proto_s_() {
+( function _ModuleForTesting12_s_() {
 
 'use strict';
 
@@ -45,16 +45,16 @@
 
 */
 
-let Self = _global_.wTools;
+let Self = _global_.wModuleForTesting1;
 let _global = _global_;
-let _ = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
 
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 let _ObjectPropertyIsEumerable = Object.propertyIsEnumerable;
 let _nameFielded = _.nameFielded;
 
-_.assert( _.objectIs( _.field ), 'wProto needs Tools/dwtools/abase/l1/FieldMapper.s' );
-_.assert( _.routineIs( _nameFielded ), 'wProto needs Tools/dwtools/l3/NameTools.s' );
+_.assert( _.objectIs( _.field ), 'wModuleForTesting12 needs ModuleForTesting1/dwtools/abase/l1/FieldMapper.s' );
+_.assert( _.routineIs( _nameFielded ), 'wModuleForTesting12 needs ModuleForTesting1/dwtools/l3/NameModuleForTesting1.s' );
 
 //
 
@@ -85,11 +85,11 @@ function constructorOf( src )
     if( src.prototype )
     proto = src.prototype; /* constructor */
     else
-    proto = Object.getPrototypeOf( Object.getPrototypeOf( src ) ); /* instance behind ruotine */
+    proto = Object.getModuleForTesting12typeOf( Object.getModuleForTesting12typeOf( src ) ); /* instance behind ruotine */
   }
   else
   {
-    proto = Object.getPrototypeOf( src ); /* instance */
+    proto = Object.getModuleForTesting12typeOf( src ); /* instance */
   }
 
   if( proto === null )
@@ -110,12 +110,12 @@ function isSubClassOf( subCls, cls )
   if( cls === subCls )
   return true;
 
-  return Object.isPrototypeOf.call( cls.prototype, subCls.prototype );
+  return Object.isModuleForTesting12typeOf.call( cls.prototype, subCls.prototype );
 }
 
 //
 
-function isSubPrototypeOf( sub, parent )
+function isSubModuleForTesting12typeOf( sub, parent )
 {
 
   _.assert( !!parent );
@@ -125,7 +125,7 @@ function isSubPrototypeOf( sub, parent )
   if( parent === sub )
   return true;
 
-  return Object.isPrototypeOf.call( parent, sub );
+  return Object.isModuleForTesting12typeOf.call( parent, sub );
 
 }
 
@@ -134,8 +134,8 @@ function isSubPrototypeOf( sub, parent )
 /**
  * Get parent's constructor.
  * @function parentOf
- * @namespace Tools
- * @module Tools/base/Proto
+ * @namespace ModuleForTesting1
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
 function parentOf( src )
@@ -144,7 +144,7 @@ function parentOf( src )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  let proto = Object.getPrototypeOf( c.prototype );
+  let proto = Object.getModuleForTesting12typeOf( c.prototype );
   let result = proto ? proto.constructor : null;
 
   return result;
@@ -152,7 +152,7 @@ function parentOf( src )
 
 //
 
-function _classConstructorAndPrototypeGet( o )
+function _classConstructorAndModuleForTesting12typeGet( o )
 {
   let result = Object.create( null );
 
@@ -197,7 +197,7 @@ function _classConstructorAndPrototypeGet( o )
 
 function prototypeOf( src )
 {
-  _.assert( arguments.length === 1, 'Expects single argument, probably you want routine isPrototypeOf' );
+  _.assert( arguments.length === 1, 'Expects single argument, probably you want routine isModuleForTesting12typeOf' );
 
   if( !( 'constructor' in src ) )
   return null;
@@ -216,8 +216,8 @@ function prototypeOf( src )
  * @param {array} protos - maps to united.
  * @return {object} united interface.
  * @function prototypeUnitedInterface
- * @namespace Tools
- * @module Tools/base/Proto
+ * @namespace ModuleForTesting1
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
 function prototypeUnitedInterface( protos )
@@ -287,8 +287,8 @@ function prototypeUnitedInterface( protos )
  * Append prototype to object. Find archi parent and replace its proto.
  * @param {object} dstMap - dst object to append proto.
  * @function prototypeAppend
- * @namespace Tools
- * @module Tools/base/Proto
+ * @namespace ModuleForTesting1
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
 function prototypeAppend( dstMap )
@@ -303,7 +303,7 @@ function prototypeAppend( dstMap )
     _.assert( _.objectIs( proto ) );
 
     let parent = _.prototypeArchyGet( dstMap );
-    Object.setPrototypeOf( parent, proto );
+    Object.setModuleForTesting12typeOf( parent, proto );
 
   }
 
@@ -314,21 +314,21 @@ function prototypeAppend( dstMap )
 
 /**
  * Returns parent which has default proto.
- * @param {object} srcPrototype - dst object to append proto.
+ * @param {object} srcModuleForTesting12type - dst object to append proto.
  * @function prototypeArchyGet
- * @namespace Tools
- * @module Tools/base/Proto
+ * @namespace ModuleForTesting1
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
-function prototypeArchyGet( srcPrototype )
+function prototypeArchyGet( srcModuleForTesting12type )
 {
 
-  _.assert( _.objectIs( srcPrototype ) );
+  _.assert( _.objectIs( srcModuleForTesting12type ) );
 
-  while( Object.getPrototypeOf( srcPrototype ) !== Object.prototype )
-  srcPrototype = Object.getPrototypeOf( srcPrototype );
+  while( Object.getModuleForTesting12typeOf( srcModuleForTesting12type ) !== Object.prototype )
+  srcModuleForTesting12type = Object.getModuleForTesting12typeOf( srcModuleForTesting12type );
 
-  return srcPrototype;
+  return srcModuleForTesting12type;
 }
 
 //
@@ -440,8 +440,8 @@ prototypeCrossRefer.defaults =
 //  * Iterate through prototypes.
 //  * @param {object} proto - prototype
 //  * @function prototypeEach
-//  * @namespace Tools
-// * @module Tools/base/Proto
+//  * @namespace ModuleForTesting1
+// * @module ModuleForTesting1/base/ModuleForTesting12
 //  */
 //
 // function prototypeEach( proto, onEach )
@@ -457,7 +457,7 @@ prototypeCrossRefer.defaults =
 //     if( onEach )
 //     onEach.call( this, proto );
 //     result.push( proto );
-//     proto = Object.getPrototypeOf( proto );
+//     proto = Object.getModuleForTesting12typeOf( proto );
 //   }
 //   while( proto );
 //
@@ -535,7 +535,7 @@ function propertyDescriptorActiveGet( object, name )
       result.object = object;
       return result;
     }
-    object = Object.getPrototypeOf( object );
+    object = Object.getModuleForTesting12typeOf( object );
   }
   while( object );
 
@@ -561,7 +561,7 @@ function propertyDescriptorGet( object, name )
       result.object = object;
       return result;
     }
-    object = Object.getPrototypeOf( object );
+    object = Object.getModuleForTesting12typeOf( object );
   }
   while( object );
 
@@ -573,30 +573,30 @@ function propertyDescriptorGet( object, name )
 // --
 
 /**
- * @summary Defines hidden property with name( name ) and value( value ) on target object( dstPrototype ).
+ * @summary Defines hidden property with name( name ) and value( value ) on target object( dstModuleForTesting12type ).
  *
  * @description
  * Property is defined as not enumarable.
  * Also accepts second argument as map of properties.
  * If second argument( name ) is a map and third argument( value ) is also defined, then all properties will have value of last arg.
  *
- * @param {Object} dstPrototype - target object
+ * @param {Object} dstModuleForTesting12type - target object
  * @param {String|Object} name - name of property or map of names
  * @param {*} value - destination object
  *
  * @throws {Exception} If number of arguments is not supported.
- * @throws {Exception} If dstPrototype is not an Object
+ * @throws {Exception} If dstModuleForTesting12type is not an Object
  * @function propertyHide
  *
- * @namespace Tools
- * @module Tools/base/Proto
+ * @namespace ModuleForTesting1
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
-function propertyHide( dstPrototype, name, value )
+function propertyHide( dstModuleForTesting12type, name, value )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3 );
-  _.assert( !_.primitiveIs( dstPrototype ), () => 'dstPrototype is needed, but got ' + _.toStrShort( dstPrototype ) );
+  _.assert( !_.primitiveIs( dstModuleForTesting12type ), () => 'dstModuleForTesting12type is needed, but got ' + _.toStrShort( dstModuleForTesting12type ) );
 
   if( _.containerIs( name ) )
   {
@@ -607,19 +607,19 @@ function propertyHide( dstPrototype, name, value )
     _.each( name, ( v, n ) =>
     {
       if( value !== undefined )
-      _.propertyHide( dstPrototype, n, value );
+      _.propertyHide( dstModuleForTesting12type, n, value );
       else
-      _.propertyHide( dstPrototype, n, v );
+      _.propertyHide( dstModuleForTesting12type, n, v );
     });
     return;
   }
 
   if( value === undefined )
-  value = dstPrototype[ name ];
+  value = dstModuleForTesting12type[ name ];
 
   _.assert( _.strIs( name ), 'name is needed, but got', name );
 
-  Object.defineProperty( dstPrototype, name,
+  Object.defineProperty( dstModuleForTesting12type, name,
   {
     value,
     enumerable : false,
@@ -633,7 +633,7 @@ function propertyHide( dstPrototype, name, value )
 
 /**
  * Makes constants properties on object by creating new or replacing existing properties.
- * @param {object} dstPrototype - prototype of class which will get new constant property.
+ * @param {object} dstModuleForTesting12type - prototype of class which will get new constant property.
  * @param {object} namesObject - name/value map of constants.
  *
  * @example
@@ -645,17 +645,17 @@ function propertyHide( dstPrototype, name, value )
  *
  * @function propertyConstant
  * @throws {exception} If no argument provided.
- * @throws {exception} If( dstPrototype ) is not a Object.
+ * @throws {exception} If( dstModuleForTesting12type ) is not a Object.
  * @throws {exception} If( name ) is not a Map.
- * @namespace Tools
- * @module Tools/base/Proto
+ * @namespace ModuleForTesting1
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
-function propertyConstant( dstPrototype, name, value )
+function propertyConstant( dstModuleForTesting12type, name, value )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3 );
-  _.assert( !_.primitiveIs( dstPrototype ), () => 'dstPrototype is needed, but got ' + _.toStrShort( dstPrototype ) );
+  _.assert( !_.primitiveIs( dstModuleForTesting12type ), () => 'dstModuleForTesting12type is needed, but got ' + _.toStrShort( dstModuleForTesting12type ) );
 
   if( _.containerIs( name ) )
   {
@@ -666,19 +666,19 @@ function propertyConstant( dstPrototype, name, value )
     _.each( name, ( v, n ) =>
     {
       if( value !== undefined )
-      _.propertyConstant( dstPrototype, n, value );
+      _.propertyConstant( dstModuleForTesting12type, n, value );
       else
-      _.propertyConstant( dstPrototype, n, v );
+      _.propertyConstant( dstModuleForTesting12type, n, v );
     });
     return;
   }
 
   if( value === undefined )
-  value = dstPrototype[ name ];
+  value = dstModuleForTesting12type[ name ];
 
   _.assert( _.strIs( name ), 'name is needed, but got', name );
 
-  Object.defineProperty( dstPrototype, name,
+  Object.defineProperty( dstModuleForTesting12type, name,
   {
     value,
     enumerable : true,
@@ -974,32 +974,32 @@ let Combining = [ 'rewrite', 'supplement', 'apppend', 'prepend' ];
 
 /**
  * @typedef {Object} DefaultFieldsGroups - contains predefined class fields groups.
- * @module Tools/base/Proto
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @typedef {Object} DefaultFieldsGroupsRelations - contains predefined class relationship types.
- * @module Tools/base/Proto
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @typedef {Object} DefaultFieldsGroupsCopyable - contains predefined copyable class fields groups.
- * @module Tools/base/Proto
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @typedef {Object} DefaultFieldsGroupsTight
- * @module Tools/base/Proto
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @typedef {Object} DefaultFieldsGroupsInput
- * @module Tools/base/Proto
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @typedef {Object} DefaultForbiddenNames - contains names of forbidden properties
- * @module Tools/base/Proto
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
 let DefaultFieldsGroups = Object.create( null );
@@ -1047,7 +1047,7 @@ Object.freeze( DefaultForbiddenNames );
 // define
 // --
 
-let ToolsExtension =
+let ModuleForTesting1Extension =
 {
 
   constructorIsStandard,
@@ -1055,10 +1055,10 @@ let ToolsExtension =
   classGet : constructorOf,
 
   isSubClassOf,
-  isSubPrototypeOf,
+  isSubModuleForTesting12typeOf,
 
   parentOf,
-  _classConstructorAndPrototypeGet,
+  _classConstructorAndModuleForTesting12typeGet,
 
   // prototype
 
@@ -1067,7 +1067,7 @@ let ToolsExtension =
   prototypeUnitedInterface, /* experimental */
 
   prototypeAppend, /* experimental */
-  // prototypeHasPrototype, /* moved */
+  // prototypeHasModuleForTesting12type, /* moved */
   // prototypeHasProperty, /* moved */
   prototypeArchyGet, /* experimental */
   prototypeHasField,
@@ -1118,7 +1118,7 @@ let ToolsExtension =
 
 //
 
-_.mapExtend( _, ToolsExtension );
+_.mapExtend( _, ModuleForTesting1Extension );
 
 // --
 // export

@@ -9,7 +9,7 @@ if( typeof module !== 'undefined' )
 }
 
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 
 //--
 // map checker
@@ -1508,7 +1508,7 @@ function mapToArray( test )
   test.case = 'src - map prototyped by another map';
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   var got = _.mapToArray( a );
   var expected = [ [ 'a', 1 ], [ 'b', 2 ] ];
   test.identical( got, expected );
@@ -1516,7 +1516,7 @@ function mapToArray( test )
   test.case = 'src - map prototyped by another map, own pairs';
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   var got = _.mapToArray.call( { own : 1 }, a );
   var expected = [ [ 'a', 1 ], [ 'b', 2 ] ];
   test.identical( got, expected );
@@ -1524,7 +1524,7 @@ function mapToArray( test )
   test.case = 'src - map prototyped by another map, own pairs, not enumerable property';
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   Object.defineProperty( a, 'k', { enumerable : 0, value : 3 } );
   var got = _.mapToArray.call( { enumerable : 0, own : 1 }, a );
   var expected = [ [ 'a', 1 ], [ 'b', 2 ] ];
@@ -1533,7 +1533,7 @@ function mapToArray( test )
   test.case = 'src - map prototyped by another map, own pairs disable, not enumerable property';
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   Object.defineProperty( a, 'k', { enumerable : 0, value : 3 } );
   var got = _.mapToArray.call( { enumerable : 0, own : 0 }, a );
   var expected = [ [ 'a', 1 ], [ 'b', 2 ] ];
@@ -1635,7 +1635,7 @@ function mapKeys( test )
   test.identical( got, expected );
 
   var f = function(){};
-  Object.setPrototypeOf( f, String );
+  Object.setModuleForTesting12typeOf( f, String );
   f.a = 1;
   var got = _.mapKeys( f );
   var expected = [ 'a' ];
@@ -1650,7 +1650,7 @@ function mapKeys( test )
   test.case = 'options';
   var a = { a : 1 }
   var b = { b : 2 }
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /* own off */
 
@@ -1734,8 +1734,8 @@ function mapOwnKeys( test )
   var a = { a : 1 };
   var b = { b : 2 };
   var c = { c : 3 };
-  Object.setPrototypeOf( a, b );
-  Object.setPrototypeOf( b, c );
+  Object.setModuleForTesting12typeOf( a, b );
+  Object.setModuleForTesting12typeOf( b, c );
 
   var got = _.mapOwnKeys( a );
   var expected = [ 'a' ];
@@ -1806,7 +1806,7 @@ function mapAllKeys( test )
     'toString',
     'toLocaleString',
     'valueOf',
-    'isPrototypeOf'
+    'isModuleForTesting12typeOf'
   ]
 
   //
@@ -1844,7 +1844,7 @@ function mapAllKeys( test )
   test.case = 'from prototype'
   var a = { a : 1 };
   var b = { b : 1 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   Object.defineProperty( a, 'k', { enumerable : 0 } );
   Object.defineProperty( b, 'y', { enumerable : 0 } );
   var got = _.mapAllKeys( a );
@@ -1909,7 +1909,7 @@ function mapVals( test )
   test.case = 'own'
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /**/
 
@@ -2002,7 +2002,7 @@ function mapOwnVals( test )
   test.case = ' only own values'
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /**/
 
@@ -2070,7 +2070,7 @@ function mapAllVals( test )
   test.case = 'from prototype'
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /**/
 
@@ -2153,7 +2153,7 @@ function mapPairs( test )
 
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   var got = _.mapPairs( a );
   var expected = [ [ 'a', 1 ], [ 'b', 2 ] ];
   test.identical( got, expected );
@@ -2255,7 +2255,7 @@ function mapOwnPairs( test )
 
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   var got = _.mapOwnPairs( a );
   var expected = [ [ 'a', 1 ] ];
   test.identical( got, expected );
@@ -2333,7 +2333,7 @@ function mapAllPairs( test )
 
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   var got = _.mapAllPairs( a );
   test.is( got.length > 2 );
   test.identical( got[ 0 ], [ 'a', 1 ] );
@@ -2399,7 +2399,7 @@ function mapProperties( test )
   test.case = 'prototype'
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /**/
 
@@ -2505,7 +2505,7 @@ function mapOwnProperties( test )
   test.case = 'prototype'
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /**/
 
@@ -2594,7 +2594,7 @@ function mapAllProperties( test )
   test.case = 'prototype'
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /**/
 
@@ -2616,7 +2616,7 @@ function mapAllProperties( test )
 
   var a = { a : 1 };
   var b = { b : 2 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   Object.defineProperty( b, 'k', { enumerable : 0, value : undefined } );
   var got = _.mapAllProperties( a );
   test.is( Object.keys( got ).length > 3 )
@@ -2689,7 +2689,7 @@ function mapRoutines( test )
   test.case = 'prototype'
   var a = { a : 1 };
   var b = { b : 2, c : function(){} };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /**/
 
@@ -2726,7 +2726,7 @@ function mapRoutines( test )
 
   var a = { a : 1, y : function(){} };
   var b = { b : 2, c : function(){} };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   var got = _.mapRoutines.call( { own : 0 }, a );
   test.is( Object.keys( got ).length === 2 )
   test.is( _.routineIs( got.y ) );
@@ -2736,7 +2736,7 @@ function mapRoutines( test )
 
   var a = { a : 1, y : function(){} };
   var b = { b : 2, c : function(){} };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   Object.defineProperty( b, 'k', { enumerable : 0, value : function(){} } );
   var o = { own : 0, enumerable : 0 };
   var got = _.mapRoutines.call( o, a, o );
@@ -2812,7 +2812,7 @@ function mapOwnRoutines( test )
   test.case = 'prototype'
   var a = { a : 1 };
   var b = { b : 2, c : function(){} };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /**/
 
@@ -2829,7 +2829,7 @@ function mapOwnRoutines( test )
 
   var a = {};
   var b = {};
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   Object.defineProperty( b, 'k', { enumerable : 0, value : function(){} } );
   var got = _.mapOwnRoutines( a );
   test.identical( got, {} );
@@ -2924,7 +2924,7 @@ function mapAllRoutines( test )
   test.case = 'prototype'
   var a = { a : 1 };
   var b = { b : 2, c : function(){} };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /**/
 
@@ -3015,7 +3015,7 @@ function mapFields( test )
   test.case = 'prototype'
   var a = { a : 1 };
   var b = { b : 2, c : function(){} };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /**/
 
@@ -3052,7 +3052,7 @@ function mapFields( test )
 
   var a = { a : 1, y : function(){} };
   var b = { b : 2, c : function(){} };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   var got = _.mapFields.call( { own : 0, enumerable : 1 }, a );
   test.is( Object.keys( got ).length === 2 )
   test.identical( got.a, 1 );
@@ -3062,7 +3062,7 @@ function mapFields( test )
 
   var a = { a : 1, y : function(){} };
   var b = { b : 2, c : function(){} };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   Object.defineProperty( b, 'k', { enumerable : 0, value : function(){} } );
   Object.defineProperty( b, 'z', { enumerable : 0, value : 3 } );
   var got = _.mapFields( a, { enumerable : 0 } );
@@ -3137,7 +3137,7 @@ function mapOwnFields( test )
   test.case = 'prototype'
   var a = { a : 1 };
   var b = { b : 2, c : function(){} };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /* */
 
@@ -3240,7 +3240,7 @@ function mapAllFields( test )
   test.case = 'prototype'
   var a = { a : 1 };
   var b = { b : 2, c : function(){} };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   /**/
 
@@ -3626,7 +3626,7 @@ function mapOnlyPrimitives( test )
   var a = {};
   var b = { a : 1, c : function(){} };
   Object.defineProperty( b, 'k', { enumerable : 0, value : 3 } );
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   var got = _.mapOnlyPrimitives( a );
   test.identical( got, { a : 1 } );
 
@@ -10013,7 +10013,7 @@ function mapHasAll( test )
   test.case = 'map has on proto';
   var a = {};
   var b = { a : 1 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   var got = _.mapHasAll( a, { a : 1 } );
   test.is( got );
 
@@ -10110,7 +10110,7 @@ function mapHasAny( test )
   test.case = 'map has on proto';
   var a = {};
   var b = { a : 1 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
   var got = _.mapHasAny( a, { a : 1, x : 1 } );
   test.is( got );
 
@@ -10207,7 +10207,7 @@ function mapHasNone( test )
   test.case = 'map has on proto';
   var a = {};
   var b = { a : 1 };
-  Object.setPrototypeOf( a, b );
+  Object.setModuleForTesting12typeOf( a, b );
 
   var got = _.mapHasNone( a, { x : 1 } );
   test.is( got );
@@ -10332,7 +10332,7 @@ function mapOwnAll( test )
     {
       var a = {};
       var b = { a : 1 };
-      Object.setPrototypeOf( a, b )
+      Object.setModuleForTesting12typeOf( a, b )
       _.mapOwnAll( a,{ a : 1 } );
     });
 
@@ -10341,7 +10341,7 @@ function mapOwnAll( test )
     {
       var a = {};
       var b = { a : 1 };
-      Object.setPrototypeOf( a, b )
+      Object.setModuleForTesting12typeOf( a, b )
       _.mapOwnAll( { a : 1 }, a );
     });
   }
@@ -10440,7 +10440,7 @@ function mapOwnAny( test )
     {
       var a = {};
       var b = { a : 1 };
-      Object.setPrototypeOf( a, b )
+      Object.setModuleForTesting12typeOf( a, b )
       _.mapOwnAny( a,{ a : 1 } );
     });
 
@@ -10449,7 +10449,7 @@ function mapOwnAny( test )
     {
       var a = {};
       var b = { a : 1 };
-      Object.setPrototypeOf( a, b )
+      Object.setModuleForTesting12typeOf( a, b )
       _.mapOwnAny( { a : 1 }, a );
     });
   }
@@ -10548,7 +10548,7 @@ function mapOwnNone( test )
     {
       var a = {};
       var b = { a : 1 };
-      Object.setPrototypeOf( a, b )
+      Object.setModuleForTesting12typeOf( a, b )
       _.mapOwnNone( a,{ a : 1 } );
     });
 
@@ -10557,7 +10557,7 @@ function mapOwnNone( test )
     {
       var a = {};
       var b = { a : 1 };
-      Object.setPrototypeOf( a, b )
+      Object.setModuleForTesting12typeOf( a, b )
       _.mapOwnNone( { a : 1 }, a );
     });
   }
@@ -12303,7 +12303,7 @@ function assertMapHasNoUndefine( test )
 var Self =
 {
 
-  name : 'Tools.base.Map',
+  name : 'ModuleForTesting1.base.Map',
   silencing : 1,
 
   tests :

@@ -1,40 +1,40 @@
-( function _ProtoAccessor_s_() {
+( function _ModuleForTesting12Accessor_s_() {
 
 'use strict';
 
-let Self = _global_.wTools;
+let Self = _global_.wModuleForTesting1;
 let _global = _global_;
-let _ = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
 
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 let _ObjectPropertyIsEumerable = Object.propertyIsEnumerable;
 let _nameFielded = _.nameFielded;
 
-_.assert( _.objectIs( _.field ), 'wProto needs wTools/staging/dwtools/abase/l1/FieldMapper.s' );
-_.assert( _.routineIs( _nameFielded ), 'wProto needs wTools/staging/dwtools/l3/NameTools.s' );
+_.assert( _.objectIs( _.field ), 'wModuleForTesting12 needs wModuleForTesting1/staging/dwtools/abase/l1/FieldMapper.s' );
+_.assert( _.routineIs( _nameFielded ), 'wModuleForTesting12 needs wModuleForTesting1/staging/dwtools/l3/NameModuleForTesting1.s' );
 
 /**
  * @summary Collection of routines for declaring accessors
- * @namespace "wTools.accessor"
- * @memberof module:Tools/base/Proto
+ * @namespace "wModuleForTesting1.accessor"
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @summary Collection of routines for declaring getters
- * @namespace "wTools.accessor.getter"
- * @memberof module:Tools/base/Proto
+ * @namespace "wModuleForTesting1.accessor.getter"
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
 
  /**
  * @summary Collection of routines for declaring setters
- * @namespace "wTools.accessor.setter"
- * @memberof module:Tools/base/Proto
+ * @namespace "wModuleForTesting1.accessor.setter"
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @summary Collection of routines for declaring getters and setters
- * @namespace "wTools.accessor.suite"
- * @memberof module:Tools/base/Proto
+ * @namespace "wModuleForTesting1.accessor.suite"
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
 
 // --
@@ -55,7 +55,7 @@ _.assert( _.routineIs( _nameFielded ), 'wProto needs wTools/staging/dwtools/l3/N
  * @property {Function} [ getter=null ]
  * @property {Function} [ setter=null ]
  * @property {Function} [ suite=null ]
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  **/
 
 let AccessorDefaults =
@@ -88,7 +88,7 @@ let AccessorDefaults =
  * - First by passing all options in one object;
  * - Second by passing object and name options;
  * - Third by passing object, names and message option as third parameter.
- * @param {Object} o - options {@link module:Tools/base/Proto.wTools.accessor~AccessorOptions}.
+ * @param {Object} o - options {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor~AccessorOptions}.
  *
  * @example
  * //returns
@@ -102,7 +102,7 @@ let AccessorDefaults =
  *
  * @private
  * @function _declare_pre
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  */
 
 function _declare_pre( routine, args )
@@ -164,7 +164,7 @@ function _declare_pre( routine, args )
  * @param {String} o.combining - combining method
  * @private
  * @function _register
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  */
 
 function _register( o )
@@ -432,7 +432,7 @@ defaults.methods = null;
  * @property {Function} [ setter=null ]
  * @property {Function} [ suite=null ]
  *
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  **/
 
 /**
@@ -442,7 +442,7 @@ defaults.methods = null;
  * to object( o.object ) property. Field can be accessed by use of Symbol.for( rawName ) function,
  * where( rawName ) is value of property from( o.names ) object.
  *
- * @param {Object} o - options {@link module:Tools/base/Proto.wTools.accessor~AccessorOptions}.
+ * @param {Object} o - options {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor~AccessorOptions}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -465,7 +465,7 @@ defaults.methods = null;
  * @throws {exception} If( o ) is extented by unknown property.
  * @throws {exception} If( o.strict ) is true and object doesn't have own constructor.
  * @throws {exception} If( o.readOnly ) is true and property has own setter.
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  */
 
 function _declare( o )
@@ -553,15 +553,15 @@ defaults.names = null;
 //
 
 /**
- * Short-cut for {@link module:Tools/base/Proto.wTools.accessor._declare } function.
+ * Short-cut for {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor._declare } function.
  * Defines set/get functions on source object( o.object ) properties if they dont have them.
- * For more details {@link module:Tools/base/Proto.wTools.accessor._declare }.
+ * For more details {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor._declare }.
  * Can be called in three ways:
  * - First by passing all options in one object( o );
  * - Second by passing ( object ) and ( names ) options;
  * - Third by passing ( object ), ( names ) and ( message ) option as third parameter.
  *
- * @param {Object} o - options {@link module:Tools/base/Proto.wTools.accessor~AccessorOptions}.
+ * @param {Object} o - options {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor~AccessorOptions}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -573,7 +573,7 @@ defaults.names = null;
  * // 1
  *
  * @function declare
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  */
 
 function accessorDeclare( o )
@@ -590,7 +590,7 @@ accessorDeclare.defaults = Object.create( _declare.defaults );
  * @summary Declares forbid accessor.
  * @description
  * Forbid accessor throws an Error when user tries to get value of the property.
- * @param {Object} o - options {@link module:Tools/base/Proto.wTools.accessor~AccessorOptions}.
+ * @param {Object} o - options {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor~AccessorOptions}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -598,7 +598,7 @@ accessorDeclare.defaults = Object.create( _declare.defaults );
  * Self.a; // throw an Error
  *
  * @function accessorForbid
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  */
 
 function accessorForbid( o )
@@ -638,7 +638,7 @@ function accessorForbid( o )
 
   /* message */
 
-  let _constructor = o.object.constructor || Object.getPrototypeOf( o.object );
+  let _constructor = o.object.constructor || Object.getModuleForTesting12typeOf( o.object );
   _.assert( _.routineIs( _constructor ) || _constructor === null );
   _.assert( _constructor === null || _.strIs( _constructor.name ) || _.strIs( _constructor._name ), 'object should have name' );
   if( !o.protoName )
@@ -839,7 +839,7 @@ defaults.protoName = null;
  * _.accessor.ownForbid( Self, 'b' ) // returns false
  *
  * @function accessorForbidOwns
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  */
 
 function accessorForbidOwns( object, name )
@@ -863,7 +863,7 @@ function accessorForbidOwns( object, name )
 
 /**
  * @summary Declares read-only accessor( s ).
- * @description Expects two arguments: (object), (names) or single as options map {@link module:Tools/base/Proto.wTools.accessor~AccessorOptions}
+ * @description Expects two arguments: (object), (names) or single as options map {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor~AccessorOptions}
  *
  * @param {Object} object - target object
  * @param {Object} names - contains names of properties that will get read-only accessor
@@ -879,7 +879,7 @@ function accessorForbidOwns( object, name )
  * _.accessor.readOnly( Alpha.prototype,{ a : 'a' });
  *
  * @function accessorForbid
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  */
 
 function accessorReadOnly( object, names )
@@ -911,7 +911,7 @@ defaults.readOnly = true;
  * @throws {Exception} If one of object doesn't have _Accessors map
  * @function accessorsSupplement
  *
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  */
 
 function accessorsSupplement( dst, src )
@@ -971,7 +971,7 @@ function accessorsSupplement( dst, src )
 
 /**
  * Makes constants properties on object by creating new or replacing existing properties.
- * @param {object} dstPrototype - prototype of class which will get new constant property.
+ * @param {object} dstModuleForTesting12type - prototype of class which will get new constant property.
  * @param {object} namesObject - name/value map of constants.
  *
  * @example
@@ -983,31 +983,31 @@ function accessorsSupplement( dst, src )
  *
  * @function constant
  * @throws {exception} If no argument provided.
- * @throws {exception} If( dstPrototype ) is not a Object.
+ * @throws {exception} If( dstModuleForTesting12type ) is not a Object.
  * @throws {exception} If( name ) is not a Map.
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  */
 
-function constant( dstPrototype, name, value )
+function constant( dstModuleForTesting12type, name, value )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3 );
-  _.assert( !_.primitiveIs( dstPrototype ), () => 'dstPrototype is needed, but got ' + _.toStrShort( dstPrototype ) );
+  _.assert( !_.primitiveIs( dstModuleForTesting12type ), () => 'dstModuleForTesting12type is needed, but got ' + _.toStrShort( dstModuleForTesting12type ) );
 
   if( _.containerIs( name ) )
   {
     _.eachKey( name, ( n, v ) =>
     {
       if( value !== undefined )
-      _.propertyConstant( dstPrototype, n, value );
+      _.propertyConstant( dstModuleForTesting12type, n, value );
       else
-      _.propertyConstant( dstPrototype, n, v );
+      _.propertyConstant( dstModuleForTesting12type, n, v );
     });
     return;
   }
 
   if( value === undefined )
-  value = dstPrototype[ name ];
+  value = dstModuleForTesting12type[ name ];
 
   _.assert( _.strIs( name ), 'name is needed, but got', name );
 
@@ -1016,7 +1016,7 @@ function constant( dstPrototype, name, value )
   //   let encodedName = n;
   //   let value = name[ n ];
 
-  Object.defineProperty( dstPrototype, name,
+  Object.defineProperty( dstModuleForTesting12type, name,
   {
     value : value,
     enumerable : true,
@@ -1029,44 +1029,44 @@ function constant( dstPrototype, name, value )
 //
 
 /**
- * @summary Defines hidden property with name( name ) and value( value ) on target object( dstPrototype ).
+ * @summary Defines hidden property with name( name ) and value( value ) on target object( dstModuleForTesting12type ).
  *
  * @description
  * Property is defined as not enumarable.
  * Also accepts second argument as map of properties.
  * If second argument( name ) is a map and third argument( value ) is also defined, then all properties will have value of last arg.
  *
- * @param {Object} dstPrototype - target object
+ * @param {Object} dstModuleForTesting12type - target object
  * @param {String|Object} name - name of property or map of names
  * @param {*} value - destination object
  *
  * @throws {Exception} If number of arguments is not supported.
- * @throws {Exception} If dstPrototype is not an Object
+ * @throws {Exception} If dstModuleForTesting12type is not an Object
  * @function hide
  *
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  */
 
-function hide( dstPrototype, name, value )
+function hide( dstModuleForTesting12type, name, value )
 {
 
   _.assert( arguments.length === 2 || arguments.length === 3 );
-  _.assert( !_.primitiveIs( dstPrototype ), () => 'dstPrototype is needed, but got ' + _.toStrShort( dstPrototype ) );
+  _.assert( !_.primitiveIs( dstModuleForTesting12type ), () => 'dstModuleForTesting12type is needed, but got ' + _.toStrShort( dstModuleForTesting12type ) );
 
   if( _.containerIs( name ) )
   {
     _.eachKey( name, ( n, v ) =>
     {
       if( value !== undefined )
-      _.propertyHide( dstPrototype, n, value );
+      _.propertyHide( dstModuleForTesting12type, n, value );
       else
-      _.propertyHide( dstPrototype, n, v );
+      _.propertyHide( dstModuleForTesting12type, n, v );
     });
     return;
   }
 
   if( value === undefined )
-  value = dstPrototype[ name ];
+  value = dstModuleForTesting12type[ name ];
 
   _.assert( _.strIs( name ), 'name is needed, but got', name );
 
@@ -1075,7 +1075,7 @@ function hide( dstPrototype, name, value )
   //   let encodedName = n;
   //   let value = name[ n ];
 
-  Object.defineProperty( dstPrototype, name,
+  Object.defineProperty( dstModuleForTesting12type, name,
   {
     value : value,
     enumerable : false,
@@ -1088,9 +1088,9 @@ function hide( dstPrototype, name, value )
 //
 
 /**
- * Makes properties of object( dstPrototype ) read only without changing their values. Uses properties names from argument( namesObject ).
- * Sets undefined for property that not exists on source( dstPrototype ).
- * @param {object} dstPrototype - prototype of class which properties will get read only state.
+ * Makes properties of object( dstModuleForTesting12type ) read only without changing their values. Uses properties names from argument( namesObject ).
+ * Sets undefined for property that not exists on source( dstModuleForTesting12type ).
+ * @param {object} dstModuleForTesting12type - prototype of class which properties will get read only state.
  * @param {object|string} namesObject - property name as string/map with properties.
  *
  * @example
@@ -1103,12 +1103,12 @@ function hide( dstPrototype, name, value )
  *
  * @function restrictReadOnly
  * @throws {exception} If no argument provided.
- * @throws {exception} If( dstPrototype ) is not a Object.
+ * @throws {exception} If( dstModuleForTesting12type ) is not a Object.
  * @throws {exception} If( namesObject ) is not a Map.
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  */
 
-function restrictReadOnly( dstPrototype, namesObject )
+function restrictReadOnly( dstModuleForTesting12type, namesObject )
 {
 
   if( _.strIs( namesObject ) )
@@ -1118,7 +1118,7 @@ function restrictReadOnly( dstPrototype, namesObject )
   }
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.objectLikeOrRoutine( dstPrototype ), '_.constant :', 'dstPrototype is needed :', dstPrototype );
+  _.assert( _.objectLikeOrRoutine( dstModuleForTesting12type ), '_.constant :', 'dstModuleForTesting12type is needed :', dstModuleForTesting12type );
   _.assert( _.mapIs( namesObject ), '_.constant :', 'namesObject is needed :', namesObject );
 
   for( let n in namesObject )
@@ -1127,9 +1127,9 @@ function restrictReadOnly( dstPrototype, namesObject )
     let encodedName = n;
     let value = namesObject[ n ];
 
-    Object.defineProperty( dstPrototype, encodedName,
+    Object.defineProperty( dstModuleForTesting12type, encodedName,
     {
-      value : dstPrototype[ n ],
+      value : dstModuleForTesting12type[ n ],
       enumerable : true,
       writable : false,
     });
@@ -1145,7 +1145,7 @@ function restrictReadOnly( dstPrototype, namesObject )
  * @param {Object} proto - target object
  * @param {String} name - name of accessor
  * @function has
- * @memberof module:Tools/base/Proto.wTools.accessor
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor
  */
 
 function has( proto, name )
@@ -1218,7 +1218,7 @@ suiteMakerFrom_functor.defaults =
  * @param {Number} o.index
  * @param {String} o.storageName
  * @function toElement
- * @memberof module:Tools/base/Proto.wTools.accessor.suite
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor.suite
  */
 
 // debugger;
@@ -1435,7 +1435,7 @@ setterArrayCollection_functor.defaults =
  * @param {Object} o.name - name of property
  * @returns {Function} Returns setter function.
  * @function own
- * @memberof module:Tools/base/Proto.wTools.accessor.setter
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor.setter
  */
 
 function setterOwn_functor( op )
@@ -1599,7 +1599,7 @@ setterCopyable_functor.defaults =
  * @param {Object} o.bufferConstructor - buffer constructor
  * @returns {Function} Returns setter function.
  * @function bufferFrom
- * @memberof module:Tools/base/Proto.wTools.accessor.setter
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor.setter
  */
 
 function setterBufferFrom_functor( o )
@@ -1683,7 +1683,7 @@ setterChangesTracking_functor.defaults =
  * @param {Object} o.alias - name of alias
  * @returns {Function} Returns setter function.
  * @function alias
- * @memberof module:Tools/base/Proto.wTools.accessor.setter
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor.setter
  */
 
 function alias_pre( routine, args )
@@ -1753,7 +1753,7 @@ let aliasSetter_functor = _.routineFromPreAndBody( alias_pre, aliasSetter_functo
  * @param {Object} o.alias - name of alias
  * @returns {Function} Returns getter function.
  * @function alias
- * @memberof module:Tools/base/Proto.wTools.accessor.getter
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor.getter
  */
 
 function aliasGetter_functor_body( o )

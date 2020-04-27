@@ -1,17 +1,17 @@
-( function _Proto_s_() {
+( function _ModuleForTesting12_s_() {
 
 'use strict';
 
 /**
- * Relations module. Collection of routines to define classes and relations between them. Proto leverages multiple inheritances, mixins, accessors, fields groups defining, introspection and more. Use it as a skeleton of the application.
-  @module Tools/base/Proto
+ * Relations module. Collection of routines to define classes and relations between them. ModuleForTesting12 leverages multiple inheritances, mixins, accessors, fields groups defining, introspection and more. Use it as a skeleton of the application.
+  @module ModuleForTesting1/base/ModuleForTesting12
 */
 
 /**
  * Collection of routines to define classes and relations between them.
- * @namespace Tools.Proto 
- * @augments wTools
- * @memberof module:Tools/base/Proto
+ * @namespace ModuleForTesting1.ModuleForTesting12 
+ * @augments wModuleForTesting1
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
@@ -58,12 +58,12 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../dwtools/ModuleForTesting1.s' );
 
-  if( !_global_.wTools.nameFielded )
+  if( !_global_.wModuleForTesting1.nameFielded )
   try
   {
-    require( './NameTools.s' );
+    require( './NameModuleForTesting1.s' );
   }
   catch( err )
   {
@@ -71,16 +71,16 @@ if( typeof module !== 'undefined' )
 
 }
 
-let Self = _global_.wTools;
+let Self = _global_.wModuleForTesting1;
 let _global = _global_;
-let _ = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
 
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 let _ObjectPropertyIsEumerable = Object.propertyIsEnumerable;
 let _nameFielded = _.nameFielded;
 
-_.assert( _.objectIs( _.field ),'wProto needs wTools/staging/dwtools/abase/l1/FieldMapper.s' );
-_.assert( _.routineIs( _nameFielded ),'wProto needs wTools/staging/dwtools/l3/NameTools.s' );
+_.assert( _.objectIs( _.field ),'wModuleForTesting12 needs wModuleForTesting1/staging/dwtools/abase/l1/FieldMapper.s' );
+_.assert( _.routineIs( _nameFielded ),'wModuleForTesting12 needs wModuleForTesting1/staging/dwtools/l3/NameModuleForTesting1.s' );
 
 // --
 // fields group
@@ -111,14 +111,14 @@ function fieldsGroupFor( dst, fieldsGroupName )
     let field = dst[ fieldsGroupName ];
     dst[ fieldsGroupName ] = Object.create( null );
     if( field )
-    Object.setPrototypeOf( dst[ fieldsGroupName ], field );
+    Object.setModuleForTesting12typeOf( dst[ fieldsGroupName ], field );
   }
 
   if( Config.debug )
   {
-    let parent = Object.getPrototypeOf( dst );
+    let parent = Object.getModuleForTesting12typeOf( dst );
     if( parent && parent[ fieldsGroupName ] )
-    _.assert( Object.getPrototypeOf( dst[ fieldsGroupName ] ) === parent[ fieldsGroupName ] );
+    _.assert( Object.getModuleForTesting12typeOf( dst[ fieldsGroupName ] ) === parent[ fieldsGroupName ] );
   }
 
   return dst;
@@ -128,17 +128,17 @@ function fieldsGroupFor( dst, fieldsGroupName )
 
 /**
 * Default options for fieldsGroupDeclare function
-* @typedef {object} wTools~protoAddDefaults
+* @typedef {object} wModuleForTesting1~protoAddDefaults
 * @property {object} [ o.fieldsGroupName=null ] - object that contains class relationship type name.
-* Example : { Composes : 'Composes' }. See {@link wTools~DefaultFieldsGroupsRelations}
-* @property {object} [ o.dstPrototype=null ] - prototype of class which will get new constant property.
+* Example : { Composes : 'Composes' }. See {@link wModuleForTesting1~DefaultFieldsGroupsRelations}
+* @property {object} [ o.dstModuleForTesting12type=null ] - prototype of class which will get new constant property.
 * @property {object} [ o.srcMap=null ] - name/value map of defaults.
 * @property {bool} [ o.extending=false ] - to extending defaults if exist.
 */
 
 /**
  * Adds own defaults to object. Creates new defaults container, if there is no such own.
- * @param {wTools~protoAddDefaults} o - options {@link wTools~protoAddDefaults}.
+ * @param {wModuleForTesting1~protoAddDefaults} o - options {@link wModuleForTesting1~protoAddDefaults}.
  * @private
  *
  * @example
@@ -146,7 +146,7 @@ function fieldsGroupFor( dst, fieldsGroupName )
  * _.fieldsGroupDeclare
  * ({
  *   fieldsGroupName : { Composes : 'Composes' },
- *   dstPrototype : Self.prototype,
+ *   dstModuleForTesting12type : Self.prototype,
  *   srcMap : { a : 1, b : 2 },
  * });
  * console.log( Self.prototype ); // returns { Composes: { a: 1, b: 2 } }
@@ -155,7 +155,7 @@ function fieldsGroupFor( dst, fieldsGroupName )
  * @throws {exception} If no argument provided.
  * @throws {exception} If( o.srcMap ) is not a Object.
  * @throws {exception} If( o ) is extented by unknown property.
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
 function fieldsGroupDeclare( o )
@@ -168,9 +168,9 @@ function fieldsGroupDeclare( o )
   _.assert( _.strIs( o.fieldsGroupName ) );
   _.assert( _.routineIs( o.filter ) && _.strIs( o.filter.functionFamily ) );
 
-  _.fieldsGroupFor( o.dstPrototype, o.fieldsGroupName );
+  _.fieldsGroupFor( o.dstModuleForTesting12type, o.fieldsGroupName );
 
-  let fieldGroup = o.dstPrototype[ o.fieldsGroupName ];
+  let fieldGroup = o.dstModuleForTesting12type[ o.fieldsGroupName ];
 
   if( o.srcMap )
   _.mapExtendConditional( o.filter, fieldGroup, o.srcMap );
@@ -179,7 +179,7 @@ function fieldsGroupDeclare( o )
 
 fieldsGroupDeclare.defaults =
 {
-  dstPrototype : null,
+  dstModuleForTesting12type : null,
   srcMap : null,
   filter : _.field.mapper.bypass,
   fieldsGroupName : null,
@@ -189,7 +189,7 @@ fieldsGroupDeclare.defaults =
 
 /**
  * Adds own defaults( Composes ) to object. Creates new defaults container, if there is no such own.
- * @param {array-like} arguments - for arguments details see {@link wTools~protoAddDefaults}.
+ * @param {array-like} arguments - for arguments details see {@link wModuleForTesting1~protoAddDefaults}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -199,10 +199,10 @@ fieldsGroupDeclare.defaults =
  *
  * @function _.workpiece.fieldsGroupComposesExtend
  * @throws {exception} If no arguments provided.
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
-function _.workpiece.fieldsGroupComposesExtend( dstPrototype, srcMap )
+function _.workpiece.fieldsGroupComposesExtend( dstModuleForTesting12type, srcMap )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -211,7 +211,7 @@ function _.workpiece.fieldsGroupComposesExtend( dstPrototype, srcMap )
   return _.fieldsGroupDeclare
   ({
     fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
+    dstModuleForTesting12type : dstModuleForTesting12type,
     srcMap : srcMap,
     // filter : _.field.mapper.bypass,
   });
@@ -222,7 +222,7 @@ function _.workpiece.fieldsGroupComposesExtend( dstPrototype, srcMap )
 
 /**
  * Adds own aggregates to object. Creates new aggregates container, if there is no such own.
- * @param {array-like} arguments - for arguments details see {@link wTools~protoAddDefaults}.
+ * @param {array-like} arguments - for arguments details see {@link wModuleForTesting1~protoAddDefaults}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -232,10 +232,10 @@ function _.workpiece.fieldsGroupComposesExtend( dstPrototype, srcMap )
  *
  * @function fieldsGroupAggregatesExtend
  * @throws {exception} If no arguments provided.
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
-function fieldsGroupAggregatesExtend( dstPrototype,srcMap )
+function fieldsGroupAggregatesExtend( dstModuleForTesting12type,srcMap )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -244,7 +244,7 @@ function fieldsGroupAggregatesExtend( dstPrototype,srcMap )
   return _.fieldsGroupDeclare
   ({
     fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
+    dstModuleForTesting12type : dstModuleForTesting12type,
     srcMap : srcMap,
     // filter : _.field.mapper.bypass,
   });
@@ -255,7 +255,7 @@ function fieldsGroupAggregatesExtend( dstPrototype,srcMap )
 
 /**
  * Adds own associates to object. Creates new associates container, if there is no such own.
- * @param {array-like} arguments - for arguments details see {@link wTools~protoAddDefaults}.
+ * @param {array-like} arguments - for arguments details see {@link wModuleForTesting1~protoAddDefaults}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -265,10 +265,10 @@ function fieldsGroupAggregatesExtend( dstPrototype,srcMap )
  *
  * @function fieldsGroupAssociatesExtend
  * @throws {exception} If no arguments provided.
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
-function fieldsGroupAssociatesExtend( dstPrototype,srcMap )
+function fieldsGroupAssociatesExtend( dstModuleForTesting12type,srcMap )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -277,7 +277,7 @@ function fieldsGroupAssociatesExtend( dstPrototype,srcMap )
   return _.fieldsGroupDeclare
   ({
     fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
+    dstModuleForTesting12type : dstModuleForTesting12type,
     srcMap : srcMap,
     // filter : _.field.mapper.bypass,
   });
@@ -288,7 +288,7 @@ function fieldsGroupAssociatesExtend( dstPrototype,srcMap )
 
 /**
  * Adds own restricts to object. Creates new restricts container, if there is no such own.
- * @param {array-like} arguments - for arguments details see {@link wTools~protoAddDefaults}.
+ * @param {array-like} arguments - for arguments details see {@link wModuleForTesting1~protoAddDefaults}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -298,10 +298,10 @@ function fieldsGroupAssociatesExtend( dstPrototype,srcMap )
  *
  * @function fieldsGroupRestrictsExtend
  * @throws {exception} If no arguments provided.
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
-function fieldsGroupRestrictsExtend( dstPrototype,srcMap )
+function fieldsGroupRestrictsExtend( dstModuleForTesting12type,srcMap )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -310,7 +310,7 @@ function fieldsGroupRestrictsExtend( dstPrototype,srcMap )
   return _.fieldsGroupDeclare
   ({
     fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
+    dstModuleForTesting12type : dstModuleForTesting12type,
     srcMap : srcMap,
     // filter : _.field.mapper.bypass,
   });
@@ -321,7 +321,7 @@ function fieldsGroupRestrictsExtend( dstPrototype,srcMap )
 
 /**
  * Adds own defaults( Composes ) to object. Creates new defaults container, if there is no such own.
- * @param {array-like} arguments - for arguments details see {@link wTools~protoAddDefaults}.
+ * @param {array-like} arguments - for arguments details see {@link wModuleForTesting1~protoAddDefaults}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -331,10 +331,10 @@ function fieldsGroupRestrictsExtend( dstPrototype,srcMap )
  *
  * @function fieldsGroupComposesSupplement
  * @throws {exception} If no arguments provided.
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
-function fieldsGroupComposesSupplement( dstPrototype, srcMap )
+function fieldsGroupComposesSupplement( dstModuleForTesting12type, srcMap )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -343,7 +343,7 @@ function fieldsGroupComposesSupplement( dstPrototype, srcMap )
   return _.fieldsGroupDeclare
   ({
     fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
+    dstModuleForTesting12type : dstModuleForTesting12type,
     srcMap : srcMap,
     filter : _.field.mapper.dstNotHas,
   });
@@ -354,7 +354,7 @@ function fieldsGroupComposesSupplement( dstPrototype, srcMap )
 
 /**
  * Adds own aggregates to object. Creates new aggregates container, if there is no such own.
- * @param {array-like} arguments - for arguments details see {@link wTools~protoAddDefaults}.
+ * @param {array-like} arguments - for arguments details see {@link wModuleForTesting1~protoAddDefaults}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -364,10 +364,10 @@ function fieldsGroupComposesSupplement( dstPrototype, srcMap )
  *
  * @function fieldsGroupAggregatesSupplement
  * @throws {exception} If no arguments provided.
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
-function fieldsGroupAggregatesSupplement( dstPrototype,srcMap )
+function fieldsGroupAggregatesSupplement( dstModuleForTesting12type,srcMap )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -376,7 +376,7 @@ function fieldsGroupAggregatesSupplement( dstPrototype,srcMap )
   return _.fieldsGroupDeclare
   ({
     fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
+    dstModuleForTesting12type : dstModuleForTesting12type,
     srcMap : srcMap,
     filter : _.field.mapper.dstNotHas,
   });
@@ -387,7 +387,7 @@ function fieldsGroupAggregatesSupplement( dstPrototype,srcMap )
 
 /**
  * Adds own associates to object. Creates new associates container, if there is no such own.
- * @param {array-like} arguments - for arguments details see {@link wTools~protoAddDefaults}.
+ * @param {array-like} arguments - for arguments details see {@link wModuleForTesting1~protoAddDefaults}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -397,10 +397,10 @@ function fieldsGroupAggregatesSupplement( dstPrototype,srcMap )
  *
  * @function fieldsGroupAssociatesSupplement
  * @throws {exception} If no arguments provided.
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
-function fieldsGroupAssociatesSupplement( dstPrototype,srcMap )
+function fieldsGroupAssociatesSupplement( dstModuleForTesting12type,srcMap )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -409,7 +409,7 @@ function fieldsGroupAssociatesSupplement( dstPrototype,srcMap )
   return _.fieldsGroupDeclare
   ({
     fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
+    dstModuleForTesting12type : dstModuleForTesting12type,
     srcMap : srcMap,
     filter : _.field.mapper.dstNotHas,
   });
@@ -420,7 +420,7 @@ function fieldsGroupAssociatesSupplement( dstPrototype,srcMap )
 
 /**
  * Adds own restricts to object. Creates new restricts container, if there is no such own.
- * @param {array-like} arguments - for arguments details see {@link wTools~protoAddDefaults}.
+ * @param {array-like} arguments - for arguments details see {@link wModuleForTesting1~protoAddDefaults}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -430,10 +430,10 @@ function fieldsGroupAssociatesSupplement( dstPrototype,srcMap )
  *
  * @function fieldsGroupRestrictsSupplement
  * @throws {exception} If no arguments provided.
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
-function fieldsGroupRestrictsSupplement( dstPrototype,srcMap )
+function fieldsGroupRestrictsSupplement( dstModuleForTesting12type,srcMap )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
@@ -442,7 +442,7 @@ function fieldsGroupRestrictsSupplement( dstPrototype,srcMap )
   return _.fieldsGroupDeclare
   ({
     fieldsGroupName : fieldsGroupName,
-    dstPrototype : dstPrototype,
+    dstModuleForTesting12type : dstModuleForTesting12type,
     srcMap : srcMap,
     filter : _.field.mapper.dstNotHas,
   });
@@ -471,7 +471,7 @@ function fieldsGroupRestrictsSupplement( dstPrototype,srcMap )
 
 //
 
-function fieldsOfRelationsGroupsFromPrototype( src )
+function fieldsOfRelationsGroupsFromModuleForTesting12type( src )
 {
   let prototype = src;
   let result = Object.create( null );
@@ -491,7 +491,7 @@ function fieldsOfRelationsGroupsFromPrototype( src )
 
 //
 
-function fieldsOfCopyableGroupsFromPrototype( src )
+function fieldsOfCopyableGroupsFromModuleForTesting12type( src )
 {
   let prototype = src;
   let result = Object.create( null );
@@ -510,7 +510,7 @@ function fieldsOfCopyableGroupsFromPrototype( src )
 
 //
 
-function fieldsOfTightGroupsFromPrototype( src )
+function fieldsOfTightGroupsFromModuleForTesting12type( src )
 {
   let prototype = src;
   let result = Object.create( null );
@@ -529,7 +529,7 @@ function fieldsOfTightGroupsFromPrototype( src )
 
 //
 
-function fieldsOfInputGroupsFromPrototype( src )
+function fieldsOfInputGroupsFromModuleForTesting12type( src )
 {
   let prototype = src;
   let result = Object.create( null );
@@ -561,10 +561,10 @@ function fieldsOfRelationsGroups( src )
 
   if( _.instanceIs( src ) )
   {
-    return _.mapOnly( src, _.workpiece.fieldsOfRelationsGroupsFromPrototype( prototype ) );
+    return _.mapOnly( src, _.workpiece.fieldsOfRelationsGroupsFromModuleForTesting12type( prototype ) );
   }
 
-  return _.workpiece.fieldsOfRelationsGroupsFromPrototype( prototype );
+  return _.workpiece.fieldsOfRelationsGroupsFromModuleForTesting12type( prototype );
 }
 
 //
@@ -581,9 +581,9 @@ function fieldsOfCopyableGroups( src )
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.instanceIs( src ) )
-  return _.mapOnly( src, _.workpiece.fieldsOfCopyableGroupsFromPrototype( prototype ) );
+  return _.mapOnly( src, _.workpiece.fieldsOfCopyableGroupsFromModuleForTesting12type( prototype ) );
 
-  return _.workpiece.fieldsOfCopyableGroupsFromPrototype( prototype );
+  return _.workpiece.fieldsOfCopyableGroupsFromModuleForTesting12type( prototype );
 }
 
 //
@@ -600,10 +600,10 @@ function fieldsOfTightGroups( src )
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.instanceIs( src ) )
-  return _.mapOnly( src, _.workpiece.fieldsOfTightGroupsFromPrototype( prototype ) );
+  return _.mapOnly( src, _.workpiece.fieldsOfTightGroupsFromModuleForTesting12type( prototype ) );
 
   debugger;
-  return _.workpiece.fieldsOfTightGroupsFromPrototype( prototype );
+  return _.workpiece.fieldsOfTightGroupsFromModuleForTesting12type( prototype );
 }
 
 //
@@ -620,9 +620,9 @@ function fieldsOfInputGroups( src )
   _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.instanceIs( src ) )
-  return _.mapOnly( src, _.workpiece.fieldsOfInputGroupsFromPrototype( prototype ) );
+  return _.mapOnly( src, _.workpiece.fieldsOfInputGroupsFromModuleForTesting12type( prototype ) );
 
-  return _.workpiece.fieldsOfInputGroupsFromPrototype( prototype );
+  return _.workpiece.fieldsOfInputGroupsFromModuleForTesting12type( prototype );
 }
 
 //
@@ -638,9 +638,9 @@ function fieldsGroupsDeclare( o )
   return;
 
   if( !o.fieldsGroups )
-  o.fieldsGroups = _.workpiece.fieldsGroupsGet( o.dstPrototype );
+  o.fieldsGroups = _.workpiece.fieldsGroupsGet( o.dstModuleForTesting12type );
 
-  _.assert( _.subPrototypeOf( o.fieldsGroups, _.DefaultFieldsGroups ) );
+  _.assert( _.subModuleForTesting12typeOf( o.fieldsGroups, _.DefaultFieldsGroups ) );
 
   for( let f in o.fieldsGroups )
   {
@@ -651,7 +651,7 @@ function fieldsGroupsDeclare( o )
     _.fieldsGroupDeclare
     ({
       fieldsGroupName : f,
-      dstPrototype : o.dstPrototype,
+      dstModuleForTesting12type : o.dstModuleForTesting12type,
       srcMap : o.srcMap[ f ],
       filter : o.filter,
     });
@@ -668,7 +668,7 @@ function fieldsGroupsDeclare( o )
       }
       else for( let k in o.srcMap[ f ] )
       {
-        _.assert( o.dstPrototype[ f2 ][ k ] === undefined,'Fields group','"'+f2+'"','already has fields','"'+k+'"','fields group','"'+f+'"','should not have the same' );
+        _.assert( o.dstModuleForTesting12type[ f2 ][ k ] === undefined,'Fields group','"'+f2+'"','already has fields','"'+k+'"','fields group','"'+f+'"','should not have the same' );
       }
     }
 
@@ -678,7 +678,7 @@ function fieldsGroupsDeclare( o )
 
 fieldsGroupsDeclare.defaults =
 {
-  dstPrototype : null,
+  dstModuleForTesting12type : null,
   srcMap : null,
   fieldsGroups : null,
   filter : fieldsGroupDeclare.defaults.filter,
@@ -693,7 +693,7 @@ function fieldsGroupsDeclareForEachFilter( o )
   _.assertRoutineOptions( fieldsGroupsDeclareForEachFilter, arguments );
   _.assertMapHasNoUndefine( o );
 
-  let oldFieldsGroups = _.workpiece.fieldsGroupsGet( o.dstPrototype );
+  let oldFieldsGroups = _.workpiece.fieldsGroupsGet( o.dstModuleForTesting12type );
   let newFieldsGroups = Object.create( oldFieldsGroups )
   if( ( o.extendMap && o.extendMap.Groups ) || ( o.supplementOwnMap && o.supplementOwnMap.Groups ) || ( o.supplementMap && o.supplementMap.Groups ) )
   {
@@ -707,41 +707,41 @@ function fieldsGroupsDeclareForEachFilter( o )
 
   // if( fieldsGroups === _.DefaultFieldsGroups )
 
-  if( !o.dstPrototype.Groups )
-  o.dstPrototype.Groups = Object.create( _.DefaultFieldsGroups );
+  if( !o.dstModuleForTesting12type.Groups )
+  o.dstModuleForTesting12type.Groups = Object.create( _.DefaultFieldsGroups );
 
   for( let f in newFieldsGroups )
-  _.fieldsGroupFor( o.dstPrototype, f );
+  _.fieldsGroupFor( o.dstModuleForTesting12type, f );
 
   // _.fieldsGroupDeclare
   // ({
   //   fieldsGroupName : 'Group',
-  //   dstPrototype : o.dstPrototype,
+  //   dstModuleForTesting12type : o.dstModuleForTesting12type,
   //   srcMap : newFieldsGroups,
   //   filter : _.field.mapper.bypass,
   // });
 
   _.workpiece.fieldsGroupsDeclare
   ({
-    dstPrototype : o.dstPrototype,
+    dstModuleForTesting12type : o.dstModuleForTesting12type,
     srcMap : o.extendMap,
     fieldsGroups : newFieldsGroups,
     filter : _.field.mapper.bypass,
   });
   _.workpiece.fieldsGroupsDeclare
   ({
-    dstPrototype : o.dstPrototype,
+    dstModuleForTesting12type : o.dstModuleForTesting12type,
     srcMap : o.supplementOwnMap,
     fieldsGroups : newFieldsGroups,
     filter : _.field.mapper.dstNotOwn,
   });
 
-  // if( o.dstPrototype.constructor.name === 'wPrinterBase' )
+  // if( o.dstModuleForTesting12type.constructor.name === 'wPrinterBase' )
   // debugger;
 
   _.workpiece.fieldsGroupsDeclare
   ({
-    dstPrototype : o.dstPrototype,
+    dstModuleForTesting12type : o.dstModuleForTesting12type,
     srcMap : o.supplementMap,
     fieldsGroups : newFieldsGroups,
     filter : _.field.mapper.dstNotHas,
@@ -751,7 +751,7 @@ function fieldsGroupsDeclareForEachFilter( o )
 
 fieldsGroupsDeclareForEachFilter.defaults =
 {
-  dstPrototype : null,
+  dstModuleForTesting12type : null,
   extendMap : null,
   supplementOwnMap : null,
   supplementMap : null,
@@ -778,7 +778,7 @@ function propertyDescriptorForAccessor( object, name )
       result.object = object;
       return result;
     }
-    object = Object.getPrototypeOf( object );
+    object = Object.getModuleForTesting12typeOf( object );
   }
   while( object );
 
@@ -804,7 +804,7 @@ function propertyDescriptorGet( object, name )
       result.object = object;
       return result;
     }
-    object = Object.getPrototypeOf( object );
+    object = Object.getModuleForTesting12typeOf( object );
   }
   while( object );
 
@@ -1043,7 +1043,7 @@ function proxyMap( dst, original )
  * Make mixin which could be mixed into prototype of another object.
  * @param {object} o - options.
  * @function _mixinDelcare
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
 function _mixinDelcare( o )
@@ -1099,7 +1099,7 @@ function _mixinDelcare( o )
 
   if( !o.prototype )
   {
-    let got = _._classConstructorAndPrototypeGet( o );
+    let got = _._classConstructorAndModuleForTesting12typeGet( o );
 
     if( got.prototype )
     o.prototype = got.prototype;
@@ -1177,7 +1177,7 @@ mixinDelcare.defaults = Object.create( _mixinDelcare.defaults );
  * Mixin methods and fields into prototype of another object.
  * @param {object} o - options.
  * @function mixinApply
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
 let MixinDescriptorFields =
@@ -1198,11 +1198,11 @@ let MixinDescriptorFields =
 
 }
 
-function mixinApply( mixinDescriptor, dstPrototype )
+function mixinApply( mixinDescriptor, dstModuleForTesting12type )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( _.objectIs( dstPrototype ), () => 'second argument {-dstPrototype-} does not look like prototype, got ' + _.strType( dstPrototype ) );
+  _.assert( _.objectIs( dstModuleForTesting12type ), () => 'second argument {-dstModuleForTesting12type-} does not look like prototype, got ' + _.strType( dstModuleForTesting12type ) );
   _.assert( _.routineIs( mixinDescriptor.mixin ), 'first argument does not look like mixin descriptor' );
   _.assert( _.objectIs( mixinDescriptor ) );
   _.assert( Object.isFrozen( mixinDescriptor ), 'first argument does not look like mixin descriptor' );
@@ -1210,20 +1210,20 @@ function mixinApply( mixinDescriptor, dstPrototype )
 
   /* mixin into routine */
 
-  if( !_.mapIs( dstPrototype ) )
+  if( !_.mapIs( dstModuleForTesting12type ) )
   {
-    _.assert( dstPrototype.constructor.prototype === dstPrototype,'mixin :','Expects prototype with own constructor field' );
-    _.assert( dstPrototype.constructor.name.length || dstPrototype.constructor._name.length,'mixin :','constructor should has name' );
-    _.assert( _.routineIs( dstPrototype.init ) );
+    _.assert( dstModuleForTesting12type.constructor.prototype === dstModuleForTesting12type,'mixin :','Expects prototype with own constructor field' );
+    _.assert( dstModuleForTesting12type.constructor.name.length || dstModuleForTesting12type.constructor._name.length,'mixin :','constructor should has name' );
+    _.assert( _.routineIs( dstModuleForTesting12type.init ) );
   }
 
   /* extend */
 
-  _.assert( _.mapOwnKey( dstPrototype,'constructor' ) );
-  _.assert( dstPrototype.constructor.prototype === dstPrototype );
+  _.assert( _.mapOwnKey( dstModuleForTesting12type,'constructor' ) );
+  _.assert( dstModuleForTesting12type.constructor.prototype === dstModuleForTesting12type );
   _.classExtend
   ({
-    cls : dstPrototype.constructor,
+    cls : dstModuleForTesting12type.constructor,
     extend : mixinDescriptor.extend,
     supplementOwn : mixinDescriptor.supplementOwn,
     supplement : mixinDescriptor.supplement,
@@ -1232,14 +1232,14 @@ function mixinApply( mixinDescriptor, dstPrototype )
 
   /* mixins map */
 
-  if( !_ObjectHasOwnProperty.call( dstPrototype,'_mixinsMap' ) )
+  if( !_ObjectHasOwnProperty.call( dstModuleForTesting12type,'_mixinsMap' ) )
   {
-    dstPrototype._mixinsMap = Object.create( dstPrototype._mixinsMap || null );
+    dstModuleForTesting12type._mixinsMap = Object.create( dstModuleForTesting12type._mixinsMap || null );
   }
 
-  _.assert( !dstPrototype._mixinsMap[ mixinDescriptor.name ],'attempt to mixin same mixin "' + mixinDescriptor.name + '" several times into ' + dstPrototype.constructor.name );
+  _.assert( !dstModuleForTesting12type._mixinsMap[ mixinDescriptor.name ],'attempt to mixin same mixin "' + mixinDescriptor.name + '" several times into ' + dstModuleForTesting12type.constructor.name );
 
-  dstPrototype._mixinsMap[ mixinDescriptor.name ] = 1;
+  dstModuleForTesting12type._mixinsMap[ mixinDescriptor.name ] = 1;
 
 }
 
@@ -1271,20 +1271,20 @@ function mixinHas( proto,mixin )
 // --
 
 /**
-* @typedef {object} wTools~prototypeOptions
+* @typedef {object} wModuleForTesting1~prototypeOptions
 * @property {routine} [o.cls=null] - constructor for which prototype is needed.
 * @property {routine} [o.parent=null] - constructor of parent class.
 * @property {object} [o.extend=null] - extend prototype by this map.
 * @property {object} [o.supplement=null] - supplement prototype by this map.
 * @property {object} [o.static=null] - static fields of a class.
 * @property {boolean} [o.usingPrimitiveExtension=false] - extends class with primitive fields from relationship descriptors.
-* @property {boolean} [o.usingOriginalPrototype=false] - makes prototype using original constructor prototype.
+* @property {boolean} [o.usingOriginalModuleForTesting12type=false] - makes prototype using original constructor prototype.
 */
 
 /**
  * Make prototype for constructor repairing relationship : Composes, Aggregates, Associates, Medials, Restricts.
  * Execute optional extend / supplement if such o present.
- * @param {wTools~prototypeOptions} o - options {@link wTools~prototypeOptions}.
+ * @param {wModuleForTesting1~prototypeOptions} o - options {@link wModuleForTesting1~prototypeOptions}.
  * @returns {object} Returns constructor's prototype based on( o.parent ) prototype and complemented by fields, static and non-static methods.
  *
  * @example
@@ -1313,7 +1313,7 @@ function mixinHas( proto,mixin )
  *   b : 2,
  *  }
  *
- *  let Proto =
+ *  let ModuleForTesting12 =
  *  {
  *   init : init,
  *   Composes : Composes
@@ -1323,12 +1323,12 @@ function mixinHas( proto,mixin )
  *  ({
  *    cls : Self,
  *    parent : Parent,
- *    extend : Proto,
+ *    extend : ModuleForTesting12,
  *  });
  *
  *  let betta = new Betta();
  *  console.log( proto === Self.prototype ); //returns true
- *  console.log( Parent.prototype.isPrototypeOf( betta ) ); //returns true
+ *  console.log( Parent.prototype.isModuleForTesting12typeOf( betta ) ); //returns true
  *  console.log( betta.a, betta.b, betta.c ); //returns 1 2 5
  *
  * @function classDeclare
@@ -1343,9 +1343,9 @@ function mixinHas( proto,mixin )
  * @throws {exception} If( o.supplement ) is not a Object.
  * @throws {exception} If( o.parent ) is equal to( o.extend ).
  * @throws {exception} If function cant rewrite constructor using original prototype.
- * @throws {exception} If( o.usingOriginalPrototype ) is false and ( o.cls.prototype ) has manually defined properties.
+ * @throws {exception} If( o.usingOriginalModuleForTesting12type ) is false and ( o.cls.prototype ) has manually defined properties.
  * @throws {exception} If( o.cls.prototype.constructor ) is not equal( o.cls  ).
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
 /*
@@ -1353,7 +1353,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Proto,
+  extend : ModuleForTesting12,
 });
 */
 
@@ -1443,11 +1443,11 @@ function classDeclare( o )
   if( o.withClass )
   {
 
-    if( o.usingOriginalPrototype )
+    if( o.usingOriginalModuleForTesting12type )
     {
 
       prototype = o.cls.prototype;
-      _.assert( o.parent === null || o.parent === Object.getPrototypeOf( o.cls.prototype ) );
+      _.assert( o.parent === null || o.parent === Object.getModuleForTesting12typeOf( o.cls.prototype ) );
 
     }
     else
@@ -1473,7 +1473,7 @@ function classDeclare( o )
 
     if( o.parent )
     {
-      Object.setPrototypeOf( o.cls, o.parent );
+      Object.setModuleForTesting12typeOf( o.cls, o.parent );
     }
 
     /* extend */
@@ -1538,7 +1538,7 @@ function classDeclare( o )
     let mixinOptions = _.mapExtend( null,o );
 
     _.assert( !o.usingPrimitiveExtension );
-    _.assert( !o.usingOriginalPrototype );
+    _.assert( !o.usingOriginalModuleForTesting12type );
     _.assert( !o.parent );
     _.assert( !o.cls || o.withClass );
 
@@ -1547,7 +1547,7 @@ function classDeclare( o )
     delete mixinOptions.withMixin;
     delete mixinOptions.withClass;
     delete mixinOptions.usingPrimitiveExtension;
-    delete mixinOptions.usingOriginalPrototype;
+    delete mixinOptions.usingOriginalModuleForTesting12type;
     delete mixinOptions.allowingExtendStatics;
     delete mixinOptions.onClassMakeEnd;
 
@@ -1601,7 +1601,7 @@ classDeclare.defaults =
   shortName : null,
 
   usingPrimitiveExtension : false,
-  usingOriginalPrototype : false,
+  usingOriginalModuleForTesting12type : false,
   allowingExtendStatics : false,
 
   withMixin : false,
@@ -1614,19 +1614,19 @@ classDeclare.defaults =
 /**
  * Extends and supplements( o.cls ) prototype by fields and methods repairing relationship : Composes, Aggregates, Associates, Medials, Restricts.
  *
- * @param {wTools~prototypeOptions} o - options {@link wTools~prototypeOptions}.
+ * @param {wModuleForTesting1~prototypeOptions} o - options {@link wModuleForTesting1~prototypeOptions}.
  * @returns {object} Returns constructor's prototype complemented by fields, static and non-static methods.
  *
  * @example
  * let Self = function Betta( o ) { };
  * let Statics = { staticFunction : function staticFunction(){ } };
  * let Composes = { a : 1, b : 2 };
- * let Proto = { Composes : Composes, Statics : Statics };
+ * let ModuleForTesting12 = { Composes : Composes, Statics : Statics };
  *
  * let proto =  _.classExtend
  * ({
  *     cls : Self,
- *     extend : Proto,
+ *     extend : ModuleForTesting12,
  * });
  * console.log( Self.prototype === proto ); //returns true
  *
@@ -1643,7 +1643,7 @@ classDeclare.defaults =
  * @throws {exception} If( o.static) is not a Object.
  * @throws {exception} If( o.cls.prototype.Constitutes ) is defined.
  * @throws {exception} If( o.cls.prototype ) is not equal( prototype ).
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
 function classExtend( o )
@@ -1703,7 +1703,7 @@ function classExtend( o )
 
   _.workpiece.fieldsGroupsDeclareForEachFilter
   ({
-    dstPrototype : o.prototype,
+    dstModuleForTesting12type : o.prototype,
     extendMap : o.extend,
     supplementOwnMap : o.supplementOwn,
     supplementMap : o.supplement,
@@ -1712,7 +1712,7 @@ function classExtend( o )
   /* get constructor */
 
   if( !o.cls )
-  o.cls = _._classConstructorAndPrototypeGet( o ).cls;
+  o.cls = _._classConstructorAndModuleForTesting12typeGet( o ).cls;
 
   /* */
 
@@ -1787,7 +1787,7 @@ to prioritize ordinary facets adjustment order should be
 
   /* statics */
 
-  let fieldsOfRelationsGroups = _.workpiece.fieldsOfRelationsGroupsFromPrototype( o.prototype );
+  let fieldsOfRelationsGroups = _.workpiece.fieldsOfRelationsGroupsFromModuleForTesting12type( o.prototype );
 
   if( o.supplement && o.supplement.Statics )
   declareStaticsForClass( o.supplement.Statics, 0, 0 );
@@ -1840,11 +1840,11 @@ to prioritize ordinary facets adjustment order should be
 
     if( Config.debug )
     if( !o.allowingExtendStatics )
-    if( Object.getPrototypeOf( o.prototype.Statics ) )
+    if( Object.getModuleForTesting12typeOf( o.prototype.Statics ) )
     {
       map = _.mapBut( map, staticsOwn );
 
-      let keys = _.mapKeys( _.mapOnly( map, Object.getPrototypeOf( o.prototype.Statics ) ) );
+      let keys = _.mapKeys( _.mapOnly( map, Object.getModuleForTesting12typeOf( o.prototype.Statics ) ) );
       if( keys.length )
       {
         _.assert( 0,'attempt to extend static field', keys );
@@ -1969,7 +1969,7 @@ function staticDeclare( o )
   // debugger;
 
   if( !o.fieldsOfRelationsGroups )
-  o.fieldsOfRelationsGroups = _.workpiece.fieldsOfRelationsGroupsFromPrototype( o.prototype );
+  o.fieldsOfRelationsGroups = _.workpiece.fieldsOfRelationsGroupsFromModuleForTesting12type( o.prototype );
 
   let pd = _.propertyDescriptorGet( o.prototype, o.name );
   let cd = _.propertyDescriptorGet( o.prototype.constructor, o.name );
@@ -2118,11 +2118,11 @@ function constructorOf( src )
     if( src.prototype )
     proto = src.prototype; /* constructor */
     else
-    proto = Object.getPrototypeOf( Object.getPrototypeOf( src ) ); /* instance behind ruotine */
+    proto = Object.getModuleForTesting12typeOf( Object.getModuleForTesting12typeOf( src ) ); /* instance behind ruotine */
   }
   else
   {
-    proto = Object.getPrototypeOf( src ); /* instance */
+    proto = Object.getModuleForTesting12typeOf( src ); /* instance */
   }
 
   if( proto === null )
@@ -2143,12 +2143,12 @@ function isSubClassOf( subCls, cls )
   if( cls === subCls )
   return true;
 
-  return Object.isPrototypeOf.call( cls.prototype, subCls.prototype );
+  return Object.isModuleForTesting12typeOf.call( cls.prototype, subCls.prototype );
 }
 
 //
 
-function subPrototypeOf( sub, parent )
+function subModuleForTesting12typeOf( sub, parent )
 {
 
   _.assert( !!parent );
@@ -2158,7 +2158,7 @@ function subPrototypeOf( sub, parent )
   if( parent === sub )
   return true;
 
-  return Object.isPrototypeOf.call( parent, sub );
+  return Object.isModuleForTesting12typeOf.call( parent, sub );
 
 }
 
@@ -2176,7 +2176,7 @@ function parentOf( src )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  let proto = Object.getPrototypeOf( c.prototype );
+  let proto = Object.getModuleForTesting12typeOf( c.prototype );
   let result = proto ? proto.constructor : null;
 
   return result;
@@ -2184,7 +2184,7 @@ function parentOf( src )
 
 //
 
-function _classConstructorAndPrototypeGet( o )
+function _classConstructorAndModuleForTesting12typeGet( o )
 {
   let result = Object.create( null );
 
@@ -2247,7 +2247,7 @@ function prototypeOf( src )
  * @param {array} protos - maps to united.
  * @return {object} united interface.
  * @function prototypeUnitedInterface
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
 function prototypeUnitedInterface( protos )
@@ -2317,7 +2317,7 @@ function prototypeUnitedInterface( protos )
  * Append prototype to object. Find archi parent and replace its proto.
  * @param {object} dstMap - dst object to append proto.
  * @function prototypeAppend
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
 function prototypeAppend( dstMap )
@@ -2332,7 +2332,7 @@ function prototypeAppend( dstMap )
     _.assert( _.objectIs( proto ) );
 
     let parent = _.prototypeArchyGet( dstMap );
-    Object.setPrototypeOf( parent, proto );
+    Object.setModuleForTesting12typeOf( parent, proto );
 
   }
 
@@ -2342,23 +2342,23 @@ function prototypeAppend( dstMap )
 //
 
 /**
- * Does srcProto has insProto as prototype.
- * @param {object} srcProto - proto stack to investigate.
- * @param {object} insProto - proto to look for.
- * @function prototypeHasPrototype
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * Does srcModuleForTesting12 has insModuleForTesting12 as prototype.
+ * @param {object} srcModuleForTesting12 - proto stack to investigate.
+ * @param {object} insModuleForTesting12 - proto to look for.
+ * @function prototypeHasModuleForTesting12type
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
-function prototypeHasPrototype( srcProto,insProto )
+function prototypeHasModuleForTesting12type( srcModuleForTesting12,insModuleForTesting12 )
 {
 
   do
   {
-    if( srcProto === insProto )
+    if( srcModuleForTesting12 === insModuleForTesting12 )
     return true;
-    srcProto = Object.getPrototypeOf( srcProto );
+    srcModuleForTesting12 = Object.getModuleForTesting12typeOf( srcModuleForTesting12 );
   }
-  while( srcProto !== Object.prototype );
+  while( srcModuleForTesting12 !== Object.prototype );
 
   return false;
 }
@@ -2367,31 +2367,31 @@ function prototypeHasPrototype( srcProto,insProto )
 
 /**
  * Return proto owning names.
- * @param {object} srcPrototype - src object to investigate proto stack.
+ * @param {object} srcModuleForTesting12type - src object to investigate proto stack.
  * @function prototypeHasProperty
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
-function prototypeHasProperty( srcPrototype,names )
+function prototypeHasProperty( srcModuleForTesting12type,names )
 {
   names = _nameFielded( names );
-  _.assert( _.objectIs( srcPrototype ) );
+  _.assert( _.objectIs( srcModuleForTesting12type ) );
 
   do
   {
     let has = true;
     for( let n in names )
-    if( !_ObjectHasOwnProperty.call( srcPrototype,n ) )
+    if( !_ObjectHasOwnProperty.call( srcModuleForTesting12type,n ) )
     {
       has = false;
       break;
     }
     if( has )
-    return srcPrototype;
+    return srcModuleForTesting12type;
 
-    srcPrototype = Object.getPrototypeOf( srcPrototype );
+    srcModuleForTesting12type = Object.getModuleForTesting12typeOf( srcModuleForTesting12type );
   }
-  while( srcPrototype !== Object.prototype && srcPrototype );
+  while( srcModuleForTesting12type !== Object.prototype && srcModuleForTesting12type );
 
   return null;
 }
@@ -2400,20 +2400,20 @@ function prototypeHasProperty( srcPrototype,names )
 
 /**
  * Returns parent which has default proto.
- * @param {object} srcPrototype - dst object to append proto.
+ * @param {object} srcModuleForTesting12type - dst object to append proto.
  * @function prototypeArchyGet
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
-function prototypeArchyGet( srcPrototype )
+function prototypeArchyGet( srcModuleForTesting12type )
 {
 
-  _.assert( _.objectIs( srcPrototype ) );
+  _.assert( _.objectIs( srcModuleForTesting12type ) );
 
-  while( Object.getPrototypeOf( srcPrototype ) !== Object.prototype )
-  srcPrototype = Object.getPrototypeOf( srcPrototype );
+  while( Object.getModuleForTesting12typeOf( srcModuleForTesting12type ) !== Object.prototype )
+  srcModuleForTesting12type = Object.getModuleForTesting12typeOf( srcModuleForTesting12type );
 
-  return srcPrototype;
+  return srcModuleForTesting12type;
 }
 
 //
@@ -2524,7 +2524,7 @@ prototypeCrossRefer.defaults =
  * Iterate through prototypes.
  * @param {object} proto - prototype
  * @function prototypeEach
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
 function prototypeEach( proto,onEach )
@@ -2671,19 +2671,19 @@ function instanceFinit( src )
  * @example
  * let Self = function Alpha( o ) { };
  *
- * let Proto = { constructor: Self, Composes : { a : 1, b : 2 } };
+ * let ModuleForTesting12 = { constructor: Self, Composes : { a : 1, b : 2 } };
  *
  * _.classDeclare
  * ({
  *     constructor: Self,
- *     extend: Proto,
+ *     extend: ModuleForTesting12,
  * });
  * let obj = new Self();
  * console.log( _.workpiece.initFields( obj ) ); //returns Alpha { a: 1, b: 2 }
  *
  * @return {object} Returns complemented instance.
  * @function instanceInit
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
 function instanceInit( instance,prototype )
@@ -2763,7 +2763,7 @@ function instanceFilterInit( o )
 
   _.mapExtend( result,o.extend );
 
-  Object.setPrototypeOf( result,result.original );
+  Object.setModuleForTesting12typeOf( result,result.original );
 
   if( o.strict )
   Object.preventExtensions( result );
@@ -2786,7 +2786,7 @@ instanceFilterInit.defaults =
  * Make sure src does not have redundant fields.
  * @param {object} src - source object of the class.
  * @function assertInstanceDoesNotHaveReduntantFields
- * @memberof module:Tools/base/Proto.Tools( module::Proto )
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12.ModuleForTesting1( module::ModuleForTesting12 )
  */
 
 function assertInstanceDoesNotHaveReduntantFields( src )
@@ -2920,13 +2920,13 @@ function defaultProxyFlatteningToArray( src )
 /**
 * @classdesc Class container for creating property-like entity from non-primitive value.
   Is used by routines:
-  @see {@link module:Tools/base/Proto.wTools.define.own}
-  @see {@link module:Tools/base/Proto.wTools.define.common}
-  @see {@link module:Tools/base/Proto.wTools.define.instanceOf}
-  @see {@link module:Tools/base/Proto.wTools.define.makeWith}
-  @see {@link module:Tools/base/Proto.wTools.define.contained}
+  @see {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define.own}
+  @see {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define.common}
+  @see {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define.instanceOf}
+  @see {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define.makeWith}
+  @see {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define.contained}
 * @class Definition
-* @memberof module:Tools/base/Proto.wTools.define
+* @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define
 */
 
 function Definition( o )
@@ -2946,9 +2946,9 @@ function Definition( o )
 /**
 * Creates property-like entity with getter that returns reference to source object.
 * @param {Object-like|Long} src - source value
-* @returns {module:Tools/base/Proto.wTools.define.Definition}
+* @returns {module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define.Definition}
 * @function common
-* @memberof module:Tools/base/Proto.wTools.define
+* @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define
 */
 
 function common( src )
@@ -2971,9 +2971,9 @@ function common( src )
 /**
 * Creates property-like entity with getter that returns shallow copy of source object.
 * @param {Object-like|Long} src - source value
-* @returns {module:Tools/base/Proto.wTools.define.Definition}
+* @returns {module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define.Definition}
 * @function own
-* @memberof module:Tools/base/Proto.wTools.define
+* @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define
 */
 
 function own( src )
@@ -2997,9 +2997,9 @@ function own( src )
 /**
 * Creates property-like entity with getter that returns new instance of source constructor.
 * @param {Function} src - source constructor
-* @returns {module:Tools/base/Proto.wTools.define.Definition}
+* @returns {module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define.Definition}
 * @function instanceOf
-* @memberof module:Tools/base/Proto.wTools.define
+* @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define
 */
 
 function instanceOf( src )
@@ -3022,9 +3022,9 @@ function instanceOf( src )
 /**
 * Creates property-like entity with getter that returns result of source routine call.
 * @param {Function} src - source routine
-* @returns {module:Tools/base/Proto.wTools.define.Definition}
+* @returns {module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define.Definition}
 * @function makeWith
-* @memberof module:Tools/base/Proto.wTools.define
+* @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define
 */
 
 function makeWith( src )
@@ -3046,9 +3046,9 @@ function makeWith( src )
 
 /**
 * @param {Object} src
-* @returns {module:Tools/base/Proto.wTools.define.Definition}
+* @returns {module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define.Definition}
 * @function contained
-* @memberof module:Tools/base/Proto.wTools.define
+* @memberof module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.define
 */
 
 function contained( src )
@@ -3121,7 +3121,7 @@ wCallableObject.shortName = 'CallableObject';
  * @property {String} _name - private name
  * @property {String} shortName - short name
  * @property {Object} prototype - prototype object
- * @memberof module:Tools/base/Proto
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
 
 let KnownConstructorFields =
@@ -3134,32 +3134,32 @@ let KnownConstructorFields =
 
 /**
  * @typedef {Object} DefaultFieldsGroups - contains predefined class fields groups.
- * @memberof module:Tools/base/Proto
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @typedef {Object} DefaultFieldsGroupsRelations - contains predefined class relationship types.
- * @memberof module:Tools/base/Proto
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @typedef {Object} DefaultFieldsGroupsCopyable - contains predefined copyable class fields groups.
- * @memberof module:Tools/base/Proto
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @typedef {Object} DefaultFieldsGroupsTight
- * @memberof module:Tools/base/Proto
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @typedef {Object} DefaultFieldsGroupsInput
- * @memberof module:Tools/base/Proto
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @typedef {Object} DefaultForbiddenNames - contains names of forbidden properties
- * @memberof module:Tools/base/Proto
+ * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
 
 let DefaultFieldsGroups = Object.create( null );
@@ -3209,9 +3209,9 @@ Object.freeze( DefaultForbiddenNames );
 
 /**
 * Collection of routines to create a property-like entity.
-* @namespace "wTools.define"
-* @augments wTools
-* @memberof module:Tools/base/Proto
+* @namespace "wModuleForTesting1.define"
+* @augments wModuleForTesting1
+* @memberof module:ModuleForTesting1/base/ModuleForTesting12
 */
 
 let Define =
@@ -3263,10 +3263,10 @@ let Routines =
   fieldsGroupAssociatesSupplement, /* experimental */
   fieldsGroupRestrictsSupplement, /* experimental */
 
-  fieldsOfRelationsGroupsFromPrototype,
-  fieldsOfCopyableGroupsFromPrototype,
-  fieldsOfTightGroupsFromPrototype,
-  fieldsOfInputGroupsFromPrototype,
+  fieldsOfRelationsGroupsFromModuleForTesting12type,
+  fieldsOfCopyableGroupsFromModuleForTesting12type,
+  fieldsOfTightGroupsFromModuleForTesting12type,
+  fieldsOfInputGroupsFromModuleForTesting12type,
 
   fieldsOfRelationsGroups,
   fieldsOfCopyableGroups,
@@ -3308,10 +3308,10 @@ let Routines =
   constructorOf,
 
   isSubClassOf,
-  subPrototypeOf,
+  subModuleForTesting12typeOf,
 
   parentOf,
-  _classConstructorAndPrototypeGet,
+  _classConstructorAndModuleForTesting12typeGet,
 
   // prototype
 
@@ -3320,7 +3320,7 @@ let Routines =
   prototypeUnitedInterface, /* experimental */
 
   prototypeAppend, /* experimental */
-  prototypeHasPrototype, /* experimental */
+  prototypeHasModuleForTesting12type, /* experimental */
   prototypeHasProperty, /* experimental */
   prototypeArchyGet, /* experimental */
   prototypeHasField,
@@ -3373,8 +3373,8 @@ module[ 'exports' ] = Self;
 if( typeof module !== 'undefined' )
 {
 
-  require( './ProtoAccessor.s' );
-  require( './ProtoLike.s' );
+  require( './ModuleForTesting12Accessor.s' );
+  require( './ModuleForTesting12Like.s' );
 
 }
 

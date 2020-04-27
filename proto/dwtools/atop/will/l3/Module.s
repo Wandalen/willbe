@@ -3969,7 +3969,11 @@ function _subModulesForm()
 
   let con = _.Consequence().take( null );
 
+  // console.log( '_subModulesForm', module.absoluteName ); xxx
+
+  debugger;
   module._resourcesAllForm( will.ModulesRelation, con );
+  debugger;
 
   con.finally( ( err, arg ) =>
   {

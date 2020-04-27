@@ -1,9 +1,9 @@
 
 submodule :
 
-  Tools : git+https:///github.com/Wandalen/wModuleForTesting1.git/#8fa27d72fe02d5e496b26e16669970a69d71fdb1
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/#8fa27d72fe02d5e496b26e16669970a69d71fdb1
   ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/@master
-  UriBasic : git+https:///github.com/Wandalen/wUriBasic.git/#d7022e6dcd5ab7f2d71aeb740d41a65dfaabdecf
+  ModuleForTesting2b : git+https:///github.com/Wandalen/wModuleForTesting2b.git/#d7022e6dcd5ab7f2d71aeb740d41a65dfaabdecf
 
 path :
 

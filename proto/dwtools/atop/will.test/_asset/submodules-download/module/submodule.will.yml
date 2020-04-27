@@ -1,6 +1,6 @@
 submodule :
-  Tools : git+https:///github.com/Wandalen/wModuleForTesting1.git/@master
-  Proto : git+https:///github.com/Wandalen/wProto.git/@master
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/@master
+  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/@master
 
 about :
 

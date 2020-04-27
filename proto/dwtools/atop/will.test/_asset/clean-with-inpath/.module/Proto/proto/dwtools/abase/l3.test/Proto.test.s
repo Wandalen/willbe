@@ -1,21 +1,21 @@
-( function _Proto_test_s_( ) {
+( function _ModuleForTesting12_test_s_( ) {
 
 'use strict'; 
 
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../dwtools/ModuleForTesting1.s' );
 
   _.include( 'wTesting' );
   _.include( 'wEqualer' );
 
-  require( '../../abase/l3/Proto.s' );
+  require( '../../abase/l3/ModuleForTesting12.s' );
 
 }
 
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 
 // --
 // test
@@ -55,12 +55,12 @@ function instanceIs( t )
   t.is( _.instanceIs( Self ) );
 
   t.will = 'object-like prototype';
-  t.is( !_.instanceIs( Object.getPrototypeOf( [] ) ) );
-  t.is( !_.instanceIs( Object.getPrototypeOf( /x/ ) ) );
-  t.is( !_.instanceIs( Object.getPrototypeOf( new Date() ) ) );
-  t.is( !_.instanceIs( Object.getPrototypeOf( new F32x() ) ) );
-  t.is( !_.instanceIs( Object.getPrototypeOf( new (function(){})() ) ) );
-  t.is( !_.instanceIs( Object.getPrototypeOf( Self ) ) );
+  t.is( !_.instanceIs( Object.getModuleForTesting12typeOf( [] ) ) );
+  t.is( !_.instanceIs( Object.getModuleForTesting12typeOf( /x/ ) ) );
+  t.is( !_.instanceIs( Object.getModuleForTesting12typeOf( new Date() ) ) );
+  t.is( !_.instanceIs( Object.getModuleForTesting12typeOf( new F32x() ) ) );
+  t.is( !_.instanceIs( Object.getModuleForTesting12typeOf( new (function(){})() ) ) );
+  t.is( !_.instanceIs( Object.getModuleForTesting12typeOf( Self ) ) );
 
 }
 
@@ -100,12 +100,12 @@ function instanceIsStandard( t )
   t.is( _.instanceIsStandard( Self ) );
 
   t.will = 'object-like prototype';
-  t.is( !_.instanceIsStandard( Object.getPrototypeOf( [] ) ) );
-  t.is( !_.instanceIsStandard( Object.getPrototypeOf( /x/ ) ) );
-  t.is( !_.instanceIsStandard( Object.getPrototypeOf( new Date() ) ) );
-  t.is( !_.instanceIsStandard( Object.getPrototypeOf( new F32x() ) ) );
-  t.is( !_.instanceIsStandard( Object.getPrototypeOf( new (function(){})() ) ) );
-  t.is( !_.instanceIsStandard( Object.getPrototypeOf( Self ) ) );
+  t.is( !_.instanceIsStandard( Object.getModuleForTesting12typeOf( [] ) ) );
+  t.is( !_.instanceIsStandard( Object.getModuleForTesting12typeOf( /x/ ) ) );
+  t.is( !_.instanceIsStandard( Object.getModuleForTesting12typeOf( new Date() ) ) );
+  t.is( !_.instanceIsStandard( Object.getModuleForTesting12typeOf( new F32x() ) ) );
+  t.is( !_.instanceIsStandard( Object.getModuleForTesting12typeOf( new (function(){})() ) ) );
+  t.is( !_.instanceIsStandard( Object.getModuleForTesting12typeOf( Self ) ) );
 
 }
 
@@ -143,12 +143,12 @@ function prototypeIs( t )
   t.is( !_.prototypeIs( Self ) );
 
   t.will = 'object-like prototype';
-  t.is( _.prototypeIs( Object.getPrototypeOf( [] ) ) );
-  t.is( _.prototypeIs( Object.getPrototypeOf( /x/ ) ) );
-  t.is( _.prototypeIs( Object.getPrototypeOf( new Date() ) ) );
-  t.is( _.prototypeIs( Object.getPrototypeOf( new F32x() ) ) );
-  t.is( _.prototypeIs( Object.getPrototypeOf( new (function(){})() ) ) );
-  t.is( _.prototypeIs( Object.getPrototypeOf( Self ) ) );
+  t.is( _.prototypeIs( Object.getModuleForTesting12typeOf( [] ) ) );
+  t.is( _.prototypeIs( Object.getModuleForTesting12typeOf( /x/ ) ) );
+  t.is( _.prototypeIs( Object.getModuleForTesting12typeOf( new Date() ) ) );
+  t.is( _.prototypeIs( Object.getModuleForTesting12typeOf( new F32x() ) ) );
+  t.is( _.prototypeIs( Object.getModuleForTesting12typeOf( new (function(){})() ) ) );
+  t.is( _.prototypeIs( Object.getModuleForTesting12typeOf( Self ) ) );
 
 }
 
@@ -186,12 +186,12 @@ function constructorIs( t )
   t.is( !_.constructorIs( Self ) );
 
   t.will = 'object-like prototype';
-  t.is( !_.constructorIs( Object.getPrototypeOf( [] ) ) );
-  t.is( !_.constructorIs( Object.getPrototypeOf( /x/ ) ) );
-  t.is( !_.constructorIs( Object.getPrototypeOf( new Date() ) ) );
-  t.is( !_.constructorIs( Object.getPrototypeOf( new F32x() ) ) );
-  t.is( !_.constructorIs( Object.getPrototypeOf( new (function(){})() ) ) );
-  t.is( !_.constructorIs( Object.getPrototypeOf( Self ) ) );
+  t.is( !_.constructorIs( Object.getModuleForTesting12typeOf( [] ) ) );
+  t.is( !_.constructorIs( Object.getModuleForTesting12typeOf( /x/ ) ) );
+  t.is( !_.constructorIs( Object.getModuleForTesting12typeOf( new Date() ) ) );
+  t.is( !_.constructorIs( Object.getModuleForTesting12typeOf( new F32x() ) ) );
+  t.is( !_.constructorIs( Object.getModuleForTesting12typeOf( new (function(){})() ) ) );
+  t.is( !_.constructorIs( Object.getModuleForTesting12typeOf( Self ) ) );
 
 }
 
@@ -229,12 +229,12 @@ function prototypeIsStandard( t )
   t.is( !_.prototypeIsStandard( Self ) );
 
   t.will = 'object-like prototype';
-  t.is( !_.prototypeIsStandard( Object.getPrototypeOf( [] ) ) );
-  t.is( !_.prototypeIsStandard( Object.getPrototypeOf( /x/ ) ) );
-  t.is( !_.prototypeIsStandard( Object.getPrototypeOf( new Date() ) ) );
-  t.is( !_.prototypeIsStandard( Object.getPrototypeOf( new F32x() ) ) );
-  t.is( !_.prototypeIsStandard( Object.getPrototypeOf( new (function(){})() ) ) );
-  t.is( _.prototypeIsStandard( Object.getPrototypeOf( Self ) ) );
+  t.is( !_.prototypeIsStandard( Object.getModuleForTesting12typeOf( [] ) ) );
+  t.is( !_.prototypeIsStandard( Object.getModuleForTesting12typeOf( /x/ ) ) );
+  t.is( !_.prototypeIsStandard( Object.getModuleForTesting12typeOf( new Date() ) ) );
+  t.is( !_.prototypeIsStandard( Object.getModuleForTesting12typeOf( new F32x() ) ) );
+  t.is( !_.prototypeIsStandard( Object.getModuleForTesting12typeOf( new (function(){})() ) ) );
+  t.is( _.prototypeIsStandard( Object.getModuleForTesting12typeOf( Self ) ) );
 
 }
 
@@ -940,8 +940,8 @@ function classDeclare( test )
     test.case = 'presence of valid prototype and constructor fields on class and prototype';
 
     test.identical( o.Class, o.Class.prototype.constructor );
-    test.identical( Object.getPrototypeOf( o.Class ), o.Class0 );
-    test.identical( Object.getPrototypeOf( o.Class.prototype ), C0proto );
+    test.identical( Object.getModuleForTesting12typeOf( o.Class ), o.Class0 );
+    test.identical( Object.getModuleForTesting12typeOf( o.Class.prototype ), C0proto );
 
     test.case = 'presence of valid static field on class and prototype';
 
@@ -992,7 +992,7 @@ function classDeclare( test )
 
     test.case = 'presence of valid prototype and constructor fields on instance';
 
-    test.identical( Object.getPrototypeOf( c1a ), o.Class.prototype );
+    test.identical( Object.getModuleForTesting12typeOf( c1a ), o.Class.prototype );
     test.identical( c1a.constructor, o.Class );
 
     test.case = 'presence of valid Statics descriptor';
@@ -2045,7 +2045,7 @@ function instanceConstructor( test )
 var Self =
 {
 
-  name : 'Tools.base.l3.proto',
+  name : 'ModuleForTesting1.base.l3.proto',
   silencing : 1,
   // verbosity : 7,
   // routineTimeOut : 300000,

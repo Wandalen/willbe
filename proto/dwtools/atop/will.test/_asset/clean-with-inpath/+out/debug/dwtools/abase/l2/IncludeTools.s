@@ -5,7 +5,7 @@
 //
 
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 
 var Module = null;
 var __nativeInclude;
@@ -762,7 +762,7 @@ _sourceFileResolve.defaults =
 
 function toolsPathGet()
 {
-  return _.path.normalize( __dirname + '/../../../../dwtools/Tools.s' );
+  return _.path.normalize( __dirname + '/../../../../dwtools/ModuleForTesting1.s' );
 }
 
 // --
@@ -833,7 +833,7 @@ function _Setup()
 // declare
 // --
 
-var ToolsExtension =
+var ModuleForTesting1Extension =
 {
   include,
   includeFirst,
@@ -904,7 +904,7 @@ var ModuleExtension =
 }
 
 _.mapSupplement( _.module, ModuleExtension );
-_.mapSupplement( _, ToolsExtension );
+_.mapSupplement( _, ModuleForTesting1Extension );
 
 _.module._Setup();
 

@@ -9,7 +9,7 @@ if( typeof module !== 'undefined' )
 }
 
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 
 // --
 // context
@@ -4009,7 +4009,7 @@ function vectorizeAccess( test )
 var Self =
 {
 
-  name : 'Tools.base.Routine',
+  name : 'ModuleForTesting1.base.Routine',
   silencing : 1,
 
   tests :

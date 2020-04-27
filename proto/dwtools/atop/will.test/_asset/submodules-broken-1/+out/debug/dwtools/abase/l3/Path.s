@@ -1,30 +1,30 @@
-( function _PathBasic_s_() {
+( function _ModuleForTesting2_s_() {
 
 'use strict';
 
 /**
  * Collection of routines to operate paths reliably and consistently. Path leverages parsing,joining,extracting,normalizing,nativizing,resolving paths. Use the module to get uniform experience from playing with paths on different platforms.
-  @module Tools/base/Path
+  @module ModuleForTesting1/base/Path
 */
 
 /**
  * @summary Collection of routines to operate paths reliably and consistently.
- * @namespace wTools.path
- * @extends Tools
- * @module Tools/PathBasic
+ * @namespace wModuleForTesting1.path
+ * @extends ModuleForTesting1
+ * @module ModuleForTesting1/ModuleForTesting2
  */
 
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../dwtools/ModuleForTesting1.s' );
 
 }
 
 //
 
 let _global = _global_;
-let _ = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
 _.assert( !!_.path );
 let Self = _.path = _.path || Object.create( null );
 
@@ -59,7 +59,7 @@ function isElement( pathElement )
  * @param {String} filePath Source path for check
  * @returns {boolean}
  * @function isSafe
- * @namespace Tools.path
+ * @namespace ModuleForTesting1.path
  */
 
 function isSafe( filePath,level )
@@ -114,7 +114,7 @@ function isSafe( filePath,level )
 //  * @param {String} filePath Source path for check
 //  * @returns {boolean}
 //  * @function isRefined
-//  * @namespace Tools.path
+//  * @namespace ModuleForTesting1.path
 //  */
 //
 // function isRefined( path )
@@ -141,7 +141,7 @@ function isSafe( filePath,level )
 // //  * @param {String} filePath Source path for check
 // //  * @returns {boolean}
 // //  * @function isRefined
-// //  * @namespace Tools.path
+// //  * @namespace ModuleForTesting1.path
 // //  */
 // //
 // // function isRefined( path )
@@ -162,7 +162,7 @@ function isSafe( filePath,level )
 //  * @param {String} filePath Source path for check
 //  * @returns {boolean}
 //  * @function isNormalized
-//  * @namespace Tools.path
+//  * @namespace ModuleForTesting1.path
 //  */
 //
 // function isNormalized( filePath )
@@ -181,7 +181,7 @@ function isSafe( filePath,level )
 //  * @param {String} filePath Source path for check
 //  * @returns {boolean}
 //  * @function isNormalized
-//  * @namespace Tools.path
+//  * @namespace ModuleForTesting1.path
 //  */
 //
 // function isNormalized( filePath )
@@ -359,28 +359,28 @@ function hasSymbolBase( srcPath )
 //   * @example
 //   *  // returns '/foo//bar/../';
 //   *  let path = '\\foo\\\\bar\\..\\';
-//   *  path = wTools.refine( path );
+//   *  path = wModuleForTesting1.refine( path );
 //   *
 //   * @example
 //   *  // returns '/C/temp//foo/bar/../';
 //   *  let path = 'C:\\temp\\\\foo\\bar\\..\\';
-//   *  path = wTools.refine( path );
+//   *  path = wModuleForTesting1.refine( path );
 //   *
 //   * @example
 //   *  // returns '';
 //   *  let path = '';
-//   *  path = wTools.refine( path );
+//   *  path = wModuleForTesting1.refine( path );
 //   *
 //   * @example
 //   *  // returns '/foo/bar/';
 //   *  let path = '/foo/bar/';
-//   *  path = wTools.refine( path );
+//   *  path = wModuleForTesting1.refine( path );
 //   *
 //   * @returns {string} Returns refined path.
 //   * @throws {Error} If {-arguments.length-} is less or more then one.
 //   * @throws {Error} If passed argument is not a string.
 //   * @function refine
-//   * @namespace Tools.path
+//   * @namespace ModuleForTesting1.path
 //   */
 //
 // function refine( src )
@@ -533,11 +533,11 @@ function hasSymbolBase( srcPath )
 //     representing the current working directory.
 //  * @example
 //    let path = '/foo/bar//baz1/baz2//some/..'
-//    path = wTools.normalize( path ); // /foo/bar/baz1/baz2
+//    path = wModuleForTesting1.normalize( path ); // /foo/bar/baz1/baz2
 //  * @param {string} src path for normalization
 //  * @returns {string}
 //  * @function normalize
-//  * @namespace Tools.path
+//  * @namespace ModuleForTesting1.path
 //  */
 //
 // function normalize( src )
@@ -744,12 +744,12 @@ function hasSymbolBase( srcPath )
 //  * Returns the directory name of `path`.
 //  * @example
 //  * let path = '/foo/bar/baz/text.txt'
-//  * wTools.dir( path ); // '/foo/bar/baz'
+//  * wModuleForTesting1.dir( path ); // '/foo/bar/baz'
 //  * @param {string} path path string
 //  * @returns {string}
 //  * @throws {Error} If argument is not string
 //  * @function dir
-//  * @namespace Tools.path
+//  * @namespace ModuleForTesting1.path
 //  */
 //
 // function dir_pre( routine, args )
@@ -859,7 +859,7 @@ function hasSymbolBase( srcPath )
  * @returns {string}
  * @throws {Error} If passed argument is not string.
  * @function prefixGet
- * @namespace Tools.path
+ * @namespace ModuleForTesting1.path
  */
 
 function prefixGet( path )
@@ -886,13 +886,13 @@ function prefixGet( path )
 /**
  * Returns path name (file name).
  * @example
- * wTools.name( '/foo/bar/baz.asdf' ); // 'baz'
+ * wModuleForTesting1.name( '/foo/bar/baz.asdf' ); // 'baz'
  * @param {string|object} path|o Path string,or options
  * @param {boolean} o.full if this parameter set to true method return name with extension.
  * @returns {string}
  * @throws {Error} If passed argument is not string
  * @function name
- * @namespace Tools.path
+ * @namespace ModuleForTesting1.path
  */
 
 function name_pre( routine, args )
@@ -949,12 +949,12 @@ fullName.defaults.full = 1;
 /**
  * Return path without extension.
  * @example
- * wTools.withoutExt( '/foo/bar/baz.txt' ); // '/foo/bar/baz'
+ * wModuleForTesting1.withoutExt( '/foo/bar/baz.txt' ); // '/foo/bar/baz'
  * @param {string} path String path
  * @returns {string}
  * @throws {Error} If passed argument is not string
  * @function withoutExt
- * @namespace Tools.path
+ * @namespace ModuleForTesting1.path
  */
 
 function withoutExt( path )
@@ -984,7 +984,7 @@ function withoutExt( path )
  * @returns {string} file extension
  * @throws {Error} If passed argument is not string.
  * @function ext
- * @namespace Tools.path
+ * @namespace ModuleForTesting1.path
  */
 
 function ext( path )
@@ -1033,13 +1033,13 @@ function exts( path )
  * Replaces existing path extension on passed in `ext` parameter. If path has no extension,adds passed extension
     to path.
  * @example
- * wTools.changeExt( '/foo/bar/baz.txt', 'text' ); // '/foo/bar/baz.text'
+ * wModuleForTesting1.changeExt( '/foo/bar/baz.txt', 'text' ); // '/foo/bar/baz.text'
  * @param {string} path Path string
  * @param {string} ext
  * @returns {string}
  * @throws {Error} If passed argument is not string
  * @function changeExt
- * @namespace Tools.path
+ * @namespace ModuleForTesting1.path
  */
 
 // qqq : extend tests | Dmytro : coverage is extended
@@ -1104,7 +1104,7 @@ function _pathsChangeExt( src )
  * @throws {Error} If elements of `paths` are not strings
  * @throws {Error} If o has extra parameters.
  * @function join_body
- * @namespace Tools.path
+ * @namespace ModuleForTesting1.path
  */
 
 function join_pre( routine, args )
@@ -1233,13 +1233,13 @@ join_body.defaults =
 /**
  * Method joins all `paths` together,beginning from string that starts with '/', and normalize the resulting path.
  * @example
- * let res = wTools.join( '/foo', 'bar', 'baz', '.');
+ * let res = wModuleForTesting1.join( '/foo', 'bar', 'baz', '.');
  * // '/foo/bar/baz'
  * @param {...string} paths path strings
  * @returns {string} Result path is the concatenation of all `paths` with '/' directory delimeter.
  * @throws {Error} If one of passed arguments is not string
  * @function join
- * @namespace Tools.path
+ * @namespace ModuleForTesting1.path
  */
 
 let join = _.routineFromPreAndBody( join_pre, join_body );
@@ -1328,13 +1328,13 @@ function joinCross()
 /**
  * Method joins all `paths` strings together.
  * @example
- * let res = wTools.reroot( '/foo', '/bar/', 'baz', '.');
+ * let res = wModuleForTesting1.reroot( '/foo', '/bar/', 'baz', '.');
  * // '/foo/bar/baz/.'
  * @param {...string} paths path strings
  * @returns {string} Result path is the concatenation of all `paths` with '/' directory delimeter.
  * @throws {Error} If one of passed arguments is not string
  * @function reroot
- * @namespace Tools.path
+ * @namespace ModuleForTesting1.path
  */
 
 let reroot = _.routineFromPreAndBody( join_pre, join_body );
@@ -1366,11 +1366,11 @@ reroot.defaults =
  * path is constructed. If after processing all given path segments an absolute path has not yet been generated,
  * the current working directory is used.
  * @example
- * let absPath = wTools.resolve('work/wFiles'); // '/home/user/work/wFiles';
+ * let absPath = wModuleForTesting1.resolve('work/wFiles'); // '/home/user/work/wFiles';
  * @param [...string] paths A sequence of paths or path segments
  * @returns {string}
  * @function resolve
- * @namespace Tools.path
+ * @namespace ModuleForTesting1.path
  */
 
 function resolve()
@@ -1623,12 +1623,12 @@ function from( src )
 * accessed to confirm the existence or nature of path or start.
 
 * * If `o.relative` and `o.path` each resolve to the same path method returns `.`.
-* * If `o.resolving` is enabled -- paths `o.relative` and `o.path` are resolved before computation, uses result of {@link module:Tools/PathBasic.Path.current _.path.current} as base.
+* * If `o.resolving` is enabled -- paths `o.relative` and `o.path` are resolved before computation, uses result of {@link module:ModuleForTesting1/ModuleForTesting2.Path.current _.path.current} as base.
 * * If `o.resolving` is disabled -- paths `o.relative` and `o.path` are not resolved and must be both relative or absolute.
 *
 * **Examples of how result is computed and how to chech the result:**
 *
-* Result is checked by a formula : from + result === to, where '+' means join operation {@link module:Tools/PathBasic.Path.join _.path.join}
+* Result is checked by a formula : from + result === to, where '+' means join operation {@link module:ModuleForTesting1/ModuleForTesting2.Path.join _.path.join}
 *
 * **Note** :
 * * `from` -- `o.relative`
@@ -1737,7 +1737,7 @@ function from( src )
 * //'./d'
 *
 * @function _relative
-* @namespace Tools.path
+* @namespace ModuleForTesting1.path
 */
 
 function _relative( o )
@@ -1952,13 +1952,13 @@ _relative.defaults =
 //
 
 /**
-* Short-cut for routine relative {@link module:Tools/PathBasic.Path._relative _.path._relative}.
+* Short-cut for routine relative {@link module:ModuleForTesting1/ModuleForTesting2.Path._relative _.path._relative}.
 * Returns a relative path to `path` from an `relative`. Does not resolve paths {o.relative} and {o.path} before computation.
 *
 * @param {string|wFileRecord} relative Start path.
 * @param {string|string[]} path Target path(s).
 * @returns {string|string[]} Returns relative path as String or array of Strings.
-* For more details please see {@link module:Tools/PathBasic.Path._relative _.path._relative}.
+* For more details please see {@link module:ModuleForTesting1/ModuleForTesting2.Path._relative _.path._relative}.
 *
 * @example
 * let from = '/a';
@@ -2002,7 +2002,7 @@ _relative.defaults =
 * //'../../c/d'
 *
 * @function relative
-* @namespace Tools.path
+* @namespace ModuleForTesting1.path
 */
 
 function relative_pre( routine, args )

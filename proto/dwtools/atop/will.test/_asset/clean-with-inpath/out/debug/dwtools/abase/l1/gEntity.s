@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 // --
 // entity getter
@@ -38,7 +38,7 @@ let Self = _global_.wTools;
  *
  * @returns {number} Returns "length" of entity.
  * @function entityLength
- * @namespace Tools
+ * @namespace ModuleForTesting1
 */
 
 function entityLength( src )
@@ -81,7 +81,7 @@ function entityLength( src )
  * // returns null
  *
  * @function uncountableSize
- * @namespace Tools
+ * @namespace ModuleForTesting1
 */
 
 function uncountableSize( src )
@@ -139,7 +139,7 @@ function uncountableSize( src )
  * // returns null
  *
  * @function entitySize
- * @namespace Tools
+ * @namespace ModuleForTesting1
 */
 
 /* qqq : review */

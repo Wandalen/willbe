@@ -1,14 +1,14 @@
 about :
 
-  name : UriBasic.informal
+  name : ModuleForTesting2b.informal
   version : 0.1.0
 
 path :
 
   in : ..
   out : out
-  remote : 'git+https:///github.com/Wandalen/wUriBasic.git'
-  download : '.module/UriBasic'
+  remote : 'git+https:///github.com/Wandalen/wModuleForTesting2b.git'
+  download : '.module/ModuleForTesting2b'
   export : '{path::download}/proto/**'
 
 reflector :

@@ -5,18 +5,18 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../../dwtools/Tools.s' );
+  let _ = require( '../../../../dwtools/ModuleForTesting1.s' );
 
   _.include( 'wTesting' );
 
-  if( !_.module.isIncluded( 'wProto' ) )
+  if( !_.module.isIncluded( 'wModuleForTesting12' ) )
   {
     require( '../../abase/l3_proto/Include.s' );
   }
 
 }
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 
 // --
 // test
@@ -76,7 +76,7 @@ function isLike( test )
 var Self =
 {
 
-  name : 'Tools.base.l3.ProtoLike',
+  name : 'ModuleForTesting1.base.l3.ModuleForTesting12Like',
   silencing : 1,
 
   tests :

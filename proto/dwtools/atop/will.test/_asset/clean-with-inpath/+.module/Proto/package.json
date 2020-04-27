@@ -1,8 +1,8 @@
 {
-  "name": "wProto",
+  "name": "wModuleForTesting12",
   "version": "0.4.154",
   "engine": "node >= 8.0.0",
-  "description": "Relations module. Collection of routines to define classes and relations between them. Proto leverages multiple inheritances, mixins, accessors, fields groups defining, introspection and more. Use it as a skeleton of the application.",
+  "description": "Relations module. Collection of routines to define classes and relations between them. ModuleForTesting12 leverages multiple inheritances, mixins, accessors, fields groups defining, introspection and more. Use it as a skeleton of the application.",
   "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
   "license": "MIT",
   "contributors": [
@@ -15,11 +15,11 @@
       "email": "volodymyr.migdal@gmail.com"
     }
   ],
-  "main": "proto/dwtools/abase/l3/Proto.s",
+  "main": "proto/dwtools/abase/l3/ModuleForTesting12.s",
   "files": [
     "npm-shrinkwrap.json",
     "proto/dwtools/abase/l3",
-    "proto/dwtools/Tools.s",
+    "proto/dwtools/ModuleForTesting1.s",
     "production"
   ],
   "scripts": {
@@ -28,26 +28,26 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Wandalen/wProto.git"
+    "url": "https://github.com/Wandalen/wModuleForTesting12.git"
   },
   "bugs": {
-    "url": "https://github.com/Wandalen/wProto/issues"
+    "url": "https://github.com/Wandalen/wModuleForTesting12/issues"
   },
   "dependencies": {
-    "wTools": ""
+    "wModuleForTesting1": ""
   },
   "devDependencies": {
-    "wProto": "file:.",
+    "wModuleForTesting12": "file:.",
     "wequaler": "",
     "wTesting": ""
   },
   "keywords": [
-    "wTools",
-    "wProto",
+    "wModuleForTesting1",
+    "wModuleForTesting12",
     "mixin",
     "Class",
     "Object",
-    "Prototype",
+    "ModuleForTesting12type",
     "Incapsulation"
   ]
 }

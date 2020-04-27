@@ -3,8 +3,8 @@ root:
   - sub.out
 consistency:
   sub.out.will.yml: &ref_0
-    hash: 6644f0fff430bdbe46629eaba22139c5
-    size: 8850
+    hash: 30dee3ba852a66d02682187d509f1a1e
+    size: 8688
   ../sub.ex.will.yml: &ref_1
     hash: 868b5a57eaff621b4f9717b65569eabf
     size: 381
@@ -47,18 +47,11 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       proto:
         path: ../proto
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: .
       out.debug:
         criterion:
@@ -73,6 +66,7 @@ module:
           - .
       exported.dir.export.:
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -80,6 +74,7 @@ module:
         path: release
       exported.files.export.:
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -89,6 +84,7 @@ module:
           - release/File.release.js
       exported.dir.export.debug:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -96,6 +92,7 @@ module:
         path: debug
       exported.files.export.debug:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -133,6 +130,7 @@ module:
           prefixPath: release
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -147,6 +145,7 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -158,6 +157,7 @@ module:
           prefixPath: debug
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -172,6 +172,7 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -230,6 +231,7 @@ module:
         opts:
           reflector: 'reflector::exported.export.*'
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -240,28 +242,9 @@ module:
         opts:
           reflector: 'reflector::exported.files.export.*'
         criterion:
+          generated: 1
           default: 1
           debug: 0
-          raw: 1
-          export: 1
-        inherit:
-          - files.reflect
-      exported.export.debug:
-        opts:
-          reflector: 'reflector::exported.export.debug*'
-        criterion:
-          default: 1
-          debug: 1
-          raw: 1
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.export.debug:
-        opts:
-          reflector: 'reflector::exported.files.export.debug*'
-        criterion:
-          default: 1
-          debug: 1
           raw: 1
           export: 1
         inherit:
@@ -367,13 +350,10 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       proto:
         path: .
       in:
-        path: ./proto
+        path: proto
       out:
         path: ../sub.out
       out.debug:
@@ -497,4 +477,6 @@ module:
       ../sub.im.will.yml:
         hash: c6233389a466d4e36531c056e1b59784
         size: 810
-      sub.out.will.yml: *ref_0
+      sub.out.will.yml:
+        hash: 30dee3ba852a66d02682187d509f1a1e
+        size: 8688

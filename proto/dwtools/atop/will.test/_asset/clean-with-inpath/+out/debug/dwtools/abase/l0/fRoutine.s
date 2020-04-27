@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 // --
 // routine
@@ -38,7 +38,7 @@ function routineIsPure( src )
 {
   if( !src )
   return false;
-  if( !( Object.getPrototypeOf( src ) === Function.__proto__ ) )
+  if( !( Object.getModuleForTesting12typeOf( src ) === Function.__proto__ ) )
   return false;
   return true;
 }
@@ -61,7 +61,7 @@ function routineWithName( src )
  * @param {object} object - object to check.
  * @return {object} object - name in key/value format.
  * @function _routineJoin
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function _routineJoin( o )
@@ -264,7 +264,7 @@ function constructorJoin( routine, args )
  * @throws {Error} When second argument is not callable throws error with text 'first argument must be a routine'
  * @thorws {Error} If passed arguments more than 3 throws error with text 'Expects 3 or less arguments'
  * @function routineJoin
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function routineJoin( context, routine, args )
@@ -321,7 +321,7 @@ function routineJoin( context, routine, args )
  * @throws {Error} When second argument is not callable throws error with text 'first argument must be a routine'
  * @thorws {Error} If passed arguments more than 3 throws error with text 'Expects 3 or less arguments'
  * @function routineJoin
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function routineJoin( context, routine, args )
@@ -361,7 +361,7 @@ function routineJoin( context, routine, args )
  * @param {Array<*>} args Arguments wrapped into array. Will be used as argument to `routine` function
  * @returns {Function} Result function with sealed context and arguments.
  * @function routineJoin
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function routineSeal( context, routine, args )
@@ -507,7 +507,7 @@ function routineOptionsFromThis( routine, _this, constructor )
   _.assert( arguments.length === 3, 'routineOptionsFromThis : expects 3 arguments' );
 
   let options = _this || Object.create( null );
-  if( Object.isPrototypeOf.call( constructor, _this ) || constructor === _this )
+  if( Object.isModuleForTesting12typeOf.call( constructor, _this ) || constructor === _this )
   options = Object.create( null );
 
   return _.routineOptions( routine, options );
@@ -670,7 +670,7 @@ qqq implement and cover _.routineExtend( null, routine );
  *
  * If the first routine (dst) is null then
  * routine routineExtend() makes a routine from routines pre and body
- * @see {@link wTools.routineFromPreAndBody} - Automatic routine generating
+ * @see {@link wModuleForTesting1.routineFromPreAndBody} - Automatic routine generating
  * from preparation routine and main routine (body).
  *
  * @param{ routine } dst - The target routine or null.
@@ -705,7 +705,7 @@ qqq implement and cover _.routineExtend( null, routine );
  * @throws { Error } Throw an error if dst is not routine or not null.
  * @throws { Error } Throw an error if dst is null and src has not pre and body properties.
  * @throws { Error } Throw an error if src is primitive value.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function routineExtend( dst )

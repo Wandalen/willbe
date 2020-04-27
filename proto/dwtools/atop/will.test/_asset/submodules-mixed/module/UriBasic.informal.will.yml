@@ -1,6 +1,6 @@
 about :
 
-  name : UriBasic.informal
+  name : ModuleForTesting2b.informal
   version : 0.1.0
 
 path :
@@ -8,7 +8,7 @@ path :
   in : ..
   out : out
   remote : 'npm:///wuribasic'
-  download : '.module/UriBasic'
+  download : '.module/ModuleForTesting2b'
   export : '{path::download}/proto/**'
 
 reflector :

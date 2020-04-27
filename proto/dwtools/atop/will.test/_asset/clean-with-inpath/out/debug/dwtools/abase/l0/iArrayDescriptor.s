@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global.wTools;
-let Self = _global.wTools;
+let _ = _global.wModuleForTesting1;
+let Self = _global.wModuleForTesting1;
 
 _.assert( !_.Array );
 _.assert( !_.array );
@@ -52,7 +52,7 @@ nameSpace = _.mapExtend( null,nameSpace );
  * @param {} src Source array
  * @param {Number} [ length ] Lengthof target array.
  * @function MakeSimilar
- * @memberof wTools."wTools.array"
+ * @memberof wModuleForTesting1."wModuleForTesting1.array"
  */
 
 function MakeSimilar( src,length )
@@ -80,7 +80,7 @@ function MakeSimilar( src,length )
  * // returns instance of F32x
  *
  * @function Make/*makeArrayOfLength*/
- * @memberof wTools."wTools.array"
+ * @memberof wModuleForTesting1."wModuleForTesting1.array"
  */
 
 function Make/*makeArrayOfLength*/( length )
@@ -113,7 +113,7 @@ function Make/*makeArrayOfLength*/( length )
  * // returns F32x [ 0,0 ]
  *
  * @function Make/*makeArrayOfLength*/Zeroed
- * @memberof wTools."wTools.array"
+ * @memberof wModuleForTesting1."wModuleForTesting1.array"
  */
 
 
@@ -158,7 +158,7 @@ function Make/*makeArrayOfLength*/Zeroed( length )
  * // returns src
  *
  * @function arrayFromCoercing
- * @memberof wTools."wTools.array"
+ * @memberof wModuleForTesting1."wModuleForTesting1.array"
  */
 
 function arrayFromCoercing( src )
@@ -344,7 +344,7 @@ let Extend =
   LongDescriptor,
 }
 
-Object.assign( wTools, Extend );
+Object.assign( wModuleForTesting1, Extend );
 
 // --
 //
@@ -371,8 +371,8 @@ _.assert( !_.withDefaultLong );
 
 /**
  * @summary Array namespace
- * @namespace "wTools.array"
- * @memberof wTools
+ * @namespace "wModuleForTesting1.array"
+ * @memberof wModuleForTesting1
  */
 
 let LongDescriptors = Object.create( null );

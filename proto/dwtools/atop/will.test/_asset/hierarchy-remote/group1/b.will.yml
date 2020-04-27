@@ -5,8 +5,8 @@ about :
 
 submodule :
 
-  PathTools : git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
-  Proto : git+https:///github.com/Wandalen/wProto.git/
+  PathModuleForTesting1 : git+https:///github.com/Wandalen/wPathModuleForTesting1.git/out/wPathModuleForTesting1.out
+  ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/
 
 path :
 

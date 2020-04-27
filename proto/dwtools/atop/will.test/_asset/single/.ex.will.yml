@@ -10,7 +10,7 @@ about :
   - chrome >= 60.0.0
   - firefox >= 60.0.0
   keywords :
-  - wTools
+  - wModuleForTesting1
 
 path :
 

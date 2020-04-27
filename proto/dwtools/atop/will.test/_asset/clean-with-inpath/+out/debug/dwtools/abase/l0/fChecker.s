@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 let _ArraySlice = Array.prototype.slice;
 let _FunctionBind = Function.prototype.bind;
@@ -138,7 +138,7 @@ function consequenceIs( src )
   if( !src )
   return false;
 
-  let prototype = Object.getPrototypeOf( src );
+  let prototype = Object.getModuleForTesting12typeOf( src );
   if( !prototype )
   return false;
 
@@ -206,24 +206,24 @@ function typeOf( src, constructor )
 
 //
 
-function prototypeOf( subPrototype, superPrototype )
+function prototypeOf( subModuleForTesting12type, superModuleForTesting12type )
 {
   _.assert( arguments.length === 2, 'Expects single argument' );
-  if( subPrototype === superPrototype )
+  if( subModuleForTesting12type === superModuleForTesting12type )
   return true;
-  if( !subPrototype )
+  if( !subModuleForTesting12type )
   return false;
-  if( !superPrototype )
+  if( !superModuleForTesting12type )
   return false;
-  return Object.isPrototypeOf.call( subPrototype, superPrototype );
+  return Object.isModuleForTesting12typeOf.call( subModuleForTesting12type, superModuleForTesting12type );
 }
 
 //
 
-function prototypeHas( superPrototype, subPrototype )
+function prototypeHas( superModuleForTesting12type, subModuleForTesting12type )
 {
   _.assert( arguments.length === 2, 'Expects single argument' );
-  return _.prototypeOf( subPrototype, superPrototype );
+  return _.prototypeOf( subModuleForTesting12type, superModuleForTesting12type );
 }
 
 //
@@ -232,7 +232,7 @@ function prototypeHas( superPrototype, subPrototype )
  * Is prototype.
  * @function prototypeIs
  * @param {object} src - entity to check
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function prototypeIs( src )
@@ -263,7 +263,7 @@ function prototypeIsStandard( src )
  * Checks if argument( cls ) is a constructor.
  * @function constructorIs
  * @param {Object} cls - entity to check
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function constructorIs( cls )
@@ -288,7 +288,7 @@ function constructorIsStandard( cls )
  * Is instance.
  * @function instanceIs
  * @param {object} src - entity to check
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function instanceIs( src )
@@ -303,9 +303,9 @@ function instanceIs( src )
   else if( _ObjectHasOwnProperty.call( src,'prototype' ) && src.prototype )
   return false;
 
-  if( Object.getPrototypeOf( src ) === Object.prototype )
+  if( Object.getModuleForTesting12typeOf( src ) === Object.prototype )
   return false;
-  if( Object.getPrototypeOf( src ) === null )
+  if( Object.getModuleForTesting12typeOf( src ) === null )
   return false;
 
   return true;
@@ -412,7 +412,7 @@ function printerIs( src )
   if( !src )
   return false;
 
-  let prototype = Object.getPrototypeOf( src );
+  let prototype = Object.getModuleForTesting12typeOf( src );
   if( !prototype )
   return false;
 

@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 let _ArrayIndexOf = Array.prototype.indexOf;
 let _ArrayLastIndexOf = Array.prototype.lastIndexOf;
@@ -36,7 +36,7 @@ let _floor = Math.floor;
  * @param {*} src.
  * @return {Boolean}.
  * @function numberIs
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function numberIs( src )

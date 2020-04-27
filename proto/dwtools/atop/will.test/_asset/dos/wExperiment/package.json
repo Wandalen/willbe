@@ -3,7 +3,7 @@
   "version" : "0.0.26", 
   "dependencies" : 
   {
-    "wTools" : "beta", 
+    "wModuleForTesting1" : "beta", 
     "wCopyable" : "beta", 
     "wLogger" : "beta", 
     "wverbal" : "beta", 

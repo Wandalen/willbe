@@ -1,15 +1,15 @@
 format: willfile-1.0.0
 about:
-  name: Proto
+  name: ModuleForTesting12
   enabled: 1
   version: 0.1.0
 path:
   module.willfiles:
-    path: .module/Proto.out.will.yml
+    path: .module/ModuleForTesting12.out.will.yml
     criterion:
       predefined: 1
   module.original.willfiles:
-    path: module/Proto.will.yml
+    path: module/ModuleForTesting12.will.yml
     criterion:
       predefined: 1
   module.dir:
@@ -25,7 +25,7 @@ path:
     criterion:
       predefined: 1
   download:
-    path: .module/Proto
+    path: .module/ModuleForTesting12
     criterion:
       predefined: 1
   export:
@@ -33,23 +33,23 @@ path:
   temp:
     path: out
   exported.dir.export:
-    path: ./.module/Proto/proto
+    path: ./.module/ModuleForTesting12/proto
     criterion:
       default: 1
       export: 1
   exported.files.export:
     path:
-      - .module/Proto/proto
-      - .module/Proto/proto/dwtools
-      - .module/Proto/proto/dwtools/Tools.s
-      - .module/Proto/proto/dwtools/abase
-      - .module/Proto/proto/dwtools/abase/l3
-      - .module/Proto/proto/dwtools/abase/l3/Proto.s
-      - .module/Proto/proto/dwtools/abase/l3/ProtoAccessor.s
-      - .module/Proto/proto/dwtools/abase/l3/ProtoLike.s
-      - .module/Proto/proto/dwtools/abase/l3.test
-      - .module/Proto/proto/dwtools/abase/l3.test/Proto.test.s
-      - .module/Proto/proto/dwtools/abase/l3.test/ProtoLike.test.s
+      - .module/ModuleForTesting12/proto
+      - .module/ModuleForTesting12/proto/dwtools
+      - .module/ModuleForTesting12/proto/dwtools/ModuleForTesting1.s
+      - .module/ModuleForTesting12/proto/dwtools/abase
+      - .module/ModuleForTesting12/proto/dwtools/abase/l3
+      - .module/ModuleForTesting12/proto/dwtools/abase/l3/ModuleForTesting12.s
+      - .module/ModuleForTesting12/proto/dwtools/abase/l3/ModuleForTesting12Accessor.s
+      - .module/ModuleForTesting12/proto/dwtools/abase/l3/ModuleForTesting12Like.s
+      - .module/ModuleForTesting12/proto/dwtools/abase/l3.test
+      - .module/ModuleForTesting12/proto/dwtools/abase/l3.test/ModuleForTesting12.test.s
+      - .module/ModuleForTesting12/proto/dwtools/abase/l3.test/ModuleForTesting12Like.test.s
     criterion:
       default: 1
       export: 1
@@ -63,7 +63,7 @@ reflector:
     mandatory: 1
   exported.export:
     src:
-      filePath: .module/Proto/proto
+      filePath: .module/ModuleForTesting12/proto
     criterion:
       default: 1
       export: 1
@@ -109,4 +109,4 @@ exported:
     exportedDirPath: 'path::exported.dir.export'
     exportedFilesPath: 'path::exported.files.export'
 module:
-  Proto.out: root
+  ModuleForTesting12.out: root

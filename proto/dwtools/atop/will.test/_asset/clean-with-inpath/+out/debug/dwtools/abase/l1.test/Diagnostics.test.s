@@ -10,7 +10,7 @@ throw 'Deprecated';
 // }
 //
 // var _global = _global_;
-// var _ = _global_.wTools;
+// var _ = _global_.wModuleForTesting1;
 // //
 // // // --
 // // // tests
@@ -1882,7 +1882,7 @@ throw 'Deprecated';
 // var Self =
 // {
 //
-//   name : 'Tools.base.Diagnostics',
+//   name : 'ModuleForTesting1.base.Diagnostics',
 //   silencing : 1,
 //
 //   tests :

@@ -1,8 +1,8 @@
 
 path :
 
-  File.remote : https:///raw.githubusercontent.com/Wandalen/wFiles/master/proto/dwtools/Tools.s
-  File.local : 'Tools.s'
+  File.remote : https:///raw.githubusercontent.com/Wandalen/wFiles/master/proto/dwtools/ModuleForTesting1.s
+  File.local : 'ModuleForTesting1.s'
 
 reflector :
 
@@ -10,7 +10,7 @@ reflector :
     criterion :
       variant : 1
     filePath :
-      path::File.remote : out/Tools.s
+      path::File.remote : out/ModuleForTesting1.s
 
 step :
 

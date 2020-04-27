@@ -10,7 +10,7 @@ if( typeof module !== 'undefined' )
 }
 
 var _global = _global_;
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 
 // --
 // evaluator
@@ -9118,7 +9118,7 @@ ghij`
 var Self =
 {
 
-  name : 'Tools.base.Str.base',
+  name : 'ModuleForTesting1.base.Str.base',
   silencing : 1,
   enabled : 1,
 

@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 let _ArraySlice = Array.prototype.slice;
 let _FunctionBind = Function.prototype.bind;
@@ -19,7 +19,7 @@ let _ObjectHasOwnProperty = Object.hasOwnProperty;
  * Returns true if entity ( src ) is a Boolean.
  * @function boolIs
  * @param {} src - entity to check
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function boolIs( src )
@@ -33,7 +33,7 @@ function boolIs( src )
  * Returns true if entity ( src ) is a Boolean or Number.
  * @function boolLike
  * @param {} src - entity to check
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function boolLike( src )
@@ -68,7 +68,7 @@ function boolLike( src )
  * @function boolsAre
  * @param {Array} src - array of entities
  * @throws {Error} If more or less than one argument is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function boolsAre( src )
@@ -88,7 +88,7 @@ function boolsAre( src )
  * @function boolsAllAre
  * @param {Array} src - array of entities
  * @throws {Error} If more or less than one argument is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function boolsAllAre( src )
@@ -108,7 +108,7 @@ function boolsAllAre( src )
  * @function boolsAnyAre
  * @param {Array} src - array of entities
  * @throws {Error} If more or less than one argument is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function boolsAnyAre( src )
@@ -128,7 +128,7 @@ function boolsAnyAre( src )
  * @function boolsAnyAre
  * @param {Array} src - array of entities
  * @throws {Error} If more or less than one argument is provided.
- * @memberof wTools
+ * @memberof wModuleForTesting1
  */
 
 function boolsNoneAre( src )

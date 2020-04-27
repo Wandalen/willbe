@@ -8,24 +8,24 @@
 
 /**
  * Collection of routines to operate multiple paths in the reliable and consistent way.
- * @namespace wTools.paths
- * @extends Tools
- * @module Tools/PathBasic
+ * @namespace wModuleForTesting1.paths
+ * @extends ModuleForTesting1
+ * @module ModuleForTesting1/ModuleForTesting2
  */
 
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../dwtools/ModuleForTesting1.s' );
 
-  require( '../l2/PathBasic.s' );
+  require( '../l2/ModuleForTesting2.s' );
 
 }
 
 //
 
 let _global = _global_;
-let _ = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
 
 let Parent = _.path;
 let Self = _.path.s = _.paths = _.paths || Object.create( Parent );
@@ -383,7 +383,7 @@ let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveText
  * _.path.s.are(['/a', 1 ]); //[ true, false ]
  * @returns {Array} Returns array of same size with check results.
  * @function are
- * @namespace Tools.paths
+ * @namespace ModuleForTesting1.paths
  */
 
 /**
@@ -393,7 +393,7 @@ let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveText
  * _.path.s.allAre(['/a', 1 ]); //false
  * @returns {Bollean} Returns true if all elements are paths or false.
  * @function allAre
- * @namespace Tools.paths
+ * @namespace ModuleForTesting1.paths
  */
 
 /**
@@ -403,7 +403,7 @@ let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveText
  * _.path.s.anyAre(['/a', 1 ]); //true
  * @returns {Bollean} Returns true if at least one element is a path or false.
  * @function anyAre
- * @namespace Tools.paths
+ * @namespace ModuleForTesting1.paths
  */
 
  /**
@@ -413,25 +413,25 @@ let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveText
  * _.path.s.noneAre(['/a', 1 ]); //false
  * @returns {Bollean} Returns false if at least one element is a path, otherwise true.
  * @function noneAre
- * @namespace Tools.paths
+ * @namespace ModuleForTesting1.paths
  */
 
  /**
  * @summary Normalizes paths from array( src ).
- * @description Look {@link module:Tools/PathBasic.normalize _.path.normalize } for details.
+ * @description Look {@link module:ModuleForTesting1/ModuleForTesting2.normalize _.path.normalize } for details.
  * @param {Array|Object} src
  * @example
  * _.path.s.normalize(['\\a', '/a/../b' ]); //['/a', '/b' ]
  * @returns {Array} Returns array with normalized paths.
  * @function normalize
- * @namespace Tools.paths
+ * @namespace ModuleForTesting1.paths
  */
 
 /**
  * @summary Joins provided paths.
  * @description
  * Supports combining of arrays/maps/strings, see examples.
- * Look {@link module:Tools/PathBasic.join _.path.join } for details.
+ * Look {@link module:ModuleForTesting1/ModuleForTesting2.join _.path.join } for details.
  * @param {...String|...Array|...Object} arguments
  *
  * @example //also works same as regular _.path.join
@@ -445,13 +445,13 @@ let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveText
  *
  * @returns {Array|Object} Returns array with joined paths.
  * @function join
- * @namespace Tools.paths
+ * @namespace ModuleForTesting1.paths
  */
 
 /**
  * @summary Gets parent dir for each path from array( src ). Writes results into array.
  * @description
- * Look {@link module:Tools/PathBasic.dir _.path.dir } for details.
+ * Look {@link module:ModuleForTesting1/ModuleForTesting2.dir _.path.dir } for details.
  * @param {Array} src Array of paths
  *
  *  @example //also works same as regular _.path.dir
@@ -462,13 +462,13 @@ let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveText
  *
  * @returns {Array} Returns array with results of dir operation.
  * @function dir
- * @namespace Tools.paths
+ * @namespace ModuleForTesting1.paths
  */
 
 /**
  * @summary Gets name of each path from array( src ). Writes results into array.
  * @description
- * Look {@link module:Tools/PathBasic.name _.path.name } for details.
+ * Look {@link module:ModuleForTesting1/ModuleForTesting2.name _.path.name } for details.
  * @param {Array} src Array of paths
  *
  *  @example //also works same as regular _.path.dir
@@ -479,14 +479,14 @@ let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveText
  *
  * @returns {Array} Returns array with results of name operation.
  * @function name
- * @namespace Tools.paths
+ * @namespace ModuleForTesting1.paths
  */
 
 
 /**
  * @summary Gets extension of each path from array( src ). Writes results into array.
  * @description
- * Look {@link module:Tools/PathBasic.ext _.path.ext } for details.
+ * Look {@link module:ModuleForTesting1/ModuleForTesting2.ext _.path.ext } for details.
  * @param {Array} src Array of paths
  *
  *  @example //also works same as regular _.path.dir
@@ -497,7 +497,7 @@ let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveText
  *
  * @returns {Array} Returns array with results of ext operation.
  * @function ext
- * @namespace Tools.paths
+ * @namespace ModuleForTesting1.paths
  */
 
 
@@ -505,7 +505,7 @@ let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveText
  * @summary Gets common path
  * @description
  * Supports combining of arrays/maps/strings, see examples.
- * Look {@link module:Tools/PathBasic.common _.path.common } for details.
+ * Look {@link module:ModuleForTesting1/ModuleForTesting2.common _.path.common } for details.
  * @param {...String|...Array|...Object} src Array of paths
  *
  * @example //also works same as regular _.path.common
@@ -519,7 +519,7 @@ let moveTextualReport = _.routineFromPreAndBody( moveTextualReport_pre, moveText
  *
  * @returns {Array|Object} Returns array with result for each combination of paths.
  * @function common
- * @namespace Tools.paths
+ * @namespace ModuleForTesting1.paths
  */
 
 // --

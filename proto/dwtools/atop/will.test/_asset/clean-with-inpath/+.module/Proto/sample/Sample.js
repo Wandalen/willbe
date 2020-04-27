@@ -3,13 +3,13 @@
 'use strict';
 
 if( typeof module !== 'undefined' )
-require( 'wProto' );
+require( 'wModuleForTesting12' );
 
 // --
 // constructor
 // --
 
-var _ = _global_.wTools;
+var _ = _global_.wModuleForTesting1;
 var Parent = null;
 var Self = function BaseClass()
 {
@@ -91,7 +91,7 @@ var Statics =
 // proto
 // --
 
-var Proto =
+var ModuleForTesting12 =
 {
 
   init : init,
@@ -111,7 +111,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Proto,
+  extend : ModuleForTesting12,
 });
 
 /* make the class global */

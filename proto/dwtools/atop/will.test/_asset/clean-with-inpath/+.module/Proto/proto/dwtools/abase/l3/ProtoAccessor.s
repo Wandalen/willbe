@@ -2,50 +2,50 @@
 
 'use strict';
 
-let Self = _global_.wTools;
+let Self = _global_.wModuleForTesting1;
 let _global = _global_;
-let _ = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
 
 let _ObjectHasOwnProperty = Object.hasOwnProperty;
 let _ObjectPropertyIsEumerable = Object.propertyIsEnumerable;
 let _nameFielded = _.nameFielded;
 
-_.assert( _.objectIs( _.field ), 'wProto needs wTools/staging/dwtools/abase/l1/FieldMapper.s' );
-_.assert( _.routineIs( _nameFielded ), 'wProto needs wTools/staging/dwtools/l3/NameTools.s' );
+_.assert( _.objectIs( _.field ), 'wModuleForTesting12 needs wModuleForTesting1/staging/dwtools/abase/l1/FieldMapper.s' );
+_.assert( _.routineIs( _nameFielded ), 'wModuleForTesting12 needs wModuleForTesting1/staging/dwtools/l3/NameModuleForTesting1.s' );
 
 /**
  * @summary Collection of routines for declaring accessors
- * @namespace wTools.accessor
- * @extends Tools
- * @module Tools/base/Proto
+ * @namespace wModuleForTesting1.accessor
+ * @extends ModuleForTesting1
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @summary Collection of getters
- * @namespace wTools.accessor.getter
- * @extends Tools.accessor
- * @module Tools/base/Proto
+ * @namespace wModuleForTesting1.accessor.getter
+ * @extends ModuleForTesting1.accessor
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
  /**
  * @summary Collection of setters
- * @namespace wTools.accessor.setter
- * @extends Tools.accessor
- * @module Tools/base/Proto
+ * @namespace wModuleForTesting1.accessor.setter
+ * @extends ModuleForTesting1.accessor
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
  /**
  * @summary Collection of putters
- * @namespace wTools.accessor.putter
- * @extends Tools.accessor
- * @module Tools/base/Proto
+ * @namespace wModuleForTesting1.accessor.putter
+ * @extends ModuleForTesting1.accessor
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
 /**
  * @summary Collection of setters
- * @namespace wTools.accessor.suite
- * @extends Tools.accessor
- * @module Tools/base/Proto
+ * @namespace wModuleForTesting1.accessor.suite
+ * @extends ModuleForTesting1.accessor
+ * @module ModuleForTesting1/base/ModuleForTesting12
  */
 
 // --
@@ -66,7 +66,7 @@ _.assert( _.routineIs( _nameFielded ), 'wProto needs wTools/staging/dwtools/l3/N
  * @property {Function} [ getter=null ]
  * @property {Function} [ setter=null ]
  * @property {Function} [ suite=null ]
- * @namespace Tools.accessor
+ * @namespace ModuleForTesting1.accessor
  **/
 
 let AccessorDefaults =
@@ -595,7 +595,7 @@ copyIterationMake.defaults =
  * @param {String} o.combining - combining method
  * @private
  * @function _register
- * @namespace Tools.accessor
+ * @namespace ModuleForTesting1.accessor
  */
 
 function _register( o )
@@ -898,7 +898,7 @@ var defaults = _declareAct.defaults =
  * - First by passing all options in one object;
  * - Second by passing object and name options;
  * - Third by passing object, names and message option as third parameter.
- * @param {Object} o - options {@link module:Tools/base/Proto.wTools.accessor~AccessorOptions}.
+ * @param {Object} o - options {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor~AccessorOptions}.
  *
  * @example
  * //returns
@@ -912,7 +912,7 @@ var defaults = _declareAct.defaults =
  *
  * @private
  * @function _declare_pre
- * @namespace Tools.accessor
+ * @namespace ModuleForTesting1.accessor
  */
 
 function _declare_pre( routine, args )
@@ -972,7 +972,7 @@ function _declare_pre( routine, args )
  * @property {Function} [ set=null ]
  * @property {Function} [ suite=null ]
  *
- * @namespace Tools.accessor
+ * @namespace ModuleForTesting1.accessor
  **/
 
 /**
@@ -987,7 +987,7 @@ function _declare_pre( routine, args )
  * - Second by passing ( object ) and ( names ) options;
  * - Third by passing ( object ), ( names ) and ( message ) option as third parameter.
  *
- * @param {Object} o - options {@link module:Tools/base/Proto.wTools.accessor~AccessorOptions}.
+ * @param {Object} o - options {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor~AccessorOptions}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -1006,7 +1006,7 @@ function _declare_pre( routine, args )
  * @throws {exception} If( o.strict ) is true and object doesn't have own constructor.
  * @throws {exception} If( o.readOnly ) is true and property has own setter.
  * @function declare
- * @namespace Tools.accessor
+ * @namespace ModuleForTesting1.accessor
  */
 
 function declare_body( o )
@@ -1114,7 +1114,7 @@ let declare = _.routineFromPreAndBody( _declare_pre, declare_body );
  * @summary Declares forbid accessor.
  * @description
  * Forbid accessor throws an Error when user tries to get value of the property.
- * @param {Object} o - options {@link module:Tools/base/Proto.wTools.accessor~AccessorOptions}.
+ * @param {Object} o - options {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor~AccessorOptions}.
  *
  * @example
  * let Self = function ClassName( o ) { };
@@ -1122,7 +1122,7 @@ let declare = _.routineFromPreAndBody( _declare_pre, declare_body );
  * Self.a; // throw an Error
  *
  * @function forbid
- * @namespace Tools.accessor
+ * @namespace ModuleForTesting1.accessor
  */
 
 function forbid_body( o )
@@ -1165,7 +1165,7 @@ function forbid_body( o )
 
   // if( o.names && o.names.abc )
   // debugger;
-  // let _constructor = o.object.constructor || Object.getPrototypeOf( o.object ); // yyy
+  // let _constructor = o.object.constructor || Object.getModuleForTesting12typeOf( o.object ); // yyy
   let _constructor = o.object.constructor || null;
   _.assert( _.routineIs( _constructor ) || _constructor === null );
   _.assert( _constructor === null || _.strIs( _constructor.name ) || _.strIs( _constructor._name ), 'object should have name' );
@@ -1355,7 +1355,7 @@ defaults.protoName = null;
  * _.accessor.ownForbid( Self, 'b' ) // returns false
  *
  * @function ownForbid
- * @namespace Tools.accessor
+ * @namespace ModuleForTesting1.accessor
  */
 
 function ownForbid( object, name )
@@ -1381,7 +1381,7 @@ function ownForbid( object, name )
 
 /**
  * @summary Declares read-only accessor( s ).
- * @description Expects two arguments: (object), (names) or single as options map {@link module:Tools/base/Proto.wTools.accessor~AccessorOptions}
+ * @description Expects two arguments: (object), (names) or single as options map {@link module:ModuleForTesting1/base/ModuleForTesting12.wModuleForTesting1.accessor~AccessorOptions}
  *
  * @param {Object} object - target object
  * @param {Object} names - contains names of properties that will get read-only accessor
@@ -1397,7 +1397,7 @@ function ownForbid( object, name )
  * _.accessor.readOnly( Alpha.prototype,{ a : 'a' });
  *
  * @function forbid
- * @namespace Tools.accessor
+ * @namespace ModuleForTesting1.accessor
  */
 
 function readOnly_body( o )
@@ -1430,7 +1430,7 @@ let readOnly = _.routineFromPreAndBody( _declare_pre, readOnly_body );
  * @throws {Exception} If one of object doesn't have _Accessors map
  * @function supplement
  *
- * @namespace Tools.accessor
+ * @namespace ModuleForTesting1.accessor
  */
 
 function supplement( dst, src )
@@ -1495,7 +1495,7 @@ function supplement( dst, src )
  * @param {Object} proto - target object
  * @param {String} name - name of accessor
  * @function has
- * @namespace Tools.accessor
+ * @namespace ModuleForTesting1.accessor
  */
 
 function has( proto, name )
@@ -1703,7 +1703,7 @@ let AccessorExtension =
 
 //
 
-let ToolsExtension =
+let ModuleForTesting1Extension =
 {
 }
 
@@ -1712,7 +1712,7 @@ let ToolsExtension =
 // --
 
 _.accessor = _.accessor || Object.create( null );
-_.mapSupplement( _, ToolsExtension );
+_.mapSupplement( _, ModuleForTesting1Extension );
 _.mapExtend( _.accessor, AccessorExtension );
 
 _.accessor.forbid( _, Forbids );

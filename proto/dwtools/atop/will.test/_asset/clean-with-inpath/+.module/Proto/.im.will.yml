@@ -1,8 +1,8 @@
 
 submodule :
 
-  wTools :
-    path : npm:///wTools
+  wModuleForTesting1 :
+    path : npm:///wModuleForTesting1
     enabled : 0 # submodule
   wselectorextra :
     path : hd://.

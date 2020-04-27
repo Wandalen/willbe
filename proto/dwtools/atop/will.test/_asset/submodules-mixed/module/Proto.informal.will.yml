@@ -1,14 +1,14 @@
 about :
 
-  name : Proto.informal
+  name : ModuleForTesting12.informal
   version : 0.1.0
 
 path :
 
   in : ..
   out : out
-  remote : 'git+https:///github.com/Wandalen/wProto.git'
-  download : '.module/Proto'
+  remote : 'git+https:///github.com/Wandalen/wModuleForTesting12.git'
+  download : '.module/ModuleForTesting12'
   export : '{path::download}/proto/**'
 
 reflector :

@@ -9,7 +9,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../dwtools/ModuleForTesting1.s' );
 
   require( '../l2/ModuleForTesting2.s' );
 
@@ -20,7 +20,7 @@ if( typeof module !== 'undefined' )
 //
 
 let _global = _global_;
-let _ = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
 let Self = _.path = _.path || Object.create( null );
 
 // --
@@ -165,14 +165,14 @@ function globSplit( glob )
  * Turn a *-wildcard style _glob into a regular expression
  * @example
  * let _glob = '* /www/*.js';
- * wTools.globRegexpsForTerminalSimple( _glob );
+ * wModuleForTesting1.globRegexpsForTerminalSimple( _glob );
  * // /^.\/[^\/]*\/www\/[^\/]*\.js$/m
  * @param {String} _glob *-wildcard style _glob
  * @returns {RegExp} RegExp that represent passed _glob
  * @throw {Error} If missed argument, or got more than one argumet
  * @throw {Error} If _glob is not string
  * @function globRegexpsForTerminalSimple
- * @memberof wTools.module:Tools/ModuleForTesting2
+ * @memberof wModuleForTesting1.module:ModuleForTesting1/ModuleForTesting2
  */
 
 function globRegexpsForTerminalSimple( _glob )

@@ -3,8 +3,8 @@
 'use strict';
 
 let _global = _global_;
-let _ = _global_.wTools;
-let Self = _global_.wTools;
+let _ = _global_.wModuleForTesting1;
+let Self = _global_.wModuleForTesting1;
 
 let _ArrayIndexOf = Array.prototype.indexOf;
 let _ArrayLastIndexOf = Array.prototype.lastIndexOf;
@@ -203,7 +203,7 @@ let regexpsEscape = null;
  * @throws {Error} Throw error with message 'unknown type of expression, expects regexp or string, but got' error
  if src not string-like ( string or regexp )
  * @function regexpFrom
- * @namespace Tools
+ * @namespace ModuleForTesting1
  */
 
 function regexpFrom( src, flags )
@@ -499,7 +499,7 @@ regexpsAtLeastFirst.defaults =
  * @throws {Error} If passed arguments are not strings or options map.
  * @throws {Error} If options contains any different from 'but' or 'atLeastOnce' properties.
  * @function regexpsNone
- * @namespace Tools
+ * @namespace ModuleForTesting1
  */
 
 function regexpsNone( o )
@@ -626,7 +626,7 @@ regexpsAll.defaults =
  * @returns {RegExp[]} Array of regexps
  * @throw {Error} if `src` in not string, regexp, or array
  * @function regexpArrayMake
- * @namespace Tools
+ * @namespace ModuleForTesting1
  */
 
 function regexpArrayMake( src )
@@ -672,7 +672,7 @@ function regexpArrayMake( src )
  * @throws {Error} If second argument is not string.
  * @throws {Error} If element of array is not RegExp.
  * @function regexpArrayIndex
- * @namespace Tools
+ * @namespace ModuleForTesting1
  */
 
 function regexpArrayIndex( arr,ins )
@@ -716,7 +716,7 @@ function regexpArrayIndex( arr,ins )
  * @returns {*} Returns the first match index, false if input array of regexp was empty or default value otherwise
  * @thows {Error} If missed one of arguments
  * @function regexpArrayAny
- * @namespace Tools
+ * @namespace ModuleForTesting1
  */
 
 function regexpArrayAny( arr, ins, ifEmpty )
@@ -761,7 +761,7 @@ function regexpArrayAny( arr, ins, ifEmpty )
  * @returns {*} Returns the first match index, false if input array of regexp was empty or default value otherwise
  * @thows {Error} If missed one of arguments
  * @function regexpArrayAll
- * @namespace Tools
+ * @namespace ModuleForTesting1
  */
 
 function regexpArrayAll( arr, ins, ifEmpty )

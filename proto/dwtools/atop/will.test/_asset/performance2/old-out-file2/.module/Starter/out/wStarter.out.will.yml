@@ -12,7 +12,7 @@ about:
     - chrome >= 60.0.0
     - firefox >= 60.0.0
   keywords: &ref_1
-    - wTools
+    - wModuleForTesting1
 path:
   module.willfiles:
     criterion:
@@ -80,7 +80,7 @@ path:
     path:
       - ../proto
       - ../proto/dwtools
-      - ../proto/dwtools/Tools.s
+      - ../proto/dwtools/ModuleForTesting1.s
       - ../proto/dwtools/abase
       - ../proto/dwtools/amid
       - ../proto/dwtools/amid/---starter
@@ -194,7 +194,7 @@ path:
       - >-
         ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/Tools.s
+        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/ModuleForTesting1.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase
       - >-
@@ -292,17 +292,17 @@ path:
       - >-
         ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/IncludeTools.s
+        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/IncludeModuleForTesting1.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/ModulesRegistry.s
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/NameTools.s
+        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/NameModuleForTesting1.s
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/StringTools.s
+        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/StringModuleForTesting1.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test/StringTools.test.s
+        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test/StringModuleForTesting1.test.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/release
       - >-
@@ -390,13 +390,13 @@ path:
       - >-
         ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/IncludeTools.s
+        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/IncludeModuleForTesting1.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/ModulesRegistry.s
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/NameTools.s
+        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/NameModuleForTesting1.s
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/StringTools.s
+        ../proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/StringModuleForTesting1.s
       - ../proto/dwtools/atop/starter.test/_asset/dep
       - ../proto/dwtools/atop/starter.test/_asset/dep/package.json
       - ../proto/dwtools/atop/starter.test/_asset/dep/app0
@@ -435,7 +435,7 @@ path:
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/Tools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/ModuleForTesting1.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase
       - >-
@@ -533,17 +533,17 @@ path:
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/IncludeTools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/IncludeModuleForTesting1.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/ModulesRegistry.s
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/NameTools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/NameModuleForTesting1.s
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/StringTools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/StringModuleForTesting1.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test/StringTools.test.s
+        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test/StringModuleForTesting1.test.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/release
       - >-
@@ -630,13 +630,13 @@ path:
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/IncludeTools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/IncludeModuleForTesting1.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/ModulesRegistry.s
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/NameTools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/NameModuleForTesting1.s
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/StringTools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/StringModuleForTesting1.s
       - ../proto/dwtools/atop/starter.test/_asset/dep2
       - ../proto/dwtools/atop/starter.test/_asset/dep2/Index.html
       - ../proto/dwtools/atop/starter.test/_asset/dep2/package.json
@@ -676,7 +676,7 @@ path:
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/Tools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/ModuleForTesting1.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase
       - >-
@@ -774,17 +774,17 @@ path:
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/IncludeTools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/IncludeModuleForTesting1.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/ModulesRegistry.s
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/NameTools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/NameModuleForTesting1.s
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/StringTools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/StringModuleForTesting1.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test/StringTools.test.s
+        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test/StringModuleForTesting1.test.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/release
       - >-
@@ -871,13 +871,13 @@ path:
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/IncludeTools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/IncludeModuleForTesting1.s
       - >-
         ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/ModulesRegistry.s
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/NameTools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/NameModuleForTesting1.s
       - >-
-        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/StringTools.s
+        ../proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/StringModuleForTesting1.s
       - ../proto/dwtools/atop/starter.test/_asset/processes
       - ../proto/dwtools/atop/starter.test/_asset/processes/Experiment.js
       - ../proto/dwtools/atop/starter.test/_asset/processes/Experiment2.js
@@ -1164,7 +1164,7 @@ module:
         path:
           - proto
           - proto/dwtools
-          - proto/dwtools/Tools.s
+          - proto/dwtools/ModuleForTesting1.s
           - proto/dwtools/abase
           - proto/dwtools/amid
           - proto/dwtools/amid/---starter
@@ -1278,7 +1278,7 @@ module:
           - >-
             proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools
           - >-
-            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/Tools.s
+            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/ModuleForTesting1.s
           - >-
             proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase
           - >-
@@ -1376,17 +1376,17 @@ module:
           - >-
             proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2
           - >-
-            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/IncludeTools.s
+            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/IncludeModuleForTesting1.s
           - >-
             proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/ModulesRegistry.s
           - >-
-            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/NameTools.s
+            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/NameModuleForTesting1.s
           - >-
-            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/StringTools.s
+            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/StringModuleForTesting1.s
           - >-
             proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test
           - >-
-            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test/StringTools.test.s
+            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test/StringModuleForTesting1.test.s
           - >-
             proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/release
           - >-
@@ -1474,13 +1474,13 @@ module:
           - >-
             proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2
           - >-
-            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/IncludeTools.s
+            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/IncludeModuleForTesting1.s
           - >-
             proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/ModulesRegistry.s
           - >-
-            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/NameTools.s
+            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/NameModuleForTesting1.s
           - >-
-            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/StringTools.s
+            proto/dwtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/StringModuleForTesting1.s
           - proto/dwtools/atop/starter.test/_asset/dep
           - proto/dwtools/atop/starter.test/_asset/dep/package.json
           - proto/dwtools/atop/starter.test/_asset/dep/app0
@@ -1519,7 +1519,7 @@ module:
           - >-
             proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/Tools.s
+            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/ModuleForTesting1.s
           - >-
             proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase
           - >-
@@ -1617,17 +1617,17 @@ module:
           - >-
             proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/IncludeTools.s
+            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/IncludeModuleForTesting1.s
           - >-
             proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/ModulesRegistry.s
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/NameTools.s
+            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/NameModuleForTesting1.s
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/StringTools.s
+            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/StringModuleForTesting1.s
           - >-
             proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test/StringTools.test.s
+            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test/StringModuleForTesting1.test.s
           - >-
             proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/release
           - >-
@@ -1714,13 +1714,13 @@ module:
           - >-
             proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/IncludeTools.s
+            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/IncludeModuleForTesting1.s
           - >-
             proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/ModulesRegistry.s
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/NameTools.s
+            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/NameModuleForTesting1.s
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/StringTools.s
+            proto/dwtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/StringModuleForTesting1.s
           - proto/dwtools/atop/starter.test/_asset/dep2
           - proto/dwtools/atop/starter.test/_asset/dep2/Index.html
           - proto/dwtools/atop/starter.test/_asset/dep2/package.json
@@ -1760,7 +1760,7 @@ module:
           - >-
             proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/Tools.s
+            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/ModuleForTesting1.s
           - >-
             proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase
           - >-
@@ -1858,17 +1858,17 @@ module:
           - >-
             proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/IncludeTools.s
+            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/IncludeModuleForTesting1.s
           - >-
             proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/ModulesRegistry.s
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/NameTools.s
+            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/NameModuleForTesting1.s
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/StringTools.s
+            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2/StringModuleForTesting1.s
           - >-
             proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test/StringTools.test.s
+            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/dwtools/abase/l2.test/StringModuleForTesting1.test.s
           - >-
             proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/release
           - >-
@@ -1956,13 +1956,13 @@ module:
           - >-
             proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/IncludeTools.s
+            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/IncludeModuleForTesting1.s
           - >-
             proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/ModulesRegistry.s
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/NameTools.s
+            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/NameModuleForTesting1.s
           - >-
-            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/StringTools.s
+            proto/dwtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/dwtools/abase/l2/StringModuleForTesting1.s
           - proto/dwtools/atop/starter.test/_asset/processes
           - proto/dwtools/atop/starter.test/_asset/processes/Experiment.js
           - proto/dwtools/atop/starter.test/_asset/processes/Experiment2.js
