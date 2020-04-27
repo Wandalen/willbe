@@ -2358,6 +2358,15 @@ module:
             ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/proto/dir3.test/File.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/export-with-submodules-few/proto/dir3.test/File.test.js
+          - ../proto/dwtools/atop/will.test/_asset/exportWithoutSubSubModules
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithoutSubSubModules/l1.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithoutSubSubModules/l2.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithoutSubSubModules/l3.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/exportWithoutSubSubModules/l4.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/exportWithSubmoduleThatHasModuleDirDeleted
           - >-
@@ -3318,6 +3327,9 @@ module:
             ../proto/dwtools/atop/will.test/_asset/submodules-with-criterion/module/B
           - >-
             ../proto/dwtools/atop/will.test/_asset/submodules-with-criterion/module/B/B.js
+          - ../proto/dwtools/atop/will.test/_asset/submodulesDownloadOfSubmodule
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/submodulesDownloadOfSubmodule/l1.will.yml
           - ../proto/dwtools/atop/will.test/_asset/transpile
           - ../proto/dwtools/atop/will.test/_asset/transpile/.ex.will.yml
           - ../proto/dwtools/atop/will.test/_asset/transpile/.im.will.yml
