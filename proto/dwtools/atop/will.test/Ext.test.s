@@ -17614,7 +17614,7 @@ function submodulesAgreeThrowing( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-download-errors' );
   let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let downloadPath = _.path.join( a.routinePath, '.module/ModuleForTesting2' );
+  let downloadPath = _.path.join( a.routinePath, '.module/ModuleForTesting2a' );
   let filePath = _.path.join( downloadPath, 'file' );
   let filesBefore;
   a.start = _.process.starter
@@ -17688,7 +17688,7 @@ function submodulesAgreeThrowing( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
-    test.is( _.strHas( got.output, 'module::wModuleForTesting2 was agreed with version master' ) );
+    test.is( _.strHas( got.output, 'module::wModuleForTesting2a was agreed with version master' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
@@ -17731,7 +17731,7 @@ function submodulesAgreeThrowing( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
-    test.is( _.strHas( got.output, 'module::wModuleForTesting2 was agreed with version master' ) );
+    test.is( _.strHas( got.output, 'module::wModuleForTesting2a was agreed with version master' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
@@ -17771,7 +17771,7 @@ function submodulesAgreeThrowing( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
-    test.is( _.strHas( got.output, 'module::wModuleForTesting2 was agreed with version master' ) );
+    test.is( _.strHas( got.output, 'module::wModuleForTesting2a was agreed with version master' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed in' ) );
     let files = self.find( downloadPath );
     test.gt( files.length, 10 );
@@ -17787,7 +17787,7 @@ function submodulesAgreeThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  a.startNonThrowing({ execPath : 'git clone https://github.com/Wandalen/wModuleForTesting1.git .module/ModuleForTesting2' })
+  a.startNonThrowing({ execPath : 'git clone https://github.com/Wandalen/wModuleForTesting1.git .module/ModuleForTesting2a' })
   a.start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
@@ -17810,7 +17810,7 @@ function submodulesAgreeThrowing( test )
     return null;
   })
   a.start({ execPath : '.with good .submodules.versions.agree' })
-  a.startNonThrowing( 'git -C .module/ModuleForTesting2 reset --hard HEAD~1' )
+  a.startNonThrowing( 'git -C .module/ModuleForTesting2a reset --hard HEAD~1' )
   .then( () =>
   {
     _.fileProvider.fileWrite( _.path.join( downloadPath, 'was.package.json' ), 'was.package.json' );
@@ -17820,8 +17820,8 @@ function submodulesAgreeThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Module at module::submodules-download-errors-good / opener::ModuleForTesting2 needs to be updated, but has local changes' ) );
-    test.is( _.strHas( got.output, 'Failed to agree module::submodules-download-errors-good / opener::ModuleForTesting2' ) );
+    test.is( _.strHas( got.output, 'Module at module::submodules-download-errors-good / opener::ModuleForTesting2a needs to be updated, but has local changes' ) );
+    test.is( _.strHas( got.output, 'Failed to agree module::submodules-download-errors-good / opener::ModuleForTesting2a' ) );
     return null;
   })
 
@@ -17835,16 +17835,16 @@ function submodulesAgreeThrowing( test )
     return null;
   })
   a.start({ execPath : '.with good .submodules.versions.agree' })
-  a.startNonThrowing( 'git -C .module/ModuleForTesting2 reset --hard HEAD~1' )
-  a.startNonThrowing( 'git -C .module/ModuleForTesting2 commit -m unpushed --allow-empty' )
-  a.startNonThrowing( 'git -C .module/ModuleForTesting2 remote remove origin' )
-  a.startNonThrowing( 'git -C .module/ModuleForTesting2 remote add origin https://github.com/Wandalen/wModuleForTesting1.git' )
+  a.startNonThrowing( 'git -C .module/ModuleForTesting2a reset --hard HEAD~1' )
+  a.startNonThrowing( 'git -C .module/ModuleForTesting2a commit -m unpushed --allow-empty' )
+  a.startNonThrowing( 'git -C .module/ModuleForTesting2a remote remove origin' )
+  a.startNonThrowing( 'git -C .module/ModuleForTesting2a remote add origin https://github.com/Wandalen/wModuleForTesting1.git' )
   a.start({ execPath : '.with good .submodules.versions.agree' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'needs to be deleted, but has local changes' ) );
-    test.is( _.strHas( got.output, 'Failed to agree module::submodules-download-errors-good / opener::ModuleForTesting2' ) );
+    test.is( _.strHas( got.output, 'Failed to agree module::submodules-download-errors-good / opener::ModuleForTesting2a' ) );
     return null;
   })
 
