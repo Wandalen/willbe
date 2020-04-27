@@ -382,7 +382,6 @@ function _read()
 
     _.assert( _.bufferBytesIs( willf.data ) || willf.data === null, `Something wrong with content of willfile ${willf.filePath}` );
     _.assert( _.bufferBytesIs( willf.data ) || willf.filePath !== willf.storagePath, `Something wrong with content of willfile ${willf.filePath}` );
-
     _.assert( willf.dirPath === path.detrail( path.dir( _.arrayAs( willf.filePath )[ 0 ] ) ) );
 
     // if( will.verbosity >= 3 )
@@ -423,6 +422,9 @@ function _open()
   let path = fileProvider.path;
   let logger = will.logger;
   let inconsistent = 0;
+
+  if( willf.id === 259 )
+  debugger;
 
   if( willf.formed === 2 )
   willf._read();
@@ -507,6 +509,19 @@ function _open()
     catch( err )
     {
       throw _.errBrief( err );
+    }
+
+    if( willf.structure.consistency ) /* yyy */
+    for( let relativePath in willf.structure.consistency )
+    {
+      let absolutePath = path.join( willf.storageWillfile.dirPath, relativePath );
+      absolutePath = will.LocalPathNormalize( absolutePath );
+      let relativePath2 = path.relative( willf.storageWillfile.dirPath, absolutePath );
+      if( relativePath2 === relativePath )
+      continue;
+      _.sure( willf.structure.consistency[ relativePath2 ] === undefined || willf.structure.consistency[ relativePath2 ] === willf.structure.consistency[ relativePath ] );
+      willf.structure.consistency[ relativePath2 ] = willf.structure.consistency[ relativePath ];
+      // delete willf.structure.consistency[ relativePath ]; /* xxx : enable later */
     }
 
     willf[ moduleStructureSymbol ] = willf.structure;
@@ -1106,6 +1121,9 @@ function isConsistentWith( willf2, opening )
     filePath = filePath.filePath;
 
     _.assert( _.strIs( filePath ) );
+
+    if( _.strEnds( filePath, '.module/wModuleForTesting1/.ex.will.yml' ) )
+    debugger;
 
     let hash1 = willf.hashFullFor( filePath );
 

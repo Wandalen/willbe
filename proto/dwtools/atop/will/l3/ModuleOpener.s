@@ -390,6 +390,7 @@ function _willfilesFindAct( o )
   o.willfilesPath = o.willfilesPath || opener.willfilesPath;
 
   _.assert( opener.willfilesArray.length === 0, 'not tested' );
+  _.assert( _.longHas( [ 'smart', 'exact', 'strict' ], opener.searching ) );
 
   if( opener.searching === 'smart' )
   o.willfilesPath = _.Will.CommonPathFor( o.willfilesPath );
@@ -407,6 +408,7 @@ function _willfilesFindAct( o )
       withIn : o.withIn,
       withOut : o.withOut,
       exact : !!opener.superRelation,
+      usingCache : 1,
     });
   }
 
@@ -527,9 +529,6 @@ function find( o )
   _.assert( _.longHas( [ 'smart', 'strict', 'exact' ], opener.searching ) );
   _.assert( opener.formed <= 2 );
 
-  // if( opener.id === 48 || opener.id === 484 )
-  // debugger;
-
   if( opener.openedModule )
   return opener.openedModule;
 
@@ -547,6 +546,9 @@ function find( o )
     openedModule = will.moduleAt( opener.willfilesPath );
 
     /* */
+
+    if( opener.absoluteName === 'module::l1 / module::wModuleForTesting12 / opener::wModuleForTesting1' )
+    debugger;
 
     if( !openedModule || !openedModule.willfilesArray.length )
     {
