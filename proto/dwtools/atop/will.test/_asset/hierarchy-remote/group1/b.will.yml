@@ -5,7 +5,7 @@ about :
 
 submodule :
 
-  PathModuleForTesting1 : git+https:///github.com/Wandalen/wPathModuleForTesting1.git/out/wPathModuleForTesting1.out
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out
   ModuleForTesting12 : git+https:///github.com/Wandalen/wModuleForTesting12.git/
 
 path :

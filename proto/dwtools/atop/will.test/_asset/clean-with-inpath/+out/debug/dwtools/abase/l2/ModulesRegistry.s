@@ -137,9 +137,9 @@ let wBaseEncoder =
 
 // base / l5
 
-let wPathModuleForTesting1 =
+let wModuleForTesting1 =
 {
-  sourcePath : sourcePath( 'abase/l5/PathModuleForTesting1.s', 'wpathtools' ),
+  sourcePath : sourcePath( 'abase/l5/ModuleForTesting1.s', 'wpathtools' ),
   isIncluded : function(){ return !!_global.wModuleForTesting1 && !!_global.wModuleForTesting1.path && !!_global.wModuleForTesting1.path.mapExtend },
 }
 
@@ -694,7 +694,7 @@ let Modules =
 
   // base / l5
 
-  wPathModuleForTesting1,
+  wModuleForTesting1,
   wSelector,
   wWebModuleForTesting2b,
   wCloner,
