@@ -17021,8 +17021,8 @@ function submodulesDownloadNpm( test )
   .then( () =>
   {
     versions[ 'ModuleForTesting1' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting1' );
-    versions[ 'ModuleForTesting2' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2@alpha' );
-    versions[ 'ModuleForTesting2b' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting2b#0.0.30' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a@alpha' );
+    versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.30' );
 
     a.reflect();
 
@@ -17039,8 +17039,7 @@ function submodulesDownloadNpm( test )
 
     test.identical( got.exitCode, 0 );
 
-    var exp =
-    [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting2', 'ModuleForTesting2.will.yml', 'ModuleForTesting2b', 'ModuleForTesting2b.will.yml' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -17051,23 +17050,23 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( got.output, '+ 3/3 submodule(s) of module::supermodule were downloaded' ), 1 );
 
     test.identical( _.strCount( got.output, `module::ModuleForTesting1 was downloaded version ${versions['ModuleForTesting1']}` ), 1 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2 was downloaded version ${versions['ModuleForTesting2']}` ), 1 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2b was downloaded version ${versions['ModuleForTesting2b']}` ), 1 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting2a was downloaded version ${versions['ModuleForTesting2a']}` ), 1 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting12ab was downloaded version ${versions['ModuleForTesting12ab']}` ), 1 );
 
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting1` ), 1 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2` ), 2 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2b` ), 1 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting1` ), 2 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2b' ) );
-    test.identical( version, versions[ 'ModuleForTesting2b' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2' ) );
-    test.identical( version, versions[ 'ModuleForTesting2' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2b/ModuleForTesting2b.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2/ModuleForTesting2.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -17082,7 +17081,7 @@ function submodulesDownloadNpm( test )
 
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting2', 'ModuleForTesting2.will.yml', 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting2b', 'ModuleForTesting2b.will.yml' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -17093,23 +17092,23 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::supermodule were downloaded' ), 1 );
 
     test.identical( _.strCount( got.output, `module::ModuleForTesting1 was downloaded version ${versions['ModuleForTesting1']}` ), 0 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2 was downloaded version ${versions['ModuleForTesting2']}` ), 0 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2b was downloaded version ${versions['ModuleForTesting2b']}` ), 0 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting2a was downloaded version ${versions['ModuleForTesting2a']}` ), 0 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting12ab was downloaded version ${versions['ModuleForTesting12ab']}` ), 0 );
 
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting1` ), 0 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2` ), 0 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2b` ), 0 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2b' ) );
-    test.identical( version, versions[ 'ModuleForTesting2b' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2' ) );
-    test.identical( version, versions[ 'ModuleForTesting2' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2b/ModuleForTesting2b.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2/ModuleForTesting2.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -17121,7 +17120,7 @@ function submodulesDownloadNpm( test )
     test.case = 'change origin of first submodule and run .submodules.download';
 
     let willFile = a.fileProvider.fileRead( willFilePath );
-    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1', 'npm:///wprocedure' );
+    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1', 'npm:///wmoduleforTesting2b' );
     a.fileProvider.fileWrite( willFilePath, willFile );
 
     filesBefore = self.find( a.abs( '.module/ModuleForTesting1' ) );
@@ -17136,7 +17135,7 @@ function submodulesDownloadNpm( test )
 
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting2', 'ModuleForTesting2.will.yml', 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting2b', 'ModuleForTesting2b.will.yml' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -17146,23 +17145,23 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::supermodule were downloaded' ), 1 );
 
     test.identical( _.strCount( got.output, `module::ModuleForTesting1 was downloaded version ${versions['ModuleForTesting1']}` ), 0 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2 was downloaded version ${versions['ModuleForTesting2']}` ), 0 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2b was downloaded version ${versions['ModuleForTesting2b']}` ), 0 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting2a was downloaded version ${versions['ModuleForTesting2a']}` ), 0 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting12ab was downloaded version ${versions['ModuleForTesting12ab']}` ), 0 );
 
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting1` ), 0 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2` ), 0 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2b` ), 0 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2b' ) );
-    test.identical( version, versions[ 'ModuleForTesting2b' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2' ) );
-    test.identical( version, versions[ 'ModuleForTesting2' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2b/ModuleForTesting2b.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2/ModuleForTesting2.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     var files = self.find( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( files,filesBefore );
@@ -17172,7 +17171,7 @@ function submodulesDownloadNpm( test )
   .then( () =>
   {
     let willFile = a.fileProvider.fileRead( willFilePath );
-    willFile = _.strReplace( willFile, 'npm:///wprocedure', 'npm:///wmodulefortesting1' );
+    willFile = _.strReplace( willFile, 'npm:///wmoduleforTesting2b', 'npm:///wmodulefortesting1' );
     a.fileProvider.fileWrite( willFilePath, willFile );
 
     return null;
@@ -17202,8 +17201,8 @@ function submodulesDownloadUpdateNpm( test )
   .then( () =>
   {
     versions[ 'ModuleForTesting1' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting1' );
-    versions[ 'ModuleForTesting2' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2@alpha' );
-    versions[ 'ModuleForTesting2b' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting2b#0.0.30' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a@alpha' );
+    versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.30' );
 
     a.reflect();
 
@@ -17220,7 +17219,7 @@ function submodulesDownloadUpdateNpm( test )
 
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting2', 'ModuleForTesting2.will.yml', 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting2b', 'ModuleForTesting2b.will.yml' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -17231,23 +17230,23 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( got.output, '+ 3/3 submodule(s) of module::supermodule were updated' ), 1 );
 
     test.identical( _.strCount( got.output, `module::ModuleForTesting1 was updated to version ${versions['ModuleForTesting1']}` ), 1 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2 was updated to version ${versions['ModuleForTesting2']}` ), 1 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2b was updated to version ${versions['ModuleForTesting2b']}` ), 1 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting2a was updated to version ${versions['ModuleForTesting2a']}` ), 1 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting12ab was updated to version ${versions['ModuleForTesting12ab']}` ), 1 );
 
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting1` ), 1 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2` ), 2 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2b` ), 1 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting1` ), 2 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2b' ) );
-    test.identical( version, versions[ 'ModuleForTesting2b' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2' ) );
-    test.identical( version, versions[ 'ModuleForTesting2' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2b/ModuleForTesting2b.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2/ModuleForTesting2.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -17261,8 +17260,8 @@ function submodulesDownloadUpdateNpm( test )
     willFile = _.strReplace( willFile, '#0.0.3', '#0.0.32' );
     a.fileProvider.fileWrite( willFilePath, willFile );
 
-    versions[ 'ModuleForTesting2' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2@beta' );
-    versions[ 'ModuleForTesting2b' ] = '0.0.32'
+    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a@beta' );
+    versions[ 'ModuleForTesting12ab' ] = '0.0.32'
 
     return null;
   })
@@ -17275,7 +17274,7 @@ function submodulesDownloadUpdateNpm( test )
 
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting2', 'ModuleForTesting2.will.yml', 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting2b', 'ModuleForTesting2b.will.yml' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -17286,23 +17285,23 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( got.output, '+ 2/3 submodule(s) of module::supermodule were updated' ), 1 );
 
     test.identical( _.strCount( got.output, `module::ModuleForTesting1 was updated to version ${versions['ModuleForTesting1']}` ), 0 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2 was updated to version ${versions['ModuleForTesting2']}` ), 1 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2b was updated to version ${versions['ModuleForTesting2b']}` ), 1 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting2a was updated to version ${versions['ModuleForTesting2a']}` ), 1 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting12ab was updated to version ${versions['ModuleForTesting12ab']}` ), 1 );
 
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting1` ), 0 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2` ), 1 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2b` ), 1 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2b' ) );
-    test.identical( version, versions[ 'ModuleForTesting2b' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2' ) );
-    test.identical( version, versions[ 'ModuleForTesting2' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2b/ModuleForTesting2b.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2/ModuleForTesting2.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -17317,7 +17316,7 @@ function submodulesDownloadUpdateNpm( test )
 
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting2', 'ModuleForTesting2.will.yml', 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting2b', 'ModuleForTesting2b.will.yml' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -17328,23 +17327,23 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::supermodule were updated' ), 1 );
 
     test.identical( _.strCount( got.output, `module::ModuleForTesting1 was updated to version ${versions['ModuleForTesting1']}` ), 0 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2 was updated to version ${versions['ModuleForTesting2']}` ), 0 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2b was updated to version ${versions['ModuleForTesting2b']}` ), 0 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting2a was updated to version ${versions['ModuleForTesting2a']}` ), 0 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting12ab was updated to version ${versions['ModuleForTesting12ab']}` ), 0 );
 
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting1` ), 0 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2` ), 0 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2b` ), 0 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( version, versions[ 'ModuleForTesting1' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2b' ) );
-    test.identical( version, versions[ 'ModuleForTesting2b' ] )
-    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2' ) );
-    test.identical( version, versions[ 'ModuleForTesting2' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting12ab' ) );
+    test.identical( version, versions[ 'ModuleForTesting12ab' ] )
+    var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting2a' ) );
+    test.identical( version, versions[ 'ModuleForTesting2a' ] )
 
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1/ModuleForTesting1.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2b/ModuleForTesting2b.out.will.yml' ) ) )
-    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2/ModuleForTesting2.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     return null;
   })
@@ -17356,7 +17355,7 @@ function submodulesDownloadUpdateNpm( test )
     test.case = 'change origin of first submodule and run .submodules.update';
 
     let willFile = a.fileProvider.fileRead( willFilePath );
-    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1', 'npm:///wprocedure' );
+    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1', 'npm:///wmoduleforTesting2b' );
     a.fileProvider.fileWrite( willFilePath, willFile );
 
     filesBefore = self.find( a.abs( '.module' ) );
@@ -17373,7 +17372,7 @@ function submodulesDownloadUpdateNpm( test )
     var files = self.find( a.abs( '.module' ) );
     test.identical( files,filesBefore );
 
-    test.identical( _.strCount( got.output, 'opener::ModuleForTesting1 is already downloaded, but has different origin url: wModuleForTesting1 , expected url: wprocedure' ), 1 );
+    test.identical( _.strCount( got.output, 'opener::ModuleForTesting1 is already downloaded, but has different origin url: wModuleForTesting1 , expected url: wmoduleforTesting2b' ), 1 );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 7 );
@@ -17381,12 +17380,12 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::supermodule were updated' ), 0 );
 
     test.identical( _.strCount( got.output, `module::ModuleForTesting1 was updated to version ${versions['ModuleForTesting1']}` ), 0 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2 was updated to version ${versions['ModuleForTesting2']}` ), 0 );
-    test.identical( _.strCount( got.output, `module::ModuleForTesting2b was updated to version ${versions['ModuleForTesting2b']}` ), 0 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting2a was updated to version ${versions['ModuleForTesting2a']}` ), 0 );
+    test.identical( _.strCount( got.output, `module::ModuleForTesting12ab was updated to version ${versions['ModuleForTesting12ab']}` ), 0 );
 
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting1` ), 0 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2` ), 0 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2b` ), 0 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 0 );
 
     return null;
   })
@@ -17394,7 +17393,7 @@ function submodulesDownloadUpdateNpm( test )
   .then( () =>
   {
     let willFile = a.fileProvider.fileRead( willFilePath );
-    willFile = _.strReplace( willFile, 'npm:///wprocedure', 'npm:///wmodulefortesting1' );
+    willFile = _.strReplace( willFile, 'npm:///wmoduleforTesting2b', 'npm:///wmodulefortesting1' );
     a.fileProvider.fileWrite( willFilePath, willFile );
     return null;
   })
@@ -17411,7 +17410,7 @@ function submodulesUpdateThrowing( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-download-errors' );
   let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let downloadPath = _.path.join( a.routinePath, '.module/ModuleForTesting2' );
+  let downloadPath = _.path.join( a.routinePath, '.module/ModuleForTesting2a' );
   let filePath = _.path.join( downloadPath, 'file' );
   let filesBefore;
   a.start = _.process.starter
@@ -17448,7 +17447,7 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2.git/` ) );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
 
     test.is( !_.fileProvider.fileExists( downloadPath ) )
@@ -17468,7 +17467,7 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2.git/` ) );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [] );
@@ -17489,7 +17488,7 @@ function submodulesUpdateThrowing( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to download update' ) );
-    test.is( _.strHas( got.output, 'module::wModuleForTesting2 was updated to version master in' ) );
+    test.is( _.strHas( got.output, 'module::wModuleForTesting2a was updated to version master in' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were updated in' ) );
 
     let files = self.find( downloadPath );
@@ -17512,7 +17511,7 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::ModuleForTesting2 is downloaded, but it's not a git repository` ) );
+    test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::ModuleForTesting2a is downloaded, but it's not a git repository` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [ 'file' ] );
@@ -17532,7 +17531,7 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Module module::submodules-download-errors-good / opener::ModuleForTesting2 is not downloaded, but file at' ) );
+    test.is( _.strHas( got.output, 'Module module::submodules-download-errors-good / opener::ModuleForTesting2a is not downloaded, but file at' ) );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( _.fileProvider.isTerminal( downloadPath ) )
     return null;
@@ -17547,7 +17546,7 @@ function submodulesUpdateThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  a.startNonThrowing({ execPath : 'git clone https://github.com/Wandalen/wModuleForTesting1.git .module/ModuleForTesting2' })
+  a.startNonThrowing({ execPath : 'git clone https://github.com/Wandalen/wModuleForTesting1.git .module/ModuleForTesting2a' })
   .then( () =>
   {
     filesBefore = self.find( downloadPath );
@@ -17557,7 +17556,7 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'opener::ModuleForTesting2 is already downloaded, but has different origin url') );
+    test.is( _.strHas( got.output, 'opener::ModuleForTesting2a is already downloaded, but has different origin url') );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
