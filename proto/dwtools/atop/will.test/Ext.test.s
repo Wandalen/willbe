@@ -14527,6 +14527,76 @@ exportWithoutSubSubModules.timeOut = 300000;
 
 //
 
+function exportWithSubmoduleWithNotDownloadedSubmodule( test )
+{
+  let self = this;
+  let a = self.assetFor( test );
+
+  a.reflect();
+
+  var exp = [ '.', './will.yml' ];
+  var got = self.find( a.abs( '.' ) );
+  test.identical( got, exp );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = '.export';
+    return null;
+  })
+
+  a.start( '.export' )
+
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Exported module::l1 / build::export with 3 file(s)' ), 1 );
+    var exp =
+    [
+      '.',
+      './l1.out.will.yml',
+      './will.yml',
+      './.module',
+      './.module/ModuleForTesting12',
+      './.module/ModuleForTesting12/.ex.will.yml',
+      './.module/ModuleForTesting12/.gitattributes',
+      './.module/ModuleForTesting12/.gitignore',
+      './.module/ModuleForTesting12/.im.will.yml',
+      './.module/ModuleForTesting12/.travis.yml',
+      './.module/ModuleForTesting12/LICENSE',
+      './.module/ModuleForTesting12/package.json',
+      './.module/ModuleForTesting12/README.md',
+      './.module/ModuleForTesting12/was.package.json',
+      './.module/ModuleForTesting12/doc',
+      './.module/ModuleForTesting12/doc/ModuleForTesting12.md',
+      './.module/ModuleForTesting12/doc/README.md',
+      './.module/ModuleForTesting12/out',
+      './.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml',
+      './.module/ModuleForTesting12/proto',
+      './.module/ModuleForTesting12/proto/dwtools',
+      './.module/ModuleForTesting12/proto/dwtools/abase',
+      './.module/ModuleForTesting12/proto/dwtools/abase/l3',
+      './.module/ModuleForTesting12/proto/dwtools/abase/l3/Include.s',
+      './.module/ModuleForTesting12/proto/dwtools/abase/l3/l3',
+      './.module/ModuleForTesting12/proto/dwtools/abase/l3/l3/ModuleForTesting12.s',
+      './.module/ModuleForTesting12/proto/dwtools/abase/l3.test',
+      './.module/ModuleForTesting12/proto/dwtools/abase/l3.test/ModuleForTesting12.test.s',
+      './.module/ModuleForTesting12/sample',
+      './.module/ModuleForTesting12/sample/Sample.js'
+    ]
+    var got = self.find( a.abs( '.' ) );
+    test.identical( got, exp );
+    return op;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 /*
 Import out file with non-importable path local.
 Test importing of non-valid out files.
@@ -21354,6 +21424,7 @@ var Self =
     exportOutdated2,
     exportWithSubmoduleThatHasModuleDirDeleted,
     exportWithoutSubSubModules,
+    exportWithSubmoduleWithNotDownloadedSubmodule,
 
     importPathLocal,
     // importLocalRepo, /* xxx : later */
