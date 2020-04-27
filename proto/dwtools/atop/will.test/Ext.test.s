@@ -17235,7 +17235,7 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( got.output, `module::ModuleForTesting2b was updated to version ${versions['ModuleForTesting2b']}` ), 1 );
 
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting1` ), 1 );
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2` ), 1 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2` ), 2 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2b` ), 1 );
 
     var version = _.npm.versionLocalRetrive( a.abs( '.module/ModuleForTesting1' ) );
@@ -17411,7 +17411,7 @@ function submodulesUpdateThrowing( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-download-errors' );
   let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let downloadPath = _.path.join( a.routinePath, '.module/PathBasic' );
+  let downloadPath = _.path.join( a.routinePath, '.module/ModuleForTesting2' );
   let filePath = _.path.join( downloadPath, 'file' );
   let filesBefore;
   a.start = _.process.starter
@@ -17448,7 +17448,7 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wPathBasic.git/` ) );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2.git/` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
 
     test.is( !_.fileProvider.fileExists( downloadPath ) )
@@ -17468,7 +17468,7 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wPathBasic.git/` ) );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2.git/` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [] );
@@ -17489,11 +17489,11 @@ function submodulesUpdateThrowing( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to download update' ) );
-    test.is( _.strHas( got.output, 'module::wPathBasic was updated to version master in' ) );
+    test.is( _.strHas( got.output, 'module::wModuleForTesting2 was updated to version master in' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were updated in' ) );
 
     let files = self.find( downloadPath );
-    test.gt( files.length, 10 );
+    test.ge( files.length, 1 );
 
     return null;
   })
@@ -17512,7 +17512,7 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::PathBasic is downloaded, but it's not a git repository` ) );
+    test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::ModuleForTesting2 is downloaded, but it's not a git repository` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [ 'file' ] );
@@ -17532,7 +17532,7 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Module module::submodules-download-errors-good / opener::PathBasic is not downloaded, but file at' ) );
+    test.is( _.strHas( got.output, 'Module module::submodules-download-errors-good / opener::ModuleForTesting2 is not downloaded, but file at' ) );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( _.fileProvider.isTerminal( downloadPath ) )
     return null;
@@ -17547,7 +17547,7 @@ function submodulesUpdateThrowing( test )
     _.fileProvider.dirMake( downloadPath );
     return null;
   })
-  a.startNonThrowing({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
+  a.startNonThrowing({ execPath : 'git clone https://github.com/Wandalen/wModuleForTesting1.git .module/ModuleForTesting2' })
   .then( () =>
   {
     filesBefore = self.find( downloadPath );
@@ -17557,7 +17557,7 @@ function submodulesUpdateThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'opener::PathBasic is already downloaded, but has different origin url') );
+    test.is( _.strHas( got.output, 'opener::ModuleForTesting2 is already downloaded, but has different origin url') );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     let filesAfter = self.find( downloadPath );
