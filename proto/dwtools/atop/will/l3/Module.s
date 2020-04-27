@@ -467,7 +467,7 @@ function outModuleMake( o )
     o2.searching = 'exact';
     o2.reason = 'export';
     o2.isAuto = 1;
-    o2.remotePath = null; // yyy
+    o2.remotePath = null; // xxx
 
     let opener2 = will._openerMake({ opener : o2 });
     _.assert( opener2.isOut === true );
@@ -2159,6 +2159,8 @@ function _attachedWillfilesOpenFromData( o )
     continue;
 
     willfile._read();
+
+    debugger;
 
     for( let modulePath in willfile.structure.module )
     {
@@ -3969,7 +3971,7 @@ function _subModulesForm()
 
   let con = _.Consequence().take( null );
 
-  // console.log( '_subModulesForm', module.absoluteName ); xxx
+  // console.log( '_subModulesForm', module.absoluteName ); yyy
 
   debugger;
   module._resourcesAllForm( will.ModulesRelation, con );
@@ -5399,8 +5401,6 @@ function predefinedPathSet_functor( fieldName, resourceName )
 function willfilesPathSet( filePath )
 {
   let module = this;
-
-  // module[ putName ]( filePath ); // yyy
 
   module._filePathChanged1
   ({
