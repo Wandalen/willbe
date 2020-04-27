@@ -419,7 +419,7 @@ function submodulesRelationsFilter( o )
 //   let junctions = junction.submodulesJunctionsFilter( o );
 //
 //   // if( o.withPeers )
-//   // _.arrayPrependOnce( junctions, junction ); /* yyy */
+//   // _.arrayPrependOnce( junctions, junction ); /* xxx */
 //
 //   result = _.arrayAppendArraysOnce( result, junctions.map( ( junction ) => junction.objects ) );
 //
