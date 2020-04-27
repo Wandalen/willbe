@@ -378,6 +378,7 @@ function archiveFilePathFor()
 
   return hd.path.resolve( module.outPath, name );
 }
+
 // --
 // relations
 // --

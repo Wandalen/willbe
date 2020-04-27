@@ -1698,10 +1698,8 @@ function commandHookCall( e )
   function handleEach( it )
   {
     let it2 = _.mapOnly( it, will.hookItFrom.defaults );
-    debugger;
     it2.execPath = path.join( will.hooksPath, execPath );
     it2 = will.hookItFrom( it2 );
-    debugger;
     return will.hookCall( it2 );
   }
 

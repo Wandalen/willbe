@@ -631,6 +631,7 @@ function _readLog( reading, failed )
   if( willf.storagePath && willf.storagePath !== willf.filePath )
   {
     let storagePath = _.color.strFormat( path.s.relative( _.arrayAs( willf.filePath ), willf.storagePath ), 'path' );
+    debugger;
     for( let f = 0 ; f < filePath.length ; f++ )
     {
       if( failed === 2 )

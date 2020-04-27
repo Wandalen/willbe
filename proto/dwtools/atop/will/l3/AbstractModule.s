@@ -632,7 +632,7 @@ function repoVerify( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( module.isPreformed() ); 
+  _.assert( module.isPreformed() );
   _.assert( arguments.length === 1 );
 
   _.routineOptions( repoVerify, o );

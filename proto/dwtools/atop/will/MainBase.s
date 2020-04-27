@@ -442,10 +442,12 @@ function CloneDirPathFor( inPath )
   _.assert( _.path.isAbsolute( inPath ) );
 
   let splits = _.path.split( inPath );
-  let insideClone = _.longHas( splits, '.module' );
+  let index = splits.indexOf( '.module' );
 
-  if( insideClone )
-  return inPath;
+  if( index >= 0 )
+  {
+    return splits.slice( 0, index+1 ).join( '/' );
+  }
 
   return _.path.join( inPath, '.module' );
 }

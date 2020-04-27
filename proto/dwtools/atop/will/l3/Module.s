@@ -1872,6 +1872,7 @@ function _willfilesOpen()
 
   /* */
 
+  // debugger;
   for( let i = 0 ; i < module.willfilesArray.length ; i++ )
   {
     let willfile = module.willfilesArray[ i ];
@@ -4250,6 +4251,8 @@ function submodulesPeersOpen_body( o )
   delete o2.throwing;
   let modules = module.modulesEach.body.call( module, o2 );
 
+  debugger;
+
   modules.forEach( ( module2 ) =>
   {
     if( module2 !== null )
@@ -5148,21 +5151,9 @@ function cloneDirPathGet( rootModule )
     let inPath = rootModule.peerInPathGet();
     if( inPath )
     return _.Will.CloneDirPathFor( inPath );
-  }
-
-  // if( rootModule.isOut )
-  // {
-  //   debugger;
-  //   let inPath = rootModule.peerInPathGet();
-  //   if( inPath )
-  //   return _.Will.CloneDirPathFor( inPath );
-  // }
-
-  if( rootModule.isOut )
-  {
     debugger;
-    if( module.verbosity )
-    logger.error( ` ! Out willfile of ${module.localPath} does not have path::module.peer.in, but should` );
+    // if( module.verbosity )
+    logger.error( ` ! Out willfile of ${rootModule.localPath} does not have path::module.peer.in, but should` );
     return null;
   }
 
@@ -7450,7 +7441,7 @@ let Accessors =
   superRelations : { set : superRelationsSet },
 
   name : { get : nameGet, readOnly : 1 },
-  absoluteName : { get : absoluteNameGet, readOnly : 1 },
+  absoluteName : { get : absoluteNameGet, readOnly : 1 }, /* xxx : deprecate option readOnly */
   aliasNames : { get : aliasNamesGet, readOnly : 1 },
 
   willfilesPath : { get : willfilesPathGet, set : willfilesPathSet },

@@ -1,0 +1,17 @@
+
+about :
+
+  name : 'l1'
+
+path :
+
+  export : './*'
+
+build :
+
+  export :
+    steps :
+      module.export
+    criterion :
+      export : 1
+      default : 1
