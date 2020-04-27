@@ -469,7 +469,6 @@ function _commandListLike( o )
   }))
   .finally( ( err, arg ) =>
   {
-    debugger;
     will._commandsEnd( o.commandRoutine );
     if( err )
     logger.log( _.errOnce( err ) );

@@ -496,6 +496,32 @@ function HooksPathGet( environmentPath )
 
 //
 
+function LocalPathNormalize( localPath )
+{
+
+  _.assert( arguments.length === 1, 'Expects no arguments' );
+
+  /* xxx : find more robust solution */
+
+  localPath = _.filter( localPath, ( r ) =>
+  {
+    let splits = _.path.split( r );
+    if( _.longCountElement( splits, '.module' ) > 1 )
+    {
+      // debugger; // yyy
+      let f = splits.indexOf( '.module' );
+      let l = splits.lastIndexOf( '.module' );
+      splits.splice( f, l-f );
+      r = splits.join( '/' );
+    }
+    return r;
+  });
+
+  return localPath;
+}
+
+//
+
 function IsModuleAt( filePath )
 {
   let cls = this;
@@ -5384,6 +5410,7 @@ let Statics =
   OutfilePathFor,
   RemotePathAdjust,
   HooksPathGet,
+  LocalPathNormalize,
   IsModuleAt,
   WillfilesFind,
 

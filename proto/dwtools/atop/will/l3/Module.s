@@ -2124,7 +2124,7 @@ function _attachedWillfilesForm()
 
   con.then( ( arg ) =>
   {
-    return module._attachedWillfilesOpenFromData();
+    return module._attachedWillfilesOpen();
   });
 
   con.finally( ( err, arg ) =>
@@ -2139,12 +2139,12 @@ function _attachedWillfilesForm()
 
 //
 
-function _attachedWillfilesOpenFromData( o )
+function _attachedWillfilesOpen( o ) /* xxx : does this stage do anything useful? */
 {
   let module = this;
   let will = module.will;
 
-  o = _.routineOptions( _attachedWillfilesOpenFromData, arguments );
+  o = _.routineOptions( _attachedWillfilesOpen, arguments );
   o.rootModule = o.rootModule || module.rootModule || module;
   o.willfilesArray = o.willfilesArray || module.willfilesArray;
 
@@ -2160,8 +2160,7 @@ function _attachedWillfilesOpenFromData( o )
 
     willfile._read();
 
-    debugger;
-
+    // debugger;
     for( let modulePath in willfile.structure.module )
     {
       let moduleStructure = willfile.structure.module[ modulePath ];
@@ -2169,7 +2168,7 @@ function _attachedWillfilesOpenFromData( o )
       if( _.longHas( willfile.structure.root, modulePath ) )
       continue;
 
-      module._attachedWillfileOpenFromData
+      module._attachedWillfileOpen
       ({
         modulePath : modulePath,
         structure : moduleStructure,
@@ -2177,14 +2176,16 @@ function _attachedWillfilesOpenFromData( o )
         storagePath : willfile.filePath,
         storageWillfile : willfile,
       });
+
     }
+    // debugger;
 
   }
 
   return null;
 }
 
-_attachedWillfilesOpenFromData.defaults =
+_attachedWillfilesOpen.defaults =
 {
   willfilesArray : null,
   rootModule : null,
@@ -2192,7 +2193,7 @@ _attachedWillfilesOpenFromData.defaults =
 
 //
 
-function _attachedWillfileOpenFromData( o )
+function _attachedWillfileOpen( o )
 {
   let module = this;
   let will = module.will;
@@ -2200,17 +2201,18 @@ function _attachedWillfileOpenFromData( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  o = _.routineOptions( _attachedWillfileOpenFromData, arguments );
+  o = _.routineOptions( _attachedWillfileOpen, arguments );
 
-  let modulePath = path.join( module.dirPath, o.modulePath );
-  let filePath = modulePath;
+  let filePath = path.join( module.dirPath, o.modulePath );
+  filePath = will.LocalPathNormalize( filePath )
+
   if( o.structure.path && o.structure.path[ 'module.willfiles' ] )
   {
     let moduleWillfilesPath = o.structure.path[ 'module.willfiles' ];
     if( _.mapIs( moduleWillfilesPath ) )
     moduleWillfilesPath = moduleWillfilesPath.path;
     if( moduleWillfilesPath )
-    filePath = path.s.join( path.s.dirFirst( modulePath ), moduleWillfilesPath );
+    filePath = path.s.join( path.s.dirFirst( filePath ), moduleWillfilesPath );
   }
 
   let willfOptions =
@@ -2225,7 +2227,7 @@ function _attachedWillfileOpenFromData( o )
   return will.willfileFor({ willf : willfOptions, combining : 'supplement' });
 }
 
-_attachedWillfileOpenFromData.defaults =
+_attachedWillfileOpen.defaults =
 {
   modulePath : null,
   storagePath : null,
@@ -3971,11 +3973,11 @@ function _subModulesForm()
 
   let con = _.Consequence().take( null );
 
-  // console.log( '_subModulesForm', module.absoluteName ); yyy
+  console.log( '_subModulesForm', module.absoluteName ); debugger; /* yyy */
 
-  debugger;
+  // debugger;
   module._resourcesAllForm( will.ModulesRelation, con );
-  debugger;
+  // debugger;
 
   con.finally( ( err, arg ) =>
   {
@@ -7556,8 +7558,8 @@ let Extend =
   willfilesSave,
 
   _attachedWillfilesForm,
-  _attachedWillfilesOpenFromData,
-  _attachedWillfileOpenFromData,
+  _attachedWillfilesOpen,
+  _attachedWillfileOpen,
 
   // build / export
 
