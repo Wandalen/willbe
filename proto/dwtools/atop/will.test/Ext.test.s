@@ -4328,9 +4328,9 @@ function withDoInfo( test )
 
     test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/proto' ) ) );
     test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/dos.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/PathBasic' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/PathTools' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/Tools' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting1' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting2a' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting12' ) ) );
 
     return null;
   })
