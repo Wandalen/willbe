@@ -876,9 +876,7 @@ function versionIsUpToDate( o )
   let will = this;
 
   _.assert( arguments.length === 1 );
-
   _.routineOptions( versionIsUpToDate, o );
-
 
   let ready = _.process.start
   ({
@@ -929,10 +927,7 @@ function versionIsUpToDate( o )
         return false;
       }
 
-      // if( o.brief )
       throw _.errBrief( coloredMessage );
-      // else
-      // throw _.err( message );
     }
     else
     {
@@ -954,7 +949,56 @@ function versionIsUpToDate( o )
 versionIsUpToDate.defaults =
 {
   throwing : 1,
-  // brief : 1
+}
+
+//
+
+function withSubModulesGet()
+{
+  let will = this;
+
+  _.assert( arguments.length === 0 );
+
+  if( !will.subModulesFormedOfMain )
+  return 0;
+  else if( will.subModulesFormedOfSub )
+  return 2;
+  else
+  return 1;
+}
+
+//
+
+function withSubModulesSet( src )
+{
+  let will = this;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.boolIs( src ) || _.numberIs( src ) );
+
+  debugger;
+
+  if( src )
+  {
+    will.subModulesFormedOfMain = true;
+    if( src === 2 )
+    {
+      will.subModulesFormedOfSub = true;
+      return 2;
+    }
+    else
+    {
+      will.subModulesFormedOfSub = false;
+      return 1;
+    }
+  }
+  else
+  {
+    will.subModulesFormedOfMain = false;
+    will.subModulesFormedOfSub = false;
+    return 0;
+  }
+
 }
 
 // --
@@ -1829,6 +1873,11 @@ function modulesFindWithAt( o )
     });
 
     it.opener.find();
+    // if( _.boolLike( will.withSubModules ) && it.opener.openedModule )
+    // {
+    //   debugger;
+    //   it.opener.openedModule.stager.stageStateSkipping( 'subModulesFormed', !will.withSubModules );
+    // }
     it.opener.open();
 
     return it.opener.openedModule.ready.split()
@@ -2923,9 +2972,8 @@ function modulesUpform( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  // let visitedSet = new Set;
 
-  o = _.routineOptions( modulesUpform, arguments );
+  o = _.routineOptions( modulesUpform, arguments ); debugger;
 
   let o2 = _.mapOnly( o, will.modulesFor.defaults );
   o2.onEachModule = handleEach;
@@ -2945,32 +2993,6 @@ function modulesUpform( o )
     return module.upform( o3 );
   }
 
-  // function handleEach( junction, op )
-  // {
-  //
-  //   if( visitedSet.has( junction ) )
-  //   debugger;
-  //   if( visitedSet.has( junction ) )
-  //   return null;
-  //
-  //   junction.reform();
-  //
-  //   if( !junction.module && o.allowingMissing )
-  //   return null;
-  //   if( !junction.module )
-  //   debugger;
-  //   if( !junction.module )
-  //   throw _.err
-  //   (
-  //       `Cant upform ${module.absoluteName} because ${junction.relation ? junction.relation.absoluteName : junction.opener.absoluteName} is not available.`
-  //     , `\nLooked at ${junction.opener ? junction.opener.commonPath : junction.relation.path}`
-  //   );
-  //
-  //   visitedSet.add( junction );
-  //   let o3 = _.mapOnly( o, junction.module.upform.defaults );
-  //   return junction.module.upform( o3 );
-  // }
-
 }
 
 var defaults = modulesUpform.defaults = _.mapExtend( null, UpformingDefaults, modulesFor.defaults );
@@ -2978,7 +3000,6 @@ var defaults = modulesUpform.defaults = _.mapExtend( null, UpformingDefaults, mo
 defaults.recursive = 2;
 defaults.withStem = 1;
 defaults.withPeers = 1;
-// defaults.allowingMissing = 1;
 defaults.all = 1;
 
 delete defaults.outputFormat;
@@ -4458,9 +4479,13 @@ function WillfilesFind( o )
       return { [ it.src ] : it.dst };
     });
 
+    if( _.strEnds( o.commonPath, '/l2' ) )
+    debugger;
     // debugger;
     let files = fileProvider.filesFind( o2 );
     // debugger;
+    if( _.strEnds( o.commonPath, '/l2' ) )
+    debugger;
 
     let files2 = [];
     files.forEach( ( file ) =>
@@ -5336,6 +5361,7 @@ let Composes =
 
   environmentPath : null,
   withPath : null,
+  // withSubModules : null,
 
   ... FilterFields,
 
@@ -5392,6 +5418,11 @@ let Restricts =
   willfileWithCommonPathMap : _.define.own({}),
   willfileWithFilePathPathMap : _.define.own({}),
 
+}
+
+let Medials =
+{
+  withSubModules : null,
 }
 
 let Statics =
@@ -5458,6 +5489,7 @@ let Accessors =
   hooks : { get : hooksGet, readOnly : 1, },
   environmentPath : { set : environmentPathSet },
   hooksPath : { get : hooksPathGet, readOnly : 1, },
+  withSubModules : {},
 
 }
 
@@ -5509,6 +5541,9 @@ let Extend =
   _pathChanged,
   versionGet,
   versionIsUpToDate,
+
+  withSubModulesGet,
+  withSubModulesSet,
 
   // defaults
 
@@ -5633,6 +5668,7 @@ let Extend =
   Aggregates,
   Associates,
   Restricts,
+  Medials,
   Statics,
   Forbids,
   Accessors,

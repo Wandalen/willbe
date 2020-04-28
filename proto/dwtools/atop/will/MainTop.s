@@ -403,7 +403,8 @@ function _commandListLike( o )
   {
     let ready2 = new _.Consequence().take( null );
 
-    ready2.then( () => it.opener.openedModule.modulesUpform({ recursive : 2, all : 0, subModulesFormed : 1 }) )
+    // ready2.then( () => it.opener.openedModule.modulesUpform({ recursive : 2, all : 0, subModulesFormed : 1 }) ) /* yyy */
+    ready2.then( () => it.opener.openedModule.modulesUpform({ recursive : 2, all : 0 }) )
 
     ready2.then( () => will.readingEnd() );
 
@@ -514,6 +515,7 @@ function _commandBuildLike( o )
 
   ready
   .then( () => filter() )
+
   .then( () => will.openersCurrentEach( forSingle ) )
   .finally( end );
 
@@ -583,7 +585,7 @@ defaults.event = null;
 defaults.onEach = null;
 defaults.commandRoutine = null;
 defaults.name = null;
-// defaults.withDisabledModules = 0;
+defaults.subModulesFormed = 1;
 
 //
 
@@ -895,8 +897,14 @@ function commandImply( e )
     withDisabled : 'withDisabled',
     withValid : 'withValid',
     withInvalid : 'withInvalid',
+    withSubModules : 'withSubModules',
 
   }
+
+  // subModulesFormedOfMain : true,
+  // subModulesFormedOfSub : true,
+  // xxx
+  debugger;
 
   let request = will.Resolver.strRequestParse( e.argument );
 

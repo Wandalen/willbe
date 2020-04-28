@@ -1,0 +1,21 @@
+
+submodule :
+
+  l3 : ./l3.will
+
+about :
+
+  name : 'l4'
+
+path :
+
+  export : './*'
+
+build :
+
+  export :
+    steps :
+      module.export
+    criterion :
+      export : 1
+      default : 1
