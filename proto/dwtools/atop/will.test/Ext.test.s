@@ -8660,15 +8660,15 @@ function cleanHierarchyRemote( test )
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting12' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -8705,15 +8705,15 @@ function cleanHierarchyRemote( test )
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting12' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -8753,7 +8753,7 @@ function cleanHierarchyRemote( test )
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -8936,19 +8936,19 @@ function cleanHierarchyRemoteDry( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting12' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -8980,19 +8980,19 @@ function cleanHierarchyRemoteDry( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting12' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -9024,19 +9024,19 @@ function cleanHierarchyRemoteDry( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting12' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -9068,19 +9068,19 @@ function cleanHierarchyRemoteDry( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting12' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -9112,19 +9112,19 @@ function cleanHierarchyRemoteDry( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting12' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -9156,19 +9156,19 @@ function cleanHierarchyRemoteDry( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting12' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -9219,15 +9219,15 @@ function cleanSubmodulesHierarchyRemote( test )
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic', 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'UriBasic' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -9264,15 +9264,15 @@ function cleanSubmodulesHierarchyRemote( test )
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic', 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'UriBasic' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -9495,19 +9495,19 @@ function cleanSubmodulesHierarchyRemoteDry( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic', 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'UriBasic' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -9539,19 +9539,19 @@ function cleanSubmodulesHierarchyRemoteDry( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic', 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'UriBasic' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -9583,19 +9583,19 @@ function cleanSubmodulesHierarchyRemoteDry( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic', 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'UriBasic' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -9627,19 +9627,19 @@ function cleanSubmodulesHierarchyRemoteDry( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic', 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'UriBasic' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -9671,19 +9671,19 @@ function cleanSubmodulesHierarchyRemoteDry( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic', 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'UriBasic' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -9715,19 +9715,19 @@ function cleanSubmodulesHierarchyRemoteDry( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic', 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'UriBasic' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -16757,15 +16757,15 @@ function submodulesDownloadHierarchyRemote( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -16789,15 +16789,15 @@ function submodulesDownloadHierarchyRemote( test )
     test.case = 'second';
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -16832,7 +16832,7 @@ function submodulesDownloadHierarchyRemote( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -16840,11 +16840,11 @@ function submodulesDownloadHierarchyRemote( test )
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -16864,7 +16864,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.case = 'second';
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -16872,11 +16872,11 @@ function submodulesDownloadHierarchyRemote( test )
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -16907,7 +16907,7 @@ function submodulesDownloadHierarchyRemote( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -16915,11 +16915,11 @@ function submodulesDownloadHierarchyRemote( test )
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
@@ -16939,7 +16939,7 @@ function submodulesDownloadHierarchyRemote( test )
     test.case = 'second';
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
@@ -16947,11 +16947,11 @@ function submodulesDownloadHierarchyRemote( test )
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
