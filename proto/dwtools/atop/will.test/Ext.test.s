@@ -7378,7 +7378,7 @@ function listWithSubmodules( test )
     test.case = '.submodules.list'
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'relation::ModuleForTesting1' ) );
-    test.is( _.strHas( got.output, 'relation::ModuleForTesting1a' ) );
+    test.is( _.strHas( got.output, 'relation::ModuleForTesting2a' ) );
     return null;
   })
 
@@ -7609,7 +7609,7 @@ function clean( test )
   .then( () =>
   {
     files = self.findAll( submodulesPath );
-    test.gt( files.length, 300 );
+    test.gt( files.length, 20 );
     return files;
   })
 
@@ -7936,7 +7936,7 @@ function cleanBroken2( test )
 
     test.notIdentical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
-    test.is( _.strHas( got.output, `Module module::submodules / opener::PathBasic is downloaded, but it's not a git repository` ) );
+    test.is( _.strHas( got.output, `Module module::submodules / opener::ModuleForTesting2 is downloaded, but it's not a git repository` ) );
 
     // var files = self.find( outDebugPath );
     // test.gt( files.length, 9 );
@@ -7974,7 +7974,7 @@ function cleanBroken2( test )
     /* agree/update/download should not count as update of module if no change was done */
     test.identical( _.strCount( got.output, 'was updated' ), 0 );
     test.identical( _.strCount( got.output, 'to version' ), 0 );
-    test.is( !_.strHas( got.output, /Module module::submodules \/ opener::PathBasic is not downloaded, but file at .*/ ) );
+    test.is( !_.strHas( got.output, /Module module::submodules \/ opener::ModuleForTesting2 is not downloaded, but file at .*/ ) );
     test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were updated' ) );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
@@ -8227,14 +8227,14 @@ function cleanSubmodules( test )
   {
     test.case = '.submodules.update'
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'Tools' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'PathBasic' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting2' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
 
-    var files = self.find( _.path.join( submodulesPath, 'Tools' ) );
+    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1' ) );
     test.is( files.length );
 
-    var files = self.find( _.path.join( submodulesPath, 'PathBasic' ) );
+    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting2' ) );
     test.is( files.length );
 
     return null;
@@ -8298,7 +8298,7 @@ function cleanMixed( test )
     test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'out' ) ) );
     test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
 
-    var expected = [ '.', './Proto.informal.will.yml', './UriBasic.informal.will.yml' ];
+    var expected = [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting2b.informal.will.yml' ];
     var files = self.find( _.path.join( a.routinePath, 'module' ) );
     test.identical( files, expected );
 
