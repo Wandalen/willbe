@@ -4511,9 +4511,9 @@ function withDoStatus( test )
 
     test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/proto' ) ) );
     test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/dos.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/PathBasic' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/PathTools' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/Tools' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting1' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting2a' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting12' ) ) );
 
     return null;
   })
@@ -4547,9 +4547,9 @@ function withDoStatus( test )
   .then( ( got ) =>
   {
     test.case = 'changes';
-    _.fileProvider.fileAppend( _.path.join( a.routinePath, '.module/Tools/README.md' ), '\n' );
-    _.fileProvider.fileAppend( _.path.join( a.routinePath, '.module/PathTools/README.md' ), '\nx' );
-    _.fileProvider.fileAppend( _.path.join( a.routinePath, '.module/PathTools/LICENSE' ), '\n' );
+    _.fileProvider.fileAppend( _.path.join( a.routinePath, '.module/ModuleForTesting1/README.md' ), '\n' );
+    _.fileProvider.fileAppend( _.path.join( a.routinePath, '.module/ModuleForTesting2a/README.md' ), '\n' );
+    _.fileProvider.fileAppend( _.path.join( a.routinePath, '.module/ModuleForTesting12/LICENSE' ), '\n' );
     return null;
   })
 
@@ -4671,9 +4671,9 @@ function hookCallInfo( test )
 
     test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/proto' ) ) );
     test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/dos.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/PathBasic' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/PathTools' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/Tools' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting1' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting2a' ) ) );
+    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting12' ) ) );
 
     return null;
   })
