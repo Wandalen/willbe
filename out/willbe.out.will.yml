@@ -3752,6 +3752,11 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/-_asset/verbosity-step-print-name/file
           - ../proto/dwtools/atop/will.test/_asset
+          - ../proto/dwtools/atop/will.test/_asset/4LevelsLocal
+          - ../proto/dwtools/atop/will.test/_asset/4LevelsLocal/l1.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/4LevelsLocal/l2.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/4LevelsLocal/l3.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/4LevelsLocal/l4.will.yml
           - ../proto/dwtools/atop/will.test/_asset/broken-out
           - ../proto/dwtools/atop/will.test/_asset/broken-out/module1
           - >-
