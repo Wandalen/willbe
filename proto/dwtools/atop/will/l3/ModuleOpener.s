@@ -402,6 +402,8 @@ function _willfilesFindAct( o )
   }
   else
   {
+    if( _.strEnds( o.willfilesPath, '/l2' ) )
+    debugger;
     records = will.willfilesFind
     ({
       commonPath : o.willfilesPath,
@@ -547,8 +549,7 @@ function find( o )
 
     /* */
 
-    if( opener.absoluteName === 'module::l1 / module::wModuleForTesting12 / opener::wModuleForTesting1' )
-    debugger;
+    // debugger;
 
     if( !openedModule || !openedModule.willfilesArray.length )
     {
@@ -682,6 +683,8 @@ function open( o )
     skipping.peerModulesFormed = !o.peerModulesFormed;
     skipping.subModulesFormed = !o.subModulesFormed;
     skipping.resourcesFormed = !o.resourcesFormed;
+
+    debugger;
 
     let processing = stager.stageStateBegun( 'opened' ) && !stager.stageStateEnded( 'formed' );
     _.assert( !processing, 'not tested' );
@@ -2337,6 +2340,9 @@ function errorSet( err )
 
   if( opener.error === err )
   return;
+
+  if( err )
+  debugger;
 
   opener[ errorSymbol ] = err;
 

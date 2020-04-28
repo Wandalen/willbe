@@ -255,7 +255,7 @@ singleModuleWithSpaceTrivial.timeOut = 200000;
 // tests
 // --
 
-function make( test )
+function build( test )
 {
   let self = this;
   let a = self.assetFor( test, 'make' );
@@ -2335,12 +2335,7 @@ function eachBrokenCommand( test )
 
 //
 
-/*
-  check internal stat of will
-  several commands separated with ";"" should works
-*/
-
-function openExportClean( test )
+function commandsSeveral( test )
 {
   let self = this;
   let a = self.assetFor( test, 'open' );
@@ -2384,7 +2379,109 @@ function openExportClean( test )
   /* - */
 
   return a.ready;
-} /* end of function openExportClean */
+} /* end of function commandsSeveral */
+
+commandsSeveral.description =
+`
+- check internal stat of will
+- several commands separated with ";"" should works
+`
+
+//
+
+function implyWithSubmodules( test )
+{
+  let self = this;
+  let a = self.assetFor( test, '4LevelsLocal' );
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubModules:0';
+    a.reflect();
+    return null;
+  })
+  a.start( '".imply withSubModules:0 ; .with l4 .modules.list"' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'error' ), 0 );
+
+    test.identical( _.strCount( got.output, 'module::' ), 1 );
+    test.identical( _.strCount( got.output, 'remote : null' ), 1 );
+    test.identical( _.strCount( got.output, 'module::l4' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubModules:1';
+    a.reflect();
+    return null;
+  })
+  a.start( '".imply withSubModules:1 ; .with l4 .modules.list"' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'error' ), 0 );
+
+    test.identical( _.strCount( got.output, 'module::' ), 3 );
+    test.identical( _.strCount( got.output, 'remote : null' ), 2 );
+    test.identical( _.strCount( got.output, 'module::l4' ), 2 );
+    test.identical( _.strCount( got.output, 'module::l3' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubModules:2';
+    a.reflect();
+    return null;
+  })
+  a.start( '".imply withSubModules:2 ; .with l4 .modules.list"' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'error' ), 0 );
+
+    test.identical( _.strCount( got.output, 'module::' ), 7 );
+    test.identical( _.strCount( got.output, 'remote : null' ), 4 );
+    test.identical( _.strCount( got.output, 'module::l4' ), 4 );
+    test.identical( _.strCount( got.output, 'module::l3' ), 1 );
+    test.identical( _.strCount( got.output, 'module::l2' ), 1 );
+    test.identical( _.strCount( got.output, 'module::l1' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+implyWithSubmodules.description =
+`
+- imply withSubModules:0 cause to open no submodules
+- imply withSubModules:1 cause to open only submodules of the main module
+- imply withSubModules:2 cause to open all submodules recursively
+- no error are thowen
+`
 
 // --
 // reflect
@@ -7494,7 +7591,9 @@ function listSteps( test )
   return a.ready;
 }
 
-//
+// --
+// clean
+// --
 
 function clean( test )
 {
@@ -10146,7 +10245,9 @@ function exportNonExportable( test )
   {
     test.is( got.exitCode !== 0 );
 
-    test.identical( _.strCount( got.output, 'uncaught error' ), 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
     test.identical( _.strCount( got.output, 'module::supermodule / relation::Submodule is not opened' ), 1 );
@@ -14407,10 +14508,10 @@ Expected behaviour:
 function exportWithoutSubSubModules( test )
 {
   let self = this;
-  let a = self.assetFor( test );
+  let a = self.assetFor( test, '4LevelsLocal' );
 
   a.reflect();
-  a.start( '.with * .clean' )
+  a.start( '.with * .clean' );
 
   /* - */
 
@@ -21291,7 +21392,7 @@ var Self =
 
     preCloneRepos,
     singleModuleWithSpaceTrivial,
-    make,
+    build,
     transpile,
     moduleNewDotless,
     moduleNewDotlessSingle,
@@ -21306,7 +21407,11 @@ var Self =
     eachBrokenIll,
     eachBrokenNon,
     eachBrokenCommand,
-    openExportClean,
+
+    // CUI
+
+    commandsSeveral,
+    implyWithSubmodules, /* qqq : cover all implies. ask how to */
 
     // reflect
 
@@ -21342,7 +21447,9 @@ var Self =
     hookGitPullConflict,
     hookGitSyncColflict,
     hookGitSyncArguments,
-    // hookPublish,//Vova: xxx: doesn't exist
+    // hookPublish, // Vova aaa : doesn't exist
+
+    // output
 
     verbositySet,
     verbosityStepDelete,
@@ -21359,6 +21466,8 @@ var Self =
     listWithSubmodulesSimple,
     listWithSubmodules,
     listSteps,
+
+    // clean
 
     clean,
     cleanSingleModule,
