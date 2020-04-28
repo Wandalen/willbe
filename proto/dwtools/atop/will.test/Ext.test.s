@@ -3158,9 +3158,9 @@ function reflectRemoteGit( test )
   let a = self.assetFor( test, 'reflect-remote-git' );
   a.reflect();
 
-  let local1Path = _.path.join( a.routinePath, 'PathBasic' );
-  let local2Path = _.path.join( a.routinePath, 'Looker' );
-  let local3Path = _.path.join( a.routinePath, 'Proto' );
+  let local1Path = _.path.join( a.routinePath, 'ModuleForTesting2a' );
+  let local2Path = _.path.join( a.routinePath, 'ModuleForTesting1b' );
+  let local3Path = _.path.join( a.routinePath, 'ModuleForTesting12' );
 
   /* - */
 
@@ -3266,7 +3266,7 @@ function reflectRemoteGit( test )
   {
     test.identical( arg.exitCode, 0 );
     var files = self.find( local1Path );
-    test.ge( files.length, 30 );
+    test.ge( files.length, 10 );
     return null;
   }
 
@@ -3277,11 +3277,11 @@ function reflectRemoteGit( test )
     test.identical( arg.exitCode, 0 );
 
     var files = self.find( local1Path );
-    test.ge( files.length, 30 );
+    test.ge( files.length, 10 );
     var files = self.find( local2Path );
-    test.ge( files.length, 30 );
+    test.ge( files.length, 10 );
     var files = self.find( local3Path );
-    test.ge( files.length, 30 );
+    test.ge( files.length, 10 );
 
     return null;
   }
