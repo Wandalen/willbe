@@ -5168,7 +5168,7 @@ function hookCall( o )
     if( o.sync )
     {
       // return ready.deasync();
-      ready.deasyncWait();
+      ready.deasync();
       return ready.sync();
     }
 
