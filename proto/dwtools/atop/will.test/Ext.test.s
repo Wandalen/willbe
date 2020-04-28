@@ -6339,20 +6339,20 @@ function modulesTreeHierarchyRemote( test )
 `
  +-- module::z
    +-- module::a
-   | +-- module::Tools
-   | +-- module::PathTools
+   | +-- module::ModuleForTesting1
+   | +-- module::ModuleForTesting1a
    | +-- module::a0
-   |   +-- module::PathTools
-   |   +-- module::PathBasic
+   |   +-- module::ModuleForTesting1
+   |   +-- module::ModuleForTesting2
    +-- module::b
-   | +-- module::PathTools
-   | +-- module::Proto
+   | +-- module::ModuleForTesting1
+   | +-- module::ModuleForTesting12
    +-- module::c
    | +-- module::a0
-   | | +-- module::PathTools
-   | | +-- module::PathBasic
-   | +-- module::UriBasic
-   +-- module::PathTools
+   | | +-- module::ModuleForTesting1
+   | | +-- module::ModuleForTesting2
+   | +-- module::ModuleForTesting2b
+   +-- module::ModuleForTesting1
 `
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
@@ -6361,11 +6361,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 7 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1a' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 1 );
 
     return null;
   })
@@ -6383,21 +6383,22 @@ function modulesTreeHierarchyRemote( test )
 `
  +-- module::z
    +-- module::a
-   | +-- module::Tools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
-   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   | +-- module::ModuleForTesting1a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1a.git/
    | +-- module::a0
-   |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   |   +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   |   +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/
    +-- module::b
-   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
-   | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out
+   | +-- module::ModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/
    +-- module::c
    | +-- module::a0
-   | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-   | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
-   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   | | +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/
+   | +-- module::ModuleForTesting2b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2b.git/out/wModuleForTesting2b.out
+   +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
 `
+
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
     test.identical( _.strCount( got.output, '+-- module::z' ), 1 );
@@ -6405,11 +6406,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 7 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1a' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 1 );
 
     return null;
   })
@@ -6429,11 +6430,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 7 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1a' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 1 );
 
     return null;
   })
@@ -6451,20 +6452,20 @@ function modulesTreeHierarchyRemote( test )
 `
  +-- module::z
    +-- module::a
-   | +-- module::Tools
-   | +-- module::PathTools
+   | +-- module::ModuleForTesting1
+   | +-- module::ModuleForTesting1a
    | +-- module::a0
-   |   +-- module::PathTools
-   |   +-- module::PathBasic
+   |   +-- module::ModuleForTesting1
+   |   +-- module::ModuleForTesting2
    +-- module::b
-   | +-- module::PathTools
-   | +-- module::Proto
+   | +-- module::ModuleForTesting1
+   | +-- module::ModuleForTesting12
    +-- module::c
    | +-- module::a0
-   | | +-- module::PathTools
-   | | +-- module::PathBasic
-   | +-- module::UriBasic
-   +-- module::PathTools
+   | | +-- module::ModuleForTesting1
+   | | +-- module::ModuleForTesting2
+   | +-- module::ModuleForTesting2b
+   +-- module::ModuleForTesting1
 `
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
@@ -6473,11 +6474,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 7 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1a' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 1 );
 
     return null;
   })
@@ -6495,20 +6496,20 @@ function modulesTreeHierarchyRemote( test )
 `
  +-- module::z
    +-- module::a
-   | +-- module::Tools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
-   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   | +-- module::ModuleForTesting1a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1a.git/
    | +-- module::a0
-   |   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   |   +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+   |   +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   |   +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/
    +-- module::b
-   | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/out/wPathTools.out
-   | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out
+   | +-- module::ModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/
    +-- module::c
    | +-- module::a0
-   | | +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   | | +-- module::PathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-   | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
-   +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+   | | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   | | +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/
+   | +-- module::ModuleForTesting2b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2b.git/out/wModuleForTesting2b.out
+   +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
 `
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
@@ -6517,11 +6518,12 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 7 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1a' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 1 );
+
 
     return null;
   })
@@ -6541,11 +6543,12 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Tools' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::PathTools' ), 5 );
-    test.identical( _.strCount( got.output, '+-- module::PathBasic' ), 2 );
-    test.identical( _.strCount( got.output, '+-- module::UriBasic' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::Proto' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 7 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1a' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2' ), 3 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2b' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 1 );
+
 
     return null;
   })
