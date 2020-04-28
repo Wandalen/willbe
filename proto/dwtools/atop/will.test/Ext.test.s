@@ -6684,7 +6684,7 @@ function modulesTreeHierarchyRemoteDownloaded( test )
      +-- module::wFiles - path::remote:=npm:///wFiles
      +-- module::wTesting - path::remote:=npm:///wTesting
 `
-
+debugger;
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 67 );
     test.identical( _.strCount( got.output, '+-- module::z' ), 1 );
@@ -6901,27 +6901,20 @@ function modulesTreeDisabledAndCorrupted( test )
 
     let exp =
 
-`+-- module::many
- | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git@master
- | | +-- module::wFiles - path::remote:=npm:///wFiles
- | | +-- module::wCloner - path::remote:=npm:///wcloner
- | | +-- module::wStringer - path::remote:=npm:///wstringer
+`
+ +-- module::many-few
+ | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@master
  | | +-- module::wTesting - path::remote:=npm:///wTesting
- | | +-- module::wSelector - path::remote:=npm:///wselector
- | | +-- module::wTools
- | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git@master
- | | +-- module::wTools - path::remote:=npm:///wTools
- | | +-- module::wFiles - path::remote:=npm:///wFiles
+ | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git@master
+ | | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git
  | | +-- module::wTesting - path::remote:=npm:///wTesting
- | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git@master
- |   +-- module::wTools - path::remote:=npm:///wTools
- |   +-- module::wPathBasic - path::remote:=npm:///wpathbasic
- |   +-- module::wArraySorted - path::remote:=npm:///warraysorted
- |   +-- module::wPathTools
- |   +-- module::wFiles - path::remote:=npm:///wFiles
+ | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git@master
+ |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git
+ |   +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git
  |   +-- module::wTesting - path::remote:=npm:///wTesting
  |
- +-- module::corrupted`
+ +-- module::corrupted
+`
 
     test.identical( _.strStripCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 20 );
