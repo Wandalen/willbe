@@ -7465,7 +7465,7 @@ function listWithSubmodules( test )
     test.is( _.strHas( got.output, `'firefox >= 60.0.0'` ));
     test.is( _.strHas( got.output, `'nodejs >= 8.0.0'` ));
     test.is( _.strHas( got.output, `keywords :` ));
-    test.is( _.strHas( got.output, `'wTools'` ));
+    test.is( _.strHas( got.output, `'wModuleForTesting1'` ));
 
     return null;
   })
