@@ -3666,19 +3666,19 @@ function reflectNpmModules( test )
     [
       '.',
       './out',
-      './out/wUriBasic.out.will.yml',
+      './out/wModuleForTesting12ab.out.will.yml',
+      './out/wModuleForTesting2a.out.will.yml',
       './proto',
       './proto/dwtools',
-      './proto/dwtools/Tools.s',
       './proto/dwtools/abase',
-      './proto/dwtools/abase/l2',
-      './proto/dwtools/abase/l2/PathBasic.s',
       './proto/dwtools/abase/l3',
-      './proto/dwtools/abase/l3/PathsBasic.s',
+      './proto/dwtools/abase/l3/Include.s',
+      './proto/dwtools/abase/l3/l3',
+      './proto/dwtools/abase/l3/l3/ModuleForTesting2a.s',
       './proto/dwtools/abase/l4',
-      './proto/dwtools/abase/l4/Uri.s',
-      './proto/dwtools/abase/l5',
-      './proto/dwtools/abase/l5/Uris.s'
+      './proto/dwtools/abase/l4/Include.s',
+      './proto/dwtools/abase/l4/l4',
+      './proto/dwtools/abase/l4/l4/ModuleForTesting12ab.s'
     ]
     var files = self.find( a.abs( 'out' ) )
     test.identical( files, exp );
