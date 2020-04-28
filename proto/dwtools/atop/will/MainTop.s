@@ -2309,7 +2309,7 @@ function commandPackageInstall( e )
       let getos = require( 'getos' );
       let con = new _.Consequence();
       getos( con.tolerantCallback() )
-      con.deasyncWait();
+      con.deasync();
       return con.sync();
     }
     catch( err )
@@ -2392,7 +2392,7 @@ function commandPackageLocalVersions( e )
       let getos = require( 'getos' );
       let con = new _.Consequence();
       getos( con.tolerantCallback() )
-      con.deasyncWait();
+      con.deasync();
       return con.sync();
     }
     catch( err )
@@ -2518,7 +2518,7 @@ function commandPackageRemoteVersions( e )
       let getos = require( 'getos' );
       let con = new _.Consequence();
       getos( con.tolerantCallback() )
-      con.deasyncWait();
+      con.deasync();
       return con.sync();
     }
     catch( err )
@@ -2673,7 +2673,7 @@ function commandPackageVersion( e )
       let getos = require( 'getos' );
       let con = new _.Consequence();
       getos( con.tolerantCallback() )
-      con.deasyncWait();
+      con.deasync();
       return con.sync();
     }
     catch( err )
