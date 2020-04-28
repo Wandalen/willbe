@@ -6934,7 +6934,9 @@ modulesTreeDisabledAndCorrupted.timeOut = 300000;
 function help( test )
 {
   let self = this;
-  let a = self.assetFor( test, '' );
+  debugger;
+  // let a = self.assetFor( test, '' );
+  let a = self.assetFor( test, 'single' ); /* Dmytro : uses real asset to prevent exception */
   /* Dmytro : not needs currentPath in starter */
   a.start = _.process.starter
   ({
