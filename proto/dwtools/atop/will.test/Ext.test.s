@@ -6934,9 +6934,8 @@ modulesTreeDisabledAndCorrupted.timeOut = 300000;
 function help( test )
 {
   let self = this;
-  debugger;
-  // let a = self.assetFor( test, '' );
   let a = self.assetFor( test, 'single' ); /* Dmytro : uses real asset to prevent exception */
+  // let a = self.assetFor( test, '' );
   /* Dmytro : not needs currentPath in starter */
   a.start = _.process.starter
   ({
@@ -7068,7 +7067,7 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, `'firefox >= 60.0.0'` ));
     test.is( _.strHas( got.output, `'nodejs >= 8.0.0'` ));
     test.is( _.strHas( got.output, `keywords :` ));
-    test.is( _.strHas( got.output, `'wTools'` ));
+    test.is( _.strHas( got.output, `'wModuleForTesting1'` ));
 
     return null;
   })
