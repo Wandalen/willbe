@@ -3310,8 +3310,8 @@ function reflectRemoteHttp( test )
   a.start({ execPath : '.build download' })
   .then( ( arg ) =>
   {
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/Tools.s' ) ) );
-    test.gt( _.fileProvider.fileSize( _.path.join( a.routinePath, 'out/Tools.s' ) ), 200 );
+    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/ModuleForTesting1.s' ) ) );
+    test.gt( _.fileProvider.fileSize( _.path.join( a.routinePath, 'out/ModuleForTesting1.s' ) ), 200 );
     return null;
   })
 
