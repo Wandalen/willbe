@@ -5645,8 +5645,8 @@ function verbositySet( test )
     test.is( _.strHas( got.output, '.imply verbosity:2 ; .build' ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, 'Failed to open relation::Tools' ) );
-    test.is( !_.strHas( got.output, 'Failed to open relation::PathBasic' ) );
+    test.is( !_.strHas( got.output, 'Failed to open relation::ModuleForTesting1' ) );
+    test.is( !_.strHas( got.output, 'Failed to open relation::ModuleForTesting2a' ) );
     test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
@@ -5675,8 +5675,8 @@ function verbositySet( test )
     test.is( _.strHas( got.output, '.imply verbosity:1 ; .build' ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( !_.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
-    test.is( !_.strHas( got.output, ' ! Failed to open relation::Tools' ) );
-    test.is( !_.strHas( got.output, ' ! Failed to open relation::PathBasic' ) );
+    test.is( !_.strHas( got.output, ' ! Failed to open relation::ModuleForTesting1' ) );
+    test.is( !_.strHas( got.output, ' ! Failed to open relation::ModuleForTesting2a' ) );
     test.is( !_.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( !_.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
