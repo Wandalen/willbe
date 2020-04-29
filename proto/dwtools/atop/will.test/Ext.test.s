@@ -15679,6 +15679,7 @@ function submodulesDownloadSwitchBranch( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-update-switch-branch' );
   let willfilePath = _.path.join( a.routinePath, '.will.yml' );
+  let submodulesPath = _.path.join( a.routinePath, '.module' );
   a.reflect();
 
 //   let self = this;
@@ -15710,7 +15711,7 @@ function submodulesDownloadSwitchBranch( test )
     let repoPath = _.path.join( a.routinePath, 'experiment' );
     let repoSrcFiles = _.path.join( a.routinePath, 'src' );
     let clonePath = _.path.join( a.routinePath, 'cloned' );
-    _.fileProvider.dirMake( a.repoPath );
+    _.fileProvider.dirMake( repoPath );
 
     let start = _.process.starter
     ({
@@ -15757,8 +15758,10 @@ function submodulesDownloadSwitchBranch( test )
   {
     test.case = 'switch master to dev';
     let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '#dev' );
+    // willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '#dev' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
     _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    debugger;
     return null;
   })
 
