@@ -13032,7 +13032,7 @@ function exportRecursiveLocal( test )
 
     test.identical( _.strCount( got.output, 'About' ), 1 );
     test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
-    test.identical( _.strCount( got.output, 'module::module-ab /' ), 52 );
+    test.identical( _.strCount( got.output, 'module::module-ab /' ), 53 );
 
     return null;
   })
@@ -13046,7 +13046,8 @@ function exportRecursiveLocal( test )
     test.is( !err );
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( got.output, 'Exported module::' ), 15 );
+    test.identical( _.strCount( got.output, 'Exported module::' ), 9 );
+    // test.identical( _.strCount( got.output, 'Exported module::' ), 15 );
     return null;
   })
 
@@ -13059,7 +13060,7 @@ function exportRecursiveLocal( test )
 
     test.identical( _.strCount( got.output, 'About' ), 1 );
     test.identical( _.strCount( got.output, 'module::module-ab / path::export' ), 1 );
-    test.identical( _.strCount( got.output, 'module::module-ab /' ), 52 );
+    test.identical( _.strCount( got.output, 'module::module-ab /' ), 53 );
 
     return null;
   })
@@ -13535,12 +13536,12 @@ function exportDiffDownloadPathsRegular( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting1a', 'ModuleForTesting2', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     // var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -13565,11 +13566,11 @@ function exportDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
