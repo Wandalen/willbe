@@ -19408,7 +19408,7 @@ function stepWillbeVersionCheck( test )
   return a.ready;
 }
 
-stepWillbeVersionCheck.timeOut = 15000;
+stepWillbeVersionCheck.timeOut = 25000;
 
 //
 
