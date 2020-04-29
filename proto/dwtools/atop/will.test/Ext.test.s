@@ -18035,7 +18035,7 @@ function submodulesVersionsAgreeWrongOrigin( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-download-errors' );
   let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let downloadPath = _.path.join( a.routinePath, '.module/PathBasic' );
+  let downloadPath = _.path.join( a.routinePath, '.module/ModuleForTesting2a' );
   let filePath = _.path.join( downloadPath, 'file' );
   a.startNonThrowing2 = _.process.starter
   ({
@@ -18058,7 +18058,7 @@ function submodulesVersionsAgreeWrongOrigin( test )
     return null;
   })
 
-  a.startNonThrowing2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
+  a.startNonThrowing2({ execPath : 'git clone https://github.com/Wandalen/wModuleForTesting1.git .module/ModuleForTesting2a' })
   a.startNonThrowing({ execPath : '.with good .submodules.versions.agree' })
 
   .then( ( got ) =>
