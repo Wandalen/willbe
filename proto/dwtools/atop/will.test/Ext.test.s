@@ -10909,7 +10909,7 @@ function exportSecond( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
-    var outfile = _.fileProvider.configRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
+    var outfile = _.fileProvider.configRead( _.path.join( a.routinePath, 'out/ExportSecond.out.will.yml' ) );
 
     outfile = outfile.module[ 'ExportSecond.out' ]
 
@@ -11123,7 +11123,7 @@ function exportSecond( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
-    var outfile = _.fileProvider.configRead( _.path.join( routinePath, 'out/ExportSecond.out.will.yml' ) );
+    var outfile = _.fileProvider.configRead( _.path.join( a.routinePath, 'out/ExportSecond.out.will.yml' ) );
 
     outfile = outfile.module[ 'ExportSecond.out' ]
 
