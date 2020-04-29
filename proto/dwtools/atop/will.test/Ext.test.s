@@ -17293,7 +17293,7 @@ function submodulesDownloadNpm( test )
     test.case = 'change origin of first submodule and run .submodules.download';
 
     let willFile = a.fileProvider.fileRead( willFilePath );
-    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1', 'npm:///wmoduleforTesting2b' );
+    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1', 'npm:///wmodulefortesting2b' );
     a.fileProvider.fileWrite( willFilePath, willFile );
 
     filesBefore = self.find( a.abs( '.module/ModuleForTesting1' ) );
