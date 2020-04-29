@@ -18253,7 +18253,6 @@ function subModulesUpdate( test )
 
   /* */
 
-  debugger;
   a.ready
   .then( () =>
   {
@@ -18266,9 +18265,9 @@ function subModulesUpdate( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, '+ module::wTools was updated to version 8fa27d72fe02d5e496b26e16669970a69d71fdb1 in' ) );
-    test.is( _.strHas( got.output, '+ module::wPathBasic was updated to version master in' ) );
-    test.is( _.strHas( got.output, '+ module::wUriBasic was updated to version d7022e6dcd5ab7f2d71aeb740d41a65dfaabdecf in' ) );
+    test.is( _.strHas( got.output, '+ module::wModuleForTesting1 was updated to version ab1f307afd10ef53bf592cabeb98699c628ab25c in' ) );
+    test.is( _.strHas( got.output, '+ module::wModuleForTesting2a was updated to version master in' ) );
+    test.is( _.strHas( got.output, '+ module::wModuleForTesting12ab was updated to version 010efd393749b8970a7cac00965855a4e77eca8c in' ) );
     test.is( _.strHas( got.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
@@ -18286,9 +18285,9 @@ function subModulesUpdate( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( !_.strHas( got.output, /module::Tools/ ) );
-    test.is( !_.strHas( got.output, /module::PathBasic/ ) );
-    test.is( !_.strHas( got.output, /module::UriBasic/ ) );
+    test.is( !_.strHas( got.output, /module::ModuleForTesting1/ ) );
+    test.is( !_.strHas( got.output, /module::ModuleForTesting2a/ ) );
+    test.is( !_.strHas( got.output, /module::ModuleForTesting12ab/ ) );
     test.is( _.strHas( got.output, '+ 0/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
@@ -18299,9 +18298,9 @@ function subModulesUpdate( test )
   .then( () =>
   {
     test.case = '.submodules.update -- after patch';
-    var read = _.fileProvider.fileRead( _.path.join( routinePath, '.im.will.yml' ) );
-    read = _.strReplace( read, '#8fa27d72fe02d5e496b26e16669970a69d71fdb1', '@master' )
-    _.fileProvider.fileWrite( _.path.join( routinePath, '.im.will.yml' ), read );
+    var read = _.fileProvider.fileRead( _.path.join( a.routinePath, '.im.will.yml' ) );
+    read = _.strReplace( read, '#ab1f307afd10ef53bf592cabeb98699c628ab25c', '@master' )
+    _.fileProvider.fileWrite( _.path.join( a.routinePath, '.im.will.yml' ), read );
     return null;
   })
 
@@ -18310,8 +18309,8 @@ function subModulesUpdate( test )
   {
     test.identical( got.exitCode, 0 );
     // test.is( _.strHas( got.output, / \+ .*module::Tools.* was updated to version .*master.* in/ ) );
-    test.is( !_.strHas( got.output, /module::PathBasic/ ) );
-    test.is( !_.strHas( got.output, /module::UriBasic/ ) );
+    test.is( !_.strHas( got.output, /module::ModuleForTesting2a/ ) );
+    test.is( !_.strHas( got.output, /module::ModuleForTesting12ab/ ) );
     test.is( _.strHas( got.output, '+ 1/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
@@ -18329,9 +18328,9 @@ function subModulesUpdate( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( !_.strHas( got.output, /module::Tools/ ) );
-    test.is( !_.strHas( got.output, /module::PathBasic/ ) );
-    test.is( !_.strHas( got.output, /module::UriBasic/ ) );
+    test.is( !_.strHas( got.output, /module::ModuleForTesting1/ ) );
+    test.is( !_.strHas( got.output, /module::ModuleForTesting2a/ ) );
+    test.is( !_.strHas( got.output, /module::ModuleForTesting12ab/ ) );
     test.is( _.strHas( got.output, '+ 0/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
