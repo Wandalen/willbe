@@ -16216,7 +16216,7 @@ function submodulesDownloadThrowing( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-download-errors' );
   let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let downloadPath = _.path.join( a.routinePath, '.module/PathBasic' );
+  let downloadPath = _.path.join( a.routinePath, '.module/ModuleForTesting2a' );
   let filePath = _.path.join( downloadPath, 'file' );
   let filesBefore;
   a.startNonThrowing2 = _.process.starter
@@ -16243,7 +16243,7 @@ function submodulesDownloadThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wPathBasic.git/` ) );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
     test.is( !_.fileProvider.fileExists( downloadPath ) )
     return null;
@@ -16262,7 +16262,7 @@ function submodulesDownloadThrowing( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wPathBasic.git/` ) );
+    test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [] );
@@ -16283,11 +16283,12 @@ function submodulesDownloadThrowing( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( !_.strHas( got.output, 'Failed to download module' ) );
-    test.is( _.strHas( got.output, 'module::wPathBasic was downloaded version master in' ) );
+    test.is( _.strHas( got.output, 'module::wModuleForTesting2a was downloaded version master in' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
 
     let files = self.find( downloadPath );
-    test.gt( files.length, 10 );
+    // test.gt( files.length, 10 );
+    test.ge( files.length, 1 );
 
     return null;
   })
@@ -16302,11 +16303,11 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.fileWrite( filePath, filePath );
     return null;
   })
-  a.startNonThrowing({ execPath : '.with good .submodules.download' })
+  a.startNonThrowing({ execPath : '.with bad .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::PathBasic is downloaded, but it's not a git repository` ) );
+    test.is( _.strHas( got.output, `Module module::submodules-download-errors-bad / opener::ModuleForTesting2a is downloaded, but it's not a git repository` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
     test.is( _.fileProvider.fileExists( downloadPath ) )
     test.identical( _.fileProvider.dirRead( downloadPath ), [ 'file' ] );
@@ -16322,11 +16323,11 @@ function submodulesDownloadThrowing( test )
     _.fileProvider.fileWrite( downloadPath, downloadPath );
     return null;
   })
-  a.startNonThrowing({ execPath : '.with good .submodules.download' })
+  a.startNonThrowing({ execPath : '.with bad .submodules.download' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::PathBasic is not downloaded, but file at` ) );
+    test.is( _.strHas( got.output, `Module module::submodules-download-errors-bad / opener::ModuleForTesting2a is not downloaded, but file at` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
     test.is( _.fileProvider.isTerminal( downloadPath ) )
     return null;
@@ -16334,14 +16335,14 @@ function submodulesDownloadThrowing( test )
 
   //
 
-  .then( () =>
-  {
-    test.case = 'no error if download path exists and it has other git repo';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
-    return null;
-  })
-  a.startNonThrowing2({ execPath : 'git clone https://github.com/Wandalen/wTools.git .module/PathBasic' })
+  // .then( () =>
+  // {
+  //   test.case = 'no error if download path exists and it has other git repo';
+  //   _.fileProvider.filesDelete( submodulesPath );
+  //   _.fileProvider.dirMake( downloadPath );
+  //   return null;
+  // })
+  a.startNonThrowing2({ execPath : 'git clone https://github.com/Wandalen/ModuleForTesting1.git .module/ModuleForTesting2a' })
   .then( () =>
   {
     filesBefore = self.find( downloadPath );
