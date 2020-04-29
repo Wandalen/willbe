@@ -19280,7 +19280,7 @@ function stepSubmodulesDownload( test )
   {
     test.case = 'list'
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, `git+https:///github.com/Wandalen/wTools.git/out/wTools.out.will@master` ) );
+    test.is( _.strHas( got.output, `git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@master` ) );
     return null;
   })
 
@@ -19299,8 +19299,8 @@ function stepSubmodulesDownload( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.gt( self.find( _.path.join( a.routinePath, '.module/Tools' ) ).length, 70 );
-    test.gt( self.find( _.path.join( a.routinePath, 'out/debug' ) ).length, 50 );
+    test.gt( self.find( _.path.join( a.routinePath, '.module/ModuleForTesting1' ) ).length, 8 );
+    test.gt( self.find( _.path.join( a.routinePath, 'out/debug' ) ).length, 8 );
     return null;
   })
 
@@ -19320,8 +19320,8 @@ function stepSubmodulesDownload( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.gt( self.find( _.path.join( a.routinePath, '.module/Tools' ) ).length, 85 );
-    test.gt( self.find( _.path.join( a.routinePath, 'out/debug' ) ).length, 50 );
+    test.gt( self.find( _.path.join( a.routinePath, '.module/ModuleForTesting1' ) ).length, 8 );
+    test.gt( self.find( _.path.join( a.routinePath, 'out/debug' ) ).length, 8 );
     test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/Download.out.will.yml' ) ) );
     return null;
   })
