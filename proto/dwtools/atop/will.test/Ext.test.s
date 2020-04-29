@@ -6340,19 +6340,19 @@ function modulesTreeHierarchyRemote( test )
  +-- module::z
    +-- module::a
    | +-- module::ModuleForTesting1
-   | +-- module::ModuleForTesting1a
+   | +-- module::ModuleForTesting1b
    | +-- module::a0
-   |   +-- module::ModuleForTesting1
-   |   +-- module::ModuleForTesting2
+   |   +-- module::ModuleForTesting1b
+   |   +-- module::ModuleForTesting2a
    +-- module::b
-   | +-- module::ModuleForTesting1
+   | +-- module::ModuleForTesting1b
    | +-- module::ModuleForTesting12
    +-- module::c
    | +-- module::a0
-   | | +-- module::ModuleForTesting1
-   | | +-- module::ModuleForTesting2
-   | +-- module::ModuleForTesting2b
-   +-- module::ModuleForTesting1
+   | | +-- module::ModuleForTesting1b
+   | | +-- module::ModuleForTesting2a
+   | +-- module::ModuleForTesting12ab
+   +-- module::ModuleForTesting1b
 `
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
@@ -6361,11 +6361,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 7 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1a' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2' ), 3 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2b' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1b' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2a' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
   })
@@ -6384,19 +6384,19 @@ function modulesTreeHierarchyRemote( test )
  +-- module::z
    +-- module::a
    | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
-   | +-- module::ModuleForTesting1a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1a.git/
+   | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    | +-- module::a0
-   |   +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
-   |   +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/
+   |   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   |   +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
    +-- module::b
-   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out
-   | +-- module::ModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/
+   | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   | +-- module::ModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting12.out
    +-- module::c
    | +-- module::a0
-   | | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
-   | | +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/
-   | +-- module::ModuleForTesting2b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2b.git/out/wModuleForTesting2b.out
-   +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   | | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   | | +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
+   | +-- module::ModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2b.git/out/wModuleForTesting12ab.out
+   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
 `
 
     test.identical( _.strCount( got.output, exp ), 1 );
@@ -6406,11 +6406,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 7 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1a' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2' ), 3 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2b' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1b' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2a' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
   })
@@ -6430,11 +6430,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 7 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1a' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2' ), 3 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2b' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1b' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2a' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
   })
@@ -6453,19 +6453,19 @@ function modulesTreeHierarchyRemote( test )
  +-- module::z
    +-- module::a
    | +-- module::ModuleForTesting1
-   | +-- module::ModuleForTesting1a
+   | +-- module::ModuleForTesting1b
    | +-- module::a0
-   |   +-- module::ModuleForTesting1
-   |   +-- module::ModuleForTesting2
+   |   +-- module::ModuleForTesting1b
+   |   +-- module::ModuleForTesting2a
    +-- module::b
-   | +-- module::ModuleForTesting1
+   | +-- module::ModuleForTesting1b
    | +-- module::ModuleForTesting12
    +-- module::c
    | +-- module::a0
-   | | +-- module::ModuleForTesting1
-   | | +-- module::ModuleForTesting2
-   | +-- module::ModuleForTesting2b
-   +-- module::ModuleForTesting1
+   | | +-- module::ModuleForTesting1b
+   | | +-- module::ModuleForTesting2a
+   | +-- module::ModuleForTesting12ab
+   +-- module::ModuleForTesting1b
 `
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
@@ -6474,11 +6474,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 7 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1a' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2' ), 3 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2b' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1b' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2a' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
   })
@@ -6497,19 +6497,19 @@ function modulesTreeHierarchyRemote( test )
  +-- module::z
    +-- module::a
    | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
-   | +-- module::ModuleForTesting1a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1a.git/
+   | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    | +-- module::a0
-   |   +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
-   |   +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/
+   |   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   |   +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
    +-- module::b
-   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out
-   | +-- module::ModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/
+   | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   | +-- module::ModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting12.out
    +-- module::c
    | +-- module::a0
-   | | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
-   | | +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git/
-   | +-- module::ModuleForTesting2b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2b.git/out/wModuleForTesting2b.out
-   +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   | | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   | | +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
+   | +-- module::ModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2b.git/out/wModuleForTesting12ab.out
+   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
 `
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 16 );
@@ -6518,11 +6518,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 7 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1a' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2' ), 3 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2b' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1b' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2a' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
 
     return null;
@@ -6543,11 +6543,11 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( got.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( got.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( got.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 7 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1a' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2' ), 3 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2b' ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 1 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1' ), 8 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting1b' ), 5 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting2a' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12' ), 2 );
+    test.identical( _.strCount( got.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
 
     return null;
