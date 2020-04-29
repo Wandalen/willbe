@@ -14353,7 +14353,7 @@ function exportOutdated2( test )
     return null;
   })
 
-  a.start( '.with module/m1/ .export' )
+  a.start( '.with module/mand/ .export' )
 
   .then( ( op ) =>
   {
@@ -15455,7 +15455,7 @@ function submodulesDownloadUpdate( test )
     test.is( files.length > 30 );
 
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1a' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -15473,13 +15473,13 @@ function submodulesDownloadUpdate( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/2 submodule(s) of module::submodules were downloaded' ) );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1a' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting2a' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
 
     var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1' ) );
     test.is( files.length > 3 );
 
-    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1a' ) );
+    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting2a' ) );
     test.is( files.length > 3 );
 
     return null;
@@ -15500,13 +15500,13 @@ function submodulesDownloadUpdate( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1a' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting2a' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
 
     var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1' ) );
     test.is( files.length );
 
-    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1a' ) );
+    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting2a' ) );
     test.is( files.length );
 
     return null;
@@ -15526,13 +15526,13 @@ function submodulesDownloadUpdate( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/2 submodule(s) of module::submodules were updated in' ) );
     test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1a' ) ) )
+    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting2a' ) ) )
     test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
 
     var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1' ) );
     test.is( files.length );
 
-    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1a' ) );
+    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting2a' ) );
     test.is( files.length );
 
     return null;
