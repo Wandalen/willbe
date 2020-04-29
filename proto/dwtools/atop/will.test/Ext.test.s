@@ -13967,8 +13967,8 @@ function exportOutResourceWithoutGeneratedCriterion( test )
       'export',
       'exported.dir.proto.export',
       'exported.files.proto.export',
-      'exported.dir.proto.export.1',
-      'exported.files.proto.export.1'
+      // 'exported.dir.proto.export.1',
+      // 'exported.files.proto.export.1'
     ]
     var got = _.mapKeys( outfile.module[ 'wChangeTransactor.out' ].path );
     test.identical( _.setFrom( got ), _.setFrom( exp ) );
@@ -14337,7 +14337,7 @@ function exportOutdated2( test )
 
   a.reflect();
 
-  a.start( '.with module/m1/ .export' )
+  a.start( '.with module/mand/ .export' )
 
   .then( ( op ) =>
   {
