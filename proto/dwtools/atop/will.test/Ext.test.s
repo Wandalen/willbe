@@ -13541,7 +13541,7 @@ function exportDiffDownloadPathsRegular( test )
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -13570,7 +13570,7 @@ function exportDiffDownloadPathsRegular( test )
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -16409,7 +16409,7 @@ function submodulesDownloadStepAndCommand( test )
   let a = self.assetFor( test, 'submodules-download' );
   let submodulesPath = _.path.join( a.routinePath, '.module' );
   let localRepoPath = _.path.join( a.routinePath, 'module' );
-  let downloadPath = _.path.join( a.routinePath, '.module/PathBasic' );
+  let downloadPath = _.path.join( a.routinePath, '.module/ModuleForTesting2a' );
   a.startNonThrowing2 = _.process.starter
   ({
     currentPath : localRepoPath,
@@ -16438,8 +16438,8 @@ function submodulesDownloadStepAndCommand( test )
   {
     test.identical( got.exitCode, 0 );
     let files = self.find( submodulesPath );
-    test.is( !_.longHas( files, './Tools' ) )
-    test.is( !_.longHas( files, './Proto' ) )
+    test.is( !_.longHas( files, './ModuleForTesting1' ) )
+    test.is( !_.longHas( files, './ModuleForTesting2a' ) )
     test.is( _.longHas( files, './submodule' ) )
     return null;
   })
@@ -16460,8 +16460,8 @@ function submodulesDownloadStepAndCommand( test )
   {
     test.identical( got.exitCode, 0 );
     let files = self.find( submodulesPath );
-    test.is( !_.longHas( files, './Tools' ) )
-    test.is( !_.longHas( files, './Proto' ) )
+    test.is( !_.longHas( files, './ModuleForTesting1' ) )
+    test.is( !_.longHas( files, './ModuleForTesting2a' ) )
     test.is( _.longHas( files, './submodule' ) )
     return null;
   })
@@ -16496,11 +16496,11 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'Color', 'PathBasic' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -16520,11 +16520,11 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'Color', 'PathBasic' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -16555,11 +16555,11 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
@@ -16579,11 +16579,11 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     test.case = 'second';
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
