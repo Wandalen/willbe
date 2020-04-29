@@ -1,7 +1,7 @@
 submodule :
   ModuleForTesting1 : npm:///wmodulefortesting1
   ModuleForTesting2a : npm:///wmodulefortesting2a@alpha
-  ModuleForTesting12ab : npm:///wmodulefortesting12ab#0.0.30
+  ModuleForTesting12ab : npm:///wmodulefortesting12ab#0.0.31
   # Path : npm:///wpathbasic@alpha
   # Uri : npm:///wuribasic#0.6.131
 
