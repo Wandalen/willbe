@@ -13621,28 +13621,28 @@ function exportHierarchyRemote( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
     var exp = [ 'debug', 'z.out.will.yml' ];
     var files = _.fileProvider.dirRead( a.abs( 'out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a.out.will.yml', 'b.out.will.yml', 'debug' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic', 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a0.out.will.yml', 'debug' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'UriBasic' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
     var exp = [ 'c.out.will.yml', 'debug' ];
@@ -13679,28 +13679,28 @@ function exportHierarchyRemote( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var exp = [ 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
     var exp = [ 'debug', 'z.out.will.yml' ];
     var files = _.fileProvider.dirRead( a.abs( 'out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathTools', 'Proto', 'Tools' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a.out.will.yml', 'b.out.will.yml', 'debug' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic', 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a0.out.will.yml', 'debug' ];
     var files = _.fileProvider.dirRead( a.abs( 'group1/group10/out' ) )
     test.identical( files, exp );
 
-    var exp = [ 'UriBasic' ];
+    var exp = [ 'ModuleForTesting12ab' ];
     var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
     var exp = [ 'c.out.will.yml', 'debug' ];
