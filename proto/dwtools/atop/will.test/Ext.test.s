@@ -17430,7 +17430,8 @@ function submodulesDownloadUpdateNpm( test )
   {
     let willFile = a.fileProvider.fileRead( willFilePath );
     willFile = _.strReplace( willFile, '@alpha', '@beta' );
-    willFile = _.strReplace( willFile, '#0.0.3', '#0.0.32' );
+    willFile = _.strReplace( willFile, '#0.0.3', '#0.0.32 ' ); /* Dmytro : need to test writer, it appends zero to last number */
+    debugger;
     a.fileProvider.fileWrite( willFilePath, willFile );
 
     versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a@beta' );
@@ -17461,7 +17462,7 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( got.output, `module::ModuleForTesting2a was updated to version ${versions['ModuleForTesting2a']}` ), 1 );
     test.identical( _.strCount( got.output, `module::ModuleForTesting12ab was updated to version ${versions['ModuleForTesting12ab']}` ), 1 );
 
-    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting1` ), 0 );
+    test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting1` ), 1 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
     test.identical( _.strCount( got.output, `Exported module::supermodule / module::ModuleForTesting12ab` ), 1 );
 
@@ -17528,7 +17529,7 @@ function submodulesDownloadUpdateNpm( test )
     test.case = 'change origin of first submodule and run .submodules.update';
 
     let willFile = a.fileProvider.fileRead( willFilePath );
-    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1', 'npm:///wmoduleforTesting2b' );
+    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1', 'npm:///wmodulefortesting2b' );
     a.fileProvider.fileWrite( willFilePath, willFile );
 
     filesBefore = self.find( a.abs( '.module' ) );
@@ -17545,7 +17546,7 @@ function submodulesDownloadUpdateNpm( test )
     var files = self.find( a.abs( '.module' ) );
     test.identical( files,filesBefore );
 
-    test.identical( _.strCount( got.output, 'opener::ModuleForTesting1 is already downloaded, but has different origin url: wModuleForTesting1 , expected url: wmoduleforTesting2b' ), 1 );
+    test.identical( _.strCount( got.output, 'opener::ModuleForTesting1 is already downloaded, but has different origin url: wmodulefortesting1 , expected url: wmodulefortesting2b' ), 1 );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( got.output, '. Opened .' ), 7 );
