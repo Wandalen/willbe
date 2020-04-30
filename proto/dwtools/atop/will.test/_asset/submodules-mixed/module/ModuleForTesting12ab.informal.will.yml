@@ -1,6 +1,6 @@
 about :
 
-  name : ModuleForTesting2b.informal
+  name : ModuleForTesting12ab.informal
   version : 0.1.0
 
 path :
@@ -8,7 +8,7 @@ path :
   in : ..
   out : out
   remote : 'npm:///wuribasic'
-  download : '.module/ModuleForTesting2b'
+  download : '.module/ModuleForTesting12ab'
   export : '{path::download}/proto/**'
 
 reflector :
