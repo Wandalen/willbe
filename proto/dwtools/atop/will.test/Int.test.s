@@ -10413,10 +10413,10 @@ function repoStatusForDeletedRepo( test )
 
   .then( () =>
   {
-    test.description = 'delete repo::ModuleForTesting1a and call status with invalidating:1'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1a' ) );
+    test.description = 'delete repo::ModuleForTesting2a and call status with invalidating:1'
+    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting2a' ) );
 
-    var repo1a = opener.openedModule.submoduleMap.ModuleForTesting1a.opener.repo;
+    var repo1a = opener.openedModule.submoduleMap.ModuleForTesting2a.opener.repo;
     var status =
     {
       'dirExists' : repo1a._.dirExists,
