@@ -133,7 +133,17 @@ function assetFor( test, name )
   {
     _.fileProvider.filesDelete( a.routinePath );
     _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
-    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.path.join( self.suiteTempPath, '_repo' ) } });
+    // _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.path.join( self.suiteTempPath, '_repo' ) } });
+    try
+    {
+      _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.path.join( self.suiteTempPath, '_repo' ) } });
+    }
+    catch( err )
+    {
+      _.Consequence().take( null ).timeOut( 3000 ).deasync();
+      _.fileProvider.filesDelete( a.path.join( self.suiteTempPath, '_repo' ) ); /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
+      _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.path.join( self.suiteTempPath, '_repo' ) } });
+    }
   }
 
   a.shell = _.process.starter
@@ -5618,7 +5628,7 @@ function verbositySet( test )
     test.is( _.strHas( got.output, / \. Opened .+\/\.im\.will\.yml/ ) );
     test.is( _.strHas( got.output, / \. Opened .+\/\.ex\.will\.yml/ ) );
     test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::ModuleForTesting1' ) );
-    test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::ModuleForTesting1a' ) );
+    test.is( _.strHas( got.output, 'Failed to open module::submodules / relation::ModuleForTesting2a' ) );
     test.is( _.strHas( got.output, '. Read 2 willfile(s) in' ) );
 
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
