@@ -10031,7 +10031,7 @@ function repoStatus( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
-    var exp = [ 'ModuleForTesting1a' ];
+    var exp = [ 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
     return null;
