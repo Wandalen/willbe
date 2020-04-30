@@ -129,6 +129,7 @@ function assetFor( test, name )
     {
       debugger;
       _.Consequence().take( null ).timeOut( 3000 ).deasync();
+      _.fileProvider.filesDelete( a.path.join( self.suiteTempPath, '_repo' ) ); /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
       _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.path.join( self.suiteTempPath, '_repo' ) } });
     }
   }
