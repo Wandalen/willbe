@@ -3756,6 +3756,16 @@ function relfectSubmodulesWithNotExistingFile( test )
   /* - */
 
   a.ready
+  // .finally( ( err, arg ) => / Dmytro : got is not defined, so `arg` replaced to `got` */
+  .finally( ( err, got ) =>
+  {
+    test.is( err === undefined );
+    if( err )
+    logger.log( err );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    return got || null;
+  })
+
   .then( () =>
   {
     test.case = 'reflect submodules'
@@ -3790,31 +3800,23 @@ function relfectSubmodulesWithNotExistingFile( test )
     return null;
   })
 
-  a.ready
-  .finally( ( err, arg ) =>
-  {
-    test.is( err === undefined );
-    if( err )
-    logger.log( err );
-    test.identical( _.strCount( got.output, 'nhandled' ), 0 ); // Dmytro : got is not defined
-    return arg || null;
-  })
-
   a.start({ execPath : '.build' })
 
   a.ready
-  .finally( ( err, arg ) =>
+  .finally( ( err, got ) =>
   {
     test.is( _.errIs( err ) );
-    test.identical( _.strCount( got.output, 'nhandled' ), 0 ); // Dmytro : got is not defined
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
     logger.log( err );
     if( err )
     throw err;
-    return arg;
+    return got;
   })
 
   return test.shouldThrowErrorAsync( a.ready );
 }
+
+relfectSubmodulesWithNotExistingFile.timeOut = 60000;
 
 //
 
