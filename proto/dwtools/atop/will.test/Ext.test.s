@@ -19817,41 +19817,41 @@ function upgradeDryDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::PathBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2\.git\/out\/wModuleForTesting2\.out\.will.* : .* <- .*\.#622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2\/out\/wModuleForTesting2\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
-    // test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Color.* will be upgraded to version/ ), 1 );
-    // test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
-    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    // test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1a.* will be upgraded to version/ ), 1 );
+    // test.identical( _.strCount( got.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
+    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     // test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::UriBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriBasic\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriBasic\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12ab.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#70fcc0c31996758b86f85aea1ae58e0e8c2cb8a7.*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#70fcc0c31996758b86f85aea1ae58e0e8c2cb8a7.*/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Procedure.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2b.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Procedure\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Procedure\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     return null;
   })
@@ -19870,41 +19870,41 @@ function upgradeDryDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::PathBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2\.git\/out\/wModuleForTesting2\.out\.will.* : .* <- .*\.#622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2\/out\/wModuleForTesting2\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
-    // test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Color.* will be upgraded to version/ ), 1 );
-    // test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
-    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    // test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1a.* will be upgraded to version/ ), 1 );
+    // test.identical( _.strCount( got.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
+    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     // test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::UriBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriBasic\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriBasic\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12ab.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#70fcc0c31996758b86f85aea1ae58e0e8c2cb8a7.*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#70fcc0c31996758b86f85aea1ae58e0e8c2cb8a7.*/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Procedure.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2b.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Procedure\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Procedure\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     return null;
   })
@@ -19925,41 +19925,41 @@ function upgradeDryDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::PathBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2\.git\/out\/wModuleForTesting2\.out\.will.* : .* <- .*\.#622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2\/out\/wModuleForTesting2\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
-    // test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Color.* will be upgraded to version/ ), 1 );
-    // test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
-    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* won't be upgraded/ ), 0 );
-    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
-    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    // test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1a.* will be upgraded to version/ ), 1 );
+    // test.identical( _.strCount( got.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
+    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* won't be upgraded/ ), 0 );
+    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
+    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     // test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::UriBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriBasic\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriBasic\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12ab.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#70fcc0c31996758b86f85aea1ae58e0e8c2cb8a7.*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#70fcc0c31996758b86f85aea1ae58e0e8c2cb8a7.*/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Procedure.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2b.* will be upgraded to version/ ), 1 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Procedure\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Procedure\.informal\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     return null;
   })
@@ -19980,41 +19980,41 @@ function upgradeDryDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Tools.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wTools\.git\/out\/wTools\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/out\/wTools\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Tools\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::PathBasic.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wPathBasic\.git\/out\/wPathBasic\.out\.will.* : .* <- .*\.#622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/out\/wPathBasic\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/PathBasic\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2.* will be upgraded to version/ ), 1 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2\.git\/out\/wModuleForTesting2\.out\.will.* : .* <- .*\.#622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2\/out\/wModuleForTesting2\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
-    // test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Color.* will be upgraded to version/ ), 1 );
-    // test.identical( _.strCount( got.output, /.*npm:\/\/\/wColor\/out\/wColor\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
-    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/out\/wColor\.out\.will\.yml.* won't be upgraded/ ), 1 );
-    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
-    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/Color\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    // test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1a.* will be upgraded to version/ ), 1 );
+    // test.identical( _.strCount( got.output, /.*npm:\/\/\/wModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will.* : .* <- .*\.#0.3.115.*/ ), 1 );
+    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/out\/wModuleForTesting1a\.out\.will\.yml.* won't be upgraded/ ), 1 );
+    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
+    // test.identical( _.strCount( got.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     // test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 3 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::UriBasic.* will be upgraded to version/ ), 0 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wUriBasic\.git.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/UriBasic\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/UriBasic\.informal\.will\.yml.* will be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12ab.* will be upgraded to version/ ), 0 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git.* : .* <- .*\..*/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12ab\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* will be upgraded to version/ ), 0 );
-    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#70fcc0c31996758b86f85aea1ae58e0e8c2cb8a7.*/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Proto\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Proto\.informal\.will\.yml.* will be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 0 );
+    test.identical( _.strCount( got.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#70fcc0c31996758b86f85aea1ae58e0e8c2cb8a7.*/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
-    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::Procedure.* will be upgraded to version/ ), 0 );
+    test.identical( _.strCount( got.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2b.* will be upgraded to version/ ), 0 );
     test.identical( _.strCount( got.output, /.*npm:\/\/\/wprocedure.* : .* <- .*\..*/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/Procedure\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
-    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/Procedure\.informal\.will\.yml.* will be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting2b\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
+    test.identical( _.strCount( got.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting2b\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
     return null;
   })
