@@ -9718,14 +9718,14 @@ function isRepositoryReformSeveralTimes( test )
 
   .then( () =>
   {
-    var repo = opener.openedModule.submoduleMap.ModuleForTesting1a.opener.repo;
+    var repo = opener.openedModule.submoduleMap.ModuleForTesting2a.opener.repo;
     return repo.status({ all : 1, invalidating : 0 });
   })
 
   .then( ( status ) =>
   {
 
-    test.description = 'status of repo::ModuleForTesting1a'
+    test.description = 'status of repo::ModuleForTesting2a'
     var exp =
     {
       'dirExists' : true,
