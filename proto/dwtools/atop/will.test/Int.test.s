@@ -9635,7 +9635,7 @@ function moduleIsNotValid( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let modulePath = abs( './good' );
-  let downloadPath = abs( './.module/ModuleForTesting2' );
+  let downloadPath = abs( './.module/ModuleForTesting2a' );
   let will = new _.Will();
   let opener;
   let ready = new  _.Consequence().take( null );
@@ -9664,7 +9664,7 @@ function moduleIsNotValid( test )
 
     opener.close();
 
-    let outWillFilePath = _.path.join( downloadPath, 'out/wModuleForTesting2.out.will.yml' );
+    let outWillFilePath = _.path.join( downloadPath, 'out/wModuleForTesting2a.out.will.yml' );
     let outWillFile = _.fileProvider.configRead( outWillFilePath );
     outWillFile.section = { field : 'value' };
     _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
@@ -9675,7 +9675,7 @@ function moduleIsNotValid( test )
   .then( () =>
   {
     test.case = 'repopen module';
-    let outWillFilePath = _.path.join( downloadPath, 'out/wModuleForTesting2.out.will.yml' );
+    let outWillFilePath = _.path.join( downloadPath, 'out/wModuleForTesting2a.out.will.yml' );
     debugger;
     opener = will.openerMakeManual({ willfilesPath : outWillFilePath });
     return opener.open({ all : 1, resourcesFormed : 0 });
