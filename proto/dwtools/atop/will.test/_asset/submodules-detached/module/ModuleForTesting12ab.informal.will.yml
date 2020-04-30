@@ -7,7 +7,7 @@ path :
 
   in : ..
   out : out
-  remote : 'npm:///wprocedure'
+  remote : 'npm:///wmodulefortesting12ab'
   download : '.module/{about::name}'
   export : '{path::download}/proto/**'
 
