@@ -21,6 +21,9 @@ function onModule( it )
   if( config && config.path && config.path.link )
   _.arrayAppendArrayOnce( basePath, _.arrayAs( config.path.link ) );
   basePath = _.path.s.join( it.will.withPath, basePath );
+  // console.log( `basePath : ${basePath}` );
+  // console.log( `_.all( fileProvider.statsResolvedRead( basePath ) ) : ${_.all( fileProvider.statsResolvedRead( basePath ) )}` );
+  // debugger;
   _.assert( _.all( fileProvider.statsResolvedRead( basePath ) ) );
 
   /* mask */

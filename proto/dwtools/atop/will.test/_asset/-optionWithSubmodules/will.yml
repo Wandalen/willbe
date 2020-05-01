@@ -1,15 +1,15 @@
 
-submodule :
-
-  l3 : ./l3.will
-
 about :
 
-  name : 'l4'
+  name : 'l1'
+
+submodule :
+
+  l2 : l2
 
 path :
 
-  export : './*'
+  export : '*'
 
 build :
 

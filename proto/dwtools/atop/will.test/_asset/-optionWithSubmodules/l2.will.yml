@@ -1,11 +1,11 @@
 
 about :
 
-  name : 'l1'
+  name : 'l2'
 
 path :
 
-  export : './*'
+  export : '*'
 
 build :
 
