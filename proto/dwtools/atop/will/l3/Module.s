@@ -7104,7 +7104,8 @@ function _remoteChanged()
   {
     let remoteProvider = fileProvider.providerForPath( module.remotePath );
     _.assert( !!remoteProvider.isVcs );
-    let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, detailing : 1 });
+    // let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, detailing : 1 });
+    let result = remoteProvider.versionLocalRetrive({ localPath : module.downloadPath, verbosity : 1 });
     if( result.version )
     {
       let remotePath = _.uri.parseConsecutive( module.remotePath );
