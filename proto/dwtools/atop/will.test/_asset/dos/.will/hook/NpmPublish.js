@@ -49,7 +49,7 @@ function onModule( it )
 
   _.assert( _.path.isTrailed( it.junction.localPath ), 'not tested' );
 
-  it.start( 'will .export' );
+  it.start( 'local-will .export' ); /* xxx */
 
   let activeСonfigPath = wasСonfigPath;
   if( !o.dry )
