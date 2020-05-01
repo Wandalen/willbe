@@ -4304,6 +4304,8 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/export.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/git.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitCommit.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitHubPatchOrigin.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitMake.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitPull.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitPush.js
@@ -7606,11 +7608,9 @@ module:
       test.docker.dock:
         opts:
           shell: docker build -t willbe.test -f docker/test.debian.dockerfile .
-          build: 1
       test.docker.run:
         opts:
           shell: docker run --rm willbe.test
-          build: 1
       reflect.proto.debug.raw:
         opts:
           reflector: 'reflector::reflect.proto*'
@@ -7732,6 +7732,12 @@ module:
         criterion:
           default: 1
           export: 1
+      test.docker.dock:
+        steps:
+          - 'step::test.docker.dock'
+      test.docker.run:
+        steps:
+          - 'step::test.docker.run'
       debug:
         steps:
           - 'step::clean.out*=2'
