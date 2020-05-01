@@ -5,7 +5,7 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
-  _.fileProvider.filesFind( it.junction.dirPath + '**' );
+  _.fileProvider.filesFind({ filePath : it.junction.dirPath + '**', safe : 0 });
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;

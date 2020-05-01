@@ -4436,6 +4436,7 @@ function WillfilesFind( o )
       filter : filter,
       maskPreset : 0,
       mandatory : 0,
+      safe : 0,
       mode : 'distinct',
     }
 
@@ -4479,13 +4480,13 @@ function WillfilesFind( o )
       return { [ it.src ] : it.dst };
     });
 
-    if( _.strEnds( o.commonPath, '/l2' ) )
-    debugger;
+    // if( _.strEnds( o.commonPath, '/l2' ) )
+    // debugger;
     // debugger;
     let files = fileProvider.filesFind( o2 );
     // debugger;
-    if( _.strEnds( o.commonPath, '/l2' ) )
-    debugger;
+    // if( _.strEnds( o.commonPath, '/l2' ) )
+    // debugger;
 
     let files2 = [];
     files.forEach( ( file ) =>
@@ -4851,11 +4852,14 @@ function hooksReload()
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( path.is( will.environmentPath ) );
 
+  debugger;
   let hooksFiles = fileProvider.filesFind
   ({
     filePath : will.hooksPath + '/*',
     withDirs : 0,
+    resolvingSoftLink : 1, /* xxx : comment out and investigate why returns non-empty list? */ /* xxx : cover */
   });
+  debugger;
 
   hooksFiles.forEach( ( hookFile ) =>
   {
@@ -5239,7 +5243,7 @@ function hookFindAt( o )
   return end( o.execPath );
 
   let filePath = `${o.execPath}.(${will.KnownHookExts.join( '|' )})`;
-  let found = fileProvider.filesFind({ filePath, outputFormat : 'absolute', withDirs : 0 });
+  let found = fileProvider.filesFind({ filePath, outputFormat : 'absolute', withDirs : 0, resolvingSoftLink : 1 });
   return end( found );
 
   function end( found )
