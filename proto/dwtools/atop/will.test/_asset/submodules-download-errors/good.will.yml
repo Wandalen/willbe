@@ -2,4 +2,4 @@ about :
   name : submodules-download-errors-good
 
 submodule :
-  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/
+  ModuleForTesting2a : git+https:///github.com/Wandalen/wModuleForTesting2a.git/

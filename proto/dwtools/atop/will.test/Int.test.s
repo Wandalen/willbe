@@ -129,6 +129,7 @@ function assetFor( test, name )
     {
       debugger;
       _.Consequence().take( null ).timeOut( 3000 ).deasync();
+      _.fileProvider.filesDelete( a.path.join( self.suiteTempPath, '_repo' ) ); /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
       _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : a.path.join( self.suiteTempPath, '_repo' ) } });
     }
   }
@@ -9611,7 +9612,8 @@ function resourcePathRemote( test )
   .then( () =>
   {
     let module = opener.openedModule;
-    let informalOpener =  module.submoduleMap[ 'UriBasic' ].opener;
+    // let informalOpener =  module.submoduleMap[ 'UriBasic' ].opener;
+    let informalOpener =  module.submoduleMap[ 'ModuleForTesting2b' ].opener;
     let informalOpened = informalOpener.openedModule;
     let informalPathRemoteResource = informalOpened.pathResourceMap[ 'remote' ];
 
@@ -9634,7 +9636,7 @@ function moduleIsNotValid( test )
   let routinePath = _.path.join( self.suiteTempPath, test.name );
   let abs = self.abs_functor( routinePath );
   let modulePath = abs( './good' );
-  let downloadPath = abs( './.module/ModuleForTesting2' );
+  let downloadPath = abs( './.module/ModuleForTesting2a' );
   let will = new _.Will();
   let opener;
   let ready = new  _.Consequence().take( null );
@@ -9663,7 +9665,7 @@ function moduleIsNotValid( test )
 
     opener.close();
 
-    let outWillFilePath = _.path.join( downloadPath, 'out/wModuleForTesting2.out.will.yml' );
+    let outWillFilePath = _.path.join( downloadPath, 'out/wModuleForTesting2a.out.will.yml' );
     let outWillFile = _.fileProvider.configRead( outWillFilePath );
     outWillFile.section = { field : 'value' };
     _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
@@ -9674,7 +9676,7 @@ function moduleIsNotValid( test )
   .then( () =>
   {
     test.case = 'repopen module';
-    let outWillFilePath = _.path.join( downloadPath, 'out/wModuleForTesting2.out.will.yml' );
+    let outWillFilePath = _.path.join( downloadPath, 'out/wModuleForTesting2a.out.will.yml' );
     debugger;
     opener = will.openerMakeManual({ willfilesPath : outWillFilePath });
     return opener.open({ all : 1, resourcesFormed : 0 });
@@ -9717,14 +9719,14 @@ function isRepositoryReformSeveralTimes( test )
 
   .then( () =>
   {
-    var repo = opener.openedModule.submoduleMap.ModuleForTesting1a.opener.repo;
+    var repo = opener.openedModule.submoduleMap.ModuleForTesting2a.opener.repo;
     return repo.status({ all : 1, invalidating : 0 });
   })
 
   .then( ( status ) =>
   {
 
-    test.description = 'status of repo::ModuleForTesting1a'
+    test.description = 'status of repo::ModuleForTesting2a'
     var exp =
     {
       'dirExists' : true,
@@ -10030,7 +10032,7 @@ function repoStatus( test )
   .then( () =>
   {
     _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
-    var exp = [ 'ModuleForTesting1a' ];
+    var exp = [ 'ModuleForTesting2a' ];
     var files = _.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
     return null;
@@ -10412,10 +10414,10 @@ function repoStatusForDeletedRepo( test )
 
   .then( () =>
   {
-    test.description = 'delete repo::ModuleForTesting1a and call status with invalidating:1'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1a' ) );
+    test.description = 'delete repo::ModuleForTesting2a and call status with invalidating:1'
+    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting2a' ) );
 
-    var repo1a = opener.openedModule.submoduleMap.ModuleForTesting1a.opener.repo;
+    var repo1a = opener.openedModule.submoduleMap.ModuleForTesting2a.opener.repo;
     var status =
     {
       'dirExists' : repo1a._.dirExists,

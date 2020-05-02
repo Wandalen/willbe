@@ -539,7 +539,8 @@ function _open()
       (
           `Out-willfile is inconsistent with its in-willfiles:`
         + `\n${peerWillfilesPath.join( '\n' )}`
-        + `\nProbably it's outdated. Consider reexporting submodules recursively with command "will .recursive.export"`
+        + `\nProbably it's outdated. Consider reexporting submodules recursively with command "will .export.recursive"`
+        // + `\nProbably it's outdated. Consider reexporting submodules recursively with command "will .recursive.export"`
       );
     }
 

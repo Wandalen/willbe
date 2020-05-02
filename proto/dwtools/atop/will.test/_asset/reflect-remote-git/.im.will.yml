@@ -1,11 +1,13 @@
 
 path :
 
-  ModuleForTesting2.remote : git+https:///github.com/Wandalen/wModuleForTesting2.git
-  ModuleForTesting2.local : 'ModuleForTesting2'
+  ModuleForTesting2a.remote : git+https:///github.com/Wandalen/wModuleForTesting2a.git
+  ModuleForTesting2a.local : 'ModuleForTesting2a'
 
-  Looker.remote : git+https:///github.com/Wandalen/wLooker.git
-  Looker.local : 'Looker'
+  ModuleForTesting1b.remote : git+https:///github.com/Wandalen/wModuleForTesting1b.git
+  ModuleForTesting1b.local : 'ModuleForTesting1b'
+  # Looker.remote : git+https:///github.com/Wandalen/wLooker.git
+  # Looker.local : 'Looker'
 
   ModuleForTesting12.remote : git+https:///github.com/Wandalen/wModuleForTesting12.git
   ModuleForTesting12.local : 'ModuleForTesting12'
@@ -16,53 +18,53 @@ reflector :
     criterion :
       variant : 1
     filePath :
-      path::ModuleForTesting2.remote : path::ModuleForTesting2.local
+      path::ModuleForTesting2a.remote : path::ModuleForTesting2a.local
 
   download.2 :
     criterion :
       variant : 2
     src :
       filePath :
-        path::ModuleForTesting2.remote : path::ModuleForTesting2.local
+        path::ModuleForTesting2a.remote : path::ModuleForTesting2a.local
 
   download.3 :
     criterion :
       variant : 3
     dst :
       filePath :
-        path::ModuleForTesting2.remote : path::ModuleForTesting2.local
+        path::ModuleForTesting2a.remote : path::ModuleForTesting2a.local
 
   download.4 :
     criterion :
       variant : 4
     src :
-      prefixPath : path::ModuleForTesting2.remote
+      prefixPath : path::ModuleForTesting2a.remote
       filePath :
-        path::ModuleForTesting2.remote : path::ModuleForTesting2.local
+        path::ModuleForTesting2a.remote : path::ModuleForTesting2a.local
 
   download.5 :
     criterion :
       variant : 5
     src :
-      prefixPath : path::ModuleForTesting2.remote
+      prefixPath : path::ModuleForTesting2a.remote
     filePath :
-      path::ModuleForTesting2.remote : path::ModuleForTesting2.local
+      path::ModuleForTesting2a.remote : path::ModuleForTesting2a.local
 
   download.6 :
     criterion :
       variant : 6
     src :
-      prefixPath : path::ModuleForTesting2.remote
+      prefixPath : path::ModuleForTesting2a.remote
     dst :
       basePath : .
-      prefixPath : path::ModuleForTesting2.local
+      prefixPath : path::ModuleForTesting2a.local
 
   download.7 :
     criterion :
       variant : 7
     filePath :
-      path::ModuleForTesting2.remote : path::ModuleForTesting2.local
-      path::Looker.remote : path::Looker.local
+      path::ModuleForTesting2a.remote : path::ModuleForTesting2a.local
+      path::ModuleForTesting1b.remote : path::ModuleForTesting1b.local
       path::ModuleForTesting12.remote : path::ModuleForTesting12.local
 
 step :
