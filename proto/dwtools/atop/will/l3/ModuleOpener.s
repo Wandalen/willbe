@@ -684,7 +684,7 @@ function open( o )
     skipping.subModulesFormed = !o.subModulesFormed;
     skipping.resourcesFormed = !o.resourcesFormed;
 
-    debugger;
+    // debugger;
 
     let processing = stager.stageStateBegun( 'opened' ) && !stager.stageStateEnded( 'formed' );
     _.assert( !processing, 'not tested' );

@@ -233,7 +233,7 @@ function packageInstall( test )
       let getos = require( 'getos' );
       let con = new _.Consequence();
       getos( con.tolerantCallback() )
-      con.deasyncWait();
+      con.deasync();
       return con.sync();
     }
     catch( err )
@@ -390,7 +390,7 @@ function packageLocalVersions( test )
       let getos = require( 'getos' );
       let con = new _.Consequence();
       getos( con.tolerantCallback() )
-      con.deasyncWait();
+      con.deasync();
       return con.sync();
     }
     catch( err )
@@ -523,7 +523,7 @@ function packageRemoteVersions( test )
       let getos = require( 'getos' );
       let con = new _.Consequence();
       getos( con.tolerantCallback() )
-      con.deasyncWait();
+      con.deasync();
       return con.sync();
     }
     catch( err )
@@ -680,7 +680,7 @@ function packageVersion( test )
       let getos = require( 'getos' );
       let con = new _.Consequence();
       getos( con.tolerantCallback() )
-      con.deasyncWait();
+      con.deasync();
       return con.sync();
     }
     catch( err )

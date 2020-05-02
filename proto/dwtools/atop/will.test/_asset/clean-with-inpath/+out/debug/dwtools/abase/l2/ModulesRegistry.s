@@ -411,8 +411,8 @@ let wVocabulary =
 
 let wCommandsAggregator =
 {
-  sourcePath : sourcePath( 'amid/l7/Commands/CommandsAggregator.s', 'wcommandsaggregator' ),
-  isIncluded : function(){ return !!_global.wTools && !!_global.wTools.CommandsAggregator },
+  sourcePath : sourcePath( 'amid/l7/commands/CommandsAggregator.s', 'wcommandsaggregator' ),
+  isIncluded : function(){ return !!_global.wModuleForTesting1 && !!_global.wModuleForTesting1.CommandsAggregator },
 }
 
 let wCommandsConfig =
