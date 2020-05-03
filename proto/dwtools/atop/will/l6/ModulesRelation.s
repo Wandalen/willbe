@@ -2,12 +2,12 @@
 
 'use strict';
 
-if( typeof module !== 'undefined' )
-{
-
-  require( '../IncludeBase.s' );
-
-}
+// if( typeof module !== 'undefined' )
+// {
+//
+//   require( '../IncludeBase.s' );
+//
+// }
 
 //
 
@@ -501,6 +501,27 @@ function toJunction()
 
 //
 
+function isMandatory()
+{
+  let relation = this;
+  let module = relation.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  if( !relation.enabled )
+  return false;
+  if( relation.criterion.dev )
+  return false;
+  if( relation.criterion.optional )
+  return false;
+
+  return true;
+}
+
+//
+
 function isValid()
 {
   let relation = this;
@@ -539,31 +560,38 @@ function isAvailableGet()
 
 // //
 //
-// function isDownloadedGet()
+// function dataGet()
 // {
 //   let relation = this;
 //   let module = relation.module;
-//
-//   if( !relation.opener )
-//   return false;
-//
-//   return relation.opener.isDownloaded;
+//   return relation[ dataSymbol ];
 // }
 //
 // //
 //
-// function isRepositoryGet()
+// function dataSet( src )
 // {
 //   let relation = this;
 //   let module = relation.module;
-//
-//   if( !relation.opener )
-//   return false;
-//
-//   return relation.opener.isRepository;
+//   relation[ dataSymbol ] = src;
 // }
 
 //
+
+function moduleSet( src )
+{
+  let resource = this;
+
+  resource[ moduleSymbol ] = src;
+
+  _.assert( resource.module === null || resource.module instanceof _.Will.Module );
+
+  return src;
+}
+
+// --
+// path
+// --
 
 function localPathGet()
 {
@@ -666,33 +694,50 @@ function pathSet( src )
 
 //
 
-function dataGet()
-{
-  let relation = this;
-  let module = relation.module;
-  return relation[ dataSymbol ];
-}
-
-//
-
-function dataSet( src )
-{
-  let relation = this;
-  let module = relation.module;
-  relation[ dataSymbol ] = src;
-}
-
-//
-
-function moduleSet( src )
+function pathsRebase( o )
 {
   let resource = this;
+  let module = resource.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let Resolver = will.Resolver;
 
-  resource[ moduleSymbol ] = src;
+  o = _.routineOptions( pathsRebase, arguments );
+  _.assert( path.isAbsolute( o.inPath ) );
+  _.assert( path.isAbsolute( o.exInPath ) );
 
-  _.assert( resource.module === null || resource.module instanceof _.Will.Module );
+  if( !o.relative )
+  o.relative = path.relative( o.inPath, o.exInPath );
 
-  return src;
+  if( o.inPath === o.exInPath )
+  {
+    debugger;
+    return resource;
+  }
+
+  /* */
+
+  resource.path = path.filterInplace( resource.path, ( filePath ) =>
+  {
+    return resource.pathRebase
+    ({
+      filePath : filePath,
+      exInPath : o.exInPath,
+      inPath : o.inPath,
+    });
+  });
+
+  return resource;
+}
+
+pathsRebase.defaults =
+{
+  resource : null,
+  relative : null,
+  inPath : null,
+  exInPath : null,
 }
 
 // --
@@ -795,75 +840,6 @@ exportInfo.defaults =
 // etc
 // --
 
-function isMandatory()
-{
-  let relation = this;
-  let module = relation.module;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-
-  if( !relation.enabled )
-  return false;
-  if( relation.criterion.dev )
-  return false;
-  if( relation.criterion.optional )
-  return false;
-
-  return true;
-}
-
-//
-
-function pathsRebase( o )
-{
-  let resource = this;
-  let module = resource.module;
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let Resolver = will.Resolver;
-
-  o = _.routineOptions( pathsRebase, arguments );
-  _.assert( path.isAbsolute( o.inPath ) );
-  _.assert( path.isAbsolute( o.exInPath ) );
-
-  if( !o.relative )
-  o.relative = path.relative( o.inPath, o.exInPath );
-
-  if( o.inPath === o.exInPath )
-  {
-    debugger;
-    return resource;
-  }
-
-  /* */
-
-  resource.path = path.filterInplace( resource.path, ( filePath ) =>
-  {
-    return resource.pathRebase
-    ({
-      filePath : filePath,
-      exInPath : o.exInPath,
-      inPath : o.inPath,
-    });
-  });
-
-  return resource;
-}
-
-pathsRebase.defaults =
-{
-  resource : null,
-  relative : null,
-  inPath : null,
-  exInPath : null,
-}
-
-//
-
 function errorNotFound( err )
 {
   let relation = this;
@@ -940,7 +916,7 @@ let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 // --
 
 let openerSymbol = Symbol.for( 'opener' );
-let dataSymbol = Symbol.for( 'data' );
+// let dataSymbol = Symbol.for( 'data' );
 let moduleSymbol = Symbol.for( 'module' );
 let pathSymbol = Symbol.for( 'path' );
 
@@ -982,8 +958,6 @@ let Statics =
 let Accessors =
 {
   isAvailable : { get : isAvailableGet, readOnly : 1 },
-  // isDownloaded : { get : isDownloadedGet, readOnly : 1 },
-  // isRepository : { get : isRepositoryGet, readOnly : 1 },
   localPath : { get : localPathGet, readOnly : 1 },
   remotePath : { get : remotePathGet, readOnly : 1 },
   opener : { set : openerSet },
@@ -1025,29 +999,33 @@ let Extend =
   _openEnd,
   _moduleAdoptEnd,
 
-  // etc
+  // inter-module
 
   own,
   ownedBy,
   submodulesRelationsFilter,
   submodulesRelationsOwnFilter,
+
   toModule,
   toOpener,
   toRelation,
   toJunction,
 
+  isMandatory,
   isValid,
   isAvailableGet,
-  // isDownloadedGet,
-  // isRepositoryGet,
+  // dataGet,
+  // dataSet,
+  moduleSet,
+
+  // path
+
   localPathGet,
   remotePathGet,
   openerSet,
   longPathGet,
   pathSet,
-  dataGet,
-  dataSet,
-  moduleSet,
+  pathsRebase,
 
   // exporter
 
@@ -1056,12 +1034,7 @@ let Extend =
 
   // etc
 
-  isMandatory,
-  pathsRebase,
   errorNotFound,
-
-  // resolver
-
   resolve,
 
   // relation

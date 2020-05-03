@@ -2,12 +2,12 @@
 
 'use strict';
 
-if( typeof module !== 'undefined' )
-{
-
-  require( './MainBase.s' );
-
-}
+// if( typeof module !== 'undefined' )
+// {
+//
+//   require( './MainBase.s' );
+//
+// }
 
 //
 
@@ -498,6 +498,8 @@ function _commandBuildLike( o )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
+  // debugger;
+
   _.routineOptions( _commandBuildLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
@@ -518,6 +520,8 @@ function _commandBuildLike( o )
 
   .then( () => will.openersCurrentEach( forSingle ) )
   .finally( end );
+
+  debugger;
 
   return ready;
 
@@ -897,14 +901,9 @@ function commandImply( e )
     withDisabled : 'withDisabled',
     withValid : 'withValid',
     withInvalid : 'withInvalid',
-    withSubModules : 'withSubModules',
+    withSubmodules : 'withSubmodules',
 
   }
-
-  // subModulesFormedOfMain : true,
-  // subModulesFormedOfSub : true,
-  // xxx
-  //debugger;
 
   let request = will.Resolver.strRequestParse( e.argument );
 
@@ -928,6 +927,7 @@ commandImply.commandProperties =
   withDisabled : 'Include disabled modules. Default is 0.',
   withValid : 'Include valid modules. Default is 1.',
   withInvalid : 'Include invalid modules. Default is 1.',
+  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : depends.',
 }
 
 //
@@ -1983,6 +1983,7 @@ function commandWith( e )
     });
   }
 
+  // debugger;
   return will.modulesFindWithAt
   ({
     selector : isolated.argument,

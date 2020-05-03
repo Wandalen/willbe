@@ -25,12 +25,12 @@
   Note: verify throws an error if result of check is false and throwing is enabled
 */
 
-if( typeof module !== 'undefined' )
-{
-
-  require( '../IncludeBase.s' );
-
-}
+// if( typeof module !== 'undefined' )
+// {
+//
+//   require( '../IncludeBase.s' );
+//
+// }
 
 //
 
@@ -2358,9 +2358,11 @@ function moduleBuild_body( o )
     return module.modulesUpform
     ({
       all : 0,
-      subModulesFormed : 1,
+      // subModulesFormed : 1, /* yyy2 */
+      subModulesFormed : 0,
       peerModulesFormed : 1,
-      recursive : 1
+      recursive : 0,
+      // recursive : 1, /* yyy2 */
     });
   })
   .then( () => build.perform({ run }) )
@@ -5160,7 +5162,7 @@ function cloneDirPathGet( rootModule )
     if( inPath )
     return _.Will.CloneDirPathFor( inPath );
     debugger;
-    // if( module.verbosity )
+    if( will.verbosity )
     logger.error( ` ! Out willfile of ${rootModule.localPath} does not have path::module.peer.in, but should` );
     return null;
   }

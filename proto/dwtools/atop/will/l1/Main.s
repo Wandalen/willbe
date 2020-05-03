@@ -1,15 +1,6 @@
-( function _MainBase_s_( ) {
+( function _Main_s_( ) {
 
 'use strict';
-
-/**
- * Utility to manage modules of complex modular systems.
-  @module Tools/Willbe
-*/
-
-/**
- * @file Main.bse.s
- */
 
 /*
 
@@ -35,12 +26,12 @@
 
 //
 
-if( typeof module !== 'undefined' )
-{
-
-  require( './IncludeBase.s' );
-
-}
+// if( typeof module !== 'undefined' )
+// {
+//
+//   require( './IncludeBase.s' );
+//
+// }
 
 // --
 // relations
@@ -178,7 +169,8 @@ function init( o )
 
   let logger = will.logger = new _.Logger({ output : _global_.logger, name : 'will' });
 
-  will._.hooks = null;
+  will._.hooks = null
+  will._.withSubmodules = null;
 
   _.workpiece.initFields( will );
   Object.preventExtensions( will );
@@ -289,7 +281,7 @@ function formAssociates()
 
 function WillPathGet()
 {
-  return _.path.join( __dirname, 'Exec' );
+  return _.path.join( __dirname, '../entry/Exec' );
 }
 
 //
@@ -429,8 +421,6 @@ function CommonPathNormalize( commonPath )
 {
   let commonPath2 = commonPath;
   commonPath2 = commonPath.replace( /((\.|\/|^)(im|ex))?((\.|\/|^)will)(\.\w+)?$/, '' );
-  // if( commonPath !== commonPath2 )
-  // debugger;
   return commonPath2;
 }
 
@@ -451,6 +441,16 @@ function CloneDirPathFor( inPath )
 
   return _.path.join( inPath, '.module' );
 }
+
+//
+
+// function DownloadPathFor( remotePath, alias )
+// {
+//   _.assert( arguments.length === 2 );
+//
+//   xxx
+//
+// }
 
 //
 
@@ -953,32 +953,47 @@ versionIsUpToDate.defaults =
 
 //
 
-function withSubModulesGet()
+function withSubmodulesGet()
 {
   let will = this;
 
   _.assert( arguments.length === 0 );
 
-  if( !will.subModulesFormedOfMain )
-  return 0;
-  else if( will.subModulesFormedOfSub )
-  return 2;
-  else
-  return 1;
+  return will._.withSubmodules;
+  // let withSubmodules = will._.withSubmodules;
+  // if( withSubmodules !== null && withSubmodules !== undefined )
+  // {
+  //   return withSubmodules;
+  // }
+  //
+  // if( !will.subModulesFormedOfMain )
+  // return 0;
+  // else if( will.subModulesFormedOfSub )
+  // return 2;
+  // else
+  // return 1;
 }
 
 //
 
-function withSubModulesSet( src )
+function withSubmodulesSet( src )
 {
   let will = this;
 
   _.assert( arguments.length === 1 );
-  _.assert( _.boolIs( src ) || _.numberIs( src ) );
+  _.assert( _.boolIs( src ) || _.numberIs( src ) || src === null );
 
-  debugger;
+  if( _.boolIs( src ) )
+  src = src ? 1 : 0;
 
-  if( src )
+  // debugger;
+
+  will._.withSubmodules = src;
+
+  if( src === null )
+  {
+  }
+  else if( src )
   {
     will.subModulesFormedOfMain = true;
     if( src === 2 )
@@ -999,6 +1014,60 @@ function withSubModulesSet( src )
     return 0;
   }
 
+}
+
+//
+
+function recursiveValueDeduceFromBuild( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let result = null;
+
+  _.routineOptions( recursiveValueDeduceFromBuild, arguments );
+
+  if( will.withSubmodules !== null )
+  return will.withSubmodules;
+
+  o.modules = _.arrayAs( o.modules );
+
+  _.all( o.modules, ( module ) =>
+  {
+
+    let builds = module._buildsResolve
+    ({
+      name : o.name,
+      criterion : o.criterion,
+      kind : o.kind,
+    });
+
+    if( builds.length === 1 )
+    if( builds[ 0 ].withSubmodules !== null )
+    {
+      if( result )
+      result = Math.max( result, builds[ 0 ].withSubmodules );
+      else
+      result = builds[ 0 ].withSubmodules;
+      if( result === 2 )
+      return false;
+    }
+
+    return true;
+  });
+
+  logger.log( ` . recursiveValueDeduceFromBuild ${result}` );
+
+  return result;
+}
+
+recursiveValueDeduceFromBuild.defaults =
+{
+  modules : null,
+  name : null,
+  criterion : null,
+  kind : null,
 }
 
 // --
@@ -1873,10 +1942,10 @@ function modulesFindWithAt( o )
     });
 
     it.opener.find();
-    // if( _.boolLike( will.withSubModules ) && it.opener.openedModule )
+    // if( _.boolLike( will.withSubmodules ) && it.opener.openedModule )
     // {
     //   debugger;
-    //   it.opener.openedModule.stager.stageStateSkipping( 'subModulesFormed', !will.withSubModules );
+    //   it.opener.openedModule.stager.stageStateSkipping( 'subModulesFormed', !will.withSubmodules );
     // }
     it.opener.open();
 
@@ -2609,22 +2678,18 @@ function modulesDownload_body( o )
       o2.modules = objects;
       o2.recursive = o.recursive;
       o2.all = 0;
+      if( o2.recursive === 2 )
       o2.subModulesFormed = 1;
+      // o2.subModulesFormed = 0;
+      // o2.subModulesFormed = 1; /* yyy2 */
       o2.withPeers = 1;
+      debugger;
       return will.modulesUpform( o2 );
-      // ({
-      //   modules : objects,
-      //   recursive : o.recursive,
-      //   all : 0,
-      //   subModulesFormed : 1,
-      //   withPeers : 1,
-      // });
     });
 
     ready.then( ( arg ) =>
     {
       let o2 = _.mapOnly( o, will.modulesEach.defaults );
-      // o2.outputFormat = '/';
       o2.outputFormat = '*/object';
       o2.modules = objects;
       o2.withPeers = 1; /* xxx */
@@ -3103,6 +3168,10 @@ function modulesBuild_body( o )
   o = _.assertRoutineOptions( modulesBuild_body, arguments );
   _.assert( _.arrayIs( o.doneContainer ) );
 
+  // debugger;
+  let recursive = will.recursiveValueDeduceFromBuild( _.mapOnly( o, will.recursiveValueDeduceFromBuild.defaults ) ); /* yyy2 */
+  // debugger;
+
   ready.then( () =>
   {
     if( !o.downloading )
@@ -3110,7 +3179,17 @@ function modulesBuild_body( o )
     let o2 = _.mapOnly( o, will.modulesDownload.defaults );
     o2.loggingNoChanges = 0;
     if( o2.recursive === 0 )
-    o2.recursive = 1;
+    {
+      if( recursive === null )
+      {
+        debugger;
+        o2.recursive = 1;
+      }
+      else
+      {
+        o2.recursive = recursive;
+      }
+    }
     o2.strict = 0;
     o2.withOut = 0;
     o2.withIn = 1;
@@ -3123,10 +3202,27 @@ function modulesBuild_body( o )
     return null;
     let o2 = _.mapOnly( o, will.modulesUpform.defaults );
     o2.all = 0;
-    o2.subModulesFormed = 1;
+    if( o2.recursive === 0 )
+    {
+      if( recursive === null )
+      {
+        debugger;
+        o2.recursive = 0;
+      }
+      else
+      {
+        o2.recursive = recursive;
+      }
+      if( o2.recursive )
+      o2.subModulesFormed = 1;
+      else
+      o2.subModulesFormed = 0;
+    }
+    // o2.subModulesFormed = 1; /* yyy2 */
     o2.peerModulesFormed = 1;
     o2.withOut = 0;
     o2.withIn = 1;
+    debugger;
     return will.modulesUpform( o2 );
   })
 
@@ -5365,7 +5461,7 @@ let Composes =
 
   environmentPath : null,
   withPath : null,
-  // withSubModules : null,
+  // withSubmodules : null,
 
   ... FilterFields,
 
@@ -5426,7 +5522,7 @@ let Restricts =
 
 let Medials =
 {
-  withSubModules : null,
+  withSubmodules : null,
 }
 
 let Statics =
@@ -5468,6 +5564,7 @@ let Statics =
   CommonPathFor,
   CommonPathNormalize,
   CloneDirPathFor,
+  // DownloadPathFor,
   OutfilePathFor,
   RemotePathAdjust,
   HooksPathGet,
@@ -5493,7 +5590,7 @@ let Accessors =
   hooks : { get : hooksGet, readOnly : 1, },
   environmentPath : { set : environmentPathSet },
   hooksPath : { get : hooksPathGet, readOnly : 1, },
-  withSubModules : {},
+  withSubmodules : {},
 
 }
 
@@ -5523,6 +5620,7 @@ let Extend =
   CommonPathFor,
   CommonPathNormalize,
   CloneDirPathFor,
+  // DownloadPathFor,
   OutfilePathFor,
   RemotePathAdjust,
   HooksPathGet,
@@ -5546,8 +5644,9 @@ let Extend =
   versionGet,
   versionIsUpToDate,
 
-  withSubModulesGet,
-  withSubModulesSet,
+  withSubmodulesGet,
+  withSubmodulesSet,
+  recursiveValueDeduceFromBuild,
 
   // defaults
 
@@ -5697,7 +5796,7 @@ if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
 wTools[ Self.shortName ] = Self;
 
-if( typeof module !== 'undefined' )
-require( './IncludeMid.s' );
+// if( typeof module !== 'undefined' )
+// require( './IncludeMid.s' );
 
 })();

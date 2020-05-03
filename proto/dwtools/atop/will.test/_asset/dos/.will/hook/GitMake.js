@@ -1,5 +1,5 @@
 
-function onModule( it )
+function onGitMake( it )
 {
   let o = it.request.map;
   let _ = it.tools;
@@ -18,7 +18,7 @@ function onModule( it )
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
-  _.routineOptions( onModule, o );
+  _.routineOptions( onGitMake, o );
 
   try
   {
@@ -47,6 +47,7 @@ function onModule( it )
     if( o.verbosity >= 2 )
     logger.log( `remotePath : ${_.color.strFormat( String( remotePath ), 'path' )}` );
 
+    debugger;
     return _.git.repositoryInit
     ({
       localPath : localPath,
@@ -73,7 +74,7 @@ function onModule( it )
 
 }
 
-onModule.defaults =
+onGitMake.defaults =
 {
   dry : 0,
   local : 1,
@@ -82,4 +83,4 @@ onModule.defaults =
   v : null,
 }
 
-module.exports = onModule;
+module.exports = onGitMake;

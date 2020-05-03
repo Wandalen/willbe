@@ -2,12 +2,12 @@
 
 'use strict';
 
-if( typeof module !== 'undefined' )
-{
-
-  require( '../IncludeBase.s' );
-
-}
+// if( typeof module !== 'undefined' )
+// {
+//
+//   require( '../IncludeBase.s' );
+//
+// }
 
 let Tar, Open;
 let _ = _global_.wTools;
@@ -489,7 +489,7 @@ function stepRoutineTranspile( frame )
   transpilingStrategy = [ 'Nop' ];
 
   // debugger;
-  let ts = new _.TranspilationStrategy({ logger : logger }).form();
+  let ts = new _.trs.System({ logger : logger }).form();
   let multiple = ts.multiple
   ({
 

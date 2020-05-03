@@ -14,7 +14,7 @@ path :
   out : out
   out.debug :
     path : '{path::out}/debug'
-    criterion :
+    criterion :w
       debug : 1
   temp : '{path::out}'
 

@@ -2,15 +2,14 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../../dwtools/Tools.s' );
   _.include( 'wAppBasic' );
 }
 
 let _ = _global_.wTools;
 let o =
 {
-  execPath : _.path.join( __dirname, 'MainTop.s' ),
-  // mode : 'shell',
+  execPath : _.path.join( __dirname, 'Exec' ),
 }
 _.process._exitHandlerRepair();
 _.process.startNodePassingThrough( o );

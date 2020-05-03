@@ -2,12 +2,12 @@
 
 'use strict';
 
-if( typeof module !== 'undefined' )
-{
-
-  require( '../IncludeBase.s' );
-
-}
+// if( typeof module !== 'undefined' )
+// {
+//
+//   require( '../IncludeBase.s' );
+//
+// }
 
 //
 
@@ -423,8 +423,8 @@ function _open()
   let logger = will.logger;
   let inconsistent = 0;
 
-  if( willf.id === 259 )
-  debugger;
+  // if( willf.id === 259 )
+  // debugger;
 
   if( willf.formed === 2 )
   willf._read();

@@ -1,0 +1,21 @@
+
+submodule :
+
+  l3 : ./l3.will
+
+about :
+
+  name : 'l4'
+
+step :
+  echo1 :
+    echo : echo1
+
+build :
+
+  build1 :
+    withSubmodules : 2
+    steps :
+      step::echo1
+    criterion :
+      default : 1

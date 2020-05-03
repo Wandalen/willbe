@@ -1,11 +1,10 @@
-( function _IncludeBase_s_( ) {
+( function _Base_s_( ) {
 
 'use strict';
 
 if( typeof module !== 'undefined' )
 {
-
-  let _ = require( '../../../dwtools/Tools.s' );
+  let _ = require( '../../../../dwtools/Tools.s' );
 
   _.include( 'wSelector' );
   _.include( 'wResolver' );
@@ -26,13 +25,10 @@ if( typeof module !== 'undefined' )
   _.include( 'wFilesArchive' );
   _.include( 'wFilesEncoders' );
 
-  _.include( 'wStateStorage' );
-  _.include( 'wStateSession' );
-  _.include( 'wCommandsAggregator' );
-  _.include( 'wCommandsConfig' );
   _.include( 'wNameMapper' );
   _.include( 'wTemplateFileWriter' );
 
+  module[ 'exports' ] = _global_.wTools;
 }
 
 })();

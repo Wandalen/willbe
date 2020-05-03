@@ -10,7 +10,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wAppBasic' );
   _.include( 'wFiles' );
 
-  require( '../will/MainBase.s' );
+  require( '../will/include/Mid.s' );
 
 }
 
@@ -2704,7 +2704,7 @@ function exportSuperIn( test )
     test.identical( files, exp );
 
     test.description = 'no error';
-    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 4 );
+    test.identical( _.longOnce( _.select( will.openersErrorsArray, '*/err' ) ).length, 3 );
     will.openersErrorsRemoveAll();
     test.identical( will.openersErrorsArray.length, 0 );
 
@@ -9251,6 +9251,10 @@ function submodulesResolve( test )
 submodulesResolve.timeOut = 300000;
 
 //
+
+/* qqq : test modules are still not working properly!
+bad alias names!
+*/
 
 function submodulesDeleteAndDownload( test )
 {
