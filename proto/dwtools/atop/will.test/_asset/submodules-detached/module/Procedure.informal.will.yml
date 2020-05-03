@@ -7,8 +7,8 @@ path :
 
   in : ..
   out : out
-  remote : 'git+https:///github.com/Wandalen/wModuleForTesting12ab.git'
-  download : '.module/ModuleForTesting12ab'
+  remote : 'npm:///wprocedure'
+  download : '.module/{about::name}'
   export : '{path::download}/proto/**'
 
 reflector :

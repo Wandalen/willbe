@@ -1,14 +1,14 @@
 about :
 
-  name : ModuleForTesting12ab.informal
+  name : ModuleForTesting2b.informal
   version : 0.1.0
 
 path :
 
   in : ..
   out : out
-  remote : 'npm:///wmodulefortesting12ab'
-  download : '.module/{about::name}'
+  remote : 'git+https:///github.com/Wandalen/wModuleForTesting2b.git'
+  download : '.module/ModuleForTesting2b'
   export : '{path::download}/proto/**'
 
 reflector :
