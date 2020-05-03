@@ -174,37 +174,74 @@ module:
           - ../proto/dwtools/abase
           - ../proto/dwtools/amid
           - ../proto/dwtools/atop
+          - ../proto/dwtools/atop/-will
+          - ../proto/dwtools/atop/-will/Exec
+          - ../proto/dwtools/atop/-will/ExecDebug
+          - ../proto/dwtools/atop/-will/ExecUnrestricted
+          - ../proto/dwtools/atop/-will/IncludeBase.s
+          - ../proto/dwtools/atop/-will/IncludeMid.s
+          - ../proto/dwtools/atop/-will/MainBase.s
+          - ../proto/dwtools/atop/-will/MainTop.s
+          - ../proto/dwtools/atop/-will/l1
+          - ../proto/dwtools/atop/-will/l1/About.s
+          - ../proto/dwtools/atop/-will/l1/BuildFrame.s
+          - ../proto/dwtools/atop/-will/l1/BuildRun.s
+          - ../proto/dwtools/atop/-will/l1/Execution.s
+          - ../proto/dwtools/atop/-will/l1/Predefined.s
+          - ../proto/dwtools/atop/-will/l1/Repository.s
+          - ../proto/dwtools/atop/-will/l1/Resolver.s
+          - ../proto/dwtools/atop/-will/l3
+          - ../proto/dwtools/atop/-will/l3/AbstractModule.s
+          - ../proto/dwtools/atop/-will/l3/Module.s
+          - ../proto/dwtools/atop/-will/l3/ModuleJunction.s
+          - ../proto/dwtools/atop/-will/l3/ModuleOpener.s
+          - ../proto/dwtools/atop/-will/l5
+          - ../proto/dwtools/atop/-will/l5/Resource.s
+          - ../proto/dwtools/atop/-will/l7
+          - ../proto/dwtools/atop/-will/l7/Build.s
+          - ../proto/dwtools/atop/-will/l7/Exported.s
+          - ../proto/dwtools/atop/-will/l7/ModulesRelation.s
+          - ../proto/dwtools/atop/-will/l7/PathResource.s
+          - ../proto/dwtools/atop/-will/l7/Reflector.s
+          - ../proto/dwtools/atop/-will/l7/Step.s
+          - ../proto/dwtools/atop/-will/l7/Willf.s
           - ../proto/dwtools/atop/will
-          - ../proto/dwtools/atop/will/Exec
-          - ../proto/dwtools/atop/will/ExecDebug
-          - ../proto/dwtools/atop/will/ExecUnrestricted
-          - ../proto/dwtools/atop/will/IncludeBase.s
-          - ../proto/dwtools/atop/will/IncludeMid.s
-          - ../proto/dwtools/atop/will/MainBase.s
-          - ../proto/dwtools/atop/will/MainTop.s
+          - ../proto/dwtools/atop/will/entry
+          - ../proto/dwtools/atop/will/entry/Exec
+          - ../proto/dwtools/atop/will/entry/ExecDebug
+          - ../proto/dwtools/atop/will/entry/ExecUnrestricted
+          - ../proto/dwtools/atop/will/entry/Include.s
+          - ../proto/dwtools/atop/will/include
+          - ../proto/dwtools/atop/will/include/Base.s
+          - ../proto/dwtools/atop/will/include/Mid.s
+          - ../proto/dwtools/atop/will/include/Top.s
           - ../proto/dwtools/atop/will/l1
-          - ../proto/dwtools/atop/will/l1/About.s
-          - ../proto/dwtools/atop/will/l1/BuildFrame.s
-          - ../proto/dwtools/atop/will/l1/BuildRun.s
-          - ../proto/dwtools/atop/will/l1/Execution.s
-          - ../proto/dwtools/atop/will/l1/Predefined.s
-          - ../proto/dwtools/atop/will/l1/Repository.s
-          - ../proto/dwtools/atop/will/l1/Resolver.s
+          - ../proto/dwtools/atop/will/l1/Main.s
+          - ../proto/dwtools/atop/will/l2
+          - ../proto/dwtools/atop/will/l2/About.s
+          - ../proto/dwtools/atop/will/l2/BuildFrame.s
+          - ../proto/dwtools/atop/will/l2/BuildRun.s
+          - ../proto/dwtools/atop/will/l2/Predefined.s
+          - ../proto/dwtools/atop/will/l2/Repository.s
+          - ../proto/dwtools/atop/will/l2/Resolver.s
           - ../proto/dwtools/atop/will/l3
           - ../proto/dwtools/atop/will/l3/AbstractModule.s
+          - ../proto/dwtools/atop/will/l3/Junction.s
           - ../proto/dwtools/atop/will/l3/Module.s
           - ../proto/dwtools/atop/will/l3/ModuleJunction.s
           - ../proto/dwtools/atop/will/l3/ModuleOpener.s
           - ../proto/dwtools/atop/will/l5
           - ../proto/dwtools/atop/will/l5/Resource.s
-          - ../proto/dwtools/atop/will/l7
-          - ../proto/dwtools/atop/will/l7/Build.s
-          - ../proto/dwtools/atop/will/l7/Exported.s
-          - ../proto/dwtools/atop/will/l7/ModulesRelation.s
-          - ../proto/dwtools/atop/will/l7/PathResource.s
-          - ../proto/dwtools/atop/will/l7/Reflector.s
-          - ../proto/dwtools/atop/will/l7/Step.s
-          - ../proto/dwtools/atop/will/l7/Willf.s
+          - ../proto/dwtools/atop/will/l6
+          - ../proto/dwtools/atop/will/l6/Build.s
+          - ../proto/dwtools/atop/will/l6/Exported.s
+          - ../proto/dwtools/atop/will/l6/ModulesRelation.s
+          - ../proto/dwtools/atop/will/l6/PathResource.s
+          - ../proto/dwtools/atop/will/l6/Reflector.s
+          - ../proto/dwtools/atop/will/l6/Step.s
+          - ../proto/dwtools/atop/will/l6/Willf.s
+          - ../proto/dwtools/atop/will/l8
+          - ../proto/dwtools/atop/will/l8/Cui.s
           - ../proto/dwtools/atop/will.test
           - ../proto/dwtools/atop/will.test/Ext.Package.test.s
           - ../proto/dwtools/atop/will.test/Ext.test.s
@@ -242,6 +279,21 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/broken-out/module2/out
           - >-
             ../proto/dwtools/atop/will.test/_asset/broken-out/module2/out/module2.out.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/buildOptionWithSubmodules
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/buildOptionWithSubmodules/l1.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/buildOptionWithSubmodules/l2.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/buildOptionWithSubmodules/l3.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/buildOptionWithSubmodules/withSubmodules0.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/buildOptionWithSubmodules/withSubmodules1.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/buildOptionWithSubmodules/withSubmodules2.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/buildOptionWithSubmodules/withSubmodulesDef.will.yml
           - ../proto/dwtools/atop/will.test/_asset/clean
           - ../proto/dwtools/atop/will.test/_asset/clean/Build.will.yml
           - ../proto/dwtools/atop/will.test/_asset/clean/NoBuild.will.yml
@@ -503,7 +555,7 @@ module:
             ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Tools/ForGit.txt
           - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module
           - >-
-            ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/Proto.will.yml
+            ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/ModuleForTesting12.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/+.module
           - >-
@@ -769,11 +821,13 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/export.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/git.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitCommit.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitDiff.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitHubPatchOrigin.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitMake.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitPull.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitPush.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitReset.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitStatus.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitSync.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitTag.js
@@ -1778,6 +1832,8 @@ module:
             ../proto/dwtools/atop/will.test/_asset/reflect-nothing-from-submodules/proto
           - >-
             ../proto/dwtools/atop/will.test/_asset/reflect-nothing-from-submodules/proto/Single.s
+          - ../proto/dwtools/atop/will.test/_asset/reflect-npm-modules
+          - ../proto/dwtools/atop/will.test/_asset/reflect-npm-modules/.will.yml
           - ../proto/dwtools/atop/will.test/_asset/reflect-remote-git
           - >-
             ../proto/dwtools/atop/will.test/_asset/reflect-remote-git/.im.will.yml
@@ -2162,11 +2218,11 @@ module:
             ../proto/dwtools/atop/will.test/_asset/submodules-detached/+module/UriBasic.informal.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules-detached/module
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-detached/module/Procedure.informal.will.yml
+            ../proto/dwtools/atop/will.test/_asset/submodules-detached/module/ModuleForTesting12.informal.will.yml
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-detached/module/Proto.informal.will.yml
+            ../proto/dwtools/atop/will.test/_asset/submodules-detached/module/ModuleForTesting12ab.informal.will.yml
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-detached/module/UriBasic.informal.will.yml
+            ../proto/dwtools/atop/will.test/_asset/submodules-detached/module/ModuleForTesting2b.informal.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules-detached/proto
           - >-
             ../proto/dwtools/atop/will.test/_asset/submodules-detached/proto/WithSubmodules.s
@@ -2204,9 +2260,9 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/submodules-git/.im.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules-git/module
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-git/module/Proto.informal.will.yml
+            ../proto/dwtools/atop/will.test/_asset/submodules-git/module/ModuleForTesting12.informal.will.yml
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-git/module/UriBasic.informal.will.yml
+            ../proto/dwtools/atop/will.test/_asset/submodules-git/module/ModuleForTesting12ab.informal.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules-git/proto
           - >-
             ../proto/dwtools/atop/will.test/_asset/submodules-git/proto/WithSubmodules.s
@@ -2223,9 +2279,9 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/submodules-mixed/.im.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules-mixed/module
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-mixed/module/Proto.informal.will.yml
+            ../proto/dwtools/atop/will.test/_asset/submodules-mixed/module/ModuleForTesting12.informal.will.yml
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-mixed/module/UriBasic.informal.will.yml
+            ../proto/dwtools/atop/will.test/_asset/submodules-mixed/module/ModuleForTesting12ab.informal.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules-mixed/proto
           - >-
             ../proto/dwtools/atop/will.test/_asset/submodules-mixed/proto/WithSubmodules.s
