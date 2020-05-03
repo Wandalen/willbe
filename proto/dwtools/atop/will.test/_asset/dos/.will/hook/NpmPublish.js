@@ -39,14 +39,14 @@ function onModule( it )
 
   if( o.force || !diff || diff.status )
   {
+    if( o.verbosity )
+    logger.log( ` + Publishing ${it.junction.nameWithLocationGet()}` );
     if( o.verbosity >= 2 )
     {
       logger.up();
       logger.log( _.toStrNice( diff ) );
       logger.down();
     }
-    if( o.verbosity )
-    logger.log( ` . Publishing ${it.junction.nameWithLocationGet()}` );
   }
   else
   {
