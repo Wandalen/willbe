@@ -5,8 +5,8 @@
 let _global = _global_;
 let _ = _global.wTools = _global.wTools || Object.create( null );
 _.module = _.module || Object.create( null );
-_.module.lateModules = _.module.lateModules || Object.create( null );
-let Self = _.module.lateModules;
+_.module.modulesToRegister = _.module.modulesToRegister || Object.create( null );
+let Self = _.module.modulesToRegister;
 
 /*
   Temporary solution.
@@ -821,9 +821,9 @@ let Modules =
 
 }
 
-Object.assign( _.module.lateModules, Modules );
+Object.assign( _.module.modulesToRegister, Modules );
 if( _.module.declareAll )
-_.module.declareAll( _.module.lateModules );
+_.module.declareAll( _.module.modulesToRegister );
 
 /*
 xxx : remove isIncluded
