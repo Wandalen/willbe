@@ -5,6 +5,15 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
+  /* qqq : implement good coverage
+    add test routine to cover broken link case
+    add test routine to cover cycled link case
+  */
+
+  if( o.v !== null && o.v !== undefined )
+  o.verbosity = o.v;
+  _.routineOptions( onModule, o );
+
   let status = _.git.statusFull
   ({
     insidePath : it.junction.dirPath,
@@ -31,8 +40,14 @@ function onModule( it )
   if( config && config.path && config.path.link )
   provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.link ) );
   provider.archive.fileMapAutosaving = 1;
+  if( o.verbosity )
   provider.archive.verbosity = 2;
+  else
+  provider.archive.verbosity = 0;
+  provider.archive.allowingMissed = 1;
+  provider.archive.allowingCycled = 1;
   provider.archive.restoreLinksBegin();
+
   it.start( `git pull` );
 
   it.ready.tap( () =>
@@ -49,4 +64,9 @@ function onModule( it )
 
 }
 
+onModule.defaults =
+{
+  v : null,
+  verbosity : 2,
+}
 module.exports = onModule;
