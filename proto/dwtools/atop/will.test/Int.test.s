@@ -971,30 +971,23 @@ function openSkippingSubButAttachedWillfiles( test )
 function openAnon( test )
 {
   let self = this;
-  let assetName = 'two-anon-exported/.';
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-anon-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let modulePath = abs( './' );
+  let a = self.assetFor( test, 'two-anon-exported' );
   let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  a.reflect();
 
   /* */
 
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  var opener1 = will.openerMakeManual({ willfilesPath : modulePath });
+
+  var opener1 = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
   let ready1 = opener1.open();
-  var opener2 = will.openerMakeManual({ willfilesPath : modulePath + '/' });
+  var opener2 = will.openerMakeManual({ willfilesPath : a.abs( './' ) + '/' });
   let ready2 = opener2.open();
 
   /* - */
 
   ready1.then( ( arg ) =>
   {
-    test.case = 'opened filePath : ' + assetName;
+    test.case = 'opened filePath : two-anon-exported/.';
     check( opener1 );
     return null;
   })
@@ -1003,7 +996,7 @@ function openAnon( test )
 
   ready1.finally( ( err, arg ) =>
   {
-    test.case = 'opened filePath : ' + assetName;
+    test.case = 'opened filePath : two-anon-exported/.';
     test.is( err === undefined );
     opener1.finit();
     if( err )
@@ -1015,7 +1008,7 @@ function openAnon( test )
 
   ready2.then( ( arg ) =>
   {
-    test.case = 'opened dirPath : ' + assetName;
+    test.case = 'opened dirPath : two-anon-exported/.';
     check( opener2 );
     return null;
   })
@@ -1024,7 +1017,7 @@ function openAnon( test )
 
   ready2.finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : ' + assetName;
+    test.case = 'opened dirPath : two-anon-exported/.';
     test.is( err === undefined );
     opener2.finit();
     if( err )
@@ -1048,8 +1041,8 @@ function openAnon( test )
     let pathMap =
     {
       'current.remote' : null,
-      'will' : path.join( __dirname, '../will/Exec' ),
-      'local' : abs( './' ),
+      'will' : a.path.join( __dirname, '../will/Exec' ),
+      'local' : a.abs( './' ),
       'remote' : null,
       'proto' : 'proto',
       'temp' : [ 'super.out', 'sub.out' ],
@@ -1057,38 +1050,38 @@ function openAnon( test )
       'out' : 'super.out',
       'out.debug' : 'super.out/debug',
       'out.release' : 'super.out/release',
-      'module.willfiles' : abs([ '.ex.will.yml', '.im.will.yml' ]),
-      'module.dir' : abs( '.' ),
-      'module.common' : abs( './' ),
-      'module.original.willfiles' : abs([ '.ex.will.yml', '.im.will.yml' ]),
-      'module.peer.willfiles' : abs( 'super.out/supermodule.out.will.yml' ),
-      'module.peer.in' : abs( 'super.out' ),
+      'module.willfiles' : a.abs([ '.ex.will.yml', '.im.will.yml' ]),
+      'module.dir' : a.abs( '.' ),
+      'module.common' : a.abs( './' ),
+      'module.original.willfiles' : a.abs([ '.ex.will.yml', '.im.will.yml' ]),
+      'module.peer.willfiles' : a.abs( 'super.out/supermodule.out.will.yml' ),
+      'module.peer.in' : a.abs( 'super.out' ),
       'download' : null,
     }
 
     test.identical( opener.qualifiedName, 'opener::supermodule' );
     test.identical( opener.absoluteName, 'opener::supermodule' );
-    test.identical( opener.dirPath, abs( '.' ) );
-    test.identical( opener.commonPath, abs( '.' ) + '/' );
-    test.identical( _.setFrom( opener.willfilesPath ), _.setFrom( abs([ '.im.will.yml', '.ex.will.yml' ]) ) );
+    test.identical( opener.dirPath, a.abs( '.' ) );
+    test.identical( opener.commonPath, a.abs( '.' ) + '/' );
+    test.identical( _.setFrom( opener.willfilesPath ), _.setFrom( a.abs([ '.im.will.yml', '.ex.will.yml' ]) ) );
     test.identical( opener.fileName, 'openAnon' );
     test.identical( opener.aliasName, null );
-    test.identical( opener.localPath, abs( './' ) );
+    test.identical( opener.localPath, a.abs( './' ) );
     test.identical( opener.remotePath, null );
     test.identical( opener.willfilesArray.length, 2 );
     test.identical( _.setFrom( _.mapKeys( opener.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
     test.identical( opener.openedModule.qualifiedName, 'module::supermodule' );
     test.identical( opener.openedModule.absoluteName, 'module::supermodule' );
-    test.identical( opener.openedModule.inPath, abs( '.' ) );
-    test.identical( opener.openedModule.dirPath, abs( '.' ) );
-    test.identical( opener.openedModule.outPath, abs( 'super.out' ) );
-    test.identical( opener.openedModule.commonPath, abs( './' ) );
-    test.identical( _.setFrom( opener.openedModule.willfilesPath ), _.setFrom( abs([ '.im.will.yml', '.ex.will.yml' ]) ) );
-    test.identical( opener.openedModule.localPath, abs( './' ) );
+    test.identical( opener.openedModule.inPath, a.abs( '.' ) );
+    test.identical( opener.openedModule.dirPath, a.abs( '.' ) );
+    test.identical( opener.openedModule.outPath, a.abs( 'super.out' ) );
+    test.identical( opener.openedModule.commonPath, a.abs( './' ) );
+    test.identical( _.setFrom( opener.openedModule.willfilesPath ), _.setFrom( a.abs([ '.im.will.yml', '.ex.will.yml' ]) ) );
+    test.identical( opener.openedModule.localPath, a.abs( './' ) );
     test.identical( opener.openedModule.remotePath, null );
     test.identical( opener.openedModule.currentRemotePath, null );
-    test.identical( opener.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
+    test.identical( opener.openedModule.willPath, a.path.join( __dirname, '../will/Exec' ) );
     test.identical( opener.openedModule.willfilesArray.length, 2 );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
@@ -1102,7 +1095,6 @@ function openAnon( test )
     test.identical( _.setFrom( steps ), _.setFrom( [ 'export.', 'export.debug', 'reflect.submodules.', 'reflect.submodules.debug' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.buildMap ) ), _.setFrom( [ 'export.', 'export.debug', 'debug', 'release' ] ) );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.exportedMap ) ), _.setFrom( [] ) );
-
   }
 
 }
