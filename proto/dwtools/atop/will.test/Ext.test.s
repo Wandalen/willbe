@@ -3426,6 +3426,120 @@ function reflectWithOptions( test )
 
 //
 
+function reflectWithOptionDstRewriting( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflect-with-options-dst-rewriting' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'reflect file, break hardlink and try to reflect again';
+    return null;
+  })
+
+  a.startNonThrowing({ execPath : '.clean' })
+
+  a.startNonThrowing({ execPath : '.build variant1' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug', './debug/File.js' ] );
+
+    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, true );
+    _.fileProvider.fileDelete( a.abs( 'proto/File.js') )
+    _.fileProvider.fileWrite( a.abs( 'proto/File.js'), 'console.log( "File2.js" )' )
+    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, false );
+
+    _.fileProvider.fileWrite( a.abs( 'proto/File.js' ), `console.log( '123' );` );
+
+    return null;
+  })
+
+  a.startNonThrowing({ execPath : '.build variant1' })
+  .finally( ( err, got ) =>
+  {
+    test.is( !err );
+    test.is( !!got.exitCode );
+    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, false );
+    return null;
+  })
+
+  //
+
+  .then( () =>
+  {
+    test.case = 'reflect file with dstRewritingOnlyPreserving : 0, hard link should be restored';
+    return null;
+  })
+
+  a.startNonThrowing({ execPath : '.build variant2' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    var read = _.fileProvider.fileRead( a.abs( 'proto/File.js') );
+    test.identical( read, `console.log( '123' );` )
+    var read = _.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
+    test.identical( read, `console.log( '123' );` )
+    test.identical( linked, true );
+
+    return null;
+  })
+
+  .then( () =>
+  {
+    test.case = 'unlink out file and try to restore';
+    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, true );
+    _.fileProvider.fileDelete( a.abs( 'out/debug/File.js' ) )
+    _.fileProvider.fileWrite( a.abs( 'out/debug/File.js' ), 'console.log( "Unlinked.js" )' )
+    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, false );
+    return null;
+  })
+
+  a.startNonThrowing({ execPath : '.build variant1' })
+  .finally( ( err, got ) =>
+  {
+    test.is( !err );
+    test.is( !!got.exitCode );
+    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, false );
+    return null;
+  })
+
+  a.startNonThrowing({ execPath : '.build variant2' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    var read = _.fileProvider.fileRead( a.abs( 'proto/File.js') );
+    test.identical( read, `console.log( '123' );` )
+    var read = _.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
+    test.identical( read, `console.log( '123' );` )
+    test.identical( linked, true );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function reflectWithSelectorInDstFilter( test )
 {
   let self = this;
@@ -9800,6 +9914,36 @@ cleanSubmodulesHierarchyRemoteDry.timeOut = 1000000;
 
 //
 
+
+function cleanSpecial( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'clean-special' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+
+  var files = _.fileProvider.dirRead( outPath );
+  var expected = [ '#dir2','@dir1' ];
+  test.identical( files, expected )
+
+  /* - */
+
+  a.start({ execPath : '.clean' })
+  .then( ( got ) =>
+  {
+    test.case = '.clean';
+    test.identical( got.exitCode, 0 );
+    test.is( !_.fileProvider.fileExists( outPath ) );
+
+  })
+
+  return a.ready;
+}
+
+cleanSpecial.timeOut = 300000;
+
+//
+
 function buildSingleModule( test )
 {
   let self = this;
@@ -14883,7 +15027,7 @@ exportOutdated2.description =
 function exportWithSubmoduleThatHasModuleDirDeleted( test )
 {
   let self = this;
-  let a = self.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' ); 
+  let a = self.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' );
 
   /* - */
 
@@ -21917,6 +22061,7 @@ var Self =
     reflectRemoteGit,
     reflectRemoteHttp,
     reflectWithOptions,
+    reflectWithOptionDstRewriting,
     reflectWithSelectorInDstFilter,
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
@@ -21980,6 +22125,7 @@ var Self =
     cleanHierarchyRemoteDry,
     cleanSubmodulesHierarchyRemote,
     cleanSubmodulesHierarchyRemoteDry,
+    cleanSpecial,
 
     buildSingleModule,
     buildSingleStep,
