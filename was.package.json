@@ -1,6 +1,6 @@
 {
   "name" : "willbe",
-  "version" : "0.5.132",
+  "version" : "0.5.148",
   "description" : "Utility to manage modules of complex modular systems",
   "author" : "Kostiantyn Wandalen <wanalen@willbe.so>",
   "contributors" :
@@ -11,23 +11,23 @@
   ],
   "license" : "MIT",
   "enabled" : 1,
-  "main" : "proto/dwtools/atop/will/MainTop.s",
+  "main" : "proto/dwtools/atop/will/entry/Include.s",
   "files" : [ "proto/dwtools/atop/will", "proto/dwtools/Tools.s", "out" ],
   "bin" :
   {
-    "single-process-will" : "proto/dwtools/atop/will/Exec",
-    "debug-will" : "proto/dwtools/atop/will/ExecDebug",
-    "unrestricted-will" : "proto/dwtools/atop/will/ExecUnrestricted",
-    "will" : "proto/dwtools/atop/will/ExecUnrestricted"
+    "single-process-will" : "proto/dwtools/atop/will/entry/Exec",
+    "debug-will" : "proto/dwtools/atop/will/entry/ExecDebug",
+    "unrestricted-will" : "proto/dwtools/atop/will/entry/ExecUnrestricted",
+    "will" : "proto/dwtools/atop/will/entry/ExecUnrestricted"
   },
   "scripts" :
   {
     "test" : "wtest .run proto/**",
     "docgen" : "wdocgen .build proto",
-    "single-process-will" : "node proto/dwtools/atop/will/Exec",
-    "debug-will" : "node proto/dwtools/atop/will/ExecDebug",
-    "unrestricted-will" : "node proto/dwtools/atop/will/ExecUnrestricted",
-    "will" : "node proto/dwtools/atop/will/ExecUnrestricted",
+    "single-process-will" : "node proto/dwtools/atop/will/entry/Exec",
+    "debug-will" : "node proto/dwtools/atop/will/entry/ExecDebug",
+    "unrestricted-will" : "node proto/dwtools/atop/will/entry/ExecUnrestricted",
+    "will" : "node proto/dwtools/atop/will/entry/ExecUnrestricted",
     "docker-build-centos" : "docker image build -t willbe-centos -f ./docker/centos.dockerfile .",
     "docker-build-ubuntu" : "docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .",
     "docker-run-centos" : "docker run --rm willbe-centos",

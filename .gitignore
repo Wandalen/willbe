@@ -5,9 +5,6 @@
 *.db
 *.tmp
 *.out
-build
-builder
-html.build.coffee
 node_modules
 package-lock.json
 

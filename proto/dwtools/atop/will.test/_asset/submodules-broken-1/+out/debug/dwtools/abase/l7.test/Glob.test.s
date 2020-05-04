@@ -7,7 +7,7 @@ if( typeof module !== 'undefined' )
 
   let _ = require( '../../../dwtools/ModuleForTesting1.s' );
   _.include( 'wTesting' );
-  require( '../l5/PathModuleForTesting1.s' );
+  require( '../l5/ModuleForTesting1.s' );
 
 }
 

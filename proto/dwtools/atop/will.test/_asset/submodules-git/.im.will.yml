@@ -3,8 +3,8 @@ submodule :
 
   ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@master
   ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will@master
-  ModuleForTesting2b : out/ModuleForTesting2b.informal.out
   ModuleForTesting12 : out/ModuleForTesting12.informal.out
+  ModuleForTesting12ab : out/ModuleForTesting12ab.informal.out
 
 path :
 

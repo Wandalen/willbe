@@ -7,6 +7,7 @@ function onModule( it )
   let logger = it.logger;
   let configPath = _.path.join( it.junction.dirPath, 'package.json' );
   let wasСonfigPath = _.path.join( it.junction.dirPath, 'was.package.json' );
+  let wasPublished = null;
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
@@ -27,8 +28,32 @@ function onModule( it )
   if( !isEnabled( it, wasСonfigPath ) )
   return;
 
-  if( o.verbosity )
-  logger.log( `Publishing ${it.junction.nameWithLocationGet()}` );
+  let diff;
+
+  if( !o.force )
+  diff = _.git.diff
+  ({
+    state2 : 'tag::' + o.tag,
+    localPath : it.junction.dirPath,
+  });
+
+  if( o.force || !diff || diff.status )
+  {
+    if( o.verbosity )
+    logger.log( ` + Publishing ${it.junction.nameWithLocationGet()}` );
+    if( o.verbosity >= 2 )
+    {
+      logger.up();
+      logger.log( _.toStrNice( diff ) );
+      logger.down();
+    }
+  }
+  else
+  {
+    if( o.verbosity )
+    logger.log( ` x Nothing to publish at ${it.junction.nameWithLocationGet()}` );
+    return;
+  }
 
   if( o.dry )
   return;
@@ -49,7 +74,7 @@ function onModule( it )
 
   _.assert( _.path.isTrailed( it.junction.localPath ), 'not tested' );
 
-  it.start( 'will .export' );
+  it.start( 'local-will .export' ); /* xxx */
 
   let activeСonfigPath = wasСonfigPath;
   if( !o.dry )
@@ -129,6 +154,7 @@ var defaults = onModule.defaults = Object.create( null );
 defaults.tag = null;
 defaults.v = null;
 defaults.dry = 0;
+defaults.force = 0;
 defaults.verbosity = 2;
 
 module.exports = onModule;

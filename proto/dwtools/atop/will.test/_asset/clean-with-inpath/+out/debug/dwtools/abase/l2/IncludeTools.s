@@ -779,8 +779,8 @@ function _Setup()
   // if( _.module.knownModulesByName )
   // _.module.declareAll( _.module.knownModulesByName );
 
-  if( _.module.lateModules )
-  _.module.declareAll( _.module.lateModules );
+  if( _.module.modulesToRegister )
+  _.module.declareAll( _.module.modulesToRegister );
 
   if( typeof require === 'undefined' )
   return;

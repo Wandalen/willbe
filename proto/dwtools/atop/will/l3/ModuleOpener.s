@@ -2,12 +2,12 @@
 
 'use strict';
 
-if( typeof opener !== 'undefined' )
-{
-
-  require( '../IncludeBase.s' );
-
-}
+// if( typeof opener !== 'undefined' )
+// {
+//
+//   require( '../IncludeBase.s' );
+//
+// }
 
 //
 
@@ -402,6 +402,8 @@ function _willfilesFindAct( o )
   }
   else
   {
+    // if( _.strEnds( o.willfilesPath, '/l2' ) )
+    // debugger;
     records = will.willfilesFind
     ({
       commonPath : o.willfilesPath,
@@ -547,8 +549,7 @@ function find( o )
 
     /* */
 
-    if( opener.absoluteName === 'module::l1 / module::wModuleForTesting12 / opener::wModuleForTesting1' )
-    debugger;
+    // debugger;
 
     if( !openedModule || !openedModule.willfilesArray.length )
     {
@@ -682,6 +683,8 @@ function open( o )
     skipping.peerModulesFormed = !o.peerModulesFormed;
     skipping.subModulesFormed = !o.subModulesFormed;
     skipping.resourcesFormed = !o.resourcesFormed;
+
+    // debugger;
 
     let processing = stager.stageStateBegun( 'opened' ) && !stager.stageStateEnded( 'formed' );
     _.assert( !processing, 'not tested' );
@@ -1253,13 +1256,13 @@ function _repoFormFormal()
 
   _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.qualifiedName + ' does not have version control system features' );
 
-  let submodulesDir = opener.superRelation.module.cloneDirPathGet();
+  let cloneDirPathGet = opener.superRelation.module.cloneDirPathGet();
   let parsed = remoteProvider.pathParse( willfilesPath );
 
   opener._.remotePath = willfilesPath;
-  opener._.downloadPath = path.resolve( submodulesDir, opener.aliasName );
+  opener._.downloadPath = path.resolve( cloneDirPathGet, opener.aliasName );
 
-  let willfilesPath2 = path.resolve( submodulesDir, opener.aliasName, parsed.localVcsPath );
+  let willfilesPath2 = path.resolve( cloneDirPathGet, opener.aliasName, parsed.localVcsPath ); 
   opener._.localPath = _.Will.CommonPathFor( willfilesPath2 );
   opener._filePathChanged2({ willfilesPath : willfilesPath2 });
 
@@ -1273,27 +1276,15 @@ function _repoFormFormal()
     _.assert( !!opener.peerModule.opener );
     opener.peerModule.opener._.downloadPath = opener.downloadPath;
     opener.peerModule.opener._.remotePath = _.Will.RemotePathAdjust( opener.remotePath, path.relative( opener.localPath, opener.peerModule.localPath ) );
-    // opener.peerModule.opener._.remotePath = path.join( opener.remotePath, path.relative( opener.localPath, opener.peerModule.localPath ) );
   }
 
-  // _.assert( opener.repo === null );
-  // debugger;
-
   if( !opener.repo || opener.repo.remotePath !== opener._.remotePath || opener.repo.downloadPath !== opener._.downloadPath )
-  // opener.repo = new _.Will.Repository
   opener.repo = will.repoFrom
   ({
-    // will : will,
     isRemote : true,
     remotePath : opener._.remotePath,
     downloadPath : opener._.downloadPath,
   });
-  // debugger;
-
-  // opener.repoHasFilesReform();
-  // opener.repoIsGoodReform();
-
-  // opener.status({ all : 0, invalidating : 1, hasFiles : 1, isRepository : 1 });
 
   opener.repo.status({ all : 0, invalidating : 1, hasFiles : 1, isRepository : 1 });
 
@@ -1870,7 +1861,7 @@ build :
     steps :
       step::export
 `
-    fileProvider.fileWrite( willFilePath, willFile );
+    fileProvider.fileWrite( willFilePath, willFile ); debugger; /* xxx */
   }
 
   /* */
@@ -2338,6 +2329,9 @@ function errorSet( err )
   if( opener.error === err )
   return;
 
+  // if( err )
+  // debugger;
+
   opener[ errorSymbol ] = err;
 
   if( will && err )
@@ -2485,12 +2479,6 @@ let Composes =
   aliasName : null,
   willfilesPath : null,
 
-  // isRemote : null,
-  // isDownloaded : null,
-  // isRepository : null,
-  // isUpToDate : null,
-
-  // isOut : null,
   isMain : null,
   isAuto : null,
 
@@ -2498,8 +2486,6 @@ let Composes =
   searching : 'strict', /* 'smart', 'strict', 'exact' */
 
 }
-
-// _.assert( Composes.downloadPath === undefined );
 
 let Aggregates =
 {
