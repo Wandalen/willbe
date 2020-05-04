@@ -1104,37 +1104,27 @@ function openAnon( test )
 function openOutNamed( test )
 {
   let self = this;
-  let assetName = 'two-exported/super.out/supermodule';
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let moduleDirPath = abs( 'super.out' );
-  let moduleFilePath = abs( 'super.out/supermodule' );
+  let a = self.assetFor( test, 'two-exported' );
   let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  a.reflect();
 
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
-  var opener1 = will.openerMakeManual({ willfilesPath : moduleFilePath });
+  var opener1 = will.openerMakeManual({ willfilesPath : a.abs( 'super.out/supermodule' ) });
   let ready1 = opener1.open();
-  var opener2 = will.openerMakeManual({ willfilesPath : moduleFilePath + '.out' });
+  var opener2 = will.openerMakeManual({ willfilesPath : a.abs( 'super.out/supermodule.out' ) });
   let ready2 = opener2.open();
 
   /* - */
 
   ready1.then( ( arg ) =>
   {
-    test.case = 'opened filePath : ' + assetName;
+    test.case = 'opened filePath : two-exported/super.out/supermodule';
     check( opener1 );
     return null;
   })
 
   ready1.finally( ( err, arg ) =>
   {
-    test.case = 'opened filePath : ' + assetName;
+    test.case = 'opened filePath : two-exported/super.out/supermodule';
     test.is( err === undefined );
     opener1.finit();
     if( err )
@@ -1146,14 +1136,14 @@ function openOutNamed( test )
 
   ready2.then( ( arg ) =>
   {
-    test.case = 'opened dirPath : ' + assetName;
+    test.case = 'opened dirPath : two-exported/super.out/supermodule';
     check( opener2 );
     return null;
   })
 
   ready2.finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : ' + assetName;
+    test.case = 'opened dirPath : two-exported/super.out/supermodule';
     test.is( err === undefined );
     opener2.finit();
     if( err )
@@ -1177,13 +1167,13 @@ function openOutNamed( test )
     let pathMap =
     {
       'current.remote' : null,
-      'will' : path.join( __dirname, '../will/Exec' ),
+      'will' : a.path.join( __dirname, '../will/Exec' ),
       'module.original.willfiles' :
       [
-        abs( './super.ex.will.yml' ),
-        abs( './super.im.will.yml' ),
+        a.abs( './super.ex.will.yml' ),
+        a.abs( './super.im.will.yml' ),
       ],
-      'local' : abs( './super.out/supermodule.out' ),
+      'local' : a.abs( './super.out/supermodule.out' ),
       'remote' : null,
       'proto' : '../proto',
       'temp' : [ '.', '../sub.out' ],
@@ -1195,33 +1185,33 @@ function openOutNamed( test )
       'exported.files.export.' : [ 'release', 'release/File.debug.js', 'release/File.release.js' ],
       'exported.dir.export.debug' : 'debug',
       'exported.files.export.debug' : [ 'debug', 'debug/File.debug.js', 'debug/File.release.js' ],
-      'module.willfiles' : abs( './super.out/supermodule.out.will.yml' ),
-      'module.dir' : abs( './super.out' ),
-      'module.common' : abs( './super.out/supermodule.out' ),
+      'module.willfiles' : a.abs( './super.out/supermodule.out.will.yml' ),
+      'module.dir' : a.abs( './super.out' ),
+      'module.common' : a.abs( './super.out/supermodule.out' ),
       'download' : null,
-      'module.peer.in' : abs( '.' ),
+      'module.peer.in' : a.abs( '.' ),
       'module.peer.willfiles' :
       [
-        abs( './super.ex.will.yml' ),
-        abs( './super.im.will.yml' )
+        a.abs( './super.ex.will.yml' ),
+        a.abs( './super.im.will.yml' )
       ]
     }
 
     test.identical( opener.qualifiedName, 'opener::supermodule' );
     test.identical( opener.absoluteName, 'opener::supermodule' );
-    test.identical( opener.dirPath, abs( './super.out' ) );
-    test.identical( opener.localPath, abs( './super.out/supermodule.out' ) );
-    test.identical( opener.willfilesPath, abs( './super.out/supermodule.out.will.yml' ) );
-    test.identical( opener.commonPath, abs( 'super.out/supermodule.out' ) );
+    test.identical( opener.dirPath, a.abs( './super.out' ) );
+    test.identical( opener.localPath, a.abs( './super.out/supermodule.out' ) );
+    test.identical( opener.willfilesPath, a.abs( './super.out/supermodule.out.will.yml' ) );
+    test.identical( opener.commonPath, a.abs( 'super.out/supermodule.out' ) );
     test.identical( opener.fileName, 'supermodule.out' );
     test.identical( opener.aliasName, null );
 
     test.identical( opener.openedModule.qualifiedName, 'module::supermodule' );
     test.identical( opener.openedModule.absoluteName, 'module::supermodule / module::supermodule' );
-    test.identical( opener.openedModule.dirPath, abs( './super.out' ) );
-    test.identical( opener.openedModule.localPath, abs( './super.out/supermodule.out' ) );
-    test.identical( opener.openedModule.willfilesPath, abs( './super.out/supermodule.out.will.yml' ) );
-    test.identical( opener.openedModule.commonPath, abs( 'super.out/supermodule.out' ) );
+    test.identical( opener.openedModule.dirPath, a.abs( './super.out' ) );
+    test.identical( opener.openedModule.localPath, a.abs( './super.out/supermodule.out' ) );
+    test.identical( opener.openedModule.willfilesPath, a.abs( './super.out/supermodule.out.will.yml' ) );
+    test.identical( opener.openedModule.commonPath, a.abs( 'super.out/supermodule.out' ) );
     test.identical( opener.openedModule.fileName, 'supermodule.out' );
 
     test.is( !!opener.openedModule.about );
