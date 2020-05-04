@@ -133,7 +133,7 @@ path :
       content : prime
 
   entry.proto.no.tests :
-    path : proto/dwtools/atop/will/MainTop.s
+    path : proto/dwtools/atop/will/include/Top.s
     criterion :
       tests : 'no.tests'
   entry.proto.only.tests :
@@ -145,7 +145,7 @@ path :
   # npm.files : proto
 
   entry.out.raw.debug :
-    path : '{path::out.*=1}/source/dwtools/atop/will/MainTop.s'
+    path : '{path::out.*=1}/source/dwtools/atop/will/include/Top.s'
     criterion :
       debug : [ debug, release ]
       raw : raw
