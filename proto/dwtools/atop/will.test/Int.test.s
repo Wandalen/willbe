@@ -213,22 +213,15 @@ function rel_functor( routinePath )
 function preCloneRepos( test )
 {
   let self = this;
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
-  let ready = new _.Consequence().take( null )
+  let a = self.assetFor( test, '_repo' );
 
-  // let reposDownload = require( './ReposDownload.s' );
-  // ready.then( () => reposDownload() )
-
-  ready.then( () =>
+  a.ready.then( () =>
   {
-    test.is( _.fileProvider.isDir( _.path.join( self.repoDirPath, 'ModuleForTesting1' ) ) );
+    test.is( a.fileProvider.isDir( a.path.join( self.repoDirPath, 'ModuleForTesting1' ) ) );
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 //
@@ -9448,7 +9441,7 @@ function submodulesDeleteAndDownload( test )
       //     './.module/ModuleForTesting1/.im.will.yml'
       //   ],
       //   './.module/wFiles',
-      //   './.module/wCloner',
+      //   './.module/wCloner',\gs
       //   './.module/wStringer',
       //   './.module/wTesting',
       //   './.module/wSelector',
