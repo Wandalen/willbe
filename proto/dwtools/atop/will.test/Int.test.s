@@ -283,19 +283,9 @@ function buildSimple( test )
 function openNamedFast( test )
 {
   let self = this;
-  let assetName = 'two-exported/super';
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let modulePath = abs( 'super' );
+  let a = self.assetFor( test, 'two-exported' );
   let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
-  let opener;
-
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  a.reflect()
 
   will.prefer
   ({
@@ -303,17 +293,17 @@ function openNamedFast( test )
     allOfSub : 0,
   });
 
-  var opener1 = will.openerMakeManual({ willfilesPath : modulePath });
+  var opener1 = will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
   let ready1 = opener1.open();
 
-  var opener2 = will.openerMakeManual({ willfilesPath : modulePath });
+  var opener2 = will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
   let ready2 = opener2.open();
 
   /* - */
 
   ready1.then( ( arg ) =>
   {
-    test.case = 'opened filePath : ' + assetName;
+    test.case = 'opened filePath : two-exported/super';
     check( opener1 );
     return null;
   })
@@ -322,7 +312,7 @@ function openNamedFast( test )
 
   ready1.finally( ( err, arg ) =>
   {
-    test.case = 'opened filePath : ' + assetName;
+    test.case = 'opened filePath : two-exported/super';
     test.is( err === undefined );
     if( err )
     throw err;
@@ -333,7 +323,7 @@ function openNamedFast( test )
 
   ready2.then( ( arg ) =>
   {
-    test.case = 'opened dirPath : ' + assetName;
+    test.case = 'opened dirPath : two-exported/super';
     check( opener2 );
     return null;
   })
@@ -342,7 +332,7 @@ function openNamedFast( test )
 
   ready2.finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : ' + assetName;
+    test.case = 'opened dirPath : two-exported/super';
     test.is( err === undefined );
     if( err )
     throw err;
@@ -358,42 +348,42 @@ function openNamedFast( test )
     test.is( opener1.openedModule === opener2.openedModule );
 
     var exp = [ 'super' ];
-    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( a.rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
 
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml' ];
-    test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
-    test.identical( _.mapKeys( will.willfileWithFilePathPathMap ), abs( exp ) );
+    test.identical( a.rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
+    test.identical( _.mapKeys( will.willfileWithFilePathPathMap ), a.abs( exp ) );
     var exp = [ 'super' ];
-    test.identical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
+    test.identical( a.rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
 
     opener1.finit();
 
     var exp = [ 'super' ];
-    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( a.rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'sub.out/sub.out', 'super' ];
-    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( a.rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.openerModuleWithIdMap ).length, exp.length );
     var exp = [ 'super.ex.will.yml', 'super.im.will.yml' ];
-    test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
-    test.identical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), exp );
+    test.identical( a.rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
+    test.identical( a.rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), exp );
     var exp = [ 'super' ];
-    test.identical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
+    test.identical( a.rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
 
     opener2.finit();
 
     test.description = 'no garbage left';
-    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
     test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
     return arg;
@@ -414,16 +404,16 @@ function openNamedFast( test )
       'out.debug' : 'super.out/debug',
       'out.release' : 'super.out/release',
 
-      'local' : abs( 'super' ),
+      'local' : a.abs( 'super' ),
       'remote' : null,
       'current.remote' : null,
-      'will' : path.join( __dirname, '../will/Exec' ),
-      'module.dir' : abs( '.' ),
-      'module.willfiles' : abs( [ 'super.ex.will.yml', 'super.im.will.yml' ] ),
-      'module.peer.willfiles' : abs( 'super.out/supermodule.out.will.yml' ),
-      'module.peer.in' : abs( 'super.out' ),
-      'module.original.willfiles' : abs( [ 'super.ex.will.yml', 'super.im.will.yml' ] ),
-      'module.common' : abs( 'super' ),
+      'will' : a.path.join( __dirname, '../will/Exec' ),
+      'module.dir' : a.abs( '.' ),
+      'module.willfiles' : a.abs( [ 'super.ex.will.yml', 'super.im.will.yml' ] ),
+      'module.peer.willfiles' : a.abs( 'super.out/supermodule.out.will.yml' ),
+      'module.peer.in' : a.abs( 'super.out' ),
+      'module.original.willfiles' : a.abs( [ 'super.ex.will.yml', 'super.im.will.yml' ] ),
+      'module.common' : a.abs( 'super' ),
       'download' : null,
 
     }
@@ -432,25 +422,25 @@ function openNamedFast( test )
     test.identical( opener.absoluteName, 'opener::supermodule' );
     test.identical( opener.fileName, 'super' );
     test.identical( opener.aliasName, null );
-    test.identical( opener.localPath, abs( './super' ) );
+    test.identical( opener.localPath, a.abs( './super' ) );
     test.identical( opener.remotePath, null );
-    test.identical( opener.dirPath, abs( '.' ) );
-    test.identical( opener.commonPath, abs( 'super' ) );
-    test.identical( opener.willfilesPath, abs( [ './super.ex.will.yml', './super.im.will.yml' ] ) );
+    test.identical( opener.dirPath, a.abs( '.' ) );
+    test.identical( opener.commonPath, a.abs( 'super' ) );
+    test.identical( opener.willfilesPath, a.abs( [ './super.ex.will.yml', './super.im.will.yml' ] ) );
     test.identical( opener.willfilesArray.length, 2 );
     test.identical( _.setFrom( _.mapKeys( opener.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
     test.identical( opener.openedModule.qualifiedName, 'module::supermodule' );
     test.identical( opener.openedModule.absoluteName, 'module::supermodule' );
-    test.identical( opener.openedModule.inPath, routinePath );
-    test.identical( opener.openedModule.dirPath, abs( '.' ) );
-    test.identical( opener.openedModule.localPath, abs( 'super' ) );
+    test.identical( opener.openedModule.inPath, a.routinePath );
+    test.identical( opener.openedModule.dirPath, a.abs( '.' ) );
+    test.identical( opener.openedModule.localPath, a.abs( 'super' ) );
     test.identical( opener.openedModule.remotePath, null );
     test.identical( opener.openedModule.currentRemotePath, null );
-    test.identical( opener.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
-    test.identical( opener.openedModule.outPath, abs( 'super.out' ) );
-    test.identical( opener.openedModule.commonPath, abs( 'super' ) );
-    test.identical( opener.openedModule.willfilesPath, abs( [ './super.ex.will.yml', './super.im.will.yml' ] ) );
+    test.identical( opener.openedModule.willPath, a.path.join( __dirname, '../will/Exec' ) );
+    test.identical( opener.openedModule.outPath, a.abs( 'super.out' ) );
+    test.identical( opener.openedModule.commonPath, a.abs( 'super' ) );
+    test.identical( opener.openedModule.willfilesPath, a.abs( [ './super.ex.will.yml', './super.im.will.yml' ] ) );
     test.identical( opener.openedModule.willfilesArray.length, 2 );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
