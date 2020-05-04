@@ -9223,7 +9223,8 @@ function submodulesResolve( test )
     test.identical( submodule.opener.openedModule.localPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.remotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
-    test.identical( submodule.opener.openedModule.currentRemotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
+    // test.identical( submodule.opener.openedModule.currentRemotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
+    test.identical( submodule.opener.openedModule.currentRemotePath, null );
 
     test.case = 'mask, single module';
     var submodule = opener.openedModule.submodulesResolve({ selector : '*Testing1' });
@@ -9298,7 +9299,7 @@ function submodulesDeleteAndDownload( test )
     {
       var files = self.find( submodulesPath );
       test.is( _.longHas( files, './ModuleForTesting1' ) );
-      test.is( _.longHas( files, './ModuleForTesting2' ) );
+      test.is( _.longHas( files, './ModuleForTesting12ab' ) );
       test.identical( files.length, 53 );
       return arg;
     })
@@ -9309,7 +9310,7 @@ function submodulesDeleteAndDownload( test )
     {
       var files = self.find( submodulesPath );
       test.is( _.longHas( files, './ModuleForTesting1' ) );
-      test.is( _.longHas( files, './ModuleForTesting2' ) );
+      test.is( _.longHas( files, './ModuleForTesting12ab' ) );
       test.identical( files.length, 53 );
       return arg;
     })
@@ -9317,7 +9318,7 @@ function submodulesDeleteAndDownload( test )
     con.finally( ( err, arg ) =>
     {
 
-      var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/ModuleForTesting2/out/wModuleForTesting2.out', '.module/ModuleForTesting2/' ];
+      var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out', '.module/ModuleForTesting12ab/' ];
       test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
       test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
 
@@ -9330,10 +9331,10 @@ function submodulesDeleteAndDownload( test )
           '.module/ModuleForTesting1/.ex.will.yml',
           '.module/ModuleForTesting1/.im.will.yml'
         ],
-        '.module/ModuleForTesting2/out/wModuleForTesting2.out.will.yml',
+        '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out.will.yml',
         [
-          '.module/ModuleForTesting2/.ex.will.yml',
-          '.module/ModuleForTesting2/.im.will.yml'
+          '.module/ModuleForTesting12ab/.ex.will.yml',
+          '.module/ModuleForTesting12ab/.im.will.yml'
         ]
       ]
       test.identical( _.select( will.willfilesArray, '*/filePath' ), abs( willfilesArray ) ); debugger;
@@ -9344,20 +9345,20 @@ function submodulesDeleteAndDownload( test )
         '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml',
         '.module/ModuleForTesting1/.ex.will.yml',
         '.module/ModuleForTesting1/.im.will.yml',
-        '.module/ModuleForTesting2/out/wModuleForTesting2.out.will.yml',
-        '.module/ModuleForTesting2/.ex.will.yml',
-        '.module/ModuleForTesting2/.im.will.yml'
+        '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out.will.yml',
+        '.module/ModuleForTesting12ab/.ex.will.yml',
+        '.module/ModuleForTesting12ab/.im.will.yml'
       ]
       test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
       test.identical( _.mapKeys( will.willfileWithFilePathPathMap ), abs( exp ) );
-      var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/ModuleForTesting2/out/wModuleForTesting2.out', '.module/ModuleForTesting2/' ]
+      var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out', '.module/ModuleForTesting12ab/' ]
       test.identical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
 
       // var exp =
       // [
       //   './',
       //   './.module/ModuleForTesting1/out/wModuleForTesting1.out',
-      //   './.module/ModuleForTesting2/out/wModuleForTesting2.out',
+      //   './.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out',
       //   './.module/wFiles',
       //   './.module/wCloner',
       //   './.module/wStringer',
@@ -9371,7 +9372,7 @@ function submodulesDeleteAndDownload( test )
       //   './.module/wTesting',
       //   './.module/wSelector',
       //   'hd://./.module/ModuleForTesting1',
-      //   './.module/ModuleForTesting2/'
+      //   './.module/ModuleForTesting12ab/'
       // ]
       // test.identical( _.setFrom( _.select( will.openersArray, '*/commonPath' ) ), _.setFrom( abs( exp ) ) );
       //
@@ -9379,7 +9380,7 @@ function submodulesDeleteAndDownload( test )
       // [
       //   './',
       //   './.module/ModuleForTesting1/out/wModuleForTesting1.out',
-      //   './.module/ModuleForTesting2/out/wModuleForTesting2.out',
+      //   './.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out',
       //   './.module/wFiles',
       //   './.module/wCloner',
       //   './.module/wStringer',
@@ -9393,7 +9394,7 @@ function submodulesDeleteAndDownload( test )
       //   './.module/wTesting',
       //   './.module/wSelector',
       //   'hd://./.module/ModuleForTesting1',
-      //   './.module/ModuleForTesting2/'
+      //   './.module/ModuleForTesting12ab/'
       // ]
       // test.identical( _.setFrom( _.select( will.openersArray, '*/localPath' ) ), _.setFrom( abs( exp ) ) );
       //
@@ -9401,7 +9402,7 @@ function submodulesDeleteAndDownload( test )
       // [
       //   null,
       //   'git+hd://../_repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will@master',
-      //   'git+hd://../_repo/ModuleForTesting2?out=out/wModuleForTesting2.out.will@master',
+      //   'git+hd://../_repo/ModuleForTesting12ab?out=out/wModuleForTesting12ab.out.will@master',
       //   'npm:///wFiles',
       //   'npm:///wcloner',
       //   'npm:///wstringer',
@@ -9415,11 +9416,11 @@ function submodulesDeleteAndDownload( test )
       //   'npm:///wTesting',
       //   'npm:///wselector',
       //   null, /* xxx : should be not null */
-      //   'git+hd://../_repo/ModuleForTesting2?out:./@master'
+      //   'git+hd://../_repo/ModuleForTesting12ab?out:./@master'
       // ]
       // var remotePath = _.select( will.openersArray, '*/remotePath' );
       // // test.is( _.strHas( remotePath[ 1 ], '/_repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
-      // // test.is( _.strHas( remotePath[ 2 ], '/_repo/ModuleForTesting2?out=out/wModuleForTesting2.out.will@master' ) );
+      // // test.is( _.strHas( remotePath[ 2 ], '/_repo/ModuleForTesting12ab?out=out/wModuleForTesting12ab.out.will@master' ) );
       // exp[ 1 ] = remotePath[ 1 ];
       // exp[ 2 ] = remotePath[ 2 ];
       // test.identical( _.setFrom( remotePath ), _.setFrom( abs( exp ) ) );
@@ -9435,7 +9436,7 @@ function submodulesDeleteAndDownload( test )
       // [
       //   './.will.yml',
       //   './.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml',
-      //   './.module/ModuleForTesting2/out/wModuleForTesting2.out.will.yml',
+      //   './.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out.will.yml',
       //   './.module/wFiles',
       //   './.module/wCloner',
       //   './.module/wStringer',
@@ -9453,8 +9454,8 @@ function submodulesDeleteAndDownload( test )
       //   './.module/wSelector',
       //   'hd://./.module/ModuleForTesting1',
       //   [
-      //     './.module/ModuleForTesting2/.ex.will.yml',
-      //     './.module/ModuleForTesting2/.im.will.yml'
+      //     './.module/ModuleForTesting12ab/.ex.will.yml',
+      //     './.module/ModuleForTesting12ab/.im.will.yml'
       //   ]
       // ]
       // var got = _.select( will.openersArray, '*/willfilesPath' )
