@@ -1238,24 +1238,16 @@ function openOutNamed( test )
 function openCurruptedUnknownField( test )
 {
   let self = this;
-  let assetName = 'corrupted-infile-unknown-field/sub';
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-infile-unknown-field' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let modulePath = abs( 'sub' );
+  let a = self.assetFor( test, 'corrupted-infile-unknown-field' );
   let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
   let opener;
 
   /* - */
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : modulePath });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'sub' ) });
     return opener.open({ all : 1 });
   })
 
@@ -1269,26 +1261,26 @@ function openCurruptedUnknownField( test )
     check( opener );
 
     var exp = [ 'sub' ];
-    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( a.rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
     test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
     var exp = [ 'sub.ex.will.yml', 'sub.im.will.yml' ];
-    test.identical( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
-    test.identical( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), exp );
+    test.identical( a.rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
+    test.identical( a.rel( _.mapKeys( will.willfileWithFilePathPathMap ) ), exp );
     var exp = [ 'sub' ];
-    test.identical( rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
+    test.identical( a.rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
 
     opener.finit();
 
     test.description = 'no garbage left';
-    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
     test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
     return null;
@@ -1298,7 +1290,7 @@ function openCurruptedUnknownField( test )
 
   .finally( ( err, arg ) =>
   {
-    test.case = 'opened dirPath : ' + assetName;
+    test.case = 'opened dirPath : corrupted-infile-unknown-field/sub';
     test.is( err === undefined );
     if( err )
     throw err;
@@ -1319,14 +1311,14 @@ function openCurruptedUnknownField( test )
 
       'remote' : null,
       'current.remote' : null,
-      'will' : path.join( __dirname, '../will/Exec' ),
-      'module.dir' : abs( '.' ),
-      'local' : abs( 'sub' ),
-      'module.willfiles' : abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ),
-      'module.original.willfiles' : abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ),
-      'module.peer.willfiles' : abs( 'sub.out.will.yml' ),
-      'module.peer.in' : abs( '.' ),
-      'module.common' : abs( 'sub' ),
+      'will' : a.path.join( __dirname, '../will/Exec' ),
+      'module.dir' : a.abs( '.' ),
+      'local' : a.abs( 'sub' ),
+      'module.willfiles' : a.abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ),
+      'module.original.willfiles' : a.abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ),
+      'module.peer.willfiles' : a.abs( 'sub.out.will.yml' ),
+      'module.peer.in' : a.abs( '.' ),
+      'module.common' : a.abs( 'sub' ),
       'download' : null,
 
     }
@@ -1336,22 +1328,22 @@ function openCurruptedUnknownField( test )
     test.identical( opener.fileName, 'sub' );
     test.identical( opener.aliasName, null );
     test.identical( opener.remotePath, null );
-    test.identical( opener.dirPath, abs( '.' ) );
-    test.identical( opener.commonPath, abs( 'sub' ) );
-    test.identical( opener.willfilesPath, abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ) );
+    test.identical( opener.dirPath, a.abs( '.' ) );
+    test.identical( opener.commonPath, a.abs( 'sub' ) );
+    test.identical( opener.willfilesPath, a.abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ) );
     test.identical( opener.willfilesArray.length, 2 );
     test.identical( _.setFrom( _.mapKeys( opener.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
     test.identical( opener.openedModule.qualifiedName, 'module::sub' );
     test.identical( opener.openedModule.absoluteName, 'module::sub' );
-    test.identical( opener.openedModule.inPath, routinePath );
-    test.identical( opener.openedModule.dirPath, abs( '.' ) );
+    test.identical( opener.openedModule.inPath, a.routinePath );
+    test.identical( opener.openedModule.dirPath, a.abs( '.' ) );
     test.identical( opener.openedModule.remotePath, null );
     test.identical( opener.openedModule.currentRemotePath, null );
-    test.identical( opener.openedModule.willPath, path.join( __dirname, '../will/Exec' ) );
-    test.identical( opener.openedModule.outPath, abs( 'sub.out' ) );
-    test.identical( opener.openedModule.commonPath, abs( 'sub' ) );
-    test.identical( opener.openedModule.willfilesPath, abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ) );
+    test.identical( opener.openedModule.willPath, a.path.join( __dirname, '../will/Exec' ) );
+    test.identical( opener.openedModule.outPath, a.abs( 'sub.out' ) );
+    test.identical( opener.openedModule.commonPath, a.abs( 'sub' ) );
+    test.identical( opener.openedModule.willfilesPath, a.abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ) );
     test.identical( opener.openedModule.willfilesArray.length, 2 );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
