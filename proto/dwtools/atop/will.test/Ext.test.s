@@ -10587,7 +10587,7 @@ function exportSingle( test )
 {
   let self = this;
   let a = self.assetFor( test, 'single' );
-  let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
+  let outDebugPath = a.path.join( a.routinePath, 'out/debug' );
   let outPath = _.path.join( a.routinePath, 'out' ); /* qqq : ? */
   let outWillPath = _.path.join( a.routinePath, 'out/single.out.will.yml' );
   a.reflect();
@@ -14883,7 +14883,7 @@ exportOutdated2.description =
 function exportWithSubmoduleThatHasModuleDirDeleted( test )
 {
   let self = this;
-  let a = self.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' ); /* qqq xxx : assets naming transition is required. ask */
+  let a = self.assetFor( test, 'exportWithSubmoduleThatHasModuleDirDeleted' ); 
 
   /* - */
 
@@ -15253,7 +15253,7 @@ function importLocalRepo( test )
 {
   let self = this;
   let a = self.assetFor( test, 'import-auto' );
-  let modulePath = _.path.join( a.routinePath, '.module' );
+  let modulePath = _.path.join( a.routinePath, '.module' ); /* qqq */
   a.reflect();
 
 //   let self = this;

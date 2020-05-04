@@ -9,8 +9,13 @@
 
 if( typeof module !== 'undefined' )
 {
+
   let _ = require( '../include/Top.s' );
   module[ 'exports' ] = _global_.wTools;
+
+  if( !module.parent )
+  _global_.wTools.WillCli.Exec();
+
 }
 
 })();

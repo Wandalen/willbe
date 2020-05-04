@@ -2683,7 +2683,7 @@ function modulesDownload_body( o )
       // o2.subModulesFormed = 0;
       // o2.subModulesFormed = 1; /* yyy2 */
       o2.withPeers = 1;
-      debugger;
+      // +debugger;
       return will.modulesUpform( o2 );
     });
 
@@ -3038,7 +3038,7 @@ function modulesUpform( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  o = _.routineOptions( modulesUpform, arguments ); debugger;
+  o = _.routineOptions( modulesUpform, arguments ); // debugger;
 
   let o2 = _.mapOnly( o, will.modulesFor.defaults );
   o2.onEachModule = handleEach;
@@ -3182,7 +3182,7 @@ function modulesBuild_body( o )
     {
       if( recursive === null )
       {
-        debugger;
+        // debugger;
         o2.recursive = 1;
       }
       else

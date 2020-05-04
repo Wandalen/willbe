@@ -521,7 +521,7 @@ function _commandBuildLike( o )
   .then( () => will.openersCurrentEach( forSingle ) )
   .finally( end );
 
-  debugger;
+  //debugger;
 
   return ready;
 

@@ -6,7 +6,7 @@ if( typeof module !== 'undefined' )
 {
   let _ = require( '../../../dwtools/Tools.s' );
 
-  _.include( 'wTesting' );;
+  _.include( 'wTesting' );
   _.include( 'wAppBasic' );
   _.include( 'wFiles' );
 
@@ -16,7 +16,6 @@ if( typeof module !== 'undefined' )
 
 var _global = _global_;
 var _ = _global_.wTools;
-
 
 /*
 qqq : implement test checking "will .call link" links files ".dot1" ".dot2"

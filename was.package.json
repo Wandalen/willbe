@@ -11,7 +11,7 @@
   ],
   "license" : "MIT",
   "enabled" : 1,
-  "main" : "proto/dwtools/atop/will/MainTop.s",
+  "main" : "proto/dwtools/atop/will/entry/Include.s",
   "files" : [ "proto/dwtools/atop/will", "proto/dwtools/Tools.s", "out" ],
   "bin" :
   {

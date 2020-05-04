@@ -599,7 +599,7 @@ let wMathConcepts =
 
 let willbe =
 {
-  sourcePath : sourcePath( 'atop/will/MainTop.s', 'willbe' ),
+  sourcePath : sourcePath( 'atop/will/entry/Include.s', 'willbe' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Will },
 }
 

@@ -127,7 +127,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: ../proto/dwtools/atop/will/MainTop.s
+        path: ../proto/dwtools/atop/will/entry/Include.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -137,13 +137,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/atop/will/MainTop.s'
+        path: '{path::out.*=1}/source/dwtools/atop/will/entry/Include.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/atop/will/MainTop.s'
+        path: '{path::out.*=1}/source/dwtools/atop/will/entry/Include.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -2760,7 +2760,7 @@ module:
           - ../proto/dwtools/atop/-will/IncludeBase.s
           - ../proto/dwtools/atop/-will/IncludeMid.s
           - ../proto/dwtools/atop/-will/MainBase.s
-          - ../proto/dwtools/atop/-will/MainTop.s
+          - ../proto/dwtools/atop/-will/entry/Include.s
           - ../proto/dwtools/atop/-will/l1
           - ../proto/dwtools/atop/-will/l1/About.s
           - ../proto/dwtools/atop/-will/l1/BuildFrame.s
@@ -8731,7 +8731,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: proto/dwtools/atop/will/MainTop.s
+        path: proto/dwtools/atop/will/entry/Include.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -8741,13 +8741,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/atop/will/MainTop.s'
+        path: '{path::out.*=1}/source/dwtools/atop/will/entry/Include.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/atop/will/MainTop.s'
+        path: '{path::out.*=1}/source/dwtools/atop/will/entry/Include.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
