@@ -1712,6 +1712,7 @@ function optionsForReflectExport( o )
   _.assert( !o.resolving );
 
   result.mandatory = reflector.mandatory;
+  result.dstRewritingOnlyPreserving = reflector.dstRewritingOnlyPreserving;
 
   /* */
 
@@ -1877,6 +1878,7 @@ let Composes =
 
   recursive : null,
   mandatory : 1,
+  dstRewritingOnlyPreserving : 1
 
 }
 
