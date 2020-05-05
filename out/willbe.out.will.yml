@@ -2,10 +2,13 @@ format: outwillfile-2.0
 root:
   - willbe.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  willbe.out.will.yml: &ref_0
+    hash: 04cd4ea4cb47b9b5afb161af03c20ea4
+    size: 502850
+  ../.ex.will.yml: &ref_1
     hash: b3c4961eaf5b7deed603923767e4f5fd
     size: 2604
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: 20d9c2abbda1ffee8f2021e20ae0e768
     size: 7126
 module:
@@ -16,20 +19,20 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters: &ref_2
+      interpreters:
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors: &ref_4
+      contributors:
         - Kostiantyn Wandalen <wanalen@willbe.so>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts: &ref_5
+      npm.scripts:
         test: 'wtest .run proto/** v:5'
         docgen: wdocgen .build proto
         single-process-will: node proto/dwtools/atop/will/entry/Exec
@@ -40,7 +43,7 @@ module:
         docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
         docker-run-centos: docker run --rm willbe-centos
         docker-run-ubuntu: docker run --rm willbe-ubuntu
-      npm.bin: &ref_6
+      npm.bin:
         single-process-will: proto/dwtools/atop/will/entry/Exec
         debug-will: proto/dwtools/atop/will/entry/ExecDebug
         unrestricted-will: proto/dwtools/atop/will/entry/ExecUnrestricted
@@ -5524,6 +5527,13 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/clean-broken-submodules/proto
           - >-
             ../proto/dwtools/atop/will.test/_asset/clean-broken-submodules/proto/WithSubmodules.s
+          - ../proto/dwtools/atop/will.test/_asset/clean-special
+          - ../proto/dwtools/atop/will.test/_asset/clean-special/.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/clean-special/out
+          - '../proto/dwtools/atop/will.test/_asset/clean-special/out/#dir2'
+          - '../proto/dwtools/atop/will.test/_asset/clean-special/out/#dir2/file'
+          - ../proto/dwtools/atop/will.test/_asset/clean-special/out/@dir1
+          - ../proto/dwtools/atop/will.test/_asset/clean-special/out/@dir1/file
           - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath
           - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module
           - >-
@@ -7028,6 +7038,14 @@ module:
             ../proto/dwtools/atop/will.test/_asset/reflect-with-options/proto/File.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/reflect-with-options/proto/File.test.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflect-with-options-dst-rewriting
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflect-with-options-dst-rewriting/will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflect-with-options-dst-rewriting/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflect-with-options-dst-rewriting/proto/File.js
           - ../proto/dwtools/atop/will.test/_asset/reflector-masks
           - ../proto/dwtools/atop/will.test/_asset/reflector-masks/.will.yml
           - ../proto/dwtools/atop/will.test/_asset/reflector-masks/proto
@@ -7990,6 +8008,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -8005,6 +8024,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -8020,6 +8040,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -8035,6 +8056,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -8050,6 +8072,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           raw: raw
           debug: release
@@ -8066,6 +8089,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -8083,6 +8107,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -8099,6 +8124,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -8115,6 +8141,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -8128,6 +8155,7 @@ module:
             '**': ''
           prefixPath: ../proto
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           generated: 1
           content: proto
@@ -8141,6 +8169,7 @@ module:
           recursive: 0
         recursive: 0
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           generated: 1
           content: proto
@@ -8502,6 +8531,24 @@ module:
           content: prime
         inherit:
           - files.transpile
+      exported.proto.export:
+        opts:
+          reflector: 'reflector::exported.proto.export*'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          reflector: 'reflector::exported.files.proto.export*'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -8596,8 +8643,9 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      willbe.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: willbe
@@ -8605,14 +8653,35 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - njs >= 8.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors: *ref_4
+      contributors:
+        - Kostiantyn Wandalen <wanalen@willbe.so>
+        - Volodymyr M. <volodymyr.migdal@gmail.com>
+        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts: *ref_5
-      npm.bin: *ref_6
+      npm.scripts:
+        test: 'wtest .run proto/** v:5'
+        docgen: wdocgen .build proto
+        single-process-will: node proto/dwtools/atop/will/entry/Exec
+        debug-will: node proto/dwtools/atop/will/entry/ExecDebug
+        unrestricted-will: node proto/dwtools/atop/will/entry/ExecUnrestricted
+        will: node proto/dwtools/atop/will/entry/ExecUnrestricted
+        docker-build-centos: docker image build -t willbe-centos -f ./docker/centos.dockerfile .
+        docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
+        docker-run-centos: docker run --rm willbe-centos
+        docker-run-ubuntu: docker run --rm willbe-ubuntu
+      npm.bin:
+        single-process-will: proto/dwtools/atop/will/entry/Exec
+        debug-will: proto/dwtools/atop/will/entry/ExecDebug
+        unrestricted-will: proto/dwtools/atop/will/entry/ExecUnrestricted
+        will: proto/dwtools/atop/will/entry/ExecUnrestricted
     path:
       module.willfiles:
         criterion:
@@ -8850,6 +8919,7 @@ module:
           filePath:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -8862,6 +8932,7 @@ module:
           filePath:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -8874,6 +8945,7 @@ module:
           filePath:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -8886,6 +8958,7 @@ module:
           filePath:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -8898,6 +8971,7 @@ module:
           filePath:
             'path::proto': '{path::out.raw.release}'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           raw: raw
           debug: release
@@ -8911,6 +8985,7 @@ module:
             '**.test/**': 0
             'path::proto': '{path::out.*=1}/Main.s'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -8925,6 +9000,7 @@ module:
             '**.test/**': 0
             'path::proto': '{path::out.*=1}/Main.s'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -8938,6 +9014,7 @@ module:
             '**.test*': 1
             'path::proto': '{path::out.*=1}/Tests.test.s'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -8951,6 +9028,7 @@ module:
             '**.test*': 1
             'path::proto': '{path::out.*=1}/Tests.test.s'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -9402,3 +9480,6 @@ module:
       ../.im.will.yml:
         hash: 20d9c2abbda1ffee8f2021e20ae0e768
         size: 7126
+      willbe.out.will.yml:
+        hash: 04cd4ea4cb47b9b5afb161af03c20ea4
+        size: 502850
