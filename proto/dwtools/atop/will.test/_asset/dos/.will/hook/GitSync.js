@@ -5,6 +5,8 @@ function onModule( it )
   let _ = it.tools;
   let logger = it.logger;
 
+  // console.log( 'argv', process.argv.length, process.argv ); debugger;
+
   _.fileProvider.filesFind({ filePath : it.junction.dirPath + '**', safe : 0 });
 
   let status = _.git.statusFull

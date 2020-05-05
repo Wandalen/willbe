@@ -30,6 +30,13 @@ function onModule( it )
 
   let diff;
 
+  {
+    let it2 = it.will.hookItNew( it );
+    it2.request.subject = `-am "."`
+    it2.request.original = it2.request.subject;
+    it2.will.hooks.GitSync.call( it2 );
+  }
+
   if( !o.force )
   diff = _.git.diff
   ({
@@ -51,7 +58,7 @@ function onModule( it )
   else
   {
     if( o.verbosity )
-    logger.log( ` x Nothing to publish at ${it.junction.nameWithLocationGet()}` );
+    logger.log( ` x Nothing to publish in ${it.junction.nameWithLocationGet()}` );
     return;
   }
 
@@ -65,12 +72,12 @@ function onModule( it )
     verbosity : o.verbosity - 4,
   });
 
-  {
-    let it2 = it.will.hookItNew( it );
-    it2.request.subject = `-am "."`
-    it2.request.original = it2.request.subject;
-    it2.will.hooks.GitSync.call( it2 );
-  }
+  // {
+  //   let it2 = it.will.hookItNew( it );
+  //   it2.request.subject = `-am "."`
+  //   it2.request.original = it2.request.subject;
+  //   it2.will.hooks.GitSync.call( it2 );
+  // }
 
   _.assert( _.path.isTrailed( it.junction.localPath ), 'not tested' );
 
