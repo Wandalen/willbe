@@ -34,6 +34,10 @@ function onModule( it )
     let it2 = it.will.hookItNew( it );
     it2.request.subject = `-am "."`
     it2.request.original = it2.request.subject;
+    delete it2.request.map.tag;
+    delete it2.request.map.dry;
+    delete it2.request.map.force;
+    _.assert( it2.request.map !== it.request.map );
     it2.will.hooks.GitSync.call( it2 );
   }
 
@@ -72,13 +76,6 @@ function onModule( it )
     verbosity : o.verbosity - 4,
   });
 
-  // {
-  //   let it2 = it.will.hookItNew( it );
-  //   it2.request.subject = `-am "."`
-  //   it2.request.original = it2.request.subject;
-  //   it2.will.hooks.GitSync.call( it2 );
-  // }
-
   _.assert( _.path.isTrailed( it.junction.localPath ), 'not tested' );
 
   it.start( 'local-will .export' ); /* xxx */
@@ -104,6 +101,9 @@ function onModule( it )
     let it2 = it.will.hookItNew( it );
     it2.request.subject = `-am "version ${bumped.config.version}"`
     it2.request.original = it2.request.subject;
+    delete it2.request.map.tag;
+    delete it2.request.map.dry;
+    delete it2.request.map.force;
     it2.will.hooks.GitSync.call( it2 );
   }
 
