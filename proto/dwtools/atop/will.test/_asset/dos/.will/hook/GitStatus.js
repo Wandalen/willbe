@@ -13,7 +13,7 @@ function onModule( it )
 
   let config = _.fileProvider.configUserRead();
   let token = null;
-  if( config.about && config.about[ 'github.token' ] )
+  if( config !== null && config.about && config.about[ 'github.token' ] )
   token = config.about[ 'github.token' ];
 
   let o2 = _.mapOnly( o, _.git.statusFull.defaults );
