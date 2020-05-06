@@ -979,7 +979,7 @@ function predefinedForm()
   path
   ({
     name : 'will',
-    path : _.path.join( __dirname, '../Exec' ),
+    path : _.path.join( __dirname, '../entry/Exec' ),
     writable : 0,
     exportable : 0,
     importableFromIn : 0,
