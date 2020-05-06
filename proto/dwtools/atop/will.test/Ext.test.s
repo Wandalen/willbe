@@ -5221,9 +5221,9 @@ function hookLink( test )
   .then( ( got ) =>
   {
     a.reflect();
-    _.fileProvider.filesReflect({ reflectMap : { [ _.path.join( self.suiteAssetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    _.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), '\ncopy' );
-    _.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), '\ncopy' );
+    a.fileProvider.filesReflect({ reflectMap : { [ _.path.join( self.suiteAssetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), '\ncopy' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), '\ncopy' );
     return null;
   })
 
@@ -5238,9 +5238,9 @@ function hookLink( test )
     test.case = '.with original/ .call link beeping:0';
 
     test.identical( _.strHas( got.output, '+ hardLink' ), true );
-    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
-    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
+    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
   })
@@ -5251,9 +5251,9 @@ function hookLink( test )
     test.case = '.with clone/ .call link beeping:0';
 
     test.identical( _.strHas( got.output, '+ hardLink' ), true );
-    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
-    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
+    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
   })
