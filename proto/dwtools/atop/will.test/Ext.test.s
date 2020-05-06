@@ -5738,7 +5738,6 @@ function verbositySet( test )
   let self = this;
   let a = self.assetFor( test, 'submodules' );
   let outPath = _.path.join( a.routinePath, 'out' );
-  /* Dmytro : assetFor has not starter with 'spawn' mode */
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -5862,8 +5861,7 @@ function verbosityStepDelete( test )
 {
   let self = this;
   let a = self.assetFor( test, 'verbosity-step-delete' );
-  let outPath = _.path.join( a.routinePath, 'out' );
-  /* Dmytro : assetFor has not starter with 'spawn' mode */
+  let outPath = a.abs( 'out' );
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -5890,14 +5888,14 @@ function verbosityStepDelete( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.vd.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
+    var files = self.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -5919,7 +5917,7 @@ function verbosityStepDelete( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
@@ -5927,7 +5925,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, /- .*step::files.delete.v0.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, 'Deleted' ), 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
+    var files = self.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -5949,14 +5947,14 @@ function verbosityStepDelete( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v1.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
+    var files = self.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -5978,14 +5976,14 @@ function verbosityStepDelete( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 1 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 1 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 1 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v3.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
+    var files = self.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6007,15 +6005,15 @@ function verbosityStepDelete( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.vd.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 0 );
-    test.identical( _.strLinesCount( got.output ), 2 );
+    test.identical( _.strLinesCount( got.output ), 3 );
 
-    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
+    var files = self.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6037,14 +6035,14 @@ function verbosityStepDelete( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v0.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
+    var files = self.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6066,14 +6064,14 @@ function verbosityStepDelete( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 1 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 1 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 1 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v0.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
+    var files = self.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6095,14 +6093,14 @@ function verbosityStepDelete( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v3.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
+    var files = self.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6124,14 +6122,14 @@ function verbosityStepDelete( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'proto' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'proto' ) ) );
 
     test.identical( _.strCount( got.output, /3 at .*\/verbosityStepDelete\/proto\// ), 1 );
     test.identical( _.strCount( got.output, '2 at ./A' ), 1 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 1 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v3.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = self.find( _.path.join( a.routinePath, 'proto' ) );
+    var files = self.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
