@@ -5686,9 +5686,9 @@ function hookGitSyncArguments( test )
   .then( ( got ) =>
   {
     a.reflect();
-    _.fileProvider.filesReflect({ reflectMap : { [ _.path.join( self.suiteAssetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    _.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
-    _.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( self.suiteAssetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
   })
 
@@ -5700,8 +5700,8 @@ function hookGitSyncArguments( test )
   a.ready.then( ( got ) =>
   {
     test.description = 'hardlink';
-    _.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
-    _.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
     return null;
   })
 
