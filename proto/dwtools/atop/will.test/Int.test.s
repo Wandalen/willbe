@@ -5644,7 +5644,8 @@ function reflectorInheritedResolve( test )
         'prefixPath' : 'proto'
       },
       'dst' : { 'prefixPath' : 'out/debug1' },
-      'mandatory' : 1
+      'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5664,7 +5665,8 @@ function reflectorInheritedResolve( test )
       },
       'dst' : { 'prefixPath' : 'out/debug2' },
       'mandatory' : 1,
-      'inherit' : [ 'reflect.proto1' ]
+      'inherit' : [ 'reflect.proto1' ],
+      'dstRewritingOnlyPreserving' : 1,
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5684,7 +5686,8 @@ function reflectorInheritedResolve( test )
       },
       'dst' : { 'prefixPath' : 'out/debug1' },
       'mandatory' : 1,
-      'inherit' : [ 'reflect.proto1' ]
+      'inherit' : [ 'reflect.proto1' ],
+      'dstRewritingOnlyPreserving' : 1,
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5704,7 +5707,8 @@ function reflectorInheritedResolve( test )
       },
       'dst' : { 'prefixPath' : 'out/debug2' },
       'mandatory' : 1,
-      'inherit' : [ 'reflect.proto1' ]
+      'inherit' : [ 'reflect.proto1' ],
+      'dstRewritingOnlyPreserving' : 1,
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5724,7 +5728,8 @@ function reflectorInheritedResolve( test )
       },
       'dst' : { 'prefixPath' : 'out/debug2' },
       'mandatory' : 1,
-      'inherit' : [ 'reflect.proto1' ]
+      'inherit' : [ 'reflect.proto1' ],
+      'dstRewritingOnlyPreserving' : 1,
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5749,7 +5754,8 @@ function reflectorInheritedResolve( test )
       },
       'dst' : { 'prefixPath' : 'out' },
       'mandatory' : 1,
-      'inherit' : [ 'not.test', 'only.js' ]
+      'inherit' : [ 'not.test', 'only.js' ],
+      'dstRewritingOnlyPreserving' : 1,
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5770,7 +5776,8 @@ function reflectorInheritedResolve( test )
       },
       'dst' : { 'prefixPath' : 'out' },
       'mandatory' : 1,
-      'inherit' : [ 'reflector::files3' ]
+      'inherit' : [ 'reflector::files3' ],
+      'dstRewritingOnlyPreserving' : 1,
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5791,7 +5798,8 @@ function reflectorInheritedResolve( test )
       },
       'dst' : { 'prefixPath' : 'out' },
       'mandatory' : 1,
-      'inherit' : [ 'reflector::files3' ]
+      'inherit' : [ 'reflector::files3' ],
+      'dstRewritingOnlyPreserving' : 1,
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5812,7 +5820,8 @@ function reflectorInheritedResolve( test )
       },
       'dst' : { 'prefixPath' : 'out' },
       'mandatory' : 1,
-      'inherit' : [ 'reflector::files3' ]
+      'inherit' : [ 'reflector::files3' ],
+      'dstRewritingOnlyPreserving' : 1,
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
