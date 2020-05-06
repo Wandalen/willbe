@@ -5228,7 +5228,8 @@ function reflectorResolve( test )
       'dst' : { 'prefixPath' : 'out/debug' },
       'criterion' : { 'debug' : 1, 'variant' : 0 },
       'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1
+      'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5247,7 +5248,8 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 0 },
       'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1
+      'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     resolved.form();
     var resolvedData = resolved.exportStructure();
@@ -5271,6 +5273,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 1 },
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5290,6 +5293,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 1 },
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
 
     var resolvedData = resolved.exportStructure();
@@ -5313,6 +5317,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 2 },
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5332,6 +5337,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 2 },
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5354,6 +5360,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 3 },
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure({ formed:1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5373,6 +5380,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 3 },
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5395,6 +5403,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 4 },
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5416,6 +5425,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 4 },
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5439,7 +5449,8 @@ function reflectorResolve( test )
       'dst' : { 'prefixPath' : 'out/debug/dir1' },
       'criterion' : { 'debug' : 1, 'variant' : 5 },
       'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1
+      'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5462,7 +5473,8 @@ function reflectorResolve( test )
       'dst' : { 'prefixPath' : '{path::out.*=1}/{path::dir1}' },
       'criterion' : { 'debug' : 1, 'variant' : 5 },
       'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1
+      'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5480,7 +5492,8 @@ function reflectorResolve( test )
       'src' : { 'prefixPath' : 'proto/dir2/File.test.js' },
       'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
       'criterion' : { 'debug' : 1, 'variant' : 6 },
-      'mandatory' : 1
+      'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5504,7 +5517,8 @@ function reflectorResolve( test )
         'prefixPath' : '{path::out.*=1}/{path::dir1}/{path::testFile}'
       },
       'criterion' : { 'debug' : 1, 'variant' : 6 },
-      'mandatory' : 1
+      'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5527,6 +5541,7 @@ function reflectorResolve( test )
       'dst' : { 'prefixPath' : 'out/debug/dir1/File.test.js' },
       'criterion' : { 'debug' : 1, 'variant' : 7 },
       'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5550,6 +5565,7 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 7 },
       'mandatory' : 1,
+      'dstRewritingOnlyPreserving' : 1,
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
