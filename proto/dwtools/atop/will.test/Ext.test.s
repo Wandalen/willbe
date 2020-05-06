@@ -2695,16 +2695,17 @@ function reflectGetPath( test )
 
     var expected =
     [
-     '.',
-     './debug',
-     './debug/dwtools',
-     './debug/dwtools/abase',
-     './debug/dwtools/abase/l3',
-     './debug/dwtools/abase/l3/Include.s',
-     './debug/dwtools/abase/l3/l3',
-     './debug/dwtools/abase/l3/l3/ModuleForTesting12.s',
-     './debug/dwtools/abase/l3.test',
-     './debug/dwtools/abase/l3.test/ModuleForTesting12.test.s'
+      '.',
+      './debug',
+      './debug/dwtools',
+      './debug/dwtools/Tools.s',
+      './debug/dwtools/abase',
+      './debug/dwtools/abase/l3',
+      './debug/dwtools/abase/l3/testing12',
+      './debug/dwtools/abase/l3/testing12/Include.s',
+      './debug/dwtools/abase/l3/testing12/ModuleForTesting12.s',
+      './debug/dwtools/abase/l3.test',
+      './debug/dwtools/abase/l3.test/ModuleForTesting12.test.s'
     ]
     var files = self.find( outPath );
     test.gt( files.length, 4 );
