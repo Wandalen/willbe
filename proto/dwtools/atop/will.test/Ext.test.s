@@ -5301,9 +5301,9 @@ function hookGitPullConflict( test )
   .then( ( got ) =>
   {
     a.reflect();
-    _.fileProvider.filesReflect({ reflectMap : { [ _.path.join( self.suiteAssetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    _.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
-    _.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+    a.fileProvider.filesReflect({ reflectMap : { [ _.path.join( self.suiteAssetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
   })
 
@@ -5318,11 +5318,11 @@ function hookGitPullConflict( test )
   {
     test.description = 'hardlink';
 
-    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
-    _.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
-    _.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
 
     var exp =
 `
@@ -5330,7 +5330,7 @@ original/f.txt
 copy
 original
 `
-    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
@@ -5338,16 +5338,7 @@ original
 original/f.txt
 copy
 `
-    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
-
-    var exp =
-`
-original/f.txt
-copy
-clone
-`
-    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
@@ -5356,7 +5347,16 @@ original/f.txt
 copy
 clone
 `
-    var orignalRead2 = _.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+clone
+`
+    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     test.equivalent( orignalRead2, exp );
 
     return null;
@@ -5364,15 +5364,15 @@ clone
 
   originalShell( 'git commit -am second' );
 
-  a.startNonThrowing( '.with clone/ .call GitPull' )
+  a.startNonThrowing( '.with clone/ .call GitPull v:5' )
   .then( ( got ) =>
   {
     test.description = 'has local changes';
     test.notIdentical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'has local changes' ), 1 );
 
-    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -5380,7 +5380,7 @@ original/f.txt
 copy
 original
 `
-    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
@@ -5388,16 +5388,7 @@ original
 original/f.txt
 copy
 `
-    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
-    test.equivalent( orignalRead1, exp );
-
-    var exp =
-`
-original/f.txt
-copy
-clone
-`
-    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
@@ -5406,25 +5397,35 @@ original/f.txt
 copy
 clone
 `
-    var orignalRead2 = _.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+copy
+clone
+`
+    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     test.equivalent( orignalRead2, exp );
 
     return null;
   })
 
-  cloneShell( 'git commit -am second' );
+  // cloneShell( 'git commit -am second' );
+  a.shell( 'git -C clone commit -am second' );
 
-  a.startNonThrowing( '.with clone/ .call GitPull' )
+  a.startNonThrowing( '.with clone/ .call GitPull v:5' )
   .then( ( got ) =>
   {
     test.description = 'conflict';
     test.notIdentical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'has local changes' ), 0 );
     test.identical( _.strCount( got.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
-    test.identical( _.strCount( got.output, 'Restored 1 links' ), 1 );
+    test.identical( _.strCount( got.output, 'Restored 1 hardlinks' ), 1 );
 
-    test.is( !_.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( _.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -5432,7 +5433,7 @@ original/f.txt
 copy
 original
 `
-    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
@@ -5440,7 +5441,7 @@ original
 original/f.txt
 copy
 `
-    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
     test.equivalent( orignalRead1, exp );
 
     var exp =
@@ -5453,7 +5454,7 @@ clone
 original
  >>>>>>>
 `
-    var orignalRead1 = _.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
     orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead1, exp );
 
@@ -5467,7 +5468,7 @@ clone
 original
  >>>>>>>
 `
-    var orignalRead2 = _.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
     orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
     test.equivalent( orignalRead2, exp );
     return null;
