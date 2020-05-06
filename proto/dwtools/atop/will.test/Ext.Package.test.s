@@ -10,7 +10,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wAppBasic' );
   _.include( 'wFiles' );
 
-  require( '../will/include/Mid.s' );
+  require( '../will/include/Top.s' );
 
 }
 
