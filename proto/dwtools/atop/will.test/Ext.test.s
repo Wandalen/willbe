@@ -4646,7 +4646,6 @@ function withDoStatus( test )
   {
     test.case = 'setup';
     a.reflect();
-    // start({ execPath : 'git init', currentPath : _.path.join( routinePath, 'disabled' ) });
     a.shell({ execPath : 'git init', currentPath : _.path.join( a.routinePath, 'disabled' ) });
 
     return null;
@@ -4711,7 +4710,7 @@ function withDoStatus( test )
     test.identical( _.strCount( got.output, '. Opened .' ), 13 );
     test.identical( _.strCount( got.output, '! Outdated' ), 0 );
     test.identical( _.strCount( got.output, 'Willfile should not have section' ), 1 );
-    test.identical( _.strCount( got.output, /module::\w+ at / ), 2 );
+    test.identical( _.strCount( got.output, /module::\w+ at / ), 3 );
     test.identical( _.strCount( got.output, 'module at' ), 2 );
 
     test.identical( _.strCount( got.output, 'M ' ), 3 );
