@@ -9196,7 +9196,7 @@ function submodulesDeleteAndDownload( test )
       var files = self.find( submodulesPath );
       test.is( _.longHas( files, './ModuleForTesting1' ) );
       test.is( _.longHas( files, './ModuleForTesting12ab' ) );
-      test.identical( files.length, 53 );
+      test.identical( files.length, 55 );
       return arg;
     })
 
@@ -9207,7 +9207,7 @@ function submodulesDeleteAndDownload( test )
       var files = self.find( submodulesPath );
       test.is( _.longHas( files, './ModuleForTesting1' ) );
       test.is( _.longHas( files, './ModuleForTesting12ab' ) );
-      test.identical( files.length, 53 );
+      test.identical( files.length, 55 );
       return arg;
     })
 
