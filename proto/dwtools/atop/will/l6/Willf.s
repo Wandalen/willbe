@@ -1123,8 +1123,8 @@ function isConsistentWith( willf2, opening )
 
     _.assert( _.strIs( filePath ) );
 
-    if( _.strEnds( filePath, '.module/wModuleForTesting1/.ex.will.yml' ) )
-    debugger;
+    // if( _.strEnds( filePath, '.module/wModuleForTesting1/.ex.will.yml' ) )
+    // debugger;
 
     let hash1 = willf.hashFullFor( filePath );
 

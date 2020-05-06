@@ -1,21 +1,13 @@
 {
-  "name": "willbe",
-  "version": "0.5.149",
-  "description": "Utility to manage modules of complex modular systems",
-  "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
-  "contributors": [
-    {
-      "name": "Kostiantyn Wandalen",
-      "email": "wanalen@willbe.so"
-    },
-    {
-      "name": "Volodymyr M.",
-      "email": "volodymyr.migdal@gmail.com"
-    },
-    {
-      "name": "Dmytro Kryvoruchko",
-      "email": "dm.vict.kr@gmail.com"
-    }
+  "name" : "willbe",
+  "version" : "0.5.152",
+  "description" : "Utility to manage modules of complex modular systems",
+  "author" : "Kostiantyn Wandalen <wanalen@willbe.so>",
+  "contributors" :
+  [
+    { "name" : "Kostiantyn Wandalen", "email" : "wanalen@willbe.so" },
+    { "name" : "Volodymyr M.", "email" : "volodymyr.migdal@gmail.com" },
+    { "name" : "Dmytro Kryvoruchko", "email" : "dm.vict.kr@gmail.com" }
   ],
   "license": "MIT",
   "enabled": 1,

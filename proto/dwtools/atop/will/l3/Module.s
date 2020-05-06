@@ -1510,7 +1510,13 @@ function usedBy( user )
     module.superRelationsAppend( user.superRelation );
 
     _.assert( user.downloadPath === null || module.downloadPath === null || user.downloadPath === module.downloadPath );
-    _.assert( user.remotePath === null || module.remotePath === null || user.remotePath === module.remotePath );
+    _.sure
+    (
+      user.remotePath === null || module.remotePath === null || user.remotePath === module.remotePath,
+      `Files namespace conflict. Two different versions:
+      ${user.remotePath}
+      ${module.remotePath}`
+    );
 
     if( !user.remotePath && module.remotePath )
     {
