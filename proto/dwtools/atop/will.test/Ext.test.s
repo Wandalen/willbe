@@ -2522,15 +2522,15 @@ function reflectNothingFromSubmodules( test )
   let outWillPath = _.path.join( a.routinePath, 'out/reflect-nothing-from-submodules.out.will.yml' );
 
   a.reflect();
-  _.fileProvider.filesDelete( outDebugPath );
+  a.fileProvider.filesDelete( outDebugPath );
 
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.export'
-    _.fileProvider.filesDelete( outDebugPath );
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outDebugPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -2578,7 +2578,8 @@ function reflectNothingFromSubmodules( test )
         },
         'criterion' : { 'debug' : 1 },
         "mandatory" : 1,
-        "inherit" : [ "predefined.*" ]
+        "inherit" : [ "predefined.*" ],
+        "dstRewritingOnlyPreserving" : 1,
       },
       "reflect.submodules1" :
       {
@@ -2588,7 +2589,8 @@ function reflectNothingFromSubmodules( test )
         "inherit" :
         [
           "submodule::*/exported::*=1/reflector::exported.files*=1"
-        ]
+        ],
+        "dstRewritingOnlyPreserving" : 1
       },
       "reflect.submodules2" :
       {
@@ -2600,7 +2602,8 @@ function reflectNothingFromSubmodules( test )
         "dst" : { "prefixPath" : '' },
         "criterion" : { "debug" : 1 },
         "mandatory" : 1,
-        "inherit" : [ "predefined.*" ]
+        "inherit" : [ "predefined.*" ],
+        "dstRewritingOnlyPreserving" : 1
       },
       "exported.proto.export" :
       {
@@ -2610,14 +2613,16 @@ function reflectNothingFromSubmodules( test )
           "prefixPath" : "../proto"
         },
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "mandatory" : 1
+        "mandatory" : 1,
+        "dstRewritingOnlyPreserving" : 1
       },
       "exported.files.proto.export" :
       {
         "src" : { "filePath" : { 'path::exported.files.proto.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export", 'recursive' : 0 },
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "recursive" : 0,
-        "mandatory" : 1
+        "mandatory" : 1,
+        "dstRewritingOnlyPreserving" : 1
       }
     }
     test.identical( outfile.reflector, expectedReflector );
