@@ -562,6 +562,8 @@ function transpileExperiment( test )
   return a.ready;
 }
 
+transpileExperiment.experimental = 1;
+
 //
 
 function moduleNewDotless( test )
