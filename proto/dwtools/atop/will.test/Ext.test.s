@@ -10848,7 +10848,7 @@ function exportItself( test )
     test.identical( got.exitCode, 0 );
 
     var files = self.find( a.routinePath );
-    test.gt( files.length, 250 );
+    test.gt( files.length, 50 );
 
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported module::experiment \/ build::export with .* file\(s\) in/ ) );
