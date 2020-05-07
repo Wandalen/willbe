@@ -11982,7 +11982,7 @@ function exportSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -11992,7 +11992,7 @@ function exportSubmodules( test )
   .then( () =>
   {
     test.case = '.export'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -12002,15 +12002,15 @@ function exportSubmodules( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/debug/dwtools/abase/l1/l1/ModuleForTesting1.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/debug/dwtools/abase/l2/l2/ModuleForTesting1a.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/submodules.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/debug/dwtools/abase/l3/testing2a/ModuleForTesting2a.s' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/submodules.out.will.yml' ) ) );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
     var files = self.find( outPath );
     test.is( files.length > 10 );
 
-    var files = _.fileProvider.dirRead( outPath );
+    var files = a.fileProvider.dirRead( outPath );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
