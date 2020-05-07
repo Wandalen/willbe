@@ -8484,11 +8484,10 @@ function cleanWithInPath( test )
   {
     test.case = '.with module/ModuleForTesting12 .clean';
     a.reflect();
-    hadFiles = self.find( a.routinePath + '/out' ).length + self.find( a.routinePath + '/.module' ).length;
+    hadFiles = self.find( a.abs( 'out' ) ).length + self.find( a.abs( '.module' ) ).length;
 
     return null;
   })
-
 
   a.start({ execPath : '.with module/ModuleForTesting12 .clean' })
   a.ready.then( ( got ) =>
