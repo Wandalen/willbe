@@ -7029,7 +7029,6 @@ function modulesTreeDisabledAndCorrupted( test )
 {
   let self = this;
   let a = self.assetFor( test, 'many-few' );
-  /* Dmytro : assetFor has not starter with 'spawn' mode */
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -7055,22 +7054,23 @@ function modulesTreeDisabledAndCorrupted( test )
     let exp =
 
 `
- +-- module::many-few
- | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@master
- | | +-- module::wTesting - path::remote:=npm:///wTesting
- | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git@master
- | | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git
- | | +-- module::wTesting - path::remote:=npm:///wTesting
- | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git@master
- |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git
- |   +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git
- |   +-- module::wTesting - path::remote:=npm:///wTesting
+ +-- module::many
+ | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
+ | | +-- module::Testing - path::remote:=npm:///wTesting
+ | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git@gamma
+ | | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
+ | | | +-- module::Testing - path::remote:=npm:///wTesting
+ | | +-- module::Testing - path::remote:=npm:///wTesting
+ | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git@gamma
+ |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
+ |   +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git@gamma
+ |   +-- module::Testing - path::remote:=npm:///wTesting
  |
  +-- module::corrupted
 `
 
     test.identical( _.strStripCount( got.output, exp ), 1 );
-    test.identical( _.strCount( got.output, '+-- module::' ), 20 );
+    test.identical( _.strCount( got.output, '+-- module::' ), 12 );
 
     return null;
   })
