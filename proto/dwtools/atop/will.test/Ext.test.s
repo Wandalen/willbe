@@ -8002,9 +8002,9 @@ function cleanBroken2( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-broken-2' );
-  let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let outPath = _.path.join( a.routinePath, 'out' );
-  let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
+  let submodulesPath = a.abs( '.module' );
+  let outPath = a.abs( 'out' );
+  let outDebugPath = a.abs( 'out/debug' );
   a.reflect();
 
   test.description = 'should handle currputed willfile properly';
@@ -8034,8 +8034,8 @@ function cleanBroken2( test )
     test.identical( files.length, 4 );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
 
     return null;
   })
@@ -8049,8 +8049,8 @@ function cleanBroken2( test )
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) ); /* filesDelete issue? */
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* filesDelete issue? */
+    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
     return null;
   })
 
@@ -8067,7 +8067,7 @@ function cleanBroken2( test )
     var files = self.find( outDebugPath );
     test.gt( files.length, 9 );
 
-    var files = _.fileProvider.dirRead( outPath );
+    var files = a.fileProvider.dirRead( outPath );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
@@ -8098,13 +8098,13 @@ function cleanBroken2( test )
     // var files = self.find( outDebugPath );
     // test.gt( files.length, 9 );
 
-    // var files = _.fileProvider.dirRead( outPath );
+    // var files = a.fileProvider.dirRead( outPath );
     // test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     var files = self.find( outDebugPath );
     test.identical( files.length, 0 );
 
-    var files = _.fileProvider.dirRead( outPath );
+    var files = a.fileProvider.dirRead( outPath );
     test.identical( files, null );
 
     return null;
@@ -8138,7 +8138,7 @@ function cleanBroken2( test )
     var files = self.find( outDebugPath );
     test.gt( files.length, 9 );
 
-    var files = _.fileProvider.dirRead( outPath );
+    var files = a.fileProvider.dirRead( outPath );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
@@ -8315,8 +8315,8 @@ function cleanDry( test )
 {
   let self = this;
   let a = self.assetFor( test, 'clean' );
-  let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let submodulesPath = a.abs( '.module' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -8327,7 +8327,7 @@ function cleanDry( test )
   {
     test.is( _.strHas( got.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
     var files = self.find( submodulesPath );
-    test.gt( files.length, 100 );
+    test.gt( files.length, 50 );
     return null;
   })
 
@@ -8347,16 +8347,16 @@ function cleanDry( test )
     test.case = '.clean dry:1';
 
     var files = self.findAll( outPath );
-    test.gt( files.length, 20 );
+    test.gt( files.length, 15 );
     var files = wasFiles = self.findAll( submodulesPath );
-    test.gt( files.length, 100 );
+    test.gt( files.length, 50 );
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) + ' at ' ) );
     test.is( _.strHas( got.output, 'Clean will delete ' + String( files.length ) + ' file(s)' ) );
-    test.is( _.fileProvider.isDir( _.path.join( a.routinePath, '.module' ) ) ); /* phantom problem ? */
-    test.is( _.fileProvider.isDir( _.path.join( a.routinePath, 'out' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) );
+    test.is( a.fileProvider.isDir( a.abs( '.module' ) ) ); /* phantom problem ? */
+    test.is( a.fileProvider.isDir( a.abs( 'out' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
 
     return null;
   })
