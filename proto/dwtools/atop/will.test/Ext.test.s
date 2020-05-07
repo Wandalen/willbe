@@ -540,6 +540,30 @@ transpile.timeOut = 200000;
 
 //
 
+function transpileExperiment( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'transpile' );
+  a.reflect();
+  a.ready
+  .then( () =>
+  {
+    test.case = '.build debug'
+    return null;
+  })
+  a.start({ execPath : '.build compiled.debug' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    console.log( got.output );
+    return null;
+  })
+
+  return a.ready;
+}
+
+//
+
 function moduleNewDotless( test )
 {
   let self = this;
@@ -22036,6 +22060,7 @@ var Self =
     singleModuleWithSpaceTrivial,
     build,
     transpile,
+    transpileExperiment,
     moduleNewDotless,
     moduleNewDotlessSingle,
     moduleNewNamed,
