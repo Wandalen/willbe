@@ -13143,10 +13143,10 @@ function exportDisabledModule( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ '.module', 'out', 'will.yml' ];
-    var files = _.fileProvider.dirRead( a.routinePath );
+    var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
 
-    var outfile = _.fileProvider.configRead( outFilePath );
+    var outfile = a.fileProvider.configRead( outFilePath );
     var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/ModuleForTesting1/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
     var got = _.setFrom( _.mapKeys( outfile.module ) );
     test.identical( got, exp );
@@ -13174,11 +13174,11 @@ function exportDisabledModule( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ '.module', 'out', 'will.yml' ];
-    var files = _.fileProvider.dirRead( a.routinePath );
+    var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
 
-    var outfile = _.fileProvider.configRead( outFilePath );
-    var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/Tools/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
+    var outfile = a.fileProvider.configRead( outFilePath );
+    var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/ModuleForTesting1/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
     var got = _.setFrom( _.mapKeys( outfile.module ) );
     test.identical( got, exp );
 
@@ -13205,7 +13205,7 @@ function exportDisabledModule( test )
     test.notIdentical( op.exitCode, 0 );
 
     var exp = [ 'will.yml' ];
-    var files = _.fileProvider.dirRead( a.routinePath );
+    var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, 'No module sattisfy' ), 1 );
@@ -13231,10 +13231,10 @@ function exportDisabledModule( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ '.module', 'out', 'will.yml' ];
-    var files = _.fileProvider.dirRead( a.routinePath );
+    var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
 
-    var outfile = _.fileProvider.configRead( outFilePath );
+    var outfile = a.fileProvider.configRead( outFilePath );
     var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/ModuleForTesting1/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
     var got = _.setFrom( _.mapKeys( outfile.module ) );
     test.identical( got, exp );
