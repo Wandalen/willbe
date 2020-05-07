@@ -8248,7 +8248,7 @@ function cleanHdBug( test )
     var files = self.find( a.abs( '.' ) );
     test.identical( files, exp );
 
-    test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, 'Opened' ), 3 );
     test.identical( _.strCount( got.output, 'Clean deleted' ), 1 );
 
     return null;
