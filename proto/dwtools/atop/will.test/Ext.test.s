@@ -10874,8 +10874,8 @@ function exportNonExportable( test )
   let self = this;
   let a = self.assetFor( test, 'two-exported' );
   a.reflect();
-  _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out' ) );
-  _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+  a.fileProvider.filesDelete( a.abs( 'out' ) );
+  a.fileProvider.filesDelete( a.abs( 'super.out' ) );
 
   /* - */
 
@@ -10888,7 +10888,7 @@ function exportNonExportable( test )
 
     test.identical( _.strCount( got.output, 'ncaught' ), 0 );
     test.identical( _.strCount( got.output, 'nhandled' ), 0 );
-    test.identical( _.strCount( got.output, 'error' ), 0 );
+    test.identical( _.strCount( got.output, 'rror' ), 1 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
     test.identical( _.strCount( got.output, 'module::supermodule / relation::Submodule is not opened' ), 1 );
