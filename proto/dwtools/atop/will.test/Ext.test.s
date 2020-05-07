@@ -6741,7 +6741,6 @@ function modulesTreeHierarchyRemoteDownloaded( test )
 {
   let self = this;
   let a = self.assetFor( test, 'hierarchy-remote' );
-  /* Dmytro : assetFor has not starter with 'spawn' mode */
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -6752,28 +6751,7 @@ function modulesTreeHierarchyRemoteDownloaded( test )
     ready : a.ready,
   })
   a.reflect();
-  _.fileProvider.filesDelete( _.path.join( a.routinePath, '.module' ) );
-  // let self = this;
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'hierarchy-remote' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let submodulesPath = _.path.join( routinePath, '.module' );
-  //
-  // let ready = new _.Consequence().take( null );
-  //
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   outputGraying : 1,
-  //   mode : 'spawn',
-  //   ready : ready,
-  // })
-  //
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  a.fileProvider.filesDelete( a.abs( '.module' ) );
 
   /* - */
 
