@@ -18400,7 +18400,7 @@ function submodulesUpdateThrowing( test )
     let inWillFilePath = _.path.join( downloadPath, '.im.will.yml' );
     let inWillFile = _.fileProvider.configRead( inWillFilePath );
     inWillFile.section = { field : 'value' };
-    _.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile,encoding : 'yml' });
+    _.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile, encoding : 'yml' });
     return null;
   })
   .then( () =>

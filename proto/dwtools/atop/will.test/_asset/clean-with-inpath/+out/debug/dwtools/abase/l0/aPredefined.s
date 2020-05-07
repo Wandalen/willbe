@@ -65,7 +65,7 @@ _realGlobal.Config.interpreter = 'njs';
 else
 _realGlobal.Config.interpreter = 'browser';
 if( _realGlobal.Config.isWorker === undefined )
-if( !!( typeof self !== 'undefined' && self.self === self && typeof importScripts !== 'undefined' ) )
+if( typeof self !== 'undefined' && self.self === self && typeof importScripts !== 'undefined' )
 _realGlobal.Config.isWorker = true;
 else
 _realGlobal.Config.isWorker = false;
