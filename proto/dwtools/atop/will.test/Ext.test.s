@@ -8531,7 +8531,6 @@ function cleanRecursive( test )
 {
   let self = this;
   let a = self.assetFor( test, 'hierarchy-remote' );
-  /* Dmytro : assetFor has not starter with 'spawn' mode */
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -8542,8 +8541,8 @@ function cleanRecursive( test )
     ready : a.ready,
   })
   /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
-  _.fileProvider.filesDelete( a.routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+  a.fileProvider.filesDelete( a.routinePath );
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
 
   /* - */
 
@@ -8634,7 +8633,7 @@ function cleanDisabledModule( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ '.module', 'out', 'will.yml' ];
-    var files = _.fileProvider.dirRead( a.routinePath );
+    var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
@@ -8648,7 +8647,7 @@ function cleanDisabledModule( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'will.yml' ];
-    var files = _.fileProvider.dirRead( a.routinePath );
+    var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
@@ -8673,7 +8672,7 @@ function cleanDisabledModule( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ '.module', 'out', 'will.yml' ];
-    var files = _.fileProvider.dirRead( a.routinePath );
+    var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
@@ -8687,7 +8686,7 @@ function cleanDisabledModule( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'will.yml' ];
-    var files = _.fileProvider.dirRead( a.routinePath );
+    var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
@@ -8712,7 +8711,7 @@ function cleanDisabledModule( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ '.module', 'out', 'will.yml' ];
-    var files = _.fileProvider.dirRead( a.routinePath );
+    var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
@@ -8726,7 +8725,7 @@ function cleanDisabledModule( test )
     test.notIdentical( op.exitCode, 0 );
 
     var exp = [ '.module', 'out', 'will.yml' ];
-    var files = _.fileProvider.dirRead( a.routinePath );
+    var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 0 );
     test.identical( _.strCount( op.output, 'No module sattisfy criteria' ), 1 );
@@ -8752,7 +8751,7 @@ function cleanDisabledModule( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ '.module', 'out', 'will.yml' ];
-    var files = _.fileProvider.dirRead( a.routinePath );
+    var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
@@ -8766,7 +8765,7 @@ function cleanDisabledModule( test )
     test.identical( op.exitCode, 0 );
 
     var exp = [ 'will.yml' ];
-    var files = _.fileProvider.dirRead( a.routinePath );
+    var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
