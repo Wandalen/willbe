@@ -5,7 +5,7 @@ about :
 
 submodule :
 
-  a : group1/a
+  a : ./group1/a
   ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/
 
 path :

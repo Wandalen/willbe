@@ -1,7 +1,7 @@
 
 path :
 
-  ModuleForTesting1.remote : https:///raw.githubusercontent.com/Wandalen/wModuleForTesting1/master/proto/dwtools/abase/l1/l1/ModuleForTesting1.s
+  ModuleForTesting1.remote : https:///raw.githubusercontent.com/Wandalen/wModuleForTesting1/master/proto/dwtools/abase/l1/testing1/ModuleForTesting1.s
   ModuleForTesting1.local : 'ModuleForTesting1.s'
 
 reflector :
