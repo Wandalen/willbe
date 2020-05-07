@@ -9923,10 +9923,9 @@ function cleanSpecial( test )
 {
   let self = this;
   let a = self.assetFor( test, 'clean-special' );
-  let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
 
-  var files = _.fileProvider.dirRead( outPath );
+  var files = a.fileProvider.dirRead( a.abs( 'out' ) );
   var expected = [ '#dir2','@dir1' ];
   test.identical( files, expected )
 
@@ -9937,8 +9936,9 @@ function cleanSpecial( test )
   {
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
-    test.is( !_.fileProvider.fileExists( outPath ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
 
+    return null;
   })
 
   return a.ready;
