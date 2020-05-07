@@ -8452,11 +8452,11 @@ function cleanMixed( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '- Clean deleted' ) ); debugger;
 
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'out' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
 
-    var expected = [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting2b.informal.will.yml' ];
-    var files = self.find( _.path.join( a.routinePath, 'module' ) );
+    var expected = [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting12ab.informal.will.yml' ];
+    var files = self.find( a.abs( 'module' ) );
     test.identical( files, expected );
 
     return null;
