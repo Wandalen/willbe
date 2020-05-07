@@ -11526,7 +11526,7 @@ function exportSecond( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-second' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -11548,12 +11548,12 @@ function exportSecond( test )
     test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
     test.identical( _.strCount( got.output, 'Exported module::ExportSecond / build::export with 6 file(s) in' ), 1 );
 
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/ExportSecond.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/ExportSecond.out.will.yml' ) ) );
 
     var files = self.find( outPath );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
-    var outfile = _.fileProvider.configRead( _.path.join( a.routinePath, 'out/ExportSecond.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/ExportSecond.out.will.yml' ) );
 
     outfile = outfile.module[ 'ExportSecond.out' ]
 
@@ -11569,7 +11569,8 @@ function exportSecond( test )
         "dst" : { "prefixPath" : "" },
         "mandatory" : 1,
         "criterion" : { "debug" : 0 },
-        "inherit" : [ "predefined.*" ]
+        "inherit" : [ "predefined.*" ],
+        "dstRewritingOnlyPreserving" : 1
       },
       "reflect.proto.debug" :
       {
@@ -11579,7 +11580,8 @@ function exportSecond( test )
         },
         "mandatory" : 1,
         "criterion" : { "debug" : 1 },
-        "inherit" : [ "predefined.*" ]
+        "inherit" : [ "predefined.*" ],
+        "dstRewritingOnlyPreserving" : 1
       },
       "exported.doc.export" :
       {
@@ -11589,7 +11591,8 @@ function exportSecond( test )
           "prefixPath" : "../doc"
         },
         "mandatory" : 1,
-        "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 }
+        "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 },
+        "dstRewritingOnlyPreserving" : 1
       },
       "exported.files.doc.export" :
       {
@@ -11602,7 +11605,8 @@ function exportSecond( test )
         },
         "recursive" : 0,
         "mandatory" : 1,
-        "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 }
+        "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 },
+        "dstRewritingOnlyPreserving" : 1
       },
       "exported.proto.export" :
       {
@@ -11612,7 +11616,8 @@ function exportSecond( test )
           "prefixPath" : "../proto"
         },
         "mandatory" : 1,
-        "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 }
+        "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
+        "dstRewritingOnlyPreserving" : 1
       },
       "exported.files.proto.export" :
       {
@@ -11625,7 +11630,8 @@ function exportSecond( test )
         },
         "recursive" : 0,
         "mandatory" : 1,
-        "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 }
+        "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
+        "dstRewritingOnlyPreserving" : 1
       }
     }
     test.identical( outfile.reflector, expected );
@@ -11762,12 +11768,12 @@ function exportSecond( test )
     test.identical( _.strCount( got.output, '+ Write out willfile' ), 2 );
     test.identical( _.strCount( got.output, 'Exported module::ExportSecond / build::export with 6 file(s) in' ), 1 );
 
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/ExportSecond.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/ExportSecond.out.will.yml' ) ) );
 
     var files = self.find( outPath );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
-    var outfile = _.fileProvider.configRead( _.path.join( a.routinePath, 'out/ExportSecond.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/ExportSecond.out.will.yml' ) );
 
     outfile = outfile.module[ 'ExportSecond.out' ]
 
@@ -11783,7 +11789,8 @@ function exportSecond( test )
         "dst" : { "prefixPath" : "" },
         "mandatory" : 1,
         "criterion" : { "debug" : 0 },
-        "inherit" : [ "predefined.*" ]
+        "inherit" : [ "predefined.*" ],
+        "dstRewritingOnlyPreserving" : 1
       },
       "reflect.proto.debug" :
       {
@@ -11793,7 +11800,8 @@ function exportSecond( test )
         },
         "mandatory" : 1,
         "criterion" : { "debug" : 1 },
-        "inherit" : [ "predefined.*" ]
+        "inherit" : [ "predefined.*" ],
+        "dstRewritingOnlyPreserving" : 1
       },
       "exported.doc.export" :
       {
@@ -11803,7 +11811,8 @@ function exportSecond( test )
           "prefixPath" : "../doc"
         },
         "mandatory" : 1,
-        "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
+        "dstRewritingOnlyPreserving" : 1
       },
       "exported.files.doc.export" :
       {
@@ -11816,7 +11825,8 @@ function exportSecond( test )
         },
         "recursive" : 0,
         "mandatory" : 1,
-        "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 }
+        "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
+        "dstRewritingOnlyPreserving" : 1
       },
       "exported.proto.export" :
       {
@@ -11826,7 +11836,8 @@ function exportSecond( test )
           "prefixPath" : "../proto"
         },
         "mandatory" : 1,
-        "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 }
+        "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 },
+        "dstRewritingOnlyPreserving" : 1
       },
       "exported.files.proto.export" :
       {
@@ -11839,7 +11850,8 @@ function exportSecond( test )
         },
         "recursive" : 0,
         "mandatory" : 1,
-        "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 }
+        "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 },
+        "dstRewritingOnlyPreserving" : 1
       }
     }
     test.identical( outfile.reflector, expected );
