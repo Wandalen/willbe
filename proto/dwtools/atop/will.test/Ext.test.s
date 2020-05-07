@@ -15014,10 +15014,10 @@ function exportOutdated2( test )
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
-    test.is( a.fileProvider.fileExists( a.abs( 'module/m1/out/m1.out.will.yml' ) ) );
-    var read = a.fileProvider.fileRead( a.abs( 'module/m1/.im.will.yml' ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
+    var read = a.fileProvider.fileRead( a.abs( 'module/mand/.im.will.yml' ) );
     read += '\n\n';
-    a.fileProvider.fileWrite( a.abs( 'module/m1/.im.will.yml' ), read );
+    a.fileProvider.fileWrite( a.abs( 'module/mand/.im.will.yml' ), read );
     return null;
   })
 
@@ -15030,7 +15030,7 @@ function exportOutdated2( test )
     test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
-    test.is( a.fileProvider.fileExists( a.abs( 'module/m1/out/m1.out.will.yml' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
     return null;
   })
 
