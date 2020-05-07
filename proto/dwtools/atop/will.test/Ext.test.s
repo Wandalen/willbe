@@ -12027,7 +12027,7 @@ function exportMultiple( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-multiple' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
   let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
   a.reflect();
 
@@ -12038,7 +12038,7 @@ function exportMultiple( test )
   {
     test.case = '.export debug:1';
     a.reflect();
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
 
     return null;
   })
@@ -12059,7 +12059,7 @@ function exportMultiple( test )
     test.is( _.strHas( got.output, 'submodule.debug.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
-    var outfile = _.fileProvider.configRead( outWillPath );
+    var outfile = a.fileProvider.configRead( outWillPath );
 
     outfile = outfile.module[ 'submodule.out' ];
 
@@ -12100,7 +12100,8 @@ function exportMultiple( test )
         raw : 1,
         export : 1,
         generated : 1,
-      }
+      },
+      dstRewritingOnlyPreserving : 1
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
     // logger.log( _.toJson( outfile.reflector ) );
@@ -12123,7 +12124,8 @@ function exportMultiple( test )
         raw : 1,
         export : 1,
         generated : 1,
-      }
+      },
+      dstRewritingOnlyPreserving : 1
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
@@ -12221,7 +12223,6 @@ function exportMultiple( test )
       }
     }
     test.identical( outfile.path, outfilePath );
-    // logger.log( _.toJson( outfile.path ) );
 
     return null;
   })
@@ -12233,7 +12234,7 @@ function exportMultiple( test )
   {
     test.case = '.export debug:1';
     a.reflect();
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
 
     return null;
   })
@@ -12256,12 +12257,12 @@ function exportMultiple( test )
     test.is( _.strHas( got.output, 'submodule.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
-    var outfileData = _.fileProvider.fileRead( outWillPath );
+    var outfileData = a.fileProvider.fileRead( outWillPath );
     test.is( outfileData.length > 1000 );
-    test.is( !_.strHas( outfileData, _.path.join( a.routinePath, '../..' ) ) );
-    test.is( !_.strHas( outfileData, _.path.nativize( _.path.join( a.routinePath, '../..' ) ) ) );
+    test.is( !_.strHas( outfileData, a.abs( '../..' ) ) );
+    test.is( !_.strHas( outfileData, _.path.nativize( a.abs( '../..' ) ) ) );
 
-    var outfile = _.fileProvider.configRead( outWillPath );
+    var outfile = a.fileProvider.configRead( outWillPath );
     outfile = outfile.module[ 'submodule.out' ]
     var exported =
     {
@@ -12321,7 +12322,8 @@ function exportMultiple( test )
         raw : 1,
         export : 1,
         generated : 1,
-      }
+      },
+      dstRewritingOnlyPreserving : 1
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
     // logger.log( _.toJson( outfile.reflector[ 'exported.export.debug' ] ) );
@@ -12342,7 +12344,8 @@ function exportMultiple( test )
         raw : 1,
         export : 1,
         generated : 1,
-      }
+      },
+      dstRewritingOnlyPreserving : 1
     }
     // logger.log( _.toJson( outfile.reflector[ 'exported.export.' ] ) );
     test.identical( outfile.reflector[ 'exported.export.' ], exportedReflector );
@@ -12365,7 +12368,8 @@ function exportMultiple( test )
         raw : 1,
         export : 1,
         generated : 1,
-      }
+      },
+      dstRewritingOnlyPreserving : 1
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
@@ -12388,7 +12392,8 @@ function exportMultiple( test )
         raw : 1,
         export : 1,
         generated : 1,
-      }
+      },
+      dstRewritingOnlyPreserving : 1
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.' ], exportedReflectorFiles );
