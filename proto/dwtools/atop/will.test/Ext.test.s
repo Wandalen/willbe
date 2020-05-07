@@ -7753,8 +7753,8 @@ function clean( test )
 {
   let self = this;
   let a = self.assetFor( test, 'clean' );
-  let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let submodulesPath = a.abs( '.module' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -7776,7 +7776,7 @@ function clean( test )
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted ' + files.length + ' file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) ); /* phantom problem ? */
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
     return null;
   })
 
@@ -7785,7 +7785,7 @@ function clean( test )
   {
     test.case = '.with NoTemp .clean -- second';
     test.identical( got.exitCode, 0 );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -7795,8 +7795,8 @@ function clean( test )
   a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( outPath );
-    _.fileProvider.filesDelete( submodulesPath );
+    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( submodulesPath );
     return null;
   })
 
@@ -7806,7 +7806,7 @@ function clean( test )
     test.case = '.with NoBuild .clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted ' + 0 + ' file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -7816,8 +7816,8 @@ function clean( test )
   a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( outPath );
-    _.fileProvider.filesDelete( submodulesPath );
+    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( submodulesPath );
     return null;
   })
 
@@ -7828,8 +7828,8 @@ function clean( test )
     test.case = '.with NoBuild .clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '- Clean deleted 2 file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'out' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
     return null;
   })
 
