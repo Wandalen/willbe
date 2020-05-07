@@ -8374,7 +8374,7 @@ function cleanSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'clean' );
-  let submodulesPath = _.path.join( a.routinePath, '.module' );
+  let submodulesPath = a.abs( '.module' );
   a.reflect();
 
   /* */
@@ -8384,14 +8384,14 @@ function cleanSubmodules( test )
   {
     test.case = '.submodules.update'
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting1' ) ) )
-    test.is( _.fileProvider.fileExists( _.path.join( submodulesPath, 'ModuleForTesting2' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
+    test.is( a.fileProvider.fileExists( a.path.join( submodulesPath, 'ModuleForTesting1' ) ) )
+    test.is( a.fileProvider.fileExists( a.path.join( submodulesPath, 'ModuleForTesting2' ) ) )
+    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
-    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting1' ) );
+    var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting1' ) );
     test.is( files.length );
 
-    var files = self.find( _.path.join( submodulesPath, 'ModuleForTesting2' ) );
+    var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting2' ) );
     test.is( files.length );
 
     return null;
@@ -8415,8 +8415,8 @@ function cleanSubmodules( test )
     test.case = '.submodules.clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `${files.length}` ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) ); /* phantom problem ? */
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
+    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
     return null;
   })
 
