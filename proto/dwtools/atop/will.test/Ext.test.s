@@ -20087,42 +20087,14 @@ function stepSubmodulesAreUpdated( test )
 {
   let self = this;
   let a = self.assetFor( test, 'step-submodules-are-updated' );
-  let localModulePath = _.path.join( a.routinePath, 'module' );
   a.start2 = _.process.starter
   ({
-    currentPath : localModulePath,
+    currentPath : a.abs( 'module' ),
     outputCollecting : 1,
     outputGraying : 1,
     ready : a.ready,
   })
   a.reflect();
-
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'step-submodules-are-updated' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let localModulePath = _.path.join( routinePath, 'module' );
-//
-//   let ready = new _.Consequence().take( null );
-//
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     throwingExitCode : 0,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-//
-//   let start2 = _.process.starter
-//   ({
-//     currentPath : localModulePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-//
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
