@@ -17081,12 +17081,9 @@ function submodulesDownloadStepAndCommand( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-download' );
-  let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let localRepoPath = _.path.join( a.routinePath, 'module' );
-  let downloadPath = _.path.join( a.routinePath, '.module/ModuleForTesting2a' );
   a.startNonThrowing2 = _.process.starter
   ({
-    currentPath : localRepoPath,
+    currentPath : a.abs( 'module' ),
     outputCollecting : 1,
     outputGraying : 1,
     throwingExitCode : 0,
@@ -17101,7 +17098,7 @@ function submodulesDownloadStepAndCommand( test )
   .then( () =>
   {
     test.case = 'download using step::submodules.download'
-    _.fileProvider.filesDelete( submodulesPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
   })
   a.startNonThrowing2( 'git init' )
@@ -17111,7 +17108,7 @@ function submodulesDownloadStepAndCommand( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    let files = self.find( submodulesPath );
+    let files = self.find( a.abs( '.module' ) );
     test.is( !_.longHas( files, './ModuleForTesting1' ) )
     test.is( !_.longHas( files, './ModuleForTesting2a' ) )
     test.is( _.longHas( files, './submodule' ) )
@@ -17123,7 +17120,7 @@ function submodulesDownloadStepAndCommand( test )
   .then( () =>
   {
     test.case = 'download using command submodules.download'
-    _.fileProvider.filesDelete( submodulesPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
   })
   a.startNonThrowing2( 'git init' )
@@ -17133,7 +17130,7 @@ function submodulesDownloadStepAndCommand( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    let files = self.find( submodulesPath );
+    let files = self.find( a.abs( '.module' ) );
     test.is( !_.longHas( files, './ModuleForTesting1' ) )
     test.is( !_.longHas( files, './ModuleForTesting2a' ) )
     test.is( _.longHas( files, './submodule' ) )
