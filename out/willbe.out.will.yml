@@ -2,13 +2,10 @@ format: outwillfile-2.0
 root:
   - willbe.out
 consistency:
-  willbe.out.will.yml: &ref_0
-    hash: 04cd4ea4cb47b9b5afb161af03c20ea4
-    size: 502850
-  ../.ex.will.yml: &ref_1
-    hash: b3c4961eaf5b7deed603923767e4f5fd
+  ../.ex.will.yml: &ref_0
+    hash: 8265b88984cea5eebe7ea92886bf5592
     size: 2604
-  ../.im.will.yml: &ref_2
+  ../.im.will.yml: &ref_1
     hash: 20d9c2abbda1ffee8f2021e20ae0e768
     size: 7126
 module:
@@ -19,20 +16,20 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@01.school>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts:
+      npm.scripts: &ref_5
         test: 'wtest .run proto/** v:5'
         docgen: wdocgen .build proto
         single-process-will: node proto/dwtools/atop/will/entry/Exec
@@ -43,7 +40,7 @@ module:
         docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
         docker-run-centos: docker run --rm willbe-centos
         docker-run-ubuntu: docker run --rm willbe-ubuntu
-      npm.bin:
+      npm.bin: &ref_6
         single-process-will: proto/dwtools/atop/will/entry/Exec
         debug-will: proto/dwtools/atop/will/entry/ExecDebug
         unrestricted-will: proto/dwtools/atop/will/entry/ExecUnrestricted
@@ -2822,6 +2819,7 @@ module:
           - ../proto/dwtools/atop/will/l8
           - ../proto/dwtools/atop/will/l8/Cui.s
           - ../proto/dwtools/atop/will.test
+          - ../proto/dwtools/atop/will.test/Ext.Package.test.s
           - ../proto/dwtools/atop/will.test/Ext.test.s
           - ../proto/dwtools/atop/will.test/Int.test.s
           - ../proto/dwtools/atop/will.test/Remake.s
@@ -5757,7 +5755,7 @@ module:
             ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/.module/Tools/ForGit.txt
           - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module
           - >-
-            ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/Proto.will.yml
+            ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/ModuleForTesting12.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/module/+.module
           - >-
@@ -6038,6 +6036,7 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/GitUnpushed.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/hlink.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/info.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/link.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/ModuleIsEnabled.js
           - >-
@@ -6602,6 +6601,8 @@ module:
             ../proto/dwtools/atop/will.test/_asset/function-strings-join/proto/Produce.js
           - ../proto/dwtools/atop/will.test/_asset/git-conflict
           - ../proto/dwtools/atop/will.test/_asset/git-conflict/original
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/git-conflict/original/.gitignore
           - ../proto/dwtools/atop/will.test/_asset/git-conflict/original/f1.txt
           - ../proto/dwtools/atop/will.test/_asset/git-conflict/original/f2.txt
           - >-
@@ -6706,6 +6707,10 @@ module:
             ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathTools/out/wPathTools.out.will.yml
           - ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/.module
           - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/.module/ModuleForTesting1
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/.module/ModuleForTesting1/.gitkeep
+          - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools
           - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools/.ex.will.yml
@@ -6720,6 +6725,14 @@ module:
             ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/a.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/ModuleForTesting12
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/ModuleForTesting12/.gitkeep
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/ModuleForTesting2b
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/ModuleForTesting2b/.gitkeep
           - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/PathTools
           - >-
@@ -6756,6 +6769,14 @@ module:
             ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/a0.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/ModuleForTesting1
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/ModuleForTesting1/.gitkeep
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/ModuleForTesting2a
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/ModuleForTesting2a/.gitkeep
           - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathBasic
           - >-
@@ -6976,6 +6997,8 @@ module:
             ../proto/dwtools/atop/will.test/_asset/reflect-nothing-from-submodules/proto
           - >-
             ../proto/dwtools/atop/will.test/_asset/reflect-nothing-from-submodules/proto/Single.s
+          - ../proto/dwtools/atop/will.test/_asset/reflect-npm-modules
+          - ../proto/dwtools/atop/will.test/_asset/reflect-npm-modules/.will.yml
           - ../proto/dwtools/atop/will.test/_asset/reflect-remote-git
           - >-
             ../proto/dwtools/atop/will.test/_asset/reflect-remote-git/.im.will.yml
@@ -7429,9 +7452,9 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/submodules-mixed/.im.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules-mixed/module
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-mixed/module/Proto.informal.will.yml
+            ../proto/dwtools/atop/will.test/_asset/submodules-mixed/module/ModuleForTesting12.informal.will.yml
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-mixed/module/UriBasic.informal.will.yml
+            ../proto/dwtools/atop/will.test/_asset/submodules-mixed/module/ModuleForTesting12ab.informal.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules-mixed/proto
           - >-
             ../proto/dwtools/atop/will.test/_asset/submodules-mixed/proto/WithSubmodules.s
@@ -8531,24 +8554,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          reflector: 'reflector::exported.proto.export*'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          reflector: 'reflector::exported.files.proto.export*'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -8643,9 +8648,8 @@ module:
           content: proto
           export: 1
     consistency:
-      willbe.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: willbe
@@ -8653,35 +8657,14 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters:
-        - njs >= 8.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - wTools
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
-        - Volodymyr M. <volodymyr.migdal@gmail.com>
-        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
+      contributors: *ref_4
       npm.name: willbe
-      npm.scripts:
-        test: 'wtest .run proto/** v:5'
-        docgen: wdocgen .build proto
-        single-process-will: node proto/dwtools/atop/will/entry/Exec
-        debug-will: node proto/dwtools/atop/will/entry/ExecDebug
-        unrestricted-will: node proto/dwtools/atop/will/entry/ExecUnrestricted
-        will: node proto/dwtools/atop/will/entry/ExecUnrestricted
-        docker-build-centos: docker image build -t willbe-centos -f ./docker/centos.dockerfile .
-        docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
-        docker-run-centos: docker run --rm willbe-centos
-        docker-run-ubuntu: docker run --rm willbe-ubuntu
-      npm.bin:
-        single-process-will: proto/dwtools/atop/will/entry/Exec
-        debug-will: proto/dwtools/atop/will/entry/ExecDebug
-        unrestricted-will: proto/dwtools/atop/will/entry/ExecUnrestricted
-        will: proto/dwtools/atop/will/entry/ExecUnrestricted
+      npm.scripts: *ref_5
+      npm.bin: *ref_6
     path:
       module.willfiles:
         criterion:
@@ -9475,9 +9458,8 @@ module:
           - 'build::npm'
     consistency:
       ../.ex.will.yml:
-        hash: b3c4961eaf5b7deed603923767e4f5fd
+        hash: 8265b88984cea5eebe7ea92886bf5592
         size: 2604
       ../.im.will.yml:
         hash: 20d9c2abbda1ffee8f2021e20ae0e768
         size: 7126
-      willbe.out.will.yml: *ref_0
