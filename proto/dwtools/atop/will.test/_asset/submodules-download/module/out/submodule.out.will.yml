@@ -3,26 +3,26 @@ root:
   - submodule.out
 consistency:
   ../submodule.will.yml: &ref_0
-    hash: ec22dc7262302c7912a304e8afb407fd
-    size: 393
+    hash: 831c4a52b614efe8774eeed782e81cc9
+    size: 441
   ../.module/ModuleForTesting1/.ex.will.yml: &ref_1
-    hash: 742015b531952d05816c35ee9f9ff3ca
-    size: 2109
+    hash: cb8e18ffa43d15a96d796fd81fa20120
+    size: 1855
   ../.module/ModuleForTesting1/.im.will.yml: &ref_2
-    hash: e0b9ac504d07fa8723c98f50459f4829
-    size: 5603
+    hash: 61158bfe28020fc446901fcb902af53b
+    size: 4862
   ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml: &ref_3
-    hash: 028ee71b8288f8b8457ae98e07c56463
-    size: 45195
-  ../.module/ModuleForTesting12/.ex.will.yml: &ref_4
-    hash: 82bb441a25d7921c033e7a75d402c3d4
-    size: 1991
-  ../.module/ModuleForTesting12/.im.will.yml: &ref_5
-    hash: 9a9fd1f83c6347611464c699fac74bd5
-    size: 5053
-  ../.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml: &ref_6
-    hash: 5900f88941ff8d2d896801ca282e7da0
-    size: 40540
+    hash: 54ae911b147c19797ad80401792063b2
+    size: 38676
+  ../.module/ModuleForTesting2a/.ex.will.yml: &ref_4
+    hash: e65322bba5e46587b3d1272acc9468c3
+    size: 1861
+  ../.module/ModuleForTesting2a/.im.will.yml: &ref_5
+    hash: 5c1adf8e274bbb3704b15e2f31fc5510
+    size: 4975
+  ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml: &ref_6
+    hash: 28facd70d1725e271cc48e509c8d9172
+    size: 39000
 module:
   submodule.out:
     about:
@@ -72,82 +72,50 @@ module:
         path:
           - ..
           - ../submodule.will.yml
+          - ../.git
+          - ../.git/COMMIT_EDITMSG
+          - ../.git/config
+          - ../.git/description
+          - ../.git/HEAD
+          - ../.git/index
+          - ../.git/branches
+          - ../.git/hooks
+          - ../.git/hooks/applypatch-msg.sample
+          - ../.git/hooks/commit-msg.sample
+          - ../.git/hooks/fsmonitor-watchman.sample
+          - ../.git/hooks/post-update.sample
+          - ../.git/hooks/pre-applypatch.sample
+          - ../.git/hooks/pre-commit.sample
+          - ../.git/hooks/pre-push.sample
+          - ../.git/hooks/pre-rebase.sample
+          - ../.git/hooks/pre-receive.sample
+          - ../.git/hooks/prepare-commit-msg.sample
+          - ../.git/hooks/update.sample
+          - ../.git/info
+          - ../.git/info/exclude
+          - ../.git/logs
+          - ../.git/logs/HEAD
+          - ../.git/logs/refs
+          - ../.git/logs/refs/heads
+          - ../.git/logs/refs/heads/master
+          - ../.git/objects
+          - ../.git/objects/0c
+          - ../.git/objects/0c/c60f99498def7537205a95236ccbbef5a7970c
+          - ../.git/objects/51
+          - ../.git/objects/51/f38890c0b546d9cf74228bcd5e1f554776bff7
+          - ../.git/objects/bb
+          - ../.git/objects/bb/4f6203dd3940a451c0cac9de28022b59fd8834
+          - ../.git/objects/ed
+          - ../.git/objects/ed/04cda1dacf3d7f85aea5350523ebf532715489
+          - ../.git/objects/f0
+          - ../.git/objects/f0/514e850c96b324ee0f4e9d532f432aa203af4c
+          - ../.git/objects/info
+          - ../.git/objects/pack
+          - ../.git/refs
+          - ../.git/refs/heads
+          - ../.git/refs/heads/master
+          - ../.git/refs/tags
           - ../.module
-          - ../.module/ModuleForTesting12
-          - ../.module/ModuleForTesting12/.ex.will.yml
-          - ../.module/ModuleForTesting12/.gitattributes
-          - ../.module/ModuleForTesting12/.im.will.yml
-          - ../.module/ModuleForTesting12/.travis.yml
-          - ../.module/ModuleForTesting12/LICENSE
-          - ../.module/ModuleForTesting12/package.json
-          - ../.module/ModuleForTesting12/README.md
-          - ../.module/ModuleForTesting12/was.package.json
-          - ../.module/ModuleForTesting12/.git
-          - ../.module/ModuleForTesting12/.git/config
-          - ../.module/ModuleForTesting12/.git/description
-          - ../.module/ModuleForTesting12/.git/HEAD
-          - ../.module/ModuleForTesting12/.git/index
-          - ../.module/ModuleForTesting12/.git/packed-refs
-          - ../.module/ModuleForTesting12/.git/hooks
-          - ../.module/ModuleForTesting12/.git/hooks/applypatch-msg.sample
-          - ../.module/ModuleForTesting12/.git/hooks/commit-msg.sample
-          - ../.module/ModuleForTesting12/.git/hooks/fsmonitor-watchman.sample
-          - ../.module/ModuleForTesting12/.git/hooks/post-update.sample
-          - ../.module/ModuleForTesting12/.git/hooks/pre-applypatch.sample
-          - ../.module/ModuleForTesting12/.git/hooks/pre-commit.sample
-          - ../.module/ModuleForTesting12/.git/hooks/pre-push.sample
-          - ../.module/ModuleForTesting12/.git/hooks/pre-rebase.sample
-          - ../.module/ModuleForTesting12/.git/hooks/pre-receive.sample
-          - ../.module/ModuleForTesting12/.git/hooks/prepare-commit-msg.sample
-          - ../.module/ModuleForTesting12/.git/hooks/update.sample
-          - ../.module/ModuleForTesting12/.git/info
-          - ../.module/ModuleForTesting12/.git/info/exclude
-          - ../.module/ModuleForTesting12/.git/logs
-          - ../.module/ModuleForTesting12/.git/logs/HEAD
-          - ../.module/ModuleForTesting12/.git/logs/refs
-          - ../.module/ModuleForTesting12/.git/logs/refs/heads
-          - ../.module/ModuleForTesting12/.git/logs/refs/heads/master
-          - ../.module/ModuleForTesting12/.git/logs/refs/remotes
-          - ../.module/ModuleForTesting12/.git/logs/refs/remotes/origin
-          - ../.module/ModuleForTesting12/.git/logs/refs/remotes/origin/HEAD
-          - ../.module/ModuleForTesting12/.git/objects
-          - ../.module/ModuleForTesting12/.git/objects/info
-          - ../.module/ModuleForTesting12/.git/objects/pack
-          - >-
-            ../.module/ModuleForTesting12/.git/objects/pack/pack-548a97cb563b48188b0624888cf82cd1cdbf5d47.idx
-          - >-
-            ../.module/ModuleForTesting12/.git/objects/pack/pack-548a97cb563b48188b0624888cf82cd1cdbf5d47.pack
-          - ../.module/ModuleForTesting12/.git/refs
-          - ../.module/ModuleForTesting12/.git/refs/heads
-          - ../.module/ModuleForTesting12/.git/refs/heads/master
-          - ../.module/ModuleForTesting12/.git/refs/remotes
-          - ../.module/ModuleForTesting12/.git/refs/remotes/origin
-          - ../.module/ModuleForTesting12/.git/refs/remotes/origin/HEAD
-          - ../.module/ModuleForTesting12/.git/refs/tags
-          - ../.module/ModuleForTesting12/out
-          - ../.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml
-          - ../.module/ModuleForTesting12/proto
-          - ../.module/ModuleForTesting12/proto/dwtools
-          - ../.module/ModuleForTesting12/proto/dwtools/ModuleForTesting1.s
-          - ../.module/ModuleForTesting12/proto/dwtools/abase
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/Include.s
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l1
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l1/Define.s
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l1/ModuleForTesting12.s
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l1/Workpiece.s
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l5
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l5/Accessor.s
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l5/Class.s
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l5/Like.s
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto.test
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto.test/Blueprint.test.s
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto.test/Class.test.s
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto.test/Like.test.s
-          - ../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto.test/ModuleForTesting12.test.s
-          - ../.module/ModuleForTesting12/sample
-          - ../.module/ModuleForTesting12/sample/Sample.html
-          - ../.module/ModuleForTesting12/sample/Sample.js
           - ../.module/ModuleForTesting1
           - ../.module/ModuleForTesting1/.ex.will.yml
           - ../.module/ModuleForTesting1/.gitattributes
@@ -164,6 +132,7 @@ module:
           - ../.module/ModuleForTesting1/.git/HEAD
           - ../.module/ModuleForTesting1/.git/index
           - ../.module/ModuleForTesting1/.git/packed-refs
+          - ../.module/ModuleForTesting1/.git/branches
           - ../.module/ModuleForTesting1/.git/hooks
           - ../.module/ModuleForTesting1/.git/hooks/applypatch-msg.sample
           - ../.module/ModuleForTesting1/.git/hooks/commit-msg.sample
@@ -190,9 +159,9 @@ module:
           - ../.module/ModuleForTesting1/.git/objects/info
           - ../.module/ModuleForTesting1/.git/objects/pack
           - >-
-            ../.module/ModuleForTesting1/.git/objects/pack/pack-1df1f6ba28810f4f2b272c4d72aa81724371201a.idx
+            ../.module/ModuleForTesting1/.git/objects/pack/pack-20ad45666fec66afcac8ba2c4d01a699232d9758.idx
           - >-
-            ../.module/ModuleForTesting1/.git/objects/pack/pack-1df1f6ba28810f4f2b272c4d72aa81724371201a.pack
+            ../.module/ModuleForTesting1/.git/objects/pack/pack-20ad45666fec66afcac8ba2c4d01a699232d9758.pack
           - ../.module/ModuleForTesting1/.git/refs
           - ../.module/ModuleForTesting1/.git/refs/heads
           - ../.module/ModuleForTesting1/.git/refs/heads/master
@@ -200,311 +169,106 @@ module:
           - ../.module/ModuleForTesting1/.git/refs/remotes/origin
           - ../.module/ModuleForTesting1/.git/refs/remotes/origin/HEAD
           - ../.module/ModuleForTesting1/.git/refs/tags
-          - ../.module/ModuleForTesting1/asset
-          - ../.module/ModuleForTesting1/asset/test
-          - ../.module/ModuleForTesting1/asset/test/file1
-          - ../.module/ModuleForTesting1/asset/test/file2
-          - ../.module/ModuleForTesting1/asset/test/file3
-          - ../.module/ModuleForTesting1/asset/test/file4.pdf
-          - ../.module/ModuleForTesting1/asset/test/small
-          - ../.module/ModuleForTesting1/asset/test/small2
-          - ../.module/ModuleForTesting1/asset/test/small3
-          - ../.module/ModuleForTesting1/asset/test/small4
-          - ../.module/ModuleForTesting1/asset/test/small5
-          - ../.module/ModuleForTesting1/asset/test/small6
-          - ../.module/ModuleForTesting1/asset/test/small7
-          - ../.module/ModuleForTesting1/asset/test/test.exe
           - ../.module/ModuleForTesting1/doc
-          - ../.module/ModuleForTesting1/doc/ArrayAppend.md
-          - ../.module/ModuleForTesting1/doc/ArrayFamily.md
-          - ../.module/ModuleForTesting1/doc/ArrayRoutines.md
-          - ../.module/ModuleForTesting1/doc/CharCodes.md
-          - ../.module/ModuleForTesting1/doc/Core-Level.xml
-          - ../.module/ModuleForTesting1/doc/junior.introduction.ua.md
-          - ../.module/ModuleForTesting1/doc/Types.md
-          - ../.module/ModuleForTesting1/doc/WillfFromNpm.txt
-          - ../.module/ModuleForTesting1/doc/eng
-          - ../.module/ModuleForTesting1/doc/eng/README.md
-          - ../.module/ModuleForTesting1/doc/eng/concept
-          - ../.module/ModuleForTesting1/doc/eng/concept/Modularity.md
-          - ../.module/ModuleForTesting1/doc/eng/concept/TypePrimitive.md
-          - ../.module/ModuleForTesting1/doc/eng/concept/TypeUnroll.md
-          - ../.module/ModuleForTesting1/doc/eng/tutorial
-          - ../.module/ModuleForTesting1/doc/eng/tutorial/ErrorHandling.md
-          - ../.module/ModuleForTesting1/doc/eng/tutorial/MechanismsOfCatchingErrors.md
-          - ../.module/ModuleForTesting1/doc/eng/tutorial/RoutineFromPreAndBody.md
-          - ../.module/ModuleForTesting1/doc/eng/tutorial/TimeMeasurement.md
-          - ../.module/ModuleForTesting1/doc/img
-          - ../.module/ModuleForTesting1/doc/img/1.png
-          - ../.module/ModuleForTesting1/doc/img/2.1.png
-          - ../.module/ModuleForTesting1/doc/img/2.2.png
-          - ../.module/ModuleForTesting1/doc/img/3.png
-          - ../.module/ModuleForTesting1/doc/img/5.png
-          - ../.module/ModuleForTesting1/doc/img/6.png
-          - ../.module/ModuleForTesting1/doc/img/errorsHandling
-          - ../.module/ModuleForTesting1/doc/img/errorsHandling/CallsStackArguments.png
-          - ../.module/ModuleForTesting1/doc/img/errorsHandling/CatchingUncaught.png
-          - ../.module/ModuleForTesting1/doc/img/errorsHandling/Errors.html
-          - ../.module/ModuleForTesting1/doc/img/errorsHandling/ErrorsHandling.drawio
-          - ../.module/ModuleForTesting1/doc/img/modularity
-          - ../.module/ModuleForTesting1/doc/img/modularity/Communication.png
-          - ../.module/ModuleForTesting1/doc/img/modularity/CPU-versus-GPU-architecture.png
-          - ../.module/ModuleForTesting1/doc/img/modularity/Distribution.png
-          - ../.module/ModuleForTesting1/doc/img/modularity/LearningCurve.png
-          - ../.module/ModuleForTesting1/doc/img/modularity/Modularity.drawio
-          - ../.module/ModuleForTesting1/doc/img/modularity/Modularization.png
-          - ../.module/ModuleForTesting1/doc/img/modularity/RestrictingChain.png
-          - ../.module/ModuleForTesting1/doc/img/modularity/TheSystem.png
-          - ../.module/ModuleForTesting1/doc/reference
-          - ../.module/ModuleForTesting1/doc/reference/component_NameModuleForTesting1.s.html
-          - ../.module/ModuleForTesting1/doc/reference/component_StringModuleForTesting1.s.html
-          - ../.module/ModuleForTesting1/doc/reference/global.html
-          - ../.module/ModuleForTesting1/doc/reference/index.html
-          - ../.module/ModuleForTesting1/doc/reference/wModuleForTesting1.html
-          - ../.module/ModuleForTesting1/doc/reference/wModuleForTesting1.s.html
-          - ../.module/ModuleForTesting1/doc/reference/fonts
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-Bold-webfont.eot
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-Bold-webfont.svg
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-Bold-webfont.woff
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-BoldItalic-webfont.eot
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-BoldItalic-webfont.svg
-          - >-
-            ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-BoldItalic-webfont.woff
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-Italic-webfont.eot
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-Italic-webfont.svg
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-Italic-webfont.woff
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-Light-webfont.eot
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-Light-webfont.svg
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-Light-webfont.woff
-          - >-
-            ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-LightItalic-webfont.eot
-          - >-
-            ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-LightItalic-webfont.svg
-          - >-
-            ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-LightItalic-webfont.woff
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-Regular-webfont.eot
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-Regular-webfont.svg
-          - ../.module/ModuleForTesting1/doc/reference/fonts/OpenSans-Regular-webfont.woff
-          - ../.module/ModuleForTesting1/doc/reference/scripts
-          - ../.module/ModuleForTesting1/doc/reference/scripts/linenumber.js
-          - ../.module/ModuleForTesting1/doc/reference/scripts/prettify
-          - >-
-            ../.module/ModuleForTesting1/doc/reference/scripts/prettify/Apache-License-2.0.txt
-          - ../.module/ModuleForTesting1/doc/reference/scripts/prettify/lang-css.js
-          - ../.module/ModuleForTesting1/doc/reference/scripts/prettify/prettify.js
-          - ../.module/ModuleForTesting1/doc/reference/styles
-          - ../.module/ModuleForTesting1/doc/reference/styles/jsdoc-default.css
-          - ../.module/ModuleForTesting1/doc/reference/styles/prettify-jsdoc.css
-          - ../.module/ModuleForTesting1/doc/reference/styles/prettify-tomorrow.css
-          - ../.module/ModuleForTesting1/doc/ukr
-          - ../.module/ModuleForTesting1/doc/ukr/README.md
-          - ../.module/ModuleForTesting1/doc/ukr/concept
-          - ../.module/ModuleForTesting1/doc/ukr/concept/Buffer.md
-          - ../.module/ModuleForTesting1/doc/ukr/concept/Equalizer.md
-          - ../.module/ModuleForTesting1/doc/ukr/concept/Evaluator.md
-          - ../.module/ModuleForTesting1/doc/ukr/concept/RoutineInput.md
-          - ../.module/ModuleForTesting1/doc/ukr/concept/TypeIndexed.md
-          - ../.module/ModuleForTesting1/doc/ukr/concept/TypePrimitive.md
-          - ../.module/ModuleForTesting1/doc/ukr/concept/TypeUnroll.md
-          - ../.module/ModuleForTesting1/doc/ukr/concept/Vector.md
-          - ../.module/ModuleForTesting1/doc/ukr/etc
-          - ../.module/ModuleForTesting1/doc/ukr/etc/Array.md
-          - ../.module/ModuleForTesting1/doc/ukr/tutorial
-          - ../.module/ModuleForTesting1/doc/ukr/tutorial/ConventionCallbecksInArray.md
-          - ../.module/ModuleForTesting1/doc/ukr/tutorial/ConventionDefaultsMapInRoutine.md
-          - ../.module/ModuleForTesting1/doc/ukr/tutorial/ConventionDstArgInArray.md
-          - ../.module/ModuleForTesting1/doc/ukr/tutorial/ConventionNamingInArray.md
-          - ../.module/ModuleForTesting1/doc/ukr/tutorial/EmbeddedModules.md
-          - ../.module/ModuleForTesting1/doc/ukr/tutorial/RoutineFromPreAndBody.md
-          - ../.module/ModuleForTesting1/doc/ukr/tutorial/TimeMeasurement.md
-          - ../.module/ModuleForTesting1/doc/ukr/tutorial/Timer.md
-          - ../.module/ModuleForTesting1/doc/ukr/tutorial/Vectorize.md
-          - ../.module/ModuleForTesting1/doc/ukr/tutorial/VectorizeOptions.md
+          - ../.module/ModuleForTesting1/doc/ModuleForTesting1.md
+          - ../.module/ModuleForTesting1/doc/README.md
           - ../.module/ModuleForTesting1/out
           - ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml
           - ../.module/ModuleForTesting1/proto
           - ../.module/ModuleForTesting1/proto/dwtools
-          - ../.module/ModuleForTesting1/proto/dwtools/ModuleForTesting1.s
+          - ../.module/ModuleForTesting1/proto/dwtools/Tools.s
           - ../.module/ModuleForTesting1/proto/dwtools/abase
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/Layer0.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/Layer1.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/Layer2.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l1
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l1/Predefined.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l2
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l2/Setup.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iBool.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iBuffer.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iContainer.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iCt.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iEntity.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iErr.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iFunctional.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iIntrospector.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iLong.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iMap.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iModule.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iNumber.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iProcess.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iRange.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iRegexp.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iRoutine.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iSet.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iStr.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iTime.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iType.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l3/iUnroll.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fBool.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fBuffer.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fContainer.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fCt.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fEntity.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fErr.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fEvent.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fFunctional.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fIntrospector.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fLong.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fMap.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fModule.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fNumber.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fPath.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fProcess.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fRange.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fRegexp.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fRoutine.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fSet.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fSorted.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fStr.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fTime.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l5/fUnroll.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l6
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l6/ContainerAdapter.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l7
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l7/ArrayDescriptor.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l7/Compose.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l7/ContainerAdapterArray.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l7/ContainerAdapterSet.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l7/Field.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gBool.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gBuffer.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gContainer.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gCt.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gEntity.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gErr.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gFunctional.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gIntrospector.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gLong.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gMap.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gModule.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gNumber.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gPair.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gProcess.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gRange.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gRegexp.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gRoutine.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gSet.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gStr.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l8/gTime.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l9
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0/l9/Setup.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Buffer.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Container.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/ContainerAdapter.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Ct.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Entity.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Err.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Functional.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Introspector.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Long.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Map.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Module.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Number.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Pair.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Path.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Range.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Regexp.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Routine.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Sorted.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Str.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Time.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Typing.test.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l0.test/Unroll.test.s
           - ../.module/ModuleForTesting1/proto/dwtools/abase/l1
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l1/ModulesRegistry.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l1/NameModuleForTesting1.s
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l1/StrBasic.s
+          - ../.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1
+          - >-
+            ../.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1/Include.s
+          - >-
+            ../.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1/ModuleForTesting1.s
           - ../.module/ModuleForTesting1/proto/dwtools/abase/l1.test
-          - ../.module/ModuleForTesting1/proto/dwtools/abase/l1.test/Str.test.s
+          - >-
+            ../.module/ModuleForTesting1/proto/dwtools/abase/l1.test/ModuleForTesting1.test.s
           - ../.module/ModuleForTesting1/sample
-          - ../.module/ModuleForTesting1/sample/Experiment.js
-          - ../.module/ModuleForTesting1/sample/Sample.html
           - ../.module/ModuleForTesting1/sample/Sample.js
-          - ../.module/ModuleForTesting1/sample/Sample.test.s
-          - ../.module/ModuleForTesting1/sample/SampleArray.js
-          - ../.module/ModuleForTesting1/sample/SampleArrayFlatten.js
-          - ../.module/ModuleForTesting1/sample/SampleArrayPrepend.js
-          - ../.module/ModuleForTesting1/sample/SampleArrayRemove.js
-          - ../.module/ModuleForTesting1/sample/SampleArrayReplace.js
-          - ../.module/ModuleForTesting1/sample/SampleLines.js
-          - ../.module/ModuleForTesting1/sample/SampleRegExp.js
-          - ../.module/ModuleForTesting1/sample/SampleString.js
-          - ../.module/ModuleForTesting1/sample/Shell.js
-          - ../.module/ModuleForTesting1/sample/Shell2.js
-          - ../.module/ModuleForTesting1/sample/Shell3.js
-          - ../.module/ModuleForTesting1/sample/StrExtractStrips.js
-          - ../.module/ModuleForTesting1/sample/String.toStr.js
-          - ../.module/ModuleForTesting1/sample/strTable.js
-          - ../.module/ModuleForTesting1/sample/VectorizeAccess.js
-          - ../.module/ModuleForTesting1/sample/conventionCallbecksInArray
+          - ../.module/ModuleForTesting2a
+          - ../.module/ModuleForTesting2a/.ex.will.yml
+          - ../.module/ModuleForTesting2a/.gitattributes
+          - ../.module/ModuleForTesting2a/.gitignore
+          - ../.module/ModuleForTesting2a/.im.will.yml
+          - ../.module/ModuleForTesting2a/.travis.yml
+          - ../.module/ModuleForTesting2a/LICENSE
+          - ../.module/ModuleForTesting2a/package.json
+          - ../.module/ModuleForTesting2a/README.md
+          - ../.module/ModuleForTesting2a/was.package.json
+          - ../.module/ModuleForTesting2a/.git
+          - ../.module/ModuleForTesting2a/.git/config
+          - ../.module/ModuleForTesting2a/.git/description
+          - ../.module/ModuleForTesting2a/.git/HEAD
+          - ../.module/ModuleForTesting2a/.git/index
+          - ../.module/ModuleForTesting2a/.git/packed-refs
+          - ../.module/ModuleForTesting2a/.git/branches
+          - ../.module/ModuleForTesting2a/.git/hooks
+          - ../.module/ModuleForTesting2a/.git/hooks/applypatch-msg.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/commit-msg.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/fsmonitor-watchman.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/post-update.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/pre-applypatch.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/pre-commit.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/pre-push.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/pre-rebase.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/pre-receive.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/prepare-commit-msg.sample
+          - ../.module/ModuleForTesting2a/.git/hooks/update.sample
+          - ../.module/ModuleForTesting2a/.git/info
+          - ../.module/ModuleForTesting2a/.git/info/exclude
+          - ../.module/ModuleForTesting2a/.git/logs
+          - ../.module/ModuleForTesting2a/.git/logs/HEAD
+          - ../.module/ModuleForTesting2a/.git/logs/refs
+          - ../.module/ModuleForTesting2a/.git/logs/refs/heads
+          - ../.module/ModuleForTesting2a/.git/logs/refs/heads/master
+          - ../.module/ModuleForTesting2a/.git/logs/refs/remotes
+          - ../.module/ModuleForTesting2a/.git/logs/refs/remotes/origin
+          - ../.module/ModuleForTesting2a/.git/logs/refs/remotes/origin/HEAD
+          - ../.module/ModuleForTesting2a/.git/objects
+          - ../.module/ModuleForTesting2a/.git/objects/info
+          - ../.module/ModuleForTesting2a/.git/objects/pack
           - >-
-            ../.module/ModuleForTesting1/sample/conventionCallbecksInArray/ArrayCountElement.js
-          - ../.module/ModuleForTesting1/sample/conventionCallbecksInArray/package.json
-          - ../.module/ModuleForTesting1/sample/conventionDefaultsMapInRoutine
+            ../.module/ModuleForTesting2a/.git/objects/pack/pack-98ae305e82662f69e77114db0378f676e1d0bc47.idx
           - >-
-            ../.module/ModuleForTesting1/sample/conventionDefaultsMapInRoutine/ConventionDefaultMapInRoutine.js
-          - ../.module/ModuleForTesting1/sample/conventionDefaultsMapInRoutine/package.json
-          - ../.module/ModuleForTesting1/sample/conventionDstArgInArray
-          - ../.module/ModuleForTesting1/sample/conventionDstArgInArray/package.json
-          - ../.module/ModuleForTesting1/sample/conventionDstArgInArray/SrcAndDst.js
-          - ../.module/ModuleForTesting1/sample/conventionNamingInArray
-          - ../.module/ModuleForTesting1/sample/conventionNamingInArray/ArrayFamily.js
-          - ../.module/ModuleForTesting1/sample/conventionNamingInArray/package.json
-          - ../.module/ModuleForTesting1/sample/errorHandling
-          - ../.module/ModuleForTesting1/sample/errorHandling/AssertionTrivial.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/AssertionType.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/AsyncStack1.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/AsyncStack2.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/AsyncStack3.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/Attend.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/Brief.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/Deasync.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/DevelopmentWithAssertions.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/Once.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/Simplest.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/Stack.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/TddInferior.js
-          - ../.module/ModuleForTesting1/sample/errorHandling/ThrowsStack.js
-          - ../.module/ModuleForTesting1/sample/routineFromPreAndBody
-          - ../.module/ModuleForTesting1/sample/routineFromPreAndBody/Name.js
-          - ../.module/ModuleForTesting1/sample/routineFromPreAndBody/package.json
-          - ../.module/ModuleForTesting1/sample/time
-          - ../.module/ModuleForTesting1/sample/time/TimeMeasurement.js
-          - ../.module/ModuleForTesting1/sample/vectorize
-          - ../.module/ModuleForTesting1/sample/vectorize/package.json
-          - ../.module/ModuleForTesting1/sample/vectorize/Sum.js
-          - ../.module/ModuleForTesting1/sample/vectorize/Vectorize.js
+            ../.module/ModuleForTesting2a/.git/objects/pack/pack-98ae305e82662f69e77114db0378f676e1d0bc47.pack
+          - ../.module/ModuleForTesting2a/.git/refs
+          - ../.module/ModuleForTesting2a/.git/refs/heads
+          - ../.module/ModuleForTesting2a/.git/refs/heads/master
+          - ../.module/ModuleForTesting2a/.git/refs/remotes
+          - ../.module/ModuleForTesting2a/.git/refs/remotes/origin
+          - ../.module/ModuleForTesting2a/.git/refs/remotes/origin/HEAD
+          - ../.module/ModuleForTesting2a/.git/refs/tags
+          - ../.module/ModuleForTesting2a/doc
+          - ../.module/ModuleForTesting2a/doc/ModuleForTesting2a.md
+          - ../.module/ModuleForTesting2a/doc/README.md
+          - ../.module/ModuleForTesting2a/out
+          - ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml
+          - ../.module/ModuleForTesting2a/proto
+          - ../.module/ModuleForTesting2a/proto/dwtools
+          - ../.module/ModuleForTesting2a/proto/dwtools/Tools.s
+          - ../.module/ModuleForTesting2a/proto/dwtools/abase
+          - ../.module/ModuleForTesting2a/proto/dwtools/abase/l3
+          - ../.module/ModuleForTesting2a/proto/dwtools/abase/l3/testing2a
+          - >-
+            ../.module/ModuleForTesting2a/proto/dwtools/abase/l3/testing2a/Include.s
+          - >-
+            ../.module/ModuleForTesting2a/proto/dwtools/abase/l3/testing2a/ModuleForTesting2a.s
+          - ../.module/ModuleForTesting2a/proto/dwtools/abase/l3.test
+          - >-
+            ../.module/ModuleForTesting2a/proto/dwtools/abase/l3.test/ModuleForTesting2a.test.s
+          - ../.module/ModuleForTesting2a/sample
+          - ../.module/ModuleForTesting2a/sample/Sample.js
     submodule:
       ModuleForTesting1:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/@master'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/@gamma'
         autoExporting: 0
         enabled: 1
-      ModuleForTesting12:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting12.git/@master'
+      ModuleForTesting2a:
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/@gamma'
         autoExporting: 0
         enabled: 1
     reflector:
@@ -514,6 +278,7 @@ module:
             '**': ''
           prefixPath: ..
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           generated: 1
           default: 1
@@ -527,6 +292,7 @@ module:
           recursive: 0
         recursive: 0
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           generated: 1
           default: 1
@@ -596,11 +362,11 @@ module:
         path: out
     submodule:
       ModuleForTesting1:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/@master'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/@gamma'
         autoExporting: 0
         enabled: 1
-      ModuleForTesting12:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting12.git/@master'
+      ModuleForTesting2a:
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/@gamma'
         autoExporting: 0
         enabled: 1
     reflector: {}
@@ -620,40 +386,30 @@ module:
           export: 1
     consistency:
       ../submodule.will.yml:
-        hash: ec22dc7262302c7912a304e8afb407fd
-        size: 393
+        hash: 831c4a52b614efe8774eeed782e81cc9
+        size: 441
   ../.module/ModuleForTesting1/:
     about:
       name: wModuleForTesting1
       org: noorg
       description: >-
-        Collection of general purpose tools for solving problems. Fundamentally
-        extend JavaScript without spoiling namespace, so may be used solely or
-        in conjunction with another module of such kind.
+        Module for testing. This module is test assets not intended to be used
+        with another purpose.
       enabled: 1
-      version: 0.9.0
+      version: 0.0.1
       interpreters:
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
       keywords:
-        - base
-        - basic
-        - core
-        - platform
-        - tools
-        - wModuleForTesting1
-        - wBase
-        - generic
+        - willbe
+        - test
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wanalen@willbe.so>
       contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
-        - Volodymyr M. <volodymyr.migdal@gmail.com>
-        - Ihor O. <iostashvxi@gmail.com>
-        - Pablo Garcimartin <pablogarcimartinruiz@gmail.com>
-        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
-      npm.name: wtools.experiment
+        - Kostiantyn Wandalen <wanalen@willbe.so>
+        - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
+      npm.name: wmodulefortesting1
       npm.scripts:
         test: wtest .run proto/**
         docgen: wdocgen .build proto
@@ -691,7 +447,7 @@ module:
       origins:
         path:
           - 'git+https:///github.com/Wandalen/wModuleForTesting1.git'
-          - 'npm:///wtools.experiment'
+          - 'npm:///wmodulefortesting1'
       bugtracker:
         path: 'https:///github.com/Wandalen/wModuleForTesting1/issues'
       in:
@@ -734,74 +490,41 @@ module:
           raw: compiled
           content: prime
         path: '{path::out}/release'
-      entry:
-        path: dwtools/abase/Layer2.s
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-          content: proto
-        path: 'proto/{path::entry}'
+        path: proto/dwtools/abase/l1/testing1/Include.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
-        path: proto/**/*.test.*
-      entry.out.raw.debug:
+        path: proto/**/*.test.s
+      entry.out.raw.debug.debug:
         criterion:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/{path::entry}'
-      entry.out.raw.release:
+        path: '{path::out.*=1}/proto/dwtools/abase/l1/testing1/Include.s'
+      entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/{path::entry}'
-      entry.out.compiled.debug:
+        path: '{path::out.*=1}/proto/dwtools/abase/l1/testing1/Include.s'
+      entry.out.compiled.debug.debug:
         criterion:
           debug: debug
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
-      entry.out.compiled.release:
+      entry.out.compiled.debug.release:
         criterion:
           debug: release
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
     submodule:
-      wFiles:
-        path: 'npm:///wFiles'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wCloner:
-        path: 'npm:///wcloner'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wStringer:
-        path: 'npm:///wstringer'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wTesting:
+      Testing:
         path: 'npm:///wTesting'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wSelector:
-        path: 'npm:///wselector'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wModuleForTesting1:
-        path: 'hd://.'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -812,6 +535,7 @@ module:
           filePath:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -824,6 +548,7 @@ module:
           filePath:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -836,6 +561,7 @@ module:
           filePath:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -848,6 +574,7 @@ module:
           filePath:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -860,6 +587,7 @@ module:
           filePath:
             'path::proto': '{path::out.raw.release}'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           raw: raw
           debug: release
@@ -873,6 +601,7 @@ module:
             '**.test/**': 0
             'path::proto': '{path::out.*=1}/Main.s'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -887,6 +616,7 @@ module:
             '**.test/**': 0
             'path::proto': '{path::out.*=1}/Main.s'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -900,6 +630,7 @@ module:
             '**.test*': 1
             'path::proto': '{path::out.*=1}/Tests.test.s'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -913,6 +644,7 @@ module:
             '**.test*': 1
             'path::proto': '{path::out.*=1}/Tests.test.s'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -956,7 +688,6 @@ module:
         criterion:
           debug: debug
           raw: raw
-          content: prime
         inherit:
           - npm.generate
       npm.generate.release.raw:
@@ -967,7 +698,6 @@ module:
         criterion:
           debug: release
           raw: raw
-          content: prime
         inherit:
           - npm.generate
       npm.generate.debug.compiled:
@@ -978,7 +708,6 @@ module:
         criterion:
           debug: debug
           raw: compiled
-          content: prime
         inherit:
           - npm.generate
       npm.generate.release.compiled:
@@ -989,16 +718,6 @@ module:
         criterion:
           debug: release
           raw: compiled
-          content: prime
-        inherit:
-          - npm.generate
-      npm.generate.proto:
-        opts:
-          entryPath: 'path::entry.proto.no.tests'
-          packagePath: package.json
-          filesPath: '{path::proto}/**'
-        criterion:
-          content: proto
         inherit:
           - npm.generate
       clean.out.debug.raw.no.tests.prime:
@@ -1344,42 +1063,20 @@ module:
           debug: release
           raw: compiled
           content: prime
-      npm.debug.raw:
+      npm:
         steps:
           - npm.generate.*=1
         criterion:
           debug: debug
           raw: raw
-      npm.release.raw:
-        steps:
-          - npm.generate.*=1
-        criterion:
-          debug: release
-          raw: raw
-      npm.debug.compiled:
-        steps:
-          - npm.generate.*=1
-        criterion:
-          debug: debug
-          raw: compiled
-      npm.release.compiled:
-        steps:
-          - npm.generate.*=1
-        criterion:
-          debug: release
-          raw: compiled
-      npm.proto:
-        steps:
-          - npm.generate.proto
-        criterion:
-          conent: proto
+          content: npm
       all:
         steps:
           - 'build::debug'
           - 'build::compiled.debug'
           - 'build::raw.release'
           - 'build::release'
-          - 'build::npm.*=5'
+          - 'build::npm'
     consistency:
       ../.module/ModuleForTesting1/.ex.will.yml: *ref_1
       ../.module/ModuleForTesting1/.im.will.yml: *ref_2
@@ -1389,33 +1086,23 @@ module:
       name: wModuleForTesting1
       org: noorg
       description: >-
-        Collection of general purpose tools for solving problems. Fundamentally
-        extend JavaScript without spoiling namespace, so may be used solely or
-        in conjunction with another module of such kind.
+        Module for testing. This module is test assets not intended to be used
+        with another purpose.
       enabled: 1
-      version: 0.9.0
+      version: 0.0.1
       interpreters:
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
       keywords:
-        - base
-        - basic
-        - core
-        - platform
-        - tools
-        - wModuleForTesting1
-        - wBase
-        - generic
+        - willbe
+        - test
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wanalen@willbe.so>
       contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
-        - Volodymyr M. <volodymyr.migdal@gmail.com>
-        - Ihor O. <iostashvxi@gmail.com>
-        - Pablo Garcimartin <pablogarcimartinruiz@gmail.com>
-        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
-      npm.name: wtools.experiment
+        - Kostiantyn Wandalen <wanalen@willbe.so>
+        - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
+      npm.name: wmodulefortesting1
       npm.scripts:
         test: wtest .run proto/**
         docgen: wdocgen .build proto
@@ -1453,7 +1140,7 @@ module:
       origins:
         path:
           - 'git+https:///github.com/Wandalen/wModuleForTesting1.git'
-          - 'npm:///wtools.experiment'
+          - 'npm:///wmodulefortesting1'
       bugtracker:
         path: 'https:///github.com/Wandalen/wModuleForTesting1/issues'
       in:
@@ -1496,36 +1183,33 @@ module:
           raw: compiled
           content: prime
         path: '{path::out}/release'
-      entry:
-        path: ../dwtools/abase/Layer2.s
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-          content: proto
-        path: '../proto/{path::entry}'
+        path: ../proto/dwtools/abase/l1/testing1/Include.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
-        path: ../proto/**/*.test.*
-      entry.out.raw.debug:
+        path: ../proto/**/*.test.s
+      entry.out.raw.debug.debug:
         criterion:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/{path::entry}'
-      entry.out.raw.release:
+        path: '{path::out.*=1}/proto/dwtools/abase/l1/testing1/Include.s'
+      entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/{path::entry}'
-      entry.out.compiled.debug:
+        path: '{path::out.*=1}/proto/dwtools/abase/l1/testing1/Include.s'
+      entry.out.compiled.debug.debug:
         criterion:
           debug: debug
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
-      entry.out.compiled.release:
+      entry.out.compiled.debug.release:
         criterion:
           debug: release
           raw: compiled
@@ -1545,157 +1229,17 @@ module:
         path:
           - ../proto
           - ../proto/dwtools
-          - ../proto/dwtools/ModuleForTesting1.s
+          - ../proto/dwtools/Tools.s
           - ../proto/dwtools/abase
-          - ../proto/dwtools/abase/Layer0.s
-          - ../proto/dwtools/abase/Layer1.s
-          - ../proto/dwtools/abase/Layer2.s
-          - ../proto/dwtools/abase/l0
-          - ../proto/dwtools/abase/l0/l1
-          - ../proto/dwtools/abase/l0/l1/Predefined.s
-          - ../proto/dwtools/abase/l0/l2
-          - ../proto/dwtools/abase/l0/l2/Setup.s
-          - ../proto/dwtools/abase/l0/l3
-          - ../proto/dwtools/abase/l0/l3/iBool.s
-          - ../proto/dwtools/abase/l0/l3/iBuffer.s
-          - ../proto/dwtools/abase/l0/l3/iContainer.s
-          - ../proto/dwtools/abase/l0/l3/iCt.s
-          - ../proto/dwtools/abase/l0/l3/iEntity.s
-          - ../proto/dwtools/abase/l0/l3/iErr.s
-          - ../proto/dwtools/abase/l0/l3/iFunctional.s
-          - ../proto/dwtools/abase/l0/l3/iIntrospector.s
-          - ../proto/dwtools/abase/l0/l3/iLong.s
-          - ../proto/dwtools/abase/l0/l3/iMap.s
-          - ../proto/dwtools/abase/l0/l3/iModule.s
-          - ../proto/dwtools/abase/l0/l3/iNumber.s
-          - ../proto/dwtools/abase/l0/l3/iProcess.s
-          - ../proto/dwtools/abase/l0/l3/iRange.s
-          - ../proto/dwtools/abase/l0/l3/iRegexp.s
-          - ../proto/dwtools/abase/l0/l3/iRoutine.s
-          - ../proto/dwtools/abase/l0/l3/iSet.s
-          - ../proto/dwtools/abase/l0/l3/iStr.s
-          - ../proto/dwtools/abase/l0/l3/iTime.s
-          - ../proto/dwtools/abase/l0/l3/iType.s
-          - ../proto/dwtools/abase/l0/l3/iUnroll.s
-          - ../proto/dwtools/abase/l0/l5
-          - ../proto/dwtools/abase/l0/l5/fBool.s
-          - ../proto/dwtools/abase/l0/l5/fBuffer.s
-          - ../proto/dwtools/abase/l0/l5/fContainer.s
-          - ../proto/dwtools/abase/l0/l5/fCt.s
-          - ../proto/dwtools/abase/l0/l5/fEntity.s
-          - ../proto/dwtools/abase/l0/l5/fErr.s
-          - ../proto/dwtools/abase/l0/l5/fEvent.s
-          - ../proto/dwtools/abase/l0/l5/fFunctional.s
-          - ../proto/dwtools/abase/l0/l5/fIntrospector.s
-          - ../proto/dwtools/abase/l0/l5/fLong.s
-          - ../proto/dwtools/abase/l0/l5/fMap.s
-          - ../proto/dwtools/abase/l0/l5/fModule.s
-          - ../proto/dwtools/abase/l0/l5/fNumber.s
-          - ../proto/dwtools/abase/l0/l5/fPath.s
-          - ../proto/dwtools/abase/l0/l5/fProcess.s
-          - ../proto/dwtools/abase/l0/l5/fRange.s
-          - ../proto/dwtools/abase/l0/l5/fRegexp.s
-          - ../proto/dwtools/abase/l0/l5/fRoutine.s
-          - ../proto/dwtools/abase/l0/l5/fSet.s
-          - ../proto/dwtools/abase/l0/l5/fSorted.s
-          - ../proto/dwtools/abase/l0/l5/fStr.s
-          - ../proto/dwtools/abase/l0/l5/fTime.s
-          - ../proto/dwtools/abase/l0/l5/fUnroll.s
-          - ../proto/dwtools/abase/l0/l6
-          - ../proto/dwtools/abase/l0/l6/ContainerAdapter.s
-          - ../proto/dwtools/abase/l0/l7
-          - ../proto/dwtools/abase/l0/l7/ArrayDescriptor.s
-          - ../proto/dwtools/abase/l0/l7/Compose.s
-          - ../proto/dwtools/abase/l0/l7/ContainerAdapterArray.s
-          - ../proto/dwtools/abase/l0/l7/ContainerAdapterSet.s
-          - ../proto/dwtools/abase/l0/l7/Field.s
-          - ../proto/dwtools/abase/l0/l8
-          - ../proto/dwtools/abase/l0/l8/gBool.s
-          - ../proto/dwtools/abase/l0/l8/gBuffer.s
-          - ../proto/dwtools/abase/l0/l8/gContainer.s
-          - ../proto/dwtools/abase/l0/l8/gCt.s
-          - ../proto/dwtools/abase/l0/l8/gEntity.s
-          - ../proto/dwtools/abase/l0/l8/gErr.s
-          - ../proto/dwtools/abase/l0/l8/gFunctional.s
-          - ../proto/dwtools/abase/l0/l8/gIntrospector.s
-          - ../proto/dwtools/abase/l0/l8/gLong.s
-          - ../proto/dwtools/abase/l0/l8/gMap.s
-          - ../proto/dwtools/abase/l0/l8/gModule.s
-          - ../proto/dwtools/abase/l0/l8/gNumber.s
-          - ../proto/dwtools/abase/l0/l8/gPair.s
-          - ../proto/dwtools/abase/l0/l8/gProcess.s
-          - ../proto/dwtools/abase/l0/l8/gRange.s
-          - ../proto/dwtools/abase/l0/l8/gRegexp.s
-          - ../proto/dwtools/abase/l0/l8/gRoutine.s
-          - ../proto/dwtools/abase/l0/l8/gSet.s
-          - ../proto/dwtools/abase/l0/l8/gStr.s
-          - ../proto/dwtools/abase/l0/l8/gTime.s
-          - ../proto/dwtools/abase/l0/l9
-          - ../proto/dwtools/abase/l0/l9/Setup.s
-          - ../proto/dwtools/abase/l0.test
-          - ../proto/dwtools/abase/l0.test/Buffer.test.s
-          - ../proto/dwtools/abase/l0.test/Container.test.s
-          - ../proto/dwtools/abase/l0.test/ContainerAdapter.test.s
-          - ../proto/dwtools/abase/l0.test/Ct.test.s
-          - ../proto/dwtools/abase/l0.test/Entity.test.s
-          - ../proto/dwtools/abase/l0.test/Err.test.s
-          - ../proto/dwtools/abase/l0.test/Functional.test.s
-          - ../proto/dwtools/abase/l0.test/Introspector.test.s
-          - ../proto/dwtools/abase/l0.test/Long.test.s
-          - ../proto/dwtools/abase/l0.test/Map.test.s
-          - ../proto/dwtools/abase/l0.test/Module.test.s
-          - ../proto/dwtools/abase/l0.test/Number.test.s
-          - ../proto/dwtools/abase/l0.test/Pair.test.s
-          - ../proto/dwtools/abase/l0.test/Path.test.s
-          - ../proto/dwtools/abase/l0.test/Range.test.s
-          - ../proto/dwtools/abase/l0.test/Regexp.test.s
-          - ../proto/dwtools/abase/l0.test/Routine.test.s
-          - ../proto/dwtools/abase/l0.test/Sorted.test.s
-          - ../proto/dwtools/abase/l0.test/Str.test.s
-          - ../proto/dwtools/abase/l0.test/Time.test.s
-          - ../proto/dwtools/abase/l0.test/Typing.test.s
-          - ../proto/dwtools/abase/l0.test/Unroll.test.s
           - ../proto/dwtools/abase/l1
-          - ../proto/dwtools/abase/l1/ModulesRegistry.s
-          - ../proto/dwtools/abase/l1/NameModuleForTesting1.s
-          - ../proto/dwtools/abase/l1/StrBasic.s
+          - ../proto/dwtools/abase/l1/testing1
+          - ../proto/dwtools/abase/l1/testing1/Include.s
+          - ../proto/dwtools/abase/l1/testing1/ModuleForTesting1.s
           - ../proto/dwtools/abase/l1.test
-          - ../proto/dwtools/abase/l1.test/Str.test.s
-          - ../proto/dwtools/amid
-          - ../proto/dwtools/atop
+          - ../proto/dwtools/abase/l1.test/ModuleForTesting1.test.s
     submodule:
-      wFiles:
-        path: 'npm:///wFiles'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wCloner:
-        path: 'npm:///wcloner'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wStringer:
-        path: 'npm:///wstringer'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wTesting:
+      Testing:
         path: 'npm:///wTesting'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wSelector:
-        path: 'npm:///wselector'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wModuleForTesting1:
-        path: 'hd://..'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -1709,6 +1253,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -1724,6 +1269,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -1739,6 +1285,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -1754,6 +1301,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -1769,6 +1317,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           raw: raw
           debug: release
@@ -1785,6 +1334,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -1802,6 +1352,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -1818,6 +1369,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -1834,6 +1386,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -1847,6 +1400,7 @@ module:
             '**': ''
           prefixPath: ../proto
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           generated: 1
           content: proto
@@ -1860,6 +1414,7 @@ module:
           recursive: 0
         recursive: 0
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           generated: 1
           content: proto
@@ -1900,7 +1455,6 @@ module:
         criterion:
           debug: debug
           raw: raw
-          content: prime
         inherit:
           - npm.generate
       npm.generate.release.raw:
@@ -1911,7 +1465,6 @@ module:
         criterion:
           debug: release
           raw: raw
-          content: prime
         inherit:
           - npm.generate
       npm.generate.debug.compiled:
@@ -1922,7 +1475,6 @@ module:
         criterion:
           debug: debug
           raw: compiled
-          content: prime
         inherit:
           - npm.generate
       npm.generate.release.compiled:
@@ -1933,16 +1485,6 @@ module:
         criterion:
           debug: release
           raw: compiled
-          content: prime
-        inherit:
-          - npm.generate
-      npm.generate.proto:
-        opts:
-          entryPath: 'path::entry.proto.no.tests'
-          packagePath: package.json
-          filesPath: '{path::proto}/**'
-        criterion:
-          content: proto
         inherit:
           - npm.generate
       clean.out.debug.raw.no.tests.prime:
@@ -2306,45 +1848,23 @@ module:
           debug: release
           raw: compiled
           content: prime
-      npm.debug.raw:
+      npm:
         steps:
           - npm.generate.*=1
         criterion:
           debug: debug
           raw: raw
-      npm.release.raw:
-        steps:
-          - npm.generate.*=1
-        criterion:
-          debug: release
-          raw: raw
-      npm.debug.compiled:
-        steps:
-          - npm.generate.*=1
-        criterion:
-          debug: debug
-          raw: compiled
-      npm.release.compiled:
-        steps:
-          - npm.generate.*=1
-        criterion:
-          debug: release
-          raw: compiled
-      npm.proto:
-        steps:
-          - npm.generate.proto
-        criterion:
-          conent: proto
+          content: npm
       all:
         steps:
           - 'build::debug'
           - 'build::compiled.debug'
           - 'build::raw.release'
           - 'build::release'
-          - 'build::npm.*=5'
+          - 'build::npm'
     exported:
       proto.export:
-        version: 0.9.0
+        version: 0.0.1
         recursive: 0
         withIntegrated: 2
         tar: 0
@@ -2356,42 +1876,37 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml: *ref_3
+      ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml:
+        hash: 54ae911b147c19797ad80401792063b2
+        size: 38676
       ../.module/ModuleForTesting1/.ex.will.yml:
-        hash: 742015b531952d05816c35ee9f9ff3ca
-        size: 2109
+        hash: cb8e18ffa43d15a96d796fd81fa20120
+        size: 1855
       ../.module/ModuleForTesting1/.im.will.yml:
-        hash: e0b9ac504d07fa8723c98f50459f4829
-        size: 5603
-  ../.module/ModuleForTesting12/:
+        hash: 61158bfe28020fc446901fcb902af53b
+        size: 4862
+  ../.module/ModuleForTesting2a/:
     about:
-      name: wModuleForTesting12
+      name: wModuleForTesting2a
       org: noorg
       description: >-
-        Relations module. Collection of routines to define classes and relations
-        between them. ModuleForTesting12 leverages multiple inheritances, mixins, accessors,
-        fields groups defining, introspection and more. Use it as a skeleton of
-        the application.
+        Module for testing. This module is test assets not intended to be used
+        with another purpose.
       enabled: 1
-      version: 0.4.169
+      version: 0.0.1
       interpreters:
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
       keywords:
-        - wModuleForTesting1
-        - wModuleForTesting12
-        - mixin
-        - Class
-        - Object
-        - ModuleForTesting12type
-        - Incapsulation
+        - willbe
+        - test
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wanalen@willbe.so>
       contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
-        - Volodymyr M. <volodymyr.migdal@gmail.com>
-      npm.name: wModuleForTesting12
+        - Kostiantyn Wandalen <wanalen@willbe.so>
+        - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
+      npm.name: wmodulefortesting2a
       npm.scripts:
         test: wtest .run proto/**
         docgen: wdocgen .build proto
@@ -2411,7 +1926,7 @@ module:
       module.peer.willfiles:
         criterion:
           predefined: 1
-        path: out/wModuleForTesting12.out.will.yml
+        path: out/wModuleForTesting2a.out.will.yml
       module.peer.in:
         criterion:
           predefined: 1
@@ -2425,13 +1940,13 @@ module:
           predefined: 1
         path: .
       repository:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting12.git'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git'
       origins:
         path:
-          - 'git+https:///github.com/Wandalen/wModuleForTesting12.git'
-          - 'npm:///wModuleForTesting12'
+          - 'git+https:///github.com/Wandalen/wModuleForTesting2a.git'
+          - 'npm:///wmodulefortesting2a'
       bugtracker:
-        path: 'https:///github.com/Wandalen/wModuleForTesting12/issues'
+        path: 'https:///github.com/Wandalen/wModuleForTesting2a/issues'
       in:
         path: .
       out:
@@ -2475,7 +1990,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: proto/dwtools/abase/l3_proto/Include.s
+        path: proto/dwtools/abase/l3/testing2a/Include.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -2485,13 +2000,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/proto/dwtools/abase/l3_proto/Include.s'
+        path: '{path::out.*=1}/proto/dwtools/abase/l3/testing2a/Include.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/proto/dwtools/abase/l3_proto/Include.s'
+        path: '{path::out.*=1}/proto/dwtools/abase/l3/testing2a/Include.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -2505,27 +2020,11 @@ module:
           content: prime
         path: '{path::out.*=}/source/Index.s'
     submodule:
-      wModuleForTesting1:
-        path: 'npm:///wModuleForTesting1'
+      ModuleForTesting2:
+        path: 'git+https://github.com/Wandalen/wModuleForTesting2.git/@gamma'
         autoExporting: 0
         enabled: 0
-      wBlueprint:
-        path: 'npm:///wblueprint'
-        autoExporting: 0
-        enabled: 0
-      Self:
-        path: 'hd://.'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wEqualer:
-        path: 'npm:///wequaler'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wTesting:
+      Testing:
         path: 'npm:///wTesting'
         autoExporting: 0
         enabled: 0
@@ -2537,6 +2036,7 @@ module:
           filePath:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -2549,6 +2049,7 @@ module:
           filePath:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -2561,6 +2062,7 @@ module:
           filePath:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -2573,6 +2075,7 @@ module:
           filePath:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -2585,6 +2088,7 @@ module:
           filePath:
             'path::proto': '{path::out.raw.release}'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           raw: raw
           debug: release
@@ -2598,6 +2102,7 @@ module:
             '**.test/**': 0
             'path::proto': '{path::out.*=1}/Main.s'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -2612,6 +2117,7 @@ module:
             '**.test/**': 0
             'path::proto': '{path::out.*=1}/Main.s'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -2625,6 +2131,7 @@ module:
             '**.test*': 1
             'path::proto': '{path::out.*=1}/Tests.test.s'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -2638,6 +2145,7 @@ module:
             '**.test*': 1
             'path::proto': '{path::out.*=1}/Tests.test.s'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -3071,38 +2579,31 @@ module:
           - 'build::release'
           - 'build::npm'
     consistency:
-      ../.module/ModuleForTesting12/.ex.will.yml: *ref_4
-      ../.module/ModuleForTesting12/.im.will.yml: *ref_5
-      ../.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml: *ref_6
-  ../.module/ModuleForTesting12/out/wModuleForTesting12.out:
+      ../.module/ModuleForTesting2a/.ex.will.yml: *ref_4
+      ../.module/ModuleForTesting2a/.im.will.yml: *ref_5
+      ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml: *ref_6
+  ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out:
     about:
-      name: wModuleForTesting12
+      name: wModuleForTesting2a
       org: noorg
       description: >-
-        Relations module. Collection of routines to define classes and relations
-        between them. ModuleForTesting12 leverages multiple inheritances, mixins, accessors,
-        fields groups defining, introspection and more. Use it as a skeleton of
-        the application.
+        Module for testing. This module is test assets not intended to be used
+        with another purpose.
       enabled: 1
-      version: 0.4.169
+      version: 0.0.1
       interpreters:
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
       keywords:
-        - wModuleForTesting1
-        - wModuleForTesting12
-        - mixin
-        - Class
-        - Object
-        - ModuleForTesting12type
-        - Incapsulation
+        - willbe
+        - test
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
+      author: Kostiantyn Wandalen <wanalen@willbe.so>
       contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
-        - Volodymyr M. <volodymyr.migdal@gmail.com>
-      npm.name: wModuleForTesting12
+        - Kostiantyn Wandalen <wanalen@willbe.so>
+        - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
+      npm.name: wmodulefortesting2a
       npm.scripts:
         test: wtest .run proto/**
         docgen: wdocgen .build proto
@@ -3110,11 +2611,11 @@ module:
       module.willfiles:
         criterion:
           predefined: 1
-        path: wModuleForTesting12.out.will.yml
+        path: wModuleForTesting2a.out.will.yml
       module.common:
         criterion:
           predefined: 1
-        path: wModuleForTesting12.out
+        path: wModuleForTesting2a.out
       module.original.willfiles:
         criterion:
           predefined: 1
@@ -3136,13 +2637,13 @@ module:
           predefined: 1
         path: ..
       repository:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting12.git'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git'
       origins:
         path:
-          - 'git+https:///github.com/Wandalen/wModuleForTesting12.git'
-          - 'npm:///wModuleForTesting12'
+          - 'git+https:///github.com/Wandalen/wModuleForTesting2a.git'
+          - 'npm:///wmodulefortesting2a'
       bugtracker:
-        path: 'https:///github.com/Wandalen/wModuleForTesting12/issues'
+        path: 'https:///github.com/Wandalen/wModuleForTesting2a/issues'
       in:
         path: .
       out:
@@ -3186,7 +2687,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: ../proto/dwtools/abase/l3_proto/Include.s
+        path: ../proto/dwtools/abase/l3/testing2a/Include.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -3196,13 +2697,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/proto/dwtools/abase/l3_proto/Include.s'
+        path: '{path::out.*=1}/proto/dwtools/abase/l3/testing2a/Include.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/proto/dwtools/abase/l3_proto/Include.s'
+        path: '{path::out.*=1}/proto/dwtools/abase/l3/testing2a/Include.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -3229,64 +2730,20 @@ module:
         path:
           - ../proto
           - ../proto/dwtools
-          - ../proto/dwtools/ModuleForTesting1.s
+          - ../proto/dwtools/Tools.s
           - ../proto/dwtools/abase
-          - ../proto/dwtools/abase/-l3_proto
-          - ../proto/dwtools/abase/-l3_proto/Include.s
-          - ../proto/dwtools/abase/-l3_proto/l1
-          - ../proto/dwtools/abase/-l3_proto/l1/Define.s
-          - ../proto/dwtools/abase/-l3_proto/l1/ModuleForTesting12.s
-          - ../proto/dwtools/abase/-l3_proto/l1/Workpiece.s
-          - ../proto/dwtools/abase/-l3_proto/l3
-          - ../proto/dwtools/abase/-l3_proto/l3/Accessor.s
-          - ../proto/dwtools/abase/-l3_proto/l3/Blueprint.s
-          - ../proto/dwtools/abase/-l3_proto/l3/Class.s
-          - ../proto/dwtools/abase/-l3_proto/l3/Construction.s
-          - ../proto/dwtools/abase/-l3_proto/l3/Like.s
-          - ../proto/dwtools/abase/-l3_proto.test
-          - ../proto/dwtools/abase/-l3_proto.test/Class.test.s
-          - ../proto/dwtools/abase/-l3_proto.test/Complex.test.s
-          - ../proto/dwtools/abase/-l3_proto.test/Like.test.s
-          - ../proto/dwtools/abase/-l3_proto.test/ModuleForTesting12.test.s
-          - ../proto/dwtools/abase/l3_proto
-          - ../proto/dwtools/abase/l3_proto/Include.s
-          - ../proto/dwtools/abase/l3_proto/l1
-          - ../proto/dwtools/abase/l3_proto/l1/Define.s
-          - ../proto/dwtools/abase/l3_proto/l1/ModuleForTesting12.s
-          - ../proto/dwtools/abase/l3_proto/l1/Workpiece.s
-          - ../proto/dwtools/abase/l3_proto/l5
-          - ../proto/dwtools/abase/l3_proto/l5/Accessor.s
-          - ../proto/dwtools/abase/l3_proto/l5/Class.s
-          - ../proto/dwtools/abase/l3_proto/l5/Like.s
-          - ../proto/dwtools/abase/l3_proto.test
-          - ../proto/dwtools/abase/l3_proto.test/Blueprint.test.s
-          - ../proto/dwtools/abase/l3_proto.test/Class.test.s
-          - ../proto/dwtools/abase/l3_proto.test/Like.test.s
-          - ../proto/dwtools/abase/l3_proto.test/ModuleForTesting12.test.s
-          - ../proto/dwtools/amid
-          - ../proto/dwtools/atop
+          - ../proto/dwtools/abase/l3
+          - ../proto/dwtools/abase/l3/testing2a
+          - ../proto/dwtools/abase/l3/testing2a/Include.s
+          - ../proto/dwtools/abase/l3/testing2a/ModuleForTesting2a.s
+          - ../proto/dwtools/abase/l3.test
+          - ../proto/dwtools/abase/l3.test/ModuleForTesting2a.test.s
     submodule:
-      wModuleForTesting1:
-        path: 'npm:///wModuleForTesting1'
+      ModuleForTesting2:
+        path: 'git+https://../github.com/Wandalen/wModuleForTesting2.git@gamma'
         autoExporting: 0
         enabled: 0
-      wBlueprint:
-        path: 'npm:///wblueprint'
-        autoExporting: 0
-        enabled: 0
-      Self:
-        path: 'hd://..'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wEqualer:
-        path: 'npm:///wequaler'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
-      wTesting:
+      Testing:
         path: 'npm:///wTesting'
         autoExporting: 0
         enabled: 0
@@ -3301,6 +2758,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -3316,6 +2774,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -3331,6 +2790,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -3346,6 +2806,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -3361,6 +2822,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           raw: raw
           debug: release
@@ -3377,6 +2839,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -3394,6 +2857,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -3410,6 +2874,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -3426,6 +2891,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -3439,6 +2905,7 @@ module:
             '**': ''
           prefixPath: ../proto
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           generated: 1
           content: proto
@@ -3452,6 +2919,7 @@ module:
           recursive: 0
         recursive: 0
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           generated: 1
           content: proto
@@ -3901,7 +3369,7 @@ module:
           - 'build::npm'
     exported:
       proto.export:
-        version: 0.4.169
+        version: 0.0.1
         recursive: 0
         withIntegrated: 2
         tar: 0
@@ -3913,10 +3381,12 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml: *ref_6
-      ../.module/ModuleForTesting12/.ex.will.yml:
-        hash: 82bb441a25d7921c033e7a75d402c3d4
-        size: 1991
-      ../.module/ModuleForTesting12/.im.will.yml:
-        hash: 9a9fd1f83c6347611464c699fac74bd5
-        size: 5053
+      ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml:
+        hash: 28facd70d1725e271cc48e509c8d9172
+        size: 39000
+      ../.module/ModuleForTesting2a/.ex.will.yml:
+        hash: e65322bba5e46587b3d1272acc9468c3
+        size: 1861
+      ../.module/ModuleForTesting2a/.im.will.yml:
+        hash: 5c1adf8e274bbb3704b15e2f31fc5510
+        size: 4975
