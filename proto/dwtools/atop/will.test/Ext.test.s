@@ -19729,7 +19729,7 @@ function versionsAgreeNpm( test )
   {
     let willFile = a.fileProvider.fileRead( willFilePath );
     willFile = _.strReplace( willFile, '@alpha', '@beta' );
-    willFile = _.strReplace( willFile, '#0.0.31', '#0.0.34' );
+    willFile = _.strReplace( willFile, '@0.0.31', '@0.0.34' );
     a.fileProvider.fileWrite( willFilePath, willFile );
 
     versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a@beta' );
