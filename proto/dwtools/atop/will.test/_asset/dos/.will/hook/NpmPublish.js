@@ -42,20 +42,30 @@ function onModule( it )
   }
 
   if( !o.force )
-  diff = _.git.diff
-  ({
-    state2 : 'tag::' + o.tag,
-    localPath : it.junction.dirPath,
-  });
+  {
+    try
+    {
+      diff = _.git.diff
+      ({
+        state2 : 'tag::' + o.tag,
+        localPath : it.junction.dirPath,
+        sync : 1,
+      });
+    }
+    catch( err )
+    {
+      diff = {};
+    }
+  }
 
   if( o.force || !diff || diff.status )
   {
     if( o.verbosity )
     logger.log( ` + Publishing ${it.junction.nameWithLocationGet()}` );
-    if( o.verbosity >= 2 )
+    if( o.verbosity >= 2 && diff && diff.status )
     {
       logger.up();
-      logger.log( _.toStrNice( diff ) );
+      logger.log( _.toStrNice( diff.status ) );
       logger.down();
     }
   }
