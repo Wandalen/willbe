@@ -20011,19 +20011,19 @@ function stepWillbeVersionCheck( test )
   let self = this;
   let a = self.assetFor( test, 'step-willbe-version-check' );
 
-  let assetDstPath = _.path.join( a.routinePath, 'asset' );
-  let willbeRootPath = _.path.join( __dirname, '../../../..' );
-  let willbeDstPath = _.path.join( a.routinePath, 'willbe' );
-  let nodeModulesSrcPath = _.path.join( willbeRootPath, 'node_modules' );
-  let nodeModulesDstPath = _.path.join( willbeDstPath, 'node_modules' );
+  let assetDstPath = a.abs( 'asset' );
+  let willbeRootPath = a.path.join( __dirname, '../../../..' );
+  let willbeDstPath = a.abs( 'willbe' );
+  let nodeModulesSrcPath = a.path.join( willbeRootPath, 'node_modules' );
+  let nodeModulesDstPath = a.path.join( willbeDstPath, 'node_modules' );
 
-  if( !_.fileProvider.fileExists( _.path.join( willbeRootPath, 'package.json' ) ) )
+  if( !a.fileProvider.fileExists( _.path.join( willbeRootPath, 'package.json' ) ) )
   {
     test.is( true );
     return;
   }
 
-  _.fileProvider.filesReflect
+  a.fileProvider.filesReflect
   ({
     reflectMap :
     {
@@ -20034,10 +20034,10 @@ function stepWillbeVersionCheck( test )
     src : { prefixPath : willbeRootPath },
     dst : { prefixPath : willbeDstPath },
   })
-  _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : assetDstPath } });
-  _.fileProvider.softLink( nodeModulesDstPath, nodeModulesSrcPath );
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : assetDstPath } });
+  a.fileProvider.softLink( nodeModulesDstPath, nodeModulesSrcPath );
 
-  let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/entry/Exec' ) );
+  let execPath = a.path.nativize( a.path.join( willbeDstPath, 'proto/dwtools/atop/will/entry/Exec' ) );
   a.start = _.process.starter
   ({
     execPath : 'node ' + execPath,
@@ -20061,9 +20061,9 @@ function stepWillbeVersionCheck( test )
   .then( ( ) =>
   {
     let packageJsonPath = _.path.join( willbeDstPath, 'package.json' );
-    let packageJson = _.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+    let packageJson = a.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
     packageJson.version = '0.0.0';
-    _.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
+    a.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
     return null;
   })
 
@@ -20079,7 +20079,7 @@ function stepWillbeVersionCheck( test )
   return a.ready;
 }
 
-stepWillbeVersionCheck.timeOut = 25000;
+stepWillbeVersionCheck.timeOut = 40000;
 
 //
 
