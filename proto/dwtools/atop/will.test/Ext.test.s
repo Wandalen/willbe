@@ -17964,7 +17964,7 @@ function submodulesDownloadNpm( test )
     test.case = 'change origin of first submodule and run .submodules.download';
 
     let willFile = a.fileProvider.fileRead( willFilePath );
-    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1', 'npm:///wmodulefortesting2b' );
+    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1 ', 'npm:///wmodulefortesting2b' );
     a.fileProvider.fileWrite( willFilePath, willFile );
 
     filesBefore = self.find( a.abs( '.module/ModuleForTesting1' ) );
@@ -18064,7 +18064,7 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 3 );
@@ -18101,8 +18101,7 @@ function submodulesDownloadUpdateNpm( test )
   {
     let willFile = a.fileProvider.fileRead( willFilePath );
     willFile = _.strReplace( willFile, '@alpha', '@beta' );
-    willFile = _.strReplace( willFile, '#0.0.31', '#0.0.32 ' ); /* Dmytro : need to test writer, it appends zero to last number */
-    debugger;
+    willFile = _.strReplace( willFile, '@0.0.31', '@0.0.32 ' ); /* Dmytro : need to test writer, it appends zero to last number */
     a.fileProvider.fileWrite( willFilePath, willFile );
 
     versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a@beta' );
@@ -18120,7 +18119,7 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -18162,7 +18161,7 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
