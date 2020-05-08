@@ -262,7 +262,7 @@ function strType( src )
   {
     if( Object.getModuleForTesting12typeOf( src ) === null )
     result = 'Map:Pure';
-    else if( src.__proto__ !== Object.__proto__ )
+    else if( Object.getPrototypeOf( src ) !== Object.getPrototypeOf( Object ) )
     result = 'Object:Special';
   }
 

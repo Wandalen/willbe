@@ -3,7 +3,7 @@ let _ = require( `../../../dwtools/Tools.s` );
 _.include( `wAppBasic` );
 _.include( `wFiles` );
 
-let execPath = _.path.nativize( _.path.join( __dirname, `../will/Exec` ) );
+let execPath = _.path.nativize( _.path.join( __dirname, `../will/entry/Exec` ) );
 let assetsOriginalSuitePath = _.path.join( __dirname, `_asset` );
 let repoDirPath = _.path.join( assetsOriginalSuitePath, `_repo` );
 let ready = new _.Consequence().take( null );

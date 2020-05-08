@@ -47,7 +47,7 @@ function ready( timeOut, procedure, onReady )
   _.assert( _.intIs( timeOut ) );
   _.assert( _.routineIs( onReady ) || onReady === undefined );
 
-  if( typeof window !== 'undefined' && typeof document !== 'undefined' && document.readyState != 'complete' )
+  if( typeof window !== 'undefined' && typeof document !== 'undefined' && document.readyState !== 'complete' )
   {
     let con = _.Consequence ? new _.Consequence({ tag : 'timeReady' }) : null;
 
