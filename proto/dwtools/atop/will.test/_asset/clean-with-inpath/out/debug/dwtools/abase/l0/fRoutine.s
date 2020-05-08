@@ -38,7 +38,7 @@ function routineIsPure( src )
 {
   if( !src )
   return false;
-  if( !( Object.getModuleForTesting12typeOf( src ) === Function.__proto__ ) )
+  if( !( Object.getModuleForTesting12typeOf( src ) === Object.getPrototypeOf( Function ) ) )
   return false;
   return true;
 }

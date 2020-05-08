@@ -3897,7 +3897,7 @@ function relfectSubmodulesWithNotExistingFile( test )
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
   // let outPath = _.path.join( routinePath, 'out' );
-  // // let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/Exec' ) );
+  // // let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/entry/Exec' ) );
   // let ready = new _.Consequence().take( null );
   //
   // let start = _.process.starter
@@ -20040,7 +20040,7 @@ function stepWillbeVersionCheck( test )
   _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : assetDstPath } });
   _.fileProvider.softLink( nodeModulesDstPath, nodeModulesSrcPath );
 
-  let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/Exec' ) );
+  let execPath = _.path.nativize( _.path.join( willbeDstPath, 'proto/dwtools/atop/will/entry/Exec' ) );
   a.start = _.process.starter
   ({
     execPath : 'node ' + execPath,
