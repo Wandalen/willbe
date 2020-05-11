@@ -15077,7 +15077,7 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
 
   .then( ( op ) =>
   {
-    _.fileProvider.filesDelete( a.abs( 'module/opt/.module' ) )
+    a.fileProvider.filesDelete( a.abs( 'module/opt/.module' ) )
     test.is( a.fileProvider.fileExists( a.abs( 'module/opt/out/opt.out.will.yml' ) ) );
     test.is( !a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
     test.is( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
@@ -15097,8 +15097,18 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
     test.is( a.fileProvider.fileExists( a.abs( 'out/Optional.out.will.yml' ) ) );
     test.is( !a.fileProvider.fileExists( a.abs( 'module/opt/.module' ) ) );
 
-    var exp = [ 'Optional.out', '../Optional', '../module/opt/', '../module/opt/out/opt.out' ];
-    var outfile = _.fileProvider.configRead( a.abs( 'out/Optional.out.will.yml' ) );
+    var exp =
+    [
+      'Optional.out',
+      '../Optional',
+      '../module/opt/',
+      '../module/opt/out/opt.out',
+      '../module/opt/.module/ModuleForTesting2/',
+      '../module/opt/.module/ModuleForTesting2/out/wModuleForTesting2.out',
+      '../module/opt/.module/ModuleForTesting1/',
+      '../module/opt/.module/ModuleForTesting1/out/wModuleForTesting1.out'
+    ];
+    var outfile = a.fileProvider.configRead( a.abs( 'out/Optional.out.will.yml' ) );
     test.identical( _.mapKeys( outfile.module ), exp );
 
     return null;
@@ -15132,7 +15142,7 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
 
   .then( ( op ) =>
   {
-    _.fileProvider.filesDelete( a.abs( 'module/mand/.module' ) )
+    a.fileProvider.filesDelete( a.abs( 'module/mand/.module' ) );
     test.is( a.fileProvider.fileExists( a.abs( 'module/mand/out/mand.out.will.yml' ) ) );
     test.is( !a.fileProvider.fileExists( a.abs( 'out/Mandatory.out.will.yml' ) ) );
     test.is( !a.fileProvider.fileExists( a.abs( 'module/mand/.module' ) ) );
@@ -15158,7 +15168,7 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
   return a.ready;
 }/* end of function exportWithSubmoduleThatHasModuleDirDeleted */
 
-exportWithSubmoduleThatHasModuleDirDeleted.timeOut = 100000;
+exportWithSubmoduleThatHasModuleDirDeleted.timeOut = 150000;
 exportWithSubmoduleThatHasModuleDirDeleted.description =
 `
 Supermodule has single submodule. Submodule has own dependency too.
