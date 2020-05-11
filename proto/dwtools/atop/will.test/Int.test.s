@@ -5773,46 +5773,37 @@ superResolve.timeOut = 130000;
 function pathsResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let modulePath = abs( 'super' );
-  let submodulesPath = abs( '.module' );
-  let outDirPath = abs( 'out' );
-  let execPath = _.path.join( __dirname, '../will/entry/Exec' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'export-multiple' );
+  let execPath = a.path.join( __dirname, '../will/entry/Exec' );
+  let will = new _.Will();
   let opener;
 
   function pin( filePath )
   {
     if( _.arrayIs( filePath ) )
-    return filePath.map( ( e ) => abs( e ) );
-    return abs( filePath );
+    return filePath.map( ( e ) => a.abs( e ) );
+    return a.abs( filePath );
   }
 
   function pout( filePath )
   {
     if( _.arrayIs( filePath ) )
-    return filePath.map( ( e ) => abs( 'super.out', e ) );
-    return abs( 'super.out', filePath );
+    return filePath.map( ( e ) => a.abs( 'super.out', e ) );
+    return a.abs( 'super.out', filePath );
   }
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeManual({ willfilesPath : modulePath });
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
     return opener.open();
   })
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
 
     test.case = 'resolved, .';
@@ -5823,7 +5814,7 @@ function pathsResolve( test )
     return null;
   })
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
 
     test.case = 'path::in*=1, pathResolving : 0';
@@ -5833,7 +5824,7 @@ function pathsResolve( test )
 
     test.case = 'path::in*=1';
     var resolved = opener.openedModule.resolve({ prefixlessAction : 'resolved', selector : 'path::in*=1' })
-    var expected = routinePath;
+    var expected = a.routinePath;
     test.identical( resolved, expected );
 
     test.case = 'path::out.debug';
@@ -5848,12 +5839,12 @@ function pathsResolve( test )
 
     test.case = '{path::in*=1}/proto, pathNativizing : 1';
     var resolved = opener.openedModule.resolve({ selector : '{path::in*=1}/proto', pathNativizing : 1, selectorIsPath : 1 });
-    var expected = _.path.nativize( pin( 'proto' ) );
+    var expected = a.path.nativize( pin( 'proto' ) );
     test.identical( resolved, expected );
 
     test.case = '{path::in*=1}/proto, pathNativizing : 1';
     var resolved = opener.openedModule.resolve({ selector : '{path::in*=1}/proto', pathNativizing : 1, selectorIsPath : 0 });
-    var expected = _.path.nativize( pin( '.' ) ) + '/proto';
+    var expected = a.path.nativize( pin( '.' ) ) + '/proto';
     test.identical( resolved, expected );
 
     return null;
@@ -5861,7 +5852,7 @@ function pathsResolve( test )
 
   /* - */
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
 
     /* */
@@ -5882,7 +5873,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      rel( execPath ),
+      a.rel( execPath ),
       'proto',
       'super.out',
       '.',
@@ -5891,7 +5882,7 @@ function pathsResolve( test )
       'super.out/release'
     ]
     var got = resolved;
-    test.identical( _.setFrom( got ), _.setFrom( _.filter( abs( expected ), ( p ) => p ? _.path.s.nativize( p ) : p ) ) );
+    test.identical( _.setFrom( got ), _.setFrom( _.filter( a.abs( expected ), ( p ) => p ? a.path.s.nativize( p ) : p ) ) );
 
     /* */
 
@@ -5911,7 +5902,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      rel( execPath ),
+      a.rel( execPath ),
       'proto',
       'super.out',
       '.',
@@ -5920,7 +5911,7 @@ function pathsResolve( test )
       'super.out/release'
     ]
     var got = resolved;
-    test.identical( _.setFrom( rel( got ) ), _.setFrom( expected ) );
+    test.identical( _.setFrom( a.rel( got ) ), _.setFrom( expected ) );
 
     /* */
 
@@ -5945,7 +5936,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      rel( execPath ),
+      a.rel( execPath ),
       'proto',
       'super.out',
       '.',
@@ -5954,7 +5945,7 @@ function pathsResolve( test )
       'super.out/release'
     ]
     var got = resolved;
-    test.identical( rel( got ), expected );
+    test.identical( a.rel( got ), expected );
 
     /* */
 
@@ -5979,7 +5970,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      rel( execPath ),
+      a.rel( execPath ),
       'super.out/proto',
       'super.out/super.out',
       'super.out',
@@ -5988,7 +5979,7 @@ function pathsResolve( test )
       'super.out/super.out/release'
     ]
     var got = resolved;
-    test.identical( rel( got ), expected );
+    test.identical( a.rel( got ), expected );
 
     /* */
 
@@ -6013,7 +6004,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      rel( execPath ),
+      a.rel( execPath ),
       'proto',
       'super.out',
       '.',
@@ -6022,7 +6013,7 @@ function pathsResolve( test )
       'super.out/release'
     ]
     var got = resolved;
-    test.identical( rel( got ), expected );
+    test.identical( a.rel( got ), expected );
 
     /* */
 
@@ -6043,14 +6034,14 @@ function pathsResolve( test )
       'out' : 'super.out',
       'out.debug' : 'super.out/debug',
       'out.release' : 'super.out/release',
-      'will' : path.join( __dirname, '../will/entry/Exec' ),
-      'module.dir' : abs( '.' ),
-      'module.willfiles' : abs([ 'super.ex.will.yml', 'super.im.will.yml' ]),
-      'module.peer.willfiles' : abs( 'super.out/supermodule.out.will.yml' ),
-      'module.common' : abs( 'super' ),
-      'module.peer.in' : abs( 'super.out' ),
-      'module.original.willfiles' : abs([ 'super.ex.will.yml', 'super.im.will.yml' ]),
-      'local' : abs( 'super' ),
+      'will' : a.path.join( __dirname, '../will/entry/Exec' ),
+      'module.dir' : a.abs( '.' ),
+      'module.willfiles' : a.abs([ 'super.ex.will.yml', 'super.im.will.yml' ]),
+      'module.peer.willfiles' : a.abs( 'super.out/supermodule.out.will.yml' ),
+      'module.common' : a.abs( 'super' ),
+      'module.peer.in' : a.abs( 'super.out' ),
+      'module.original.willfiles' : a.abs([ 'super.ex.will.yml', 'super.im.will.yml' ]),
+      'local' : a.abs( 'super' ),
       'download' : null,
       'remote' : null,
       'current.remote' : null,
@@ -6061,7 +6052,7 @@ function pathsResolve( test )
     _.any( resolved, ( e, k ) => test.identical( e.path, opener.openedModule.pathResourceMap[ k ].path ) );
     _.any( resolved, ( e, k ) => test.is( e.module === module || e.module === opener.openedModule ) );
     _.any( resolved, ( e, k ) => test.is( !!e.original ) );
-    test.is( _.path.isAbsolute( got.will ) );
+    test.is( a.path.isAbsolute( got.will ) );
 
     /* */
 
@@ -6081,7 +6072,7 @@ function pathsResolve( test )
       'out' : ( 'super.out' ),
       'out.debug' : ( 'super.out/debug' ),
       'out.release' : ( 'super.out/release' ),
-      'will' : rel( execPath ),
+      'will' : a.rel( execPath ),
       'module.dir' : '.',
       'module.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.common' : 'super',
@@ -6094,7 +6085,7 @@ function pathsResolve( test )
       'module.peer.in' : 'super.out',
     }
     var got = _.select( resolved, '*/path' );
-    test.identical( rel( got ), expected );
+    test.identical( a.rel( got ), expected );
 
     /* */
 
@@ -6117,7 +6108,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
-      'will' : rel( execPath ),
+      'will' : a.rel( execPath ),
       'proto' : 'super.out/proto',
       'temp' : 'super.out/super.out',
       'download' : null,
@@ -6127,7 +6118,7 @@ function pathsResolve( test )
       'out.release' : 'super.out/super.out/release'
     }
     var got = _.select( resolved, '*/path' );
-    test.identical( rel( got ), expected );
+    test.identical( a.rel( got ), expected );
 
     /* */
 
@@ -6151,7 +6142,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
-      'will' : rel( execPath ),
+      'will' : a.rel( execPath ),
       'proto' : 'proto',
       'temp' : 'super.out',
       'in' : '.',
@@ -6160,7 +6151,7 @@ function pathsResolve( test )
       'out.release' : 'super.out/release'
     }
     var got = resolved;
-    test.identical( rel( got ), expected );
+    test.identical( a.rel( got ), expected );
 
     /* */
 
@@ -6184,7 +6175,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
-      'will' : rel( execPath ),
+      'will' : a.rel( execPath ),
       'proto' : 'proto',
       'temp' : 'super.out',
       'in' : '.',
@@ -6193,7 +6184,7 @@ function pathsResolve( test )
       'out.release' : 'super.out/release'
     }
     var got = resolved;
-    test.identical( rel( got ), expected );
+    test.identical( a.rel( got ), expected );
 
     /* */
 
@@ -6217,7 +6208,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
-      'will' : rel( execPath ),
+      'will' : a.rel( execPath ),
       'proto' : 'super.out/proto',
       'temp' : 'super.out/super.out',
       'in' : 'super.out',
@@ -6226,7 +6217,7 @@ function pathsResolve( test )
       'out.release' : 'super.out/super.out/release'
     }
     var got = resolved;
-    test.identical( rel( got ), expected );
+    test.identical( a.rel( got ), expected );
 
     /* */
 
@@ -6250,7 +6241,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      rel( execPath ),
+      a.rel( execPath ),
       'proto',
       'super.out',
       '.',
@@ -6259,7 +6250,7 @@ function pathsResolve( test )
       'super.out/release'
     ]
     var got = _.select( resolved, '*/path' );
-    test.identical( rel( got ), expected );
+    test.identical( a.rel( got ), expected );
 
     /* */
 
@@ -6283,7 +6274,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      rel( execPath ),
+      a.rel( execPath ),
       'proto',
       'super.out',
       '.',
@@ -6292,7 +6283,7 @@ function pathsResolve( test )
       'super.out/release'
     ]
     var got = _.select( resolved, '*/path' );
-    test.identical( rel( got ), expected );
+    test.identical( a.rel( got ), expected );
 
     /* */
 
@@ -6316,7 +6307,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      rel( execPath ),
+      a.rel( execPath ),
       'super.out/proto',
       'super.out/super.out',
       'super.out',
@@ -6325,14 +6316,14 @@ function pathsResolve( test )
       'super.out/super.out/release'
     ]
     var got = _.select( resolved, '*/path' );
-    test.identical( rel( got ), expected );
+    test.identical( a.rel( got ), expected );
 
     return null;
   });
 
   /* - */
 
-  ready.finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     if( err )
     throw err;
@@ -6341,7 +6332,7 @@ function pathsResolve( test )
     return arg;
   });
 
-  return ready;
+  return a.ready;
 }
 
 pathsResolve.timeOut = 130000;
