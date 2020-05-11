@@ -4472,6 +4472,40 @@ function reflectorMasks( test )
 
 reflectorMasks.timeOut = 200000;
 
+//
+
+function reflectorsCommonPrefix( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflectors-common-prefix' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.build' })
+
+  .then( ( got ) =>
+  {
+    test.case = 'use two reflectors with common prefix in name';
+
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug', './debug/Source.js' ] );
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy reflected 1 file\\(s\\) .* in .*` ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy.second reflected 1 file\\(s\\) .* in .*` ) ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+reflectorMasks.timeOut = 200000;
+
 // --
 // with do
 // --
@@ -22096,6 +22130,7 @@ var Self =
     reflectInheritSubmodules,
     reflectComplexInherit,
     reflectorMasks,
+    reflectorsCommonPrefix,
 
     // with do
 
