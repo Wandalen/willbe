@@ -8486,7 +8486,6 @@ function modulesEach( test )
 {
   let self = this;
   let a = self.assetFor( test, 'two-in-exported' );
-  let modulePath = a.abs( './super' );
   let opener;
 
   /* - */
@@ -8496,7 +8495,7 @@ function modulesEach( test )
   {
     test.case = 'all : 0';
     a.reflect();
-    opener = a.will.openerMakeManual({ willfilesPath : modulePath });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './super' ) });
 
     a.will.prefer
     ({
@@ -8564,7 +8563,7 @@ function modulesEach( test )
   {
     test.case = 'all : 1';
     a.reflect();
-    opener = a.will.openerMakeManual({ willfilesPath : modulePath });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './super' ) });
 
     a.will.prefer
     ({
@@ -8605,7 +8604,6 @@ function modulesEachDuplicates( test )
 {
   let self = this;
   let a = self.assetFor( test, 'hierarchy-duplicate' );
-  let modulePath = a.abs( './z' );
   let opener;
 
   /* - */
@@ -8615,7 +8613,7 @@ function modulesEachDuplicates( test )
   .then( () =>
   {
     a.reflect();
-    opener = a.will.openerMakeManual({ willfilesPath : modulePath });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './z' ) });
     return opener.open();
   })
 
@@ -8937,29 +8935,21 @@ submodulesDeleteAndDownload.timeOut = 300000;
 function customLogger( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'simple' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let modulePath = abs( './' );
-  let submodulesPath = abs( '.module' );
-  let outDirPath = abs( 'out' );
+  let a = self.assetFor( test, 'simple' );
   let logger = new _.Logger({ output : null, name : 'willCustomLogger', onTransformEnd, verbosity : 2 });
   let loggerOutput = [];
-  let will = new _.Will({ logger });
+  a.will = new _.Will({ logger });
+  a.reflect();
+  a.fileProvider.filesDelete( a.abs( 'out' ) );
 
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  _.fileProvider.filesDelete( outDirPath );
-
-  var opener = will.openerMakeManual({ willfilesPath : modulePath });
+  var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
   opener.find();
 
   return opener.open().split().then( () =>
   {
 
     var expected = [];
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     let builds = opener.openedModule.buildsResolve();
 
     test.identical( builds.length, 1 );
@@ -8972,21 +8962,21 @@ function customLogger( test )
 
       test.description = 'files';
       var expected = [ '.', './debug', './debug/File.js' ];
-      var files = self.find( outDirPath );
+      var files = self.find( a.abs( 'out' ) );
       test.identical( files, expected );
 
       opener.finit();
 
       test.description = 'no garbage left';
-      test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.select( a.will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( _.mapKeys( a.will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
       let output = loggerOutput.join( '\n' );
       test.is( _.strHas( output, /Building .*module::customLogger \/ build::debug.*/ ) );
