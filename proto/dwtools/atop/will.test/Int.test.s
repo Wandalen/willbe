@@ -9026,29 +9026,18 @@ modulesEachDuplicates.timeOut = 300000;
 function submodulesResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-local-repos' );
-  let repoPath = _.path.join( self.suiteTempPath, '_repo' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let modulePath = abs( './' );
-  let submodulesPath = abs( '.module' );
-  let outDirPath = abs( 'out' );
-  let will = new _.Will;
-  let ready = new _.Consequence().take( null );
+  let a = self.assetFor( test, 'submodules-local-repos' );
+  let will = new _.Will();
   let opener;
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesDelete( repoPath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
-    _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeManual({ willfilesPath : modulePath });
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
 
     will.prefer
     ({
@@ -9069,13 +9058,12 @@ function submodulesResolve( test )
     test.is( !!submodule.opener );
     test.identical( submodule.name, 'ModuleForTesting1' );
     test.identical( submodule.opener.openedModule, null );
-    test.identical( submodule.opener.willfilesPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out.will' ) );
-    test.identical( submodule.opener.dirPath, abs( '.module/ModuleForTesting1/out' ) );
-    test.identical( submodule.opener.localPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.commonPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
+    test.identical( submodule.opener.willfilesPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out.will' ) );
+    test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
+    test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@gamma' ) );
 
-    // test.is( !submodule.hasFiles );
     test.is( !submodule.opener.repo.hasFiles );
     test.is( !submodule.opener.openedModule );
 
@@ -9105,21 +9093,20 @@ function submodulesResolve( test )
     test.identical( submodule.opener.name, 'ModuleForTesting1' );
     test.identical( submodule.opener.aliasName, 'ModuleForTesting1' );
     test.identical( submodule.opener.fileName, 'wModuleForTesting1.out' );
-    test.identical( submodule.opener.willfilesPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) );
-    test.identical( submodule.opener.dirPath, abs( '.module/ModuleForTesting1/out' ) );
-    test.identical( submodule.opener.localPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.commonPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
+    test.identical( submodule.opener.willfilesPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) );
+    test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
+    test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@gamma' ) );
 
     test.identical( submodule.opener.openedModule.name, 'wModuleForTesting1' );
     test.identical( submodule.opener.openedModule.resourcesFormed, 8 );
     test.identical( submodule.opener.openedModule.subModulesFormed, 8 );
-    test.identical( submodule.opener.openedModule.willfilesPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) );
-    test.identical( submodule.opener.openedModule.dirPath, abs( '.module/ModuleForTesting1/out' ) );
-    test.identical( submodule.opener.openedModule.localPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.openedModule.commonPath, abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
-    // test.identical( submodule.opener.openedModule.currentRemotePath, _.uri.join( repoPath, 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@master' ) );
+    test.identical( submodule.opener.openedModule.willfilesPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) );
+    test.identical( submodule.opener.openedModule.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
+    test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@gamma' ) );
     test.identical( submodule.opener.openedModule.currentRemotePath, null );
 
     test.case = 'mask, single module';
@@ -9141,7 +9128,7 @@ function submodulesResolve( test )
 
   /* */
 
-  return ready;
+  return a.ready;
 } /* end of function submodulesResolve */
 
 submodulesResolve.timeOut = 300000;
