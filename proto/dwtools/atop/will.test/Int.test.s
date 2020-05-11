@@ -9060,24 +9060,18 @@ function resourcePathRemote( test )
 function moduleIsNotValid( test )
 {
   let self = this; /* xxx qqq : ! */
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-download-errors' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let modulePath = abs( './good' );
-  let downloadPath = abs( './.module/ModuleForTesting2a' );
-  let will = new _.Will();
+  let a = self.assetFor( test, 'submodules-download-errors' );
+  let downloadPath = a.abs( './.module/ModuleForTesting2a' );
   let opener;
-  let ready = new  _.Consequence().take( null );
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'download submodule';
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : modulePath });
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './good' ) });
 
-    will.prefer
+    a.will.prefer
     ({
       allOfSub : 1,
     });
@@ -9093,10 +9087,10 @@ function moduleIsNotValid( test )
 
     opener.close();
 
-    let outWillFilePath = _.path.join( downloadPath, 'out/wModuleForTesting2a.out.will.yml' );
-    let outWillFile = _.fileProvider.configRead( outWillFilePath );
+    let outWillFilePath = a.path.join( downloadPath, 'out/wModuleForTesting2a.out.will.yml' );
+    let outWillFile = a.fileProvider.configRead( outWillFilePath );
     outWillFile.section = { field : 'value' };
-    _.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
 
     return null;
   })
@@ -9104,9 +9098,9 @@ function moduleIsNotValid( test )
   .then( () =>
   {
     test.case = 'repopen module';
-    let outWillFilePath = _.path.join( downloadPath, 'out/wModuleForTesting2a.out.will.yml' );
+    let outWillFilePath = a.path.join( downloadPath, 'out/wModuleForTesting2a.out.will.yml' );
     debugger;
-    opener = will.openerMakeManual({ willfilesPath : outWillFilePath });
+    opener = a.will.openerMakeManual({ willfilesPath : outWillFilePath });
     return opener.open({ all : 1, resourcesFormed : 0 });
   })
 
@@ -9123,7 +9117,7 @@ function moduleIsNotValid( test )
     return null;
   })
 
-  return ready;
+  return a.ready;
 }
 
 //
