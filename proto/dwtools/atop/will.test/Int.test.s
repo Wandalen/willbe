@@ -4239,35 +4239,25 @@ function exportCourruptedOutfileSyntax( test )
 
 /*
 test
-  - exporing of module with disabled corrupted submodules works
+  - exporting of module with disabled corrupted submodules works
   - Disabled modules are not in default submodules
 */
 
 function exportCourruptedSubmodulesDisabled( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-submodules-disabled' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let superInPath = abs( 'super' );
-  let superOutFilePath = abs( 'super.out/supermodule.out.will.yml' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'corrupted-submodules-disabled' );
+  let will = new _.Will();
   let opener;
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'export super';
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
-    opener = will.openerMakeManual({ willfilesPath : superInPath });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
 
     will.prefer
     ({
@@ -4297,7 +4287,6 @@ function exportCourruptedSubmodulesDisabled( test )
 
     test.case = 'modulesEach, withDisabled';
     var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabledSubmodules : 1 });
-    // var exp = [];
     var exp =
     [
       '.module/Submodule1/',
@@ -4305,9 +4294,8 @@ function exportCourruptedSubmodulesDisabled( test )
       '.module/Submodule3/',
     ];
     var localPath = _.filter( got, ( e ) => e.localPath );
-    test.identical( localPath, abs( exp ) );
+    test.identical( localPath, a.abs( exp ) );
     var got = opener.openedModule.modulesEach({ outputFormat : '/', withDisabledSubmodules : 1 });
-    // var exp = [];
     var exp =
     [
       '.module/Submodule1',
@@ -4315,8 +4303,7 @@ function exportCourruptedSubmodulesDisabled( test )
       '.module/Submodule3',
     ];
     var localPath = _.filter( got, ( e ) => e.opener.downloadPath );
-    test.identical( localPath, abs( exp ) );
-    // var exp = [];
+    test.identical( localPath, a.abs( exp ) );
     var exp =
     [
       'git+https:///github.com/X1/X1.git@master',
@@ -4336,7 +4323,7 @@ function exportCourruptedSubmodulesDisabled( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.configRead( superOutFilePath );
+    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4360,14 +4347,14 @@ function exportCourruptedSubmodulesDisabled( test )
     test.identical( will.openersErrorsArray.length, 0 );
 
     test.description = 'no garbage left';
-    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
     test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
     return null;
@@ -4375,7 +4362,7 @@ function exportCourruptedSubmodulesDisabled( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 } /* end of function exportCourruptedSubmodulesDisabled */
 
 //
