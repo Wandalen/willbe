@@ -8378,40 +8378,31 @@ relative resolved path absolutized if pathResolving:1
 function pathsResolveFailing( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-with-submodules' ); /* xxx qqq : ! */
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let modulePath = abs( 'ab/' );
-  let outDirPath = abs( 'out' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'export-with-submodules' );
   let opener;
 
   function pin( filePath )
   {
-    return abs( '', filePath );
+    return a.abs( '', filePath );
   }
 
   function pout( filePath )
   {
-    return abs( 'out', filePath );
+    return a.abs( 'out', filePath );
   }
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeManual({ willfilesPath : modulePath });
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( 'ab/' ) });
     return opener.open({ all : 1 });
   })
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
 
     test.case = 'path::entry.*=1: null';
@@ -8475,7 +8466,7 @@ function pathsResolveFailing( test )
     return null;
   });
 
-  ready.finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     if( err )
     throw err;
@@ -8486,7 +8477,7 @@ function pathsResolveFailing( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 //
