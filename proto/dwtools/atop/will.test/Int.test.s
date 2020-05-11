@@ -2951,25 +2951,19 @@ test
 function exportDefaultPath( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-default-path' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outDirPath = abs( 'out' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'export-default-path' );
+  let outDirPath = a.abs( 'out' );
+  let will = new _.Will();
   let opener;
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'export willfile with default path';
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : abs( 'path' ) });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'path' ) });
     return opener.open();
   })
 
@@ -2986,7 +2980,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.configRead( _.path.join( outDirPath, 'path.out.will' ) );
+    var outfile = a.fileProvider.configRead( _.path.join( outDirPath, 'path.out.will' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3003,13 +2997,12 @@ function exportDefaultPath( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'export willfile with default reflector';
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : abs( 'reflector' ) });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'reflector' ) });
     return opener.open();
   })
 
@@ -3026,7 +3019,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.configRead( _.path.join( outDirPath, 'reflector.out.will' ) );
+    var outfile = a.fileProvider.configRead( _.path.join( outDirPath, 'reflector.out.will' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3042,13 +3035,12 @@ function exportDefaultPath( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'export willfile with no default export path';
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : abs( 'nopath' ) });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'nopath' ) });
     return opener.open();
   })
 
@@ -3081,13 +3073,12 @@ function exportDefaultPath( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'export willfile with default export path, no file found';
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : abs( 'nofile' ) });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'nofile' ) });
     return opener.open();
   })
 
@@ -3119,13 +3110,12 @@ function exportDefaultPath( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'export willfile with default nonglob export path';
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : abs( 'nonglob' ) });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'nonglob' ) });
     return opener.open();
   })
 
@@ -3154,18 +3144,18 @@ function exportDefaultPath( test )
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.description = 'no garbage left';
-    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
     test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
     return null;
@@ -3173,7 +3163,7 @@ function exportDefaultPath( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 
 } /* end of function exportDefaultPath */
 
