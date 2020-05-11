@@ -281,8 +281,8 @@ function build( test )
   .then( () =>
   {
     test.case = '.with v1 .build'
-    _.fileProvider.filesDelete( _.fileProvider.path.join( a.routinePath, 'out/Produced.js2' ) );
-    _.fileProvider.filesDelete( _.fileProvider.path.join( a.routinePath, 'out/Produced.txt2' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/Produced.js2' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/Produced.txt2' ) );
     return null;
   })
 
@@ -338,8 +338,8 @@ function build( test )
   .then( () =>
   {
     test.case = '.with v2 .build'
-    _.fileProvider.filesDelete( _.fileProvider.path.join( a.routinePath, 'out/Produced.js2' ) );
-    _.fileProvider.filesDelete( _.fileProvider.path.join( a.routinePath, 'out/Produced.txt2' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/Produced.js2' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/Produced.txt2' ) );
     return null;
   })
 
