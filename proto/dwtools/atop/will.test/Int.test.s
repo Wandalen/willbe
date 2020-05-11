@@ -7228,54 +7228,43 @@ pathsResolveOfSubmodulesAndOwn.timeOut = 300000;
 function pathsResolveOutFileOfExports( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let outSuperDirPath = abs( 'super.out' );
-  let outSubDirPath = abs( 'sub.out' );
-  let outSuperTerminalPath = abs( 'super.out/supermodule.out.will.yml' );
-  let outSubTerminalPath = abs( 'sub.out/submodule.out.will.yml' );
-  let modulePath = abs( 'super.out/supermodule' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'export-multiple-exported' );
+  let will = new _.Will();
   let opener;
 
   function pin( filePath )
   {
-    return abs( filePath );
+    return a.abs( filePath );
   }
 
   function pout( filePath )
   {
-    return abs( 'out', filePath );
+    return a.abs( 'out', filePath );
   }
 
   function sout( filePath )
   {
-    return abs( 'super.out', filePath );
+    return a.abs( 'super.out', filePath );
   }
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : modulePath });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'super.out/supermodule' ) });
     return opener.open({ all : 1 });
   })
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
 
     test.open( 'without export' );
 
     test.case = 'submodule::*/path::in*=1, default';
     var resolved = opener.openedModule.resolve( 'submodule::*/path::in*=1' );
-    var expected = abs( 'sub.out' );
+    var expected = a.abs( 'sub.out' );
     test.identical( resolved, expected );
 
     test.case = 'submodule::*/path::in*=1, pathResolving : 0';
@@ -7291,7 +7280,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapFlattening : 1,
     });
-    var expected = abs( 'sub.out' );
+    var expected = a.abs( 'sub.out' );
     test.identical( resolved, expected );
 
     test.close( 'without export' );
@@ -7302,7 +7291,7 @@ function pathsResolveOutFileOfExports( test )
 
     test.case = 'submodule::*/exported::*=1debug/path::in*=1, default';
     var resolved = opener.openedModule.resolve( 'submodule::*/exported::*=1debug/path::in*=1' );
-    var expected = abs( 'sub.out' );
+    var expected = a.abs( 'sub.out' );
     test.identical( resolved, expected );
 
     test.case = 'submodule::*/exported::*=1debug/path::in*=1, pathResolving : 0';
@@ -7323,7 +7312,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapFlattening : 1,
     });
-    var expected = abs( 'sub.out' );
+    var expected = a.abs( 'sub.out' );
     test.identical( resolved, expected );
 
     test.close( 'with export' );
@@ -7331,7 +7320,7 @@ function pathsResolveOutFileOfExports( test )
     return null;
   });
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
 
 /*
@@ -7526,7 +7515,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 1,
     });
-    var expected = abs( 'sub.out' );
+    var expected = a.abs( 'sub.out' );
     test.identical( resolved, expected );
 
     test.close( 'mapValsUnwrapping : 1' );
@@ -7542,7 +7531,7 @@ function pathsResolveOutFileOfExports( test )
       singleUnwrapping : 1,
       mapValsUnwrapping : 0,
     });
-    var expected = abs( 'sub.out' );
+    var expected = a.abs( 'sub.out' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -7562,7 +7551,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = [ [ abs( 'sub.out' ) ] ];
+    var expected = [ [ a.abs( 'sub.out' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -7578,7 +7567,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = { 'Submodule/in' : abs( 'sub.out' ) };
+    var expected = { 'Submodule/in' : a.abs( 'sub.out' ) };
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -7603,7 +7592,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = abs( 'sub.out' );
+    var expected = a.abs( 'sub.out' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -7619,7 +7608,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 0,
       arrayFlattening : 0,
     });
-    var expected = abs( 'sub.out' );
+    var expected = a.abs( 'sub.out' );
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
 
@@ -7639,7 +7628,7 @@ function pathsResolveOutFileOfExports( test )
       mapValsUnwrapping : 1,
       arrayFlattening : 0,
     });
-    var expected = [ [ abs( 'sub.out' ) ] ];
+    var expected = [ [ a.abs( 'sub.out' ) ] ];
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -7657,7 +7646,7 @@ function pathsResolveOutFileOfExports( test )
     });
     var expected =
     {
-      'Submodule' : { 'in' : abs( 'sub.out' ) }
+      'Submodule' : { 'in' : a.abs( 'sub.out' ) }
     }
     test.identical( resolved, expected );
     test.close( 'mapValsUnwrapping : 0' );
@@ -8009,7 +7998,7 @@ function pathsResolveOutFileOfExports( test )
     return null;
   })
 
-  ready.finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     if( err )
     throw err;
@@ -8022,7 +8011,7 @@ function pathsResolveOutFileOfExports( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 pathsResolveOutFileOfExports.timeOut = 130000;
