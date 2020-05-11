@@ -54,7 +54,8 @@ function onModule( it )
     }
     catch( err )
     {
-      diff = {};
+      _.errAttend( err );
+      logger.log( err );
     }
   }
 

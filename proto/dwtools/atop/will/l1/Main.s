@@ -4948,14 +4948,14 @@ function hooksReload()
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( path.is( will.environmentPath ) );
 
-  debugger;
+  // debugger;
   let hooksFiles = fileProvider.filesFind
   ({
     filePath : will.hooksPath + '/*',
     withDirs : 0,
-    resolvingSoftLink : 1, /* xxx : comment out and investigate why returns non-empty list? */ /* xxx : cover */
+    resolvingSoftLink : 1, /* xxx : comment out and investigate why returns non-empty list when path is link? */ /* xxx : cover */
   });
-  debugger;
+  // debugger;
 
   hooksFiles.forEach( ( hookFile ) =>
   {
