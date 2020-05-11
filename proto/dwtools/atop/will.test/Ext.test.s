@@ -404,7 +404,7 @@ function transpile( test )
 {
   let self = this;
   let a = self.assetFor( test, 'transpile' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -413,7 +413,7 @@ function transpile( test )
   .then( () =>
   {
     test.case = '.build debug'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
   a.start({ execPath : '.build debug' })
@@ -422,7 +422,7 @@ function transpile( test )
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
     test.identical( files, [ '.', './debug', './debug/dir1', './debug/dir1/Text.txt', './debug/dir2', './debug/dir2/File.js', './debug/dir2/File.test.js', './debug/dir2/File1.debug.js', './debug/dir2/File2.debug.js', './debug/dir3.test', './debug/dir3.test/File.js', './debug/dir3.test/File.test.js' ] );
-    _.fileProvider.isTerminal( _.path.join( outPath, 'debug/dir3.test/File.js' ) );
+    a.fileProvider.isTerminal( a.path.join( outPath, 'debug/dir3.test/File.js' ) );
     return null;
   })
 
@@ -432,7 +432,7 @@ function transpile( test )
   .then( () =>
   {
     test.case = '.build compiled.debug'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
   a.start({ execPath : '.build compiled.debug' })
@@ -442,10 +442,10 @@ function transpile( test )
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
     test.identical( files, [ '.', './compiled.debug', './compiled.debug/Main.s', './tests.compiled.debug', './tests.compiled.debug/Tests.s' ] );
-    _.fileProvider.isTerminal( _.path.join( outPath, 'compiled.debug/Main.s' ) );
-    _.fileProvider.isTerminal( _.path.join( outPath, 'tests.compiled.debug/Tests.s' ) );
+    a.fileProvider.isTerminal( a.path.join( outPath, 'compiled.debug/Main.s' ) );
+    a.fileProvider.isTerminal( a.path.join( outPath, 'tests.compiled.debug/Tests.s' ) );
 
-    var read = _.fileProvider.fileRead( _.path.join( outPath, 'compiled.debug/Main.s' ) );
+    var read = a.fileProvider.fileRead( a.path.join( outPath, 'compiled.debug/Main.s' ) );
     test.is( !_.strHas( read, 'dir2/-Ecluded.js' ) );
     test.is( _.strHas( read, 'dir2/File.js' ) );
     test.is( !_.strHas( read, 'dir2/File.test.js' ) );
@@ -454,7 +454,7 @@ function transpile( test )
     test.is( _.strHas( read, 'dir2/File2.debug.js' ) );
     test.is( !_.strHas( read, 'dir2/File2.release.js' ) );
 
-    var read = _.fileProvider.fileRead( _.path.join( outPath, 'tests.compiled.debug/Tests.s' ) );
+    var read = a.fileProvider.fileRead( a.path.join( outPath, 'tests.compiled.debug/Tests.s' ) );
     test.is( !_.strHas( read, 'dir2/-Ecluded.js' ) );
     test.is( !_.strHas( read, 'dir2/File.js' ) );
     test.is( _.strHas( read, 'dir2/File.test.js' ) );
@@ -472,7 +472,7 @@ function transpile( test )
   .then( () =>
   {
     test.case = '.build raw.release'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
   a.start({ execPath : '.build raw.release' })
@@ -481,7 +481,7 @@ function transpile( test )
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
     test.identical( files, [ '.', './raw.release', './raw.release/dir1', './raw.release/dir1/Text.txt', './raw.release/dir2', './raw.release/dir2/File.js', './raw.release/dir2/File.test.js', './raw.release/dir2/File1.release.js', './raw.release/dir2/File2.release.js', './raw.release/dir3.test', './raw.release/dir3.test/File.js', './raw.release/dir3.test/File.test.js' ] );
-    _.fileProvider.isTerminal( _.path.join( outPath, './raw.release/dir3.test/File.test.js' ) );
+    a.fileProvider.isTerminal( a.path.join( outPath, './raw.release/dir3.test/File.test.js' ) );
     return null;
   })
 
@@ -491,7 +491,7 @@ function transpile( test )
   .then( () =>
   {
     test.case = '.build release';
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
   a.start({ execPath : '.build release' })
@@ -500,10 +500,10 @@ function transpile( test )
     test.identical( got.exitCode, 0 );
     var files = self.find( outPath );
     test.identical( files, [ '.', './release', './release/Main.s', './tests.compiled.release', './tests.compiled.release/Tests.s' ] );
-    _.fileProvider.isTerminal( _.path.join( outPath, './release/Main.s' ) );
-    _.fileProvider.isTerminal( _.path.join( outPath, './tests.compiled.release/Tests.s' ) );
+    a.fileProvider.isTerminal( a.path.join( outPath, './release/Main.s' ) );
+    a.fileProvider.isTerminal( a.path.join( outPath, './tests.compiled.release/Tests.s' ) );
 
-    var read = _.fileProvider.fileRead( _.path.join( outPath, './release/Main.s' ) );
+    var read = a.fileProvider.fileRead( a.path.join( outPath, './release/Main.s' ) );
     test.is( _.strHas( read, 'dir2/File.js' ) );
     test.is( !_.strHas( read, 'dir2/File1.debug.js' ) );
     test.is( _.strHas( read, 'dir2/File1.release.js' ) );
@@ -519,7 +519,7 @@ function transpile( test )
   .then( () =>
   {
     test.case = '.build all'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
   a.start({ execPath : '.build all' })
