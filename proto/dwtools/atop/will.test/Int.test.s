@@ -5410,41 +5410,32 @@ function reflectorResolve( test )
 function reflectorInheritedResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'reflect-inherit' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let modulePath = abs( './' );
-  let submodulesPath = abs( '.module' );
-  let outDirPath = abs( 'out' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'reflect-inherit' );
+  let will = new _.Will();
   let opener;
 
   function pin( filePath )
   {
-    return abs( filePath );
+    return a.abs( filePath );
   }
 
   function pout( filePath )
   {
-    return abs( 'super.out', filePath );
+    return a.abs( 'super.out', filePath );
   }
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeManual({ willfilesPath : modulePath });
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
   })
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
 
     test.case = 'reflector::reflect.proto1 formed:1';
@@ -5648,7 +5639,7 @@ function reflectorInheritedResolve( test )
 
   /* - */
 
-  ready.finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     if( err )
     throw err;
@@ -5657,7 +5648,7 @@ function reflectorInheritedResolve( test )
     return arg;
   });
 
-  return ready;
+  return a.ready;
 }
 
 //
