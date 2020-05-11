@@ -8703,7 +8703,6 @@ function submodulesResolve( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-local-repos' );
-  let will = new _.Will();
   let opener;
 
   /* - */
@@ -8713,9 +8712,9 @@ function submodulesResolve( test )
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
-    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
 
-    will.prefer
+    a.will.prefer
     ({
       allOfSub : 1,
     });
@@ -8729,7 +8728,7 @@ function submodulesResolve( test )
 
     test.case = 'trivial';
     var submodule = opener.openedModule.submoduleMap.ModuleForTesting1;
-    test.is( submodule instanceof will.ModulesRelation );
+    test.is( submodule instanceof a.will.ModulesRelation );
 
     test.is( !!submodule.opener );
     test.identical( submodule.name, 'ModuleForTesting1' );
@@ -8760,7 +8759,7 @@ function submodulesResolve( test )
 
     test.case = 'trivial';
     var submodule = opener.openedModule.submodulesResolve({ selector : 'ModuleForTesting1' });
-    test.is( submodule instanceof will.ModulesRelation );
+    test.is( submodule instanceof a.will.ModulesRelation );
     test.is( submodule.opener.repo.hasFiles );
     test.is( submodule.opener.repo === submodule.opener.openedModule.repo );
     test.is( !!submodule.opener );
@@ -8787,15 +8786,15 @@ function submodulesResolve( test )
 
     test.case = 'mask, single module';
     var submodule = opener.openedModule.submodulesResolve({ selector : '*Testing1' });
-    test.is( submodule instanceof will.ModulesRelation );
+    test.is( submodule instanceof a.will.ModulesRelation );
     test.identical( submodule.name, 'ModuleForTesting1' );
 
     test.case = 'mask, two modules';
     var submodules = opener.openedModule.submodulesResolve({ selector : '*s*' });
     test.identical( submodules.length, 2 );
-    test.is( submodules[ 0 ] instanceof will.ModulesRelation );
+    test.is( submodules[ 0 ] instanceof a.will.ModulesRelation );
     test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
-    test.is( submodules[ 1 ] instanceof will.ModulesRelation );
+    test.is( submodules[ 1 ] instanceof a.will.ModulesRelation );
     test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
 
     test.close( 'downloaded' );
@@ -8819,7 +8818,6 @@ function submodulesDeleteAndDownload( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-del-download' );
-  let will = new _.Will();
   let opener;
 
   /* */
@@ -8829,7 +8827,7 @@ function submodulesDeleteAndDownload( test )
   {
     a.reflect();
     a.fileProvider.filesDelete( a.abs( 'out' ) );
-    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
   })
 
@@ -8867,10 +8865,10 @@ function submodulesDeleteAndDownload( test )
     {
 
       var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out', '.module/ModuleForTesting12ab/' ];
-      test.identical( _.setFrom( a.rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
-      test.identical( _.setFrom( a.rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
+      test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
+      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( exp ) );
 
-      test.identical( _.mapKeys( will.moduleWithIdMap ).length, exp.length );
+      test.identical( _.mapKeys( a.will.moduleWithIdMap ).length, exp.length );
       var willfilesArray =
       [
         '.will.yml',
@@ -8885,7 +8883,7 @@ function submodulesDeleteAndDownload( test )
           '.module/ModuleForTesting12ab/.im.will.yml'
         ]
       ]
-      test.identical( _.select( will.willfilesArray, '*/filePath' ), a.abs( willfilesArray ) );
+      test.identical( _.select( a.will.willfilesArray, '*/filePath' ), a.abs( willfilesArray ) );
 
       var exp =
       [
@@ -8897,23 +8895,23 @@ function submodulesDeleteAndDownload( test )
         '.module/ModuleForTesting12ab/.ex.will.yml',
         '.module/ModuleForTesting12ab/.im.will.yml'
       ]
-      test.identical( a.rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ), exp );
-      test.identical( _.mapKeys( will.willfileWithFilePathPathMap ), a.abs( exp ) );
+      test.identical( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ), exp );
+      test.identical( _.mapKeys( a.will.willfileWithFilePathPathMap ), a.abs( exp ) );
       var exp = [ './', '.module/ModuleForTesting1/out/wModuleForTesting1.out', '.module/ModuleForTesting1/', '.module/ModuleForTesting12ab/out/wModuleForTesting12ab.out', '.module/ModuleForTesting12ab/' ]
-      test.identical( a.rel( _.mapKeys( will.willfileWithCommonPathMap ) ), exp );
+      test.identical( a.rel( _.mapKeys( a.will.willfileWithCommonPathMap ) ), exp );
 
       opener.finit();
 
       test.description = 'no garbage left';
-      test.identical( _.setFrom( a.rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( a.rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
-      test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.select( a.will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.select( _.mapVals( a.will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( a.will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( a.rel( _.mapKeys( a.will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+      test.identical( _.setFrom( _.mapKeys( a.will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
       if( err )
       throw err;
@@ -9126,14 +9124,13 @@ function isRepositoryReformSeveralTimes( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  let will = new _.Will();
   let opener;
 
   a.ready
   .then( () =>
   {
     a.reflect();
-    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
   })
 
@@ -9184,14 +9181,13 @@ function repoStatus( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  let will = new _.Will();
   let opener;
 
   a.ready
   .then( () =>
   {
     a.reflect();
-    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
   })
 
@@ -9758,14 +9754,13 @@ function repoStatusForDeletedRepo( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  let will = new _.Will();
   let opener;
 
   a.ready
   .then( () =>
   {
     a.reflect();
-    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
   })
 
@@ -9911,14 +9906,13 @@ function repoStatusForOutdatedRepo( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  let will = new _.Will();
   let opener;
 
   a.ready
   .then( () =>
   {
     a.reflect();
-    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
   })
 
@@ -10089,14 +10083,13 @@ function repoStatusForInvalidRepo( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  let will = new _.Will();
   let opener;
 
   a.ready
   .then( () =>
   {
     a.reflect();
-    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
   })
 
@@ -10267,14 +10260,13 @@ function repoStatusLocalChanges( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  let will = new _.Will();
   let opener;
 
   a.ready
   .then( () =>
   {
     a.reflect();
-    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
   })
 
@@ -10486,14 +10478,13 @@ function repoStatusLocalUncommittedChanges( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  let will = new _.Will();
   let opener;
 
   a.ready
   .then( () =>
   {
     a.reflect();
-    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
   })
 
