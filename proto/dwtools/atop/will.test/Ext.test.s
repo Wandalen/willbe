@@ -246,7 +246,7 @@ function singleModuleWithSpaceTrivial( test )
 {
   let self = this;
   let a = self.assetFor( test, 'single with space' );
-  _.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : _.path.join( a.routinePath, 'single with space' ) } }); // Dmytro : not used a.reflect() because it has no parameters
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'single with space' ) } });
 
   a.start({ execPath : '.with "single with space/" .resources.list' })
 
