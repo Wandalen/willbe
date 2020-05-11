@@ -3890,31 +3890,20 @@ function exportRecursiveUsingSubmodule( test )
 function exportSteps( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-multiple-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let inPath = abs( 'super' );
-  let outSuperDirPath = abs( 'super.out' );
-  let outSubDirPath = abs( 'sub.out' );
-  let outSuperTerminalPath = abs( 'super.out/supermodule.out.will.yml' );
-  let outSubTerminalPath = abs( 'sub.out/submodule.out.will.yml' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'export-multiple-exported' );
+  let will = new _.Will();
   let opener;
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'export debug';
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    _.fileProvider.filesDelete( outSuperDirPath );
-    _.fileProvider.filesDelete( outSubDirPath );
-    opener = will.openerMakeManual({ willfilesPath : inPath });
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
     return opener.open();
   })
 
@@ -3969,11 +3958,11 @@ function exportSteps( test )
       './super.out/release',
       './super.out/release/File.release.js'
     ]
-    var files = self.find({ filePath : { [ routinePath ] : '', '**/+**' : 0 } });
+    var files = self.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.description = 'super outfile';
-    var outfile = _.fileProvider.configRead( outSuperTerminalPath );
+    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'supermodule.out', '../', '../sub.out/submodule.out', '../super' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3985,7 +3974,7 @@ function exportSteps( test )
     test.identical( _.setFrom( steps ), _.setFrom( exp ) );
 
     test.description = 'sub outfile';
-    var outfile = _.fileProvider.configRead( outSubTerminalPath );
+    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/submodule.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'submodule.out', '../' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4041,7 +4030,7 @@ function exportSteps( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 
 } /* end of function exportSteps */
 
