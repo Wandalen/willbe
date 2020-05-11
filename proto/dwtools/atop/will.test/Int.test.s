@@ -4946,26 +4946,17 @@ function trivialResolve( test )
 function detailedResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let inPath = abs( 'super' );
-  let outSuperDirPath = abs( 'super.out' );
-  let outSubDirPath = abs( 'sub.out' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'two-exported' );
+  let will = new _.Will();
   let opener;
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : inPath });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
     return opener.open({ all : 1 });
   })
 
@@ -5000,7 +4991,7 @@ function detailedResolve( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 
 } /* end of function detailedResolve */
 
