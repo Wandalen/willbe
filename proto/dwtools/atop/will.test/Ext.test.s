@@ -1133,8 +1133,8 @@ function moduleNewNamed( test )
   {
     test.case = '.module.new super'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.module.new super' })
@@ -1171,8 +1171,8 @@ function moduleNewNamed( test )
   {
     test.case = '.with some .module.new'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.with some .module.new' })
@@ -1221,8 +1221,8 @@ function moduleNewNamed( test )
   {
     test.case = '.with some/ .module.new'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.with some/ .module.new' })
@@ -1272,8 +1272,8 @@ function moduleNewNamed( test )
   {
     test.case = '.with some .module.new some2'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.with some .module.new some2' })
@@ -1323,8 +1323,8 @@ function moduleNewNamed( test )
   {
     test.case = '.module.new'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.module.new' })
@@ -1373,8 +1373,8 @@ function moduleNewNamed( test )
   {
     test.case = '.module.new super/'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.module.new super/' })
@@ -1424,8 +1424,8 @@ function moduleNewNamed( test )
   {
     test.case = '.module.new some'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.module.new some' })
@@ -1474,8 +1474,8 @@ function moduleNewNamed( test )
   {
     test.case = '.module.new some/'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.module.new some/' })
@@ -1525,8 +1525,8 @@ function moduleNewNamed( test )
   {
     test.case = '.module.new ../dir1/dir2/some/'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.module.new ../dir1/dir2/some/' })
@@ -1547,8 +1547,14 @@ function moduleNewNamed( test )
     var files = self.find( a.routinePath );
     test.identical( files, exp );
 
-    var exp = [ '.', './dir2', './dir2/some', './dir2/some/will.yml' ]
-    var files = self.find( a.routinePath + '/../dir1' );
+    var exp =
+    [
+      '.',
+      './dir2',
+      './dir2/some',
+      './dir2/some/will.yml'
+    ]
+    var files = self.find( a.abs( '../dir1' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1568,7 +1574,7 @@ function moduleNewNamed( test )
     test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
-    _.fileProvider.filesDelete( a.routinePath + '/../dir1' );
+    a.fileProvider.filesDelete( a.abs( '../dir1' ) );
     return null;
   })
 
