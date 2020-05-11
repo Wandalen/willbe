@@ -9004,23 +9004,14 @@ function customLogger( test )
 function resourcePathRemote( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-informal' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let informalPath = abs( './module/' );
-  let supermodulePath = abs( './' );
-  let will = new _.Will({});
-  let ready = new _.Consequence().take( null )
-
+  let a = self.assetFor( test, 'export-informal' );
   let opener;
 
-  ready
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : informalPath });
+    a.reflect();
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './module/' ) });
     return opener.open();
   })
   .then( () =>
@@ -9043,7 +9034,7 @@ function resourcePathRemote( test )
 
   .then( () =>
   {
-    opener = will.openerMakeManual({ willfilesPath : supermodulePath });
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open();
   })
   .then( () =>
@@ -9061,7 +9052,7 @@ function resourcePathRemote( test )
   })
 
 
-  return ready;
+  return a.ready;
 }
 
 //
