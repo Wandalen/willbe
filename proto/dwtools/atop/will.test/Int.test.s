@@ -8131,38 +8131,31 @@ pathsResolveComposite.timeOut = 130000;
 function pathsResolveComposite2( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'path-composite' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let modulePath = abs( 'Module1' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'path-composite' );
+  let will = new _.Will();
   let opener;
 
   function pin( filePath )
   {
-    return abs( 'in', filePath );
+    return a.abs( 'in', filePath );
   }
 
   function pout( filePath )
   {
-    return abs( 'out', filePath );
+    return a.abs( 'out', filePath );
   }
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : modulePath });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'Module1' ) });
     return opener.open({ all : 1 });
   })
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
     test.case = 'path::export';
     var resolved = opener.openedModule.resolve({ selector : 'path::export', pathResolving : 0 });
@@ -8171,7 +8164,7 @@ function pathsResolveComposite2( test )
     return null;
   });
 
-  ready.finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     if( err )
     throw err;
@@ -8182,7 +8175,7 @@ function pathsResolveComposite2( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 pathsResolveComposite2.timeOut = 130000;
