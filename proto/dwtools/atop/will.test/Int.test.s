@@ -7159,34 +7159,26 @@ pathsResolveOfSubmodules.timeOut = 130000;
 function pathsResolveOfSubmodulesAndOwn( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'resolve-path-of-submodules-exported' );
-  let repoPath = _.path.join( self.suiteTempPath, '_repo' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = abs( '.module' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'resolve-path-of-submodules-exported' );
+  let will = new _.Will();
   let opener;
 
   function pin( filePath )
   {
-    return abs( filePath );
+    return a.abs( filePath );
   }
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : abs( './ab/' ) });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( './ab/' ) });
     return opener.open({ all : 1 });
   })
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
 
     test.case = 'path::export';
@@ -7210,12 +7202,12 @@ function pathsResolveOfSubmodulesAndOwn( test )
       'proto/b/File2.release.js/**',
       'proto/dir3.test/**'
     ]
-    test.identical( rel( resolved ), expected );
+    test.identical( a.rel( resolved ), expected );
 
     return null;
   })
 
-  ready.finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     if( err )
     throw err;
@@ -7226,7 +7218,7 @@ function pathsResolveOfSubmodulesAndOwn( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 pathsResolveOfSubmodulesAndOwn.timeOut = 300000;
