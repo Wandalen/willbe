@@ -7076,39 +7076,30 @@ pathsResolveImportIn.timeOut = 130000;
 function pathsResolveOfSubmodules( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-local-repos' );
-  let repoPath = _.path.join( self.suiteTempPath, '_repo' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let submodulesPath = abs( '.module' );
-  let outDirPath = abs( 'out' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'submodules-local-repos' );
+  let submodulesPath = a.abs( '.module' );
+  let will = new _.Will();
   let opener;
+
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesDelete( repoPath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
-    _.fileProvider.filesDelete( outDirPath );
-    opener = will.openerMakeManual({ willfilesPath : abs( './' ) });
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    opener = will.openerMakeManual({ willfilesPath : a.abs( './' ) });
     return opener.open({ all : 1 });
   })
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
     let module = opener.openedModule;
     return module.modulesBuild({ criterion : { debug : 1 }, downloading : 1 });
   })
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
 
     test.case = 'resolve submodules';
@@ -7117,7 +7108,7 @@ function pathsResolveOfSubmodules( test )
 
     test.case = 'path::in, supermodule';
     var resolved = opener.openedModule.resolve( 'path::in' );
-    var expected = path.join( routinePath );
+    var expected = path.join( a.routinePath );
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1';
@@ -7147,7 +7138,7 @@ function pathsResolveOfSubmodules( test )
     return null;
   })
 
-  ready.finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     if( err )
     throw err;
@@ -7158,7 +7149,7 @@ function pathsResolveOfSubmodules( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 pathsResolveOfSubmodules.timeOut = 130000;
