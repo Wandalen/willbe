@@ -305,7 +305,23 @@ function build( test )
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
     var files = self.find( a.routinePath );
-    test.identical( files, [ '.', './v1.will.yml', './v2.will.yml', './file', './file/File.js', './file/File.test.js', './file/Produce.js', './file/Src1.txt', './file/Src2.txt', './out', './out/Produced.js2', './out/Produced.txt2', './out/shouldbe.txt' ] );
+    var exp =
+    [
+      '.',
+      './v1.will.yml',
+      './v2.will.yml',
+      './file',
+      './file/File.js',
+      './file/File.test.js',
+      './file/Produce.js',
+      './file/Src1.txt',
+      './file/Src2.txt',
+      './out',
+      './out/Produced.js2',
+      './out/Produced.txt2',
+      './out/shouldbe.txt'
+    ];
+    test.identical( files, exp );
     return null;
   })
 
@@ -328,7 +344,23 @@ function build( test )
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
     var files = self.find( a.routinePath );
-    test.identical( files, [ '.', './v1.will.yml', './v2.will.yml', './file', './file/File.js', './file/File.test.js', './file/Produce.js', './file/Src1.txt', './file/Src2.txt', './out', './out/Produced.js2', './out/Produced.txt2', './out/shouldbe.txt' ] );
+    var exp =
+    [
+      '.',
+      './v1.will.yml',
+      './v2.will.yml',
+      './file',
+      './file/File.js',
+      './file/File.test.js',
+      './file/Produce.js',
+      './file/Src1.txt',
+      './file/Src2.txt',
+      './out',
+      './out/Produced.js2',
+      './out/Produced.txt2',
+      './out/shouldbe.txt'
+    ];
+    test.identical( files, exp );
     return null;
   })
 
@@ -362,7 +394,23 @@ function build( test )
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
     var files = self.find( a.routinePath );
-    test.identical( files, [ '.', './v1.will.yml', './v2.will.yml', './file', './file/File.js', './file/File.test.js', './file/Produce.js', './file/Src1.txt', './file/Src2.txt', './out', './out/Produced.js2', './out/Produced.txt2', './out/shouldbe.txt' ] );
+    var exp =
+    [
+      '.',
+      './v1.will.yml',
+      './v2.will.yml',
+      './file',
+      './file/File.js',
+      './file/File.test.js',
+      './file/Produce.js',
+      './file/Src1.txt',
+      './file/Src2.txt',
+      './out',
+      './out/Produced.js2',
+      './out/Produced.txt2',
+      './out/shouldbe.txt'
+    ];
+    test.identical( files, exp );
     return null;
   })
 
@@ -385,7 +433,23 @@ function build( test )
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
     var files = self.find( a.routinePath );
-    test.identical( files, [ '.', './v1.will.yml', './v2.will.yml', './file', './file/File.js', './file/File.test.js', './file/Produce.js', './file/Src1.txt', './file/Src2.txt', './out', './out/Produced.js2', './out/Produced.txt2', './out/shouldbe.txt' ] );
+    var exp =
+    [
+      '.',
+      './v1.will.yml',
+      './v2.will.yml',
+      './file',
+      './file/File.js',
+      './file/File.test.js',
+      './file/Produce.js',
+      './file/Src1.txt',
+      './file/Src2.txt',
+      './out',
+      './out/Produced.js2',
+      './out/Produced.txt2',
+      './out/shouldbe.txt'
+    ];
+    test.identical( files, exp );
     return null;
   })
 
@@ -866,15 +930,24 @@ function moduleNewDotlessSingle( test )
   {
     test.case = '.module.new'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.module.new' })
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 0 );
-    var exp = [ '.', './will.yml', './proto', './proto/File.debug.js', './proto/File.release.js', './sub', './sub/will.yml' ]
+    var exp =
+    [
+      '.',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/will.yml'
+    ];
     var files = self.find( a.routinePath );
     test.identical( files, exp );
 
@@ -894,8 +967,8 @@ function moduleNewDotlessSingle( test )
   {
     test.case = '.module.new some'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.module.new some' })
@@ -912,7 +985,7 @@ function moduleNewDotlessSingle( test )
       './proto/File.release.js',
       './sub',
       './sub/will.yml'
-    ]
+    ];
     var files = self.find( a.routinePath );
     test.identical( files, exp );
 
@@ -943,8 +1016,8 @@ function moduleNewDotlessSingle( test )
   {
     test.case = '.module.new some/'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.module.new some/' })
@@ -962,7 +1035,7 @@ function moduleNewDotlessSingle( test )
       './some/will.yml',
       './sub',
       './sub/will.yml'
-    ]
+    ];
     var files = self.find( a.routinePath );
     test.identical( files, exp );
 
@@ -993,20 +1066,29 @@ function moduleNewDotlessSingle( test )
   {
     test.case = '.module.new ../dir1/dir2/some/'
     a.reflect();
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'sub.out' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.module.new ../dir1/dir2/some/' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var exp = [ '.', './will.yml', './proto', './proto/File.debug.js', './proto/File.release.js', './sub', './sub/will.yml' ]
+    var exp =
+    [
+      '.',
+      './will.yml',
+      './proto',
+      './proto/File.debug.js',
+      './proto/File.release.js',
+      './sub',
+      './sub/will.yml'
+    ];
     var files = self.find( a.routinePath );
     test.identical( files, exp );
 
     var exp = [ '.', './dir2', './dir2/some', './dir2/some/will.yml' ]
-    var files = self.find( a.routinePath + '/../dir1' );
+    var files = self.find( a.abs( '../dir1' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1026,7 +1108,7 @@ function moduleNewDotlessSingle( test )
     test.identical( _.strCount( got.output, 'ncaught error' ), 0 );
     test.identical( _.strCount( got.output, `name : 'some'` ), 1 );
 
-    _.fileProvider.filesDelete( a.routinePath + '/../dir1' );
+    a.fileProvider.filesDelete( a.abs( '../dir1' ) );
     return null;
   })
 
