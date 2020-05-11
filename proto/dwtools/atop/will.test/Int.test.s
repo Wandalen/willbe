@@ -2938,6 +2938,8 @@ function exportSuperIn( test )
   return a.ready;
 } /* end of function exportSuperIn */
 
+exportSuperIn.timeOut = 100000;
+
 //
 
 /*
@@ -4700,27 +4702,17 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
 function exportsResolve( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-submodule-outfile-unknown-section' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let superInPath = abs( 'super' );
-  let subInPath = abs( 'sub' );
-  let superOutFilePath = abs( 'super.out/supermodule.out.will.yml' );
-  let subOutFilePath = abs( 'sub.out/sub.out.will.yml' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'corrupted-submodule-outfile-unknown-section' );
+  let will = new _.Will();
   let opener;
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : subInPath });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'sub' ) });
     return opener.open();
   })
 
@@ -4750,7 +4742,7 @@ function exportsResolve( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 
 } /* end of function exportsResolve */
 
