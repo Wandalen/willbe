@@ -4147,28 +4147,18 @@ test
 function exportCourruptedOutfileSyntax( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'corrupted-outfile-syntax' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let subInPath = abs( 'sub' );
-  let subOutFilePath = abs( 'sub.out/sub.out.will.yml' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'corrupted-outfile-syntax' );
+  let will = new _.Will();
   let opener;
 
   /* - */
 
-  ready
+  a.ready
   .then( () =>
   {
     test.case = 'export sub';
-
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
-    opener = will.openerMakeManual({ willfilesPath : subInPath });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'sub' ) });
 
     will.prefer
     ({
@@ -4200,7 +4190,7 @@ function exportCourruptedOutfileSyntax( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = _.fileProvider.configRead( subOutFilePath );
+    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
     var modulePaths = _.mapKeys( outfile.module );
     var exp = [ 'sub.out', '../sub' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -4226,14 +4216,14 @@ function exportCourruptedOutfileSyntax( test )
     test.identical( will.openersErrorsArray.length, 0 );
 
     test.description = 'no garbage left';
-    test.identical( _.setFrom( rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
-    test.identical( _.setFrom( rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( will.modulesArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( _.mapVals( will.moduleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.moduleWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( will.openersArray, '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.select( _.mapVals( will.openerModuleWithIdMap ), '*/commonPath' ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.arrayFlatten( _.select( will.willfilesArray, '*/filePath' ) ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.willfileWithCommonPathMap ) ) ), _.setFrom( [] ) );
+    test.identical( _.setFrom( a.rel( _.mapKeys( will.willfileWithFilePathPathMap ) ) ), _.setFrom( [] ) );
     test.identical( _.setFrom( _.mapKeys( will.moduleWithNameMap ) ), _.setFrom( [] ) );
 
     return null;
@@ -4241,7 +4231,7 @@ function exportCourruptedOutfileSyntax( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 
 } /* end of function exportCourruptedOutfileSyntax */
 
