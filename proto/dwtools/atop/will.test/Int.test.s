@@ -6342,49 +6342,40 @@ pathsResolve.timeOut = 130000;
 function pathsResolveImportIn( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'two-exported' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
-  let modulePath = abs( 'super' );
-  let submodulesPath = abs( '.module' );
-  let outDirPath = abs( 'out' );
-  let will = new _.Will;
-  let path = _.fileProvider.path;
-  let ready = _.Consequence().take( null );
+  let a = self.assetFor( test, 'two-exported' );
+  let will = new _.Will();
   let opener;
 
   function pin( filePath )
   {
-    return abs( filePath );
+    return a.abs( filePath );
   }
 
   function sout( filePath )
   {
-    return abs( 'super.out', filePath );
+    return a.abs( 'super.out', filePath );
   }
 
   function pout( filePath )
   {
-    return abs( 'out', filePath );
+    return a.abs( 'out', filePath );
   }
 
-  ready
+  a.ready
   .then( () =>
   {
-    _.fileProvider.filesDelete( routinePath );
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    opener = will.openerMakeManual({ willfilesPath : modulePath });
+    a.reflect();
+    opener = will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
     return opener.open({ all : 1 });
   })
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
 
     test.case = 'submodule::*/path::in*=1, default';
     var resolved = opener.openedModule.resolve( 'submodule::*/path::in*=1' )
     var expected = ( 'sub.out' );
-    test.identical( rel( resolved ), expected );
+    test.identical( a.rel( resolved ), expected );
 
     test.case = 'submodule::*/path::in*=1, pathResolving : 0';
     var resolved = opener.openedModule.resolve({ prefixlessAction : 'resolved', selector : 'submodule::*/path::in*=1', pathResolving : 0 })
@@ -6400,12 +6391,12 @@ function pathsResolveImportIn( test )
       mapFlattening : 1,
     });
     var expected = ( 'sub.out' );
-    test.identical( rel( resolved ), expected );
+    test.identical( a.rel( resolved ), expected );
 
     return null;
   });
 
-  ready.then( ( arg ) =>
+  a.ready.then( ( arg ) =>
   {
 
 /*
@@ -6597,7 +6588,7 @@ function pathsResolveImportIn( test )
       mapValsUnwrapping : 1,
     });
     var expected = ( 'sub.out' );
-    test.identical( rel( resolved ), expected );
+    test.identical( a.rel( resolved ), expected );
 
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
@@ -6613,7 +6604,7 @@ function pathsResolveImportIn( test )
       mapValsUnwrapping : 0,
     });
     var expected = ( 'sub.out' );
-    test.identical( rel( resolved ), expected );
+    test.identical( a.rel( resolved ), expected );
     test.close( 'mapValsUnwrapping : 0' );
 
     test.close( 'singleUnwrapping : 1' );
@@ -6672,7 +6663,7 @@ function pathsResolveImportIn( test )
       mapValsUnwrapping : 1,
     });
     var expected = ( 'sub.out' );
-    test.identical( rel( resolved ), expected );
+    test.identical( a.rel( resolved ), expected );
     test.close( 'mapValsUnwrapping : 1' );
     test.open( 'mapValsUnwrapping : 0' );
     test.case = 'submodule::*/path::in*=1';
@@ -6687,7 +6678,7 @@ function pathsResolveImportIn( test )
       mapValsUnwrapping : 0,
     });
     var expected = ( 'sub.out' );
-    test.identical( rel( resolved ), expected );
+    test.identical( a.rel( resolved ), expected );
     test.close( 'mapValsUnwrapping : 0' );
 
     test.close( 'singleUnwrapping : 1' );
@@ -7064,7 +7055,7 @@ function pathsResolveImportIn( test )
     return null;
   })
 
-  ready.finally( ( err, arg ) =>
+  a.ready.finally( ( err, arg ) =>
   {
     if( err )
     throw err;
@@ -7075,7 +7066,7 @@ function pathsResolveImportIn( test )
 
   /* - */
 
-  return ready;
+  return a.ready;
 }
 
 pathsResolveImportIn.timeOut = 130000;
