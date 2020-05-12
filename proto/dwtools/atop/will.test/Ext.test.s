@@ -2778,18 +2778,15 @@ function reflectGetPath( test )
   let self = this;
   let a = self.assetFor( test, 'reflect-get-path' );
   let repoPath = _.path.join( self.suiteTempPath, '_repo' );
-  let outPath = _.path.join( a.routinePath, 'out' );
-
+  let outPath = a.abs( 'out' );
   a.reflect();
-  _.fileProvider.filesDelete( repoPath );
-  _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
 
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.build debug1'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -2801,7 +2798,7 @@ function reflectGetPath( test )
   a.ready.then( () =>
   {
     test.case = '.build debug2'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -2813,7 +2810,7 @@ function reflectGetPath( test )
   a.ready.then( () =>
   {
     test.case = '.build debug3'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
