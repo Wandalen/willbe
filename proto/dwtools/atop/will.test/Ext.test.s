@@ -11108,19 +11108,16 @@ function exportWithReflector( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-with-reflector' );
-  let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
-  let outPath = _.path.join( a.routinePath, 'out' );
-  let outWillPath = _.path.join( a.routinePath, 'out/export-with-reflector.out.will.yml' );
   a.reflect();
-  _.fileProvider.filesDelete( outDebugPath );
+  a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
 
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.export'
-    _.fileProvider.filesDelete( outDebugPath );
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -11130,12 +11127,10 @@ function exportWithReflector( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './export-with-reflector.out.will.yml' ] );
 
-    // var reflectors =
-
-    var outfile = _.fileProvider.configRead( outWillPath );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/export-with-reflector.out.will.yml' ) );
 
     return null;
   })
