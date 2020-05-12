@@ -7045,7 +7045,6 @@ function pathsResolveOfSubmodules( test )
   let submodulesPath = a.abs( '.module' );
   let opener;
 
-
   /* - */
 
   a.ready

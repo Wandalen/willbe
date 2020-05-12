@@ -4821,7 +4821,7 @@ function withDoCommentOut( test )
   .then( ( got ) =>
   {
     a.reflect();
-    var outfile = _.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
     test.is( !!outfile.execution );
     return null;
   })
@@ -4830,7 +4830,7 @@ function withDoCommentOut( test )
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'Comment out "execution" in module::execution_section at' ), 1 );
-    var outfile = _.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
     test.is( !outfile.execution );
     return null;
   })
@@ -4841,7 +4841,7 @@ function withDoCommentOut( test )
   .then( ( got ) =>
   {
     a.reflect();
-    var outfile = _.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
     test.is( !!outfile.execution );
     return null;
   })
@@ -4850,7 +4850,7 @@ function withDoCommentOut( test )
   {
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, 'Comment out "execution" in module::execution_section at' ), 1 );
-    var outfile = _.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'execution_section/will.yml' ) );
     test.is( !!outfile.execution );
     return null;
   })
@@ -4873,12 +4873,9 @@ function hookCallInfo( test )
 {
   let self = this;
   let a = self.assetFor( test, 'dos' );
-  let outPath = _.path.join( a.routinePath, 'out' );
-
-  // qqq : modules for testing are still broken !!!
-
-  // Dmytro : assetFor has not mode 'spawn' in subroutines
-  // qqq : ??
+  let outPath = a.abs( 'out' );
+  // aaa : modules for testing are still broken !!! /* Dmytro : fixed */
+  // aaa : ?? /* Dmytro : a.start - mode : 'fork'; a.shell - mode : 'shell' */
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -4899,13 +4896,13 @@ function hookCallInfo( test )
   .then( ( got ) =>
   {
     test.case = 'setup';
-    _.fileProvider.fileAppend( _.path.join( a.routinePath, 'will.yml' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( 'will.yml' ), '\n' );
 
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/proto' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/dos.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting1' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting2a' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting12' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
   })
