@@ -11192,27 +11192,27 @@ function exportMixed( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /Exporting .*module::UriBasic\.informal \/ build::export.*/ ) );
+    test.is( _.strHas( got.output, /Exporting .*module::ModuleForTesting12ab\.informal \/ build::export.*/ ) );
     test.is( _.strHas( got.output, ' + reflector::download reflected' ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, /Exported .*module::UriBasic\.informal \/ build::export.* in/ ) );
-    test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
-    test.is( _.strHas( got.output, 'out/UriBasic.informal.out.will.yml' ) );
+    test.is( _.strHas( got.output, /Exported .*module::ModuleForTesting12ab\.informal \/ build::export.* in/ ) );
+    test.is( _.strHas( got.output, 'out/ModuleForTesting12.informal.out.will.yml' ) );
+    test.is( _.strHas( got.output, 'out/ModuleForTesting12ab.informal.out.will.yml' ) );
 
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/Proto.informal.out.will.yml' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/UriBasic.informal.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12ab.informal.out.will.yml' ) ) );
 
     var files = self.find( modulePath );
-    test.identical( files, [ '.', './Proto.informal.will.yml', './UriBasic.informal.will.yml' ] );
+    test.identical( files, [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting12ab.informal.will.yml' ] );
     var files = self.find( outPath );
-    test.identical( files, [ '.', './Proto.informal.out.will.yml', './UriBasic.informal.out.will.yml' ] );
+    test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml', './ModuleForTesting12ab.informal.out.will.yml' ] );
 
-    var expected = [ 'Proto.informal.will.yml', 'UriBasic.informal.will.yml' ];
+    var expected = [ 'ModuleForTesting12.informal.will.yml', 'ModuleForTesting12ab.informal.will.yml' ];
     var files = a.fileProvider.dirRead( modulePath );
     test.identical( files, expected );
 
-    var outfile = a.fileProvider.configRead( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) );
-    outfile = outfile.module[ 'Proto.informal.out' ];
+    var outfile = a.fileProvider.configRead( _.path.join( routinePath, 'out/ModuleForTesting12.informal.out.will.yml' ) );
+    outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
       'download' :
@@ -11226,7 +11226,7 @@ function exportMixed( test )
         'src' :
         {
           'filePath' : { '**' : '' },
-          'prefixPath' : '../.module/Proto/proto'
+          'prefixPath' : '../.module/ModuleForTesting12/proto'
         },
         'criterion' : { 'export' : 1, 'default' : 1, 'generated' : 1 },
         'mandatory' : 1,
@@ -11247,22 +11247,22 @@ function exportMixed( test )
       "module.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `Proto.informal.out.will.yml`
+        "path" : `ModuleForTesting12.informal.out.will.yml`
       },
       "module.common" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `Proto.informal.out`
+        "path" : `ModuleForTesting12.informal.out`
       },
       "module.original.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `../module/Proto.informal.will.yml`
+        "path" : `../module/ModuleForTesting12.informal.will.yml`
       },
       "module.peer.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `../module/Proto.informal.will.yml`,
+        "path" : `../module/ModuleForTesting12.informal.will.yml`,
       },
       'module.peer.in' :
       {
@@ -11281,38 +11281,38 @@ function exportMixed( test )
       // {
       //   "criterion" : { "predefined" : 1 }
       // },
-      "download" : { "path" : `../.module/Proto`/*, "criterion" : { "predefined" : 1 }*/ },
+      "download" : { "path" : `../.module/ModuleForTesting12`/*, "criterion" : { "predefined" : 1 }*/ },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "path" : `../.module/Proto/proto`
+        "path" : `../.module/ModuleForTesting12/proto`
       },
       "exported.files.export" :
       {
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "path" :
         [
-          `../.module/Proto/proto`,
-          `../.module/Proto/proto/dwtools`,
-          `../.module/Proto/proto/dwtools/Tools.s`,
-          `../.module/Proto/proto/dwtools/abase`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto/Include.s`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto/l1`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto/l1/Define.s`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto/l1/Proto.s`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto/l1/Workpiece.s`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto/l3`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto/l3/Accessor.s`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto/l3/Class.s`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto/l3/Complex.s`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto/l3/Like.s`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto.test`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto.test/Class.test.s`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto.test/Complex.test.s`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto.test/Like.test.s`,
-          `../.module/Proto/proto/dwtools/abase/l3_proto.test/Proto.test.s`
+          `../.module/ModuleForTesting12/proto`,
+          `../.module/ModuleForTesting12/proto/dwtools`,
+          `../.module/ModuleForTesting12/proto/dwtools/Tools.s`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/Include.s`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l1`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l1/Define.s`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l1/ModuleForTesting12.s`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l1/Workpiece.s`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l3`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l3/Accessor.s`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l3/Class.s`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l3/Complex.s`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto/l3/Like.s`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto.test`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto.test/Class.test.s`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto.test/Complex.test.s`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto.test/Like.test.s`,
+          `../.module/ModuleForTesting12/proto/dwtools/abase/l3_proto.test/ModuleForTesting12.test.s`
         ]
       }
     }
@@ -11380,12 +11380,12 @@ function exportMixed( test )
   {
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, /Exporting .*module::UriBasic.informal.* \/ build::export/ ) );
+    test.is( _.strHas( got.output, /Exporting .*module::ModuleForTesting12ab.informal.* \/ build::export/ ) );
     test.is( _.strHas( got.output, /\+ reflector::download reflected .* file\(s\)/ ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
-    test.is( _.strHas( got.output, /Exported .*module::UriBasic.informal.* \/ build::export/ ) );
-    test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
-    test.is( _.strHas( got.output, 'out/UriBasic.informal.out.will.yml' ) );
+    test.is( _.strHas( got.output, /Exported .*module::ModuleForTesting12ab.informal.* \/ build::export/ ) );
+    test.is( _.strHas( got.output, 'out/ModuleForTesting12.informal.out.will.yml' ) );
+    test.is( _.strHas( got.output, 'out/ModuleForTesting12ab.informal.out.will.yml' ) );
     test.is( _.strHas( got.output, 'Reloading submodules' ) );
 
     test.is( _.strHas( got.output, /- .*step::delete.out.debug.* deleted 0 file\(s\), at/ ) );
@@ -11394,15 +11394,15 @@ function exportMixed( test )
 
     test.identical( _.strCount( got.output, ' ! Failed to open' ), 4 );
 
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/Proto.informal.out.will.yml' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/UriBasic.informal.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12ab.informal.out.will.yml' ) ) );
 
     var files = self.find( modulePath );
-    test.identical( files, [ '.', './Proto.informal.will.yml', './UriBasic.informal.will.yml' ] );
+    test.identical( files, [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting12ab.informal.will.yml' ] );
     var files = self.find( outPath );
     test.gt( files.length, 70 );
 
-    var expected = [ 'Proto.informal.will.yml', 'UriBasic.informal.will.yml' ];
+    var expected = [ 'ModuleForTesting12.informal.will.yml', 'ModuleForTesting12ab.informal.will.yml' ];
     var files = a.fileProvider.dirRead( modulePath );
     test.identical( files, expected );
 
