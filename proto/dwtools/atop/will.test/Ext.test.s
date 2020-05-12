@@ -291,7 +291,7 @@ function build( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .+ \/ build::shell1/ ) );
-    test.is( _.strHas( got.output, `node ${ _.path.nativize( 'file/Produce.js' )}` ) );
+    test.is( _.strHas( got.output, `node ${ a.path.nativize( 'file/Produce.js' )}` ) );
     if( process.platform === 'win32' )
     {
       test.identical( _.strCount( got.output, 'out\\Produced.txt2' ), 1 );
@@ -380,7 +380,7 @@ function build( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Building .+ \/ build::shell1/ ) );
-    test.is( _.strHas( got.output, `node ${ _.path.nativize( 'file/Produce.js' )}` ) );
+    test.is( _.strHas( got.output, `node ${ a.path.nativize( 'file/Produce.js' )}` ) );
     if( process.platform === 'win32' )
     {
       test.identical( _.strCount( got.output, 'out\\Produced.txt2' ), 1 );
@@ -2777,7 +2777,7 @@ function reflectGetPath( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-get-path' );
-  let repoPath = _.path.join( self.suiteTempPath, '_repo' );
+  let repoPath = a.path.join( self.suiteTempPath, '_repo' );
   let outPath = a.abs( 'out' );
   a.reflect();
 
@@ -5260,7 +5260,7 @@ function hookLink( test )
   .then( ( got ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ _.path.join( self.suiteAssetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( self.suiteAssetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), '\ncopy' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), '\ncopy' );
     return null;
@@ -10658,10 +10658,10 @@ function buildDetached( test )
     test.is( _.strHas( got.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#aed847d09f8d22370d47e7aed9ad7f9efd67de1d/ ) );
     test.is( _.strHas( got.output, /\.module\/ModuleForTesting12ab\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git/ ) );
 
-    var files = _.fileProvider.dirRead( _.path.join( a.routinePath, '.module' ) );
+    var files = _.fileProvider.dirRead( a.path.join( a.routinePath, '.module' ) );
     test.identical( files, [ 'ModuleForTesting1', 'ModuleForTesting12.informal', 'ModuleForTesting12ab.informal', 'ModuleForTesting2a.informal', 'ModuleForTesting2b' ] );
 
-    var files = _.fileProvider.dirRead( _.path.join( a.routinePath, 'out' ) );
+    var files = _.fileProvider.dirRead( a.path.join( a.routinePath, 'out' ) );
     test.identical( files, [ 'debug', 'ModuleForTesting12.informal.out.will.yml', 'ModuleForTesting12ab.informal.out.will.yml', 'ModuleForTesting2a.informal.out.will.yml' ] );
 
     return null;
@@ -10876,7 +10876,7 @@ function exportInformal( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml' ] );
 
-    var outfile = a.fileProvider.configRead( _.path.join( outPath, './ModuleForTesting12.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.path.join( outPath, './ModuleForTesting12.informal.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
@@ -10953,7 +10953,7 @@ function exportInformal( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml' ] );
 
-    var outfile = a.fileProvider.configRead( _.path.join( outPath, './ModuleForTesting12.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.path.join( outPath, './ModuleForTesting12.informal.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
@@ -11031,7 +11031,7 @@ function exportInformal( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './ModuleForTesting12ab.informal.out.will.yml' ] );
 
-    var outfile = a.fileProvider.configRead( _.path.join( outPath, './ModuleForTesting12ab.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.path.join( outPath, './ModuleForTesting12ab.informal.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12ab.informal.out' ];
     var expected =
     {
@@ -11211,7 +11211,7 @@ function exportMixed( test )
     var files = a.fileProvider.dirRead( modulePath );
     test.identical( files, expected );
 
-    var outfile = a.fileProvider.configRead( _.path.join( routinePath, 'out/ModuleForTesting12.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.path.join( routinePath, 'out/ModuleForTesting12.informal.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
@@ -11426,7 +11426,6 @@ function exportSecond( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-second' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -11450,7 +11449,7 @@ function exportSecond( test )
 
     test.is( a.fileProvider.isTerminal( a.abs( 'out/ExportSecond.out.will.yml' ) ) );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/ExportSecond.out.will.yml' ) );
@@ -11670,7 +11669,7 @@ function exportSecond( test )
 
     test.is( a.fileProvider.isTerminal( a.abs( 'out/ExportSecond.out.will.yml' ) ) );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/ExportSecond.out.will.yml' ) );
@@ -11928,7 +11927,7 @@ function exportMultiple( test )
   let self = this;
   let a = self.assetFor( test, 'export-multiple' );
   let outPath = a.abs( 'out' );
-  let outWillPath = _.path.join( outPath, 'submodule.out.will.yml' );
+  let outWillPath = a.path.join( outPath, 'submodule.out.will.yml' );
   a.reflect();
 
   /* - */
@@ -12160,7 +12159,7 @@ function exportMultiple( test )
     var outfileData = a.fileProvider.fileRead( outWillPath );
     test.is( outfileData.length > 1000 );
     test.is( !_.strHas( outfileData, a.abs( '../..' ) ) );
-    test.is( !_.strHas( outfileData, _.path.nativize( a.abs( '../..' ) ) ) );
+    test.is( !_.strHas( outfileData, a.path.nativize( a.abs( '../..' ) ) ) );
 
     var outfile = a.fileProvider.configRead( outWillPath );
     outfile = outfile.module[ 'submodule.out' ]
@@ -12445,8 +12444,7 @@ function exportImportMultiple( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-multiple' );
-  let outPath = _.path.join( a.routinePath, 'out' );
-  let out2Path = _.path.join( a.routinePath, 'super.out' );
+  let out2Path = a.abs( 'super.out' );
 
   /* - */
 
@@ -12455,7 +12453,7 @@ function exportImportMultiple( test )
   {
     test.case = 'export submodule';
     a.reflect();
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
 
     return null;
   })
@@ -12466,7 +12464,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Exported module::submodule / build::export.debug with 2 file(s)' ) );
@@ -12480,7 +12478,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
     test.case = '.with super .export debug:0';
-    _.fileProvider.filesDelete( out2Path );
+    a.fileProvider.filesDelete( out2Path );
 
     return null;
   })
@@ -12550,7 +12548,7 @@ function exportImportMultiple( test )
   {
     test.case = '.with super .export debug:0 ; .with super .export debug:1';
 
-    _.fileProvider.filesDelete( out2Path );
+    a.fileProvider.filesDelete( out2Path );
 
     return null;
   })
