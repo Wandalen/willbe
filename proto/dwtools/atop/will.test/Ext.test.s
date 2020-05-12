@@ -13012,7 +13012,6 @@ function exportDisabledModule( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-disabled-module' );
-  let willfPath = a.abs( './' );
   let outFilePath = a.abs( 'out/disabled.out.will.yml' );
 
   /* - */
@@ -13153,8 +13152,6 @@ function exportOutdated( test )
 {
   let self = this;
   let a = self.assetFor( test, 'inconsistent-outfile' );
-  let outPath = _.path.join( a.routinePath, 'sub.out' );
-  let outFilePath = _.path.join( a.routinePath, 'sub.out/sub.out.will.yml' );
   a.reflect();
 
   /* - */
@@ -13173,10 +13170,10 @@ function exportOutdated( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'sub.out' ) );
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
-    var outfile = _.fileProvider.configRead( outFilePath );
+    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
     outfile = outfile.module[ 'sub.out' ];
     var exported = _.setFrom( _.mapKeys( _.select( outfile, 'exported/*' ) ) );
     var exp = _.setFrom( [ 'export.debug' ] );
@@ -13194,7 +13191,7 @@ function exportOutdated( test )
   .then( () =>
   {
     test.case = 'export release, but input willfile is changed';
-    _.fileProvider.fileAppend( _.path.join( a.routinePath, 'sub.ex.will.yml' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( 'sub.ex.will.yml' ), '\n' );
     return null;
   })
 
@@ -13204,10 +13201,10 @@ function exportOutdated( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'sub.out' ) );
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
-    var outfile = _.fileProvider.configRead( outFilePath );
+    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
     outfile = outfile.module[ 'sub.out' ];
     var exported = _.setFrom( _.mapKeys( _.select( outfile, 'exported/*' ) ) );
     var exp = _.setFrom( [ 'export.' ] );
