@@ -4706,8 +4706,7 @@ function withDoStatus( test )
 {
   let self = this;
   let a = self.assetFor( test, 'dos' );
-  let outPath = _.path.join( a.routinePath, 'out' );
-  let startWill = _.process.starter // Dmytro : not exists in assetFor
+  a.start = _.process.starter // Dmytro : not exists in assetFor
   ({
     execPath : 'node ' + self.willPath,
     currentPath : a.routinePath,
@@ -4718,33 +4717,6 @@ function withDoStatus( test )
     ready : a.ready,
   })
 
-  // let self = this;
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  //
-  // let outPath = _.path.join( routinePath, 'out' );
-  // let ready = new _.Consequence().take( null );
-  // let startWill = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   mode : 'spawn',
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   throwingExitCode : 1,
-  //   ready : ready,
-  // })
-  // let start = _.process.starter
-  // ({
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   throwingExitCode : 1,
-  //   ready : ready,
-  // })
-
   /* - */
 
   a.ready
@@ -4752,31 +4724,31 @@ function withDoStatus( test )
   {
     test.case = 'setup';
     a.reflect();
-    a.shell({ execPath : 'git init', currentPath : _.path.join( a.routinePath, 'disabled' ) });
+    a.shell({ execPath : 'git init', currentPath : a.abs( 'disabled' ) });
 
     return null;
   })
 
   /* - */
 
-  startWill( '.clean' )
-  startWill( '.export' )
+  a.start( '.clean' )
+  a.start( '.export' )
   .then( ( got ) =>
   {
     test.case = 'setup';
 
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/proto' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/dos.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting1' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting2a' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting12' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
   })
 
   /* - */
 
-  startWill( '.hooks.list' )
+  a.start( '.hooks.list' )
   .then( ( got ) =>
   {
     test.case = 'hooks list';
@@ -4787,7 +4759,7 @@ function withDoStatus( test )
 
   /* - */
 
-  startWill( '.with ** .do .will/hook/status.js' )
+  a.start( '.with ** .do .will/hook/status.js' )
   .then( ( got ) =>
   {
     test.case = 'no changes';
@@ -4803,13 +4775,13 @@ function withDoStatus( test )
   .then( ( got ) =>
   {
     test.case = 'changes';
-    _.fileProvider.fileAppend( _.path.join( a.routinePath, '.module/ModuleForTesting1/README.md' ), '\n' );
-    _.fileProvider.fileAppend( _.path.join( a.routinePath, '.module/ModuleForTesting2a/README.md' ), '\n' );
-    _.fileProvider.fileAppend( _.path.join( a.routinePath, '.module/ModuleForTesting12/LICENSE' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting1/README.md' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting2a/README.md' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( '.module/ModuleForTesting12/LICENSE' ), '\n' );
     return null;
   })
 
-  startWill( '.with ** .do .will/hook/status.js' )
+  a.start( '.with ** .do .will/hook/status.js' )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
@@ -4820,7 +4792,6 @@ function withDoStatus( test )
     test.identical( _.strCount( got.output, 'module at' ), 2 );
 
     test.identical( _.strCount( got.output, 'M ' ), 3 );
-    // test.identical( _.strCount( got.output, 'no changes added to commit' ), 2 );
     return null;
   })
 
