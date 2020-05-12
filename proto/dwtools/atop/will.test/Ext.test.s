@@ -689,6 +689,9 @@ function transpileExperiment( test )
   let self = this;
   let a = self.assetFor( test, 'transpile' );
   a.reflect();
+
+  /* - */
+
   a.ready
   .then( () =>
   {
@@ -2046,28 +2049,8 @@ openEach.timeOut = 300000;
 function withMixed( test )
 {
   let self = this;
-
   let a = self.assetFor( test, 'submodules-mixed' );
   a.reflect();
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-mixed' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let filePath = _.path.join( routinePath, 'file' );
-
-  // let ready = new _.Consequence().take( null );
-
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   throwingExitCode : 0,
-  //   ready : ready,
-  // });
-
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -2117,25 +2100,8 @@ withMixed.timeOut = 300000;
 function eachMixed( test )
 {
   let self = this;
-
   let a = self.assetFor( test, 'submodules-git' );
   a.reflect();
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-git' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let ready = new _.Consequence().take( null );
-
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // });
-
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
