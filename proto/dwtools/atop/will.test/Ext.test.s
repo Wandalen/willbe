@@ -12920,8 +12920,6 @@ function exportCourruptedOutfileSyntax( test )
 {
   let self = this;
   let a = self.assetFor( test, 'corrupted-outfile-syntax' );
-  let outPath = _.path.join( a.routinePath, 'sub.out' );
-  let outFilePath = _.path.join( a.routinePath, 'sub.out/sub.out.will.yml' );
   a.reflect();
 
   /* - */
@@ -12940,10 +12938,10 @@ function exportCourruptedOutfileSyntax( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'sub.out' ) );
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
-    var outfile = _.fileProvider.configRead( outFilePath );
+    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
     outfile = outfile.module[ 'sub.out' ]
     var exported = _.setFrom( _.mapKeys( _.select( outfile, 'exported/*' ) ) );
     var exp = _.setFrom( [ 'export.debug' ] );
@@ -12969,8 +12967,6 @@ function exportCourruptedSubmodulesDisabled( test )
 {
   let self = this;
   let a = self.assetFor( test, 'corrupted-submodules-disabled' );
-  let outPath = a.abs( 'super.out' );
-  let outFilePath = a.abs( 'super.out/supermodule.out.will.yml' );
 
   a.reflect();
 
@@ -12990,10 +12986,10 @@ function exportCourruptedSubmodulesDisabled( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.out.will.yml' ] );
 
-    var outfile = _.fileProvider.configRead( outFilePath );
+    var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
     var exported = _.setFrom( _.mapKeys( _.select( outfile.module[ outfile.root[ 0 ] ], 'exported/*' ) ) );
     var exp = _.setFrom( [ 'export.debug' ] );
     test.identical( exported, exp );
