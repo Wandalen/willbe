@@ -19099,59 +19099,21 @@ function submodulesVerify( test )
 {
   let self = this;
   let a = self.assetFor( test, 'command-versions-verify' );
-  let localModulePathSrc = _.path.join( a.routinePath, 'module' );
-  let localModulePathDst = _.path.join( a.routinePath, '.module/local' );
   a.start2 = _.process.starter
   ({
-    currentPath : localModulePathSrc,
+    currentPath : a.abs( 'module' ),
     outputCollecting : 1,
     outputGraying : 1,
     ready : a.ready,
   });
   a.start3 = _.process.starter
   ({
-    currentPath : localModulePathDst,
+    currentPath : a.abs( '.module/local' ),
     outputCollecting : 1,
     outputGraying : 1,
     ready : a.ready,
   });
   a.reflect();
-
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'command-versions-verify' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let localModulePathSrc = _.path.join( routinePath, 'module' );
-//   let localModulePathDst = _.path.join( routinePath, '.module/local' );
-//
-//   let ready = new _.Consequence().take( null );
-//
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     throwingExitCode : 0,
-//     ready : ready,
-//   })
-//
-//   let start2 = _.process.starter
-//   ({
-//     currentPath : localModulePathSrc,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-//
-//   let start3 = _.process.starter
-//   ({
-//     currentPath : localModulePathDst,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-//
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
