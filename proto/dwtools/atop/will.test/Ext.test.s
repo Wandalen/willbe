@@ -3681,7 +3681,7 @@ function reflectWithSelectorInDstFilter( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-selecting-dst' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
   /*
@@ -3702,7 +3702,7 @@ function reflectWithSelectorInDstFilter( test )
   .then( () =>
   {
     test.case = '.build debug';
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -3721,7 +3721,7 @@ function reflectWithSelectorInDstFilter( test )
   .then( () =>
   {
     test.case = '.build release';
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -3745,7 +3745,7 @@ function reflectSubmodulesWithCriterion( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-with-criterion' );
-  let outPath = _.path.join( a.routinePath, 'out/debug' );
+  let outPath = a.abs( 'out/debug' );
   a.reflect();
 
   /* - */
@@ -3754,7 +3754,7 @@ function reflectSubmodulesWithCriterion( test )
   .then( () =>
   {
     test.case = 'setup'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -3790,7 +3790,7 @@ function reflectSubmodulesWithCriterion( test )
   .then( () =>
   {
     test.case = 'reflect only A'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -3810,7 +3810,7 @@ function reflectSubmodulesWithCriterion( test )
   .then( () =>
   {
     test.case = 'reflect only B'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
