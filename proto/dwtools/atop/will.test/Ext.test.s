@@ -3007,7 +3007,7 @@ function reflectSubmodulesWithBase( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-submodules-with-base' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
 
   /* - */
 
@@ -3025,8 +3025,8 @@ function reflectSubmodulesWithBase( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'submodule1.out.will.yml' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'submodule2.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'submodule1.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'submodule2.out.will.yml' ) ) );
     return got;
   })
 
@@ -3035,7 +3035,7 @@ function reflectSubmodulesWithBase( test )
   a.ready.then( () =>
   {
     test.case = 'variant 0, src basePath : ../..'
-    _.fileProvider.filesDelete( outPath )
+    a.fileProvider.filesDelete( outPath )
     return null;
   });
 
@@ -3065,7 +3065,7 @@ function reflectSubmodulesWithBase( test )
   a.ready.then( () =>
   {
     test.case = 'variant 1, src basePath : "{submodule::*/exported::*=1/path::exported.dir*=1}/../.."'
-    _.fileProvider.filesDelete( outPath )
+    a.fileProvider.filesDelete( outPath )
     return null;
   });
 
