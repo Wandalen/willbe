@@ -3835,7 +3835,6 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-submodules-with-plural-criterion' );
-  let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
 
   /* - */
@@ -3844,7 +3843,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
   .then( () =>
   {
     test.case = 'reflect informal submodule, manual export'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -3856,7 +3855,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
