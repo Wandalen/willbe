@@ -4509,7 +4509,6 @@ function reflectorMasks( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflector-masks' );
-  let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
 
   /* - */
@@ -4521,7 +4520,7 @@ function reflectorMasks( test )
   {
     test.case = 'mask directory';
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './release', './release/proto.two' ] );
 
     test.identical( got.exitCode, 0 );
@@ -4539,7 +4538,7 @@ function reflectorMasks( test )
   {
     test.case = 'mask terminal';
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/build.txt.js', './debug/manual.md', './debug/package.json', './debug/tutorial.md' ] );
 
     test.identical( got.exitCode, 0 );
