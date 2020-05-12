@@ -10047,8 +10047,8 @@ function buildSingleStep( test )
   .then( () =>
   {
     test.case = '.build debug1'
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out/debug' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -10067,8 +10067,8 @@ function buildSingleStep( test )
   .then( () =>
   {
     test.case = '.build debug2'
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out/debug' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
