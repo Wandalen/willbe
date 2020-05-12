@@ -14487,14 +14487,14 @@ function exportOutResourceWithoutGeneratedCriterion( test )
     test.identical( _.strCount( got.output, 'Exported module::' ), 1 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'debug', 'wChangeTransactor.out.will.yml' ];
-    var files = _.fileProvider.dirRead( a.abs( 'out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) )
     test.identical( files, exp );
 
-    var outfile = _.fileProvider.configRead( a.abs( 'out/wChangeTransactor.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/wChangeTransactor.out.will.yml' ) );
     var exp =
     [
       'module.willfiles',
@@ -14562,7 +14562,7 @@ function exportImplicit( test )
     var files = self.find( a.abs( 'explicit' ) );
     test.identical( files, exp );
 
-    var outfile = _.fileProvider.configRead( a.abs( 'explicit/explicit.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'explicit/explicit.out.will.yml' ) );
 
     /* */
 
@@ -14655,7 +14655,7 @@ function exportImplicit( test )
     var files = self.find( a.abs( 'implicit' ) );
     test.identical( files, exp );
 
-    var outfile = _.fileProvider.configRead( a.abs( 'implicit/implicit.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'implicit/implicit.out.will.yml' ) );
     debugger;
 
     /* */
@@ -14741,26 +14741,6 @@ function exportAuto( test )
   let self = this;
   let a = self.assetFor( test, 'export-auto' );
   a.reflect();
-
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'export-auto' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let outPath = _.path.join( routinePath, 'out' );
-//   let submodulesPath = _.path.join( routinePath, '.module' );
-//   let ready = new _.Consequence().take( null );
-//
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-//
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -14882,7 +14862,6 @@ function exportOutdated2( test )
   /* - */
 
   a.ready
-
   a.reflect();
 
   a.start( '.with module/mand/ .export' )
@@ -15275,18 +15254,13 @@ function importPathLocal( test )
   .then( ( got ) =>
   {
     test.case = 'export submodule';
-
-    // _.fileProvider.filesDelete( routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
     a.reflect();
-    _.fileProvider.filesDelete( a.abs( 'out' ) );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
 
     return null;
   })
 
-  // a.start({ execPath : '.build' })
   a.start({ execPath : '.build' })
-
   .then( ( got ) =>
   {
 
@@ -15311,59 +15285,35 @@ function importLocalRepo( test )
 {
   let self = this;
   let a = self.assetFor( test, 'import-auto' );
-  let modulePath = _.path.join( a.routinePath, '.module' ); /* qqq */
+  let modulePath = a.abs( '.module' ); /* qqq */
   a.reflect();
-
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'import-auto' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let repoPath = _.path.join( self.suiteTempPath, '_repo' );
-//   let outPath = _.path.join( routinePath, 'out' );
-//   let modulePath = _.path.join( routinePath, '.module' );
-//
-//   let ready = new _.Consequence().take( null );
-//
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
 
   /* - */
 
   a.ready
   .then( ( got ) =>
   {
-    test.case = '.with module/Proto .export';
-
+    test.case = '.with module/ModuleForTesting12 .export';
     a.reflect();
-    // _.fileProvider.filesDelete( a.routinePath );
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-    // _.fileProvider.filesReflect({ reflectMap : { [ self.repoDirPath ] : repoPath } });
 
     return null;
   })
 
-  a.start({ execPath : '.with module/Proto .clean' })
-  a.start({ execPath : '.with module/Proto .export' })
+  a.start({ execPath : '.with module/ModuleForTesting12 .clean' })
+  a.start({ execPath : '.with module/ModuleForTesting12 .export' })
 
   .then( ( got ) =>
   {
 
-    var files = _.fileProvider.dirRead( modulePath );
-    test.identical( files, [ 'Proto', 'Proto.out.will.yml' ] );
+    var files = a.fileProvider.dirRead( modulePath );
+    test.identical( files, [ 'ModuleForTesting12', 'ModuleForTesting12.out.will.yml' ] );
 
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /\+ reflector::download reflected .* file\(s\)/ ), 1 );
-    test.identical( _.strCount( got.output, /Write out willfile .*\/.module\/Proto.out.will.yml/ ), 1 );
+    test.identical( _.strCount( got.output, /Write out willfile .*\/.module\/ModuleForTesting12.out.will.yml/ ), 1 );
 
-    var outfile = _.fileProvider.configRead( _.path.join( modulePath, 'Proto.out.will.yml' ) ); /* qqq xxx */
-    outfile = outfile.module[ 'Proto.out' ];
+    var outfile = a.fileProvider.configRead( a.path.join( modulePath, 'ModuleForTesting12.out.will.yml' ) ); /* qqq xxx */
+    outfile = outfile.module[ 'ModuleForTesting12.out' ];
 
     var expectedReflector =
     {
@@ -15382,7 +15332,7 @@ function importLocalRepo( test )
         "src" :
         {
           "filePath" : { "**" : `` },
-          "prefixPath" : `Proto/proto`
+          "prefixPath" : `ModuleForTesting12/proto`
         },
         "mandatory" : 1,
         "criterion" : { "default" : 1, "export" : 1, 'generated' : 1 }
@@ -15408,22 +15358,22 @@ function importLocalRepo( test )
       "module.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `Proto.out.will.yml`
+        "path" : `ModuleForTesting12.out.will.yml`
       },
       "module.common" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `Proto.out`
+        "path" : `ModuleForTesting12.out`
       },
       "module.original.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `../module/Proto.will.yml`
+        "path" : `../module/ModuleForTesting12.will.yml`
       },
       "module.peer.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `../module/Proto.will.yml`
+        "path" : `../module/ModuleForTesting12.will.yml`
       },
       "in" :
       {
@@ -15437,13 +15387,13 @@ function importLocalRepo( test )
       // {
       //   "criterion" : { "predefined" : 1 }
       // },
-      "download" : { "path" : `Proto` },
+      "download" : { "path" : `ModuleForTesting12` },
       "export" : { "path" : `{path::download}/proto/**` },
       "temp" : { "path" : `../out` },
       "exported.dir.export" :
       {
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "path" : `Proto/proto`
+        "path" : `ModuleForTesting12/proto`
       },
       "module.peer.in" :
       {
@@ -15455,26 +15405,26 @@ function importLocalRepo( test )
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "path" :
         [
-          `Proto/proto`,
-          `Proto/proto/dwtools`,
-          `Proto/proto/dwtools/Tools.s`,
-          `Proto/proto/dwtools/abase`,
-          `Proto/proto/dwtools/abase/l3_proto`,
-          `Proto/proto/dwtools/abase/l3_proto/Include.s`,
-          `Proto/proto/dwtools/abase/l3_proto/l1`,
-          `Proto/proto/dwtools/abase/l3_proto/l1/Define.s`,
-          `Proto/proto/dwtools/abase/l3_proto/l1/Proto.s`,
-          `Proto/proto/dwtools/abase/l3_proto/l1/Workpiece.s`,
-          `Proto/proto/dwtools/abase/l3_proto/l3`,
-          `Proto/proto/dwtools/abase/l3_proto/l3/Accessor.s`,
-          `Proto/proto/dwtools/abase/l3_proto/l3/Class.s`,
-          `Proto/proto/dwtools/abase/l3_proto/l3/Complex.s`,
-          `Proto/proto/dwtools/abase/l3_proto/l3/Like.s`,
-          `Proto/proto/dwtools/abase/l3_proto.test`,
-          `Proto/proto/dwtools/abase/l3_proto.test/Class.test.s`,
-          `Proto/proto/dwtools/abase/l3_proto.test/Complex.test.s`,
-          `Proto/proto/dwtools/abase/l3_proto.test/Like.test.s`,
-          `Proto/proto/dwtools/abase/l3_proto.test/Proto.test.s`
+          `ModuleForTesting12/proto`,
+          `ModuleForTesting12/proto/dwtools`,
+          `ModuleForTesting12/proto/dwtools/Tools.s`,
+          `ModuleForTesting12/proto/dwtools/abase`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto/Include.s`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto/l1`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto/l1/Define.s`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto/l1/ModuleForTesting12.s`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto/l1/Workpiece.s`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto/l3`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto/l3/Accessor.s`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto/l3/Class.s`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto/l3/Complex.s`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto/l3/Like.s`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto.test`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto.test/Class.test.s`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto.test/Complex.test.s`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto.test/Like.test.s`,
+          `ModuleForTesting12/proto/dwtools/abase/l3_proto.test/ModuleForTesting12.test.s`
         ]
       }
     }
@@ -15501,7 +15451,6 @@ function importOutWithDeletedSource( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-with-submodules' );
-  let outPath = _.path.join( a.routinePath, 'out' );
 
   /* - */
 
@@ -15524,13 +15473,13 @@ function importOutWithDeletedSource( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ '.', './module-a.out.will.yml', './module-ab-named.out.will.yml', './module-b.out.will.yml' ];
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp );
 
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'a.will.yml' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'b.will.yml' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'ab' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'ab-named.will.yml' ) );
+    a.fileProvider.filesDelete( a.abs( 'a.will.yml' ) );
+    a.fileProvider.filesDelete( a.abs( 'b.will.yml' ) );
+    a.fileProvider.filesDelete( a.abs( 'ab' ) );
+    a.fileProvider.filesDelete( a.abs( 'ab-named.will.yml' ) );
 
     return null;
   })
