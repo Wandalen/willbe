@@ -8128,8 +8128,8 @@ function cleanBrokenSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'clean-broken-submodules' );
-  let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let submodulesPath = a.abs( '.module' );
+  let outPath = a.abs( 'out' );
 
   /* - */
 
@@ -8237,8 +8237,8 @@ function cleanNoBuild( test )
 {
   let self = this;
   let a = self.assetFor( test, 'clean' );
-  let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let submodulesPath = a.abs( '.module' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -8249,7 +8249,7 @@ function cleanNoBuild( test )
     test.case = '.clean -- second';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted ' + 0 + ' file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) ); /* phantom problem ? */
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* phantom problem ? */
     return null;
   })
 
@@ -8258,7 +8258,7 @@ function cleanNoBuild( test )
   {
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
     return null;
   })
 
@@ -8286,8 +8286,6 @@ function cleanDry( test )
 {
   let self = this;
   let a = self.assetFor( test, 'clean' );
-  let submodulesPath = a.abs( '.module' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -8297,7 +8295,7 @@ function cleanDry( test )
   .then( ( got ) =>
   {
     test.is( _.strHas( got.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
-    var files = self.find( submodulesPath );
+    var files = self.find( a.abs( '.module' ) );
     test.gt( files.length, 50 );
     return null;
   })
@@ -8317,9 +8315,9 @@ function cleanDry( test )
   {
     test.case = '.clean dry:1';
 
-    var files = self.findAll( outPath );
+    var files = self.findAll( a.abs( 'out' ) );
     test.gt( files.length, 15 );
-    var files = wasFiles = self.findAll( submodulesPath );
+    var files = wasFiles = self.findAll( a.abs( '.module' ) );
     test.gt( files.length, 50 );
 
     test.identical( got.exitCode, 0 );
