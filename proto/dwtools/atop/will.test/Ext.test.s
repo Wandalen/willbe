@@ -5776,7 +5776,6 @@ function verbositySet( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  let outPath = _.path.join( a.routinePath, 'out' );
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -5900,7 +5899,6 @@ function verbosityStepDelete( test )
 {
   let self = this;
   let a = self.assetFor( test, 'verbosity-step-delete' );
-  let outPath = a.abs( 'out' );
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -6191,8 +6189,6 @@ function verbosityStepPrintName( test )
 {
   let self = this;
   let a = self.assetFor( test, 'verbosity-step-print-name' );
-  let outPath = _.path.join( a.routinePath, 'out' );
-  /* Dmytro : assetFor has not starter with 'spawn' mode */
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
