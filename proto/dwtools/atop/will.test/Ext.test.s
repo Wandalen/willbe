@@ -7164,7 +7164,6 @@ function listSingleModule( test )
 {
   let self = this;
   let a = self.assetFor( test, 'single' );
-  /* Dmytro : assetFor has not starter with 'spawn' mode */
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -7611,18 +7610,6 @@ function listWithSubmodules( test )
     return null;
   })
 
-  // /* - */
-  //
-  // start({ execPath : '.execution.list' })
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.case = '.execution.list'
-  //   test.identical( got.exitCode, 0 );
-  //   test.is( got.output.length );
-  //   return null;
-  // })
-
   return a.ready;
 } /* end of function listWithSubmodules */
 
@@ -7634,7 +7621,6 @@ function listSteps( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  /* Dmytro : assetFor has not starter with 'spawn' mode */
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -7846,8 +7832,8 @@ function cleanSingleModule( test )
     test.identical( got[ 0 ].exitCode, 0 );
     test.identical( got[ 1 ].exitCode, 0 );
     test.is( _.strHas( got[ 1 ].output, 'Clean deleted 0 file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
+    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
     return null;
   })
 
