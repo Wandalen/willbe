@@ -13742,8 +13742,8 @@ function exportDotlessSingle( test )
   let self = this;
   let a = self.assetFor( test, 'two-dotless-single-exported' );
   a.reflect();
-  _.fileProvider.filesDelete( a.abs( 'super.out' ) );
-  _.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+  a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+  a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
 
   /* - */
 
@@ -13850,8 +13850,8 @@ function exportTracing( test )
   let self = this;
   let a = self.assetFor( test, 'two-dotless-single-exported' );
   a.reflect();
-  _.fileProvider.filesDelete( a.abs( 'super.out' ) );
-  _.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+  a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+  a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
 
   /* - */
 
@@ -13932,13 +13932,9 @@ function exportRewritesOutFile( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-rewrites-out-file' );
-  let outFilePath = _.path.join( a.routinePath, 'out/export-rewrites-out-file.out.will.yml' );
-  let willFilePath = _.path.join( a.routinePath, '.will.yml' );
-  let willSingleExportFilePath = _.path.join( a.routinePath, '.will.single-export.yml' );
-  let willCopyFilePath = _.path.join( a.routinePath, 'copy.will.yml' );
-
+  let outFilePath = a.abs( 'out/export-rewrites-out-file.out.will.yml' );
   a.reflect();
-  _.fileProvider.fileCopy( willCopyFilePath, willFilePath );
+  a.fileProvider.fileCopy( a.abs( 'copy.will.yml' ), a.abs( '.will.yml' ) );
 
   /* - */
 
@@ -13955,8 +13951,8 @@ function exportRewritesOutFile( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( outFilePath ) );
-    let outFile = _.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
+    test.is( a.fileProvider.fileExists( outFilePath ) );
+    let outFile = a.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
     let build = outFile.module[ outFile.root[ 0 ] ].build;
     test.identical( _.mapKeys( build ), [ 'export1', 'export2' ] );
     return null;
@@ -13967,7 +13963,7 @@ function exportRewritesOutFile( test )
   .then( () =>
   {
     test.case = 'remove second export build then export again';
-    _.fileProvider.fileCopy( willFilePath, willSingleExportFilePath )
+    a.fileProvider.fileCopy( a.abs( '.will.yml' ), a.abs( '.will.single-export.yml' ) )
     return null;
   })
 
@@ -13976,8 +13972,8 @@ function exportRewritesOutFile( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( outFilePath ) );
-    let outFile = _.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
+    test.is( a.fileProvider.fileExists( outFilePath ) );
+    let outFile = a.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
     let build = outFile.module[ outFile.root[ 0 ] ].build;
     test.identical( _.mapKeys( build ), [ 'export1' ] );
     return null;
@@ -13988,7 +13984,7 @@ function exportRewritesOutFile( test )
   .then( () =>
   {
     test.case = 'restore second export, then export again';
-    _.fileProvider.fileCopy( willFilePath, willCopyFilePath )
+    a.fileProvider.fileCopy( a.abs( '.will.yml' ), a.abs( 'copy.will.yml' ) )
     return null;
   })
 
@@ -13997,8 +13993,8 @@ function exportRewritesOutFile( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.fileExists( outFilePath ) );
-    let outFile = _.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
+    test.is( a.fileProvider.fileExists( outFilePath ) );
+    let outFile = a.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
     let build = outFile.module[ outFile.root[ 0 ] ].build;
     test.identical( _.mapKeys( build ), [ 'export1', 'export2' ] );
     return null;
