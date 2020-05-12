@@ -3870,7 +3870,7 @@ function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-submodules-with-plural-criterion' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -3879,7 +3879,7 @@ function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
   .then( () =>
   {
     test.case = 'reflect informal submodule exported using steps, two builds in a row'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -3991,31 +3991,10 @@ function relfectSubmodulesWithNotExistingFile( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-reflect-with-not-existing' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
   a.reflect();
-  _.assert( _.fileProvider.fileExists( a.abs( a.routinePath, 'module/moduleB/proto/amid/File.txt' ) ) );
-  _.fileProvider.fileDelete( a.abs( a.routinePath, 'module/moduleB/proto/amid/File.txt' ) );
-  // let self = this;
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-reflect-with-not-existing' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let outPath = _.path.join( routinePath, 'out' );
-  // // let execPath = _.path.nativize( _.path.join( _.path.normalize( __dirname ), '../will/entry/Exec' ) );
-  // let ready = new _.Consequence().take( null );
-  //
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // })
-  //
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  // _.assert( _.fileProvider.fileExists( abs( routinePath, 'module/moduleB/proto/amid/File.txt' ) ) );
-  // _.fileProvider.fileDelete( abs( routinePath, 'module/moduleB/proto/amid/File.txt' ) );
+  _.assert( a.fileProvider.fileExists( a.abs( 'module/moduleB/proto/amid/File.txt' ) ) );
+  a.fileProvider.fileDelete( a.abs( 'module/moduleB/proto/amid/File.txt' ) );
 
   /* - */
 
@@ -4103,7 +4082,7 @@ function reflectInherit( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-inherit' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -4112,7 +4091,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.proto1'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4133,7 +4112,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.proto2'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4154,7 +4133,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.proto3'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4175,7 +4154,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.proto4'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4196,7 +4175,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.proto5'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4217,7 +4196,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build not1'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4254,7 +4233,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.files1'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4275,7 +4254,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.files2'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4296,7 +4275,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.files3'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
