@@ -11159,7 +11159,7 @@ function exportToRoot( test )
     test.is( _.strHas( got.output, /Exporting .*module::export-to-root \/ build::proto\.export.*/ ) );
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported .*module::export-to-root \/ build::proto\.export.* in/ ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'export-to-root.out.will.yml' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( 'export-to-root.out.will.yml' ) ) )
     return null;
   })
 
@@ -11174,30 +11174,9 @@ function exportMixed( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-mixed' );
-  let outPath = _.path.join( a.routinePath, 'out' );
-  let modulePath = _.path.join( a.routinePath, 'module' );
+  let outPath = a.abs( 'out' );
+  let modulePath = a.abs( 'module' );
   a.reflect();
-
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-mixed' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let outPath = _.path.join( routinePath, 'out' );
-//   let modulePath = _.path.join( routinePath, 'module' );
-//
-//   let ready = new _.Consequence().take( null )
-//
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready
-//   })
-//
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -11220,8 +11199,8 @@ function exportMixed( test )
     test.is( _.strHas( got.output, 'out/Proto.informal.out.will.yml' ) );
     test.is( _.strHas( got.output, 'out/UriBasic.informal.out.will.yml' ) );
 
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/Proto.informal.out.will.yml' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/UriBasic.informal.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/Proto.informal.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/UriBasic.informal.out.will.yml' ) ) );
 
     var files = self.find( modulePath );
     test.identical( files, [ '.', './Proto.informal.will.yml', './UriBasic.informal.will.yml' ] );
@@ -11229,10 +11208,10 @@ function exportMixed( test )
     test.identical( files, [ '.', './Proto.informal.out.will.yml', './UriBasic.informal.out.will.yml' ] );
 
     var expected = [ 'Proto.informal.will.yml', 'UriBasic.informal.will.yml' ];
-    var files = _.fileProvider.dirRead( modulePath );
+    var files = a.fileProvider.dirRead( modulePath );
     test.identical( files, expected );
 
-    var outfile = _.fileProvider.configRead( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( _.path.join( routinePath, 'out/Proto.informal.out.will.yml' ) );
     outfile = outfile.module[ 'Proto.informal.out' ];
     var expected =
     {
@@ -11415,8 +11394,8 @@ function exportMixed( test )
 
     test.identical( _.strCount( got.output, ' ! Failed to open' ), 4 );
 
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/Proto.informal.out.will.yml' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/UriBasic.informal.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/Proto.informal.out.will.yml' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/UriBasic.informal.out.will.yml' ) ) );
 
     var files = self.find( modulePath );
     test.identical( files, [ '.', './Proto.informal.will.yml', './UriBasic.informal.will.yml' ] );
@@ -11424,11 +11403,11 @@ function exportMixed( test )
     test.gt( files.length, 70 );
 
     var expected = [ 'Proto.informal.will.yml', 'UriBasic.informal.will.yml' ];
-    var files = _.fileProvider.dirRead( modulePath );
+    var files = a.fileProvider.dirRead( modulePath );
     test.identical( files, expected );
 
     var expected = [ 'dwtools', 'WithSubmodules.s' ];
-    var files = _.fileProvider.dirRead( _.path.join( a.routinePath, 'out/debug' ) );
+    var files = a.fileProvider.dirRead( a.abs( 'out/debug' ) );
     test.identical( files, expected );
 
     return null;
