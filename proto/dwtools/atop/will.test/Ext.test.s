@@ -8582,7 +8582,6 @@ function cleanDisabledModule( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-disabled-module' );
-  let willfPath = a.abs( './' );
 
   /* - */
 
@@ -8761,7 +8760,7 @@ function cleanHierarchyRemote( test )
   let self = this;
   let a = self.assetFor( test, 'hierarchy-remote' );
 
-  /* qqq : problems with willfiles
+  /* aaa : problems with willfiles // Dmytro : fixed
 
 about :
   name : a
@@ -8793,19 +8792,19 @@ submodule :
     test.identical( got.exitCode, 0 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -8838,19 +8837,19 @@ submodule :
     test.identical( got.exitCode, 0 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -8882,19 +8881,19 @@ submodule :
     test.identical( got.exitCode, 0 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -8926,19 +8925,19 @@ submodule :
     test.identical( got.exitCode, 0 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -8970,19 +8969,19 @@ submodule :
     test.identical( got.exitCode, 0 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9014,19 +9013,19 @@ submodule :
     test.identical( got.exitCode, 0 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9073,19 +9072,19 @@ function cleanHierarchyRemoteDry( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9117,19 +9116,19 @@ function cleanHierarchyRemoteDry( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9161,19 +9160,19 @@ function cleanHierarchyRemoteDry( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9205,19 +9204,19 @@ function cleanHierarchyRemoteDry( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9249,19 +9248,19 @@ function cleanHierarchyRemoteDry( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9293,19 +9292,19 @@ function cleanHierarchyRemoteDry( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9352,19 +9351,19 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9397,19 +9396,19 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9441,19 +9440,19 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'PathBasic', 'PathTools' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9485,19 +9484,19 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9529,19 +9528,19 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9573,19 +9572,19 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9632,19 +9631,19 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9676,19 +9675,19 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9720,19 +9719,19 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9764,19 +9763,19 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9808,19 +9807,19 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9852,19 +9851,19 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -9921,7 +9920,7 @@ function buildSingleModule( test )
 {
   let self = this;
   let a = self.assetFor( test, 'single' );
-  let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
+  let outDebugPath = a.abs( 'out/debug' );
   a.reflect();
 
   /* - */
@@ -9929,7 +9928,7 @@ function buildSingleModule( test )
   a.ready.then( () =>
   {
     test.case = '.build'
-    _.fileProvider.filesDelete( outDebugPath );
+    a.fileProvider.filesDelete( outDebugPath );
     return null;
   })
 
@@ -9954,8 +9953,8 @@ function buildSingleModule( test )
   .then( () =>
   {
     test.case = '.build debug.raw'
-    let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
-    _.fileProvider.filesDelete( outDebugPath );
+    let outDebugPath = a.abs( 'out/debug' );
+    a.fileProvider.filesDelete( outDebugPath );
     return null;
   })
 
@@ -9979,8 +9978,8 @@ function buildSingleModule( test )
   .then( () =>
   {
     test.case = '.build release.raw'
-    let outDebugPath = _.path.join( a.routinePath, 'out/release' );
-    _.fileProvider.filesDelete( outDebugPath );
+    let outDebugPath = a.abs( 'out/release' );
+    a.fileProvider.filesDelete( outDebugPath );
     return null;
   })
 
@@ -10005,10 +10004,10 @@ function buildSingleModule( test )
   .then( () =>
   {
     test.case = '.build wrong'
-    let buildOutDebugPath = _.path.join( a.routinePath, 'out/debug' );
-    let buildOutReleasePath = _.path.join( a.routinePath, 'out/release' );
-    _.fileProvider.filesDelete( buildOutDebugPath );
-    _.fileProvider.filesDelete( buildOutReleasePath );
+    let buildOutDebugPath = a.abs( 'out/debug' );
+    let buildOutReleasePath = a.abs( 'out/release' );
+    a.fileProvider.filesDelete( buildOutDebugPath );
+    a.fileProvider.filesDelete( buildOutReleasePath );
     var o =
     {
       args : [ '.build wrong' ],
@@ -10019,8 +10018,8 @@ function buildSingleModule( test )
     {
       test.is( o.exitCode !== 0 );
       test.is( o.output.length );
-      test.is( !_.fileProvider.fileExists( buildOutDebugPath ) )
-      test.is( !_.fileProvider.fileExists( buildOutReleasePath ) )
+      test.is( !a.fileProvider.fileExists( buildOutDebugPath ) )
+      test.is( !a.fileProvider.fileExists( buildOutReleasePath ) )
 
       return null;
     })
