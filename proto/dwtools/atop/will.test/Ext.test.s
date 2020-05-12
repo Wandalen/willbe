@@ -19227,11 +19227,9 @@ function versionsAgree( test )
 {
   let self = this;
   let a = self.assetFor( test, 'command-versions-agree' );
-  let localModulePathSrc = a.abs( 'module' );
-  let localModulePathDst = a.abs( '.module/local' );
   a.start2 = _.process.starter
   ({
-    currentPath : localModulePathSrc,
+    currentPath : a.abs( 'module' ),
     outputCollecting : 1,
     outputGraying : 1,
     ready : a.ready,
@@ -19239,48 +19237,12 @@ function versionsAgree( test )
 
   a.start3 = _.process.starter
   ({
-    currentPath : localModulePathDst,
+    currentPath : a.abs( '.module/local' ),
     outputCollecting : 1,
     outputGraying : 1,
     ready : a.ready,
   })
   a.reflect();
-
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'command-versions-agree' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let localModulePathSrc = _.path.join( routinePath, 'module' );
-//   let localModulePathDst = _.path.join( routinePath, '.module/local' );
-//
-//   let ready = new _.Consequence().take( null );
-//
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     throwingExitCode : 0,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-//
-//   let start2 = _.process.starter
-//   ({
-//     currentPath : localModulePathSrc,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-//
-//   let start3 = _.process.starter
-//   ({
-//     currentPath : localModulePathDst,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-//
-//   a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -19444,7 +19406,7 @@ function versionsAgreeNpm( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 3 );
@@ -19499,7 +19461,7 @@ function versionsAgreeNpm( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -19540,7 +19502,7 @@ function versionsAgreeNpm( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -19594,7 +19556,7 @@ function versionsAgreeNpm( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting1.will.yml', 'ModuleForTesting12ab', 'ModuleForTesting12ab.will.yml', 'ModuleForTesting2a', 'ModuleForTesting2a.will.yml' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -19661,40 +19623,6 @@ function stepSubmodulesDownload( test )
   })
   a.reflect();
 
-  // let self = this;
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'step-submodules-download' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  //
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-  // _.fileProvider.filesDelete( _.path.join( routinePath, '.module' ) );
-  // _.fileProvider.filesDelete( _.path.join( routinePath, 'out/debug' ) );
-  //
-  // let ready = new _.Consequence().take( null )
-  //
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   verbosity : 3,
-  //   ready : ready
-  // })
-  //
-  // /* - */
-  //
-  // start()
-  //
-  // .then( ( got ) =>
-  // {
-  //   test.case = 'simple run without args'
-  //   test.identical( got.exitCode, 0 );
-  //   test.is( got.output.length );
-  //   return null;
-  // })
-
   /* - */
 
   a.start({ execPath : '.resources.list' })
@@ -19712,8 +19640,8 @@ function stepSubmodulesDownload( test )
   .then( () =>
   {
     test.case = 'build'
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, '.module' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     return null;
   })
 
@@ -19722,8 +19650,8 @@ function stepSubmodulesDownload( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.gt( self.find( _.path.join( a.routinePath, '.module/ModuleForTesting1' ) ).length, 8 );
-    test.gt( self.find( _.path.join( a.routinePath, 'out/debug' ) ).length, 8 );
+    test.gt( self.find( a.abs( '.module/ModuleForTesting1' ) ).length, 8 );
+    test.gt( self.find( a.abs( 'out/debug' ) ).length, 8 );
     return null;
   })
 
@@ -19732,9 +19660,9 @@ function stepSubmodulesDownload( test )
   .then( () =>
   {
     test.case = 'export'
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, '.module' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out/debug' ) );
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out/Download.out.will.yml' ) );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/Download.out.will.yml' ) );
     return null;
   })
 
@@ -19743,9 +19671,9 @@ function stepSubmodulesDownload( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.gt( self.find( _.path.join( a.routinePath, '.module/ModuleForTesting1' ) ).length, 8 );
-    test.gt( self.find( _.path.join( a.routinePath, 'out/debug' ) ).length, 8 );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/Download.out.will.yml' ) ) );
+    test.gt( self.find( a.abs( '.module/ModuleForTesting1' ) ).length, 8 );
+    test.gt( self.find( a.abs( 'out/debug' ) ).length, 8 );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/Download.out.will.yml' ) ) );
     return null;
   })
 
