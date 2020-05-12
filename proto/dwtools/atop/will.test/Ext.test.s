@@ -1993,13 +1993,13 @@ function openEach( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -2022,13 +2022,13 @@ function openEach( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
