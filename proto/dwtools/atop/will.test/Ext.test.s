@@ -19227,8 +19227,8 @@ function versionsAgree( test )
 {
   let self = this;
   let a = self.assetFor( test, 'command-versions-agree' );
-  let localModulePathSrc = _.path.join( a.routinePath, 'module' );
-  let localModulePathDst = _.path.join( a.routinePath, '.module/local' );
+  let localModulePathSrc = a.abs( 'module' );
+  let localModulePathDst = a.abs( '.module/local' );
   a.start2 = _.process.starter
   ({
     currentPath : localModulePathSrc,
@@ -19280,7 +19280,7 @@ function versionsAgree( test )
 //     ready : ready,
 //   })
 //
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+//   a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
