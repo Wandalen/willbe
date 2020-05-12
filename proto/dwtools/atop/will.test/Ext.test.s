@@ -13230,7 +13230,6 @@ function exportWholeModule( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-whole' );
-  let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
 
   /* - */
@@ -13249,7 +13248,7 @@ function exportWholeModule( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './.will.yml', './proto', './proto/File1.s', './proto/dir', './proto/dir/File2.s' ] );
     return null;
   })
@@ -13265,11 +13264,9 @@ function exportRecursive( test )
 {
   let self = this;
   let a = self.assetFor( test, 'resolve-path-of-submodules-exported' );
-  let inPath = a.abs( 'ab/' );
-  let outTerminalPath = a.abs( 'out/ab/module-ab.out.will.yml' );
   let outDirPath = a.abs( 'out' );
   a.reflect();
-  _.fileProvider.filesDelete( outDirPath );
+  a.fileProvider.filesDelete( outDirPath );
 
   /* - */
 
@@ -13339,8 +13336,8 @@ function exportRecursiveUsingSubmodule( test )
   let self = this;
   let a = self.assetFor( test, 'export-multiple-exported' );
   a.reflect();
-  _.fileProvider.filesDelete( a.abs( 'super.out' ) );
-  _.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+  a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+  a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
 
   /* - */
 
@@ -13633,8 +13630,8 @@ function exportDotless( test )
   let self = this;
   let a = self.assetFor( test, 'two-dotless-exported' );
   a.reflect();
-  _.fileProvider.filesDelete( a.abs( 'super.out' ) );
-  _.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+  a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+  a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
 
   /* - */
 
