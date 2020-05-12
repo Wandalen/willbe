@@ -19697,7 +19697,7 @@ function stepWillbeVersionCheck( test )
   let nodeModulesSrcPath = a.path.join( willbeRootPath, 'node_modules' );
   let nodeModulesDstPath = a.path.join( willbeDstPath, 'node_modules' );
 
-  if( !a.fileProvider.fileExists( _.path.join( willbeRootPath, 'package.json' ) ) )
+  if( !a.fileProvider.fileExists( a.path.join( willbeRootPath, 'package.json' ) ) )
   {
     test.is( true );
     return;
@@ -20091,13 +20091,13 @@ function upgradeDryDetached( test )
   a.reflect();
 
   // let self = this;
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let originalAssetPath = a.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
+  // let routinePath = a.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
-  // let filePath = _.path.join( routinePath, 'file' );
-  // let modulePath = _.path.join( routinePath, '.module' );
-  // let outPath = _.path.join( routinePath, 'out' );
+  // let filePath = a.path.join( routinePath, 'file' );
+  // let modulePath = a.path.join( routinePath, '.module' );
+  // let outPath = a.path.join( routinePath, 'out' );
   //
   // let ready = new _.Consequence().take( null );
   //
@@ -20110,7 +20110,7 @@ function upgradeDryDetached( test )
   //   ready : ready,
   // });
   //
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -20346,13 +20346,13 @@ function upgradeDetached( test )
   a.reflect();
 
   // let self = this;
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let originalAssetPath = a.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
+  // let routinePath = a.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
-  // let filePath = _.path.join( routinePath, 'file' );
-  // let modulePath = _.path.join( routinePath, '.module' );
-  // let outPath = _.path.join( routinePath, 'out' );
+  // let filePath = a.path.join( routinePath, 'file' );
+  // let modulePath = a.path.join( routinePath, '.module' );
+  // let outPath = a.path.join( routinePath, 'out' );
   //
   // let ready = new _.Consequence().take( null );
   //
@@ -20371,7 +20371,7 @@ function upgradeDetached( test )
   .then( () =>
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after full update';
-    _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     return null;
   })
 
@@ -20429,8 +20429,8 @@ function upgradeDetached( test )
     test.case = '.submodules.upgrade dry:0 negative:0 -- after full update';
 
     a.reflect();
-    // _.fileProvider.filesDelete({ filePath : routinePath })
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    // a.fileProvider.filesDelete({ filePath : routinePath })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
@@ -20599,8 +20599,8 @@ function upgradeDetached( test )
     test.case = '.submodules.upgrade dry:0 negative:1 -- after informal update';
 
     a.reflect();
-    // _.fileProvider.filesDelete({ filePath : routinePath })
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    // a.fileProvider.filesDelete({ filePath : routinePath })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
@@ -20659,8 +20659,8 @@ function upgradeDetached( test )
     test.case = '.submodules.upgrade dry:0 negative:1 -- after formal update';
 
     a.reflect();
-    // _.fileProvider.filesDelete({ filePath : routinePath })
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    // a.fileProvider.filesDelete({ filePath : routinePath })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
@@ -20726,8 +20726,8 @@ function upgradeDetachedExperiment( test )
   let a = self.assetFor( test, 'submodules-detached-single' );
 
   // let self = this;
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached-single' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let originalAssetPath = a.path.join( self.suiteAssetsOriginalPath, 'submodules-detached-single' );
+  // let routinePath = a.path.join( self.suiteTempPath, test.name );
   //
   // let ready = new _.Consequence().take( null );
   //
@@ -20747,7 +20747,7 @@ function upgradeDetachedExperiment( test )
   {
     test.case = '.submodules.upgrade dry:0 negative:1 -- after download';
     a.reflect();
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     return null;
   })
 
@@ -20781,13 +20781,13 @@ function fixateDryDetached( test )
   a.reflect();
 
   // let self = this;
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let originalAssetPath = a.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
+  // let routinePath = a.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
-  // let filePath = _.path.join( routinePath, 'file' );
-  // let modulePath = _.path.join( routinePath, '.module' );
-  // let outPath = _.path.join( routinePath, 'out' );
+  // let filePath = a.path.join( routinePath, 'file' );
+  // let modulePath = a.path.join( routinePath, '.module' );
+  // let outPath = a.path.join( routinePath, 'out' );
   //
   // let ready = new _.Consequence().take( null );
   //
@@ -20800,7 +20800,7 @@ function fixateDryDetached( test )
   //   ready : ready,
   // });
   //
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -21035,13 +21035,13 @@ function fixateDetached( test )
   let a = self.assetFor( test, 'submodules-detached' );
 
   // let self = this;
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let originalAssetPath = a.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
+  // let routinePath = a.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
-  // let filePath = _.path.join( routinePath, 'file' );
-  // let modulePath = _.path.join( routinePath, '.module' );
-  // let outPath = _.path.join( routinePath, 'out' );
+  // let filePath = a.path.join( routinePath, 'file' );
+  // let modulePath = a.path.join( routinePath, '.module' );
+  // let outPath = a.path.join( routinePath, 'out' );
   //
   // let ready = new _.Consequence().take( null );
   //
@@ -21061,7 +21061,7 @@ function fixateDetached( test )
   {
     test.case = '.submodules.fixate dry:0 negative:1 -- after full update';
     a.reflect();
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     return null;
   })
 
@@ -21119,8 +21119,8 @@ function fixateDetached( test )
     test.case = '.submodules.fixate dry:0 negative:0 -- after full update';
 
     a.reflect();
-    // _.fileProvider.filesDelete({ filePath : routinePath })
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    // a.fileProvider.filesDelete({ filePath : routinePath })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
@@ -21289,8 +21289,8 @@ function fixateDetached( test )
     test.case = '.submodules.fixate dry:0 negative:1 -- after informal update';
 
     a.reflect();
-    // _.fileProvider.filesDelete({ filePath : routinePath })
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    // a.fileProvider.filesDelete({ filePath : routinePath })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
@@ -21349,8 +21349,8 @@ function fixateDetached( test )
     test.case = '.submodules.fixate dry:0 negative:1 -- after formal update';
 
     a.reflect();
-    // _.fileProvider.filesDelete({ filePath : routinePath })
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    // a.fileProvider.filesDelete({ filePath : routinePath })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
     return null;
   })
@@ -21419,7 +21419,7 @@ function runWillbe( test )
 
   let self = this;
   let a = self.assetFor( test, 'run-willbe' );
-  let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
+  let execUnrestrictedPath = a.path.nativize( a.path.join( __dirname, '../will/ExecUnrestricted' ) );
 
   a.fork = _.process.starter
   ({
@@ -21441,12 +21441,12 @@ function runWillbe( test )
   });
 
 //   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'run-willbe' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
+//   let originalAssetPath = a.path.join( self.suiteAssetsOriginalPath, 'run-willbe' );
+//   let routinePath = a.path.join( self.suiteTempPath, test.name );
 //   let abs = self.abs_functor( routinePath );
 //   let rel = self.rel_functor( routinePath );
 //
-//   let execUnrestrictedPath = _.path.nativize( _.path.join( __dirname, '../will/ExecUnrestricted' ) );
+//   let execUnrestrictedPath = a.path.nativize( a.path.join( __dirname, '../will/ExecUnrestricted' ) );
 //   let ready = new _.Consequence().take( null );
 //
 //   let fork = _.process.starter
@@ -21475,7 +21475,7 @@ function runWillbe( test )
   .then( () =>
   {
     a.reflect();
-    // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+    // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
     return null;
   })
 
