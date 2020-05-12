@@ -4309,7 +4309,7 @@ function reflectInheritSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-inherit-submodules' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -4318,7 +4318,7 @@ function reflectInheritSubmodules( test )
   .then( () =>
   {
     test.case = 'setup'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4337,7 +4337,7 @@ function reflectInheritSubmodules( test )
   .then( () =>
   {
     test.case = '.with a .build'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4356,7 +4356,7 @@ function reflectInheritSubmodules( test )
   .then( () =>
   {
     test.case = '.with b .build'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4375,7 +4375,7 @@ function reflectInheritSubmodules( test )
   .then( () =>
   {
     test.case = '.with c .build'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4399,7 +4399,7 @@ function reflectComplexInherit( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-with-submodules' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
 
   /* - */
 
@@ -4408,7 +4408,7 @@ function reflectComplexInherit( test )
   {
     test.case = '.with ab/ .build';
     a.reflect();
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -4452,7 +4452,7 @@ function reflectComplexInherit( test )
   {
     test.case = '.with abac/ .build';
     a.reflect();
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
