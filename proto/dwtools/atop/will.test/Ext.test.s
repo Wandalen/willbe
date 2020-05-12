@@ -2243,31 +2243,12 @@ function withList( test )
 function eachList( test )
 {
   let self = this;
-
   let a = self.assetFor( test, 'each-list' );
   a.reflect();
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'each-list' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  //
-  // let ready = new _.Consequence().take( null );
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // })
-  //
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
   a.start({ args : '.clean' })
-
-  /* - */
 
   a.start({ args : '.each . .resources.list about::name' })
   .finally( ( err, got ) =>
@@ -2418,7 +2399,6 @@ eachList.timeOut = 300000;
 function eachBrokenIll( test )
 {
   let self = this;
-
   let a = self.assetFor( test, 'each-broken' );
   a.reflect();
 
@@ -2493,7 +2473,7 @@ function eachBrokenCommand( test )
   let self = this;
   let a = self.assetFor( test, 'export-with-submodules-few' );
   a.reflect();
-  _.fileProvider.filesDelete({ filePath : _.path.join( a.routinePath, 'out' ) });
+  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
 
   /* - */
 
