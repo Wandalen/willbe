@@ -10091,7 +10091,7 @@ function buildSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -10101,7 +10101,7 @@ function buildSubmodules( test )
   .then( () =>
   {
     test.case = 'build withoud submodules'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -10122,7 +10122,7 @@ function buildSubmodules( test )
   .then( () =>
   {
     test.case = '.build'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -10145,7 +10145,7 @@ function buildSubmodules( test )
   .then( () =>
   {
     test.case = '.build wrong'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -10161,17 +10161,17 @@ function buildSubmodules( test )
       args : [ '.build wrong' ]
     }
 
-    let buildOutDebugPath = _.path.join( a.routinePath, 'out/debug' );
-    let buildOutReleasePath = _.path.join( a.routinePath, 'out/release' );
+    let buildOutDebugPath = a.abs( 'out/debug' );
+    let buildOutReleasePath = a.abs( 'out/release' );
 
     return test.shouldThrowErrorOfAnyKind( _.process.start( o ) )
     .then( ( got ) =>
     {
       test.is( o.exitCode !== 0 );
       test.is( o.output.length );
-      test.is( !_.fileProvider.fileExists( outPath ) );
-      test.is( !_.fileProvider.fileExists( buildOutDebugPath ) );
-      test.is( !_.fileProvider.fileExists( buildOutReleasePath ) );
+      test.is( !a.fileProvider.fileExists( outPath ) );
+      test.is( !a.fileProvider.fileExists( buildOutDebugPath ) );
+      test.is( !a.fileProvider.fileExists( buildOutReleasePath ) );
 
       return null;
     })
@@ -10637,34 +10637,12 @@ function buildDetached( test )
   let a = self.assetFor( test, 'submodules-detached' );
   a.reflect();
 
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let filePath = _.path.join( routinePath, 'file' );
-//   let modulePath = _.path.join( routinePath, '.module' );
-//   let outPath = _.path.join( routinePath, 'out' );
-//
-//   let ready = new _.Consequence().take( null );
-//
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   });
-//
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
   /* - */
 
   a.ready
   .then( () =>
   {
-    test.case = '.build'
+    test.case = '.build';
     return null;
   })
 
@@ -10674,18 +10652,17 @@ function buildDetached( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.is( _.strHas( got.output, /\+ .*module::wTools.* was downloaded version .*master.* in/ ) );
+    test.is( _.strHas( got.output, /\+ .*module::wModuleForTesting1.* was downloaded version .*master.* in/ ) );
     test.is( _.strHas( got.output, /\+ .*module::wPathBasic.* was downloaded version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.* in/ ) );
-    // test.is( _.strHas( got.output, /\+ .*module::wColor.* was downloaded version .*0.3.115.* in/ ) );
-    test.is( _.strHas( got.output, /\.module\/Procedure\.informal <- npm:\/\/wprocedure/ ) );
-    test.is( _.strHas( got.output, /\.module\/Proto\.informal <- git\+https:\/\/github\.com\/Wandalen\/wProto\.git#70fcc0c31996758b86f85aea1ae58e0e8c2cb8a7/ ) );
-    test.is( _.strHas( got.output, /\.module\/UriBasic\.informal <- git\+https:\/\/github\.com\/Wandalen\/wUriBasic\.git/ ) );
+    test.is( _.strHas( got.output, /\.module\/ModuleForTesting2a\.informal <- npm:\/\/wprocedure/ ) );
+    test.is( _.strHas( got.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#aed847d09f8d22370d47e7aed9ad7f9efd67de1d/ ) );
+    test.is( _.strHas( got.output, /\.module\/ModuleForTesting12ab\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git/ ) );
 
     var files = _.fileProvider.dirRead( _.path.join( a.routinePath, '.module' ) );
-    test.identical( files, [ /* 'Color', */ 'PathBasic', 'Procedure.informal', 'Proto.informal', 'Tools', 'UriBasic.informal' ] );
+    test.identical( files, [ 'ModuleForTesting1', 'ModuleForTesting12.informal', 'ModuleForTesting12ab.informal', 'ModuleForTesting2a.informal', 'ModuleForTesting2b' ] );
 
     var files = _.fileProvider.dirRead( _.path.join( a.routinePath, 'out' ) );
-    test.identical( files, [ 'debug', 'Procedure.informal.out.will.yml', 'Proto.informal.out.will.yml', 'UriBasic.informal.out.will.yml' ] );
+    test.identical( files, [ 'debug', 'ModuleForTesting12.informal.out.will.yml', 'ModuleForTesting12ab.informal.out.will.yml', 'ModuleForTesting2a.informal.out.will.yml' ] );
 
     return null;
   })
@@ -10704,18 +10681,18 @@ function exportSingle( test )
   let self = this;
   let a = self.assetFor( test, 'single' );
   let outDebugPath = a.path.join( a.routinePath, 'out/debug' );
-  let outPath = _.path.join( a.routinePath, 'out' ); /* qqq : ? */
-  let outWillPath = _.path.join( a.routinePath, 'out/single.out.will.yml' );
+  let outPath = a.abs( 'out' ); /* aaa : ? */ /* Dmytro : use `a.abs` */
+  let outWillPath = a.abs( 'out/single.out.will.yml' );
   a.reflect();
-  _.fileProvider.filesDelete( outDebugPath );
+  a.fileProvider.filesDelete( outDebugPath );
 
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.export'
-    _.fileProvider.filesDelete( outDebugPath );
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outDebugPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -10733,8 +10710,8 @@ function exportSingle( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s' ] );
 
-    test.is( _.fileProvider.fileExists( outWillPath ) )
-    var outfile = _.fileProvider.configRead( outWillPath );
+    test.is( a.fileProvider.fileExists( outWillPath ) )
+    var outfile = a.fileProvider.configRead( outWillPath );
     outfile = outfile.module[ outfile.root[ 0 ] ];
 
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
@@ -10750,8 +10727,8 @@ function exportSingle( test )
   .then( () =>
   {
     test.case = '.export.proto'
-    _.fileProvider.filesDelete( outDebugPath );
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outDebugPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -10769,8 +10746,8 @@ function exportSingle( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s'  ] );
 
-    test.is( _.fileProvider.fileExists( outWillPath ) )
-    var outfile = _.fileProvider.configRead( outWillPath );
+    test.is( a.fileProvider.fileExists( outWillPath ) )
+    var outfile = a.fileProvider.configRead( outWillPath );
     outfile = outfile.module[ outfile.root[ 0 ] ];
 
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
@@ -10803,7 +10780,7 @@ function exportItself( test )
 
   a.ready.then( () =>
   {
-    test.case = '.export'
+    test.case = '.export';
     return null;
   })
 
