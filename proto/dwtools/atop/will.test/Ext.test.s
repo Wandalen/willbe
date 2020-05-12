@@ -12738,8 +12738,6 @@ function exportDoc( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-multiple-doc' );
-  let subOutPath = _.path.join( a.routinePath, 'out' );
-  let supOutPath = _.path.join( a.routinePath, 'doc.out' );
 
   /* - */
 
@@ -12748,8 +12746,8 @@ function exportDoc( test )
   {
     test.case = 'export submodule';
     a.reflect();
-    _.fileProvider.filesDelete( subOutPath );
-    _.fileProvider.filesDelete( supOutPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    a.fileProvider.filesDelete( a.abs( 'doc.out' ) );
 
     return null;
   })
@@ -12763,10 +12761,10 @@ function exportDoc( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( subOutPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.default-debug-raw.out.tgs', './submodule.default-raw.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
 
-    var files = self.find( supOutPath );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [ '.', './file.md' ] );
 
     return null;
@@ -12785,7 +12783,7 @@ function exportImport( test )
 {
   let self = this;
   let a = self.assetFor( test, 'two-exported' );
-  let outPath = _.path.join( a.routinePath, 'super.out' );
+  let outPath = a.abs( 'super.out' );
   a.reflect();
 
   /* - */
@@ -12795,7 +12793,7 @@ function exportImport( test )
   .then( () =>
   {
     test.case = '.export'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -12806,7 +12804,7 @@ function exportImport( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = _.fileProvider.dirRead( outPath );
+    var files = a.fileProvider.dirRead( outPath );
     test.identical( files, [ 'debug', 'release', 'supermodule.out.will.yml' ] );
 
     return null;
@@ -12875,8 +12873,6 @@ function exportCourrputedOutfileUnknownSection( test )
 {
   let self = this;
   let a = self.assetFor( test, 'corrupted-outfile-unknown-section' );
-  let outPath = _.path.join( a.routinePath, 'sub.out' );
-  let outFilePath = _.path.join( a.routinePath, 'sub.out/sub.out.will.yml' );
   a.reflect();
 
   /* - */
@@ -12895,10 +12891,10 @@ function exportCourrputedOutfileUnknownSection( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'sub.out' ) );
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
-    var outfile = _.fileProvider.configRead( outFilePath );
+    var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
     outfile = outfile.module[ 'sub.out' ];
     var exported = _.setFrom( _.mapKeys( _.select( outfile, 'exported/*' ) ) );
     var exp = _.setFrom( [ 'export.debug' ] );
