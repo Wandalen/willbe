@@ -10854,70 +10854,51 @@ function exportInformal( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-mixed' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-mixed' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let outPath = _.path.join( routinePath, 'out' );
-//   let ready = new _.Consequence().take( null );
-//
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   });
-//
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
   /* - */
 
   a.ready
   .then( () =>
   {
-    test.case = '.with module/Proto.informal .export'
+    test.case = '.with module/ModuleForTesting12.informal .export'
     return null;
   })
 
   a.start({ execPath : '.clean' })
-  a.start({ execPath : '.with module/Proto.informal .export' })
+  a.start({ execPath : '.with module/ModuleForTesting12.informal .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /Exported .*module::Proto.informal \/ build::export.* in/ ), 1 );
+    test.identical( _.strCount( got.output, /Exported .*module::ModuleForTesting12.informal \/ build::export.* in/ ), 1 );
 
     var files = self.find( outPath );
-    test.identical( files, [ '.', './Proto.informal.out.will.yml' ] );
+    test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml' ] );
 
-    var outfile = _.fileProvider.configRead( _.path.join( outPath, './Proto.informal.out.will.yml' ) );
-    outfile = outfile.module[ 'Proto.informal.out' ];
+    var outfile = a.fileProvider.configRead( _.path.join( outPath, './ModuleForTesting12.informal.out.will.yml' ) );
+    outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
       "module.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `Proto.informal.out.will.yml`
+        "path" : `ModuleForTesting12.informal.out.will.yml`
       },
       "module.common" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `Proto.informal.out`
+        "path" : `ModuleForTesting12.informal.out`
       },
       "module.original.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `../module/Proto.informal.will.yml`
+        "path" : `../module/ModuleForTesting12.informal.will.yml`
       },
       "module.peer.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `../module/Proto.informal.will.yml`
+        "path" : `../module/ModuleForTesting12.informal.will.yml`
       },
       "in" :
       {
@@ -10931,12 +10912,12 @@ function exportInformal( test )
       // {
       //   "criterion" : { "predefined" : 1 }
       // },
-      "download" : { "path" : `../.module/Proto`, "criterion" : { "predefined" : 1 } },
+      "download" : { "path" : `../.module/ModuleForTesting12`, "criterion" : { "predefined" : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "path" : `../.module/Proto/proto`
+        "path" : `../.module/ModuleForTesting12/proto`
       },
       'module.peer.in' :
       {
@@ -10946,9 +10927,9 @@ function exportInformal( test )
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.download.path, '../.module/Proto' );
+    test.identical( outfile.path.download.path, '../.module/ModuleForTesting12' );
     test.identical( outfile.path.remote.path, undefined );
-    // test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wProto.git' );
+    // test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wModuleForTesting12.git' );
     // logger.log( _.toJson( outfile.path ) );
 
     return null;
@@ -10959,42 +10940,42 @@ function exportInformal( test )
   a.ready
   .then( () =>
   {
-    test.case = '.with module/Proto.informal .export -- second'
+    test.case = '.with module/ModuleForTesting12.informal .export -- second'
     return null;
   })
 
-  a.start({ execPath : '.with module/Proto.informal .export' })
+  a.start({ execPath : '.with module/ModuleForTesting12.informal .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /Exported .*module::Proto.informal \/ build::export.* in/ ), 1 );
+    test.identical( _.strCount( got.output, /Exported .*module::ModuleForTesting12.informal \/ build::export.* in/ ), 1 );
 
     var files = self.find( outPath );
-    test.identical( files, [ '.', './Proto.informal.out.will.yml' ] );
+    test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml' ] );
 
-    var outfile = _.fileProvider.configRead( _.path.join( outPath, './Proto.informal.out.will.yml' ) );
-    outfile = outfile.module[ 'Proto.informal.out' ];
+    var outfile = a.fileProvider.configRead( _.path.join( outPath, './ModuleForTesting12.informal.out.will.yml' ) );
+    outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
       "module.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `Proto.informal.out.will.yml`
+        "path" : `ModuleForTesting12.informal.out.will.yml`
       },
       "module.common" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `Proto.informal.out`
+        "path" : `ModuleForTesting12.informal.out`
       },
       "module.original.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `../module/Proto.informal.will.yml`
+        "path" : `../module/ModuleForTesting12.informal.will.yml`
       },
       "module.peer.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `../module/Proto.informal.will.yml`
+        "path" : `../module/ModuleForTesting12.informal.will.yml`
       },
       "in" :
       {
@@ -11008,12 +10989,12 @@ function exportInformal( test )
       // {
       //   "criterion" : { "predefined" : 1 }
       // },
-      "download" : { "path" : `../.module/Proto`, "criterion" : { "predefined" : 1 } },
+      "download" : { "path" : `../.module/ModuleForTesting12`, "criterion" : { "predefined" : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "path" : `../.module/Proto/proto`
+        "path" : `../.module/ModuleForTesting12/proto`
       },
       'module.peer.in' :
       {
@@ -11023,9 +11004,9 @@ function exportInformal( test )
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.download.path, '../.module/Proto' );
+    test.identical( outfile.path.download.path, '../.module/ModuleForTesting12' );
     test.identical( outfile.path.remote.path, undefined );
-    // test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wProto.git' );
+    // test.identical( outfile.path.remote.path, 'git+https:///github.com/Wandalen/wModuleForTesting12.git' );
     // logger.log( _.toJson( outfile.path ) );
 
     return null;
@@ -11036,43 +11017,43 @@ function exportInformal( test )
   a.ready
   .then( () =>
   {
-    test.case = '.with module/UriBasic.informal .export'
+    test.case = '.with module/ModuleForTesting12ab.informal .export'
     return null;
   })
 
   a.start({ execPath : '.clean' })
-  a.start({ execPath : '.with module/UriBasic.informal .export' })
+  a.start({ execPath : '.with module/ModuleForTesting12ab.informal .export' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.identical( _.strCount( got.output, /Exported .*module::UriBasic.informal \/ build::export.* in/ ), 1 );
+    test.identical( _.strCount( got.output, /Exported .*module::ModuleForTesting12ab.informal \/ build::export.* in/ ), 1 );
 
     var files = self.find( outPath );
-    test.identical( files, [ '.', './UriBasic.informal.out.will.yml' ] );
+    test.identical( files, [ '.', './ModuleForTesting12ab.informal.out.will.yml' ] );
 
-    var outfile = _.fileProvider.configRead( _.path.join( outPath, './UriBasic.informal.out.will.yml' ) );
-    outfile = outfile.module[ 'UriBasic.informal.out' ];
+    var outfile = a.fileProvider.configRead( _.path.join( outPath, './ModuleForTesting12ab.informal.out.will.yml' ) );
+    outfile = outfile.module[ 'ModuleForTesting12ab.informal.out' ];
     var expected =
     {
       "module.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `UriBasic.informal.out.will.yml`
+        "path" : `ModuleForTesting12ab.informal.out.will.yml`
       },
       "module.common" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `UriBasic.informal.out`
+        "path" : `ModuleForTesting12ab.informal.out`
       },
       "module.original.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `../module/UriBasic.informal.will.yml`
+        "path" : `../module/ModuleForTesting12ab.informal.will.yml`
       },
       "module.peer.willfiles" :
       {
         "criterion" : { "predefined" : 1 },
-        "path" : `../module/UriBasic.informal.will.yml`
+        "path" : `../module/ModuleForTesting12ab.informal.will.yml`
       },
       "in" :
       {
@@ -11086,12 +11067,12 @@ function exportInformal( test )
       // {
       //   "criterion" : { "predefined" : 1 }
       // },
-      "download" : { "path" : `../.module/UriBasic`, "criterion" : { "predefined" : 1 } },
+      "download" : { "path" : `../.module/ModuleForTesting12ab`, "criterion" : { "predefined" : 1 } },
       "export" : { "path" : `{path::download}/proto/**` },
       "exported.dir.export" :
       {
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "path" : `../.module/UriBasic/proto`
+        "path" : `../.module/ModuleForTesting12ab/proto`
       },
       'module.peer.in' :
       {
@@ -11101,9 +11082,9 @@ function exportInformal( test )
     }
     delete outfile.path[ 'exported.files.export' ];
     test.identical( outfile.path, expected );
-    test.identical( outfile.path.download.path, '../.module/UriBasic' );
+    test.identical( outfile.path.download.path, '../.module/ModuleForTesting12ab' );
     test.identical( outfile.path.remote.path, undefined );
-    // test.identical( outfile.path.remote.path, 'npm:///wuribasic' );
+    // test.identical( outfile.path.remote.path, 'npm:///wmodulefortesting12ab' );
     // logger.log( _.toJson( outfile.path ) );
 
     return null;
