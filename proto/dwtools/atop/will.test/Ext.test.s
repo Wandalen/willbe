@@ -15685,7 +15685,7 @@ function functionStringsJoin( test )
 console.log( 'File3.js' );
 console.log( 'File1.js' );
 `
-    var read = _.fileProvider.fileRead( _.path.join( a.routinePath, 'out1.js' ) );
+    var read = a.fileProvider.fileRead( a.abs( 'out1.js' ) );
     test.identical( read, expected );
 
     return null;
@@ -15715,7 +15715,7 @@ console.log( 'File1.js' );
 `console.log( 'File3.js' );
 console.log( 'File1.js' );
 `
-    var read = _.fileProvider.fileRead( _.path.join( a.routinePath, 'out2.js' ) );
+    var read = a.fileProvider.fileRead( a.abs( 'out2.js' ) );
     test.identical( read, expected );
 
     return null;
@@ -15776,7 +15776,6 @@ function functionPlatform( test )
 {
   let self = this;
   let a = self.assetFor( test, 'function-platform' );
-  let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
 
   /* - */
@@ -15803,7 +15802,7 @@ function functionPlatform( test )
     test.identical( _.strCount( got.output, '+ reflector::copy reflected 2 file(s)' ), 1 );
     test.identical( _.strCount( got.output, `./out/dir.${platform} <- ./proto in` ), 1 );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
 
     test.identical( files, [ '.', `./dir.${platform}`, `./dir.${platform}/File.js` ] );
 
