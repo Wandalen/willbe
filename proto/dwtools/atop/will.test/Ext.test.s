@@ -14085,15 +14085,15 @@ function exportDiffDownloadPathsRegular( test )
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
     // var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
-    var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'a.out.will.yml', 'c.out.will.yml', 'debug' ];
-    var files = _.fileProvider.dirRead( a.abs( 'out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 4 );
@@ -14114,15 +14114,15 @@ function exportDiffDownloadPathsRegular( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
-    var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'a.out.will.yml', 'c.out.will.yml', 'debug' ];
-    var files = _.fileProvider.dirRead( a.abs( 'out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -14169,31 +14169,31 @@ function exportHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
     var exp = [ 'debug', 'z.out.will.yml' ];
-    var files = _.fileProvider.dirRead( a.abs( 'out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a.out.will.yml', 'b.out.will.yml', 'debug' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/out' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a0.out.will.yml', 'debug' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/out' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
     var exp = [ 'c.out.will.yml', 'debug' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/out' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
@@ -14227,31 +14227,31 @@ function exportHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
     var exp = [ 'debug', 'z.out.will.yml' ];
-    var files = _.fileProvider.dirRead( a.abs( 'out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a.out.will.yml', 'b.out.will.yml', 'debug' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/out' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
     var exp = [ 'a0.out.will.yml', 'debug' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/out' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
     var exp = [ 'c.out.will.yml', 'debug' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/out' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/out' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
@@ -14336,7 +14336,7 @@ function exportWithDisabled( test )
   {
     test.case = '.imply withDisabled:0 ; .with */* .export.recursive';
     a.reflect();
-    _.fileProvider.filesDelete( a.abs( 'module1/out' ) );
+    a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
   })
 
@@ -14377,7 +14377,7 @@ function exportWithDisabled( test )
   {
     test.case = '.imply withDisabled:0 ; .with */* .export';
     a.reflect();
-    _.fileProvider.filesDelete( a.abs( 'module1/out' ) );
+    a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
   })
 
@@ -14418,7 +14418,7 @@ function exportWithDisabled( test )
   {
     test.case = '.with */* .export.recursive';
     a.reflect();
-    _.fileProvider.filesDelete( a.abs( 'module1/out' ) );
+    a.fileProvider.filesDelete( a.abs( 'module1/out' ) );
     return null;
   })
 
