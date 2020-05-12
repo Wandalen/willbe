@@ -3103,14 +3103,14 @@ function reflectComposite( test )
   let self = this;
   let a = self.assetFor( test, 'composite-reflector' );
   a.reflect();
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
 
   /* */
 
   a.ready.then( () =>
   {
     test.case = '.build out* variant:0'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -3141,7 +3141,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:1'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -3172,7 +3172,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:2'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -3203,7 +3203,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:3'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -3234,7 +3234,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:4'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -3255,7 +3255,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:5'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -3275,7 +3275,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:6'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
@@ -3294,7 +3294,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:7'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   })
 
