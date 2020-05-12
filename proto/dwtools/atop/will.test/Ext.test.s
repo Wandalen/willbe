@@ -6349,13 +6349,14 @@ shell.step
   return a.ready;
 } /* end of function verbosityStepPrintName */
 
+verbosityStepPrintName.timeOut = 100000;
+
 //
 
 function modulesTreeDotless( test )
 {
   let self = this;
   let a = self.assetFor( test, 'two-dotless-single-exported' );
-  /* Dmytro : assetFor has not starter with 'spawn' mode */
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -6397,8 +6398,8 @@ function modulesTreeDotless( test )
   .then( () =>
   {
     test.case = '.modules.tree withLocalPath:1'
-    _.fileProvider.filesDelete( a.abs( 'super.out' ) );
-    _.fileProvider.filesDelete( a.abs( 'sub.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+    a.fileProvider.filesDelete( a.abs( 'sub.out' ) );
     return null;
   })
 
@@ -6426,7 +6427,6 @@ function modulesTreeLocal( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-with-submodules' );
-  /* Dmytro : assetFor has not starter with 'spawn' mode */
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -6846,7 +6846,7 @@ function modulesTreeHierarchyRemoteDownloaded( test )
      +-- module::wFiles - path::remote:=npm:///wFiles
      +-- module::wTesting - path::remote:=npm:///wTesting
 `
-debugger;
+
     test.identical( _.strCount( got.output, exp ), 1 );
     test.identical( _.strCount( got.output, '+-- module::' ), 67 );
     test.identical( _.strCount( got.output, '+-- module::z' ), 1 );
@@ -6880,7 +6880,6 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 {
   let self = this;
   let a = self.assetFor( test, 'hierarchy-remote' );
-  /* Dmytro : assetFor has not starter with 'spawn' mode */
   a.start = _.process.starter
   ({
     execPath : 'node ' + self.willPath,
@@ -6890,28 +6889,8 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
     mode : 'spawn',
     ready : a.ready,
   })
-  a.reflect();  // let self = this;
-  _.fileProvider.filesDelete( _.path.join( a.routinePath, '.module' ) );
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'hierarchy-remote' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let submodulesPath = _.path.join( routinePath, '.module' );
-  //
-  // let ready = new _.Consequence().take( null );
-  //
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   outputGraying : 1,
-  //   mode : 'spawn',
-  //   ready : ready,
-  // })
-  //
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  a.reflect();
+  a.fileProvider.filesDelete( a.abs( '.module' ) );
 
   /* - */
 
