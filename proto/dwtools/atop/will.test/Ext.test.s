@@ -2503,7 +2503,7 @@ function commandsSeveral( test )
   let self = this;
   let a = self.assetFor( test, 'open' );
   a.reflect();
-  _.fileProvider.filesDelete({ filePath : _.path.join( a.routinePath, 'out' ) });
+  a.fileProvider.filesDelete({ filePath : a.abs( 'out' ) });
 
   /* - */
 
@@ -2654,11 +2654,8 @@ function reflectNothingFromSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-nothing-from-submodules' );
-
-  let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
-  let outPath = _.path.join( a.routinePath, 'out' );
-  let outWillPath = _.path.join( a.routinePath, 'out/reflect-nothing-from-submodules.out.will.yml' );
-
+  let outDebugPath = a.abs( 'out/debug' );
+  let outPath = a.abs( 'out' );
   a.reflect();
   a.fileProvider.filesDelete( outDebugPath );
 
@@ -2691,8 +2688,8 @@ function reflectNothingFromSubmodules( test )
     var files = self.find( outPath );
     test.identical( files, [ '.', './reflect-nothing-from-submodules.out.will.yml', './debug', './debug/Single.s' ] );
 
-    test.is( _.fileProvider.fileExists( outWillPath ) )
-    var outfile = _.fileProvider.configRead( outWillPath );
+    test.is( a.fileProvider.fileExists( a.abs( 'out/reflect-nothing-from-submodules.out.will.yml' ) ) )
+    var outfile = a.fileProvider.configRead( a.abs( 'out/reflect-nothing-from-submodules.out.will.yml' ) );
 
     outfile = outfile.module[ 'reflect-nothing-from-submodules.out' ]
 
