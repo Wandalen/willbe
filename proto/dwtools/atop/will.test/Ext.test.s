@@ -3466,15 +3466,15 @@ function reflectRemoteHttp( test )
   a.ready.then( () =>
   {
     test.case = '.build download'
-    _.fileProvider.filesDelete( _.path.join( a.routinePath, 'out' ) );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
   a.start({ execPath : '.build download' })
   .then( ( arg ) =>
   {
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'out/ModuleForTesting1.s' ) ) );
-    test.gt( _.fileProvider.fileSize( _.path.join( a.routinePath, 'out/ModuleForTesting1.s' ) ), 200 );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting1.s' ) ) );
+    test.gt( a.fileProvider.fileSize( a.abs( 'out/ModuleForTesting1.s' ) ), 200 );
     return null;
   })
 
@@ -3489,7 +3489,7 @@ function reflectWithOptions( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-with-options' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -3568,7 +3568,6 @@ function reflectWithOptionDstRewriting( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-with-options-dst-rewriting' );
-  let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
 
   /* - */
@@ -3586,17 +3585,17 @@ function reflectWithOptionDstRewriting( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
 
-    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
-    _.fileProvider.fileDelete( a.abs( 'proto/File.js') )
-    _.fileProvider.fileWrite( a.abs( 'proto/File.js'), 'console.log( "File2.js" )' )
-    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    a.fileProvider.fileDelete( a.abs( 'proto/File.js') )
+    a.fileProvider.fileWrite( a.abs( 'proto/File.js'), 'console.log( "File2.js" )' )
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
 
-    _.fileProvider.fileWrite( a.abs( 'proto/File.js' ), `console.log( '123' );` );
+    a.fileProvider.fileWrite( a.abs( 'proto/File.js' ), `console.log( '123' );` );
 
     return null;
   })
@@ -3606,7 +3605,7 @@ function reflectWithOptionDstRewriting( test )
   {
     test.is( !err );
     test.is( !!got.exitCode );
-    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
     return null;
   })
@@ -3624,10 +3623,10 @@ function reflectWithOptionDstRewriting( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
-    var read = _.fileProvider.fileRead( a.abs( 'proto/File.js') );
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    var read = a.fileProvider.fileRead( a.abs( 'proto/File.js') );
     test.identical( read, `console.log( '123' );` )
-    var read = _.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
+    var read = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
     test.identical( read, `console.log( '123' );` )
     test.identical( linked, true );
 
@@ -3637,11 +3636,11 @@ function reflectWithOptionDstRewriting( test )
   .then( () =>
   {
     test.case = 'unlink out file and try to restore';
-    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
-    _.fileProvider.fileDelete( a.abs( 'out/debug/File.js' ) )
-    _.fileProvider.fileWrite( a.abs( 'out/debug/File.js' ), 'console.log( "Unlinked.js" )' )
-    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    a.fileProvider.fileDelete( a.abs( 'out/debug/File.js' ) )
+    a.fileProvider.fileWrite( a.abs( 'out/debug/File.js' ), 'console.log( "Unlinked.js" )' )
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
     return null;
   })
@@ -3651,7 +3650,7 @@ function reflectWithOptionDstRewriting( test )
   {
     test.is( !err );
     test.is( !!got.exitCode );
-    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
     return null;
   })
@@ -3661,10 +3660,10 @@ function reflectWithOptionDstRewriting( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var linked = _.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
-    var read = _.fileProvider.fileRead( a.abs( 'proto/File.js') );
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    var read = a.fileProvider.fileRead( a.abs( 'proto/File.js') );
     test.identical( read, `console.log( '123' );` )
-    var read = _.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
+    var read = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
     test.identical( read, `console.log( '123' );` )
     test.identical( linked, true );
 
