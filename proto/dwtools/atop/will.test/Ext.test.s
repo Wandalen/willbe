@@ -16351,7 +16351,7 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //   {
 //     test.identical( got.exitCode, 0 );
 //
-//     var exp = [ 'PathTools' ];
+//     var exp = [ 'ModuleForTesting2b' ];
 //     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
 //     test.identical( files, exp )
 //
@@ -16376,11 +16376,11 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //   {
 //     test.identical( got.exitCode, 0 );
 //
-//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
 //     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
 //     test.identical( files, exp )
 //
-//     var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
+//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting12', 'Tools' ];
 //     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
 //     test.identical( files, exp )
 //
@@ -16413,11 +16413,11 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //   {
 //     test.identical( got.exitCode, 0 );
 //
-//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
 //     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
 //     test.identical( files, exp )
 //
-//     var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
+//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting12', 'Tools' ];
 //     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
 //     test.identical( files, exp )
 //
@@ -16438,11 +16438,11 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //   {
 //     test.identical( got.exitCode, 0 );
 //
-//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
 //     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
 //     test.identical( files, exp )
 //
-//     var exp = [ 'Color', 'PathBasic', 'Proto', 'Tools' ];
+//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting12', 'Tools' ];
 //     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
 //     test.identical( files, exp )
 //
@@ -16450,13 +16450,13 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //     test.identical( _.strCount( got.output, '. Read 26 willfile(s) in' ), 1 );
 //     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
 //
-//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathBasic were downloaded' ), 1 );
-//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic were downloaded' ), 1 );
-//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wProto were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting1b were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wModuleForTesting12ab were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting12 were downloaded' ), 1 );
 //     // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
 //     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wTools were downloaded' ), 1 );
 //     // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::c were downloaded' ), 1 );
-//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathTools were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting2b were downloaded' ), 1 );
 //     // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
 //     // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z / module::a were downloaded' ), 1 );
 //     // test.identical( _.strCount( got.output, '+ 0/9 submodule(s) of module::z were downloaded' ), 1 );
@@ -16485,11 +16485,11 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //   {
 //     test.identical( got.exitCode, 0 );
 //
-//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
 //     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
 //     test.identical( files, exp )
 //
-//     var exp = [ 'Color', 'PathBasic' ];
+//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b' ];
 //     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
 //     test.identical( files, exp )
 //
@@ -16510,11 +16510,11 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //   {
 //     test.identical( got.exitCode, 0 );
 //
-//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
 //     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
 //     test.identical( files, exp )
 //
-//     var exp = [ 'Color', 'PathBasic' ];
+//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b' ];
 //     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
 //     test.identical( files, exp )
 //
@@ -16547,11 +16547,11 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //   {
 //     test.identical( got.exitCode, 0 );
 //
-//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
 //     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
 //     test.identical( files, exp )
 //
-//     var exp = [ 'Color', 'PathBasic', 'PathTools', 'UriBasic' ];
+//     var exp = [ 'ModuleForTesting2a', 'ModuleForTesting1b', 'ModuleForTesting2b', 'ModuleForTesting12ab' ];
 //     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
 //     test.identical( files, exp )
 //
@@ -16576,11 +16576,11 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //   {
 //     test.identical( got.exitCode, 0 );
 //
-//     var exp = [ 'PathTools' ];
+//     var exp = [ 'ModuleForTesting2b' ];
 //     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
 //     test.identical( files, exp )
 //
-//     var exp = [ 'PathTools' ];
+//     var exp = [ 'ModuleForTesting2b' ];
 //     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
 //     test.identical( files, exp )
 //
@@ -16588,26 +16588,26 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //     test.identical( _.strCount( got.output, '. Read 20 willfile(s) in' ), 1 );
 //     test.identical( _.strCount( got.output, 'willfile(s) in' ), 1 );
 //
-//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathBasic were downloaded' ), 1 );
-//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic were downloaded' ), 1 );
-//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wProto were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting1b were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wModuleForTesting12ab were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting12 were downloaded' ), 1 );
 //     test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
 //     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wTools were downloaded' ), 1 );
 //     test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
-//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wPathTools were downloaded' ), 1 );
+//     test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::z / module::wModuleForTesting2b were downloaded' ), 1 );
 //     test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
 //     test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
 //     test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 //     test.identical( _.strCount( got.output, 'submodule(s)' ), 10 );
 //     test.identical( _.strCount( got.output, '+ Reflected' ), 2 );
 //
-//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathBasic / module::wPathBasic were downloaded' ), 1 );
-//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wUriBasic / module::wUriBasic were downloaded' ), 1 );
-//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wProto / module::wProto were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wModuleForTesting1b / module::wModuleForTesting1b were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wModuleForTesting12ab / module::wModuleForTesting12ab were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wModuleForTesting12 / module::wModuleForTesting12 were downloaded' ), 1 );
 //     // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::a0 were downloaded' ), 1 );
 //     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wTools / module::wTools were downloaded' ), 1 );
 //     // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::c were downloaded' ), 1 );
-//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wPathTools / module::wPathTools were downloaded' ), 1 );
+//     // test.identical( _.strCount( got.output, '+ 0/0 submodule(s) of module::wModuleForTesting2b / module::wModuleForTesting2b were downloaded' ), 1 );
 //     // test.identical( _.strCount( got.output, '+ 0/2 submodule(s) of module::z / module::b were downloaded' ), 1 );
 //     // test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::z / module::a were downloaded' ), 1 );
 //     // test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
@@ -16638,7 +16638,7 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
 //     test.identical( files, exp )
 //
-//     var exp = [ 'PathTools' ];
+//     var exp = [ 'ModuleForTesting2b' ];
 //     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
 //     test.identical( files, exp )
 //
@@ -16675,7 +16675,7 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //     var files = _.fileProvider.dirRead( a.abs( '.module' ) );
 //     test.identical( files, exp )
 //
-//     var exp = [ 'PathTools' ];
+//     var exp = [ 'ModuleForTesting2b' ];
 //     var files = _.fileProvider.dirRead( a.abs( 'a/.module' ) );
 //     test.identical( files, exp )
 //
@@ -16705,7 +16705,7 @@ function submodulesDownloadThrowing( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-download-errors' );
   let downloadPath = a.abs( '.module/ModuleForTesting2a' );
-  let filePath = _.path.join( downloadPath, 'file' );
+  let filePath = a.path.join( downloadPath, 'file' );
   let filesBefore;
   a.startNonThrowing2 = _.process.starter
   ({
@@ -16867,7 +16867,7 @@ function submodulesDownloadThrowing( test )
   a.startNonThrowing({ execPath : '.with good .submodules.download' })
   .then( () =>
   {
-    let inWillFilePath = _.path.join( downloadPath, '.im.will.yml' );
+    let inWillFilePath = a.path.join( downloadPath, '.im.will.yml' );
     let inWillFile = a.fileProvider.configRead( inWillFilePath );
     inWillFile.section = { field : 'value' };
     a.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile,encoding : 'yml' });
@@ -17254,19 +17254,19 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
@@ -17286,19 +17286,19 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = null;
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -17329,19 +17329,19 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
@@ -17361,19 +17361,19 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -17404,19 +17404,19 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 1 );
@@ -17436,19 +17436,19 @@ function submodulesDownloadHierarchyRemote( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ 'ModuleForTesting1b' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
     var exp = [ 'ModuleForTesting12ab' ];
-    var files = _.fileProvider.dirRead( a.abs( 'group2/.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( 'group2/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, '! Failed to open' ), 0 );
@@ -18838,39 +18838,10 @@ function subModulesUpdateSwitchBranch( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-update-switch-branch' );
-  let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let willfilePath = _.path.join( a.routinePath, '.will.yml' );
+  let submodulesPath = a.abs( '.module' );
+  let willfilePath = a.abs( '.will.yml' );
   let experimentModulePath = _.path.join( submodulesPath, 'willbe-experiment' );
   let detachedVersion;
-
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-update-switch-branch' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//   let submodulesPath = _.path.join( routinePath, '.module' );
-//
-//   let experimentModulePath = _.path.join( submodulesPath, 'willbe-experiment' );
-//   let willfilePath = _.path.join( routinePath, '.will.yml' );
-//   let detachedVersion;
-//
-//   let ready = new _.Consequence().take( null )
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-//
-//   let start2 = _.process.starter
-//   ({
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
 
   /* */
 
@@ -18886,7 +18857,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -18894,9 +18865,9 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     test.case = 'switch master to dev';
-    let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ]= _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
-    _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
 
@@ -18904,7 +18875,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
@@ -18912,9 +18883,9 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     test.case = 'switch dev to detached state';
-    let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@dev', '#' + detachedVersion );
-    _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
 
@@ -18922,7 +18893,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, detachedVersion ) );
     return null;
   })
@@ -18930,9 +18901,9 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     test.case = 'switch detached state to master';
-    let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#' + detachedVersion, '@master' );
-    _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
 
@@ -18940,7 +18911,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -18948,11 +18919,11 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     test.case = 'master has local change, cause conflict when switch to dev';
-    let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
-    _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     let filePath = _.path.join( submodulesPath, 'willbe-experiment/File.js' );
-    _.fileProvider.fileWrite({ filePath, data : 'master' });
+    a.fileProvider.fileWrite({ filePath, data : 'master' });
     return null;
   })
 
@@ -18974,7 +18945,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.is( _.strHas( got.output, 'modified:   File.js' ) )
 
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -18999,9 +18970,9 @@ function subModulesUpdateSwitchBranch( test )
   })
   .then( () =>
   {
-    let willFile = _.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
-    _.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
 
@@ -19009,7 +18980,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
@@ -19055,7 +19026,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.is( _.strHas( got.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
 
-    let currentVersion = _.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -19072,13 +19043,13 @@ function subModulesUpdateSwitchBranch( test )
       test.case = 'setup repo';
 
       let con = new _.Consequence().take( null );
-      let repoPath = _.path.join( a.routinePath, 'experiment' );
-      let repoSrcFiles = _.path.join( a.routinePath, 'src' );
-      let clonePath = _.path.join( a.routinePath, 'cloned' );
+      let repoPath = a.abs( 'experiment' );
+      let repoSrcFiles = a.abs( 'src' );
+      let clonePath = a.abs( 'cloned' );
 
       a.reflect();
 
-      _.fileProvider.dirMake( repoPath );
+      a.fileProvider.dirMake( repoPath );
 
       let start = _.process.starter
       ({
@@ -19092,7 +19063,7 @@ function subModulesUpdateSwitchBranch( test )
 
       .then( () =>
       {
-        return _.fileProvider.filesReflect({ reflectMap : { [ repoSrcFiles ] : clonePath } })
+        return a.fileProvider.filesReflect({ reflectMap : { [ repoSrcFiles ] : clonePath } })
       })
 
       start( 'git -C cloned add -fA .' )
