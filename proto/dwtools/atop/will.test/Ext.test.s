@@ -4562,19 +4562,17 @@ function withDoInfo( test )
 {
   let self = this;
   let a = self.assetFor( test, 'dos' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  a.start = _.process.starter
+  ({
+    execPath : 'node ' + self.willPath,
+    currentPath : a.routinePath,
+    outputCollecting : 1,
+    mode : 'spawn',
+    outputGraying : 1,
+    throwingExitCode : 1,
+    ready : a.ready,
+  })
   a.reflect();
-
-//   let start = _.process.starter  // Dmytro : save it for comparison. Object a has start() method and other, but none has mode `spawn`.
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     mode : 'spawn',
-//     outputGraying : 1,
-//     throwingExitCode : 1,
-//     ready : ready,
-//   })
 
   /* - */
 
