@@ -21577,22 +21577,25 @@ Disappeared as mystically as appeared.
 function resourcesFormReflectorsExperiment( test )
 {
   let self = this;
-  let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'performance2' );
-  let routinePath = _.path.join( self.suiteTempPath, test.name );
-  let abs = self.abs_functor( routinePath );
-  let rel = self.rel_functor( routinePath );
+  let a = self.assetFor( test, 'performance2' );
+  a.reflect()
+
+  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'performance2' );
+  // let routinePath = _.path.join( self.suiteTempPath, test.name );
+  // let abs = self.abs_functor( routinePath );
+  // let rel = self.rel_functor( routinePath );
 
   let moduleOldPath = _.path.join( routinePath, './old-out-file/' );
   let moduleNewPath = _.path.join( routinePath, './new-out-file/' );
 
-  _.fileProvider.filesDelete( routinePath );
-  _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
-  let ready = new _.Consequence().take( null )
+  // _.fileProvider.filesDelete( routinePath );
+  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  //
+  // let ready = new _.Consequence().take( null )
 
   /* */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     /* This case uses out file of Starter that cause slow forming of reflector reflect.submodules from supermode */
 
@@ -21632,7 +21635,7 @@ function resourcesFormReflectorsExperiment( test )
 
   /* */
 
-  ready.then( () =>
+  a.ready.then( () =>
   {
     /* This case uses new out file of Starter forming of reflector reflect.submodules from supermode is fast */
 
@@ -21673,7 +21676,7 @@ function resourcesFormReflectorsExperiment( test )
 
   /* */
 
-  return ready;
+  return a.ready;
 }
 
 // --
