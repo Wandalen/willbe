@@ -7863,9 +7863,9 @@ function cleanBroken1( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-broken-1' );
-  let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let outPath = _.path.join( a.routinePath, 'out' );
-  let outDebugPath = _.path.join( a.routinePath, 'out/debug' );
+  let submodulesPath = a.abs( '.module' );
+  let outPath = a.abs( 'out' );
+  let outDebugPath = a.abs( 'out/debug' );
   a.reflect();
 
   test.description = 'should handle currputed willfile properly';
@@ -7896,8 +7896,8 @@ function cleanBroken1( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) + ' at ' ) );
     test.is( _.strHas( got.output, 'Clean will delete ' + String( files.length ) + ' file(s)' ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
 
     return null;
   })
@@ -7911,8 +7911,8 @@ function cleanBroken1( test )
     test.case = '.clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) ); /* filesDelete issue? */
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) ); /* filesDelete issue? */
+    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) );
     return null;
   })
 
@@ -7929,7 +7929,7 @@ function cleanBroken1( test )
     var files = self.find( outDebugPath );
     test.gt( files.length, 9 );
 
-    var files = _.fileProvider.dirRead( outPath );
+    var files = a.fileProvider.dirRead( outPath );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
@@ -7957,7 +7957,7 @@ function cleanBroken1( test )
     var files = self.find( outDebugPath );
     test.gt( files.length, 9 );
 
-    var files = _.fileProvider.dirRead( outPath );
+    var files = a.fileProvider.dirRead( outPath );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
