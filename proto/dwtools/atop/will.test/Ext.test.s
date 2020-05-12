@@ -1610,13 +1610,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1639,13 +1639,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1668,13 +1668,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1688,8 +1688,8 @@ function openWith( test )
   {
     test.case = '.with doc .export -- deleted doc.will.yml'
     a.reflect();
-    _.fileProvider.fileDelete( _.path.join( a.routinePath, 'doc.ex.will.yml' ) );
-    _.fileProvider.fileDelete( _.path.join( a.routinePath, 'doc.im.will.yml' ) );
+    a.fileProvider.fileDelete( a.abs( 'doc.ex.will.yml' ) );
+    a.fileProvider.fileDelete( a.abs( 'doc.im.will.yml' ) );
     return null;
   })
 
@@ -1699,13 +1699,13 @@ function openWith( test )
   {
     test.notIdentical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     a.reflect();
@@ -1730,13 +1730,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1759,13 +1759,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1791,13 +1791,13 @@ function openWith( test )
     test.identical( _.strCount( got.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1823,13 +1823,13 @@ function openWith( test )
     test.identical( _.strCount( got.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1852,13 +1852,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1873,8 +1873,8 @@ function openWith( test )
     test.case = '.with doc/ .export -- deleted doc/.will.yml'
 
     a.reflect();
-    _.fileProvider.fileDelete( _.path.join( a.routinePath, 'doc/.ex.will.yml' ) );
-    _.fileProvider.fileDelete( _.path.join( a.routinePath, 'doc/.im.will.yml' ) );
+    a.fileProvider.fileDelete( a.abs( 'doc/.ex.will.yml' ) );
+    a.fileProvider.fileDelete( a.abs( 'doc/.im.will.yml' ) );
 
     return null;
   })
@@ -1889,13 +1889,13 @@ function openWith( test )
     test.identical( _.strCount( got.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     a.reflect();
@@ -1920,13 +1920,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
@@ -1949,13 +1949,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = self.find( _.path.join( a.routinePath, 'out' ) );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc.out' ) );
+    var files = self.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/out' ) );
+    var files = self.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = self.find( _.path.join( a.routinePath, 'doc/doc.out' ) );
+    var files = self.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
