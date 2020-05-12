@@ -15890,8 +15890,8 @@ function submodulesDownloadSingle( test )
     test.case = '.submodules.download'
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::single were downloaded in' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
+    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
     return null;
   })
 
@@ -15904,8 +15904,8 @@ function submodulesDownloadSingle( test )
     test.case = '.submodules.update'
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::single were updated in' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
+    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
     return null;
   })
 
@@ -15918,8 +15918,8 @@ function submodulesDownloadSingle( test )
     test.case = '.submodules.clean';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted 0 file(s)' ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, '.module' ) ) )
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'modules' ) ) )
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) )
+    test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
     return null;
   })
 
