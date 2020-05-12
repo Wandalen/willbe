@@ -4581,13 +4581,13 @@ function withDoInfo( test )
   .then( ( got ) =>
   {
     test.case = 'setup';
-    _.fileProvider.fileAppend( _.path.join( a.routinePath, 'will.yml' ), '\n' );
+    a.fileProvider.fileAppend( a.abs( 'will.yml' ), '\n' );
 
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/proto' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out/dos.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting1' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting2a' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, '.module/ModuleForTesting12' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'out/proto' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'out/dos.out.will.yml' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12' ) ) );
 
     return null;
   })
