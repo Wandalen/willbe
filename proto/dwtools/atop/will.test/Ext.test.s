@@ -2856,7 +2856,7 @@ function reflectSubdir( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-subdir' );
-  let outPath = _.path.join( a.routinePath, 'out' );
+  let outPath = a.abs( 'out' );
 
   /* - */
 
@@ -2871,8 +2871,8 @@ function reflectSubdir( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'submodule.out.will.yml' ) ) );
-    test.is( !_.fileProvider.fileExists( _.path.join( a.routinePath, 'out' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
     return null;
   })
 
@@ -2881,17 +2881,17 @@ function reflectSubdir( test )
   .then( () =>
   {
     test.case = '.build variant:1'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   });
   a.start({ execPath : '.build variant:1' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, './module/proto/File1.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, './out/debug/proto/File1.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'submodule.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( './module/proto/File1.s' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( './out/debug/proto/File1.s' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'out' ) ) );
 
     var expected =
     [
@@ -2921,17 +2921,17 @@ function reflectSubdir( test )
   .then( () =>
   {
     test.case = '.build variant:2'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   });
   a.start({ execPath : '.build variant:2' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, './module/proto/File1.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, './out/debug/proto/File1.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'submodule.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( './module/proto/File1.s' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( './out/debug/proto/File1.s' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'out' ) ) );
 
     var expected =
     [
@@ -2961,17 +2961,17 @@ function reflectSubdir( test )
   .then( () =>
   {
     test.case = '.build variant:3'
-    _.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( outPath );
     return null;
   });
   a.start({ execPath : '.build variant:3' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, './module/proto/File1.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, './out/debug/proto/File1.s' ) ) );
-    test.is( _.fileProvider.isTerminal( _.path.join( a.routinePath, 'submodule.out.will.yml' ) ) );
-    test.is( _.fileProvider.fileExists( _.path.join( a.routinePath, 'out' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( './module/proto/File1.s' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( './out/debug/proto/File1.s' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'submodule.out.will.yml' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'out' ) ) );
 
     var expected =
     [
