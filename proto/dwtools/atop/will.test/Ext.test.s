@@ -5022,28 +5022,11 @@ function hookGitMake( test )
   let a = self.assetFor( test, 'dos' );
   a.reflect();
 
-//   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
-//   let routinePath = _.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//
-//   let ready = new _.Consequence().take( null );
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + self.willPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     throwingExitCode : 1,
-//     ready : ready,
-//   })
-//
-//   _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
+  /* - */
 
   test.is( true );
 
-  let config = _.fileProvider.configUserRead();
+  let config = a.fileProvider.configUserRead();
   if( !config || !config.about || !config.about[ 'github.token' ] )
   return null;
   let user = config.about.user;
@@ -5056,7 +5039,7 @@ function hookGitMake( test )
   .then( ( got ) =>
   {
     var exp = [ '.', './will.yml' ];
-    var files = self.find( _.path.join( a.routinePath, 'New2' ) );
+    var files = self.find( a.abs( 'New2' ) );
     test.identical( files, exp );
 
     return _.git.repositoryDelete
@@ -5081,7 +5064,7 @@ function hookGitMake( test )
     test.identical( _.strCount( got.output, `> ` ), 2 );
 
     var exp = [ '.', './will.yml' ];
-    var files = self.find( _.path.join( a.routinePath, 'New2' ) );
+    var files = self.find( a.abs( 'New2' ) );
     test.identical( files, exp );
 
     return null;
@@ -5102,28 +5085,10 @@ function hookPrepare( test )
   let self = this;
   let a = self.assetFor( test, 'dos' );
   a.reflect();
-  // let self = this;
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'dos' );
-  // let routinePath = _.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  //
-  // let ready = new _.Consequence().take( null );
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   throwingExitCode : 1,
-  //   ready : ready,
-  // })
-  //
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   test.is( true );
 
-  let config = _.fileProvider.configUserRead();
+  let config = a.fileProvider.configUserRead();
   if( !config || !config.about || !config.about[ 'github.token' ] )
   return null;
   let user = config.about.user;
@@ -5134,7 +5099,7 @@ function hookPrepare( test )
   .then( ( got ) =>
   {
     var exp = [];
-    var files = self.find( _.path.join( a.routinePath, 'New2' ) );
+    var files = self.find( a.abs( 'New2' ) );
     test.identical( files, exp );
     return _.git.repositoryDelete
     ({
@@ -5180,7 +5145,7 @@ function hookPrepare( test )
       './sample/Sample.html',
       './sample/Sample.js'
     ]
-    var files = self.find( _.path.join( a.routinePath, 'New2' ) );
+    var files = self.find( a.abs( 'New2' ) );
     test.identical( files, exp );
 
     return null;
@@ -5198,7 +5163,7 @@ function hookPrepare( test )
   .then( ( got ) =>
   {
     var exp = [];
-    var files = self.find( _.path.join( a.routinePath, 'New3/New4' ) );
+    var files = self.find( a.abs( 'New3/New4' ) );
     test.identical( files, exp );
     return _.git.repositoryDelete
     ({
@@ -5244,7 +5209,7 @@ function hookPrepare( test )
       './sample/Sample.html',
       './sample/Sample.js'
     ]
-    var files = self.find( _.path.join( a.routinePath, 'New3' ) );
+    var files = self.find( a.abs( 'New3' ) );
     test.identical( files, exp );
 
     return null;
