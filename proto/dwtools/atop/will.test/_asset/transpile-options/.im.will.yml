@@ -1,0 +1,40 @@
+
+path :
+
+  proto : './proto'
+  temp : 'out'
+  in : '.'
+  out : 'out'
+  
+reflector :
+
+  transpile.reflector :
+    inherit : predefined.*
+    filePath :
+      './proto/File.js' : './out/File.min.js'
+
+step :
+
+  clean.out :
+    inherit : files.delete
+    filePath : path::out
+
+  transpile :
+    inherit : files.transpile
+    reflector : reflector::transpile.reflector
+    transpilingStrategy : [ 'Uglify' ]
+    optimization : 9
+    minification : 9
+    diagnosing : 0
+    beautifing : 1
+    criterion :
+      raw : 'raw'
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+    steps :
+      - clean.out
+      - transpile

@@ -540,6 +540,51 @@ transpile.timeOut = 200000;
 
 //
 
+function transpileWithOptions( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'transpile-options' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'minify, raw mode, max compression'
+    test.description = 
+    `Options:\
+     \n transpilingStrategy : [ 'Uglify' ]\
+     \n optimization : 9\
+     \n minification : 9\
+     \n diagnosing : 0\
+     \n beautifing : 1
+    `
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+  a.start({ execPath : '.build' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './File.min.js' ] );
+    let file = _.fileProvider.fileRead( a.abs( 'out/File.min.js') );
+    let lines = _.strLinesCount( file );
+    test.identical( lines, 1 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+transpileWithOptions.timeOut = 200000;
+
+//
+
 function transpileExperiment( test )
 {
   let self = this;
@@ -22089,6 +22134,7 @@ var Self =
     singleModuleWithSpaceTrivial,
     build,
     transpile,
+    transpileWithOptions,
     transpileExperiment,
     moduleNewDotless,
     moduleNewDotlessSingle,
