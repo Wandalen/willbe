@@ -4551,6 +4551,68 @@ function reflectorsCommonPrefix( test )
 
 reflectorMasks.timeOut = 200000;
 
+//
+
+function reflectorOptionStep( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-option-step' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.build' })
+
+  .then( ( got ) =>
+  {
+    test.case = 'copy proto and then use reflector to remote it';
+
+    test.is( !_.fileProvider.fileExists( outPath ) );
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflector.proto reflected 1 file\\(s\\) .* in .*` ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflector.delete deleted 1 file\\(s\\) .* in .*` ) ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+reflectorOptionStep.timeOut = 200000;
+
+//
+
+function reflectorOptionStepThrowing( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-option-step-throwing' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+
+  /* - */
+
+  a.startNonThrowing({ execPath : '.build' })
+
+  .then( ( got ) =>
+  {
+    test.case = 'try to create reflector with name of existing step using option step, should throw error';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, 'step::reflector.delete deleted 0 file' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+reflectorOptionStepThrowing.timeOut = 200000;
+
 // --
 // with do
 // --
@@ -22177,6 +22239,8 @@ var Self =
     reflectComplexInherit,
     reflectorMasks,
     reflectorsCommonPrefix,
+    reflectorOptionStep,
+    reflectorOptionStepThrowing,
 
     // with do
 

@@ -1,0 +1,32 @@
+about :
+  name : reflect-option-step-throwing
+  description : "To set step option of reflector"
+  version : 0.0.1
+
+path :
+
+  in : '.'
+  out : 'out'
+  proto : 'proto'
+
+reflector :
+
+  reflector.delete :
+    filePath : path::out
+    step : files.delete
+    
+step : 
+  
+  reflector.delete :
+    inherit : files.delete
+    filePath : path::out
+  
+    
+build :
+  
+  debug :
+    criterion :
+      default : 1
+    steps :
+      - reflector.delete
+  
