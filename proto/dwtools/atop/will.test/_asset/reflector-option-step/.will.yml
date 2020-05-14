@@ -16,7 +16,7 @@ reflector :
       path::proto : path::out
 
   reflector.delete :
-    filePath : path::out
+    src : path::out
     step : files.delete
     
 build :
