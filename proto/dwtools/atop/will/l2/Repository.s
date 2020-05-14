@@ -311,15 +311,20 @@ function status( o )
       return end( false );
     }
 
-    let status = vcs.statusLocal
-    ({
+    let status = false;
+    let o2 =
+    {
       localPath : repo.downloadPath,
       uncommitted : 1,
       detailing : o.hasLocalUncommittedChanges,
       unpushed : o.hasLocalChanges,
       explaining : 0,
       sync : 1,
-    });
+    };
+    if( _.longHas( vcs.protocols, 'git' ) )
+    status = vcs.statusLocal( o2 );
+    else
+    status = vcs.hasLocalChanges( o2 );
 
     return end( status );
 
