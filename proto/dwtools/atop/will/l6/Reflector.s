@@ -76,7 +76,8 @@ function MakeFor_body( o )
   else if( !module.stepMap[ o.name ] )
   {
 
-    o3.resource.reflector = 'reflector::' + o.name + '*';
+    // o3.resource.reflector = 'reflector::' + o.name + '*';
+    o3.resource.filePath = 'reflector::' + o.name + '*';
     if( !o3.resource.inherit )
     o3.resource.inherit = 'files.reflect';
     o3.Optional = 1;
