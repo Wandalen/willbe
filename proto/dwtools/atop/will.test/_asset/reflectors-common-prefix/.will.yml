@@ -1,0 +1,39 @@
+about :
+  name : reflectors-common-prefix
+  version : 0.0.1
+
+path :
+
+  in : '.'
+  out : 'out'
+  proto : './proto'
+  out.debug :
+    path : './out/debug'
+    criterion :
+      debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
+  src : proto/Source.js
+  temp :
+    - out
+
+reflector :
+
+  reflect.copy :
+    src : 'path::src'
+    dst : 'path::out.debug'
+
+  reflect.copy.second :
+    src : 'path::src'
+    dst : 'path::out.debug'
+
+build :
+
+  copy :
+    criterion :
+      default : 1
+    steps :
+      - reflect.copy
+      - reflect.copy.second

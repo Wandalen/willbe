@@ -684,6 +684,51 @@ transpile.timeOut = 200000;
 
 //
 
+function transpileWithOptions( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'transpile-options' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'minify, raw mode, max compression'
+    test.description = 
+    `Options:\
+     \n transpilingStrategy : [ 'Uglify' ]\
+     \n optimization : 9\
+     \n minification : 9\
+     \n diagnosing : 0\
+     \n beautifing : 1
+    `
+    _.fileProvider.filesDelete( outPath );
+    return null;
+  })
+  a.start({ execPath : '.build' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './File.min.js' ] );
+    let file = _.fileProvider.fileRead( a.abs( 'out/File.min.js') );
+    let lines = _.strLinesCount( file );
+    test.identical( lines, 1 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+transpileWithOptions.timeOut = 200000;
+
+//
+
 function transpileExperiment( test )
 {
   let self = this;
@@ -4553,6 +4598,102 @@ function reflectorMasks( test )
 }
 
 reflectorMasks.timeOut = 200000;
+
+//
+
+function reflectorsCommonPrefix( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflectors-common-prefix' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.build' })
+
+  .then( ( got ) =>
+  {
+    test.case = 'use two reflectors with common prefix in name';
+
+    var files = self.find( outPath );
+    test.identical( files, [ '.', './debug', './debug/Source.js' ] );
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy reflected 1 file\\(s\\) .* in .*` ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy.second reflected 1 file\\(s\\) .* in .*` ) ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+reflectorMasks.timeOut = 200000;
+
+//
+
+function reflectorOptionStep( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-option-step' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.build' })
+
+  .then( ( got ) =>
+  {
+    test.case = 'copy proto and then use reflector to remote it';
+
+    test.is( !_.fileProvider.fileExists( outPath ) );
+
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflector.proto reflected 1 file\\(s\\) .* in .*` ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflector.delete deleted 1 file\\(s\\) .* in .*` ) ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+reflectorOptionStep.timeOut = 200000;
+
+//
+
+function reflectorOptionStepThrowing( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-option-step-throwing' );
+  let outPath = _.path.join( a.routinePath, 'out' );
+  a.reflect();
+
+  /* - */
+
+  a.startNonThrowing({ execPath : '.build' })
+
+  .then( ( got ) =>
+  {
+    test.case = 'try to create reflector with name of existing step using option step, should throw error';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( !_.strHas( got.output, 'step::reflector.delete deleted 0 file' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+reflectorOptionStepThrowing.timeOut = 200000;
 
 // --
 // with do
@@ -21713,6 +21854,7 @@ var Self =
     singleModuleWithSpaceTrivial,
     build,
     transpile,
+    transpileWithOptions,
     transpileExperiment,
     moduleNewDotless,
     moduleNewDotlessSingle,
@@ -21754,6 +21896,9 @@ var Self =
     reflectInheritSubmodules,
     reflectComplexInherit,
     reflectorMasks,
+    reflectorsCommonPrefix,
+    reflectorOptionStep,
+    reflectorOptionStepThrowing,
 
     // with do
 

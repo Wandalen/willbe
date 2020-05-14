@@ -1,0 +1,30 @@
+about :
+  name : reflect-option-step
+  description : "To set step option of reflector"
+  version : 0.0.1
+
+path :
+
+  in : '.'
+  out : 'out'
+  proto : 'proto'
+
+reflector :
+
+  reflector.proto :
+    filePath : 
+      path::proto : path::out
+
+  reflector.delete :
+    src : path::out
+    step : files.delete
+    
+build :
+  
+  debug :
+    criterion :
+      default : 1
+    steps :
+      - reflector.proto
+      - reflector.delete
+  

@@ -458,6 +458,7 @@ function stepRoutineTranspile( frame )
   let verbosity = step.verbosityWithDelta( -1 );
 
   _.sure( _.longHas( [ 'preserve', 'rebuild' ], opts.upToDate ), () => 'Unknown value of upToDate ' + _.strQuote( opts.upToDate ) );
+  _.sure( opts.transpilingStrategy === null || _.arrayIs( opts.transpilingStrategy ),() => 'Unknown value of transpilingStrategy ' + _.strQuote( opts.transpilingStrategy ) )
   _.assert( arguments.length === 1 );
 
   if( opts.entry )
@@ -484,11 +485,13 @@ function stepRoutineTranspile( frame )
   else if( frame.resource.criterion.raw !== undefined )
   raw = !!frame.resource.criterion.raw;
 
-  let transpilingStrategy = [ 'Uglify' ];
-  if( debug )
-  transpilingStrategy = [ 'Nop' ];
+  if( opts.transpilingStrategy === null )
+  {
+    opts.transpilingStrategy = [ 'Uglify' ];
+    if( debug )
+    opts.transpilingStrategy = [ 'Nop' ];
+  }
 
-  // debugger;
   let ts = new _.trs.System({ logger : logger }).form();
   let multiple = ts.multiple
   ({
@@ -499,7 +502,7 @@ function stepRoutineTranspile( frame )
     externalBeforePath : opts[ 'external.before' ],
     externalAfterPath : opts[ 'external.after' ],
     // totalReporting : 0,
-    transpilingStrategy : transpilingStrategy,
+    transpilingStrategy : opts.transpilingStrategy,
     splittingStrategy : raw ? 'OneToOne' : 'ManyToOne',
     writingTerminalUnderDirectory : 1,
     simpleConcatenator : 0,
@@ -507,10 +510,10 @@ function stepRoutineTranspile( frame )
     verbosity : verbosity,
     // verbosity : 1,
 
-    optimization : 9,
-    minification : 8,
-    diagnosing : 1,
-    beautifing : 0,
+    optimization : opts.optimization,
+    minification : opts.minification,
+    diagnosing : opts.diagnosing,
+    beautifing : opts.beautifing,
 
   });
 
@@ -533,10 +536,21 @@ stepRoutineTranspile.stepOptions =
   entry : null,
   'external.before' : null,
   'external.after' : null,
+
+  transpilingStrategy : null,
+  optimization : 9,
+  minification : 8,
+  diagnosing : 1,
+  beautifing : 0
 }
 
 stepRoutineTranspile.uniqueOptions =
 {
+  transpilingStrategy : null,
+  optimization : 9,
+  minification : 8,
+  diagnosing : 1,
+  beautifing : 0
 }
 
 //
