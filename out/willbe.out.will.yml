@@ -6823,7 +6823,7 @@ module:
             ../proto/dwtools/atop/will.test/_asset/import-auto/Informal.im.will.yml
           - ../proto/dwtools/atop/will.test/_asset/import-auto/module
           - >-
-            ../proto/dwtools/atop/will.test/_asset/import-auto/module/Proto.will.yml
+            ../proto/dwtools/atop/will.test/_asset/import-auto/module/ModuleForTesting12.will.yml
           - ../proto/dwtools/atop/will.test/_asset/import-auto/module/.module
           - >-
             ../proto/dwtools/atop/will.test/_asset/import-auto/module/.module/Proto
@@ -7087,6 +7087,27 @@ module:
             ../proto/dwtools/atop/will.test/_asset/reflector-masks/proto/proto.two
           - >-
             ../proto/dwtools/atop/will.test/_asset/reflector-masks/proto/proto.two/script.js
+          - ../proto/dwtools/atop/will.test/_asset/reflector-option-step
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflector-option-step/.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/reflector-option-step/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflector-option-step/proto/File.js
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflector-option-step-throwing
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflector-option-step-throwing/.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflector-option-step-throwing/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflector-option-step-throwing/proto/File.js
+          - ../proto/dwtools/atop/will.test/_asset/reflectors-common-prefix
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflectors-common-prefix/.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflectors-common-prefix/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/reflectors-common-prefix/proto/Source.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/resolve-path-of-submodules-exported
           - >-
@@ -7359,19 +7380,19 @@ module:
             ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.im.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module/PathBasic
+            ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module/ModuleForTesting2
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module/PathBasic/out
+            ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module/ModuleForTesting2/out
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module/PathBasic/out/wPathFundamentals.out.will.yml
+            ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module/ModuleForTesting2/out/wModuleForTesting2.out.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/PathBasic
+            ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/ModuleForTesting2
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/PathBasic/out
+            ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/ModuleForTesting2/out
           - >-
-            ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/PathBasic/out/wPathFundamentals.out.will.yml
+            ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/.module-copy/ModuleForTesting2/out/wModuleForTesting2.out.will.yml
           - ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/proto
           - >-
             ../proto/dwtools/atop/will.test/_asset/submodules-broken-2/proto/WithSubmodules.s
@@ -7555,6 +7576,14 @@ module:
             ../proto/dwtools/atop/will.test/_asset/transpile/proto/dir3.test/File.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/transpile/proto/dir3.test/File.test.js
+          - ../proto/dwtools/atop/will.test/_asset/transpile-options
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/transpile-options/.ex.will.yml
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/transpile-options/.im.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/transpile-options/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/transpile-options/proto/File.js
           - ../proto/dwtools/atop/will.test/_asset/two-anon-exported
           - >-
             ../proto/dwtools/atop/will.test/_asset/two-anon-exported/.ex.will.yml
