@@ -4653,8 +4653,8 @@ function reflectorOptionStep( test )
     test.is( !_.fileProvider.fileExists( outPath ) );
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflector.proto reflected 1 file\\(s\\) .* in .*` ) ) );
-    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflector.delete deleted 1 file\\(s\\) .* in .*` ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflector.proto reflected 2 file\\(s\\) .* in .*` ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\\- step::reflector.delete deleted 2 file\\(s\\), at .* in .*` ) ) );
 
     return null;
   })

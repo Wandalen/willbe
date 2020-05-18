@@ -124,17 +124,17 @@ function stepRoutineReflect( frame )
   let time = _.time.now();
   let verbosity = step.verbosityWithDelta( -1 );
 
-  _.assert( !!opts.reflector, 'Expects option reflector' );
+  _.assert( !!opts.filePath, 'Expects reflector as option filePath' );
   _.assert( arguments.length === 1 );
 
-  let reflector = step.reflectorResolve( opts.reflector );
+  let reflector = step.reflectorResolve( opts.filePath );
 
   _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
   _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
 
   beginLog();
 
-  delete opts.reflector ;
+  delete opts.filePath ;
 
   let reflectorOptions = reflector.optionsForReflectExport();
 
@@ -189,7 +189,7 @@ function stepRoutineReflect( frame )
 
 stepRoutineReflect.stepOptions =
 {
-  reflector : null,
+  filePath : null,
   verbosity : null,
 }
 
@@ -468,7 +468,7 @@ function stepRoutineTranspile( frame )
   if( opts[ 'external.after' ] )
   opts[ 'external.after' ] = step.inPathResolve( opts[ 'external.after' ] );
 
-  let reflector = step.reflectorResolve( opts.reflector );
+  let reflector = step.reflectorResolve( opts.filePath );
   let reflectOptions = reflector.optionsForReflectExport();
 
   _.include( 'wTranspilationStrategy' );
@@ -531,7 +531,7 @@ function stepRoutineTranspile( frame )
 
 stepRoutineTranspile.stepOptions =
 {
-  reflector : null,
+  filePath : null,
   upToDate : 'preserve',
   entry : null,
   'external.before' : null,
