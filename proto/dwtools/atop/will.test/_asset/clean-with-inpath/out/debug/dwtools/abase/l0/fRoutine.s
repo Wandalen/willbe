@@ -34,7 +34,7 @@ function routinesAre( src )
 
 //
 
-function routineIsPure( src )
+function routineIsTrivial( src )
 {
   if( !src )
   return false;
@@ -895,7 +895,7 @@ let Routines =
 
   routineIs,
   routinesAre,
-  routineIsPure,
+  routineIsTrivial,
   routineWithName,
 
   _routineJoin,

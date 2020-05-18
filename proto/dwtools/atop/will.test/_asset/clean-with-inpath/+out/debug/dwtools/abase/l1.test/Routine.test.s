@@ -296,7 +296,7 @@ function routineLike( test )
 
 //
 
-function routineIsPure( test )
+function routineIsTrivial( test )
 {
 
   function sync1(){}
@@ -306,49 +306,49 @@ function routineIsPure( test )
   function async2(){}
   async2.map = {};
 
-  var got = _.routineIsPure( 1 );
+  var got = _.routineIsTrivial( 1 );
   test.identical( got, false )
 
-  var got = _.routineIsPure( '' );
+  var got = _.routineIsTrivial( '' );
   test.identical( got, false )
 
-  var got = _.routineIsPure( {} );
+  var got = _.routineIsTrivial( {} );
   test.identical( got, false )
 
-  var got = _.routineIsPure( [] );
+  var got = _.routineIsTrivial( [] );
   test.identical( got, false )
 
-  var got = _.routineIsPure( () => {} );
+  var got = _.routineIsTrivial( () => {} );
   test.identical( got, true )
 
-  var got = _.routineIsPure( Object );
+  var got = _.routineIsTrivial( Object );
   test.identical( got, true )
 
-  var got = _.routineIsPure( function () {} );
+  var got = _.routineIsTrivial( function () {} );
   test.identical( got, true )
 
-  var got = _.routineIsPure( function a() {} );
+  var got = _.routineIsTrivial( function a() {} );
   test.identical( got, true )
 
-  var got = _.routineIsPure( async function () {} );
+  var got = _.routineIsTrivial( async function () {} );
   test.identical( got, true )
 
-  var got = _.routineIsPure( async () => {} );
+  var got = _.routineIsTrivial( async () => {} );
   test.identical( got, true )
 
-  var got = _.routineIsPure( async function a() {} );
+  var got = _.routineIsTrivial( async function a() {} );
   test.identical( got, true )
 
-  var got = _.routineIsPure( sync1 );
+  var got = _.routineIsTrivial( sync1 );
   test.identical( got, true )
 
-  var got = _.routineIsPure( sync2 );
+  var got = _.routineIsTrivial( sync2 );
   test.identical( got, true )
 
-  var got = _.routineIsPure( async1 );
+  var got = _.routineIsTrivial( async1 );
   test.identical( got, true )
 
-  var got = _.routineIsPure( async2 );
+  var got = _.routineIsTrivial( async2 );
   test.identical( got, true )
 
 }
@@ -4019,7 +4019,7 @@ var Self =
     routineLike,
     routineIsSync,
     routineIsAsync,
-    routineIsPure,
+    routineIsTrivial,
 
     /* qqq : tests for constructorJoin, extend tests for routineJoin | Dmytro : coverage is extended */
 

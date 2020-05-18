@@ -96,7 +96,7 @@ function objectLike( src )
   return false;
   if( _.longIs( src ) )
   return false;
-  if( _.routineIsPure( src ) )
+  if( _.routineIsTrivial( src ) )
   return false;
   if( _.strIs( src ) )
   return false;
