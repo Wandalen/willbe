@@ -3,7 +3,7 @@
 
 'use strict';
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 {
 
   require( './Layer0.s' );
@@ -22,7 +22,7 @@ let Self = _global_.wModuleForTesting1;
 // export
 // --
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 
 })();

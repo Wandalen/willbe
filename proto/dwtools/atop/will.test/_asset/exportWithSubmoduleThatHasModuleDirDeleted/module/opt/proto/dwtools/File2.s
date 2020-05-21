@@ -4,7 +4,7 @@
 
 /* File2.s */
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = 'File2.s';
 
 })();

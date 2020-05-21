@@ -148,7 +148,7 @@ _global[ 'wModuleForTesting1' ] = Self;
 _global.wModuleForTesting1 = Self;
 _global.wBase = Self;
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 
 })();

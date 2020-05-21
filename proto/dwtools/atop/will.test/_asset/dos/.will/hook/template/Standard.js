@@ -466,15 +466,22 @@ env :
   commonjs : true
   es6 : true
   node : true
-extends : 'eslint:recommended'
+extends :
+  - 'eslint:recommended'
+# plugins :
+  # - 'for-wtools'
+  # - 'optimize-regex'
+  # - 'unicorn'
 globals :
   Atomics : readonly
   SharedArrayBuffer : readonly
 parserOptions :
-  ecmaVersion : 2018
+  ecmaVersion : 2020
 rules :
   accessor-pairs : error
-  array-bracket-newline : error
+  array-bracket-newline :
+    - error
+    - multiline : true
   array-bracket-spacing :
     - error
     - always
@@ -522,7 +529,6 @@ rules :
   dot-notation : off
   eol-last : error
   eqeqeq : error
-  func-call-spacing : off
   no-unexpected-multiline : off
   func-name-matching : off
   func-names : off
@@ -545,7 +551,13 @@ rules :
   implicit-arrow-linebreak :
     - error
     - beside
-  indent : off
+  indent :
+    - error
+    - 2
+    -
+      outerIIFEBody : 0
+      MemberExpression : 0
+      ignoredNodes : [ "IfStatement.body", "WhileStatement.body", "ForStatement.body" ]
   indent-legacy : off
   init-declarations : off
   key-spacing :
@@ -553,7 +565,17 @@ rules :
     -
       beforeColon : true
       afterColon : true
-  keyword-spacing : off
+      mode : minimum
+  keyword-spacing :
+    - error
+    -
+      before : false
+      after : false
+      overrides :
+        return : { 'after' : true }
+        let : { 'after' : true }
+        const : { 'after' : true }
+        var : { 'after' : true }
   line-comment-position : off
   linebreak-style :
     - error
@@ -576,6 +598,9 @@ rules :
       ignoreStrings : true
       ignoreRegExpLiterals : true
   multiline-comment-style : off
+  multiline-ternary :
+    - error
+    - never
   new-parens : off
   newline-after-var : off
   newline-before-return : off
@@ -702,10 +727,23 @@ rules :
   object-shorthand :
     - error
     - properties
-  one-var : off
+  one-var :
+    - error
+    -
+      initialized : never
+      uninitialized : consecutive
   one-var-declaration-per-line : error
   operator-assignment : off
-  operator-linebreak : error
+  operator-linebreak :
+    - error
+    - before
+    -
+      overrides :
+        '=' : 'after'
+        '+=' : 'after'
+        '-=' : 'after'
+        '*=' : 'after'
+        '/=' : 'after'
   padded-blocks : off
   padding-line-between-statements : error
   prefer-arrow-callback : off
@@ -744,19 +782,10 @@ rules :
   sort-vars : off
   space-before-blocks : off
   space-before-function-paren : off
-  space-in-parens :
-    - error
-    - always
-    # - exceptions : [ 'empty' ]
-    # - exceptions : [ 'empty', '{}' ]
-    - exceptions : [ 'empty', '{}', '[]' ]
-  space-in-brackets : off
   space-infix-ops : off
   space-unary-ops : off
   spaced-comment : off
-  strict :
-    - error
-    - function
+  strict : off
   switch-colon-spacing :
     - error
     -
@@ -779,7 +808,8 @@ rules :
   # curly
 
   curly : off
-  object-curly-newline : error
+  object-curly-newline :
+    - error
   object-curly-spacing :
     - error
     - always
@@ -787,6 +817,30 @@ rules :
     - error
     - allman
     - allowSingleLine : true
+  space-in-parens :
+    - error
+    - always
+    - exceptions : [ 'empty' ]
+    # - exceptions : [ 'empty', '{}' ]
+    # - exceptions : [ 'empty', '{}', '[]' ]
+  space-in-brackets : off
+
+  # # plugins
+  #
+  # # optimize-regex/optimize-regex : warn
+  # unicorn/better-regex : warn
+  # unicorn/no-unsafe-regex : warn
+  # unicorn/no-unused-properties : warn
+  # unicorn/no-nested-ternary : error
+  #
+  # for-wtools/filename :
+  #   - warn
+  # # for-wtools/space-in-parens :
+  # #   - error
+  # #   - always
+  # #   - exceptions : [ 'empty' ]
+  # #   # - exceptions : [ 'empty', '{}' ]
+  # #   # - exceptions : [ 'empty', '{}', '[]' ]
 
   # warn
 
@@ -799,6 +853,10 @@ rules :
 
   # play with this later
 
+  func-call-spacing : off
+    # - error
+    # - never
+    # - allowNewlines : true
   consistent-this : off
   prefer-named-capture-group : off
   valid-jsdoc : error
@@ -827,12 +885,11 @@ rules :
 
 '.gitignore' : //
 `
+./_
 .*
 -*
 *.log
 *.db
-*.sh
-*.bat
 *.tmp
 *.out
 node_modules

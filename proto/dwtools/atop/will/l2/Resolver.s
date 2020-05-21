@@ -1496,7 +1496,7 @@ let Extension =
 
 _.mapExtend( Self, Extension );
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 
 _.staticDeclare

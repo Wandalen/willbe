@@ -1728,7 +1728,7 @@ _.accessor.define = _.accessor.define || Object.create( null );
 // export
 // --
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 
 })();
