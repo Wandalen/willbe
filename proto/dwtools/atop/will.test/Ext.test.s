@@ -3802,6 +3802,69 @@ function reflectWithOptionLinking( test )
   return a.ready;
 }
 
+//
+
+function reflectorFromPredefinedWithOptions( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-with-options-from-predefined' );
+  a.reflect();
+
+  /* - */
+  
+  a.ready
+  .then( () =>
+  {
+    test.case = 'reflector without explicit inherit property';
+    return null;
+  })
+
+  a.startNonThrowing({ execPath : '.build variant1' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './debug', './debug/File.js' ] );
+
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, false );
+    
+    var read1 = a.fileProvider.fileRead( a.abs( 'proto/File.js' ) );
+    var read2 = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
+    
+    test.notIdentical( read1, read2 )
+
+    return null;
+  })
+  
+  a.ready
+  .then( () =>
+  {
+    test.case = 'same reflector but has explicit inherit from predefined reflector';
+    return null;
+  })
+  a.startNonThrowing({ execPath : '.build variant2' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './debug', './debug/File.js' ] );
+
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, false );
+    
+    var read1 = a.fileProvider.fileRead( a.abs( 'proto/File.js' ) );
+    var read2 = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
+    
+    test.notIdentical( read1, read2 )
+
+    return null;
+  })
+  
+  /* - */
+
+  return a.ready;
+}
 
 //
 
@@ -21970,6 +22033,7 @@ var Self =
     reflectWithOptions,
     reflectWithOptionDstRewriting,
     reflectWithOptionLinking,
+    reflectorFromPredefinedWithOptions,
     reflectWithSelectorInDstFilter,
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
