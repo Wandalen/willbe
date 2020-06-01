@@ -7576,7 +7576,7 @@ function listSingleModule( test )
   {
     test.case = 'submodules list'
     test.identical( got.exitCode, 0 );
-    test.is( got.output.length );
+    test.is( got.output.length >= 1 );
     return null;
   })
 
