@@ -5,7 +5,7 @@ path :
   temp : 'out'
   in : '.'
   out : 'out'
-  
+
 reflector :
 
   transpile.reflector :
@@ -21,7 +21,7 @@ step :
 
   transpile :
     inherit : files.transpile
-    reflector : reflector::transpile.reflector
+    filePath : reflector::transpile.reflector
     transpilingStrategy : [ 'Uglify' ]
     optimization : 9
     minification : 9
