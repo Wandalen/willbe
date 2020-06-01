@@ -5643,7 +5643,7 @@ function hookGitPullConflict( test )
   originalShell( 'git commit -am first' );
   a.shell( `git clone original clone` );
 
-  a.start( '.with clone/ .call link beeping:0' )
+  a.start( '.with clone/ .call hlink beeping:0' )
 
   .then( ( got ) =>
   {
