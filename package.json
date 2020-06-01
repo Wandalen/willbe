@@ -22,7 +22,7 @@
   },
   "scripts" :
   {
-    "test" : "wtest .run proto/**",
+    "test" : "wtest .run 'proto/**'",
     "docgen" : "wdocgen .build proto",
     "single-process-will" : "node proto/dwtools/atop/will/entry/Exec",
     "debug-will" : "node proto/dwtools/atop/will/entry/ExecDebug",

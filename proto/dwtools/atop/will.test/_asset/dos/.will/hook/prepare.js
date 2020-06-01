@@ -52,6 +52,7 @@ function onModule( it )
     it.start( `git add --force .gitattributes` );
     it.start( `git add --force .gitignore` );
     it.start( `git add --force .travis.yml` );
+    it.start( `git add --force .eslintrc.yml` );
 
     it.start({ execPath : `git commit -am "prepare"`, throwingExitCode : 0 });
     it.start({ execPath : `git push -u origin --all --follow-tags`, throwingExitCode : 0 });

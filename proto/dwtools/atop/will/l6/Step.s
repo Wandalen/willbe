@@ -38,6 +38,7 @@ function MakeFor_body( o )
 
   let build = o.resource.build;
   // delete o.resource.build;
+  // reflect.proto
 
   Parent.MakeFor.body.apply( Cls, arguments );
 

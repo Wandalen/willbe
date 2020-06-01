@@ -739,34 +739,34 @@ function vectorAdapterIs( test )
 
 //
 
-function constructorIsVector( test )
+function constructorIsVad( test )
 {
   test.case = 'without argument';
-  var got = _.constructorIsVector();
+  var got = _.constructorIsVad();
   test.identical( got, false );
 
   test.case = 'check null';
-  var got = _.constructorIsVector( null );
+  var got = _.constructorIsVad( null );
   test.identical( got, false );
 
   test.case = 'check undefined';
-  var got = _.constructorIsVector( undefined );
+  var got = _.constructorIsVad( undefined );
   test.identical( got, false );
 
   test.case = 'check zero';
-  var got = _.constructorIsVector( 0 );
+  var got = _.constructorIsVad( 0 );
   test.identical( got, false );
 
   test.case = 'check empty string';
-  var got = _.constructorIsVector( '' );
+  var got = _.constructorIsVad( '' );
   test.identical( got, false );
 
   test.case = 'check false';
-  var got = _.constructorIsVector( false );
+  var got = _.constructorIsVad( false );
   test.identical( got, false );
 
   test.case = 'check NaN';
-  var got = _.constructorIsVector( NaN );
+  var got = _.constructorIsVad( NaN );
   test.identical( got, false );
 
   /* */
@@ -775,7 +775,7 @@ function constructorIsVector( test )
   var proto = { a : 1 };
   var src = {};
   src.prototype = proto;
-  var got = _.constructorIsVector( src );
+  var got = _.constructorIsVad( src );
   test.identical( got, false );
 
   test.case = 'map has property prototype and prototype has property _vectorBuffer';
@@ -783,7 +783,7 @@ function constructorIsVector( test )
   proto._vectorBuffer = true;
   var src = {};
   src.prototype = proto;
-  var got = _.constructorIsVector( src );
+  var got = _.constructorIsVad( src );
   test.identical( got, true );
 
   /* */
@@ -797,7 +797,7 @@ function constructorIsVector( test )
   var proto = new Constr();
   var src = new Constr();
   src.prototype = proto;
-  var got = _.constructorIsVector( src );
+  var got = _.constructorIsVad( src );
   test.identical( got, false );
 
   test.case = 'check instance of constructor prototyped by another instance with _vectorBuffer property';
@@ -810,7 +810,7 @@ function constructorIsVector( test )
   proto._vectorBuffer = true;
   var src = new Constr();
   src.prototype = proto;
-  var got = _.constructorIsVector( src );
+  var got = _.constructorIsVad( src );
   test.identical( got, true );
 
   test.case = 'check instance of constructor prototyped by another instance with _vectorBuffer and own "constructor" properties';
@@ -824,7 +824,7 @@ function constructorIsVector( test )
   proto.constructor = Constr;
   var src = new Constr();
   src.prototype = proto;
-  var got = _.constructorIsVector( src );
+  var got = _.constructorIsVad( src );
   test.identical( got, true );
 
   /* - */
@@ -833,8 +833,8 @@ function constructorIsVector( test )
   return;
 
   test.case = 'src.prototype is undefined';
-  test.shouldThrowErrorSync( () => _.constructorIsVector( [] ) );
-  test.shouldThrowErrorSync( () => _.constructorIsVector( {} ) );
+  test.shouldThrowErrorSync( () => _.constructorIsVad( [] ) );
+  test.shouldThrowErrorSync( () => _.constructorIsVad( {} ) );
 
   /* Dmytro : the second part of routine in module wMathVector */
 }
@@ -4610,7 +4610,7 @@ var Self =
     //
 
     vectorAdapterIs,
-    constructorIsVector,
+    constructorIsVad,
     matrixIs,
     constructorIsMatrix,
 

@@ -11531,12 +11531,12 @@ function longDuplicate( test )
 
   /* */
 
-  test.case = 'numberOfScalarsPerElement 1 numberOfDuplicatesPerElement 1';
+  test.case = 'nScalarsPerElement 1 nDupsPerElement 1';
   var options =
   {
     src : [ 10, 20 ],
-    numberOfScalarsPerElement : 1,
-    numberOfDuplicatesPerElement : 1
+    nScalarsPerElement : 1,
+    nDupsPerElement : 1
   };
   var got = _.longDuplicate( options );
   var expected = [ 10, 20 ];
@@ -11544,12 +11544,12 @@ function longDuplicate( test )
 
   /* */
 
-  test.case = 'numberOfScalarsPerElement 1 numberOfDuplicatesPerElement 2';
+  test.case = 'nScalarsPerElement 1 nDupsPerElement 2';
   var options =
   {
     src : [ 10, 20 ],
-    numberOfScalarsPerElement : 1,
-    numberOfDuplicatesPerElement : 2
+    nScalarsPerElement : 1,
+    nDupsPerElement : 2
   };
   var got = _.longDuplicate( options );
   var expected = [ 10, 10, 20, 20 ];
@@ -11557,12 +11557,12 @@ function longDuplicate( test )
 
   /* */
 
-  test.case = 'numberOfScalarsPerElement 2 numberOfDuplicatesPerElement 1';
+  test.case = 'nScalarsPerElement 2 nDupsPerElement 1';
   var options =
   {
     src : [ 10, 20 ],
-    numberOfScalarsPerElement : 2,
-    numberOfDuplicatesPerElement : 1
+    nScalarsPerElement : 2,
+    nDupsPerElement : 1
   };
   var got = _.longDuplicate( options );
   var expected = [ 10, 20 ];
@@ -11570,12 +11570,12 @@ function longDuplicate( test )
 
   /* */
 
-  test.case = 'numberOfScalarsPerElement 2 numberOfDuplicatesPerElement 2';
+  test.case = 'nScalarsPerElement 2 nDupsPerElement 2';
   var options =
   {
     src : [ 10, 20 ],
-    numberOfScalarsPerElement : 2,
-    numberOfDuplicatesPerElement : 2
+    nScalarsPerElement : 2,
+    nDupsPerElement : 2
   };
   var got = _.longDuplicate( options );
   var expected = [ 10, 20, 10, 20 ];
@@ -11588,8 +11588,8 @@ function longDuplicate( test )
   {
     src : [ 10, 20 ],
     result : [ 1, 1, 1, 1 ],
-    numberOfScalarsPerElement : 1,
-    numberOfDuplicatesPerElement : 2
+    nScalarsPerElement : 1,
+    nDupsPerElement : 2
   };
   var got = _.longDuplicate( options );
   var expected = [ 10, 10, 20, 20 ];
@@ -11602,8 +11602,8 @@ function longDuplicate( test )
   {
     src : [ 'abc', 'def' ],
     result : new Array( 6 ),
-    numberOfScalarsPerElement : 2,
-    numberOfDuplicatesPerElement : 3
+    nScalarsPerElement : 2,
+    nDupsPerElement : 3
   };
   var got = _.longDuplicate( options );
   var expected = [ 'abc', 'def', 'abc', 'def', 'abc', 'def' ];
@@ -11616,8 +11616,8 @@ function longDuplicate( test )
   {
     src : [ 'abc', 'def' ],
     result : [],
-    numberOfScalarsPerElement : 1,
-    numberOfDuplicatesPerElement : 1
+    nScalarsPerElement : 1,
+    nDupsPerElement : 1
   };
   var got = _.longDuplicate( options );
   var expected = [ 'abc', 'def', ];
@@ -11630,8 +11630,8 @@ function longDuplicate( test )
   {
     src : [ 'abc', 'def' ],
     result : [ 1, 2 ],
-    numberOfScalarsPerElement : 1,
-    numberOfDuplicatesPerElement : 1
+    nScalarsPerElement : 1,
+    nDupsPerElement : 1
   };
   var got = _.longDuplicate( options );
   var expected = [ 1, 2, 'abc', 'def', ];
@@ -11646,8 +11646,8 @@ function longDuplicate( test )
   {
     src : [ 1, 2 ],
     result : arr,
-    numberOfScalarsPerElement : 1,
-    numberOfDuplicatesPerElement : 1
+    nScalarsPerElement : 1,
+    nDupsPerElement : 1
   };
   var got = _.longDuplicate( options );
   var expected = [ 5, 1, 2 ];
@@ -11665,8 +11665,8 @@ function longDuplicate( test )
   test.case = 'second argument is replaced and non-existent elements from options.src is replaced undefined';
   var options = {
     src : [ 'abc', 'def', undefined ],
-    numberOfScalarsPerElement : 3,
-    numberOfDuplicatesPerElement : 3
+    nScalarsPerElement : 3,
+    nDupsPerElement : 3
   };
   var got = _.longDuplicate( options );
   var expected = [ 'abc', 'def', undefined, 'abc', 'def', undefined, 'abc', 'def', undefined ];
@@ -11693,8 +11693,8 @@ function longDuplicate( test )
   var options = {
     src : undefined,
     result : [],
-    numberOfScalarsPerElement : 3,
-    numberOfDuplicatesPerElement : 3
+    nScalarsPerElement : 3,
+    nDupsPerElement : 3
   };
   test.shouldThrowErrorSync( function()
   {
@@ -11706,8 +11706,8 @@ function longDuplicate( test )
   {
     src : [ 10, 20 ],
     result : [],
-    numberOfScalarsPerElement : 1,
-    numberOfDuplicatesPerElement : 2
+    nScalarsPerElement : 1,
+    nDupsPerElement : 2
   };
   test.shouldThrowErrorSync( function ()
   {

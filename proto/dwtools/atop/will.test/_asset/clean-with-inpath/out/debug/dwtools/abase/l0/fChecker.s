@@ -101,7 +101,7 @@ function vectorAdapterIs( src )
 
 //
 
-function constructorIsVector( src )
+function constructorIsVad( src )
 {
   if( !src )
   return false;
@@ -523,7 +523,7 @@ let Routines =
   bigIntIs,
 
   vectorAdapterIs,
-  constructorIsVector,
+  constructorIsVad,
   matrixIs,
   constructorIsMatrix,
 

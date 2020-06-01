@@ -407,7 +407,6 @@ os:
   - osx
   - windows
 node_js:
-  - '9'
   - '10'
   - '12'
   - 'node'
@@ -766,7 +765,7 @@ rules :
     - single
     - allowTemplateLiterals : true
   radix : off
-  require-atomic-updates : error
+  require-atomic-updates : off
   require-await : off
   require-unicode-regexp : off
   rest-spread-spacing :
@@ -818,7 +817,7 @@ rules :
     - allman
     - allowSingleLine : true
   space-in-parens :
-    - error
+    - warn
     - always
     - exceptions : [ 'empty' ]
     # - exceptions : [ 'empty', '{}' ]
@@ -863,7 +862,7 @@ rules :
   require-jsdoc : off
   max-statements-per-line : off
   max-statements :
-    - error
+    - warn
     - max : 100
   complexity :
     - error
