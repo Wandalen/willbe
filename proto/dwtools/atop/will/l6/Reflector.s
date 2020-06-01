@@ -1714,6 +1714,8 @@ function optionsForReflectExport( o )
 
   result.mandatory = reflector.mandatory;
   result.dstRewritingOnlyPreserving = reflector.dstRewritingOnlyPreserving;
+  result.linking = reflector.linking;
+  result.breakingDstHardLink = reflector.breakingDstHardLink;
 
   /* */
 
@@ -1879,7 +1881,9 @@ let Composes =
 
   recursive : null,
   mandatory : 1,
-  dstRewritingOnlyPreserving : 1
+  dstRewritingOnlyPreserving : 1,
+  linking : 'hardLinkMaybe',
+  breakingDstHardLink : null
 
 }
 

@@ -1,0 +1,37 @@
+
+path :
+
+  proto : 'proto'
+  in : '.'
+  out : 'out'
+  'out.debug' : 'out/debug'
+  temp : 'out'
+
+reflector :
+
+  reflect.proto1 :
+    filePath :
+      'path::proto' : 'path::out.debug'
+      
+  reflect.proto2 :
+    filePath :
+      'path::proto' : 'path::out.debug'
+    linking : fileCopy
+
+  reflect.proto3 :
+    filePath :
+      'path::proto' : 'path::out.debug'
+    linking : fileCopy
+    dstRewritingOnlyPreserving : 0
+    breakingDstHardLink : 1
+
+build :
+
+  variant1 :
+    steps : reflect.proto1
+
+  variant2 :
+    steps : reflect.proto2
+    
+  variant3 :
+    steps : reflect.proto3
