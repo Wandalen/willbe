@@ -697,7 +697,7 @@ function transpileWithOptions( test )
   .then( () =>
   {
     test.case = 'minify, raw mode, max compression'
-    test.description = 
+    test.description =
     `Options:\
      \n transpilingStrategy : [ 'Uglify' ]\
      \n optimization : 9\
@@ -2760,6 +2760,7 @@ function reflectNothingFromSubmodules( test )
         "mandatory" : 1,
         "inherit" : [ "predefined.*" ],
         "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "reflect.submodules1" :
       {
@@ -2770,7 +2771,8 @@ function reflectNothingFromSubmodules( test )
         [
           "submodule::*/exported::*=1/reflector::exported.files*=1"
         ],
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "reflect.submodules2" :
       {
@@ -2783,7 +2785,8 @@ function reflectNothingFromSubmodules( test )
         "criterion" : { "debug" : 1 },
         "mandatory" : 1,
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.proto.export" :
       {
@@ -2794,7 +2797,8 @@ function reflectNothingFromSubmodules( test )
         },
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "mandatory" : 1,
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.files.proto.export" :
       {
@@ -2802,7 +2806,8 @@ function reflectNothingFromSubmodules( test )
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "recursive" : 0,
         "mandatory" : 1,
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       }
     }
     test.identical( outfile.reflector, expectedReflector );
@@ -3729,7 +3734,7 @@ function reflectWithOptionLinking( test )
   a.reflect();
 
   /* - */
-  
+
   a.ready
   .then( () =>
   {
@@ -3749,16 +3754,16 @@ function reflectWithOptionLinking( test )
 
     return null;
   })
-  
+
   //
-  
+
   a.ready
   .then( () =>
   {
     test.case = 'linking : fileCopy, other options default, should throw error';
     return null;
   })
-  
+
   a.startNonThrowing({ execPath : '.build variant2' })
   .then( ( got ) =>
   {
@@ -3766,7 +3771,7 @@ function reflectWithOptionLinking( test )
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
-    
+
     return null;
   })
 
@@ -3778,7 +3783,7 @@ function reflectWithOptionLinking( test )
     test.case = 'linking : fileCopy,dstRewritingOnlyPreserving : 0, breakingDstHardLink : 1';
     return null;
   })
-  
+
   a.startNonThrowing({ execPath : '.build variant3' })
   .then( ( got ) =>
   {
@@ -3788,12 +3793,12 @@ function reflectWithOptionLinking( test )
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
-    
+
     let write = 'console.log( "File2.js" )';
     a.fileProvider.fileWrite( a.abs( 'proto/File.js'), write );
     let read = a.fileProvider.fileRead( a.abs( 'out/debug/File.js') );
     test.notIdentical( write, read );
-    
+
     return null;
   })
 
@@ -3811,7 +3816,7 @@ function reflectorFromPredefinedWithOptions( test )
   a.reflect();
 
   /* - */
-  
+
   a.ready
   .then( () =>
   {
@@ -3828,15 +3833,15 @@ function reflectorFromPredefinedWithOptions( test )
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
-    
+
     var read1 = a.fileProvider.fileRead( a.abs( 'proto/File.js' ) );
     var read2 = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
-    
+
     test.notIdentical( read1, read2 )
 
     return null;
   })
-  
+
   a.ready
   .then( () =>
   {
@@ -3852,15 +3857,15 @@ function reflectorFromPredefinedWithOptions( test )
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
-    
+
     var read1 = a.fileProvider.fileRead( a.abs( 'proto/File.js' ) );
     var read2 = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
-    
+
     test.notIdentical( read1, read2 )
 
     return null;
   })
-  
+
   /* - */
 
   return a.ready;
