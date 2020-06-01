@@ -7393,7 +7393,7 @@ function help( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 1 );
-    test.is( got.output.length );
+    test.is( got.output.length >= 1 );
     test.identical( _.strCount( got.output, /.*.help.* - Get help/ ), 1 );
     return null;
   })
@@ -7412,7 +7412,7 @@ function help( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 1 );
-    test.is( got.output.length );
+    test.is( got.output.length >= 1 );
     test.identical( _.strCount( got.output, /.*.help.* - Get help/ ), 1 );
     return null;
   })
