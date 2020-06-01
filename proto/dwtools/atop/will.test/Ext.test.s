@@ -5523,7 +5523,7 @@ hookPrepare.timeOut = 300000;
 
 //
 
-function hookLink( test )
+function hookHlink( test )
 {
   let self = this;
   let a = self.assetFor( test, 'git-conflict' );
@@ -5563,10 +5563,10 @@ function hookLink( test )
   originalShell( 'git commit -am first' );
   a.shell( `git clone original clone` );
 
-  a.start( '.with original/ .call link beeping:0' )
+  a.start( '.with original/ .call hlink beeping:0' )
   .then( ( got ) =>
   {
-    test.case = '.with original/ .call link beeping:0';
+    test.case = '.with original/ .call hlink beeping:0';
 
     test.identical( _.strHas( got.output, '+ hardLink' ), true );
     test.is( a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
@@ -5576,10 +5576,10 @@ function hookLink( test )
     return null;
   })
 
-  a.start( '.with clone/ .call link beeping:0' )
+  a.start( '.with clone/ .call hlink beeping:0' )
   .then( ( got ) =>
   {
-    test.case = '.with clone/ .call link beeping:0';
+    test.case = '.with clone/ .call hlink beeping:0';
 
     test.identical( _.strHas( got.output, '+ hardLink' ), true );
     test.is( a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
@@ -5592,14 +5592,14 @@ function hookLink( test )
   /* - */
 
   return a.ready;
-} /* end of function hookLink */
+} /* end of function hookHlink */
 
-hookLink.description =
+hookHlink.description =
 `
 - same files are hardlinked
 - same files from different modules are not hardlinked
 `
-hookLink.timeOut = 300000;
+hookHlink.timeOut = 300000;
 
 //
 
@@ -22062,7 +22062,7 @@ var Self =
     hookCallInfo,
     hookGitMake,
     hookPrepare,
-    hookLink,
+    hookHlink,
     hookGitPullConflict,
     hookGitSyncColflict,
     hookGitSyncArguments,
