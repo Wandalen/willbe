@@ -4531,7 +4531,7 @@ function resourceMapsForKind( resourceSelector )
   return module.resourceMapForKind( resourceSelector );
 
   let resources = module.resourceMaps();
-  let result = _.path.globFilterKeys( resources, resourceSelector );
+  let result = _.path.globShortFilterKeys( resources, resourceSelector );
   return result;
 }
 
@@ -6299,7 +6299,7 @@ function _buildsResolve_body( o )
 
   if( o.name )
   {
-    elements = _.mapVals( _.path.globFilterKeys( elements, o.name ) );
+    elements = _.mapVals( _.path.globShortFilterKeys( elements, o.name ) );
     if( !elements.length )
     return []
     if( o.criterion === null || Object.keys( o.criterion ).length === 0 )

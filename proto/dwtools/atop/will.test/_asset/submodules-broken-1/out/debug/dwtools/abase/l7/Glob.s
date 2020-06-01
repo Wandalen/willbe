@@ -411,8 +411,8 @@ function _globFullToRegexpSingle( glob, filePath, basePath )
   let related = this.relateForGlob( glob, filePath, basePath );
   // debugger;
   let maybeHere = '';
-  let hereEscapedStr = self._globSplitToRegexpSource( self._hereStr );
-  let downEscapedStr = self._globSplitToRegexpSource( self._downStr );
+  let hereEscapedStr = self._globShortSplitToRegexpSource( self._hereStr );
+  let downEscapedStr = self._globShortSplitToRegexpSource( self._downStr );
 
   let cache = Object.create( null );
   let result = Object.create( null );
@@ -423,7 +423,7 @@ function _globFullToRegexpSingle( glob, filePath, basePath )
   {
 
     // related[ r ] = this.globSplit( related[ r ] );
-    // related[ r ] = related[ r ].map( ( e, i ) => self._globSplitToRegexpSource( e ) );
+    // related[ r ] = related[ r ].map( ( e, i ) => self._globShortSplitToRegexpSource( e ) );
 
     let transientSplits = this.globSplit( related[ r ] );
     let actualSplits = this.split( related[ r ] );
@@ -449,7 +449,7 @@ function _globFullToRegexpSingle( glob, filePath, basePath )
   {
     if( cache[ split ] )
     return cache[ split ];
-    cache[ split ] = self._globSplitToRegexpSource( split );
+    cache[ split ] = self._globShortSplitToRegexpSource( split );
     return cache[ split ];
   }
 
@@ -480,7 +480,7 @@ function globsToRegexps()
 
 //
 
-function globSplitToRegexp( glob )
+function globShortSplitToRegexp( glob )
 {
 
   _.assert( _.strIs( glob ) || _.regexpIs( glob ) );
@@ -489,7 +489,7 @@ function globSplitToRegexp( glob )
   if( _.regexpIs( glob ) )
   return glob;
 
-  let str = this._globSplitToRegexpSource( glob );
+  let str = this._globShortSplitToRegexpSource( glob );
 
   let result = new RegExp( '^' + str + '$' );
 
@@ -498,7 +498,7 @@ function globSplitToRegexp( glob )
 
 //
 
-function globFilter_pre( routine, args )
+function globShortFilter_pre( routine, args )
 {
   let result;
 
@@ -522,7 +522,7 @@ function globFilter_pre( routine, args )
 
 //
 
-function globFilter_body( o )
+function globShortFilter_body( o )
 {
   let result;
 
@@ -547,23 +547,23 @@ function globFilter_body( o )
   return result;
 }
 
-globFilter_body.defaults =
+globShortFilter_body.defaults =
 {
   src : null,
   selector : null,
   onEvaluate : null,
 }
 
-let globFilter = _.routineFromPreAndBody( globFilter_pre, globFilter_body );
+let globShortFilter = _.routineFromPreAndBody( globShortFilter_pre, globShortFilter_body );
 
-let globFilterVals = _.routineFromPreAndBody( globFilter_pre, globFilter_body );
-globFilterVals.defaults.onEvaluate = function byVal( e, k, src )
+let globShortFilterVals = _.routineFromPreAndBody( globShortFilter_pre, globShortFilter_body );
+globShortFilterVals.defaults.onEvaluate = function byVal( e, k, src )
 {
   return e;
 }
 
-let globFilterKeys = _.routineFromPreAndBody( globFilter_pre, globFilter_body );
-globFilterKeys.defaults.onEvaluate = function byKey( e, k, src )
+let globShortFilterKeys = _.routineFromPreAndBody( globShortFilter_pre, globShortFilter_body );
+globShortFilterKeys.defaults.onEvaluate = function byKey( e, k, src )
 {
   return _.arrayIs( src ) ? e : k;
 }
@@ -580,8 +580,8 @@ function _globSplitsToRegexpSourceGroups( globSplits )
 
   let s = 0;
   let depth = 0;
-  let hereEscapedStr = self._globSplitToRegexpSource( self._hereStr );
-  let downEscapedStr = self._globSplitToRegexpSource( self._downStr );
+  let hereEscapedStr = self._globShortSplitToRegexpSource( self._hereStr );
+  let downEscapedStr = self._globShortSplitToRegexpSource( self._downStr );
   let levels = levelsEval( globSplits );
 
   for( let s = 0 ; s < globSplits.length ; s++ )
@@ -666,7 +666,7 @@ function _globSplitsToRegexpSourceGroups( globSplits )
 
 //
 
-function _globSplitToRegexpSource( src )
+function _globShortSplitToRegexpSource( src )
 {
 
   _.assert( _.strIs( src ) );
@@ -768,7 +768,7 @@ function _globSplitToRegexpSource( src )
     // result = result.replace( /[^\*\+\[\]\{\}\?\@\!\^\(\)]+/g, ( m ) => _.regexpEscape( m ) );
 
     // /* replace globs with regexps from map */
-    // result = result.replace( /(\*\*\\\/|\*\*)|(\*)|(\?)|(\[.*\])/g, globSplitToRegexp );
+    // result = result.replace( /(\*\*\\\/|\*\*)|(\*)|(\?)|(\[.*\])/g, globShortSplitToRegexp );
 
     // /* replace {} -> () and , -> | to make proper regexp */
     // result = result.replace( /\{.*\}/g, curlyBrackets );
@@ -866,7 +866,7 @@ function relateForGlob( glob, filePath, basePath )
     result.push( downGlob2 );
 
     let globSplits = this.globSplit( glob2 );
-    let globRegexpSourceSplits = globSplits.map( ( e, i ) => self._globSplitToRegexpSource( e ) );
+    let globRegexpSourceSplits = globSplits.map( ( e, i ) => self._globShortSplitToRegexpSource( e ) );
 
     // debugger; // yyy
     let globPath = self.fromGlob( glob );
@@ -1624,14 +1624,14 @@ let Routines =
   _globsToRegexps,
   globsToRegexps,
 
-  globSplitToRegexp,
-  globsToRegexps : _.routineVectorize_functor( globSplitToRegexp ),
-  globFilter,
-  globFilterVals,
-  globFilterKeys,
+  globShortSplitToRegexp,
+  globsToRegexps : _.routineVectorize_functor( globShortSplitToRegexp ),
+  globShortFilter,
+  globShortFilterVals,
+  globShortFilterKeys,
 
   _globSplitsToRegexpSourceGroups,
-  _globSplitToRegexpSource,
+  _globShortSplitToRegexpSource,
   _globRegexpSourceSplitsJoinForTerminal,
   _globRegexpSourceSplitsJoinForDirectory,
 
