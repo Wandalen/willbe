@@ -3722,6 +3722,152 @@ function reflectWithOptionDstRewriting( test )
 
 //
 
+function reflectWithOptionLinking( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflect-with-options-linking' );
+  a.reflect();
+
+  /* - */
+  
+  a.ready
+  .then( () =>
+  {
+    test.case = 'reflect file using hardlinking';
+    return null;
+  })
+
+  a.startNonThrowing({ execPath : '.build variant1' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './debug', './debug/File.js' ] );
+
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, true );
+
+    return null;
+  })
+  
+  //
+  
+  a.ready
+  .then( () =>
+  {
+    test.case = 'linking : fileCopy, other options default, should throw error';
+    return null;
+  })
+  
+  a.startNonThrowing({ execPath : '.build variant2' })
+  .then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, true );
+    
+    return null;
+  })
+
+  //
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'linking : fileCopy,dstRewritingOnlyPreserving : 0, breakingDstHardLink : 1';
+    return null;
+  })
+  
+  a.startNonThrowing({ execPath : '.build variant3' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './debug', './debug/File.js' ] );
+
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, false );
+    
+    let write = 'console.log( "File2.js" )';
+    a.fileProvider.fileWrite( a.abs( 'proto/File.js'), write );
+    let read = a.fileProvider.fileRead( a.abs( 'out/debug/File.js') );
+    test.notIdentical( write, read );
+    
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function reflectorFromPredefinedWithOptions( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-with-options-from-predefined' );
+  a.reflect();
+
+  /* - */
+  
+  a.ready
+  .then( () =>
+  {
+    test.case = 'reflector without explicit inherit property';
+    return null;
+  })
+
+  a.startNonThrowing({ execPath : '.build variant1' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './debug', './debug/File.js' ] );
+
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, false );
+    
+    var read1 = a.fileProvider.fileRead( a.abs( 'proto/File.js' ) );
+    var read2 = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
+    
+    test.notIdentical( read1, read2 )
+
+    return null;
+  })
+  
+  a.ready
+  .then( () =>
+  {
+    test.case = 'same reflector but has explicit inherit from predefined reflector';
+    return null;
+  })
+  a.startNonThrowing({ execPath : '.build variant2' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    var files = self.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './debug', './debug/File.js' ] );
+
+    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    test.identical( linked, false );
+    
+    var read1 = a.fileProvider.fileRead( a.abs( 'proto/File.js' ) );
+    var read2 = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
+    
+    test.notIdentical( read1, read2 )
+
+    return null;
+  })
+  
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function reflectWithSelectorInDstFilter( test )
 {
   let self = this;
@@ -21886,6 +22032,8 @@ var Self =
     reflectRemoteHttp,
     reflectWithOptions,
     reflectWithOptionDstRewriting,
+    reflectWithOptionLinking,
+    reflectorFromPredefinedWithOptions,
     reflectWithSelectorInDstFilter,
     reflectSubmodulesWithCriterion,
     reflectSubmodulesWithPluralCriterionManualExport,
