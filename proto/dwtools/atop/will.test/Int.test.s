@@ -5012,6 +5012,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5032,6 +5033,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe'
     }
     resolved.form();
     var resolvedData = resolved.exportStructure();
@@ -5056,6 +5058,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe'
     }
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5076,6 +5079,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
 
     var resolvedData = resolved.exportStructure();
@@ -5100,6 +5104,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5120,6 +5125,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5143,6 +5149,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure({ formed:1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5163,6 +5170,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5186,6 +5194,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5208,6 +5217,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5233,6 +5243,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5257,6 +5268,7 @@ function reflectorResolve( test )
       'inherit' : [ 'predefined.*' ],
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5276,6 +5288,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 6 },
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5301,6 +5314,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 6 },
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5324,6 +5338,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 7 },
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5348,6 +5363,7 @@ function reflectorResolve( test )
       'criterion' : { 'debug' : 1, 'variant' : 7 },
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
