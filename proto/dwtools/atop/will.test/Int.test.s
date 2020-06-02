@@ -5434,6 +5434,7 @@ function reflectorInheritedResolve( test )
       'dst' : { 'prefixPath' : 'out/debug1' },
       'mandatory' : 1,
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5455,6 +5456,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflect.proto1' ],
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5476,6 +5478,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflect.proto1' ],
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5497,6 +5500,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflect.proto1' ],
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5518,6 +5522,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflect.proto1' ],
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5544,6 +5549,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'not.test', 'only.js' ],
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5566,6 +5572,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflector::files3' ],
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5588,6 +5595,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflector::files3' ],
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
@@ -5610,6 +5618,7 @@ function reflectorInheritedResolve( test )
       'mandatory' : 1,
       'inherit' : [ 'reflector::files3' ],
       'dstRewritingOnlyPreserving' : 1,
+      'linking' : 'hardLinkMaybe',
     }
     resolved.form();
     var resolvedData = resolved.exportStructure({ formed : 1 });
