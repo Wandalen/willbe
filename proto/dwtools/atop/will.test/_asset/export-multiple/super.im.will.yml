@@ -33,7 +33,7 @@ step :
 
   reflect.submodules :
     inherit : files.reflect
-    reflector :
+    filePath :
       reflector::reflect.submodules*=1
     criterion :
       debug : [ 0,1 ]
