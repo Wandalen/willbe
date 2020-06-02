@@ -12304,7 +12304,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
     // logger.log( _.toJson( outfile.reflector ) );
@@ -12328,7 +12329,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
@@ -12526,7 +12528,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
     // logger.log( _.toJson( outfile.reflector[ 'exported.export.debug' ] ) );
@@ -12548,7 +12551,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
     // logger.log( _.toJson( outfile.reflector[ 'exported.export.' ] ) );
     test.identical( outfile.reflector[ 'exported.export.' ], exportedReflector );
@@ -12572,7 +12576,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
@@ -12596,7 +12601,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.' ], exportedReflectorFiles );
