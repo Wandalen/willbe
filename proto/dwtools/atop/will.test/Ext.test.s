@@ -16323,10 +16323,10 @@ function submodulesDownloadUpdate( test )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
     var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting1' ) );
-    test.is( files.length );
+    test.is( files.length >= 1 );
 
     var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting2a' ) );
-    test.is( files.length );
+    test.is( files.length >= 1 );
 
     return null;
   })
@@ -16349,10 +16349,10 @@ function submodulesDownloadUpdate( test )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
     var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting1' ) );
-    test.is( files.length );
+    test.is( files.length >= 1 );
 
     var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting2a' ) );
-    test.is( files.length );
+    test.is( files.length >= 1 );
 
     return null;
   })
