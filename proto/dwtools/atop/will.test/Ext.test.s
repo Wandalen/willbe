@@ -13008,7 +13008,8 @@ function exportBroken( test )
         raw : 1,
         export : 1
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
 
@@ -13031,7 +13032,8 @@ function exportBroken( test )
         raw : 1,
         export : 1
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
