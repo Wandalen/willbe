@@ -11761,7 +11761,8 @@ function exportSecond( test )
         "mandatory" : 1,
         "criterion" : { "debug" : 0 },
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "reflect.proto.debug" :
       {
@@ -11772,7 +11773,8 @@ function exportSecond( test )
         "mandatory" : 1,
         "criterion" : { "debug" : 1 },
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.doc.export" :
       {
@@ -11783,7 +11785,8 @@ function exportSecond( test )
         },
         "mandatory" : 1,
         "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.files.doc.export" :
       {
@@ -11797,7 +11800,8 @@ function exportSecond( test )
         "recursive" : 0,
         "mandatory" : 1,
         "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.proto.export" :
       {
@@ -11808,7 +11812,8 @@ function exportSecond( test )
         },
         "mandatory" : 1,
         "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.files.proto.export" :
       {
@@ -11822,7 +11827,8 @@ function exportSecond( test )
         "recursive" : 0,
         "mandatory" : 1,
         "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       }
     }
     test.identical( outfile.reflector, expected );
@@ -11981,7 +11987,8 @@ function exportSecond( test )
         "mandatory" : 1,
         "criterion" : { "debug" : 0 },
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "reflect.proto.debug" :
       {
@@ -11992,7 +11999,8 @@ function exportSecond( test )
         "mandatory" : 1,
         "criterion" : { "debug" : 1 },
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.doc.export" :
       {
@@ -12003,7 +12011,8 @@ function exportSecond( test )
         },
         "mandatory" : 1,
         "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.files.doc.export" :
       {
@@ -12017,7 +12026,8 @@ function exportSecond( test )
         "recursive" : 0,
         "mandatory" : 1,
         "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.proto.export" :
       {
@@ -12028,7 +12038,8 @@ function exportSecond( test )
         },
         "mandatory" : 1,
         "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.files.proto.export" :
       {
@@ -12042,7 +12053,8 @@ function exportSecond( test )
         "recursive" : 0,
         "mandatory" : 1,
         "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       }
     }
     test.identical( outfile.reflector, expected );
