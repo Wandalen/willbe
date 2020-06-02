@@ -10460,7 +10460,7 @@ function buildSubmodules( test )
     .then( ( got ) =>
     {
       test.is( o.exitCode !== 0 );
-      test.is( o.output.length );
+      test.is( o.output.length >= 1 );
       test.is( !a.fileProvider.fileExists( outPath ) );
       test.is( !a.fileProvider.fileExists( buildOutDebugPath ) );
       test.is( !a.fileProvider.fileExists( buildOutReleasePath ) );
