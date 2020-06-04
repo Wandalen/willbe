@@ -241,9 +241,9 @@ let wProcedure =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.procedure },
 }
 
-let wGdfStrategy =
+let wGdf =
 {
-  sourcePath : sourcePath( 'abase/l8_gdf/GdfConverter.s', 'wgdfstrategy' ),
+  sourcePath : sourcePath( 'amid/l1/gdf/GdfConverter.s', 'wgdfstrategy' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Gdf },
 }
 
@@ -722,7 +722,7 @@ let Modules =
   // base / l8
 
   wProcedure,
-  wGdfStrategy,
+  wGdf,
 
   // base / l9
 

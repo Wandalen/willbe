@@ -28,7 +28,7 @@ submodule :
   StringsExtra : git+https:///github.com/Wandalen/wStringsExtra.git/@master
   ModuleForTesting12ab : git+https:///github.com/Wandalen/wModuleForTesting12ab.git/@master
 
-  Gdf : git+https:///github.com/Wandalen/wGdfStrategy.git/@master
+  Gdf : git+https:///github.com/Wandalen/wGdf.git/@master
   Replicator : git+https:///github.com/Wandalen/wReplicator.git/@master
   RoutineFundamentals : git+https:///github.com/Wandalen/wRoutineFundamentals.git/@master
   EntityFundamentals : git+https:///github.com/Wandalen/wEntityFundamentals.git/@master
