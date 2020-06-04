@@ -41,17 +41,17 @@ step :
 
   reflect.proto :
     inherit : files.reflect
-    reflector :
+    filePath :
       reflector::reflect.proto
 
   reflect.submodules1 :
     inherit : files.reflect
-    reflector :
+    filePath :
       reflector::reflect.submodules1
 
   reflect.submodules2 :
     inherit : files.reflect
-    reflector : reflector::reflect.submodules2
+    filePath : reflector::reflect.submodules2
 
 build :
 
