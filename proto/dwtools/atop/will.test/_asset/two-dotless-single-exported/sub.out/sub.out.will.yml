@@ -3,11 +3,11 @@ root:
   - sub.out
 consistency:
   sub.out.will.yml: &ref_0
-    hash: e90096764f6ce1e1ca89a9527e2fafcc
-    size: 8292
+    hash: 50aa07df5be23d6aa169756e024e38ea
+    size: 8698
   ../sub/will.yml: &ref_1
-    hash: e218aa70565faf23aa7ef7909d139ce0
-    size: 1175
+    hash: ec9c98467d7bb4b17ffd82782a01ac7e
+    size: 1174
 module:
   sub.out:
     about:
@@ -100,6 +100,8 @@ module:
           filePath:
             'path::proto': 'path::out.*=1'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           debug: 0
         inherit:
@@ -112,6 +114,8 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           debug: 1
         inherit:
@@ -122,6 +126,8 @@ module:
             '**': ''
           prefixPath: release
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -137,6 +143,8 @@ module:
           recursive: 0
         recursive: 0
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -149,6 +157,8 @@ module:
             '**': ''
           prefixPath: debug
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -164,6 +174,8 @@ module:
           recursive: 0
         recursive: 0
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -173,7 +185,7 @@ module:
     step:
       reflect.proto.:
         opts:
-          reflector: 'reflector::reflect.proto.*=1'
+          filePath: 'reflector::reflect.proto.*=1'
         criterion:
           debug: 0
           raw: 0
@@ -181,7 +193,7 @@ module:
           - files.reflect
       reflect.proto.debug:
         opts:
-          reflector: 'reflector::reflect.proto.*=1'
+          filePath: 'reflector::reflect.proto.*=1'
         criterion:
           debug: 1
           raw: 0
@@ -189,7 +201,7 @@ module:
           - files.reflect
       reflect.proto.raw:
         opts:
-          reflector: 'reflector::reflect.proto.*=1'
+          filePath: 'reflector::reflect.proto.*=1'
           verbosity: null
         criterion:
           debug: 0
@@ -198,7 +210,7 @@ module:
           - files.reflect
       reflect.proto.debug.raw:
         opts:
-          reflector: 'reflector::reflect.proto.*=1'
+          filePath: 'reflector::reflect.proto.*=1'
         criterion:
           debug: 1
           raw: 1
@@ -222,7 +234,7 @@ module:
           - module.export
       exported.export.:
         opts:
-          reflector: 'reflector::exported.export.*'
+          filePath: 'reflector::exported.export.*'
         criterion:
           generated: 1
           default: 1
@@ -233,7 +245,7 @@ module:
           - files.reflect
       exported.files.export.:
         opts:
-          reflector: 'reflector::exported.files.export.*'
+          filePath: 'reflector::exported.files.export.*'
         criterion:
           generated: 1
           default: 1
@@ -362,6 +374,8 @@ module:
           filePath:
             'path::proto': 'path::out.*=1'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           debug: 0
         inherit:
@@ -371,6 +385,8 @@ module:
           filePath:
             'path::proto': 'path::out.*=1'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           debug: 1
         inherit:
@@ -378,7 +394,7 @@ module:
     step:
       reflect.proto.:
         opts:
-          reflector: 'reflector::reflect.proto.*=1'
+          filePath: 'reflector::reflect.proto.*=1'
         criterion:
           debug: 0
           raw: 0
@@ -386,7 +402,7 @@ module:
           - files.reflect
       reflect.proto.debug:
         opts:
-          reflector: 'reflector::reflect.proto.*=1'
+          filePath: 'reflector::reflect.proto.*=1'
         criterion:
           debug: 1
           raw: 0
@@ -394,7 +410,7 @@ module:
           - files.reflect
       reflect.proto.raw:
         opts:
-          reflector: 'reflector::reflect.proto.*=1'
+          filePath: 'reflector::reflect.proto.*=1'
         criterion:
           debug: 0
           raw: 1
@@ -402,7 +418,7 @@ module:
           - files.reflect
       reflect.proto.debug.raw:
         opts:
-          reflector: 'reflector::reflect.proto.*=1'
+          filePath: 'reflector::reflect.proto.*=1'
           verbosity: null
         criterion:
           debug: 1
@@ -460,8 +476,8 @@ module:
           export: 1
     consistency:
       ../sub/will.yml:
-        hash: e218aa70565faf23aa7ef7909d139ce0
-        size: 1175
+        hash: ec9c98467d7bb4b17ffd82782a01ac7e
+        size: 1174
       sub.out.will.yml:
-        hash: e90096764f6ce1e1ca89a9527e2fafcc
-        size: 8292
+        hash: 50aa07df5be23d6aa169756e024e38ea
+        size: 8698

@@ -880,13 +880,14 @@ rules :
 *.s linguist-language=JavaScript
 *.ss linguist-language=JavaScript
 *.js linguist-language=JavaScript
+* -text
 `,
 
 '.gitignore' : //
 `
-./_
-.*
+/_*
 -*
+.*
 *.log
 *.db
 *.tmp

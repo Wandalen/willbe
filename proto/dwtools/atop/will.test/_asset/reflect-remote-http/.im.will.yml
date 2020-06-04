@@ -12,15 +12,6 @@ reflector :
     filePath :
       path::ModuleForTesting1.remote : out/ModuleForTesting1.s
 
-step :
-
-  # download.1 :
-  #   inherit : files.reflect
-  #   criterion :
-  #     variant : [ 1 ]
-  #   reflector :
-  #     reflector::download.*=1
-
 build :
 
   download :

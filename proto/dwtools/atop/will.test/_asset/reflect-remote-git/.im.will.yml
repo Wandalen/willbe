@@ -67,15 +67,6 @@ reflector :
       path::ModuleForTesting1b.remote : path::ModuleForTesting1b.local
       path::ModuleForTesting12.remote : path::ModuleForTesting12.local
 
-step :
-
-  # download :
-  #   inherit : files.reflect
-  #   criterion :
-  #     variant : [ 1,2,3,4,5,6,7 ]
-  #   reflector :
-  #     reflector::download.*=1
-
 build :
 
   download :

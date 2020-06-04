@@ -1,12 +1,10 @@
 
-.*
+/_*
 -*
+.*
 *.log
 *.db
 *.tmp
 *.out
 node_modules
 package-lock.json
-
-*/dwtools/atop/will.test/_asset/_repo
-*/*/dwtools/atop/will.test/_asset/_repo
