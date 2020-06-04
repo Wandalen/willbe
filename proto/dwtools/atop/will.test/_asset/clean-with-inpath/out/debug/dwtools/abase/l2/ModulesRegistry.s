@@ -615,9 +615,9 @@ let wTesting =
   isIncluded : function(){ return _realGlobal_.wTester && _realGlobal_.wTester._isReal_; },
 }
 
-let wTranspilationStrategy =
+let wTranspile =
 {
-  sourcePath : sourcePath( 'atop/transpilationStrategy/MainBase.s', 'wtranspilationstrategy' ),
+  sourcePath : sourcePath( 'atop/transpilationStrategy/MainBase.s', 'wtranspile' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.TranspilationStrategy },
 }
 
@@ -811,7 +811,7 @@ let Modules =
   willbe,
   wStarter,
   wTesting,
-  wTranspilationStrategy,
+  wTranspile,
   wFilesOperationsDirector,
   wFilesLinker,
   wBaker,

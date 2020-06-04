@@ -48,7 +48,7 @@ submodule :
   StateStorage : git+https:///github.com/Wandalen/wStateStorage.git/@master
   StateSession : git+https:///github.com/Wandalen/wStateSession.git/@master
   PathTranslator : git+https:///github.com/Wandalen/wPathTranslator.git/@master
-  TranspilationStrategy : git+https:///github.com/Wandalen/wTranspilationStrategy.git/@master
+  TranspilationStrategy : git+https:///github.com/Wandalen/wTranspile.git/@master
   NameMapper : git+https:///github.com/Wandalen/wNameMapper.git/@master
   TemplateTreeResolver : git+https:///github.com/Wandalen/wTemplateTreeResolver.git/@master
   TemplateTreeEnvironment : git+https:///github.com/Wandalen/wTemplateTreeEnvironment.git/@master

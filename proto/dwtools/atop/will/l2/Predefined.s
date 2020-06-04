@@ -471,7 +471,7 @@ function stepRoutineTranspile( frame )
   let reflector = step.reflectorResolve( opts.filePath );
   let reflectOptions = reflector.optionsForReflectExport();
 
-  _.include( 'wTranspilationStrategy' );
+  _.include( 'wTranspile' );
 
   let debug = false;
   if( _.strIs( frame.resource.criterion.debug ) )

@@ -61,7 +61,7 @@
     "wcommandsaggregator" : "",
     "wcommandsconfig" : "",
     "wnamemapper" : "",
-    "wtranspilationstrategy" : "",
+    "wtranspile" : "",
     "wnpmtools" : "",
     "wyamltools" : "",
     "tar" : "",

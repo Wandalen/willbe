@@ -61,7 +61,7 @@
     "wcommandsaggregator" : "alpha",
     "wcommandsconfig" : "alpha",
     "wnamemapper" : "alpha",
-    "wtranspilationstrategy" : "alpha",
+    "wtranspile" : "alpha",
     "wnpmtools" : "alpha",
     "wyamltools" : "alpha",
     "tar" : "6.0.2",

@@ -8044,8 +8044,8 @@ module:
         path: 'npm:///wnamemapper'
         autoExporting: 0
         enabled: 0
-      wTranspilationStrategy:
-        path: 'npm:///wtranspilationstrategy'
+      wTranspile:
+        path: 'npm:///wtranspile'
         autoExporting: 0
         enabled: 0
       tar:
@@ -8969,8 +8969,8 @@ module:
         path: 'npm:///wnamemapper'
         autoExporting: 0
         enabled: 0
-      wTranspilationStrategy:
-        path: 'npm:///wtranspilationstrategy'
+      wTranspile:
+        path: 'npm:///wtranspile'
         autoExporting: 0
         enabled: 0
       tar:
