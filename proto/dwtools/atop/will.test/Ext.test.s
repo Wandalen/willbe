@@ -697,7 +697,7 @@ function transpileWithOptions( test )
   .then( () =>
   {
     test.case = 'minify, raw mode, max compression'
-    test.description = 
+    test.description =
     `Options:\
      \n transpilingStrategy : [ 'Uglify' ]\
      \n optimization : 9\
@@ -2760,6 +2760,7 @@ function reflectNothingFromSubmodules( test )
         "mandatory" : 1,
         "inherit" : [ "predefined.*" ],
         "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "reflect.submodules1" :
       {
@@ -2770,7 +2771,8 @@ function reflectNothingFromSubmodules( test )
         [
           "submodule::*/exported::*=1/reflector::exported.files*=1"
         ],
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "reflect.submodules2" :
       {
@@ -2783,7 +2785,8 @@ function reflectNothingFromSubmodules( test )
         "criterion" : { "debug" : 1 },
         "mandatory" : 1,
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.proto.export" :
       {
@@ -2794,7 +2797,8 @@ function reflectNothingFromSubmodules( test )
         },
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "mandatory" : 1,
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.files.proto.export" :
       {
@@ -2802,7 +2806,8 @@ function reflectNothingFromSubmodules( test )
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "recursive" : 0,
         "mandatory" : 1,
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       }
     }
     test.identical( outfile.reflector, expectedReflector );
@@ -3729,7 +3734,7 @@ function reflectWithOptionLinking( test )
   a.reflect();
 
   /* - */
-  
+
   a.ready
   .then( () =>
   {
@@ -3749,16 +3754,16 @@ function reflectWithOptionLinking( test )
 
     return null;
   })
-  
+
   //
-  
+
   a.ready
   .then( () =>
   {
     test.case = 'linking : fileCopy, other options default, should throw error';
     return null;
   })
-  
+
   a.startNonThrowing({ execPath : '.build variant2' })
   .then( ( got ) =>
   {
@@ -3766,7 +3771,7 @@ function reflectWithOptionLinking( test )
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
-    
+
     return null;
   })
 
@@ -3778,7 +3783,7 @@ function reflectWithOptionLinking( test )
     test.case = 'linking : fileCopy,dstRewritingOnlyPreserving : 0, breakingDstHardLink : 1';
     return null;
   })
-  
+
   a.startNonThrowing({ execPath : '.build variant3' })
   .then( ( got ) =>
   {
@@ -3788,12 +3793,12 @@ function reflectWithOptionLinking( test )
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
-    
+
     let write = 'console.log( "File2.js" )';
     a.fileProvider.fileWrite( a.abs( 'proto/File.js'), write );
     let read = a.fileProvider.fileRead( a.abs( 'out/debug/File.js') );
     test.notIdentical( write, read );
-    
+
     return null;
   })
 
@@ -3811,7 +3816,7 @@ function reflectorFromPredefinedWithOptions( test )
   a.reflect();
 
   /* - */
-  
+
   a.ready
   .then( () =>
   {
@@ -3828,15 +3833,15 @@ function reflectorFromPredefinedWithOptions( test )
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
-    
+
     var read1 = a.fileProvider.fileRead( a.abs( 'proto/File.js' ) );
     var read2 = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
-    
+
     test.notIdentical( read1, read2 )
 
     return null;
   })
-  
+
   a.ready
   .then( () =>
   {
@@ -3852,15 +3857,15 @@ function reflectorFromPredefinedWithOptions( test )
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
-    
+
     var read1 = a.fileProvider.fileRead( a.abs( 'proto/File.js' ) );
     var read2 = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
-    
+
     test.notIdentical( read1, read2 )
 
     return null;
   })
-  
+
   /* - */
 
   return a.ready;
@@ -5518,7 +5523,7 @@ hookPrepare.timeOut = 300000;
 
 //
 
-function hookLink( test )
+function hookHlink( test )
 {
   let self = this;
   let a = self.assetFor( test, 'git-conflict' );
@@ -5558,10 +5563,10 @@ function hookLink( test )
   originalShell( 'git commit -am first' );
   a.shell( `git clone original clone` );
 
-  a.start( '.with original/ .call link beeping:0' )
+  a.start( '.with original/ .call hlink beeping:0' )
   .then( ( got ) =>
   {
-    test.case = '.with original/ .call link beeping:0';
+    test.case = '.with original/ .call hlink beeping:0';
 
     test.identical( _.strHas( got.output, '+ hardLink' ), true );
     test.is( a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
@@ -5571,10 +5576,10 @@ function hookLink( test )
     return null;
   })
 
-  a.start( '.with clone/ .call link beeping:0' )
+  a.start( '.with clone/ .call hlink beeping:0' )
   .then( ( got ) =>
   {
-    test.case = '.with clone/ .call link beeping:0';
+    test.case = '.with clone/ .call hlink beeping:0';
 
     test.identical( _.strHas( got.output, '+ hardLink' ), true );
     test.is( a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
@@ -5587,14 +5592,14 @@ function hookLink( test )
   /* - */
 
   return a.ready;
-} /* end of function hookLink */
+} /* end of function hookHlink */
 
-hookLink.description =
+hookHlink.description =
 `
 - same files are hardlinked
 - same files from different modules are not hardlinked
 `
-hookLink.timeOut = 300000;
+hookHlink.timeOut = 300000;
 
 //
 
@@ -5638,7 +5643,7 @@ function hookGitPullConflict( test )
   originalShell( 'git commit -am first' );
   a.shell( `git clone original clone` );
 
-  a.start( '.with clone/ .call link beeping:0' )
+  a.start( '.with clone/ .call hlink beeping:0' )
 
   .then( ( got ) =>
   {
@@ -5854,7 +5859,7 @@ function hookGitSyncColflict( test )
   originalShell( 'git commit -am first' );
   a.shell( `git clone original clone` );
 
-  a.start( '.with clone/ .call link beeping:0' )
+  a.start( '.with clone/ .call hlink beeping:0' )
 
   .then( ( got ) =>
   {
@@ -7388,7 +7393,7 @@ function help( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 1 );
-    test.is( got.output.length );
+    test.is( got.output.length >= 1 );
     test.identical( _.strCount( got.output, /.*.help.* - Get help/ ), 1 );
     return null;
   })
@@ -7407,7 +7412,7 @@ function help( test )
   .then( ( got ) =>
   {
     test.notIdentical( got.exitCode, 1 );
-    test.is( got.output.length );
+    test.is( got.output.length >= 1 );
     test.identical( _.strCount( got.output, /.*.help.* - Get help/ ), 1 );
     return null;
   })
@@ -7571,7 +7576,7 @@ function listSingleModule( test )
   {
     test.case = 'submodules list'
     test.identical( got.exitCode, 0 );
-    test.is( got.output.length );
+    test.is( got.output.length >= 1 );
     return null;
   })
 
@@ -8645,10 +8650,10 @@ function cleanSubmodules( test )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
     var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting1' ) );
-    test.is( files.length );
+    test.is( files.length >= 1 );
 
     var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting2' ) );
-    test.is( files.length );
+    test.is( files.length >= 1 );
 
     return null;
   })
@@ -10304,7 +10309,7 @@ function buildSingleModule( test )
     .then( ( got ) =>
     {
       test.is( o.exitCode !== 0 );
-      test.is( o.output.length );
+      test.is( o.output.length >= 1 );
       test.is( !a.fileProvider.fileExists( buildOutDebugPath ) )
       test.is( !a.fileProvider.fileExists( buildOutReleasePath ) )
 
@@ -10455,7 +10460,7 @@ function buildSubmodules( test )
     .then( ( got ) =>
     {
       test.is( o.exitCode !== 0 );
-      test.is( o.output.length );
+      test.is( o.output.length >= 1 );
       test.is( !a.fileProvider.fileExists( outPath ) );
       test.is( !a.fileProvider.fileExists( buildOutDebugPath ) );
       test.is( !a.fileProvider.fileExists( buildOutReleasePath ) );
@@ -11756,7 +11761,8 @@ function exportSecond( test )
         "mandatory" : 1,
         "criterion" : { "debug" : 0 },
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "reflect.proto.debug" :
       {
@@ -11767,7 +11773,8 @@ function exportSecond( test )
         "mandatory" : 1,
         "criterion" : { "debug" : 1 },
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.doc.export" :
       {
@@ -11778,7 +11785,8 @@ function exportSecond( test )
         },
         "mandatory" : 1,
         "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.files.doc.export" :
       {
@@ -11792,7 +11800,8 @@ function exportSecond( test )
         "recursive" : 0,
         "mandatory" : 1,
         "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.proto.export" :
       {
@@ -11803,7 +11812,8 @@ function exportSecond( test )
         },
         "mandatory" : 1,
         "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.files.proto.export" :
       {
@@ -11817,7 +11827,8 @@ function exportSecond( test )
         "recursive" : 0,
         "mandatory" : 1,
         "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       }
     }
     test.identical( outfile.reflector, expected );
@@ -11976,7 +11987,8 @@ function exportSecond( test )
         "mandatory" : 1,
         "criterion" : { "debug" : 0 },
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "reflect.proto.debug" :
       {
@@ -11987,7 +11999,8 @@ function exportSecond( test )
         "mandatory" : 1,
         "criterion" : { "debug" : 1 },
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.doc.export" :
       {
@@ -11998,7 +12011,8 @@ function exportSecond( test )
         },
         "mandatory" : 1,
         "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.files.doc.export" :
       {
@@ -12012,7 +12026,8 @@ function exportSecond( test )
         "recursive" : 0,
         "mandatory" : 1,
         "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.proto.export" :
       {
@@ -12023,7 +12038,8 @@ function exportSecond( test )
         },
         "mandatory" : 1,
         "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       },
       "exported.files.proto.export" :
       {
@@ -12037,7 +12053,8 @@ function exportSecond( test )
         "recursive" : 0,
         "mandatory" : 1,
         "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 },
-        "dstRewritingOnlyPreserving" : 1
+        "dstRewritingOnlyPreserving" : 1,
+        "linking" : "hardLinkMaybe",
       }
     }
     test.identical( outfile.reflector, expected );
@@ -12287,7 +12304,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
     // logger.log( _.toJson( outfile.reflector ) );
@@ -12311,7 +12329,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
@@ -12509,7 +12528,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
     // logger.log( _.toJson( outfile.reflector[ 'exported.export.debug' ] ) );
@@ -12531,7 +12551,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
     // logger.log( _.toJson( outfile.reflector[ 'exported.export.' ] ) );
     test.identical( outfile.reflector[ 'exported.export.' ], exportedReflector );
@@ -12555,7 +12576,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
@@ -12579,7 +12601,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.' ], exportedReflectorFiles );
@@ -12985,7 +13008,8 @@ function exportBroken( test )
         raw : 1,
         export : 1
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
     test.identical( outfile.reflector[ 'exported.export.debug' ], exportedReflector );
 
@@ -13008,7 +13032,8 @@ function exportBroken( test )
         raw : 1,
         export : 1
       },
-      dstRewritingOnlyPreserving : 1
+      dstRewritingOnlyPreserving : 1,
+      linking : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
@@ -16298,10 +16323,10 @@ function submodulesDownloadUpdate( test )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
     var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting1' ) );
-    test.is( files.length );
+    test.is( files.length >= 1 );
 
     var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting2a' ) );
-    test.is( files.length );
+    test.is( files.length >= 1 );
 
     return null;
   })
@@ -16324,10 +16349,10 @@ function submodulesDownloadUpdate( test )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
     var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting1' ) );
-    test.is( files.length );
+    test.is( files.length >= 1 );
 
     var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting2a' ) );
-    test.is( files.length );
+    test.is( files.length >= 1 );
 
     return null;
   })
@@ -22057,7 +22082,7 @@ var Self =
     hookCallInfo,
     hookGitMake,
     hookPrepare,
-    hookLink,
+    hookHlink,
     hookGitPullConflict,
     hookGitSyncColflict,
     hookGitSyncArguments,

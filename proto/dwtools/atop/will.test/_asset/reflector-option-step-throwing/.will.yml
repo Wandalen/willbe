@@ -14,19 +14,20 @@ reflector :
   reflector.delete :
     filePath : path::out
     step : files.delete
-    
-step : 
-  
+
+step :
+
   reflector.delete :
     inherit : files.delete
-    filePath : path::out
-  
-    
+    # filePath : path::out
+    filePath : reflector::reflector.delete
+
+
 build :
-  
+
   debug :
     criterion :
       default : 1
     steps :
       - reflector.delete
-  
+

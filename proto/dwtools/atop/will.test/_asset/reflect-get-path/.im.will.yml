@@ -35,17 +35,17 @@ step :
 
   reflect.submodules1 :
     inherit : files.reflect
-    reflector :
+    filePath :
       reflector::reflect.submodules1
 
   reflect.submodules2 :
     inherit : files.reflect
-    reflector :
+    filePath :
       reflector::reflect.submodules2
 
   reflect.submodules3 :
     inherit : files.reflect
-    reflector :
+    filePath :
       reflector::reflect.submodules3
 
 build :

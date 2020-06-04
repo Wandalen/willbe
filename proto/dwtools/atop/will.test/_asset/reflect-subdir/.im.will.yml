@@ -49,7 +49,7 @@ step :
     inherit : files.reflect
     criterion :
       variant : [ 1,2,3 ]
-    reflector :
+    filePath :
       reflector::reflect.submodules.*=1
 
 build :

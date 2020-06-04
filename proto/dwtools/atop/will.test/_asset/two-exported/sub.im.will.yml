@@ -28,7 +28,7 @@ step :
 
   reflect.proto :
     inherit : files.reflect
-    reflector :
+    filePath :
       reflector::reflect.proto.*=1
     criterion :
       debug : [ 0,1 ]
