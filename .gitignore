@@ -8,3 +8,5 @@
 *.out
 node_modules
 package-lock.json
+
+proto/dwtools/atop/will.test/_asset/_repo
