@@ -57,8 +57,8 @@ function onSuiteBegin()
 {
   let self = this;
   self.suiteTempPath = _.path.pathDirTempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
-  self.suiteAssetsOriginalPath = _.path.join( __dirname, '_asset' );
-  self.repoDirPath = _.path.join( self.suiteAssetsOriginalPath, '_repo' );
+  self.assetsOriginalPath = _.path.join( __dirname, '_asset' );
+  self.repoDirPath = _.path.join( self.assetsOriginalPath, '_repo' );
   self.willPath = _.path.nativize( _.Will.WillPathGet() );
   self.find = _.fileProvider.filesFinder
   ({
@@ -122,7 +122,7 @@ function assetFor( test, name )
 
   a.test = test;
   a.name = name;
-  a.originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, name );
+  a.originalAssetPath = _.path.join( self.assetsOriginalPath, name );
   a.originalAbs = self.abs_functor( a.originalAssetPath );
   a.originalRel = self.rel_functor( a.originalAssetPath );
   a.routinePath = _.path.join( self.suiteTempPath, test.name );
@@ -5547,7 +5547,7 @@ function hookLink( test )
   .then( ( got ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( self.suiteAssetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( self.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), '\ncopy' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), '\ncopy' );
     return null;
@@ -5627,7 +5627,7 @@ function hookGitPullConflict( test )
   .then( ( got ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( self.suiteAssetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( self.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -5843,7 +5843,7 @@ function hookGitSyncColflict( test )
   .then( ( got ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( self.suiteAssetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( self.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -6012,7 +6012,7 @@ function hookGitSyncArguments( test )
   .then( ( got ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( self.suiteAssetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( self.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -16599,7 +16599,7 @@ submodulesDownloadSwitchBranch.timeOut = 300000;
 //   let a = self.assetFor( test, 'hierarchy-remote' );
 //
 //   // let a = self.assetFor( test, 'hierarchy-diff-download-paths-regular' );
-//   // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'hierarchy-remote' );
+//   // let originalAssetPath = _.path.join( self.assetsOriginalPath, 'hierarchy-remote' );
 //   // let routinePath = _.path.join( self.suiteTempPath, test.name );
 //   // let abs = self.abs_functor( routinePath );
 //   // let rel = self.rel_functor( routinePath );
@@ -18873,7 +18873,7 @@ function submodulesDownloadedUpdate( test )
   a.reflect();
 
 //   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-downloaded-update' );
+//   let originalAssetPath = _.path.join( self.assetsOriginalPath, 'submodules-downloaded-update' );
 //   let routinePath = _.path.join( self.suiteTempPath, test.name );
 //   let abs = self.abs_functor( routinePath );
 //   let rel = self.rel_functor( routinePath );
@@ -19009,7 +19009,7 @@ function subModulesUpdate( test )
   a.reflect();
 
 //   let self = this;
-//   let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'submodules-update' );
+//   let originalAssetPath = _.path.join( self.assetsOriginalPath, 'submodules-update' );
 //   let routinePath = _.path.join( self.suiteTempPath, test.name );
 //   let abs = self.abs_functor( routinePath );
 //   let rel = self.rel_functor( routinePath );
@@ -20378,7 +20378,7 @@ function upgradeDryDetached( test )
   a.reflect();
 
   // let self = this;
-  // let originalAssetPath = a.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
+  // let originalAssetPath = a.path.join( self.assetsOriginalPath, 'submodules-detached' );
   // let routinePath = a.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
@@ -20633,7 +20633,7 @@ function upgradeDetached( test )
   a.reflect();
 
   // let self = this;
-  // let originalAssetPath = a.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
+  // let originalAssetPath = a.path.join( self.assetsOriginalPath, 'submodules-detached' );
   // let routinePath = a.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
@@ -21013,7 +21013,7 @@ function upgradeDetachedExperiment( test )
   let a = self.assetFor( test, 'submodules-detached-single' );
 
   // let self = this;
-  // let originalAssetPath = a.path.join( self.suiteAssetsOriginalPath, 'submodules-detached-single' );
+  // let originalAssetPath = a.path.join( self.assetsOriginalPath, 'submodules-detached-single' );
   // let routinePath = a.path.join( self.suiteTempPath, test.name );
   //
   // let ready = new _.Consequence().take( null );
@@ -21068,7 +21068,7 @@ function fixateDryDetached( test )
   a.reflect();
 
   // let self = this;
-  // let originalAssetPath = a.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
+  // let originalAssetPath = a.path.join( self.assetsOriginalPath, 'submodules-detached' );
   // let routinePath = a.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
@@ -21322,7 +21322,7 @@ function fixateDetached( test )
   let a = self.assetFor( test, 'submodules-detached' );
 
   // let self = this;
-  // let originalAssetPath = a.path.join( self.suiteAssetsOriginalPath, 'submodules-detached' );
+  // let originalAssetPath = a.path.join( self.assetsOriginalPath, 'submodules-detached' );
   // let routinePath = a.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
@@ -21728,7 +21728,7 @@ function runWillbe( test )
   });
 
 //   let self = this;
-//   let originalAssetPath = a.path.join( self.suiteAssetsOriginalPath, 'run-willbe' );
+//   let originalAssetPath = a.path.join( self.assetsOriginalPath, 'run-willbe' );
 //   let routinePath = a.path.join( self.suiteTempPath, test.name );
 //   let abs = self.abs_functor( routinePath );
 //   let rel = self.rel_functor( routinePath );
@@ -21867,7 +21867,7 @@ function resourcesFormReflectorsExperiment( test )
   let a = self.assetFor( test, 'performance2' );
   a.reflect()
 
-  // let originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, 'performance2' );
+  // let originalAssetPath = _.path.join( self.assetsOriginalPath, 'performance2' );
   // let routinePath = _.path.join( self.suiteTempPath, test.name );
   // let abs = self.abs_functor( routinePath );
   // let rel = self.rel_functor( routinePath );
@@ -21983,7 +21983,7 @@ var Self =
   context :
   {
     suiteTempPath : null,
-    suiteAssetsOriginalPath : null,
+    assetsOriginalPath : null,
     repoDirPath : null,
     willPath : null,
     find : null,

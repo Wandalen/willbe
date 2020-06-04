@@ -39,8 +39,8 @@ function onSuiteBegin()
   let self = this;
 
   self.suiteTempPath = _.path.pathDirTempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
-  self.suiteAssetsOriginalPath = _.path.join( __dirname, '_asset' );
-  self.repoDirPath = _.path.join( self.suiteAssetsOriginalPath, '_repo' );
+  self.assetsOriginalPath = _.path.join( __dirname, '_asset' );
+  self.repoDirPath = _.path.join( self.assetsOriginalPath, '_repo' );
 
   self.find = _.fileProvider.filesFinder
   ({
@@ -105,7 +105,7 @@ function assetFor( test, name )
 
   a.test = test;
   a.name = name;
-  a.originalAssetPath = _.path.join( self.suiteAssetsOriginalPath, name );
+  a.originalAssetPath = _.path.join( self.assetsOriginalPath, name );
   a.originalAbs = self.abs_functor( a.originalAssetPath );
   a.originalRel = self.rel_functor( a.originalAssetPath );
   a.routinePath = _.path.join( self.suiteTempPath, test.name );
@@ -10661,7 +10661,7 @@ var Self =
   context :
   {
     suiteTempPath : null,
-    suiteAssetsOriginalPath : null,
+    assetsOriginalPath : null,
     repoDirPath : null,
     find : null,
     findAll : null,

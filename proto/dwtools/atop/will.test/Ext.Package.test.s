@@ -26,8 +26,8 @@ function onSuiteBegin()
   let self = this;
 
   self.suiteTempPath = _.path.pathDirTempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
-  self.suiteAssetsOriginalPath = _.path.join( __dirname, '_asset' );
-  self.repoDirPath = _.path.join( self.suiteAssetsOriginalPath, '_repo' );
+  self.assetsOriginalPath = _.path.join( __dirname, '_asset' );
+  self.repoDirPath = _.path.join( self.assetsOriginalPath, '_repo' );
   self.willPath = _.path.nativize( _.Will.WillPathGet() );
 }
 
@@ -710,7 +710,7 @@ var Self =
   context :
   {
     suiteTempPath : null,
-    suiteAssetsOriginalPath : null,
+    assetsOriginalPath : null,
     repoDirPath : null,
     willPath : null,
   },
