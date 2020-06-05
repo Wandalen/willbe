@@ -6458,19 +6458,19 @@ function optionsForOpenerExport()
 
 //
 
-function exportInfo( o )
+function exportString( o )
 {
   let module = this;
   let will = module.will;
   let result = '';
 
-  o = _.routineOptions( exportInfo, arguments );
+  o = _.routineOptions( exportString, arguments );
 
   if( o.verbosity >= 1 )
   result += module.decoratedAbsoluteName + '#' + module.id;
 
   if( o.verbosity >= 3 )
-  result += module.about.exportInfo();
+  result += module.about.exportString();
 
   if( o.verbosity >= 2 )
   {
@@ -6496,7 +6496,7 @@ function exportInfo( o )
   return result;
 }
 
-exportInfo.defaults =
+exportString.defaults =
 {
   verbosity : 2,
 }
@@ -6544,12 +6544,12 @@ function infoExportResource( collection )
       if( _.longHas( modules, resource ) )
       return;
       modules.push( resource );
-      result += resource.exportInfo({ verbosity : 2 });
+      result += resource.exportString({ verbosity : 2 });
       result += '\n\n';
     }
     else if( _.instanceIs( resource ) )
     {
-      result += resource.exportInfo();
+      result += resource.exportString();
       result += '\n\n';
     }
     else
@@ -7758,7 +7758,7 @@ let Extend =
 
   optionsForOpenerExport,
 
-  exportInfo,
+  exportString,
   infoExportPaths,
   infoExportResource,
   infoExportModulesTopological,

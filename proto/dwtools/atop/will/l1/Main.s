@@ -1057,7 +1057,7 @@ function recursiveValueDeduceFromBuild( o )
     return true;
   });
 
-  logger.log( ` . recursiveValueDeduceFromBuild ${result}` );
+  // logger.log( ` . recursiveValueDeduceFromBuild ${result}` );
 
   return result;
 }
@@ -3644,8 +3644,8 @@ function ObjectsExportInfo( o )
   _.assert( _.longIs( o.objects ) );
   return o.objects.map( ( object ) =>
   {
-    _.assert( _.routineIs( object.exportInfo ) );
-    return object.exportInfo({ verbosity : 2 })
+    _.assert( _.routineIs( object.exportString ) );
+    return object.exportString({ verbosity : 2 })
   }).join( '\n' );
 }
 
@@ -3873,7 +3873,7 @@ function junctionsInfoExport( junctions )
     // });
   }
 
-  return _.map( junctions, ( junction ) => junction.exportInfo() ).join( '\n' );
+  return _.map( junctions, ( junction ) => junction.exportString() ).join( '\n' );
 }
 
 // --
@@ -3980,7 +3980,7 @@ function graphGroupMake( o )
   module::z / module::wPathTools / opener::wPathTools #1447 #1576
   module::z / module::wPathTools / relation::wPathTools #1446 #1575
 "
-will.junctionWithId( 922 ).exportInfo()
+will.junctionWithId( 922 ).exportString()
 "junction:: : #922
   path::local : hd:///atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools
   module::z / module::wPathTools / opener::wPathTools #921 #1050

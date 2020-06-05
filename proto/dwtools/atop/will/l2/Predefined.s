@@ -155,7 +155,7 @@ function stepRoutineReflect( frame )
   .catch( ( err ) =>
   {
     debugger;
-    err = _.err( err, '\n\n', _.strLinesIndentation( reflector.exportInfo(), '  ' ), '\n' );
+    err = _.err( err, '\n\n', _.strLinesIndentation( reflector.exportString(), '  ' ), '\n' );
     throw _.err( err );
     // throw _.errBrief( err );
   })

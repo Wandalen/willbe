@@ -982,7 +982,7 @@ function commandResourcesList( e )
     {
       let result = '';
       result += _.color.strFormat( 'About', 'highlighted' );
-      result += module.openedModule.about.exportInfo();
+      result += module.openedModule.about.exportString();
       logger.log( result );
     }
 
@@ -1172,7 +1172,7 @@ function commandAboutList( e )
   {
     let logger = will.logger;
     logger.log( _.color.strFormat( 'About', 'highlighted' ) );
-    logger.log( module.openedModule.about.exportInfo() );
+    logger.log( module.openedModule.about.exportString() );
   }
 
   // return will._commandListLike( e, act, null );

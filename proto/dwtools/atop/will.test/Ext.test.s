@@ -11142,7 +11142,7 @@ function exportNonExportable( test )
 
 //
 
-function exportInformal( test )
+function exportStringrmal( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-mixed' );
@@ -11387,8 +11387,8 @@ function exportInformal( test )
   return a.ready;
 }
 
-exportInformal.timeOut = 300000;
-exportInformal.description =
+exportStringrmal.timeOut = 300000;
+exportStringrmal.description =
 `
 - local path and remote path of exported informal module should be preserved and in proper form
 - second export should work properly
@@ -22138,7 +22138,7 @@ var Self =
     exportSingle,
     exportItself,
     exportNonExportable,
-    // exportInformal, /* xxx : later */
+    // exportStringrmal, /* xxx : later */
     exportWithReflector,
     exportToRoot,
     // exportMixed, /* xxx : later */

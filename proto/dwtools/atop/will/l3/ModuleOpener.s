@@ -2,15 +2,6 @@
 
 'use strict';
 
-// if( typeof opener !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
-//
-
 let _ = _global_.wTools;
 let Parent = _.Will.AbstractModule;
 let Self = function wWillModuleOpener( o )
@@ -1256,13 +1247,13 @@ function _repoFormFormal()
 
   _.assert( remoteProvider.isVcs && _.routineIs( remoteProvider.pathParse ), () => 'Seems file provider ' + remoteProvider.qualifiedName + ' does not have version control system features' );
 
-  let cloneDirPathGet = opener.superRelation.module.cloneDirPathGet();
+  let cloneDirPath = opener.superRelation.module.cloneDirPathGet();
   let parsed = remoteProvider.pathParse( willfilesPath );
 
   opener._.remotePath = willfilesPath;
-  opener._.downloadPath = path.resolve( cloneDirPathGet, opener.aliasName );
+  opener._.downloadPath = path.resolve( cloneDirPath, opener.aliasName );
 
-  let willfilesPath2 = path.resolve( cloneDirPathGet, opener.aliasName, parsed.localVcsPath ); 
+  let willfilesPath2 = path.resolve( cloneDirPath, opener.aliasName, parsed.localVcsPath );
   opener._.localPath = _.Will.CommonPathFor( willfilesPath2 );
   opener._filePathChanged2({ willfilesPath : willfilesPath2 });
 
@@ -2435,13 +2426,13 @@ let isOutSet = accessorSet_functor( 'isOut' );
 // export
 // --
 
-function exportInfo( o )
+function exportString( o )
 {
   let opener = this;
   let will = opener.will;
   let result = '';
 
-  o = _.routineOptions( exportInfo, arguments );
+  o = _.routineOptions( exportString, arguments );
 
   if( o.verbosity >= 1 )
   result += opener.decoratedAbsoluteName + '#' + opener.id;
@@ -2458,7 +2449,7 @@ function exportInfo( o )
   return result;
 }
 
-exportInfo.defaults =
+exportString.defaults =
 {
   verbosity : 2,
 }
@@ -2698,7 +2689,7 @@ let Extend =
 
   // export
 
-  exportInfo,
+  exportString,
 
   // relation
 
@@ -2720,7 +2711,7 @@ _.classDeclare
   extend : Extend,
 });
 
-Self.prototype[ Symbol.toStringTag ] = Object.prototype.toString;
+// Self.prototype[ Symbol.toStringTag ] = Object.prototype.toString;
 
 /* xxx : refactor tree of files */
 _.staticDeclare

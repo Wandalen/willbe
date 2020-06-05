@@ -7067,7 +7067,7 @@ function pathsResolveOfSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-local-repos' );
-  let submodulesPath = a.abs( '.module' );
+  let submodulesPath = a.abs( '.module' ); /* qqq xxx : ask */
   let opener;
 
   /* - */
@@ -7102,7 +7102,7 @@ function pathsResolveOfSubmodules( test )
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' ); /* qqq xxx : ask */
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1, through opener';
