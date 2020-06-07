@@ -2355,6 +2355,7 @@ function moduleBuild_body( o )
   ({
     build,
     recursive : 0,
+    isRoot : o.isRoot,
   });
 
   return con
@@ -2371,6 +2372,15 @@ function moduleBuild_body( o )
       // recursive : 1, /* yyy2 */
     });
   })
+  .then( () =>
+  {
+    debugger;
+    if( module.peerModule )
+    module.peerModule.finit();
+    _.assert( module.peerModule === null );
+    _.assert( !module.isFinited() );
+    return null;
+  })
   .then( () => build.perform({ run }) )
   .then( () =>
   {
@@ -2384,6 +2394,7 @@ moduleBuild_body.defaults =
   name : null,
   criterion : null,
   kind : 'export',
+  isRoot : null,
 }
 
 let moduleBuild = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
@@ -2398,6 +2409,8 @@ function exportedMake( o )
   let module = this;
   let outModule = module;
   let will = module.will;
+
+  debugger;
 
   o = _.routineOptions( exportedMake, arguments );
   _.assert( o.build instanceof _.Will.Build );
@@ -2420,9 +2433,13 @@ function exportedMake( o )
     }
 
     _.assert( !module.isFinited() );
+    // _.assert( o.rewriting, 'not tested' ); /* xxx : check */
 
     if( !module.peerModule )
     {
+      if( o.rewriting )
+      return _.Consequence.From( module.outModuleMake() ).then( () => makeFromPeer() );
+      else
       return module.outModuleOpenOrMake().then( () => makeFromPeer() );
     }
 
@@ -2453,7 +2470,6 @@ function exportedMake( o )
 
   function makeFromPeer()
   {
-    // debugger;
     _.assert
     (
       module.peerModule && module.peerModule.isValid() && module.peerModule.isOut
@@ -2468,6 +2484,7 @@ function exportedMake( o )
 exportedMake.defaults =
 {
   build : null,
+  rewriting : 0,
 }
 
 // --
@@ -2527,76 +2544,9 @@ function modulesBuild_body( o )
   let will = module.will;
   o.modules = [ module ];
   return will.modulesBuild( o );
-
-  // let fileProvider = will.fileProvider;
-  // let path = fileProvider.path;
-  // let logger = will.logger;
-  // let ready = new _.Consequence().take( null );
-  //
-  // o = _.routineOptions( modulesBuild_body, arguments );
-  //
-  // ready.then( () =>
-  // {
-  //   if( !o.downloading )
-  //   return null;
-  //   let o2 = _.mapOnly( o, will.modulesDownload.defaults );
-  //   o2.loggingNoChanges = 0;
-  //   o2.modules = [ module ];
-  //   if( o2.recursive === 0 )
-  //   o2.recursive = 1;
-  //   o2.strict = 0;
-  //   o2.withOut = 0;
-  //   o2.withIn = 1;
-  //   return will.modulesDownload( o2 );
-  // })
-  //
-  // ready.then( () =>
-  // {
-  //   if( !o.upforming || o.downloading )
-  //   return null;
-  //   let o2 = _.mapOnly( o, will.modulesUpform.defaults );
-  //   o2.modules = [ module ];
-  //   o2.all = 0;
-  //   o2.subModulesFormed = 1;
-  //   o2.peerModulesFormed = 1;
-  //   o2.withOut = 0;
-  //   o2.withIn = 1;
-  //   return will.modulesUpform( o2 );
-  // })
-  //
-  // ready.then( () =>
-  // {
-  //   let o2 = _.mapOnly( o, will.modulesFor.defaults );
-  //   o2.onEachModule = handleEach;
-  //   o2.modules = [ module ];
-  //   o2.left = 0;
-  //   o2.withOut = 0;
-  //   o2.withIn = 1;
-  //   return will.modulesFor( o2 );
-  // })
-  //
-  // ready.finally( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   debugger;
-  //   if( err )
-  //   throw _.err( err, `\nFailed to ${o.kind} ${module.absoluteName} at ${module.localPath}` );
-  //   return arg;
-  // })
-  //
-  // return ready;
-  //
-  // /* */
-  //
-  // function handleEach( module, op )
-  // {
-  //   let o3 = _.mapOnly( o, module.moduleBuild.defaults );
-  //   return module.moduleBuild( o3 );
-  // }
-
 }
 
-var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, _.Will.prototype.modulesFor.defaults );
+var defaults = modulesBuild_body.defaults = _.mapExtend( null, _.mapBut( moduleBuild.defaults, [ 'isRoot' ] ), _.Will.prototype.modulesFor.defaults );
 
 defaults.recursive = 0;
 defaults.withStem = 1;
@@ -4266,8 +4216,6 @@ function submodulesPeersOpen_body( o )
   let o2 = _.mapExtend( null, o );
   delete o2.throwing;
   let modules = module.modulesEach.body.call( module, o2 );
-
-  debugger;
 
   modules.forEach( ( module2 ) =>
   {

@@ -7063,7 +7063,7 @@ pathsResolveImportIn.timeOut = 130000;
 
 //
 
-function pathsResolveOfSubmodules( test )
+function pathsResolveOfSubmodulesLocal( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-local-repos' );
@@ -7140,7 +7140,89 @@ function pathsResolveOfSubmodules( test )
   return a.ready;
 }
 
-pathsResolveOfSubmodules.timeOut = 130000;
+pathsResolveOfSubmodulesLocal.timeOut = 130000;
+
+//
+
+function pathsResolveOfSubmodulesRemote( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'submodules-remote-repos' );
+  let submodulesPath = a.abs( '.module' ); /* qqq xxx : ask */
+  let path = a.path; /* qqq2 : ! */
+  let opener;
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+    return opener.open({ all : 1 });
+  })
+
+  a.ready.then( ( arg ) =>
+  {
+    let module = opener.openedModule;
+    return module.modulesBuild({ criterion : { debug : 1 }, downloading : 1 });
+  })
+
+  a.ready.then( ( arg ) =>
+  {
+
+    test.case = 'resolve submodules';
+    var submodules = opener.openedModule.submodulesResolve({ selector : '*' });
+    test.identical( submodules.length, 2 );
+
+    test.case = 'path::in, supermodule';
+    var resolved = opener.openedModule.resolve( 'path::in' );
+    var expected = path.join( a.routinePath );
+    test.identical( resolved, expected );
+
+    test.case = 'path::in, wModuleForTesting1';
+    var submodule = submodules[ 0 ];
+    var resolved = submodule.resolve( 'path::in' );
+    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' ); /* qqq xxx : ask */
+    test.identical( resolved, expected );
+
+    test.case = 'path::in, wModuleForTesting1, through opener';
+    var submodule = submodules[ 0 ].opener;
+    var resolved = submodule.openedModule.resolve( 'path::in' );
+    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    test.identical( resolved, expected );
+
+    test.case = 'path::out, wModuleForTesting1';
+    var submodule = submodules[ 0 ];
+    var resolved = submodule.resolve( 'path::out' );
+    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    test.identical( resolved, expected );
+
+    test.case = 'path::out, wModuleForTesting1, through opener';
+    var submodule = submodules[ 0 ].opener;
+    var resolved = submodule.openedModule.resolve( 'path::out' );
+    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    test.identical( resolved, expected );
+
+    return null;
+  })
+
+  a.ready.finally( ( err, arg ) =>
+  {
+    if( err )
+    throw err;
+    test.is( err === undefined );
+    opener.finit();
+    return arg;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+pathsResolveOfSubmodulesRemote.timeOut = 130000;
 
 //
 
@@ -8723,7 +8805,119 @@ modulesEachDuplicates.timeOut = 300000;
 
 //
 
-function submodulesResolve( test )
+function submodulesRemoteResolve( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'submodules-remote-repos' );
+  let opener;
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
+    opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
+
+    a.will.prefer
+    ({
+      allOfSub : 1,
+    });
+
+    return opener.open({ all : 1, resourcesFormed : 0 });
+  })
+
+  .then( () =>
+  {
+    test.open( 'not downloaded' );
+
+    test.case = 'trivial';
+    var submodule = opener.openedModule.submoduleMap.ModuleForTesting1;
+    test.is( submodule instanceof a.will.ModulesRelation );
+
+    test.is( !!submodule.opener );
+    test.identical( submodule.name, 'ModuleForTesting1' );
+    test.identical( submodule.opener.openedModule, null );
+    test.identical( submodule.opener.willfilesPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out.will' ) );
+    test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
+    test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    // test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@gamma' ) );
+    test.identical( submodule.opener.remotePath, 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@gamma' );
+
+    test.is( !submodule.opener.repo.hasFiles );
+    test.is( !submodule.opener.openedModule );
+
+    test.close( 'not downloaded' );
+    return null;
+  })
+
+  /* */
+
+  .then( () =>
+  {
+    return opener.openedModule.subModulesDownload();
+  })
+
+  .then( () =>
+  {
+    test.open( 'downloaded' );
+
+    test.case = 'trivial';
+    var submodule = opener.openedModule.submodulesResolve({ selector : 'ModuleForTesting1' });
+    test.is( submodule instanceof a.will.ModulesRelation );
+    test.is( submodule.opener.repo.hasFiles );
+    test.is( submodule.opener.repo === submodule.opener.openedModule.repo );
+    test.is( !!submodule.opener );
+    test.identical( submodule.name, 'ModuleForTesting1' );
+
+    test.identical( submodule.opener.name, 'ModuleForTesting1' );
+    test.identical( submodule.opener.aliasName, 'ModuleForTesting1' );
+    test.identical( submodule.opener.fileName, 'wModuleForTesting1.out' );
+    test.identical( submodule.opener.willfilesPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) );
+    test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
+    test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.remotePath, 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@gamma' );
+
+    test.identical( submodule.opener.openedModule.name, 'wModuleForTesting1' );
+    test.identical( submodule.opener.openedModule.resourcesFormed, 8 );
+    test.identical( submodule.opener.openedModule.subModulesFormed, 8 );
+    test.identical( submodule.opener.openedModule.willfilesPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml' ) );
+    test.identical( submodule.opener.openedModule.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
+    test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
+    test.identical( submodule.opener.openedModule.remotePath, 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@gamma' );
+    test.identical( submodule.opener.openedModule.currentRemotePath, null );
+
+    test.case = 'mask, single module';
+    var submodule = opener.openedModule.submodulesResolve({ selector : '*Testing1' });
+    test.is( submodule instanceof a.will.ModulesRelation );
+    test.identical( submodule.name, 'ModuleForTesting1' );
+
+    test.case = 'mask, two modules';
+    var submodules = opener.openedModule.submodulesResolve({ selector : '*s*' });
+    test.identical( submodules.length, 2 );
+    test.is( submodules[ 0 ] instanceof a.will.ModulesRelation );
+    test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
+    test.is( submodules[ 1 ] instanceof a.will.ModulesRelation );
+    test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
+
+    test.close( 'downloaded' );
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+} /* end of function submodulesRemoteResolve */
+
+submodulesRemoteResolve.timeOut = 300000;
+
+//
+
+function submodulesLocalResolve( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-local-repos' );
@@ -8828,9 +9022,9 @@ function submodulesResolve( test )
   /* */
 
   return a.ready;
-} /* end of function submodulesResolve */
+} /* end of function submodulesLocalResolve */
 
-submodulesResolve.timeOut = 300000;
+submodulesLocalResolve.timeOut = 300000;
 
 //
 
@@ -10738,7 +10932,8 @@ var Self =
     superResolve,
     pathsResolve,
     pathsResolveImportIn,
-    pathsResolveOfSubmodules,
+    // pathsResolveOfSubmodulesLocal, /* xxx2 : make it working */
+    pathsResolveOfSubmodulesRemote,
     pathsResolveOfSubmodulesAndOwn,
     pathsResolveOutFileOfExports,
     pathsResolveComposite,
@@ -10750,7 +10945,8 @@ var Self =
 
     modulesEach,
     modulesEachDuplicates,
-    submodulesResolve,
+    submodulesRemoteResolve,
+    submodulesLocalResolve,
     submodulesDeleteAndDownload,
 
     customLogger,

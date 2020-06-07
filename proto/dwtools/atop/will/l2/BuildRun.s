@@ -2,15 +2,6 @@
 
 'use strict';
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
-//
-
 let _ = _global_.wTools;
 let Parent = null;
 let Self = function wWillBuildRun( o )
@@ -132,6 +123,7 @@ let Composes =
 {
   recursive : 0,
   withIntegrated : 2,
+  isRoot : null,
 }
 
 let Aggregates =

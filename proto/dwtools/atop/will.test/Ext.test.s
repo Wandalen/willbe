@@ -11142,6 +11142,56 @@ function exportNonExportable( test )
 
 //
 
+function exportAfterOutChange( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'exportMinimal' );
+  a.reflect();
+  a.fileProvider.filesDelete( a.abs( 'out' ) );
+  a.fileProvider.filesDelete( a.abs( 'super.out' ) );
+
+  /* - */
+
+  a.start({ execPath : '.export' })
+  .then( ( got ) =>
+  {
+    test.is( got.exitCode === 0 );
+
+    var outfile = a.fileProvider.configRead( a.abs( './out/ExportMinimal.out.will.yml' ) );
+    test.identical( outfile.module[ 'ExportMinimal.out' ].about.version, '0.0.0' );
+    outfile.module[ 'ExportMinimal.out' ].about.version = '3.3.3';
+
+    a.fileProvider.fileWrite
+    ({
+      filePath : a.abs( './out/ExportMinimal.out.will.yml' ),
+      data : outfile,
+      encoding : 'yml',
+    });
+
+    var outfile = a.fileProvider.configRead( a.abs( './out/ExportMinimal.out.will.yml' ) );
+    test.identical( outfile.module[ 'ExportMinimal.out' ].about.version, '3.3.3' );
+
+    return null;
+  })
+
+  a.start({ execPath : '.export' })
+  .then( ( got ) =>
+  {
+    test.is( got.exitCode === 0 );
+
+    var outfile = a.fileProvider.configRead( a.abs( './out/ExportMinimal.out.will.yml' ) );
+    test.identical( outfile.module[ 'ExportMinimal.out' ].about.version, '0.0.0' );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function exportStringrmal( test )
 {
   let self = this;
@@ -22138,6 +22188,7 @@ var Self =
     exportSingle,
     exportItself,
     exportNonExportable,
+    exportAfterOutChange,
     // exportStringrmal, /* xxx : later */
     exportWithReflector,
     exportToRoot,

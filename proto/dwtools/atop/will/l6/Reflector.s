@@ -2,15 +2,6 @@
 
 'use strict';
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
-//
-
 let _ = _global_.wTools;
 let Parent = _.Will.Resource;
 let Self = function wWillReflector( o )
@@ -1755,6 +1746,9 @@ function exportStructure()
   _.assert( reflector.src instanceof _.FileRecordFilter );
 
   let result = Parent.prototype.exportStructure.apply( this, arguments );
+
+  // if( _.strHas( reflector.name, 'reflect.proto.debug.raw' ) )
+  // debugger;
 
   if( result === undefined )
   return result;

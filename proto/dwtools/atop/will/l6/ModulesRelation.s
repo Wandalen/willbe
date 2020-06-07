@@ -100,8 +100,6 @@ function form1()
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( relation.module instanceof will.Module );
 
-  debugger;
-
   /* */
 
   relation.opener = will.ModuleOpener

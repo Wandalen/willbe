@@ -1095,7 +1095,6 @@ function sharedFieldSet_functor( fieldName )
 
 let peerModuleGet = sharedFieldGet_functor( 'peerModule' );
 let peerModuleSet = sharedFieldSet_functor( 'peerModule' );
-
 let rootModuleGet = sharedFieldGet_functor( 'rootModule' );
 
 //
