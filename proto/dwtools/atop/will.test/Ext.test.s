@@ -263,8 +263,6 @@ function singleModuleWithSpaceTrivial( test )
   return a.ready;
 }
 
-singleModuleWithSpaceTrivial.timeOut = 200000;
-
 // --
 // tests
 // --
@@ -680,8 +678,6 @@ function transpile( test )
   return a.ready;
 }
 
-transpile.timeOut = 200000;
-
 //
 
 function transpileWithOptions( test )
@@ -724,8 +720,6 @@ function transpileWithOptions( test )
 
   return a.ready;
 }
-
-transpileWithOptions.timeOut = 200000;
 
 //
 
@@ -962,8 +956,6 @@ function moduleNewDotless( test )
   return a.ready;
 }
 
-moduleNewDotless.timeOut = 200000;
-
 //
 
 function moduleNewDotlessSingle( test )
@@ -1164,8 +1156,6 @@ function moduleNewDotlessSingle( test )
 
   return a.ready;
 }
-
-moduleNewDotlessSingle.timeOut = 200000;
 
 //
 
@@ -1630,8 +1620,6 @@ function moduleNewNamed( test )
 
   return a.ready;
 }
-
-moduleNewNamed.timeOut = 200000;
 
 //
 
@@ -2922,8 +2910,6 @@ function reflectNothingFromSubmodules( test )
   return a.ready;
 }
 
-reflectNothingFromSubmodules.timeOut = 200000;
-
 //
 
 function reflectGetPath( test )
@@ -3000,8 +2986,6 @@ function reflectGetPath( test )
   }
 
 }
-
-reflectGetPath.timeOut = 200000;
 
 //
 
@@ -3151,8 +3135,6 @@ function reflectSubdir( test )
 
   return a.ready;
 }
-
-reflectSubdir.timeOut = 200000;
 
 //
 
@@ -3464,8 +3446,6 @@ function reflectComposite( test )
   return a.ready;
 }
 
-reflectComposite.timeOut = 200000;
-
 //
 
 function reflectRemoteGit( test )
@@ -3604,8 +3584,6 @@ function reflectRemoteGit( test )
 
 }
 
-reflectRemoteGit.timeOut = 200000;
-
 //
 
 function reflectRemoteHttp( test )
@@ -3633,8 +3611,6 @@ function reflectRemoteHttp( test )
 
   return a.ready;
 }
-
-reflectRemoteHttp.timeOut = 200000;
 
 //
 
@@ -4373,8 +4349,6 @@ function relfectSubmodulesWithNotExistingFile( test )
   return test.shouldThrowErrorAsync( a.ready );
 }
 
-relfectSubmodulesWithNotExistingFile.timeOut = 60000;
-
 //
 
 function reflectInherit( test )
@@ -4851,8 +4825,6 @@ function reflectorMasks( test )
   return a.ready;
 }
 
-reflectorMasks.timeOut = 200000;
-
 //
 
 function reflectorsCommonPrefix( test )
@@ -4885,8 +4857,6 @@ function reflectorsCommonPrefix( test )
   return a.ready;
 }
 
-reflectorMasks.timeOut = 200000;
-
 //
 
 function reflectorOptionStep( test )
@@ -4918,8 +4888,6 @@ function reflectorOptionStep( test )
   return a.ready;
 }
 
-reflectorOptionStep.timeOut = 200000;
-
 //
 
 function reflectorOptionStepThrowing( test )
@@ -4946,8 +4914,6 @@ function reflectorOptionStepThrowing( test )
 
   return a.ready;
 }
-
-reflectorOptionStepThrowing.timeOut = 200000;
 
 // --
 // with do
@@ -6572,8 +6538,6 @@ function verbosityStepDelete( test )
   return a.ready;
 }
 
-verbosityStepDelete.timeOut = 200000;
-
 //
 
 /*
@@ -6743,8 +6707,6 @@ shell.step
 
   return a.ready;
 } /* end of function verbosityStepPrintName */
-
-verbosityStepPrintName.timeOut = 100000;
 
 //
 
@@ -7869,8 +7831,6 @@ function listSingleModule( test )
   return a.ready;
 }
 
-listSingleModule.timeOut = 200000;
-
 //
 
 function listWithSubmodulesSimple( test )
@@ -7893,8 +7853,6 @@ function listWithSubmodulesSimple( test )
 
   return a.ready;
 }
-
-listWithSubmodulesSimple.timeOut = 200000;
 
 //
 
@@ -8007,8 +7965,6 @@ function listWithSubmodules( test )
 
   return a.ready;
 } /* end of function listWithSubmodules */
-
-listWithSubmodules.timeOut = 200000;
 
 //
 
@@ -8250,8 +8206,6 @@ function cleanSingleModule( test )
   return a.ready;
 }
 
-cleanSingleModule.timeOut = 200000;
-
 //
 
 function cleanBroken1( test )
@@ -8362,8 +8316,6 @@ function cleanBroken1( test )
 
   return a.ready;
 }
-
-cleanBroken1.timeOut = 200000;
 
 //
 
@@ -8515,8 +8467,6 @@ function cleanBroken2( test )
   return a.ready;
 }
 
-cleanBroken2.timeOut = 200000;
-
 //
 
 function cleanBrokenSubmodules( test )
@@ -8583,8 +8533,6 @@ function cleanBrokenSubmodules( test )
 
   return a.ready;
 }
-
-cleanBrokenSubmodules.timeOut = 200000;
 
 //
 
@@ -8672,8 +8620,6 @@ function cleanNoBuild( test )
 
   return a.ready;
 }
-
-cleanNoBuild.timeOut = 200000;
 
 //
 
@@ -8831,8 +8777,6 @@ function cleanMixed( test )
   return a.ready;
 }
 
-cleanMixed.timeOut = 200000;
-
 //
 
 function cleanWithInPath( test )
@@ -8882,8 +8826,6 @@ function cleanWithInPath( test )
 
   return a.ready;
 }
-
-cleanWithInPath.timeOut = 200000;
 
 //
 
@@ -10425,8 +10367,6 @@ function buildSingleModule( test )
   return a.ready;
 }
 
-buildSingleModule.timeOut = 200000;
-
 //
 
 function buildSingleStep( test )
@@ -11161,8 +11101,6 @@ function exportSingle( test )
   return a.ready;
 }
 
-exportSingle.timeOut = 200000;
-
 //
 
 function exportItself( test )
@@ -11200,8 +11138,6 @@ function exportItself( test )
 
   return a.ready;
 }
-
-exportItself.timeOut = 100000;
 
 //
 
@@ -11596,8 +11532,6 @@ function exportWithReflector( test )
   return a.ready;
 }
 
-exportWithReflector.timeOut = 200000;
-
 //
 
 function exportToRoot( test )
@@ -11623,8 +11557,6 @@ function exportToRoot( test )
 
   return a.ready;
 }
-
-exportToRoot.timeOut = 200000;
 
 //
 
@@ -12388,8 +12320,6 @@ function exportSubmodules( test )
   return a.ready;
 }
 
-exportSubmodules.timeOut = 200000;
-
 //
 
 function exportMultiple( test )
@@ -12912,8 +12842,6 @@ function exportMultiple( test )
   return a.ready;
 }
 
-exportMultiple.timeOut = 200000;
-
 //
 
 function exportImportMultiple( test )
@@ -13093,8 +13021,6 @@ function exportImportMultiple( test )
   return a.ready;
 }
 
-exportImportMultiple.timeOut = 200000;
-
 //
 
 function exportBroken( test )
@@ -13253,8 +13179,6 @@ function exportDoc( test )
   return a.ready;
 }
 
-exportDoc.timeOut = 200000;
-
 //
 
 function exportImport( test )
@@ -13290,8 +13214,6 @@ function exportImport( test )
 
   return a.ready;
 }
-
-exportImport.timeOut = 200000;
 
 //
 
@@ -14483,8 +14405,6 @@ function exportRewritesOutFile( test )
   return a.ready;
 }
 
-exportRewritesOutFile.timeOut = 60000;
-
 //
 
 function exportWithRemoteSubmodules( test )
@@ -15008,8 +14928,6 @@ function exportOutResourceWithoutGeneratedCriterion( test )
 
 } /* end of function exportOutResourceWithoutGeneratedCriterion */
 
-exportOutResourceWithoutGeneratedCriterion.timeOut = 100000;
-
 //
 
 function exportImplicit( test )
@@ -15376,7 +15294,6 @@ function exportOutdated2( test )
   return a.ready;
 }/* end of function exportOutdated2 */
 
-exportOutdated2.timeOut = 100000;
 exportOutdated2.description =
 `
 - Exporting of module with outdated outfile throws no error.
@@ -15755,8 +15672,6 @@ function importPathLocal( test )
   return a.ready;
 }
 
-importPathLocal.timeOut = 200000;
-
 //
 
 function importLocalRepo( test )
@@ -15917,8 +15832,6 @@ function importLocalRepo( test )
   return a.ready;
 }
 
-importLocalRepo.timeOut = 200000;
-
 //
 
 /*
@@ -15983,8 +15896,6 @@ function importOutWithDeletedSource( test )
   return a.ready;
 }
 
-importOutWithDeletedSource.timeOut = 200000;
-
 //
 
 function shellWithCriterion( test )
@@ -16025,8 +15936,6 @@ function shellWithCriterion( test )
 
   return a.ready;
 }
-
-shellWithCriterion.timeOut = 200000;
 
 //
 
@@ -16337,8 +16246,6 @@ function functionThisCriterion( test )
   return a.ready;
 }
 
-functionThisCriterion.timeOut = 200000;
-
 //
 
 function submodulesDownloadSingle( test )
@@ -16404,8 +16311,6 @@ function submodulesDownloadSingle( test )
   return a.ready;
 
 }
-
-submodulesDownloadSingle.timeOut = 200000;
 
 //
 
@@ -22169,7 +22074,7 @@ var Self =
 
   onSuiteBegin,
   onSuiteEnd,
-  routineTimeOut : 60000,
+  routineTimeOut : 300000,
 
   context :
   {
