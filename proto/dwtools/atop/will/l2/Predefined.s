@@ -987,7 +987,7 @@ function stepRoutineExport( frame )
 
   _.assert( arguments.length === 1 );
   _.assert( build instanceof _.Will.Build );
-  _.assert( _.boolIs( frame.run.isRoot ) );
+  // _.assert( _.boolIs( frame.run.isRoot ) ); /* xxx : investigate */
 
   return module.exportedMake({ build, rewriting : frame.run.isRoot })
   .then( ( exported ) =>

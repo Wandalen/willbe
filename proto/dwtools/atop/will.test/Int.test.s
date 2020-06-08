@@ -337,7 +337,7 @@ function openNamedFast( test )
     return arg;
   });
 
-  return _.Consequence.AndTake([ ready1, ready2 ])
+  return _.Consequence.AndTake_( ready1, ready2 )
   .finally( ( err, arg ) =>
   {
     if( err )
@@ -544,7 +544,7 @@ function openNamedForming( test )
     return arg;
   });
 
-  return _.Consequence.AndTake([ ready1, ready2 ])
+  return _.Consequence.AndTake_( ready1, ready2 )
   .finally( ( err, arg ) =>
   {
     if( err )
@@ -704,7 +704,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
     opener2 = a.will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
     ready2 = opener2.open({});
 
-    return _.Consequence.AndTake([ ready1, ready2 ])
+    return _.Consequence.AndTake_( ready1, ready2 )
   })
 
   .finally( ( err, arg ) => check( err, arg ) );
@@ -732,7 +732,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
     opener2 = a.will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
     ready2 = opener2.open({});
 
-    return _.Consequence.AndTake([ ready1, ready2 ])
+    return _.Consequence.AndTake_( ready1, ready2 )
   })
 
   .finally( ( err, arg ) => check( err, arg ) );
@@ -837,7 +837,7 @@ function openSkippingSubButAttachedWillfiles( test )
     opener2 = a.will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
     ready2 = opener2.open();
 
-    return _.Consequence.AndTake([ ready1, ready2 ])
+    return _.Consequence.AndTake_( ready1, ready2 )
   })
   .finally( ( err, arg ) => check( err, arg ) );
 
@@ -861,7 +861,7 @@ function openSkippingSubButAttachedWillfiles( test )
     opener2 = a.will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
     ready2 = opener2.open();
 
-    return _.Consequence.AndTake([ ready1, ready2 ])
+    return _.Consequence.AndTake_( ready1, ready2 )
   })
   .finally( ( err, arg ) => check( err, arg ) );
 
@@ -1019,7 +1019,7 @@ function openAnon( test )
     return arg;
   });
 
-  return _.Consequence.AndTake([ ready1, ready2 ])
+  return _.Consequence.AndTake_( ready1, ready2 )
   .finally( ( err, arg ) =>
   {
     if( err )
@@ -1144,7 +1144,7 @@ function openOutNamed( test )
     return arg;
   });
 
-  return _.Consequence.AndTake([ ready1, ready2 ])
+  return _.Consequence.AndTake_( ready1, ready2 )
   .finally( ( err, arg ) =>
   {
     if( err )
