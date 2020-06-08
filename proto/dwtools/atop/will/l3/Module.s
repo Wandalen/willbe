@@ -2376,7 +2376,8 @@ function moduleBuild_body( o )
   })
   .then( () =>
   {
-    debugger;
+    if( !o.isRoot || !o.purging )
+    return null;
     if( module.peerModule )
     module.peerModule.finit();
     _.assert( module.peerModule === null );
@@ -2413,8 +2414,6 @@ function exportedMake( o )
   let outModule = module;
   let will = module.will;
 
-  debugger;
-
   o = _.routineOptions( exportedMake, arguments );
   _.assert( o.build instanceof _.Will.Build );
   _.assert( !module.isFinited() );
@@ -2440,6 +2439,8 @@ function exportedMake( o )
 
     if( !module.peerModule )
     {
+      if( o.purging )
+      debugger;
       if( o.purging )
       return _.Consequence.From( module.outModuleMake() ).then( () => makeFromPeer() );
       else

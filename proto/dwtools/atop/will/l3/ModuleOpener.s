@@ -1178,8 +1178,6 @@ function _repoForm()
   let downloadPath, remotePath;
   let isRemote = opener.repoIsRemote();
 
-  debugger;
-
   if( opener.peerModule && opener.remotePath === null && opener.peerModule.remotePath )
   {
     if( !opener._.localPath )
