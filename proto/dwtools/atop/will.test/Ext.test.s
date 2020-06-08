@@ -3739,9 +3739,10 @@ function reflectWithOptionDstRewriting( test )
     return null;
   })
 
+  /* xxx for Vova : adjust styles */
   //
 
-  .then( () =>
+  a.ready.then( () =>
   {
     test.case = 'reflect file with dstRewritingOnlyPreserving : 0, hard link should be restored';
     return null;
@@ -3834,7 +3835,7 @@ function reflectWithOptionLinking( test )
     return null;
   })
 
-  //
+  /* */
 
   a.ready
   .then( () =>
@@ -3854,7 +3855,7 @@ function reflectWithOptionLinking( test )
     return null;
   })
 
-  //
+  /* */
 
   a.ready
   .then( () =>
@@ -3920,6 +3921,8 @@ function reflectorFromPredefinedWithOptions( test )
 
     return null;
   })
+
+  /* */
 
   a.ready
   .then( () =>

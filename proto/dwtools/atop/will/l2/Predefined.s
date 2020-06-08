@@ -138,7 +138,8 @@ function stepRoutineReflect( frame )
 
   let reflectorOptions = reflector.optionsForReflectExport();
 
-  _.mapSupplement( opts, reflectorOptions );
+  // _.mapSupplement( opts, reflectorOptions );
+  _.mapExtend( opts, reflectorOptions );
 
   opts.verbosity = 0;
 
