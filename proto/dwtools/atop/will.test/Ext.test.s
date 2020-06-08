@@ -2597,10 +2597,37 @@ commandsSeveral.description =
 
 //
 
-function implyWithSubmodules( test )
+function implyWithSubmodulesModulesList( test )
 {
   let self = this;
   let a = self.assetFor( test, '4LevelsLocal' );
+
+  /* - */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'default withSubmodules';
+    a.reflect();
+    return null;
+  })
+  a.start( '".with l4 .modules.list"' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'error' ), 0 );
+
+    test.identical( _.strCount( got.output, 'module::' ), 7 );
+    test.identical( _.strCount( got.output, 'remote : null' ), 4 );
+    test.identical( _.strCount( got.output, 'module::l4' ), 4 );
+    test.identical( _.strCount( got.output, 'module::l3' ), 1 );
+    test.identical( _.strCount( got.output, 'module::l2' ), 1 );
+    test.identical( _.strCount( got.output, 'module::l1' ), 1 );
+
+    return null;
+  })
 
   /* - */
 
@@ -2626,7 +2653,7 @@ function implyWithSubmodules( test )
     return null;
   })
 
-  /* - */
+  /* */
 
   a.ready
   .then( () =>
@@ -2651,7 +2678,7 @@ function implyWithSubmodules( test )
     return null;
   })
 
-  /* - */
+  /* */
 
   a.ready
   .then( () =>
@@ -2680,10 +2707,86 @@ function implyWithSubmodules( test )
 
   /* - */
 
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubmodules:0';
+    a.reflect();
+    return null;
+  })
+  a.start( '.imply withSubmodules:0 .with l4 .modules.list' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'error' ), 0 );
+
+    test.identical( _.strCount( got.output, 'module::' ), 1 );
+    test.identical( _.strCount( got.output, 'remote : null' ), 1 );
+    test.identical( _.strCount( got.output, 'module::l4' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubmodules:1';
+    a.reflect();
+    return null;
+  })
+  a.start( '.imply withSubmodules:1 .with l4 .modules.list' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'error' ), 0 );
+
+    test.identical( _.strCount( got.output, 'module::' ), 3 );
+    test.identical( _.strCount( got.output, 'remote : null' ), 2 );
+    test.identical( _.strCount( got.output, 'module::l4' ), 2 );
+    test.identical( _.strCount( got.output, 'module::l3' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready
+  .then( () =>
+  {
+    test.case = 'withSubmodules:2';
+    a.reflect();
+    return null;
+  })
+  a.start( '.imply withSubmodules:2 .with l4 .modules.list' )
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'ncaught' ), 0 );
+    test.identical( _.strCount( got.output, 'nhandled' ), 0 );
+    test.identical( _.strCount( got.output, 'error' ), 0 );
+
+    test.identical( _.strCount( got.output, 'module::' ), 7 );
+    test.identical( _.strCount( got.output, 'remote : null' ), 4 );
+    test.identical( _.strCount( got.output, 'module::l4' ), 4 );
+    test.identical( _.strCount( got.output, 'module::l3' ), 1 );
+    test.identical( _.strCount( got.output, 'module::l2' ), 1 );
+    test.identical( _.strCount( got.output, 'module::l1' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
   return a.ready;
 }
 
-implyWithSubmodules.description =
+implyWithSubmodulesModulesList.description =
 `
 - imply withSubmodules:0 cause to open no submodules
 - imply withSubmodules:1 cause to open only submodules of the main module
@@ -22107,7 +22210,7 @@ var Self =
     // CUI
 
     commandsSeveral,
-    implyWithSubmodules, /* qqq : cover all implies. ask how to */
+    implyWithSubmodulesModulesList, /* qqq : cover all implies. ask how to */
 
     // reflect
 

@@ -6437,12 +6437,12 @@ function exportString( o )
   {
     result += '\n';
     result += module.infoExportPaths( module.pathMap );
-    result += module.infoExportResource( module.submoduleMap );
-    result += module.infoExportResource( module.reflectorMap );
-    result += module.infoExportResource( module.stepMap );
-    result += module.infoExportResource( module.buildsResolve({ preffering : 'more' }) );
-    result += module.infoExportResource( module.exportsResolve({ preffering : 'more' }) );
-    result += module.infoExportResource( module.exportedMap );
+    result += module.resourcesExportInfo( module.submoduleMap );
+    result += module.resourcesExportInfo( module.reflectorMap );
+    result += module.resourcesExportInfo( module.stepMap );
+    result += module.resourcesExportInfo( module.buildsResolve({ preffering : 'more' }) );
+    result += module.resourcesExportInfo( module.exportsResolve({ preffering : 'more' }) );
+    result += module.resourcesExportInfo( module.exportedMap );
   }
 
   return result;
@@ -6479,7 +6479,7 @@ function infoExportPaths( paths )
 
 //
 
-function infoExportResource( collection )
+function resourcesExportInfo( collection )
 {
   let module = this;
   let will = module.will;
@@ -7181,7 +7181,7 @@ function errTooMany( builds, what )
 
   if( logger.verbosity >= 2 && builds.length > 1 )
   {
-    prefix = module.infoExportResource( builds );
+    prefix = module.resourcesExportInfo( builds );
   }
 
   if( builds.length !== 1 )
@@ -7712,7 +7712,7 @@ let Extend =
 
   exportString,
   infoExportPaths,
-  infoExportResource,
+  resourcesExportInfo,
   infoExportModulesTopological,
 
   exportStructure,

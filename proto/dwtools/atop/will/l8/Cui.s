@@ -880,6 +880,8 @@ function commandImply( e )
   let will = this;
   let ca = e.ca;
   let logger = will.logger;
+  let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+  _.assert( !!isolated );
 
   let namesMap =
   {
@@ -898,13 +900,19 @@ function commandImply( e )
 
   }
 
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = will.Resolver.strRequestParse( isolated.argument );
 
   _.process.argsReadTo
   ({
     dst : will,
     propertiesMap : request.map,
     namesMap : namesMap,
+  });
+
+  if( isolated.secondCommand )
+  return ca.commandPerform
+  ({
+    command : isolated.secondCommand,
   });
 
 }
@@ -979,7 +987,7 @@ function commandResourcesList( e )
       logger.log( result );
     }
 
-    logger.log( module.openedModule.infoExportResource( resources ) );
+    logger.log( module.openedModule.resourcesExportInfo( resources ) );
 
   }
 
@@ -1030,7 +1038,7 @@ function commandSubmodulesList( e )
   function act( module, resources )
   {
     let logger = will.logger;
-    logger.log( module.openedModule.infoExportResource( resources ) );
+    logger.log( module.openedModule.resourcesExportInfo( resources ) );
   }
 
   // return will._commandListLike( e, act, 'submodule' );
@@ -1054,7 +1062,7 @@ function commandReflectorsList( e )
   function act( module, resources )
   {
     let logger = will.logger;
-    logger.log( module.openedModule.infoExportResource( resources ) );
+    logger.log( module.openedModule.resourcesExportInfo( resources ) );
   }
 
   // return will._commandListLike( e, act, 'reflector' );
@@ -1078,7 +1086,7 @@ function commandStepsList( e )
   function act( module, resources )
   {
     let logger = will.logger;
-    logger.log( module.openedModule.infoExportResource( resources ) );
+    logger.log( module.openedModule.resourcesExportInfo( resources ) );
   }
 
   // return will._commandListLike( e, act, 'step' );
@@ -1109,7 +1117,7 @@ function commandBuildsList( e )
       criterion : request.map,
       preffering : 'more',
     });
-    logger.log( module.openedModule.infoExportResource( builds ) );
+    logger.log( module.openedModule.resourcesExportInfo( builds ) );
   }
 
   // return will._commandListLike( e, act, null );
@@ -1140,7 +1148,7 @@ function commandExportsList( e )
       criterion : request.map,
       preffering : 'more',
     });
-    logger.log( module.openedModule.infoExportResource( builds ) );
+    logger.log( module.openedModule.resourcesExportInfo( builds ) );
   }
 
   // return will._commandListLike( e, act, null );
@@ -1189,7 +1197,7 @@ function commandModulesList( e )
   function act( module, resources )
   {
     let logger = will.logger;
-    logger.log( module.openedModule.infoExportResource( resources ) );
+    logger.log( module.openedModule.resourcesExportInfo( resources ) );
   }
 
   // return will._commandListLike( e, act, 'module' );
@@ -2010,7 +2018,6 @@ function commandWith( e )
     });
   }
 
-  // debugger;
   return will.modulesFindWithAt
   ({
     selector : isolated.argument,
@@ -2928,7 +2935,6 @@ if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 wTools[ Self.shortName ] = Self;
 
-// _.process._exitHandlerRepair();
 if( !module.parent )
 Self.Exec();
 
