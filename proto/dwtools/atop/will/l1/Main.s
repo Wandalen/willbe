@@ -2677,6 +2677,9 @@ function modulesDownload_body( o )
   {
     let ready = new _.Consequence().take( null );
 
+    if( rootModule )
+    ready.then( () => rootModule.repo.renormalize( rootModule.localPath ) );
+
     ready.then( () =>
     {
       let o2 = _.mapOnly( o, will.modulesUpform.defaults );
