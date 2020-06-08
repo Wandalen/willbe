@@ -16461,7 +16461,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     // test.is( _.strHas( got.output, / \+ .*module::ModuleForTesting1.* will be downloaded version .*/ ) );
-    // test.is( _.strHas( got.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*f152a302c437e1fabd45ef26770c4bf0a19c4a0e.*/ ) );
+    // test.is( _.strHas( got.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*8031560ec22fd955b0b57430b5d6d96b042fbd99.*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::ModuleForTesting1a.* will be downloaded version .*$.$.$$$.*/ ) );
     test.is( _.strHas( got.output, '+ 2/5 submodule(s) of module::submodules-detached will be downloaded' ) );
     var files = self.find( submodulesPath );
@@ -19119,7 +19119,7 @@ function subModulesUpdate( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ module::wModuleForTesting1 was updated to version ab1f307afd10ef53bf592cabeb98699c628ab25c in' ) );
     test.is( _.strHas( got.output, '+ module::wModuleForTesting2a was updated to version master in' ) );
-    test.is( _.strHas( got.output, '+ module::wModuleForTesting12ab was updated to version 010efd393749b8970a7cac00965855a4e77eca8c in' ) );
+    test.is( _.strHas( got.output, '+ module::wModuleForTesting12ab was updated to version b3499c8f6756cad511bb42559e6c3d501ed15061 in' ) );
     test.is( _.strHas( got.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
