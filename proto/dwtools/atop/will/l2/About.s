@@ -112,7 +112,7 @@ let orgGetterSetter =
 
 //
 
-function exportInfo()
+function exportString()
 {
   let about = this;
   let fields = about.exportStructure();
@@ -201,7 +201,7 @@ let Extend =
   init,
   copy,
 
-  exportInfo,
+  exportString,
   exportStructure,
 
   // relation

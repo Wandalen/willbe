@@ -28,7 +28,7 @@ submodule :
   StringsExtra : git+https:///github.com/Wandalen/wStringsExtra.git/@master
   ModuleForTesting12ab : git+https:///github.com/Wandalen/wModuleForTesting12ab.git/@master
 
-  Gdf : git+https:///github.com/Wandalen/wGdfStrategy.git/@master
+  Gdf : git+https:///github.com/Wandalen/wGdf.git/@master
   Replicator : git+https:///github.com/Wandalen/wReplicator.git/@master
   RoutineFundamentals : git+https:///github.com/Wandalen/wRoutineFundamentals.git/@master
   EntityFundamentals : git+https:///github.com/Wandalen/wEntityFundamentals.git/@master
@@ -48,7 +48,7 @@ submodule :
   StateStorage : git+https:///github.com/Wandalen/wStateStorage.git/@master
   StateSession : git+https:///github.com/Wandalen/wStateSession.git/@master
   PathTranslator : git+https:///github.com/Wandalen/wPathTranslator.git/@master
-  TranspilationStrategy : git+https:///github.com/Wandalen/wTranspilationStrategy.git/@master
+  TranspilationStrategy : git+https:///github.com/Wandalen/wTranspile.git/@master
   NameMapper : git+https:///github.com/Wandalen/wNameMapper.git/@master
   TemplateTreeResolver : git+https:///github.com/Wandalen/wTemplateTreeResolver.git/@master
   TemplateTreeEnvironment : git+https:///github.com/Wandalen/wTemplateTreeEnvironment.git/@master

@@ -1,0 +1,22 @@
+about :
+
+  name : "ExportMinimal"
+  version : "0.0.0"
+
+path :
+
+  in : '.'
+  temp : 'out'
+  out : 'out'
+  proto : './proto/**'
+  export : './proto/**'
+
+build :
+
+  proto.export :
+    criterion :
+      proto : 1
+      export : 1
+      default : 1
+    steps :
+      - step::module.export

@@ -508,7 +508,6 @@ function LocalPathNormalize( localPath )
     let splits = _.path.split( r );
     if( _.longCountElement( splits, '.module' ) > 1 )
     {
-      // debugger; // yyy
       let f = splits.indexOf( '.module' );
       let l = splits.lastIndexOf( '.module' );
       splits.splice( f, l-f );
@@ -1057,7 +1056,7 @@ function recursiveValueDeduceFromBuild( o )
     return true;
   });
 
-  logger.log( ` . recursiveValueDeduceFromBuild ${result}` );
+  // logger.log( ` . recursiveValueDeduceFromBuild ${result}` );
 
   return result;
 }
@@ -2426,9 +2425,11 @@ function modulesFor_body( o )
   if( !o.nodesGroup )
   o.nodesGroup = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
   o.modules = _.arrayAs( o.modules );
+
   _.assert( _.arrayIs( o.modules ) );
   _.assert( will.ObjectsAreAll( o.modules ) );
 
+  let rootJunctions = _.longOnce( will.junctionsFrom( o.modules ) );
   let objects = objectsEach( o.modules );
 
   return act( objects )
@@ -2495,10 +2496,10 @@ function modulesFor_body( o )
     _.assert( will.ObjectIs( object ) );
     let ready = new _.Consequence().take( null );
     let junction = object.toJunction();
+    let isRoot = _.longHas( rootJunctions, junction );
 
     if( o.onEachVisitedObject )
     {
-      // let junction = object.toJunction();
       let objects = [ object ];
 
       objects.forEach( ( object ) =>
@@ -2511,6 +2512,7 @@ function modulesFor_body( o )
         {
           let o3 = _.mapExtend( null, o );
           o3.object = object;
+          o3.isRoot = isRoot;
           ready.then( () => o.onEachVisitedObject( object, o3 ) );
         }
 
@@ -2519,7 +2521,6 @@ function modulesFor_body( o )
 
     if( o.onEachModule )
     {
-      // let junction = object.toJunction();
       let objects = [ object ];
       _.arrayAppendArrayOnce( objects, junction.modules );
 
@@ -2533,6 +2534,7 @@ function modulesFor_body( o )
         {
           let o3 = _.mapExtend( null, o );
           o3.module = object;
+          o3.isRoot = isRoot;
           ready.then( () => o.onEachModule( object, o3 ) );
         }
 
@@ -2547,14 +2549,17 @@ function modulesFor_body( o )
   function junctionAction( junction )
   {
     _.assert( junction instanceof _.Will.ModuleJunction );
-    let ready = new _.Consequence().take( null );
     if( visitedJunctionsSet.has( junction ) )
     return null;
+    let ready = new _.Consequence().take( null );
     visitedJunctionsSet.add( junction );
+    let isRoot = _.longHas( rootJunctions, junction ); debugger;
+
     if( o.onEachJunction )
     {
       let o3 = _.mapExtend( null, o );
       o3.junction = junction;
+      o3.isRoot = isRoot;
       ready.then( () => o.onEachJunction( junction, o3 ) );
     }
     return ready;
@@ -2680,10 +2685,7 @@ function modulesDownload_body( o )
       o2.all = 0;
       if( o2.recursive === 2 )
       o2.subModulesFormed = 1;
-      // o2.subModulesFormed = 0;
-      // o2.subModulesFormed = 1; /* yyy2 */
       o2.withPeers = 1;
-      // +debugger;
       return will.modulesUpform( o2 );
     });
 
@@ -3168,9 +3170,7 @@ function modulesBuild_body( o )
   o = _.assertRoutineOptions( modulesBuild_body, arguments );
   _.assert( _.arrayIs( o.doneContainer ) );
 
-  // debugger;
   let recursive = will.recursiveValueDeduceFromBuild( _.mapOnly( o, will.recursiveValueDeduceFromBuild.defaults ) ); /* yyy2 */
-  // debugger;
 
   ready.then( () =>
   {
@@ -3182,7 +3182,6 @@ function modulesBuild_body( o )
     {
       if( recursive === null )
       {
-        // debugger;
         o2.recursive = 1;
       }
       else
@@ -3218,7 +3217,6 @@ function modulesBuild_body( o )
       else
       o2.subModulesFormed = 0;
     }
-    // o2.subModulesFormed = 1; /* yyy2 */
     o2.peerModulesFormed = 1;
     o2.withOut = 0;
     o2.withIn = 1;
@@ -3252,6 +3250,7 @@ function modulesBuild_body( o )
   function moduleBuild( module, op )
   {
     let o3 = _.mapOnly( o, module.moduleBuild.defaults );
+    o3.isRoot = op.isRoot;
     _.assert( module instanceof _.Will.Module );
     if( _.longHas( o.doneContainer, module ) )
     return null;
@@ -3261,7 +3260,6 @@ function modulesBuild_body( o )
 
 }
 
-// var defaults = modulesBuild_body.defaults = _.mapExtend( null, moduleBuild.defaults, _.Will.prototype.modulesFor.defaults );
 var defaults = modulesBuild_body.defaults =
 {
 
@@ -3322,7 +3320,6 @@ function modulesVerify_body( o )
   let time = _.time.now();
 
   o = _.assertRoutineOptions( modulesVerify_body, arguments );
-  // _.assert( _.arrayIs( o.doneContainer ) );
 
   logger.up();
 
@@ -3350,7 +3347,6 @@ function modulesVerify_body( o )
     {
       let module = o.modules[ 0 ];
       module = module.toModule() || module.toOpener() || module;
-      // ofModule = ` of ${module.decoratedQualifiedName} `;
       ofModule = ` of ${module.decoratedAbsoluteName} `;
     }
 
@@ -3377,9 +3373,6 @@ function modulesVerify_body( o )
     object = object.openedModule;
     let o3 = _.mapOnly( o, object.repoVerify.defaults ); debugger;
     _.assert( object instanceof _.Will.Module || object instanceof _.Will.ModuleOpener );
-    // if( _.longHas( o.doneContainer, object ) )
-    // return null;
-    // o.doneContainer.push( object );
     return object.repoVerify( o3 ).then( ( verified ) =>
     {
       debugger;
@@ -3414,180 +3407,8 @@ var defaults = modulesVerify_body.defaults =
 delete defaults.onEach;
 delete defaults.onEachModule;
 delete defaults.onEachJunction;
-// delete defaults.withOut;
-// delete defaults.withIn;
 
 let modulesVerify = _.routineFromPreAndBody( modulesVerify_pre, modulesVerify_body );
-
-// //
-//
-// {
-//   let module = this;
-//   let will = module.will;
-//   let fileProvider = will.fileProvider;
-//   let path = fileProvider.path;
-//   let logger = will.logger;
-//   let totalNumber = _.mapKeys( module.submoduleMap ).length;
-//   let verifiedNumber = 0;
-//   let time = _.time.now();
-//
-//   _.assert( module.preformed > 0  );
-//   _.assert( arguments.length === 1 );
-//
-//   _.routineOptions( modulesVerify, o );
-//
-//   logger.up();
-//
-//   let modules = module.modulesEach({ outputFormat : '/', recursive : o.recursive, withDisabledStem : 1 });
-//   let ready = new _.Consequence().take( null );
-//
-//   _.each( modules, ( r ) =>
-//   {
-//     // ready.then( () => reform( r ) )
-//     ready.then( () => onEach( r ) );
-//     ready.then( onEachEnd );
-//   })
-//
-//   ready.then( () =>
-//   {
-//     if( o.asMap )
-//     return { verifiedNumber, totalNumber };
-//     logger.log( verifiedNumber + '/' + totalNumber + ' submodule(s) of ' + module.decoratedQualifiedName + ' were verified in ' + _.time.spent( time ) );
-//     logger.down();
-//     return verifiedNumber === totalNumber;
-//   })
-//
-//   return ready;
-//
-//   /* */
-//
-//   function onEach( r )
-//   {
-//
-//     // if( o.hasFiles )
-//     // if( !r.opener.repo.hasFiles )
-//     // {
-//     //   if( o.throwing )
-//     //   throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'does not have files' );
-//     //   return false;
-//     // }
-//     //
-//     // _.assert
-//     // (
-//     //   !!r.opener && r.opener.formed >= 2,
-//     //   () => 'Submodule', ( r.opener ? r.opener.qualifiedName : n ), 'was not preformed to verify'
-//     // );
-//     //
-//     // /* isValid */
-//     //
-//     // if( o.isValid )
-//     // if( !r.opener.isValid() )
-//     // throw _.err( opener.error, '\n! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is downloaded, but it\'s not valid.' );
-//     //
-//     // /* is remote / enabled */
-//     //
-//     // if( !r.opener.repo.isRemote )
-//     // return true;
-//     // if( r.relation && !r.relation.enabled )
-//     // return true;
-//     //
-//     // /* repository check */
-//     //
-//     // if( o.isRepository )
-//     // if( !r.opener.repo.isRepository )
-//     // {
-//     //   if( o.throwing )
-//     //   throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), `is downloaded, but it's not a repository` );
-//     //   return false;
-//     // }
-//     //
-//     // let remoteProvider = will.fileProvider.providerForPath( r.opener.repo.remotePath );
-//     //
-//     // /* origin check */
-//     //
-//     // if( o.hasRemote )
-//     // {
-//     //   let result = remoteProvider.hasRemote
-//     //   ({
-//     //     localPath : r.opener.repo.downloadPath,
-//     //     remotePath : r.opener.repo.remotePath
-//     //   });
-//     //
-//     //   if( !result.remoteIsValid )
-//     //   {
-//     //     if( o.throwing )
-//     //     throw _.errBrief
-//     //     (
-//     //       '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has different origin url:',
-//     //       _.color.strFormat( result.originVcsPath, 'path' ), ', expected url:', _.color.strFormat( result.remoteVcsPath, 'path' )
-//     //     );
-//     //
-//     //     return false;
-//     //   }
-//     // }
-//     //
-//     // /* version check */
-//     //
-//     // if( o.isUpToDate )
-//     // {
-//     //   if( r.opener.repo.isUpToDate )
-//     //   return true;
-//     //
-//     //   if( !o.throwing )
-//     //   return false;
-//     //
-//     //   let remoteParsed = remoteProvider.pathParse( r.opener.repo.remotePath );
-//     //   let remoteVersion = remoteParsed.hash || 'master';
-//     //   let localVersion = remoteProvider.versionLocalRetrive( r.opener.repo.downloadPath );
-//     //
-//     //   if( remoteVersion === localVersion )
-//     //   throw _.errBrief( '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'is not up to date!' );
-//     //
-//     //   throw _.errBrief
-//     //   (
-//     //     '! Submodule', ( r.relation ? r.relation.qualifiedName : r.module.qualifiedName ), 'has version different from that is specified in will-file!',
-//     //     '\nCurrent:', localVersion,
-//     //     '\nExpected:', remoteVersion
-//     //   );
-//     // }
-//     //
-//     // return true;
-//   }
-//
-//   /*  */
-//
-//   function onEachEnd( verified )
-//   {
-//     if( verified )
-//     verifiedNumber += 1;
-//     return verified;
-//   }
-//
-//   /*  */
-//
-//   // function reform( relation )
-//   // {
-//   //   let con = new _.Consequence().take( null );
-//   //   con.then( () => relation.opener.repo.status({ all : 1, invalidating : 1 }) )
-//   //   con.then( () => relation )
-//   //   return con;
-//   // }
-//
-// }
-//
-// var defaults  = modulesVerify.defaults = Object.create( null );
-//
-// defaults.recursive = 1;
-// defaults.throwing = 1;
-// defaults.asMap = 0;
-//
-// defaults.hasFiles = 1;
-// defaults.isValid = 1;
-// defaults.isRepository = 1;
-// defaults.hasRemote = 1;
-// defaults.isUpToDate = 1
-//
-// // xxx
 
 // --
 // object
@@ -3644,8 +3465,8 @@ function ObjectsExportInfo( o )
   _.assert( _.longIs( o.objects ) );
   return o.objects.map( ( object ) =>
   {
-    _.assert( _.routineIs( object.exportInfo ) );
-    return object.exportInfo({ verbosity : 2 })
+    _.assert( _.routineIs( object.exportString ) );
+    return object.exportString({ verbosity : 2 })
   }).join( '\n' );
 }
 
@@ -3873,7 +3694,7 @@ function junctionsInfoExport( junctions )
     // });
   }
 
-  return _.map( junctions, ( junction ) => junction.exportInfo() ).join( '\n' );
+  return _.map( junctions, ( junction ) => junction.exportString() ).join( '\n' );
 }
 
 // --
@@ -3980,7 +3801,7 @@ function graphGroupMake( o )
   module::z / module::wPathTools / opener::wPathTools #1447 #1576
   module::z / module::wPathTools / relation::wPathTools #1446 #1575
 "
-will.junctionWithId( 922 ).exportInfo()
+will.junctionWithId( 922 ).exportString()
 "junction:: : #922
   path::local : hd:///atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools
   module::z / module::wPathTools / opener::wPathTools #921 #1050
@@ -4627,7 +4448,6 @@ function willfilesFind( o )
   if( o.usingCache )
   {
     let result = [];
-    // debugger;
     for( let i = 0 ; i < will.willfilesArray.length ; i++ )
     {
       let willfile = will.willfilesArray[ i ];
@@ -4635,14 +4455,13 @@ function willfilesFind( o )
       {
         _.each( willfile.filePath, ( filePath ) =>
         {
-          // debugger;
           result.push( fileProvider.record( filePath ) );
         });
       }
     }
     if( result.length )
     {
-      debugger; /* yyy */
+      debugger;
       return result;
     }
   }

@@ -69,8 +69,8 @@ submodule :
   wNameMapper :
     path : npm:///wnamemapper
     enabled : 0 # submodule
-  wTranspilationStrategy :
-    path : npm:///wtranspilationstrategy
+  wTranspile :
+    path : npm:///wtranspile
     enabled : 0 # submodule
   tar :
     path : npm:///tar

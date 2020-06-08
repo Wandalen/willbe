@@ -16,7 +16,7 @@ step :
 
   reflect.proto :
     inherit : files.reflect
-    reflector :
+    filePath :
       reflector::reflect.proto
 
 build :

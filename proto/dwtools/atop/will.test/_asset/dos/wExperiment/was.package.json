@@ -22,7 +22,7 @@
     "wcommandsaggregator" : "", 
     "wcommandsconfig" : "", 
     "wnamemapper" : "", 
-    "wtranspilationstrategy" : "", 
+    "wtranspile" : "", 
     "tar" : "", 
     "gitconfiglocal" : "", 
     "open" : ""

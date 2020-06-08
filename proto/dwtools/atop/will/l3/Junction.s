@@ -1372,7 +1372,7 @@ function toJunction()
 // export
 // --
 
-function exportInfo()
+function exportString()
 {
   let result = '';
   let junction = this;
@@ -1651,7 +1651,7 @@ let Extend =
 
   // export
 
-  exportInfo,
+  exportString,
   nameWithLocationGet,
 
   // etc

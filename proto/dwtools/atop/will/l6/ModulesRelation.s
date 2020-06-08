@@ -2,15 +2,6 @@
 
 'use strict';
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
-//
-
 let _ = _global_.wTools;
 let Parent = _.Will.Resource;
 let Self = function wWillModulesRelation( o )
@@ -127,7 +118,7 @@ function form1()
 
   _.assert( relation.opener.formed >= 2 );
 
-  // if( relation.enabled ) /* ttt */
+  // if( relation.enabled ) /* ttt xxx */
   will.junctionReform( relation );
 
   /* end */
@@ -166,7 +157,7 @@ function form3()
   _.assert( _.strIs( relation.path ), 'not tested' );
   _.sure( _.strIs( relation.path ) || _.arrayIs( relation.path ), 'Path resource should have "path" field' );
 
-  // yyy
+  // yyy xxx
   // if( relation.absoluteName === "module::l1 / module::wModuleForTesting12 / relation::wModuleForTesting1" )
   // debugger;
 
@@ -799,7 +790,7 @@ exportStructure.defaults = Object.create( _.Will.Resource.prototype.exportStruct
 
 //
 
-function exportInfo( o )
+function exportString( o )
 {
   let relation = this;
   let module = relation.module;
@@ -810,7 +801,7 @@ function exportInfo( o )
   let resultMap = Parent.prototype.exportStructure.call( relation );
   let tab = '  ';
 
-  o = _.routineOptions( exportInfo, arguments );
+  o = _.routineOptions( exportString, arguments );
 
   if( relation.opener )
   {
@@ -823,15 +814,14 @@ function exportInfo( o )
 
   }
 
-  // resultMap.hasFiles = relation.opener ? relation.opener.hasFiles : null;
   resultMap.isAvailable = relation.isAvailable;
 
-  let result = relation._exportInfo({ fields : resultMap });
+  let result = relation._exportString({ fields : resultMap });
 
   return result;
 }
 
-exportInfo.defaults =
+exportString.defaults =
 {
   verbosity : 2,
 }
@@ -1030,7 +1020,7 @@ let Extend =
   // exporter
 
   exportStructure,
-  exportInfo,
+  exportString,
 
   // etc
 

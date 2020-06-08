@@ -1,0 +1,41 @@
+name : Experiment
+
+on :
+  push :
+    branches : [ master ]
+
+jobs :
+
+  Int :
+    if : "!startsWith( github.event.head_commit.message, 'version' )"
+    runs-on : ${{ matrix.os }}
+    strategy :
+      fail-fast  : false
+      matrix :
+        os : [ windows-latest, ubuntu-latest, macos-latest ]
+        node-version : [ 14.x ]
+    steps :
+    - uses : actions/checkout@v2
+    - name : ${{ matrix.node-version }}
+      uses : actions/setup-node@v1
+      with :
+        node-version : ${{ matrix.node-version }}
+    - run : npm i
+    - run : node proto/dwtools/atop/will.test/Int.test.s
+
+  Ext :
+    if : "!startsWith( github.event.head_commit.message, 'version' )"
+    runs-on : ${{ matrix.os }}
+    strategy :
+      fail-fast  : false
+      matrix :
+        os : [ windows-latest, ubuntu-latest, macos-latest ]
+        node-version : [ 14.x ]
+    steps :
+    - uses : actions/checkout@v2
+    - name : ${{ matrix.node-version }}
+      uses : actions/setup-node@v1
+      with :
+        node-version : ${{ matrix.node-version }}
+    - run : npm i
+    - run : node proto/dwtools/atop/will.test/Ext.test.s

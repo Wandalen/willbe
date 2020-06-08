@@ -904,11 +904,11 @@ function CriterionValueNormalize( criterionValue )
 // export
 // --
 
-function _exportInfo( o )
+function _exportString( o )
 {
   let resource = this;
   let result = '';
-  o = _.routineOptions( _exportInfo, arguments );
+  o = _.routineOptions( _exportString, arguments );
 
   result += resource.decoratedAbsoluteName + '\n';
   result += _.toStr( o.fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } );
@@ -916,23 +916,23 @@ function _exportInfo( o )
   return result;
 }
 
-var defaults = _exportInfo.defaults = Object.create( null );
+var defaults = _exportString.defaults = Object.create( null );
 defaults.fields = 1;
 
 //
 
-function exportInfo()
+function exportString()
 {
   let resource = this;
-  let o = _.routineOptions( exportInfo, arguments );
+  let o = _.routineOptions( exportString, arguments );
 
   let fields = resource.exportStructure( o );
-  let result = resource._exportInfo({ fields });
+  let result = resource._exportString({ fields });
 
   return result;
 }
 
-var defaults = exportInfo.defaults = Object.create( _.Will.Module.prototype.exportStructure.defaults );
+var defaults = exportString.defaults = Object.create( _.Will.Module.prototype.exportStructure.defaults );
 defaults.copyingNonExportable = 1;
 defaults.formed = 1;
 defaults.strict = 0;
@@ -1365,8 +1365,8 @@ let Extend =
 
   // export
 
-  _exportInfo,
-  exportInfo,
+  _exportString,
+  exportString,
   exportStructure,
   extraExport,
   compactField,

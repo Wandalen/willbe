@@ -3,8 +3,8 @@ let _ = require( '../../../dwtools/Tools.s' );
 _.include( 'wAppBasic' );
 _.include( 'wFiles' );
 
-let = assetsOriginalSuitePath = _.path.join( __dirname, '_asset' );
-let repoDirPath = _.path.join( assetsOriginalSuitePath, '_repo' );
+let = assetsOriginalPath = _.path.join( __dirname, '_asset' );
+let repoDirPath = _.path.join( assetsOriginalPath, '_repo' );
 let ready = new _.Consequence().take( null );
 let start = _.process.starter
 ({

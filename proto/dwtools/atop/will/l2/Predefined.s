@@ -155,7 +155,7 @@ function stepRoutineReflect( frame )
   .catch( ( err ) =>
   {
     debugger;
-    err = _.err( err, '\n\n', _.strLinesIndentation( reflector.exportInfo(), '  ' ), '\n' );
+    err = _.err( err, '\n\n', _.strLinesIndentation( reflector.exportString(), '  ' ), '\n' );
     throw _.err( err );
     // throw _.errBrief( err );
   })
@@ -471,7 +471,7 @@ function stepRoutineTranspile( frame )
   let reflector = step.reflectorResolve( opts.filePath );
   let reflectOptions = reflector.optionsForReflectExport();
 
-  _.include( 'wTranspilationStrategy' );
+  _.include( 'wTranspile' );
 
   let debug = false;
   if( _.strIs( frame.resource.criterion.debug ) )
@@ -981,35 +981,20 @@ function stepRoutineExport( frame )
   let step = this;
   let run = frame.run;
   let module = run.module;
-  // let build = run.build;
   let will = module.will;
   let logger = will.logger;
   let build = frame.closesBuildGet();
 
   _.assert( arguments.length === 1 );
   _.assert( build instanceof _.Will.Build );
+  // _.assert( _.boolIs( frame.run.isRoot ) ); /* xxx : investigate */
 
-  return module.exportedMake({ build })
+  return module.exportedMake({ build, rewriting : frame.run.isRoot })
   .then( ( exported ) =>
   {
-    // debugger;
     _.assert( exported instanceof _.Will.Exported );
     return exported.perform( frame );
   });
-
-  // let exported = module.exportedMake({ build });
-  //
-  // // if( module.exportedMap[ build.name ] )
-  // // {
-  // //   module.exportedMap[ build.name ].finit();
-  // //   _.assert( module.exportedMap[ build.name ] === undefined );
-  // // }
-  // //
-  // // let exported = new will.Exported({ module : module, name : build.name }).form1();
-  // //
-  // // _.assert( module.exportedMap[ build.name ] === exported );
-  //
-  // return exported.perform( frame );
 }
 
 stepRoutineExport.stepOptions =

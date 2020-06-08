@@ -1,6 +1,6 @@
 {
   "name" : "willbe",
-  "version" : "0.5.164",
+  "version" : "0.5.171",
   "description" : "Utility to manage modules of complex modular systems",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "contributors" :
@@ -61,7 +61,7 @@
     "wcommandsaggregator" : "alpha",
     "wcommandsconfig" : "alpha",
     "wnamemapper" : "alpha",
-    "wtranspilationstrategy" : "alpha",
+    "wtranspile" : "alpha",
     "wnpmtools" : "alpha",
     "wyamltools" : "alpha",
     "tar" : "6.0.2",

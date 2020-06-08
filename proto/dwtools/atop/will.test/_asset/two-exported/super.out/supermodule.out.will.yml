@@ -2,19 +2,22 @@ format: outwillfile-2.0
 root:
   - supermodule.out
 consistency:
-  ../super.ex.will.yml: &ref_0
+  supermodule.out.will.yml: &ref_0
+    hash: d9d0061a40cdd461ec89088cc14417c4
+    size: 20435
+  ../super.ex.will.yml: &ref_1
     hash: e420f15a7f0fa0a402272845d56fd05b
     size: 357
-  ../super.im.will.yml: &ref_1
+  ../super.im.will.yml: &ref_2
     hash: e5a50de1641bef81ace1e37f5b120079
     size: 882
-  ../sub.out/sub.out.will.yml: &ref_2
-    hash: 29787834dbfeb7002c11cee372788123
-    size: 9139
-  ../sub.ex.will.yml: &ref_3
+  ../sub.out/sub.out.will.yml: &ref_3
+    hash: 74f9a5f8562ff0a8e7764587e0a3c7a1
+    size: 9094
+  ../sub.ex.will.yml: &ref_4
     hash: 868b5a57eaff621b4f9717b65569eabf
     size: 381
-  ../sub.im.will.yml: &ref_4
+  ../sub.im.will.yml: &ref_5
     hash: e42ca7d9b865e8643bd8c4d7058054df
     size: 809
 module:
@@ -90,6 +93,25 @@ module:
           - release
           - release/File.debug.js
           - release/File.release.js
+      exported.dir.export.debug:
+        criterion:
+          generated: 1
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        path: debug
+      exported.files.export.debug:
+        criterion:
+          generated: 1
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+        path:
+          - debug
+          - debug/File.debug.js
+          - debug/File.release.js
     submodule:
       Submodule:
         path: ../sub.out/sub.out
@@ -151,6 +173,37 @@ module:
           debug: 0
           raw: 1
           export: 1
+      exported.export.debug:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: debug
+        mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
+        criterion:
+          generated: 1
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
+      exported.files.export.debug:
+        src:
+          filePath:
+            'path::exported.files.export.debug': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export.debug'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
+        criterion:
+          generated: 1
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
     step:
       export.:
         opts:
@@ -179,6 +232,28 @@ module:
           filePath: 'reflector::reflect.submodules*=1'
         criterion:
           debug: 1
+        inherit:
+          - files.reflect
+      exported.export.:
+        opts:
+          filePath: 'reflector::exported.export.*'
+        criterion:
+          generated: 1
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.export.:
+        opts:
+          filePath: 'reflector::exported.files.export.*'
+        criterion:
+          generated: 1
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
         inherit:
           - files.reflect
     build:
@@ -228,9 +303,24 @@ module:
           debug: 0
           raw: 1
           export: 1
+      export.debug:
+        version: 0.0.1
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.export.debug'
+        exportedFilesReflector: 'reflector::exported.files.export.debug'
+        exportedDirPath: 'path::exported.dir.export.debug'
+        exportedFilesPath: 'path::exported.files.export.debug'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          export: 1
     consistency:
-      ../super.ex.will.yml: *ref_0
-      ../super.im.will.yml: *ref_1
+      supermodule.out.will.yml: *ref_0
+      ../super.ex.will.yml: *ref_1
+      ../super.im.will.yml: *ref_2
   ../super:
     about:
       name: supermodule
@@ -321,18 +411,17 @@ module:
           tar: 0
         criterion:
           debug: 0
-        inherit:
-          - module.export
       export.debug:
         opts:
           export: '{path::out.*=1}/**'
           tar: 0
         criterion:
           debug: 1
+        inherit:
+          - module.export
       reflect.submodules.:
         opts:
           filePath: 'reflector::reflect.submodules*=1'
-          verbosity: null
         criterion:
           debug: 0
         inherit:
@@ -340,6 +429,7 @@ module:
       reflect.submodules.debug:
         opts:
           filePath: 'reflector::reflect.submodules*=1'
+          verbosity: null
         criterion:
           debug: 1
         inherit:
@@ -383,6 +473,9 @@ module:
       ../super.im.will.yml:
         hash: e5a50de1641bef81ace1e37f5b120079
         size: 882
+      supermodule.out.will.yml:
+        hash: d9d0061a40cdd461ec89088cc14417c4
+        size: 20435
   ../sub.out/sub.out:
     about:
       name: sub
@@ -435,6 +528,24 @@ module:
       temp:
         path:
           - .
+      exported.dir.export.:
+        criterion:
+          generated: 1
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+        path: release
+      exported.files.export.:
+        criterion:
+          generated: 1
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+        path:
+          - release
+          - release/File.release.js
       exported.dir.export.debug:
         criterion:
           generated: 1
@@ -459,9 +570,6 @@ module:
         src:
           filePath:
             'path::proto': 'path::out.*=1'
-          prefixPath: ''
-        dst:
-          prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
         linking: hardLinkMaybe
@@ -473,6 +581,9 @@ module:
         src:
           filePath:
             'path::proto': 'path::out.*=1'
+          prefixPath: ''
+        dst:
+          prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
         linking: hardLinkMaybe
@@ -480,6 +591,37 @@ module:
           debug: 1
         inherit:
           - predefined.*
+      exported.export.:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: release
+        mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
+        criterion:
+          generated: 1
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+      exported.files.export.:
+        src:
+          filePath:
+            'path::exported.files.export.': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.export.'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
+        criterion:
+          generated: 1
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
       exported.export.debug:
         src:
           filePath:
@@ -547,6 +689,7 @@ module:
       reflect.proto.raw:
         opts:
           filePath: 'reflector::reflect.proto.*=1'
+          verbosity: null
         criterion:
           debug: 0
           raw: 1
@@ -555,10 +698,31 @@ module:
       reflect.proto.debug.raw:
         opts:
           filePath: 'reflector::reflect.proto.*=1'
-          verbosity: null
         criterion:
           debug: 1
           raw: 1
+        inherit:
+          - files.reflect
+      exported.export.:
+        opts:
+          filePath: 'reflector::exported.export.*'
+        criterion:
+          generated: 1
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.export.:
+        opts:
+          filePath: 'reflector::exported.files.export.*'
+        criterion:
+          generated: 1
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
         inherit:
           - files.reflect
       exported.export.debug:
@@ -617,6 +781,20 @@ module:
           debug: 0
           raw: 1
     exported:
+      export.:
+        version: 0.0.1
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.export.'
+        exportedFilesReflector: 'reflector::exported.files.export.'
+        exportedDirPath: 'path::exported.dir.export.'
+        exportedFilesPath: 'path::exported.files.export.'
+        criterion:
+          default: 1
+          debug: 0
+          raw: 1
+          export: 1
       export.debug:
         version: 0.0.1
         recursive: 0
@@ -632,9 +810,9 @@ module:
           raw: 1
           export: 1
     consistency:
-      ../sub.out/sub.out.will.yml: *ref_2
-      ../sub.ex.will.yml: *ref_3
-      ../sub.im.will.yml: *ref_4
+      ../sub.out/sub.out.will.yml: *ref_3
+      ../sub.ex.will.yml: *ref_4
+      ../sub.im.will.yml: *ref_5
   ../sub:
     about:
       name: sub
@@ -795,8 +973,6 @@ module:
           debug: 0
           raw: 1
     consistency:
-      ../sub.ex.will.yml: *ref_3
-      ../sub.im.will.yml: *ref_4
-      ../sub.out/sub.out.will.yml:
-        hash: 29787834dbfeb7002c11cee372788123
-        size: 9139
+      ../sub.ex.will.yml: *ref_4
+      ../sub.im.will.yml: *ref_5
+      ../sub.out/sub.out.will.yml: *ref_3

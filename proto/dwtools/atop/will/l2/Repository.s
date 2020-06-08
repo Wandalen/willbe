@@ -2,15 +2,6 @@
 
 'use strict';
 
-// if( typeof repo !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
-//
-
 let _ = _global_.wTools;
 let Parent = null;
 let Self = function wWillRepository( o )
@@ -646,7 +637,7 @@ function repoLatestVersion()
 
 //
 
-function exportInfo()
+function exportString()
 {
   let repo = this;
   let will = repo.will;
@@ -811,7 +802,7 @@ let Extend =
   repoLocalVersion,
   repoLatestVersion,
 
-  exportInfo,
+  exportString,
   Hash,
 
   // relation

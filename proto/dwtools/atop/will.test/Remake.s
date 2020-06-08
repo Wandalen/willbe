@@ -4,8 +4,8 @@ _.include( `wAppBasic` );
 _.include( `wFiles` );
 
 let execPath = _.path.nativize( _.path.join( __dirname, `../will/entry/Exec` ) );
-let assetsOriginalSuitePath = _.path.join( __dirname, `_asset` );
-let repoDirPath = _.path.join( assetsOriginalSuitePath, `_repo` );
+let assetsOriginalPath = _.path.join( __dirname, `_asset` );
+let repoDirPath = _.path.join( assetsOriginalPath, `_repo` );
 let ready = new _.Consequence().take( null );
 let start = _.process.starter
 ({
@@ -16,7 +16,7 @@ let start = _.process.starter
 
 let will = _.process.starter
 ({
-  currentPath : assetsOriginalSuitePath,
+  currentPath : assetsOriginalPath,
   execPath : `node ` + execPath,
   outputCollecting : 1,
   outputGraying : 1,
@@ -77,14 +77,14 @@ copy( `${asset}/+super.out`, `${asset}/super.out` );
 
 function del( filePath )
 {
-  return _.fileProvider.filesDelete( _.path.join( assetsOriginalSuitePath, filePath ) ) || null;
+  return _.fileProvider.filesDelete( _.path.join( assetsOriginalPath, filePath ) ) || null;
 }
 
 function copy( dst, src )
 {
   return _.fileProvider.filesReflect
   ({
-    dst : _.path.join( assetsOriginalSuitePath, dst ),
-    src : _.path.join( assetsOriginalSuitePath, src ),
+    dst : _.path.join( assetsOriginalPath, dst ),
+    src : _.path.join( assetsOriginalPath, src ),
   }) || null;
 }

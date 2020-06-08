@@ -2,13 +2,6 @@
 
 'use strict';
 
-// if( typeof inModule !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
 let Tar;
 
 //
@@ -264,7 +257,7 @@ function _performPrepare1( frame )
 
 //
 
-function _performOutModule()
+function _performOutModule( frame )
 {
   let exported = this;
   let inModule = exported.inModule;
@@ -276,16 +269,25 @@ function _performOutModule()
   let logger = will.logger;
   let outFilePath = inModule.outfilePathGet();
 
+  debugger;
   if( exported.outModule )
   {
-    _.assert( exported.outModule.isValid() );
-    return null;
+
+    // xxx : implement
+    // if( frame.run.isRoot )
+    // {
+    //   debugger;
+    //   exported.outModule.finit();
+    //   exported.outModule = null;
+    // }
+    // else
+    {
+      _.assert( exported.outModule.isValid() );
+      return null;
+    }
   }
 
-  debugger;
   exported.outModule = inModule.outModuleMake({ willfilesPath : outFilePath });
-  // exported.outModule = inModule.outModuleMake();
-  // debugger;
   return null;
 }
 
@@ -820,12 +822,14 @@ function _performWriteOutFile()
 
   /* */
 
+  // debugger;
   hd.fileWrite
   ({
     filePath : outFilePath,
     data : structure,
     encoding : 'yaml',
   });
+  // debugger;
 
   /* */
 
@@ -876,7 +880,6 @@ function _performReloadOutFile()
   /* */
 
   let name = outModule.absoluteName;
-  // debugger;
   return outModule.reopen()
   .finally( ( err, outModule2 ) =>
   {
@@ -885,8 +888,6 @@ function _performReloadOutFile()
     if( err )
     throw _.err( err, `\nFailed to reopen ${name} after exporting it` );
     _.assert( outModule2 instanceof _.Will.Module );
-    // debugger;
-    // exported.outModule = outModule2;
     return outModule2;
   });
 
@@ -906,7 +907,7 @@ function perform( frame )
   _.assert( arguments.length === 1 );
 
   con.then( () => exported._performPrepare1( frame ) );
-  con.then( () => exported._performOutModule() );
+  con.then( () => exported._performOutModule( frame ) );
   con.then( () => exported._performReform() );
   con.then( () => exported._performSubmodulesPeersOpen() );
   con.then( () => exported._performRecursive() );
@@ -925,11 +926,7 @@ function perform( frame )
   {
     if( err )
     throw _.err( err, `\nFailed to export ${exported.decoratedAbsoluteName}` );
-    // debugger;
     frame.run.exported.push( exported );
-    // debugger;
-    // frame.run.exported = outModule2.exportedMap[ exported.name ];
-    // frame.run.exported.form();
     return outModule2;
   });
 
@@ -1070,7 +1067,7 @@ _.Copyable.mixin( Self );
 //
 
 if( typeof inModule !== 'undefined' && inModule !== null )
-inModule[ 'exports' ] = _global_.wTools;
+module[ 'exports' ] = _global_.wTools;
 
 _.staticDeclare
 ({
