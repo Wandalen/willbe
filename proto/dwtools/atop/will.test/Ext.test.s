@@ -6340,7 +6340,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, '2 at ./A' ), 0 );
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.vd.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 0 );
-    test.identical( _.strLinesCount( got.output ), 3 );
+    test.is( 2 <=_.strLinesCount( got.output ) && _.strLinesCount( got.output ) <= 3 );
 
     var files = self.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
