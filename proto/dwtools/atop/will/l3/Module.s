@@ -36,7 +36,8 @@
 
 let _ = _global_.wTools;
 let Parent = _.Will.AbstractModule;
-let Self = function wWillModule( o )
+let Self = wWillModule;
+function wWillModule( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
@@ -2356,6 +2357,7 @@ function moduleBuild_body( o )
     build,
     recursive : 0,
     isRoot : o.isRoot,
+    purging : o.purging,
   });
 
   return con
@@ -2395,6 +2397,7 @@ moduleBuild_body.defaults =
   criterion : null,
   kind : 'export',
   isRoot : null,
+  purging : 0,
 }
 
 let moduleBuild = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
@@ -2433,11 +2436,11 @@ function exportedMake( o )
     }
 
     _.assert( !module.isFinited() );
-    // _.assert( o.rewriting, 'not tested' ); /* xxx : check */
+    // _.assert( _.boolLike( o.purging ), 'not tested' ); /* xxx : check */
 
     if( !module.peerModule )
     {
-      if( o.rewriting )
+      if( o.purging )
       return _.Consequence.From( module.outModuleMake() ).then( () => makeFromPeer() );
       else
       return module.outModuleOpenOrMake().then( () => makeFromPeer() );
@@ -2484,7 +2487,7 @@ function exportedMake( o )
 exportedMake.defaults =
 {
   build : null,
-  rewriting : 0,
+  purging : 0,
 }
 
 // --

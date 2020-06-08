@@ -11142,7 +11142,7 @@ function exportNonExportable( test )
 
 //
 
-function exportAfterOutChange( test )
+function exportPurging( test )
 {
   let self = this;
   let a = self.assetFor( test, 'exportMinimal' );
@@ -11177,6 +11177,19 @@ function exportAfterOutChange( test )
   a.start({ execPath : '.export' })
   .then( ( got ) =>
   {
+    test.description = 'second .export';
+    test.is( got.exitCode === 0 );
+
+    var outfile = a.fileProvider.configRead( a.abs( './out/ExportMinimal.out.will.yml' ) );
+    test.identical( outfile.module[ 'ExportMinimal.out' ].about.version, '3.3.3' );
+
+    return null;
+  })
+
+  a.start({ execPath : '.export.purging' })
+  .then( ( got ) =>
+  {
+    test.description = '.export.purging';
     test.is( got.exitCode === 0 );
 
     var outfile = a.fileProvider.configRead( a.abs( './out/ExportMinimal.out.will.yml' ) );
@@ -22188,7 +22201,7 @@ var Self =
     exportSingle,
     exportItself,
     exportNonExportable,
-    exportAfterOutChange,
+    exportPurging, /* yyy */
     // exportStringrmal, /* xxx : later */
     exportWithReflector,
     exportToRoot,

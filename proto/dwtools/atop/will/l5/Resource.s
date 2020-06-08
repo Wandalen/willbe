@@ -13,7 +13,8 @@
 
 let _ = _global_.wTools;
 let Parent = null;
-let Self = function wWillResource( o )
+let Self = wWillResource;
+function wWillResource( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

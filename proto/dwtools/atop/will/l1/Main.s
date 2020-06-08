@@ -39,7 +39,8 @@
 
 let _ = _global_.wTools;
 let Parent = null;
-let Self = function wWill( o )
+let Self = wWill;
+function wWill( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
@@ -3277,6 +3278,7 @@ var defaults = modulesBuild_body.defaults =
   withPeers : 1,
   upforming : 1,
   downloading : 1,
+  purging : 0,
 
 }
 

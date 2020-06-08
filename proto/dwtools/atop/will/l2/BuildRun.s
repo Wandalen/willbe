@@ -4,7 +4,8 @@
 
 let _ = _global_.wTools;
 let Parent = null;
-let Self = function wWillBuildRun( o )
+let Self = wWillBuildRun;
+function wWillBuildRun( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
@@ -124,6 +125,7 @@ let Composes =
   recursive : 0,
   withIntegrated : 2,
   isRoot : null,
+  purging : null,
 }
 
 let Aggregates =

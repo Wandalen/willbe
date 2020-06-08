@@ -13,7 +13,8 @@
 
 let _ = _global_.wTools;
 let Parent = _.Will.Resource;
-let Self = function wWillStep( o )
+let Self = wWillStep;
+function wWillStep( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

@@ -4,7 +4,8 @@
 
 let _ = _global_.wTools;
 let Parent = _.Will.Resource;
-let Self = function wWillReflector( o )
+let Self = wWillReflector;
+function wWillReflector( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

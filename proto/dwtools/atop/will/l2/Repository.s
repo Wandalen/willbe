@@ -4,7 +4,8 @@
 
 let _ = _global_.wTools;
 let Parent = null;
-let Self = function wWillRepository( o )
+let Self = wWillRepository;
+function wWillRepository( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

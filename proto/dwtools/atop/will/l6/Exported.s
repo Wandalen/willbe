@@ -8,7 +8,8 @@ let Tar;
 
 let _ = _global_.wTools;
 let Parent = _.Will.Resource;
-let Self = function wWillExported( o )
+let Self = wWillExported;
+function wWillExported( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
@@ -269,22 +270,10 @@ function _performOutModule( frame )
   let logger = will.logger;
   let outFilePath = inModule.outfilePathGet();
 
-  debugger;
   if( exported.outModule )
   {
-
-    // xxx : implement
-    // if( frame.run.isRoot )
-    // {
-    //   debugger;
-    //   exported.outModule.finit();
-    //   exported.outModule = null;
-    // }
-    // else
-    {
-      _.assert( exported.outModule.isValid() );
-      return null;
-    }
+    _.assert( exported.outModule.isValid() );
+    return null;
   }
 
   exported.outModule = inModule.outModuleMake({ willfilesPath : outFilePath });

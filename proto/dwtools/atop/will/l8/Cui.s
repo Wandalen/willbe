@@ -2,18 +2,10 @@
 
 'use strict';
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( './MainBase.s' );
-//
-// }
-
-//
-
 let _ = _global_.wTools;
 let Parent = _.Will;
-let Self = function wWillCli( o )
+let Self = wWillCli;
+function wWillCli( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
@@ -284,6 +276,7 @@ function _commandsMake()
     'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
     'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
     'export' :                          { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
+    'export purging' :                  { e : _.routineJoin( will, will.commandExportPurging ),               h : 'Export selected the module with spesified criterion purging output willfile first. Save output to output willfile and archive.' },
     'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
 
     'module new' :                      { e : _.routineJoin( will, will.commandModuleNew ),                   h : 'Create a new module.' },
@@ -1899,6 +1892,40 @@ function commandExport( e )
 
 //
 
+function commandExportPurging( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = will.Resolver.strRequestParse( e.argument );
+  let doneContainer = [];
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'export',
+    onEach : handleEach,
+    commandRoutine : commandExport,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.modulesExport
+    ({
+      ... _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } ),
+      doneContainer,
+      name : request.subject,
+      criterion : request.map,
+      recursive : 0,
+      purging : 1,
+      kind : 'export',
+    });
+  }
+
+}
+
+//
+
 function commandExportRecursive( e )
 {
   let will = this;
@@ -2859,6 +2886,7 @@ let Extend =
   commandSubmodulesClean,
   commandBuild,
   commandExport,
+  commandExportPurging,
   commandExportRecursive,
 
   commandGitPreservingHardLinks,

@@ -13,7 +13,8 @@
 
 let _ = _global_.wTools;
 let Parent = null;
-let Self = function wWillParagraphAbout( o )
+let Self = wWillParagraphAbout;
+function wWillParagraphAbout( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

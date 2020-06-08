@@ -4,7 +4,8 @@
 
 let _ = _global_.wTools;
 let Parent = _.Will.Resource;
-let Self = function wWillModulesRelation( o )
+let Self = wWillModulesRelation;
+function wWillModulesRelation( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

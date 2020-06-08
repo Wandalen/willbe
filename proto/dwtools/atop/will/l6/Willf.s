@@ -14,7 +14,8 @@
 let _ = _global_.wTools;
 let Crypto;
 let Parent = null;
-let Self = function wWillfile( o )
+let Self = wWillfile;
+function wWillfile( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

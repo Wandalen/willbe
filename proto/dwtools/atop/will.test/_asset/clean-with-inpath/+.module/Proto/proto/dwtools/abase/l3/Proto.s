@@ -637,7 +637,8 @@ function propertyHide( dstModuleForTesting12type, name, value )
  * @param {object} namesObject - name/value map of constants.
  *
  * @example
- * let Self = function ClassName( o ) { };
+ * let Self = ClassName;
+function ClassName( o ) { };
  * let Constants = { num : 100  };
  * _.propertyConstant( Self.prototype, Constants );
  * console.log( Self.prototype ); // returns { num: 100 }
