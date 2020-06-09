@@ -4848,7 +4848,6 @@ function reflectorOptionStep( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflector-option-step' );
-  let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
 
   /* - */
@@ -4859,7 +4858,7 @@ function reflectorOptionStep( test )
   {
     test.case = 'copy proto and then use reflector to remote it';
 
-    test.is( !_.fileProvider.fileExists( outPath ) );
+    test.is( !_.fileProvider.fileExists( a.abs( 'out' ) ) );
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflector.proto reflected 2 file\\(s\\) .* in .*` ) ) );
