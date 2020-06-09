@@ -18599,9 +18599,6 @@ function submodulesAgreeThrowing( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-download-errors' );
-  let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let downloadPath = _.path.join( a.routinePath, '.module/ModuleForTesting2a' );
-  let filePath = _.path.join( downloadPath, 'file' );
   let filesBefore;
   a.start = _.process.starter
   ({
@@ -18630,7 +18627,7 @@ function submodulesAgreeThrowing( test )
   .then( () =>
   {
     test.case = 'error on agree, new directory should not be made';
-    _.fileProvider.filesDelete( submodulesPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
   })
   a.start({ execPath : '.with bad .submodules.versions.agree' })
@@ -18638,7 +18635,7 @@ function submodulesAgreeThrowing( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Failed to agree module' ) );
-    test.is( !_.fileProvider.fileExists( downloadPath ) )
+    test.is( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -18647,8 +18644,8 @@ function submodulesAgreeThrowing( test )
   .then( () =>
   {
     test.case = 'error on download, existing empty directory will be deleted ';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.start({ execPath : '.with bad .submodules.versions.agree' })
@@ -18656,7 +18653,7 @@ function submodulesAgreeThrowing( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Failed to agree module' ) );
-    test.is( !_.fileProvider.fileExists( downloadPath ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
     return null;
   })
 
@@ -18665,8 +18662,8 @@ function submodulesAgreeThrowing( test )
   .then( () =>
   {
     test.case = 'existing empty directory will be deleted ';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.versions.agree' })
@@ -18676,7 +18673,7 @@ function submodulesAgreeThrowing( test )
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
     test.is( _.strHas( got.output, 'module::wModuleForTesting2a was agreed with version master' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
-    let files = self.find( downloadPath );
+    let files = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
     return null;
@@ -18687,9 +18684,9 @@ function submodulesAgreeThrowing( test )
   .then( () =>
   {
     test.case = 'error on download, dir with terminal at download path, download path will be deleted';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
-    _.fileProvider.fileWrite( filePath,filePath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
+    a.fileProvider.fileWrite( a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ),a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ) );
     return null;
   })
   a.start({ execPath : '.with bad .submodules.versions.agree' })
@@ -18697,7 +18694,7 @@ function submodulesAgreeThrowing( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Failed to agree module' ) );
-    test.is( !_.fileProvider.fileExists( downloadPath ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
 
     return null;
   })
@@ -18707,9 +18704,9 @@ function submodulesAgreeThrowing( test )
   .then( () =>
   {
     test.case = 'dir with terminal at download path, download path will be deleted';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
-    _.fileProvider.fileWrite( filePath,filePath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
+    a.fileProvider.fileWrite( a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ),a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.versions.agree' })
@@ -18719,7 +18716,7 @@ function submodulesAgreeThrowing( test )
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
     test.is( _.strHas( got.output, 'module::wModuleForTesting2a was agreed with version master' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
-    let files = self.find( downloadPath );
+    let files = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
     return null;
@@ -18730,8 +18727,8 @@ function submodulesAgreeThrowing( test )
   .then( () =>
   {
     test.case = 'error on download, download path exists and its terminal, file will be removed';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.fileWrite( downloadPath,downloadPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a' ),a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.start({ execPath : '.with bad .submodules.versions.agree' })
@@ -18739,7 +18736,7 @@ function submodulesAgreeThrowing( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Failed to agree module' ) );
-    test.is( !_.fileProvider.fileExists( downloadPath ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) );
     return null;
   })
 
@@ -18748,8 +18745,8 @@ function submodulesAgreeThrowing( test )
   .then( () =>
   {
     test.case = 'download path exists and its terminal, file will be removed';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.fileWrite( downloadPath,downloadPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a' ),a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.versions.agree' })
@@ -18759,7 +18756,7 @@ function submodulesAgreeThrowing( test )
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
     test.is( _.strHas( got.output, 'module::wModuleForTesting2a was agreed with version master' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed in' ) );
-    let files = self.find( downloadPath );
+    let files = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
     return null;
   })
@@ -18769,8 +18766,8 @@ function submodulesAgreeThrowing( test )
   .then( () =>
   {
     test.case = 'donwloaded repo has different origin, should be deleted and downloaded again';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.startNonThrowing({ execPath : 'git clone https://github.com/Wandalen/wModuleForTesting1.git .module/ModuleForTesting2a' })
@@ -18779,8 +18776,8 @@ function submodulesAgreeThrowing( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
-    test.is( _.fileProvider.fileExists( downloadPath ) )
-    let files = self.find( downloadPath );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    let files = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
     return null;
@@ -18791,15 +18788,15 @@ function submodulesAgreeThrowing( test )
   .then( () =>
   {
     test.case = 'donwloaded repo has uncommitted change, error expected';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.versions.agree' })
   a.startNonThrowing( 'git -C .module/ModuleForTesting2a reset --hard HEAD~1' )
   .then( () =>
   {
-    _.fileProvider.fileWrite( _.path.join( downloadPath, 'was.package.json' ), 'was.package.json' );
+    a.fileProvider.fileWrite( _.path.join( a.abs( '.module/ModuleForTesting2a' ), 'was.package.json' ), 'was.package.json' );
     return null;
   })
   a.start({ execPath : '.with good .submodules.versions.agree' })
@@ -18816,8 +18813,8 @@ function submodulesAgreeThrowing( test )
   .then( () =>
   {
     test.case = 'donwloaded repo has unpushed change and wrong origin, error expected';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
+    a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.versions.agree' })
