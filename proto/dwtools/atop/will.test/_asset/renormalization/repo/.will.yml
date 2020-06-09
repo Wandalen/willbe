@@ -1,0 +1,21 @@
+about :
+
+  name : supermodule
+  version : 0.0.0
+
+path :
+
+  out : out
+
+step :
+
+  export :
+    export : '**'
+
+build :
+
+  export :
+    steps : export
+    criterion :
+      export : 1
+      default : 1

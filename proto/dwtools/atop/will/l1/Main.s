@@ -3008,7 +3008,6 @@ function modulesDownload_body( o )
       {
         let module = junction.module;
         let localPath = module.localPath;
-        debugger
         return module.repo.renormalize( localPath );
       });
     })
