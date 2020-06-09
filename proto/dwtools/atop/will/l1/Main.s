@@ -2677,8 +2677,7 @@ function modulesDownload_body( o )
   {
     let ready = new _.Consequence().take( null );
 
-    if( rootModule )
-    ready.then( () => rootModule.repo.renormalize( rootModule.localPath ) );
+    ready.then( () => renormalize() );
 
     ready.then( () =>
     {
@@ -2999,6 +2998,22 @@ function modulesDownload_body( o )
   }
 
   /* */
+
+  function renormalize()
+  {
+    let ready = new _.Consequence().take( null );
+    rootJunctions.forEach( ( junction ) =>
+    {
+      ready.then( () =>
+      {
+        let module = junction.module;
+        let localPath = module.localPath;
+        debugger
+        return module.repo.renormalize( localPath );
+      });
+    })
+    return ready;
+  }
 }
 
 var defaults = modulesDownload_body.defaults = _.mapExtend

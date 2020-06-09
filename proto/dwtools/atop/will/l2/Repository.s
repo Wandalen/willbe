@@ -643,11 +643,14 @@ function renormalize( dirPath )
   let will = repo.will;
 
   _.assert( arguments.length === 1 );
+  _.assert( _.strDefined( dirPath ) );
 
   if( !repo.isRepository )
   return true;
 
-  return _.git.renormalize
+  let vcs = will.vcsToolsFor( repo.remotePath ) || _.git;
+
+  return vcs.renormalize
   ({
     localPath : repo.downloadPath || dirPath,
     sync : 0,
