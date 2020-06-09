@@ -20382,28 +20382,6 @@ function upgradeDryDetached( test )
   let a = self.assetFor( test, 'submodules-detached' );
   a.reflect();
 
-  // let self = this;
-  // let originalAssetPath = a.path.join( self.assetsOriginalPath, 'submodules-detached' );
-  // let routinePath = a.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let filePath = a.path.join( routinePath, 'file' );
-  // let modulePath = a.path.join( routinePath, '.module' );
-  // let outPath = a.path.join( routinePath, 'out' );
-  //
-  // let ready = new _.Consequence().take( null );
-  //
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // });
-  //
-  // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
-
   /* - */
 
   a.ready
@@ -20636,26 +20614,6 @@ function upgradeDetached( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-detached' );
   a.reflect();
-
-  // let self = this;
-  // let originalAssetPath = a.path.join( self.assetsOriginalPath, 'submodules-detached' );
-  // let routinePath = a.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let filePath = a.path.join( routinePath, 'file' );
-  // let modulePath = a.path.join( routinePath, '.module' );
-  // let outPath = a.path.join( routinePath, 'out' );
-  //
-  // let ready = new _.Consequence().take( null );
-  //
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // });
 
   /* - */
 
@@ -21017,21 +20975,6 @@ function upgradeDetachedExperiment( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-detached-single' );
 
-  // let self = this;
-  // let originalAssetPath = a.path.join( self.assetsOriginalPath, 'submodules-detached-single' );
-  // let routinePath = a.path.join( self.suiteTempPath, test.name );
-  //
-  // let ready = new _.Consequence().take( null );
-  //
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // });
-
   /* - */
 
   a.ready
@@ -21071,28 +21014,6 @@ function fixateDryDetached( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-detached' );
   a.reflect();
-
-  // let self = this;
-  // let originalAssetPath = a.path.join( self.assetsOriginalPath, 'submodules-detached' );
-  // let routinePath = a.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let filePath = a.path.join( routinePath, 'file' );
-  // let modulePath = a.path.join( routinePath, '.module' );
-  // let outPath = a.path.join( routinePath, 'out' );
-  //
-  // let ready = new _.Consequence().take( null );
-  //
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // });
-  //
-  // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } })
 
   /* - */
 
@@ -21325,26 +21246,6 @@ function fixateDetached( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-detached' );
-
-  // let self = this;
-  // let originalAssetPath = a.path.join( self.assetsOriginalPath, 'submodules-detached' );
-  // let routinePath = a.path.join( self.suiteTempPath, test.name );
-  // let abs = self.abs_functor( routinePath );
-  // let rel = self.rel_functor( routinePath );
-  // let filePath = a.path.join( routinePath, 'file' );
-  // let modulePath = a.path.join( routinePath, '.module' );
-  // let outPath = a.path.join( routinePath, 'out' );
-  //
-  // let ready = new _.Consequence().take( null );
-  //
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + self.willPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // });
 
   /* - */
 
@@ -21730,35 +21631,6 @@ function runWillbe( test )
     ready : a.ready,
     mode : 'shell',
   });
-
-//   let self = this;
-//   let originalAssetPath = a.path.join( self.assetsOriginalPath, 'run-willbe' );
-//   let routinePath = a.path.join( self.suiteTempPath, test.name );
-//   let abs = self.abs_functor( routinePath );
-//   let rel = self.rel_functor( routinePath );
-//
-//   let execUnrestrictedPath = a.path.nativize( a.path.join( __dirname, '../will/ExecUnrestricted' ) );
-//   let ready = new _.Consequence().take( null );
-//
-//   let fork = _.process.starter
-//   ({
-//     // execPath : 'node',
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//     mode : 'fork',
-//   });
-//
-//   let start = _.process.starter
-//   ({
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     mode : 'fork',
-//     ready : ready,
-//     mode : 'shell',
-//   });
 
   /* - */
 
