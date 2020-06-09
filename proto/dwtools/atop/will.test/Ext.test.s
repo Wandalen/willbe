@@ -683,7 +683,6 @@ function transpileWithOptions( test )
 {
   let self = this;
   let a = self.assetFor( test, 'transpile-options' );
-  let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
 
   /* - */
@@ -700,14 +699,14 @@ function transpileWithOptions( test )
      \n diagnosing : 0\
      \n beautifing : 1
     `
-    _.fileProvider.filesDelete( outPath );
+    _.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
   a.start({ execPath : '.build' })
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './File.min.js' ] );
     let file = _.fileProvider.fileRead( a.abs( 'out/File.min.js') );
     let lines = _.strLinesCount( file );
