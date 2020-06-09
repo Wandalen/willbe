@@ -12286,8 +12286,6 @@ function exportMultiple( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-multiple' );
-  let outPath = a.abs( 'out' );
-  let outWillPath = a.path.join( outPath, 'submodule.out.will.yml' );
   a.reflect();
 
   /* - */
@@ -12297,7 +12295,7 @@ function exportMultiple( test )
   {
     test.case = '.export debug:1';
     a.reflect();
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
 
     return null;
   })
@@ -12307,7 +12305,7 @@ function exportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js' ] );
     test.identical( got.exitCode, 0 );
 
@@ -12318,7 +12316,7 @@ function exportMultiple( test )
     test.is( _.strHas( got.output, 'submodule.debug.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
-    var outfile = a.fileProvider.configRead( outWillPath );
+    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), 'submodule.out.will.yml' ) );
 
     outfile = outfile.module[ 'submodule.out' ];
 
@@ -12495,7 +12493,7 @@ function exportMultiple( test )
   {
     test.case = '.export debug:1';
     a.reflect();
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
 
     return null;
   })
@@ -12507,7 +12505,7 @@ function exportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
 
@@ -12518,12 +12516,12 @@ function exportMultiple( test )
     test.is( _.strHas( got.output, 'submodule.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
-    var outfileData = a.fileProvider.fileRead( outWillPath );
+    var outfileData = a.fileProvider.fileRead( a.path.join( a.abs( 'out' ), 'submodule.out.will.yml' ) );
     test.is( outfileData.length > 1000 );
     test.is( !_.strHas( outfileData, a.abs( '../..' ) ) );
     test.is( !_.strHas( outfileData, a.path.nativize( a.abs( '../..' ) ) ) );
 
-    var outfile = a.fileProvider.configRead( outWillPath );
+    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), 'submodule.out.will.yml' ) );
     outfile = outfile.module[ 'submodule.out' ]
     var exported =
     {
