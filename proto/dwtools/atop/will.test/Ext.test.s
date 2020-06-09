@@ -18844,9 +18844,6 @@ function submodulesVersionsAgreeWrongOrigin( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-download-errors' );
-  let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let downloadPath = _.path.join( a.routinePath, '.module/ModuleForTesting2a' );
-  let filePath = _.path.join( downloadPath, 'file' );
   a.startNonThrowing2 = _.process.starter
   ({
     currentPath : a.routinePath,
@@ -18863,8 +18860,8 @@ function submodulesVersionsAgreeWrongOrigin( test )
   .then( () =>
   {
     test.case = 'donwloaded repo has different origin, should be deleted and downloaded again';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
+    _.fileProvider.filesDelete( a.abs( '.module' ) );
+    _.fileProvider.dirMake( a.path.join( a.routinePath, '.module/ModuleForTesting2a' ) );
     return null;
   })
 
@@ -18875,8 +18872,8 @@ function submodulesVersionsAgreeWrongOrigin( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
-    test.is( _.fileProvider.fileExists( downloadPath ) )
-    let files = self.find( downloadPath );
+    test.is( _.fileProvider.fileExists( a.path.join( a.routinePath, '.module/ModuleForTesting2a' ) ) )
+    let files = self.find( a.path.join( a.routinePath, '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
     return null;
@@ -19158,9 +19155,6 @@ function subModulesUpdateSwitchBranch( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-update-switch-branch' );
-  let submodulesPath = a.abs( '.module' );
-  let willfilePath = a.abs( '.will.yml' );
-  let experimentModulePath = _.path.join( submodulesPath, 'willbe-experiment' );
   let detachedVersion;
 
   /* */
@@ -19177,7 +19171,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -19185,9 +19179,9 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     test.case = 'switch master to dev';
-    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ]= _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
-    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     return null;
   })
 
@@ -19195,7 +19189,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
@@ -19203,9 +19197,9 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     test.case = 'switch dev to detached state';
-    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@dev', '#' + detachedVersion );
-    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     return null;
   })
 
@@ -19213,7 +19207,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, detachedVersion ) );
     return null;
   })
@@ -19221,9 +19215,9 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     test.case = 'switch detached state to master';
-    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#' + detachedVersion, '@master' );
-    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     return null;
   })
 
@@ -19231,7 +19225,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -19239,10 +19233,10 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     test.case = 'master has local change, cause conflict when switch to dev';
-    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
-    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
-    let filePath = _.path.join( submodulesPath, 'willbe-experiment/File.js' );
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
+    let filePath = _.path.join( a.abs( '.module' ), 'willbe-experiment/File.js' );
     a.fileProvider.fileWrite({ filePath, data : 'master' });
     return null;
   })
@@ -19256,7 +19250,7 @@ function subModulesUpdateSwitchBranch( test )
   _.process.start
   ({
     execPath : 'git status',
-    currentPath : experimentModulePath,
+    currentPath : a.path.join( a.abs( '.module' ), 'willbe-experiment' ),
     ready : a.ready,
     outputCollecting : 1
   })
@@ -19265,7 +19259,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.is( _.strHas( got.output, 'modified:   File.js' ) )
 
-    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -19285,14 +19279,14 @@ function subModulesUpdateSwitchBranch( test )
   _.process.start
   ({
     execPath : 'git commit --allow-empty -m commitofmaster',
-    currentPath : experimentModulePath,
+    currentPath : a.path.join( a.abs( '.module' ), 'willbe-experiment' ),
     ready : a.ready
   })
   .then( () =>
   {
-    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
-    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     return null;
   })
 
@@ -19300,7 +19294,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
@@ -19320,7 +19314,7 @@ function subModulesUpdateSwitchBranch( test )
   _.process.start
   ({
     execPath : 'git commit --allow-empty -m emptycommit',
-    currentPath : experimentModulePath,
+    currentPath : a.path.join( a.abs( '.module' ), 'willbe-experiment' ),
     ready : a.ready
   })
 
@@ -19336,7 +19330,7 @@ function subModulesUpdateSwitchBranch( test )
   _.process.start
   ({
     execPath : 'git status',
-    currentPath : experimentModulePath,
+    currentPath : a.path.join( a.abs( '.module' ), 'willbe-experiment' ),
     outputCollecting : 1,
     outputGraying : 1,
     ready : a.ready,
@@ -19346,7 +19340,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.is( _.strHas( got.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
 
-    let currentVersion = a.fileProvider.fileRead( _.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( _.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
