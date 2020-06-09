@@ -16517,8 +16517,6 @@ function submodulesDownloadSwitchBranch( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-update-switch-branch' );
-  let willfilePath = a.abs( '.will.yml' );
-  let submodulesPath = a.abs( '.module' );
   a.reflect();
 
   /* - */
@@ -16570,7 +16568,7 @@ function submodulesDownloadSwitchBranch( test )
   .then( () =>
   {
     debugger
-    let currentVersion = a.fileProvider.fileRead( a.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -16578,10 +16576,10 @@ function submodulesDownloadSwitchBranch( test )
   .then( () =>
   {
     test.case = 'switch master to dev';
-    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
     // willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '#dev' );
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
-    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     debugger;
     return null;
   })
@@ -16590,7 +16588,7 @@ function submodulesDownloadSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( a.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -16598,9 +16596,9 @@ function submodulesDownloadSwitchBranch( test )
   .then( () =>
   {
     test.case = 'switch dev to detached state';
-    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#dev', '#9ce409887df0754760a1cbdce249b0fa5f08152e' );
-    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     return null;
   })
 
@@ -16608,7 +16606,7 @@ function submodulesDownloadSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( a.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -16616,9 +16614,9 @@ function submodulesDownloadSwitchBranch( test )
   .then( () =>
   {
     test.case = 'switch detached state to master';
-    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#9ce409887df0754760a1cbdce249b0fa5f08152e', '@master' );
-    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     return null;
   })
 
@@ -16626,7 +16624,7 @@ function submodulesDownloadSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( a.path.join( submodulesPath, 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
