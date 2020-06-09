@@ -10230,7 +10230,6 @@ function buildSingleModule( test )
 {
   let self = this;
   let a = self.assetFor( test, 'single' );
-  let outDebugPath = a.abs( 'out/debug' );
   a.reflect();
 
   /* - */
@@ -10238,7 +10237,7 @@ function buildSingleModule( test )
   a.ready.then( () =>
   {
     test.case = '.build'
-    a.fileProvider.filesDelete( outDebugPath );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     return null;
   })
 
@@ -10252,7 +10251,7 @@ function buildSingleModule( test )
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
 
-    var files = self.find( outDebugPath );
+    var files = self.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
 
     return null;
@@ -10263,8 +10262,7 @@ function buildSingleModule( test )
   .then( () =>
   {
     test.case = '.build debug.raw'
-    let outDebugPath = a.abs( 'out/debug' );
-    a.fileProvider.filesDelete( outDebugPath );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     return null;
   })
 
@@ -10277,7 +10275,7 @@ function buildSingleModule( test )
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
 
-    var files = self.find( outDebugPath );
+    var files = self.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
 
     return null;
@@ -10288,8 +10286,7 @@ function buildSingleModule( test )
   .then( () =>
   {
     test.case = '.build release.raw'
-    let outDebugPath = a.abs( 'out/release' );
-    a.fileProvider.filesDelete( outDebugPath );
+    a.fileProvider.filesDelete( a.abs( 'out/release' ) );
     return null;
   })
 
@@ -10302,7 +10299,7 @@ function buildSingleModule( test )
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, /Built .*module::single \/ build::release\.raw.* in/ ) );
 
-    var files = self.find( outDebugPath );
+    var files = self.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
 
     return null;
