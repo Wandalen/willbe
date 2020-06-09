@@ -4136,7 +4136,6 @@ function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-submodules-with-plural-criterion' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -4145,7 +4144,7 @@ function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
   .then( () =>
   {
     test.case = 'reflect informal submodule exported using steps, two builds in a row'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4155,7 +4154,7 @@ function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
@@ -4167,7 +4166,7 @@ function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
