@@ -12984,8 +12984,6 @@ function exportBroken( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-multiple-broken' );
-  let outPath = a.abs( 'out' );
-  let outWillPath = a.path.join( outPath, 'submodule.out.will.yml' );
 
   /* - */
 
@@ -13003,16 +13001,16 @@ function exportBroken( test )
   .then( ( got ) =>
   {
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js' ] );
     test.identical( got.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( _.path.join( outPath, 'debug' ) ) );
-    test.is( !a.fileProvider.fileExists( _.path.join( outPath, 'release' ) ) );
+    test.is( a.fileProvider.fileExists( _.path.join( a.abs( 'out' ), 'debug' ) ) );
+    test.is( !a.fileProvider.fileExists( _.path.join( a.abs( 'out' ), 'release' ) ) );
 
     test.is( _.strHas( got.output, 'submodule.debug.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
-    var outfile = a.fileProvider.configRead( outWillPath );
+    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), 'submodule.out.will.yml' ) );
     outfile = outfile.module[ 'submodule.out' ];
 
     var exported =
