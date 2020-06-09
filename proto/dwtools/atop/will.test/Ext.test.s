@@ -18384,6 +18384,57 @@ submodulesDownloadUpdateNpm.timeOut = 300000;
 
 //
 
+function submodulesDownloadAutoCrlfEnabled( test )
+{
+  let self = this;
+  let runningInsideTestContainer = _.process.insideTestContainer();
+  let a = self.assetFor( test, 'submodules-download-crlf' );
+
+  /* - */
+
+  test.description = 'checks that global option core.autocrlf=true does not affect on submodules download'
+
+  if( runningInsideTestContainer )
+  a.shell( 'git config --global core.autocrlf true' );
+
+  prepare()
+  a.start({ execPath : '.submodules.download' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::supermodule were downloaded in' ) );
+    return null;
+  })
+  a.start({ execPath : '.submodules.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( got.output, '! Outdated .' ), 0 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+  /* - */
+
+  function prepare( o )
+  {
+    a.ready.then( () => { a.reflect(); return null } );
+    a.start({ execPath : '.with module/submodule .export' })
+    let shell = _.process.starter({ currentPath : a.abs( 'module' ), ready : a.ready })
+    shell( 'git init' )
+    shell( 'git config core.autocrlf false' )
+    shell( 'git add -fA .' )
+    shell( 'git commit -m init' )
+    return a.ready;
+  }
+}
+
+//
+
 function rootModuleRenormalization( test )
 {
   let self = this;
@@ -22206,6 +22257,7 @@ var Self =
     submodulesDownloadHierarchyDuplicate,
     submodulesDownloadNpm,
     submodulesDownloadUpdateNpm,
+    submodulesDownloadAutoCrlfEnabled,
     rootModuleRenormalization,
 
     submodulesUpdateThrowing,
