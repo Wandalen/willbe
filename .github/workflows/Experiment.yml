@@ -31,6 +31,8 @@ jobs :
       with :
         node-version : ${{ matrix.node-version }}
     - run : npm i
+    - run : git config --global user.email "testrunner@example.com"
+    - run : git config --global user.name "TestRunner"
     - run : node proto/dwtools/atop/will.test/Int.test.s
 
   Ext :
@@ -48,4 +50,6 @@ jobs :
       with :
         node-version : ${{ matrix.node-version }}
     - run : npm i
+    - run : git config --global user.email "testrunner@example.com"
+    - run : git config --global user.name "TestRunner"
     - run : node proto/dwtools/atop/will.test/Ext.test.s
