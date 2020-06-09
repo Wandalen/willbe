@@ -3445,16 +3445,12 @@ function reflectRemoteGit( test )
   let a = self.assetFor( test, 'reflect-remote-git' );
   a.reflect();
 
-  let local1Path = a.abs( 'ModuleForTesting2a' );
-  let local2Path = a.abs( 'ModuleForTesting1b' );
-  let local3Path = a.abs( 'ModuleForTesting12' );
-
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.build download.* variant:1'
-    a.fileProvider.filesDelete( local1Path );
+    a.fileProvider.filesDelete( a.abs( 'ModuleForTesting2a' ) );
     return null;
   })
 
@@ -3466,7 +3462,7 @@ function reflectRemoteGit( test )
   .then( () =>
   {
     test.case = '.build download.* variant:2'
-    a.fileProvider.filesDelete( local1Path );
+    a.fileProvider.filesDelete( a.abs( 'ModuleForTesting2a' ) );
     return null;
   })
 
@@ -3478,7 +3474,7 @@ function reflectRemoteGit( test )
   .then( () =>
   {
     test.case = '.build download.* variant:3'
-    a.fileProvider.filesDelete( local1Path );
+    a.fileProvider.filesDelete( a.abs( 'ModuleForTesting2a' ) );
     return null;
   })
 
@@ -3490,7 +3486,7 @@ function reflectRemoteGit( test )
   .then( () =>
   {
     test.case = '.build download.* variant:4'
-    a.fileProvider.filesDelete( local1Path );
+    a.fileProvider.filesDelete( a.abs( 'ModuleForTesting2a' ) );
     return null;
   })
 
@@ -3502,7 +3498,7 @@ function reflectRemoteGit( test )
   .then( () =>
   {
     test.case = '.build download.* variant:5'
-    a.fileProvider.filesDelete( local1Path );
+    a.fileProvider.filesDelete( a.abs( 'ModuleForTesting2a' ) );
     return null;
   })
 
@@ -3514,7 +3510,7 @@ function reflectRemoteGit( test )
   .then( () =>
   {
     test.case = '.build download.* variant:6'
-    a.fileProvider.filesDelete( local1Path );
+    a.fileProvider.filesDelete( a.abs( 'ModuleForTesting2a' ) );
     return null;
   })
 
@@ -3526,7 +3522,7 @@ function reflectRemoteGit( test )
   .then( () =>
   {
     test.case = '.build download.* variant:7'
-    a.fileProvider.filesDelete( local1Path );
+    a.fileProvider.filesDelete( a.abs( 'ModuleForTesting2a' ) );
     return null;
   })
 
@@ -3537,9 +3533,9 @@ function reflectRemoteGit( test )
 
   .then( () =>
   {
-    a.fileProvider.filesDelete( local1Path );
-    a.fileProvider.filesDelete( local2Path );
-    a.fileProvider.filesDelete( local3Path );
+    a.fileProvider.filesDelete( a.abs( 'ModuleForTesting2a' ) );
+    a.fileProvider.filesDelete( a.abs( 'ModuleForTesting1b' ) );
+    a.fileProvider.filesDelete( a.abs( 'ModuleForTesting12' ) );
     return null;
   })
 
@@ -3552,7 +3548,7 @@ function reflectRemoteGit( test )
   function validate1( arg )
   {
     test.identical( arg.exitCode, 0 );
-    var files = self.find( local1Path );
+    var files = self.find( a.abs( 'ModuleForTesting2a' ) );
     test.ge( files.length, 10 );
     return null;
   }
@@ -3563,11 +3559,11 @@ function reflectRemoteGit( test )
   {
     test.identical( arg.exitCode, 0 );
 
-    var files = self.find( local1Path );
+    var files = self.find( a.abs( 'ModuleForTesting2a' ) );
     test.ge( files.length, 10 );
-    var files = self.find( local2Path );
+    var files = self.find( a.abs( 'ModuleForTesting1b' ) );
     test.ge( files.length, 10 );
-    var files = self.find( local3Path );
+    var files = self.find( a.abs( 'ModuleForTesting12' ) );
     test.ge( files.length, 10 );
 
     return null;
