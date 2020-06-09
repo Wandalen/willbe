@@ -12244,7 +12244,6 @@ function exportSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -12254,7 +12253,7 @@ function exportSubmodules( test )
   .then( () =>
   {
     test.case = '.export'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -12269,10 +12268,10 @@ function exportSubmodules( test )
     test.is( a.fileProvider.isTerminal( a.abs( 'out/submodules.out.will.yml' ) ) );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.is( files.length > 10 );
 
-    var files = a.fileProvider.dirRead( outPath );
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
