@@ -2,7 +2,7 @@
 let willbePath = require.resolve( '..' );
 let _ = require( 'wTools' )
 _.include( 'wFiles' );
-_.include( 'wAppBasic' );
+_.include( 'wProcess' );
 
 _.process.start
 ({ 
