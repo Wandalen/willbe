@@ -12806,7 +12806,6 @@ function exportImportMultiple( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-multiple' );
-  let out2Path = a.abs( 'super.out' );
 
   /* - */
 
@@ -12840,7 +12839,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
     test.case = '.with super .export debug:0';
-    a.fileProvider.filesDelete( out2Path );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
 
     return null;
   })
@@ -12850,7 +12849,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = self.find( out2Path );
+    var files = self.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Exported module::supermodule / build::export. with 2 file(s)' ) );
@@ -12872,7 +12871,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = self.find( out2Path );
+    var files = self.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '5 at ' ) );
@@ -12895,7 +12894,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = self.find( out2Path );
+    var files = self.find( a.abs( 'super.out' ) );
     test.identical( files, [] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted 5 file(s)' ) );
@@ -12910,7 +12909,7 @@ function exportImportMultiple( test )
   {
     test.case = '.with super .export debug:0 ; .with super .export debug:1';
 
-    a.fileProvider.filesDelete( out2Path );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
 
     return null;
   })
@@ -12921,7 +12920,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = self.find( out2Path );
+    var files = self.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Exported module::supermodule / build::export.debug with 2 file(s)' ) );
@@ -12943,7 +12942,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = self.find( out2Path );
+    var files = self.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '8 at ' ) );
@@ -12966,7 +12965,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = self.find( out2Path );
+    var files = self.find( a.abs( 'super.out' ) );
     test.identical( files, [] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted 8 file(s)' ) );
