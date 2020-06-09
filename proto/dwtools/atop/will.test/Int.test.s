@@ -1503,7 +1503,7 @@ function openerClone( test )
     test.identical( a.rel( opener2.dirPath ), '.' );
     test.identical( a.rel( opener2.commonPath ), 'sub' );
     test.identical( a.rel( opener2.localPath ), 'sub' );
-    test.identical( a.rel( opener2.filePath ), null );
+    test.identical( a.rel( opener2.downloadPath ), null );
     test.identical( a.rel( opener2.remotePath ), null );
 
     opener2.preform();
@@ -1513,7 +1513,7 @@ function openerClone( test )
     test.identical( a.rel( opener2.dirPath ), '.' );
     test.identical( a.rel( opener2.commonPath ), 'sub' );
     test.identical( a.rel( opener2.localPath ), 'sub' );
-    test.identical( a.rel( opener2.filePath ), null );
+    test.identical( a.rel( opener2.downloadPath ), null );
     test.identical( a.rel( opener2.remotePath ), null );
 
     opener2.close();
