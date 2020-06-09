@@ -8556,8 +8556,6 @@ function cleanNoBuild( test )
 {
   let self = this;
   let a = self.assetFor( test, 'clean' );
-  let submodulesPath = a.abs( '.module' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -8660,7 +8658,6 @@ function cleanSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'clean' );
-  let submodulesPath = a.abs( '.module' );
   a.reflect();
 
   /* */
@@ -8670,14 +8667,14 @@ function cleanSubmodules( test )
   {
     test.case = '.submodules.update'
     test.identical( got.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.path.join( submodulesPath, 'ModuleForTesting1' ) ) )
-    test.is( a.fileProvider.fileExists( a.path.join( submodulesPath, 'ModuleForTesting2' ) ) )
+    test.is( a.fileProvider.fileExists( a.path.join( a.abs( '.module' ), 'ModuleForTesting1' ) ) )
+    test.is( a.fileProvider.fileExists( a.path.join( a.abs( '.module' ), 'ModuleForTesting2' ) ) )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
-    var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting1' ) );
+    var files = self.find( a.path.join( a.abs( '.module' ), 'ModuleForTesting1' ) );
     test.is( files.length >= 1 );
 
-    var files = self.find( a.path.join( submodulesPath, 'ModuleForTesting2' ) );
+    var files = self.find( a.path.join( a.abs( '.module' ), 'ModuleForTesting2' ) );
     test.is( files.length >= 1 );
 
     return null;
@@ -8689,7 +8686,7 @@ function cleanSubmodules( test )
   a.ready
   .then( () =>
   {
-    files = self.findAll( submodulesPath );
+    files = self.findAll( a.abs( '.module' ) );
     return null;
   })
 
