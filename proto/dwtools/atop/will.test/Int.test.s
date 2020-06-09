@@ -7149,7 +7149,7 @@ function pathsResolveOfSubmodulesRemote( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-remote-repos' );
   let submodulesPath = a.abs( '.module' ); /* qqq xxx : ask */
-  let path = a.path; /* qqq2 : ! */
+  // let path = a.path; [> qqq2 : ! <]
   let opener;
 
   /* - */
@@ -7178,31 +7178,31 @@ function pathsResolveOfSubmodulesRemote( test )
 
     test.case = 'path::in, supermodule';
     var resolved = opener.openedModule.resolve( 'path::in' );
-    var expected = path.join( a.routinePath );
+    var expected = a.path.join( a.routinePath );
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' ); /* qqq xxx : ask */
+    var expected = a.path.join( submodulesPath, 'ModuleForTesting1/out' ); /* qqq xxx : ask */
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = a.path.join( submodulesPath, 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::out' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = a.path.join( submodulesPath, 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::out' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = a.path.join( submodulesPath, 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     return null;
