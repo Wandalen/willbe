@@ -10981,19 +10981,17 @@ function exportSingle( test )
 {
   let self = this;
   let a = self.assetFor( test, 'single' );
-  let outDebugPath = a.path.join( a.routinePath, 'out/debug' );
-  let outPath = a.abs( 'out' ); /* aaa : ? */ /* Dmytro : use `a.abs` */
-  let outWillPath = a.abs( 'out/single.out.will.yml' );
+  // let outPath = a.abs( 'out' ); [> aaa : ? */ /* Dmytro : use `a.abs` <]
   a.reflect();
-  a.fileProvider.filesDelete( outDebugPath );
+  a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
 
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.export'
-    a.fileProvider.filesDelete( outDebugPath );
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -11006,13 +11004,13 @@ function exportSingle( test )
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, 'Exported module::single / build::proto.export with 2 file(s) in') );
 
-    var files = self.find( outDebugPath );
+    var files = self.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s' ] );
 
-    test.is( a.fileProvider.fileExists( outWillPath ) )
-    var outfile = a.fileProvider.configRead( outWillPath );
+    test.is( a.fileProvider.fileExists( a.abs( 'out/single.out.will.yml' ) ) )
+    var outfile = a.fileProvider.configRead( a.abs( 'out/single.out.will.yml' ) );
     outfile = outfile.module[ outfile.root[ 0 ] ];
 
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
@@ -11028,8 +11026,8 @@ function exportSingle( test )
   .then( () =>
   {
     test.case = '.export.proto'
-    a.fileProvider.filesDelete( outDebugPath );
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -11042,13 +11040,13 @@ function exportSingle( test )
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, 'Exported module::single / build::proto.export with 2 file(s) in' ) );
 
-    var files = self.find( outDebugPath );
+    var files = self.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s'  ] );
 
-    test.is( a.fileProvider.fileExists( outWillPath ) )
-    var outfile = a.fileProvider.configRead( outWillPath );
+    test.is( a.fileProvider.fileExists( a.abs( 'out/single.out.will.yml' ) ) )
+    var outfile = a.fileProvider.configRead( a.abs( 'out/single.out.will.yml' ) );
     outfile = outfile.module[ outfile.root[ 0 ] ];
 
     let reflector = outfile.reflector[ 'exported.files.proto.export' ];
