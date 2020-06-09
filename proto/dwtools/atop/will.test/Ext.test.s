@@ -3609,7 +3609,6 @@ function reflectWithOptions( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-with-options' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -3627,7 +3626,7 @@ function reflectWithOptions( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ reflector::reflect.proto1 reflected 3 file\(s\) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js', './debug/File.test.js' ] );
     return null;
   })
@@ -3652,7 +3651,7 @@ function reflectWithOptions( test )
     test.identical( _.strCount( got.output, '====' ), 0 );
     test.is( _.strHas( got.output, /Failed .*module::.+ \/ step::reflect\.proto2/ ) );
     test.is( _.strHas( got.output, /No file found at .+/ ) );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
     return null;
   })
@@ -3672,7 +3671,7 @@ function reflectWithOptions( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ reflector::reflect.proto3 reflected 0 file\(s\) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [] );
     return null;
   })
