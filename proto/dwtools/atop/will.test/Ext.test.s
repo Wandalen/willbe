@@ -2989,7 +2989,7 @@ function reflectSubdir( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-subdir' );
-  let outPath = a.abs( 'out' );
+  let outPath = ;
 
   /* - */
 
