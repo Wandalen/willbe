@@ -10981,7 +10981,7 @@ function exportSingle( test )
 {
   let self = this;
   let a = self.assetFor( test, 'single' );
-  // let outPath = a.abs( 'out' ); [> aaa : ? */ /* Dmytro : use `a.abs` <]
+  // let outPath = a.abs( 'out' ); /* aaa : ? */ /* Dmytro : use `a.abs` */
   a.reflect();
   a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
 
@@ -11212,7 +11212,6 @@ function exportStringrmal( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-mixed' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -11231,10 +11230,10 @@ function exportStringrmal( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /Exported .*module::ModuleForTesting12.informal \/ build::export.* in/ ), 1 );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml' ] );
 
-    var outfile = a.fileProvider.configRead( a.path.join( outPath, './ModuleForTesting12.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), './ModuleForTesting12.informal.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
@@ -11308,10 +11307,10 @@ function exportStringrmal( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /Exported .*module::ModuleForTesting12.informal \/ build::export.* in/ ), 1 );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml' ] );
 
-    var outfile = a.fileProvider.configRead( a.path.join( outPath, './ModuleForTesting12.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), './ModuleForTesting12.informal.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
@@ -11386,10 +11385,10 @@ function exportStringrmal( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /Exported .*module::ModuleForTesting12ab.informal \/ build::export.* in/ ), 1 );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ModuleForTesting12ab.informal.out.will.yml' ] );
 
-    var outfile = a.fileProvider.configRead( a.path.join( outPath, './ModuleForTesting12ab.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), './ModuleForTesting12ab.informal.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12ab.informal.out' ];
     var expected =
     {
