@@ -4256,7 +4256,6 @@ function relfectSubmodulesWithNotExistingFile( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-reflect-with-not-existing' );
-  let outPath = a.abs( 'out' );
   a.reflect();
   _.assert( a.fileProvider.fileExists( a.abs( 'module/moduleB/proto/amid/File.txt' ) ) );
   a.fileProvider.fileDelete( a.abs( 'module/moduleB/proto/amid/File.txt' ) );
@@ -4345,7 +4344,6 @@ function reflectInherit( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-inherit' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -4354,7 +4352,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.proto1'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4375,7 +4373,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.proto2'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4396,7 +4394,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.proto3'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4417,7 +4415,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.proto4'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4438,7 +4436,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.proto5'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4459,7 +4457,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build not1'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4496,7 +4494,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.files1'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4517,7 +4515,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.files2'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4538,7 +4536,7 @@ function reflectInherit( test )
   .then( () =>
   {
     test.case = '.build reflect.files3'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
