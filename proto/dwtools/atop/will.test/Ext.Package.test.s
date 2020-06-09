@@ -7,7 +7,7 @@ if( typeof module !== 'undefined' )
   let _ = require( '../../Tools.s' );
 
   _.include( 'wTesting' );;
-  _.include( 'wAppBasic' );
+  _.include( 'wProcess' );
   _.include( 'wFiles' );
 
   require( '../will/include/Top.s' );

@@ -1,6 +1,6 @@
 
 let _ = require( '../../../dwtools/Tools.s' );
-_.include( 'wAppBasic' );
+_.include( 'wProcess' );
 _.include( 'wFiles' );
 
 let = assetsOriginalPath = _.path.join( __dirname, '_asset' );

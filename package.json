@@ -46,7 +46,7 @@
     "wverbal" : "alpha",
     "wtemplatetreeenvironment" : "alpha",
     "wtemplatefilewriter" : "alpha",
-    "wappbasic" : "alpha",
+    "wprocess" : "alpha",
     "wgraphbasic" : "alpha",
     "wFiles" : "alpha",
     "wfilesarchive" : "alpha",

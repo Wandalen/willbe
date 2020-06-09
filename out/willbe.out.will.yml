@@ -14262,8 +14262,8 @@ module:
         path: 'npm:///wtemplatefilewriter'
         autoExporting: 0
         enabled: 0
-      wAppBasic:
-        path: 'npm:///wappbasic'
+      wProcess:
+        path: 'npm:///wprocess'
         autoExporting: 0
         enabled: 0
       wGraphBasic:
@@ -15147,8 +15147,8 @@ module:
         path: 'npm:///wtemplatefilewriter'
         autoExporting: 0
         enabled: 0
-      wAppBasic:
-        path: 'npm:///wappbasic'
+      wProcess:
+        path: 'npm:///wprocess'
         autoExporting: 0
         enabled: 0
       wGraphBasic:
