@@ -10396,7 +10396,6 @@ function buildSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -10406,7 +10405,7 @@ function buildSubmodules( test )
   .then( () =>
   {
     test.case = 'build withoud submodules'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -10416,7 +10415,7 @@ function buildSubmodules( test )
     test.is( !err );
     test.identical( _.strCount( got.output, 'nhandled' ), 0 )
     test.identical( _.strCount( got.output, 'ncaught' ), 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.gt( files.length, 10 );
     return null;
   })
@@ -10427,7 +10426,7 @@ function buildSubmodules( test )
   .then( () =>
   {
     test.case = '.build'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -10439,7 +10438,7 @@ function buildSubmodules( test )
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.is( _.strHas( got.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.gt( files.length, 15 );
 
     return null;
@@ -10450,7 +10449,7 @@ function buildSubmodules( test )
   .then( () =>
   {
     test.case = '.build wrong'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -10466,17 +10465,14 @@ function buildSubmodules( test )
       args : [ '.build wrong' ]
     }
 
-    let buildOutDebugPath = a.abs( 'out/debug' );
-    let buildOutReleasePath = a.abs( 'out/release' );
-
     return test.shouldThrowErrorOfAnyKind( _.process.start( o ) )
     .then( ( got ) =>
     {
       test.is( o.exitCode !== 0 );
       test.is( o.output.length >= 1 );
-      test.is( !a.fileProvider.fileExists( outPath ) );
-      test.is( !a.fileProvider.fileExists( buildOutDebugPath ) );
-      test.is( !a.fileProvider.fileExists( buildOutReleasePath ) );
+      test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
+      test.is( !a.fileProvider.fileExists( a.abs( 'out/debug' ) ) );
+      test.is( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) );
 
       return null;
     })
