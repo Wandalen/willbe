@@ -3085,7 +3085,7 @@ function exportDefaultPath( test )
 
     test.description = 'files';
     var exp = []
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
     opener.finit();
