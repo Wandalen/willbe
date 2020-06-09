@@ -13616,9 +13616,8 @@ function exportRecursive( test )
 {
   let self = this;
   let a = self.assetFor( test, 'resolve-path-of-submodules-exported' );
-  let outDirPath = a.abs( 'out' );
   a.reflect();
-  a.fileProvider.filesDelete( outDirPath );
+  a.fileProvider.filesDelete( a.abs( 'out' ) );
 
   /* - */
 
@@ -13638,7 +13637,7 @@ function exportRecursive( test )
 
     test.description = 'files';
     var exp = [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './ab', './ab/module-ab.out.will.yml' ];
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, 'Exported module::module-ab / module::module-a / build::proto.export with 2 file(s) in' ), 1 );
@@ -13666,7 +13665,7 @@ function exportRecursive( test )
 
     test.description = 'files';
     var exp = [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './ab', './ab/module-ab.out.will.yml' ];
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, 'Exported module::module-ab / module::module-a / build::proto.export with 2 file(s) in' ), 1 );
