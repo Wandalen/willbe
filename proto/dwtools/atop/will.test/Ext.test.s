@@ -3229,7 +3229,6 @@ function reflectComposite( test )
 {
   let self = this;
   let a = self.assetFor( test, 'composite-reflector' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* */
@@ -3237,7 +3236,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:0'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -3256,7 +3255,7 @@ function reflectComposite( test )
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
     ]
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.is( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
@@ -3268,7 +3267,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:1'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -3287,7 +3286,7 @@ function reflectComposite( test )
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
     ]
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.is( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
@@ -3299,7 +3298,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:2'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -3318,7 +3317,7 @@ function reflectComposite( test )
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
     ]
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.is( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
@@ -3330,7 +3329,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:3'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -3349,7 +3348,7 @@ function reflectComposite( test )
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
     ]
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.is( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
@@ -3361,7 +3360,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:4'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -3370,7 +3369,7 @@ function reflectComposite( test )
   {
     var expected =
     [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ]
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.is( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
@@ -3382,7 +3381,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:5'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -3390,7 +3389,7 @@ function reflectComposite( test )
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ];
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.is( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
@@ -3402,7 +3401,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:6'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -3410,7 +3409,7 @@ function reflectComposite( test )
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ];
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
@@ -3421,7 +3420,7 @@ function reflectComposite( test )
   a.ready.then( () =>
   {
     test.case = '.build out* variant:7'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -3429,7 +3428,7 @@ function reflectComposite( test )
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ]
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
