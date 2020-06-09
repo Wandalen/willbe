@@ -20004,13 +20004,7 @@ function stepWillbeVersionCheck( test )
   let self = this;
   let a = self.assetFor( test, 'step-willbe-version-check' );
 
-  let assetDstPath = a.abs( 'asset' );
-  let willbeRootPath = a.path.join( __dirname, '../../../..' );
-  let willbeDstPath = a.abs( 'willbe' );
-  let nodeModulesSrcPath = a.path.join( willbeRootPath, 'node_modules' );
-  let nodeModulesDstPath = a.path.join( willbeDstPath, 'node_modules' );
-
-  if( !a.fileProvider.fileExists( a.path.join( willbeRootPath, 'package.json' ) ) )
+  if( !a.fileProvider.fileExists( a.path.join( a.path.join( __dirname, '../../../..' ), 'package.json' ) ) )
   {
     test.is( true );
     return;
@@ -20024,17 +20018,17 @@ function stepWillbeVersionCheck( test )
       'proto/dwtools/atop/will' : 'proto/dwtools/atop/will',
       'package.json' : 'package.json',
     },
-    src : { prefixPath : willbeRootPath },
-    dst : { prefixPath : willbeDstPath },
+    src : { prefixPath : a.path.join( __dirname, '../../../..' ) },
+    dst : { prefixPath : a.abs( 'willbe' ) },
   })
-  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : assetDstPath } });
-  a.fileProvider.softLink( nodeModulesDstPath, nodeModulesSrcPath );
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'asset' ) } });
+  a.fileProvider.softLink( a.path.join( a.abs( 'willbe' ), 'node_modules' ), a.path.join( a.path.join( __dirname, '../../../..' ), 'node_modules' ) );
 
-  let execPath = a.path.nativize( a.path.join( willbeDstPath, 'proto/dwtools/atop/will/entry/Exec' ) );
+  let execPath = a.path.nativize( a.path.join( a.abs( 'willbe' ), 'proto/dwtools/atop/will/entry/Exec' ) );
   a.start = _.process.starter
   ({
     execPath : 'node ' + execPath,
-    currentPath : assetDstPath,
+    currentPath : a.abs( 'asset' ),
     outputCollecting : 1,
     throwingExitCode : 0,
     verbosity : 3,
@@ -20053,7 +20047,7 @@ function stepWillbeVersionCheck( test )
 
   .then( ( ) =>
   {
-    let packageJsonPath = _.path.join( willbeDstPath, 'package.json' );
+    let packageJsonPath = _.path.join( a.abs( 'willbe' ), 'package.json' );
     let packageJson = a.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
     packageJson.version = '0.0.0';
     a.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
