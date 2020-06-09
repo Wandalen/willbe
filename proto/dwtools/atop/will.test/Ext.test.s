@@ -4817,7 +4817,6 @@ function reflectorsCommonPrefix( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflectors-common-prefix' );
-  let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
 
   /* - */
@@ -4828,7 +4827,7 @@ function reflectorsCommonPrefix( test )
   {
     test.case = 'use two reflectors with common prefix in name';
 
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/Source.js' ] );
 
     test.identical( got.exitCode, 0 );
