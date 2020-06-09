@@ -18003,7 +18003,6 @@ function submodulesDownloadNpm( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-download-npm' );
   let versions = {}
-  let willFilePath = a.abs( '.will.yml' )
   let filesBefore = null;
 
   /* - */
@@ -18111,9 +18110,9 @@ function submodulesDownloadNpm( test )
   {
     test.case = 'change origin of first submodule and run .submodules.download';
 
-    let willFile = a.fileProvider.fileRead( willFilePath );
+    let willFile = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
     willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1 ', 'npm:///wmodulefortesting2b' );
-    a.fileProvider.fileWrite( willFilePath, willFile );
+    a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
     filesBefore = self.find( a.abs( '.module/ModuleForTesting1' ) );
 
@@ -18162,9 +18161,9 @@ function submodulesDownloadNpm( test )
   })
   .then( () =>
   {
-    let willFile = a.fileProvider.fileRead( willFilePath );
+    let willFile = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
     willFile = _.strReplace( willFile, 'npm:///wmoduleforTesting2b', 'npm:///wmodulefortesting1' );
-    a.fileProvider.fileWrite( willFilePath, willFile );
+    a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
     return null;
   })
