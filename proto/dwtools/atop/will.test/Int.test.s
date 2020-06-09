@@ -2938,7 +2938,6 @@ function exportDefaultPath( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-default-path' );
-  let outDirPath = a.abs( 'out' );
   let opener;
 
   /* - */
@@ -2965,7 +2964,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.path.join( outDirPath, 'path.out.will' ) );
+    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), 'path.out.will' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2973,7 +2972,7 @@ function exportDefaultPath( test )
 
     test.description = 'files';
     var exp = [ '.', './path.out.will.yml' ]
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
     opener.finit();
@@ -3004,14 +3003,14 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.path.join( outDirPath, 'reflector.out.will' ) );
+    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), 'reflector.out.will' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
 
     test.description = 'files';
     var exp = [ '.', './reflector.out.will.yml' ]
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
     opener.finit();
@@ -3049,7 +3048,7 @@ function exportDefaultPath( test )
 
     test.description = 'files';
     var exp = []
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
     opener.finit();
@@ -3120,7 +3119,7 @@ function exportDefaultPath( test )
 
     test.description = 'files';
     var exp = [ '.', './nonglob.out.will.yml' ];
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp );
 
     opener.finit();
