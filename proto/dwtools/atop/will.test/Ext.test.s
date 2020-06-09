@@ -2912,8 +2912,6 @@ function reflectGetPath( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-get-path' );
-  let repoPath = a.path.join( self.suiteTempPath, '_repo' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -2921,7 +2919,7 @@ function reflectGetPath( test )
   a.ready.then( () =>
   {
     test.case = '.build debug1'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -2933,7 +2931,7 @@ function reflectGetPath( test )
   a.ready.then( () =>
   {
     test.case = '.build debug2'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -2945,7 +2943,7 @@ function reflectGetPath( test )
   a.ready.then( () =>
   {
     test.case = '.build debug3'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -2974,7 +2972,7 @@ function reflectGetPath( test )
       './debug/dwtools/abase/l3.test',
       './debug/dwtools/abase/l3.test/ModuleForTesting12.test.s'
     ]
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.gt( files.length, 4 );
     test.identical( files, expected );
 
@@ -2989,7 +2987,6 @@ function reflectSubdir( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-subdir' );
-  let outPath = ;
 
   /* - */
 
@@ -3014,7 +3011,7 @@ function reflectSubdir( test )
   .then( () =>
   {
     test.case = '.build variant:1'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   });
   a.start({ execPath : '.build variant:1' })
@@ -3054,7 +3051,7 @@ function reflectSubdir( test )
   .then( () =>
   {
     test.case = '.build variant:2'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   });
   a.start({ execPath : '.build variant:2' })
@@ -3094,7 +3091,7 @@ function reflectSubdir( test )
   .then( () =>
   {
     test.case = '.build variant:3'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   });
   a.start({ execPath : '.build variant:3' })
