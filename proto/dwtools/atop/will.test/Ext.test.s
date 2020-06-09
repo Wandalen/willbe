@@ -17034,8 +17034,6 @@ function submodulesDownloadThrowing( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-download-errors' );
-  let downloadPath = a.abs( '.module/ModuleForTesting2a' );
-  let filePath = a.path.join( downloadPath, 'file' );
   let filesBefore;
   a.startNonThrowing2 = _.process.starter
   ({
@@ -17063,7 +17061,7 @@ function submodulesDownloadThrowing( test )
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
-    test.is( !a.fileProvider.fileExists( downloadPath ) )
+    test.is( !a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -17073,7 +17071,7 @@ function submodulesDownloadThrowing( test )
   {
     test.case = 'error on download, existing empty directory should be preserved';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
-    a.fileProvider.dirMake( downloadPath );
+    a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.with bad .submodules.download' })
@@ -17082,8 +17080,8 @@ function submodulesDownloadThrowing( test )
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
-    test.is( a.fileProvider.fileExists( downloadPath ) )
-    test.identical( a.fileProvider.dirRead( downloadPath ), [] );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [] );
     return null;
   })
 
@@ -17093,7 +17091,7 @@ function submodulesDownloadThrowing( test )
   {
     test.case = 'no error if download path exists and its an empty dir';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
-    a.fileProvider.dirMake( downloadPath );
+    a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.with good .submodules.download' })
@@ -17104,7 +17102,7 @@ function submodulesDownloadThrowing( test )
     test.is( _.strHas( got.output, 'module::wModuleForTesting2a was downloaded version master in' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
 
-    let files = self.find( downloadPath );
+    let files = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     // test.gt( files.length, 10 );
     test.ge( files.length, 1 );
 
@@ -17117,8 +17115,8 @@ function submodulesDownloadThrowing( test )
   {
     test.case = 'error if download path exists and it is not a empty dir';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
-    a.fileProvider.dirMake( downloadPath );
-    a.fileProvider.fileWrite( filePath, filePath );
+    a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
+    a.fileProvider.fileWrite( a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ), a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.with bad .submodules.download' })
@@ -17127,8 +17125,8 @@ function submodulesDownloadThrowing( test )
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `Module module::submodules-download-errors-bad / opener::ModuleForTesting2a is downloaded, but it's not a git repository` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
-    test.is( a.fileProvider.fileExists( downloadPath ) )
-    test.identical( a.fileProvider.dirRead( downloadPath ), [ 'file' ] );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [ 'file' ] );
     return null;
   })
 
@@ -17138,7 +17136,7 @@ function submodulesDownloadThrowing( test )
   {
     test.case = 'error if download path exists and its terminal';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
-    a.fileProvider.fileWrite( downloadPath, downloadPath );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a' ), a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.with bad .submodules.download' })
@@ -17147,7 +17145,7 @@ function submodulesDownloadThrowing( test )
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `Module module::submodules-download-errors-bad / opener::ModuleForTesting2a is not downloaded, but file at` ) );
     test.is( _.strHas( got.output, 'Failed to download module' ) );
-    test.is( a.fileProvider.isTerminal( downloadPath ) )
+    test.is( a.fileProvider.isTerminal( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -17157,7 +17155,7 @@ function submodulesDownloadThrowing( test )
   // {
   //   test.case = 'no error if download path exists and it has other git repo';
   //   a.fileProvider.filesDelete( a.abs( '.module' ) );
-  //   a.fileProvider.dirMake( downloadPath );
+  //   a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
   //   return null;
   // })
   .then( () =>
@@ -17168,7 +17166,7 @@ function submodulesDownloadThrowing( test )
   a.startNonThrowing2({ execPath : 'git clone https://github.com/Wandalen/wModuleForTesting1.git .module/ModuleForTesting2a' })
   .then( () =>
   {
-    filesBefore = self.find( downloadPath );
+    filesBefore = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.with good .submodules.download' })
@@ -17177,8 +17175,8 @@ function submodulesDownloadThrowing( test )
     debugger;
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
-    test.is( a.fileProvider.fileExists( downloadPath ) )
-    let filesAfter = self.find( downloadPath );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    let filesAfter = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesAfter, filesBefore );
 
     return null;
@@ -17191,21 +17189,21 @@ function submodulesDownloadThrowing( test )
   {
     test.case = 'downloaded, change in file to make module not valid, error expected';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
-    a.fileProvider.dirMake( downloadPath );
+    a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.with good .submodules.download' })
   .then( () =>
   {
-    let inWillFilePath = a.path.join( downloadPath, '.im.will.yml' );
+    let inWillFilePath = a.path.join( a.abs( '.module/ModuleForTesting2a' ), '.im.will.yml' );
     let inWillFile = a.fileProvider.configRead( inWillFilePath );
     inWillFile.section = { field : 'value' };
-    a.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile,encoding : 'yml' });
+    a.fileProvider.fileWrite({ a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ) : inWillFilePath, data : inWillFile,encoding : 'yml' });
     return null;
   })
   .then( () =>
   {
-    filesBefore = self.find( downloadPath );
+    filesBefore = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.with good .submodules.download' })
@@ -17213,7 +17211,7 @@ function submodulesDownloadThrowing( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Willfile should not have section(s) : "section"' ) );
-    let filesAfter = self.find( downloadPath );
+    let filesAfter = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesAfter, filesBefore )
     return null;
   })
