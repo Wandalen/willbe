@@ -8451,8 +8451,6 @@ function cleanBrokenSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'clean-broken-submodules' );
-  let submodulesPath = a.abs( '.module' );
-  let outPath = a.abs( 'out' );
 
   /* - */
 
@@ -8462,9 +8460,9 @@ function cleanBrokenSubmodules( test )
   {
     test.case = 'setup';
     a.reflect();
-    var files = self.find( submodulesPath );
+    var files = self.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files.length, 2 );
 
     return null;
@@ -8477,9 +8475,9 @@ function cleanBrokenSubmodules( test )
   {
     test.case = '.clean dry:1';
 
-    var files = self.find( submodulesPath );
+    var files = self.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files.length, 2 );
 
     test.identical( got.exitCode, 0 );
@@ -8496,9 +8494,9 @@ function cleanBrokenSubmodules( test )
   {
     test.case = '.clean';
 
-    var files = self.find( submodulesPath );
+    var files = self.find( a.abs( '.module' ) );
     test.identical( files.length, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files.length, 0 );
 
     test.identical( got.exitCode, 0 );
