@@ -4878,7 +4878,6 @@ function reflectorOptionStepThrowing( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflector-option-step-throwing' );
-  let outPath = _.path.join( a.routinePath, 'out' );
   a.reflect();
 
   /* - */
@@ -5218,7 +5217,6 @@ function hookCallInfo( test )
 {
   let self = this;
   let a = self.assetFor( test, 'dos' );
-  let outPath = a.abs( 'out' );
   // aaa : modules for testing are still broken !!! /* Dmytro : fixed */
   // aaa : ?? /* Dmytro : a.start - mode : 'fork'; a.shell - mode : 'shell' */
   a.start = _.process.starter
@@ -8063,7 +8061,6 @@ function clean( test )
   let self = this;
   let a = self.assetFor( test, 'clean' );
   let submodulesPath = a.abs( '.module' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -8104,7 +8101,7 @@ function clean( test )
   a.ready
   .then( () =>
   {
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     a.fileProvider.filesDelete( submodulesPath );
     return null;
   })
@@ -8125,7 +8122,7 @@ function clean( test )
   a.ready
   .then( () =>
   {
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     a.fileProvider.filesDelete( submodulesPath );
     return null;
   })
