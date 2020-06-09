@@ -2788,18 +2788,16 @@ function reflectNothingFromSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-nothing-from-submodules' );
-  let outDebugPath = a.abs( 'out/debug' );
-  let outPath = a.abs( 'out' );
   a.reflect();
-  a.fileProvider.filesDelete( outDebugPath );
+  a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
 
   /* - */
 
   a.ready.then( () =>
   {
     test.case = '.export'
-    a.fileProvider.filesDelete( outDebugPath );
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -2817,9 +2815,9 @@ function reflectNothingFromSubmodules( test )
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported module::reflect-nothing-from-submodules \/ build::proto.export with 2 file\(s\) in/ ) );
 
-    var files = self.find( outDebugPath );
+    var files = self.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './reflect-nothing-from-submodules.out.will.yml', './debug', './debug/Single.s' ] );
 
     test.is( a.fileProvider.fileExists( a.abs( 'out/reflect-nothing-from-submodules.out.will.yml' ) ) )
