@@ -4659,7 +4659,6 @@ function reflectComplexInherit( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-with-submodules' );
-  let outPath = a.abs( 'out' );
 
   /* - */
 
@@ -4668,7 +4667,7 @@ function reflectComplexInherit( test )
   {
     test.case = '.with ab/ .build';
     a.reflect();
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4700,7 +4699,7 @@ function reflectComplexInherit( test )
       './ab/files/dir3.test/File.js',
       './ab/files/dir3.test/File.test.js'
     ]
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp );
     return null;
   })
@@ -4712,7 +4711,7 @@ function reflectComplexInherit( test )
   {
     test.case = '.with abac/ .build';
     a.reflect();
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4751,7 +4750,7 @@ function reflectComplexInherit( test )
       './abac/files/dir3.test/File.js',
       './abac/files/dir3.test/File.test.js'
     ]
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp );
     return null;
   })
