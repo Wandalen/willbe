@@ -18,7 +18,7 @@ if( typeof module !== 'undefined' )
 
 - Test check line is short. Use variables to reach that.
 
-    var outfile = _.fileProvider.configRead( outFilePath );
+    var outfile = _.fileProvider.configRead( a.abs( 'out/export-rewrites-out-file.out.will.yml' ) );
     var exp = [ 'disabled.out', '../', '../.module/Tools/', '../.module/Tools/out/wTools.out', '../.module/PathBasic/', '../.module/PathBasic/out/wPathBasic.out' ];
     var got = _.mapKeys( outfile.module );
     test.identical( got, exp );
@@ -8056,7 +8056,6 @@ function clean( test )
 {
   let self = this;
   let a = self.assetFor( test, 'clean' );
-  let submodulesPath = a.abs( '.module' );
   a.reflect();
 
   /* - */
@@ -8067,7 +8066,7 @@ function clean( test )
   a.ready
   .then( () =>
   {
-    files = self.findAll( submodulesPath );
+    files = self.findAll( a.abs( '.module' ) );
     test.gt( files.length, 20 );
     return files;
   })
@@ -8098,7 +8097,7 @@ function clean( test )
   .then( () =>
   {
     a.fileProvider.filesDelete( a.abs( 'out' ) );
-    a.fileProvider.filesDelete( submodulesPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
   })
 
@@ -8119,7 +8118,7 @@ function clean( test )
   .then( () =>
   {
     a.fileProvider.filesDelete( a.abs( 'out' ) );
-    a.fileProvider.filesDelete( submodulesPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
   })
 
@@ -10307,10 +10306,8 @@ function buildSingleModule( test )
   .then( () =>
   {
     test.case = '.build wrong'
-    let buildOutDebugPath = a.abs( 'out/debug' );
-    let buildOutReleasePath = a.abs( 'out/release' );
-    a.fileProvider.filesDelete( buildOutDebugPath );
-    a.fileProvider.filesDelete( buildOutReleasePath );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
+    a.fileProvider.filesDelete( a.abs( 'out/release' ) );
     var o =
     {
       args : [ '.build wrong' ],
@@ -10321,8 +10318,8 @@ function buildSingleModule( test )
     {
       test.is( o.exitCode !== 0 );
       test.is( o.output.length >= 1 );
-      test.is( !a.fileProvider.fileExists( buildOutDebugPath ) )
-      test.is( !a.fileProvider.fileExists( buildOutReleasePath ) )
+      test.is( !a.fileProvider.fileExists( a.abs( 'out/debug' ) ) )
+      test.is( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) )
 
       return null;
     })
@@ -14279,7 +14276,6 @@ function exportRewritesOutFile( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-rewrites-out-file' );
-  let outFilePath = a.abs( 'out/export-rewrites-out-file.out.will.yml' );
   a.reflect();
   a.fileProvider.fileCopy( a.abs( 'copy.will.yml' ), a.abs( '.will.yml' ) );
 
@@ -14298,8 +14294,8 @@ function exportRewritesOutFile( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( outFilePath ) );
-    let outFile = a.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
+    test.is( a.fileProvider.fileExists( a.abs( 'out/export-rewrites-out-file.out.will.yml' ) ) );
+    let outFile = a.fileProvider.fileRead({ filePath : a.abs( 'out/export-rewrites-out-file.out.will.yml' ), encoding : 'yaml' });
     let build = outFile.module[ outFile.root[ 0 ] ].build;
     test.identical( _.mapKeys( build ), [ 'export1', 'export2' ] );
     return null;
@@ -14319,8 +14315,8 @@ function exportRewritesOutFile( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( outFilePath ) );
-    let outFile = a.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
+    test.is( a.fileProvider.fileExists( a.abs( 'out/export-rewrites-out-file.out.will.yml' ) ) );
+    let outFile = a.fileProvider.fileRead({ filePath : a.abs( 'out/export-rewrites-out-file.out.will.yml' ), encoding : 'yaml' });
     let build = outFile.module[ outFile.root[ 0 ] ].build;
     test.identical( _.mapKeys( build ), [ 'export1' ] );
     return null;
@@ -14340,8 +14336,8 @@ function exportRewritesOutFile( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( outFilePath ) );
-    let outFile = a.fileProvider.fileRead({ filePath : outFilePath, encoding : 'yaml' });
+    test.is( a.fileProvider.fileExists( a.abs( 'out/export-rewrites-out-file.out.will.yml' ) ) );
+    let outFile = a.fileProvider.fileRead({ filePath : a.abs( 'out/export-rewrites-out-file.out.will.yml' ), encoding : 'yaml' });
     let build = outFile.module[ outFile.root[ 0 ] ].build;
     test.identical( _.mapKeys( build ), [ 'export1', 'export2' ] );
     return null;
