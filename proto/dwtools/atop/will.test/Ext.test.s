@@ -17198,7 +17198,7 @@ function submodulesDownloadThrowing( test )
     let inWillFilePath = a.path.join( a.abs( '.module/ModuleForTesting2a' ), '.im.will.yml' );
     let inWillFile = a.fileProvider.configRead( inWillFilePath );
     inWillFile.section = { field : 'value' };
-    a.fileProvider.fileWrite({ a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ) : inWillFilePath, data : inWillFile,encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile,encoding : 'yml' });
     return null;
   })
   .then( () =>
@@ -18399,9 +18399,6 @@ function submodulesUpdateThrowing( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-download-errors' );
-  let submodulesPath = _.path.join( a.routinePath, '.module' );
-  let downloadPath = _.path.join( a.routinePath, '.module/ModuleForTesting2a' );
-  let filePath = _.path.join( downloadPath, 'file' );
   let filesBefore;
   a.start = _.process.starter
   ({
@@ -18430,7 +18427,7 @@ function submodulesUpdateThrowing( test )
   .then( () =>
   {
     test.case = 'error on update, new directory should not be made';
-    _.fileProvider.filesDelete( submodulesPath );
+    _.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
   })
   a.start({ execPath : '.with bad .submodules.update' })
@@ -18440,7 +18437,7 @@ function submodulesUpdateThrowing( test )
     test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
 
-    test.is( !_.fileProvider.fileExists( downloadPath ) )
+    test.is( !_.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -18449,8 +18446,8 @@ function submodulesUpdateThrowing( test )
   .then( () =>
   {
     test.case = 'error on update, existing empty directory should be preserved';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
+    _.fileProvider.filesDelete( a.abs( '.module' ) );
+    _.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.start({ execPath : '.with bad .submodules.update' })
@@ -18459,8 +18456,8 @@ function submodulesUpdateThrowing( test )
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `fatal: unable to access 'https://githu.com/Wandalen/wModuleForTesting2a.git/` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
-    test.is( _.fileProvider.fileExists( downloadPath ) )
-    test.identical( _.fileProvider.dirRead( downloadPath ), [] );
+    test.is( _.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.identical( _.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [] );
     return null;
   })
 
@@ -18469,8 +18466,8 @@ function submodulesUpdateThrowing( test )
   .then( () =>
   {
     test.case = 'no error if download path exists and its an empty dir';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
+    _.fileProvider.filesDelete( a.abs( '.module' ) );
+    _.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.update' })
@@ -18481,7 +18478,7 @@ function submodulesUpdateThrowing( test )
     test.is( _.strHas( got.output, 'module::wModuleForTesting2a was updated to version master in' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were updated in' ) );
 
-    let files = self.find( downloadPath );
+    let files = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.ge( files.length, 1 );
 
     return null;
@@ -18492,9 +18489,9 @@ function submodulesUpdateThrowing( test )
   .then( () =>
   {
     test.case = 'error if download path exists and it is not a empty dir';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
-    _.fileProvider.fileWrite( filePath,filePath );
+    _.fileProvider.filesDelete( a.abs( '.module' ) );
+    _.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
+    _.fileProvider.fileWrite( a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ),a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.update' })
@@ -18503,8 +18500,8 @@ function submodulesUpdateThrowing( test )
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, `Module module::submodules-download-errors-good / opener::ModuleForTesting2a is downloaded, but it's not a git repository` ) );
     test.is( _.strHas( got.output, 'Failed to update module' ) );
-    test.is( _.fileProvider.fileExists( downloadPath ) )
-    test.identical( _.fileProvider.dirRead( downloadPath ), [ 'file' ] );
+    test.is( _.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    test.identical( _.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [ 'file' ] );
     return null;
   })
 
@@ -18513,8 +18510,8 @@ function submodulesUpdateThrowing( test )
   .then( () =>
   {
     test.case = 'error if download path exists and its terminal';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.fileWrite( downloadPath,downloadPath );
+    _.fileProvider.filesDelete( a.abs( '.module' ) );
+    _.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a' ),a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.update' })
@@ -18523,7 +18520,7 @@ function submodulesUpdateThrowing( test )
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Module module::submodules-download-errors-good / opener::ModuleForTesting2a is not downloaded, but file at' ) );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
-    test.is( _.fileProvider.isTerminal( downloadPath ) )
+    test.is( _.fileProvider.isTerminal( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -18532,14 +18529,14 @@ function submodulesUpdateThrowing( test )
   .then( () =>
   {
     test.case = 'error if download path exists and it has other git repo, repo should be preserved';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
+    _.fileProvider.filesDelete( a.abs( '.module' ) );
+    _.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.startNonThrowing({ execPath : 'git clone https://github.com/Wandalen/wModuleForTesting1.git .module/ModuleForTesting2a' })
   .then( () =>
   {
-    filesBefore = self.find( downloadPath );
+    filesBefore = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.update' })
@@ -18548,8 +18545,8 @@ function submodulesUpdateThrowing( test )
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'opener::ModuleForTesting2a is already downloaded, but has different origin url') );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
-    test.is( _.fileProvider.fileExists( downloadPath ) )
-    let filesAfter = self.find( downloadPath );
+    test.is( _.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    let filesAfter = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesBefore.length, filesAfter.length );
 
     return null;
@@ -18561,14 +18558,14 @@ function submodulesUpdateThrowing( test )
   .then( () =>
   {
     test.case = 'downloaded, change in file to make module not valid, error expected';
-    _.fileProvider.filesDelete( submodulesPath );
-    _.fileProvider.dirMake( downloadPath );
+    _.fileProvider.filesDelete( a.abs( '.module' ) );
+    _.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.update' })
   .then( () =>
   {
-    let inWillFilePath = _.path.join( downloadPath, '.im.will.yml' );
+    let inWillFilePath = _.path.join( a.abs( '.module/ModuleForTesting2a' ), '.im.will.yml' );
     let inWillFile = _.fileProvider.configRead( inWillFilePath );
     inWillFile.section = { field : 'value' };
     _.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile, encoding : 'yml' });
@@ -18576,7 +18573,7 @@ function submodulesUpdateThrowing( test )
   })
   .then( () =>
   {
-    filesBefore = self.find( downloadPath );
+    filesBefore = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.update' })
@@ -18584,7 +18581,7 @@ function submodulesUpdateThrowing( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Willfile should not have section(s) : "section"' ) );
-    let filesAfter = self.find( downloadPath );
+    let filesAfter = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesAfter, filesBefore )
     return null;
   })
