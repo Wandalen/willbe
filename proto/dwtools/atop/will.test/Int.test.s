@@ -9664,9 +9664,9 @@ function repoStatus( test )
 
   .then( () =>
   {
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     var exp = [ 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
     return null;
   })
@@ -9986,7 +9986,7 @@ function repoStatusForDeletedRepo( test )
   .then( () =>
   {
     test.description = 'delete repo::ModuleForTesting1 and call status with invalidating:0'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
 
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
     var status =
@@ -10047,7 +10047,7 @@ function repoStatusForDeletedRepo( test )
   .then( () =>
   {
     test.description = 'delete repo::ModuleForTesting2a and call status with invalidating:1'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting2a' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting2a' ) );
 
     var repo1a = opener.openedModule.submoduleMap.ModuleForTesting2a.opener.repo;
     var status =
@@ -10138,7 +10138,7 @@ function repoStatusForOutdatedRepo( test )
   .then( () =>
   {
     test.description = 'repo::ModuleForTesting1 is not up to date'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     let con = opener.openedModule.subModulesDownload();
     con.then( () =>
     {
@@ -10315,7 +10315,7 @@ function repoStatusForInvalidRepo( test )
   .then( () =>
   {
     test.description = 'repo::ModuleForTesting1 is not valid'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     let con = opener.openedModule.subModulesDownload();
     con.then( () =>
     {
@@ -10492,7 +10492,7 @@ function repoStatusLocalChanges( test )
   .then( () =>
   {
     test.description = 'repo::ModuleForTesting1 has local changes'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     let con = opener.openedModule.subModulesDownload();
     con.then( () =>
     {
@@ -10501,7 +10501,7 @@ function repoStatusLocalChanges( test )
     })
     con.then( () =>
     {
-      _.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.js' ), data : '' })
+      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.js' ), data : '' })
       return null;
     });
     return con;
@@ -10710,7 +10710,7 @@ function repoStatusLocalUncommittedChanges( test )
   .then( () =>
   {
     test.description = 'repo::ModuleForTesting1 has local uncommitted changes'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     let con = opener.openedModule.subModulesDownload();
     con.then( () =>
     {
@@ -10719,7 +10719,7 @@ function repoStatusLocalUncommittedChanges( test )
     })
     con.then( () =>
     {
-      _.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.js' ), data : '' })
+      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.js' ), data : '' })
       return null;
     })
     _.process.start
