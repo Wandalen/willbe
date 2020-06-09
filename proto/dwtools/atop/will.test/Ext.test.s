@@ -16519,10 +16519,7 @@ function submodulesDownloadSwitchBranch( test )
     test.case = 'setup repo';
 
     let con = new _.Consequence().take( null );
-    let repoPath = a.abs( 'experiment' );
-    let repoSrcFiles = a.abs( 'src' );
-    let clonePath = a.abs( 'cloned' );
-    a.fileProvider.dirMake( repoPath );
+    a.fileProvider.dirMake( a.abs( 'experiment' ) );
 
     let start = _.process.starter
     ({
@@ -16536,7 +16533,7 @@ function submodulesDownloadSwitchBranch( test )
 
     .then( () =>
     {
-      return a.fileProvider.filesReflect({ reflectMap : { [ repoSrcFiles ] : clonePath } })
+      return a.fileProvider.filesReflect({ reflectMap : { [ a.abs( 'src' ) ] : a.abs( 'cloned' ) } })
     })
 
     start( 'git -C cloned add -fA .' )
@@ -19349,13 +19346,9 @@ function subModulesUpdateSwitchBranch( test )
       test.case = 'setup repo';
 
       let con = new _.Consequence().take( null );
-      let repoPath = a.abs( 'experiment' );
-      let repoSrcFiles = a.abs( 'src' );
-      let clonePath = a.abs( 'cloned' );
-
       a.reflect();
 
-      a.fileProvider.dirMake( repoPath );
+      a.fileProvider.dirMake( a.abs( 'experiment' ) );
 
       let start = _.process.starter
       ({
@@ -19369,7 +19362,7 @@ function subModulesUpdateSwitchBranch( test )
 
       .then( () =>
       {
-        return a.fileProvider.filesReflect({ reflectMap : { [ repoSrcFiles ] : clonePath } })
+        return a.fileProvider.filesReflect({ reflectMap : { [ a.abs( 'src' ) ] : a.abs( 'cloned' ) } })
       })
 
       start( 'git -C cloned add -fA .' )
