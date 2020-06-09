@@ -16414,7 +16414,6 @@ function submodulesDownloadUpdateDry( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-detached' );
-  let submodulesPath = a.abs( '.module' );
   a.reflect();
 
   /* */
@@ -16423,7 +16422,7 @@ function submodulesDownloadUpdateDry( test )
   .then( () =>
   {
     test.case = '.submodules.download dry:1';
-    a.fileProvider.filesDelete( submodulesPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
   })
 
@@ -16435,7 +16434,7 @@ function submodulesDownloadUpdateDry( test )
     // test.is( _.strHas( got.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*8031560ec22fd955b0b57430b5d6d96b042fbd99.*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::ModuleForTesting1a.* will be downloaded version .*$.$.$$$.*/ ) );
     test.is( _.strHas( got.output, '+ 2/5 submodule(s) of module::submodules-detached will be downloaded' ) );
-    var files = self.find( submodulesPath );
+    var files = self.find( a.abs( '.module' ) );
     test.is( files.length === 0 );
     return null;
   })
@@ -16446,7 +16445,7 @@ function submodulesDownloadUpdateDry( test )
   .then( () =>
   {
     test.case = '.submodules.download dry:1 -- after download';
-    a.fileProvider.filesDelete( submodulesPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
   })
 
@@ -16456,7 +16455,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '0/5 submodule(s) of module::submodules-detached will be downloaded' ) );
-    var files = self.find( submodulesPath );
+    var files = self.find( a.abs( '.module' ) );
     test.gt( files.length, 50 );
     return null;
   })
@@ -16467,7 +16466,7 @@ function submodulesDownloadUpdateDry( test )
   .then( () =>
   {
     test.case = '.submodules.update dry:1';
-    a.fileProvider.filesDelete( submodulesPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
   })
 
@@ -16479,7 +16478,7 @@ function submodulesDownloadUpdateDry( test )
     // test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be updated to version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::Color.* will be updated to version .*0.3.115.*/ ) );
     test.is( _.strHas( got.output, '+ 2/5 submodule(s) of module::submodules-detached will be updated' ) );
-    var files = self.find( submodulesPath );
+    var files = self.find( a.abs( '.module' ) );
     test.is( files.length === 0 );
     return null;
   })
@@ -16490,7 +16489,7 @@ function submodulesDownloadUpdateDry( test )
   .then( () =>
   {
     test.case = '.submodules.update dry:1 -- after update';
-    a.fileProvider.filesDelete( submodulesPath );
+    a.fileProvider.filesDelete( a.abs( '.module' ) );
     return null;
   })
 
@@ -16500,7 +16499,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/5 submodule(s) of module::submodules-detached will be updated' ) );
-    var files = self.find( submodulesPath );
+    var files = self.find( a.abs( '.module' ) );
     test.gt( files.length, 50 );
     return null;
   })
