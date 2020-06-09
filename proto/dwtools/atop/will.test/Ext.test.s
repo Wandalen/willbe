@@ -4570,7 +4570,6 @@ function reflectInheritSubmodules( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-inherit-submodules' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /* - */
@@ -4579,7 +4578,7 @@ function reflectInheritSubmodules( test )
   .then( () =>
   {
     test.case = 'setup'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4598,7 +4597,7 @@ function reflectInheritSubmodules( test )
   .then( () =>
   {
     test.case = '.with a .build'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4606,7 +4605,7 @@ function reflectInheritSubmodules( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File1.s', './debug/File2.s' ] );
     return null;
   })
@@ -4617,7 +4616,7 @@ function reflectInheritSubmodules( test )
   .then( () =>
   {
     test.case = '.with b .build'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4625,7 +4624,7 @@ function reflectInheritSubmodules( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/f1', './debug/f2' ] );
     return null;
   })
@@ -4636,7 +4635,7 @@ function reflectInheritSubmodules( test )
   .then( () =>
   {
     test.case = '.with c .build'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -4644,7 +4643,7 @@ function reflectInheritSubmodules( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File1.s', './debug/File2.s' ] );
     return null;
   })
