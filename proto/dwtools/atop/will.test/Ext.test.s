@@ -11527,8 +11527,6 @@ function exportMixed( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-mixed' );
-  let outPath = a.abs( 'out' );
-  let modulePath = a.abs( 'module' );
   a.reflect();
 
   /* - */
@@ -11555,13 +11553,13 @@ function exportMixed( test )
     test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) ) );
     test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12ab.informal.out.will.yml' ) ) );
 
-    var files = self.find( modulePath );
+    var files = self.find( a.abs( 'module' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting12ab.informal.will.yml' ] );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml', './ModuleForTesting12ab.informal.out.will.yml' ] );
 
     var expected = [ 'ModuleForTesting12.informal.will.yml', 'ModuleForTesting12ab.informal.will.yml' ];
-    var files = a.fileProvider.dirRead( modulePath );
+    var files = a.fileProvider.dirRead( a.abs( 'module' ) );
     test.identical( files, expected );
 
     var outfile = a.fileProvider.configRead( a.path.join( routinePath, 'out/ModuleForTesting12.informal.out.will.yml' ) );
@@ -11750,13 +11748,13 @@ function exportMixed( test )
     test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) ) );
     test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12ab.informal.out.will.yml' ) ) );
 
-    var files = self.find( modulePath );
+    var files = self.find( a.abs( 'module' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting12ab.informal.will.yml' ] );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.gt( files.length, 70 );
 
     var expected = [ 'ModuleForTesting12.informal.will.yml', 'ModuleForTesting12ab.informal.will.yml' ];
-    var files = a.fileProvider.dirRead( modulePath );
+    var files = a.fileProvider.dirRead( a.abs( 'module' ) );
     test.identical( files, expected );
 
     var expected = [ 'dwtools', 'WithSubmodules.s' ];
