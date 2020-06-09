@@ -13321,7 +13321,6 @@ function exportCourruptedSubmodulesDisabled( test )
 {
   let self = this;
   let a = self.assetFor( test, 'corrupted-submodules-disabled' );
-
   a.reflect();
 
   /* - */
@@ -13366,7 +13365,6 @@ function exportDisabledModule( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-disabled-module' );
-  let outFilePath = a.abs( 'out/disabled.out.will.yml' );
 
   /* - */
 
@@ -13389,7 +13387,7 @@ function exportDisabledModule( test )
     var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
 
-    var outfile = a.fileProvider.configRead( outFilePath );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/disabled.out.will.yml' ) );
     var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/ModuleForTesting1/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
     var got = _.setFrom( _.mapKeys( outfile.module ) );
     test.identical( got, exp );
@@ -13420,7 +13418,7 @@ function exportDisabledModule( test )
     var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
 
-    var outfile = a.fileProvider.configRead( outFilePath );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/disabled.out.will.yml' ) );
     var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/ModuleForTesting1/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
     var got = _.setFrom( _.mapKeys( outfile.module ) );
     test.identical( got, exp );
@@ -13477,7 +13475,7 @@ function exportDisabledModule( test )
     var files = a.fileProvider.dirRead( a.routinePath );
     test.identical( files, exp );
 
-    var outfile = a.fileProvider.configRead( outFilePath );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/disabled.out.will.yml' ) );
     var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/ModuleForTesting1/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
     var got = _.setFrom( _.mapKeys( outfile.module ) );
     test.identical( got, exp );
