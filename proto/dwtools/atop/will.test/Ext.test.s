@@ -3135,7 +3135,6 @@ function reflectSubmodulesWithBase( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-submodules-with-base' );
-  let outPath = a.abs( 'out' );
 
   /* - */
 
@@ -3163,7 +3162,7 @@ function reflectSubmodulesWithBase( test )
   a.ready.then( () =>
   {
     test.case = 'variant 0, src basePath : ../..'
-    a.fileProvider.filesDelete( outPath )
+    a.fileProvider.filesDelete( a.abs( 'out' ) )
     return null;
   });
 
@@ -3183,7 +3182,7 @@ function reflectSubmodulesWithBase( test )
       './debug/reflectSubmodulesWithBase/module/proto/File1.s',
       './debug/reflectSubmodulesWithBase/module/proto/File2.s'
     ]
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, expected );
     return got;
   })
@@ -3193,7 +3192,7 @@ function reflectSubmodulesWithBase( test )
   a.ready.then( () =>
   {
     test.case = 'variant 1, src basePath : "{submodule::*/exported::*=1/path::exported.dir*=1}/../.."'
-    a.fileProvider.filesDelete( outPath )
+    a.fileProvider.filesDelete( a.abs( 'out' ) )
     return null;
   });
 
@@ -3212,7 +3211,7 @@ function reflectSubmodulesWithBase( test )
       './debug/module/proto/File1.s',
       './debug/module/proto/File2.s'
     ];
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, expected );
     return got;
   })
