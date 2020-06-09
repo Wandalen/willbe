@@ -15629,7 +15629,7 @@ function importLocalRepo( test )
 {
   let self = this;
   let a = self.assetFor( test, 'import-auto' );
-  let modulePath = a.abs( '.module' ); /* qqq */
+  // let modulePath = a.abs( '.module' ); /* aaa */ /* Dmytro : corrected */
   a.reflect();
 
   /* - */
@@ -15649,14 +15649,14 @@ function importLocalRepo( test )
   .then( ( got ) =>
   {
 
-    var files = a.fileProvider.dirRead( modulePath );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, [ 'ModuleForTesting12', 'ModuleForTesting12.out.will.yml' ] );
 
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /\+ reflector::download reflected .* file\(s\)/ ), 1 );
     test.identical( _.strCount( got.output, /Write out willfile .*\/.module\/ModuleForTesting12.out.will.yml/ ), 1 );
 
-    var outfile = a.fileProvider.configRead( a.path.join( modulePath, 'ModuleForTesting12.out.will.yml' ) ); /* qqq xxx */
+    var outfile = a.fileProvider.configRead( a.path.join( a.abs( '.module' ), 'ModuleForTesting12.out.will.yml' ) ); /* qqq xxx */
     outfile = outfile.module[ 'ModuleForTesting12.out' ];
 
     var expectedReflector =
