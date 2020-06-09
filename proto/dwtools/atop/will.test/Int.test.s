@@ -2964,7 +2964,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), 'path.out.will' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/path.out.will' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -3003,7 +3003,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), 'reflector.out.will' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/reflector.out.will' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -7182,25 +7182,25 @@ function pathsResolveOfSubmodulesRemote( test )
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = a.path.join( a.abs( '.module' ), 'ModuleForTesting1/out' ); /* qqq xxx : ask */
+    var expected = a.abs( '.module/ModuleForTesting1/out' ); /* qqq xxx : ask */
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::in' );
-    var expected = a.path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
+    var expected = a.abs( '.module/ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::out' );
-    var expected = a.path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
+    var expected = a.abs( '.module/ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::out' );
-    var expected = a.path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
+    var expected = a.abs( '.module/ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     return null;
@@ -9300,7 +9300,7 @@ function moduleIsNotValid( test )
 
     opener.close();
 
-    let outWillFilePath = a.path.join( a.abs( './.module/ModuleForTesting2a' ), 'out/wModuleForTesting2a.out.will.yml' );
+    let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
     let outWillFile = a.fileProvider.configRead( outWillFilePath );
     outWillFile.section = { field : 'value' };
     a.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
@@ -9311,8 +9311,7 @@ function moduleIsNotValid( test )
   .then( () =>
   {
     test.case = 'repopen module';
-    let outWillFilePath = a.path.join( a.abs( './.module/ModuleForTesting2a' ), 'out/wModuleForTesting2a.out.will.yml' );
-    debugger;
+    let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
     opener = a.will.openerMakeManual({ willfilesPath : outWillFilePath });
     return opener.open({ all : 1, resourcesFormed : 0 });
   })
@@ -9323,7 +9322,6 @@ function moduleIsNotValid( test )
     if( err )
     _.errAttend( err );
     test.is( _.errIs( err ) );
-    debugger;
     test.identical( opener.isValid(), false );
     test.identical( opener.openedModule.isValid(), false );
     opener.close();

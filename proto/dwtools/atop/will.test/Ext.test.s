@@ -498,7 +498,7 @@ function transpile( test )
       './debug/dir3.test/File.test.js'
     ];
     test.identical( files, exp );
-    a.fileProvider.isTerminal( a.path.join( a.abs( 'out' ), 'debug/dir3.test/File.js' ) );
+    a.fileProvider.isTerminal( a.abs( 'out/debug/dir3.test/File.js' ) );
     return null;
   })
 
@@ -526,10 +526,10 @@ function transpile( test )
       './tests.compiled.debug/Tests.s'
     ];
     test.identical( files, exp );
-    a.fileProvider.isTerminal( a.path.join( a.abs( 'out' ), 'compiled.debug/Main.s' ) );
-    a.fileProvider.isTerminal( a.path.join( a.abs( 'out' ), 'tests.compiled.debug/Tests.s' ) );
+    a.fileProvider.isTerminal( a.abs( 'out/compiled.debug/Main.s' ) );
+    a.fileProvider.isTerminal( a.abs( 'out/tests.compiled.debug/Tests.s' ) );
 
-    var read = a.fileProvider.fileRead( a.path.join( a.abs( 'out' ), 'compiled.debug/Main.s' ) );
+    var read = a.fileProvider.fileRead( a.abs( 'out/compiled.debug/Main.s' ) );
     test.is( !_.strHas( read, 'dir2/-Ecluded.js' ) );
     test.is( _.strHas( read, 'dir2/File.js' ) );
     test.is( !_.strHas( read, 'dir2/File.test.js' ) );
@@ -538,7 +538,7 @@ function transpile( test )
     test.is( _.strHas( read, 'dir2/File2.debug.js' ) );
     test.is( !_.strHas( read, 'dir2/File2.release.js' ) );
 
-    var read = a.fileProvider.fileRead( a.path.join( a.abs( 'out' ), 'tests.compiled.debug/Tests.s' ) );
+    var read = a.fileProvider.fileRead( a.abs( 'out/tests.compiled.debug/Tests.s' ) );
     test.is( !_.strHas( read, 'dir2/-Ecluded.js' ) );
     test.is( !_.strHas( read, 'dir2/File.js' ) );
     test.is( _.strHas( read, 'dir2/File.test.js' ) );
@@ -580,7 +580,7 @@ function transpile( test )
       './raw.release/dir3.test/File.test.js'
     ];
     test.identical( files, exp );
-    a.fileProvider.isTerminal( a.path.join( a.abs( 'out' ), './raw.release/dir3.test/File.test.js' ) );
+    a.fileProvider.isTerminal( a.abs( 'out/raw.release/dir3.test/File.test.js' ) );
     return null;
   })
 
@@ -607,10 +607,10 @@ function transpile( test )
       './tests.compiled.release/Tests.s'
     ];
     test.identical( files, exp );
-    a.fileProvider.isTerminal( a.path.join( a.abs( 'out' ), './release/Main.s' ) );
-    a.fileProvider.isTerminal( a.path.join( a.abs( 'out' ), './tests.compiled.release/Tests.s' ) );
+    a.fileProvider.isTerminal( a.abs( 'out/release/Main.s' ) );
+    a.fileProvider.isTerminal( a.abs( 'out/tests.compiled.release/Tests.s' ) );
 
-    var read = a.fileProvider.fileRead( a.path.join( a.abs( 'out' ), './release/Main.s' ) );
+    var read = a.fileProvider.fileRead( a.abs( 'out/release/Main.s' ) );
     test.is( _.strHas( read, 'dir2/File.js' ) );
     test.is( !_.strHas( read, 'dir2/File1.debug.js' ) );
     test.is( _.strHas( read, 'dir2/File1.release.js' ) );
@@ -8662,14 +8662,14 @@ function cleanSubmodules( test )
   {
     test.case = '.submodules.update'
     test.identical( got.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.path.join( a.abs( '.module' ), 'ModuleForTesting1' ) ) )
-    test.is( a.fileProvider.fileExists( a.path.join( a.abs( '.module' ), 'ModuleForTesting2' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2' ) ) )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
-    var files = self.find( a.path.join( a.abs( '.module' ), 'ModuleForTesting1' ) );
+    var files = self.find( a.abs( '.module/ModuleForTesting1' ) );
     test.is( files.length >= 1 );
 
-    var files = self.find( a.path.join( a.abs( '.module' ), 'ModuleForTesting2' ) );
+    var files = self.find( a.abs( '.module/ModuleForTesting2' ) );
     test.is( files.length >= 1 );
 
     return null;
@@ -11226,7 +11226,7 @@ function exportStringrmal( test )
     var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml' ] );
 
-    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), './ModuleForTesting12.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
@@ -11303,7 +11303,7 @@ function exportStringrmal( test )
     var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml' ] );
 
-    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), './ModuleForTesting12.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
@@ -11381,7 +11381,7 @@ function exportStringrmal( test )
     var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ModuleForTesting12ab.informal.out.will.yml' ] );
 
-    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), './ModuleForTesting12ab.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/ModuleForTesting12ab.informal.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12ab.informal.out' ];
     var expected =
     {
@@ -11555,7 +11555,7 @@ function exportMixed( test )
     var files = a.fileProvider.dirRead( a.abs( 'module' ) );
     test.identical( files, expected );
 
-    var outfile = a.fileProvider.configRead( a.path.join( routinePath, 'out/ModuleForTesting12.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.path.join( a.routinePath, 'out/ModuleForTesting12.informal.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
@@ -12309,7 +12309,7 @@ function exportMultiple( test )
     test.is( _.strHas( got.output, 'submodule.debug.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
-    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), 'submodule.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/submodule.out.will.yml' ) );
 
     outfile = outfile.module[ 'submodule.out' ];
 
@@ -12509,12 +12509,12 @@ function exportMultiple( test )
     test.is( _.strHas( got.output, 'submodule.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
-    var outfileData = a.fileProvider.fileRead( a.path.join( a.abs( 'out' ), 'submodule.out.will.yml' ) );
+    var outfileData = a.fileProvider.fileRead( a.abs( 'out/submodule.out.will.yml' ) );
     test.is( outfileData.length > 1000 );
     test.is( !_.strHas( outfileData, a.abs( '../..' ) ) );
     test.is( !_.strHas( outfileData, a.path.nativize( a.abs( '../..' ) ) ) );
 
-    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), 'submodule.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/submodule.out.will.yml' ) );
     outfile = outfile.module[ 'submodule.out' ]
     var exported =
     {
@@ -12997,13 +12997,13 @@ function exportBroken( test )
     var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js' ] );
     test.identical( got.exitCode, 0 );
-    test.is( a.fileProvider.fileExists( a.path.join( a.abs( 'out' ), 'debug' ) ) );
-    test.is( !a.fileProvider.fileExists( a.path.join( a.abs( 'out' ), 'release' ) ) );
+    test.is( a.fileProvider.fileExists( a.abs( 'out/debug' ) ) );
+    test.is( !a.fileProvider.fileExists( a.abs( 'out/release' ) ) );
 
     test.is( _.strHas( got.output, 'submodule.debug.out.tgs' ) );
     test.is( _.strHas( got.output, 'out/submodule.out.will.yml' ) );
 
-    var outfile = a.fileProvider.configRead( a.path.join( a.abs( 'out' ), 'submodule.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/submodule.out.will.yml' ) );
     outfile = outfile.module[ 'submodule.out' ];
 
     var exported =
@@ -15648,7 +15648,7 @@ function importLocalRepo( test )
     test.identical( _.strCount( got.output, /\+ reflector::download reflected .* file\(s\)/ ), 1 );
     test.identical( _.strCount( got.output, /Write out willfile .*\/.module\/ModuleForTesting12.out.will.yml/ ), 1 );
 
-    var outfile = a.fileProvider.configRead( a.path.join( a.abs( '.module' ), 'ModuleForTesting12.out.will.yml' ) ); /* qqq xxx */
+    var outfile = a.fileProvider.configRead( a.abs( '.module/ModuleForTesting12.out.will.yml' ) ); /* qqq xxx */
     outfile = outfile.module[ 'ModuleForTesting12.out' ];
 
     var expectedReflector =
@@ -16286,8 +16286,8 @@ function submodulesDownloadUpdate( test )
 
     test.is( files.length > 30 );
 
-    test.is( a.fileProvider.fileExists( a.path.join( a.abs( '.module' ), 'ModuleForTesting1' ) ) )
-    test.is( a.fileProvider.fileExists( a.path.join( a.abs( '.module' ), 'ModuleForTesting2a' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
   })
 
@@ -16304,14 +16304,14 @@ function submodulesDownloadUpdate( test )
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/2 submodule(s) of module::submodules were downloaded' ) );
-    test.is( a.fileProvider.fileExists( a.path.join( a.abs( '.module' ), 'ModuleForTesting1' ) ) )
-    test.is( a.fileProvider.fileExists( a.path.join( a.abs( '.module' ), 'ModuleForTesting2a' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
-    var files = self.find( a.path.join( a.abs( '.module' ), 'ModuleForTesting1' ) );
+    var files = self.find( a.abs( '.module/ModuleForTesting1' ) );
     test.is( files.length > 3 );
 
-    var files = self.find( a.path.join( a.abs( '.module' ), 'ModuleForTesting2a' ) );
+    var files = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.is( files.length > 3 );
 
     return null;
@@ -16331,14 +16331,14 @@ function submodulesDownloadUpdate( test )
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
-    test.is( a.fileProvider.fileExists( a.path.join( a.abs( '.module' ), 'ModuleForTesting1' ) ) )
-    test.is( a.fileProvider.fileExists( a.path.join( a.abs( '.module' ), 'ModuleForTesting2a' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
-    var files = self.find( a.path.join( a.abs( '.module' ), 'ModuleForTesting1' ) );
+    var files = self.find( a.abs( '.module/ModuleForTesting1' ) );
     test.is( files.length >= 1 );
 
-    var files = self.find( a.path.join( a.abs( '.module' ), 'ModuleForTesting2a' ) );
+    var files = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.is( files.length >= 1 );
 
     return null;
@@ -16357,14 +16357,14 @@ function submodulesDownloadUpdate( test )
 
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/2 submodule(s) of module::submodules were updated in' ) );
-    test.is( a.fileProvider.fileExists( a.path.join( a.abs( '.module' ), 'ModuleForTesting1' ) ) )
-    test.is( a.fileProvider.fileExists( a.path.join( a.abs( '.module' ), 'ModuleForTesting2a' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting1' ) ) )
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
-    var files = self.find( a.path.join( a.abs( '.module' ), 'ModuleForTesting1' ) );
+    var files = self.find( a.abs( '.module/ModuleForTesting1' ) );
     test.is( files.length >= 1 );
 
-    var files = self.find( a.path.join( a.abs( '.module' ), 'ModuleForTesting2a' ) );
+    var files = self.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.is( files.length >= 1 );
 
     return null;
@@ -16557,7 +16557,7 @@ function submodulesDownloadSwitchBranch( test )
   .then( () =>
   {
     debugger
-    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -16577,7 +16577,7 @@ function submodulesDownloadSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -16595,7 +16595,7 @@ function submodulesDownloadSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -16613,7 +16613,7 @@ function submodulesDownloadSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -17105,7 +17105,7 @@ function submodulesDownloadThrowing( test )
     test.case = 'error if download path exists and it is not a empty dir';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
-    a.fileProvider.fileWrite( a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ), a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ) );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a/file' ), a.abs( '.module/ModuleForTesting2a/file' ) );
     return null;
   })
   a.startNonThrowing({ execPath : '.with bad .submodules.download' })
@@ -17184,7 +17184,7 @@ function submodulesDownloadThrowing( test )
   a.startNonThrowing({ execPath : '.with good .submodules.download' })
   .then( () =>
   {
-    let inWillFilePath = a.path.join( a.abs( '.module/ModuleForTesting2a' ), '.im.will.yml' );
+    let inWillFilePath = a.abs( '.module/ModuleForTesting2a/.im.will.yml' );
     let inWillFile = a.fileProvider.configRead( inWillFilePath );
     inWillFile.section = { field : 'value' };
     a.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile,encoding : 'yml' });
@@ -18480,7 +18480,7 @@ function submodulesUpdateThrowing( test )
     test.case = 'error if download path exists and it is not a empty dir';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
-    a.fileProvider.fileWrite( a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ),a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ) );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a/file' ), a.abs( '.module/ModuleForTesting2a/file' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.update' })
@@ -18554,7 +18554,7 @@ function submodulesUpdateThrowing( test )
   a.start({ execPath : '.with good .submodules.update' })
   .then( () =>
   {
-    let inWillFilePath = a.path.join( a.abs( '.module/ModuleForTesting2a' ), '.im.will.yml' );
+    let inWillFilePath = a.abs( '.module/ModuleForTesting2a/.im.will.yml' );
     let inWillFile = a.fileProvider.configRead( inWillFilePath );
     inWillFile.section = { field : 'value' };
     a.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile, encoding : 'yml' });
@@ -18675,7 +18675,7 @@ function submodulesAgreeThrowing( test )
     test.case = 'error on download, dir with terminal at download path, download path will be deleted';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
-    a.fileProvider.fileWrite( a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ),a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ) );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a/file' ), a.abs( '.module/ModuleForTesting2a/file' ) );
     return null;
   })
   a.start({ execPath : '.with bad .submodules.versions.agree' })
@@ -18695,7 +18695,7 @@ function submodulesAgreeThrowing( test )
     test.case = 'dir with terminal at download path, download path will be deleted';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
     a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
-    a.fileProvider.fileWrite( a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ),a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'file' ) );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a/file' ), a.abs( '.module/ModuleForTesting2a/file' ) );
     return null;
   })
   a.start({ execPath : '.with good .submodules.versions.agree' })
@@ -18785,7 +18785,7 @@ function submodulesAgreeThrowing( test )
   a.startNonThrowing( 'git -C .module/ModuleForTesting2a reset --hard HEAD~1' )
   .then( () =>
   {
-    a.fileProvider.fileWrite( a.path.join( a.abs( '.module/ModuleForTesting2a' ), 'was.package.json' ), 'was.package.json' );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a/was.package.json' ), 'was.package.json' );
     return null;
   })
   a.start({ execPath : '.with good .submodules.versions.agree' })
@@ -19160,7 +19160,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -19178,7 +19178,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
@@ -19196,7 +19196,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, detachedVersion ) );
     return null;
   })
@@ -19214,7 +19214,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -19225,7 +19225,7 @@ function subModulesUpdateSwitchBranch( test )
     let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
     willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
     a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
-    let filePath = a.path.join( a.abs( '.module' ), 'willbe-experiment/File.js' );
+    let filePath = a.abs( '.module/willbe-experiment/File.js' );
     a.fileProvider.fileWrite({ filePath, data : 'master' });
     return null;
   })
@@ -19239,7 +19239,7 @@ function subModulesUpdateSwitchBranch( test )
   _.process.start
   ({
     execPath : 'git status',
-    currentPath : a.path.join( a.abs( '.module' ), 'willbe-experiment' ),
+    currentPath : a.abs( '.module/willbe-experiment' ),
     ready : a.ready,
     outputCollecting : 1
   })
@@ -19248,7 +19248,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.is( _.strHas( got.output, 'modified:   File.js' ) )
 
-    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -19268,7 +19268,7 @@ function subModulesUpdateSwitchBranch( test )
   _.process.start
   ({
     execPath : 'git commit --allow-empty -m commitofmaster',
-    currentPath : a.path.join( a.abs( '.module' ), 'willbe-experiment' ),
+    currentPath : a.abs( '.module/willbe-experiment' ),
     ready : a.ready
   })
   .then( () =>
@@ -19283,7 +19283,7 @@ function subModulesUpdateSwitchBranch( test )
 
   .then( () =>
   {
-    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/dev' ) );
     return null;
   })
@@ -19303,7 +19303,7 @@ function subModulesUpdateSwitchBranch( test )
   _.process.start
   ({
     execPath : 'git commit --allow-empty -m emptycommit',
-    currentPath : a.path.join( a.abs( '.module' ), 'willbe-experiment' ),
+    currentPath : a.abs( '.module/willbe-experiment' ),
     ready : a.ready
   })
 
@@ -19319,7 +19319,7 @@ function subModulesUpdateSwitchBranch( test )
   _.process.start
   ({
     execPath : 'git status',
-    currentPath : a.path.join( a.abs( '.module' ), 'willbe-experiment' ),
+    currentPath : a.abs( '.module/willbe-experiment' ),
     outputCollecting : 1,
     outputGraying : 1,
     ready : a.ready,
@@ -19329,7 +19329,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.is( _.strHas( got.output, `Your branch is ahead of 'origin/master' by 2 commits` ) );
 
-    let currentVersion = a.fileProvider.fileRead( a.path.join( a.abs( '.module' ), 'willbe-experiment/.git/HEAD' ) );
+    let currentVersion = a.fileProvider.fileRead( a.abs( '.module/willbe-experiment/.git/HEAD' ) );
     test.is( _.strHas( currentVersion, 'ref: refs/heads/master' ) );
     return null;
   })
@@ -20007,9 +20007,9 @@ function stepWillbeVersionCheck( test )
     dst : { prefixPath : a.abs( 'willbe' ) },
   })
   a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'asset' ) } });
-  a.fileProvider.softLink( a.path.join( a.abs( 'willbe' ), 'node_modules' ), a.path.join( a.path.join( __dirname, '../../../..' ), 'node_modules' ) );
+  a.fileProvider.softLink( a.abs( 'willbe/node_modules' ), a.path.join( a.path.join( __dirname, '../../../..' ), 'node_modules' ) );
 
-  let execPath = a.path.nativize( a.path.join( a.abs( 'willbe' ), 'proto/dwtools/atop/will/entry/Exec' ) );
+  let execPath = a.path.nativize( a.abs( 'willbe/proto/dwtools/atop/will/entry/Exec' ) );
   a.start = _.process.starter
   ({
     execPath : 'node ' + execPath,
@@ -20032,7 +20032,7 @@ function stepWillbeVersionCheck( test )
 
   .then( ( ) =>
   {
-    let packageJsonPath = a.path.join( a.abs( 'willbe' ), 'package.json' );
+    let packageJsonPath = a.abs( 'willbe/package.json' );
     let packageJson = a.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
     packageJson.version = '0.0.0';
     a.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
