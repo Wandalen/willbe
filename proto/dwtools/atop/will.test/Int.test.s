@@ -1503,7 +1503,7 @@ function openerClone( test )
     test.identical( a.rel( opener2.dirPath ), '.' );
     test.identical( a.rel( opener2.commonPath ), 'sub' );
     test.identical( a.rel( opener2.localPath ), 'sub' );
-    test.identical( a.rel( opener2.downloadPath ), null );
+    test.identical( a.rel( opener2.a.abs( './.module/ModuleForTesting2a' ) ), null );
     test.identical( a.rel( opener2.remotePath ), null );
 
     opener2.preform();
@@ -1513,7 +1513,7 @@ function openerClone( test )
     test.identical( a.rel( opener2.dirPath ), '.' );
     test.identical( a.rel( opener2.commonPath ), 'sub' );
     test.identical( a.rel( opener2.localPath ), 'sub' );
-    test.identical( a.rel( opener2.downloadPath ), null );
+    test.identical( a.rel( opener2.a.abs( './.module/ModuleForTesting2a' ) ), null );
     test.identical( a.rel( opener2.remotePath ), null );
 
     opener2.close();
@@ -7065,7 +7065,7 @@ function pathsResolveOfSubmodulesLocal( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-local-repos' );
-  let submodulesPath = a.abs( '.module' ); /* qqq xxx : ask */
+  // let submodulesPath = a.abs( '.module' ); /* aaa xxx : ask */ /* Dmytro : corrected */
   let opener;
 
   /* - */
@@ -7100,25 +7100,25 @@ function pathsResolveOfSubmodulesLocal( test )
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' ); /* qqq xxx : ask */
+    var expected = path.join( a.abs( '.module' ), 'ModuleForTesting1/out' ); /* qqq xxx : ask */
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::out' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::out' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     return null;
@@ -7146,8 +7146,8 @@ function pathsResolveOfSubmodulesRemote( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-remote-repos' );
-  let submodulesPath = a.abs( '.module' ); /* qqq xxx : ask */
-  // let path = a.path; [> qqq2 : ! <]
+  // let submodulesPath = a.abs( '.module' ); /* qqq xxx : ask */
+  // let path = a.path; /* qqq2 : ! */ /* Dmytro : corrected */
   let opener;
 
   /* - */
@@ -7182,25 +7182,25 @@ function pathsResolveOfSubmodulesRemote( test )
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = a.path.join( submodulesPath, 'ModuleForTesting1/out' ); /* qqq xxx : ask */
+    var expected = a.path.join( a.abs( '.module' ), 'ModuleForTesting1/out' ); /* qqq xxx : ask */
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::in' );
-    var expected = a.path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = a.path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::out' );
-    var expected = a.path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = a.path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::out' );
-    var expected = a.path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = a.path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     return null;
@@ -9275,7 +9275,6 @@ function moduleIsNotValid( test )
 {
   let self = this; /* xxx qqq : ! */
   let a = self.assetFor( test, 'submodules-download-errors' );
-  let downloadPath = a.abs( './.module/ModuleForTesting2a' );
   let opener;
 
   a.ready
@@ -9301,7 +9300,7 @@ function moduleIsNotValid( test )
 
     opener.close();
 
-    let outWillFilePath = a.path.join( downloadPath, 'out/wModuleForTesting2a.out.will.yml' );
+    let outWillFilePath = a.path.join( a.abs( './.module/ModuleForTesting2a' ), 'out/wModuleForTesting2a.out.will.yml' );
     let outWillFile = a.fileProvider.configRead( outWillFilePath );
     outWillFile.section = { field : 'value' };
     a.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
@@ -9312,7 +9311,7 @@ function moduleIsNotValid( test )
   .then( () =>
   {
     test.case = 'repopen module';
-    let outWillFilePath = a.path.join( downloadPath, 'out/wModuleForTesting2a.out.will.yml' );
+    let outWillFilePath = a.path.join( a.abs( './.module/ModuleForTesting2a' ), 'out/wModuleForTesting2a.out.will.yml' );
     debugger;
     opener = a.will.openerMakeManual({ willfilesPath : outWillFilePath });
     return opener.open({ all : 1, resourcesFormed : 0 });
