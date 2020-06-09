@@ -8193,9 +8193,6 @@ function cleanBroken1( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-broken-1' );
-  let submodulesPath = a.abs( '.module' );
-  let outPath = a.abs( 'out' );
-  let outDebugPath = a.abs( 'out/debug' );
   a.reflect();
 
   test.description = 'should handle currputed willfile properly';
@@ -8207,7 +8204,7 @@ function cleanBroken1( test )
   .then( ( got ) =>
   {
     test.case = '.clean ';
-    var files = self.find( submodulesPath );
+    var files = self.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
 
     return null;
@@ -8221,7 +8218,7 @@ function cleanBroken1( test )
   {
     test.case = '.clean dry:1';
 
-    var files = self.find( submodulesPath );
+    var files = self.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) + ' at ' ) );
@@ -8256,10 +8253,10 @@ function cleanBroken1( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
-    var files = self.find( outDebugPath );
+    var files = self.find( a.abs( 'out/debug' ) );
     test.gt( files.length, 9 );
 
-    var files = a.fileProvider.dirRead( outPath );
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
@@ -8284,10 +8281,10 @@ function cleanBroken1( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
-    var files = self.find( outDebugPath );
+    var files = self.find( a.abs( 'out/debug' ) );
     test.gt( files.length, 9 );
 
-    var files = a.fileProvider.dirRead( outPath );
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
     return null;
