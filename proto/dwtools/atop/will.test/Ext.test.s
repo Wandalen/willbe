@@ -13140,7 +13140,6 @@ function exportImport( test )
 {
   let self = this;
   let a = self.assetFor( test, 'two-exported' );
-  let outPath = a.abs( 'super.out' );
   a.reflect();
 
   /* - */
@@ -13150,7 +13149,7 @@ function exportImport( test )
   .then( () =>
   {
     test.case = '.export'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'super.out' ) );
     return null;
   })
 
@@ -13161,7 +13160,7 @@ function exportImport( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = a.fileProvider.dirRead( outPath );
+    var files = a.fileProvider.dirRead( a.abs( 'super.out' ) );
     test.identical( files, [ 'debug', 'release', 'supermodule.out.will.yml' ] );
 
     return null;
