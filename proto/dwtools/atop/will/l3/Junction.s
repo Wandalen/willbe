@@ -13,7 +13,8 @@
 
 let _ = _global_.wTools;
 let Parent = null;
-let Self = function wWillJunction( o )
+let Self = wWillJunction;
+function wWillJunction( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

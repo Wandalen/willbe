@@ -14,41 +14,40 @@ path :
 reflector :
 
   reflect.proto0 :
-    filePath : 
+    filePath :
       path::file1 : '{path::out}/debug/File.js'
-      
+
   reflect.proto1 :
-    filePath : 
+    filePath :
       path::file2 : '{path::out}/debug/File.js'
     linking : fileCopy
     dstRewritingOnlyPreserving : 0
     breakingDstHardLink : 1
-      
+
   reflect.proto2 :
     inherit : predefined.*
-    filePath : 
+    filePath :
       path::file2 : '{path::out}/debug/File.js'
     linking : fileCopy
     dstRewritingOnlyPreserving : 0
     breakingDstHardLink : 1
-    
+
 step :
-  
-  clean.out : 
+
+  clean.out :
     inherit : files.delete
     filePath : path::out
 
 build :
-  
+
   variant1 :
     steps :
       - clean.out
       - reflect.proto0
       - reflect.proto1
-      
+
   variant2 :
     steps :
       - clean.out
       - reflect.proto0
       - reflect.proto2
-  

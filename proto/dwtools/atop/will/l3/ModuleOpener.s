@@ -4,7 +4,8 @@
 
 let _ = _global_.wTools;
 let Parent = _.Will.AbstractModule;
-let Self = function wWillModuleOpener( o )
+let Self = wWillModuleOpener;
+function wWillModuleOpener( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

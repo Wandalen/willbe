@@ -11,7 +11,8 @@
 
 let _ = _global_.wTools;
 let Parent = _.Will.Resource;
-let Self = function wWillPathResource( o )
+let Self = wWillPathResource;
+function wWillPathResource( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

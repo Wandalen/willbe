@@ -2938,7 +2938,6 @@ function exportDefaultPath( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-default-path' );
-  let outDirPath = a.abs( 'out' );
   let opener;
 
   /* - */
@@ -2965,7 +2964,7 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.path.join( outDirPath, 'path.out.will' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/path.out.will' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
@@ -2973,7 +2972,7 @@ function exportDefaultPath( test )
 
     test.description = 'files';
     var exp = [ '.', './path.out.will.yml' ]
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
     opener.finit();
@@ -3004,14 +3003,14 @@ function exportDefaultPath( test )
     var module = opener.openedModule;
 
     test.description = 'outfile';
-    var outfile = a.fileProvider.configRead( a.path.join( outDirPath, 'reflector.out.will' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/reflector.out.will' ) );
     var modulePaths = _.select( outfile.module[ outfile.root[ 0 ] ], 'path/exported.files.export.debug/path' );
     var exp = [ '..', '../File.txt', '../nofile.will.yml', '../nonglob.will.yml', '../nopath.will.yml', '../path.will.yml', '../reflector.will.yml' ];
     test.identical( _.setFrom( modulePaths ), _.setFrom( exp ) );
 
     test.description = 'files';
     var exp = [ '.', './reflector.out.will.yml' ]
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
     opener.finit();
@@ -3049,7 +3048,7 @@ function exportDefaultPath( test )
 
     test.description = 'files';
     var exp = []
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
     opener.finit();
@@ -3120,7 +3119,7 @@ function exportDefaultPath( test )
 
     test.description = 'files';
     var exp = [ '.', './nonglob.out.will.yml' ];
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp );
 
     opener.finit();
@@ -5766,7 +5765,6 @@ function pathsResolve( test )
 {
   let self = this;
   let a = self.assetFor( test, 'export-multiple' );
-  let execPath = a.path.join( __dirname, '../will/entry/Exec' );
   let opener;
 
   function pin( filePath )
@@ -5864,7 +5862,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( execPath ),
+      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'proto',
       'super.out',
       '.',
@@ -5893,7 +5891,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( execPath ),
+      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'proto',
       'super.out',
       '.',
@@ -5927,7 +5925,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( execPath ),
+      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'proto',
       'super.out',
       '.',
@@ -5961,7 +5959,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( execPath ),
+      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'super.out/proto',
       'super.out/super.out',
       'super.out',
@@ -5995,7 +5993,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( execPath ),
+      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'proto',
       'super.out',
       '.',
@@ -6063,7 +6061,7 @@ function pathsResolve( test )
       'out' : ( 'super.out' ),
       'out.debug' : ( 'super.out/debug' ),
       'out.release' : ( 'super.out/release' ),
-      'will' : a.rel( execPath ),
+      'will' : a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'module.dir' : '.',
       'module.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.common' : 'super',
@@ -6099,7 +6097,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
-      'will' : a.rel( execPath ),
+      'will' : a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'proto' : 'super.out/proto',
       'temp' : 'super.out/super.out',
       'download' : null,
@@ -6133,7 +6131,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
-      'will' : a.rel( execPath ),
+      'will' : a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'proto' : 'proto',
       'temp' : 'super.out',
       'in' : '.',
@@ -6166,7 +6164,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
-      'will' : a.rel( execPath ),
+      'will' : a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'proto' : 'proto',
       'temp' : 'super.out',
       'in' : '.',
@@ -6199,7 +6197,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
-      'will' : a.rel( execPath ),
+      'will' : a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'proto' : 'super.out/proto',
       'temp' : 'super.out/super.out',
       'in' : 'super.out',
@@ -6232,7 +6230,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( execPath ),
+      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'proto',
       'super.out',
       '.',
@@ -6265,7 +6263,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( execPath ),
+      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'proto',
       'super.out',
       '.',
@@ -6298,7 +6296,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( execPath ),
+      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
       'super.out/proto',
       'super.out/super.out',
       'super.out',
@@ -7067,7 +7065,7 @@ function pathsResolveOfSubmodulesLocal( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-local-repos' );
-  let submodulesPath = a.abs( '.module' ); /* qqq xxx : ask */
+  // let submodulesPath = a.abs( '.module' ); /* aaa xxx : ask */ /* Dmytro : corrected */
   let opener;
 
   /* - */
@@ -7102,25 +7100,25 @@ function pathsResolveOfSubmodulesLocal( test )
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' ); /* qqq xxx : ask */
+    var expected = path.join( a.abs( '.module' ), 'ModuleForTesting1/out' ); /* qqq xxx : ask */
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::out' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::out' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     return null;
@@ -7148,8 +7146,8 @@ function pathsResolveOfSubmodulesRemote( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-remote-repos' );
-  let submodulesPath = a.abs( '.module' ); /* qqq xxx : ask */
-  let path = a.path; /* qqq2 : ! */
+  // let submodulesPath = a.abs( '.module' ); /* qqq xxx : ask */
+  // let path = a.path; /* qqq2 : ! */ /* Dmytro : corrected */
   let opener;
 
   /* - */
@@ -7178,31 +7176,31 @@ function pathsResolveOfSubmodulesRemote( test )
 
     test.case = 'path::in, supermodule';
     var resolved = opener.openedModule.resolve( 'path::in' );
-    var expected = path.join( a.routinePath );
+    var expected = a.path.join( a.routinePath );
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' ); /* qqq xxx : ask */
+    var expected = a.abs( '.module/ModuleForTesting1/out' ); /* qqq xxx : ask */
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::in' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = a.abs( '.module/ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::out' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = a.abs( '.module/ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::out' );
-    var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+    var expected = a.abs( '.module/ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     return null;
@@ -9277,7 +9275,6 @@ function moduleIsNotValid( test )
 {
   let self = this; /* xxx qqq : ! */
   let a = self.assetFor( test, 'submodules-download-errors' );
-  let downloadPath = a.abs( './.module/ModuleForTesting2a' );
   let opener;
 
   a.ready
@@ -9303,7 +9300,7 @@ function moduleIsNotValid( test )
 
     opener.close();
 
-    let outWillFilePath = a.path.join( downloadPath, 'out/wModuleForTesting2a.out.will.yml' );
+    let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
     let outWillFile = a.fileProvider.configRead( outWillFilePath );
     outWillFile.section = { field : 'value' };
     a.fileProvider.fileWrite({ filePath : outWillFilePath, data : outWillFile, encoding : 'yml' });
@@ -9314,8 +9311,7 @@ function moduleIsNotValid( test )
   .then( () =>
   {
     test.case = 'repopen module';
-    let outWillFilePath = a.path.join( downloadPath, 'out/wModuleForTesting2a.out.will.yml' );
-    debugger;
+    let outWillFilePath = a.abs( './.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml' );
     opener = a.will.openerMakeManual({ willfilesPath : outWillFilePath });
     return opener.open({ all : 1, resourcesFormed : 0 });
   })
@@ -9326,7 +9322,6 @@ function moduleIsNotValid( test )
     if( err )
     _.errAttend( err );
     test.is( _.errIs( err ) );
-    debugger;
     test.identical( opener.isValid(), false );
     test.identical( opener.openedModule.isValid(), false );
     opener.close();
@@ -9667,9 +9662,9 @@ function repoStatus( test )
 
   .then( () =>
   {
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     var exp = [ 'ModuleForTesting2a' ];
-    var files = _.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
     return null;
   })
@@ -9989,7 +9984,7 @@ function repoStatusForDeletedRepo( test )
   .then( () =>
   {
     test.description = 'delete repo::ModuleForTesting1 and call status with invalidating:0'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
 
     var repo1 = opener.openedModule.submoduleMap.ModuleForTesting1.opener.repo;
     var status =
@@ -10050,7 +10045,7 @@ function repoStatusForDeletedRepo( test )
   .then( () =>
   {
     test.description = 'delete repo::ModuleForTesting2a and call status with invalidating:1'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting2a' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting2a' ) );
 
     var repo1a = opener.openedModule.submoduleMap.ModuleForTesting2a.opener.repo;
     var status =
@@ -10141,7 +10136,7 @@ function repoStatusForOutdatedRepo( test )
   .then( () =>
   {
     test.description = 'repo::ModuleForTesting1 is not up to date'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     let con = opener.openedModule.subModulesDownload();
     con.then( () =>
     {
@@ -10318,7 +10313,7 @@ function repoStatusForInvalidRepo( test )
   .then( () =>
   {
     test.description = 'repo::ModuleForTesting1 is not valid'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     let con = opener.openedModule.subModulesDownload();
     con.then( () =>
     {
@@ -10495,7 +10490,7 @@ function repoStatusLocalChanges( test )
   .then( () =>
   {
     test.description = 'repo::ModuleForTesting1 has local changes'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     let con = opener.openedModule.subModulesDownload();
     con.then( () =>
     {
@@ -10504,7 +10499,7 @@ function repoStatusLocalChanges( test )
     })
     con.then( () =>
     {
-      _.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.js' ), data : '' })
+      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.js' ), data : '' })
       return null;
     });
     return con;
@@ -10713,7 +10708,7 @@ function repoStatusLocalUncommittedChanges( test )
   .then( () =>
   {
     test.description = 'repo::ModuleForTesting1 has local uncommitted changes'
-    _.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
+    a.fileProvider.filesDelete( a.abs( '.module/ModuleForTesting1' ) );
     let con = opener.openedModule.subModulesDownload();
     con.then( () =>
     {
@@ -10722,7 +10717,7 @@ function repoStatusLocalUncommittedChanges( test )
     })
     con.then( () =>
     {
-      _.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.js' ), data : '' })
+      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.js' ), data : '' })
       return null;
     })
     _.process.start

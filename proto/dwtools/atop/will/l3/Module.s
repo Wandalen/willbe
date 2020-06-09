@@ -36,7 +36,8 @@
 
 let _ = _global_.wTools;
 let Parent = _.Will.AbstractModule;
-let Self = function wWillModule( o )
+let Self = wWillModule;
+function wWillModule( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
@@ -2356,6 +2357,7 @@ function moduleBuild_body( o )
     build,
     recursive : 0,
     isRoot : o.isRoot,
+    purging : o.purging,
   });
 
   return con
@@ -2374,7 +2376,8 @@ function moduleBuild_body( o )
   })
   .then( () =>
   {
-    debugger;
+    if( !o.isRoot || !o.purging )
+    return null;
     if( module.peerModule )
     module.peerModule.finit();
     _.assert( module.peerModule === null );
@@ -2395,6 +2398,7 @@ moduleBuild_body.defaults =
   criterion : null,
   kind : 'export',
   isRoot : null,
+  purging : 0,
 }
 
 let moduleBuild = _.routineFromPreAndBody( moduleBuild_pre, moduleBuild_body );
@@ -2409,8 +2413,6 @@ function exportedMake( o )
   let module = this;
   let outModule = module;
   let will = module.will;
-
-  debugger;
 
   o = _.routineOptions( exportedMake, arguments );
   _.assert( o.build instanceof _.Will.Build );
@@ -2433,11 +2435,13 @@ function exportedMake( o )
     }
 
     _.assert( !module.isFinited() );
-    // _.assert( o.rewriting, 'not tested' ); /* xxx : check */
+    // _.assert( _.boolLike( o.purging ), 'not tested' ); /* xxx : check */
 
     if( !module.peerModule )
     {
-      if( o.rewriting )
+      if( o.purging )
+      debugger;
+      if( o.purging )
       return _.Consequence.From( module.outModuleMake() ).then( () => makeFromPeer() );
       else
       return module.outModuleOpenOrMake().then( () => makeFromPeer() );
@@ -2484,7 +2488,7 @@ function exportedMake( o )
 exportedMake.defaults =
 {
   build : null,
-  rewriting : 0,
+  purging : 0,
 }
 
 // --
@@ -6433,12 +6437,12 @@ function exportString( o )
   {
     result += '\n';
     result += module.infoExportPaths( module.pathMap );
-    result += module.infoExportResource( module.submoduleMap );
-    result += module.infoExportResource( module.reflectorMap );
-    result += module.infoExportResource( module.stepMap );
-    result += module.infoExportResource( module.buildsResolve({ preffering : 'more' }) );
-    result += module.infoExportResource( module.exportsResolve({ preffering : 'more' }) );
-    result += module.infoExportResource( module.exportedMap );
+    result += module.resourcesExportInfo( module.submoduleMap );
+    result += module.resourcesExportInfo( module.reflectorMap );
+    result += module.resourcesExportInfo( module.stepMap );
+    result += module.resourcesExportInfo( module.buildsResolve({ preffering : 'more' }) );
+    result += module.resourcesExportInfo( module.exportsResolve({ preffering : 'more' }) );
+    result += module.resourcesExportInfo( module.exportedMap );
   }
 
   return result;
@@ -6475,7 +6479,7 @@ function infoExportPaths( paths )
 
 //
 
-function infoExportResource( collection )
+function resourcesExportInfo( collection )
 {
   let module = this;
   let will = module.will;
@@ -7177,7 +7181,7 @@ function errTooMany( builds, what )
 
   if( logger.verbosity >= 2 && builds.length > 1 )
   {
-    prefix = module.infoExportResource( builds );
+    prefix = module.resourcesExportInfo( builds );
   }
 
   if( builds.length !== 1 )
@@ -7708,7 +7712,7 @@ let Extend =
 
   exportString,
   infoExportPaths,
-  infoExportResource,
+  resourcesExportInfo,
   infoExportModulesTopological,
 
   exportStructure,

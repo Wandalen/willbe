@@ -138,7 +138,8 @@ function stepRoutineReflect( frame )
 
   let reflectorOptions = reflector.optionsForReflectExport();
 
-  _.mapSupplement( opts, reflectorOptions );
+  // _.mapSupplement( opts, reflectorOptions );
+  _.mapExtend( opts, reflectorOptions );
 
   opts.verbosity = 0;
 
@@ -987,9 +988,10 @@ function stepRoutineExport( frame )
 
   _.assert( arguments.length === 1 );
   _.assert( build instanceof _.Will.Build );
-  // _.assert( _.boolIs( frame.run.isRoot ) ); /* xxx : investigate */
+  // _.assert( _.boolLike( frame.run.isRoot ) ); /* xxx : investigate */
+  // _.assert( _.boolLike( frame.run.purging ) ); /* xxx : investigate */
 
-  return module.exportedMake({ build, rewriting : frame.run.isRoot })
+  return module.exportedMake({ build, purging : frame.run.isRoot && frame.run.purging })
   .then( ( exported ) =>
   {
     _.assert( exported instanceof _.Will.Exported );

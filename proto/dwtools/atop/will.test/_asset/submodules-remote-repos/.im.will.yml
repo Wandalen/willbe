@@ -1,12 +1,14 @@
 
 submodule :
 
-  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/#64c96412c81266f119210e7af71e300cce5b2ebd
-  ModuleForTesting2a : git+https:///github.com/Wandalen/wModuleForTesting2a.git/@master
-  ModuleForTesting12ab : git+https:///github.com/Wandalen/wModuleForTesting12ab.git/#b3499c8f6756cad511bb42559e6c3d501ed15061
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@gamma
+  ModuleForTesting2 : git+https:///github.com/Wandalen/wModuleForTesting2.git/out/wModuleForTesting2.out.will@gamma
+  # ModuleForTesting1 : git+hd://../_repo/ModuleForTesting1?out=out/wModuleForTesting1.out.will@gamma
+  # ModuleForTesting2 : git+hd://../_repo/ModuleForTesting2?out=out/wModuleForTesting2.out.will@gamma
 
 path :
 
+  temp : out
   proto : './proto'
   in : '.'
   out : 'out'
@@ -14,13 +16,17 @@ path :
     path : './out/debug'
     criterion :
       debug : 1
+  out.release :
+    path : './out/release'
+    criterion :
+      debug : 0
 
 reflector :
 
   reflect.proto :
     inherit : predefined.*
     criterion :
-      debug : 1
+      debug : [ 0,1 ]
     filePath :
       path::proto : path::out.*=1
 
@@ -45,8 +51,10 @@ build :
   debug.raw :
     criterion :
       default : 1
+      debug : 1
+      raw : 1
     steps :
       - submodules.download
       - delete.out.debug
-      - reflect.proto*=1
+      - reflect.proto.*=1
       - reflect.submodules*=1

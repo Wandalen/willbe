@@ -1227,7 +1227,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 'README.md' : //
 `
-# {{package/name}} -- Experimental [![Status](https://github.com/{{about/user}}/{{package/name}}/workflows/Test/badge.svg)](https://github.com/{{about/user}}/{{package/name}}/actions?query=workflow%3ATest)
+# module::{{package/prefixlessName}} - Experimental [![Status](https://github.com/{{about/user}}/{{package/name}}/workflows/Test/badge.svg)](https://github.com/{{about/user}}/{{package/name}}/actions?query=workflow%3ATest)
 
 ___
 

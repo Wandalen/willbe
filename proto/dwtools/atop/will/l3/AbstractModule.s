@@ -13,7 +13,8 @@
 
 let _ = _global_.wTools;
 let Parent = null;
-let Self = function wWillAbstractModule( o )
+let Self = wWillAbstractModule;
+function wWillAbstractModule( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

@@ -4,7 +4,7 @@ function onModule( it )
   let _ = it.tools;
 
   if( it.module )
-  logger.log( it.module.exportInfo({ verbosity : 2 }) );
+  logger.log( it.module.exportString({ verbosity : 2 }) );
   else
   logger.log( `Info for ${it.junction.nameWithLocationGet()}` );
 

@@ -4,7 +4,8 @@
 
 let _ = _global_.wTools;
 let Parent = _.Will.Resource;
-let Self = function wWillReflector( o )
+let Self = wWillReflector;
+function wWillReflector( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
@@ -238,7 +239,29 @@ function form2( o )
   // if( reflector.absoluteName === "module::a / module::submodule2 / reflector::exported.files.export" )
   // debugger;
 
+  // if( reflector.name === 'reflect.proto2' )
+  // debugger;
+
   let result = Parent.prototype.form2.apply( reflector, arguments );
+
+  // if( reflector.name === 'reflect.proto2' )
+  // debugger;
+
+  if( reflector.mandatory === null )
+  reflector.mandatory = 1;
+  if( reflector.dstRewritingOnlyPreserving === null )
+  reflector.dstRewritingOnlyPreserving = 1;
+  if( reflector.linking === null )
+  reflector.linking = 'hardLinkMaybe';
+
+  _.assert( _.boolLike( reflector.mandatory ) );
+  _.assert( _.boolLike( reflector.dstRewritingOnlyPreserving ) );
+  _.assert( _.strIs( reflector.linking ) );
+
+  // mandatory : null,
+  // dstRewritingOnlyPreserving : null,
+  // linking : null,
+
   return result;
 }
 
@@ -258,13 +281,6 @@ function form3()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-
-  // if( reflector.name === 'reflect.submodules' )
-  // debugger;
-  // if( reflector.absoluteName === "module::a / module::submodule2 / reflector::exported.files.export" )
-  // debugger;
-  // if( reflector.name === 'only.js' )
-  // debugger;
 
   if( reflector.formed === 3 )
   return reflector;
@@ -288,9 +304,6 @@ function form3()
   reflector.src.basePath = reflector.src.basePathSimplest();
   reflector.dst.basePath = reflector.dst.basePathSimplest();
   reflector.sureRelativeOrGlobal();
-
-  // if( reflector.name === 'only.js' )
-  // debugger;
 
   _.assert
   (
@@ -335,17 +348,6 @@ function _inheritMultiple( o )
   _.assert( reflector.src === reflector.dst.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
-  // if( reflector.absoluteName === "module::a / module::submodule2 / reflector::exported.files.export" )
-  // debugger;
-  // if( reflector.name === 'reflect.not.test.only.js.v1' )
-  // debugger;
-  // if( reflector.name === 'download.6' )
-  // debugger;
-  // if( reflector.name === 'only.js' )
-  // debugger;
-  // if( reflector.name === "reflect.submodules.debug" )
-  // debugger;
-
   reflector._inheritPrefixes({ visited : o.visited });
 
   reflector.prefixesResolve();
@@ -358,37 +360,17 @@ function _inheritMultiple( o )
   _.assert( reflector.src === reflector.dst.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
-  // if( reflector.absoluteName === "module::a / module::submodule2 / reflector::exported.files.export" )
-  // debugger;
-  // if( reflector.name === 'reflect.submodules' )
-  // debugger;
-
   reflector.pathsResolve();
-
-  // if( reflector.name === 'reflect.submodules' )
-  // debugger;
-  // if( reflector.absoluteName === "module::a / module::submodule2 / reflector::exported.files.export" )
-  // debugger;
 
   reflector.prefixesApply();
 
   reflector._accumulator.prefixesApply();
-
-  // if( reflector.name === 'reflect.submodules' )
-  // debugger;
 
   reflector.src.and( reflector._accumulator.src ).pathsSupplementJoining( reflector._accumulator.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 
   reflector.dst.and( reflector._accumulator.dst ).pathsSupplementJoining( reflector._accumulator.dst );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
-
-  // if( reflector.name === 'reflect.not.test.only.js.v1' )
-  // debugger;
-  // if( reflector.name === 'download.6' )
-  // debugger;
-  // if( reflector.name === "reflect.submodules.debug" )
-  // debugger;
 
   return reflector;
 }
@@ -451,16 +433,21 @@ function _inheritSingle( o )
   delete extend.filePath;
   delete extend.inherit;
 
-  reflector.copy( extend );
+  // if( reflector.name === 'reflect.proto2' )
+  // debugger;
+
+  // reflector.copy( extend );
+
+  for( let k in extend )
+  if( reflector[ k ] === null && extend[ k ] !== null )
+  reflector[ k ] = extend[ k ];
+
+  // if( reflector.name === 'reflect.proto2' )
+  // debugger;
+
   reflector.criterionInherit( reflector2.criterion );
 
   reflector2 = reflector2.cloneDerivative();
-
-  // if( reflector.name === 'reflect.submodules' )
-  // debugger;
-
-  // if( reflector.name === 'reflect.not.test.only.js.v1' )
-  // debugger;
 
   if( reflector2.src.hasAnyPath() )
   reflector2.src.prefixPath = path.join( reflector2.module.inPath, reflector2.src.prefixPath || '.' );
@@ -1874,9 +1861,12 @@ let Composes =
   dst : null,
 
   recursive : null,
-  mandatory : 1,
-  dstRewritingOnlyPreserving : 1,
-  linking : 'hardLinkMaybe',
+  // mandatory : 1,
+  // dstRewritingOnlyPreserving : 1,
+  // linking : 'hardLinkMaybe',
+  mandatory : null,
+  dstRewritingOnlyPreserving : null,
+  linking : null,
   breakingDstHardLink : null
 
 }
