@@ -4012,7 +4012,6 @@ function reflectSubmodulesWithCriterion( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-with-criterion' );
-  let outPath = a.abs( 'out/debug' );
   a.reflect();
 
   /* - */
@@ -4021,7 +4020,7 @@ function reflectSubmodulesWithCriterion( test )
   .then( () =>
   {
     test.case = 'setup'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     return null;
   })
 
@@ -4057,7 +4056,7 @@ function reflectSubmodulesWithCriterion( test )
   .then( () =>
   {
     test.case = 'reflect only A'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     return null;
   })
 
@@ -4065,7 +4064,7 @@ function reflectSubmodulesWithCriterion( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out/debug' ) );
     var expected = [ '.', './A.js' ];
     test.identical( files, expected );
     return null;
@@ -4077,7 +4076,7 @@ function reflectSubmodulesWithCriterion( test )
   .then( () =>
   {
     test.case = 'reflect only B'
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out/debug' ) );
     return null;
   })
 
@@ -4085,7 +4084,7 @@ function reflectSubmodulesWithCriterion( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out/debug' ) );
     var expected = [ '.', './B.js' ];
     test.identical( files, expected );
     return null;
