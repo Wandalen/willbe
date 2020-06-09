@@ -19691,7 +19691,6 @@ function versionsAgreeNpm( test )
   let self = this;
   let a = self.assetFor( test, 'submodules-download-npm' );
   let versions = {}
-  let willFilePath = a.abs( '.will.yml' );
   let filesBefore = null;
 
   /* - */
@@ -19755,10 +19754,10 @@ function versionsAgreeNpm( test )
 
   .then( ( got ) =>
   {
-    let willFile = a.fileProvider.fileRead( willFilePath );
+    let willFile = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
     willFile = _.strReplace( willFile, '@alpha', '@beta' );
     willFile = _.strReplace( willFile, '@0.0.31', '@0.0.34' );
-    a.fileProvider.fileWrite( willFilePath, willFile );
+    a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
     versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a@beta' );
     versions[ 'ModuleForTesting12ab' ] = '0.0.34'
@@ -19852,9 +19851,9 @@ function versionsAgreeNpm( test )
   {
     test.case = 'change origin of first submodule and run .submodules.versions.agree';
 
-    let willFile = a.fileProvider.fileRead( willFilePath );
+    let willFile = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
     willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1\n', 'npm:///wmodulefortesting2b\n' );
-    a.fileProvider.fileWrite( willFilePath, willFile );
+    a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
     versions[ 'ModuleForTesting2b' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2b' );
 
