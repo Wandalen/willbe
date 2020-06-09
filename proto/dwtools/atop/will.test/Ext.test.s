@@ -3949,7 +3949,6 @@ function reflectWithSelectorInDstFilter( test )
 {
   let self = this;
   let a = self.assetFor( test, 'reflect-selecting-dst' );
-  let outPath = a.abs( 'out' );
   a.reflect();
 
   /*
@@ -3970,7 +3969,7 @@ function reflectWithSelectorInDstFilter( test )
   .then( () =>
   {
     test.case = '.build debug';
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -3978,7 +3977,7 @@ function reflectWithSelectorInDstFilter( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/Single.s' ] );
     return null;
   })
@@ -3989,7 +3988,7 @@ function reflectWithSelectorInDstFilter( test )
   .then( () =>
   {
     test.case = '.build release';
-    a.fileProvider.filesDelete( outPath );
+    a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
@@ -3997,7 +3996,7 @@ function reflectWithSelectorInDstFilter( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = self.find( outPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './release', './release/Single.s' ] );
     return null;
   })
