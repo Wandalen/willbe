@@ -970,6 +970,11 @@ function commandVersion( e )
   let will = this;
   let ca = e.ca;
   let logger = will.logger;
+
+  // let implyMap = _.strStructureParse( e.argument ); /* Dmytro : uncomment it, if command needs some options from command `.imply` */
+  // _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  // will._propertiesImply( implyMap );
+
   logger.log( 'Current version:', will.versionGet() );
 }
 
@@ -983,6 +988,10 @@ function commandVersionCheck( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  // let implyMap = _.mapBut( propertiesMap, commandClean.commandProperties ); /* Dmytro : uncomment it, if command needs some options from command `.imply` */
+  // propertiesMap = _.mapBut( propertiesMap, implyMap );
+  // will._propertiesImply( implyMap );
 
   return will.versionIsUpToDate( propertiesMap );
 }
