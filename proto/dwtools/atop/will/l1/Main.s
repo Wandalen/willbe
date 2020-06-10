@@ -968,8 +968,8 @@ function versionIsUpToDate( o )
       [
         '╔════════════════════════════════════════════════════════════╗',
         '║ Utility willbe is out of date!                             ║',
-        `║ Current version: ${currentVersion}`,
-        `║ Latest: ${latestVersion}`,
+        `║ Current version: ${ currentVersion.join( '.' ) }`,
+        `║ Latest: ${ latestVersion.join( '.' ) }`,
         '║ Please run: "npm r -g willbe && npm i -g willbe" to update.║',
         '╚════════════════════════════════════════════════════════════╝'
       ]
@@ -991,7 +991,7 @@ function versionIsUpToDate( o )
     }
     else
     {
-      logger.log( `Current version: ${currentVersion}. Utility willbe is up to date.` );
+      logger.log( `Current version: ${ currentVersion.join( '.' ) }. Utility willbe is up to date.` );
     }
 
     return true;
