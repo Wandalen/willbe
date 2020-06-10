@@ -2738,6 +2738,8 @@ function modulesDownload_body( o )
   {
     let ready = new _.Consequence().take( null );
 
+    ready.then( () => renormalize() );
+
     ready.then( () =>
     {
       let o2 = _.mapOnly( o, will.modulesUpform.defaults );
@@ -3057,6 +3059,21 @@ function modulesDownload_body( o )
   }
 
   /* */
+
+  function renormalize()
+  {
+    let ready = new _.Consequence().take( null );
+    rootJunctions.forEach( ( junction ) =>
+    {
+      ready.then( () =>
+      {
+        let module = junction.module;
+        let localPath = module.localPath;
+        return module.repo.renormalize( localPath );
+      });
+    })
+    return ready;
+  }
 }
 
 var defaults = modulesDownload_body.defaults = _.mapExtend

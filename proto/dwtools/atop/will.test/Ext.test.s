@@ -18384,6 +18384,213 @@ submodulesDownloadUpdateNpm.timeOut = 300000;
 
 //
 
+function submodulesDownloadAutoCrlfEnabled( test )
+{
+  let self = this;
+  let runningInsideTestContainer = _.process.insideTestContainer();
+  let a = self.assetFor( test, 'submodules-download-crlf' );
+
+  /* - */
+
+  test.description = 'checks that global option core.autocrlf=true does not affect on submodules download'
+
+  if( runningInsideTestContainer )
+  a.shell( 'git config --global core.autocrlf true' );
+
+  prepare()
+  a.start({ execPath : '.submodules.download' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::supermodule were downloaded in' ) );
+    return null;
+  })
+  a.start({ execPath : '.submodules.list' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 3 );
+    test.identical( _.strCount( got.output, '! Outdated .' ), 0 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+  /* - */
+
+  function prepare( o )
+  {
+    a.ready.then( () => { a.reflect(); return null } );
+    a.start({ execPath : '.with module/submodule .export' })
+    let shell = _.process.starter({ currentPath : a.abs( 'module' ), ready : a.ready })
+    shell( 'git init' )
+    shell( 'git config core.autocrlf false' )
+    shell( 'git add -fA .' )
+    shell( 'git commit -m init' )
+    return a.ready;
+  }
+}
+
+//
+
+function rootModuleRenormalization( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'renormalization' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.with repo/ .submodules.download' })
+  .then( ( got ) =>
+  {
+    test.description = 'run submodules.download on module that is not a git repo';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::supermodule were downloaded in' ) );
+    return null;
+  })
+
+  /* - */
+
+  a.start({ execPath : '.with repo/ .submodules.update' })
+  .then( ( got ) =>
+  {
+    test.description = 'run submodules.update on module that is not a git repo';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::supermodule were updated in' ) );
+    return null;
+  })
+
+  /* - */
+
+  prepareClone()
+  a.start({ execPath : '.with repoClone/ .submodules.list' })
+  .then( ( got ) =>
+  {
+    test.description = 'will file of git module has modified eol( crlf ), out file should be marked as outdated';
+    test.identical( _.strCount( got.output, '. Opened .' ), 1 );
+    test.is( _.strHas( got.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
+    return null;
+  })
+  a.start({ execPath : '.with repoClone/ .submodules.download' })
+  .then( ( got ) =>
+  {
+    test.description = 'files of a git module should be normalized after executing submodules.download';
+    test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::supermodule were downloaded in' ) );
+    return null;
+  })
+  a.start({ execPath : '.with repoClone/ .submodules.list' })
+  .then( ( got ) =>
+  {
+    test.description = 'out file of root git module should be up to date';
+    test.identical( _.strCount( got.output, '. Opened .' ), 2 );
+    test.is( !_.strHas( got.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
+    return null;
+  })
+
+  /* - */
+
+  prepareClone()
+  a.start({ execPath : '.with repoClone/ .submodules.list' })
+  .then( ( got ) =>
+  {
+    test.description = 'will file of git module has modified eol( crlf ), out file should be marked as outdated';
+    test.identical( _.strCount( got.output, '. Opened .' ), 1 );
+    test.is( _.strHas( got.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
+    return null;
+  })
+  a.start({ execPath : '.with repoClone/ .submodules.update' })
+  .then( ( got ) =>
+  {
+    test.description = 'files of a git module should be normalized after executing submodules.download';
+    test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::supermodule were updated in' ) );
+    return null;
+  })
+  a.start({ execPath : '.with repoClone/ .submodules.list' })
+  .then( ( got ) =>
+  {
+    test.description = 'out file of root git module should be up to date';
+    test.identical( _.strCount( got.output, '. Opened .' ), 2 );
+    test.is( !_.strHas( got.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
+    return null;
+  })
+
+  /* - */
+
+  prepareClone()
+  a.start({ execPath : '.with repoClone/ .submodules.list' })
+  .then( ( got ) =>
+  {
+    test.description = 'will file of git module has modified eol( crlf ), out file should be marked as outdated';
+    test.identical( _.strCount( got.output, '. Opened .' ), 1 );
+    test.is( _.strHas( got.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
+
+    a.fileProvider.fileWrite( a.abs( 'repoClone/File.js' ), 'console.log( 1 );' );
+
+    return null;
+  })
+  a.start({ execPath : '.with repoClone/ .submodules.download' })
+  .then( ( got ) =>
+  {
+    test.description = 'files of a git module should not be normalized, because module repository has local changes';
+    test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::supermodule were downloaded in' ) );
+    return null;
+  })
+  a.start({ execPath : '.with repoClone/ .submodules.list' })
+  .then( ( got ) =>
+  {
+    test.description = 'out file of root git module should stay stale';
+    test.identical( _.strCount( got.output, '. Opened .' ), 1 );
+    test.is( _.strHas( got.output, /\! Outdated \. .*supermodule\.out\.will\.yml/g ) );
+    return null;
+  })
+
+  /* - */
+
+  prepareClone({ attributes : '* text' })
+  a.start({ execPath : '.with repoClone/ .submodules.download' })
+  .then( ( got ) =>
+  {
+    test.description = 'gitattrubutes has "* text" attribute, normalization should print warning that result can be affected by gitattrubutes';
+    test.is( _.strHas( got.output, /File \.gitattributes from the repository at .* contains lines that can affect the result of EOL normalization/g ) )
+    test.is( _.strHas( got.output, '+ 0/0 submodule(s) of module::supermodule were downloaded in' ) );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
+  /* - */
+
+  function prepareClone( o )
+  {
+    a.ready.then( () => { a.reflect(); return null } );
+    a.start({ execPath : '.with repo/ .export' })
+    a.shell( 'git -C repo init' )
+    a.shell( 'git -C repo config core.autocrlf false' )
+
+    if( o )
+    a.ready.then( () =>
+    {
+      if( o.attributes )
+      a.fileProvider.fileWrite( a.abs( 'repo/.gitattributes' ), o.attributes );
+      return null;
+    })
+
+    a.shell( 'git -C repo add -fA .' )
+    a.shell( 'git -C repo commit -m init' )
+    a.shell( 'git clone repo repoClone --config core.autocrlf=true' )
+    return a.ready;
+  }
+}
+
+rootModuleRenormalization.timeOut = 200000;
+
+//
+
 function submodulesUpdateThrowing( test )
 {
   let self = this;
@@ -22050,6 +22257,8 @@ var Self =
     submodulesDownloadHierarchyDuplicate,
     submodulesDownloadNpm,
     submodulesDownloadUpdateNpm,
+    submodulesDownloadAutoCrlfEnabled,
+    rootModuleRenormalization,
 
     submodulesUpdateThrowing,
     submodulesAgreeThrowing,

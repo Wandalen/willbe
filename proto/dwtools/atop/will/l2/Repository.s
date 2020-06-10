@@ -638,6 +638,35 @@ function repoLatestVersion()
 
 //
 
+function renormalize( dirPath )
+{
+  let repo = this;
+  let will = repo.will;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.strDefined( dirPath ) );
+
+  let localPath = repo.downloadPath || dirPath;
+
+  if( !_.git.isRepository({ localPath }) )
+  {
+    debugger
+    return true;
+  }
+
+  return _.git.renormalize
+  ({
+    localPath,
+    sync : 0,
+    safe : 1,
+    force : 0,
+    throwing : 0,
+    audit : 1
+  })
+}
+
+//
+
 function exportString()
 {
   let repo = this;
@@ -802,6 +831,8 @@ let Extend =
   repoIsRemote,
   repoLocalVersion,
   repoLatestVersion,
+
+  renormalize,
 
   exportString,
   Hash,
