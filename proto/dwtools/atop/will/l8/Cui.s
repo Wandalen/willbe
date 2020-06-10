@@ -1359,6 +1359,25 @@ commandSubmodulesFixate.commandProperties =
 
 //
 
+function _propertiesImply( implyMap )
+{
+  let will = this;
+
+  let namesMap =
+  {
+    v : 'verbosity',
+    verbosity : 'verbosity',
+  };
+  _.process.argsReadTo
+  ({
+    dst : will,
+    propertiesMap : implyMap,
+    namesMap : namesMap,
+  });
+}
+
+//
+
 function commandSubmodulesUpgrade( e )
 {
   let will = this;
@@ -1367,6 +1386,11 @@ function commandSubmodulesUpgrade( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  let implyMap = _.mapBut( propertiesMap, commandSubmodulesUpgrade.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  _propertiesImply.call( will, implyMap );
+
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
   e.propertiesMap.upgrading = 1;
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
