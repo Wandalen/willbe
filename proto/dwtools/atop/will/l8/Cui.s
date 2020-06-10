@@ -1862,6 +1862,11 @@ function commandSubmodulesClean( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  let implyMap = _.mapBut( propertiesMap, commandSubmodulesClean.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
+
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
   e.propertiesMap.dry = !!e.propertiesMap.dry;;
   let dry = e.propertiesMap.dry;
