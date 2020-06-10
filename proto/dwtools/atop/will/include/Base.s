@@ -10,7 +10,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wResolver' );
   _.include( 'wResolverExtra' );
   _.include( 'wCopyable' );
-  _.include( 'wAppBasic' );
+  _.include( 'wProcess' );
   _.include( 'wLogger' );
 
   _.include( 'wVerbal' );

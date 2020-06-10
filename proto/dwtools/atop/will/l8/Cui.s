@@ -221,6 +221,37 @@ function errEncounter( error )
 
 }
 
+//
+
+function _propertiesImply( implyMap )
+{
+  let will = this;
+
+  _.assert( arguments.length === 1, 'Expects options map {-implyMap-}' );
+
+  let namesMap =
+  {
+    v : 'verbosity',
+    verbosity : 'verbosity',
+    beeping : 'beeping',
+
+    withOut : 'withOut',
+    withIn : 'withIn',
+    withEnabled : 'withEnabled',
+    withDisabled : 'withDisabled',
+    withValid : 'withValid',
+    withInvalid : 'withInvalid',
+    withSubmodules : 'withSubmodules',
+  };
+
+  _.process.argsReadTo
+  ({
+    dst : will,
+    propertiesMap : implyMap,
+    namesMap : namesMap,
+  });
+}
+
 // --
 // meta command
 // --
@@ -883,31 +914,32 @@ function commandImply( e )
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
   _.assert( !!isolated );
 
-  let namesMap =
-  {
-
-    v : 'verbosity',
-    verbosity : 'verbosity',
-    beeping : 'beeping',
-
-    withOut : 'withOut',
-    withIn : 'withIn',
-    withEnabled : 'withEnabled',
-    withDisabled : 'withDisabled',
-    withValid : 'withValid',
-    withInvalid : 'withInvalid',
-    withSubmodules : 'withSubmodules',
-
-  }
-
   let request = will.Resolver.strRequestParse( isolated.argument );
+  will._propertiesImply( request.map );
 
-  _.process.argsReadTo
-  ({
-    dst : will,
-    propertiesMap : request.map,
-    namesMap : namesMap,
-  });
+  // let namesMap =
+  // {
+  //
+  //   v : 'verbosity',
+  //   verbosity : 'verbosity',
+  //   beeping : 'beeping',
+  //
+  //   withOut : 'withOut',
+  //   withIn : 'withIn',
+  //   withEnabled : 'withEnabled',
+  //   withDisabled : 'withDisabled',
+  //   withValid : 'withValid',
+  //   withInvalid : 'withInvalid',
+  //   withSubmodules : 'withSubmodules',
+  //
+  // }
+  //
+  // _.process.argsReadTo
+  // ({
+  //   dst : will,
+  //   propertiesMap : request.map,
+  //   namesMap : namesMap,
+  // });
 
   if( isolated.secondCommand )
   return ca.commandPerform
@@ -938,6 +970,11 @@ function commandVersion( e )
   let will = this;
   let ca = e.ca;
   let logger = will.logger;
+
+  let implyMap = _.strStructureParse( e.argument );
+  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  will._propertiesImply( implyMap );
+
   logger.log( 'Current version:', will.versionGet() );
 }
 
@@ -951,6 +988,10 @@ function commandVersionCheck( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  let implyMap = _.mapBut( propertiesMap, commandClean.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
 
   return will.versionIsUpToDate( propertiesMap );
 }
@@ -1236,6 +1277,9 @@ function commandModulesTree( e )
   let ready = new _.Consequence().take( null );
   let request = will.Resolver.strRequestParse( e.argument );
   let propertiesMap = _.strStructureParse( e.argument );
+  let implyMap = _.mapBut( propertiesMap, commandModulesTree.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
 
   return will._commandTreeLike
   ({
@@ -1328,6 +1372,11 @@ function commandSubmodulesFixate( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  let implyMap = _.mapBut( propertiesMap, commandSubmodulesFixate.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
+
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
   e.propertiesMap.upgrading = 0;
@@ -1341,11 +1390,16 @@ function commandSubmodulesFixate( e )
     commandRoutine : commandSubmodulesFixate,
   });
 
+  // function handleEach( it )
+  // {
+  //   let o2 = will.filterImplied(); /* Dmytro : it creates options map with field "withDisabledModules", "withEnabledModules", "withOut", "withIn"... but routine submodulesFixate does not expects such options. Below version which used only options "dry", "negative", "recursive" */
+  //   o2 = _.mapExtend( o2, e.propertiesMap );
+  //   return it.opener.openedModule.submodulesFixate( o2 );
+  // }
+
   function handleEach( it )
   {
-    let o2 = will.filterImplied();
-    o2 = _.mapExtend( o2, e.propertiesMap )
-    return it.opener.openedModule.submodulesFixate( o2 );
+    return it.opener.openedModule.submodulesFixate( _.mapExtend( null, e.propertiesMap ) );
   }
 
 }
@@ -1367,6 +1421,11 @@ function commandSubmodulesUpgrade( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  let implyMap = _.mapBut( propertiesMap, commandSubmodulesUpgrade.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
+
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
   e.propertiesMap.upgrading = 1;
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
@@ -1404,6 +1463,11 @@ function commandSubmodulesVersionsDownload( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsDownload.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
+
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
   return will._commandCleanLike
@@ -1445,6 +1509,11 @@ function commandSubmodulesVersionsUpdate( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsUpdate.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
+
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
   return will._commandBuildLike
@@ -1478,7 +1547,12 @@ function commandSubmodulesVersionsVerify( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
+  let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsVerify.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
+
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
 
   return will._commandBuildLike
   ({
@@ -1509,7 +1583,12 @@ function commandSubmodulesVersionsAgree( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
+
+  let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsAgree.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
+
+  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
 
   return will._commandBuildLike
   ({
@@ -1738,6 +1817,11 @@ function commandClean( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  let implyMap = _.mapBut( propertiesMap, commandClean.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
+
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
   e.propertiesMap.dry = !!e.propertiesMap.dry;;
   let dry = e.propertiesMap.dry;
@@ -1790,6 +1874,11 @@ function commandSubmodulesClean( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  let implyMap = _.mapBut( propertiesMap, commandSubmodulesClean.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
+
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
   e.propertiesMap.dry = !!e.propertiesMap.dry;;
   let dry = e.propertiesMap.dry;
@@ -2840,6 +2929,7 @@ let Extend =
   // etc
 
   errEncounter,
+  _propertiesImply,
 
   // meta command
 

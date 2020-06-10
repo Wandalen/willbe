@@ -7,7 +7,7 @@ if( typeof module !== 'undefined' )
   let _ = require( '../../../dwtools/Tools.s' );
 
   _.include( 'wTesting' );
-  _.include( 'wAppBasic' );
+  _.include( 'wProcess' );
   _.include( 'wFiles' );
 
   require( '../will/include/Mid.s' );
@@ -28,6 +28,14 @@ xxx : find solution
   fatal: TaskCanceledException encountered.
   A task was canceled.
   bash: /dev/tty: No such device or address
+
+*/
+
+/* xxx : check
+
+let submodulesPath = a.abs( '.module' );
+var expected = path.join( submodulesPath, 'ModuleForTesting1/out' );
+
 */
 
 // --
@@ -3085,7 +3093,7 @@ function exportDefaultPath( test )
 
     test.description = 'files';
     var exp = []
-    var files = self.find( outDirPath );
+    var files = self.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
     opener.finit();
@@ -9025,10 +9033,6 @@ function submodulesLocalResolve( test )
 submodulesLocalResolve.timeOut = 300000;
 
 //
-
-/* qqq : test modules are still not working properly!
-bad alias names!
-*/
 
 function submodulesDeleteAndDownload( test )
 {

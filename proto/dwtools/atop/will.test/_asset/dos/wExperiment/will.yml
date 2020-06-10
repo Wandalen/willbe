@@ -24,8 +24,8 @@ submodule :
   wTemplateTreeEnvironment :
     path : npm:///wtemplatetreeenvironment
     enabled : 0 # submodule
-  wAppBasic :
-    path : npm:///wappbasic
+  wProcess :
+    path : npm:///wprocess
     enabled : 0 # submodule
   wGraphBasic :
     path : npm:///wgraphbasic

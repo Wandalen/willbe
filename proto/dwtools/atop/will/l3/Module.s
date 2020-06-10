@@ -3111,11 +3111,11 @@ function moduleFixate( o )
   function submoduleFixate( submodule )
   {
 
-    if( submodule.opener && !submodule.opener.isRemote )
+    if( submodule.opener && !submodule.opener.repo.isRemote )
     return;
 
     let originalPath = submodule.path;
-    let fixatedPath = resolve( originalPath )
+    let fixatedPath = resolve( originalPath ) /* Dmytro : submodule.fixatedPath has slash before hash, but submodule.longPath has not. It fails execution of command submodules.upgrade. See below */
 
     let o2 = _.mapExtend( null, o );
     o2.replacer = [ submodule.name, 'path' ];
@@ -3132,7 +3132,7 @@ function moduleFixate( o )
       if( opened )
       debugger;
       submodule.close();
-      submodule.path = fixatedPath;
+      submodule.path = fixatedPath; /* Dmytro : I think, options path has proxy or setter that affects field longPath */
       if( submodule.opener )
       submodule.opener.remotePath = fixatedPath;
       if( opened )
