@@ -1277,6 +1277,9 @@ function commandModulesTree( e )
   let ready = new _.Consequence().take( null );
   let request = will.Resolver.strRequestParse( e.argument );
   let propertiesMap = _.strStructureParse( e.argument );
+  let implyMap = _.mapBut( propertiesMap, commandModulesTree.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
 
   return will._commandTreeLike
   ({
