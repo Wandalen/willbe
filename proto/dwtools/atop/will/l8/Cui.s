@@ -1360,6 +1360,11 @@ function commandSubmodulesFixate( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  let implyMap = _.mapBut( propertiesMap, commandSubmodulesFixate.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
+
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
   e.propertiesMap.upgrading = 0;
