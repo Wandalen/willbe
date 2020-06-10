@@ -1497,6 +1497,11 @@ function commandSubmodulesVersionsUpdate( e )
 
   let propertiesMap = _.strStructureParse( e.argument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+
+  let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsUpdate.commandProperties );
+  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  will._propertiesImply( implyMap );
+
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
 
   return will._commandBuildLike
