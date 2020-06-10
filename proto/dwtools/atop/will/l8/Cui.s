@@ -221,6 +221,37 @@ function errEncounter( error )
 
 }
 
+//
+
+function _propertiesImply( implyMap )
+{
+  let will = this;
+
+  _.assert( arguments.length === 1, 'Expects options map {-implyMap-}' );
+
+  let namesMap =
+  {
+    v : 'verbosity',
+    verbosity : 'verbosity',
+    beeping : 'beeping',
+
+    withOut : 'withOut',
+    withIn : 'withIn',
+    withEnabled : 'withEnabled',
+    withDisabled : 'withDisabled',
+    withValid : 'withValid',
+    withInvalid : 'withInvalid',
+    withSubmodules : 'withSubmodules',
+  };
+
+  _.process.argsReadTo
+  ({
+    dst : will,
+    propertiesMap : implyMap,
+    namesMap : namesMap,
+  });
+}
+
 // --
 // meta command
 // --
@@ -1359,25 +1390,6 @@ commandSubmodulesFixate.commandProperties =
 
 //
 
-function _propertiesImply( implyMap )
-{
-  let will = this;
-
-  let namesMap =
-  {
-    v : 'verbosity',
-    verbosity : 'verbosity',
-  };
-  _.process.argsReadTo
-  ({
-    dst : will,
-    propertiesMap : implyMap,
-    namesMap : namesMap,
-  });
-}
-
-//
-
 function commandSubmodulesUpgrade( e )
 {
   let will = this;
@@ -1389,7 +1401,7 @@ function commandSubmodulesUpgrade( e )
 
   let implyMap = _.mapBut( propertiesMap, commandSubmodulesUpgrade.commandProperties );
   propertiesMap = _.mapBut( propertiesMap, implyMap );
-  _propertiesImply.call( will, implyMap );
+  will._propertiesImply( implyMap );
 
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
   e.propertiesMap.upgrading = 1;
@@ -2864,6 +2876,7 @@ let Extend =
   // etc
 
   errEncounter,
+  _propertiesImply,
 
   // meta command
 
