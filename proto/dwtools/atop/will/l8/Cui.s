@@ -1373,11 +1373,16 @@ function commandSubmodulesFixate( e )
     commandRoutine : commandSubmodulesFixate,
   });
 
+  // function handleEach( it )
+  // {
+  //   let o2 = will.filterImplied(); /* Dmytro : it creates options map with field "withDisabledModules", "withEnabledModules", "withOut", "withIn"... but routine submodulesFixate does not expects such options. Below version which used only options "dry", "negative", "recursive" */
+  //   o2 = _.mapExtend( o2, e.propertiesMap );
+  //   return it.opener.openedModule.submodulesFixate( o2 );
+  // }
+
   function handleEach( it )
   {
-    let o2 = will.filterImplied();
-    o2 = _.mapExtend( o2, e.propertiesMap )
-    return it.opener.openedModule.submodulesFixate( o2 );
+    return it.opener.openedModule.submodulesFixate( _.mapExtend( null, e.propertiesMap ) );
   }
 
 }
