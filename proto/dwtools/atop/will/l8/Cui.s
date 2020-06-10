@@ -914,31 +914,32 @@ function commandImply( e )
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
   _.assert( !!isolated );
 
-  let namesMap =
-  {
-
-    v : 'verbosity',
-    verbosity : 'verbosity',
-    beeping : 'beeping',
-
-    withOut : 'withOut',
-    withIn : 'withIn',
-    withEnabled : 'withEnabled',
-    withDisabled : 'withDisabled',
-    withValid : 'withValid',
-    withInvalid : 'withInvalid',
-    withSubmodules : 'withSubmodules',
-
-  }
-
   let request = will.Resolver.strRequestParse( isolated.argument );
+  will._propertiesImply( request.map );
 
-  _.process.argsReadTo
-  ({
-    dst : will,
-    propertiesMap : request.map,
-    namesMap : namesMap,
-  });
+  // let namesMap =
+  // {
+  //
+  //   v : 'verbosity',
+  //   verbosity : 'verbosity',
+  //   beeping : 'beeping',
+  //
+  //   withOut : 'withOut',
+  //   withIn : 'withIn',
+  //   withEnabled : 'withEnabled',
+  //   withDisabled : 'withDisabled',
+  //   withValid : 'withValid',
+  //   withInvalid : 'withInvalid',
+  //   withSubmodules : 'withSubmodules',
+  //
+  // }
+  //
+  // _.process.argsReadTo
+  // ({
+  //   dst : will,
+  //   propertiesMap : request.map,
+  //   namesMap : namesMap,
+  // });
 
   if( isolated.secondCommand )
   return ca.commandPerform
