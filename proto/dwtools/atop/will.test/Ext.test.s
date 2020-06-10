@@ -22046,6 +22046,89 @@ function resourcesFormReflectorsExperiment( test )
 }
 
 // --
+// commands with implied options
+// --
+
+function commandVersion( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'submodules' );
+  a.reflect();
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.version';
+    return null;
+  })
+
+  a.start({ args : '.version' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.isNot( _.strHas( got.output, 'Read' ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.imply v:9 ; .version';
+    return null;
+  })
+
+  a.start({ args : '.imply v:9 ; .version' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Read' ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.imply v:9 .version';
+    return null;
+  })
+
+  a.start({ args : '.imply v:9 .version' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Read' ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.version v:7';
+    return null;
+  })
+
+  a.start({ args : '.version v:7' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Read' ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+// --
 // declare
 // --
 
@@ -22287,6 +22370,9 @@ var Self =
 
     // resourcesFormReflectorsExperiment, // xxx : look
 
+    // commands with implied options
+
+    commandVersion,
   }
 
 }
