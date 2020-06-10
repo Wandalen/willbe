@@ -3110,8 +3110,9 @@ function moduleFixate( o )
 
   function submoduleFixate( submodule )
   {
+    debugger;
 
-    if( submodule.opener && !submodule.opener.isRemote )
+    if( submodule.opener && !submodule.opener.repo.isRemote )
     return;
 
     let originalPath = submodule.path;
