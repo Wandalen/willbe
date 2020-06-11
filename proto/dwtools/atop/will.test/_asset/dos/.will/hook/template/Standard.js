@@ -19,9 +19,9 @@ var Self =
 if( typeof module !== 'undefined' )
 {
 
-  if( typeof _global_ === 'undefined' || !_global_.wBase )
+  if( typeof _global_ === 'undefined' || !Object.hasOwnProperty.call( _global_, 'wBase' ) )
   {
-    let toolsPath = './Base.s';
+    let toolsPath = './abase/Layer1.s';
     let toolsExternal = 0;
     try
     {
@@ -75,23 +75,23 @@ function samples( test )
   let sampleDir = path.join( __dirname, '../sample' );
 
   let appStartNonThrowing = _.process.starter
-  ( {
+  ({
     currentPath : sampleDir,
     outputCollecting : 1,
     outputGraying : 1,
     throwingExitCode : 0,
     ready,
     mode : 'fork'
-  } )
+  })
 
   let found = fileProvider.filesFind
-  ( {
+  ({
     filePath : path.join( sampleDir, '**/*.(s|js|ss)' ),
     withStem : 0,
     withDirs : 0,
     mode : 'distinct',
     mandatory : 0,
-  } );
+  });
 
   /* */
 
@@ -108,37 +108,37 @@ function samples( test )
       test.case = found[ i ].relative;
       startTime = _.time.now();
       return null;
-    } )
+    })
 
     if( _.longHas( found[ i ].exts, 'throwing' ) )
     {
-      appStartNonThrowing( { execPath : found[ i ].relative } )
-      .then( ( got ) =>
+      appStartNonThrowing({ execPath : found[ i ].relative })
+      .then( ( op ) =>
       {
         console.log( _.time.spent( startTime ) );
         test.description = 'nonzero exit code';
-        test.notIdentical( got.exitCode, 0 );
+        test.notIdentical( op.exitCode, 0 );
         return null;
-      } )
+      })
     }
     else
     {
-      appStartNonThrowing( { execPath : found[ i ].relative } )
-      .then( ( got ) =>
+      appStartNonThrowing({ execPath : found[ i ].relative })
+      .then( ( op ) =>
       {
         console.log( _.time.spent( startTime ) );
         test.description = 'good exit code';
-        test.identical( got.exitCode, 0 );
-        if( got.exitCode )
+        test.identical( op.exitCode, 0 );
+        if( op.exitCode )
         return null;
         test.description = 'have no uncaught errors';
-        test.identical( _.strCount( got.output, 'ncaught' ), 0 );
-        test.identical( _.strCount( got.output, 'rror' ), 0 );
+        test.identical( _.strCount( op.output, 'ncaught' ), 0 );
+        test.identical( _.strCount( op.output, 'rror' ), 0 );
         test.description = 'have some output';
-        test.ge( got.output.split( '\n' ).length, 1 );
-        test.ge( got.output.length, 3 );
+        test.ge( op.output.split( '\\n' ).length, 1 );
+        test.ge( op.output.length, 3 );
         return null;
-      } )
+      })
     }
   }
 
@@ -151,6 +151,7 @@ function samples( test )
 
 function eslint( test )
 {
+  let context = this;
   let rootPath = path.join( __dirname, '..' );
   let eslint = process.platform === 'win32' ? 'node_modules/eslint/bin/eslint' : 'node_modules/.bin/eslint';
   eslint = path.join( rootPath, eslint );
@@ -159,13 +160,14 @@ function eslint( test )
   let ready = new _.Consequence().take( null );
 
   let start = _.process.starter
-  ( {
+  ({
     execPath : eslint,
     mode : 'fork',
     currentPath : rootPath,
-    args : [ '-c', '.eslintrc.yml', '--ext', '.js,.s,.ss', '--ignore-pattern', '*.html', '--ignore-pattern', '*.txt' ],
-    throwingExitCode : 0
-  } )
+    args : [ '-c', '.eslintrc.yml', '--ext', '.js,.s,.ss', '--ignore-pattern', '*.html', '--ignore-pattern', '*.txt', '--ignore-pattern', '*.png', '--ignore-pattern', '*.json' ],
+    throwingExitCode : 0,
+    outputCollecting : 1,
+  })
 
   /**/
 
@@ -173,12 +175,14 @@ function eslint( test )
   {
     test.case = 'eslint proto';
     return start( 'proto/**' );
-  } )
-  .then( ( got ) =>
+  })
+  .then( ( op ) =>
   {
-    test.identical( got.exitCode, 0 );
+    test.identical( op.exitCode, 0 ); debugger;
+    if( op.output.length < 1000 )
+    logger.log( op.output );
     return null;
-  } )
+  })
 
   /**/
 
@@ -187,15 +191,21 @@ function eslint( test )
   {
     test.case = 'eslint samples';
     return start( 'sample/**' )
-    .then( ( got ) =>
+    .then( ( op ) =>
     {
-      test.identical( got.exitCode, 0 );
+      test.identical( op.exitCode, 0 );
+      if( op.output.length < 1000 )
+      logger.log( op.output );
       return null;
-    } )
-  } )
+    })
+  })
+
+  /**/
 
   return ready;
 }
+
+eslint.rapidity = -1;
 
 // --
 // declare
@@ -206,7 +216,7 @@ var Self =
 
   name : 'Integration',
   routineTimeOut : 500000,
-  silencing : 1,
+  silencing : 0,
 
   tests :
   {
@@ -222,7 +232,7 @@ Self = wTestSuite( Self );
 if( typeof module !== 'undefined' && !module.parent )
 _global_.wTester.test( Self.name );
 
-} )();
+})();
 `
 
 },
@@ -238,7 +248,7 @@ submodule :
   eslint :
     path : npm:///eslint#7.1.0
     enabled : 0 # submodule
-    cirterion :
+    criterion :
       debug : 1
 
 path :
@@ -462,7 +472,7 @@ build :
 
 about :
 
-  name : '{{package/name}}'
+  name : '{:package/name:}'
   description : '___'
   version : '0.4.0'
   enabled : 1
@@ -474,21 +484,21 @@ about :
   - tools
   - wTools
   license : MIT
-  author : '{{about/full.name}} <{{about/email}}>'
+  author : '{:about/full.name:} <{:about/email:}>'
   contributors :
-  - '{{about/full.name}} <{{about/email}}>'
-  npm.name : '{{package/lowName}}'
+  - '{:about/full.name:} <{:about/email:}>'
+  npm.name : '{:package/lowName:}'
   npm.scripts :
     test : 'wtest .run proto/**'
     docgen : 'wdocgen .build proto'
 
 path :
 
-  repository : git+https:///github.com/{{about/user}}/{{package/name}}.git
+  repository : git+https:///github.com/{:about/user:}/{:package/name:}.git
   origins :
-   - git+https:///github.com/{{about/user}}/{{package/name}}.git
-   - npm:///{{package/name}}
-  bugtracker : https:///github.com/{{about/user}}/{{package/name}}/issues
+   - git+https:///github.com/{:about/user:}/{:package/name:}.git
+   - npm:///{:package/name:}
+  bugtracker : https:///github.com/{:about/user:}/{:package/name:}/issues
 
 step :
 
@@ -558,10 +568,10 @@ build :
 'was.package.json' : //
 `
 {
-  "name" : "{{package/lowName}}",
-  "version" : "0.3.0",
+  "name" : "{:package/lowName:}",
+  "version" : "0.2.0",
   "description" : "___",
-  "author" : "{{about/full.name}} <{{about/email}}>",
+  "author" : "{:about/full.name:} <{:about/email:}>",
   "license" : "MIT",
   "main" : "proto/dwtools/___",
   "files" :
@@ -577,11 +587,11 @@ build :
   "repository" :
   {
     "type" : "git",
-    "url" : "https://github.com/{{about/user}}/{{package/name}}.git"
+    "url" : "https://github.com/{:about/user:}/{:package/name:}.git"
   },
   "bugs" :
   {
-    "url" : "https://github.com/{{about/user}}/{{package/name}}/issues"
+    "url" : "https://github.com/{:about/user:}/{:package/name:}/issues"
   },
   "dependencies" :
   {
@@ -591,7 +601,7 @@ build :
   {
     "wTesting" : "",
     "eslint" : "7.1.0",
-    "{{package/lowName}}" : "file:."
+    "{:package/lowName:}" : "file:."
   },
   "keywords" :
   [
@@ -605,7 +615,7 @@ build :
 
 'Sample.js' : //
 `
-let _ = require( '{{package/lowName}}' );
+let _ = require( '{:package/lowName:}' );
 
 /**/
 
@@ -639,7 +649,6 @@ ___
 
 'Test.yml' : //
 `
-
 name : Test
 
 on :
@@ -652,20 +661,19 @@ on :
 
 jobs :
 
-  # xxx : uncomment later
-  # Cancel:
-  #   name : 'Cancel Previous Runs'
-  #   runs-on : ubuntu-latest
-  #   timeout-minutes : 1
-  #   steps :
-  #     - uses : styfle/cancel-workflow-action@0.3.2
-  #       with :
-  #         workflow_id : ${{ github.workflow }}
-  #         access_token : ${{ github.token }}
+  Cancel:
+    name : 'Cancel Previous Runs'
+    runs-on : ubuntu-latest
+    timeout-minutes : 1
+    steps :
+      - uses : styfle/cancel-workflow-action@0.4.0
+        with :
+          access_token : \${{ github.token }}
+          # workflow_id : \${{ github.workflow }}
 
   Fast :
     if : "!startsWith( github.event.head_commit.message, 'version' )"
-    runs-on : ${{ matrix.os }}
+    runs-on : \${{ matrix.os }}
     strategy :
       fail-fast  : false
       matrix :
@@ -673,16 +681,18 @@ jobs :
         node-version : [ 14.x ]
     steps :
     - uses : actions/checkout@v2
-    - name : ${{ matrix.node-version }}
+    - run : git config --global user.email "testrunner@example.com"
+    - run : git config --global user.name "TestRunner"
+    - name : \${{ matrix.node-version }}
       uses : actions/setup-node@v1
       with :
-        node-version : ${{ matrix.node-version }}
+        node-version : \${{ matrix.node-version }}
     - run : npm i
     - run : npm test
 
   Full :
     if : "startsWith( github.event.head_commit.message, 'version' )"
-    runs-on : ${{ matrix.os }}
+    runs-on : \${{ matrix.os }}
     strategy :
       fail-fast  : false
       matrix :
@@ -690,10 +700,12 @@ jobs :
         node-version : [ 10.x, 12.x, 13.x, 14.x ]
     steps :
     - uses : actions/checkout@v2
-    - name : ${{ matrix.node-version }}
+    - run : git config --global user.email "testrunner@example.com"
+    - run : git config --global user.name "TestRunner"
+    - name : \${{ matrix.node-version }}
       uses : actions/setup-node@v1
       with :
-        node-version : ${{ matrix.node-version }}
+        node-version : \${{ matrix.node-version }}
     - run : npm i
     - run : npm test
 `,
@@ -856,10 +868,9 @@ rules :
   indent :
     - error
     - 2
-    -
-      outerIIFEBody : 0
+    - outerIIFEBody : 0
       MemberExpression : 0
-      ignoredNodes : [ "IfStatement.body", "WhileStatement.body", "ForStatement.body" ]
+      ignoredNodes : [ "IfStatement > IfStatement.consequent", "IfStatement > IfStatement.alternate", "IfStatement.body", "WhileStatement.body", "ForStatement.body" ]
   indent-legacy : off
   init-declarations : off
   key-spacing :
@@ -893,9 +904,9 @@ rules :
     - max : 3
   max-len :
     - error
-    -
-      code : 130
+    - code : 130
       comments : 130
+      ignoreComments : true
       ignoreUrls : true
       ignoreStrings : true
       ignoreRegExpLiterals : true
@@ -948,7 +959,7 @@ rules :
   no-labels : error
   no-lone-blocks : error
   no-lonely-if : off
-  no-loop-func : error
+  no-loop-func : off
   no-magic-numbers : off
   no-mixed-operators : off
   no-mixed-requires : error
@@ -1200,8 +1211,7 @@ package-lock.json
 `,
 
 'LICENSE' : //
-`
-Copyright (c) 2013-2020 {{about/full.name}}
+`Copyright (c) 2013-2020 {:about/full.name:}
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -1227,7 +1237,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 'README.md' : //
 `
-# module::{{package/prefixlessName}} - Experimental [![Status](https://github.com/{{about/user}}/{{package/name}}/workflows/Test/badge.svg)](https://github.com/{{about/user}}/{{package/name}}/actions?query=workflow%3ATest)
+# module::{:package/shortName:} - Experimental [![Status](https://github.com/{:about/user:}/{:package/name:}/workflows/Test/badge.svg)](https://github.com/{:about/user:}/{:package/name:}/actions?query=workflow%3ATest)
 
 ___
 
@@ -1239,7 +1249,7 @@ node sample/Sample.js
 
 ## To add as submodule
 \`\`\`
-npm add '{{package/lowName}}@alpha'
+npm add '{:package/lowName:}@alpha'
 \`\`\`
 
 `,

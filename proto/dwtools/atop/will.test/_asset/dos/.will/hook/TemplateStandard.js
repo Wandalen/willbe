@@ -19,7 +19,7 @@ function onModule( it )
 
   var writer = _.TemplateFileWriter
   ({
-    resolver : _.TemplateTreeResolver(),
+    // resolver : _.TemplateTreeResolver(),
     dst : it.junction.dirPath,
     srcTemplatePath : __dirname + '/template/Standard.js',
     name : it.module.about.name,
