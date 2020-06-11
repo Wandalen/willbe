@@ -2823,9 +2823,9 @@ function reflectorOptionsCheck( test )
     test.identical( reflector.dstRewritingOnlyPreserving, 0 );
     test.identical( reflector.linking, 'fileCopy' );
 
-    test.case = 'reflector with not default options';
+    test.case = 'reflector with not default options without option mandatory';
     var reflector = outfile.reflector[ 'reflect.notDefaultMandatory1' ];
-    test.identical( reflector.mandatory, 1 );
+    test.identical( reflector.mandatory, undefined );
     test.identical( reflector.dstRewritingOnlyPreserving, 0 );
     test.identical( reflector.linking, 'fileCopy' );
 
