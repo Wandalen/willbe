@@ -68,8 +68,8 @@ function MakeFor_body( o )
   else if( !module.stepMap[ o.name ] )
   {
 
-    // o3.resource.reflector = 'reflector::' + o.name + '*';
-    o3.resource.filePath = 'reflector::' + o.name + '*';
+    // o3.resource.filePath = 'reflector::' + o.name + '*';
+    o3.resource.filePath = 'reflector::' + o.name;
     if( !o3.resource.inherit )
     o3.resource.inherit = 'files.reflect';
     o3.Optional = 1;
@@ -1734,9 +1734,6 @@ function exportStructure()
 
   let result = Parent.prototype.exportStructure.apply( this, arguments );
 
-  // if( _.strHas( reflector.name, 'reflect.proto.debug.raw' ) )
-  // debugger;
-
   if( result === undefined )
   return result;
 
@@ -1856,14 +1853,11 @@ let Composes =
 {
 
   shell : null,
-  filePath : null,
+  filePath : null, /* xxx : remove? */
   src : null,
   dst : null,
 
   recursive : null,
-  // mandatory : 1,
-  // dstRewritingOnlyPreserving : 1,
-  // linking : 'hardLinkMaybe',
   mandatory : null,
   dstRewritingOnlyPreserving : null,
   linking : null,
@@ -1900,7 +1894,6 @@ let Forbids =
   reflectMap : 'reflectMap',
   srcFilter : 'srcFilter',
   dstFilter : 'dstFilter',
-  // recursive : 'recursive',
 }
 
 let Accessors =

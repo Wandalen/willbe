@@ -474,7 +474,7 @@ about :
 
   name : '{:package/name:}'
   description : '___'
-  version : '0.4.0'
+  version : '0.3.0'
   enabled : 1
   interpreters :
   - njs >= 8.0.0
@@ -497,7 +497,7 @@ path :
   repository : git+https:///github.com/{:about/user:}/{:package/name:}.git
   origins :
    - git+https:///github.com/{:about/user:}/{:package/name:}.git
-   - npm:///{:package/name:}
+   - npm:///{:package/lowName:}
   bugtracker : https:///github.com/{:about/user:}/{:package/name:}/issues
 
 step :
@@ -613,7 +613,7 @@ build :
 'sample' : //
 {
 
-'Sample.js' : //
+'Sample.s' : //
 `
 let _ = require( '{:package/lowName:}' );
 
@@ -988,8 +988,8 @@ rules :
   no-param-reassign : off
   no-path-concat : off
   no-plusplus : off
-  no-process-env : error
-  no-process-exit : error
+  no-process-env : off
+  no-process-exit : off
   no-proto : error
   no-restricted-globals : error
   no-restricted-imports : error
@@ -1244,7 +1244,7 @@ ___
 ## Try out
 \`\`\`
 npm install
-node sample/Sample.js
+node sample/Sample.s
 \`\`\`
 
 ## To add as submodule

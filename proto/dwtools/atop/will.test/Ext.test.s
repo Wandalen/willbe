@@ -22555,7 +22555,7 @@ var Self =
     submodulesDownloadNpm,
     submodulesDownloadUpdateNpm,
     submodulesDownloadAutoCrlfEnabled,
-    rootModuleRenormalization,
+    // rootModuleRenormalization, /* xxx : check */
 
     submodulesUpdateThrowing,
     submodulesAgreeThrowing,
