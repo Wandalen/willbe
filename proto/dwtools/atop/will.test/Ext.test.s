@@ -2784,6 +2784,123 @@ implyWithSubmodulesModulesList.description =
 // reflect
 // --
 
+function reflectorOptionsCheck( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-options-check' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.export' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ Write out willfile' ) );
+    test.is( _.strHas( got.output, /Exported module::reflector-options-check \/ build::export with 3 file\(s\) in/ ) );
+
+    var files = self.find( a.abs( 'out/' ) );
+    test.identical( files, [ '.', './reflector-options-check.out.will.yml' ] );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/reflector-options-check.out.will.yml' ) );
+
+    outfile = outfile.module[ 'reflector-options-check.out' ]
+
+    test.case = 'reflector without options';
+    var reflector = outfile.reflector[ 'reflect.withoutOptions' ];
+    test.identical( reflector.mandatory, undefined );
+    test.identical( reflector.dstRewritingOnlyPreserving, undefined );
+    test.identical( reflector.linking, undefined );
+
+    test.case = 'reflector with default options';
+    var reflector = outfile.reflector[ 'reflect.defaultOptions' ];
+    test.identical( reflector.mandatory, 1 );
+    test.identical( reflector.dstRewritingOnlyPreserving, 1 );
+    test.identical( reflector.linking, 'hardLinkMaybe' );
+
+    test.case = 'reflector with not default options';
+    var reflector = outfile.reflector[ 'reflect.notDefaultOptions' ];
+    test.identical( reflector.mandatory, 0 );
+    test.identical( reflector.dstRewritingOnlyPreserving, 0 );
+    test.identical( reflector.linking, 'fileCopy' );
+
+    test.case = 'reflector with not default options without option mandatory';
+    var reflector = outfile.reflector[ 'reflect.notDefaultMandatory1' ];
+    test.identical( reflector.mandatory, undefined );
+    test.identical( reflector.dstRewritingOnlyPreserving, 0 );
+    test.identical( reflector.linking, 'fileCopy' );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesDelete( a.abs( './.will.yml' ) );
+    return null;
+  })
+
+  a.start({ args : '.with import .build defaultOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '.with import .build defaultOptions';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.startNonThrowing({ args : '.with import .build withoutOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '.with import .build withoutOptions';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, "Can't rewrite terminal file" ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.startNonThrowing({ args : '.with import .build notDefaultOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '.with import .build notDefaultOptions';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Cant fileCopy file:' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.start({ args : '.with import .build notDefaultMandatory1' })
+  .then( ( got ) =>
+  {
+    test.case = '.with import .build notDefaultMandatory1';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function reflectNothingFromSubmodules( test )
 {
   let self = this;
@@ -2844,22 +2961,16 @@ function reflectNothingFromSubmodules( test )
           "filePath" : { "path::proto" : "path::out.*=1" }
         },
         'criterion' : { 'debug' : 1 },
-        "mandatory" : 1,
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       },
       "reflect.submodules1" :
       {
         "dst" : { "basePath" : ".", "prefixPath" : "path::out.debug" },
         "criterion" : { "debug" : 1 },
-        "mandatory" : 1,
         "inherit" :
         [
           "submodule::*/exported::*=1/reflector::exported.files*=1"
         ],
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       },
       "reflect.submodules2" :
       {
@@ -2870,10 +2981,7 @@ function reflectNothingFromSubmodules( test )
         },
         "dst" : { "prefixPath" : '' },
         "criterion" : { "debug" : 1 },
-        "mandatory" : 1,
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       },
       "exported.proto.export" :
       {
@@ -2892,9 +3000,6 @@ function reflectNothingFromSubmodules( test )
         "src" : { "filePath" : { 'path::exported.files.proto.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export", 'recursive' : 0 },
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "recursive" : 0,
-        "mandatory" : 1,
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       }
     }
     test.identical( outfile.reflector, expectedReflector );
@@ -11810,11 +11915,8 @@ function exportSecond( test )
           "prefixPath" : ""
         },
         "dst" : { "prefixPath" : "" },
-        "mandatory" : 1,
         "criterion" : { "debug" : 0 },
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       },
       "reflect.proto.debug" :
       {
@@ -11822,11 +11924,8 @@ function exportSecond( test )
         {
           "filePath" : { "path::proto" : "path::out.*=1" }
         },
-        "mandatory" : 1,
         "criterion" : { "debug" : 1 },
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       },
       "exported.doc.export" :
       {
@@ -11835,8 +11934,8 @@ function exportSecond( test )
           "filePath" : { "**" : "" },
           "prefixPath" : "../doc"
         },
-        "mandatory" : 1,
         "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 },
+        "mandatory" : 1,
         "dstRewritingOnlyPreserving" : 1,
         "linking" : "hardLinkMaybe",
       },
@@ -11850,10 +11949,7 @@ function exportSecond( test )
           "recursive" : 0
         },
         "recursive" : 0,
-        "mandatory" : 1,
         "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 },
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       },
       "exported.proto.export" :
       {
@@ -11862,8 +11958,8 @@ function exportSecond( test )
           "filePath" : { "**" : "" },
           "prefixPath" : "../proto"
         },
-        "mandatory" : 1,
         "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
+        "mandatory" : 1,
         "dstRewritingOnlyPreserving" : 1,
         "linking" : "hardLinkMaybe",
       },
@@ -11877,10 +11973,7 @@ function exportSecond( test )
           "recursive" : 0
         },
         "recursive" : 0,
-        "mandatory" : 1,
         "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       }
     }
     test.identical( outfile.reflector, expected );
@@ -12036,11 +12129,8 @@ function exportSecond( test )
           "prefixPath" : ""
         },
         "dst" : { "prefixPath" : "" },
-        "mandatory" : 1,
         "criterion" : { "debug" : 0 },
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       },
       "reflect.proto.debug" :
       {
@@ -12048,11 +12138,8 @@ function exportSecond( test )
         {
           "filePath" : { "path::proto" : "path::out.*=1" }
         },
-        "mandatory" : 1,
         "criterion" : { "debug" : 1 },
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       },
       "exported.doc.export" :
       {
@@ -12061,8 +12148,8 @@ function exportSecond( test )
           "filePath" : { "**" : "" },
           "prefixPath" : "../doc"
         },
-        "mandatory" : 1,
         "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
+        "mandatory" : 1,
         "dstRewritingOnlyPreserving" : 1,
         "linking" : "hardLinkMaybe",
       },
@@ -12076,10 +12163,7 @@ function exportSecond( test )
           "recursive" : 0
         },
         "recursive" : 0,
-        "mandatory" : 1,
         "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       },
       "exported.proto.export" :
       {
@@ -12088,8 +12172,8 @@ function exportSecond( test )
           "filePath" : { "**" : "" },
           "prefixPath" : "../proto"
         },
-        "mandatory" : 1,
         "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 },
+        "mandatory" : 1,
         "dstRewritingOnlyPreserving" : 1,
         "linking" : "hardLinkMaybe",
       },
@@ -12103,10 +12187,7 @@ function exportSecond( test )
           "recursive" : 0
         },
         "recursive" : 0,
-        "mandatory" : 1,
         "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 },
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       }
     }
     test.identical( outfile.reflector, expected );
@@ -13056,7 +13137,6 @@ function exportBroken( test )
     var exportedReflectorFiles =
     {
       recursive : 0,
-      mandatory : 1,
       src :
       {
         filePath : { 'path::exported.files.export.debug' : '' },
@@ -13072,8 +13152,6 @@ function exportBroken( test )
         raw : 1,
         export : 1
       },
-      dstRewritingOnlyPreserving : 1,
-      linking : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
@@ -22046,6 +22124,224 @@ function resourcesFormReflectorsExperiment( test )
 }
 
 // --
+// commands with implied options
+// --
+
+function commandVersion( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'step-willbe-version-check' );
+  a.reflect();
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.version';
+    return null;
+  })
+
+  a.start({ args : '.version' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.isNot( _.strHas( got.output, 'Read' ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.imply v:9 ; .version';
+    return null;
+  })
+
+  a.start({ args : '.imply v:9 ; .version' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Read' ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.imply v:9 .version';
+    return null;
+  })
+
+  a.start({ args : '.imply v:9 .version' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Read' ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = '.version v:7';
+    return null;
+  })
+
+  a.start({ args : '.version v:7' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Read' ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+//
+
+function commandVersionCheck( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'step-willbe-version-check' );
+
+  if( !a.fileProvider.fileExists( a.path.join( a.path.join( __dirname, '../../../..' ), 'package.json' ) ) )
+  {
+    test.is( true );
+    return;
+  }
+
+  a.fileProvider.filesReflect
+  ({
+    reflectMap :
+    {
+      'proto/dwtools/Tools.s' : 'proto/dwtools/Tools.s',
+      'proto/dwtools/atop/will' : 'proto/dwtools/atop/will',
+      'package.json' : 'package.json',
+    },
+    src : { prefixPath : a.path.join( __dirname, '../../../..' ) },
+    dst : { prefixPath : a.abs( 'willbe' ) },
+  })
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'asset' ) } });
+  a.fileProvider.softLink( a.abs( 'willbe/node_modules' ), a.path.join( __dirname, '../../../../node_modules' ) );
+
+  let execPath = a.path.nativize( a.abs( 'willbe/proto/dwtools/atop/will/entry/Exec' ) );
+  a.start = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : a.abs( 'asset' ),
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    verbosity : 3,
+    ready : a.ready
+  })
+
+  /* - */
+
+  a.start({ args : '.version.check' })
+  .then( ( got ) =>
+  {
+    test.case = '".version.check", current version';
+    test.identical( got.exitCode, 0 );
+    test.isNot( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null
+  })
+
+  a.start({ args : '.imply v:9 ; .version.check' })
+  .then( ( got ) =>
+  {
+    test.case = '".imply v:9 ; .version.check", current version';
+    test.identical( got.exitCode, 0 );
+    test.isNot( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Read/ ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null
+  })
+
+  a.start({ args : '.imply v:9 .version.check' })
+  .then( ( got ) =>
+  {
+    test.case = '".imply v:9 .version.check", current version';
+    test.identical( got.exitCode, 0 );
+    test.isNot( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Read/ ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null
+  })
+
+  a.start({ args : '.version.check v:7' })
+  .then( ( got ) =>
+  {
+    test.case = '".version.check v:7", current version';
+    test.identical( got.exitCode, 0 );
+    test.isNot( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Read/ ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null
+  })
+
+  .then( () =>
+  {
+    let packageJsonPath = a.abs( 'willbe/package.json' );
+    let packageJson = a.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+    packageJson.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
+    return null;
+  })
+
+  a.start({ args : '.version.check' })
+  .then( ( got ) =>
+  {
+    test.case = '".version.check", outdated version';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Current version: 0.0.0/ ) );
+    return null;
+  })
+
+  a.start({ args : '.imply v:9 ; .version.check' })
+  .then( ( got ) =>
+  {
+    test.case = '".imply v:9 ; .version.check", outdated version';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Current version: 0.0.0/ ) );
+    return null;
+  })
+
+  a.start({ args : '.imply v:9 .version.check' })
+  .then( ( got ) =>
+  {
+    test.case = '".imply v:9 .version.check", outdated version';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Current version: 0.0.0/ ) );
+    return null;
+  })
+
+  a.start({ args : '.version.check v:7' })
+  .then( ( got ) =>
+  {
+    test.case = '".imply v:7 .version.check", outdated version';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Current version: 0.0.0/ ) );
+    return null;
+  })
+
+  return a.ready;
+}
+
+// --
 // declare
 // --
 
@@ -22102,6 +22398,7 @@ var Self =
 
     // reflect
 
+    reflectorOptionsCheck,
     reflectNothingFromSubmodules,
     reflectGetPath,
     reflectSubdir,
@@ -22287,6 +22584,10 @@ var Self =
 
     // resourcesFormReflectorsExperiment, // xxx : look
 
+    // commands with implied options
+
+    commandVersion,
+    commandVersionCheck,
   }
 
 }

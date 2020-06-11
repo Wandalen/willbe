@@ -1,0 +1,49 @@
+about :
+  name : import
+  description : "To check that information is not lost in export"
+  version : 0.0.1
+
+submodule :
+  local : './out/reflector-options-check.out'
+
+
+reflector :
+
+  reflect.withoutOptions :
+    inherit : submodule::local/exported::*=1/reflector::reflect.withoutOptions
+
+  reflect.defaultOptions :
+    inherit : submodule::local/exported::*=1/reflector::reflect.defaultOptions
+
+  reflect.notDefaultOptions :
+    inherit : submodule::local/exported::*=1/reflector::reflect.notDefaultOptions
+
+  reflect.notDefaultMandatory1 :
+    inherit : submodule::local/exported::*=1/reflector::reflect.notDefaultMandatory1
+
+build :
+
+  withoutOptions :
+    criterion :
+      default : 1
+    steps :
+      - step::reflect.withoutOptions
+
+  defaultOptions :
+    criterion :
+      default : 1
+    steps :
+      - step::reflect.defaultOptions
+
+  notDefaultOptions :
+    criterion :
+      default : 1
+    steps :
+      - step::reflect.notDefaultOptions
+
+  notDefaultMandatory1 :
+    criterion :
+      default : 1
+    steps :
+      - step::reflect.notDefaultMandatory1
+
