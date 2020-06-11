@@ -677,7 +677,7 @@ jobs :
     strategy :
       fail-fast  : false
       matrix :
-        os : [ windows-latest, ubuntu-latest, macos-latest ]
+        os : [ ubuntu-latest, windows-latest, macos-latest ]
         node-version : [ 14.x ]
     steps :
     - uses : actions/checkout@v2
@@ -696,7 +696,7 @@ jobs :
     strategy :
       fail-fast  : false
       matrix :
-        os : [ windows-latest, ubuntu-latest, macos-latest ]
+        os : [ ubuntu-latest, windows-latest, macos-latest ]
         node-version : [ 10.x, 12.x, 13.x, 14.x ]
     steps :
     - uses : actions/checkout@v2
@@ -870,7 +870,7 @@ rules :
     - 2
     - outerIIFEBody : 0
       MemberExpression : 0
-      ignoredNodes : [ "IfStatement > IfStatement.consequent", "IfStatement > IfStatement.alternate", "IfStatement.body", "WhileStatement.body", "ForStatement.body" ]
+      ignoredNodes : [ "IfStatement > IfStatement.consequent", "IfStatement > IfStatement.alternate", "IfStatement.body", "WhileStatement.body", "ForStatement.body", "ForInStatement.body" ]
   indent-legacy : off
   init-declarations : off
   key-spacing :

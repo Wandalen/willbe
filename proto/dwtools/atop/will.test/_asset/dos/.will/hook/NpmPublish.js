@@ -28,68 +28,68 @@ function onModule( it )
   if( !isEnabled( it, wasСonfigPath ) )
   return;
 
-  let diff;
-
-  {
-    let it2 = it.will.hookItNew( it );
-    it2.request.subject = `-am "."`
-    it2.request.original = it2.request.subject;
-    delete it2.request.map.tag;
-    delete it2.request.map.dry;
-    delete it2.request.map.force;
-    _.assert( it2.request.map !== it.request.map );
-    it2.will.hooks.GitSync.call( it2 );
-  }
-
-  if( !o.force )
-  {
-    try
-    {
-      diff = _.git.diff
-      ({
-        state2 : 'tag::' + o.tag,
-        localPath : it.junction.dirPath,
-        sync : 1,
-      });
-    }
-    catch( err )
-    {
-      _.errAttend( err );
-      logger.log( err );
-    }
-  }
-
-  if( o.force || !diff || diff.status )
-  {
-    if( o.verbosity )
-    logger.log( ` + Publishing ${it.junction.nameWithLocationGet()}` );
-    if( o.verbosity >= 2 && diff && diff.status )
-    {
-      logger.up();
-      logger.log( _.toStrNice( diff.status ) );
-      logger.down();
-    }
-  }
-  else
-  {
-    if( o.verbosity )
-    logger.log( ` x Nothing to publish in ${it.junction.nameWithLocationGet()}` );
-    return;
-  }
-
-  if( o.dry )
-  return;
-
-  let bumped = _.npm.bump
-  ({
-    dry : o.dry,
-    configPath : wasСonfigPath,
-    verbosity : o.verbosity - 4,
-  });
-
-  _.assert( _.path.isTrailed( it.junction.localPath ), 'not tested' );
-
-  it.start( 'local-will .export' ); /* xxx */
+  // let diff;
+  // 
+  // {
+  //   let it2 = it.will.hookItNew( it );
+  //   it2.request.subject = `-am "."`
+  //   it2.request.original = it2.request.subject;
+  //   delete it2.request.map.tag;
+  //   delete it2.request.map.dry;
+  //   delete it2.request.map.force;
+  //   _.assert( it2.request.map !== it.request.map );
+  //   it2.will.hooks.GitSync.call( it2 );
+  // }
+  //
+  // if( !o.force )
+  // {
+  //   try
+  //   {
+  //     diff = _.git.diff
+  //     ({
+  //       state2 : 'tag::' + o.tag,
+  //       localPath : it.junction.dirPath,
+  //       sync : 1,
+  //     });
+  //   }
+  //   catch( err )
+  //   {
+  //     _.errAttend( err );
+  //     logger.log( err );
+  //   }
+  // }
+  //
+  // if( o.force || !diff || diff.status )
+  // {
+  //   if( o.verbosity )
+  //   logger.log( ` + Publishing ${it.junction.nameWithLocationGet()}` );
+  //   if( o.verbosity >= 2 && diff && diff.status )
+  //   {
+  //     logger.up();
+  //     logger.log( _.toStrNice( diff.status ) );
+  //     logger.down();
+  //   }
+  // }
+  // else
+  // {
+  //   if( o.verbosity )
+  //   logger.log( ` x Nothing to publish in ${it.junction.nameWithLocationGet()}` );
+  //   return;
+  // }
+  //
+  // if( o.dry )
+  // return;
+  //
+  // let bumped = _.npm.bump
+  // ({
+  //   dry : o.dry,
+  //   configPath : wasСonfigPath,
+  //   verbosity : o.verbosity - 4,
+  // });
+  //
+  // _.assert( _.path.isTrailed( it.junction.localPath ), 'not tested' );
+  //
+  // it.start( 'local-will .export' ); /* xxx */
 
   let activeСonfigPath = wasСonfigPath;
   if( !o.dry )
@@ -97,6 +97,8 @@ function onModule( it )
     _.fileProvider.fileCopy( configPath, wasСonfigPath );
     activeСonfigPath = configPath;
   }
+
+  debugger; return; xxx
 
   _.npm.fixate
   ({
