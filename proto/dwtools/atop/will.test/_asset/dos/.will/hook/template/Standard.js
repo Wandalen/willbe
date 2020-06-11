@@ -1199,9 +1199,10 @@ rules :
 
 '.gitignore' : //
 `
-/_*
--*
+/tmp
+/_
 .*
+-*
 *.log
 *.db
 *.tmp

@@ -4932,8 +4932,8 @@ function reflectorsCommonPrefix( test )
     test.identical( files, [ '.', './debug', './debug/Source.js' ] );
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy reflected 1 file\\(s\\) .* in .*` ) ) );
-    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy.second reflected 1 file\\(s\\) .* in .*` ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy reflected 2 file\\(s\\) .* in .*` ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy.second reflected 2 file\\(s\\) .* in .*` ) ) );
 
     return null;
   })
@@ -5505,7 +5505,7 @@ function hookGitMake( test )
     test.identical( _.strCount( got.output, `Making a new local repository at` ), 1 );
     test.identical( _.strCount( got.output, `git init .` ), 1 );
     test.identical( _.strCount( got.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
-    test.identical( _.strCount( got.output, `> ` ), 2 );
+    test.identical( _.strCount( got.output, `> ` ), 3 );
 
     var exp = [ '.', './will.yml' ];
     var files = self.find( a.abs( 'New2' ) );
@@ -5552,7 +5552,7 @@ function hookPrepare( test )
     });
   })
 
-  start({ execPath : '.with New2/ .module.new.with prepare v:3' })
+  a.start({ execPath : '.with New2/ .module.new.with prepare v:3' })
 
   .then( ( got ) =>
   {
@@ -5565,21 +5565,26 @@ function hookPrepare( test )
     test.identical( _.strCount( got.output, `git init .` ), 1 );
     test.identical( _.strCount( got.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
     test.identical( _.strCount( got.output, `git push -u origin --all --follow-tags` ), 1 );
-    test.identical( _.strCount( got.output, `> ` ), 10 );
+    test.identical( _.strCount( got.output, `> ` ), 12 );
+    test.identical( _.strCount( got.output, `+ hardLink` ), 5 );
 
     var exp =
     [
       '.',
       './-will.yml',
+      './.eslintrc.yml',
       './.ex.will.yml',
       './.gitattributes',
       './.gitignore',
       './.im.will.yml',
-      './.travis.yml',
       './LICENSE',
       './README.md',
       './was.package.json',
+      './.github',
+      './.github/workflows',
+      './.github/workflows/Test.yml',
       './proto',
+      './proto/Integration.test.s',
       './proto/dwtools',
       './proto/dwtools/Tools.s',
       './proto/dwtools/abase',
@@ -5587,7 +5592,7 @@ function hookPrepare( test )
       './proto/dwtools/atop',
       './sample',
       './sample/Sample.html',
-      './sample/Sample.js'
+      './sample/Sample.s',
     ]
     var files = self.find( a.abs( 'New2' ) );
     test.identical( files, exp );
@@ -5629,21 +5634,26 @@ function hookPrepare( test )
     test.identical( _.strCount( got.output, `git init .` ), 1 );
     test.identical( _.strCount( got.output, `git remote add origin https://github.com/${user}/New4.git` ), 1 );
     test.identical( _.strCount( got.output, `git push -u origin --all --follow-tags` ), 1 );
-    test.identical( _.strCount( got.output, `> ` ), 10 );
+    test.identical( _.strCount( got.output, `> ` ), 12 );
+    test.identical( _.strCount( got.output, `+ hardLink` ), 5 );
 
     var exp =
     [
       '.',
       './-New4.will.yml',
+      './.eslintrc.yml',
       './.ex.will.yml',
       './.gitattributes',
       './.gitignore',
       './.im.will.yml',
-      './.travis.yml',
       './LICENSE',
       './README.md',
       './was.package.json',
+      './.github',
+      './.github/workflows',
+      './.github/workflows/Test.yml',
       './proto',
+      './proto/Integration.test.s',
       './proto/dwtools',
       './proto/dwtools/Tools.s',
       './proto/dwtools/abase',
@@ -5651,7 +5661,7 @@ function hookPrepare( test )
       './proto/dwtools/atop',
       './sample',
       './sample/Sample.html',
-      './sample/Sample.js'
+      './sample/Sample.s'
     ]
     var files = self.find( a.abs( 'New3' ) );
     test.identical( files, exp );
