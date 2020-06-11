@@ -22052,7 +22052,7 @@ function resourcesFormReflectorsExperiment( test )
 function commandVersion( test )
 {
   let self = this;
-  let a = self.assetFor( test, 'submodules' );
+  let a = self.assetFor( test, 'step-willbe-version-check' );
   a.reflect();
 
   /* */
@@ -22124,6 +22124,141 @@ function commandVersion( test )
   })
 
   /* */
+
+  return a.ready;
+}
+
+//
+
+function commandVersionCheck( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'step-willbe-version-check' );
+
+  if( !a.fileProvider.fileExists( a.path.join( a.path.join( __dirname, '../../../..' ), 'package.json' ) ) )
+  {
+    test.is( true );
+    return;
+  }
+
+  a.fileProvider.filesReflect
+  ({
+    reflectMap :
+    {
+      'proto/dwtools/Tools.s' : 'proto/dwtools/Tools.s',
+      'proto/dwtools/atop/will' : 'proto/dwtools/atop/will',
+      'package.json' : 'package.json',
+    },
+    src : { prefixPath : a.path.join( __dirname, '../../../..' ) },
+    dst : { prefixPath : a.abs( 'willbe' ) },
+  })
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'asset' ) } });
+  a.fileProvider.softLink( a.abs( 'willbe/node_modules' ), a.path.join( __dirname, '../../../../node_modules' ) );
+
+  let execPath = a.path.nativize( a.abs( 'willbe/proto/dwtools/atop/will/entry/Exec' ) );
+  a.start = _.process.starter
+  ({
+    execPath : 'node ' + execPath,
+    currentPath : a.abs( 'asset' ),
+    outputCollecting : 1,
+    throwingExitCode : 0,
+    verbosity : 3,
+    ready : a.ready
+  })
+
+  /* - */
+
+  a.start({ args : '.version.check' })
+  .then( ( got ) =>
+  {
+    test.case = '".version.check", current version';
+    test.identical( got.exitCode, 0 );
+    test.isNot( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null
+  })
+
+  a.start({ args : '.imply v:9 ; .version.check' })
+  .then( ( got ) =>
+  {
+    test.case = '".imply v:9 ; .version.check", current version';
+    test.identical( got.exitCode, 0 );
+    test.isNot( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Read/ ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null
+  })
+
+  a.start({ args : '.imply v:9 .version.check' })
+  .then( ( got ) =>
+  {
+    test.case = '".imply v:9 .version.check", current version';
+    test.identical( got.exitCode, 0 );
+    test.isNot( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Read/ ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null
+  })
+
+  a.start({ args : '.version.check v:7' })
+  .then( ( got ) =>
+  {
+    test.case = '".version.check v:7", current version';
+    test.identical( got.exitCode, 0 );
+    test.isNot( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Read/ ) );
+    test.is( _.strHas( got.output, /Current version: \d+\.\d+\.\d+/ ) );
+    return null
+  })
+
+  .then( () =>
+  {
+    let packageJsonPath = a.abs( 'willbe/package.json' );
+    let packageJson = a.fileProvider.fileRead({ filePath : packageJsonPath, encoding : 'json' });
+    packageJson.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : packageJsonPath, encoding : 'json', data : packageJson });
+    return null;
+  })
+
+  a.start({ args : '.version.check' })
+  .then( ( got ) =>
+  {
+    test.case = '".version.check", outdated version';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Current version: 0.0.0/ ) );
+    return null;
+  })
+
+  a.start({ args : '.imply v:9 ; .version.check' })
+  .then( ( got ) =>
+  {
+    test.case = '".imply v:9 ; .version.check", outdated version';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Current version: 0.0.0/ ) );
+    return null;
+  })
+
+  a.start({ args : '.imply v:9 .version.check' })
+  .then( ( got ) =>
+  {
+    test.case = '".imply v:9 .version.check", outdated version';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Current version: 0.0.0/ ) );
+    return null;
+  })
+
+  a.start({ args : '.version.check v:7' })
+  .then( ( got ) =>
+  {
+    test.case = '".imply v:7 .version.check", outdated version';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, /Utility willbe is out of date!/ ) );
+    test.is( _.strHas( got.output, /Current version: 0.0.0/ ) );
+    return null;
+  })
 
   return a.ready;
 }
@@ -22373,6 +22508,7 @@ var Self =
     // commands with implied options
 
     commandVersion,
+    commandVersionCheck,
   }
 
 }
