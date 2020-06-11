@@ -13137,7 +13137,6 @@ function exportBroken( test )
     var exportedReflectorFiles =
     {
       recursive : 0,
-      mandatory : 1,
       src :
       {
         filePath : { 'path::exported.files.export.debug' : '' },
@@ -13153,8 +13152,6 @@ function exportBroken( test )
         raw : 1,
         export : 1
       },
-      dstRewritingOnlyPreserving : 1,
-      linking : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
