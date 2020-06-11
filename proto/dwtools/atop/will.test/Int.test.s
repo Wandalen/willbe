@@ -4980,16 +4980,6 @@ function reflectorResolve( test )
   let a = self.assetFor( test, 'composite-reflector' );
   let opener;
 
-  function pin( filePath )
-  {
-    return a.abs( filePath );
-  }
-
-  function pout( filePath )
-  {
-    return a.abs( 'super.out', filePath );
-  }
-
   /* - */
 
   a.ready
@@ -5038,9 +5028,6 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 0 },
       'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1,
-      'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe'
     }
     resolved.form();
     var resolvedData = resolved.exportStructure();
@@ -5084,9 +5071,6 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 1 },
       'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1,
-      'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
     }
 
     var resolvedData = resolved.exportStructure();
@@ -5130,9 +5114,6 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 2 },
       'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1,
-      'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5175,9 +5156,6 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 3 },
       'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1,
-      'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
@@ -5208,8 +5186,8 @@ function reflectorResolve( test )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
+    test.identical( resolved.src.prefixPath, a.abs( 'proto/dir2' ) );
+    test.identical( resolved.dst.prefixPath, a.abs( 'out/debug/dir1' ) );
 
     test.case = 'reflector::reflect.proto.4.debug';
     var resolved = opener.openedModule.resolve( 'reflector::reflect.proto.4.debug' );
@@ -5222,17 +5200,14 @@ function reflectorResolve( test )
       },
       'criterion' : { 'debug' : 1, 'variant' : 4 },
       'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1,
-      'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
+    test.identical( resolved.src.prefixPath, a.abs( 'proto/dir2' ) );
+    test.identical( resolved.dst.prefixPath, a.abs( 'out/debug/dir1' ) );
 
     test.case = 'reflector::reflect.proto.5.debug formed:1';
     var resolved = opener.openedModule.resolve( 'reflector::reflect.proto.5.debug' );
@@ -5257,8 +5232,8 @@ function reflectorResolve( test )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
+    test.identical( resolved.src.prefixPath, a.abs( 'proto/dir2' ) );
+    test.identical( resolved.dst.prefixPath, a.abs( 'out/debug/dir1' ) );
 
     test.case = 'reflector::reflect.proto.5.debug';
     var resolved = opener.openedModule.resolve( 'reflector::reflect.proto.5.debug' );
@@ -5273,17 +5248,14 @@ function reflectorResolve( test )
       'dst' : { 'prefixPath' : '{path::out.*=1}/{path::dir1}' },
       'criterion' : { 'debug' : 1, 'variant' : 5 },
       'inherit' : [ 'predefined.*' ],
-      'mandatory' : 1,
-      'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1' ) );
+    test.identical( resolved.src.prefixPath, a.abs( 'proto/dir2' ) );
+    test.identical( resolved.dst.prefixPath, a.abs( 'out/debug/dir1' ) );
 
     test.case = 'reflector::reflect.proto.6.debug formed:1';
     var resolved = opener.openedModule.resolve( 'reflector::reflect.proto.6.debug' );
@@ -5302,8 +5274,8 @@ function reflectorResolve( test )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.js' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.js' ) );
+    test.identical( resolved.src.prefixPath, a.abs( 'proto/dir2/File.test.js' ) );
+    test.identical( resolved.dst.prefixPath, a.abs( 'out/debug/dir1/File.test.js' ) );
 
     test.case = 'reflector::reflect.proto.6.debug';
     var resolved = opener.openedModule.resolve( 'reflector::reflect.proto.6.debug' );
@@ -5319,17 +5291,14 @@ function reflectorResolve( test )
         'prefixPath' : '{path::out.*=1}/{path::dir1}/{path::testFile}'
       },
       'criterion' : { 'debug' : 1, 'variant' : 6 },
-      'mandatory' : 1,
-      'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.js' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.js' ) );
+    test.identical( resolved.src.prefixPath, a.abs( 'proto/dir2/File.test.js' ) );
+    test.identical( resolved.dst.prefixPath, a.abs( 'out/debug/dir1/File.test.js' ) );
 
     test.case = 'reflector::reflect.proto.7.debug formed:1';
     var resolved = opener.openedModule.resolve( 'reflector::reflect.proto.7.debug' );
@@ -5352,8 +5321,8 @@ function reflectorResolve( test )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.js' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.js' ) );
+    test.identical( resolved.src.prefixPath, a.abs( 'proto/dir2/File.test.js' ) );
+    test.identical( resolved.dst.prefixPath, a.abs( 'out/debug/dir1/File.test.js' ) );
 
     test.case = 'reflector::reflect.proto.7.debug';
     var resolved = opener.openedModule.resolve( 'reflector::reflect.proto.7.debug' );
@@ -5368,17 +5337,14 @@ function reflectorResolve( test )
         }
       },
       'criterion' : { 'debug' : 1, 'variant' : 7 },
-      'mandatory' : 1,
-      'dstRewritingOnlyPreserving' : 1,
-      'linking' : 'hardLinkMaybe',
     }
     var resolvedData = resolved.exportStructure();
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
     test.identical( resolvedData, expected );
-    test.identical( resolved.src.prefixPath, pin( 'proto/dir2/File.test.js' ) );
-    test.identical( resolved.dst.prefixPath, pin( 'out/debug/dir1/File.test.js' ) );
+    test.identical( resolved.src.prefixPath, a.abs( 'proto/dir2/File.test.js' ) );
+    test.identical( resolved.dst.prefixPath, a.abs( 'out/debug/dir1/File.test.js' ) );
 
     return null;
   });

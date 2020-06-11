@@ -1607,7 +1607,7 @@ function commandSubmodulesVersionsAgree( e )
 
 }
 
-commandSubmodulesVersionsVerify.commandProperties =
+commandSubmodulesVersionsAgree.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
