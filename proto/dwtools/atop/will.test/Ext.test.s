@@ -2961,22 +2961,16 @@ function reflectNothingFromSubmodules( test )
           "filePath" : { "path::proto" : "path::out.*=1" }
         },
         'criterion' : { 'debug' : 1 },
-        "mandatory" : 1,
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       },
       "reflect.submodules1" :
       {
         "dst" : { "basePath" : ".", "prefixPath" : "path::out.debug" },
         "criterion" : { "debug" : 1 },
-        "mandatory" : 1,
         "inherit" :
         [
           "submodule::*/exported::*=1/reflector::exported.files*=1"
         ],
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       },
       "reflect.submodules2" :
       {
@@ -2987,10 +2981,7 @@ function reflectNothingFromSubmodules( test )
         },
         "dst" : { "prefixPath" : '' },
         "criterion" : { "debug" : 1 },
-        "mandatory" : 1,
         "inherit" : [ "predefined.*" ],
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       },
       "exported.proto.export" :
       {
@@ -3009,9 +3000,6 @@ function reflectNothingFromSubmodules( test )
         "src" : { "filePath" : { 'path::exported.files.proto.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export", 'recursive' : 0 },
         "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
         "recursive" : 0,
-        "mandatory" : 1,
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
       }
     }
     test.identical( outfile.reflector, expectedReflector );
