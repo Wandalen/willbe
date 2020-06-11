@@ -38,10 +38,12 @@ function onModule( it )
     return null;
   });
 
-  let it2 = it.will.hookItNew( it );
-  if( it2.request.map.verbosity )
-  it2.request.map.verbosity += 2;
-  it2.will.hooks.GitMake.call( it2 );
+  {
+    let it2 = it.will.hookItNew( it );
+    if( it2.request.map.verbosity )
+    it2.request.map.verbosity += 2;
+    it2.will.hooks.GitMake.call( it2 );
+  }
 
   it.ready.thenGive( ( arg ) =>
   {
@@ -51,13 +53,20 @@ function onModule( it )
     it.start( `git add --force *.will.*` );
     it.start( `git add --force .gitattributes` );
     it.start( `git add --force .gitignore` );
-    it.start( `git add --force .travis.yml` );
+    it.start( `git add --force .github` );
     it.start( `git add --force .eslintrc.yml` );
 
     it.start({ execPath : `git commit -am "prepare"`, throwingExitCode : 0 });
     it.start({ execPath : `git push -u origin --all --follow-tags`, throwingExitCode : 0 });
 
   });
+
+  {
+    let it2 = it.will.hookItNew( it );
+    if( it2.request.map.verbosity )
+    it2.request.map.verbosity += 2;
+    it2.will.hooks.hlink.call( it2 );
+  }
 
 }
 
