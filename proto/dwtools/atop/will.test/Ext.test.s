@@ -2784,6 +2784,123 @@ implyWithSubmodulesModulesList.description =
 // reflect
 // --
 
+function reflectorOptionsCheck( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-options-check' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.export' })
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '+ Write out willfile' ) );
+    test.is( _.strHas( got.output, /Exported module::reflector-options-check \/ build::export with 3 file\(s\) in/ ) );
+
+    var files = self.find( a.abs( 'out/' ) );
+    test.identical( files, [ '.', './reflector-options-check.out.will.yml' ] );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/reflector-options-check.out.will.yml' ) );
+
+    outfile = outfile.module[ 'reflector-options-check.out' ]
+
+    test.case = 'reflector without options';
+    var reflector = outfile.reflector[ 'reflect.withoutOptions' ];
+    test.identical( reflector.mandatory, undefined );
+    test.identical( reflector.dstRewritingOnlyPreserving, undefined );
+    test.identical( reflector.linking, undefined );
+
+    test.case = 'reflector with default options';
+    var reflector = outfile.reflector[ 'reflect.defaultOptions' ];
+    test.identical( reflector.mandatory, 1 );
+    test.identical( reflector.dstRewritingOnlyPreserving, 1 );
+    test.identical( reflector.linking, 'hardLinkMaybe' );
+
+    test.case = 'reflector with not default options';
+    var reflector = outfile.reflector[ 'reflect.notDefaultOptions' ];
+    test.identical( reflector.mandatory, 0 );
+    test.identical( reflector.dstRewritingOnlyPreserving, 0 );
+    test.identical( reflector.linking, 'fileCopy' );
+
+    test.case = 'reflector with not default options';
+    var reflector = outfile.reflector[ 'reflect.notDefaultMandatory1' ];
+    test.identical( reflector.mandatory, 1 );
+    test.identical( reflector.dstRewritingOnlyPreserving, 0 );
+    test.identical( reflector.linking, 'fileCopy' );
+
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesDelete( a.abs( './.will.yml' ) );
+    return null;
+  })
+
+  a.start({ args : '.with import .build defaultOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '.with import .build defaultOptions';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.startNonThrowing({ args : '.with import .build withoutOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '.with import .build withoutOptions';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, "Can't rewrite terminal file" ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.startNonThrowing({ args : '.with import .build notDefaultOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '.with import .build notDefaultOptions';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'Cant fileCopy file:' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.start({ args : '.with import .build notDefaultMandatory1' })
+  .then( ( got ) =>
+  {
+    test.case = '.with import .build notDefaultMandatory1';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function reflectNothingFromSubmodules( test )
 {
   let self = this;
@@ -22320,6 +22437,7 @@ var Self =
 
     // reflect
 
+    reflectorOptionsCheck,
     reflectNothingFromSubmodules,
     reflectGetPath,
     reflectSubdir,
