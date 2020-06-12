@@ -46,4 +46,3 @@ build :
       default : 1
     steps :
       - step::reflect.notDefaultMandatory1
-

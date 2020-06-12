@@ -2,15 +2,6 @@
 
 'use strict';
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
-//
-
 let _ = _global_.wTools;
 let Parent = null;
 let Self = wWillResource;
@@ -58,10 +49,11 @@ function MakeFor_body( o )
   o2.Importing = o.Importing;
   o2.IsOut = o.IsOut;
 
-  if( Cls.ResouceDataFrom )
-  o2.resource = Cls.ResouceDataFrom( o.resource );
-  else
-  o2.resource = _.mapExtend( null, o.resource );
+  // if( Cls.ResouceDataFrom )
+  // o2.resource = Cls.ResouceDataFrom( o.resource );
+  // else
+  // o2.resource = _.mapExtend( null, o.resource );
+  o2.resource = Cls.ResouceMapFrom( o.resource );
 
   _.assert( o.resource !== o2.resource );
 
@@ -158,78 +150,22 @@ function MakeForEachCriterion( o )
         if( module[ Cls.MapName ][ o2.resource.name ] )
         continue;
 
-        single( o2 );
+        let r = Cls.MakeSingle( o2 );
+        result.push( r );
         counter += 1;
       }
     }
 
     if( isSingle )
     {
-      single( o );
+      let r = Cls.MakeSingle( o );
+      if( r )
+      result.push( r );
+      // single( o );
       counter += 1;
     }
 
     return result;
-  }
-
-  /* */
-
-  function single( o )
-  {
-
-    try
-    {
-
-      _.assert( o.resource.module instanceof will.Module );
-      _.assert( !!o.resource.module[ Cls.MapName ] );
-      let instance = o.resource.module[ Cls.MapName ][ o.resource.name ];
-      if( instance )
-      {
-        _.sure( !!Cls.OnInstanceExists, 'Instance ' + Cls.KindName + '::' + o.resource.name + ' already exists' );
-        o.instance = instance;
-        Cls.OnInstanceExists( o );
-      }
-
-      let optional = !!o.Optional;
-      let rewriting = !!o.Rewriting;
-      let importing = !!o.Importing;
-      let isOut = !!o.IsOut;
-
-      if( !isOut && importing && o.resource.name === 'local' && Cls.KindName === 'path' )
-      {
-        debugger;
-        throw _.err( 'Willfile should have no path::local' );
-      }
-
-      if( o.resource.importableFromIn !== undefined && !o.resource.importableFromIn )
-      if( importing && !isOut )
-      {
-        return;
-      }
-
-      if( o.resource.importableFromOut !== undefined && !o.resource.importableFromOut )
-      if( importing && isOut )
-      {
-        return;
-      }
-
-      if( instance && rewriting )
-      instance.finit();
-
-      let r = Cls( o.resource ).form1();
-      result.push( r );
-      return r;
-    }
-    catch( err )
-    {
-      let cirterion = '';
-      if( o.resource.criterion )
-      cirterion += '\nCriterions\n' + _.toStr( o.resource.criterion );
-      if( err.message && _.strHas( err.message, 'Options map for' ) )
-      err = _.errBrief( err );
-      throw _.err( err, `\nFailed to make resource ${Cls.KindName}::${o.resource.name}`, cirterion );
-    }
-
   }
 
 }
@@ -245,7 +181,87 @@ MakeForEachCriterion.defaults =
 
 //
 
-function ResouceDataFrom( o )
+function MakeSingle( o )
+{
+  let Cls = this;
+  let module = o.resource.module;
+  let will = module.will;
+
+  o = _.routineOptions( MakeSingle, arguments );
+
+  try
+  {
+
+    _.assert( o.resource.module instanceof will.Module );
+    _.assert( !!o.resource.module[ Cls.MapName ] );
+    let instance = o.resource.module[ Cls.MapName ][ o.resource.name ];
+    if( instance )
+    {
+      _.sure( !!Cls.OnInstanceExists, 'Instance ' + Cls.KindName + '::' + o.resource.name + ' already exists' );
+      o.instance = instance;
+      Cls.OnInstanceExists( o );
+    }
+
+    let optional = !!o.Optional;
+    let rewriting = !!o.Rewriting;
+    let importing = !!o.Importing;
+    let isOut = !!o.IsOut;
+
+    if( !isOut && importing && o.resource.name === 'local' && Cls.KindName === 'path' )
+    {
+      debugger;
+      throw _.err( 'Willfile should have no path::local' );
+    }
+
+    if( o.resource.importableFromIn !== undefined && !o.resource.importableFromIn )
+    if( importing && !isOut )
+    {
+      return;
+    }
+
+    if( o.resource.importableFromOut !== undefined && !o.resource.importableFromOut )
+    if( importing && isOut )
+    {
+      return;
+    }
+
+    if( instance && rewriting )
+    instance.finit();
+
+    let resource = Cls.ResouceStructureFrom( o.resource );
+    _.assert( o.resource !== resource );
+    let r = Cls( resource ).form1();
+    // result.push( r );
+    return r;
+  }
+  catch( err )
+  {
+    let cirterion = '';
+    if( o.resource.criterion )
+    cirterion += '\nCriterions\n' + _.toStr( o.resource.criterion );
+    if( err.message && _.strHas( err.message, 'Options map for' ) )
+    err = _.errBrief( err );
+    throw _.err( err, `\nFailed to make resource ${Cls.KindName}::${o.resource.name}`, cirterion );
+  }
+
+}
+
+MakeSingle.defaults =
+{
+  ... MakeForEachCriterion.defaults,
+}
+
+//
+
+function ResouceMapFrom( o )
+{
+  _.assert( arguments.length === 1 );
+  return _.mapExtend( null, o );
+}
+
+//
+
+function ResouceStructureFrom( o )
 {
   _.assert( arguments.length === 1 );
   return _.mapExtend( null, o );
@@ -1289,7 +1305,9 @@ let Statics =
 
   MakeFor,
   MakeForEachCriterion,
-  ResouceDataFrom,
+  MakeSingle,
+  ResouceMapFrom,
+  ResouceStructureFrom,
 
   CriterionVariable,
   CriterionPostfixFor,
@@ -1333,7 +1351,9 @@ let Extend =
 
   MakeFor,
   MakeForEachCriterion,
-  ResouceDataFrom,
+  MakeSingle,
+  ResouceMapFrom,
+  ResouceStructureFrom,
 
   finit,
   init,

@@ -2,13 +2,6 @@
 
 'use strict';
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
 let Tar, Open;
 let _ = _global_.wTools;
 let Self = Object.create( null );
@@ -17,9 +10,7 @@ let Self = Object.create( null );
 // routines
 // --
 
-// let filesReflect = _.routineFromPreAndBody( _.FileProvider.Find.prototype.filesReflect.pre, _.FileProvider.Find.prototype.filesReflect.body );
 let filesReflect = _.routineExtend( null, _.FileProvider.Find.prototype.filesReflect );
-
 let defaults = filesReflect.defaults;
 
 defaults.linking = 'hardLinkMaybe';

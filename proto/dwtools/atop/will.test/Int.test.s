@@ -1595,8 +1595,6 @@ function openerClone( test )
 
 } /* end of function openerClone */
 
-openerClone.timeOut = 130000;
-
 //
 
 function moduleClone( test )
@@ -1918,8 +1916,6 @@ function moduleClone( test )
   }
 
 } /* end of function moduleClone */
-
-moduleClone.timeOut = 130000;
 
 //
 
@@ -2933,8 +2929,6 @@ function exportSuperIn( test )
   return a.ready;
 } /* end of function exportSuperIn */
 
-exportSuperIn.timeOut = 100000;
-
 //
 
 /*
@@ -3158,8 +3152,6 @@ function exportDefaultPath( test )
   return a.ready;
 
 } /* end of function exportDefaultPath */
-
-exportDefaultPath.timeOut = 300000;
 
 //
 
@@ -4857,8 +4849,6 @@ function buildsResolve( test )
   return a.ready;
 } /* end of function buildsResolve */
 
-buildsResolve.timeOut = 130000;
-
 //
 
 function trivialResolve( test )
@@ -5731,8 +5721,6 @@ function superResolve( test )
   return a.ready;
 }
 
-superResolve.timeOut = 130000;
-
 //
 
 function pathsResolve( test )
@@ -6297,8 +6285,6 @@ function pathsResolve( test )
 
   return a.ready;
 }
-
-pathsResolve.timeOut = 130000;
 
 //
 
@@ -7031,15 +7017,12 @@ function pathsResolveImportIn( test )
   return a.ready;
 }
 
-pathsResolveImportIn.timeOut = 130000;
-
 //
 
 function pathsResolveOfSubmodulesLocal( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-local-repos' );
-  // let submodulesPath = a.abs( '.module' ); /* aaa xxx : ask */ /* Dmytro : corrected */
   let opener;
 
   /* - */
@@ -7112,16 +7095,12 @@ function pathsResolveOfSubmodulesLocal( test )
   return a.ready;
 }
 
-pathsResolveOfSubmodulesLocal.timeOut = 130000;
-
 //
 
 function pathsResolveOfSubmodulesRemote( test )
 {
   let self = this;
   let a = self.assetFor( test, 'submodules-remote-repos' );
-  // let submodulesPath = a.abs( '.module' ); /* qqq xxx : ask */
-  // let path = a.path; /* qqq2 : ! */ /* Dmytro : corrected */
   let opener;
 
   /* - */
@@ -7194,8 +7173,6 @@ function pathsResolveOfSubmodulesRemote( test )
   return a.ready;
 }
 
-pathsResolveOfSubmodulesRemote.timeOut = 130000;
-
 //
 
 function pathsResolveOfSubmodulesAndOwn( test )
@@ -7261,8 +7238,6 @@ function pathsResolveOfSubmodulesAndOwn( test )
 
   return a.ready;
 }
-
-pathsResolveOfSubmodulesAndOwn.timeOut = 300000;
 
 //
 
@@ -8054,8 +8029,6 @@ function pathsResolveOutFileOfExports( test )
   return a.ready;
 }
 
-pathsResolveOutFileOfExports.timeOut = 130000;
-
 //
 
 function pathsResolveComposite( test )
@@ -8163,8 +8136,6 @@ function pathsResolveComposite( test )
   return a.ready;
 }
 
-pathsResolveComposite.timeOut = 130000;
-
 //
 
 function pathsResolveComposite2( test )
@@ -8215,8 +8186,6 @@ function pathsResolveComposite2( test )
 
   return a.ready;
 }
-
-pathsResolveComposite2.timeOut = 130000;
 
 //
 
@@ -8674,7 +8643,6 @@ function modulesEach( test )
   return a.ready;
 } /* end of function modulesEach */
 
-modulesEach.timeOut = 300000;
 
 //
 
@@ -8772,8 +8740,6 @@ function modulesEachDuplicates( test )
 
   return a.ready;
 } /* end of function modulesEachDuplicates */
-
-modulesEachDuplicates.timeOut = 300000;
 
 //
 
@@ -8885,8 +8851,6 @@ function submodulesRemoteResolve( test )
   return a.ready;
 } /* end of function submodulesRemoteResolve */
 
-submodulesRemoteResolve.timeOut = 300000;
-
 //
 
 function submodulesLocalResolve( test )
@@ -8995,8 +8959,6 @@ function submodulesLocalResolve( test )
 
   return a.ready;
 } /* end of function submodulesLocalResolve */
-
-submodulesLocalResolve.timeOut = 300000;
 
 //
 
@@ -9111,8 +9073,6 @@ function submodulesDeleteAndDownload( test )
 
   return a.ready;
 }
-
-submodulesDeleteAndDownload.timeOut = 300000;
 
 //
 
@@ -10840,7 +10800,7 @@ var Self =
 
   onSuiteBegin : onSuiteBegin,
   onSuiteEnd : onSuiteEnd,
-  routineTimeOut : 60000,
+  routineTimeOut : 300000,
 
   context :
   {

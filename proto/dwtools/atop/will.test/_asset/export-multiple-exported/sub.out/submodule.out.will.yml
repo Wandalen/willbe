@@ -3,8 +3,8 @@ root:
   - submodule.out
 consistency:
   submodule.out.will.yml: &ref_0
-    hash: 0c9c269eb5e9228e50558e499548c8b1
-    size: 7892
+    hash: a092fb1dadde4efd40bd08180f3a5dc3
+    size: 7870
   ../.ex.will.yml: &ref_1
     hash: 4d8b91d25fda3e1a06ea28397539a8f1
     size: 387
@@ -15,6 +15,7 @@ module:
   submodule.out:
     about:
       name: submodule
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -27,9 +28,6 @@ module:
         criterion:
           predefined: 1
         path: submodule.out
-      download:
-        criterion:
-          predefined: 1
       module.original.willfiles:
         criterion:
           predefined: 1
@@ -42,18 +40,18 @@ module:
         path:
           - ../.ex.will.yml
           - ../.im.will.yml
-      remote:
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: ..
+      download:
         criterion:
           predefined: 1
       proto:
         path: ../proto
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: .
       out.debug:
         criterion:
@@ -65,13 +63,15 @@ module:
         path: release
       exported.dir.export.:
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
           export: 1
-        path: ./release
+        path: release
       exported.files.export.:
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -81,20 +81,23 @@ module:
           - release/File.release.js
       archiveFile.export.:
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
           export: 1
-        path: ./submodule.out.tgs
+        path: submodule.out.tgs
       exported.dir.export.debug:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
           export: 1
-        path: ./debug
+        path: debug
       exported.files.export.debug:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -104,18 +107,18 @@ module:
           - debug/File.debug.js
       archiveFile.export.debug:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
           export: 1
-        path: ./submodule.debug.out.tgs
+        path: submodule.debug.out.tgs
     submodule: {}
     reflector:
       reflect.proto.:
         src:
           filePath:
             'path::proto': 'path::out.*=1'
-        mandatory: 1
         criterion:
           debug: 0
         inherit:
@@ -127,7 +130,6 @@ module:
           prefixPath: ''
         dst:
           prefixPath: ''
-        mandatory: 1
         criterion:
           debug: 1
         inherit:
@@ -138,7 +140,10 @@ module:
             '**': ''
           prefixPath: release
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -151,8 +156,8 @@ module:
           prefixPath: 'path::exported.dir.export.'
           recursive: 0
         recursive: 0
-        mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -163,7 +168,10 @@ module:
             '**': ''
           prefixPath: debug
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -176,8 +184,8 @@ module:
           prefixPath: 'path::exported.dir.export.debug'
           recursive: 0
         recursive: 0
-        mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -201,7 +209,7 @@ module:
           - module.export
       reflect.proto.:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.'
           verbosity: null
         criterion:
           debug: 0
@@ -209,15 +217,16 @@ module:
           - files.reflect
       reflect.proto.debug:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug'
         criterion:
           debug: 1
         inherit:
           - files.reflect
       exported.export.:
         opts:
-          reflector: 'reflector::exported.export.*'
+          filePath: 'reflector::exported.export.'
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -226,8 +235,9 @@ module:
           - files.reflect
       exported.files.export.:
         opts:
-          reflector: 'reflector::exported.files.export.*'
+          filePath: 'reflector::exported.files.export.'
         criterion:
+          generated: 1
           default: 1
           debug: 0
           raw: 1
@@ -304,6 +314,7 @@ module:
   ../:
     about:
       name: submodule
+      org: noorg
       description: Module for testing
       enabled: 1
       version: 0.0.1
@@ -324,6 +335,10 @@ module:
         criterion:
           predefined: 1
         path: sub.out/submodule.out.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: sub.out
       module.common:
         criterion:
           predefined: 1
@@ -331,34 +346,26 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       proto:
-        path: ./proto
+        path: proto
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: sub.out
       out.debug:
         criterion:
           debug: 1
-        path: ./sub.out/debug
+        path: sub.out/debug
       out.release:
         criterion:
           debug: 0
-        path: ./sub.out/release
+        path: sub.out/release
     submodule: {}
     reflector:
       reflect.proto.:
         src:
           filePath:
             'path::proto': 'path::out.*=1'
-        mandatory: 1
         criterion:
           debug: 0
         inherit:
@@ -367,7 +374,6 @@ module:
         src:
           filePath:
             'path::proto': 'path::out.*=1'
-        mandatory: 1
         criterion:
           debug: 1
         inherit:
@@ -391,14 +397,14 @@ module:
           - module.export
       reflect.proto.:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.'
         criterion:
           debug: 0
         inherit:
           - files.reflect
       reflect.proto.debug:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug'
           verbosity: null
         criterion:
           debug: 1
@@ -444,5 +450,5 @@ module:
         hash: 63b09dfb89584a32ab3cbc9ae0a31cf4
         size: 610
       submodule.out.will.yml:
-        hash: 0c9c269eb5e9228e50558e499548c8b1
-        size: 7892
+        hash: a092fb1dadde4efd40bd08180f3a5dc3
+        size: 7870

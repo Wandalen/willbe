@@ -43,7 +43,7 @@ function copy( o )
 
 //
 
-function ResouceDataFrom( o )
+function ResouceStructureFrom( o )
 {
   _.assert( arguments.length === 1 );
   if( _.strIs( o ) || _.arrayIs( o ) )
@@ -941,7 +941,8 @@ let Medials =
 
 let Statics =
 {
-  ResouceDataFrom : ResouceDataFrom,
+  ResouceMapFrom : ResouceStructureFrom,
+  ResouceStructureFrom,
   MapName : 'submoduleMap',
   KindName : 'relation',
 }
@@ -979,7 +980,8 @@ let Extend =
   init,
   copy,
 
-  ResouceDataFrom,
+  ResouceMapFrom : ResouceStructureFrom,
+  ResouceStructureFrom,
   unform,
   form1,
   form3,
