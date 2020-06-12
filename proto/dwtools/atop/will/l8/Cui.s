@@ -2299,8 +2299,7 @@ function commandNpmGenerateFromWillfile( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
-  request = _.routineOptions( commandNpmGenerateFromWillfile, request.map );
+  let request = _.strStructureParse( e.argument );
 
   return will._commandBuildLike
   ({
