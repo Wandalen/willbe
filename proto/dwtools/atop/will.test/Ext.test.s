@@ -2823,16 +2823,25 @@ function reflectorOptionsCheck( test )
     test.identical( reflector.dstRewritingOnlyPreserving, 0 );
     test.identical( reflector.linking, 'fileCopy' );
 
-    test.case = 'reflector with not default options without option mandatory';
-    var reflector = outfile.reflector[ 'reflect.notDefaultMandatory1' ];
-    test.identical( reflector.mandatory, undefined );
-    test.identical( reflector.dstRewritingOnlyPreserving, 0 );
-    test.identical( reflector.linking, 'fileCopy' );
-
     return null;
   });
 
-  /* */
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function reflectorOptionsCheckDefaultOptionsAndWithoutOptions( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-options-check' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.export' })
 
   a.ready.then( () =>
   {
@@ -2840,10 +2849,26 @@ function reflectorOptionsCheck( test )
     return null;
   })
 
+  /* */
+
   a.start({ args : '.with import .build defaultOptions' })
   .then( ( got ) =>
   {
-    test.case = '.with import .build defaultOptions';
+    test.case = '".with import .build defaultOptions", first reflection';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.start({ args : '.with import .build defaultOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '".with import .build defaultOptions", second reflection';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 1 file' ) );
     var files = self.find( a.abs( 'out/debug' ) );
@@ -2857,7 +2882,7 @@ function reflectorOptionsCheck( test )
   a.startNonThrowing({ args : '.with import .build withoutOptions' })
   .then( ( got ) =>
   {
-    test.case = '.with import .build withoutOptions';
+    test.case = '".with import .build withoutOptions", throw error - different files';
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, "Can't rewrite terminal file" ) );
     var files = self.find( a.abs( 'out/debug' ) );
@@ -2866,14 +2891,37 @@ function reflectorOptionsCheck( test )
     return null;
   });
 
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function reflectorOptionsCheckWithoutOptionsAndDefaultOptions( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-options-check' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.export' })
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesDelete( a.abs( './.will.yml' ) );
+    return null;
+  })
+
   /* */
 
-  a.startNonThrowing({ args : '.with import .build notDefaultOptions' })
+  a.start({ args : '.with import .build withoutOptions' })
   .then( ( got ) =>
   {
-    test.case = '.with import .build notDefaultOptions';
-    test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Cant fileCopy file:' ) );
+    test.case = '".with import .build withoutOptions", first reflection';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
     var files = self.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
@@ -2882,10 +2930,89 @@ function reflectorOptionsCheck( test )
 
   /* */
 
-  a.start({ args : '.with import .build notDefaultMandatory1' })
+  a.start({ args : '.with import .build withoutOptions' })
   .then( ( got ) =>
   {
-    test.case = '.with import .build notDefaultMandatory1';
+    test.case = '".with import .build withoutOptions", second reflection';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.startNonThrowing({ args : '.with import .build defaultOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '".with import .build defaultOptions", throw error - different files';
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, "Can't rewrite terminal file" ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function reflectorOptionsCheckWithoutOptionsAndNotDefaultOptions( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-options-check' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.export' })
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesDelete( a.abs( './.will.yml' ) );
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with import .build withoutOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '".with import .build withoutOptions", first reflection';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.start({ args : '.with import .build withoutOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '".with import .build withoutOptions", second reflection';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.start({ args : '.with import .build notDefaultOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '".with import .build notDefaultOptions", rewrite file because options disabled';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 1 file' ) );
     var files = self.find( a.abs( 'out/debug' ) );
@@ -22399,6 +22526,9 @@ var Self =
     // reflect
 
     reflectorOptionsCheck,
+    reflectorOptionsCheckDefaultOptionsAndWithoutOptions,
+    reflectorOptionsCheckWithoutOptionsAndDefaultOptions,
+    reflectorOptionsCheckWithoutOptionsAndNotDefaultOptions,
     reflectNothingFromSubmodules,
     reflectGetPath,
     reflectSubdir,

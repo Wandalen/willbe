@@ -33,13 +33,6 @@ reflector :
     dstRewritingOnlyPreserving : 0
     mandatory : 0
 
-  reflect.notDefaultMandatory1 :
-    inherit : predefined.*
-    filePath :
-      path::file2 : '{path::out}/debug/File.js'
-    linking : fileCopy
-    dstRewritingOnlyPreserving : 0
-
 build :
 
   export :
