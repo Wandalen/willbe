@@ -2,15 +2,6 @@
 
 'use strict';
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
-//
-
 let _ = _global_.wTools;
 let Parent = _.Will.Resource;
 let Self = wWillStep;
@@ -38,19 +29,17 @@ function MakeFor_body( o )
   _.assert( arguments.length === 1 );
 
   let build = o.resource.build;
-  // delete o.resource.build;
-  // reflect.proto
 
-  Parent.MakeFor.body.apply( Cls, arguments );
+  let result = Parent.MakeFor.body.apply( Cls, arguments );
 
   if( !build )
-  return;
+  return result;
 
   let o3 = Object.create( null );
   o3.resource = Object.create( null );
   o3.resource.criterion = _.mapExtend( null, o.resource.criterion || {} );
   o3.resource.steps = [ `step::${o.name}` ];
-  o3.Importing = 1;
+  o3.Importing = 1; /* xxx : ? */
   o3.module = module;
   o3.willf = willf;
   o3.name = o.name;
@@ -123,8 +112,6 @@ function form2()
 
       if( !step2.criterion || !step2.criterion.predefined )
       continue;
-      // if( step2.formed < 2 )
-      // continue;
       if( step2.uniqueOptions === null )
       continue;
       if( step === step2 )

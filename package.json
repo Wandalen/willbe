@@ -1,6 +1,6 @@
 {
   "name" : "willbe",
-  "version" : "0.5.174",
+  "version" : "0.5.175",
   "description" : "Utility to manage modules of complex modular systems",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "contributors" :
@@ -10,7 +10,6 @@
     { "name" : "Dmytro Kryvoruchko", "email" : "dm.vict.kr@gmail.com" }
   ],
   "license" : "MIT",
-  "enabled" : 1,
   "main" : "proto/dwtools/atop/will/entry/Include.s",
   "files" : [ "proto/dwtools/atop/will", "proto/dwtools/Tools.s", "out" ],
   "bin" :

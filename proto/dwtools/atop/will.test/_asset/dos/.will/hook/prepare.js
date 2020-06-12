@@ -50,7 +50,7 @@ function onModule( it )
     it.ready.take( arg );
 
     it.start( `git add --all` );
-    it.start( `git add --force *.will.*` );
+    it.start( `git add --force '*.will.*'` );
     it.start( `git add --force .gitattributes` );
     it.start( `git add --force .gitignore` );
     it.start( `git add --force .github` );

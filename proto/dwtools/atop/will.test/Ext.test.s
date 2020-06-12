@@ -2790,6 +2790,8 @@ function reflectorOptionsCheck( test )
   let a = self.assetFor( test, 'reflector-options-check' );
   a.reflect();
 
+  /* qqq2 : very poor! */
+
   /* - */
 
   a.start({ execPath : '.export' })
@@ -3003,13 +3005,12 @@ function reflectorOptionsCheckWithoutOptionsAndNotDefaultOptions( test )
     test.is( _.strHas( got.output, 'reflected 1 file' ) );
     var files = self.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
-
     return null;
   });
 
   /* */
 
-  a.start({ args : '.with import .build notDefaultOptions' })
+  a.start({ args : '.with import .build notDefaultOptions' }) /* aaa : ? */ /* Dmytro : routine is splitted */
   .then( ( got ) =>
   {
     test.case = '".with import .build notDefaultOptions", rewrite file because options disabled';
@@ -4044,9 +4045,9 @@ function reflectWithOptionLinking( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
+
     var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
-
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
 
@@ -4058,15 +4059,17 @@ function reflectWithOptionLinking( test )
   a.ready
   .then( () =>
   {
-    test.case = 'linking : fileCopy, other options default, should throw error';
+    test.case = 'linking : fileCopy, other options default, should noy throw error';
     return null;
   })
 
   a.startNonThrowing({ execPath : '.build variant2' })
   .then( ( got ) =>
   {
-    test.notIdentical( got.exitCode, 0 );
+    test.identical( got.exitCode, 0 );
 
+    var files = self.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './debug', './debug/File.js' ] );
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
 
@@ -5059,8 +5062,8 @@ function reflectorsCommonPrefix( test )
     test.identical( files, [ '.', './debug', './debug/Source.js' ] );
 
     test.identical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy reflected 1 file\\(s\\) .* in .*` ) ) );
-    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy.second reflected 1 file\\(s\\) .* in .*` ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy reflected 2 file\\(s\\) .* in .*` ) ) );
+    test.is( _.strHas( got.output, new RegExp( `\\+ reflector::reflect.copy.second reflected 2 file\\(s\\) .* in .*` ) ) );
 
     return null;
   })
@@ -5632,7 +5635,7 @@ function hookGitMake( test )
     test.identical( _.strCount( got.output, `Making a new local repository at` ), 1 );
     test.identical( _.strCount( got.output, `git init .` ), 1 );
     test.identical( _.strCount( got.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
-    test.identical( _.strCount( got.output, `> ` ), 2 );
+    test.identical( _.strCount( got.output, `> ` ), 3 );
 
     var exp = [ '.', './will.yml' ];
     var files = self.find( a.abs( 'New2' ) );
@@ -5679,7 +5682,7 @@ function hookPrepare( test )
     });
   })
 
-  start({ execPath : '.with New2/ .module.new.with prepare v:3' })
+  a.start({ execPath : '.with New2/ .module.new.with prepare v:3' })
 
   .then( ( got ) =>
   {
@@ -5692,21 +5695,26 @@ function hookPrepare( test )
     test.identical( _.strCount( got.output, `git init .` ), 1 );
     test.identical( _.strCount( got.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
     test.identical( _.strCount( got.output, `git push -u origin --all --follow-tags` ), 1 );
-    test.identical( _.strCount( got.output, `> ` ), 10 );
+    test.identical( _.strCount( got.output, `> ` ), 12 );
+    test.identical( _.strCount( got.output, `+ hardLink` ), 5 );
 
     var exp =
     [
       '.',
       './-will.yml',
+      './.eslintrc.yml',
       './.ex.will.yml',
       './.gitattributes',
       './.gitignore',
       './.im.will.yml',
-      './.travis.yml',
       './LICENSE',
       './README.md',
       './was.package.json',
+      './.github',
+      './.github/workflows',
+      './.github/workflows/Test.yml',
       './proto',
+      './proto/Integration.test.s',
       './proto/dwtools',
       './proto/dwtools/Tools.s',
       './proto/dwtools/abase',
@@ -5714,7 +5722,7 @@ function hookPrepare( test )
       './proto/dwtools/atop',
       './sample',
       './sample/Sample.html',
-      './sample/Sample.js'
+      './sample/Sample.s',
     ]
     var files = self.find( a.abs( 'New2' ) );
     test.identical( files, exp );
@@ -5756,21 +5764,26 @@ function hookPrepare( test )
     test.identical( _.strCount( got.output, `git init .` ), 1 );
     test.identical( _.strCount( got.output, `git remote add origin https://github.com/${user}/New4.git` ), 1 );
     test.identical( _.strCount( got.output, `git push -u origin --all --follow-tags` ), 1 );
-    test.identical( _.strCount( got.output, `> ` ), 10 );
+    test.identical( _.strCount( got.output, `> ` ), 12 );
+    test.identical( _.strCount( got.output, `+ hardLink` ), 5 );
 
     var exp =
     [
       '.',
       './-New4.will.yml',
+      './.eslintrc.yml',
       './.ex.will.yml',
       './.gitattributes',
       './.gitignore',
       './.im.will.yml',
-      './.travis.yml',
       './LICENSE',
       './README.md',
       './was.package.json',
+      './.github',
+      './.github/workflows',
+      './.github/workflows/Test.yml',
       './proto',
+      './proto/Integration.test.s',
       './proto/dwtools',
       './proto/dwtools/Tools.s',
       './proto/dwtools/abase',
@@ -5778,7 +5791,7 @@ function hookPrepare( test )
       './proto/dwtools/atop',
       './sample',
       './sample/Sample.html',
-      './sample/Sample.js'
+      './sample/Sample.s'
     ]
     var files = self.find( a.abs( 'New3' ) );
     test.identical( files, exp );
@@ -22685,7 +22698,7 @@ var Self =
     submodulesDownloadNpm,
     submodulesDownloadUpdateNpm,
     submodulesDownloadAutoCrlfEnabled,
-    rootModuleRenormalization,
+    // rootModuleRenormalization, /* xxx : check */
 
     submodulesUpdateThrowing,
     submodulesAgreeThrowing,

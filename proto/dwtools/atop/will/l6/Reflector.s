@@ -16,9 +16,9 @@ Self.shortName = 'Reflector';
 // inter
 // --
 
-function ResouceDataFrom( o )
+function ResouceStructureFrom( o )
 {
-  let result = Parent.prototype.ResouceDataFrom.apply( this, arguments );
+  let result = Parent.prototype.ResouceStructureFrom.apply( this, arguments );
   delete result.step;
   return result;
 }
@@ -39,17 +39,90 @@ function MakeFor_body( o )
 
   Parent.MakeFor.body.apply( Cls, arguments );
 
+  // let o3 = Object.create( null );
+  // o3.resource = Object.create( null );
+  // o3.resource.criterion = _.mapExtend( null, o.resource.criterion || {} );
+  // o3.resource.shell = o.resource.shell;
+  // o3.Importing = 1;
+  // o3.module = module;
+  // o3.willf = willf;
+  // o3.name = o.name;
+  //
+  // if( o.resource.step )
+  // {
+  //   if( !_.mapIs( o.resource.step ) )
+  //   o.resource.step = { inherit : o.resource.step }
+  //   _.mapExtend( o3.resource, o.resource.step );
+  // }
+  //
+  // if( o.resource.shell )
+  // {
+  //
+  //   o3.resource.forEachDst = 'reflector::' + o.name + '*';
+  //   if( !o3.resource.inherit )
+  //   o3.resource.inherit = 'shell.run';
+  //
+  //   _.Will.Step.MakeFor( o3 );
+  //
+  // }
+  // else if( !module.stepMap[ o.name ] )
+  // {
+  //
+  //   // o3.resource.filePath = 'reflector::' + o.name + '*';
+  //   o3.resource.filePath = 'reflector::' + o.name;
+  //   if( !o3.resource.inherit )
+  //   o3.resource.inherit = 'files.reflect';
+  //   o3.Optional = 1;
+  //
+  //   _.Will.Step.MakeFor( o3 );
+  //
+  // }
+
+}
+
+_.routineExtend( MakeFor_body, Parent.MakeFor.body );
+
+let MakeFor = _.routineFromPreAndBody( Parent.MakeFor.pre, MakeFor_body );
+
+//
+
+function MakeSingle( o )
+{
+  let Cls = this;
+  let willf = o.resource.willf;
+  let module = o.resource.module;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.assert( arguments.length === 1 );
+  o = _.routineOptions( MakeSingle, arguments );
+
+  if( o.resource.name === 'reflector.delete' )
+  debugger;
+
+  let result = Parent.MakeSingle.apply( Cls, arguments );
+
+  if( _.boolLikeFalse( o.resource.exportable ) )
+  return result;
+
   let o3 = Object.create( null );
   o3.resource = Object.create( null );
   o3.resource.criterion = _.mapExtend( null, o.resource.criterion || {} );
   o3.resource.shell = o.resource.shell;
+  o3.resource.module = module;
+  o3.resource.willf = willf;
+  o3.resource.name = o.resource.name;
+
   o3.Importing = 1;
-  o3.module = module;
-  o3.willf = willf;
-  o3.name = o.name;
+  // o3.module = module;
+  // o3.willf = willf;
+  // o3.name = o.name;
 
   if( o.resource.step )
   {
+    // debugger;
     if( !_.mapIs( o.resource.step ) )
     o.resource.step = { inherit : o.resource.step }
     _.mapExtend( o3.resource, o.resource.step );
@@ -57,32 +130,33 @@ function MakeFor_body( o )
 
   if( o.resource.shell )
   {
-
-    o3.resource.forEachDst = 'reflector::' + o.name + '*';
+    // debugger;
+    // o3.resource.forEachDst = 'reflector::' + o.resource.name + '*';
+    o3.resource.forEachDst = 'reflector::' + o.resource.name;
     if( !o3.resource.inherit )
     o3.resource.inherit = 'shell.run';
 
-    _.Will.Step.MakeFor( o3 );
-
+    _.Will.Step.MakeSingle( o3 );
   }
-  else if( !module.stepMap[ o.name ] )
+  else if( !module.stepMap[ o.resource.name ] )
   {
-
-    // o3.resource.reflector = 'reflector::' + o.name + '*';
-    o3.resource.filePath = 'reflector::' + o.name + '*';
+    // debugger;
+    // o3.resource.filePath = 'reflector::' + o.resource.name + '*';
+    o3.resource.filePath = 'reflector::' + o.resource.name;
     if( !o3.resource.inherit )
     o3.resource.inherit = 'files.reflect';
     o3.Optional = 1;
 
-    _.Will.Step.MakeFor( o3 );
-
+    _.Will.Step.MakeSingle( o3 );
   }
 
+  return result;
 }
 
-_.routineExtend( MakeFor_body, Parent.MakeFor.body );
-
-let MakeFor = _.routineFromPreAndBody( Parent.MakeFor.pre, MakeFor_body );
+MakeSingle.defaults =
+{
+  ... Parent.MakeSingle.defaults,
+}
 
 //
 
@@ -1734,9 +1808,6 @@ function exportStructure()
 
   let result = Parent.prototype.exportStructure.apply( this, arguments );
 
-  // if( _.strHas( reflector.name, 'reflect.proto.debug.raw' ) )
-  // debugger;
-
   if( result === undefined )
   return result;
 
@@ -1856,14 +1927,11 @@ let Composes =
 {
 
   shell : null,
-  filePath : null,
+  filePath : null, /* xxx : remove? */
   src : null,
   dst : null,
 
   recursive : null,
-  // mandatory : 1,
-  // dstRewritingOnlyPreserving : 1,
-  // linking : 'hardLinkMaybe',
   mandatory : null,
   dstRewritingOnlyPreserving : null,
   linking : null,
@@ -1889,8 +1957,9 @@ let Statics =
 {
   KindName : 'reflector',
   MapName : 'reflectorMap',
-  ResouceDataFrom,
+  ResouceStructureFrom,
   MakeFor,
+  MakeSingle,
 }
 
 let Forbids =
@@ -1900,7 +1969,6 @@ let Forbids =
   reflectMap : 'reflectMap',
   srcFilter : 'srcFilter',
   dstFilter : 'dstFilter',
-  // recursive : 'recursive',
 }
 
 let Accessors =
@@ -1922,7 +1990,9 @@ let Extend =
 
   // inter
 
-  ResouceDataFrom,
+  MakeFor,
+  MakeSingle,
+  ResouceStructureFrom,
   init,
   cloneDerivative,
   form1,

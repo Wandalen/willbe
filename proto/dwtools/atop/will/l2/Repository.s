@@ -648,6 +648,8 @@ function renormalize( dirPath )
 
   let localPath = repo.downloadPath || dirPath;
 
+  return true; /* xxx : check */
+
   if( !_.git.isRepository({ localPath }) )
   {
     debugger

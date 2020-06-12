@@ -23,7 +23,7 @@ Self.shortName = 'PathResource';
 // inter
 // --
 
-function ResouceDataFrom( o )
+function ResouceStructureFrom( o )
 {
   _.assert( arguments.length === 1 );
   if( _.strIs( o ) || _.arrayIs( o ) )
@@ -407,7 +407,8 @@ let Restricts =
 
 let Statics =
 {
-  ResouceDataFrom,
+  ResouceMapFrom : ResouceStructureFrom,
+  ResouceStructureFrom,
   OnInstanceExists,
   MapName : 'pathResourceMap',
   KindName : 'path',
@@ -433,7 +434,8 @@ let Extend =
 
   // inter
 
-  ResouceDataFrom,
+  ResouceMapFrom : ResouceStructureFrom,
+  ResouceStructureFrom,
   OnInstanceExists,
 
   init,
