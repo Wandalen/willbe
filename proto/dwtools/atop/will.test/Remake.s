@@ -30,6 +30,15 @@ let reposDownload = require( `./ReposDownload.s` );
 ready.then( () => _.fileProvider.filesDelete( repoDirPath ) );
 ready.then( () => reposDownload() );
 
+var asset = `export-multiple-exported`;
+del( `${asset}/*.out/**` );
+will( `.with ${asset}/ .export debug:0` );
+will( `.with ${asset}/ .export debug:1` );
+will( `.with ${asset}/super .export debug:0` );
+will( `.with ${asset}/super .export debug:1` );
+copy( `${asset}/+sub.out`, `${asset}/sub.out` );
+copy( `${asset}/+super.out`, `${asset}/super.out` );
+
 var asset = `two-exported`;
 del( `${asset}/*.out/**` );
 will( `.with ${asset}/sub .export debug:0` );
@@ -86,5 +95,6 @@ function copy( dst, src )
   ({
     dst : _.path.join( assetsOriginalPath, dst ),
     src : _.path.join( assetsOriginalPath, src ),
+    verbosity : 5,
   }) || null;
 }

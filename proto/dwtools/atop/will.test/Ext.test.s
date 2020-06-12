@@ -2790,6 +2790,8 @@ function reflectorOptionsCheck( test )
   let a = self.assetFor( test, 'reflector-options-check' );
   a.reflect();
 
+  /* qqq2 : very poor! */
+
   /* - */
 
   a.start({ execPath : '.export' })
@@ -2868,7 +2870,7 @@ function reflectorOptionsCheck( test )
 
   /* */
 
-  a.startNonThrowing({ args : '.with import .build notDefaultOptions' })
+  a.startNonThrowing({ args : '.with import .build notDefaultOptions' }) /* qqq : ? */
   .then( ( got ) =>
   {
     test.case = '.with import .build notDefaultOptions';
@@ -2876,7 +2878,6 @@ function reflectorOptionsCheck( test )
     test.is( _.strHas( got.output, 'Cant fileCopy file:' ) );
     var files = self.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
-
     return null;
   });
 
@@ -3917,9 +3918,9 @@ function reflectWithOptionLinking( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
+
     var files = self.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
-
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
 
@@ -3931,15 +3932,17 @@ function reflectWithOptionLinking( test )
   a.ready
   .then( () =>
   {
-    test.case = 'linking : fileCopy, other options default, should throw error';
+    test.case = 'linking : fileCopy, other options default, should noy throw error';
     return null;
   })
 
   a.startNonThrowing({ execPath : '.build variant2' })
   .then( ( got ) =>
   {
-    test.notIdentical( got.exitCode, 0 );
+    test.identical( got.exitCode, 0 );
 
+    var files = self.find( a.abs( 'out' ) );
+    test.identical( files, [ '.', './debug', './debug/File.js' ] );
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
 
