@@ -2237,7 +2237,7 @@ function modulesEach_pre( routine, args )
   o = { onUp : args[ 0 ] };
   o = _.routineOptions( routine, o );
   _.assert( args.length === 0 || args.length === 1 );
-  _.assert( _.longHas( [ '/', '*/object', '*/module', '*/relation' ], o.outputFormat ) )
+  _.assert( _.longHas( _.will.ModuleVariant, o.outputFormat ) ) /* xxx : add '* / junction' */
 
   return o;
 }
@@ -2287,21 +2287,6 @@ function modulesEach_body( o )
 
   /* */
 
-  // let nodes = _.arrayAs( will.junctionsFrom( o.modules ) );
-  //
-  // if( o.withPeers )
-  // {
-  //   let nodes2 = nodes.slice();
-  //   nodes.forEach( ( node ) =>
-  //   {
-  //     if( node.object && node.object.peerModule )
-  //     _.arrayAppendOnce( nodes2, o.nodesGroup.nodeFrom( node.object.peerModule ) );
-  //   });
-  //   nodes = nodes2;
-  // }
-
-  /* */
-
   let filter = _.mapOnly( o, _.Will.prototype.relationFit.defaults );
 
   will.assertGraphGroup( o.nodesGroup, o );
@@ -2311,17 +2296,7 @@ function modulesEach_body( o )
   o2.onDown = handleDown;
   _.assert( _.boolLike( o2.left ) );
 
-  // will.objectsLogInfo( o.modules );
-  // if( o.modules[ 0 ].id === 5 )
-  // if( o.withStem )
-  // debugger;
-  // debugger;
   o.result = o.nodesGroup.each( o2 );
-  // debugger;
-  // if( o.modules[ 0 ].id === 5 )
-  // if( o.withStem )
-  // debugger;
-
   o.result = _.longOnce( o.result.map( ( junction ) => outputFrom( junction ) ) );
 
   if( o.descriptive )
@@ -2333,6 +2308,10 @@ function modulesEach_body( o )
 
   function objectAppend( object )
   {
+
+    if( _global_.debugger )
+    debugger;
+
     _.assert( !!object );
     _.assert
     (
@@ -2353,9 +2332,6 @@ function modulesEach_body( o )
   function handleUp( object, it )
   {
 
-    // if( _global_.debugger )
-    // debugger;
-
     _.assert( will.ObjectIs( object ) );
     let junction = will.junctionFrom( object );
 
@@ -2375,6 +2351,8 @@ function modulesEach_body( o )
     {
       junction.objects.forEach( ( object ) =>
       {
+        if( _global_.debugger )
+        debugger;
         if( object.ownedBy( o.ownedObjects ) )
         objectAppend( object );
       });
@@ -2410,6 +2388,12 @@ function modulesEach_body( o )
       _.assert( will.ObjectIs( object ) );
       return object;
     }
+    else if( o.outputFormat === '*/handle' )
+    {
+      if( object instanceof _.will.ModuleHandle )
+      return object;
+      return _.will.ModuleHandle({ object, junction : will.junctionFrom( object ) });
+    }
     else if( o.outputFormat === '/' )
     {
       if( object instanceof _.Will.ModuleJunction )
@@ -2436,7 +2420,7 @@ var defaults = modulesEach_body.defaults =
 
   modules : null,
   ownedObjects : null,
-  outputFormat : '*/module', /* / | * / module | * / relation */
+  outputFormat : '*/module',
   descriptive : 0,
   onUp : null,
   onDown : null,
@@ -4540,7 +4524,6 @@ function willfilesFind( o )
     }
     if( result.length )
     {
-      debugger;
       return result;
     }
   }

@@ -2504,7 +2504,7 @@ function modulesEach_pre( routine, args )
   o = { onUp : args[ 0 ] };
   o = _.routineOptions( routine, o );
   _.assert( args.length === 0 || args.length === 1 );
-  _.assert( _.longHas( [ '/', '*/module', '*/relation' ], o.outputFormat ) )
+  _.assert( _.longHas( _.will.ModuleVariant, o.outputFormat ) )
 
   return o;
 }
@@ -6634,6 +6634,15 @@ function structureExportOut( o )
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
+  debugger;
+  // if( _.strHas( module.name, 'ModuleForTesting1b' ) )
+  // debugger;
+  if( _.strHas( module.commonPath, 'group1/.module/ModuleForTesting1b' ) )
+  {
+    // _global_.debugger = 1;
+    debugger;
+  }
+
   let found = module.modulesEach
   ({
     withPeers : 1,
@@ -6642,14 +6651,15 @@ function structureExportOut( o )
     withDisabledSubmodules : 0,
     withDisabledStem : 1,
     recursive : 2,
-    outputFormat : '/',
+    outputFormat : '*/handle',
     descriptive : 1,
   });
 
-  found.result = _.longOnce( _.filter( found.result, ( junction ) =>
+  found.result = _.longOnce( _.filter( found.result, ( handle ) =>
   {
-    let result = junction.toModule();
-    if( !result )
+    let junction = handle.toJunction();
+    let module = handle.toModule();
+    if( !module )
     {
       debugger;
       if( junction.relation && junction.relation.criterion.optional )
@@ -6661,7 +6671,7 @@ function structureExportOut( o )
         + `\nLocal path is ${junction.localPath}`
       );
     }
-    return result;
+    return module;
   }));
 
   let modules = [];
@@ -6684,7 +6694,7 @@ function structureExportOut( o )
       modules.push( module2 );
       c += 1;
     }
-    _.assert( c === 1 );
+    _.assert( c === 1 ); /* xxx */
   });
 
   _.assert( modules.length >= 2, 'No module to export' );
