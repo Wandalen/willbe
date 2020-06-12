@@ -3931,14 +3931,14 @@ function reflectWithOptionLinking( test )
   a.ready
   .then( () =>
   {
-    test.case = 'linking : fileCopy, other options default, should throw error';
+    test.case = 'linking : fileCopy, other options default, hard link should be preserved';
     return null;
   })
 
   a.startNonThrowing({ execPath : '.build variant2' })
   .then( ( got ) =>
   {
-    test.notIdentical( got.exitCode, 0 );
+    test.identical( got.exitCode, 0 );
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
