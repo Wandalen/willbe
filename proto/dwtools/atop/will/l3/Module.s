@@ -6988,8 +6988,8 @@ function npmGenerate( o )
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
 
-  let currentContext = o.currentContext ? o.currentContext : module;
   debugger;
+  let currentContext = o.currentContext ? o.currentContext : module;
   opts.packagePath = module.pathResolve
   ({
     selector : opts.packagePath || '{path::out}/package.json',

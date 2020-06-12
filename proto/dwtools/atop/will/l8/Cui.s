@@ -2300,6 +2300,8 @@ function commandNpmGenerateFromWillfile( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let request = _.strStructureParse( e.argument );
+  let criterionsMap = _.mapBut( request, commandNpmGenerateFromWillfile.defaults );
+  request = _.mapBut( request, criterionsMap );
 
   return will._commandBuildLike
   ({
@@ -2311,12 +2313,15 @@ function commandNpmGenerateFromWillfile( e )
 
   function handleEach( it )
   {
-    debugger;
+    if( _.mapKeys( criterionsMap ).length > 0 )
+    it.opener.openedModule.stepMap[ "npm.generate" ].criterion = criterionsMap;
+
     return it.opener.openedModule.npmGenerate
     ({
       packagePath : request.packagePath,
       entryPath : request.entryPath,
       filesPath : request.filesPath,
+      currentContext : it.opener.openedModule.stepMap[ "npm.generate" ],
       verbosity : 5,
     });
   }
