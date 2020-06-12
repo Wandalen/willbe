@@ -1,0 +1,5 @@
+about :
+  interpreters :
+  - njs >= 8.0.0
+  - chrome >= 60.0.0
+  - firefox >= 60.0.0

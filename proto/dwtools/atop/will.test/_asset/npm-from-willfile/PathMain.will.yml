@@ -1,0 +1,8 @@
+path :
+  proto :
+    path : 'proto'
+
+  entry :
+    path : 'proto'
+    criterion :
+      debug : [ debug, release ]
