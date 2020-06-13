@@ -2825,16 +2825,25 @@ function reflectorOptionsCheck( test )
     test.identical( reflector.dstRewritingOnlyPreserving, 0 );
     test.identical( reflector.linking, 'fileCopy' );
 
-    test.case = 'reflector with not default options without option mandatory';
-    var reflector = outfile.reflector[ 'reflect.notDefaultMandatory1' ];
-    test.identical( reflector.mandatory, undefined );
-    test.identical( reflector.dstRewritingOnlyPreserving, 0 );
-    test.identical( reflector.linking, 'fileCopy' );
-
     return null;
   });
 
-  /* */
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function reflectorOptionsCheckDefaultOptionsAndWithoutOptions( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-options-check' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.export' })
 
   a.ready.then( () =>
   {
@@ -2842,10 +2851,26 @@ function reflectorOptionsCheck( test )
     return null;
   })
 
+  /* */
+
   a.start({ args : '.with import .build defaultOptions' })
   .then( ( got ) =>
   {
-    test.case = '.with import .build defaultOptions';
+    test.case = '".with import .build defaultOptions", first reflection';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.start({ args : '.with import .build defaultOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '".with import .build defaultOptions", second reflection';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 1 file' ) );
     var files = self.find( a.abs( 'out/debug' ) );
@@ -2859,7 +2884,7 @@ function reflectorOptionsCheck( test )
   a.startNonThrowing({ args : '.with import .build withoutOptions' })
   .then( ( got ) =>
   {
-    test.case = '.with import .build withoutOptions';
+    test.case = '".with import .build withoutOptions", throw error - different files';
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, "Can't rewrite terminal file" ) );
     var files = self.find( a.abs( 'out/debug' ) );
@@ -2868,14 +2893,116 @@ function reflectorOptionsCheck( test )
     return null;
   });
 
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function reflectorOptionsCheckWithoutOptionsAndDefaultOptions( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-options-check' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.export' })
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesDelete( a.abs( './.will.yml' ) );
+    return null;
+  })
+
   /* */
 
-  a.startNonThrowing({ args : '.with import .build notDefaultOptions' }) /* qqq : ? */
+  a.start({ args : '.with import .build withoutOptions' })
   .then( ( got ) =>
   {
-    test.case = '.with import .build notDefaultOptions';
+    test.case = '".with import .build withoutOptions", first reflection';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.start({ args : '.with import .build withoutOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '".with import .build withoutOptions", second reflection';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.startNonThrowing({ args : '.with import .build defaultOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '".with import .build defaultOptions", throw error - different files';
     test.notIdentical( got.exitCode, 0 );
-    test.is( _.strHas( got.output, 'Cant fileCopy file:' ) );
+    test.is( _.strHas( got.output, "Can't rewrite terminal file" ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function reflectorOptionsCheckWithoutOptionsAndNotDefaultOptions( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'reflector-options-check' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ execPath : '.export' })
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesDelete( a.abs( './.will.yml' ) );
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with import .build withoutOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '".with import .build withoutOptions", first reflection';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
+    var files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './File.js' ] );
+
+    return null;
+  });
+
+  /* */
+
+  a.start({ args : '.with import .build withoutOptions' })
+  .then( ( got ) =>
+  {
+    test.case = '".with import .build withoutOptions", second reflection';
+    test.identical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, 'reflected 1 file' ) );
     var files = self.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
     return null;
@@ -2883,10 +3010,10 @@ function reflectorOptionsCheck( test )
 
   /* */
 
-  a.start({ args : '.with import .build notDefaultMandatory1' })
+  a.start({ args : '.with import .build notDefaultOptions' }) /* aaa : ? */ /* Dmytro : routine is splitted */
   .then( ( got ) =>
   {
-    test.case = '.with import .build notDefaultMandatory1';
+    test.case = '".with import .build notDefaultOptions", rewrite file because options disabled';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 1 file' ) );
     var files = self.find( a.abs( 'out/debug' ) );
@@ -22420,7 +22547,507 @@ function commandVersionCheck( test )
     return null;
   })
 
+  /* - */
+
   return a.ready;
+}
+
+//
+
+function commandNpmFromWillfile( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ args : '.with Author .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `author`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.author, 'Author <author@dot.com>' );
+    test.identical( config.name, null );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with Contributors .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `contributors`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>'] );
+    test.identical( config.name, null );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with Description .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `description`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.description, 'To check the conversion' );
+    test.identical( config.name, null );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with Enabled .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `enabled`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.name, null );
+    test.identical( config.enabled, 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with Interpreters .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `interpreters`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.interpreters, undefined );
+    test.identical( config.name, null );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with Keywords .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `keywords`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.keywords, [ 'tools', 'export' ] );
+    test.identical( config.name, null );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with License .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `license`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.license, 'MIT' );
+    test.identical( config.name, null );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with Name .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `name`, name of willfile';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.name, 'NpmFromWillfile' );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with NpmName .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `name`, npm name';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.name, 'npmfromwillfile' );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with NpmScripts .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `scripts`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.scripts, { 'test' : 'wtest .run proto/**', 'docgen' : 'wdocgen .build proto' } );
+    test.identical( config.name, null );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with PathMain .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `main`, should not read path';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.main, undefined );
+    test.identical( config.name, null );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with PathRepository .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check fields `repository` and `bugs`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.repository, 'git+https://github.com/author/NpmFromWillfile.git' );
+    test.identical( config.bugs, 'https://github.com/author/NpmFromWillfile/issues' );
+    test.identical( config.name, null );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with Submodule .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check fields `dependencies` and `devDependencies`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.dependencies, { eslint : '7.1.0', babel : '^0.3.0' } );
+    test.identical( config.devDependencies, { npmfromwillfile : 'file:.', wTesting : '', willbe : 'alpha' } );
+    test.identical( config.name, 'npmfromwillfile' );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with Version .npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `version`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.version, '0.0.0' );
+    test.identical( config.name, null );
+    test.identical( config.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check unnamed willfiles, full config';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
+    var exp =
+    {
+      name : "NpmFromWillfile",
+      description: "To check the conversion",
+      version : "0.0.0",
+      enabled : 1,
+      license : "MIT",
+      description : "To check the conversion",
+      author : "Author <author@dot.com>",
+      contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      dependencies : { "eslint" : "7.1.0" },
+      devDependencies : { "NpmFromWillfile" : "file:.", "wTesting" : "" },
+      repository: "git+https://github.com/author/NpmFromWillfile.git",
+      bugs : "https://github.com/author/NpmFromWillfile/issues",
+      keywords : ["tools", "export"],
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  return a.ready;
+}
+
+//
+
+function commandNpmFromWillfileOptionsInCommand( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.start({ args : '.npm.from.willfile packagePath:"out/debug/package.json"' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check option `packagePath`, `package.json`, direct link to directory';
+    test.identical( got.exitCode, 0 );
+    let files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
+    var exp =
+    {
+      name : "NpmFromWillfile",
+      description: "To check the conversion",
+      version : "0.0.0",
+      enabled : 1,
+      license : "MIT",
+      description : "To check the conversion",
+      author : "Author <author@dot.com>",
+      contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      dependencies : { "eslint" : "7.1.0" },
+      devDependencies : { "NpmFromWillfile" : "file:.", "wTesting" : "" },
+      repository: "git+https://github.com/author/NpmFromWillfile.git",
+      bugs : "https://github.com/author/NpmFromWillfile/issues",
+      keywords : ["tools", "export"],
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.npm.from.willfile packagePath:"{path::out}/package.json"' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check option `packagePath`, `package.json`, resolve path without criterions';
+    test.identical( got.exitCode, 0 );
+    let files = self.find( a.abs( 'out/' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
+    var exp =
+    {
+      name : "NpmFromWillfile",
+      description: "To check the conversion",
+      version : "0.0.0",
+      enabled : 1,
+      license : "MIT",
+      description : "To check the conversion",
+      author : "Author <author@dot.com>",
+      contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      dependencies : { "eslint" : "7.1.0" },
+      devDependencies : { "NpmFromWillfile" : "file:.", "wTesting" : "" },
+      repository: "git+https://github.com/author/NpmFromWillfile.git",
+      bugs : "https://github.com/author/NpmFromWillfile/issues",
+      keywords : ["tools", "export"],
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.npm.from.willfile packagePath:"{path::out.*=1}/package.json" debug:1' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check option `packagePath`, `package.json`, resolve path with criterions';
+    test.identical( got.exitCode, 0 );
+    let files = self.find( a.abs( 'out/debug' ) );
+    test.identical( files, [ '.', './package.json' ] );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
+    var exp =
+    {
+      name : "NpmFromWillfile",
+      description: "To check the conversion",
+      version : "0.0.0",
+      enabled : 1,
+      license : "MIT",
+      description : "To check the conversion",
+      author : "Author <author@dot.com>",
+      contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      dependencies : { "eslint" : "7.1.0" },
+      devDependencies : { "NpmFromWillfile" : "file:.", "wTesting" : "" },
+      repository: "git+https://github.com/author/NpmFromWillfile.git",
+      bugs : "https://github.com/author/NpmFromWillfile/issues",
+      keywords : ["tools", "export"],
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'out/' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with PathMain .npm.from.willfile entryPath:"proto/File.s"' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check option `entryPath`, direct link to file';
+    test.identical( got.exitCode, 0 );
+    let files = self.find( a.routinePath );
+    test.is( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp =
+    {
+      name : null,
+      enabled : 1,
+      main : 'proto/File.s',
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with PathMain .npm.from.willfile entryPath:"{path::proto}/File.s"' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.identical( got.exitCode, 0 );
+    let files = self.find( a.routinePath );
+    test.is( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp =
+    {
+      name : null,
+      enabled : 1,
+      main : 'proto/File.s',
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with PathMain .npm.from.willfile entryPath:"{path::entry.*=1}/File.s" debug:"debug"' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.identical( got.exitCode, 0 );
+    let files = self.find( a.routinePath );
+    test.is( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp =
+    {
+      name : null,
+      enabled : 1,
+      main : 'proto/File.s',
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with PathMain .npm.from.willfile filesPath:"proto/**"' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check option `filesPath`, direct link to file';
+    test.identical( got.exitCode, 0 );
+    let files = self.find( a.routinePath );
+    test.is( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp =
+    {
+      name : null,
+      enabled : 1,
+      files : [ 'proto/File.s' ]
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with PathMain .npm.from.willfile filesPath:"{path::proto}/**"' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.identical( got.exitCode, 0 );
+    let files = self.find( a.routinePath );
+    test.is( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp =
+    {
+      name : null,
+      enabled : 1,
+      files : [ 'proto/File.s' ]
+    };
+    test.identical( config, exp );
+
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.start({ args : '.with PathMain .npm.from.willfile filesPath:"{path::entry.*=1}/**" debug:"debug"' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check option `entryPath`, resolve path without criterions';
+    test.identical( got.exitCode, 0 );
+    let files = self.find( a.routinePath );
+    test.is( _.longHas( files, './package.json' ) );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp =
+    {
+      name : null,
+      enabled : 1,
+      files : [ 'proto/File.s' ]
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+
 }
 
 // --
@@ -22481,6 +23108,9 @@ var Self =
     // reflect
 
     reflectorOptionsCheck,
+    reflectorOptionsCheckDefaultOptionsAndWithoutOptions,
+    reflectorOptionsCheckWithoutOptionsAndDefaultOptions,
+    reflectorOptionsCheckWithoutOptionsAndNotDefaultOptions,
     reflectNothingFromSubmodules,
     reflectGetPath,
     reflectSubdir,
@@ -22672,6 +23302,9 @@ var Self =
 
     commandVersion,
     commandVersionCheck,
+
+    commandNpmFromWillfile,
+    commandNpmFromWillfileOptionsInCommand,
   }
 
 }

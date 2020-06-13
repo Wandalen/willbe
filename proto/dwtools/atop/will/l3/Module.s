@@ -6984,6 +6984,176 @@ resourceImport.defaults =
 
 //
 
+function npmGenerate( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = _.mapExtend( null, o );
+  let verbosity = o.verbosity;
+  let about = module.about.exportStructure();
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  let currentContext = o.currentContext ? o.currentContext : module;
+  opts.packagePath = module.pathResolve
+  ({
+    selector : opts.packagePath || '{path::out}/package.json',
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : currentContext,
+  });
+  // opts.packagePath = path.join( module.inPath, opts.packagePath );
+
+
+  if( opts.entryPath )
+  opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext : currentContext });
+  if( opts.filesPath )
+  opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext : currentContext });
+
+  /* */
+
+  let config = Object.create( null );
+  config.name = about.name;
+  config.version = about.version;
+  config.enabled = about.enabled;
+
+  if( about.description )
+  config.description = about.description;
+  if( about.keywords )
+  config.keywords = about.keywords;
+  if( about.license )
+  config.license = about.license;
+
+  if( about.interpreters )
+  {
+    let interpreters = _.arrayAs( about.interpreters );
+    interpreters.forEach( ( interpreter ) =>
+    {
+      if( _.strHas( interpreter, 'njs' ) )
+      config.engine = _.strReplace( interpreter, 'njs', 'node' );
+    });
+  }
+
+  if( about.author )
+  config.author = about.author;
+  if( about.contributors )
+  config.contributors = about.contributors;
+
+  for( let n in about )
+  {
+    if( !_.strBegins( n, 'npm.' ) )
+    continue;
+    config[ _.strRemoveBegin( n, 'npm.' ) ] = about[ n ];
+  }
+
+  if( opts.entryPath && opts.entryPath.length )
+  {
+    config.main = _.scalarFrom( path.s.relative( path.dir( opts.packagePath ), opts.entryPath ) );
+  }
+
+  if( opts.filesPath && opts.filesPath.length )
+  {
+    config.files = path.s.relative( path.dir( opts.packagePath ), opts.filesPath );
+  }
+
+  if( module.pathMap.repository )
+  config.repository = pathSimplify( module.pathMap.repository );
+  if( module.pathMap.bugtracker )
+  config.bugs = pathSimplify( module.pathMap.bugtracker );
+  if( module.pathMap.entry )
+  config.entry = module.pathMap.entry;
+
+  for( let n in module.pathMap )
+  {
+    if( !_.strBegins( n, 'npm.' ) )
+    continue;
+    config[ _.strRemoveBegin( n, 'npm.' ) ] = module.pathMap[ n ];
+  }
+
+  for( let s in module.submoduleMap )
+  {
+    let submodule = module.submoduleMap[ s ];
+    let p = submodule.path;
+    p = path.parseFull( p );
+
+    _.assert
+    (
+      p.protocol === 'npm' || p.protocol === 'hd',
+      () => 'Implemented only for "npm" and "hd" dependencies, but got ' + p.full
+    );
+
+    if( p.protocol === 'npm' )
+    {
+      depAdd( submodule, path.relative( '/', p.longPath ), p.hash );
+    }
+    else if( p.protocol === 'hd' )
+    {
+      debugger;
+      depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath,  );
+    }
+    else _.assert( 0 );
+
+  }
+
+  _.sure( !fileProvider.isDir( opts.packagePath ), () => packagePath + ' is dir, not safe to delete' );
+
+  fileProvider.fileWrite
+  ({
+    filePath : opts.packagePath,
+    data : config,
+    encoding : 'json.fine',
+    verbosity : verbosity ? 5 : 0,
+  });
+
+  debugger;
+  return null;
+
+  /* */
+
+  function pathSimplify( src )
+  {
+    let r = src;
+    if( !_.strIs( r ) )
+    return r;
+
+    r = r.replace( '///', '//' );
+    r = r.replace( 'npm://', '' );
+
+    return r;
+  }
+
+  function depAdd( submodule, name, hash )
+  {
+    if( submodule.criterion.optional )
+    _depAdd( 'optionalDependencies', name, hash );
+    else if( submodule.criterion.development )
+    _depAdd( 'devDependencies', name, hash );
+    else
+    _depAdd( 'dependencies', name, hash );
+  }
+
+  function _depAdd( section, name, hash )
+  {
+    config[ section ] = config[ section ] || Object.create( null );
+    config[ section ][ name ] = hash ? hash : '';
+  }
+}
+
+npmGenerate.defaults =
+{
+  packagePath : 'package.json',
+  entryPath : 'Index.js',
+  filesPath : null,
+  verbosity : null,
+}
+
+//
+
 function ResourceSetter_functor( op )
 {
   _.routineOptions( ResourceSetter_functor, arguments );
@@ -7733,6 +7903,8 @@ let Extend =
   structureExportConsistency,
 
   resourceImport,
+
+  npmGenerate,
 
   // remote
 
