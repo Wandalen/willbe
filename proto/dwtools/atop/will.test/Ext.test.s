@@ -12679,8 +12679,138 @@ function exportWithRemoteSubmodules( test )
     test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
-    var exp = [ 'xxx' ];
-    var files = a.findNoModules( a.routinePath );
+    var exp =
+    [
+      '.',
+      './.module',
+      './.module/ModuleForTesting1b',
+      './.module/ModuleForTesting1b/doc',
+      './.module/ModuleForTesting1b/out',
+      './.module/ModuleForTesting1b/proto',
+      './.module/ModuleForTesting1b/proto/dwtools',
+      './.module/ModuleForTesting1b/proto/dwtools/abase',
+      './.module/ModuleForTesting1b/proto/dwtools/abase/l3',
+      './.module/ModuleForTesting1b/proto/dwtools/abase/l3/testing1b',
+      './.module/ModuleForTesting1b/proto/dwtools/abase/l3.test',
+      './.module/ModuleForTesting1b/sample',
+      './group1',
+      './group1/.module',
+      './group1/.module/ModuleForTesting1',
+      './group1/.module/ModuleForTesting1/doc',
+      './group1/.module/ModuleForTesting1/out',
+      './group1/.module/ModuleForTesting1/proto',
+      './group1/.module/ModuleForTesting1/proto/dwtools',
+      './group1/.module/ModuleForTesting1/proto/dwtools/abase',
+      './group1/.module/ModuleForTesting1/proto/dwtools/abase/l1',
+      './group1/.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1',
+      './group1/.module/ModuleForTesting1/proto/dwtools/abase/l1.test',
+      './group1/.module/ModuleForTesting1/sample',
+      './group1/.module/ModuleForTesting12',
+      './group1/.module/ModuleForTesting12/doc',
+      './group1/.module/ModuleForTesting12/out',
+      './group1/.module/ModuleForTesting12/proto',
+      './group1/.module/ModuleForTesting12/proto/dwtools',
+      './group1/.module/ModuleForTesting12/proto/dwtools/abase',
+      './group1/.module/ModuleForTesting12/proto/dwtools/abase/l3',
+      './group1/.module/ModuleForTesting12/proto/dwtools/abase/l3/testing12',
+      './group1/.module/ModuleForTesting12/proto/dwtools/abase/l3.test',
+      './group1/.module/ModuleForTesting12/sample',
+      './group1/.module/ModuleForTesting1b',
+      './group1/.module/ModuleForTesting1b/doc',
+      './group1/.module/ModuleForTesting1b/out',
+      './group1/.module/ModuleForTesting1b/proto',
+      './group1/.module/ModuleForTesting1b/proto/dwtools',
+      './group1/.module/ModuleForTesting1b/proto/dwtools/abase',
+      './group1/.module/ModuleForTesting1b/proto/dwtools/abase/l3',
+      './group1/.module/ModuleForTesting1b/proto/dwtools/abase/l3/testing1b',
+      './group1/.module/ModuleForTesting1b/proto/dwtools/abase/l3.test',
+      './group1/.module/ModuleForTesting1b/sample',
+      './group1/group10',
+      './group1/group10/.module',
+      './group1/group10/.module/ModuleForTesting1',
+      './group1/group10/.module/ModuleForTesting1/doc',
+      './group1/group10/.module/ModuleForTesting1/out',
+      './group1/group10/.module/ModuleForTesting1/proto',
+      './group1/group10/.module/ModuleForTesting1/proto/dwtools',
+      './group1/group10/.module/ModuleForTesting1/proto/dwtools/abase',
+      './group1/group10/.module/ModuleForTesting1/proto/dwtools/abase/l1',
+      './group1/group10/.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1',
+      './group1/group10/.module/ModuleForTesting1/proto/dwtools/abase/l1.test',
+      './group1/group10/.module/ModuleForTesting1/sample',
+      './group1/group10/.module/ModuleForTesting2a',
+      './group1/group10/.module/ModuleForTesting2a/doc',
+      './group1/group10/.module/ModuleForTesting2a/out',
+      './group1/group10/.module/ModuleForTesting2a/proto',
+      './group1/group10/.module/ModuleForTesting2a/proto/dwtools',
+      './group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase',
+      './group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase/l3',
+      './group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase/l3/testing2a',
+      './group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase/l3.test',
+      './group1/group10/.module/ModuleForTesting2a/sample',
+      './group1/group10/out',
+      './group1/group10/out/debug',
+      './group1/group10/out/debug/dwtools',
+      './group1/group10/out/debug/dwtools/abase',
+      './group1/group10/out/debug/dwtools/abase/l1',
+      './group1/group10/out/debug/dwtools/abase/l1/testing1',
+      './group1/group10/out/debug/dwtools/abase/l1.test',
+      './group1/group10/out/debug/dwtools/abase/l3',
+      './group1/group10/out/debug/dwtools/abase/l3/testing2a',
+      './group1/group10/out/debug/dwtools/abase/l3.test',
+      './group1/out',
+      './group1/out/debug',
+      './group1/out/debug/dwtools',
+      './group1/out/debug/dwtools/abase',
+      './group1/out/debug/dwtools/abase/l1',
+      './group1/out/debug/dwtools/abase/l1/testing1',
+      './group1/out/debug/dwtools/abase/l1.test',
+      './group1/out/debug/dwtools/abase/l3',
+      './group1/out/debug/dwtools/abase/l3/testing12',
+      './group1/out/debug/dwtools/abase/l3/testing1b',
+      './group1/out/debug/dwtools/abase/l3/testing2a',
+      './group1/out/debug/dwtools/abase/l3.test',
+      './group2',
+      './group2/.module',
+      './group2/.module/ModuleForTesting12ab',
+      './group2/.module/ModuleForTesting12ab/doc',
+      './group2/.module/ModuleForTesting12ab/out',
+      './group2/.module/ModuleForTesting12ab/proto',
+      './group2/.module/ModuleForTesting12ab/proto/dwtools',
+      './group2/.module/ModuleForTesting12ab/proto/dwtools/abase',
+      './group2/.module/ModuleForTesting12ab/proto/dwtools/abase/l4',
+      './group2/.module/ModuleForTesting12ab/proto/dwtools/abase/l4/testing12ab',
+      './group2/.module/ModuleForTesting12ab/proto/dwtools/abase/l4.test',
+      './group2/.module/ModuleForTesting12ab/sample',
+      './group2/out',
+      './group2/out/debug',
+      './group2/out/debug/dwtools',
+      './group2/out/debug/dwtools/abase',
+      './group2/out/debug/dwtools/abase/l1',
+      './group2/out/debug/dwtools/abase/l1/testing1',
+      './group2/out/debug/dwtools/abase/l1.test',
+      './group2/out/debug/dwtools/abase/l3',
+      './group2/out/debug/dwtools/abase/l3/testing2a',
+      './group2/out/debug/dwtools/abase/l3.test',
+      './group2/out/debug/dwtools/abase/l4',
+      './group2/out/debug/dwtools/abase/l4/testing12ab',
+      './group2/out/debug/dwtools/abase/l4.test',
+      './out',
+      './out/debug',
+      './out/debug/dwtools',
+      './out/debug/dwtools/abase',
+      './out/debug/dwtools/abase/l1',
+      './out/debug/dwtools/abase/l1/testing1',
+      './out/debug/dwtools/abase/l1.test',
+      './out/debug/dwtools/abase/l3',
+      './out/debug/dwtools/abase/l3/testing12',
+      './out/debug/dwtools/abase/l3/testing1b',
+      './out/debug/dwtools/abase/l3/testing2a',
+      './out/debug/dwtools/abase/l3.test',
+      './out/debug/dwtools/abase/l4',
+      './out/debug/dwtools/abase/l4/testing12ab',
+      './out/debug/dwtools/abase/l4.test'
+    ]
+    var files = a.findDirs( a.routinePath );
     test.identical( files, exp );
 
     return null;
@@ -15040,7 +15170,117 @@ function cleanRecursiveMin( test )
   /* - */
 
   return a.ready;
-} /* end of function cleanRecursive */
+} /* end of function cleanRecursiveMin */
+
+//
+
+function cleanGlobMin( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'hierarchy-remote-min' );
+
+  /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
+  a.fileProvider.filesDelete( a.routinePath );
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = 'export first'
+    return null;
+  })
+
+  a.appStart( '.with ** .clean' )
+  a.appStart( '.with group1/a .export' )
+  a.appStart( '.with z .export' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Failed to open' ), 2 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 16 );
+    test.identical( _.strCount( got.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
+
+    var exp =
+    [
+      '.',
+      './z.will.yml',
+      './.module',
+      './group1',
+      './group1/a.will.yml',
+      './group1/.module',
+      './group1/out',
+      './group1/out/a.out.will.yml',
+      './group1/out/debug',
+      './group1/out/debug/dwtools',
+      './group1/out/debug/dwtools/Tools.s',
+      './group1/out/debug/dwtools/abase',
+      './group1/out/debug/dwtools/abase/l1',
+      './group1/out/debug/dwtools/abase/l1/testing1',
+      './group1/out/debug/dwtools/abase/l1/testing1/Include.s',
+      './group1/out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s',
+      './group1/out/debug/dwtools/abase/l1.test',
+      './group1/out/debug/dwtools/abase/l1.test/ModuleForTesting1.test.s',
+      './group1/out/debug/dwtools/abase/l3',
+      './group1/out/debug/dwtools/abase/l3/testing1b',
+      './group1/out/debug/dwtools/abase/l3/testing1b/Include.s',
+      './group1/out/debug/dwtools/abase/l3/testing1b/ModuleForTesting1b.s',
+      './group1/out/debug/dwtools/abase/l3.test',
+      './group1/out/debug/dwtools/abase/l3.test/ModuleForTesting1b.test.s',
+      './out',
+      './out/z.out.will.yml',
+      './out/debug',
+      './out/debug/dwtools',
+      './out/debug/dwtools/Tools.s',
+      './out/debug/dwtools/abase',
+      './out/debug/dwtools/abase/l1',
+      './out/debug/dwtools/abase/l1/testing1',
+      './out/debug/dwtools/abase/l1/testing1/Include.s',
+      './out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s',
+      './out/debug/dwtools/abase/l1.test',
+      './out/debug/dwtools/abase/l1.test/ModuleForTesting1.test.s',
+      './out/debug/dwtools/abase/l2',
+      './out/debug/dwtools/abase/l2/testing1a',
+      './out/debug/dwtools/abase/l2/testing1a/Include.s',
+      './out/debug/dwtools/abase/l2/testing1a/ModuleForTesting1a.s',
+      './out/debug/dwtools/abase/l2.test',
+      './out/debug/dwtools/abase/l2.test/ModuleForTesting1a.test.s',
+      './out/debug/dwtools/abase/l3',
+      './out/debug/dwtools/abase/l3/testing1b',
+      './out/debug/dwtools/abase/l3/testing1b/Include.s',
+      './out/debug/dwtools/abase/l3/testing1b/ModuleForTesting1b.s',
+      './out/debug/dwtools/abase/l3.test',
+      './out/debug/dwtools/abase/l3.test/ModuleForTesting1b.test.s'
+    ]
+    var files = a.findNoModules( a.routinePath );
+    test.identical( files, exp );
+
+    return null;
+  })
+
+  a.appStart( '.with "**" .clean' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+    test.identical( _.strCount( got.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 16 );
+
+    var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml' ];
+    var files = a.findAll( a.routinePath );
+    test.identical( files, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+} /* end of function cleanGlobMin */
 
 //
 
@@ -24015,6 +24255,7 @@ var Self =
     cleanMixed,
     cleanWithInPath,
     cleanRecursiveMin,
+    cleanGlobMin,
     cleanRecursive,
     cleanDisabledModule,
     cleanHierarchyRemote,

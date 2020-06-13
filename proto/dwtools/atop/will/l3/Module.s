@@ -4814,21 +4814,6 @@ function cleanLog( o )
   debugger;
   let o3 = _.mapOnly( o, will.cleanLog.defaults );
   return will.cleanLog( o3 );
-
-  // if( !o.spentTime )
-  // o.spentTime = _.time.now() - time;
-  //
-  // let textualReport = path.groupTextualReport
-  // ({
-  //   explanation : o.explanation,
-  //   groupsMap : o.files,
-  //   verbosity : logger.verbosity,
-  //   spentTime : o.spentTime,
-  // });
-  //
-  // logger.log( textualReport );
-  //
-  // return textualReport;
 }
 
 var defaults = cleanLog.defaults = Object.create( cleanWhat.defaults );
@@ -4837,6 +4822,7 @@ defaults.files = null;
 defaults.explanation = ' . Clean will delete ';
 defaults.beginTime = null;
 defaults.spentTime = null;
+defaults.asCommand = 0;
 
 //
 
@@ -4865,62 +4851,13 @@ function clean( o )
   will.cleanLog( o4 );
 
   return o.files;
-
-  // will.readingEnd();
-  //
-  // if( o.dry )
-  // {
-  //   let o2 = _.mapOnly( o, module.cleanLog.defaults );
-  //   return module.cleanLog( o2 );
-  // }
-  //
-  // let o2 = _.mapExtend( null, o );
-  // delete o2.late;
-  // delete o2.dry;
-  // let files = module.cleanWhat( o2 );
-  //
-  // _.assert( _.mapIs( files ) );
-  // _.assert( _.arrayIs( files[ '/' ] ) );
-  //
-  // for( let f = files[ '/' ].length-1 ; f >= 0 ; f-- )
-  // {
-  //   let filePath = files[ '/' ][ f ];
-  //   _.assert( path.isAbsolute( filePath ) );
-  //
-  //   if( o.fast )
-  //   fileProvider.filesDelete
-  //   ({
-  //     filePath : filePath,
-  //     verbosity : 0,
-  //     throwing : 0,
-  //     late : 1,
-  //   });
-  //   else
-  //   fileProvider.fileDelete
-  //   ({
-  //     filePath : filePath,
-  //     verbosity : 0,
-  //     throwing : 0,
-  //   });
-  //
-  // }
-  //
-  // time = _.time.now() - time;
-  //
-  // let o3 = _.mapOnly( o, module.cleanLog.defaults );
-  // o3.explanation = ' - Clean deleted ';
-  // o3.spentTime = time;
-  // o3.files = files;
-  //
-  // let textualReport = module.cleanLog( o3 );
-  //
-  // return files;
 }
 
 var defaults = clean.defaults = Object.create( cleanWhat.defaults );
 
 defaults.beginTime = null;
 defaults.dry = 0;
+defaults.asCommand = 0;
 
 // --
 // resolver

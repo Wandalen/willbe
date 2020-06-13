@@ -688,7 +688,6 @@ function _commandCleanLike( o )
   _.routineOptions( _commandCleanLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
-
   _.all( _.Will.ModuleFilterNulls, ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` ) );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
@@ -770,7 +769,6 @@ defaults.event = null;
 defaults.onAll = null;
 defaults.commandRoutine = null;
 defaults.name = null;
-// defaults.withDisabledModules = 0;
 
 //
 
@@ -1910,6 +1908,7 @@ function commandClean( e )
     _.routineOptions( will.modulesClean, o2 );
     if( o2.recursive === 2 )
     o2.modules = it.roots;
+    o2.asCommand = 1;
 
     return will.modulesClean( o2 );
   }
@@ -1924,6 +1923,7 @@ commandClean.commandProperties =
   cleaningTemp : 'Deleting module-specific temporary directory. Default is cleaningTemp:1.',
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
+  /* qqq2 : should have verbosity and other common options */
 }
 
 //
@@ -1967,6 +1967,7 @@ function commandSubmodulesClean( e )
     _.routineOptions( will.modulesClean, o2 );
     if( o2.recursive === 2 )
     o2.modules = it.roots;
+    o2.asCommand = 1;
     o2.cleaningSubmodules = 1;
     o2.cleaningOut = 0;
     o2.cleaningTemp = 0;

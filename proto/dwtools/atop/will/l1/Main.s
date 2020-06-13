@@ -3034,7 +3034,6 @@ function modulesClean( o )
   o.beginTime = _.time.now();
 
   let o2 = _.mapOnly( o, will.modulesFor.defaults );
-  // o2.onEachModule = handleEach;
   o2.onEachVisitedObject = handleEach;
 
   return will.modulesFor( o2 )
@@ -3060,7 +3059,6 @@ function modulesClean( o )
 
   function handleEach( module, op )
   {
-    // debugger;
     module = module.toModule();
     if( !( module instanceof _.Will.Module ) )
     return null;
@@ -3082,6 +3080,7 @@ defaults.beginTime = null;
 defaults.cleaningSubmodules = 1;
 defaults.cleaningOut = 1;
 defaults.cleaningTemp = 1;
+defaults.asCommand = 0;
 
 defaults.recursive = 0;
 defaults.withStem = 1;
@@ -4606,7 +4605,11 @@ function cleanLog( o )
   o.explanation = ' - Clean deleted ';
 
   if( !o.spentTime )
-  o.spentTime = _.time.now() - o.beginTime;
+  {
+    o.spentTime = _.time.now() - o.beginTime;
+    if( o.asCommand )
+    o.spentTime += will.willfilesReadEndTime - will.willfilesReadBeginTime
+  }
 
   let textualReport = path.groupTextualReport
   ({
@@ -4629,6 +4632,7 @@ var defaults = cleanLog.defaults =
   explanation : null,
   beginTime : null,
   spentTime : null,
+  asCommand : 0,
   dry : 1,
 
 }

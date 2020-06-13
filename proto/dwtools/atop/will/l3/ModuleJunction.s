@@ -332,13 +332,12 @@ function reform()
       _.assert( junction.peer.peer === junction );
       if( !object.peerModule )
       return junction.peer;
-
-      let junction2 = junction.Of( object.peerModule, will );
+      let junction2 = _.will.ModuleJunction._Of({ object : object.peerModule, will });
       if( junction2 && junction2.peer === junction )
       return junction.peer;
     }
 
-    let junction2 = _.will.ModuleJunction.Of( peerModule, will );
+    let junction2 = _.will.ModuleJunction._Of({ object : peerModule, will });
     peerAssign( junction, junction2 );
 
     return junction2;
@@ -1645,11 +1644,31 @@ function assertIntegrityVerify()
 
   objects.forEach( ( object ) =>
   {
-    _.assert( will.objectToJunctionHash.get( object ) === junction, `Integrity of ${junction.nameWithLocationGet()} is broken. Another junction has this object.` );
-    _.assert( _.longHasAll( objects, junction.AssociationsOf( object ) ), `Integrity of ${junction.nameWithLocationGet()} is broken. One or several associations are no in the list.` );
+    _.assert
+    (
+      will.objectToJunctionHash.get( object ) === junction,
+      () => `Integrity of ${junction.nameWithLocationGet()} is broken. Another junction has this object.`
+    );
+    _.assert
+    (
+      _.longHasAll( objects, junction.AssociationsOf( object ) ),
+      () => `Integrity of ${junction.nameWithLocationGet()} is broken. One or several associations are no in the list.`
+    );
     let p = junction.PathsOfAsMap( object );
-    _.assert( !p.localPath || _.longHas( junction.localPaths, p.localPath ), `Integrity of ${junction.nameWithLocationGet()} is broken. Local path ${p.localPath} is not in the list` );
-    _.assert( !p.remotePath || _.longHas( junction.remotePaths, p.remotePath ), `Integrity of ${junction.nameWithLocationGet()} is broken. Remote path ${p.remotePath} is not in the list` );
+    _.assert
+    (
+      !p.localPath || _.longHas( junction.localPaths, p.localPath ),
+      () => `Integrity of ${junction.nameWithLocationGet()} is broken.`
+          + `\nLocal path ${_.ct.format( p.localPath, 'path' )} is not in the list.`
+          + `\n  ` + _.ct.format( junction.localPaths, 'path' ).join( '\n  ' )
+    );
+    _.assert
+    (
+      !p.remotePath || _.longHas( junction.remotePaths, p.remotePath ),
+      () => `Integrity of ${junction.nameWithLocationGet()} is broken.`
+          + `\nRemote path ${_.ct.format( p.remotePath, 'path' )} is not in the list.`
+          + `\n  ` + _.ct.format( junction.remotePaths, 'path' ).join( '\n  ' )
+    );
   });
 
   _.assert( arguments.length === 0 );
@@ -1739,7 +1758,8 @@ function exportString()
 function nameWithLocationGet()
 {
   let junction = this;
-  let name = _.color.strFormat( junction.object.qualifiedName || junction.name, 'entity' );
+  let name = ( junction.object ? junction.object.qualifiedName : junction.name ) || junction.name;
+  name = _.color.strFormat( name, 'entity' );
   let localPath = _.color.strFormat( junction.localPath, 'path' );
   let result = `${name} at ${localPath}`;
   return result;
