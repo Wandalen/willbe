@@ -318,6 +318,7 @@ function _commandsMake()
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
 
+    'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmGenerateFromWillfile ),     h : 'Use "npm from willfile" to generate "package.json" file from willfile.' },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              h : 'Use "package install" to install target package.' },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        h : 'Use "package local versions" to get list of package versions avaiable locally' },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       h : 'Use "package remote versions" to get list of package versions avaiable in remote archive' },
@@ -2293,6 +2294,48 @@ function commandEach( e )
 
 //
 
+function commandNpmGenerateFromWillfile( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = _.strStructureParse( e.argument );
+  let criterionsMap = _.mapBut( request, commandNpmGenerateFromWillfile.defaults );
+  request = _.mapBut( request, criterionsMap );
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'npm from willfile',
+    onEach : handleEach,
+    commandRoutine : commandBuild,
+  });
+
+  function handleEach( it )
+  {
+    if( _.mapKeys( criterionsMap ).length > 0 )
+    it.opener.openedModule.stepMap[ "npm.generate" ].criterion = criterionsMap;
+
+    return it.opener.openedModule.npmGenerate
+    ({
+      packagePath : request.packagePath,
+      entryPath : request.entryPath,
+      filesPath : request.filesPath,
+      currentContext : it.opener.openedModule.stepMap[ "npm.generate" ],
+      verbosity : 5,
+    });
+  }
+}
+
+commandNpmGenerateFromWillfile.defaults =
+{
+  packagePath : null,
+  entryPath : null,
+  filesPath : null,
+};
+
+//
+
 function commandPackageInstall( e )
 {
   let will = this;
@@ -2992,6 +3035,8 @@ let Extend =
 
   commandWith,
   commandEach,
+
+  commandNpmGenerateFromWillfile,
 
   commandPackageInstall,
   commandPackageLocalVersions,

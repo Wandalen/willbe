@@ -18,9 +18,6 @@ reflector :
   reflect.notDefaultOptions :
     inherit : submodule::local/exported::*=1/reflector::reflect.notDefaultOptions
 
-  reflect.notDefaultMandatory1 :
-    inherit : submodule::local/exported::*=1/reflector::reflect.notDefaultMandatory1
-
 build :
 
   withoutOptions :
@@ -41,8 +38,3 @@ build :
     steps :
       - step::reflect.notDefaultOptions
 
-  notDefaultMandatory1 :
-    criterion :
-      default : 1
-    steps :
-      - step::reflect.notDefaultMandatory1

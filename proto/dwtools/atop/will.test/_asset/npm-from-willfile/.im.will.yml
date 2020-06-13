@@ -1,0 +1,193 @@
+
+submodule :
+
+  eslint :
+    path : npm:///eslint#7.1.0
+    enabled : 0 # submodule
+    criterion :
+      debug : 1
+  NpmFromWillfile :
+    path : hd://.
+    enabled : 0 # submodule
+    criterion :
+      development : 1
+  wTesting :
+    path : npm:///wTesting
+    enabled : 0 # submodule
+    criterion :
+      development : 1
+
+path :
+
+  in : '.'
+  out : 'out'
+  temp : 'path::out'
+  proto : './proto'
+  doc : './doc'
+
+  out.debug :
+    path : '{path::out}/debug'
+    criterion :
+      debug : 1
+
+  entry.debug :
+    path : 'proto'
+    criterion :
+      debug : [ debug, release ]
+
+reflector :
+
+  reflect.proto :
+    inherit : predefined.*
+    criterion :
+      tests : 'no.tests'
+      debug : [ debug, release ]
+      raw : [ raw, compiled ]
+      content : prime
+    filePath :
+      path::proto : '{path::out.*=1}/source'
+
+  transpile.proto.raw :
+    inherit : predefined.*
+    step :
+      inherit : files.transpile
+      entry : path::entry.no.tests
+    criterion :
+      raw : raw
+      debug : release
+      content : prime
+    filePath :
+      path::proto : '{path::out.raw.release}'
+
+  transpile.proto.no.tests.compiled :
+    inherit : predefined.*
+    step :
+      inherit : files.transpile
+      entry : path::entry.*=1
+    criterion :
+      tests : 'no.tests'
+      raw : compiled
+      debug : [ debug, release ]
+      content : prime
+    filePath :
+      '**.test*' : 0
+      '**.test/**' : 0
+      path::proto : '{path::out.*=1}/Main.s'
+
+  transpile.proto.only.tests.compiled :
+    inherit : predefined.*
+    step :
+      inherit : files.transpile
+      entry : path::entry.*=1
+      external.before : '{path::out.*=1}/Main.s'
+    criterion :
+      tests : 'only.tests'
+      raw : compiled
+      debug : [ debug, release ]
+      content : prime
+    filePath :
+      '**.test*' : 1
+      path::proto : '{path::out.*=1}/Tests.test.s'
+
+step :
+
+  clean.out :
+    inherit : files.delete
+    filePath : path::out.*=1
+    criterion :
+      debug : [ debug, release ]
+      raw : [ raw, compiled ]
+      tests : [ 'no.tests', 'only.tests' ]
+      content : [ 'prime', 'npm' ]
+
+  clean.out.npm :
+    inherit : files.delete
+    filePath : path::out.*=1
+    criterion :
+      debug : debug
+      raw : compiled
+      tests : no.tests
+      content : npm
+
+  tst.proto :
+    shell : 'tst {path::proto}'
+    criterion :
+      content : proto
+
+  tst.debug :
+    shell : 'tst {path::out.*=1}'
+    criterion :
+      content : prime
+      debug : debug
+
+  tst.release :
+    shell : 'tst {path::out.*=1}'
+    criterion :
+      content : prime
+      debug : release
+
+build :
+
+  debug :
+    criterion :
+      default : 1
+      debug : debug
+      raw : raw
+      content : prime
+    steps :
+      # - timelapse.begin
+      - step::clean.out*=2
+      - reflect.proto.*=1
+      # - timelapse.end
+
+  compiled.debug :
+    criterion :
+      debug : debug
+      raw : compiled
+      content : prime
+    steps :
+      # - timelapse.begin
+      - step::clean.out*=2
+      - transpile.proto.no.tests*=1
+      - transpile.proto.only.tests*=1
+      # - timelapse.end
+
+  raw.release :
+    criterion :
+      debug : release
+      raw : raw
+      content : prime
+    steps :
+      # - timelapse.begin
+      - step::clean.out*=2
+      - transpile.proto.raw
+      # - timelapse.end
+
+  release :
+    criterion :
+      debug : release
+      raw : compiled
+      content : prime
+    steps :
+      # - timelapse.begin
+      - step::clean.out*=2
+      - transpile.proto.no.tests*=1
+      - transpile.proto.only.tests*=1
+      # - timelapse.end
+
+  npm :
+    criterion :
+      debug : debug
+      raw : compiled
+      content : npm
+    steps :
+      # - step::clean.out.npm*=1
+      - npm.generate
+
+  all :
+    steps :
+      - build::debug
+      - build::compiled.debug
+      - build::raw.release
+      - build::release
+      - build::npm
