@@ -319,6 +319,7 @@ function _commandsMake()
     'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
 
     'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmGenerateFromWillfile ),     h : 'Use "npm from willfile" to generate "package.json" file from willfile.' },
+    'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileGenerateFromNpm ),     h : 'Use "willfile from npm" to generate ".will.yml" file from "package.json".' },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              h : 'Use "package install" to install target package.' },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        h : 'Use "package local versions" to get list of package versions avaiable locally' },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       h : 'Use "package remote versions" to get list of package versions avaiable in remote archive' },
@@ -2308,7 +2309,7 @@ function commandNpmGenerateFromWillfile( e )
     event : e,
     name : 'npm from willfile',
     onEach : handleEach,
-    commandRoutine : commandBuild,
+    commandRoutine : commandNpmGenerateFromWillfile,
   });
 
   function handleEach( it )
@@ -2332,6 +2333,30 @@ commandNpmGenerateFromWillfile.defaults =
   packagePath : null,
   entryPath : null,
   filesPath : null,
+};
+
+//
+
+function commandWillfileGenerateFromNpm( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = _.strStructureParse( e.argument );
+  request = _.routineOptions( commandWillfileGenerateFromNpm, request );
+
+  return will.Module.prototype.willfileGenerateFromNpm.call( will,
+  {
+    packagePath : request.packagePath,
+    willfilePath : request.entryPath,
+    verbosity : 5,
+  });
+}
+
+commandWillfileGenerateFromNpm.defaults =
+{
+  packagePath : null,
+  willfilePath : null,
 };
 
 //
@@ -3037,6 +3062,7 @@ let Extend =
   commandEach,
 
   commandNpmGenerateFromWillfile,
+  commandWillfileGenerateFromNpm,
 
   commandPackageInstall,
   commandPackageLocalVersions,
