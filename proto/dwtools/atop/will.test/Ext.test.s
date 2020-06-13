@@ -22746,9 +22746,9 @@ function commandNpmFromWillfile( test )
     test.case = 'check fields `dependencies` and `devDependencies`';
     test.identical( got.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    test.identical( config.dependencies, { eslint : '7.1.0' } );
-    test.identical( config.devDependencies, { NpmFromWillfile : 'file:.', wTesting : '' } );
-    test.identical( config.name, null );
+    test.identical( config.dependencies, { eslint : '7.1.0', babel : '^0.3.0' } );
+    test.identical( config.devDependencies, { npmfromwillfile : 'file:.', wTesting : '', willbe : 'alpha' } );
+    test.identical( config.name, 'npmfromwillfile' );
     test.identical( config.enabled, 1 );
 
     return null;
