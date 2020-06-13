@@ -32,10 +32,72 @@ function init( o )
   Object.preventExtensions( self );
   if( o )
   self.copy( o );
+  self.form();
   return self;
 }
 
 //
+
+function form()
+{
+  let self = this;
+
+  if( self.will === null )
+  {
+    if( self.object )
+    self.will = self.object.will ? self.object.will : self.object.module.will;
+    else if( self.junction )
+    self.will = self.junction.will;
+  }
+
+  _.assert( self.will instanceof _.Will );
+
+  if( self.junction === null )
+  self.junction = self.object.toJunction();
+
+  _.assert( self.junction instanceof _.will.ModuleJunction );
+  _.assert( !!self.object );
+
+  return self;
+}
+
+//
+
+function From( object, will )
+{
+  let cls = this;
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+  if( object instanceof Self )
+  return object;
+
+  let o = object;
+  if( !_.mapIs( o ) )
+  o = { object : object };
+
+  if( will )
+  o.will = will;
+
+  _.assert( _.objectIs( o.object ) );
+  _.assert( o.will instanceof _.Will );
+
+  return cls.Self( o );
+}
+
+//
+
+function Froms( objects, will )
+{
+  let cls = this;
+  _.assert( arguments.length === 2 );
+  if( _.arrayLike( objects ) )
+  return _.filter_( null, objects, ( object ) => cls.From( object, will ) );
+  else
+  return cls.From( objects, will );
+}
+
+// --
+// coercer
+// --
 
 function toModule()
 {
@@ -98,8 +160,40 @@ function toJunction()
 {
   let self = this;
   let result = self.junction;
-  _.assert( result === null || result instanceof _.Will.ModuleJunction );
+  _.assert( result === null || result instanceof _.will.ModuleJunction );
   return result;
+}
+
+// --
+// accessor
+// --
+
+function dirPathGet()
+{
+  let self = this;
+  if( self.junction )
+  return self.junction.dirPath;
+  return null;
+}
+
+//
+
+function enabledGet()
+{
+  let self = this;
+  if( self.junction )
+  return self.junction.enabled;
+  return null;
+}
+
+//
+
+function isRemoteGet()
+{
+  let self = this;
+  if( self.junction )
+  return self.junction.isRemote;
+  return null;
 }
 
 // --
@@ -116,6 +210,7 @@ let Aggregates =
 
 let Associates =
 {
+  will : null,
   junction : null,
   object : null,
 }
@@ -130,32 +225,48 @@ let Restricts =
 
 let Statics =
 {
+  From,
+  Froms,
 }
 
-let Forbids=
+let Forbids =
 {
 }
 
 let Accessors =
 {
+  dirPath : { get : dirPathGet, readOnly : 1 },
+  enabled : { get : enabledGet, readOnly : 1 },
+  isRemote : { get : isRemoteGet, readOnly : 1 },
 }
 
 // --
 // declare
 // --
 
-let Extend =
+let Extension =
 {
 
   // inter
 
   finit,
   init,
+  form,
+  From,
+  Froms,
+
+  // coercer
 
   toModule,
   toOpener,
   toRelation,
   toJunction,
+
+  // accessor
+
+  dirPathGet,
+  enabledGet,
+  isRemoteGet,
 
   // relation
 
@@ -174,7 +285,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Extend,
+  extend : Extension,
 });
 
 _.Copyable.mixin( Self );

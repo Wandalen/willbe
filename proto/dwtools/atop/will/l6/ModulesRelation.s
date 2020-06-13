@@ -455,44 +455,6 @@ submodulesRelationsOwnFilter.defaults =
 
 //
 
-function toModule()
-{
-  let relation = this;
-  let module = relation.module;
-  let will = module.will;
-  if( relation.opener.openedModule && relation.opener.openedModule )
-  return relation.opener.openedModule;
-  return null;
-}
-
-//
-
-function toOpener()
-{
-  let relation = this;
-  return relation.opener;
-}
-
-//
-
-function toRelation()
-{
-  let relation = this;
-  return relation;
-}
-
-//
-
-function toJunction()
-{
-  let relation = this;
-  let module = relation.module;
-  let will = module.will;
-  return will.junctionFrom( relation );
-}
-
-//
-
 function isMandatory()
 {
   let relation = this;
@@ -730,6 +692,46 @@ pathsRebase.defaults =
   relative : null,
   inPath : null,
   exInPath : null,
+}
+
+// --
+// coercer
+// --
+
+function toModule()
+{
+  let relation = this;
+  let module = relation.module;
+  let will = module.will;
+  if( relation.opener.openedModule && relation.opener.openedModule )
+  return relation.opener.openedModule;
+  return null;
+}
+
+//
+
+function toOpener()
+{
+  let relation = this;
+  return relation.opener;
+}
+
+//
+
+function toRelation()
+{
+  let relation = this;
+  return relation;
+}
+
+//
+
+function toJunction()
+{
+  let relation = this;
+  let module = relation.module;
+  let will = module.will;
+  return will.junctionFrom( relation );
 }
 
 // --
@@ -971,7 +973,7 @@ let Forbids =
 // declare
 // --
 
-let Extend =
+let Extension =
 {
 
   // inter
@@ -999,11 +1001,6 @@ let Extend =
   submodulesRelationsFilter,
   submodulesRelationsOwnFilter,
 
-  toModule,
-  toOpener,
-  toRelation,
-  toJunction,
-
   isMandatory,
   isValid,
   isAvailableGet,
@@ -1019,6 +1016,13 @@ let Extend =
   longPathGet,
   pathSet,
   pathsRebase,
+
+  // coercer
+
+  toModule,
+  toOpener,
+  toRelation,
+  toJunction,
 
   // exporter
 
@@ -1049,7 +1053,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Extend,
+  extend : Extension,
 });
 
 _.Copyable.mixin( Self );

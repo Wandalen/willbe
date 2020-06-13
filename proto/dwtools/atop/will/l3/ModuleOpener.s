@@ -1005,44 +1005,6 @@ submodulesRelationsOwnFilter.defaults =
 
 _.assert( submodulesRelationsOwnFilter.defaults.withStem === undefined );
 
-//
-
-function toModule()
-{
-  let opener = this;
-  let will = opener.will;
-  if( opener.openedModule )
-  return opener.openedModule;
-  return null;
-}
-
-//
-
-function toOpener()
-{
-  let opener = this;
-  let will = opener.will;
-  return opener;
-}
-
-//
-
-function toRelation()
-{
-  let opener = this;
-  let will = opener.will;
-  return opener.superRelation;
-}
-
-//
-
-function toJunction()
-{
-  let opener = this;
-  let will = opener.will;
-  return will.junctionFrom( opener );
-}
-
 // --
 // submodule
 // --
@@ -1316,8 +1278,6 @@ function _repoDownload( o )
   _.assert( _.strDefined( opener.localPath ) );
   _.assert( !!opener.superRelation );
   _.assert( _.longHas( [ 'download', 'update', 'agree' ], o.mode ) );
-
-  // debugger;
 
   return ready
   .then( () => opener.repo.status({ all : 1, invalidating : 1 }) )
@@ -2320,10 +2280,12 @@ function errorSet( err )
   if( opener.error === err )
   return;
 
+  // if( err && opener.commonPath && _.strHas( opener.commonPath, 'ModuleForTesting12ab' ) )
+  // debugger;
   // if( err )
   // debugger;
 
-  opener[ errorSymbol ] = err;
+  opener[ errorSymbol ] = err; /* xxx qqq : replace */
 
   if( will && err )
   {
@@ -2421,6 +2383,46 @@ function accessorSet_functor( fieldName )
 
 let isOutGet = accessorGet_functor( 'isOut' );
 let isOutSet = accessorSet_functor( 'isOut' );
+
+// --
+// coercer
+// --
+
+function toModule()
+{
+  let opener = this;
+  let will = opener.will;
+  if( opener.openedModule )
+  return opener.openedModule;
+  return null;
+}
+
+//
+
+function toOpener()
+{
+  let opener = this;
+  let will = opener.will;
+  return opener;
+}
+
+//
+
+function toRelation()
+{
+  let opener = this;
+  let will = opener.will;
+  return opener.superRelation;
+}
+
+//
+
+function toJunction()
+{
+  let opener = this;
+  let will = opener.will;
+  return will.junctionFrom( opener );
+}
 
 // --
 // export
@@ -2572,7 +2574,7 @@ let Accessors =
 // declare
 // --
 
-let Extend =
+let Extension =
 {
 
   // inter
@@ -2622,10 +2624,6 @@ let Extend =
   moduleUseError,
   submodulesRelationsFilter,
   submodulesRelationsOwnFilter,
-  toModule,
-  toOpener,
-  toRelation,
-  toJunction,
 
   // submodule
 
@@ -2687,6 +2685,13 @@ let Extend =
   isOutGet,
   isOutSet,
 
+  // coercer
+
+  toModule,
+  toOpener,
+  toRelation,
+  toJunction,
+
   // export
 
   exportString,
@@ -2708,7 +2713,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Extend,
+  extend : Extension,
 });
 
 // Self.prototype[ Symbol.toStringTag ] = Object.prototype.toString;

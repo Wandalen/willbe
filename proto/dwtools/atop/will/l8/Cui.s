@@ -2,6 +2,66 @@
 
 'use strict';
 
+/*
+
+Command routines list
+
+Without selectors :
+
+commandVersion
+commandVersionCheck
+commandSubmodulesFixate
+commandSubmodulesUpgrade
+commandSubmodulesVersionsDownload
+commandSubmodulesVersionsUpdate
+commandSubmodulesVersionsVerify
+commandSubmodulesVersionsAgree
+commandHooksList
+commandClean
+commandSubmodulesClean
+commandModulesTree
+
+With resource selector :
+
+commandResourcesList
+commandPathsList
+commandSubmodulesList
+commandReflectorsList
+commandStepsList
+commandBuildsList
+commandExportsList
+commandAboutList
+commandModulesList
+commandModulesTopologicalList
+commandSubmodulesAdd
+commandGitPreservingHardLinks
+
+With selector of build :
+
+commandBuild
+commandExport
+commandExportPurging
+commandExportRecursive
+
+With other selectors :
+
+commandHelp
+commandImply,
+commandModuleNew
+commandModuleNewWith
+commandWith
+commandEach
+commandPackageInstall
+commandPackageLocalVersions
+commandPackageRemoteVersions
+commandPackageVersion
+
+commandShell
+commandDo
+commandHookCall
+
+*/
+
 let _ = _global_.wTools;
 let Parent = _.Will;
 let Self = wWillCli;
@@ -2953,7 +3013,7 @@ let Accessors =
 // declare
 // --
 
-let Extend =
+let Extension =
 {
 
   // exec
@@ -3061,7 +3121,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Extend,
+  extend : Extension,
 });
 
 //

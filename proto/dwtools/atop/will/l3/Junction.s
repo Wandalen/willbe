@@ -398,7 +398,7 @@
 //
 // //
 //
-// function JunctionReform( sys, o )
+// function Reform( sys, o )
 // {
 //   let cls = this;
 //   let result;
@@ -425,14 +425,14 @@
 //
 // //
 //
-// function JunctionsReform( sys, junctions )
+// function Reforms( sys, junctions )
 // {
 //   let cls = this;
 //   _.assert( arguments.length === 2 );
 //   if( _.arrayLike( junctions ) )
-//   return _.filter( junctions, ( junction ) => cls.JunctionReform( sys, junction ) );
+//   return _.filter( junctions, ( junction ) => cls.Reform( sys, junction ) );
 //   else
-//   return cls.JunctionReform( sys, junctions );
+//   return cls.Reform( sys, junctions );
 // }
 //
 // //
@@ -477,7 +477,7 @@
 //
 // //
 //
-// function JunctionWithObject( sys, object )
+// function Of( sys, object )
 // {
 //   let cls = this;
 //
@@ -506,14 +506,14 @@
 //
 // //
 //
-// function JunctionsWithObjects( sys, junctions )
+// function Ofs( sys, junctions )
 // {
 //   let cls = this;
 //   _.assert( arguments.length === 2 );
 //   if( _.arrayLike( junctions ) )
-//   return _.filter( junctions, ( junction ) => cls.JunctionWithObject( sys, junction ) );
+//   return _.filter( junctions, ( junction ) => cls.Of( sys, junction ) );
 //   else
-//   return cls.JunctionWithObject( sys, junctions );
+//   return cls.Of( sys, junctions );
 // }
 //
 // //
@@ -1134,7 +1134,7 @@
 //       {
 //         let relation = module.submoduleMap[ s ];
 //
-//         // let junction2 = junction.JunctionWithObject( sys, relation );
+//         // let junction2 = junction.Of( sys, relation );
 //         // if( !junction2 )
 //         let junction2 = junction.From({ relation : relation, sys : sys });
 //         _.assert( !!junction2 );
@@ -1304,7 +1304,7 @@
 //   {
 //     _.assert( peerModule instanceof _.Will.Module );
 //     _.assert( shadowMap.peer === _.unknown );
-//     shadowMap.peer = junction.JunctionWithObject( sys, peerModule );
+//     shadowMap.peer = junction.Of( sys, peerModule );
 //     if( !shadowMap.peer )
 //     shadowMap.peer = junction.JunctionFrom( sys, peerModule );
 //     shadowMap.peer = shadowMap.peer.shadow({ module : peerModule, peer : shadowProxy });
@@ -1559,12 +1559,12 @@
 //   ObjectsNames : null,
 //
 //   From,
-//   JunctionReform,
-//   JunctionsReform,
+//   Reform,
+//   Reforms,
 //   JunctionFrom,
 //   JunctionsFrom,
-//   JunctionWithObject,
-//   JunctionsWithObjects,
+//   Of,
+//   Ofs,
 //
 //   PathsOf,
 //   PathsOfAct,
@@ -1595,7 +1595,7 @@
 // // declare
 // // --
 //
-// let Extend =
+// let Extension =
 // {
 //
 //   // inter
@@ -1609,12 +1609,12 @@
 //   mergeMaybe,
 //
 //   From,
-//   JunctionReform,
-//   JunctionsReform,
+//   Reform,
+//   Reforms,
 //   JunctionFrom,
 //   JunctionsFrom,
-//   JunctionWithObject,
-//   JunctionsWithObjects,
+//   Of,
+//   Ofs,
 //   JunctionWithPath,
 //   JunctionsWithPaths,
 //
@@ -1680,7 +1680,7 @@
 // ({
 //   cls : Self,
 //   parent : Parent,
-//   extend : Extend,
+//   extend : Extension,
 // });
 //
 // _.Copyable.mixin( Self );

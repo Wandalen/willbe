@@ -1027,7 +1027,7 @@ stepRoutineWillbeIsUpToDate.uniqueOptions =
 // declare
 // --
 
-let Extend =
+let Extension =
 {
 
   filesReflect,
@@ -1060,7 +1060,7 @@ let Extend =
 
 //
 
-_.mapExtend( Self, Extend );
+_.mapExtend( Self, Extension );
 _.staticDeclare
 ({
   prototype : _.Will.prototype,
