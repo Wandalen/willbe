@@ -1,0 +1,6 @@
+{
+  "name" : "submodule",
+  "enabled" : 1,
+  "dependencies" : { "eslint" : "7.1.0", "babel" : "^0.3.0" },
+  "devDependencies" : { "npmfromwillfile" : "file:.", "wTesting" : "", "willbe" : "alpha" }
+}

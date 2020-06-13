@@ -1,0 +1,5 @@
+{
+  "name" : "npmscripts",
+  "enabled" : 1,
+  "scripts" : { "test" : "wtest .run proto/**", "docgen" : "wdocgen .build proto" }
+}

@@ -1,0 +1,6 @@
+{
+  "name" : "pathrepository",
+  "enabled" : 1,
+  "repository" : "git+https://github.com/author/NpmFromWillfile.git",
+  "bugs" : "https://github.com/author/NpmFromWillfile/issues"
+}
