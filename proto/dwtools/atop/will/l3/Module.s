@@ -7268,7 +7268,7 @@ function willfileGenerateFromNpm( o )
   function addNpmDependency( name, hash, criterion )
   {
     let result = Object.create( null );
-    let hash = hash === '' ? '' : `#${ hash }`;
+    hash = hash === '' ? '' : `#${ hash }`;
     result.path = `npm:///${ name }${ hash }`;
     result.enabled = 1;
     if( criterion )
