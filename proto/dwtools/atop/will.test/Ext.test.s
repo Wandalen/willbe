@@ -23139,6 +23139,8 @@ function commandNpmFromWillfile( test )
     return null;
   })
 
+  /* */
+
   return a.ready;
 }
 
@@ -23388,7 +23390,433 @@ function commandNpmFromWillfileOptionsInCommand( test )
   /* - */
 
   return a.ready;
+}
 
+//
+
+function commandWillfileFromNpm( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'willfile-from-npm' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:Author.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `author`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.about.author, 'Author <author@dot.com>' );
+    test.identical( config.about.name, 'author' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:Contributors.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `contributors`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.about.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>'] );
+    test.identical( config.about.name, 'contributors' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:Description.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `description`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.about.description, 'To check the conversion' );
+    test.identical( config.about.name, 'description' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:Enabled.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `enabled`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.about.name, 'enabled' );
+    test.identical( config.about.enabled, 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:Interpreters.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `interpreters`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.about.interpreters, 'node >= 8.0.0' );
+    test.identical( config.about.name, 'interpreters' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:Keywords.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `keywords`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.about.keywords, [ 'tools', 'export' ] );
+    test.identical( config.about.name, 'keywords' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:License.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `license`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.about.license, 'MIT' );
+    test.identical( config.about.name, 'license' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:Name.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `name`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.about.name, 'willfilefromnpm' );
+    test.identical( config.about[ "npm.name" ], 'willfilefromnpm' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:NpmScripts.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `scripts`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.about[ 'npm.scripts' ], { 'test' : 'wtest .run proto/**', 'docgen' : 'wdocgen .build proto' } );
+    test.identical( config.about.name, 'npmscripts' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:PathMain.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `main`, should not read path';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.path.entryPath, 'path/to' );
+    test.identical( config.about.name, 'pathmain' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:PathRepository.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check fields `repository` and `bugs`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.path.repository, 'git+https:///github.com/author/NpmFromWillfile.git' );
+    test.identical( config.path.bugtracker, 'https:///github.com/author/NpmFromWillfile/issues' );
+    test.identical( config.about.name, 'pathrepository' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:Submodule.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check fields `dependencies` and `devDependencies`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    var exp =
+    {
+      'eslint' :
+      {
+        'path' : 'npm:///eslint#7.1.0',
+        'enabled' : 1
+      },
+      'babel' :
+      {
+        'path' : 'npm:///babel#^0.3.0',
+        'enabled' : 1
+      },
+      'npmfromwillfile' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 1,
+        'criterion' : { 'development' : 1 }
+      },
+      'wTesting' :
+      {
+        'path' : 'npm:///wTesting',
+        'enabled' : 1,
+        'criterion' : { 'development' : 1 }
+      },
+      'willbe' :
+      {
+        'path' : 'npm:///willbe#alpha',
+        'enabled' : 1,
+        'criterion' : { 'development' : 1 }
+      }
+    };
+    test.identical( config.submodule, exp );
+    test.identical( config.about.name, 'submodule' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm packagePath:Version.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check field `version`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.about.version, '0.0.0' );
+    test.identical( config.about.name, 'version' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.from.npm' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check default `package.json` file';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    var exp =
+    {
+      'about' :
+      {
+        'npm.name' : 'willfilefromnpm',
+        'name' : 'willfilefromnpm',
+        'version' : '0.0.0',
+        'enabled' : 1,
+        'description' : 'To check the conversion',
+        'keywords' : [ 'tools', 'export' ],
+        'license' : 'MIT',
+        'author' : 'Author <author@dot.com>',
+        'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ]
+      },
+      'path' :
+      {
+        'origins' :
+        [
+          'git+https:///github.com/author/NpmFromWillfile.git',
+          'npm:///willfilefromnpm'
+        ],
+        'repository' : 'git+https:///github.com/author/NpmFromWillfile.git',
+        'bugtracker' : 'https:///github.com/author/NpmFromWillfile/issues'
+      },
+      'submodule' :
+      {
+        'eslint' :
+        {
+          'path' : 'npm:///eslint#7.1.0',
+          'enabled' : 1
+        },
+        'willfilefromnpm' :
+        {
+          'path' : 'hd://.',
+          'enabled' : 1,
+          'criterion' : { 'development' : 1 }
+        },
+        'wTesting' :
+        {
+          'path' : 'npm:///wTesting',
+          'enabled' : 1,
+          'criterion' : { 'development' : 1 }
+        }
+      }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandWillfileFromNpmDoubleConversion( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'willfile-from-npm' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.from.npm' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check default `package.json` file';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    var exp =
+    {
+      'about' :
+      {
+        'npm.name' : 'willfilefromnpm',
+        'name' : 'willfilefromnpm',
+        'version' : '0.0.0',
+        'enabled' : 1,
+        'description' : 'To check the conversion',
+        'keywords' : [ 'tools', 'export' ],
+        'license' : 'MIT',
+        'author' : 'Author <author@dot.com>',
+        'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ]
+      },
+      'path' :
+      {
+        'origins' :
+        [
+          'git+https:///github.com/author/NpmFromWillfile.git',
+          'npm:///willfilefromnpm'
+        ],
+        'repository' : 'git+https:///github.com/author/NpmFromWillfile.git',
+        'bugtracker' : 'https:///github.com/author/NpmFromWillfile/issues'
+      },
+      'submodule' :
+      {
+        'eslint' :
+        {
+          'path' : 'npm:///eslint#7.1.0',
+          'enabled' : 1
+        },
+        'willfilefromnpm' :
+        {
+          'path' : 'hd://.',
+          'enabled' : 1,
+          'criterion' : { 'development' : 1 }
+        },
+        'wTesting' :
+        {
+          'path' : 'npm:///wTesting',
+          'enabled' : 1,
+          'criterion' : { 'development' : 1 }
+        }
+      }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.npm.from.willfile' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check conversion from generated willfile';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    var exp =
+    {
+      name : "willfilefromnpm",
+      description: "To check the conversion",
+      version : "0.0.0",
+      enabled : 1,
+      license : "MIT",
+      description : "To check the conversion",
+      author : "Author <author@dot.com>",
+      contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      dependencies : { "eslint" : "7.1.0" },
+      devDependencies : { "willfilefromnpm" : "file:.", "wTesting" : "" },
+      repository: "git+https://github.com/author/NpmFromWillfile.git",
+      bugs : "https://github.com/author/NpmFromWillfile/issues",
+      keywords : ["tools", "export"],
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Named .willfile.from.npm packagePath:Version.json' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check of using command `.with`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    test.identical( config.about.version, '0.0.0' );
+    test.identical( config.about.name, 'version' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Named .willfile.from.npm packagePath:Version.json willfilePath:New.will.yml' })
+  a.ready.then( ( got ) =>
+  {
+    test.case = 'check of option `willfilePath`';
+    test.identical( got.exitCode, 0 );
+    let config = a.fileProvider.configRead( a.abs( 'New.will.yml' ) );
+    test.identical( config.about.version, '0.0.0' );
+    test.identical( config.about.name, 'version' );
+    test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
 }
 
 // --
@@ -23658,6 +24086,8 @@ var Self =
 
     commandNpmFromWillfile,
     commandNpmFromWillfileOptionsInCommand,
+    commandWillfileFromNpm,
+    commandWillfileFromNpmDoubleConversion,
   }
 
 }

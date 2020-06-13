@@ -7085,7 +7085,6 @@ function npmGenerate( o )
     }
     else if( p.protocol === 'hd' )
     {
-      debugger;
       depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath,  );
     }
     else _.assert( 0 );
@@ -7143,6 +7142,176 @@ npmGenerate.defaults =
   filesPath : null,
   verbosity : null,
 }
+
+//
+
+function willfileGenerateFromNpm( o )
+{
+  let will = this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = _.mapExtend( null, o );
+  let verbosity = o.verbosity;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
+  packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
+  let config = fileProvider.fileRead({ filePath : packagePath, encoding : 'json' });
+
+  /* */
+
+  let willfile = Object.create( null );
+  willfile.about = Object.create( null );
+  willfile.path = Object.create( null );
+  willfile.submodule = Object.create( null );
+
+  /* */
+
+  if( config.name )
+  willfile.about.name = willfile.about[ 'npm.name' ] = config.name;
+  if( config.version )
+  willfile.about.version = config.version;
+  willfile.about.enabled = config.enabled;
+  if( config.description )
+  willfile.about.description = config.description;
+  if( config.engine )
+  willfile.about.interpreters = config.engine;
+  if( config.keywords )
+  willfile.about.keywords = config.keywords;
+  if( config.license )
+  willfile.about.license = config.license;
+  if( config.author )
+  willfile.about.author = config.author;
+  if( config.contributors )
+  willfile.about.contributors = config.contributors;
+  if( config.scripts )
+  willfile.about[ 'npm.scripts' ] = config.scripts;
+
+  /* */
+
+  willfile.path.origins = [];
+  if( config.repository )
+  {
+    willfile.path.repository = pathNormalize( config.repository );
+    willfile.path.origins.push( willfile.path.repository );
+  }
+  if( config.name )
+  {
+    willfile.path.origins.push( `npm:///${ willfile.about.name }` );
+  }
+  if( willfile.path.origins.length === 0 )
+  {
+    delete willfile.path.origins;
+  }
+  if( config.bugs )
+  {
+    willfile.path.bugtracker = pathNormalize( config.bugs );
+  }
+  if( config.main )
+  {
+    willfile.path.entryPath = config.main;
+  }
+  if( config.files )
+  {
+    willfile.path.export = path.common( config.files );
+  }
+
+  /* */
+
+  if( config.dependencies !== undefined )
+  addDependency( config.dependencies );
+  if( config.devDependencies !== undefined )
+  addDependency( config.devDependencies, 'development' );
+  if( config.optionalDependencies !== undefined )
+  addDependency( config.optionalDependencies, 'optional' );
+
+  /* */
+
+  let willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
+  willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
+  _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
+
+  fileProvider.fileWrite
+  ({
+    filePath : willfilePath,
+    data : willfile,
+    encoding : 'yaml',
+    verbosity : verbosity ? 5 : 0,
+  });
+
+  return null;
+
+  /* */
+
+  function pathNormalize( src )
+  {
+    if( _.strIs( src ) )
+    {
+      if( !_.strHas( src, '///' ) )
+      return _.strReplace( src, '//', '///' );
+      return str;
+    }
+
+    let result = src.type;
+    result += '+' + src.url.replace( '//', '///' );
+    return result;
+  }
+
+  /* */
+
+  function addDependency( dependenciesMap, criterion )
+  {
+    for( let dependency in dependenciesMap )
+    {
+      if( _.strHas( dependenciesMap[ dependency ], /file:/ ) )
+      willfile.submodule[ dependency ] = addHdDependency( dependenciesMap[ dependency ], criterion );
+      else
+      willfile.submodule[ dependency ] = addNpmDependency( dependency, dependenciesMap[ dependency ], criterion );
+    }
+  }
+
+  /* */
+
+  function addHdDependency( path, criterion )
+  {
+    let result = Object.create( null );
+    result.path = `hd://${ _.strRemoveBegin( path, 'file:' ) }`;
+    result.enabled = 1;
+    if( criterion )
+    {
+      result.criterion = Object.create( null );
+      result.criterion[ criterion ] = 1;
+    }
+    return result;
+  }
+
+  /* */
+
+  function addNpmDependency( name, hash, criterion )
+  {
+    let result = Object.create( null );
+    hash = hash === '' ? hash : `#${ hash }`;
+    result.path = `npm:///${ name }${ hash }`;
+    result.enabled = 1;
+    if( criterion )
+    {
+      result.criterion = Object.create( null );
+      result.criterion[ criterion ] = 1;
+    }
+    return result;
+  }
+
+}
+
+willfileGenerateFromNpm.defaults =
+{
+  packagePath : null,
+  willfilePath : null,
+  verbosity : null,
+};
 
 //
 
@@ -7900,6 +8069,7 @@ let Extension =
   resourceImport,
 
   npmGenerate,
+  willfileGenerateFromNpm,
 
   // remote
 

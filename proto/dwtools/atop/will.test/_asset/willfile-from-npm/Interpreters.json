@@ -1,0 +1,5 @@
+{
+  "name" : "interpreters",
+  "enabled" : 1,
+  "engine" : "node >= 8.0.0"
+}
