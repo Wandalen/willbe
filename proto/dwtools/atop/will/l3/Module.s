@@ -7155,8 +7155,7 @@ npmGenerate.defaults =
 
 function willfileGenerateFromNpm( o )
 {
-  let module = this;
-  let will = module.will;
+  let will = this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
@@ -7167,7 +7166,7 @@ function willfileGenerateFromNpm( o )
   _.assert( _.objectIs( opts ) );
 
   let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
-  packagePath = path.join( module.inPath, packagePath );
+  packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
   let config = fileProvider.fileRead({ filePath : packagePath, encoding : 'json' });
 
   /* */
@@ -7188,6 +7187,7 @@ function willfileGenerateFromNpm( o )
   willfile.about.license = config.license;
   willfile.about.author = config.author;
   willfile.about.contributors = config.contributors;
+  willfile.about.npm = Object.create( null );
   willfile.about.npm.name = config.name;
   willfile.about.npm.scripts = config.scripts;
 
@@ -7203,6 +7203,7 @@ function willfileGenerateFromNpm( o )
 
   /* */
 
+  debugger;
   if( config.dependencies !== undefined )
   addDependency( config.dependencies );
   if( config.devDependencies !== undefined )
@@ -7213,7 +7214,7 @@ function willfileGenerateFromNpm( o )
   /* */
 
   let willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
-  willfilePath = path.join( module.inPath, willfilePath );
+  willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
   _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
 
   fileProvider.fileWrite
@@ -7268,7 +7269,7 @@ function willfileGenerateFromNpm( o )
   function addNpmDependency( name, hash, criterion )
   {
     let result = Object.create( null );
-    hash = hash === '' ? '' : `#${ hash }`;
+    hash = hash === '' ? hash : `#${ hash }`;
     result.path = `npm:///${ name }${ hash }`;
     result.enabled = 1;
     if( criterion )
@@ -7281,7 +7282,8 @@ willfileGenerateFromNpm.defaults =
 {
   packagePath : null,
   willfilePath : null,
-}
+  verbosity : null,
+};
 
 //
 
@@ -8036,6 +8038,7 @@ let Extend =
   resourceImport,
 
   npmGenerate,
+  willfileGenerateFromNpm,
 
   // remote
 
