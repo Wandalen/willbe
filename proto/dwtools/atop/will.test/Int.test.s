@@ -50,44 +50,10 @@ function onSuiteBegin()
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
   context.repoDirPath = _.path.join( context.assetsOriginalPath, '_repo' );
 
-  // /*context.find*/a.find = _.fileProvider.filesFinder
-  // ({
-  //   withTerminals : 1,
-  //   withDirs : 1,
-  //   withStem : 1,
-  //   allowingMissed : 1,
-  //   maskPreset : 0,
-  //   outputFormat : 'relative',
-  //   filter :
-  //   {
-  //     recursive : 2,
-  //     maskAll :
-  //     {
-  //       excludeAny : [ /(^|\/)\.git($|\/)/, /(^|\/)\+/ ],
-  //     },
-  //     maskTransientAll :
-  //     {
-  //       excludeAny : [ /(^|\/)\.git($|\/)/, /(^|\/)\+/ ],
-  //     },
-  //   },
-  // });
-  //
-  // /*context.find*/a.findAll = _.fileProvider.filesFinder
-  // ({
-  //   withTerminals : 1,
-  //   withDirs : 1,
-  //   withStem : 1,
-  //   withTransient : 1,
-  //   allowingMissed : 1,
-  //   maskPreset : 0,
-  //   outputFormat : 'relative',
-  // });
-
   let reposDownload = require( './ReposDownload.s' );
   return reposDownload().then( () =>
   {
     _.assert( _.fileProvider.isDir( _.path.join( context.repoDirPath, 'ModuleForTesting1' ) ) );
-    // _.assert( _.fileProvider.isDir( _.path.join( context.repoDirPath, 'ModuleForTesting1' ) ) );
     return null;
   })
 }
@@ -106,7 +72,6 @@ function onSuiteEnd()
 function assetFor( test, name )
 {
   let context = this;
-  // let a = Object.create( null );
 
   if( !name )
   name = test.name;

@@ -10711,7 +10711,7 @@ function exportMultiple( test )
     var exportedReflectorFiles =
     {
       recursive : 0,
-      mandatory : 1,
+      // mandatory : 1,
       src :
       {
         filePath : { 'path::exported.files.export.debug' : '' },
@@ -10727,8 +10727,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1,
-      linking : 'hardLinkMaybe',
+      // dstRewritingOnlyPreserving : 1,
+      // linking : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.debug' ], exportedReflectorFiles );
@@ -10736,7 +10736,7 @@ function exportMultiple( test )
     var exportedReflectorFiles =
     {
       recursive : 0,
-      mandatory : 1,
+      // mandatory : 1,
       src :
       {
         filePath : { 'path::exported.files.export.' : '' },
@@ -10752,8 +10752,8 @@ function exportMultiple( test )
         export : 1,
         generated : 1,
       },
-      dstRewritingOnlyPreserving : 1,
-      linking : 'hardLinkMaybe',
+      // dstRewritingOnlyPreserving : 1,
+      // linking : 'hardLinkMaybe',
     }
 
     test.identical( outfile.reflector[ 'exported.files.export.' ], exportedReflectorFiles );
@@ -12674,7 +12674,6 @@ function exportWithRemoteSubmodules( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-
     test.identical( _.strCount( got.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( got.output, '. Opened .' ), 31 );
     test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
