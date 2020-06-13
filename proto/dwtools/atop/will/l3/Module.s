@@ -7178,32 +7178,57 @@ function willfileGenerateFromNpm( o )
 
   /* */
 
-  willfile.about.name = config.name;
+  if( config.name )
+  willfile.about.name = willfile.about[ 'npm.name' ] = config.name;
+  if( config.version )
   willfile.about.version = config.version;
   willfile.about.enabled = config.enabled;
+  if( config.description )
   willfile.about.description = config.description;
+  if( config.engine )
   willfile.about.interpreters = config.engine;
+  if( config.keywords )
   willfile.about.keywords = config.keywords;
+  if( config.license )
   willfile.about.license = config.license;
+  if( config.author )
   willfile.about.author = config.author;
+  if( config.contributors )
   willfile.about.contributors = config.contributors;
-  willfile.about.npm = Object.create( null );
-  willfile.about.npm.name = config.name;
-  willfile.about.npm.scripts = config.scripts;
+  if( config.scripts )
+  willfile.about[ 'npm.scripts' ] = config.scripts;
 
   /* */
 
-  willfile.path.repository = pathNormalize( config.repository );
-  willfile.path.origins = [ willfile.path.repository, `npm:///${ willfile.about.name }` ];
-  willfile.path.bugtracker = pathNormalize( config.bugs );
+  willfile.path.origins = [];
+  if( config.repository )
+  {
+    willfile.path.repository = pathNormalize( config.repository );
+    willfile.path.origins.push( willfile.path.repository );
+  }
+  if( config.name )
+  {
+    willfile.path.origins.push( `npm:///${ willfile.about.name }` );
+  }
+  if( willfile.path.origins.length === 0 )
+  {
+    delete willfile.path.origins;
+  }
+  if( config.bugs )
+  {
+    willfile.path.bugtracker = pathNormalize( config.bugs );
+  }
   if( config.main )
-  willfile.path.entryPath = config.main;
+  {
+    willfile.path.entryPath = config.main;
+  }
   if( config.files )
-  willfile.path.export = path.common( config.files );
+  {
+    willfile.path.export = path.common( config.files );
+  }
 
   /* */
 
-  debugger;
   if( config.dependencies !== undefined )
   addDependency( config.dependencies );
   if( config.devDependencies !== undefined )
@@ -7219,7 +7244,7 @@ function willfileGenerateFromNpm( o )
 
   fileProvider.fileWrite
   ({
-    filePath : opts.willfilePath,
+    filePath : willfilePath,
     data : willfile,
     encoding : 'yaml',
     verbosity : verbosity ? 5 : 0,
@@ -7232,7 +7257,11 @@ function willfileGenerateFromNpm( o )
   function pathNormalize( src )
   {
     if( _.strIs( src ) )
-    return src;
+    {
+      if( !_.strHas( src, '///' ) )
+      return _.strReplace( src, '//', '///' );
+      return str;
+    }
 
     let result = src.type;
     result += '+' + src.url.replace( '//', '///' );
@@ -7245,10 +7274,10 @@ function willfileGenerateFromNpm( o )
   {
     for( let dependency in dependenciesMap )
     {
-      if( _.strHas( dependenciesMap.dependency, /file:/ ) )
-      willfile.submodule.dependency = addHdDependency( dependenciesMap.dependency, criterion );
+      if( _.strHas( dependenciesMap[ dependency ], /file:/ ) )
+      willfile.submodule[ dependency ] = addHdDependency( dependenciesMap[ dependency ], criterion );
       else
-      willfile.submodule.dependency = addNpmDependency( dependency, dependenciesMap.dependency, criterion );
+      willfile.submodule[ dependency ] = addNpmDependency( dependency, dependenciesMap[ dependency ], criterion );
     }
   }
 
@@ -7256,11 +7285,14 @@ function willfileGenerateFromNpm( o )
 
   function addHdDependency( path, criterion )
   {
-    let result = dependency = Object.create( null );
+    let result = Object.create( null );
     result.path = `hd://${ _.strRemoveBegin( path, 'file:' ) }`;
     result.enabled = 1;
     if( criterion )
-    result.criterion = 1;
+    {
+      result.criterion = Object.create( null );
+      result.criterion[ criterion ] = 1;
+    }
     return result;
   }
 
@@ -7273,7 +7305,11 @@ function willfileGenerateFromNpm( o )
     result.path = `npm:///${ name }${ hash }`;
     result.enabled = 1;
     if( criterion )
-    result.criterion = 1;
+    {
+      result.criterion = Object.create( null );
+      result.criterion[ criterion ] = 1;
+    }
+    return result;
   }
 
 }
