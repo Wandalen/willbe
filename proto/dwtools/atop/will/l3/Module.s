@@ -6634,14 +6634,14 @@ function structureExportOut( o )
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
-  debugger;
-  // if( _.strHas( module.name, 'ModuleForTesting1b' ) )
   // debugger;
-  if( _.strHas( module.commonPath, 'group1/.module/ModuleForTesting1b' ) )
-  {
-    // _global_.debugger = 1;
-    debugger;
-  }
+  // // if( _.strHas( module.name, 'ModuleForTesting1b' ) )
+  // // debugger;
+  // if( _.strHas( module.commonPath, 'group1/.module/ModuleForTesting1b' ) )
+  // {
+  //   // _global_.debugger = 1;
+  //   debugger;
+  // }
 
   let found = module.modulesEach
   ({
