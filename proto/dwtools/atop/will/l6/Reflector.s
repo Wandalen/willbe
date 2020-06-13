@@ -99,9 +99,6 @@ function MakeSingle( o )
   _.assert( arguments.length === 1 );
   o = _.routineOptions( MakeSingle, arguments );
 
-  if( o.resource.name === 'reflector.delete' )
-  debugger;
-
   let result = Parent.MakeSingle.apply( Cls, arguments );
 
   if( _.boolLikeFalse( o.resource.exportable ) )

@@ -9042,6 +9042,75 @@ function cleanWithInPath( test )
 
 //
 
+function cleanRecursiveMin( test )
+{
+  let self = this;
+  let a = self.assetFor( test, 'hierarchy-remote-min' );
+
+  /* Dmytro : new implementation of assetFor().reflect copies _repo, it affects results */
+  a.fileProvider.filesDelete( a.routinePath );
+  a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
+
+  /* - */
+
+  a.ready
+
+  .then( () =>
+  {
+    test.case = 'export first'
+    return null;
+  })
+
+  a.start( '.with ** .clean' )
+  a.start( '.with group1/a .export' )
+  a.start( '.with z .export' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+
+    return null;
+  })
+
+  a.start( '.with z .clean recursive:2' )
+
+  .then( ( got ) =>
+  {
+    test.identical( got.exitCode, 0 );
+
+    test.identical( _.strCount( got.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 31 );
+
+    var exp =
+    [
+      '.',
+      './z.will.yml',
+      './group1',
+      './group1/a.will.yml',
+      './group1/b.will.yml',
+      './group1/group10',
+      './group1/group10/a0.will.yml',
+      './group2',
+      './group2/c.will.yml'
+    ]
+    var files = self.find( a.routinePath );
+    test.identical( files, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+} /* end of function cleanRecursive */
+
+//
+
 /*
   check there is no annoying information about lack of remote submodules of submodules
 */
@@ -23113,6 +23182,7 @@ var Self =
     cleanSubmodules,
     cleanMixed,
     cleanWithInPath,
+    cleanRecursiveMin,
     cleanRecursive,
     cleanDisabledModule,
     cleanHierarchyRemote,
@@ -23151,6 +23221,7 @@ var Self =
     exportDisabledModule,
     exportOutdated,
     exportWholeModule,
+    // exportRecursiveMinimal, /* xxx : implement */
     exportRecursive,
     exportRecursiveUsingSubmodule,
     exportRecursiveLocal,
