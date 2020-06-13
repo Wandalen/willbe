@@ -2348,7 +2348,7 @@ function commandWillfileGenerateFromNpm( e )
   return will.Module.prototype.willfileGenerateFromNpm.call( will,
   {
     packagePath : request.packagePath,
-    willfilePath : request.entryPath,
+    willfilePath : request.willfilePath,
     verbosity : 5,
   });
 }
