@@ -8942,10 +8942,10 @@ function cleanRecursiveMin( test )
   {
     test.identical( got.exitCode, 0 );
 
-    test.identical( _.strCount( got.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 31 );
-    test.identical( _.strCount( got.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
-    test.identical( _.strCount( got.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, 'Failed to open' ), 2 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 16 );
+    test.identical( _.strCount( got.output, '+ 2/3 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( got.output, '+ 0/3 submodule(s) of module::z were downloaded' ), 1 );
 
     return null;
   })
@@ -8957,20 +8957,9 @@ function cleanRecursiveMin( test )
     test.identical( got.exitCode, 0 );
 
     test.identical( _.strCount( got.output, 'Failed to open' ), 0 );
-    test.identical( _.strCount( got.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( got.output, '. Opened .' ), 16 );
 
-    var exp =
-    [
-      '.',
-      './z.will.yml',
-      './group1',
-      './group1/a.will.yml',
-      './group1/b.will.yml',
-      './group1/group10',
-      './group1/group10/a0.will.yml',
-      './group2',
-      './group2/c.will.yml'
-    ]
+    var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml' ];
     var files = self.find( a.routinePath );
     test.identical( files, exp );
 
