@@ -6998,7 +6998,6 @@ function npmGenerate( o )
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
 
-  debugger;
   let currentContext = o.currentContext ? o.currentContext : module;
   opts.packagePath = module.pathResolve
   ({
@@ -7090,11 +7089,12 @@ function npmGenerate( o )
 
     if( p.protocol === 'npm' )
     {
-      depAdd( submodule, path.relative( '/', p.longPath ) );
+      depAdd( submodule, path.relative( '/', p.longPath ), p.hash );
     }
     else if( p.protocol === 'hd' )
     {
-      depAdd( submodule, 'file:' + p.longPath );
+      debugger;
+      depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath,  );
     }
     else _.assert( 0 );
 
@@ -7127,20 +7127,20 @@ function npmGenerate( o )
     return r;
   }
 
-  function depAdd( submodule, name )
+  function depAdd( submodule, name, hash )
   {
     if( submodule.criterion.optional )
-    _depAdd( 'optionalDependencies', name );
+    _depAdd( 'optionalDependencies', name, hash );
     else if( submodule.criterion.development )
-    _depAdd( 'devDependencies', name );
+    _depAdd( 'devDependencies', name, hash );
     else
-    _depAdd( 'dependencies', name );
+    _depAdd( 'dependencies', name, hash );
   }
 
-  function _depAdd( section, name )
+  function _depAdd( section, name, hash )
   {
     config[ section ] = config[ section ] || Object.create( null );
-    config[ section ][ name ] = '';
+    config[ section ][ name ] = hash ? hash : '';
   }
 }
 
