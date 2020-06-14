@@ -95,7 +95,7 @@ function reform()
   if( junction.isFinited() )
   return;
 
-  associationsAdd();
+  associationsAdd(); /* xxx : optimize? */
   objectFind();
   pathsForm();
 
@@ -168,6 +168,9 @@ function reform()
 
   function pathsForm()
   {
+
+    if( junction.id === 49 )
+    debugger;
 
     junction.localPaths.splice( 0, junction.localPaths.length );
     junction.remotePaths.splice( 0, junction.remotePaths.length );
@@ -327,6 +330,9 @@ function reform()
     if( !peerModule.isPreformed() )
     return;
 
+    // if( peerModule && peerModule.id === 1004 )
+    // debugger;
+
     if( junction.peer )
     {
       _.assert( junction.peer.peer === junction );
@@ -337,6 +343,7 @@ function reform()
       return junction.peer;
     }
 
+    debugger; /* xxx */
     let junction2 = _.will.ModuleJunction._Of({ object : peerModule, will });
     peerAssign( junction, junction2 );
 
@@ -348,6 +355,7 @@ function reform()
   function peerAssign( junction, junction2 )
   {
     _.assert( !junction.isFinited() );
+    _.assert( !!junction2 );
 
     if( junction2.peer && junction2.peer !== junction )
     {
@@ -489,7 +497,7 @@ function mergeIn( junction2 )
   _.assert( junction.isFinited() );
   _.assert( !junction2.isFinited() );
 
-  junction2.reform(); /* yyy */
+  junction2.reform();
 
   if( junction.isFinited() )
   return true;
@@ -1052,6 +1060,9 @@ function _relationAdd( relation )
   let will = junction.will;
   let changed = false;
 
+  // if( junction.id === 49 )
+  // debugger;
+
   _.assert( relation instanceof _.Will.ModulesRelation );
 
   if( !junction.relation )
@@ -1108,7 +1119,7 @@ function _relationRemove( relation )
 
   junction._relationRemoveSingle( relation );
 
-  junction._remove( junction.AssociationsOf( relation ) );
+  junction._remove( junction.AssociationsOf( relation ) ); // yyy
   return true;
 }
 
@@ -1120,6 +1131,16 @@ function _openerAdd( opener )
   let will = junction.will;
   let changed = false;
 
+  // if( _.longHas( junction.openers, opener ) ) /* yyy */
+  // {
+  //   _.assert( will.objectToJunctionHash.get( opener ) === junction );
+  //   return changed;
+  // }
+
+  // console.log( ` !! added opener#${opener.id} ${opener.commonPath}` );
+  // if( opener.id === 122 )
+  // debugger;
+
   _.assert( opener instanceof _.Will.ModuleOpener );
 
   if( !junction.opener )
@@ -1130,11 +1151,17 @@ function _openerAdd( opener )
 
   changed = _.arrayAppendedOnce( junction.openers, opener ) > -1 || changed;
 
-  let junction2 = will.objectToJunctionHash.get( opener );
-  _.assert( junction.formed === -1 || junction2 === junction || junction2 === undefined );
-  will.objectToJunctionHash.set( opener, junction );
-
-  _.assert( junction.formed === -1 || changed || _.all( junction.PathsOf( opener ), ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction ) );
+  if( Config.debug )
+  {
+    let junction2 = will.objectToJunctionHash.get( opener );
+    _.assert( junction.formed === -1 || junction2 === junction || junction2 === undefined );
+    will.objectToJunctionHash.set( opener, junction );
+    _.assert( junction.formed === -1 || changed || _.all( junction.PathsOf( opener ), ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction ) );
+  }
+  else
+  {
+    will.objectToJunctionHash.set( opener, junction );
+  }
 
   return changed;
 }
@@ -1161,6 +1188,10 @@ function _openerRemoveSingle( opener )
   _.assert( junction2 === junction );
   will.objectToJunctionHash.delete( opener );
 
+  // console.log( ` !! removed opener#${opener.id} ${opener.commonPath}` );
+  // if( opener.id === 122 )
+  // debugger;
+
 }
 
 //
@@ -1175,7 +1206,7 @@ function _openerRemove( opener )
 
   junction._openerRemoveSingle( opener );
 
-  junction._remove( junction.AssociationsOf( opener ) );
+  junction._remove( junction.AssociationsOf( opener ) ); // yyy
   return true;
 }
 
@@ -1226,6 +1257,10 @@ function _moduleRemoveSingle( module )
 
   let junction2 = will.objectToJunctionHash.get( module );
   _.assert( junction2 === junction );
+
+  if( module.id === 1004 )
+  debugger;
+
   will.objectToJunctionHash.delete( module );
 
 }
@@ -1242,7 +1277,7 @@ function _moduleRemove( module )
 
   junction._moduleRemoveSingle( module );
 
-  junction._remove( junction.AssociationsOf( module ) );
+  junction._remove( junction.AssociationsOf( module ) ); // yyy
   return true;
 }
 
@@ -1255,6 +1290,13 @@ function _add( object )
 
   if( _.arrayIs( object ) )
   return _.any( _.map( object, ( object ) => junction._add( object ) ) );
+
+  // _.assert( _.numberIs( object.formed ) ); /* yyy */
+  // if( !object.formed )
+  // {
+  //   debugger;
+  //   return false
+  // }
 
   if( object instanceof _.Will.ModulesRelation )
   {

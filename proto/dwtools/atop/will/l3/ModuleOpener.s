@@ -21,6 +21,9 @@ function finit()
   let opener = this;
   let will = opener.will;
 
+  if( opener.id === 122 )
+  debugger;
+
   _.assert( !opener.isFinited() );
 
   opener.unform();
@@ -188,6 +191,14 @@ function unform()
 
   _.assert( opener.superRelation === null );
 
+  // if( opener.id === 621 )
+  // debugger;
+ 
+  // let junction = will.junctionOf( opener ); /* yyy */
+  // /* xxx : can be false? */
+  // if( junction && junction.own( opener ) )
+  // junction.remove( opener );
+
   if( opener.openedModule )
   {
     let openedModule = opener.openedModule;
@@ -196,7 +207,7 @@ function unform()
     openedModule.finit();
   }
 
-  let junction = will.junctionOf( opener );
+  let junction = will.junctionOf( opener ); /* yyy */
   if( junction && junction.own( opener ) )
   junction.remove( opener );
 

@@ -512,24 +512,6 @@ function isAvailableGet()
   return true;
 }
 
-// //
-//
-// function dataGet()
-// {
-//   let relation = this;
-//   let module = relation.module;
-//   return relation[ dataSymbol ];
-// }
-//
-// //
-//
-// function dataSet( src )
-// {
-//   let relation = this;
-//   let module = relation.module;
-//   relation[ dataSymbol ] = src;
-// }
-
 //
 
 function moduleSet( src )
@@ -558,6 +540,8 @@ function localPathGet()
     return relation.opener.localPath;
   }
 
+  return null; /* yyy */
+
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
@@ -580,6 +564,8 @@ function remotePathGet()
     _.assert( relation.opener.formed >= 2 );
     return relation.opener.remotePath;
   }
+
+  return null; /* yyy */
 
   let will = module.will;
   let fileProvider = will.fileProvider;
@@ -909,7 +895,6 @@ let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 // --
 
 let openerSymbol = Symbol.for( 'opener' );
-// let dataSymbol = Symbol.for( 'data' );
 let moduleSymbol = Symbol.for( 'module' );
 let pathSymbol = Symbol.for( 'path' );
 
@@ -1004,8 +989,6 @@ let Extension =
   isMandatory,
   isValid,
   isAvailableGet,
-  // dataGet,
-  // dataSet,
   moduleSet,
 
   // path

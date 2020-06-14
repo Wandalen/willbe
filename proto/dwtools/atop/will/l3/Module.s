@@ -51,6 +51,9 @@ function finit()
 
   _.assert( !module.isFinited() );
 
+  if( module.id === 1004 )
+  debugger;
+
   try
   {
 
@@ -631,6 +634,10 @@ function unform()
 {
   let module = this;
   let will = module.will;
+
+  if( module.id === 1004 )
+  debugger;
+
   let junction = will.junctionOf( module );
 
   _.assert( arguments.length === 0, 'Expects no arguments' );

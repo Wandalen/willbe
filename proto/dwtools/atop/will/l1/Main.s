@@ -2608,7 +2608,7 @@ function modulesDownload_body( o )
   let rootModule = o.modules.length === 1 ? o.modules[ 0 ] : null;
   let rootJunctions = _.arrayAs( will.junctionsFrom( o.modules ) );
 
-  debugger;
+  // debugger;
   return objectsUpformAndDownload( o.modules )
   .finally( ( err, arg ) =>
   {

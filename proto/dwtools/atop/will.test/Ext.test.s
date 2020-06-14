@@ -61,7 +61,7 @@ function onSuiteBegin()
   context.repoDirPath = _.path.join( context.assetsOriginalPath, '_repo' );
   context.appJsPath = _.path.nativize( _.Will.WillPathGet() );
 
-  // /*context.find*/a.find = _.fileProvider.filesFinder /* xxx qqq : remove that from context. asset should have such routines */
+  // a.find = _.fileProvider.filesFinder /* xxx qqq : remove that from context. asset should have such routines */
   // ({
   //   withTerminals : 1,
   //   withDirs : 1,
@@ -83,7 +83,7 @@ function onSuiteBegin()
   //   },
   // });
   //
-  // /*context.find*/a.findAll = _.fileProvider.filesFinder
+  // a.findAll = _.fileProvider.filesFinder
   // ({
   //   withTerminals : 1,
   //   withDirs : 1,
@@ -198,6 +198,7 @@ function assetFor( test, name )
       a.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) );
       a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
     }
+    return null
   }
 
   // a.shell = _.process.starter
@@ -352,7 +353,7 @@ function build( test )
     }
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     var exp =
     [
       '.',
@@ -391,7 +392,7 @@ function build( test )
     }
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     var exp =
     [
       '.',
@@ -441,7 +442,7 @@ function build( test )
     }
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     var exp =
     [
       '.',
@@ -480,7 +481,7 @@ function build( test )
     }
     test.is( _.strHas( got.output, /Built .+ \/ build::shell1/ ) );
 
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     var exp =
     [
       '.',
@@ -531,7 +532,7 @@ function transpile( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     var exp =
     [
       '.',
@@ -566,7 +567,7 @@ function transpile( test )
   {
 
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     var exp =
     [
       '.',
@@ -613,7 +614,7 @@ function transpile( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     var exp =
     [
       '.',
@@ -647,7 +648,7 @@ function transpile( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     var exp =
     [
       '.',
@@ -683,7 +684,7 @@ function transpile( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     var exp =
     [
       '.',
@@ -756,7 +757,7 @@ function transpileWithOptions( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './File.min.js' ] );
     let file = a.fileProvider.fileRead( a.abs( 'out/File.min.js') );
     let lines = _.strLinesCount( file );
@@ -832,7 +833,7 @@ function moduleNewDotless( test )
       './sub/ex.will.yml',
       './sub/im.will.yml'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -871,7 +872,7 @@ function moduleNewDotless( test )
       './sub/ex.will.yml',
       './sub/im.will.yml'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -922,7 +923,7 @@ function moduleNewDotless( test )
       './sub/ex.will.yml',
       './sub/im.will.yml'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -972,11 +973,11 @@ function moduleNewDotless( test )
       './sub/ex.will.yml',
       './sub/im.will.yml'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     var exp = [ '.', './dir2', './dir2/some', './dir2/some/will.yml' ]
-    var files = /*context.find*/a.find( a.abs( '../dir1' ) );
+    var files = a.find( a.abs( '../dir1' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1036,7 +1037,7 @@ function moduleNewDotlessSingle( test )
       './sub',
       './sub/will.yml'
     ];
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1074,7 +1075,7 @@ function moduleNewDotlessSingle( test )
       './sub',
       './sub/will.yml'
     ];
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1124,7 +1125,7 @@ function moduleNewDotlessSingle( test )
       './sub',
       './sub/will.yml'
     ];
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1172,11 +1173,11 @@ function moduleNewDotlessSingle( test )
       './sub',
       './sub/will.yml'
     ];
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     var exp = [ '.', './dir2', './dir2/some', './dir2/some/will.yml' ]
-    var files = /*context.find*/a.find( a.abs( '../dir1' ) );
+    var files = a.find( a.abs( '../dir1' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1238,7 +1239,7 @@ function moduleNewNamed( test )
       './proto/File.debug.js',
       './proto/File.release.js'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1277,7 +1278,7 @@ function moduleNewNamed( test )
       './proto/File.debug.js',
       './proto/File.release.js'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1328,7 +1329,7 @@ function moduleNewNamed( test )
       './some',
       './some/will.yml'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1379,7 +1380,7 @@ function moduleNewNamed( test )
       './some',
       './some/some2.will.yml'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1429,7 +1430,7 @@ function moduleNewNamed( test )
       './proto/File.debug.js',
       './proto/File.release.js'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1480,7 +1481,7 @@ function moduleNewNamed( test )
       './super',
       './super/will.yml'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1530,7 +1531,7 @@ function moduleNewNamed( test )
       './proto/File.debug.js',
       './proto/File.release.js'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1581,7 +1582,7 @@ function moduleNewNamed( test )
       './some',
       './some/will.yml'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1630,7 +1631,7 @@ function moduleNewNamed( test )
       './proto/File.debug.js',
       './proto/File.release.js'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     var exp =
@@ -1640,7 +1641,7 @@ function moduleNewNamed( test )
       './dir2/some',
       './dir2/some/will.yml'
     ]
-    var files = /*context.find*/a.find( a.abs( '../dir1' ) );
+    var files = a.find( a.abs( '../dir1' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'nhandled error' ), 0 );
@@ -1694,13 +1695,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1723,13 +1724,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1752,13 +1753,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1783,13 +1784,13 @@ function openWith( test )
   {
     test.notIdentical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     a.reflect();
@@ -1814,13 +1815,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1843,13 +1844,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1875,13 +1876,13 @@ function openWith( test )
     test.identical( _.strCount( got.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1907,13 +1908,13 @@ function openWith( test )
     test.identical( _.strCount( got.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1936,13 +1937,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -1973,13 +1974,13 @@ function openWith( test )
     test.identical( _.strCount( got.output, 'uncaught error' ), 0 );
     test.identical( _.strCount( got.output, '====' ), 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     a.reflect();
@@ -2004,13 +2005,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
@@ -2033,13 +2034,13 @@ function openWith( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
@@ -2077,13 +2078,13 @@ function openEach( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [] );
 
     return null;
@@ -2106,13 +2107,13 @@ function openEach( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [] );
-    var files = /*context.find*/a.find( a.abs( 'doc/out' ) );
+    var files = a.find( a.abs( 'doc/out' ) );
     test.identical( files, [ '.', './submodule.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
-    var files = /*context.find*/a.find( a.abs( 'doc/doc.out' ) );
+    var files = a.find( a.abs( 'doc/doc.out' ) );
     test.identical( files, [ '.', './super.out.will.yml', './debug', './debug/File.debug.js', './debug/File.release.js' ] );
 
     return null;
@@ -2614,7 +2615,7 @@ function commandsSeveral( test )
       './proto/File.debug.js',
       './proto/File.release.js'
     ]
-    var got = /*context.find*/a.find( a.routinePath );
+    var got = a.find( a.routinePath );
     test.identical( got, exp );
 
     return null;
@@ -2851,7 +2852,7 @@ function reflectorOptionsCheck( test )
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported module::reflector-options-check \/ build::export with 3 file\(s\) in/ ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out/' ) );
+    var files = a.find( a.abs( 'out/' ) );
     test.identical( files, [ '.', './reflector-options-check.out.will.yml' ] );
     var outfile = a.fileProvider.configRead( a.abs( 'out/reflector-options-check.out.will.yml' ) );
 
@@ -2909,7 +2910,7 @@ function reflectorOptionsCheckDefaultOptionsAndWithoutOptions( test )
     test.case = '".with import .build defaultOptions", first reflection';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 1 file' ) );
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
     return null;
@@ -2923,7 +2924,7 @@ function reflectorOptionsCheckDefaultOptionsAndWithoutOptions( test )
     test.case = '".with import .build defaultOptions", second reflection';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 1 file' ) );
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
     return null;
@@ -2937,7 +2938,7 @@ function reflectorOptionsCheckDefaultOptionsAndWithoutOptions( test )
     test.case = '".with import .build withoutOptions", throw error - different files';
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, "Can't rewrite terminal file" ) );
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
     return null;
@@ -2974,7 +2975,7 @@ function reflectorOptionsCheckWithoutOptionsAndDefaultOptions( test )
     test.case = '".with import .build withoutOptions", first reflection';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 1 file' ) );
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
     return null;
@@ -2988,7 +2989,7 @@ function reflectorOptionsCheckWithoutOptionsAndDefaultOptions( test )
     test.case = '".with import .build withoutOptions", second reflection';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 1 file' ) );
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
     return null;
@@ -3002,7 +3003,7 @@ function reflectorOptionsCheckWithoutOptionsAndDefaultOptions( test )
     test.case = '".with import .build defaultOptions", throw error - different files';
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, "Can't rewrite terminal file" ) );
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
     return null;
@@ -3039,7 +3040,7 @@ function reflectorOptionsCheckWithoutOptionsAndNotDefaultOptions( test )
     test.case = '".with import .build withoutOptions", first reflection';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 1 file' ) );
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
     return null;
@@ -3053,7 +3054,7 @@ function reflectorOptionsCheckWithoutOptionsAndNotDefaultOptions( test )
     test.case = '".with import .build withoutOptions", second reflection';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 1 file' ) );
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
     return null;
   });
@@ -3066,7 +3067,7 @@ function reflectorOptionsCheckWithoutOptionsAndNotDefaultOptions( test )
     test.case = '".with import .build notDefaultOptions", rewrite file because options disabled';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'reflected 1 file' ) );
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
     return null;
@@ -3110,9 +3111,9 @@ function reflectNothingFromSubmodules( test )
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, /Exported module::reflect-nothing-from-submodules \/ build::proto.export with 2 file\(s\) in/ ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './reflect-nothing-from-submodules.out.will.yml', './debug', './debug/Single.s' ] );
 
     test.is( a.fileProvider.fileExists( a.abs( 'out/reflect-nothing-from-submodules.out.will.yml' ) ) )
@@ -3255,7 +3256,7 @@ function reflectGetPath( test )
       './debug/dwtools/abase/l3.test',
       './debug/dwtools/abase/l3.test/ModuleForTesting12.test.s'
     ]
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 4 );
     test.identical( files, expected );
 
@@ -3323,7 +3324,7 @@ function reflectSubdir( test )
       './out/debug/proto/File1.s',
       './out/debug/proto/File2.s',
     ]
-    var got = /*context.find*/a.find( a.routinePath );
+    var got = a.find( a.routinePath );
     test.identical( got, expected );
 
     return null;
@@ -3363,7 +3364,7 @@ function reflectSubdir( test )
       './out/debug/proto/File1.s',
       './out/debug/proto/File2.s',
     ]
-    var got = /*context.find*/a.find( a.routinePath );
+    var got = a.find( a.routinePath );
     test.identical( got, expected );
 
     return null;
@@ -3403,7 +3404,7 @@ function reflectSubdir( test )
       './out/debug/proto/File1.s',
       './out/debug/proto/File2.s',
     ]
-    var got = /*context.find*/a.find( a.routinePath );
+    var got = a.find( a.routinePath );
     test.identical( got, expected );
 
     return null;
@@ -3465,7 +3466,7 @@ function reflectSubmodulesWithBase( test )
       './debug/reflectSubmodulesWithBase/module/proto/File1.s',
       './debug/reflectSubmodulesWithBase/module/proto/File2.s'
     ]
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, expected );
     return got;
   })
@@ -3494,7 +3495,7 @@ function reflectSubmodulesWithBase( test )
       './debug/module/proto/File1.s',
       './debug/module/proto/File2.s'
     ];
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, expected );
     return got;
   })
@@ -3538,7 +3539,7 @@ function reflectComposite( test )
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
     ]
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.is( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
@@ -3569,7 +3570,7 @@ function reflectComposite( test )
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
     ]
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.is( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
@@ -3600,7 +3601,7 @@ function reflectComposite( test )
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
     ]
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.is( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
@@ -3631,7 +3632,7 @@ function reflectComposite( test )
       './debug/dir2/File1.debug.js',
       './debug/dir2/File2.debug.js'
     ]
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.is( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
@@ -3652,7 +3653,7 @@ function reflectComposite( test )
   {
     var expected =
     [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ]
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.is( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
@@ -3672,7 +3673,7 @@ function reflectComposite( test )
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.js', './debug/dir1/File.test.js', './debug/dir1/File1.debug.js', './debug/dir1/File2.debug.js' ];
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.is( files.length > 5 );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
@@ -3692,7 +3693,7 @@ function reflectComposite( test )
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ];
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
@@ -3711,7 +3712,7 @@ function reflectComposite( test )
   .then( ( arg ) =>
   {
     var expected = [ '.', './debug', './debug/dir1', './debug/dir1/File.test.js' ]
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, expected );
     test.identical( arg.exitCode, 0 );
     return null;
@@ -3831,7 +3832,7 @@ function reflectRemoteGit( test )
   function validate1( arg )
   {
     test.identical( arg.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'ModuleForTesting2a' ) );
+    var files = a.find( a.abs( 'ModuleForTesting2a' ) );
     test.ge( files.length, 10 );
     return null;
   }
@@ -3842,11 +3843,11 @@ function reflectRemoteGit( test )
   {
     test.identical( arg.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'ModuleForTesting2a' ) );
+    var files = a.find( a.abs( 'ModuleForTesting2a' ) );
     test.ge( files.length, 10 );
-    var files = /*context.find*/a.find( a.abs( 'ModuleForTesting1b' ) );
+    var files = a.find( a.abs( 'ModuleForTesting1b' ) );
     test.ge( files.length, 10 );
-    var files = /*context.find*/a.find( a.abs( 'ModuleForTesting12' ) );
+    var files = a.find( a.abs( 'ModuleForTesting12' ) );
     test.ge( files.length, 10 );
 
     return null;
@@ -3905,7 +3906,7 @@ function reflectWithOptions( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ reflector::reflect.proto1 reflected 3 file\(s\) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js', './debug/File.test.js' ] );
     return null;
   })
@@ -3930,7 +3931,7 @@ function reflectWithOptions( test )
     test.identical( _.strCount( got.output, '====' ), 0 );
     test.is( _.strHas( got.output, /Failed .*module::.+ \/ step::reflect\.proto2/ ) );
     test.is( _.strHas( got.output, /No file found at .+/ ) );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
     return null;
   })
@@ -3950,7 +3951,7 @@ function reflectWithOptions( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, / \+ reflector::reflect.proto3 reflected 0 file\(s\) .+\/reflectWithOptions\/.* : .*out\/debug.* <- .*proto.* in/ ) );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [] );
     return null;
   })
@@ -3983,7 +3984,7 @@ function reflectWithOptionDstRewriting( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
@@ -4096,7 +4097,7 @@ function reflectWithOptionLinking( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
@@ -4118,7 +4119,7 @@ function reflectWithOptionLinking( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
@@ -4139,7 +4140,7 @@ function reflectWithOptionLinking( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
@@ -4179,7 +4180,7 @@ function reflectorFromPredefinedWithOptions( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
@@ -4205,7 +4206,7 @@ function reflectorFromPredefinedWithOptions( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
 
     var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
@@ -4258,7 +4259,7 @@ function reflectWithSelectorInDstFilter( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/Single.s' ] );
     return null;
   })
@@ -4277,7 +4278,7 @@ function reflectWithSelectorInDstFilter( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './release', './release/Single.s' ] );
     return null;
   })
@@ -4311,7 +4312,7 @@ function reflectSubmodulesWithCriterion( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     var expected =
     [
       '.',
@@ -4345,7 +4346,7 @@ function reflectSubmodulesWithCriterion( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     var expected = [ '.', './A.js' ];
     test.identical( files, expected );
     return null;
@@ -4365,7 +4366,7 @@ function reflectSubmodulesWithCriterion( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     var expected = [ '.', './B.js' ];
     test.identical( files, expected );
     return null;
@@ -4402,7 +4403,7 @@ function reflectSubmodulesWithPluralCriterionManualExport( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
@@ -4435,7 +4436,7 @@ function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
@@ -4447,7 +4448,7 @@ function reflectSubmodulesWithPluralCriterionEmbeddedExport( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     var expected = [ '.', './debug', './debug/File.s' ];
     test.identical( files, expected );
     return null;
@@ -4503,7 +4504,7 @@ function reflectNpmModules( test )
       './proto/dwtools/abase/l4/l4',
       './proto/dwtools/abase/l4/l4/ModuleForTesting12ab.s'
     ]
-    var files = /*context.find*/a.find( a.abs( 'out' ) )
+    var files = a.find( a.abs( 'out' ) )
     test.identical( files, exp );
 
     return null;
@@ -4596,7 +4597,7 @@ function relfectSubmodulesWithNotExistingFile( test )
       './module/moduleB/proto',
       './module/moduleB/proto/amid'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
 
     return null;
@@ -4643,7 +4644,7 @@ function reflectInherit( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, ' + reflector::reflect.proto1 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug1/File.test.js', './out/debug1/some.test', './out/debug1/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
@@ -4664,7 +4665,7 @@ function reflectInherit( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, ' + reflector::reflect.proto2 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
@@ -4685,7 +4686,7 @@ function reflectInherit( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, ' + reflector::reflect.proto3 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug1.* <- .*proto.*/ ) );
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug1', './out/debug1/File.js', './out/debug1/File.s', './out/debug1/File.test.js', './out/debug1/some.test', './out/debug1/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
@@ -4706,7 +4707,7 @@ function reflectInherit( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, ' + reflector::reflect.proto4 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
@@ -4727,7 +4728,7 @@ function reflectInherit( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, ' + reflector::reflect.proto5 reflected 6 file(s)' ) );
     test.is( _.strHas( got.output, /.*out\/debug2.* <- .*proto.*/ ) );
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/debug2', './out/debug2/File.js', './out/debug2/File.s', './out/debug2/File.test.js', './out/debug2/some.test', './out/debug2/some.test/File2.js', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
@@ -4764,7 +4765,7 @@ function reflectInherit( test )
       './proto/some.test',
       './proto/some.test/File2.js'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, exp );
     return null;
   })
@@ -4785,7 +4786,7 @@ function reflectInherit( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, / \+ reflector::reflect.files1 reflected 2 file\(s\) .*:.*out.*<-.*proto/ ), 1 );
     test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
@@ -4806,7 +4807,7 @@ function reflectInherit( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, / \+ reflector::reflect.files2 reflected 2 file\(s\) .*:.*out.*<-.*proto/ ), 1 );
     test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
@@ -4827,7 +4828,7 @@ function reflectInherit( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, / \+ reflector::reflect\.files3 reflected 2 file\(s\) .*:.*out.*<-.*proto/ ), 1 );
     test.identical( _.strCount( got.output, /.*out.* <- .*proto.*/ ), 1 );
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, [ '.', './.will.yml', './out', './out/File.js', './out/File.s', './proto', './proto/File.js', './proto/File.s', './proto/File.test.js', './proto/some.test', './proto/some.test/File2.js' ] );
     return null;
   })
@@ -4867,7 +4868,7 @@ function reflectInheritSubmodules( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.identical( files, [ '.', './a.will.yml', './b.will.yml', './c.will.yml', './submodule1.out.will.yml', './submodule2.out.will.yml', './submodule3.out.will.yml', './submodule4.out.will.yml', './module', './module/submodule1.will.yml', './module/submodule2.will.yml', './module/submodule3.will.yml', './module/submodule4.will.yml', './module/proto', './module/proto/File1.s', './module/proto/File2.s', './module/proto1', './module/proto1/File1.s', './module/proto2', './module/proto2/File2.s' ] );
     return null;
   })
@@ -4886,7 +4887,7 @@ function reflectInheritSubmodules( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File1.s', './debug/File2.s' ] );
     return null;
   })
@@ -4905,7 +4906,7 @@ function reflectInheritSubmodules( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/f1', './debug/f2' ] );
     return null;
   })
@@ -4924,7 +4925,7 @@ function reflectInheritSubmodules( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File1.s', './debug/File2.s' ] );
     return null;
   })
@@ -4980,7 +4981,7 @@ function reflectComplexInherit( test )
       './ab/files/dir3.test/File.js',
       './ab/files/dir3.test/File.test.js'
     ]
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp );
     return null;
   })
@@ -5031,7 +5032,7 @@ function reflectComplexInherit( test )
       './abac/files/dir3.test/File.js',
       './abac/files/dir3.test/File.test.js'
     ]
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp );
     return null;
   })
@@ -5060,7 +5061,7 @@ function reflectorMasks( test )
   {
     test.case = 'mask directory';
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './release', './release/proto.two' ] );
 
     test.identical( got.exitCode, 0 );
@@ -5078,7 +5079,7 @@ function reflectorMasks( test )
   {
     test.case = 'mask terminal';
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/build.txt.js', './debug/manual.md', './debug/package.json', './debug/tutorial.md' ] );
 
     test.identical( got.exitCode, 0 );
@@ -5108,7 +5109,7 @@ function reflectorsCommonPrefix( test )
   {
     test.case = 'use two reflectors with common prefix in name';
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/Source.js' ] );
 
     test.identical( got.exitCode, 0 );
@@ -5663,7 +5664,7 @@ function hookGitMake( test )
   .then( ( got ) =>
   {
     var exp = [ '.', './will.yml' ];
-    var files = /*context.find*/a.find( a.abs( 'New2' ) );
+    var files = a.find( a.abs( 'New2' ) );
     test.identical( files, exp );
 
     return _.git.repositoryDelete
@@ -5688,7 +5689,7 @@ function hookGitMake( test )
     test.identical( _.strCount( got.output, `> ` ), 3 );
 
     var exp = [ '.', './will.yml' ];
-    var files = /*context.find*/a.find( a.abs( 'New2' ) );
+    var files = a.find( a.abs( 'New2' ) );
     test.identical( files, exp );
 
     return null;
@@ -5723,7 +5724,7 @@ function hookPrepare( test )
   .then( ( got ) =>
   {
     var exp = [];
-    var files = /*context.find*/a.find( a.abs( 'New2' ) );
+    var files = a.find( a.abs( 'New2' ) );
     test.identical( files, exp );
     return _.git.repositoryDelete
     ({
@@ -5774,7 +5775,7 @@ function hookPrepare( test )
       './sample/Sample.html',
       './sample/Sample.s',
     ]
-    var files = /*context.find*/a.find( a.abs( 'New2' ) );
+    var files = a.find( a.abs( 'New2' ) );
     test.identical( files, exp );
 
     return null;
@@ -5792,7 +5793,7 @@ function hookPrepare( test )
   .then( ( got ) =>
   {
     var exp = [];
-    var files = /*context.find*/a.find( a.abs( 'New3/New4' ) );
+    var files = a.find( a.abs( 'New3/New4' ) );
     test.identical( files, exp );
     return _.git.repositoryDelete
     ({
@@ -5843,7 +5844,7 @@ function hookPrepare( test )
       './sample/Sample.html',
       './sample/Sample.s'
     ]
-    var files = /*context.find*/a.find( a.abs( 'New3' ) );
+    var files = a.find( a.abs( 'New3' ) );
     test.identical( files, exp );
 
     return null;
@@ -6566,7 +6567,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.vd.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = /*context.find*/a.find( a.abs( 'proto' ) );
+    var files = a.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6596,7 +6597,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, /- .*step::files.delete.v0.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.identical( _.strCount( got.output, 'Deleted' ), 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'proto' ) );
+    var files = a.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6625,7 +6626,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v1.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = /*context.find*/a.find( a.abs( 'proto' ) );
+    var files = a.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6654,7 +6655,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, '1 at ./B' ), 1 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v3.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = /*context.find*/a.find( a.abs( 'proto' ) );
+    var files = a.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6684,7 +6685,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, /- .*step::files.delete.vd.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 0 );
     test.is( 2 <=_.strLinesCount( got.output ) && _.strLinesCount( got.output ) <= 3 );
 
-    var files = /*context.find*/a.find( a.abs( 'proto' ) );
+    var files = a.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6713,7 +6714,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v0.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'proto' ) );
+    var files = a.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6742,7 +6743,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, '1 at ./B' ), 1 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v0.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = /*context.find*/a.find( a.abs( 'proto' ) );
+    var files = a.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6771,7 +6772,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, '1 at ./B' ), 0 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v3.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = /*context.find*/a.find( a.abs( 'proto' ) );
+    var files = a.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -6800,7 +6801,7 @@ function verbosityStepDelete( test )
     test.identical( _.strCount( got.output, '1 at ./B' ), 1 );
     test.identical( _.strCount( got.output, /- .*step::files.delete.v3.* deleted 3 file\(s\), at .*\/verbosityStepDelete\/proto\// ), 1 );
 
-    var files = /*context.find*/a.find( a.abs( 'proto' ) );
+    var files = a.find( a.abs( 'proto' ) );
     test.identical( files, [ '.' ] );
 
     return null;
@@ -8372,7 +8373,7 @@ function buildSingleModule( test )
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
 
     return null;
@@ -8396,7 +8397,7 @@ function buildSingleModule( test )
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, /Built .*module::single \/ build::debug\.raw.* in/ ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
 
     return null;
@@ -8420,7 +8421,7 @@ function buildSingleModule( test )
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, /Built .*module::single \/ build::release\.raw.* in/ ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
 
     return null;
@@ -8534,7 +8535,7 @@ function buildSubmodules( test )
     test.is( !err );
     test.identical( _.strCount( got.output, 'nhandled' ), 0 )
     test.identical( _.strCount( got.output, 'ncaught' ), 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 10 );
     return null;
   })
@@ -8557,7 +8558,7 @@ function buildSubmodules( test )
     test.is( _.strHas( got.output, /Building .*module::submodules \/ build::debug\.raw.*/ ) );
     test.is( _.strHas( got.output, /Built .*module::submodules \/ build::debug\.raw.*/ ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 15 );
 
     return null;
@@ -9125,9 +9126,9 @@ function exportSingle( test )
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
     test.is( _.strHas( got.output, 'Exported module::single / build::proto.export with 2 file(s) in') );
 
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s' ] );
 
     test.is( a.fileProvider.fileExists( a.abs( 'out/single.out.will.yml' ) ) )
@@ -9161,9 +9162,9 @@ function exportSingle( test )
     test.is( _.strHas( got.output, 'reflected 2 file(s)' ) );
     test.is( _.strHas( got.output, 'Exported module::single / build::proto.export with 2 file(s) in' ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './Single.s' ] );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './single.out.will.yml', './debug', './debug/Single.s'  ] );
 
     test.is( a.fileProvider.fileExists( a.abs( 'out/single.out.will.yml' ) ) )
@@ -9210,7 +9211,7 @@ function exportItself( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.gt( files.length, 50 );
 
     test.is( _.strHas( got.output, '+ Write out willfile' ) );
@@ -9351,7 +9352,7 @@ function exportStringrmal( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /Exported .*module::ModuleForTesting12.informal \/ build::export.* in/ ), 1 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) );
@@ -9428,7 +9429,7 @@ function exportStringrmal( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /Exported .*module::ModuleForTesting12.informal \/ build::export.* in/ ), 1 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) );
@@ -9506,7 +9507,7 @@ function exportStringrmal( test )
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /Exported .*module::ModuleForTesting12ab.informal \/ build::export.* in/ ), 1 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ModuleForTesting12ab.informal.out.will.yml' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/ModuleForTesting12ab.informal.out.will.yml' ) );
@@ -9605,7 +9606,7 @@ function exportWithReflector( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './export-with-reflector.out.will.yml' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/export-with-reflector.out.will.yml' ) );
@@ -9674,9 +9675,9 @@ function exportMixed( test )
     test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) ) );
     test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12ab.informal.out.will.yml' ) ) );
 
-    var files = /*context.find*/a.find( a.abs( 'module' ) );
+    var files = a.find( a.abs( 'module' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting12ab.informal.will.yml' ] );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.out.will.yml', './ModuleForTesting12ab.informal.out.will.yml' ] );
 
     var expected = [ 'ModuleForTesting12.informal.will.yml', 'ModuleForTesting12ab.informal.will.yml' ];
@@ -9869,9 +9870,9 @@ function exportMixed( test )
     test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) ) );
     test.is( a.fileProvider.isTerminal( a.abs( 'out/ModuleForTesting12ab.informal.out.will.yml' ) ) );
 
-    var files = /*context.find*/a.find( a.abs( 'module' ) );
+    var files = a.find( a.abs( 'module' ) );
     test.identical( files, [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting12ab.informal.will.yml' ] );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 70 );
 
     var expected = [ 'ModuleForTesting12.informal.will.yml', 'ModuleForTesting12ab.informal.will.yml' ];
@@ -9921,7 +9922,7 @@ function exportSecond( test )
 
     test.is( a.fileProvider.isTerminal( a.abs( 'out/ExportSecond.out.will.yml' ) ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/ExportSecond.out.will.yml' ) );
@@ -10135,7 +10136,7 @@ function exportSecond( test )
 
     test.is( a.fileProvider.isTerminal( a.abs( 'out/ExportSecond.out.will.yml' ) ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './ExportSecond.out.will.yml', './debug', './debug/.NotExecluded.js', './debug/File.js' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/ExportSecond.out.will.yml' ) );
@@ -10365,7 +10366,7 @@ function exportSubmodules( test )
     test.is( a.fileProvider.isTerminal( a.abs( 'out/submodules.out.will.yml' ) ) );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.is( files.length > 10 );
 
     var files = a.fileProvider.dirRead( a.abs( 'out' ) );
@@ -10402,7 +10403,7 @@ function exportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js' ] );
     test.identical( got.exitCode, 0 );
 
@@ -10602,7 +10603,7 @@ function exportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
 
@@ -10922,7 +10923,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Exported module::submodule / build::export.debug with 2 file(s)' ) );
@@ -10946,7 +10947,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = /*context.find*/a.find( a.abs( 'super.out' ) );
+    var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Exported module::supermodule / build::export. with 2 file(s)' ) );
@@ -10968,7 +10969,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = /*context.find*/a.find( a.abs( 'super.out' ) );
+    var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.out.tgs', './supermodule.out.will.yml', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '5 at ' ) );
@@ -10991,7 +10992,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = /*context.find*/a.find( a.abs( 'super.out' ) );
+    var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted 5 file(s)' ) );
@@ -11017,7 +11018,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = /*context.find*/a.find( a.abs( 'super.out' ) );
+    var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Exported module::supermodule / build::export.debug with 2 file(s)' ) );
@@ -11039,7 +11040,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = /*context.find*/a.find( a.abs( 'super.out' ) );
+    var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.debug.out.tgs', './supermodule.out.tgs', './supermodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '8 at ' ) );
@@ -11062,7 +11063,7 @@ function exportImportMultiple( test )
   .then( ( got ) =>
   {
 
-    var files = /*context.find*/a.find( a.abs( 'super.out' ) );
+    var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [] );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Clean deleted 8 file(s)' ) );
@@ -11098,7 +11099,7 @@ function exportBroken( test )
   .then( ( got ) =>
   {
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.debug.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js' ] );
     test.identical( got.exitCode, 0 );
     test.is( a.fileProvider.fileExists( a.abs( 'out/debug' ) ) );
@@ -11214,10 +11215,10 @@ function exportDoc( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './submodule.default-debug-raw.out.tgs', './submodule.default-raw.out.tgs', './submodule.out.will.yml', './debug', './debug/File.debug.js', './release', './release/File.release.js' ] );
 
-    var files = /*context.find*/a.find( a.abs( 'doc.out' ) );
+    var files = a.find( a.abs( 'doc.out' ) );
     test.identical( files, [ '.', './file.md' ] );
 
     return null;
@@ -11339,7 +11340,7 @@ function exportCourrputedOutfileUnknownSection( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'sub.out' ) );
+    var files = a.find( a.abs( 'sub.out' ) );
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
@@ -11386,7 +11387,7 @@ function exportCourruptedOutfileSyntax( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'sub.out' ) );
+    var files = a.find( a.abs( 'sub.out' ) );
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
@@ -11433,7 +11434,7 @@ function exportCourruptedSubmodulesDisabled( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'super.out' ) );
+    var files = a.find( a.abs( 'super.out' ) );
     test.identical( files, [ '.', './supermodule.out.will.yml' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'super.out/supermodule.out.will.yml' ) );
@@ -11616,7 +11617,7 @@ function exportOutdated( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'sub.out' ) );
+    var files = a.find( a.abs( 'sub.out' ) );
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
@@ -11647,7 +11648,7 @@ function exportOutdated( test )
   {
     test.identical( got.exitCode, 0 );
 
-    var files = /*context.find*/a.find( a.abs( 'sub.out' ) );
+    var files = a.find( a.abs( 'sub.out' ) );
     test.identical( files, [ '.', './sub.out.will.yml' ] );
 
     var outfile = a.fileProvider.configRead( a.abs( 'sub.out/sub.out.will.yml' ) );
@@ -11694,7 +11695,7 @@ function exportWholeModule( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './.will.yml', './proto', './proto/File1.s', './proto/dir', './proto/dir/File2.s' ] );
     return null;
   })
@@ -11731,7 +11732,7 @@ function exportRecursive( test )
 
     test.description = 'files';
     var exp = [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './ab', './ab/module-ab.out.will.yml' ];
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, 'Exported module::module-ab / module::module-a / build::proto.export with 2 file(s) in' ), 1 );
@@ -11759,7 +11760,7 @@ function exportRecursive( test )
 
     test.description = 'files';
     var exp = [ '.', './module-a.out.will.yml', './module-b.out.will.yml', './ab', './ab/module-ab.out.will.yml' ];
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp )
 
     test.identical( _.strCount( got.output, 'Exported module::module-ab / module::module-a / build::proto.export with 2 file(s) in' ), 1 );
@@ -11822,7 +11823,7 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/debug',
       './super.out/debug/File.debug.js'
     ]
-    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::submodule / build::export.debug with 2 file(s)' ), 1 );
@@ -11869,7 +11870,7 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/debug',
       './super.out/debug/File.debug.js'
     ]
-    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::submodule / build::export.debug with 2 file(s)' ), 1 );
@@ -11922,7 +11923,7 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/release',
       './super.out/release/File.release.js'
     ]
-    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::submodule / build::export. with 2 file(s)' ), 1 );
@@ -11975,7 +11976,7 @@ function exportRecursiveUsingSubmodule( test )
       './super.out/release',
       './super.out/release/File.release.js'
     ]
-    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::submodule / build::export. with 2 file(s)' ), 1 );
@@ -12116,7 +12117,7 @@ function exportDotless( test )
       './super.out/debug/File.debug.js',
       './super.out/debug/File.release.js'
     ]
-    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in' ), 1 );
@@ -12164,7 +12165,7 @@ function exportDotless( test )
       './super.out/release/File.debug.js',
       './super.out/release/File.release.js'
     ]
-    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::sub / build::export. with 2 file(s) in' ), 1 );
@@ -12226,7 +12227,7 @@ function exportDotlessSingle( test )
       './super.out/debug/File.debug.js',
       './super.out/debug/File.release.js'
     ]
-    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in' ), 1 );
@@ -12272,7 +12273,7 @@ function exportDotlessSingle( test )
       './super.out/release/File.debug.js',
       './super.out/release/File.release.js'
     ]
-    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::sub / build::export. with 2 file(s) in' ), 1 );
@@ -12334,7 +12335,7 @@ function exportTracing( test )
       './super.out/debug/File.debug.js',
       './super.out/debug/File.release.js'
     ]
-    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '**/+**' : 0 } });
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported module::supermodule / module::sub / build::export.debug with 2 file(s) in' ), 1 );
@@ -13135,7 +13136,7 @@ function exportWithDisabled( test )
       './module2/out',
       './module2/out/module2.out.will.yml'
     ];
-    var files = /*context.find*/a.find( a.abs( '.' ) )
+    var files = a.find( a.abs( '.' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported' ), 2 );
@@ -13176,7 +13177,7 @@ function exportWithDisabled( test )
       './module2/out',
       './module2/out/module2.out.will.yml'
     ];
-    var files = /*context.find*/a.find( a.abs( '.' ) )
+    var files = a.find( a.abs( '.' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported' ), 1 );
@@ -13217,7 +13218,7 @@ function exportWithDisabled( test )
       './module2/out',
       './module2/out/module2.out.will.yml'
     ];
-    var files = /*context.find*/a.find( a.abs( '.' ) )
+    var files = a.find( a.abs( '.' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported' ), 1 );
@@ -13258,7 +13259,7 @@ function exportWithDisabled( test )
       './module2/out',
       './module2/out/module2.out.will.yml'
     ];
-    var files = /*context.find*/a.find( a.abs( '.' ) )
+    var files = a.find( a.abs( '.' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Exported' ), 1 );
@@ -13374,7 +13375,7 @@ function exportImplicit( test )
     test.identical( _.strCount( got.output, 'Exported module::explicit / build::export with 4 file(s)' ), 1 );
 
     var exp = [ '.', './explicit.out.will.yml', './will.yml', './proto', './proto/File.js' ];
-    var files = /*context.find*/a.find( a.abs( 'explicit' ) );
+    var files = a.find( a.abs( 'explicit' ) );
     test.identical( files, exp );
 
     var outfile = a.fileProvider.configRead( a.abs( 'explicit/explicit.out.will.yml' ) );
@@ -13467,7 +13468,7 @@ function exportImplicit( test )
     test.identical( _.strCount( got.output, 'Exported module::implicit / build::export with 4 file(s)' ), 1 );
 
     var exp = [ '.', './implicit.out.will.yml', './will.yml', './proto', './proto/File.js' ];
-    var files = /*context.find*/a.find( a.abs( 'implicit' ) );
+    var files = a.find( a.abs( 'implicit' ) );
     test.identical( files, exp );
 
     var outfile = a.fileProvider.configRead( a.abs( 'implicit/implicit.out.will.yml' ) );
@@ -13601,7 +13602,7 @@ function exportAuto( test )
       './submodule/local.will.yml',
       './submodule/remote.will.yml'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.contains( files, exp );
 
     return null;
@@ -13650,7 +13651,7 @@ function exportAuto( test )
       './submodule/local.will.yml',
       './submodule/remote.will.yml'
     ]
-    var files = /*context.find*/a.find( a.routinePath );
+    var files = a.find( a.routinePath );
     test.contains( files, exp );
 
     return null;
@@ -13879,7 +13880,7 @@ function exportWithoutSubSubModules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml\n' ), 1 );
     test.identical( _.strCount( op.output, '/l1.out.will.yml\n' ), 2 );
     var exp = [ '.', './l1.out.will.yml', './l1.will.yml', './l2.will.yml', './l3.will.yml', './l4.will.yml' ];
-    var got = /*context.find*/a.find( a.abs( '.' ) );
+    var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
     return op;
   });
@@ -13902,7 +13903,7 @@ function exportWithoutSubSubModules( test )
     test.identical( _.strCount( op.output, '/l2.will.yml\n' ), 1 );
     test.identical( _.strCount( op.output, '/l2.out.will.yml\n' ), 2 );
     var exp = [ '.', './l1.out.will.yml', './l1.will.yml', './l2.out.will.yml', './l2.will.yml', './l3.will.yml', './l4.will.yml' ];
-    var got = /*context.find*/a.find( a.abs( '.' ) );
+    var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
     return op;
   });
@@ -13930,7 +13931,7 @@ function exportWithoutSubSubModules( test )
     test.identical( _.strCount( op.output, '/l3.will.yml\n' ), 1 );
     test.identical( _.strCount( op.output, '/l3.out.will.yml\n' ), 2 );
     var exp = [ '.', './l1.will.yml', './l2.out.will.yml', './l2.will.yml', './l3.out.will.yml', './l3.will.yml', './l4.will.yml' ];
-    var got = /*context.find*/a.find( a.abs( '.' ) );
+    var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
     return op;
   });
@@ -13964,7 +13965,7 @@ function exportWithoutSubSubModules( test )
     test.identical( _.strCount( op.output, '/l4.will.yml\n' ), 1 );
     test.identical( _.strCount( op.output, '/l4.out.will.yml\n' ), 2 );
     var exp = [ '.', './l1.will.yml', './l2.will.yml', './l3.out.will.yml', './l3.will.yml', './l4.out.will.yml', './l4.will.yml' ];
-    var got = /*context.find*/a.find( a.abs( '.' ) );
+    var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
     return op;
   });
@@ -13986,7 +13987,7 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
   a.reflect();
 
   var exp = [ '.', './will.yml' ];
-  var got = /*context.find*/a.find( a.abs( '.' ) );
+  var got = a.find( a.abs( '.' ) );
   test.identical( got, exp );
 
   /* - */
@@ -14037,7 +14038,7 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/sample',
       './.module/ModuleForTesting12/sample/Sample.js'
     ]
-    var got = /*context.find*/a.find( a.abs( '.' ) );
+    var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
     return op;
   });
@@ -14078,7 +14079,7 @@ function importPathLocal( test )
   .then( ( got ) =>
   {
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.contains( files, [ '.', './debug', './debug/WithSubmodules.s', './debug/dwtools', './debug/dwtools/Tools.s' ] );
     test.identical( got.exitCode, 0 );
     test.identical( _.strCount( got.output, /Built .*module::submodules \/ build::debug\.raw.* in/ ), 1 );
@@ -14283,7 +14284,7 @@ function importOutWithDeletedSource( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ '.', './module-a.out.will.yml', './module-ab-named.out.will.yml', './module-b.out.will.yml' ];
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files, exp );
 
     a.fileProvider.filesDelete( a.abs( 'a.will.yml' ) );
@@ -14333,7 +14334,7 @@ function clean( test )
   a.ready
   .then( () =>
   {
-    files = /*context.find*/a.findAll( a.abs( '.module' ) );
+    files = a.findAll( a.abs( '.module' ) );
     test.gt( files.length, 20 );
     return files;
   })
@@ -14466,7 +14467,7 @@ function cleanBroken1( test )
   .then( ( got ) =>
   {
     test.case = '.clean ';
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
 
     return null;
@@ -14480,7 +14481,7 @@ function cleanBroken1( test )
   {
     test.case = '.clean dry:1';
 
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) + ' at ' ) );
@@ -14515,7 +14516,7 @@ function cleanBroken1( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.gt( files.length, 9 );
 
     var files = a.fileProvider.dirRead( a.abs( 'out' ) );
@@ -14543,7 +14544,7 @@ function cleanBroken1( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.gt( files.length, 9 );
 
     var files = a.fileProvider.dirRead( a.abs( 'out' ) );
@@ -14574,7 +14575,7 @@ function cleanBroken2( test )
   .then( ( got ) =>
   {
     test.case = '.clean ';
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
 
     return null;
@@ -14588,7 +14589,7 @@ function cleanBroken2( test )
   {
     test.case = '.clean dry:1';
 
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, String( files.length ) ) );
@@ -14622,7 +14623,7 @@ function cleanBroken2( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.gt( files.length, 9 );
 
     var files = a.fileProvider.dirRead( a.abs( 'out' ) );
@@ -14653,13 +14654,13 @@ function cleanBroken2( test )
     test.is( !_.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
     test.is( _.strHas( got.output, `Module module::submodules / opener::ModuleForTesting2 is downloaded, but it's not a git repository` ) );
 
-    // var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    // var files = a.find( a.abs( 'out/debug' ) );
     // test.gt( files.length, 9 );
 
     // var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     // test.identical( files, [ 'debug', 'submodules.out.will.yml' ] );
 
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files.length, 0 );
 
     var files = a.fileProvider.dirRead( a.abs( 'out' ) );
@@ -14693,7 +14694,7 @@ function cleanBroken2( test )
     test.is( _.strHas( got.output, '+ 0/1 submodule(s) of module::submodules were updated' ) );
     test.is( _.strHas( got.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
-    var files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    var files = a.find( a.abs( 'out/debug' ) );
     test.gt( files.length, 9 );
 
     var files = a.fileProvider.dirRead( a.abs( 'out' ) );
@@ -14722,9 +14723,9 @@ function cleanBrokenSubmodules( test )
   {
     test.case = 'setup';
     a.reflect();
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files.length, 2 );
 
     return null;
@@ -14737,9 +14738,9 @@ function cleanBrokenSubmodules( test )
   {
     test.case = '.clean dry:1';
 
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 4 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files.length, 2 );
 
     test.identical( got.exitCode, 0 );
@@ -14756,9 +14757,9 @@ function cleanBrokenSubmodules( test )
   {
     test.case = '.clean';
 
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.identical( files.length, 0 );
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
     test.identical( files.length, 0 );
 
     test.identical( got.exitCode, 0 );
@@ -14797,7 +14798,7 @@ function cleanHdBug( test )
     test.identical( got.exitCode, 0 );
 
     var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml', './group1/group10', './group1/group10/a0.will.yml' ];
-    var files = /*context.find*/a.findAll( a.abs( '.' ) );
+    var files = a.findAll( a.abs( '.' ) );
     test.identical( files, exp );
 
     test.identical( _.strCount( got.output, 'Opened' ), 3 );
@@ -14872,7 +14873,7 @@ function cleanDry( test )
   .then( ( got ) =>
   {
     test.is( _.strHas( got.output, '+ 2/2 submodule(s) of module::submodules were updated' ) );
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.gt( files.length, 50 );
     return null;
   })
@@ -14892,9 +14893,9 @@ function cleanDry( test )
   {
     test.case = '.clean dry:1';
 
-    var files = /*context.find*/a.findAll( a.abs( 'out' ) );
+    var files = a.findAll( a.abs( 'out' ) );
     test.gt( files.length, 15 );
-    var files = wasFiles = /*context.find*/a.findAll( a.abs( '.module' ) );
+    var files = wasFiles = a.findAll( a.abs( '.module' ) );
     test.gt( files.length, 50 );
 
     test.identical( got.exitCode, 0 );
@@ -14933,10 +14934,10 @@ function cleanSubmodules( test )
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2' ) ) )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
-    var files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting1' ) );
+    var files = a.find( a.abs( '.module/ModuleForTesting1' ) );
     test.is( files.length >= 1 );
 
-    var files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2' ) );
+    var files = a.find( a.abs( '.module/ModuleForTesting2' ) );
     test.is( files.length >= 1 );
 
     return null;
@@ -14948,7 +14949,7 @@ function cleanSubmodules( test )
   a.ready
   .then( () =>
   {
-    files = /*context.find*/a.findAll( a.abs( '.module' ) );
+    files = a.findAll( a.abs( '.module' ) );
     return null;
   })
 
@@ -15001,7 +15002,7 @@ function cleanMixed( test )
     test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
 
     var expected = [ '.', './ModuleForTesting12.informal.will.yml', './ModuleForTesting12ab.informal.will.yml' ];
-    var files = /*context.find*/a.find( a.abs( 'module' ) );
+    var files = a.find( a.abs( 'module' ) );
     test.identical( files, expected );
 
     return null;
@@ -15027,7 +15028,7 @@ function cleanWithInPath( test )
   {
     test.case = '.with module/ModuleForTesting12 .clean';
     a.reflect();
-    hadFiles = /*context.find*/a.find( a.abs( 'out' ) ).length + /*context.find*/a.find( a.abs( '.module' ) ).length;
+    hadFiles = a.find( a.abs( 'out' ) ).length + a.find( a.abs( '.module' ) ).length;
 
     return null;
   })
@@ -15048,7 +15049,7 @@ function cleanWithInPath( test )
       './proto',
       './proto/WithSubmodules.s'
     ]
-    var files = /*context.find*/a.find({ filePath : { [ a.routinePath ] : '', '+**' : 0 } });
+    var files = a.find({ filePath : { [ a.routinePath ] : '', '+**' : 0 } });
     test.identical( files, expectedFiles );
 
     test.identical( got.exitCode, 0 ); debugger;
@@ -15355,7 +15356,7 @@ function cleanRecursive( test )
       './group2',
       './group2/c.will.yml'
     ]
-    var files = /*context.find*/a.findAll( a.routinePath );
+    var files = a.findAll( a.routinePath );
     test.identical( files, exp );
 
     return null;
@@ -16691,19 +16692,45 @@ function cleanSpecial( test )
   /* - */
 
   a.appStart({ execPath : '.clean' })
-  .then( ( got ) =>
+  .then( ( op ) =>
   {
     test.case = '.clean';
-    test.identical( got.exitCode, 0 );
+    test.identical( op.exitCode, 0 );
     test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
-
     return null;
   })
+
+  /* - */
 
   return a.ready;
 }
 
-cleanSpecial.timeOut = 300000;
+//
+
+function cleanSelfRefBug( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'selfRefIntegrityBug' );
+
+  /* - */
+
+  a.ready.then( ( arg ) => a.reflect() );
+  a.appStart({ execPath : '.export' })
+  a.appStart({ execPath : '.clean' })
+  .then( ( op ) =>
+  {
+    test.case = 'basic';
+    test.identical( op.exitCode, 0 );
+    var exp = [ '.', './will.yml', './proto', './proto/File.js' ];
+    var got = a.findAll( a.abs( '.' ) );
+    test.identical( got, exp );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
 
 // --
 // shell
@@ -16721,7 +16748,7 @@ function shellWithCriterion( test )
 
   a.appStart({ execPath : '.build A' })
 
-  .then( ( got ) =>
+  .then( ( got ) => /* xxx qqq2 : use got only for test checks. use op or arg instead of got as argument of consequence callback */
   {
     test.description = 'should execute file A.js';
     test.identical( got.exitCode, 0 );
@@ -17000,7 +17027,7 @@ function functionPlatform( test )
     test.identical( _.strCount( got.output, '+ reflector::copy reflected 2 file(s)' ), 1 );
     test.identical( _.strCount( got.output, `./out/dir.${platform} <- ./proto in` ), 1 );
 
-    var files = /*context.find*/a.find( a.abs( 'out' ) );
+    var files = a.find( a.abs( 'out' ) );
 
     test.identical( files, [ '.', `./dir.${platform}`, `./dir.${platform}/File.js` ] );
 
@@ -17150,7 +17177,7 @@ function submodulesDownloadUpdate( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 2/2 submodule(s) of module::submodules were downloaded' ) );
 
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
 
     test.is( files.length > 30 );
 
@@ -17176,10 +17203,10 @@ function submodulesDownloadUpdate( test )
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
-    var files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting1' ) );
+    var files = a.find( a.abs( '.module/ModuleForTesting1' ) );
     test.is( files.length > 3 );
 
-    var files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    var files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.is( files.length > 3 );
 
     return null;
@@ -17203,10 +17230,10 @@ function submodulesDownloadUpdate( test )
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
-    var files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting1' ) );
+    var files = a.find( a.abs( '.module/ModuleForTesting1' ) );
     test.is( files.length >= 1 );
 
-    var files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    var files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.is( files.length >= 1 );
 
     return null;
@@ -17229,10 +17256,10 @@ function submodulesDownloadUpdate( test )
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.is( !a.fileProvider.fileExists( a.abs( 'modules' ) ) )
 
-    var files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting1' ) );
+    var files = a.find( a.abs( '.module/ModuleForTesting1' ) );
     test.is( files.length >= 1 );
 
-    var files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    var files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.is( files.length >= 1 );
 
     return null;
@@ -17246,7 +17273,7 @@ function submodulesDownloadUpdate( test )
   .then( () =>
   {
     test.case = '.submodules.clean';
-    files = /*context.find*/a.findAll( a.abs( '.module' ) );
+    files = a.findAll( a.abs( '.module' ) );
     return files;
   })
 
@@ -17294,7 +17321,7 @@ function submodulesDownloadUpdateDry( test )
     // test.is( _.strHas( got.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*8031560ec22fd955b0b57430b5d6d96b042fbd99.*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::ModuleForTesting1a.* will be downloaded version .*$.$.$$$.*/ ) );
     test.is( _.strHas( got.output, '+ 2/5 submodule(s) of module::submodules-detached will be downloaded' ) );
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.is( files.length === 0 );
     return null;
   })
@@ -17315,7 +17342,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '0/5 submodule(s) of module::submodules-detached will be downloaded' ) );
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.gt( files.length, 50 );
     return null;
   })
@@ -17338,7 +17365,7 @@ function submodulesDownloadUpdateDry( test )
     // test.is( _.strHas( got.output, / \+ .*module::PathBasic.* will be updated to version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.*/ ) );
     // test.is( _.strHas( got.output, / \+ .*module::Color.* will be updated to version .*0.3.115.*/ ) );
     test.is( _.strHas( got.output, '+ 2/5 submodule(s) of module::submodules-detached will be updated' ) );
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.is( files.length === 0 );
     return null;
   })
@@ -17359,7 +17386,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 0/5 submodule(s) of module::submodules-detached will be updated' ) );
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.gt( files.length, 50 );
     return null;
   })
@@ -17959,7 +17986,7 @@ function submodulesDownloadThrowing( test )
     test.is( _.strHas( got.output, 'module::wModuleForTesting2a was downloaded version master in' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
 
-    let files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     // test.gt( files.length, 10 );
     test.ge( files.length, 1 );
 
@@ -18023,7 +18050,7 @@ function submodulesDownloadThrowing( test )
   a.appStartNonThrowing2({ execPath : 'git clone https://github.com/Wandalen/wModuleForTesting1.git .module/ModuleForTesting2a' })
   .then( () =>
   {
-    filesBefore = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    filesBefore = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.appStartNonThrowing({ execPath : '.with good .submodules.download' })
@@ -18033,7 +18060,7 @@ function submodulesDownloadThrowing( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '0/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
-    let filesAfter = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    let filesAfter = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesAfter, filesBefore );
 
     return null;
@@ -18060,7 +18087,7 @@ function submodulesDownloadThrowing( test )
   })
   .then( () =>
   {
-    filesBefore = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    filesBefore = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.appStartNonThrowing({ execPath : '.with good .submodules.download' })
@@ -18068,7 +18095,7 @@ function submodulesDownloadThrowing( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Willfile should not have section(s) : "section"' ) );
-    let filesAfter = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    let filesAfter = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesAfter, filesBefore )
     return null;
   })
@@ -18113,7 +18140,7 @@ function submodulesDownloadStepAndCommand( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    let files = /*context.find*/a.find( a.abs( '.module' ) );
+    let files = a.find( a.abs( '.module' ) );
     test.is( !_.longHas( files, './ModuleForTesting1' ) )
     test.is( !_.longHas( files, './ModuleForTesting2a' ) )
     test.is( _.longHas( files, './submodule' ) )
@@ -18135,7 +18162,7 @@ function submodulesDownloadStepAndCommand( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    let files = /*context.find*/a.find( a.abs( '.module' ) );
+    let files = a.find( a.abs( '.module' ) );
     test.is( !_.longHas( files, './ModuleForTesting1' ) )
     test.is( !_.longHas( files, './ModuleForTesting2a' ) )
     test.is( _.longHas( files, './submodule' ) )
@@ -18971,7 +18998,7 @@ function submodulesDownloadNpm( test )
     willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1 ', 'npm:///wmodulefortesting2b' );
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
-    filesBefore = /*context.find*/a.find( a.abs( '.module/ModuleForTesting1' ) );
+    filesBefore = a.find( a.abs( '.module/ModuleForTesting1' ) );
 
     return null;
   })
@@ -19011,7 +19038,7 @@ function submodulesDownloadNpm( test )
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting12ab/ModuleForTesting12ab.out.will.yml' ) ) )
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
-    var files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting1' ) );
+    var files = a.find( a.abs( '.module/ModuleForTesting1' ) );
     test.identical( files,filesBefore );
 
     return null;
@@ -19205,7 +19232,7 @@ function submodulesDownloadUpdateNpm( test )
     willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1', 'npm:///wmodulefortesting2b' );
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
-    filesBefore = /*context.find*/a.find( a.abs( '.module' ) );
+    filesBefore = a.find( a.abs( '.module' ) );
 
     return null;
   })
@@ -19216,7 +19243,7 @@ function submodulesDownloadUpdateNpm( test )
   {
     test.notIdentical( got.exitCode, 1 );
 
-    var files = /*context.find*/a.find( a.abs( '.module' ) );
+    var files = a.find( a.abs( '.module' ) );
     test.identical( files,filesBefore );
 
     test.identical( _.strCount( got.output, 'opener::ModuleForTesting1 is already downloaded, but has different origin url: wmodulefortesting1 , expected url: wmodulefortesting2b' ), 1 );
@@ -19542,7 +19569,7 @@ function submodulesUpdateThrowing( test )
     test.is( _.strHas( got.output, 'module::wModuleForTesting2a was updated to version master in' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were updated in' ) );
 
-    let files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.ge( files.length, 1 );
 
     return null;
@@ -19600,7 +19627,7 @@ function submodulesUpdateThrowing( test )
   a.appStartNonThrowing({ execPath : 'git clone https://github.com/Wandalen/wModuleForTesting1.git .module/ModuleForTesting2a' })
   .then( () =>
   {
-    filesBefore = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    filesBefore = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.appStart({ execPath : '.with good .submodules.update' })
@@ -19610,7 +19637,7 @@ function submodulesUpdateThrowing( test )
     test.is( _.strHas( got.output, 'opener::ModuleForTesting2a is already downloaded, but has different origin url') );
     test.is( _.strHas( got.output, 'Failed to update submodules' ) );
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
-    let filesAfter = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    let filesAfter = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesBefore.length, filesAfter.length );
 
     return null;
@@ -19637,7 +19664,7 @@ function submodulesUpdateThrowing( test )
   })
   .then( () =>
   {
-    filesBefore = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    filesBefore = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.appStart({ execPath : '.with good .submodules.update' })
@@ -19645,7 +19672,7 @@ function submodulesUpdateThrowing( test )
   {
     test.notIdentical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Willfile should not have section(s) : "section"' ) );
-    let filesAfter = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    let filesAfter = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.identical( filesAfter, filesBefore )
     return null;
   })
@@ -19737,7 +19764,7 @@ function submodulesAgreeThrowing( test )
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
     test.is( _.strHas( got.output, 'module::wModuleForTesting2a was agreed with version master' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
-    let files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
     return null;
@@ -19780,7 +19807,7 @@ function submodulesAgreeThrowing( test )
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
     test.is( _.strHas( got.output, 'module::wModuleForTesting2a was agreed with version master' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
-    let files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
     return null;
@@ -19820,7 +19847,7 @@ function submodulesAgreeThrowing( test )
     test.is( !_.strHas( got.output, 'Failed to agree module' ) );
     test.is( _.strHas( got.output, 'module::wModuleForTesting2a was agreed with version master' ) );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed in' ) );
-    let files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
     return null;
   })
@@ -19841,7 +19868,7 @@ function submodulesAgreeThrowing( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
-    let files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting2a' ) );
+    let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
     return null;
@@ -19937,7 +19964,7 @@ function submodulesVersionsAgreeWrongOrigin( test )
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, '+ 1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
     test.is( a.fileProvider.fileExists( a.path.join( a.routinePath, '.module/ModuleForTesting2a' ) ) )
-    let files = /*context.find*/a.find( a.path.join( a.routinePath, '.module/ModuleForTesting2a' ) );
+    let files = a.find( a.path.join( a.routinePath, '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
     return null;
@@ -20966,7 +20993,7 @@ function versionsAgreeNpm( test )
       './dwtools/abase/l2/l2',
       './dwtools/abase/l2/l2/ModuleForTesting2b.s'
     ];
-    var files = /*context.find*/a.find( a.abs( '.module/ModuleForTesting1/proto' ) );
+    var files = a.find( a.abs( '.module/ModuleForTesting1/proto' ) );
     test.identical( files,exp );
 
     return null;
@@ -21023,8 +21050,8 @@ function stepSubmodulesDownload( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.gt( /*context.find*/a.find( a.abs( '.module/ModuleForTesting1' ) ).length, 8 );
-    test.gt( /*context.find*/a.find( a.abs( 'out/debug' ) ).length, 8 );
+    test.gt( a.find( a.abs( '.module/ModuleForTesting1' ) ).length, 8 );
+    test.gt( a.find( a.abs( 'out/debug' ) ).length, 8 );
     return null;
   })
 
@@ -21044,8 +21071,8 @@ function stepSubmodulesDownload( test )
   .then( ( got ) =>
   {
     test.identical( got.exitCode, 0 );
-    test.gt( /*context.find*/a.find( a.abs( '.module/ModuleForTesting1' ) ).length, 8 );
-    test.gt( /*context.find*/a.find( a.abs( 'out/debug' ) ).length, 8 );
+    test.gt( a.find( a.abs( '.module/ModuleForTesting1' ) ).length, 8 );
+    test.gt( a.find( a.abs( 'out/debug' ) ).length, 8 );
     test.is( a.fileProvider.isTerminal( a.abs( 'out/Download.out.will.yml' ) ) );
     return null;
   })
@@ -23399,7 +23426,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
   {
     test.case = 'check option `packagePath`, `package.json`, direct link to directory';
     test.identical( got.exitCode, 0 );
-    let files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    let files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './package.json' ] );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
     var exp =
@@ -23432,7 +23459,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
   {
     test.case = 'check option `packagePath`, `package.json`, resolve path without criterions';
     test.identical( got.exitCode, 0 );
-    let files = /*context.find*/a.find( a.abs( 'out/' ) );
+    let files = a.find( a.abs( 'out/' ) );
     test.identical( files, [ '.', './package.json' ] );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
     var exp =
@@ -23465,7 +23492,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
   {
     test.case = 'check option `packagePath`, `package.json`, resolve path with criterions';
     test.identical( got.exitCode, 0 );
-    let files = /*context.find*/a.find( a.abs( 'out/debug' ) );
+    let files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './package.json' ] );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
     var exp =
@@ -23498,7 +23525,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
   {
     test.case = 'check option `entryPath`, direct link to file';
     test.identical( got.exitCode, 0 );
-    let files = /*context.find*/a.find( a.routinePath );
+    let files = a.find( a.routinePath );
     test.is( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
@@ -23521,7 +23548,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
     test.identical( got.exitCode, 0 );
-    let files = /*context.find*/a.find( a.routinePath );
+    let files = a.find( a.routinePath );
     test.is( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
@@ -23544,7 +23571,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
     test.identical( got.exitCode, 0 );
-    let files = /*context.find*/a.find( a.routinePath );
+    let files = a.find( a.routinePath );
     test.is( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
@@ -23567,7 +23594,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
   {
     test.case = 'check option `filesPath`, direct link to file';
     test.identical( got.exitCode, 0 );
-    let files = /*context.find*/a.find( a.routinePath );
+    let files = a.find( a.routinePath );
     test.is( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
@@ -23590,7 +23617,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
     test.identical( got.exitCode, 0 );
-    let files = /*context.find*/a.find( a.routinePath );
+    let files = a.find( a.routinePath );
     test.is( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
@@ -23613,7 +23640,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
     test.identical( got.exitCode, 0 );
-    let files = /*context.find*/a.find( a.routinePath );
+    let files = a.find( a.routinePath );
     test.is( _.longHas( files, './package.json' ) );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
@@ -23707,7 +23734,7 @@ function commandWillfileFromNpm( test )
     test.case = 'check field `interpreters`';
     test.identical( got.exitCode, 0 );
     let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
-    test.identical( config.about.interpreters, 'node >= 8.0.0' );
+    test.identical( config.about.interpreters, 'node >= 10.0.0' );
     test.identical( config.about.name, 'interpreters' );
     test.identical( config.about.enabled, 1 );
 
@@ -24263,6 +24290,7 @@ var Self =
     cleanSubmodulesHierarchyRemote,
     cleanSubmodulesHierarchyRemoteDry,
     cleanSpecial,
+    cleanSelfRefBug,
 
     // shell
 
