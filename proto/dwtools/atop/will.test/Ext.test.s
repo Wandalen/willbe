@@ -16740,8 +16740,6 @@ function shellWithCriterion( test )
   let a = context.assetFor( test, 'step-shell-with-criterion' );
   a.reflect();
 
-  /* Checks if start step supports plural criterion and which path is selected using current value of criterion */
-
   /* - */
 
   a.appStart({ execPath : '.build A' })
@@ -16751,7 +16749,6 @@ function shellWithCriterion( test )
     test.description = 'should execute file A.js';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Executed-A.js' ) );
-
     return null;
   })
 
@@ -16772,6 +16769,11 @@ function shellWithCriterion( test )
 
   return a.ready;
 }
+
+shellWithCriterion.description =
+`
+Checks if start step supports plural criterion and which path is selected using current value of criterion
+`
 
 //
 
