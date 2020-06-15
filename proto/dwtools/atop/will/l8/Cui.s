@@ -2404,14 +2404,57 @@ function commandWillfileGenerateFromNpm( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let request = _.strStructureParse( e.argument );
-  request = _.routineOptions( commandWillfileGenerateFromNpm, request );
+  let criterionsMap = _.mapBut( request, commandWillfileGenerateFromNpm.defaults );
+  request = _.mapBut( request, criterionsMap );
 
-  return will.Module.prototype.willfileGenerateFromNpm.call( will,
+  debugger;
+  if( will.currentOpeners && will.currentOpeners.length )
   {
-    packagePath : request.packagePath,
-    willfilePath : request.willfilePath,
-    verbosity : 5,
-  });
+    return will._commandBuildLike
+    ({
+      event : e,
+      name : 'npm from willfile',
+      onEach : handleEach,
+      commandRoutine : commandWillfileGenerateFromNpm,
+    });
+  }
+  else
+  {
+    will.modulesFindWithAt( { atLeastOne: 1, selector: "./", tracing: 1 } )
+    .finally( function( err, it )
+    {
+      if( err )
+      throw _.err( err );
+
+      will.currentOpeners = it.openers;
+      if( !will.currentOpeners.length )
+      return will.Module.prototype.willfileGenerateFromNpm.call( will,
+      {
+        packagePath : request.packagePath,
+        willfilePath : request.willfilePath,
+        verbosity : 5,
+      });
+
+      return will._commandBuildLike
+      ({
+        event : e,
+        name : 'npm from willfile',
+        onEach : handleEach,
+        commandRoutine : commandWillfileGenerateFromNpm,
+      });
+    })
+  }
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.willfileGenerateFromNpm
+    ({
+      packagePath : request.packagePath,
+      willfilePath : request.willfilePath,
+      currentContext : it.opener.openedModule.stepMap[ "willfile.generate" ],
+      verbosity : 5,
+    });
+  }
 }
 
 commandWillfileGenerateFromNpm.defaults =

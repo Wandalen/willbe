@@ -1067,6 +1067,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'willfile.generate',
+    stepRoutine : Predefined.stepRoutineWillfileFromNpm,
+  })
+
+  step
+  ({
     name : 'submodules.download',
     stepRoutine : Predefined.stepRoutineSubmodulesDownload,
   })
@@ -7117,7 +7123,8 @@ npmGenerate.defaults =
 
 function willfileGenerateFromNpm( o )
 {
-  let will = this;
+  let module = this;
+  let will = module.will ? module.will : module;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
@@ -7128,7 +7135,32 @@ function willfileGenerateFromNpm( o )
   _.assert( _.objectIs( opts ) );
 
   let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
-  packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
+  let willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
+  if( opts.currentContext )
+  {
+    packagePath = module.pathResolve
+    ({
+      selector : opts.packagePath || '{path::in}/package.json',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : opts.currentContext,
+    });
+    willfilePath = module.pathResolve
+    ({
+      selector : opts.willfilePath || '{path::out}/.will.yml',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : opts.currentContext,
+    });
+  }
+  else
+  {
+    packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
+    willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
+  }
+
   let config = fileProvider.fileRead({ filePath : packagePath, encoding : 'json' });
 
   /* */
@@ -7136,73 +7168,58 @@ function willfileGenerateFromNpm( o )
   let willfile = Object.create( null );
   willfile.about = Object.create( null );
   willfile.path = Object.create( null );
+  willfile.path.origins = [];
   willfile.submodule = Object.create( null );
 
   /* */
 
-  if( config.name )
-  willfile.about.name = willfile.about[ 'npm.name' ] = config.name;
-  if( config.version )
-  willfile.about.version = config.version;
-  willfile.about.enabled = config.enabled;
-  if( config.description )
-  willfile.about.description = config.description;
-  if( config.engine )
-  willfile.about.interpreters = config.engine;
-  if( config.keywords )
-  willfile.about.keywords = config.keywords;
-  if( config.license )
-  willfile.about.license = config.license;
-  if( config.author )
-  willfile.about.author = config.author;
-  if( config.contributors )
-  willfile.about.contributors = config.contributors;
-  if( config.scripts )
-  willfile.about[ 'npm.scripts' ] = config.scripts;
-
-  /* */
-
-  willfile.path.origins = [];
-  if( config.repository )
+  let propertiesMap =
   {
-    willfile.path.repository = pathNormalize( config.repository );
-    willfile.path.origins.push( willfile.path.repository );
-  }
-  if( config.name )
+    name :          { propertyAdd : aboutPropertyAdd, name : 'name' },
+    version :       { propertyAdd : aboutPropertyAdd, name : 'version' },
+    enabled :       { propertyAdd : aboutPropertyAdd, name : 'enabled' },
+    description :   { propertyAdd : aboutPropertyAdd, name : 'description' },
+    interpreters :  { propertyAdd : aboutPropertyAdd, name : 'interpreters' },
+    engine :        { propertyAdd : aboutPropertyAdd, name : 'interpreters' },
+    keywords :      { propertyAdd : aboutPropertyAdd, name : 'keywords' },
+    license :       { propertyAdd : aboutPropertyAdd, name : 'license' },
+    author :        { propertyAdd : aboutPropertyAdd, name : 'author' },
+    contributors :  { propertyAdd : aboutPropertyAdd, name : 'contributors' },
+    scripts :       { propertyAdd : aboutPropertyAdd, name : 'npm.scripts' },
+    repository :    { propertyAdd : pathPropertyAdd, name : 'repository' },
+    bugs :          { propertyAdd : pathPropertyAdd, name : 'bugs' },
+    main :          { propertyAdd : pathPropertyAdd, name : 'main' },
+    files :         { propertyAdd : pathPropertyAdd, name : 'files' },
+    dependencies :          { propertyAdd : submodulePropertyAdd, name : undefined },
+    devDependencies :       { propertyAdd : submodulePropertyAdd, name : 'development' },
+    optionalDependencies :  { propertyAdd : submodulePropertyAdd, name : 'optional' },
+  };
+
+  for( let property in config )
+  propertiesMap[ property ].propertyAdd( property, propertiesMap[ property ].name );
+
+  if( willfile.about.name )
   {
+    willfile.about[ 'npm.name' ] = willfile.about.name;
     willfile.path.origins.push( `npm:///${ willfile.about.name }` );
   }
   if( willfile.path.origins.length === 0 )
   {
     delete willfile.path.origins;
   }
-  if( config.bugs )
+  if( _.mapKeys( willfile.submodule ).length === 0 )
   {
-    willfile.path.bugtracker = pathNormalize( config.bugs );
+    delete willfile.submodule;
   }
-  if( config.main )
+  if( _.mapKeys( willfile.path ).length === 0 )
   {
-    willfile.path.entryPath = config.main;
-  }
-  if( config.files )
-  {
-    willfile.path.export = path.common( config.files );
+    delete willfile.path;
   }
 
   /* */
 
-  if( config.dependencies !== undefined )
-  addDependency( config.dependencies );
-  if( config.devDependencies !== undefined )
-  addDependency( config.devDependencies, 'development' );
-  if( config.optionalDependencies !== undefined )
-  addDependency( config.optionalDependencies, 'optional' );
-
-  /* */
-
-  let willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
-  willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
   _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
+  _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
 
   fileProvider.fileWrite
   ({
@@ -7213,6 +7230,43 @@ function willfileGenerateFromNpm( o )
   });
 
   return null;
+
+  /* */
+
+  function aboutPropertyAdd( property, name )
+  {
+    willfile.about[ name ] = config[ property ];
+  }
+
+  /* */
+
+  function pathPropertyAdd( property )
+  {
+    if( property === 'repository' )
+    {
+      willfile.path.repository = pathNormalize( config.repository );
+      willfile.path.origins.push( willfile.path.repository );
+    }
+    if( property === 'bugs' )
+    {
+      willfile.path.bugtracker = pathNormalize( config.bugs );
+    }
+    if( property === 'main' )
+    {
+      willfile.path.entryPath = config.main;
+    }
+    if( property === 'files' )
+    {
+      willfile.path.export = path.common( config.files );
+    }
+  }
+
+  /* */
+
+  function submodulePropertyAdd( property, criterion )
+  {
+    addDependency( config[ property ], criterion );
+  }
 
   /* */
 

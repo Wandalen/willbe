@@ -796,6 +796,33 @@ stepRoutineNpmGenerate.uniqueOptions =
 
 //
 
+function stepRoutineWillfileFromNpm( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+  opts.currentContext = step;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  return module.willfileGenerateFromNpm( opts );
+}
+
+stepRoutineWillfileFromNpm.stepOptions =
+{
+  packagePath : 'package.json',
+  willfilePath : '.will.yml',
+}
+
+stepRoutineWillfileFromNpm.uniqueOptions =
+{
+}
+
+//
+
 function stepRoutineSubmodulesDownload( frame )
 {
   let step = this;
@@ -1043,6 +1070,7 @@ let Extension =
   stepRoutineTranspile,
   stepRoutineView,
   stepRoutineNpmGenerate,
+  stepRoutineWillfileFromNpm,
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpdate,
