@@ -7123,7 +7123,8 @@ npmGenerate.defaults =
 
 function willfileGenerateFromNpm( o )
 {
-  let will = this;
+  let module = this;
+  let will = module.will ? module.will : module;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
@@ -7133,23 +7134,35 @@ function willfileGenerateFromNpm( o )
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
 
-  let packagePath, willfilePath;
+  let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
+  let willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
   if( opts.currentContext )
   {
-    if( opts.entryPath )
-    packagePath = module.filesFromResource({ selector : opts.packagePath ? opts.packagePath || 'package.json', currentContext : currentContext });
-    if( opts.filesPath )
-    willfilePath = module.filesFromResource({ selector : opts.willfilePath ? opts.willfilePath || '.will.yml', currentContext : currentContext });
+    packagePath = module.pathResolve
+    ({
+      selector : opts.packagePath || '{path::in}/package.json',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : opts.currentContext,
+    });
+    willfilePath = module.pathResolve
+    ({
+      selector : opts.willfilePath || '{path::out}/.will.yml',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : opts.currentContext,
+    });
   }
   else
   {
-    packagePath = opts.packagePath ? opts.packagePath : 'package.json';
     packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
-    willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
     willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
   }
 
   let config = fileProvider.fileRead({ filePath : packagePath, encoding : 'json' });
+
   /* */
 
   let willfile = Object.create( null );
@@ -7162,45 +7175,51 @@ function willfileGenerateFromNpm( o )
 
   let propertiesMap =
   {
-    name : addAboutProperty,
-    version : addAboutProperty,
-    enabled : addAboutProperty,
-    description : addAboutProperty,
-    interpreters : addAboutProperty,
-    engine : addAboutProperty,
-    keywords : addAboutProperty,
-    license : addAboutProperty,
-    author : addAboutProperty,
-    contributors : addAboutProperty,
-    repository : addPathProperty,
-    bugs : addPathProperty,
-    main : addPathProperty,
-    files : addPathProperty,
-    dependencies : addSubmoduleProperty,
-    devDependencies : addSubmoduleProperty,
-    optionalDependencies : addSubmoduleProperty,
-  }
+    name :          { propertyAdd : aboutPropertyAdd, name : 'name' },
+    version :       { propertyAdd : aboutPropertyAdd, name : 'version' },
+    enabled :       { propertyAdd : aboutPropertyAdd, name : 'enabled' },
+    description :   { propertyAdd : aboutPropertyAdd, name : 'description' },
+    interpreters :  { propertyAdd : aboutPropertyAdd, name : 'interpreters' },
+    engine :        { propertyAdd : aboutPropertyAdd, name : 'interpreters' },
+    keywords :      { propertyAdd : aboutPropertyAdd, name : 'keywords' },
+    license :       { propertyAdd : aboutPropertyAdd, name : 'license' },
+    author :        { propertyAdd : aboutPropertyAdd, name : 'author' },
+    contributors :  { propertyAdd : aboutPropertyAdd, name : 'contributors' },
+    scripts :       { propertyAdd : aboutPropertyAdd, name : 'npm.scripts' },
+    repository :    { propertyAdd : pathPropertyAdd, name : 'repository' },
+    bugs :          { propertyAdd : pathPropertyAdd, name : 'bugs' },
+    main :          { propertyAdd : pathPropertyAdd, name : 'main' },
+    files :         { propertyAdd : pathPropertyAdd, name : 'files' },
+    dependencies :          { propertyAdd : submodulePropertyAdd, name : undefined },
+    devDependencies :       { propertyAdd : submodulePropertyAdd, name : 'development' },
+    optionalDependencies :  { propertyAdd : submodulePropertyAdd, name : 'optional' },
+  };
 
   for( let property in config )
-  propertiesMap[ property ]( property );
+  propertiesMap[ property ].propertyAdd( property, propertiesMap[ property ].name );
 
   if( willfile.about.name )
   {
     willfile.about[ 'npm.name' ] = willfile.about.name;
     willfile.path.origins.push( `npm:///${ willfile.about.name }` );
   }
-  if( config.scripts )
-  {
-    willfile.about[ 'npm.scripts' ] = config.scripts;
-  }
   if( willfile.path.origins.length === 0 )
   {
     delete willfile.path.origins;
+  }
+  if( _.mapKeys( willfile.submodule ).length === 0 )
+  {
+    delete willfile.submodule;
+  }
+  if( _.mapKeys( willfile.path ).length === 0 )
+  {
+    delete willfile.path;
   }
 
   /* */
 
   _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
+  _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
 
   fileProvider.fileWrite
   ({
@@ -7214,14 +7233,14 @@ function willfileGenerateFromNpm( o )
 
   /* */
 
-  function addAboutProperty( property )
+  function aboutPropertyAdd( property, name )
   {
-    willfile.about[ property ] = config[ property ];
+    willfile.about[ name ] = config[ property ];
   }
 
   /* */
 
-  function addPathProperty( property )
+  function pathPropertyAdd( property )
   {
     if( property === 'repository' )
     {
@@ -7244,15 +7263,9 @@ function willfileGenerateFromNpm( o )
 
   /* */
 
-  function addSubmoduleProperty( property )
+  function submodulePropertyAdd( property, criterion )
   {
-    let nameMap =
-    {
-      dependencies : undefined,
-      devDependencies : 'development',
-      optionalDependencies : 'optional',
-    }
-    addDependency( config[ property ], nameMap[ property ] );
+    addDependency( config[ property ], criterion );
   }
 
   /* */
