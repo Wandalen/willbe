@@ -59,8 +59,10 @@ function unform()
   let module = relation.module;
   let will = module.will;
 
-  if( !relation.formed )
+  if( relation.formed <= 0 )
   return;
+
+  relation.formed = -1; /* yyy */
 
   if( relation.opener )
   {
@@ -71,14 +73,17 @@ function unform()
     opener.finit();
   }
 
-  if( relation.formed )
-  {
+  // return Parent.prototype.unform.call( relation );
+
+  // if( relation.formed ) /* yyy */
+  // {
     let junction = will.junctionOf( relation );
+    /* xxx : not always true? */
     if( junction && junction.own( relation ) )
     junction.remove( relation );
-  }
+  // }
 
-  return Parent.prototype.unform.call( relation );
+  return Parent.prototype.unform.call( relation ); /* yyy */
 }
 
 //
@@ -119,12 +124,13 @@ function form1()
 
   _.assert( relation.opener.formed >= 2 );
 
-  // if( relation.enabled ) /* ttt xxx */
+  Parent.prototype.form1.call( relation );
+
   will.junctionReform( relation );
 
   /* end */
 
-  Parent.prototype.form1.call( relation );
+  // Parent.prototype.form1.call( relation ); /* yyy */
   return relation;
 }
 
@@ -157,10 +163,6 @@ function form3()
   _.assert( relation.formed === 2 );
   _.assert( _.strIs( relation.path ), 'not tested' );
   _.sure( _.strIs( relation.path ) || _.arrayIs( relation.path ), 'Path resource should have "path" field' );
-
-  // yyy xxx
-  // if( relation.absoluteName === "module::l1 / module::wModuleForTesting12 / relation::wModuleForTesting1" )
-  // debugger;
 
   if( relation.enabled )
   result = relation._openAct();
@@ -514,6 +516,14 @@ function isAvailableGet()
 
 //
 
+function isAliveGet()
+{
+  let relation = this;
+  return relation.formed >= 1;
+}
+
+//
+
 function moduleSet( src )
 {
   let resource = this;
@@ -542,14 +552,14 @@ function localPathGet()
 
   return null; /* yyy */
 
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  if( path.isGlobal( relation.path ) )
-  return null;
-
-  return path.join( module.inPath, relation.path );
+  // let will = module.will;
+  // let fileProvider = will.fileProvider;
+  // let path = fileProvider.path;
+  //
+  // if( path.isGlobal( relation.path ) )
+  // return null;
+  //
+  // return path.join( module.inPath, relation.path );
 }
 
 //
@@ -567,14 +577,14 @@ function remotePathGet()
 
   return null; /* yyy */
 
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  if( !path.isGlobal( relation.path ) )
-  return null;
-
-  return path.join( module.inPath, relation.path );
+  // let will = module.will;
+  // let fileProvider = will.fileProvider;
+  // let path = fileProvider.path;
+  //
+  // if( !path.isGlobal( relation.path ) )
+  // return null;
+  //
+  // return path.join( module.inPath, relation.path );
 }
 
 //
@@ -989,6 +999,7 @@ let Extension =
   isMandatory,
   isValid,
   isAvailableGet,
+  isAliveGet,
   moduleSet,
 
   // path

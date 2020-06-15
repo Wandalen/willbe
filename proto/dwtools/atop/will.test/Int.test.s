@@ -579,7 +579,7 @@ function openNamedForming( test )
   test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
   test.identical( stager.stageStateSkipping( 'subModulesFormed' ), false );
   test.identical( stager.stageStateSkipping( 'resourcesFormed' ), false );
-  test.identical( stager.stageStateSkipping( 'formed' ), false );
+  test.identical( stager.stageStateSkipping( 'finalFormed' ), false );
 
   let opener2 = a.will.openerMakeManual({ willfilesPath : a.abs( 'super' ) });
   let ready2 = opener2.open();
@@ -592,7 +592,7 @@ function openNamedForming( test )
   test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
   test.identical( stager.stageStateSkipping( 'subModulesFormed' ), false );
   test.identical( stager.stageStateSkipping( 'resourcesFormed' ), false );
-  test.identical( stager.stageStateSkipping( 'formed' ), false );
+  test.identical( stager.stageStateSkipping( 'finalFormed' ), false );
 
   test.case = 'structure consistency';
   test.is( a.will.mainOpener === opener1 );
@@ -654,7 +654,7 @@ function openNamedForming( test )
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'subModulesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'resourcesFormed' ), true );
-    test.identical( stager.stageStatePerformed( 'formed' ), true );
+    test.identical( stager.stageStatePerformed( 'finalFormed' ), true );
 
     var exp = [ 'super', 'super.out/supermodule.out', 'sub.out/sub.out', 'sub' ];
     test.identical( _.setFrom( a.rel( _.select( a.will.modulesArray, '*/commonPath' ) ) ), _.setFrom( exp ) );
@@ -850,7 +850,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
     test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), true );
     test.identical( stager.stageStateSkipping( 'subModulesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'resourcesFormed' ), false );
-    test.identical( stager.stageStateSkipping( 'formed' ), false );
+    test.identical( stager.stageStateSkipping( 'finalFormed' ), false );
 
     test.case = 'structure consistency';
     test.is( a.will.mainOpener === opener1 );
@@ -978,14 +978,14 @@ function openSkippingSubButAttachedWillfiles( test )
     test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'subModulesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'resourcesFormed' ), false );
-    test.identical( stager.stageStateSkipping( 'formed' ), false );
+    test.identical( stager.stageStateSkipping( 'finalFormed' ), false );
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
     test.identical( stager.stageStatePerformed( 'opened' ), true );
     test.identical( stager.stageStatePerformed( 'attachedWillfilesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'subModulesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'resourcesFormed' ), true );
-    test.identical( stager.stageStatePerformed( 'formed' ), true );
+    test.identical( stager.stageStatePerformed( 'finalFormed' ), true );
 
     test.case = 'skipping of stages of module';
     var stager = a.will.moduleWithNameMap.Submodule.stager;
@@ -995,7 +995,7 @@ function openSkippingSubButAttachedWillfiles( test )
     test.identical( stager.stageStateSkipping( 'peerModulesFormed' ), false );
     test.identical( stager.stageStateSkipping( 'subModulesFormed' ), true );
     test.identical( stager.stageStateSkipping( 'resourcesFormed' ), true );
-    test.identical( stager.stageStateSkipping( 'formed' ), false );
+    test.identical( stager.stageStateSkipping( 'finalFormed' ), false );
 
     test.identical( stager.stageStatePerformed( 'preformed' ), true );
     test.identical( stager.stageStatePerformed( 'opened' ), true );
@@ -1003,7 +1003,7 @@ function openSkippingSubButAttachedWillfiles( test )
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), true );
     test.identical( stager.stageStatePerformed( 'subModulesFormed' ), false );
     test.identical( stager.stageStatePerformed( 'resourcesFormed' ), false );
-    test.identical( stager.stageStatePerformed( 'formed' ), true );
+    test.identical( stager.stageStatePerformed( 'finalFormed' ), true );
 
     test.case = 'structure consistency';
     test.is( a.will.mainOpener === opener1 );
@@ -1738,7 +1738,7 @@ function moduleClone( test )
     test.identical( stager.stageStatePerformed( 'peerModulesFormed' ), false );
     test.identical( stager.stageStatePerformed( 'subModulesFormed' ), false );
     test.identical( stager.stageStatePerformed( 'resourcesFormed' ), false );
-    test.identical( stager.stageStatePerformed( 'formed' ), false );
+    test.identical( stager.stageStatePerformed( 'finalFormed' ), false );
 
     test.description = 'paths of module2';
     test.identical( a.rel( module2.willfilesPath ), 'super2.out/super.out.will.yml' );

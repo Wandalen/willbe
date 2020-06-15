@@ -477,7 +477,7 @@ about :
   version : '0.3.0'
   enabled : 1
   interpreters :
-  - njs >= 8.0.0
+  - njs >= 10.0.0
   - chrome >= 60.0.0
   - firefox >= 60.0.0
   keywords :

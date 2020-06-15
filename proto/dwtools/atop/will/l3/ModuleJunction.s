@@ -202,7 +202,7 @@ function reform()
     }
     else if( junction.opener )
     {
-      _.assert( junction.opener.formed >= 2 );
+      _.assert( junction.opener.formed >= 2 || junction.opener.formed === -1 );
       junction.object = junction.opener;
     }
     else if( junction.relation )
@@ -216,9 +216,10 @@ function reform()
   function associationsAdd()
   {
 
-    junction._add( junction.AssociationsOf( junction.relations ) );
-    junction._add( junction.AssociationsOf( junction.openers ) );
-    junction._add( junction.AssociationsOf( junction.modules ) );
+    /* yyy */
+    junction._add( junction.AssociationsAliveOf( junction.relations ) );
+    junction._add( junction.AssociationsAliveOf( junction.openers ) );
+    junction._add( junction.AssociationsAliveOf( junction.modules ) );
 
   }
 
@@ -259,7 +260,7 @@ function reform()
     );
     _.assert
     (
-      !junction.opener || junction.opener.formed >= 2,
+      !junction.opener || junction.opener.formed >= 2 || junction.opener.formed === -1,
       () => `Opener should be formed to level 2 or higher, but ${junction.opener.absoluteName} is not`
     );
 
@@ -681,7 +682,6 @@ function PathsOf( object )
   }
   else if( object instanceof _.Will.ModulesRelation )
   {
-    let path = object.module.will.fileProvider.path;
     let localPath = object.localPath;
     let remotePath = object.remotePath;
     result.push( localPath );
@@ -721,7 +721,6 @@ function PathsOfAsMap( object )
   }
   else if( object instanceof _.Will.ModulesRelation )
   {
-    let path = object.module.will.fileProvider.path;
     result.localPath = object.localPath;
     result.remotePath = object.remotePath;
   }
@@ -1033,6 +1032,24 @@ function AssociationsOf( object )
 
 //
 
+function AssociationsAliveOf( object )
+{
+  let cls = this;
+  let result = cls.AssociationsOf( object );
+
+  if( _.arrayIs( result ) )
+  return _.filter_( null, result, ( association ) =>
+  {
+    return association.isAliveGet() ? association : undefined;
+  });
+
+  if( result.isAliveGet() )
+  return result;
+
+}
+
+//
+
 function ObjectToOptionsMap( o )
 {
   if( _.mapIs( o ) )
@@ -1060,10 +1077,17 @@ function _relationAdd( relation )
   let will = junction.will;
   let changed = false;
 
-  // if( junction.id === 49 )
-  // debugger;
-
   _.assert( relation instanceof _.Will.ModulesRelation );
+  if( !relation.isAliveGet() ) /* yyy */
+  {
+    // debugger;
+    return false
+  }
+  // if( _.longHas( junction.relations, relation ) ) /* xxx */
+  // {
+  //   _.assert( will.objectToJunctionHash.get( relation ) === junction );
+  //   return changed;
+  // }
 
   if( !junction.relation )
   {
@@ -1119,7 +1143,7 @@ function _relationRemove( relation )
 
   junction._relationRemoveSingle( relation );
 
-  junction._remove( junction.AssociationsOf( relation ) ); // yyy
+  // junction._remove( junction.AssociationsOf( relation ) ); // yyy
   return true;
 }
 
@@ -1131,17 +1155,17 @@ function _openerAdd( opener )
   let will = junction.will;
   let changed = false;
 
-  // if( _.longHas( junction.openers, opener ) ) /* yyy */
+  _.assert( opener instanceof _.Will.ModuleOpener );
+  if( !opener.isAliveGet() ) /* yyy */
+  {
+    debugger;
+    return false
+  }
+  // if( _.longHas( junction.openers, opener ) ) /* xxx */
   // {
   //   _.assert( will.objectToJunctionHash.get( opener ) === junction );
   //   return changed;
   // }
-
-  // console.log( ` !! added opener#${opener.id} ${opener.commonPath}` );
-  // if( opener.id === 122 )
-  // debugger;
-
-  _.assert( opener instanceof _.Will.ModuleOpener );
 
   if( !junction.opener )
   {
@@ -1206,7 +1230,7 @@ function _openerRemove( opener )
 
   junction._openerRemoveSingle( opener );
 
-  junction._remove( junction.AssociationsOf( opener ) ); // yyy
+  // junction._remove( junction.AssociationsOf( opener ) ); // yyy
   return true;
 }
 
@@ -1219,6 +1243,16 @@ function _moduleAdd( module )
   let changed = false;
 
   _.assert( module instanceof _.Will.Module );
+  if( !module.isAliveGet() ) /* yyy */
+  {
+    debugger; /* xxx : enter? */
+    return false
+  }
+  // if( _.longHas( junction.modules, module ) ) /* xxx */
+  // {
+  //   _.assert( will.objectToJunctionHash.get( module ) === junction );
+  //   return changed;
+  // }
 
   if( !junction.module )
   {
@@ -1258,8 +1292,8 @@ function _moduleRemoveSingle( module )
   let junction2 = will.objectToJunctionHash.get( module );
   _.assert( junction2 === junction );
 
-  if( module.id === 1004 )
-  debugger;
+  // if( module.id === 1004 )
+  // debugger;
 
   will.objectToJunctionHash.delete( module );
 
@@ -1277,7 +1311,7 @@ function _moduleRemove( module )
 
   junction._moduleRemoveSingle( module );
 
-  junction._remove( junction.AssociationsOf( module ) ); // yyy
+  // junction._remove( junction.AssociationsOf( module ) ); // yyy
   return true;
 }
 
@@ -1292,7 +1326,7 @@ function _add( object )
   return _.any( _.map( object, ( object ) => junction._add( object ) ) );
 
   // _.assert( _.numberIs( object.formed ) ); /* yyy */
-  // if( !object.formed )
+  // if( object.formed <= 0 )
   // {
   //   debugger;
   //   return false
@@ -1693,7 +1727,7 @@ function assertIntegrityVerify()
     );
     _.assert
     (
-      _.longHasAll( objects, junction.AssociationsOf( object ) ),
+      _.longHasAll( objects, junction.AssociationsAliveOf( object ) ),
       () => `Integrity of ${junction.nameWithLocationGet()} is broken. One or several associations are no in the list.`
     );
     let p = junction.PathsOfAsMap( object );
@@ -1949,6 +1983,7 @@ let Statics =
   Of,
   Ofs,
   AssociationsOf,
+  AssociationsAliveOf,
   ObjectToOptionsMap,
 }
 
@@ -1994,6 +2029,7 @@ let Extension =
   Of,
   Ofs,
   AssociationsOf,
+  AssociationsAliveOf,
   ObjectToOptionsMap,
 
   _relationAdd,
