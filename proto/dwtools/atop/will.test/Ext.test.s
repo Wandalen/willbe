@@ -2841,8 +2841,6 @@ function reflectorOptionsCheck( test )
   let a = context.assetFor( test, 'reflector-options-check' );
   a.reflect();
 
-  /* qqq2 : very poor! */
-
   /* - */
 
   a.appStart({ execPath : '.export' })
@@ -7833,10 +7831,10 @@ function listSingleModule( test )
     test.is( _.strHas( got.output, `version : '0.0.1'` ));
     test.is( _.strHas( got.output, `enabled : 1` ));
     test.is( _.strHas( got.output, `interpreters :` ));
-    test.is( _.strHas( got.output, `'nodejs >= 8.0.0'` ));
+    test.is( _.strHas( got.output, `'nodejs >= 10.0.0'` ));
     test.is( _.strHas( got.output, `'chrome >= 60.0.0'` ));
     test.is( _.strHas( got.output, `'firefox >= 60.0.0'` ));
-    test.is( _.strHas( got.output, `'nodejs >= 8.0.0'` ));
+    test.is( _.strHas( got.output, `'nodejs >= 10.0.0'` ));
     test.is( _.strHas( got.output, `keywords :` ));
     test.is( _.strHas( got.output, `'wModuleForTesting1'` ));
 
@@ -8227,10 +8225,10 @@ function listWithSubmodules( test )
     test.is( _.strHas( got.output, `version : '0.0.1'` ));
     test.is( _.strHas( got.output, `enabled : 1` ));
     test.is( _.strHas( got.output, `interpreters :` ));
-    test.is( _.strHas( got.output, `'nodejs >= 8.0.0'` ));
+    test.is( _.strHas( got.output, `'nodejs >= 10.0.0'` ));
     test.is( _.strHas( got.output, `'chrome >= 60.0.0'` ));
     test.is( _.strHas( got.output, `'firefox >= 60.0.0'` ));
-    test.is( _.strHas( got.output, `'nodejs >= 8.0.0'` ));
+    test.is( _.strHas( got.output, `'nodejs >= 10.0.0'` ));
     test.is( _.strHas( got.output, `keywords :` ));
     test.is( _.strHas( got.output, `'wModuleForTesting1'` ));
 
@@ -16742,8 +16740,6 @@ function shellWithCriterion( test )
   let a = context.assetFor( test, 'step-shell-with-criterion' );
   a.reflect();
 
-  /* Checks if start step supports plural criterion and which path is selected using current value of criterion */
-
   /* - */
 
   a.appStart({ execPath : '.build A' })
@@ -16753,7 +16749,6 @@ function shellWithCriterion( test )
     test.description = 'should execute file A.js';
     test.identical( got.exitCode, 0 );
     test.is( _.strHas( got.output, 'Executed-A.js' ) );
-
     return null;
   })
 
@@ -16774,6 +16769,11 @@ function shellWithCriterion( test )
 
   return a.ready;
 }
+
+shellWithCriterion.description =
+`
+Checks if start step supports plural criterion and which path is selected using current value of criterion
+`
 
 //
 

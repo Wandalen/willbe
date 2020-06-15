@@ -51,8 +51,8 @@ function finit()
 
   _.assert( !module.isFinited() );
 
-  if( module.id === 1004 )
-  debugger;
+  // if( module.id === 1004 )
+  // debugger;
 
   try
   {
@@ -103,7 +103,7 @@ function finit()
     finited.finited = true;
     module.stager.cancel();
     module.stager.stagesState( 'skipping', true );
-    module.stager.stageError( 'formed', finited );
+    module.stager.stageError( 'finalFormed', finited );
 
     if( module.peerModule )
     {
@@ -160,10 +160,10 @@ function init( o )
   ({
     object :            module,
     verbosity :         Math.max( Math.min( will.verbosity, will.verboseStaging ), will.verbosity - 6 ),
-    stageNames :        [ 'preformed',        'opened',             'attachedWillfilesFormed',      'peerModulesFormed',        'subModulesFormed',                 'resourcesFormed',          'formed' ],
+    stageNames :        [ 'preformed',        'opened',             'attachedWillfilesFormed',      'peerModulesFormed',        'subModulesFormed',                 'resourcesFormed',          'finalFormed' ],
     consequences :      [ 'preformReady',     'openedReady',        'attachedWillfilesFormReady',   'peerModulesFormReady',     'subModulesFormReady',              'resourcesFormReady',       'ready' ],
     onPerform :         [ '_preform',         '_willfilesOpen',     '_attachedWillfilesForm',       '_peerModulesForm',         '_subModulesForm',                  '_resourcesForm',           null ],
-    onBegin :           [ null,               null,                 null,                           null,                       null,                               null,                       null ],
+    onBegin :           [ '_performBegin',    null,                 null,                           null,                       null,                               null,                       null ],
     onEnd :             [ null,               '_willfilesOpenEnd',  null,                           null,                       null, /*module._willfilesReadEnd,*/ null,                       module._formEnd ],
   });
 
@@ -635,8 +635,13 @@ function unform()
   let module = this;
   let will = module.will;
 
-  if( module.id === 1004 )
-  debugger;
+  // if( module.id === 1004 )
+  // debugger;
+
+  if( module.formed2 <= 0 ) /**/
+  return;
+
+  module.formed2 = -1;
 
   let junction = will.junctionOf( module );
 
@@ -681,6 +686,8 @@ function unform()
   _.assert( Object.keys( module.pathResourceMap ).length === 0 );
   _.assert( Object.keys( module.pathMap ).length === 0 );
   _.assert( Object.keys( module.submoduleMap ).length === 0 );
+
+  module.formed2 = 0;
 
   return module;
 }
@@ -763,6 +770,16 @@ function _preform()
   /* */
 
   return module;
+}
+
+//
+
+function _performBegin()
+{
+  let module = this;
+  _.assert( module.formed2 === 0 );
+  module.formed2 = 1;
+  return null;
 }
 
 //
@@ -1713,6 +1730,15 @@ function isFull( o )
 
 var defaults = isFull.defaults = Object.create( null );
 defaults.only = null;
+
+//
+
+function isAliveGet()
+{
+  let module = this;
+  return module.formed2 >= 1;
+  // return module.stager.stageStateBegun( 'preformed' );
+}
 
 //
 
@@ -7653,6 +7679,7 @@ let Restricts =
   moduleWithNameMap : null,
   userArray : _.define.own([]),
 
+  formed2 : 0,
   predefinedFormed : 0,
   preformed : 0,
   opened : 0,
@@ -7660,7 +7687,7 @@ let Restricts =
   peerModulesFormed : 0,
   subModulesFormed : 0,
   resourcesFormed : 0,
-  formed : 0,
+  finalFormed : 0,
 
   preformReady : _.define.own( _.Consequence({ capacity : 1, tag : 'preformReady' }) ),
   openedReady : _.define.own( _.Consequence({ capacity : 1, tag : 'openedReady' }) ),
@@ -7715,6 +7742,7 @@ let Forbids =
   pickedReady : 'pickedReady',
   superRelation : 'superRelation',
   enabled : 'enabled',
+  formed : 'formed',
 
 }
 
@@ -7796,6 +7824,7 @@ let Extension =
   unform,
   preform,
   _preform,
+  _performBegin,
   upform,
   reform_,
 
@@ -7822,6 +7851,7 @@ let Extension =
   isValid,
   isConsistent,
   isFull,
+  isAliveGet,
   isPreformed,
   reopen,
   close,

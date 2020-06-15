@@ -21,8 +21,8 @@ function finit()
   let opener = this;
   let will = opener.will;
 
-  if( opener.id === 122 )
-  debugger;
+  // if( opener.id === 122 )
+  // debugger;
 
   _.assert( !opener.isFinited() );
 
@@ -186,14 +186,13 @@ function unform()
   let opener = this;
   let will = opener.will;
 
-  if( !opener.formed )
+  if( opener.formed <= 0 )
   return opener;
 
   _.assert( opener.superRelation === null );
 
-  // if( opener.id === 621 )
-  // debugger;
- 
+  opener.formed = -1;
+
   // let junction = will.junctionOf( opener ); /* yyy */
   // /* xxx : can be false? */
   // if( junction && junction.own( opener ) )
@@ -208,6 +207,7 @@ function unform()
   }
 
   let junction = will.junctionOf( opener ); /* yyy */
+  /* xxx : can be false? */
   if( junction && junction.own( opener ) )
   junction.remove( opener );
 
@@ -689,7 +689,7 @@ function open( o )
 
     // debugger;
 
-    let processing = stager.stageStateBegun( 'opened' ) && !stager.stageStateEnded( 'formed' );
+    let processing = stager.stageStateBegun( 'opened' ) && !stager.stageStateEnded( 'finalFormed' );
     _.assert( !processing, 'not tested' );
 
     for( let s in skipping )
@@ -834,7 +834,7 @@ function reopen()
 function isOpened()
 {
   let opener = this;
-  return !!opener.openedModule && opener.openedModule.stager.stageStatePerformed( 'formed' );
+  return !!opener.openedModule && opener.openedModule.stager.stageStatePerformed( 'finalFormed' );
 }
 
 //
@@ -2313,6 +2313,14 @@ function errorSet( err )
 
 //
 
+function isAliveGet()
+{
+  let opener = this;
+  return opener.formed >= 1;
+}
+
+//
+
 function isPreformed()
 {
   let opener = this;
@@ -2619,6 +2627,8 @@ let Extension =
 
   // opener
 
+  /* xxx : split looking for the willfiles algorithm into a separate module */
+
   close,
   find,
   open,
@@ -2690,6 +2700,7 @@ let Extension =
 
   errorSet,
 
+  isAliveGet,
   isPreformed,
   isMainGet,
   isMainSet,
