@@ -23679,6 +23679,8 @@ function commandWillfileFromNpm( test )
     test.identical( config.about.name, 'author' );
     test.identical( config.about.enabled, 1 );
 
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+
     return null;
   })
 
@@ -23693,6 +23695,8 @@ function commandWillfileFromNpm( test )
     test.identical( config.about.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>'] );
     test.identical( config.about.name, 'contributors' );
     test.identical( config.about.enabled, 1 );
+
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
 
     return null;
   })
@@ -23709,6 +23713,8 @@ function commandWillfileFromNpm( test )
     test.identical( config.about.name, 'description' );
     test.identical( config.about.enabled, 1 );
 
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+
     return null;
   })
 
@@ -23722,6 +23728,8 @@ function commandWillfileFromNpm( test )
     let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
     test.identical( config.about.name, 'enabled' );
     test.identical( config.about.enabled, 0 );
+
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
 
     return null;
   })
@@ -23738,6 +23746,8 @@ function commandWillfileFromNpm( test )
     test.identical( config.about.name, 'interpreters' );
     test.identical( config.about.enabled, 1 );
 
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+
     return null;
   })
 
@@ -23752,6 +23762,8 @@ function commandWillfileFromNpm( test )
     test.identical( config.about.keywords, [ 'tools', 'export' ] );
     test.identical( config.about.name, 'keywords' );
     test.identical( config.about.enabled, 1 );
+
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
 
     return null;
   })
@@ -23768,6 +23780,8 @@ function commandWillfileFromNpm( test )
     test.identical( config.about.name, 'license' );
     test.identical( config.about.enabled, 1 );
 
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+
     return null;
   })
 
@@ -23782,6 +23796,8 @@ function commandWillfileFromNpm( test )
     test.identical( config.about.name, 'willfilefromnpm' );
     test.identical( config.about[ "npm.name" ], 'willfilefromnpm' );
     test.identical( config.about.enabled, 1 );
+
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
 
     return null;
   })
@@ -23798,6 +23814,8 @@ function commandWillfileFromNpm( test )
     test.identical( config.about.name, 'npmscripts' );
     test.identical( config.about.enabled, 1 );
 
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+
     return null;
   })
 
@@ -23812,6 +23830,8 @@ function commandWillfileFromNpm( test )
     test.identical( config.path.entryPath, 'path/to' );
     test.identical( config.about.name, 'pathmain' );
     test.identical( config.about.enabled, 1 );
+
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
 
     return null;
   })
@@ -23828,6 +23848,8 @@ function commandWillfileFromNpm( test )
     test.identical( config.path.bugtracker, 'https:///github.com/author/NpmFromWillfile/issues' );
     test.identical( config.about.name, 'pathrepository' );
     test.identical( config.about.enabled, 1 );
+
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
 
     return null;
   })
@@ -23875,6 +23897,8 @@ function commandWillfileFromNpm( test )
     test.identical( config.about.name, 'submodule' );
     test.identical( config.about.enabled, 1 );
 
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+
     return null;
   })
 
@@ -23889,6 +23913,8 @@ function commandWillfileFromNpm( test )
     test.identical( config.about.version, '0.0.0' );
     test.identical( config.about.name, 'version' );
     test.identical( config.about.enabled, 1 );
+
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
 
     return null;
   })
@@ -24048,6 +24074,8 @@ function commandWillfileFromNpmDoubleConversion( test )
     };
     test.identical( config, exp );
 
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+
     return null;
   })
 
@@ -24062,6 +24090,8 @@ function commandWillfileFromNpmDoubleConversion( test )
     test.identical( config.about.version, '0.0.0' );
     test.identical( config.about.name, 'version' );
     test.identical( config.about.enabled, 1 );
+
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
 
     return null;
   })
