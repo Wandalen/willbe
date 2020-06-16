@@ -503,11 +503,11 @@ function _commandListLike( o )
 
         let resourceKindIsGlob = _.path.isGlob( o.resourceKind );
         _.assert( e.request === undefined );
-        e.request = will.Resolver.strRequestParse( e.argument );
+        e.request = _.will.Resolver.strRequestParse( e.argument );
 
-        if( will.Resolver.selectorIs( e.request.subject ) )
+        if( _.will.Resolver.selectorIs( e.request.subject ) )
         {
-          let splits = will.Resolver.selectorShortSplit
+          let splits = _.will.Resolver.selectorShortSplit
           ({
             selector : e.request.subject,
             defaultResourceKind : o.resourceKind,
@@ -516,7 +516,7 @@ function _commandListLike( o )
           resourceKindIsGlob = _.path.isGlob( o.resourceKind );
         }
 
-        if( resourceKindIsGlob && e.request.subject && !will.Resolver.selectorIs( e.request.subject ) )
+        if( resourceKindIsGlob && e.request.subject && !_.will.Resolver.selectorIs( e.request.subject ) )
         {
           e.request.subject = '*::' + e.request.subject;
         }
@@ -974,7 +974,7 @@ function commandImply( e )
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
   _.assert( !!isolated );
 
-  let request = will.Resolver.strRequestParse( isolated.argument );
+  let request = _.will.Resolver.strRequestParse( isolated.argument );
   will._propertiesImply( request.map );
 
   // let namesMap =
@@ -1211,7 +1211,7 @@ function commandBuildsList( e )
   function act( module )
   {
     let logger = will.logger;
-    let request = will.Resolver.strRequestParse( e.argument );
+    let request = _.will.Resolver.strRequestParse( e.argument );
     let builds = module.openedModule.buildsResolve
     ({
       name : request.subject,
@@ -1242,7 +1242,7 @@ function commandExportsList( e )
   function act( module )
   {
     let logger = will.logger;
-    let request = will.Resolver.strRequestParse( e.argument );
+    let request = _.will.Resolver.strRequestParse( e.argument );
     let builds = module.openedModule.exportsResolve
     ({
       name : request.subject,
@@ -1335,7 +1335,7 @@ function commandModulesTree( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.argument );
   let propertiesMap = _.strStructureParse( e.argument );
   let implyMap = _.mapBut( propertiesMap, commandModulesTree.commandProperties );
   propertiesMap = _.mapBut( propertiesMap, implyMap );
@@ -1682,7 +1682,7 @@ function commandModuleNew( e )
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.argument );
 
   if( request.subject )
   request.map.localPath = request.subject;
@@ -1991,7 +1991,7 @@ function commandBuild( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.argument );
   let doneContainer = [];
 
   return will._commandBuildLike
@@ -2024,7 +2024,7 @@ function commandExport( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.argument );
   let doneContainer = [];
 
   return will._commandBuildLike
@@ -2057,7 +2057,7 @@ function commandExportPurging( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.argument );
   let doneContainer = [];
 
   return will._commandBuildLike
@@ -2091,7 +2091,7 @@ function commandExportRecursive( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.argument );
   let doneContainer = [];
 
   return will._commandBuildLike
