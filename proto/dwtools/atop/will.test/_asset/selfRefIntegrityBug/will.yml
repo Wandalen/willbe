@@ -1,0 +1,23 @@
+
+about :
+
+  name : 'SelfRefIntegrityBug'
+
+submodule :
+
+  # ModuleForTesting1 :
+  #   path : npm:///wmodulefortesting1
+  #   enabled : 0 # submodule
+  SelfRefIntegrityBug :
+    path : hd://.
+    enabled : 0 # submodule
+    criterion :
+      development : 1
+
+path :
+
+  out : 'out'
+  temp :
+    - 'path::out'
+  proto : './proto'
+  export : '{path::proto}/**'

@@ -462,7 +462,7 @@ function _open()
 
 /*
       zzz qqq : make it working
-      let encoder = _.Gdf.Select
+      let encoder = _.gdf.select
       ({
         in : 'buffer.raw',
         out : 'structure',
@@ -471,7 +471,7 @@ function _open()
       let structure = encoder.encode( bufferRaw );
 */
 
-      let encoder = _.Gdf.Select
+      let encoder = _.gdf.select
       ({
         in : 'string',
         out : 'structure',
@@ -1697,7 +1697,7 @@ let Accessors =
 // declare
 // --
 
-let Extend =
+let Extension =
 {
 
   // inter
@@ -1776,7 +1776,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Extend,
+  extend : Extension,
 });
 
 _.Copyable.mixin( Self );

@@ -59,8 +59,10 @@ function unform()
   let module = relation.module;
   let will = module.will;
 
-  if( !relation.formed )
+  if( relation.formed <= 0 )
   return;
+
+  relation.formed = -1; /* yyy */
 
   if( relation.opener )
   {
@@ -71,14 +73,17 @@ function unform()
     opener.finit();
   }
 
-  if( relation.formed )
-  {
+  // return Parent.prototype.unform.call( relation );
+
+  // if( relation.formed ) /* yyy */
+  // {
     let junction = will.junctionOf( relation );
+    /* xxx : not always true? */
     if( junction && junction.own( relation ) )
     junction.remove( relation );
-  }
+  // }
 
-  return Parent.prototype.unform.call( relation );
+  return Parent.prototype.unform.call( relation ); /* yyy */
 }
 
 //
@@ -119,12 +124,13 @@ function form1()
 
   _.assert( relation.opener.formed >= 2 );
 
-  // if( relation.enabled ) /* ttt xxx */
+  Parent.prototype.form1.call( relation );
+
   will.junctionReform( relation );
 
   /* end */
 
-  Parent.prototype.form1.call( relation );
+  // Parent.prototype.form1.call( relation ); /* yyy */
   return relation;
 }
 
@@ -157,10 +163,6 @@ function form3()
   _.assert( relation.formed === 2 );
   _.assert( _.strIs( relation.path ), 'not tested' );
   _.sure( _.strIs( relation.path ) || _.arrayIs( relation.path ), 'Path resource should have "path" field' );
-
-  // yyy xxx
-  // if( relation.absoluteName === "module::l1 / module::wModuleForTesting12 / relation::wModuleForTesting1" )
-  // debugger;
 
   if( relation.enabled )
   result = relation._openAct();
@@ -455,44 +457,6 @@ submodulesRelationsOwnFilter.defaults =
 
 //
 
-function toModule()
-{
-  let relation = this;
-  let module = relation.module;
-  let will = module.will;
-  if( relation.opener.openedModule && relation.opener.openedModule )
-  return relation.opener.openedModule;
-  return null;
-}
-
-//
-
-function toOpener()
-{
-  let relation = this;
-  return relation.opener;
-}
-
-//
-
-function toRelation()
-{
-  let relation = this;
-  return relation;
-}
-
-//
-
-function toJunction()
-{
-  let relation = this;
-  let module = relation.module;
-  let will = module.will;
-  return will.junctionFrom( relation );
-}
-
-//
-
 function isMandatory()
 {
   let relation = this;
@@ -550,23 +514,13 @@ function isAvailableGet()
   return true;
 }
 
-// //
 //
-// function dataGet()
-// {
-//   let relation = this;
-//   let module = relation.module;
-//   return relation[ dataSymbol ];
-// }
-//
-// //
-//
-// function dataSet( src )
-// {
-//   let relation = this;
-//   let module = relation.module;
-//   relation[ dataSymbol ] = src;
-// }
+
+function isAliveGet()
+{
+  let relation = this;
+  return relation.formed >= 1;
+}
 
 //
 
@@ -596,14 +550,16 @@ function localPathGet()
     return relation.opener.localPath;
   }
 
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  return null; /* yyy */
 
-  if( path.isGlobal( relation.path ) )
-  return null;
-
-  return path.join( module.inPath, relation.path );
+  // let will = module.will;
+  // let fileProvider = will.fileProvider;
+  // let path = fileProvider.path;
+  //
+  // if( path.isGlobal( relation.path ) )
+  // return null;
+  //
+  // return path.join( module.inPath, relation.path );
 }
 
 //
@@ -619,14 +575,16 @@ function remotePathGet()
     return relation.opener.remotePath;
   }
 
-  let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
+  return null; /* yyy */
 
-  if( !path.isGlobal( relation.path ) )
-  return null;
-
-  return path.join( module.inPath, relation.path );
+  // let will = module.will;
+  // let fileProvider = will.fileProvider;
+  // let path = fileProvider.path;
+  //
+  // if( !path.isGlobal( relation.path ) )
+  // return null;
+  //
+  // return path.join( module.inPath, relation.path );
 }
 
 //
@@ -730,6 +688,46 @@ pathsRebase.defaults =
   relative : null,
   inPath : null,
   exInPath : null,
+}
+
+// --
+// coercer
+// --
+
+function toModule()
+{
+  let relation = this;
+  let module = relation.module;
+  let will = module.will;
+  if( relation.opener.openedModule && relation.opener.openedModule )
+  return relation.opener.openedModule;
+  return null;
+}
+
+//
+
+function toOpener()
+{
+  let relation = this;
+  return relation.opener;
+}
+
+//
+
+function toRelation()
+{
+  let relation = this;
+  return relation;
+}
+
+//
+
+function toJunction()
+{
+  let relation = this;
+  let module = relation.module;
+  let will = module.will;
+  return will.junctionFrom( relation );
 }
 
 // --
@@ -907,7 +905,6 @@ let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 // --
 
 let openerSymbol = Symbol.for( 'opener' );
-// let dataSymbol = Symbol.for( 'data' );
 let moduleSymbol = Symbol.for( 'module' );
 let pathSymbol = Symbol.for( 'path' );
 
@@ -971,7 +968,7 @@ let Forbids =
 // declare
 // --
 
-let Extend =
+let Extension =
 {
 
   // inter
@@ -999,16 +996,10 @@ let Extend =
   submodulesRelationsFilter,
   submodulesRelationsOwnFilter,
 
-  toModule,
-  toOpener,
-  toRelation,
-  toJunction,
-
   isMandatory,
   isValid,
   isAvailableGet,
-  // dataGet,
-  // dataSet,
+  isAliveGet,
   moduleSet,
 
   // path
@@ -1019,6 +1010,13 @@ let Extend =
   longPathGet,
   pathSet,
   pathsRebase,
+
+  // coercer
+
+  toModule,
+  toOpener,
+  toRelation,
+  toJunction,
 
   // exporter
 
@@ -1049,7 +1047,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Extend,
+  extend : Extension,
 });
 
 _.Copyable.mixin( Self );

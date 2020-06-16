@@ -6,6 +6,8 @@ if( typeof module !== 'undefined' )
 {
   let _ = require( './Base.s' );
 
+  require( '../l0/Namespace.s' );
+
   require( '../l1/Main.s' );
 
   require( '../l2/About.s' );
@@ -17,6 +19,7 @@ if( typeof module !== 'undefined' )
 
   require( '../l3/AbstractModule.s' );
   require( '../l3/Module.s' );
+  require( '../l3/ModuleHandle.s' );
   require( '../l3/ModuleOpener.s' );
   require( '../l3/ModuleJunction.s' );
 

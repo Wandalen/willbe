@@ -2,97 +2,6 @@
 
 'use strict';
 
-/*
-
-= Principles
-
-- Willbe prepends all relative paths by path::in. path::out and path::temp are prepended by path::in as well.
-- Willbe prepends path::in by module.dirPath, a directory which has the willfile.
-- Major difference between generated out-willfiles and manually written willfile is section exported. out-willfiles has such section, manually written willfile does not.
-- Output files are generated and input files are for manual editing, but the utility can help with it.
-
-*/
-
-/*
-
-= Requested features
-
-- Command .submodules.update should change back manually updated fixated submodules.
-- Faster loading, perhaps without submodules
-- Timelapse for transpilation
-- Reflect submodules into dir with the same name as submodule
-
-*/
-
-/*
-
-Command routines list
-
-Without selectors :
-
-commandVersion
-commandVersionCheck
-commandSubmodulesFixate
-commandSubmodulesUpgrade
-commandSubmodulesVersionsDownload
-commandSubmodulesVersionsUpdate
-commandSubmodulesVersionsVerify
-commandSubmodulesVersionsAgree
-commandHooksList
-commandClean
-commandSubmodulesClean
-commandModulesTree
-
-With resource selector :
-
-commandResourcesList
-commandPathsList
-commandSubmodulesList
-commandReflectorsList
-commandStepsList
-commandBuildsList
-commandExportsList
-commandAboutList
-commandModulesList
-commandModulesTopologicalList
-commandSubmodulesAdd
-commandGitPreservingHardLinks
-
-With selector of build :
-
-commandBuild
-commandExport
-commandExportPurging
-commandExportRecursive
-
-With other selectors :
-
-commandHelp
-commandImply,
-commandModuleNew
-commandModuleNewWith
-commandWith
-commandEach
-commandPackageInstall
-commandPackageLocalVersions
-commandPackageRemoteVersions
-commandPackageVersion
-
-commandShell
-commandDo
-commandHookCall
-
-*/
-
-//
-
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( './IncludeBase.s' );
-//
-// }
-
 // --
 // relations
 // --
@@ -776,7 +685,7 @@ function resourceWrap( o )
   o = { module : o }
   else if( o instanceof _.Will.ModuleOpener )
   o = { opener : o }
-  else if( o instanceof _.Will.ModuleJunction )
+  else if( o instanceof _.will.ModuleJunction )
   o = { junction : o }
 
   return o;
@@ -1361,7 +1270,7 @@ function moduleFit_body( object, opts )
   module = junction.module;
 
   _.assert( arguments.length === 2 );
-  _.assert( junction instanceof _.Will.ModuleJunction )
+  _.assert( junction instanceof _.will.ModuleJunction )
 
   if( !opts.withKnown && junction.object )
   return false;
@@ -1422,9 +1331,9 @@ function relationFit_body( object, opts )
   relation = junction.relation;
 
   _.assert( arguments.length === 2 );
-  _.assert( will.ObjectIs( object ) || will.isJunction( object ) );
-  // _.assert( object instanceof _.Will.ModulesRelation || object instanceof _.Will.Module || object instanceof _.Will.ModuleJunction );
-  // _.assert( object instanceof _.Will.ModuleJunction ); /* ttt */
+  _.assert( will.ObjectIs( object ) || _.will.isJunction( object ) );
+  // _.assert( object instanceof _.Will.ModulesRelation || object instanceof _.Will.Module || object instanceof _.will.ModuleJunction );
+  // _.assert( object instanceof _.will.ModuleJunction ); /* ttt */
 
   let result = will.moduleFit.body.call( will, object, _.mapOnly( opts, will.moduleFit.defaults ) );
   if( !result )
@@ -1503,7 +1412,7 @@ function relationsFilter( junctions, o )
   junctions.forEach( ( module ) =>
   {
     let junction = module;
-    // if( !( junction instanceof _.Will.ModuleJunction ) )
+    // if( !( junction instanceof _.will.ModuleJunction ) )
     junction = will.junctionFrom( module );
     if( will.relationFit.body.call( will, junction, o ) )
     result.push( module );
@@ -2237,7 +2146,7 @@ function modulesEach_pre( routine, args )
   o = { onUp : args[ 0 ] };
   o = _.routineOptions( routine, o );
   _.assert( args.length === 0 || args.length === 1 );
-  _.assert( _.longHas( [ '/', '*/object', '*/module', '*/relation' ], o.outputFormat ) )
+  _.assert( _.longHas( _.will.ModuleVariant, o.outputFormat ) ) /* xxx : add '* / junction' */
 
   return o;
 }
@@ -2264,7 +2173,7 @@ function modulesEach_body( o )
   let nodes = _.arrayAs( o.modules );
   nodes = _.filter( nodes, ( node ) =>
   {
-    if( will.isJunction( node ) )
+    if( _.will.isJunction( node ) )
     return _.unrollFrom( node.objects );
     return node;
   });
@@ -2287,21 +2196,6 @@ function modulesEach_body( o )
 
   /* */
 
-  // let nodes = _.arrayAs( will.junctionsFrom( o.modules ) );
-  //
-  // if( o.withPeers )
-  // {
-  //   let nodes2 = nodes.slice();
-  //   nodes.forEach( ( node ) =>
-  //   {
-  //     if( node.object && node.object.peerModule )
-  //     _.arrayAppendOnce( nodes2, o.nodesGroup.nodeFrom( node.object.peerModule ) );
-  //   });
-  //   nodes = nodes2;
-  // }
-
-  /* */
-
   let filter = _.mapOnly( o, _.Will.prototype.relationFit.defaults );
 
   will.assertGraphGroup( o.nodesGroup, o );
@@ -2311,17 +2205,7 @@ function modulesEach_body( o )
   o2.onDown = handleDown;
   _.assert( _.boolLike( o2.left ) );
 
-  // will.objectsLogInfo( o.modules );
-  // if( o.modules[ 0 ].id === 5 )
-  // if( o.withStem )
-  // debugger;
-  // debugger;
   o.result = o.nodesGroup.each( o2 );
-  // debugger;
-  // if( o.modules[ 0 ].id === 5 )
-  // if( o.withStem )
-  // debugger;
-
   o.result = _.longOnce( o.result.map( ( junction ) => outputFrom( junction ) ) );
 
   if( o.descriptive )
@@ -2333,15 +2217,19 @@ function modulesEach_body( o )
 
   function objectAppend( object )
   {
+
+    if( _global_.debugger )
+    debugger;
+
     _.assert( !!object );
     _.assert
     (
          object instanceof _.Will.Module
       || object instanceof _.Will.ModuleOpener
       || object instanceof _.Will.ModulesRelation
-      || object instanceof _.Will.ModuleJunction
+      || object instanceof _.will.ModuleJunction
     );
-    if( object instanceof _.Will.ModuleJunction )
+    if( object instanceof _.will.ModuleJunction )
     _.arrayAppendOnce( o.ownedObjects, object.objects );
     else
     o.ownedObjects.push( object );
@@ -2352,9 +2240,6 @@ function modulesEach_body( o )
 
   function handleUp( object, it )
   {
-
-    // if( _global_.debugger )
-    // debugger;
 
     _.assert( will.ObjectIs( object ) );
     let junction = will.junctionFrom( object );
@@ -2375,6 +2260,8 @@ function modulesEach_body( o )
     {
       junction.objects.forEach( ( object ) =>
       {
+        if( _global_.debugger )
+        debugger;
         if( object.ownedBy( o.ownedObjects ) )
         objectAppend( object );
       });
@@ -2410,9 +2297,15 @@ function modulesEach_body( o )
       _.assert( will.ObjectIs( object ) );
       return object;
     }
+    else if( o.outputFormat === '*/handle' )
+    {
+      if( object instanceof _.will.ModuleHandle )
+      return object;
+      return _.will.ModuleHandle({ object, junction : will.junctionFrom( object ) });
+    }
     else if( o.outputFormat === '/' )
     {
-      if( object instanceof _.Will.ModuleJunction )
+      if( object instanceof _.will.ModuleJunction )
       return object;
       return will.junctionFrom( object );
     }
@@ -2436,7 +2329,7 @@ var defaults = modulesEach_body.defaults =
 
   modules : null,
   ownedObjects : null,
-  outputFormat : '*/module', /* / | * / module | * / relation */
+  outputFormat : '*/module',
   descriptive : 0,
   onUp : null,
   onDown : null,
@@ -2609,7 +2502,7 @@ function modulesFor_body( o )
 
   function junctionAction( junction )
   {
-    _.assert( junction instanceof _.Will.ModuleJunction );
+    _.assert( junction instanceof _.will.ModuleJunction );
     if( visitedJunctionsSet.has( junction ) )
     return null;
     let ready = new _.Consequence().take( null );
@@ -2694,15 +2587,11 @@ function modulesDownload_body( o )
   if( !o.nodesGroup )
   o.nodesGroup = will.graphGroupMake( _.mapOnly( o, will.graphGroupMake.defaults ) );
 
-  _.assert( arguments.length === 1 );
   _.assertRoutineOptions( modulesDownload_body, arguments );
-
-  // o.modules = _.arrayAs( o.nodesGroup.nodesAddOnce( o.modules ) );
-  // o.modules = _.arrayAs( will.junctionsFrom( o.modules ) );
   o.modules = _.arrayAs( o.modules );
   _.assert( _.arrayIs( o.modules ) );
   _.assert( will.ObjectsAreAll( o.modules ) );
-  // _.assert( _.all( o.modules, ( module ) => module instanceof _.Will.Module ) );
+  _.assert( arguments.length === 1 );
 
   let filter = _.mapOnly( o, _.Will.prototype.relationsFilter.defaults );
   filter.withOut = false;
@@ -2717,10 +2606,9 @@ function modulesDownload_body( o )
   return _.Consequence().take( o );
 
   let rootModule = o.modules.length === 1 ? o.modules[ 0 ] : null;
-  // let rootModulePath = rootModule ? rootModule.localPath : null;
-  // let rootJunction = rootModule ? will.junctionFrom( rootModule ) : null;
   let rootJunctions = _.arrayAs( will.junctionsFrom( o.modules ) );
 
+  // debugger;
   return objectsUpformAndDownload( o.modules )
   .finally( ( err, arg ) =>
   {
@@ -2740,7 +2628,7 @@ function modulesDownload_body( o )
 
     ready.then( () => renormalize() );
 
-    ready.then( () =>
+    ready.then( () => /* xxx : remove the stage? */
     {
       let o2 = _.mapOnly( o, will.modulesUpform.defaults );
       o2.modules = objects;
@@ -2805,8 +2693,6 @@ function modulesDownload_body( o )
       return;
       if( !junction.module && junction.relation && !junction.relation.enabled )
       return;
-      // if( junction === rootJunction || junction.peer === rootJunction )
-      // return;
       return !junction.isOut || !_.longHas( o.localContainer, junction.peer );
     });
 
@@ -2842,15 +2728,27 @@ function modulesDownload_body( o )
     let ready2 = new _.Consequence().take( null );
 
     _.assert( _.arrayIs( objects ) );
-    let junctions = _.longOnce( will.junctionsFrom( objects ) );
+    // let junctions = _.longOnce( will.junctionsFrom( objects ) );
+    // debugger;
+    let handles = _.longOnce_( null, will.handlesFrom( objects ), ( handle ) => handle.object );
+    // debugger;
 
-    junctions.forEach( ( junction ) => /* xxx : make it parallel */
+    // debugger;
+    // if( _global_.debugger )
+    // debugger;
+
+    // junctions.forEach( ( junction ) => /* xxx : make it parallel */
+    handles.forEach( ( handle ) => /* xxx : make it parallel */
     {
+      let junction = handle.junction;
 
-      _.assert( will.isJunction( junction ) );
+      // _.assert( _.will.isJunction( junction ) );
 
       if( !junction.object )
-      return;
+      {
+        debugger; /* xxx : check */
+        return;
+      }
 
       _.assert
       (
@@ -2992,19 +2890,6 @@ function modulesDownload_body( o )
 
   function junctionRemote( junction )
   {
-
-    // if( junctionIsRoot( junction ) )
-    // {
-    //   debugger;
-    //   return null;
-    // }
-    //
-    // if( rootModulePath && junction.localPath && rootModulePath === junction.localPath )
-    // {
-    //   debugger;
-    //   return null;
-    // }
-
     _.assert( !!junction.remotePath );
     _.arrayAppendOnce( o.remoteContainer, junction );
     _.assert( !_.longHas( o.localContainer, junction ) );
@@ -3015,16 +2900,6 @@ function modulesDownload_body( o )
 
   function junctionLocal( junction )
   {
-
-    // if( junctionIsRoot( junction ) )
-    // {
-    //   debugger;
-    //   return null;
-    // }
-    //
-    // if( rootModulePath && junction.localPath && rootModulePath === junction.localPath )
-    // return null;
-
     if( junction.peer )
     {
       if( _.longHas( o.doneContainer, junction.peer ) )
@@ -3044,16 +2919,6 @@ function modulesDownload_body( o )
 
   function junctionDone( junction )
   {
-
-    // if( junctionIsRoot( junction ) )
-    // {
-    //   debugger;
-    //   return null;
-    // }
-    //
-    // if( rootModulePath && junction.localPath && rootModulePath === junction.localPath )
-    // return null;
-
     _.arrayAppendOnce( o.doneContainer, junction );
     return null;
   }
@@ -3169,7 +3034,6 @@ function modulesClean( o )
   o.beginTime = _.time.now();
 
   let o2 = _.mapOnly( o, will.modulesFor.defaults );
-  // o2.onEachModule = handleEach;
   o2.onEachVisitedObject = handleEach;
 
   return will.modulesFor( o2 )
@@ -3195,7 +3059,6 @@ function modulesClean( o )
 
   function handleEach( module, op )
   {
-    // debugger;
     module = module.toModule();
     if( !( module instanceof _.Will.Module ) )
     return null;
@@ -3217,6 +3080,7 @@ defaults.beginTime = null;
 defaults.cleaningSubmodules = 1;
 defaults.cleaningOut = 1;
 defaults.cleaningTemp = 1;
+defaults.asCommand = 0;
 
 defaults.recursive = 0;
 defaults.withStem = 1;
@@ -3663,35 +3527,20 @@ function objectsToVariants( objects )
 // junction
 // --
 
-function isJunction( object )
-{
-  let will = this;
-
-  _.assert( arguments.length === 1 );
-
-  if( !object )
-  return false;
-  if( object instanceof _.Will.ModuleJunction )
-  return true;
-  return false;
-}
-
-//
-
 function junctionReform( object )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.Will.ModuleJunction.JunctionReform( will, object );
+  return _.will.ModuleJunction.Reform( object, will );
 }
 
 //
 
-function junctionsReform( varaints )
+function junctionsReform( objects )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.Will.ModuleJunction.JunctionsReform( will, varaints );
+  return _.will.ModuleJunction.Reforms( objects, will );
 }
 
 //
@@ -3700,16 +3549,25 @@ function junctionFrom( object )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.Will.ModuleJunction.JunctionFrom( will, object );
+  return _.will.ModuleJunction.JunctionFrom( object, will );
 }
 
 //
 
-function junctionsFrom( varaints )
+function junctionsFrom( objects )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.Will.ModuleJunction.JunctionsFrom( will, varaints );
+  return _.will.ModuleJunction.JunctionsFrom( objects, will );
+}
+
+//
+
+function handlesFrom( objects )
+{
+  let will = this;
+  _.assert( arguments.length === 1 );
+  return _.will.ModuleHandle.Froms( objects, will );
 }
 
 //
@@ -3718,16 +3576,16 @@ function junctionOf( object )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.Will.ModuleJunction.JunctionWithObject( will, object );
+  return _.will.ModuleJunction.Of( object, will );
 }
 
 //
 
-function junctionsOf( varaints )
+function junctionsOf( objects )
 {
   let will = this;
   _.assert( arguments.length === 1 );
-  return _.Will.ModuleJunction.JunctionsWithObjects( will, object );
+  return _.will.ModuleJunction.Ofs( objects, will );
 }
 
 //
@@ -3841,7 +3699,7 @@ function graphGroupMake( o )
     // if( junction instanceof _.Will.ModulesRelation )
     // return true;
     // return false;
-    // return junction instanceof _.Will.ModuleJunction;
+    // return junction instanceof _.will.ModuleJunction;
   }
 
   /* */
@@ -3853,7 +3711,7 @@ function graphGroupMake( o )
     // let junction = will.junctionOf( object );
     // if( junction )
     // return junction;
-    // _.assert( !( object instanceof _.Will.ModuleJunction ) );
+    // _.assert( !( object instanceof _.will.ModuleJunction ) );
     // junction = will.junctionFrom( object );
     // return junction;
   }
@@ -4540,7 +4398,6 @@ function willfilesFind( o )
     }
     if( result.length )
     {
-      debugger;
       return result;
     }
   }
@@ -4748,7 +4605,11 @@ function cleanLog( o )
   o.explanation = ' - Clean deleted ';
 
   if( !o.spentTime )
-  o.spentTime = _.time.now() - o.beginTime;
+  {
+    o.spentTime = _.time.now() - o.beginTime;
+    if( o.asCommand )
+    o.spentTime += will.willfilesReadEndTime - will.willfilesReadBeginTime
+  }
 
   let textualReport = path.groupTextualReport
   ({
@@ -4771,6 +4632,7 @@ var defaults = cleanLog.defaults =
   explanation : null,
   beginTime : null,
   spentTime : null,
+  asCommand : 0,
   dry : 1,
 
 }
@@ -4951,7 +4813,7 @@ function hookItFrom( o )
   if( !o.module )
   o.module = o.junction.module;
 
-  _.assert( o.junction instanceof _.Will.ModuleJunction );
+  _.assert( o.junction instanceof _.will.ModuleJunction );
 
   let relativeLocalPath = _.path.relative( o.junction.dirPath, o.junction.localPath );
 
@@ -5496,7 +5358,7 @@ let Accessors =
 // declare
 // --
 
-let Extend =
+let Extension =
 {
 
   // inter
@@ -5600,11 +5462,12 @@ let Extend =
 
   // junction
 
-  isJunction,
+  // isJunction,
   junctionReform,
   junctionsReform,
   junctionFrom,
   junctionsFrom,
+  handlesFrom,
   junctionOf,
   junctionsOf,
   junctionWithId,
@@ -5682,7 +5545,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Extend,
+  extend : Extension,
 });
 
 _.Copyable.mixin( Self );
@@ -5693,8 +5556,5 @@ _.Verbal.mixin( Self );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 wTools[ Self.shortName ] = Self;
-
-// if( typeof module !== 'undefined' )
-// require( './IncludeMid.s' );
 
 })();

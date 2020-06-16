@@ -1,0 +1,5 @@
+{
+  "name" : "pathmain",
+  "main" : "path/to",
+  "enabled" : 1
+}

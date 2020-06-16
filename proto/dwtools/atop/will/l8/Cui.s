@@ -2,6 +2,66 @@
 
 'use strict';
 
+/*
+
+Command routines list
+
+Without selectors :
+
+commandVersion
+commandVersionCheck
+commandSubmodulesFixate
+commandSubmodulesUpgrade
+commandSubmodulesVersionsDownload
+commandSubmodulesVersionsUpdate
+commandSubmodulesVersionsVerify
+commandSubmodulesVersionsAgree
+commandHooksList
+commandClean
+commandSubmodulesClean
+commandModulesTree
+
+With resource selector :
+
+commandResourcesList
+commandPathsList
+commandSubmodulesList
+commandReflectorsList
+commandStepsList
+commandBuildsList
+commandExportsList
+commandAboutList
+commandModulesList
+commandModulesTopologicalList
+commandSubmodulesAdd
+commandGitPreservingHardLinks
+
+With selector of build :
+
+commandBuild
+commandExport
+commandExportPurging
+commandExportRecursive
+
+With other selectors :
+
+commandHelp
+commandImply,
+commandModuleNew
+commandModuleNewWith
+commandWith
+commandEach
+commandPackageInstall
+commandPackageLocalVersions
+commandPackageRemoteVersions
+commandPackageVersion
+
+commandShell
+commandDo
+commandHookCall
+
+*/
+
 let _ = _global_.wTools;
 let Parent = _.Will;
 let Self = wWillCli;
@@ -318,6 +378,8 @@ function _commandsMake()
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
 
+    'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmGenerateFromWillfile ),     h : 'Use "npm from willfile" to generate "package.json" file from willfile.' },
+    'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileGenerateFromNpm ),     h : 'Use "willfile from npm" to generate ".will.yml" file from "package.json".' },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              h : 'Use "package install" to install target package.' },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        h : 'Use "package local versions" to get list of package versions avaiable locally' },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       h : 'Use "package remote versions" to get list of package versions avaiable in remote archive' },
@@ -626,7 +688,6 @@ function _commandCleanLike( o )
   _.routineOptions( _commandCleanLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
-
   _.all( _.Will.ModuleFilterNulls, ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` ) );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
@@ -708,7 +769,6 @@ defaults.event = null;
 defaults.onAll = null;
 defaults.commandRoutine = null;
 defaults.name = null;
-// defaults.withDisabledModules = 0;
 
 //
 
@@ -1848,6 +1908,7 @@ function commandClean( e )
     _.routineOptions( will.modulesClean, o2 );
     if( o2.recursive === 2 )
     o2.modules = it.roots;
+    o2.asCommand = 1;
 
     return will.modulesClean( o2 );
   }
@@ -1862,6 +1923,7 @@ commandClean.commandProperties =
   cleaningTemp : 'Deleting module-specific temporary directory. Default is cleaningTemp:1.',
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
+  /* qqq2 : should have verbosity and other common options */
 }
 
 //
@@ -1905,6 +1967,7 @@ function commandSubmodulesClean( e )
     _.routineOptions( will.modulesClean, o2 );
     if( o2.recursive === 2 )
     o2.modules = it.roots;
+    o2.asCommand = 1;
     o2.cleaningSubmodules = 1;
     o2.cleaningOut = 0;
     o2.cleaningTemp = 0;
@@ -2290,6 +2353,115 @@ function commandEach( e )
   }
 
 }
+
+//
+
+function commandNpmGenerateFromWillfile( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = _.strStructureParse( e.argument );
+  let criterionsMap = _.mapBut( request, commandNpmGenerateFromWillfile.defaults );
+  request = _.mapBut( request, criterionsMap );
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'npm from willfile',
+    onEach : handleEach,
+    commandRoutine : commandNpmGenerateFromWillfile,
+  });
+
+  function handleEach( it )
+  {
+    if( _.mapKeys( criterionsMap ).length > 0 )
+    it.opener.openedModule.stepMap[ "npm.generate" ].criterion = criterionsMap;
+
+    return it.opener.openedModule.npmGenerate
+    ({
+      packagePath : request.packagePath,
+      entryPath : request.entryPath,
+      filesPath : request.filesPath,
+      currentContext : it.opener.openedModule.stepMap[ "npm.generate" ],
+      verbosity : 5,
+    });
+  }
+}
+
+commandNpmGenerateFromWillfile.defaults =
+{
+  packagePath : null,
+  entryPath : null,
+  filesPath : null,
+};
+
+//
+
+function commandWillfileGenerateFromNpm( e )
+{
+  let will = this;
+  let logger = will.logger;
+  let ready = new _.Consequence().take( null );
+  let request = _.strStructureParse( e.argument );
+  let criterionsMap = _.mapBut( request, commandWillfileGenerateFromNpm.defaults );
+  request = _.mapBut( request, criterionsMap );
+
+  debugger;
+  if( will.currentOpeners && will.currentOpeners.length )
+  {
+    return will._commandBuildLike
+    ({
+      event : e,
+      name : 'npm from willfile',
+      onEach : handleEach,
+      commandRoutine : commandWillfileGenerateFromNpm,
+    });
+  }
+  else
+  {
+    will.modulesFindWithAt( { atLeastOne: 1, selector: "./", tracing: 1 } )
+    .finally( function( err, it )
+    {
+      if( err )
+      throw _.err( err );
+
+      will.currentOpeners = it.openers;
+      if( !will.currentOpeners.length )
+      return will.Module.prototype.willfileGenerateFromNpm.call( will,
+      {
+        packagePath : request.packagePath,
+        willfilePath : request.willfilePath,
+        verbosity : 5,
+      });
+
+      return will._commandBuildLike
+      ({
+        event : e,
+        name : 'npm from willfile',
+        onEach : handleEach,
+        commandRoutine : commandWillfileGenerateFromNpm,
+      });
+    })
+  }
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.willfileGenerateFromNpm
+    ({
+      packagePath : request.packagePath,
+      willfilePath : request.willfilePath,
+      currentContext : it.opener.openedModule.stepMap[ "willfile.generate" ],
+      verbosity : 5,
+    });
+  }
+}
+
+commandWillfileGenerateFromNpm.defaults =
+{
+  packagePath : null,
+  willfilePath : null,
+};
 
 //
 
@@ -2910,7 +3082,7 @@ let Accessors =
 // declare
 // --
 
-let Extend =
+let Extension =
 {
 
   // exec
@@ -2993,6 +3165,9 @@ let Extend =
   commandWith,
   commandEach,
 
+  commandNpmGenerateFromWillfile,
+  commandWillfileGenerateFromNpm,
+
   commandPackageInstall,
   commandPackageLocalVersions,
   commandPackageRemoteVersions,
@@ -3016,7 +3191,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Extend,
+  extend : Extension,
 });
 
 //

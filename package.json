@@ -1,6 +1,6 @@
 {
   "name" : "willbe",
-  "version" : "0.5.176",
+  "version" : "0.5.179",
   "description" : "Utility to manage modules of complex modular systems",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "contributors" :
@@ -63,6 +63,7 @@
     "wtranspile" : "alpha",
     "wnpmtools" : "alpha",
     "wyamltools" : "alpha",
+    "wcensorbasic" : "alpha",
     "tar" : "6.0.2",
     "gitconfiglocal" : "2.1.0",
     "open" : "7.0.4",

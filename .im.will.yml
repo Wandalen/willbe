@@ -76,23 +76,35 @@ submodule :
   wTranspile :
     path : npm:///wtranspile
     enabled : 0 # submodule
-  tar :
-    path : npm:///tar
-    enabled : 0 # submodule
-  gitconfiglocal :
-    path : npm:///gitconfiglocal
-    enabled : 0 # submodule
-  open :
-    path : npm:///open
-    enabled : 0 # submodule
-  getos :
-    path : npm:///getos
+  wCensorBasic :
+    path : npm:///wcensorbasic
     enabled : 0 # submodule
   wTesting :
     path : npm:///wTesting
     enabled : 0 # submodule
     criterion :
       development : 1
+
+  tar :
+    path : npm:///tar
+    enabled : 0 # submodule
+    criterion :
+      external : 1
+  gitconfiglocal :
+    path : npm:///gitconfiglocal
+    enabled : 0 # submodule
+    criterion :
+      external : 1
+  open :
+    path : npm:///open
+    enabled : 0 # submodule
+    criterion :
+      external : 1
+  getos :
+    path : npm:///getos
+    enabled : 0 # submodule
+    criterion :
+      external : 1
 
 path :
 

@@ -156,8 +156,10 @@ function eslint( test )
   let eslint = process.platform === 'win32' ? 'node_modules/eslint/bin/eslint' : 'node_modules/.bin/eslint';
   eslint = path.join( rootPath, eslint );
   let sampleDir = path.join( rootPath, 'sample' );
-
   let ready = new _.Consequence().take( null );
+
+  if( _.process.insideTestContainer() && process.platform !== 'linux' )
+  return test.is( true );
 
   let start = _.process.starter
   ({
@@ -477,7 +479,7 @@ about :
   version : '0.3.0'
   enabled : 1
   interpreters :
-  - njs >= 8.0.0
+  - njs >= 10.0.0
   - chrome >= 60.0.0
   - firefox >= 60.0.0
   keywords :
@@ -972,7 +974,6 @@ rules :
         Property : true
         VariableDeclarator : true
         ImportDeclaration : true
-
   no-multi-str : error
   no-multiple-empty-lines : error
   no-native-reassign : error

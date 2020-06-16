@@ -25,15 +25,6 @@
   Note: verify throws an error if result of check is false and throwing is enabled
 */
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
-//
-
 let _ = _global_.wTools;
 let Parent = _.Will.AbstractModule;
 let Self = wWillModule;
@@ -59,6 +50,9 @@ function finit()
   logger.log( module.qualifiedName, 'finit.begin' );
 
   _.assert( !module.isFinited() );
+
+  // if( module.id === 1004 )
+  // debugger;
 
   try
   {
@@ -109,7 +103,7 @@ function finit()
     finited.finited = true;
     module.stager.cancel();
     module.stager.stagesState( 'skipping', true );
-    module.stager.stageError( 'formed', finited );
+    module.stager.stageError( 'finalFormed', finited );
 
     if( module.peerModule )
     {
@@ -166,10 +160,10 @@ function init( o )
   ({
     object :            module,
     verbosity :         Math.max( Math.min( will.verbosity, will.verboseStaging ), will.verbosity - 6 ),
-    stageNames :        [ 'preformed',        'opened',             'attachedWillfilesFormed',      'peerModulesFormed',        'subModulesFormed',                 'resourcesFormed',          'formed' ],
+    stageNames :        [ 'preformed',        'opened',             'attachedWillfilesFormed',      'peerModulesFormed',        'subModulesFormed',                 'resourcesFormed',          'finalFormed' ],
     consequences :      [ 'preformReady',     'openedReady',        'attachedWillfilesFormReady',   'peerModulesFormReady',     'subModulesFormReady',              'resourcesFormReady',       'ready' ],
     onPerform :         [ '_preform',         '_willfilesOpen',     '_attachedWillfilesForm',       '_peerModulesForm',         '_subModulesForm',                  '_resourcesForm',           null ],
-    onBegin :           [ null,               null,                 null,                           null,                       null,                               null,                       null ],
+    onBegin :           [ '_performBegin',    null,                 null,                           null,                       null,                               null,                       null ],
     onEnd :             [ null,               '_willfilesOpenEnd',  null,                           null,                       null, /*module._willfilesReadEnd,*/ null,                       module._formEnd ],
   });
 
@@ -640,6 +634,15 @@ function unform()
 {
   let module = this;
   let will = module.will;
+
+  // if( module.id === 1004 )
+  // debugger;
+
+  if( module.formed2 <= 0 ) /**/
+  return;
+
+  module.formed2 = -1;
+
   let junction = will.junctionOf( module );
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
@@ -683,6 +686,8 @@ function unform()
   _.assert( Object.keys( module.pathResourceMap ).length === 0 );
   _.assert( Object.keys( module.pathMap ).length === 0 );
   _.assert( Object.keys( module.submoduleMap ).length === 0 );
+
+  module.formed2 = 0;
 
   return module;
 }
@@ -765,6 +770,16 @@ function _preform()
   /* */
 
   return module;
+}
+
+//
+
+function _performBegin()
+{
+  let module = this;
+  _.assert( module.formed2 === 0 );
+  module.formed2 = 1;
+  return null;
 }
 
 //
@@ -1048,6 +1063,12 @@ function predefinedForm()
   ({
     name : 'npm.generate',
     stepRoutine : Predefined.stepRoutineNpmGenerate,
+  })
+
+  step
+  ({
+    name : 'willfile.generate',
+    stepRoutine : Predefined.stepRoutineWillfileFromNpm,
   })
 
   step
@@ -1712,6 +1733,15 @@ defaults.only = null;
 
 //
 
+function isAliveGet()
+{
+  let module = this;
+  return module.formed2 >= 1;
+  // return module.stager.stageStateBegun( 'preformed' );
+}
+
+//
+
 function isPreformed()
 {
   let module = this;
@@ -2269,7 +2299,7 @@ function exportAuto()
   // {
   //   'about' :
   //   {
-  //     'name' : 'Extend',
+  //     'name' : 'Extension',
   //     'version' : '0.1.0'
   //   },
   //   'path' :
@@ -2277,7 +2307,7 @@ function exportAuto()
   //     'in' : '..',
   //     'out' : '.module',
   //     'remote' : 'git+https :///github.com/Wandalen/wProto.git',
-  //     'local' : '.module/Extend',
+  //     'local' : '.module/Extension',
   //     'export' : '{path::local}/proto'
   //   },
   //   'reflector' :
@@ -2504,7 +2534,7 @@ function modulesEach_pre( routine, args )
   o = { onUp : args[ 0 ] };
   o = _.routineOptions( routine, o );
   _.assert( args.length === 0 || args.length === 1 );
-  _.assert( _.longHas( [ '/', '*/module', '*/relation' ], o.outputFormat ) )
+  _.assert( _.longHas( _.will.ModuleVariant, o.outputFormat ) )
 
   return o;
 }
@@ -3741,7 +3771,7 @@ function submodulesRelationsOwnFilter( o )
     if( !will.relationFit( module, filter ) )
     return;
 
-    // _.assert( module instanceof _.Will.ModuleJunction );
+    // _.assert( module instanceof _.will.ModuleJunction );
     // _.assert( module instanceof _.Will.ModulesRelation || module instanceof _.Will.Module );
     _.assert( will.ObjectIs( module ) );
     _.arrayAppendOnce( result, module );
@@ -3764,58 +3794,6 @@ submodulesRelationsOwnFilter.defaults =
 
 //
 
-function toModule()
-{
-  let module = this;
-  let will = module.will;
-
-  module.assertIsValidIntegrity(); /* zzz : temp */
-
-  return module;
-}
-
-//
-
-function toOpener()
-{
-  let module = this;
-  let will = module.will;
-
-  module.assertIsValidIntegrity(); /* zzz : temp */
-
-  for( let u = 0 ; u < module.userArray.length ; u++ )
-  {
-    let opener = module.userArray[ u ];
-    if( opener instanceof will.ModuleOpener )
-    return opener;
-  }
-
-  return null;
-}
-
-//
-
-function toRelation()
-{
-  let module = this;
-  let will = module.will;
-
-  module.assertIsValidIntegrity(); /* zzz : temp */
-
-  return module.superRelations[ 0 ] || null;
-}
-
-//
-
-function toJunction()
-{
-  let module = this;
-  let will = module.will;
-  return will.junctionFrom( module );
-}
-
-//
-
 function submodulesAdd( o )
 {
   let module = this;
@@ -3832,7 +3810,7 @@ function submodulesAdd( o )
 
   junctions.forEach( ( junction ) =>
   {
-    _.assert( will.isJunction( junction ) );
+    _.assert( _.will.isJunction( junction ) );
     if( !junction.module )
     return;
     if( !junction.module.about.name )
@@ -4675,10 +4653,598 @@ let resourceNameAllocate = _.routineFromPreAndBody( resourceNameAllocate_pre, re
 let resourceNameGenerate = _.routineDefaults( null, resourceNameAllocate, { generating : 1 } );
 
 // --
+// clean
+// --
+
+function cleanWhatSingle( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let exps = module.exportsResolve();
+  let filePaths = [];
+
+  o = _.routineOptions( cleanWhatSingle, arguments );
+
+  if( o.files === null )
+  o.files = Object.create( null );
+  o.files[ '/' ] = o.files[ '/' ] || [];
+
+  // logger.log( 'cleanWhatSingle', module.commonPath );
+  // if( _.strHas( module.commonPath, 'group10' ) )
+  // debugger;
+
+  /* submodules */
+
+  if( o.cleaningSubmodules )
+  {
+
+    find( module.cloneDirPathGet() );
+    if( module.rootModule !== module )
+    find( module.cloneDirPathGet( module ) );
+
+  }
+
+  /* out */
+
+  if( o.cleaningOut )
+  {
+    let files = [];
+
+    if( module.about.name )
+    {
+      let outFilePath = module.outfilePathGet();
+      _.arrayAppendArrayOnce( files, [ outFilePath ] );
+    }
+    for( let e = 0 ; e < exps.length ; e++ )
+    {
+      let exp = exps[ e ];
+      let archiveFilePath = exp.archiveFilePathFor();
+      _.arrayAppendArrayOnce( files, [ archiveFilePath ] );
+    }
+
+    find( files );
+  }
+
+  /* temp dir */
+
+  if( o.cleaningTemp )
+  {
+    let resource = module.pathOrReflectorResolve( 'temp' );
+
+    if( resource && resource instanceof _.Will.Reflector )
+    {
+      let o2 = resource.optionsForFindExport();
+      o2.mandatory = 0;
+      find( o2 );
+    }
+    else if( resource && resource instanceof _.Will.PathResource )
+    {
+      let filePath = resource.path;
+      if( !filePath )
+      filePath = [];
+      filePath = _.arrayAs( path.s.join( module.inPath, filePath ) );
+      find( filePath );
+    }
+
+  }
+
+  filePaths.sort();
+
+  return o.files;
+
+  /* - */
+
+  function find( op )
+  {
+
+    if( _.arrayIs( op ) || _.strIs( op ) )
+    op = { filter : { filePath : op } }
+
+    if( op === null )
+    return;
+
+    if( _.arrayIs( op.filter.filePath.length ) && !op.filter.filePath.length )
+    return;
+
+    let def =
+    {
+      verbosity : 0,
+      allowingMissed : 1,
+      withDirs : 1,
+      withTerminals : 1,
+      maskPreset : 0,
+      outputFormat : 'absolute',
+      writing : 0,
+      deletingEmptyDirs : 1,
+      visitingCertain : !o.fast,
+    }
+
+    _.mapSupplement( op, def );
+
+    op.filter = op.filter || Object.create( null );
+    op.filter.recursive = 2;
+
+    let found = fileProvider.filesDelete( op );
+    _.assert( op.filter.formed === 5 );
+
+    let r = path.group
+    ({
+      keys : op.filter.filePath,
+      vals : found,
+      result : o.files,
+    });
+
+  }
+
+}
+
+cleanWhatSingle.defaults =
+{
+  cleaningSubmodules : 1,
+  cleaningOut : 1,
+  cleaningTemp : 1,
+  fast : 0,
+  files : null,
+}
+
+//
+
+function cleanWhat( o )
+{
+  let module = this;
+  let will = module.will;
+  let logger = will.logger;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.routineOptions( cleanWhat, arguments );
+
+  if( o.files === null )
+  o.files = Object.create( null );
+  o.files[ '/' ] = o.files[ '/' ] || [];
+
+  let modules = module.modulesEach
+  ({
+    recursive : o.recursive,
+    withStem : 1,
+    withDisabledStem : 1,
+  });
+
+  modules.forEach( ( module2 ) =>
+  {
+    if( module2 === null )
+    return;
+    let o2 = _.mapExtend( null, o );
+    delete o2.recursive;
+    module2.cleanWhatSingle( o2 );
+  });
+
+  return o.files;
+}
+
+var defaults = cleanWhat.defaults = Object.create( cleanWhatSingle.defaults );
+
+defaults.recursive = 0;
+
+//
+
+function cleanLog( o )
+{
+  let module = this;
+  let will = module.will;
+  let logger = will.logger;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let time = _.time.now();
+
+  o = _.routineOptions( cleanLog, arguments );
+
+  if( !o.files )
+  {
+    let o2 = _.mapExtend( null, o );
+    delete o2.files;
+    delete o2.explanation;
+    delete o2.spentTime;
+    o.files = module.cleanWhat( o2 );
+  }
+
+  debugger;
+  let o3 = _.mapOnly( o, will.cleanLog.defaults );
+  return will.cleanLog( o3 );
+}
+
+var defaults = cleanLog.defaults = Object.create( cleanWhat.defaults );
+
+defaults.files = null;
+defaults.explanation = ' . Clean will delete ';
+defaults.beginTime = null;
+defaults.spentTime = null;
+defaults.asCommand = 0;
+
+//
+
+function clean( o )
+{
+  let module = this;
+  let will = module.will;
+  let logger = will.logger;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  o = _.routineOptions( clean, arguments );
+
+  if( o.beginTime === null )
+  o.beginTime = _.time.now();
+
+  let o2 = _.mapOnly( o, module.cleanWhat.defaults );
+  o.files = module.cleanWhat( o2 );
+
+  debugger;
+
+  let o3 = _.mapOnly( o, will.cleanDelete.defaults );
+  will.cleanDelete( o3 );
+
+  let o4 = _.mapOnly( o, will.cleanLog.defaults );
+  will.cleanLog( o4 );
+
+  return o.files;
+}
+
+var defaults = clean.defaults = Object.create( cleanWhat.defaults );
+
+defaults.beginTime = null;
+defaults.dry = 0;
+defaults.asCommand = 0;
+
+// --
+// resolver
+// --
+
+function resolve_pre( routine, args )
+{
+  let module = this;
+  let o = args[ 0 ];
+
+  if( _.strIs( o ) || _.arrayIs( o ) )
+  o = { selector : o }
+
+  _.routineOptions( routine, o );
+
+  if( o.visited === null )
+  o.visited = [];
+
+  o.baseModule = module;
+
+  _.Will.Resolver.resolve.pre.call( _.Will.Resolver, routine, [ o ] );
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+  _.assert( _.arrayIs( o.visited ) );
+
+  return o;
+}
+
+//
+
+function resolve_body( o )
+{
+  let module = this;
+  let will = module.will;
+  _.assert( o.baseModule === module );
+  let result = will.Resolver.resolve.body.call( will.Resolver, o );
+
+  if( o.pathUnwrapping )
+  _.assert( !result || !( result instanceof _.Will.PathResource ) );
+
+  return result;
+}
+
+_.routineExtend( resolve_body, _.Will.Resolver.resolve );
+
+let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
+
+//
+
+let resolveMaybe = _.routineFromPreAndBody( resolve_pre, resolve_body );
+
+_.routineExtend( resolveMaybe, _.Will.Resolver.resolveMaybe );
+
+//
+
+let resolveRaw = _.routineFromPreAndBody( resolve_pre, resolve_body );
+
+_.routineExtend( resolveRaw, _.Will.Resolver.resolveRaw );
+
+//
+
+let pathResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
+
+_.routineExtend( pathResolve, _.Will.Resolver.pathResolve );
+
+//
+
+// function pathOrReflectorResolve( o )
+// {
+//   let module = this;
+//   let will = module.will;
+//   let resource;
+//
+//   if( _.strIs( o ) )
+//   o = { selector : arguments[ 0 ] }
+//   _.assert( _.strIs( o.selector ) );
+//   _.routineOptions( pathOrReflectorResolve, o );
+//
+//   resource = module.reflectorResolve
+//   ({
+//     selector : 'reflector::' + o.selector,
+//     pathResolving : 'in',
+//     missingAction : 'undefine',
+//   });
+//
+//   if( reflector )
+//   return reflector;
+//
+//   resource = module.pathResolve
+//   ({
+//     selector : 'path::' + o.selector,
+//     pathResolving : 'in',
+//     missingAction : 'undefine',
+//     pathUnwrapping : 0,
+//   });
+//
+//   return resource;
+// }
+//
+// pathOrReflectorResolve.defaults =
+// {
+//   selector : null,
+// }
+
+function pathOrReflectorResolve_body( o )
+{
+  let module = this;
+  let will = module.will;
+  _.assert( o.baseModule === module );
+  _.assert( arguments.length === 1 );
+  let result = will.Resolver.pathOrReflectorResolve.body.call( will.Resolver, o );
+  return result;
+}
+
+_.routineExtend( pathOrReflectorResolve_body, _.Will.Resolver.pathOrReflectorResolve );
+
+let pathOrReflectorResolve = _.routineFromPreAndBody( resolve_pre, pathOrReflectorResolve_body );
+
+//
+
+function filesFromResource_pre( routine, args )
+{
+  let module = this;
+  let o = args[ 0 ];
+
+  if( _.strIs( o ) || _.arrayIs( o ) )
+  o = { selector : o }
+
+  _.routineOptions( routine, o );
+
+  if( o.visited === null )
+  o.visited = [];
+
+  o.baseModule = module;
+
+  _.Will.Resolver.filesFromResource.pre.call( _.Will.Resolver, routine, [ o ] );
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+  // _.assert( _.longHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), 'Unknown value of option path resolving', o.pathResolving );
+  // _.assert( _.longHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown value of option missing action', o.missingAction );
+  // _.assert( _.longHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ), 'Unknown value of option prefixless action', o.prefixlessAction );
+  _.assert( _.arrayIs( o.visited ) );
+  // _.assert( !o.defaultResourceKind || !_.path.isGlob( o.defaultResourceKind ), 'Expects non glob {-defaultResourceKind-}' );
+
+  return o;
+}
+
+function filesFromResource_body( o )
+{
+  let module = this;
+  let will = module.will;
+  _.assert( o.baseModule === module );
+  let result = will.Resolver.filesFromResource.body.call( will.Resolver, o );
+  return result;
+}
+
+_.routineExtend( filesFromResource_body, _.Will.Resolver.filesFromResource );
+
+let filesFromResource = _.routineFromPreAndBody( filesFromResource_pre, filesFromResource_body );
+
+//
+
+let submodulesResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
+
+_.routineExtend( submodulesResolve, _.Will.Resolver.submodulesResolve );
+
+_.assert( _.Will.Resolver.submodulesResolve.defaults.defaultResourceKind === 'submodule' );
+_.assert( submodulesResolve.defaults.defaultResourceKind === 'submodule' );
+
+//
+
+function reflectorResolve_body( o )
+{
+  let module = this;
+  let will = module.will;
+  _.assert( o.baseModule === module );
+  let result = will.Resolver.reflectorResolve.body.call( will.Resolver, o );
+  return result;
+}
+
+_.routineExtend( reflectorResolve_body, _.Will.Resolver.reflectorResolve );
+
+let reflectorResolve = _.routineFromPreAndBody( resolve_pre, reflectorResolve_body );
+
+_.assert( reflectorResolve.defaults.defaultResourceKind === 'reflector' );
+
+// --
+// other resolver
+// --
+
+function _buildsResolve_pre( routine, args )
+{
+  let module = this;
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length <= 2 );
+
+  let o;
+  if( args[ 1 ] !== undefined )
+  o = { name : args[ 0 ], criterion : args[ 1 ] }
+  else
+  o = args[ 0 ];
+
+  o = _.routineOptions( routine, o );
+  _.assert( _.longHas( [ 'build', 'export' ], o.kind ) );
+  _.assert( _.longHas( [ 'default', 'more' ], o.preffering ) );
+  _.assert( o.criterion === null || _.routineIs( o.criterion ) || _.mapIs( o.criterion ) );
+
+  if( o.preffering === 'default' )
+  o.preffering = 'default';
+
+  return o;
+}
+
+//
+
+function _buildsResolve_body( o )
+{
+  let module = this;
+  let elements = module.buildMap;
+
+  _.assertRoutineOptions( _buildsResolve_body, arguments );
+  _.assert( arguments.length === 1 );
+
+  if( o.name )
+  {
+    elements = _.mapVals( _.path.globShortFilterKeys( elements, o.name ) );
+    if( !elements.length )
+    return []
+    if( o.criterion === null || Object.keys( o.criterion ).length === 0 )
+    return elements;
+  }
+  else
+  {
+    elements = _.mapVals( elements );
+  }
+
+  let hasMapFilter = _.objectIs( o.criterion ) && Object.keys( o.criterion ).length > 0;
+  if( _.routineIs( o.criterion ) || hasMapFilter )
+  {
+
+    _.assert( _.objectIs( o.criterion ), 'not tested' );
+
+    elements = filterWith( elements, o.criterion );
+
+  }
+  else if( _.objectIs( o.criterion ) && Object.keys( o.criterion ).length === 0 && !o.name && o.preffering === 'default' )
+  {
+
+    elements = filterWith( elements, { default : 1 } );
+
+  }
+
+  if( o.kind === 'export' )
+  elements = elements.filter( ( element ) => element.criterion && element.criterion.export );
+  else if( o.kind === 'build' )
+  elements = elements.filter( ( element ) => !element.criterion || !element.criterion.export );
+
+  return elements;
+
+  /* */
+
+  function filterWith( elements, filter )
+  {
+
+    _.assert( _.objectIs( filter ), 'not tested' );
+
+    if( _.objectIs( filter ) && Object.keys( filter ).length > 0 )
+    {
+
+      let template = filter;
+      filter = function filter( build, k, c )
+      {
+
+        _.assert( _.mapIs( build.criterion ) );
+
+        let satisfied = _.objectSatisfy
+        ({
+          template,
+          src : build.criterion,
+          levels : 1,
+          strict : o.strictCriterion,
+        });
+
+        if( satisfied )
+        return build;
+      }
+
+    }
+
+    elements = _.entityFilter( elements, filter );
+
+    return elements;
+  }
+
+}
+
+_buildsResolve_body.defaults =
+{
+  kind : null,
+  name : null,
+  criterion : null,
+  preffering : 'default',
+  strictCriterion : 1,
+}
+
+let _buildsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsResolve_body );
+
+//
+
+let buildsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsResolve_body );
+var defaults = buildsResolve.defaults;
+defaults.kind = 'build';
+
+//
+
+let exportsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsResolve_body );
+var defaults = exportsResolve.defaults;
+defaults.kind = 'export';
+
+//
+
+function willfilesResolve()
+{
+  let module = this;
+  let will = module.will;
+  _.assert( arguments.length === 0, 'Expects no arguments' );
+
+  let result = module.willfilesArray.slice();
+  for( let m in module.submoduleMap )
+  {
+    let submodule = module.submoduleMap[ m ];
+    if( !submodule.opener )
+    continue;
+    if( !submodule.opener.openedModule )
+    continue;
+    _.arrayAppendArrayOnce( result, submodule.opener.openedModule.willfilesResolve() );
+  }
+
+  return result;
+}
+
+// --
 // path
 // --
 
-// function pathsRelative( basePath, filePath )
 function pathsRelative( o )
 {
   let module = this;
@@ -5039,7 +5605,7 @@ function _pathRegister()
 
   junctions.forEach( ( junction ) =>
   {
-    _.assert( will.isJunction( junction ) );
+    _.assert( _.will.isJunction( junction ) );
     will.junctionsReform( junction.relations );
   });
 
@@ -5716,655 +6282,57 @@ function shortNameArrayGet()
 }
 
 // --
-// clean
+// coercer
 // --
 
-function cleanWhatSingle( o )
+function toModule()
 {
   let module = this;
   let will = module.will;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let exps = module.exportsResolve();
-  let filePaths = [];
 
-  o = _.routineOptions( cleanWhatSingle, arguments );
+  module.assertIsValidIntegrity(); /* zzz : temp */
 
-  if( o.files === null )
-  o.files = Object.create( null );
-  o.files[ '/' ] = o.files[ '/' ] || [];
-
-  // logger.log( 'cleanWhatSingle', module.commonPath );
-  // if( _.strHas( module.commonPath, 'group10' ) )
-  // debugger;
-
-  /* submodules */
-
-  if( o.cleaningSubmodules )
-  {
-
-    find( module.cloneDirPathGet() );
-    if( module.rootModule !== module )
-    find( module.cloneDirPathGet( module ) );
-
-  }
-
-  /* out */
-
-  if( o.cleaningOut )
-  {
-    let files = [];
-
-    if( module.about.name )
-    {
-      let outFilePath = module.outfilePathGet();
-      _.arrayAppendArrayOnce( files, [ outFilePath ] );
-    }
-    for( let e = 0 ; e < exps.length ; e++ )
-    {
-      let exp = exps[ e ];
-      let archiveFilePath = exp.archiveFilePathFor();
-      _.arrayAppendArrayOnce( files, [ archiveFilePath ] );
-    }
-
-    find( files );
-  }
-
-  /* temp dir */
-
-  if( o.cleaningTemp )
-  {
-    let resource = module.pathOrReflectorResolve( 'temp' );
-
-    if( resource && resource instanceof _.Will.Reflector )
-    {
-      let o2 = resource.optionsForFindExport();
-      o2.mandatory = 0;
-      find( o2 );
-    }
-    else if( resource && resource instanceof _.Will.PathResource )
-    {
-      let filePath = resource.path;
-      if( !filePath )
-      filePath = [];
-      filePath = _.arrayAs( path.s.join( module.inPath, filePath ) );
-      find( filePath );
-    }
-
-  }
-
-  filePaths.sort();
-
-  return o.files;
-
-  /* - */
-
-  function find( op )
-  {
-
-    if( _.arrayIs( op ) || _.strIs( op ) )
-    op = { filter : { filePath : op } }
-
-    if( op === null )
-    return;
-
-    if( _.arrayIs( op.filter.filePath.length ) && !op.filter.filePath.length )
-    return;
-
-    let def =
-    {
-      verbosity : 0,
-      allowingMissed : 1,
-      withDirs : 1,
-      withTerminals : 1,
-      maskPreset : 0,
-      outputFormat : 'absolute',
-      writing : 0,
-      deletingEmptyDirs : 1,
-      visitingCertain : !o.fast,
-    }
-
-    _.mapSupplement( op, def );
-
-    op.filter = op.filter || Object.create( null );
-    op.filter.recursive = 2;
-
-    let found = fileProvider.filesDelete( op );
-    _.assert( op.filter.formed === 5 );
-
-    let r = path.group
-    ({
-      keys : op.filter.filePath,
-      vals : found,
-      result : o.files,
-    });
-
-  }
-
-}
-
-cleanWhatSingle.defaults =
-{
-  cleaningSubmodules : 1,
-  cleaningOut : 1,
-  cleaningTemp : 1,
-  fast : 0,
-  files : null,
+  return module;
 }
 
 //
 
-function cleanWhat( o )
+function toOpener()
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
 
-  _.routineOptions( cleanWhat, arguments );
+  module.assertIsValidIntegrity(); /* zzz : temp */
 
-  if( o.files === null )
-  o.files = Object.create( null );
-  o.files[ '/' ] = o.files[ '/' ] || [];
-
-  let modules = module.modulesEach
-  ({
-    recursive : o.recursive,
-    withStem : 1,
-    withDisabledStem : 1,
-  });
-
-  modules.forEach( ( module2 ) =>
+  for( let u = 0 ; u < module.userArray.length ; u++ )
   {
-    if( module2 === null )
-    return;
-    let o2 = _.mapExtend( null, o );
-    delete o2.recursive;
-    module2.cleanWhatSingle( o2 );
-  });
+    let opener = module.userArray[ u ];
+    if( opener instanceof will.ModuleOpener )
+    return opener;
+  }
 
-  return o.files;
+  return null;
 }
-
-var defaults = cleanWhat.defaults = Object.create( cleanWhatSingle.defaults );
-
-defaults.recursive = 0;
 
 //
 
-function cleanLog( o )
+function toRelation()
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let time = _.time.now();
 
-  o = _.routineOptions( cleanLog, arguments );
+  module.assertIsValidIntegrity(); /* zzz : temp */
 
-  if( !o.files )
-  {
-    let o2 = _.mapExtend( null, o );
-    delete o2.files;
-    delete o2.explanation;
-    delete o2.spentTime;
-    o.files = module.cleanWhat( o2 );
-  }
-
-  debugger;
-  let o3 = _.mapOnly( o, will.cleanLog.defaults );
-  return will.cleanLog( o3 );
-
-  // if( !o.spentTime )
-  // o.spentTime = _.time.now() - time;
-  //
-  // let textualReport = path.groupTextualReport
-  // ({
-  //   explanation : o.explanation,
-  //   groupsMap : o.files,
-  //   verbosity : logger.verbosity,
-  //   spentTime : o.spentTime,
-  // });
-  //
-  // logger.log( textualReport );
-  //
-  // return textualReport;
+  return module.superRelations[ 0 ] || null;
 }
-
-var defaults = cleanLog.defaults = Object.create( cleanWhat.defaults );
-
-defaults.files = null;
-defaults.explanation = ' . Clean will delete ';
-defaults.beginTime = null;
-defaults.spentTime = null;
 
 //
 
-function clean( o )
+function toJunction()
 {
   let module = this;
   let will = module.will;
-  let logger = will.logger;
-  let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-
-  o = _.routineOptions( clean, arguments );
-
-  if( o.beginTime === null )
-  o.beginTime = _.time.now();
-
-  let o2 = _.mapOnly( o, module.cleanWhat.defaults );
-  o.files = module.cleanWhat( o2 );
-
-  debugger;
-
-  let o3 = _.mapOnly( o, will.cleanDelete.defaults );
-  will.cleanDelete( o3 );
-
-  let o4 = _.mapOnly( o, will.cleanLog.defaults );
-  will.cleanLog( o4 );
-
-  return o.files;
-
-  // will.readingEnd();
-  //
-  // if( o.dry )
-  // {
-  //   let o2 = _.mapOnly( o, module.cleanLog.defaults );
-  //   return module.cleanLog( o2 );
-  // }
-  //
-  // let o2 = _.mapExtend( null, o );
-  // delete o2.late;
-  // delete o2.dry;
-  // let files = module.cleanWhat( o2 );
-  //
-  // _.assert( _.mapIs( files ) );
-  // _.assert( _.arrayIs( files[ '/' ] ) );
-  //
-  // for( let f = files[ '/' ].length-1 ; f >= 0 ; f-- )
-  // {
-  //   let filePath = files[ '/' ][ f ];
-  //   _.assert( path.isAbsolute( filePath ) );
-  //
-  //   if( o.fast )
-  //   fileProvider.filesDelete
-  //   ({
-  //     filePath : filePath,
-  //     verbosity : 0,
-  //     throwing : 0,
-  //     late : 1,
-  //   });
-  //   else
-  //   fileProvider.fileDelete
-  //   ({
-  //     filePath : filePath,
-  //     verbosity : 0,
-  //     throwing : 0,
-  //   });
-  //
-  // }
-  //
-  // time = _.time.now() - time;
-  //
-  // let o3 = _.mapOnly( o, module.cleanLog.defaults );
-  // o3.explanation = ' - Clean deleted ';
-  // o3.spentTime = time;
-  // o3.files = files;
-  //
-  // let textualReport = module.cleanLog( o3 );
-  //
-  // return files;
-}
-
-var defaults = clean.defaults = Object.create( cleanWhat.defaults );
-
-defaults.beginTime = null;
-defaults.dry = 0;
-
-// --
-// resolver
-// --
-
-function resolve_pre( routine, args )
-{
-  let module = this;
-  let o = args[ 0 ];
-
-  if( _.strIs( o ) || _.arrayIs( o ) )
-  o = { selector : o }
-
-  _.routineOptions( routine, o );
-
-  if( o.visited === null )
-  o.visited = [];
-
-  o.baseModule = module;
-
-  _.Will.Resolver.resolve.pre.call( _.Will.Resolver, routine, [ o ] );
-
-  _.assert( arguments.length === 2 );
-  _.assert( args.length === 1 );
-  _.assert( _.arrayIs( o.visited ) );
-
-  return o;
-}
-
-//
-
-function resolve_body( o )
-{
-  let module = this;
-  let will = module.will;
-  _.assert( o.baseModule === module );
-  let result = will.Resolver.resolve.body.call( will.Resolver, o );
-
-  if( o.pathUnwrapping )
-  _.assert( !result || !( result instanceof _.Will.PathResource ) );
-
-  return result;
-}
-
-_.routineExtend( resolve_body, _.Will.Resolver.resolve );
-
-let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
-
-//
-
-let resolveMaybe = _.routineFromPreAndBody( resolve_pre, resolve_body );
-
-_.routineExtend( resolveMaybe, _.Will.Resolver.resolveMaybe );
-
-//
-
-let resolveRaw = _.routineFromPreAndBody( resolve_pre, resolve_body );
-
-_.routineExtend( resolveRaw, _.Will.Resolver.resolveRaw );
-
-//
-
-let pathResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
-
-_.routineExtend( pathResolve, _.Will.Resolver.pathResolve );
-
-//
-
-// function pathOrReflectorResolve( o )
-// {
-//   let module = this;
-//   let will = module.will;
-//   let resource;
-//
-//   if( _.strIs( o ) )
-//   o = { selector : arguments[ 0 ] }
-//   _.assert( _.strIs( o.selector ) );
-//   _.routineOptions( pathOrReflectorResolve, o );
-//
-//   resource = module.reflectorResolve
-//   ({
-//     selector : 'reflector::' + o.selector,
-//     pathResolving : 'in',
-//     missingAction : 'undefine',
-//   });
-//
-//   if( reflector )
-//   return reflector;
-//
-//   resource = module.pathResolve
-//   ({
-//     selector : 'path::' + o.selector,
-//     pathResolving : 'in',
-//     missingAction : 'undefine',
-//     pathUnwrapping : 0,
-//   });
-//
-//   return resource;
-// }
-//
-// pathOrReflectorResolve.defaults =
-// {
-//   selector : null,
-// }
-
-function pathOrReflectorResolve_body( o )
-{
-  let module = this;
-  let will = module.will;
-  _.assert( o.baseModule === module );
-  _.assert( arguments.length === 1 );
-  let result = will.Resolver.pathOrReflectorResolve.body.call( will.Resolver, o );
-  return result;
-}
-
-_.routineExtend( pathOrReflectorResolve_body, _.Will.Resolver.pathOrReflectorResolve );
-
-let pathOrReflectorResolve = _.routineFromPreAndBody( resolve_pre, pathOrReflectorResolve_body );
-
-//
-
-function filesFromResource_pre( routine, args )
-{
-  let module = this;
-  let o = args[ 0 ];
-
-  if( _.strIs( o ) || _.arrayIs( o ) )
-  o = { selector : o }
-
-  _.routineOptions( routine, o );
-
-  if( o.visited === null )
-  o.visited = [];
-
-  o.baseModule = module;
-
-  _.Will.Resolver.filesFromResource.pre.call( _.Will.Resolver, routine, [ o ] );
-
-  _.assert( arguments.length === 2 );
-  _.assert( args.length === 1 );
-  // _.assert( _.longHas( [ null, 0, false, 'in', 'out' ], o.pathResolving ), 'Unknown value of option path resolving', o.pathResolving );
-  // _.assert( _.longHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown value of option missing action', o.missingAction );
-  // _.assert( _.longHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ), 'Unknown value of option prefixless action', o.prefixlessAction );
-  _.assert( _.arrayIs( o.visited ) );
-  // _.assert( !o.defaultResourceKind || !_.path.isGlob( o.defaultResourceKind ), 'Expects non glob {-defaultResourceKind-}' );
-
-  return o;
-}
-
-function filesFromResource_body( o )
-{
-  let module = this;
-  let will = module.will;
-  _.assert( o.baseModule === module );
-  let result = will.Resolver.filesFromResource.body.call( will.Resolver, o );
-  return result;
-}
-
-_.routineExtend( filesFromResource_body, _.Will.Resolver.filesFromResource );
-
-let filesFromResource = _.routineFromPreAndBody( filesFromResource_pre, filesFromResource_body );
-
-//
-
-let submodulesResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
-
-_.routineExtend( submodulesResolve, _.Will.Resolver.submodulesResolve );
-
-_.assert( _.Will.Resolver.submodulesResolve.defaults.defaultResourceKind === 'submodule' );
-_.assert( submodulesResolve.defaults.defaultResourceKind === 'submodule' );
-
-//
-
-function reflectorResolve_body( o )
-{
-  let module = this;
-  let will = module.will;
-  _.assert( o.baseModule === module );
-  let result = will.Resolver.reflectorResolve.body.call( will.Resolver, o );
-  return result;
-}
-
-_.routineExtend( reflectorResolve_body, _.Will.Resolver.reflectorResolve );
-
-let reflectorResolve = _.routineFromPreAndBody( resolve_pre, reflectorResolve_body );
-
-_.assert( reflectorResolve.defaults.defaultResourceKind === 'reflector' );
-
-// --
-// other resolver
-// --
-
-function _buildsResolve_pre( routine, args )
-{
-  let module = this;
-
-  _.assert( arguments.length === 2 );
-  _.assert( args.length <= 2 );
-
-  let o;
-  if( args[ 1 ] !== undefined )
-  o = { name : args[ 0 ], criterion : args[ 1 ] }
-  else
-  o = args[ 0 ];
-
-  o = _.routineOptions( routine, o );
-  _.assert( _.longHas( [ 'build', 'export' ], o.kind ) );
-  _.assert( _.longHas( [ 'default', 'more' ], o.preffering ) );
-  _.assert( o.criterion === null || _.routineIs( o.criterion ) || _.mapIs( o.criterion ) );
-
-  if( o.preffering === 'default' )
-  o.preffering = 'default';
-
-  return o;
-}
-
-//
-
-function _buildsResolve_body( o )
-{
-  let module = this;
-  let elements = module.buildMap;
-
-  _.assertRoutineOptions( _buildsResolve_body, arguments );
-  _.assert( arguments.length === 1 );
-
-  if( o.name )
-  {
-    elements = _.mapVals( _.path.globShortFilterKeys( elements, o.name ) );
-    if( !elements.length )
-    return []
-    if( o.criterion === null || Object.keys( o.criterion ).length === 0 )
-    return elements;
-  }
-  else
-  {
-    elements = _.mapVals( elements );
-  }
-
-  let hasMapFilter = _.objectIs( o.criterion ) && Object.keys( o.criterion ).length > 0;
-  if( _.routineIs( o.criterion ) || hasMapFilter )
-  {
-
-    _.assert( _.objectIs( o.criterion ), 'not tested' );
-
-    elements = filterWith( elements, o.criterion );
-
-  }
-  else if( _.objectIs( o.criterion ) && Object.keys( o.criterion ).length === 0 && !o.name && o.preffering === 'default' )
-  {
-
-    elements = filterWith( elements, { default : 1 } );
-
-  }
-
-  if( o.kind === 'export' )
-  elements = elements.filter( ( element ) => element.criterion && element.criterion.export );
-  else if( o.kind === 'build' )
-  elements = elements.filter( ( element ) => !element.criterion || !element.criterion.export );
-
-  return elements;
-
-  /* */
-
-  function filterWith( elements, filter )
-  {
-
-    _.assert( _.objectIs( filter ), 'not tested' );
-
-    if( _.objectIs( filter ) && Object.keys( filter ).length > 0 )
-    {
-
-      let template = filter;
-      filter = function filter( build, k, c )
-      {
-
-        _.assert( _.mapIs( build.criterion ) );
-
-        let satisfied = _.objectSatisfy
-        ({
-          template,
-          src : build.criterion,
-          levels : 1,
-          strict : o.strictCriterion,
-        });
-
-        if( satisfied )
-        return build;
-      }
-
-    }
-
-    elements = _.entityFilter( elements, filter );
-
-    return elements;
-  }
-
-}
-
-_buildsResolve_body.defaults =
-{
-  kind : null,
-  name : null,
-  criterion : null,
-  preffering : 'default',
-  strictCriterion : 1,
-}
-
-let _buildsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsResolve_body );
-
-//
-
-let buildsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsResolve_body );
-var defaults = buildsResolve.defaults;
-defaults.kind = 'build';
-
-//
-
-let exportsResolve = _.routineFromPreAndBody( _buildsResolve_pre, _buildsResolve_body );
-var defaults = exportsResolve.defaults;
-defaults.kind = 'export';
-
-//
-
-function willfilesResolve()
-{
-  let module = this;
-  let will = module.will;
-  _.assert( arguments.length === 0, 'Expects no arguments' );
-
-  let result = module.willfilesArray.slice();
-  for( let m in module.submoduleMap )
-  {
-    let submodule = module.submoduleMap[ m ];
-    if( !submodule.opener )
-    continue;
-    if( !submodule.opener.openedModule )
-    continue;
-    _.arrayAppendArrayOnce( result, submodule.opener.openedModule.willfilesResolve() );
-  }
-
-  return result;
+  return will.junctionFrom( module );
 }
 
 // --
@@ -6634,6 +6602,15 @@ function structureExportOut( o )
   o.dst = o.dst || Object.create( null );
   o.dst.format = will.Willfile.FormatVersion;
 
+  // debugger;
+  // // if( _.strHas( module.name, 'ModuleForTesting1b' ) )
+  // // debugger;
+  // if( _.strHas( module.commonPath, 'group1/.module/ModuleForTesting1b' ) )
+  // {
+  //   // _global_.debugger = 1;
+  //   debugger;
+  // }
+
   let found = module.modulesEach
   ({
     withPeers : 1,
@@ -6642,14 +6619,15 @@ function structureExportOut( o )
     withDisabledSubmodules : 0,
     withDisabledStem : 1,
     recursive : 2,
-    outputFormat : '/',
+    outputFormat : '*/handle',
     descriptive : 1,
   });
 
-  found.result = _.longOnce( _.filter( found.result, ( junction ) =>
+  found.result = _.longOnce( _.filter( found.result, ( handle ) =>
   {
-    let result = junction.toModule();
-    if( !result )
+    let junction = handle.toJunction();
+    let module = handle.toModule();
+    if( !module )
     {
       debugger;
       if( junction.relation && junction.relation.criterion.optional )
@@ -6661,7 +6639,7 @@ function structureExportOut( o )
         + `\nLocal path is ${junction.localPath}`
       );
     }
-    return result;
+    return module;
   }));
 
   let modules = [];
@@ -6684,7 +6662,7 @@ function structureExportOut( o )
       modules.push( module2 );
       c += 1;
     }
-    _.assert( c === 1 );
+    _.assert( c === 1 ); /* xxx */
   });
 
   _.assert( modules.length >= 2, 'No module to export' );
@@ -6971,6 +6949,393 @@ resourceImport.defaults =
   srcResource : null,
   overriding : 1,
 }
+
+//
+
+function npmGenerate( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = _.mapExtend( null, o );
+  let verbosity = o.verbosity;
+  let about = module.about.exportStructure();
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  let currentContext = o.currentContext ? o.currentContext : module;
+  opts.packagePath = module.pathResolve
+  ({
+    selector : opts.packagePath || '{path::out}/package.json',
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : currentContext,
+  });
+  // opts.packagePath = path.join( module.inPath, opts.packagePath );
+
+
+  if( opts.entryPath )
+  opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext : currentContext });
+  if( opts.filesPath )
+  opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext : currentContext });
+
+  /* */
+
+  let config = Object.create( null );
+  config.name = about.name;
+  config.version = about.version;
+  config.enabled = about.enabled;
+
+  if( about.description )
+  config.description = about.description;
+  if( about.keywords )
+  config.keywords = about.keywords;
+  if( about.license )
+  config.license = about.license;
+
+  if( about.interpreters )
+  {
+    let interpreters = _.arrayAs( about.interpreters );
+    interpreters.forEach( ( interpreter ) =>
+    {
+      if( _.strHas( interpreter, 'njs' ) )
+      config.engine = _.strReplace( interpreter, 'njs', 'node' );
+    });
+  }
+
+  if( about.author )
+  config.author = about.author;
+  if( about.contributors )
+  config.contributors = about.contributors;
+
+  for( let n in about )
+  {
+    if( !_.strBegins( n, 'npm.' ) )
+    continue;
+    config[ _.strRemoveBegin( n, 'npm.' ) ] = about[ n ];
+  }
+
+  if( opts.entryPath && opts.entryPath.length )
+  {
+    config.main = _.scalarFrom( path.s.relative( path.dir( opts.packagePath ), opts.entryPath ) );
+  }
+
+  if( opts.filesPath && opts.filesPath.length )
+  {
+    config.files = path.s.relative( path.dir( opts.packagePath ), opts.filesPath );
+  }
+
+  if( module.pathMap.repository )
+  config.repository = pathSimplify( module.pathMap.repository );
+  if( module.pathMap.bugtracker )
+  config.bugs = pathSimplify( module.pathMap.bugtracker );
+  if( module.pathMap.entry )
+  config.entry = module.pathMap.entry;
+
+  for( let n in module.pathMap )
+  {
+    if( !_.strBegins( n, 'npm.' ) )
+    continue;
+    config[ _.strRemoveBegin( n, 'npm.' ) ] = module.pathMap[ n ];
+  }
+
+  for( let s in module.submoduleMap )
+  {
+    let submodule = module.submoduleMap[ s ];
+    let p = submodule.path;
+    p = path.parseFull( p );
+
+    _.assert
+    (
+      p.protocol === 'npm' || p.protocol === 'hd',
+      () => 'Implemented only for "npm" and "hd" dependencies, but got ' + p.full
+    );
+
+    if( p.protocol === 'npm' )
+    {
+      depAdd( submodule, path.relative( '/', p.longPath ), p.hash );
+    }
+    else if( p.protocol === 'hd' )
+    {
+      depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath,  );
+    }
+    else _.assert( 0 );
+
+  }
+
+  _.sure( !fileProvider.isDir( opts.packagePath ), () => packagePath + ' is dir, not safe to delete' );
+
+  fileProvider.fileWrite
+  ({
+    filePath : opts.packagePath,
+    data : config,
+    encoding : 'json.fine',
+    verbosity : verbosity ? 5 : 0,
+  });
+
+  debugger;
+  return null;
+
+  /* */
+
+  function pathSimplify( src )
+  {
+    let r = src;
+    if( !_.strIs( r ) )
+    return r;
+
+    r = r.replace( '///', '//' );
+    r = r.replace( 'npm://', '' );
+
+    return r;
+  }
+
+  function depAdd( submodule, name, hash )
+  {
+    if( submodule.criterion.optional )
+    _depAdd( 'optionalDependencies', name, hash );
+    else if( submodule.criterion.development )
+    _depAdd( 'devDependencies', name, hash );
+    else
+    _depAdd( 'dependencies', name, hash );
+  }
+
+  function _depAdd( section, name, hash )
+  {
+    config[ section ] = config[ section ] || Object.create( null );
+    config[ section ][ name ] = hash ? hash : '';
+  }
+}
+
+npmGenerate.defaults =
+{
+  packagePath : 'package.json',
+  entryPath : 'Index.js',
+  filesPath : null,
+  verbosity : null,
+}
+
+//
+
+function willfileGenerateFromNpm( o )
+{
+  let module = this;
+  let will = module.will ? module.will : module;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = _.mapExtend( null, o );
+  let verbosity = o.verbosity;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
+  let willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
+  if( opts.currentContext )
+  {
+    packagePath = module.pathResolve
+    ({
+      selector : opts.packagePath || '{path::in}/package.json',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : opts.currentContext,
+    });
+    willfilePath = module.pathResolve
+    ({
+      selector : opts.willfilePath || '{path::out}/.will.yml',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : opts.currentContext,
+    });
+  }
+  else
+  {
+    packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
+    willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
+  }
+
+  let config = fileProvider.fileRead({ filePath : packagePath, encoding : 'json' });
+
+  /* */
+
+  let willfile = Object.create( null );
+  willfile.about = Object.create( null );
+  willfile.path = Object.create( null );
+  willfile.path.origins = [];
+  willfile.submodule = Object.create( null );
+
+  /* */
+
+  let propertiesMap =
+  {
+    name :          { propertyAdd : aboutPropertyAdd, name : 'name' },
+    version :       { propertyAdd : aboutPropertyAdd, name : 'version' },
+    enabled :       { propertyAdd : aboutPropertyAdd, name : 'enabled' },
+    description :   { propertyAdd : aboutPropertyAdd, name : 'description' },
+    interpreters :  { propertyAdd : aboutPropertyAdd, name : 'interpreters' },
+    engine :        { propertyAdd : aboutPropertyAdd, name : 'interpreters' },
+    keywords :      { propertyAdd : aboutPropertyAdd, name : 'keywords' },
+    license :       { propertyAdd : aboutPropertyAdd, name : 'license' },
+    author :        { propertyAdd : aboutPropertyAdd, name : 'author' },
+    contributors :  { propertyAdd : aboutPropertyAdd, name : 'contributors' },
+    scripts :       { propertyAdd : aboutPropertyAdd, name : 'npm.scripts' },
+    repository :    { propertyAdd : pathPropertyAdd, name : 'repository' },
+    bugs :          { propertyAdd : pathPropertyAdd, name : 'bugs' },
+    main :          { propertyAdd : pathPropertyAdd, name : 'main' },
+    files :         { propertyAdd : pathPropertyAdd, name : 'files' },
+    dependencies :          { propertyAdd : submodulePropertyAdd, name : undefined },
+    devDependencies :       { propertyAdd : submodulePropertyAdd, name : 'development' },
+    optionalDependencies :  { propertyAdd : submodulePropertyAdd, name : 'optional' },
+  };
+
+  for( let property in config )
+  propertiesMap[ property ].propertyAdd( property, propertiesMap[ property ].name );
+
+  if( willfile.about.name )
+  {
+    willfile.about[ 'npm.name' ] = willfile.about.name;
+    willfile.path.origins.push( `npm:///${ willfile.about.name }` );
+  }
+  if( willfile.path.origins.length === 0 )
+  {
+    delete willfile.path.origins;
+  }
+  if( _.mapKeys( willfile.submodule ).length === 0 )
+  {
+    delete willfile.submodule;
+  }
+  if( _.mapKeys( willfile.path ).length === 0 )
+  {
+    delete willfile.path;
+  }
+
+  /* */
+
+  _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
+  _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
+
+  fileProvider.fileWrite
+  ({
+    filePath : willfilePath,
+    data : willfile,
+    encoding : 'yaml',
+    verbosity : verbosity ? 5 : 0,
+  });
+
+  return null;
+
+  /* */
+
+  function aboutPropertyAdd( property, name )
+  {
+    willfile.about[ name ] = config[ property ];
+  }
+
+  /* */
+
+  function pathPropertyAdd( property )
+  {
+    if( property === 'repository' )
+    {
+      willfile.path.repository = pathNormalize( config.repository );
+      willfile.path.origins.push( willfile.path.repository );
+    }
+    if( property === 'bugs' )
+    {
+      willfile.path.bugtracker = pathNormalize( config.bugs );
+    }
+    if( property === 'main' )
+    {
+      willfile.path.entryPath = config.main;
+    }
+    if( property === 'files' )
+    {
+      willfile.path.export = path.common( config.files );
+    }
+  }
+
+  /* */
+
+  function submodulePropertyAdd( property, criterion )
+  {
+    addDependency( config[ property ], criterion );
+  }
+
+  /* */
+
+  function pathNormalize( src )
+  {
+    if( _.strIs( src ) )
+    {
+      if( !_.strHas( src, '///' ) )
+      return _.strReplace( src, '//', '///' );
+      return str;
+    }
+
+    let result = src.type;
+    result += '+' + src.url.replace( '//', '///' );
+    return result;
+  }
+
+  /* */
+
+  function addDependency( dependenciesMap, criterion )
+  {
+    for( let dependency in dependenciesMap )
+    {
+      if( _.strHas( dependenciesMap[ dependency ], /file:/ ) )
+      willfile.submodule[ dependency ] = addHdDependency( dependenciesMap[ dependency ], criterion );
+      else
+      willfile.submodule[ dependency ] = addNpmDependency( dependency, dependenciesMap[ dependency ], criterion );
+    }
+  }
+
+  /* */
+
+  function addHdDependency( path, criterion )
+  {
+    let result = Object.create( null );
+    result.path = `hd://${ _.strRemoveBegin( path, 'file:' ) }`;
+    result.enabled = 1;
+    if( criterion )
+    {
+      result.criterion = Object.create( null );
+      result.criterion[ criterion ] = 1;
+    }
+    return result;
+  }
+
+  /* */
+
+  function addNpmDependency( name, hash, criterion )
+  {
+    let result = Object.create( null );
+    hash = hash === '' ? hash : `#${ hash }`;
+    result.path = `npm:///${ name }${ hash }`;
+    result.enabled = 1;
+    if( criterion )
+    {
+      result.criterion = Object.create( null );
+      result.criterion[ criterion ] = 1;
+    }
+    return result;
+  }
+
+}
+
+willfileGenerateFromNpm.defaults =
+{
+  packagePath : null,
+  willfilePath : null,
+  verbosity : null,
+};
 
 //
 
@@ -7327,6 +7692,7 @@ let Restricts =
   moduleWithNameMap : null,
   userArray : _.define.own([]),
 
+  formed2 : 0,
   predefinedFormed : 0,
   preformed : 0,
   opened : 0,
@@ -7334,7 +7700,7 @@ let Restricts =
   peerModulesFormed : 0,
   subModulesFormed : 0,
   resourcesFormed : 0,
-  formed : 0,
+  finalFormed : 0,
 
   preformReady : _.define.own( _.Consequence({ capacity : 1, tag : 'preformReady' }) ),
   openedReady : _.define.own( _.Consequence({ capacity : 1, tag : 'openedReady' }) ),
@@ -7389,6 +7755,7 @@ let Forbids =
   pickedReady : 'pickedReady',
   superRelation : 'superRelation',
   enabled : 'enabled',
+  formed : 'formed',
 
 }
 
@@ -7445,7 +7812,7 @@ let Accessors =
 // declare
 // --
 
-let Extend =
+let Extension =
 {
 
   // inter
@@ -7470,6 +7837,7 @@ let Extend =
   unform,
   preform,
   _preform,
+  _performBegin,
   upform,
   reform_,
 
@@ -7496,6 +7864,7 @@ let Extend =
   isValid,
   isConsistent,
   isFull,
+  isAliveGet,
   isPreformed,
   reopen,
   close,
@@ -7566,11 +7935,6 @@ let Extend =
   submodulesVerify,
   submodulesRelationsFilter,
   submodulesRelationsOwnFilter,
-  toModule,
-  toOpener,
-  toRelation,
-  toOpener,
-  toJunction,
 
   submodulesAdd,
   submodulesReload,
@@ -7604,6 +7968,32 @@ let Extend =
   resourceGenerate,
   resourceNameAllocate,
   resourceNameGenerate,
+
+  // clean
+
+  cleanWhatSingle,
+  cleanWhat,
+  cleanLog,
+  clean,
+
+  // resolver
+
+  resolve,
+
+  resolveMaybe,
+  resolveRaw,
+  pathResolve,
+  pathOrReflectorResolve,
+  filesFromResource,
+  submodulesResolve,
+  reflectorResolve,
+
+  // other resolver
+
+  _buildsResolve,
+  buildsResolve,
+  exportsResolve,
+  willfilesResolve,
 
   // path
 
@@ -7680,31 +8070,13 @@ let Extend =
   absoluteNameGet,
   shortNameArrayGet,
 
-  // clean
+  // coercer
 
-  cleanWhatSingle,
-  cleanWhat,
-  cleanLog,
-  clean,
-
-  // resolver
-
-  resolve,
-
-  resolveMaybe,
-  resolveRaw,
-  pathResolve,
-  pathOrReflectorResolve,
-  filesFromResource,
-  submodulesResolve,
-  reflectorResolve,
-
-  // other resolver
-
-  _buildsResolve,
-  buildsResolve,
-  exportsResolve,
-  willfilesResolve,
+  toModule,
+  toOpener,
+  toRelation,
+  toOpener,
+  toJunction,
 
   // exporter
 
@@ -7723,6 +8095,9 @@ let Extend =
   structureExportConsistency,
 
   resourceImport,
+
+  npmGenerate,
+  willfileGenerateFromNpm,
 
   // remote
 
@@ -7751,13 +8126,17 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Extend,
+  extend : Extension,
 });
 
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
+/* qqq2 : move each class under namespace _.will */
+
+// _.will[ Self.shortName ] = Self; /* qqq : uncomment */
+
+_.staticDeclare /* qqq : commend out */
 ({
   prototype : _.Will.prototype,
   name : Self.shortName,
