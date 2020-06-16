@@ -4922,7 +4922,7 @@ function resolve_pre( routine, args )
 
   o.baseModule = module;
 
-  _.Will.Resolver.resolve.pre.call( _.Will.Resolver, routine, [ o ] );
+  _.will.Resolver.resolve.pre.call( _.will.Resolver, routine, [ o ] );
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
@@ -4938,7 +4938,7 @@ function resolve_body( o )
   let module = this;
   let will = module.will;
   _.assert( o.baseModule === module );
-  let result = will.Resolver.resolve.body.call( will.Resolver, o );
+  let result = _.will.Resolver.resolve.body.call( _.will.Resolver, o );
 
   if( o.pathUnwrapping )
   _.assert( !result || !( result instanceof _.will.PathResource ) );
@@ -4946,7 +4946,7 @@ function resolve_body( o )
   return result;
 }
 
-_.routineExtend( resolve_body, _.Will.Resolver.resolve );
+_.routineExtend( resolve_body, _.will.Resolver.resolve );
 
 let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
@@ -4954,19 +4954,19 @@ let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
 let resolveMaybe = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
-_.routineExtend( resolveMaybe, _.Will.Resolver.resolveMaybe );
+_.routineExtend( resolveMaybe, _.will.Resolver.resolveMaybe );
 
 //
 
 let resolveRaw = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
-_.routineExtend( resolveRaw, _.Will.Resolver.resolveRaw );
+_.routineExtend( resolveRaw, _.will.Resolver.resolveRaw );
 
 //
 
 let pathResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
-_.routineExtend( pathResolve, _.Will.Resolver.pathResolve );
+_.routineExtend( pathResolve, _.will.Resolver.pathResolve );
 
 //
 
@@ -5013,11 +5013,11 @@ function pathOrReflectorResolve_body( o )
   let will = module.will;
   _.assert( o.baseModule === module );
   _.assert( arguments.length === 1 );
-  let result = will.Resolver.pathOrReflectorResolve.body.call( will.Resolver, o );
+  let result = _.will.Resolver.pathOrReflectorResolve.body.call( _.will.Resolver, o );
   return result;
 }
 
-_.routineExtend( pathOrReflectorResolve_body, _.Will.Resolver.pathOrReflectorResolve );
+_.routineExtend( pathOrReflectorResolve_body, _.will.Resolver.pathOrReflectorResolve );
 
 let pathOrReflectorResolve = _.routineFromPreAndBody( resolve_pre, pathOrReflectorResolve_body );
 
@@ -5038,7 +5038,7 @@ function filesFromResource_pre( routine, args )
 
   o.baseModule = module;
 
-  _.Will.Resolver.filesFromResource.pre.call( _.Will.Resolver, routine, [ o ] );
+  _.will.Resolver.filesFromResource.pre.call( _.will.Resolver, routine, [ o ] );
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
@@ -5056,11 +5056,11 @@ function filesFromResource_body( o )
   let module = this;
   let will = module.will;
   _.assert( o.baseModule === module );
-  let result = will.Resolver.filesFromResource.body.call( will.Resolver, o );
+  let result = _.will.Resolver.filesFromResource.body.call( _.will.Resolver, o );
   return result;
 }
 
-_.routineExtend( filesFromResource_body, _.Will.Resolver.filesFromResource );
+_.routineExtend( filesFromResource_body, _.will.Resolver.filesFromResource );
 
 let filesFromResource = _.routineFromPreAndBody( filesFromResource_pre, filesFromResource_body );
 
@@ -5068,9 +5068,9 @@ let filesFromResource = _.routineFromPreAndBody( filesFromResource_pre, filesFro
 
 let submodulesResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
-_.routineExtend( submodulesResolve, _.Will.Resolver.submodulesResolve );
+_.routineExtend( submodulesResolve, _.will.Resolver.submodulesResolve );
 
-_.assert( _.Will.Resolver.submodulesResolve.defaults.defaultResourceKind === 'submodule' );
+_.assert( _.will.Resolver.submodulesResolve.defaults.defaultResourceKind === 'submodule' );
 _.assert( submodulesResolve.defaults.defaultResourceKind === 'submodule' );
 
 //
@@ -5080,11 +5080,11 @@ function reflectorResolve_body( o )
   let module = this;
   let will = module.will;
   _.assert( o.baseModule === module );
-  let result = will.Resolver.reflectorResolve.body.call( will.Resolver, o );
+  let result = _.will.Resolver.reflectorResolve.body.call( _.will.Resolver, o );
   return result;
 }
 
-_.routineExtend( reflectorResolve_body, _.Will.Resolver.reflectorResolve );
+_.routineExtend( reflectorResolve_body, _.will.Resolver.reflectorResolve );
 
 let reflectorResolve = _.routineFromPreAndBody( resolve_pre, reflectorResolve_body );
 
@@ -5316,7 +5316,7 @@ function pathsRebase( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let Resolver = will.Resolver;
+  let Resolver = _.will.Resolver;
 
   o = _.routineOptions( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
@@ -5787,7 +5787,7 @@ function predefinedPathGet_functor( fieldName, resourceName, absolutize )
     result = null;
 
     if( result )
-    if( _.Will.Resolver.selectorIs( result ) )
+    if( _.will.Resolver.selectorIs( result ) )
     {
       result = module.pathResolve( result );
     }

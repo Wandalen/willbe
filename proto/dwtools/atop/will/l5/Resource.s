@@ -1228,7 +1228,7 @@ function pathRebase( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let Resolver = will.Resolver;
+  let Resolver = _.will.Resolver;
 
   o = _.routineOptions( pathRebase, arguments );
 

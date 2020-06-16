@@ -299,7 +299,7 @@ function form2( o )
   {
     reflector.src.prefixPath = _.filter( reflector.src.prefixPath, ( prefixPath ) =>
     {
-      if( will.Resolver.selectorIs( prefixPath ) )
+      if( _.will.Resolver.selectorIs( prefixPath ) )
       return prefixPath;
       return path.s.join( module.inPath, prefixPath || '.' )
     });
@@ -632,8 +632,8 @@ function _inheritPathMapAct1( o )
   {
     let dst = o.pathMap[ src ];
 
-    // if( will.Resolver.selectorIs( src ) )
-    if( will.Resolver.selectorIs( src ) || will.Resolver.selectorIs( dst ) )
+    // if( _.will.Resolver.selectorIs( src ) )
+    if( _.will.Resolver.selectorIs( src ) || _.will.Resolver.selectorIs( dst ) )
     {
       reflector._inheritPathMapAct2
       ({
@@ -699,7 +699,7 @@ function _inheritPathMapAct2( o )
   // debugger;
 
   let resolvedSrc = o.src;
-  if( will.Resolver.selectorIs( resolvedSrc ) )
+  if( _.will.Resolver.selectorIs( resolvedSrc ) )
   resolvedSrc = module.pathResolve
   ({
     selector : resolvedSrc,
@@ -709,7 +709,7 @@ function _inheritPathMapAct2( o )
   });
 
   let resolvedDst = o.dst;
-  if( will.Resolver.selectorIs( resolvedDst ) )
+  if( _.will.Resolver.selectorIs( resolvedDst ) )
   resolvedDst = module.pathResolve
   ({
     selector : resolvedDst,
@@ -837,8 +837,8 @@ function _inheritPathMapAct3( o )
   for( let src in pathMap3 )
   {
     let dst = pathMap3[ src ];
-    _.assert( !will.Resolver.selectorIs( src ) );
-    _.assert( !will.Resolver.selectorIs( dst ) );
+    _.assert( !_.will.Resolver.selectorIs( src ) );
+    _.assert( !_.will.Resolver.selectorIs( dst ) );
     set( dst, src );
   }
 
@@ -912,7 +912,7 @@ function _inheritPrefixes( o )
     reflector.src.prefixPath = path.filterInplace( srcPrefixPath, ( prefixPath ) =>
     {
       // debugger;
-      if( will.Resolver.selectorIs( prefixPath ) )
+      if( _.will.Resolver.selectorIs( prefixPath ) )
       return inherit( prefixPath, 0 );
       return prefixPath;
     });
@@ -929,7 +929,7 @@ function _inheritPrefixes( o )
     reflector.dst.prefixPath = path.filterInplace( dstPrefixPath, ( prefixPath ) =>
     {
       // debugger;
-      if( will.Resolver.selectorIs( prefixPath ) )
+      if( _.will.Resolver.selectorIs( prefixPath ) )
       return inherit( prefixPath, 1 );
       return prefixPath;
     });
@@ -945,7 +945,7 @@ function _inheritPrefixes( o )
   // if( reflector.dst.prefixPath )
   // reflector.dst.prefixPath = path.filterInplace( reflector.dst.prefixPath, ( prefixPath ) =>
   // {
-  //   if( will.Resolver.selectorIs( prefixPath ) )
+  //   if( _.will.Resolver.selectorIs( prefixPath ) )
   //   return inherit( prefixPath, 1 );
   //   return prefixPath;
   // });
@@ -1132,10 +1132,10 @@ function prefixesResolve()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  if( reflector.src.prefixPath && will.Resolver.selectorIs( reflector.src.prefixPath ) )
+  if( reflector.src.prefixPath && _.will.Resolver.selectorIs( reflector.src.prefixPath ) )
   reflector.src.prefixPath = resolve( reflector.src.prefixPath );
 
-  if( reflector.dst.prefixPath && will.Resolver.selectorIs( reflector.dst.prefixPath ) )
+  if( reflector.dst.prefixPath && _.will.Resolver.selectorIs( reflector.dst.prefixPath ) )
   reflector.dst.prefixPath = resolve( reflector.dst.prefixPath );
 
   function resolve( filePath )
@@ -1170,7 +1170,7 @@ function pathRelative( filePath )
   // let srcRelativePath = reflector.src.prefixPath || module.inPath;
   // let dstRelativePath = reflector.dst.prefixPath || module.inPath;
 
-  _.assert( !will.Resolver.selectorIs( filePath ) )
+  _.assert( !_.will.Resolver.selectorIs( filePath ) )
   _.assert( filePath === null || _.strIs( filePath ) || _.arrayIs( filePath ) || _.mapIs( filePath ) );
   _.assert( filePath === null || _.strIs( filePath ) || _.arrayIs( filePath ) || _.mapIs( filePath ) );
 
@@ -1198,9 +1198,9 @@ function pathAbsolute( filePath, isSrc )
   let srcRelativePath = reflector.src.prefixPath || module.inPath;
   let dstRelativePath = reflector.dst.prefixPath || module.inPath;
 
-  _.assert( !will.Resolver.selectorIs( srcRelativePath ) );
-  _.assert( !will.Resolver.selectorIs( dstRelativePath ) );
-  _.assert( !will.Resolver.selectorIs( filePath ) );
+  _.assert( !_.will.Resolver.selectorIs( srcRelativePath ) );
+  _.assert( !_.will.Resolver.selectorIs( dstRelativePath ) );
+  _.assert( !_.will.Resolver.selectorIs( filePath ) );
   _.assert( filePath === null || _.strIs( filePath ) || _.arrayIs( filePath ) || _.mapIs( filePath ) );
   _.assert( arguments.length === 1 || arguments.length === 2 );
 
@@ -1462,7 +1462,7 @@ function pathsResolve( o )
 
   function pathResolve( filePath )
   {
-    if( will.Resolver.selectorIs( filePath ) )
+    if( _.will.Resolver.selectorIs( filePath ) )
     filePath = module.pathResolve
     ({
       selector : filePath,
@@ -1483,7 +1483,7 @@ function pathsResolve( o )
   //     if( _.boolIs( filePath ) )
   //     return filePath;
   //
-  //     // if( !will.Resolver.selectorIs( filePath ) && !pathResolving )
+  //     // if( !_.will.Resolver.selectorIs( filePath ) && !pathResolving )
   //     // return filePath;
   //
   //     // if( reflector.name === 'reflect.submodules.debug' )
@@ -1496,7 +1496,7 @@ function pathsResolve( o )
   //     // }
   //
   //     let r = filePath;
-  //     if( will.Resolver.selectorIs( filePath ) )
+  //     if( _.will.Resolver.selectorIs( filePath ) )
   //     r = module.pathResolve
   //     ({
   //       selector : r,
@@ -1596,9 +1596,9 @@ function selectorsNormalize( o )
       return filePath;
       if( _.boolIs( filePath ) )
       return filePath;
-      if( !will.Resolver.selectorIs( filePath ) )
+      if( !_.will.Resolver.selectorIs( filePath ) )
       return filePath;
-      return will.Resolver.selectorNormalize( filePath );
+      return _.will.Resolver.selectorNormalize( filePath );
     });
 
   }
@@ -1619,7 +1619,7 @@ function pathsRebase( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let Resolver = will.Resolver;
+  let Resolver = _.will.Resolver;
 
   o = _.routineOptions( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
@@ -1817,7 +1817,7 @@ function exportStructure()
   delete result.filePath;
 
   if( result.dst )
-  if( _.mapIs( reflector.src.filePath ) || ( _.strIs( reflector.src.filePath ) && will.Resolver.selectorIs( reflector.src.filePath ) ) )
+  if( _.mapIs( reflector.src.filePath ) || ( _.strIs( reflector.src.filePath ) && _.will.Resolver.selectorIs( reflector.src.filePath ) ) )
   if( _.entityIdentical( reflector.src.filePath, reflector.dst.filePath ) )
   delete result.dst.filePath;
 
