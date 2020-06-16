@@ -4389,7 +4389,6 @@ function resourceClassForKind( resourceKind )
   result = _.will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
   // result = will[ will.ResourceKindToClassName.forKey( resourceKind ) ]; /* Dmytro : previous */
 
-
   _.assert( arguments.length === 1 );
   _.sure( _.routineIs( result ), () => 'Cant find class for resource kind ' + _.strQuote( resourceKind ) );
 
