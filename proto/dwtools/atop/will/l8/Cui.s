@@ -2407,7 +2407,6 @@ function commandWillfileGenerateFromNpm( e )
   let criterionsMap = _.mapBut( request, commandWillfileGenerateFromNpm.defaults );
   request = _.mapBut( request, criterionsMap );
 
-  debugger;
   if( will.currentOpeners && will.currentOpeners.length )
   {
     return will._commandBuildLike

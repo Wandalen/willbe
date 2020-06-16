@@ -1339,7 +1339,7 @@ function predefinedForm()
     //
     // _.assert( arguments.length === 1 );
     //
-    // let result = new will.Step( o ).form1();
+    // let result = new _.will.Step( o ).form1();
     // result.writable = 0;
     // return result;
   }
@@ -1470,7 +1470,7 @@ function predefinedStepMake( o )
   _.assert( arguments.length === 1 );
 
   // debugger;
-  let result = new will.Step( o ).form1();
+  let result = new _.will.Step( o ).form1();
   result.writable = 0;
   return result;
 }
@@ -4332,11 +4332,12 @@ function _resourcesFormAct()
 
   /* */
 
+  debugger;
   module._resourcesAllForm( will.ModulesRelation, con );
   module._resourcesAllForm( will.Exported, con );
   module._resourcesAllForm( will.PathResource, con );
   module._resourcesAllForm( will.Reflector, con );
-  module._resourcesAllForm( will.Step, con );
+  module._resourcesAllForm( _.will.Step, con );
   module._resourcesAllForm( will.Build, con );
 
   /* */

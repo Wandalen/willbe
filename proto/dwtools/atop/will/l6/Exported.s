@@ -192,6 +192,7 @@ function _verify()
   _.assert( exported.inModule && !exported.inModule.isOut );
   _.assert( exported.outModule && exported.outModule.isOut );
 
+  debugger;
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!inModule );
   _.assert( !!will );
@@ -202,7 +203,7 @@ function _verify()
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( build instanceof will.Build );
-  _.assert( exported.step instanceof will.Step );
+  _.assert( exported.step instanceof _.will.Step );
   _.assert( exported.recursive === 0 || exported.recursive === 1 || exported.recursive === 2 );
   _.assert( exported.withIntegrated === 0 || exported.withIntegrated === 1 || exported.withIntegrated === 2 );
   _.assert( _.boolLike( exported.tar ), 'Expects bool-like {- exported.tar -}' );
@@ -467,6 +468,7 @@ function _performExportedReflectors()
   let path = hub.path;
   let logger = will.logger;
 
+  debugger;
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!outModule );
   _.assert( !!will );
@@ -478,7 +480,7 @@ function _performExportedReflectors()
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( _.objectIs( exported.criterion ) );
-  _.assert( step instanceof will.Step );
+  _.assert( step instanceof _.will.Step );
   _.assert( build instanceof will.Build );
   _.assert( exported.exportedReflector === null );
   _.assert( exported.exportedDirPath === null );

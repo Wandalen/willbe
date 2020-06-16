@@ -62,7 +62,7 @@ function MakeFor_body( o )
   //   if( !o3.resource.inherit )
   //   o3.resource.inherit = 'shell.run';
   //
-  //   _.Will.Step.MakeFor( o3 );
+  //   _.will.Step.MakeFor( o3 );
   //
   // }
   // else if( !module.stepMap[ o.name ] )
@@ -74,7 +74,7 @@ function MakeFor_body( o )
   //   o3.resource.inherit = 'files.reflect';
   //   o3.Optional = 1;
   //
-  //   _.Will.Step.MakeFor( o3 );
+  //   _.will.Step.MakeFor( o3 );
   //
   // }
 
@@ -133,7 +133,7 @@ function MakeSingle( o )
     if( !o3.resource.inherit )
     o3.resource.inherit = 'shell.run';
 
-    _.Will.Step.MakeSingle( o3 );
+    _.will.Step.MakeSingle( o3 );
   }
   else if( !module.stepMap[ o.resource.name ] )
   {
@@ -144,7 +144,7 @@ function MakeSingle( o )
     o3.resource.inherit = 'files.reflect';
     o3.Optional = 1;
 
-    _.Will.Step.MakeSingle( o3 );
+    _.will.Step.MakeSingle( o3 );
   }
 
   return result;
