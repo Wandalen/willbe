@@ -137,7 +137,7 @@ function stepRoutineReflect( frame )
   return _.Consequence.Try( () =>
   {
     // debugger;
-    return will.Predefined.filesReflect.call( fileProvider, opts );
+    return _.will.Predefined.filesReflect.call( fileProvider, opts );
   })
   .then( ( result ) =>
   {
@@ -1089,12 +1089,13 @@ let Extension =
 //
 
 _.mapExtend( Self, Extension );
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : 'Predefined',
-  value : Self,
-});
+_.will[ 'Predefined' ] = Self;
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : 'Predefined',
+//   value : Self,
+// });
 
 //
 

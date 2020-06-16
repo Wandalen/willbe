@@ -1623,7 +1623,7 @@ function _repoDownload( o )
     }
 
     if( downloading && !o.dry )
-    return will.Predefined.filesReflect.call( fileProvider, o2 );
+    return _.will.Predefined.filesReflect.call( fileProvider, o2 );
 
     return null;
   }

@@ -862,7 +862,7 @@ function predefinedForm()
 {
   let module = this;
   let will = module.will;
-  let Predefined = will.Predefined;
+  let Predefined = _.will.Predefined;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( module.predefinedFormed === 0 );
