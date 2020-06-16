@@ -619,7 +619,7 @@ function find( o )
 
       _.assert( opener.openedModule === null );
       let o2 = opener.optionsForModuleExport();
-      openedModule = opener.openedModule = new will.Module( o2 );
+      openedModule = opener.openedModule = new _.will.Module( o2 );
       if( openedModule.rootModule === null )
       openedModule.rootModule = openedModule;
       openedModule.preform();
@@ -861,7 +861,7 @@ function moduleAdopt( module )
   _.assert( !module.isFinited() );
   _.assert( opener.openedModule === null );
   _.assert( arguments.length === 1 );
-  _.assert( module instanceof _.Will.Module );
+  _.assert( module instanceof _.will.Module );
   _.assert( !opener.isFinited() );
   _.assert( !module.isFinited() );
 
@@ -895,7 +895,7 @@ function openedModuleSet( module )
   let opener = this;
 
   _.assert( arguments.length === 1 );
-  _.assert( module === null || module instanceof _.Will.Module )
+  _.assert( module === null || module instanceof _.will.Module )
 
   if( opener.openedModule === module )
   return module ;
@@ -925,7 +925,7 @@ function moduleUsePaths( module )
   let opener = this;
 
   _.assert( arguments.length === 1 );
-  _.assert( module instanceof _.Will.Module );
+  _.assert( module instanceof _.will.Module );
 
   opener._.dirPath = module.dirPath;
   opener._.commonPath = module.commonPath;
@@ -945,7 +945,7 @@ function moduleUseError( module )
   let opener = this;
 
   _.assert( arguments.length === 1 );
-  _.assert( module instanceof _.Will.Module );
+  _.assert( module instanceof _.will.Module );
 
   if( module.ready.errorsCount() )
   opener.error = opener.error || module.ready.errorsGet()[ 0 ];
@@ -1051,7 +1051,7 @@ function sharedFieldSet_functor( fieldName )
     let opener = this;
     let openedModule = opener.openedModule;
 
-    _.assert( src === null || src instanceof _.Will.Module );
+    _.assert( src === null || src instanceof _.will.Module );
 
     if( opener.id === 304 )
     if( fieldName === 'peerModule' && src )
@@ -1079,7 +1079,7 @@ function rootModuleSet( src )
   let will = opener.will;
   let openedModule = opener.openedModule;
 
-  _.assert( src === null || src instanceof _.Will.Module );
+  _.assert( src === null || src instanceof _.will.Module );
   _.assert( src === null || src.rootModule === src || src.rootModule === null );
 
   opener[ rootModuleSymbol ] = src;

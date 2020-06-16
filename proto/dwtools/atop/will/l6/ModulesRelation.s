@@ -104,7 +104,7 @@ function form1()
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
-  _.assert( relation.module instanceof will.Module );
+  _.assert( relation.module instanceof _.will.Module );
 
   /* */
 
@@ -530,7 +530,7 @@ function moduleSet( src )
 
   resource[ moduleSymbol ] = src;
 
-  _.assert( resource.module === null || resource.module instanceof _.Will.Module );
+  _.assert( resource.module === null || resource.module instanceof _.will.Module );
 
   return src;
 }

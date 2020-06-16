@@ -560,7 +560,7 @@
 //   //   result.push( localPath );
 //   //   result.push( remotePath );
 //   // }
-//   // else if( object instanceof _.Will.Module )
+//   // else if( object instanceof _.will.Module )
 //   // {
 //   //   let localPath = object.localPath || object.commonPath;
 //   //   let remotePath = object.remotePath;
@@ -613,7 +613,7 @@
 // //     result.localPath = object.localPath;
 // //     result.remotePath = object.remotePath;
 // //   }
-// //   else if( object instanceof _.Will.Module )
+// //   else if( object instanceof _.will.Module )
 // //   {
 // //     result.localPath = object.localPath || object.commonPath;
 // //     result.remotePath = object.remotePath;
@@ -648,7 +648,7 @@
 //   _.assert( _.arrayIs( result ) );
 //
 //   // let result = [];
-//   // if( object instanceof _.Will.Module )
+//   // if( object instanceof _.will.Module )
 //   // {
 //   //   return _.each( object.userArray, ( opener ) =>
 //   //   {
@@ -701,7 +701,7 @@
 //   }
 //
 //   _.assert( 0, `Unknown type of node ${_.strType( o )}` );
-//   // if( o instanceof _.Will.Module )
+//   // if( o instanceof _.will.Module )
 //   // {
 //   //   return { module : o }
 //   // }
@@ -879,7 +879,7 @@
 //   let sys = junction.sys;
 //   let changed = false;
 //
-//   _.assert( module instanceof _.Will.Module );
+//   _.assert( module instanceof _.will.Module );
 //
 //   if( !junction.module )
 //   {
@@ -910,7 +910,7 @@
 //   let junction = this;
 //   let sys = junction.sys;
 //
-//   _.assert( module instanceof _.Will.Module );
+//   _.assert( module instanceof _.will.Module );
 //   // _.assert( junction.module === module );
 //   _.arrayRemoveOnceStrictly( junction.modules, module );
 //
@@ -958,7 +958,7 @@
 //   {
 //     result = junction._relationAdd( object );
 //   }
-//   else if( object instanceof _.Will.Module )
+//   else if( object instanceof _.will.Module )
 //   {
 //     result = junction._moduleAdd( object );
 //   }
@@ -994,7 +994,7 @@
 //   {
 //     return junction._relationRemove( object );
 //   }
-//   else if( object instanceof _.Will.Module )
+//   else if( object instanceof _.will.Module )
 //   {
 //     return junction._moduleRemove( object );
 //   }
@@ -1023,7 +1023,7 @@
 //
 //   _.assert( arguments.length === 1 );
 //
-//   if( object instanceof _.Will.Module )
+//   if( object instanceof _.will.Module )
 //   {
 //     return _.longHas( junction.modules, object );
 //   }
@@ -1238,7 +1238,7 @@
 //   {
 //     junction.AssociationsOf( object ).forEach( ( object ) =>
 //     {
-//       if( object instanceof _.Will.Module )
+//       if( object instanceof _.will.Module )
 //       {
 //         if( shadowMap.module === _.unknown )
 //         shadowMap.module = object;
@@ -1302,7 +1302,7 @@
 //
 //   function peerFrom( peerModule )
 //   {
-//     _.assert( peerModule instanceof _.Will.Module );
+//     _.assert( peerModule instanceof _.will.Module );
 //     _.assert( shadowMap.peer === _.unknown );
 //     shadowMap.peer = junction.Of( sys, peerModule );
 //     if( !shadowMap.peer )

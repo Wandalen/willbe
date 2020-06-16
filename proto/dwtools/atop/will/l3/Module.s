@@ -762,7 +762,7 @@ function _preform()
     _.assert( will.moduleWithIdMap[ module.id ] === module );
     _.assert( module.dirPath === null || _.strDefined( module.dirPath ) );
     _.assert( !!module.willfilesPath || !!module.dirPath );
-    _.assert( module.rootModule instanceof will.Module );
+    _.assert( module.rootModule instanceof _.will.Module );
     _.assert( _.strsAreAll( module.willfilesPath ) || _.strIs( module.dirPath ), 'Expects willfilesPath or dirPath' );
 
   }
@@ -1616,7 +1616,7 @@ function own( object )
       return true;
     }
   }
-  else if( object instanceof _.Will.Module )
+  else if( object instanceof _.will.Module )
   {
     if( object === module )
     return true;
@@ -2698,7 +2698,7 @@ function rootModuleSetAct( src )
   let module = this;
   let will = module.will;
 
-  _.assert( src === null || src instanceof _.Will.Module );
+  _.assert( src === null || src instanceof _.will.Module );
   _.assert( src === null || src.rootModule === src || src.rootModule === null );
 
   let oldRootModule = module.rootModule;
@@ -3068,7 +3068,7 @@ function moduleFixate( o )
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.dry ) );
   _.assert( _.boolLike( o.upgrading ) );
-  _.assert( o.module  === null || o.module instanceof will.Module );
+  _.assert( o.module  === null || o.module instanceof _.will.Module );
   _.assert( o.submodule === null || o.submodule instanceof _.will.ModulesRelation );
   // _.assert( o.module  === null || o.module.rootModule === o.module || _.longHas( o.module.superRelations, module ) );
 
@@ -3262,7 +3262,7 @@ function moduleFixateAct( o )
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.dry ) );
   _.assert( _.boolLike( o.upgrading ) );
-  _.assert( o.module  === null || o.module instanceof will.Module );
+  _.assert( o.module  === null || o.module instanceof _.will.Module );
   _.assert( o.submodule === null || o.submodule instanceof _.will.ModulesRelation );
   _.assert( _.strIs( o.willfilePath ) || _.strsAreAll( o.willfilePath ) );
   _.assert( _.strIs( o.originalPath ) );
@@ -3772,7 +3772,7 @@ function submodulesRelationsOwnFilter( o )
     return;
 
     // _.assert( module instanceof _.will.ModuleJunction );
-    // _.assert( module instanceof _.will.ModulesRelation || module instanceof _.Will.Module );
+    // _.assert( module instanceof _.will.ModulesRelation || module instanceof _.will.Module );
     _.assert( will.ObjectIs( module ) );
     _.arrayAppendOnce( result, module );
 
@@ -4117,7 +4117,7 @@ function peerModuleSet( src )
   let module = this;
   let will = module.will;
 
-  _.assert( src === null || src instanceof _.Will.Module );
+  _.assert( src === null || src instanceof _.will.Module );
 
   if( module.peerModule === src )
   return src;
@@ -4406,7 +4406,7 @@ function resourceMapForKind( resourceKind )
   let will = module.will;
   let result;
 
-  _.assert( module.rootModule instanceof will.Module );
+  _.assert( module.rootModule instanceof _.will.Module );
 
   if( resourceKind === 'export' )
   result = module.buildMap;
@@ -6464,7 +6464,7 @@ function resourcesExportInfo( collection )
 
   _.each( collection, ( resource, r ) =>
   {
-    if( resource && resource instanceof will.Module )
+    if( resource && resource instanceof _.will.Module )
     {
       if( _.longHas( modules, resource ) )
       return;
@@ -6650,7 +6650,7 @@ function structureExportOut( o )
   let modules = [];
   found.result.forEach( ( module2 ) =>
   {
-    if( !( module2 instanceof _.Will.Module ) )
+    if( !( module2 instanceof _.will.Module ) )
     {
       debugger;
       let junction = will.junctionFrom( module2 );
@@ -6757,7 +6757,7 @@ function structureExportModules( modules, op )
   op.dst.module = op.dst.module || Object.create( null );
 
   _.assert( arguments.length === 2 );
-  _.assert( exportModule instanceof will.Module );
+  _.assert( exportModule instanceof _.will.Module );
   _.assert( exportModule.isOut );
 
   _.each( modules, ( module2 ) =>
@@ -6874,8 +6874,8 @@ function resourceImport( o )
 
   let srcModule = o.srcResource.module;
 
-  _.assert( module instanceof will.Module );
-  _.assert( srcModule === null || srcModule instanceof will.Module );
+  _.assert( module instanceof _.will.Module );
+  _.assert( srcModule === null || srcModule instanceof _.will.Module );
 
   if( o.srcResource.pathsRebase )
   {
@@ -8139,13 +8139,13 @@ module[ 'exports' ] = _global_.wTools;
 
 /* qqq2 : move each class under namespace _.will */
 
-// _.will[ Self.shortName ] = Self; /* qqq : uncomment */
+_.will[ Self.shortName ] = Self; /* aaa : uncomment */ /* Dmytro : done */
 
-_.staticDeclare /* qqq : commend out */
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+// _.staticDeclare /* aaa : comment out */ /* Dmytro : done */
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

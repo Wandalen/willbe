@@ -1769,8 +1769,8 @@ function moduleClone( test )
     test.description = 'elements';
     test.identical( opener2.willfilesArray.length, 0 );
     test.identical( _.setFrom( _.mapKeys( opener2.willfileWithRoleMap ) ), _.setFrom( [] ) );
-    test.is( opener.openedModule instanceof _.Will.Module );
-    test.is( opener2.openedModule instanceof _.Will.Module );
+    test.is( opener.openedModule instanceof _.will.Module );
+    test.is( opener2.openedModule instanceof _.will.Module );
     test.is( opener.openedModule !== opener2.openedModule );
     test.is( !module.isFinited() );
     test.is( !opener.isFinited() );
@@ -1834,7 +1834,7 @@ function moduleClone( test )
     test.description = 'elements';
     test.identical( opener2.willfilesArray.length, 0 );
     test.identical( _.setFrom( _.mapKeys( opener2.willfileWithRoleMap ) ), _.setFrom( [] ) );
-    test.is( opener.openedModule instanceof _.Will.Module );
+    test.is( opener.openedModule instanceof _.will.Module );
     test.is( opener2.openedModule === null );
     test.is( opener.openedModule !== opener2.openedModule );
     test.is( !module.isFinited() );

@@ -341,7 +341,7 @@ function _performRecursive()
     modules.forEach( ( module2 ) =>
     {
 
-      _.assert( module2 instanceof _.Will.Module );
+      _.assert( module2 instanceof _.will.Module );
 
       con.then( () =>
       {
@@ -874,7 +874,7 @@ function _performReloadOutFile()
     debugger;
     if( err )
     throw _.err( err, `\nFailed to reopen ${name} after exporting it` );
-    _.assert( outModule2 instanceof _.Will.Module );
+    _.assert( outModule2 instanceof _.will.Module );
     return outModule2;
   });
 

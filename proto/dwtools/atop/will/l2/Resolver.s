@@ -247,7 +247,7 @@ function _statusPreUpdate()
 
   if( it.down && it.down.src && it.down.src instanceof _.will.ModulesRelation )
   {
-    _.assert( it.src instanceof will.Module )
+    _.assert( it.src instanceof _.will.Module )
     let valid = it.src.isValid();
     if( !valid )
     throw _.errBrief
@@ -258,7 +258,7 @@ function _statusPreUpdate()
   }
 
   // debugger;
-  if( it.src instanceof will.Module )
+  if( it.src instanceof _.will.Module )
   {
     // debugger;
     it.currentModule = it.src;
@@ -1080,7 +1080,7 @@ function resolve_body( o )
   let path = fileProvider.path;
   let currentContext = o.currentContext = o.currentContext || module;
 
-  _.assert( o.src instanceof will.Module );
+  _.assert( o.src instanceof _.will.Module );
 
   o.currentThis = resolver.resolveContextPrepare
   ({

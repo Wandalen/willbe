@@ -192,7 +192,7 @@ function MakeSingle( o )
   try
   {
 
-    _.assert( o.resource.module instanceof will.Module );
+    _.assert( o.resource.module instanceof _.will.Module );
     _.assert( !!o.resource.module[ Cls.MapName ] );
     let instance = o.resource.module[ Cls.MapName ][ o.resource.name ];
     if( instance )
@@ -949,7 +949,7 @@ function exportString()
   return result;
 }
 
-var defaults = exportString.defaults = Object.create( _.Will.Module.prototype.exportStructure.defaults );
+var defaults = exportString.defaults = Object.create( _.will.Module.prototype.exportStructure.defaults );
 defaults.copyingNonExportable = 1;
 defaults.formed = 1;
 defaults.strict = 0;
@@ -997,7 +997,7 @@ function exportStructure()
   return fields;
 }
 
-exportStructure.defaults = Object.create( _.Will.Module.prototype.exportStructure.defaults );
+exportStructure.defaults = Object.create( _.will.Module.prototype.exportStructure.defaults );
 
 //
 
@@ -1124,7 +1124,7 @@ function moduleSet( src )
 
   resource[ moduleSymbol ] = src;
 
-  _.assert( resource.module === null || resource.module instanceof _.Will.Module );
+  _.assert( resource.module === null || resource.module instanceof _.will.Module );
 
   return src;
 }
@@ -1159,7 +1159,7 @@ function resolve_body( o )
   return resolved;
 }
 
-var defaults = resolve_body.defaults = Object.create( _.Will.Module.prototype.resolve.defaults );
+var defaults = resolve_body.defaults = Object.create( _.will.Module.prototype.resolve.defaults );
 defaults.prefixlessAction = 'default';
 
 let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
@@ -1213,7 +1213,7 @@ function reflectorResolve_body( o )
   return resolved;
 }
 
-reflectorResolve_body.defaults = Object.create( _.Will.Module.prototype.reflectorResolve.defaults );
+reflectorResolve_body.defaults = Object.create( _.will.Module.prototype.reflectorResolve.defaults );
 
 let reflectorResolve = _.routineFromPreAndBody( resolve.pre, reflectorResolve_body );
 

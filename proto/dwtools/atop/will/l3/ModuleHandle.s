@@ -103,7 +103,7 @@ function toModule()
 {
   let self = this;
   let result = self.object;
-  if( !( result instanceof _.Will.Module ) )
+  if( !( result instanceof _.will.Module ) )
   result = null;
   if( result === null )
   {
@@ -112,7 +112,7 @@ function toModule()
     if( result === null && self.junction )
     result = self.junction.toModule();
   }
-  _.assert( result === null || result instanceof _.Will.Module );
+  _.assert( result === null || result instanceof _.will.Module );
   return result;
 }
 

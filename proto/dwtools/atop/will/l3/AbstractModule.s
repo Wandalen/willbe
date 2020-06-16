@@ -88,8 +88,8 @@ function isUsedManually()
     return;
     if( node === module )
     return;
-    if( module instanceof _.Will.Module )
-    if( node instanceof _.Will.Module )
+    if( module instanceof _.will.Module )
+    if( node instanceof _.will.Module )
     return;
     found.push( node );
   }

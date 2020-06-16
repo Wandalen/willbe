@@ -2427,7 +2427,7 @@ function commandWillfileGenerateFromNpm( e )
 
       will.currentOpeners = it.openers;
       if( !will.currentOpeners.length )
-      return will.Module.prototype.willfileGenerateFromNpm.call( will,
+      return _.will.Module.prototype.willfileGenerateFromNpm.call( will,
       {
         packagePath : request.packagePath,
         willfilePath : request.willfilePath,

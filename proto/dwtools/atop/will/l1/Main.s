@@ -681,7 +681,7 @@ function resourceWrap( o )
   let will = this;
 
   if( o && !_.mapIs( o ) )
-  if( o instanceof _.Will.Module )
+  if( o instanceof _.will.Module )
   o = { module : o }
   else if( o instanceof _.will.ModuleOpener )
   o = { opener : o }
@@ -1332,7 +1332,7 @@ function relationFit_body( object, opts )
 
   _.assert( arguments.length === 2 );
   _.assert( will.ObjectIs( object ) || _.will.isJunction( object ) );
-  // _.assert( object instanceof _.will.ModulesRelation || object instanceof _.Will.Module || object instanceof _.will.ModuleJunction );
+  // _.assert( object instanceof _.will.ModulesRelation || object instanceof _.will.Module || object instanceof _.will.ModuleJunction );
   // _.assert( object instanceof _.will.ModuleJunction ); /* ttt */
 
   let result = will.moduleFit.body.call( will, object, _.mapOnly( opts, will.moduleFit.defaults ) );
@@ -1434,7 +1434,7 @@ function moduleIdUnregister( openedModule )
   let logger = will.logger;
 
   _.assert( arguments.length === 1 );
-  _.assert( openedModule instanceof will.Module );
+  _.assert( openedModule instanceof _.will.Module );
   _.assert( openedModule.id > 0 );
 
   _.assert( will.moduleWithIdMap[ openedModule.id ] === openedModule || will.moduleWithIdMap[ openedModule.id ] === undefined );
@@ -1453,7 +1453,7 @@ function moduleIdRegister( openedModule )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.assert( openedModule instanceof will.Module );
+  _.assert( openedModule instanceof _.will.Module );
   _.assert( arguments.length === 1 );
   _.assert( openedModule.id > 0 );
 
@@ -1474,7 +1474,7 @@ function modulePathUnregister( openedModule )
   let logger = will.logger;
 
   _.assert( arguments.length === 1 );
-  _.assert( openedModule instanceof will.Module );
+  _.assert( openedModule instanceof _.will.Module );
   _.assert( openedModule._registeredPath === null || openedModule._registeredPath === openedModule.commonPath );
 
   if( !openedModule._registeredPath )
@@ -1505,7 +1505,7 @@ function modulePathRegister( openedModule )
 
   openedModule._registeredPath = openedModule.commonPath;
 
-  _.assert( openedModule instanceof will.Module );
+  _.assert( openedModule instanceof _.will.Module );
   _.assert( arguments.length === 1 );
   _.assert( _.strIs( openedModule.commonPath ) );
 
@@ -1663,7 +1663,7 @@ function modulesFindEachAt( o )
         // it2.dst = element;
 
         it2.currentModule = it1.currentModule;
-        _.assert( it2.currentModule instanceof _.Will.Module );
+        _.assert( it2.currentModule instanceof _.will.Module );
         it2.currentOpener = it2.currentModule.userArray[ 0 ];
         _.assert( it2.currentOpener instanceof _.will.ModuleOpener );
 
@@ -2224,7 +2224,7 @@ function modulesEach_body( o )
     _.assert( !!object );
     _.assert
     (
-         object instanceof _.Will.Module
+         object instanceof _.will.Module
       || object instanceof _.will.ModuleOpener
       || object instanceof _.will.ModulesRelation
       || object instanceof _.will.ModuleJunction
@@ -2484,7 +2484,7 @@ function modulesFor_body( o )
         return null;
         visitedModulesSet.add( object );
 
-        if( object && object instanceof _.Will.Module )
+        if( object && object instanceof _.will.Module )
         {
           let o3 = _.mapExtend( null, o );
           o3.module = object;
@@ -3060,7 +3060,7 @@ function modulesClean( o )
   function handleEach( module, op )
   {
     module = module.toModule();
-    if( !( module instanceof _.Will.Module ) )
+    if( !( module instanceof _.will.Module ) )
     return null;
     if( visitedObjectSet.has( module ) )
     return null;
@@ -3193,7 +3193,7 @@ function modulesBuild_body( o )
   {
     let o3 = _.mapOnly( o, module.moduleBuild.defaults );
     o3.isRoot = op.isRoot;
-    _.assert( module instanceof _.Will.Module );
+    _.assert( module instanceof _.will.Module );
     if( _.longHas( o.doneContainer, module ) )
     return null;
     o.doneContainer.push( module );
@@ -3309,13 +3309,13 @@ function modulesVerify_body( o )
     if( object instanceof _.will.ModulesRelation )
     if( object.opener )
     object = object.opener;
-    if( !( object instanceof _.Will.Module || object instanceof _.will.ModuleOpener ) )
+    if( !( object instanceof _.will.Module || object instanceof _.will.ModuleOpener ) )
     return null;
     if( object instanceof _.will.ModuleOpener )
     if( object.openedModule )
     object = object.openedModule;
     let o3 = _.mapOnly( o, object.repoVerify.defaults ); debugger;
-    _.assert( object instanceof _.Will.Module || object instanceof _.will.ModuleOpener );
+    _.assert( object instanceof _.will.Module || object instanceof _.will.ModuleOpener );
     return object.repoVerify( o3 ).then( ( verified ) =>
     {
       debugger;
@@ -3365,7 +3365,7 @@ function ObjectIs( object )
 
   if( !object )
   return false;
-  if( object instanceof _.Will.Module )
+  if( object instanceof _.will.Module )
   return true;
   if( object instanceof _.will.ModuleOpener )
   return true;
@@ -3692,7 +3692,7 @@ function graphGroupMake( o )
     return will.ObjectIs( object );
     // if( !junction )
     // return false;
-    // if( junction instanceof _.Will.Module )
+    // if( junction instanceof _.will.Module )
     // return true;
     // if( junction instanceof _.will.ModuleOpener )
     // return true;
@@ -4143,7 +4143,7 @@ function _willfilesReadEnd( module )
   let logger = will.logger;
 
   _.assert( arguments.length === 1 );
-  _.assert( module instanceof will.Module );
+  _.assert( module instanceof _.will.Module );
   _.assert( will.mainOpener === null || will.mainOpener instanceof _.will.ModuleOpener );
 
   if( will.willfilesReadEndTime )
