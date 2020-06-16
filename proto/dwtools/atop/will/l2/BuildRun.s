@@ -102,7 +102,7 @@ function frameUp( resource2 )
   _.assert( arguments.length === 1 );
   _.assert( run.formed === 1 );
 
-  let frame2 = new will.BuildFrame
+  let frame2 = new _.will.BuildFrame
   ({
     resource : resource2,
     down : null,
