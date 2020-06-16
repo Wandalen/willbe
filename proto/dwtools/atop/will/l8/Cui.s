@@ -1037,6 +1037,7 @@ function commandVersion( e )
 
   logger.log( 'Current version:', will.versionGet() );
 }
+commandVersion.commandProperties = commandImply.commandProperties;
 
 //
 
@@ -1058,7 +1059,8 @@ function commandVersionCheck( e )
 
 commandVersionCheck.commandProperties =
 {
-  throwing : 'Throw an error if utility is not up to date. Default : 1'
+  throwing : 'Throw an error if utility is not up to date. Default : 1',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1362,10 +1364,12 @@ function commandModulesTree( e )
 
 }
 
-var defaults = commandModulesTree.commandProperties = Object.create( null );
-
-defaults.withLocalPath = 'Print local paths. Default is 0';
-defaults.withRemotePath = 'Print remote paths. Default is 0';
+commandModulesTree.commandProperties =
+{
+  defaults.withLocalPath = 'Print local paths. Default is 0';
+  defaults.withRemotePath = 'Print remote paths. Default is 0';
+  ... commandImply.commandProperties,
+}
 
 //
 
@@ -1469,6 +1473,7 @@ commandSubmodulesFixate.commandProperties =
   dry : 'Dry run without writing. Default is dry:0.',
   negative : 'Reporting attempt of fixation with negative outcome. Default is negative:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1511,6 +1516,7 @@ commandSubmodulesUpgrade.commandProperties =
   dry : 'Dry run without writing. Default is dry:0.',
   negative : 'Reporting attempt of upgrade with negative outcome. Default is negative:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1557,6 +1563,7 @@ commandSubmodulesVersionsDownload.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1597,6 +1604,7 @@ commandSubmodulesVersionsUpdate.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1633,6 +1641,7 @@ function commandSubmodulesVersionsVerify( e )
 commandSubmodulesVersionsVerify.commandProperties =
 {
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1671,6 +1680,7 @@ commandSubmodulesVersionsAgree.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1923,7 +1933,8 @@ commandClean.commandProperties =
   cleaningTemp : 'Deleting module-specific temporary directory. Default is cleaningTemp:1.',
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
-  /* qqq2 : should have verbosity and other common options */
+  ... commandImply.commandProperties,
+  /* aaa2 : should have verbosity and other common options */ /* Dmytro : appended to the property commandProperties */
 }
 
 //
@@ -1982,6 +1993,7 @@ commandSubmodulesClean.commandProperties =
   dry : 'Dry run without deleting. Default is dry:0.',
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
+  ... commandImply.commandProperties,
 }
 
 //
