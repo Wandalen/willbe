@@ -1509,7 +1509,7 @@ function pathsResolve( o )
   //
   //     _.assert( r === null || _.strIs( r ) || _.arrayIs( r ) || _.mapIs( r ) );
   //
-  //     // if( r && r instanceof will.PathResource )
+  //     // if( r && r instanceof _.will.PathResource )
   //     // {
   //     //   _.assert( 0, 'not expected' );
   //     // }

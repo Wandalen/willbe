@@ -1315,7 +1315,7 @@ function predefinedForm()
     // }
     // else
     // {
-    //   result = new will.PathResource( o );
+    //   result = new _.will.PathResource( o );
     // }
     //
     // result.form1();
@@ -1441,7 +1441,7 @@ function predefinedPathMake( o )
   }
   else
   {
-    result = new will.PathResource( o );
+    result = new _.will.PathResource( o );
   }
 
   result.form1();
@@ -1949,7 +1949,7 @@ function _willfilesOpen()
       name : 'export',
       path : '**',
     }
-    let resource3 = new will.PathResource( o3 ).form1();
+    let resource3 = new _.will.PathResource( o3 ).form1();
 
     return arg;
   });
@@ -4332,10 +4332,9 @@ function _resourcesFormAct()
 
   /* */
 
-  debugger;
   module._resourcesAllForm( will.ModulesRelation, con );
   module._resourcesAllForm( will.Exported, con );
-  module._resourcesAllForm( will.PathResource, con );
+  module._resourcesAllForm( _.will.PathResource, con );
   module._resourcesAllForm( _.will.Reflector, con );
   module._resourcesAllForm( _.will.Step, con );
   module._resourcesAllForm( will.Build, con );
@@ -4387,7 +4386,8 @@ function resourceClassForKind( resourceKind )
   let module = this;
   let will = module.will;
   let result;
-  if( resourceKind === 'reflector' || resourceKind === 'step' || resourceKind === 'willfile' ) /* Dmytro : temporary, remove after all class replacing */
+  if( resourceKind === 'reflector' || resourceKind === 'step' ||
+      resourceKind === 'willfile' || resourceKind === 'path' ) /* Dmytro : rrr temporary, remove after all class replacing */
   result = _.will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
   else
   result = will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
@@ -4506,7 +4506,7 @@ function resourceObtain( resourceKind, resourceName )
   resource = module.resourceAllocate( resourceKind, resourceName );
 
   _.assert( resource instanceof will.Resource );
-  if( resource instanceof will.PathResource )
+  if( resource instanceof _.will.PathResource )
   _.assert( module.pathResourceMap[ resource.name ] === resource );
 
   return resource;
@@ -4724,7 +4724,7 @@ function cleanWhatSingle( o )
       o2.mandatory = 0;
       find( o2 );
     }
-    else if( resource && resource instanceof _.Will.PathResource )
+    else if( resource && resource instanceof _.will.PathResource )
     {
       let filePath = resource.path;
       if( !filePath )
@@ -4941,7 +4941,7 @@ function resolve_body( o )
   let result = will.Resolver.resolve.body.call( will.Resolver, o );
 
   if( o.pathUnwrapping )
-  _.assert( !result || !( result instanceof _.Will.PathResource ) );
+  _.assert( !result || !( result instanceof _.will.PathResource ) );
 
   return result;
 }
@@ -5827,7 +5827,7 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
 
     if( !module.pathResourceMap[ resourceName ] )
     {
-      let resource = new _.Will.PathResource({ module : module, name : resourceName }).form1();
+      let resource = new _.will.PathResource({ module : module, name : resourceName }).form1();
       resource.criterion = resource.criterion || Object.create( null );
       resource.criterion.predefined = 1;
       resource.writable = 0;

@@ -46,7 +46,7 @@ function _onSelectorReplicate( o )
     if( !resolver.selectorIs( selector ) )
     if( !it.composite )
     {
-      selector = new _.Will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : selector });
+      selector = new _.will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : selector });
       selector.form1();
       it.src = selector;
     }
@@ -69,7 +69,7 @@ function _onSelectorDown()
 
     for( let d = 0 ; d < it.dst.length ; d++ )
     {
-      if( it.dst[ d ] && it.dst[ d ] instanceof will.PathResource )
+      if( it.dst[ d ] && it.dst[ d ] instanceof _.will.PathResource )
       it.dst[ d ] = it.dst[ d ].path;
       if( _.errIs( it.dst[ d ] ) )
       throw it.dst[ d ];
@@ -79,7 +79,7 @@ function _onSelectorDown()
 
     if( rop.defaultResourceKind === 'path' || rop.selectorIsPath )
     {
-      it.dst = new _.Will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : it.dst });
+      it.dst = new _.will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : it.dst });
       it.dst.form1();
     }
 
@@ -508,7 +508,7 @@ function _pathsTransform( onPath, onStr )
     return resource;
     if( _.strIs( resource ) && onStr )
     return onStr.call( it, resource );
-    if( resource instanceof will.PathResource )
+    if( resource instanceof _.will.PathResource )
     return resourceTransform( resource );
     if( _.arrayIs( resource ) || _.mapIs( resource ) )
     return resourcesTransform( resource );
@@ -553,13 +553,13 @@ function _pathsNormalize()
     return resource;
   });
 
-  // if( it.dst instanceof will.PathResource )
+  // if( it.dst instanceof _.will.PathResource )
   // return resourceNormalize( resource );
   //
   // if( _.arrayIs( it.dst ) || _.mapIs( it.dst ) )
   // it.dst = _.map( it.dst, ( resource ) =>
   // {
-  //   if( resource instanceof will.PathResource )
+  //   if( resource instanceof _.will.PathResource )
   //   return resourceNormalize( resource );
   //   return resource;
   // });
@@ -726,7 +726,7 @@ function _pathsCompositeResolve()
     }
   }
 
-  if( resource instanceof will.PathResource )
+  if( resource instanceof _.will.PathResource )
   {
     if( resolver.selectorIsComposite( resource.path ) )
     {
@@ -845,7 +845,7 @@ function _pathsResolve()
   // {
   //   if( !resource )
   //   return resource;
-  //   if( !( resource instanceof will.PathResource ) )
+  //   if( !( resource instanceof _.will.PathResource ) )
   //   return resource;
   //   resource = resource.cloneDerivative();
   //   _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
