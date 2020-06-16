@@ -574,7 +574,7 @@
 //   //   result.push( localPath );
 //   //   result.push( remotePath );
 //   // }
-//   // else if( object instanceof _.Will.ModulesRelation )
+//   // else if( object instanceof _.will.ModulesRelation )
 //   // {
 //   //   let path = object.module.sys.fileProvider.path;
 //   //   let localPath = object.localPath;
@@ -623,7 +623,7 @@
 // //     result.localPath = object.localPath || object.commonPath;
 // //     result.remotePath = object.remotePath;
 // //   }
-// //   else if( object instanceof _.Will.ModulesRelation )
+// //   else if( object instanceof _.will.ModulesRelation )
 // //   {
 // //     let path = object.module.sys.fileProvider.path;
 // //     result.localPath = object.localPath;
@@ -663,7 +663,7 @@
 //   //   if( object.superRelation )
 //   //   result.push( object.superRelation );
 //   // }
-//   // else if( object instanceof _.Will.ModulesRelation )
+//   // else if( object instanceof _.will.ModulesRelation )
 //   // {
 //   //   if( object.opener )
 //   //   result.push( object.opener );
@@ -709,7 +709,7 @@
 //   // {
 //   //   return { opener : o }
 //   // }
-//   // else if( o instanceof _.Will.ModulesRelation )
+//   // else if( o instanceof _.will.ModulesRelation )
 //   // {
 //   //   return { relation : o }
 //   // }
@@ -724,7 +724,7 @@
 //   let sys = junction.sys;
 //   let changed = false;
 //
-//   _.assert( relation instanceof _.Will.ModulesRelation );
+//   _.assert( relation instanceof _.will.ModulesRelation );
 //
 //   // if( !relation.enabled ) /* ttt */
 //   // {
@@ -758,7 +758,7 @@
 //   let junction = this;
 //   let sys = junction.sys;
 //
-//   _.assert( relation instanceof _.Will.ModulesRelation );
+//   _.assert( relation instanceof _.will.ModulesRelation );
 //   _.arrayRemoveOnce( junction.relations, relation );
 //
 //   if( junction.relation === relation )
@@ -954,7 +954,7 @@
 //   if( _.arrayIs( object ) )
 //   return _.any( _.map( object, ( object ) => junction._add( object ) ) );
 //
-//   if( object instanceof _.Will.ModulesRelation )
+//   if( object instanceof _.will.ModulesRelation )
 //   {
 //     result = junction._relationAdd( object );
 //   }
@@ -990,7 +990,7 @@
 //   if( _.arrayIs( object ) )
 //   return _.any( _.map( object, ( object ) => junction._remove( object ) ) );
 //
-//   if( object instanceof _.Will.ModulesRelation )
+//   if( object instanceof _.will.ModulesRelation )
 //   {
 //     return junction._relationRemove( object );
 //   }
@@ -1031,7 +1031,7 @@
 //   {
 //     return _.longHas( junction.openers, object );
 //   }
-//   else if( object instanceof _.Will.ModulesRelation )
+//   else if( object instanceof _.will.ModulesRelation )
 //   {
 //     return _.longHas( junction.relations, object );
 //   }
@@ -1248,7 +1248,7 @@
 //         if( shadowMap.opener === _.unknown )
 //         shadowMap.opener = object;
 //       }
-//       else if( object instanceof _.Will.ModulesRelation )
+//       else if( object instanceof _.will.ModulesRelation )
 //       {
 //         if( shadowMap.relation === _.unknown )
 //         shadowMap.relation = object;

@@ -680,7 +680,7 @@ function PathsOf( object )
     result.push( localPath );
     result.push( remotePath );
   }
-  else if( object instanceof _.Will.ModulesRelation )
+  else if( object instanceof _.will.ModulesRelation )
   {
     let localPath = object.localPath;
     let remotePath = object.remotePath;
@@ -719,7 +719,7 @@ function PathsOfAsMap( object )
     result.localPath = object.localPath || object.commonPath;
     result.remotePath = object.remotePath;
   }
-  else if( object instanceof _.Will.ModulesRelation )
+  else if( object instanceof _.will.ModulesRelation )
   {
     result.localPath = object.localPath;
     result.remotePath = object.remotePath;
@@ -1018,7 +1018,7 @@ function AssociationsOf( object )
     if( object.superRelation )
     result.push( object.superRelation );
   }
-  else if( object instanceof _.Will.ModulesRelation )
+  else if( object instanceof _.will.ModulesRelation )
   {
     if( object.opener )
     result.push( object.opener );
@@ -1062,7 +1062,7 @@ function ObjectToOptionsMap( o )
   {
     return { opener : o }
   }
-  else if( o instanceof _.Will.ModulesRelation )
+  else if( o instanceof _.will.ModulesRelation )
   {
     return { relation : o }
   }
@@ -1077,7 +1077,7 @@ function _relationAdd( relation )
   let will = junction.will;
   let changed = false;
 
-  _.assert( relation instanceof _.Will.ModulesRelation );
+  _.assert( relation instanceof _.will.ModulesRelation );
   if( !relation.isAliveGet() ) /* yyy */
   {
     // debugger;
@@ -1113,7 +1113,7 @@ function _relationRemoveSingle( relation )
   let junction = this;
   let will = junction.will;
 
-  _.assert( relation instanceof _.Will.ModulesRelation );
+  _.assert( relation instanceof _.will.ModulesRelation );
   _.arrayRemoveOnce( junction.relations, relation );
 
   if( junction.relation === relation )
@@ -1332,7 +1332,7 @@ function _add( object )
   //   return false
   // }
 
-  if( object instanceof _.Will.ModulesRelation )
+  if( object instanceof _.will.ModulesRelation )
   {
     result = junction._relationAdd( object );
   }
@@ -1368,7 +1368,7 @@ function _remove( object )
   if( _.arrayIs( object ) )
   return _.any( _.map( object, ( object ) => junction._remove( object ) ) );
 
-  if( object instanceof _.Will.ModulesRelation )
+  if( object instanceof _.will.ModulesRelation )
   {
     return junction._relationRemove( object );
   }
@@ -1409,7 +1409,7 @@ function own( object )
   {
     return _.longHas( junction.openers, object );
   }
-  else if( object instanceof _.Will.ModulesRelation )
+  else if( object instanceof _.will.ModulesRelation )
   {
     return _.longHas( junction.relations, object );
   }
@@ -1609,7 +1609,7 @@ submodulesJunctionsFilter.defaults =
 //         if( shadowMap.opener === _.unknown )
 //         shadowMap.opener = object;
 //       }
-//       else if( object instanceof _.Will.ModulesRelation )
+//       else if( object instanceof _.will.ModulesRelation )
 //       {
 //         if( shadowMap.relation === _.unknown )
 //         shadowMap.relation = object;

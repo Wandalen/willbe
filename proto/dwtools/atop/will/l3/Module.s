@@ -1601,7 +1601,7 @@ function own( object )
 
   _.assert( !!object );
 
-  if( object instanceof _.Will.ModulesRelation )
+  if( object instanceof _.will.ModulesRelation )
   {
     for( let name in module.submoduleMap )
     {
@@ -2730,7 +2730,7 @@ function superRelationsSet( src )
   let module = this;
 
   _.assert( src === null || _.arrayIs( src ) );
-  _.assert( src === null || src.every( ( superRelation ) => superRelation instanceof _.Will.ModulesRelation ) );
+  _.assert( src === null || src.every( ( superRelation ) => superRelation instanceof _.will.ModulesRelation ) );
 
   if( !module[ superRelationsSymbol ] )
   module[ superRelationsSymbol ] = [];
@@ -2756,7 +2756,7 @@ function superRelationsAppend( src )
     return _.map( src, ( src ) => module.supeRelationsAppend( src ) );
   }
 
-  _.assert( src instanceof _.Will.ModulesRelation );
+  _.assert( src instanceof _.will.ModulesRelation );
 
   if( module[ superRelationsSymbol ] === null )
   module[ superRelationsSymbol ] = [];
@@ -2777,7 +2777,7 @@ function superRelationsRemove( src )
     return _.map( src, ( src ) => module.superRelationsRemove( src ) );
   }
 
-  _.assert( src instanceof _.Will.ModulesRelation );
+  _.assert( src instanceof _.will.ModulesRelation );
 
   if( module[ superRelationsSymbol ] )
   _.arrayRemoveOnceStrictly( module[ superRelationsSymbol ], src );
@@ -3069,7 +3069,7 @@ function moduleFixate( o )
   _.assert( _.boolLike( o.dry ) );
   _.assert( _.boolLike( o.upgrading ) );
   _.assert( o.module  === null || o.module instanceof will.Module );
-  _.assert( o.submodule === null || o.submodule instanceof will.ModulesRelation );
+  _.assert( o.submodule === null || o.submodule instanceof _.will.ModulesRelation );
   // _.assert( o.module  === null || o.module.rootModule === o.module || _.longHas( o.module.superRelations, module ) );
 
   if( o.module )
@@ -3263,7 +3263,7 @@ function moduleFixateAct( o )
   _.assert( _.boolLike( o.dry ) );
   _.assert( _.boolLike( o.upgrading ) );
   _.assert( o.module  === null || o.module instanceof will.Module );
-  _.assert( o.submodule === null || o.submodule instanceof will.ModulesRelation );
+  _.assert( o.submodule === null || o.submodule instanceof _.will.ModulesRelation );
   _.assert( _.strIs( o.willfilePath ) || _.strsAreAll( o.willfilePath ) );
   _.assert( _.strIs( o.originalPath ) );
   _.assert( !o.fixatedPath || _.strIs( o.fixatedPath ) );
@@ -3772,7 +3772,7 @@ function submodulesRelationsOwnFilter( o )
     return;
 
     // _.assert( module instanceof _.will.ModuleJunction );
-    // _.assert( module instanceof _.Will.ModulesRelation || module instanceof _.Will.Module );
+    // _.assert( module instanceof _.will.ModulesRelation || module instanceof _.Will.Module );
     _.assert( will.ObjectIs( module ) );
     _.arrayAppendOnce( result, module );
 
@@ -3828,7 +3828,7 @@ function submodulesAdd( o )
     o2.module = module;
     o2.path = junction.remotePath || junction.localPath;
     o2.name = junction.module.originDirNameGet();
-    let relation = new _.Will.ModulesRelation( o2 );
+    let relation = new _.will.ModulesRelation( o2 );
     ready.then( () => relation.form() );
     ready.then( () => counter += 1 );
 
@@ -3916,7 +3916,7 @@ function _subModulesForm()
   // console.log( '_subModulesForm', module.absoluteName ); debugger; /* yyy */
 
   // debugger;
-  module._resourcesAllForm( will.ModulesRelation, con );
+  module._resourcesAllForm( _.will.ModulesRelation, con );
   // debugger;
 
   con.finally( ( err, arg ) =>
@@ -4332,7 +4332,7 @@ function _resourcesFormAct()
 
   /* */
 
-  module._resourcesAllForm( will.ModulesRelation, con );
+  module._resourcesAllForm( _.will.ModulesRelation, con );
   module._resourcesAllForm( will.Exported, con );
   module._resourcesAllForm( _.will.PathResource, con );
   module._resourcesAllForm( _.will.Reflector, con );

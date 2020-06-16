@@ -312,7 +312,7 @@ function own( object )
 
   _.assert( !!object );
 
-  if( object instanceof _.Will.ModulesRelation )
+  if( object instanceof _.will.ModulesRelation )
   {
     if( object === opener.superRelation )
     return true;
@@ -1102,7 +1102,7 @@ function rootModuleSet( src )
 function superRelationGet()
 {
   let opener = this;
-  _.assert( opener[ superRelationSymbol ] === undefined || opener[ superRelationSymbol ] === null || opener[ superRelationSymbol ] instanceof _.Will.ModulesRelation );
+  _.assert( opener[ superRelationSymbol ] === undefined || opener[ superRelationSymbol ] === null || opener[ superRelationSymbol ] instanceof _.will.ModulesRelation );
   return opener[ superRelationSymbol ];
 }
 
@@ -1113,7 +1113,7 @@ function superRelationSet( src )
   let opener = this;
   let will = opener.will;
 
-  _.assert( src === null || src instanceof _.Will.ModulesRelation );
+  _.assert( src === null || src instanceof _.will.ModulesRelation );
   _.assert( src === null || src.opener === null || src.opener === opener )
 
   if( opener.openedModule && opener.superRelation )

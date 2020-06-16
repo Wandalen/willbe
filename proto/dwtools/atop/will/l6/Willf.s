@@ -738,7 +738,7 @@ function _importToModule()
     willf._resourcesImport( _.will.PathResource, mstructure.path );
     if( willf.isOut ) /* xxx */
     willf._resourcesImport( will.Exported, mstructure.exported );
-    willf._resourcesImport( will.ModulesRelation, mstructure.submodule );
+    willf._resourcesImport( _.will.ModulesRelation, mstructure.submodule );
     willf._resourcesImport( _.will.Step, mstructure.step );
     willf._resourcesImport( _.will.Reflector, mstructure.reflector );
     willf._resourcesImport( will.Build, mstructure.build );

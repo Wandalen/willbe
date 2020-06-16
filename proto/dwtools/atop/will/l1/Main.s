@@ -1327,12 +1327,12 @@ function relationFit_body( object, opts )
   let junction = will.junctionFrom( object );
   let relation = object;
 
-  if( !( object instanceof _.Will.ModulesRelation ) )
+  if( !( object instanceof _.will.ModulesRelation ) )
   relation = junction.relation;
 
   _.assert( arguments.length === 2 );
   _.assert( will.ObjectIs( object ) || _.will.isJunction( object ) );
-  // _.assert( object instanceof _.Will.ModulesRelation || object instanceof _.Will.Module || object instanceof _.will.ModuleJunction );
+  // _.assert( object instanceof _.will.ModulesRelation || object instanceof _.Will.Module || object instanceof _.will.ModuleJunction );
   // _.assert( object instanceof _.will.ModuleJunction ); /* ttt */
 
   let result = will.moduleFit.body.call( will, object, _.mapOnly( opts, will.moduleFit.defaults ) );
@@ -2226,7 +2226,7 @@ function modulesEach_body( o )
     (
          object instanceof _.Will.Module
       || object instanceof _.Will.ModuleOpener
-      || object instanceof _.Will.ModulesRelation
+      || object instanceof _.will.ModulesRelation
       || object instanceof _.will.ModuleJunction
     );
     if( object instanceof _.will.ModuleJunction )
@@ -3306,7 +3306,7 @@ function modulesVerify_body( o )
   function moduleVerify( object, op )
   {
     debugger;
-    if( object instanceof _.Will.ModulesRelation )
+    if( object instanceof _.will.ModulesRelation )
     if( object.opener )
     object = object.opener;
     if( !( object instanceof _.Will.Module || object instanceof _.Will.ModuleOpener ) )
@@ -3369,7 +3369,7 @@ function ObjectIs( object )
   return true;
   if( object instanceof _.Will.ModuleOpener )
   return true;
-  if( object instanceof _.Will.ModulesRelation )
+  if( object instanceof _.will.ModulesRelation )
   return true;
 
   return false;
@@ -3696,7 +3696,7 @@ function graphGroupMake( o )
     // return true;
     // if( junction instanceof _.Will.ModuleOpener )
     // return true;
-    // if( junction instanceof _.Will.ModulesRelation )
+    // if( junction instanceof _.will.ModulesRelation )
     // return true;
     // return false;
     // return junction instanceof _.will.ModuleJunction;
