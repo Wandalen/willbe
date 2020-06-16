@@ -307,8 +307,8 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/clean-special
           - ../proto/dwtools/atop/will.test/_asset/clean-special/.will.yml
           - ../proto/dwtools/atop/will.test/_asset/clean-special/out
-          - ../proto/dwtools/atop/will.test/_asset/clean-special/out/#dir2
-          - ../proto/dwtools/atop/will.test/_asset/clean-special/out/#dir2/file
+          - '../proto/dwtools/atop/will.test/_asset/clean-special/out/#dir2'
+          - '../proto/dwtools/atop/will.test/_asset/clean-special/out/#dir2/file'
           - ../proto/dwtools/atop/will.test/_asset/clean-special/out/@dir1
           - ../proto/dwtools/atop/will.test/_asset/clean-special/out/@dir1/file
           - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath
@@ -817,6 +817,7 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/info.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/ModuleIsEnabled.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/Normalize.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/NpmConfigRemove.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/NpmInstall.js
@@ -4633,7 +4634,7 @@ module:
           shell: docker run --rm willbe.test
       reflect.proto.debug.raw:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug.raw'
         criterion:
           tests: no.tests
           debug: debug
@@ -4643,7 +4644,7 @@ module:
           - files.reflect
       reflect.proto.release.raw:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.release.raw'
         criterion:
           tests: no.tests
           debug: release
@@ -4653,7 +4654,7 @@ module:
           - files.reflect
       reflect.proto.debug.compiled:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug.compiled'
         criterion:
           tests: no.tests
           debug: debug
@@ -4663,7 +4664,7 @@ module:
           - files.reflect
       reflect.proto.release.compiled:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.release.compiled'
         criterion:
           tests: no.tests
           debug: release
@@ -4674,7 +4675,7 @@ module:
       transpile.proto.raw:
         opts:
           entry: 'path::entry.proto.no.tests'
-          filePath: 'reflector::transpile.proto.raw*'
+          filePath: 'reflector::transpile.proto.raw'
         criterion:
           raw: raw
           debug: release
@@ -4684,7 +4685,7 @@ module:
       transpile.proto.no.tests.compiled.debug:
         opts:
           entry: 'path::entry.proto.*=1'
-          filePath: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled.debug'
         criterion:
           tests: no.tests
           raw: compiled
@@ -4695,7 +4696,7 @@ module:
       transpile.proto.no.tests.compiled.release:
         opts:
           entry: 'path::entry.proto.*=1'
-          filePath: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled.release'
         criterion:
           tests: no.tests
           raw: compiled
@@ -4707,7 +4708,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          filePath: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled.debug'
         criterion:
           tests: only.tests
           raw: compiled
@@ -4719,7 +4720,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          filePath: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled.release'
         criterion:
           tests: only.tests
           raw: compiled
