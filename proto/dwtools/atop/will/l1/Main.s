@@ -4519,7 +4519,7 @@ function willfileFor( o )
   }
   else
   {
-    willf = new will.Willfile( o.willf ).preform();
+    willf = new _.will.Willfile( o.willf ).preform();
     r.willf = willf;
     r.new = true;
   }

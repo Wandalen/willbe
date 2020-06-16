@@ -1322,7 +1322,7 @@ function structureOf( object )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( object instanceof _.Will.AbstractModule || object instanceof _.Will.Willfile );
+  _.assert( object instanceof _.Will.AbstractModule || object instanceof _.will.Willfile );
 
   let commonPath = object.commonPath;
 
@@ -1786,11 +1786,13 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

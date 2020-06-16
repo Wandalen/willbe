@@ -4178,7 +4178,7 @@ function peerWillfilesPathFromWillfiles( willfilesArray )
 
   let peerWillfilesPath = module.willfilesArray.map( ( willf ) =>
   {
-    _.assert( willf instanceof _.Will.Willfile );
+    _.assert( willf instanceof _.will.Willfile );
     return willf.peerWillfilesPathGet();
   });
 
@@ -6600,7 +6600,7 @@ function structureExportOut( o )
   _.assert( !!module.peerModule );
 
   o.dst = o.dst || Object.create( null );
-  o.dst.format = will.Willfile.FormatVersion;
+  o.dst.format = will.willfile.FormatVersion;
 
   // debugger;
   // // if( _.strHas( module.name, 'ModuleForTesting1b' ) )
