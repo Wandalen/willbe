@@ -45,7 +45,7 @@ function stepRoutineDelete( frame )
     verbosity : 0,
   }
 
-  if( filePath instanceof will.Reflector )
+  if( filePath instanceof _.will.Reflector )
   {
     delete o2.filePath;
     let o3 = filePath.optionsForFindExport();
@@ -120,7 +120,7 @@ function stepRoutineReflect( frame )
 
   let reflector = step.reflectorResolve( opts.filePath );
 
-  _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
+  _.sure( reflector instanceof _.will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
   _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
 
   beginLog();
@@ -377,7 +377,7 @@ function stepRoutineShell( frame )
   if( opts.upToDate === 'preserve' && forEachDstReflector )
   {
 
-    _.assert( forEachDstReflector instanceof will.Reflector );
+    _.assert( forEachDstReflector instanceof _.will.Reflector );
     forEachDst = will.Resolver.resolveContextPrepare({ currentThis : forEachDstReflector, baseModule : module });
 
     for( let dst in forEachDst.filesGrouped )

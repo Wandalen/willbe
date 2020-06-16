@@ -105,7 +105,6 @@ function stepsEach( o )
     if( _.arrayIs( step ) )
     return inArray( step );
 
-    debugger;
     _.assert( step instanceof _.will.Step || step instanceof will.Build, () => 'Cant find ' + arguments[ 0 ] );
     let it = Object.create( null );
     it.element = step;

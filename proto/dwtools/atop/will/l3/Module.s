@@ -1360,7 +1360,7 @@ function predefinedForm()
     // _.assert( !!o2.resource.criterion );
     // _.assert( arguments.length === 1 );
     //
-    // let result = will.Reflector.MakeForEachCriterion( o2 );
+    // let result = _.will.Reflector.MakeForEachCriterion( o2 );
     // return result;
   }
 
@@ -1494,7 +1494,7 @@ function predefinedReflectorMake( o )
   _.assert( !!o2.resource.criterion );
   _.assert( arguments.length === 1 );
 
-  let result = will.Reflector.MakeForEachCriterion( o2 );
+  let result = _.will.Reflector.MakeForEachCriterion( o2 );
   return result;
 }
 
@@ -4336,7 +4336,7 @@ function _resourcesFormAct()
   module._resourcesAllForm( will.ModulesRelation, con );
   module._resourcesAllForm( will.Exported, con );
   module._resourcesAllForm( will.PathResource, con );
-  module._resourcesAllForm( will.Reflector, con );
+  module._resourcesAllForm( _.will.Reflector, con );
   module._resourcesAllForm( _.will.Step, con );
   module._resourcesAllForm( will.Build, con );
 
@@ -4386,7 +4386,11 @@ function resourceClassForKind( resourceKind )
 {
   let module = this;
   let will = module.will;
-  let result = will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
+  let result;
+  if( resourceKind === 'reflector' || resourceKind === 'step' || resourceKind === 'willfile' ) /* Dmytro : temporary, remove after all class replacing */
+  result = _.will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
+  else
+  result = will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
 
   _.assert( arguments.length === 1 );
   _.sure( _.routineIs( result ), () => 'Cant find class for resource kind ' + _.strQuote( resourceKind ) );
@@ -4714,7 +4718,7 @@ function cleanWhatSingle( o )
   {
     let resource = module.pathOrReflectorResolve( 'temp' );
 
-    if( resource && resource instanceof _.Will.Reflector )
+    if( resource && resource instanceof _.will.Reflector )
     {
       let o2 = resource.optionsForFindExport();
       o2.mandatory = 0;
@@ -6601,9 +6605,9 @@ function structureExportOut( o )
   _.assert( !!module.peerModule );
 
   o.dst = o.dst || Object.create( null );
-  o.dst.format = will.willfile.FormatVersion;
+  // o.dst.format = will.willfile.FormatVersion;
+  o.dst.format = _.will.Willfile.FormatVersion; /* Dmytro : rrr */
 
-  // debugger;
   // // if( _.strHas( module.name, 'ModuleForTesting1b' ) )
   // // debugger;
   // if( _.strHas( module.commonPath, 'group1/.module/ModuleForTesting1b' ) )

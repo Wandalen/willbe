@@ -714,7 +714,7 @@ function _pathsCompositeResolve()
   let currentModule = it.currentModule;
   let resource = it.dst;
 
-  if( resource instanceof will.Reflector )
+  if( resource instanceof _.will.Reflector )
   {
     if( resolver.selectorIsComposite( resource.src.prefixPath ) || resolver.selectorIsComposite( resource.dst.prefixPath ) )
     {
@@ -1012,7 +1012,7 @@ function resolveContextPrepare( o )
     o.currentThis = o.currentContext;
   }
 
-  if( o.currentThis instanceof will.Reflector )
+  if( o.currentThis instanceof _.will.Reflector )
   {
     let currentThis = Object.create( null );
     currentThis.src = [];
@@ -1306,7 +1306,7 @@ function filesFromResource_body( o )
     if( resource === null )
     {
     }
-    else if( resource instanceof will.Reflector )
+    else if( resource instanceof _.will.Reflector )
     {
       let o2 = resource.optionsForFindExport();
       let files = filesFind( o2 );
@@ -1384,9 +1384,9 @@ function reflectorResolve_body( o )
   else if( o.missingAction === 'error' && _.errIs( reflector ) )
   return reflector;
 
-  if( reflector instanceof will.Reflector )
+  if( reflector instanceof _.will.Reflector )
   {
-    _.sure( reflector instanceof will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.strType( reflector ) );
+    _.sure( reflector instanceof _.will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.strType( reflector ) );
     reflector.form();
     _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
   }

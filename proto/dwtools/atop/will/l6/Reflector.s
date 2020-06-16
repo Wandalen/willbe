@@ -411,7 +411,7 @@ function _inheritMultiple( o )
   _.assert( reflector._accumulator === null );
   _.routineOptions( _inheritMultiple, arguments );
 
-  reflector._accumulator = new will.Reflector({ module : module, original : reflector, name : reflector.name });
+  reflector._accumulator = new _.will.Reflector({ module : module, original : reflector, name : reflector.name });
   reflector._accumulator.src.pairWithDst( reflector._accumulator.dst );
   reflector._accumulator.src.pairRefineLight();
 
@@ -719,7 +719,7 @@ function _inheritPathMapAct2( o )
     pathResolving : 'in', /* yyy */
   });
 
-  if( !_.errIs( resolvedSrc ) && !_.strIs( resolvedSrc ) && !_.arrayIs( resolvedSrc ) && !( resolvedSrc instanceof will.Reflector ) )
+  if( !_.errIs( resolvedSrc ) && !_.strIs( resolvedSrc ) && !_.arrayIs( resolvedSrc ) && !( resolvedSrc instanceof _.will.Reflector ) )
   {
     debugger;
     resolvedSrc = _.err( 'Source of path map was resolved to unexpected type', _.strType( resolvedSrc ) );
@@ -735,13 +735,13 @@ function _inheritPathMapAct2( o )
     throw _.err( resolvedDst, '\nFailed to form', reflector.qualifiedName );
   }
 
-  if( resolvedSrc && resolvedSrc instanceof will.Reflector )
+  if( resolvedSrc && resolvedSrc instanceof _.will.Reflector )
   {
     resolvedSrc = resolvedSrc.cloneDerivative();
     resolvedSrc.form(); /* xxx : implement assert against recrusion */
   }
 
-  if( resolvedDst && resolvedDst instanceof will.Reflector )
+  if( resolvedDst && resolvedDst instanceof _.will.Reflector )
   {
     resolvedDst = resolvedDst.cloneDerivative();
     resolvedDst.form(); /* xxx : implement assert against recrusion */
@@ -794,7 +794,7 @@ function _inheritPathMapAct3( o )
     });
   }
 
-  if( o.src instanceof will.Reflector )
+  if( o.src instanceof _.will.Reflector )
   {
     o.src = o.src.cloneDerivative();
     _.assert( !!o.src.original );
@@ -1285,7 +1285,7 @@ function pathsResolve( o )
     {
       reflector.src.pathsSupplementJoining( r );
     }
-    else if( r instanceof will.Reflector )
+    else if( r instanceof _.will.Reflector )
     {
     }
     else
@@ -1514,7 +1514,7 @@ function pathsResolve( o )
   //     //   _.assert( 0, 'not expected' );
   //     // }
   //     //
-  //     // if( r instanceof will.Reflector )
+  //     // if( r instanceof _.will.Reflector )
   //     // {
   //     //   r = r.cloneDerivative();
   //     //   r.form();
@@ -2059,11 +2059,13 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

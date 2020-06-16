@@ -735,13 +735,12 @@ function _importToModule()
 
     /* */
 
-    debugger;
     willf._resourcesImport( will.PathResource, mstructure.path );
     if( willf.isOut ) /* xxx */
     willf._resourcesImport( will.Exported, mstructure.exported );
     willf._resourcesImport( will.ModulesRelation, mstructure.submodule );
     willf._resourcesImport( _.will.Step, mstructure.step );
-    willf._resourcesImport( will.Reflector, mstructure.reflector );
+    willf._resourcesImport( _.will.Reflector, mstructure.reflector );
     willf._resourcesImport( will.Build, mstructure.build );
 
     _.assert( path.s.allAreAbsolute( openedModule.pathResourceMap[ 'module.dir' ].path ) );

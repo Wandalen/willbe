@@ -192,7 +192,6 @@ function _verify()
   _.assert( exported.inModule && !exported.inModule.isOut );
   _.assert( exported.outModule && exported.outModule.isOut );
 
-  debugger;
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!inModule );
   _.assert( !!will );
@@ -468,7 +467,6 @@ function _performExportedReflectors()
   let path = hub.path;
   let logger = will.logger;
 
-  debugger;
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!outModule );
   _.assert( !!will );
@@ -489,7 +487,6 @@ function _performExportedReflectors()
   let exp;
   let recursive = null;
 
-  // debugger;
   exp = inModule.pathResolve
   ({
     selector : exported.exportPath,
@@ -499,7 +496,7 @@ function _performExportedReflectors()
 
   /* */
 
-  if( exp instanceof will.Reflector )
+  if( exp instanceof _.will.Reflector )
   {
 
     exp.form1();
@@ -577,7 +574,7 @@ function _performExportedReflectors()
   _.assert( exportedReflector.dst.prefixPath === null );
   _.assert( exportedReflector.dst.basePath === null );
   _.assert( path.isAbsolute( exportedReflector.src.prefixPath ) );
-  _.assert( exportedReflector instanceof will.Reflector );
+  _.assert( exportedReflector instanceof _.will.Reflector );
 
   /* srcFilter */
 
@@ -708,7 +705,6 @@ function _performPaths()
   let logger = will.logger;
   let build = outModule.buildMap[ exported.name ];
 
-  // debugger;
   let originalWillFilesPath = outModule.resourceObtain( 'path', 'module.original.willfiles' );
   // originalWillFilesPath.path = path.s.relative( outModule.inPath, _.entityMake( outModule.willfilesPath ) );
   // originalWillFilesPath.criterion.predefined = 1;
