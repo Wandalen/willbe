@@ -145,7 +145,7 @@ function _openersCurrentEach( o )
   {
 
     _.assert( will.currentOpeners === null );
-    _.assert( will.currentOpener instanceof will.ModuleOpener );
+    _.assert( will.currentOpener instanceof _.will.ModuleOpener );
 
     let opener = will.currentOpener;
     let it = itFrom( opener );
@@ -253,7 +253,7 @@ function currentOpenerChange( src )
 {
   let will = this;
 
-  _.assert( src === null || src instanceof will.ModuleOpener );
+  _.assert( src === null || src instanceof _.will.ModuleOpener );
   _.assert( arguments.length === 1 );
 
   if( src && will[ currentOpenerSymbol ] === src )

@@ -108,7 +108,7 @@ function form1()
 
   /* */
 
-  relation.opener = will.ModuleOpener
+  relation.opener = _.will.ModuleOpener
   ({
     will : will,
     aliasName : relation.name,

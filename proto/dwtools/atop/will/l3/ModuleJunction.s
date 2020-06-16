@@ -673,7 +673,7 @@ function PathsOf( object )
     result.push( localPath );
     result.push( remotePath );
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     let localPath = object.localPath || object.commonPath;
     let remotePath = object.remotePath;
@@ -714,7 +714,7 @@ function PathsOfAsMap( object )
     result.localPath = object.localPath || object.commonPath;
     result.remotePath = object.remotePath;
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     result.localPath = object.localPath || object.commonPath;
     result.remotePath = object.remotePath;
@@ -1007,11 +1007,11 @@ function AssociationsOf( object )
   {
     return _.each( object.userArray, ( opener ) =>
     {
-      if( opener instanceof _.Will.ModuleOpener )
+      if( opener instanceof _.will.ModuleOpener )
       result.push( opener );
     });
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     if( object.openedModule )
     result.push( object.openedModule );
@@ -1058,7 +1058,7 @@ function ObjectToOptionsMap( o )
   {
     return { module : o }
   }
-  else if( o instanceof _.Will.ModuleOpener )
+  else if( o instanceof _.will.ModuleOpener )
   {
     return { opener : o }
   }
@@ -1155,7 +1155,7 @@ function _openerAdd( opener )
   let will = junction.will;
   let changed = false;
 
-  _.assert( opener instanceof _.Will.ModuleOpener );
+  _.assert( opener instanceof _.will.ModuleOpener );
   if( !opener.isAliveGet() ) /* yyy */
   {
     debugger;
@@ -1197,7 +1197,7 @@ function _openerRemoveSingle( opener )
   let junction = this;
   let will = junction.will;
 
-  _.assert( opener instanceof _.Will.ModuleOpener );
+  _.assert( opener instanceof _.will.ModuleOpener );
   _.arrayRemoveOnceStrictly( junction.openers, opener );
 
   if( junction.opener === opener )
@@ -1340,7 +1340,7 @@ function _add( object )
   {
     result = junction._moduleAdd( object );
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     result = junction._openerAdd( object );
   }
@@ -1376,7 +1376,7 @@ function _remove( object )
   {
     return junction._moduleRemove( object );
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     return junction._openerRemove( object );
   }
@@ -1405,7 +1405,7 @@ function own( object )
   {
     return _.longHas( junction.modules, object );
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     return _.longHas( junction.openers, object );
   }
@@ -1604,7 +1604,7 @@ submodulesJunctionsFilter.defaults =
 //         if( shadowMap.module === _.unknown )
 //         shadowMap.module = object;
 //       }
-//       else if( object instanceof _.Will.ModuleOpener )
+//       else if( object instanceof _.will.ModuleOpener )
 //       {
 //         if( shadowMap.opener === _.unknown )
 //         shadowMap.opener = object;

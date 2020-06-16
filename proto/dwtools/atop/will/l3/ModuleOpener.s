@@ -242,7 +242,7 @@ function preform()
 
   if( !will.mainOpener )
   opener.isMain = true;
-  _.assert( will.mainOpener instanceof _.Will.ModuleOpener );
+  _.assert( will.mainOpener instanceof _.will.ModuleOpener );
 
   will.openerRegister( opener );
   will._willfilesReadBegin();
@@ -324,7 +324,7 @@ function own( object )
       return true;
     }
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     return object === opener;
   }
@@ -2137,7 +2137,7 @@ function remotePathEachAdoptAct( o )
     {
       if( opener2 === opener )
       return;
-      if( !( opener2 instanceof _.Will.ModuleOpener ) )
+      if( !( opener2 instanceof _.will.ModuleOpener ) )
       return;
       opener2.remotePathAdopt( o );
     });
@@ -2740,13 +2740,15 @@ _.classDeclare
 
 // Self.prototype[ Symbol.toStringTag ] = Object.prototype.toString;
 
+_.will[ Self.shortName ] = Self;
+
 /* xxx : refactor tree of files */
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 //
 

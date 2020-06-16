@@ -122,7 +122,7 @@ function toOpener()
 {
   let self = this;
   let result = self.object;
-  if( !( result instanceof _.Will.ModuleOpener ) )
+  if( !( result instanceof _.will.ModuleOpener ) )
   result = null;
   if( result === null )
   {
@@ -131,7 +131,7 @@ function toOpener()
     if( result === null && self.junction )
     result = self.junction.toOpener();
   }
-  _.assert( result === null || result instanceof _.Will.ModuleOpener );
+  _.assert( result === null || result instanceof _.will.ModuleOpener );
   return result;
 }
 

@@ -567,7 +567,7 @@
 //   //   result.push( localPath );
 //   //   result.push( remotePath );
 //   // }
-//   // else if( object instanceof _.Will.ModuleOpener )
+//   // else if( object instanceof _.will.ModuleOpener )
 //   // {
 //   //   let localPath = object.localPath || object.commonPath;
 //   //   let remotePath = object.remotePath;
@@ -618,7 +618,7 @@
 // //     result.localPath = object.localPath || object.commonPath;
 // //     result.remotePath = object.remotePath;
 // //   }
-// //   else if( object instanceof _.Will.ModuleOpener )
+// //   else if( object instanceof _.will.ModuleOpener )
 // //   {
 // //     result.localPath = object.localPath || object.commonPath;
 // //     result.remotePath = object.remotePath;
@@ -652,11 +652,11 @@
 //   // {
 //   //   return _.each( object.userArray, ( opener ) =>
 //   //   {
-//   //     if( opener instanceof _.Will.ModuleOpener )
+//   //     if( opener instanceof _.will.ModuleOpener )
 //   //     result.push( opener );
 //   //   });
 //   // }
-//   // else if( object instanceof _.Will.ModuleOpener )
+//   // else if( object instanceof _.will.ModuleOpener )
 //   // {
 //   //   if( object.openedModule )
 //   //   result.push( object.openedModule );
@@ -705,7 +705,7 @@
 //   // {
 //   //   return { module : o }
 //   // }
-//   // else if( o instanceof _.Will.ModuleOpener )
+//   // else if( o instanceof _.will.ModuleOpener )
 //   // {
 //   //   return { opener : o }
 //   // }
@@ -807,7 +807,7 @@
 //   //   _.assert( !!opener.superRelation.enabled );
 //   // }
 //
-//   _.assert( opener instanceof _.Will.ModuleOpener );
+//   _.assert( opener instanceof _.will.ModuleOpener );
 //
 //   if( !junction.opener )
 //   {
@@ -838,7 +838,7 @@
 //   let junction = this;
 //   let sys = junction.sys;
 //
-//   _.assert( opener instanceof _.Will.ModuleOpener );
+//   _.assert( opener instanceof _.will.ModuleOpener );
 //   _.arrayRemoveOnceStrictly( junction.openers, opener );
 //
 //   if( junction.opener === opener )
@@ -962,7 +962,7 @@
 //   {
 //     result = junction._moduleAdd( object );
 //   }
-//   else if( object instanceof _.Will.ModuleOpener )
+//   else if( object instanceof _.will.ModuleOpener )
 //   {
 //     result = junction._openerAdd( object );
 //   }
@@ -998,7 +998,7 @@
 //   {
 //     return junction._moduleRemove( object );
 //   }
-//   else if( object instanceof _.Will.ModuleOpener )
+//   else if( object instanceof _.will.ModuleOpener )
 //   {
 //     return junction._openerRemove( object );
 //   }
@@ -1027,7 +1027,7 @@
 //   {
 //     return _.longHas( junction.modules, object );
 //   }
-//   else if( object instanceof _.Will.ModuleOpener )
+//   else if( object instanceof _.will.ModuleOpener )
 //   {
 //     return _.longHas( junction.openers, object );
 //   }
@@ -1243,7 +1243,7 @@
 //         if( shadowMap.module === _.unknown )
 //         shadowMap.module = object;
 //       }
-//       else if( object instanceof _.Will.ModuleOpener )
+//       else if( object instanceof _.will.ModuleOpener )
 //       {
 //         if( shadowMap.opener === _.unknown )
 //         shadowMap.opener = object;

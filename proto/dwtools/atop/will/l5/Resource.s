@@ -1119,7 +1119,7 @@ function moduleSet( src )
 {
   let resource = this;
 
-  if( src && src instanceof _.Will.ModuleOpener )
+  if( src && src instanceof _.will.ModuleOpener )
   src = src.openedModule;
 
   resource[ moduleSymbol ] = src;

@@ -683,7 +683,7 @@ function resourceWrap( o )
   if( o && !_.mapIs( o ) )
   if( o instanceof _.Will.Module )
   o = { module : o }
-  else if( o instanceof _.Will.ModuleOpener )
+  else if( o instanceof _.will.ModuleOpener )
   o = { opener : o }
   else if( o instanceof _.will.ModuleJunction )
   o = { junction : o }
@@ -1665,7 +1665,7 @@ function modulesFindEachAt( o )
         it2.currentModule = it1.currentModule;
         _.assert( it2.currentModule instanceof _.Will.Module );
         it2.currentOpener = it2.currentModule.userArray[ 0 ];
-        _.assert( it2.currentOpener instanceof _.Will.ModuleOpener );
+        _.assert( it2.currentOpener instanceof _.will.ModuleOpener );
 
         debugger;
         if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
@@ -1980,7 +1980,7 @@ function modulesFindWithAt( o )
 
     // debugger;
     // op.sortedOpeners = op.openers.slice();
-    // op.sortedOpeners.forEach( ( opener ) => _.assert( opener instanceof _.Will.ModuleOpener ) );
+    // op.sortedOpeners.forEach( ( opener ) => _.assert( opener instanceof _.will.ModuleOpener ) );
     // debugger;
 
     op.sortedOpeners = will.graphTopSort( op.openers );
@@ -1989,8 +1989,8 @@ function modulesFindWithAt( o )
     op.sortedOpeners = op.sortedOpeners.filter( ( object ) =>
     {
       _.assert( will.ObjectIs( object ) );
-      // _.assert( opener instanceof _.Will.ModuleOpener );
-      // if( object instanceof _.Will.ModuleOpener )
+      // _.assert( opener instanceof _.will.ModuleOpener );
+      // if( object instanceof _.will.ModuleOpener )
       if( _.longHas( op.openers, object ) )
       return object;
     });
@@ -1998,7 +1998,7 @@ function modulesFindWithAt( o )
 
     op.sortedOpeners.forEach( ( opener ) =>
     {
-      _.assert( opener instanceof _.Will.ModuleOpener );
+      _.assert( opener instanceof _.will.ModuleOpener );
     });
 
     // op.sortedOpeners = [];
@@ -2225,7 +2225,7 @@ function modulesEach_body( o )
     _.assert
     (
          object instanceof _.Will.Module
-      || object instanceof _.Will.ModuleOpener
+      || object instanceof _.will.ModuleOpener
       || object instanceof _.will.ModulesRelation
       || object instanceof _.will.ModuleJunction
     );
@@ -3309,13 +3309,13 @@ function modulesVerify_body( o )
     if( object instanceof _.will.ModulesRelation )
     if( object.opener )
     object = object.opener;
-    if( !( object instanceof _.Will.Module || object instanceof _.Will.ModuleOpener ) )
+    if( !( object instanceof _.Will.Module || object instanceof _.will.ModuleOpener ) )
     return null;
-    if( object instanceof _.Will.ModuleOpener )
+    if( object instanceof _.will.ModuleOpener )
     if( object.openedModule )
     object = object.openedModule;
     let o3 = _.mapOnly( o, object.repoVerify.defaults ); debugger;
-    _.assert( object instanceof _.Will.Module || object instanceof _.Will.ModuleOpener );
+    _.assert( object instanceof _.Will.Module || object instanceof _.will.ModuleOpener );
     return object.repoVerify( o3 ).then( ( verified ) =>
     {
       debugger;
@@ -3367,7 +3367,7 @@ function ObjectIs( object )
   return false;
   if( object instanceof _.Will.Module )
   return true;
-  if( object instanceof _.Will.ModuleOpener )
+  if( object instanceof _.will.ModuleOpener )
   return true;
   if( object instanceof _.will.ModulesRelation )
   return true;
@@ -3694,7 +3694,7 @@ function graphGroupMake( o )
     // return false;
     // if( junction instanceof _.Will.Module )
     // return true;
-    // if( junction instanceof _.Will.ModuleOpener )
+    // if( junction instanceof _.will.ModuleOpener )
     // return true;
     // if( junction instanceof _.will.ModulesRelation )
     // return true;
@@ -3845,7 +3845,7 @@ function graphExportTreeInfo( modules, o )
   {
     _.assert( will.ObjectIs( object ) );
     let junction = will.junctionFrom( object );
-    let result = junction.object instanceof _.Will.ModuleOpener ? 'module::' + junction.opener.name : junction.object.qualifiedName;
+    let result = junction.object instanceof _.will.ModuleOpener ? 'module::' + junction.opener.name : junction.object.qualifiedName;
     if( o.withLocalPath )
     result += ` - path::local:=${_.color.strFormat( junction.localPath, 'path' )}`;
     if( o.withRemotePath && junction.remotePath )
@@ -3913,10 +3913,10 @@ function _openerMake_body( o )
     if( o.willfilesPath )
     o.opener.willfilesPath = o.willfilesPath;
 
-    if( !( o.opener instanceof will.ModuleOpener ) )
-    o.opener = madeOpener = will.ModuleOpener( o.opener );
+    if( !( o.opener instanceof _.will.ModuleOpener ) )
+    o.opener = madeOpener = _.will.ModuleOpener( o.opener );
 
-    _.assert( o.opener instanceof will.ModuleOpener );
+    _.assert( o.opener instanceof _.will.ModuleOpener );
 
     if( o.searching )
     o.opener.searching = o.searching;
@@ -4037,7 +4037,7 @@ function openersErrorsRemoveOf( opener )
   let will = this;
 
   _.assert( arguments.length === 1 );
-  _.assert( opener instanceof will.ModuleOpener );
+  _.assert( opener instanceof _.will.ModuleOpener );
 
   will.openersErrorsArray = will.openersErrorsArray.filter( ( r ) =>
   {
@@ -4127,7 +4127,7 @@ function _willfilesReadBegin()
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
-  _.assert( will.mainOpener === null || will.mainOpener instanceof will.ModuleOpener );
+  _.assert( will.mainOpener === null || will.mainOpener instanceof _.will.ModuleOpener );
 
   will.willfilesReadBeginTime = will.willfilesReadBeginTime || _.time.now();
 
@@ -4144,7 +4144,7 @@ function _willfilesReadEnd( module )
 
   _.assert( arguments.length === 1 );
   _.assert( module instanceof will.Module );
-  _.assert( will.mainOpener === null || will.mainOpener instanceof will.ModuleOpener );
+  _.assert( will.mainOpener === null || will.mainOpener instanceof _.will.ModuleOpener );
 
   if( will.willfilesReadEndTime )
   return will;

@@ -732,7 +732,7 @@ function _preform()
     for( let u = 0 ; u < module.userArray.length ; u++ )
     {
       let opener = module.userArray[ u ];
-      _.assert( opener instanceof will.ModuleOpener );
+      _.assert( opener instanceof _.will.ModuleOpener );
       opener.error = opener.error || err;
     }
   });
@@ -1508,7 +1508,7 @@ function releasedBy( user )
 
   _.arrayRemoveOnceStrictly( module.userArray, user );
 
-  if( user instanceof _.Will.ModuleOpener )
+  if( user instanceof _.will.ModuleOpener )
   {
     if( user.superRelation )
     module.superRelationsRemove( user.superRelation );
@@ -1526,7 +1526,7 @@ function usedBy( user )
 
   _.arrayAppendOnceStrictly( module.userArray, user );
 
-  if( user instanceof _.Will.ModuleOpener )
+  if( user instanceof _.will.ModuleOpener )
   {
     if( user.superRelation )
     module.superRelationsAppend( user.superRelation );
@@ -1631,7 +1631,7 @@ function own( object )
       return true;
     }
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     for( let name in module.submoduleMap )
     {
@@ -2663,7 +2663,7 @@ function rootModuleSet( src )
 
   _.each( module.userArray, ( opener ) =>
   {
-    if( opener instanceof _.Will.ModuleOpener )
+    if( opener instanceof _.will.ModuleOpener )
     opener._.rootModule = src;
   });
 
@@ -5426,7 +5426,7 @@ function _pathChanged( o )
   {
     module.userArray.forEach( ( opener ) =>
     {
-      if( !( opener instanceof _.Will.ModuleOpener ) )
+      if( !( opener instanceof _.will.ModuleOpener ) )
       return;
       let o2 = _.mapExtend( null, o );
       o2.touching = 0;
@@ -5513,7 +5513,7 @@ function _filePathChanged1( o )
   if( !o.isIdentical )
   module.userArray.forEach( ( opener ) =>
   {
-    if( opener instanceof _.Will.ModuleOpener )
+    if( opener instanceof _.will.ModuleOpener )
     opener._filePathChanged2({ willfilesPath : o.willfilesPath });
   });
 
@@ -5989,7 +5989,7 @@ function remotePathEachAdoptAct( o )
     module.remotePathAdopt( o );
     module.userArray.forEach( ( opener2 ) =>
     {
-      if( !( opener2 instanceof _.Will.ModuleOpener ) )
+      if( !( opener2 instanceof _.will.ModuleOpener ) )
       return;
       opener2.remotePathAdopt( o );
     });
@@ -6246,7 +6246,7 @@ function aliasNamesGet()
   for( let u = 0 ; u < module.userArray.length ; u++ )
   {
     let opener = module.userArray[ u ];
-    if( opener instanceof will.ModuleOpener )
+    if( opener instanceof _.will.ModuleOpener )
     if( opener.aliasName )
     _.arrayAppendElementOnce( result, opener.aliasName )
   }
@@ -6312,7 +6312,7 @@ function toOpener()
   for( let u = 0 ; u < module.userArray.length ; u++ )
   {
     let opener = module.userArray[ u ];
-    if( opener instanceof will.ModuleOpener )
+    if( opener instanceof _.will.ModuleOpener )
     return opener;
   }
 
@@ -7576,7 +7576,7 @@ function assertIsValidIntegrity()
   if( module.userArray )
   _.each( module.userArray, ( opener ) =>
   {
-    if( !( opener instanceof _.Will.ModuleOpener ) )
+    if( !( opener instanceof _.will.ModuleOpener ) )
     return;
     _.assert( !opener.isFinited() );
     _.assert( opener.openedModule === module );
