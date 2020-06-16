@@ -5725,7 +5725,7 @@ function superResolve( test )
       pathUnwrapping : 0,
       missingAction : 'undefine',
     });
-    test.identical( resolved.length, 18 );
+    test.identical( resolved.length, 19 );
 
     test.case = '*::*a*/qualifiedName';
     var exp =
@@ -5740,6 +5740,7 @@ function superResolve( test )
       'step::timelapse.end',
       'step::files.transpile',
       'step::npm.generate',
+      'step::willfile.generate',
       'step::submodules.download',
       'step::submodules.update',
       'step::submodules.agree',

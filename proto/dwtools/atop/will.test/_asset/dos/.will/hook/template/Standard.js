@@ -135,7 +135,7 @@ function samples( test )
         test.identical( _.strCount( op.output, 'ncaught' ), 0 );
         test.identical( _.strCount( op.output, 'rror' ), 0 );
         test.description = 'have some output';
-        test.ge( op.output.split( '\n' ).length, 1 );
+        test.ge( op.output.split( '\\n' ).length, 1 );
         test.ge( op.output.length, 3 );
         return null;
       })
@@ -974,7 +974,6 @@ rules :
         Property : true
         VariableDeclarator : true
         ImportDeclaration : true
-
   no-multi-str : error
   no-multiple-empty-lines : error
   no-native-reassign : error
