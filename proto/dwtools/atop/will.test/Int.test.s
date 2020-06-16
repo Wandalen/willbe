@@ -3411,7 +3411,7 @@ function exportRecursive( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve();
     let build = builds[ 0 ];
-    let run = new a.will.BuildRun
+    let run = new _.will.BuildRun
     ({
       build,
       recursive : 2,
@@ -4503,7 +4503,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    let run = new a.will.BuildRun
+    let run = new _.will.BuildRun
     ({
       build,
       recursive : 2,
@@ -4672,7 +4672,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    let run = new a.will.BuildRun
+    let run = new _.will.BuildRun
     ({
       build,
       recursive : 2,

@@ -250,12 +250,12 @@ function perform( o )
   o = _.routineOptions( build.perform, arguments );
 
   if( !o.run )
-  o.run = new will.BuildRun
+  o.run = new _.will.BuildRun
   ({
     build : build,
   });
 
-  _.assert( o.run instanceof will.BuildRun );
+  _.assert( o.run instanceof _.will.BuildRun );
 
   o.run.form();
 

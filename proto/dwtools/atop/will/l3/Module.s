@@ -2382,7 +2382,7 @@ function moduleBuild_body( o )
   let build = builds[ 0 ];
   will._willfilesReadEnd( module );
 
-  let run = new will.BuildRun
+  let run = new _.will.BuildRun
   ({
     build,
     recursive : 0,

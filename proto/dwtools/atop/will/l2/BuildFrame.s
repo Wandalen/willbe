@@ -47,7 +47,7 @@ function init( o )
   if( o )
   frame.copy( o );
 
-  _.assert( frame.run instanceof _.Will.BuildRun );
+  _.assert( frame.run instanceof _.will.BuildRun );
 
 }
 
@@ -89,7 +89,7 @@ function form()
   _.assert( !!logger );
   _.assert( !!will.formed );
   _.assert( down === null || down instanceof Self );
-  _.assert( run instanceof will.BuildRun );
+  _.assert( run instanceof _.will.BuildRun );
   _.assert( module.preformed >= 1 );
 
   /* */
