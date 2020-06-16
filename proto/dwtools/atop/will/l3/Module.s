@@ -4386,11 +4386,9 @@ function resourceClassForKind( resourceKind )
   let module = this;
   let will = module.will;
   let result;
-  if( resourceKind === 'reflector' || resourceKind === 'step' ||
-      resourceKind === 'willfile' || resourceKind === 'path' ) /* Dmytro : rrr temporary, remove after all class replacing */
   result = _.will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
-  else
-  result = will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
+  // result = will[ will.ResourceKindToClassName.forKey( resourceKind ) ]; /* Dmytro : previous */
+
 
   _.assert( arguments.length === 1 );
   _.sure( _.routineIs( result ), () => 'Cant find class for resource kind ' + _.strQuote( resourceKind ) );
@@ -6605,8 +6603,8 @@ function structureExportOut( o )
   _.assert( !!module.peerModule );
 
   o.dst = o.dst || Object.create( null );
-  // o.dst.format = will.willfile.FormatVersion;
-  o.dst.format = _.will.Willfile.FormatVersion; /* Dmytro : rrr */
+  // o.dst.format = will.willfile.FormatVersion; /* Dmytro : previous */
+  o.dst.format = _.will.Willfile.FormatVersion;
 
   // // if( _.strHas( module.name, 'ModuleForTesting1b' ) )
   // // debugger;
@@ -7659,7 +7657,7 @@ let Composes =
 let Aggregates =
 {
 
-  about : _.define.instanceOf( _.Will.ParagraphAbout ),
+  about : _.define.instanceOf( _.will.ParagraphAbout ),
   submoduleMap : _.define.own({}),
   pathResourceMap : _.define.own({}),
   reflectorMap : _.define.own({}),
@@ -7767,7 +7765,7 @@ let Forbids =
 let Accessors =
 {
 
-  about : { set : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
+  about : { set : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.will.ParagraphAbout }) },
   rootModule : { get : rootModuleGet, set : rootModuleSet },
   peerModule : { set : peerModuleSet },
 
@@ -8137,7 +8135,7 @@ _.classDeclare
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-/* qqq2 : move each class under namespace _.will */
+/* aaa2 : move each class under namespace _.will */ /* Dmytro : moved. Main class `Will` is saved */
 
 _.will[ Self.shortName ] = Self; /* aaa : uncomment */ /* Dmytro : done */
 

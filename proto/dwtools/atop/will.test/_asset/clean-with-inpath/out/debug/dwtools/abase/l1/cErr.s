@@ -889,7 +889,7 @@ function assertOwnNoConstructor( ins )
 }
 
 // --
-// errrors
+// errors
 // --
 
 let ErrorAbort = _.error_functor( 'ErrorAbort' );
