@@ -1992,7 +1992,7 @@ function moduleClone( test )
       test.is( resource1 !== resource2 );
       test.is( resource1.module === module1 );
       test.is( resource2.module === module2 );
-      if( resource1 instanceof a.will.Resource )
+      if( resource1 instanceof _.will.Resource )
       {
         test.is( !!resource1.willf || ( resource1.criterion && !!resource1.criterion.predefined ) );
         test.is( resource1.willf === resource2.willf );

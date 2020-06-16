@@ -3,7 +3,7 @@
 'use strict';
 
 let _ = _global_.wTools;
-let Parent = _.Will.Resource;
+let Parent = _.will.Resource;
 let Self = wWillModulesRelation;
 function wWillModulesRelation( o )
 {
@@ -785,7 +785,7 @@ function exportStructure( o )
   return result;
 }
 
-exportStructure.defaults = Object.create( _.Will.Resource.prototype.exportStructure.defaults );
+exportStructure.defaults = Object.create( _.will.Resource.prototype.exportStructure.defaults );
 
 //
 

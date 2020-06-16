@@ -7,7 +7,7 @@ let Tar;
 //
 
 let _ = _global_.wTools;
-let Parent = _.Will.Resource;
+let Parent = _.will.Resource;
 let Self = wWillExported;
 function wWillExported( o )
 {
@@ -37,9 +37,9 @@ function finit()
   {
     if( exported[ name ] )
     {
-      if( !( exported[ name ] instanceof _.Will.Resource ) )
+      if( !( exported[ name ] instanceof _.will.Resource ) )
       exported[ name ] = module.resolveRaw( exported[ name ] );
-      if( exported[ name ] instanceof _.Will.Resource )
+      if( exported[ name ] instanceof _.will.Resource )
       if( !_.workpiece.isFinited( exported[ name ] ) )
       exported[ name ].finit();
     }

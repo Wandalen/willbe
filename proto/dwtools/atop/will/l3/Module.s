@@ -4505,7 +4505,7 @@ function resourceObtain( resourceKind, resourceName )
   if( !resource )
   resource = module.resourceAllocate( resourceKind, resourceName );
 
-  _.assert( resource instanceof will.Resource );
+  _.assert( resource instanceof _.will.Resource );
   if( resource instanceof _.will.PathResource )
   _.assert( module.pathResourceMap[ resource.name ] === resource );
 
@@ -6869,7 +6869,7 @@ function resourceImport( o )
 
   _.assert( _.mapIs( o ) );
   _.assert( arguments.length === 1 );
-  _.assert( o.srcResource instanceof will.Resource );
+  _.assert( o.srcResource instanceof _.will.Resource );
   _.routineOptions( resourceImport, arguments );
 
   let srcModule = o.srcResource.module;

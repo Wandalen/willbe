@@ -3,7 +3,7 @@
 'use strict';
 
 let _ = _global_.wTools;
-let Parent = _.Will.Resource;
+let Parent = _.will.Resource;
 let Self = wWillReflector;
 function wWillReflector( o )
 {
@@ -1870,7 +1870,7 @@ function exportStructure()
 
 }
 
-exportStructure.defaults = Object.create( _.Will.Resource.prototype.exportStructure.defaults );
+exportStructure.defaults = Object.create( _.will.Resource.prototype.exportStructure.defaults );
 
 //
 

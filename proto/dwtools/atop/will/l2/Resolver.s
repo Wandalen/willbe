@@ -1032,7 +1032,7 @@ function resolveContextPrepare( o )
   if( _.mapIs( o.currentThis ) )
   {
   }
-  else if( o.currentThis instanceof will.Resource )
+  else if( o.currentThis instanceof _.will.Resource )
   {
     o.currentThis = o.currentThis.exportStructure();
   }
