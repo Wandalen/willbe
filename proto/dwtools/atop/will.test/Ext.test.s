@@ -2615,8 +2615,8 @@ function commandsSeveral( test )
       './proto/File.debug.js',
       './proto/File.release.js'
     ]
-    var op = a.find( a.routinePath );
-    test.identical( op, exp );
+    var got = a.find( a.routinePath );
+    test.identical( got, exp );
 
     return null;
   })
@@ -3322,8 +3322,8 @@ function reflectSubdir( test )
       './out/debug/proto/File1.s',
       './out/debug/proto/File2.s',
     ]
-    var op = a.find( a.routinePath );
-    test.identical( op, expected );
+    var got = a.find( a.routinePath );
+    test.identical( got, expected );
 
     return null;
   })
@@ -3362,8 +3362,8 @@ function reflectSubdir( test )
       './out/debug/proto/File1.s',
       './out/debug/proto/File2.s',
     ]
-    var op = a.find( a.routinePath );
-    test.identical( op, expected );
+    var got = a.find( a.routinePath );
+    test.identical( got, expected );
 
     return null;
   })
@@ -3402,8 +3402,8 @@ function reflectSubdir( test )
       './out/debug/proto/File1.s',
       './out/debug/proto/File2.s',
     ]
-    var op = a.find( a.routinePath );
-    test.identical( op, expected );
+    var got = a.find( a.routinePath );
+    test.identical( got, expected );
 
     return null;
   })
@@ -11482,8 +11482,8 @@ function exportDisabledModule( test )
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/disabled.out.will.yml' ) );
     var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/ModuleForTesting1/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
-    var op = _.setFrom( _.mapKeys( outfile.module ) );
-    test.identical( op, exp );
+    var got = _.setFrom( _.mapKeys( outfile.module ) );
+    test.identical( got, exp );
 
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
@@ -11513,8 +11513,8 @@ function exportDisabledModule( test )
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/disabled.out.will.yml' ) );
     var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/ModuleForTesting1/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
-    var op = _.setFrom( _.mapKeys( outfile.module ) );
-    test.identical( op, exp );
+    var got = _.setFrom( _.mapKeys( outfile.module ) );
+    test.identical( got, exp );
 
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
@@ -11570,8 +11570,8 @@ function exportDisabledModule( test )
 
     var outfile = a.fileProvider.configRead( a.abs( 'out/disabled.out.will.yml' ) );
     var exp = _.setFrom( [ 'disabled.out', '../', '../.module/ModuleForTesting1/', '../.module/ModuleForTesting1/out/wModuleForTesting1.out', '../.module/ModuleForTesting2/', '../.module/ModuleForTesting2/out/wModuleForTesting2.out' ] );
-    var op = _.setFrom( _.mapKeys( outfile.module ) );
-    test.identical( op, exp );
+    var got = _.setFrom( _.mapKeys( outfile.module ) );
+    test.identical( got, exp );
 
     test.identical( _.strCount( op.output, 'Exported module::disabled / build::proto.export' ), 1 );
 
@@ -13334,8 +13334,8 @@ function exportOutResourceWithoutGeneratedCriterion( test )
       // 'exported.dir.proto.export.1',
       // 'exported.files.proto.export.1'
     ]
-    var op = _.mapKeys( outfile.module[ 'wChangeTransactor.out' ].path );
-    test.identical( _.setFrom( op ), _.setFrom( exp ) );
+    var got = _.mapKeys( outfile.module[ 'wChangeTransactor.out' ].path );
+    test.identical( _.setFrom( got ), _.setFrom( exp ) );
 
     return null;
   })
@@ -13381,11 +13381,11 @@ function exportImplicit( test )
     /* */
 
     var exp = [ 'export' ];
-    var op = _.mapKeys( outfile.module[ './' ].build );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ './' ].build );
+    test.identical( got, exp );
     var exp = [];
-    var op = _.mapKeys( outfile.module[ './' ].step );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ './' ].step );
+    test.identical( got, exp );
     var exp =
     [
       'in',
@@ -13398,23 +13398,23 @@ function exportImplicit( test )
       'download',
       'export'
     ];
-    var op = _.mapKeys( outfile.module[ './' ].path );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ './' ].path );
+    test.identical( got, exp );
     var exp = [];
-    var op = _.mapKeys( outfile.module[ './' ].reflector );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ './' ].reflector );
+    test.identical( got, exp );
 
     /* */
 
     var exp = [ 'export' ];
-    var op = _.mapKeys( outfile.module[ 'explicit.out' ].exported );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ 'explicit.out' ].exported );
+    test.identical( got, exp );
     var exp = [ 'export' ];
-    var op = _.mapKeys( outfile.module[ 'explicit.out' ].build );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ 'explicit.out' ].build );
+    test.identical( got, exp );
     var exp = [];
-    var op = _.mapKeys( outfile.module[ 'explicit.out' ].step );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ 'explicit.out' ].step );
+    test.identical( got, exp );
     var exp =
     [
       'module.willfiles',
@@ -13429,17 +13429,17 @@ function exportImplicit( test )
       'exported.dir.export',
       'exported.files.export'
     ];
-    var op = _.mapKeys( outfile.module[ 'explicit.out' ].path );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ 'explicit.out' ].path );
+    test.identical( got, exp );
     var exp = [ 'exported.export', 'exported.files.export' ];
-    var op = _.mapKeys( outfile.module[ 'explicit.out' ].reflector );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ 'explicit.out' ].reflector );
+    test.identical( got, exp );
 
     /* */
 
     var exp = [ '.', 'will.yml', 'proto', 'proto/File.js' ];
-    var op = outfile.module[ 'explicit.out' ].path[ 'exported.files.export' ].path;
-    test.identical( op, exp );
+    var got = outfile.module[ 'explicit.out' ].path[ 'exported.files.export' ].path;
+    test.identical( got, exp );
 
     /* */
 
@@ -13470,16 +13470,15 @@ function exportImplicit( test )
     test.identical( files, exp );
 
     var outfile = a.fileProvider.configRead( a.abs( 'implicit/implicit.out.will.yml' ) );
-    debugger;
 
     /* */
 
     var exp = [ 'export' ];
-    var op = _.mapKeys( outfile.module[ './' ].build );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ './' ].build );
+    test.identical( got, exp );
     var exp = [];
-    var op = _.mapKeys( outfile.module[ './' ].step );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ './' ].step );
+    test.identical( got, exp );
     var exp =
     [
       'in',
@@ -13492,23 +13491,23 @@ function exportImplicit( test )
       'download',
       'export'
     ];
-    var op = _.mapKeys( outfile.module[ './' ].path );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ './' ].path );
+    test.identical( got, exp );
     var exp = [];
-    var op = _.mapKeys( outfile.module[ './' ].reflector );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ './' ].reflector );
+    test.identical( got, exp );
 
     /* */
 
     var exp = [ 'export' ];
-    var op = _.mapKeys( outfile.module[ 'implicit.out' ].exported );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ 'implicit.out' ].exported );
+    test.identical( got, exp );
     var exp = [ 'export' ];
-    var op = _.mapKeys( outfile.module[ 'implicit.out' ].build );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ 'implicit.out' ].build );
+    test.identical( got, exp );
     var exp = [];
-    var op = _.mapKeys( outfile.module[ 'implicit.out' ].step );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ 'implicit.out' ].step );
+    test.identical( got, exp );
     var exp =
     [
       'module.willfiles',
@@ -13523,17 +13522,17 @@ function exportImplicit( test )
       'exported.dir.export',
       'exported.files.export'
     ];
-    var op = _.mapKeys( outfile.module[ 'implicit.out' ].path );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ 'implicit.out' ].path );
+    test.identical( got, exp );
     var exp = [ 'exported.export', 'exported.files.export' ];
-    var op = _.mapKeys( outfile.module[ 'implicit.out' ].reflector );
-    test.identical( op, exp );
+    var got = _.mapKeys( outfile.module[ 'implicit.out' ].reflector );
+    test.identical( got, exp );
 
     /* */
 
     var exp = [ '.', 'will.yml', 'proto', 'proto/File.js' ];
-    var op = outfile.module[ 'implicit.out' ].path[ 'exported.files.export' ].path;
-    test.identical( op, exp );
+    var got = outfile.module[ 'implicit.out' ].path[ 'exported.files.export' ].path;
+    test.identical( got, exp );
 
     /* */
 
@@ -13878,8 +13877,8 @@ function exportWithoutSubSubModules( test )
     test.identical( _.strCount( op.output, '/l1.will.yml\n' ), 1 );
     test.identical( _.strCount( op.output, '/l1.out.will.yml\n' ), 2 );
     var exp = [ '.', './l1.out.will.yml', './l1.will.yml', './l2.will.yml', './l3.will.yml', './l4.will.yml' ];
-    var op = a.find( a.abs( '.' ) );
-    test.identical( op, exp );
+    var got = a.find( a.abs( '.' ) );
+    test.identical( got, exp );
     return op;
   });
 
@@ -13901,8 +13900,8 @@ function exportWithoutSubSubModules( test )
     test.identical( _.strCount( op.output, '/l2.will.yml\n' ), 1 );
     test.identical( _.strCount( op.output, '/l2.out.will.yml\n' ), 2 );
     var exp = [ '.', './l1.out.will.yml', './l1.will.yml', './l2.out.will.yml', './l2.will.yml', './l3.will.yml', './l4.will.yml' ];
-    var op = a.find( a.abs( '.' ) );
-    test.identical( op, exp );
+    var got = a.find( a.abs( '.' ) );
+    test.identical( got, exp );
     return op;
   });
 
@@ -13929,8 +13928,8 @@ function exportWithoutSubSubModules( test )
     test.identical( _.strCount( op.output, '/l3.will.yml\n' ), 1 );
     test.identical( _.strCount( op.output, '/l3.out.will.yml\n' ), 2 );
     var exp = [ '.', './l1.will.yml', './l2.out.will.yml', './l2.will.yml', './l3.out.will.yml', './l3.will.yml', './l4.will.yml' ];
-    var op = a.find( a.abs( '.' ) );
-    test.identical( op, exp );
+    var got = a.find( a.abs( '.' ) );
+    test.identical( got, exp );
     return op;
   });
 
@@ -13963,8 +13962,8 @@ function exportWithoutSubSubModules( test )
     test.identical( _.strCount( op.output, '/l4.will.yml\n' ), 1 );
     test.identical( _.strCount( op.output, '/l4.out.will.yml\n' ), 2 );
     var exp = [ '.', './l1.will.yml', './l2.will.yml', './l3.out.will.yml', './l3.will.yml', './l4.out.will.yml', './l4.will.yml' ];
-    var op = a.find( a.abs( '.' ) );
-    test.identical( op, exp );
+    var got = a.find( a.abs( '.' ) );
+    test.identical( got, exp );
     return op;
   });
 
@@ -13985,8 +13984,8 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
   a.reflect();
 
   var exp = [ '.', './will.yml' ];
-  var op = a.find( a.abs( '.' ) );
-  test.identical( op, exp );
+  var got = a.find( a.abs( '.' ) );
+  test.identical( got, exp );
 
   /* - */
 
@@ -14036,8 +14035,8 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/sample',
       './.module/ModuleForTesting12/sample/Sample.js'
     ]
-    var op = a.find( a.abs( '.' ) );
-    test.identical( op, exp );
+    var got = a.find( a.abs( '.' ) );
+    test.identical( got, exp );
     return op;
   });
 
@@ -16720,8 +16719,8 @@ function cleanSelfRefBug( test )
     test.case = 'basic';
     test.identical( op.exitCode, 0 );
     var exp = [ '.', './will.yml', './proto', './proto/File.js' ];
-    var op = a.findAll( a.abs( '.' ) );
-    test.identical( op, exp );
+    var got = a.findAll( a.abs( '.' ) );
+    test.identical( got, exp );
     return null;
   })
 
@@ -16744,7 +16743,7 @@ function shellWithCriterion( test )
 
   a.appStart({ execPath : '.build A' })
 
-  .then( ( op ) => /* xxx qqq2 : use op only for test checks. use op or arg instead of op as argument of consequence callback */
+  .then( ( op ) => /* xxx aaa2 : use op only for test checks. use op or arg instead of op as argument of consequence callback */ /* Dmytro : replaced */
   {
     test.description = 'should execute file A.js';
     test.identical( op.exitCode, 0 );
