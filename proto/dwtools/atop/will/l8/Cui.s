@@ -1366,8 +1366,8 @@ function commandModulesTree( e )
 
 commandModulesTree.commandProperties =
 {
-  defaults.withLocalPath = 'Print local paths. Default is 0';
-  defaults.withRemotePath = 'Print remote paths. Default is 0';
+  withLocalPath : 'Print local paths. Default is 0',
+  withRemotePath : 'Print remote paths. Default is 0',
   ... commandImply.commandProperties,
 }
 

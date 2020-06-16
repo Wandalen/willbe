@@ -847,7 +847,6 @@ function hasSymbolBase( srcPath )
 // let dirFirst = _.routineFromPreAndBody( dir_pre, dir_body );
 // dirFirst.defaults.first = 1;
 //
-// /* qqq2 : implement and cover option depth. ask how */
 
 //
 
