@@ -26,7 +26,7 @@
 */
 
 let _ = _global_.wTools;
-let Parent = _.Will.AbstractModule;
+let Parent = _.will.AbstractModule;
 let Self = wWillModule;
 function wWillModule( o )
 {
@@ -5520,7 +5520,7 @@ function _filePathChanged1( o )
   return o;
 }
 
-_filePathChanged1.defaults = _.mapExtend( null, _.Will.AbstractModule.prototype._filePathChanged1.defaults );
+_filePathChanged1.defaults = _.mapExtend( null, _.will.AbstractModule.prototype._filePathChanged1.defaults );
 
 //
 
@@ -5585,7 +5585,7 @@ function _filePathChanged2( o )
   return o;
 }
 
-_filePathChanged2.defaults = _.mapExtend( null, _.Will.AbstractModule.prototype._filePathChanged2.defaults );
+_filePathChanged2.defaults = _.mapExtend( null, _.will.AbstractModule.prototype._filePathChanged2.defaults );
 
 //
 

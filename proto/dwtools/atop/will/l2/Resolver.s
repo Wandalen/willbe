@@ -1125,12 +1125,12 @@ function _resolveQualifiedAct( o )
   let currentContext = o.currentContext;
   let result;
 
-  if( !( o.currentContext instanceof will.AbstractModule ) )
+  if( !( o.currentContext instanceof _.will.AbstractModule ) )
   if( o.criterion === null && o.currentContext && o.currentContext.criterion )
   o.criterion = o.currentContext.criterion;
 
   _.assert( o.criterion === null || _.mapIs( o.criterion ) );
-  _.assert( o.baseModule instanceof will.AbstractModule );
+  _.assert( o.baseModule instanceof _.will.AbstractModule );
 
   o.iterationPreserve = o.iterationPreserve || Object.create( null );
   o.iterationPreserve.exported = null;

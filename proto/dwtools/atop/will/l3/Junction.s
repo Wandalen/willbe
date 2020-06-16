@@ -484,7 +484,7 @@
 //   _.assert( arguments.length === 2 );
 //   _.assert( !!object );
 //
-//   if( object instanceof _.Will.Junction )
+//   if( object instanceof _.will.Junction )
 //   return object;
 //
 //   let junction = sys.objectToJunctionHash.get( object );
@@ -1171,7 +1171,7 @@
 //     if( !sys.relationFit( junction, filter ) )
 //     return;
 //
-//     _.assert( junction instanceof _.Will.Junction );
+//     _.assert( junction instanceof _.will.Junction );
 //     _.arrayAppendOnce( result, junction );
 //
 //   }
@@ -1688,11 +1688,13 @@
 // if( typeof module !== 'undefined' )
 // module[ 'exports' ] = _global_.wTools;
 //
-// _.staticDeclare
-// ({
-//   prototype : _.Will.prototype,
-//   name : Self.shortName,
-//   value : Self,
-// });
+// _.will[ Self.shortName ] = Self;
+//
+// // _.staticDeclare
+// // ({
+// //   prototype : _.Will.prototype,
+// //   name : Self.shortName,
+// //   value : Self,
+// // });
 //
 // })();
