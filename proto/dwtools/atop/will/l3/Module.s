@@ -724,7 +724,7 @@ function _preform()
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!module.will );
-  _.assert( module.repo instanceof _.Will.Repository );
+  _.assert( module.repo instanceof _.will.Repository );
 
   module.ready.tap( ( err, arg ) =>
   {

@@ -1185,7 +1185,7 @@ function _repoForm()
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
   _.assert( downloadPath === undefined || downloadPath === opener._.downloadPath );
   _.assert( remotePath === undefined || remotePath === opener._.remotePath );
-  _.assert( opener.repo instanceof _.Will.Repository );
+  _.assert( opener.repo instanceof _.will.Repository );
 
   if( opener.formed < 2 )
   opener.formed = 2;

@@ -664,12 +664,12 @@ function repoFrom( o )
 
   o.will = will;
 
-  let hash = _.Will.Repository.Hash({ downloadPath : o.downloadPath, remotePath : o.remotePath });
+  let hash = _.will.Repository.Hash({ downloadPath : o.downloadPath, remotePath : o.remotePath });
   let repo = will.repoMap[ hash ];
   if( repo )
   return repo;
 
-  repo = will.repoMap[ hash ] = new _.Will.Repository( o );
+  repo = will.repoMap[ hash ] = new _.will.Repository( o );
 
   return repo;
 }
