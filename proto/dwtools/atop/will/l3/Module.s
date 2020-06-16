@@ -2494,7 +2494,7 @@ function exportedMake( o )
       _.assert( outModule.exportedMap[ o.build.name ] === undefined );
     }
 
-    let exported = new will.Exported({ outModule : outModule, name : o.build.name }).form1();
+    let exported = new _.will.Exported({ outModule : outModule, name : o.build.name }).form1();
 
     _.assert( outModule.exportedMap[ o.build.name ] === exported );
 
@@ -4333,7 +4333,7 @@ function _resourcesFormAct()
   /* */
 
   module._resourcesAllForm( _.will.ModulesRelation, con );
-  module._resourcesAllForm( will.Exported, con );
+  module._resourcesAllForm( _.will.Exported, con );
   module._resourcesAllForm( _.will.PathResource, con );
   module._resourcesAllForm( _.will.Reflector, con );
   module._resourcesAllForm( _.will.Step, con );

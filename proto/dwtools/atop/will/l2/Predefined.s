@@ -1010,7 +1010,7 @@ function stepRoutineExport( frame )
   return module.exportedMake({ build, purging : frame.run.isRoot && frame.run.purging })
   .then( ( exported ) =>
   {
-    _.assert( exported instanceof _.Will.Exported );
+    _.assert( exported instanceof _.will.Exported );
     return exported.perform( frame );
   });
 }

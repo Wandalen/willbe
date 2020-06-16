@@ -1030,7 +1030,7 @@ function compactField( it )
 
   if( it.src instanceof Self )
   {
-    _.assert( resource instanceof _.Will.Exported, 'not tested' );
+    _.assert( resource instanceof _.will.Exported, 'not tested' );
     it.dst = it.src.qualifiedName;
     return it.dst;
   }

@@ -292,7 +292,7 @@ function _statusPreUpdate()
 
     it.currentModule = module2;
   }
-  else if( it.src instanceof will.Exported )
+  else if( it.src instanceof _.will.Exported )
   {
     it.exported = it.src;
   }
