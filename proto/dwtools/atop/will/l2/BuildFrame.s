@@ -137,7 +137,7 @@ function closesBuildGet()
   let logger = will.logger;
   let resource = frame.resource;
 
-  if( frame.resource instanceof _.Will.Build )
+  if( frame.resource instanceof _.will.Build )
   return frame.resource;
 
   _.assert( frame.down && frame.down !== frame );

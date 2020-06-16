@@ -1938,7 +1938,7 @@ function _willfilesOpen()
       },
       steps : [ 'step::module.export' ],
     }
-    let resource2 = new will.Build( o2 ).form1();
+    let resource2 = new _.will.Build( o2 ).form1();
 
     if( module.pathResourceMap.export || module.reflectorMap.export )
     return arg;
@@ -2445,7 +2445,7 @@ function exportedMake( o )
   let will = module.will;
 
   o = _.routineOptions( exportedMake, arguments );
-  _.assert( o.build instanceof _.Will.Build );
+  _.assert( o.build instanceof _.will.Build );
   _.assert( !module.isFinited() );
 
   if( !module.isOut )
@@ -4337,7 +4337,7 @@ function _resourcesFormAct()
   module._resourcesAllForm( _.will.PathResource, con );
   module._resourcesAllForm( _.will.Reflector, con );
   module._resourcesAllForm( _.will.Step, con );
-  module._resourcesAllForm( will.Build, con );
+  module._resourcesAllForm( _.will.Build, con );
 
   /* */
 

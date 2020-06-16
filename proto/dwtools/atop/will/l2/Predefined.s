@@ -1003,7 +1003,7 @@ function stepRoutineExport( frame )
   let build = frame.closesBuildGet();
 
   _.assert( arguments.length === 1 );
-  _.assert( build instanceof _.Will.Build );
+  _.assert( build instanceof _.will.Build );
   // _.assert( _.boolLike( frame.run.isRoot ) ); /* xxx : investigate */
   // _.assert( _.boolLike( frame.run.purging ) ); /* xxx : investigate */
 

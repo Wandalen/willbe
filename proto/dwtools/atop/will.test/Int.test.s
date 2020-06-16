@@ -4863,7 +4863,7 @@ function buildsResolve( test )
     test.case = 'build::*, currentContext is build::export.';
 
     var build = opener.openedModule.resolve({ selector : 'build::export.' });
-    test.is( build instanceof a.will.Build );
+    test.is( build instanceof _.will.Build );
     test.identical( build.qualifiedName, 'build::export.' );
     test.identical( build.absoluteName, 'module::supermodule / build::export.' );
 

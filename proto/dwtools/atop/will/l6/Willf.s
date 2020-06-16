@@ -741,7 +741,7 @@ function _importToModule()
     willf._resourcesImport( _.will.ModulesRelation, mstructure.submodule );
     willf._resourcesImport( _.will.Step, mstructure.step );
     willf._resourcesImport( _.will.Reflector, mstructure.reflector );
-    willf._resourcesImport( will.Build, mstructure.build );
+    willf._resourcesImport( _.will.Build, mstructure.build );
 
     _.assert( path.s.allAreAbsolute( openedModule.pathResourceMap[ 'module.dir' ].path ) );
     _.assert( path.s.allAreAbsolute( openedModule.pathResourceMap[ 'module.willfiles' ].path ) );
