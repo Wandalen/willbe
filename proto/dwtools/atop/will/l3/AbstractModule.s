@@ -658,14 +658,14 @@ function repoVerify( o )
       return false;
     }
 
-    // _.assert /* Dmytro : used option `formed2` instead of forbidden option `formed` */
+    // _.assert /* Dmytro : used option `formed2` as alternative option for class `Module` */
     // (
     //   !!module && module.formed >= 2,
     //   () => 'Submodule', ( module ? module.qualifiedName : n ), 'was not preformed to verify'
     // );
     _.assert
     (
-      !!module && module.formed2,
+      ( !!module && module.formed2 ) || ( !!module && module.formed >= 2 ),
       () => 'Submodule', ( module ? module.qualifiedName : n ), 'was not preformed to verify'
     );
 
