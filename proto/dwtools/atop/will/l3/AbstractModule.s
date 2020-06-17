@@ -663,11 +663,11 @@ function repoVerify( o )
     //   !!module && module.formed >= 2,
     //   () => 'Submodule', ( module ? module.qualifiedName : n ), 'was not preformed to verify'
     // );
-    debugger;
+
     _.assert
     (
-      !!module && module.isPreformed(),
-      () => 'Submodule', ( module ? module.qualifiedName : n ), 'was not preformed to verify'
+      !!module && ( module instanceof _.will.Module ) ? module.formed2 : module.formed,
+      () => 'Submodule', ( module ? module.qualifiedName : '{-unknown-}' ), 'was not preformed to verify'
     );
 
     /* isValid */
