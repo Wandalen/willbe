@@ -1,0 +1,20 @@
+
+about :
+
+  name : second
+  description : "Second module"
+  version : 0.0.1
+
+step :
+
+  npm.install :
+    currentPath : '.'
+    shell : npm install
+
+build :
+
+  debug:
+    criterion :
+      default : 1
+    steps :
+      - npm.install
