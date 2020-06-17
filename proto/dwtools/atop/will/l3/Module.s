@@ -7685,7 +7685,7 @@ let Restricts =
 
   id : null,
   stager : null,
-
+  peerModuleIsOutdated : null,
   _registeredPath : null,
 
   pathMap : _.define.own({}),

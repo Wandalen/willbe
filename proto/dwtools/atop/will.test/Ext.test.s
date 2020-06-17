@@ -14331,7 +14331,7 @@ function importOutdated( test )
     let willfilePath = a.abs( 'module1/.will.yml' );
     let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
     willFile.path.somepath = 'somepath';
-    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' })
+    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
     return null;
   })
   a.appStart({ args : [ '.with module1/ .export' ] });
@@ -14339,8 +14339,11 @@ function importOutdated( test )
   a.ready.then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '! Outdated' ) );
-    test.is( _.strHas( op.output, 'Select constraint "exported::*=1" failed, got 0 elements for selector "*=1"' ) );
+    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
+    test.identical( _.strCount( op.output, 'Select constraint "exported::*=1" failed with 0 elements' ), 1 );
+    test.identical( _.strCount( op.output, 'Selector "submodule::*/exported::*=1/reflector::exported.files*=1"' ), 1 );
+    test.identical( _.strCount( op.output, 'module::supermodule / module::submodule1 loaded from module::supermodule / module::submodule2 is outdated!' ), 1 );
+    test.identical( _.strCount( op.output, `Please re-export ${a.abs( './module2/out/submodule2.out.will.yml' )} first.` ), 1 );
     return null;
   })
 
@@ -14352,6 +14355,7 @@ function importOutdated( test )
 importOutdated.timeOut = 30000;
 importOutdated.description =
 `
+Problem was : not clear enough information about error.
 Module "module1" is re-exported after export of "module2" and becomes outdated as a part of supermodule.
 Import of "module1" results with the error, because "module1" was not opened.
 Modules structure:

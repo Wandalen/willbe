@@ -2,13 +2,6 @@
 
 'use strict';
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
 let _ = _global_.wTools;
 let Parent = _.resolver;
 let Self = Object.create( Parent );
@@ -17,7 +10,6 @@ let Self = Object.create( Parent );
 // handler
 // --
 
-// function _onSelectorReplicate( selector )
 function _onSelectorReplicate( o )
 {
   let it = this;
@@ -84,7 +76,6 @@ function _onSelectorDown()
     }
 
     it.src.composite = null;
-    // resolver._pathsNativize.call( it );
 
   }
 
@@ -92,16 +83,6 @@ function _onSelectorDown()
   return end();
 
   resolver._pathPerform.call( it );
-
-  // if( rop.pathResolving || it.isFunction )
-  // resolver._pathsResolve.call( it );
-  //
-  // resolver._pathsNormalize.call( it );
-  //
-  // if( rop.pathNativizing || it.isFunction )
-  // resolver._pathsNativize.call( it );
-  //
-  // resolver._pathsUnwrap.call( it );
 
   return end();
 
@@ -156,19 +137,6 @@ function _onUpEnd()
 
   resolver._pathsCompositeResolve.call( it );
 
-  // yyy
-  // if( !it.dstWritingDown )
-  // return;
-  //
-  // if( rop.pathResolving || it.isFunction )
-  // resolver._pathsResolve.call( it );
-  //
-  // if( !it.dstWritingDown )
-  // return;
-  //
-  // if( rop.pathUnwrapping )
-  // resolver._pathsUnwrap.call( it );
-
 }
 
 //
@@ -182,9 +150,6 @@ function _onDownEnd()
   if( !it.dstWritingDown )
   return;
 
-  // if( rop.pathNativizing || it.isFunction ) // yyy
-  // resolver._pathsNativize.call( it );
-
   resolver._pathPerform.call( it );
 
   return Parent._onDownEnd.call( it );
@@ -196,17 +161,21 @@ function _onQuantitativeFail( err )
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let dst = it.dst;
 
-  let result = it.dst;
-  if( _.mapIs( result ) )
-  result = _.mapVals( result );
-  if( _.arrayIs( result ) )
+  if( _.mapIs( dst ) )
+  dst = _.mapVals( dst );
+
+  if( _.arrayIs( dst ) )
   {
+
+    /* is string */
+
     let isString = 1;
-    if( result.every( ( e ) => _.strIs( e ) ) )
+    if( dst.every( ( e ) => _.strIs( e ) ) )
     isString = 1;
     else
-    result = result.map( ( e ) =>
+    dst = dst.map( ( e ) =>
     {
       if( _.strIs( e ) )
       return e;
@@ -218,11 +187,43 @@ function _onQuantitativeFail( err )
     if( rop.criterion )
     err = _.err( err, '\nCriterions :\n', _.toStr( rop.criterion, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } ) );
 
+    /* found */
+
     if( isString )
-    if( result.length )
-    err = _.err( err, '\n', 'Found : ' + result.join( ', ' ) );
+    if( dst.length )
+    err = _.err( err, '\n', 'Found : ' + dst.join( ', ' ) );
     else
     err = _.err( err, '\n', 'Found nothing' );
+
+    /* information about outdated status of the module */
+
+    if( it.currentModule.peerModuleIsOutdated )
+    if
+    (
+         ( it.parsedSelector && it.parsedSelector.kind === 'exported' )
+      || ( it.down.parsedSelector && it.down.parsedSelector.kind === 'module' )
+      || ( it.down.parsedSelector && it.down.parsedSelector.kind === 'submodule' )
+    )
+    {
+      let willfile = it.currentModule.willfilesArray[ 0 ];
+      let storagePath = willfile ? willfile.storagePath : '';
+      if( willfile )
+      err = _.err
+      (
+          err
+        , `\n${ it.currentModule.decoratedAbsoluteName } loaded from ${ willfile.storageWillfile.openedModule.decoratedAbsoluteName } is outdated!`
+        , `\nPlease re-export ${ _.ct.format( storagePath, 'path' ) } first.`
+      );
+      else
+      err = _.err
+      (
+          err
+        , `\n${ it.currentModule.decoratedAbsoluteName } is outdated!`
+        , `\nPlease re-export it first.`
+      );
+    }
+
+    /* bried */
 
     err = _.errBrief( err );
   }
@@ -257,10 +258,8 @@ function _statusPreUpdate()
     );
   }
 
-  // debugger;
   if( it.src instanceof will.Module )
   {
-    // debugger;
     it.currentModule = it.src;
   }
   else if( it.src instanceof will.ModulesRelation )
@@ -392,7 +391,7 @@ function _resourceMapSelect()
   else
   {
 
-    it.src = it.currentModule.resourceMapsForKind( kind );
+    it.src = it.currentModule.resourceMapsForKind( kind ); /* xxx : write result of selection to dst, never to src */
 
     if( _.strIs( kind ) && path.isGlob( kind ) )
     {
@@ -552,26 +551,6 @@ function _pathsNormalize()
     resource.path = resolver._pathNormalize.call( it, filePath, resource )
     return resource;
   });
-
-  // if( it.dst instanceof will.PathResource )
-  // return resourceNormalize( resource );
-  //
-  // if( _.arrayIs( it.dst ) || _.mapIs( it.dst ) )
-  // it.dst = _.map( it.dst, ( resource ) =>
-  // {
-  //   if( resource instanceof will.PathResource )
-  //   return resourceNormalize( resource );
-  //   return resource;
-  // });
-  //
-  // function resourceNormalize( resource )
-  // {
-  //   resource = resource.cloneDerivative();
-  //   _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
-  //   if( resource.path )
-  //   resource.path = resolver._pathNormalize.call( it, resource.path );
-  //   return resource;
-  // }
 
 }
 
@@ -739,7 +718,6 @@ function _pathsCompositeResolve()
 
 //
 
-// function _pathResolve( filePath, resourceName )
 function _pathResolve( filePath, resource )
 {
   let it = this;
@@ -828,32 +806,11 @@ function _pathsResolve()
   let currentModule = it.currentModule;
   let resource = it.dst;
 
-  // resolver._pathsTransform.call( it, resolver._pathResolve );
-
   resolver._pathsTransform.call( it, ( filePath, resource ) =>
   {
     resource.path = resolver._pathResolve.call( it, filePath, resource )
     return resource;
   });
-
-  // if( _.arrayIs( it.dst ) || _.mapIs( it.dst ) )
-  // it.dst = _.map( it.dst, ( resource ) => resourceResolve( resource ) );
-  // else
-  // it.dst = resourceResolve( resource )
-  //
-  // function resourceResolve( resource )
-  // {
-  //   if( !resource )
-  //   return resource;
-  //   if( !( resource instanceof will.PathResource ) )
-  //   return resource;
-  //   resource = resource.cloneDerivative();
-  //   _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
-  //   if( resource.path )
-  //   resource.path = resolver._pathResolve.call( it, resource );
-  //   // resource.path = resolver._pathResolve.call( it, resource.path, resource.name );
-  //   return resource;
-  // }
 
 }
 
@@ -866,11 +823,6 @@ function _pathsUnwrap()
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
   let currentModule = it.currentModule;
-
-  // if( _.arrayIs( it.dst ) || _.mapIs( it.dst ) )
-  // it.dst = _.filter( it.dst, ( e ) => unwrap( e ) );
-  // else
-  // it.dst = unwrap( it.dst );
 
   resolver._pathsTransform.call( it, unwrap );
 
@@ -904,7 +856,6 @@ function _functionOsGetUp()
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let will = rop.baseModule.will;
-  // let sop = it.selectOptions;
   let Os = require( 'os' );
   let os = 'posix';
 
@@ -930,7 +881,6 @@ function _functionThisUp()
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let resolver = rop.Resolver;
   let will = rop.baseModule.will;
-  // let sop = it.selectOptions;
   let currentThis = rop.currentThis;
 
   if( currentThis === null )
@@ -943,7 +893,7 @@ function _functionThisUp()
   });
 
   it.isFunction = it.selector;
-  it.src = [ currentThis ];
+  it.src = [ currentThis ]; /* xxx : write result of selection to dst, never to src */
   it.selector = 0;
   it.iterable = null;
   it.selectorChanged();
@@ -960,8 +910,6 @@ function _functionStringsJoinDown()
 
   if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
   return;
-
-  // resolver._pathPerform.call( it );
 
   return Parent._functionStringsJoinDown.call( it );
 }
@@ -1139,9 +1087,7 @@ function _resolveQualifiedAct( o )
 
   try
   {
-    // debugger;
     result = Parent._resolveQualifiedAct.call( resolver, o );
-    // result = Parent._resolveQualifiedAct.call( resolver, o );
   }
   catch( err )
   {

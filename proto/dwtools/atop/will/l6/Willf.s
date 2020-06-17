@@ -536,6 +536,8 @@ function _open()
       inconsistent = 1;
       let peerWillfilesPath = willf.peerWillfilesPathGet();
       peerWillfilesPath = _.arrayAs( peerWillfilesPath );
+      if( willf.openedModule && willf.openedModule.peerModule )
+      willf.openedModule.peerModule.peerModuleIsOutdated = true;
       throw _.errBrief
       (
           `Out-willfile is inconsistent with its in-willfiles:`
