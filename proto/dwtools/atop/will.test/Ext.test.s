@@ -14316,11 +14316,22 @@ function importOutWithDeletedSource( test )
 
 //
 
-function importExperiment( test )
+function importOutdated( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'import-experiment' );
+  let a = context.assetFor( test, 'import-outdated' );
   a.reflect();
+
+  test.description =
+  `
+  Module "module1" is re-exported after export of "module2" and becomes outdated as a part of supermodule.
+  Import of "module1" results with the error, because "module1" was not opened.
+  Modules structure:
+    supermodule
+      - module1
+      - module2
+        - module1
+  `
 
   /* - */
 
@@ -14335,15 +14346,20 @@ function importExperiment( test )
     return null;
   })
   a.appStart({ args : [ '.with module1/ .export' ] });
-  a.appStart({ args : [ '.build' ] });
+  a.appStartNonThrowing({ args : [ '.build' ] });
+  a.ready.then( ( got ) =>
+  {
+    test.notIdentical( got.exitCode, 0 );
+    test.is( _.strHas( got.output, '! Outdated' ) );
+    return null;
+  })
 
   /* - */
 
   return a.ready;
 }
 
-importExperiment.timeOut = 30000;
-importExperiment.experimental = 1;
+importOutdated.timeOut = 30000;
 
 // --
 // clean
