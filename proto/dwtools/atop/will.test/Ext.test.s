@@ -7156,14 +7156,14 @@ function modulesTreeHierarchyRemote( test )
    | +-- module::ModuleForTesting1
    | +-- module::ModuleForTesting1b
    | +-- module::a0
-   |   +-- module::ModuleForTesting1
+   |   +-- module::ModuleForTesting1b
    |   +-- module::ModuleForTesting2a
    +-- module::b
    | +-- module::ModuleForTesting1b
    | +-- module::ModuleForTesting12
    +-- module::c
    | +-- module::a0
-   | | +-- module::ModuleForTesting1
+   | | +-- module::ModuleForTesting1b
    | | +-- module::ModuleForTesting2a
    | +-- module::ModuleForTesting12ab
    +-- module::ModuleForTesting1b
@@ -7177,7 +7177,7 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 3 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
@@ -7201,14 +7201,14 @@ function modulesTreeHierarchyRemote( test )
    | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
    | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    | +-- module::a0
-   |   +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   |   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    |   +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
    +-- module::b
    | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    | +-- module::ModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out
    +-- module::c
    | +-- module::a0
-   | | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   | | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    | | +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
    | +-- module::ModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12ab.git/out/wModuleForTesting12ab.out
    +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
@@ -7222,7 +7222,7 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 3 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
@@ -7246,7 +7246,7 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 3 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
@@ -7270,14 +7270,14 @@ function modulesTreeHierarchyRemote( test )
    | +-- module::ModuleForTesting1
    | +-- module::ModuleForTesting1b
    | +-- module::a0
-   |   +-- module::ModuleForTesting1
+   |   +-- module::ModuleForTesting1b
    |   +-- module::ModuleForTesting2a
    +-- module::b
    | +-- module::ModuleForTesting1b
    | +-- module::ModuleForTesting12
    +-- module::c
    | +-- module::a0
-   | | +-- module::ModuleForTesting1
+   | | +-- module::ModuleForTesting1b
    | | +-- module::ModuleForTesting2a
    | +-- module::ModuleForTesting12ab
    +-- module::ModuleForTesting1b
@@ -7290,7 +7290,7 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 3 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
@@ -7314,14 +7314,14 @@ function modulesTreeHierarchyRemote( test )
    | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
    | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    | +-- module::a0
-   |   +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   |   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    |   +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
    +-- module::b
    | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    | +-- module::ModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/out/wModuleForTesting12.out
    +-- module::c
    | +-- module::a0
-   | | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   | | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    | | +-- module::ModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
    | +-- module::ModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12ab.git/out/wModuleForTesting12ab.out
    +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
@@ -7334,7 +7334,7 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 3 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
@@ -7358,7 +7358,7 @@ function modulesTreeHierarchyRemote( test )
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 8 );
-    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 3 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 5 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
@@ -7409,71 +7409,47 @@ function modulesTreeHierarchyRemoteDownloaded( test )
 `
  +-- module::z
    +-- module::a
-   | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
-   | | +-- module::wFiles - path::remote:=npm:///wFiles
-   | | +-- module::wCloner - path::remote:=npm:///wcloner
-   | | +-- module::wStringer - path::remote:=npm:///wstringer
-   | | +-- module::wTesting - path::remote:=npm:///wTesting
-   | | +-- module::wSelector - path::remote:=npm:///wselector
-   | | +-- module::wTools
-   | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   | | +-- module::wTools - path::remote:=npm:///wTools
-   | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-   | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
-   | | +-- module::wPathTools
-   | | +-- module::wFiles - path::remote:=npm:///wFiles
-   | | +-- module::wTesting - path::remote:=npm:///wTesting
+   | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
+   | | +-- module::Testing - path::remote:=npm:///wTesting
+   | +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   | | +-- module::Testing - path::remote:=npm:///wTesting
    | +-- module::a0
-   |   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   |   | +-- module::wTools - path::remote:=npm:///wTools
-   |   | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-   |   | +-- module::wArraySorted - path::remote:=npm:///warraysorted
-   |   | +-- module::wPathTools
-   |   | +-- module::wFiles - path::remote:=npm:///wFiles
-   |   | +-- module::wTesting - path::remote:=npm:///wTesting
-   |   +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-   |     +-- module::wTools - path::remote:=npm:///wTools
-   |     +-- module::wFiles - path::remote:=npm:///wFiles
-   |     +-- module::wTesting - path::remote:=npm:///wTesting
+   |   +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   |   | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   |   | +-- module::Testing - path::remote:=npm:///wTesting
+   |   +-- module::wModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
+   |     +-- module::ModuleForTesting2 - path::remote:=git+https://${ a.path.current() }/group1/group10/.module/ModuleForTesting2a/github.com/Wandalen/wModuleForTesting2.git@gamma
+   |     +-- module::Testing - path::remote:=npm:///wTesting
    +-- module::b
-   | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   | | +-- module::wTools - path::remote:=npm:///wTools
-   | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-   | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
-   | | +-- module::wPathTools
-   | | +-- module::wFiles - path::remote:=npm:///wFiles
-   | | +-- module::wTesting - path::remote:=npm:///wTesting
-   | +-- module::wProto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
-   |   +-- module::wTools - path::remote:=npm:///wTools
-   |   +-- module::Self
-   |   +-- module::wEqualer - path::remote:=npm:///wequaler
-   |   +-- module::wTesting - path::remote:=npm:///wTesting
+   | +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   | | +-- module::Testing - path::remote:=npm:///wTesting
+   | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/
+   |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
+   |   +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git@gamma
+   |   +-- module::Testing - path::remote:=npm:///wTesting
    +-- module::c
    | +-- module::a0
-   | | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   | | | +-- module::wTools - path::remote:=npm:///wTools
-   | | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-   | | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
-   | | | +-- module::wPathTools
-   | | | +-- module::wFiles - path::remote:=npm:///wFiles
-   | | | +-- module::wTesting - path::remote:=npm:///wTesting
-   | | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-   | |   +-- module::wTools - path::remote:=npm:///wTools
-   | |   +-- module::wFiles - path::remote:=npm:///wFiles
-   | |   +-- module::wTesting - path::remote:=npm:///wTesting
-   | +-- module::wUriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/
-   |   +-- module::wTools - path::remote:=npm:///wTools
-   |   +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-   |   +-- module::wUriBasic
-   |   +-- module::wFiles - path::remote:=npm:///wFiles
-   |   +-- module::wTesting - path::remote:=npm:///wTesting
-   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-     +-- module::wTools - path::remote:=npm:///wTools
-     +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-     +-- module::wArraySorted - path::remote:=npm:///warraysorted
-     +-- module::wPathTools
-     +-- module::wFiles - path::remote:=npm:///wFiles
-     +-- module::wTesting - path::remote:=npm:///wTesting
+   | | +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   | | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   | | | +-- module::Testing - path::remote:=npm:///wTesting
+   | | +-- module::wModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
+   | |   +-- module::ModuleForTesting2 - path::remote:=git+https://${ a.path.current() }/group1/group10/.module/ModuleForTesting2a/github.com/Wandalen/wModuleForTesting2.git@gamma
+   | |   +-- module::Testing - path::remote:=npm:///wTesting
+   | +-- module::wModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12ab.git/
+   |   +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   |   +-- module::ModuleForTesting1a - path::remote:=npm:///wmodulefortesting1a@gamma
+   |   +-- module::ModuleForTesting1b - path::remote:=npm:///wmodulefortesting1b@gamma
+   |   +-- module::ModuleForTesting2 - path::remote:=npm:///wmodulefortesting2@gamma
+   |   +-- module::ModuleForTesting2a - path::remote:=npm:///wmodulefortesting2a@gamma
+   |   +-- module::ModuleForTesting2b - path::remote:=npm:///wmodulefortesting2b@gamma
+   |   +-- module::ModuleForTesting12 - path::remote:=npm:///wmodulefortesting12@gamma
+   |   +-- module::Testing - path::remote:=npm:///wTesting
+   +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+     +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+     +-- module::Testing - path::remote:=npm:///wTesting
+
 `
 
     test.identical( _.strCount( op.output, exp ), 1 );
@@ -7483,11 +7459,11 @@ function modulesTreeHierarchyRemoteDownloaded( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::wTools' ), 11 );
-    test.identical( _.strCount( op.output, '+-- module::wPathTools' ), 10 );
-    test.identical( _.strCount( op.output, '+-- module::wPathBasic' ), 8 );
-    test.identical( _.strCount( op.output, '+-- module::wUriBasic' ), 2 );
-    test.identical( _.strCount( op.output, '+-- module::wProto' ), 1 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 11 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 10 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 8 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 2 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
   })
@@ -7551,65 +7527,109 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 //    | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
 //    +-- module::PathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
 // `
+// `
+//  +-- module::z
+//    +-- module::a
+//    | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
+//    | | +-- module::wFiles - path::remote:=npm:///wFiles
+//    | | +-- module::wCloner - path::remote:=npm:///wcloner
+//    | | +-- module::wStringer - path::remote:=npm:///wstringer
+//    | | +-- module::wTesting - path::remote:=npm:///wTesting
+//    | | +-- module::wSelector - path::remote:=npm:///wselector
+//    | | +-- module::wTools
+//    | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+//    | | +-- module::wTools - path::remote:=npm:///wTools
+//    | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+//    | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
+//    | | +-- module::wPathTools
+//    | | +-- module::wFiles - path::remote:=npm:///wFiles
+//    | | +-- module::wTesting - path::remote:=npm:///wTesting
+//    | +-- module::a0
+//    |   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+//    |   | +-- module::wTools - path::remote:=npm:///wTools
+//    |   | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+//    |   | +-- module::wArraySorted - path::remote:=npm:///warraysorted
+//    |   | +-- module::wPathTools
+//    |   | +-- module::wFiles - path::remote:=npm:///wFiles
+//    |   | +-- module::wTesting - path::remote:=npm:///wTesting
+//    |   +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+//    |     +-- module::wTools - path::remote:=npm:///wTools
+//    |     +-- module::wFiles - path::remote:=npm:///wFiles
+//    |     +-- module::wTesting - path::remote:=npm:///wTesting
+//    +-- module::b
+//    | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+//    | | +-- module::wTools - path::remote:=npm:///wTools
+//    | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+//    | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
+//    | | +-- module::wPathTools
+//    | | +-- module::wFiles - path::remote:=npm:///wFiles
+//    | | +-- module::wTesting - path::remote:=npm:///wTesting
+//    | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+//    +-- module::c
+//    | +-- module::a0
+//    | | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+//    | | | +-- module::wTools - path::remote:=npm:///wTools
+//    | | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+//    | | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
+//    | | | +-- module::wPathTools
+//    | | | +-- module::wFiles - path::remote:=npm:///wFiles
+//    | | | +-- module::wTesting - path::remote:=npm:///wTesting
+//    | | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
+//    | |   +-- module::wTools - path::remote:=npm:///wTools
+//    | |   +-- module::wFiles - path::remote:=npm:///wFiles
+//    | |   +-- module::wTesting - path::remote:=npm:///wTesting
+//    | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
+//    +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
+//      +-- module::wTools - path::remote:=npm:///wTools
+//      +-- module::wPathBasic - path::remote:=npm:///wpathbasic
+//      +-- module::wArraySorted - path::remote:=npm:///warraysorted
+//      +-- module::wPathTools
+//      +-- module::wFiles - path::remote:=npm:///wFiles
+//      +-- module::wTesting - path::remote:=npm:///wTesting
+// `
 `
  +-- module::z
    +-- module::a
-   | +-- module::wTools - path::remote:=git+https:///github.com/Wandalen/wTools.git/
-   | | +-- module::wFiles - path::remote:=npm:///wFiles
-   | | +-- module::wCloner - path::remote:=npm:///wcloner
-   | | +-- module::wStringer - path::remote:=npm:///wstringer
-   | | +-- module::wTesting - path::remote:=npm:///wTesting
-   | | +-- module::wSelector - path::remote:=npm:///wselector
-   | | +-- module::wTools
-   | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   | | +-- module::wTools - path::remote:=npm:///wTools
-   | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-   | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
-   | | +-- module::wPathTools
-   | | +-- module::wFiles - path::remote:=npm:///wFiles
-   | | +-- module::wTesting - path::remote:=npm:///wTesting
+   | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
+   | | +-- module::Testing - path::remote:=npm:///wTesting
+   | +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   | | +-- module::Testing - path::remote:=npm:///wTesting
    | +-- module::a0
-   |   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   |   | +-- module::wTools - path::remote:=npm:///wTools
-   |   | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-   |   | +-- module::wArraySorted - path::remote:=npm:///warraysorted
-   |   | +-- module::wPathTools
-   |   | +-- module::wFiles - path::remote:=npm:///wFiles
-   |   | +-- module::wTesting - path::remote:=npm:///wTesting
-   |   +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-   |     +-- module::wTools - path::remote:=npm:///wTools
-   |     +-- module::wFiles - path::remote:=npm:///wFiles
-   |     +-- module::wTesting - path::remote:=npm:///wTesting
+   |   +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   |   | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   |   | +-- module::Testing - path::remote:=npm:///wTesting
+   |   +-- module::wModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
+   |     +-- module::ModuleForTesting2 - path::remote:=git+https://${ a.path.current() }/group1/group10/.module/ModuleForTesting2a/github.com/Wandalen/wModuleForTesting2.git@gamma
+   |     +-- module::Testing - path::remote:=npm:///wTesting
    +-- module::b
-   | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   | | +-- module::wTools - path::remote:=npm:///wTools
-   | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-   | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
-   | | +-- module::wPathTools
-   | | +-- module::wFiles - path::remote:=npm:///wFiles
-   | | +-- module::wTesting - path::remote:=npm:///wTesting
-   | +-- module::Proto - path::remote:=git+https:///github.com/Wandalen/wProto.git/
+   | +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   | | +-- module::Testing - path::remote:=npm:///wTesting
+   | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/
+   |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
+   |   +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git@gamma
+   |   +-- module::Testing - path::remote:=npm:///wTesting
    +-- module::c
    | +-- module::a0
-   | | +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-   | | | +-- module::wTools - path::remote:=npm:///wTools
-   | | | +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-   | | | +-- module::wArraySorted - path::remote:=npm:///warraysorted
-   | | | +-- module::wPathTools
-   | | | +-- module::wFiles - path::remote:=npm:///wFiles
-   | | | +-- module::wTesting - path::remote:=npm:///wTesting
-   | | +-- module::wPathBasic - path::remote:=git+https:///github.com/Wandalen/wPathBasic.git/
-   | |   +-- module::wTools - path::remote:=npm:///wTools
-   | |   +-- module::wFiles - path::remote:=npm:///wFiles
-   | |   +-- module::wTesting - path::remote:=npm:///wTesting
-   | +-- module::UriBasic - path::remote:=git+https:///github.com/Wandalen/wUriBasic.git/out/wUriBasic.out
-   +-- module::wPathTools - path::remote:=git+https:///github.com/Wandalen/wPathTools.git/
-     +-- module::wTools - path::remote:=npm:///wTools
-     +-- module::wPathBasic - path::remote:=npm:///wpathbasic
-     +-- module::wArraySorted - path::remote:=npm:///warraysorted
-     +-- module::wPathTools
-     +-- module::wFiles - path::remote:=npm:///wFiles
-     +-- module::wTesting - path::remote:=npm:///wTesting
+   | | +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+   | | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   | | | +-- module::Testing - path::remote:=npm:///wTesting
+   | | +-- module::wModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
+   | |   +-- module::ModuleForTesting2 - path::remote:=git+https://${ a.path.current() }/group1/group10/.module/ModuleForTesting2a/github.com/Wandalen/wModuleForTesting2.git@gamma
+   | |   +-- module::Testing - path::remote:=npm:///wTesting
+   | +-- module::wModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12ab.git/
+   |   +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   |   +-- module::ModuleForTesting1a - path::remote:=npm:///wmodulefortesting1a@gamma
+   |   +-- module::ModuleForTesting1b - path::remote:=npm:///wmodulefortesting1b@gamma
+   |   +-- module::ModuleForTesting2 - path::remote:=npm:///wmodulefortesting2@gamma
+   |   +-- module::ModuleForTesting2a - path::remote:=npm:///wmodulefortesting2a@gamma
+   |   +-- module::ModuleForTesting2b - path::remote:=npm:///wmodulefortesting2b@gamma
+   |   +-- module::ModuleForTesting12 - path::remote:=npm:///wmodulefortesting12@gamma
+   |   +-- module::Testing - path::remote:=npm:///wTesting
+   +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
+     +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+     +-- module::Testing - path::remote:=npm:///wTesting
 `
 
     test.identical( _.strCount( op.output, exp ), 1 );
@@ -7619,16 +7639,16 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
     test.identical( _.strCount( op.output, '+-- module::a0' ), 2 );
     test.identical( _.strCount( op.output, '+-- module::b' ), 1 );
     test.identical( _.strCount( op.output, '+-- module::c' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::wTools' ), 9 );
-    test.identical( _.strCount( op.output, '+-- module::wPathTools' ), 10 );
-    test.identical( _.strCount( op.output, '+-- module::wPathBasic' ), 7 );
-    test.identical( _.strCount( op.output, '+-- module::wUriBasic' ), 0 ); /* xxx */
-    test.identical( _.strCount( op.output, '+-- module::wProto' ), 0 );
-    test.identical( _.strCount( op.output, '+-- module::Tools' ), 0 );
-    test.identical( _.strCount( op.output, '+-- module::PathTools' ), 0 );
-    test.identical( _.strCount( op.output, '+-- module::PathBasic' ), 0 );
-    test.identical( _.strCount( op.output, '+-- module::UriBasic' ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::Proto' ), 1 );
+    test.identical( _.strCount( op.output, '+-- module::wModuleForTesting1' ), 9 );
+    test.identical( _.strCount( op.output, '+-- module::wModuleForTesting1b' ), 10 );
+    test.identical( _.strCount( op.output, '+-- module::wModuleForTesting2a' ), 7 );
+    test.identical( _.strCount( op.output, '+-- module::wModuleForTesting12' ), 0 ); /* xxx */
+    test.identical( _.strCount( op.output, '+-- module::wModuleForTesting12ab' ), 0 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1' ), 0 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting1b' ), 0 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting2a' ), 0 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12' ), 1 );
+    test.identical( _.strCount( op.output, '+-- module::ModuleForTesting12ab' ), 1 );
 
     return null;
   })
@@ -12726,16 +12746,16 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1b/sample',
       './group1/group10',
       './group1/group10/.module',
-      './group1/group10/.module/ModuleForTesting1',
-      './group1/group10/.module/ModuleForTesting1/doc',
-      './group1/group10/.module/ModuleForTesting1/out',
-      './group1/group10/.module/ModuleForTesting1/proto',
-      './group1/group10/.module/ModuleForTesting1/proto/dwtools',
-      './group1/group10/.module/ModuleForTesting1/proto/dwtools/abase',
-      './group1/group10/.module/ModuleForTesting1/proto/dwtools/abase/l1',
-      './group1/group10/.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1',
-      './group1/group10/.module/ModuleForTesting1/proto/dwtools/abase/l1.test',
-      './group1/group10/.module/ModuleForTesting1/sample',
+      './group1/group10/.module/ModuleForTesting1b',
+      './group1/group10/.module/ModuleForTesting1b/doc',
+      './group1/group10/.module/ModuleForTesting1b/out',
+      './group1/group10/.module/ModuleForTesting1b/proto',
+      './group1/group10/.module/ModuleForTesting1b/proto/dwtools',
+      './group1/group10/.module/ModuleForTesting1b/proto/dwtools/abase',
+      './group1/group10/.module/ModuleForTesting1b/proto/dwtools/abase/l3',
+      './group1/group10/.module/ModuleForTesting1b/proto/dwtools/abase/l3/testing1b',
+      './group1/group10/.module/ModuleForTesting1b/proto/dwtools/abase/l3.test',
+      './group1/group10/.module/ModuleForTesting1b/sample',
       './group1/group10/.module/ModuleForTesting2a',
       './group1/group10/.module/ModuleForTesting2a/doc',
       './group1/group10/.module/ModuleForTesting2a/out',
@@ -12750,10 +12770,8 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/out/debug',
       './group1/group10/out/debug/dwtools',
       './group1/group10/out/debug/dwtools/abase',
-      './group1/group10/out/debug/dwtools/abase/l1',
-      './group1/group10/out/debug/dwtools/abase/l1/testing1',
-      './group1/group10/out/debug/dwtools/abase/l1.test',
       './group1/group10/out/debug/dwtools/abase/l3',
+      './group1/group10/out/debug/dwtools/abase/l3/testing1b',
       './group1/group10/out/debug/dwtools/abase/l3/testing2a',
       './group1/group10/out/debug/dwtools/abase/l3.test',
       './group1/out',
@@ -12784,10 +12802,8 @@ function exportWithRemoteSubmodules( test )
       './group2/out/debug',
       './group2/out/debug/dwtools',
       './group2/out/debug/dwtools/abase',
-      './group2/out/debug/dwtools/abase/l1',
-      './group2/out/debug/dwtools/abase/l1/testing1',
-      './group2/out/debug/dwtools/abase/l1.test',
       './group2/out/debug/dwtools/abase/l3',
+      './group2/out/debug/dwtools/abase/l3/testing1b',
       './group2/out/debug/dwtools/abase/l3/testing2a',
       './group2/out/debug/dwtools/abase/l3.test',
       './group2/out/debug/dwtools/abase/l4',
@@ -12808,7 +12824,7 @@ function exportWithRemoteSubmodules( test )
       './out/debug/dwtools/abase/l4',
       './out/debug/dwtools/abase/l4/testing12ab',
       './out/debug/dwtools/abase/l4.test'
-    ]
+    ];
     var files = a.findDirs( a.routinePath );
     test.identical( files, exp );
 
@@ -12845,7 +12861,7 @@ function exportWithRemoteSubmodulesRecursive( test )
   })
 
   a.appStart( '.with ** .clean' )
-  a.appStart( '.with ** .recursive' )
+  a.appStart( '.with ** .export.recursive' )
 
   .then( ( op ) =>
   {
@@ -15689,8 +15705,8 @@ submodule :
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 7 );
-    test.identical( _.strCount( op.output, ' at ' ), 9 );
+    test.identical( _.strCount( op.output, ' at .' ), 6 );
+    test.identical( _.strCount( op.output, ' at ' ), 8 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -15733,8 +15749,8 @@ submodule :
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 24 );
-    test.identical( _.strCount( op.output, ' at ' ), 26 );
+    test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at ' ), 21 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -15777,8 +15793,8 @@ submodule :
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 24 );
-    test.identical( _.strCount( op.output, ' at ' ), 26 );
+    test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at ' ), 21 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -15821,8 +15837,8 @@ submodule :
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 24 );
-    test.identical( _.strCount( op.output, ' at ' ), 26 );
+    test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at ' ), 21 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -15968,8 +15984,8 @@ function cleanHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 7 );
-    test.identical( _.strCount( op.output, ' at ' ), 9 );
+    test.identical( _.strCount( op.output, ' at .' ), 6 );
+    test.identical( _.strCount( op.output, ' at ' ), 8 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -16012,8 +16028,8 @@ function cleanHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 24 );
-    test.identical( _.strCount( op.output, ' at ' ), 26 );
+    test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at ' ), 21 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -16056,8 +16072,8 @@ function cleanHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 24 );
-    test.identical( _.strCount( op.output, ' at ' ), 26 );
+    test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at ' ), 21 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -16100,8 +16116,8 @@ function cleanHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 24 );
-    test.identical( _.strCount( op.output, ' at ' ), 26 );
+    test.identical( _.strCount( op.output, ' at .' ), 19 );
+    test.identical( _.strCount( op.output, ' at ' ), 21 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -16237,7 +16253,7 @@ function cleanSubmodulesHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'PathBasic', 'PathTools' ];
+    var exp = [ 'ModuleForTesting1b', 'ModuleForTesting2a' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/group10/.module' ) )
     test.identical( files, exp );
 
@@ -16248,8 +16264,8 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 4 );
-    test.identical( _.strCount( op.output, ' at ' ), 6 );
+    test.identical( _.strCount( op.output, ' at .' ), 3 );
+    test.identical( _.strCount( op.output, ' at ' ), 5 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -16292,8 +16308,8 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 9 );
-    test.identical( _.strCount( op.output, ' at ' ), 11 );
+    test.identical( _.strCount( op.output, ' at .' ), 4 );
+    test.identical( _.strCount( op.output, ' at ' ), 6 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -16336,8 +16352,8 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 9 );
-    test.identical( _.strCount( op.output, ' at ' ), 11 );
+    test.identical( _.strCount( op.output, ' at .' ), 4 );
+    test.identical( _.strCount( op.output, ' at ' ), 6 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -16380,8 +16396,8 @@ function cleanSubmodulesHierarchyRemote( test )
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 9 );
-    test.identical( _.strCount( op.output, ' at ' ), 11 );
+    test.identical( _.strCount( op.output, ' at .' ), 4 );
+    test.identical( _.strCount( op.output, ' at ' ), 6 );
     test.identical( _.strCount( op.output, '- Clean deleted' ), 1 );
 
     return null;
@@ -16527,8 +16543,8 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 4 );
-    test.identical( _.strCount( op.output, ' at ' ), 6 );
+    test.identical( _.strCount( op.output, ' at .' ), 3 );
+    test.identical( _.strCount( op.output, ' at ' ), 5 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -16571,8 +16587,8 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 9 );
-    test.identical( _.strCount( op.output, ' at ' ), 11 );
+    test.identical( _.strCount( op.output, ' at .' ), 4 );
+    test.identical( _.strCount( op.output, ' at ' ), 6 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -16615,8 +16631,8 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 9 );
-    test.identical( _.strCount( op.output, ' at ' ), 11 );
+    test.identical( _.strCount( op.output, ' at .' ), 4 );
+    test.identical( _.strCount( op.output, ' at ' ), 6 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -16659,8 +16675,8 @@ function cleanSubmodulesHierarchyRemoteDry( test )
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '. Read 26 willfile(s)' ), 1 );
-    test.identical( _.strCount( op.output, ' at .' ), 9 );
-    test.identical( _.strCount( op.output, ' at ' ), 11 );
+    test.identical( _.strCount( op.output, ' at .' ), 4 );
+    test.identical( _.strCount( op.output, ' at ' ), 6 );
     test.identical( _.strCount( op.output, '. Clean will delete' ), 1 );
 
     return null;
@@ -18575,7 +18591,7 @@ function submodulesDownloadHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
@@ -18618,7 +18634,7 @@ function submodulesDownloadHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
