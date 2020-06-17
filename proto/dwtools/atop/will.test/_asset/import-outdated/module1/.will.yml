@@ -1,0 +1,21 @@
+
+about :
+
+  name : submodule1
+  version : 0.0.0
+
+path :
+  out : out
+
+step :
+
+  export :
+    export : 'proto/**'
+
+build :
+
+  export :
+    steps : export
+    criterion :
+      export : 1
+      default : 1
