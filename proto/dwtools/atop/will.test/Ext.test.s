@@ -24345,7 +24345,7 @@ var Self =
     importPathLocal,
     // importLocalRepo, /* xxx : later */
     importOutWithDeletedSource,
-    importExperiment,
+    importOutdated,
 
     // clean
 
