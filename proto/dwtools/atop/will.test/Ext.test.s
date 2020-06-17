@@ -14314,6 +14314,53 @@ function importOutWithDeletedSource( test )
   return a.ready;
 }
 
+//
+
+function importOutdated( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'import-outdated' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : [ '.with module1/ .export' ] });
+  a.appStart({ args : [ '.with module2/ .export' ] });
+  a.ready.then( () =>
+  {
+    let willfilePath = a.abs( 'module1/.will.yml' );
+    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    willFile.path.somepath = 'somepath';
+    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' })
+    return null;
+  })
+  a.appStart({ args : [ '.with module1/ .export' ] });
+  a.appStartNonThrowing({ args : [ '.build' ] });
+  a.ready.then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.is( _.strHas( op.output, '! Outdated' ) );
+    test.is( _.strHas( op.output, 'Select constraint "exported::*=1" failed, got 0 elements for selector "*=1"' ) );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+importOutdated.timeOut = 30000;
+importOutdated.description =
+`
+Module "module1" is re-exported after export of "module2" and becomes outdated as a part of supermodule.
+Import of "module1" results with the error, because "module1" was not opened.
+Modules structure:
+  supermodule
+    - module1
+    - module2
+      - module1
+`
+
 // --
 // clean
 // --
@@ -24298,6 +24345,7 @@ var Self =
     importPathLocal,
     // importLocalRepo, /* xxx : later */
     importOutWithDeletedSource,
+    importOutdated,
 
     // clean
 
