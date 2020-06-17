@@ -3,7 +3,7 @@
 'use strict';
 
 let _ = _global_.wTools;
-let Parent = _.Will.Resource;
+let Parent = _.will.Resource;
 let Self = wWillStep;
 function wWillStep( o )
 {
@@ -49,7 +49,7 @@ function MakeFor_body( o )
     o3.name = build;
   }
 
-  _.Will.Build.MakeFor( o3 );
+  _.will.Build.MakeFor( o3 );
 
 }
 
@@ -358,11 +358,13 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

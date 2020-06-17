@@ -294,7 +294,7 @@ function reform()
 
   function peerFromModule( module )
   {
-    _.assert( module instanceof _.Will.Module );
+    _.assert( module instanceof _.will.Module );
     _.assert( !module.peerModule );
 
     let localPath = module.peerLocalPathGet();
@@ -666,21 +666,21 @@ function PathsOf( object )
     result.push( localPath );
     result.push( remotePath );
   }
-  else if( object instanceof _.Will.Module )
+  else if( object instanceof _.will.Module )
   {
     let localPath = object.localPath || object.commonPath;
     let remotePath = object.remotePath;
     result.push( localPath );
     result.push( remotePath );
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     let localPath = object.localPath || object.commonPath;
     let remotePath = object.remotePath;
     result.push( localPath );
     result.push( remotePath );
   }
-  else if( object instanceof _.Will.ModulesRelation )
+  else if( object instanceof _.will.ModulesRelation )
   {
     let localPath = object.localPath;
     let remotePath = object.remotePath;
@@ -709,17 +709,17 @@ function PathsOfAsMap( object )
     result.localPath = object.localPath;
     result.remotePath = object.remotePath;
   }
-  else if( object instanceof _.Will.Module )
+  else if( object instanceof _.will.Module )
   {
     result.localPath = object.localPath || object.commonPath;
     result.remotePath = object.remotePath;
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     result.localPath = object.localPath || object.commonPath;
     result.remotePath = object.remotePath;
   }
-  else if( object instanceof _.Will.ModulesRelation )
+  else if( object instanceof _.will.ModulesRelation )
   {
     result.localPath = object.localPath;
     result.remotePath = object.remotePath;
@@ -1003,22 +1003,22 @@ function AssociationsOf( object )
   return _.longOnce( _.arrayFlatten( object.map( ( object ) => cls.AssociationsOf( object ) ) ) );
 
   let result = [];
-  if( object instanceof _.Will.Module )
+  if( object instanceof _.will.Module )
   {
     return _.each( object.userArray, ( opener ) =>
     {
-      if( opener instanceof _.Will.ModuleOpener )
+      if( opener instanceof _.will.ModuleOpener )
       result.push( opener );
     });
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     if( object.openedModule )
     result.push( object.openedModule );
     if( object.superRelation )
     result.push( object.superRelation );
   }
-  else if( object instanceof _.Will.ModulesRelation )
+  else if( object instanceof _.will.ModulesRelation )
   {
     if( object.opener )
     result.push( object.opener );
@@ -1054,15 +1054,15 @@ function ObjectToOptionsMap( o )
 {
   if( _.mapIs( o ) )
   return o;
-  if( o instanceof _.Will.Module )
+  if( o instanceof _.will.Module )
   {
     return { module : o }
   }
-  else if( o instanceof _.Will.ModuleOpener )
+  else if( o instanceof _.will.ModuleOpener )
   {
     return { opener : o }
   }
-  else if( o instanceof _.Will.ModulesRelation )
+  else if( o instanceof _.will.ModulesRelation )
   {
     return { relation : o }
   }
@@ -1077,7 +1077,7 @@ function _relationAdd( relation )
   let will = junction.will;
   let changed = false;
 
-  _.assert( relation instanceof _.Will.ModulesRelation );
+  _.assert( relation instanceof _.will.ModulesRelation );
   if( !relation.isAliveGet() ) /* yyy */
   {
     // debugger;
@@ -1113,7 +1113,7 @@ function _relationRemoveSingle( relation )
   let junction = this;
   let will = junction.will;
 
-  _.assert( relation instanceof _.Will.ModulesRelation );
+  _.assert( relation instanceof _.will.ModulesRelation );
   _.arrayRemoveOnce( junction.relations, relation );
 
   if( junction.relation === relation )
@@ -1155,7 +1155,7 @@ function _openerAdd( opener )
   let will = junction.will;
   let changed = false;
 
-  _.assert( opener instanceof _.Will.ModuleOpener );
+  _.assert( opener instanceof _.will.ModuleOpener );
   if( !opener.isAliveGet() ) /* yyy */
   {
     debugger;
@@ -1197,7 +1197,7 @@ function _openerRemoveSingle( opener )
   let junction = this;
   let will = junction.will;
 
-  _.assert( opener instanceof _.Will.ModuleOpener );
+  _.assert( opener instanceof _.will.ModuleOpener );
   _.arrayRemoveOnceStrictly( junction.openers, opener );
 
   if( junction.opener === opener )
@@ -1242,7 +1242,7 @@ function _moduleAdd( module )
   let will = junction.will;
   let changed = false;
 
-  _.assert( module instanceof _.Will.Module );
+  _.assert( module instanceof _.will.Module );
   if( !module.isAliveGet() ) /* yyy */
   {
     debugger; /* xxx : enter? */
@@ -1278,7 +1278,7 @@ function _moduleRemoveSingle( module )
   let junction = this;
   let will = junction.will;
 
-  _.assert( module instanceof _.Will.Module );
+  _.assert( module instanceof _.will.Module );
   _.arrayRemoveOnceStrictly( junction.modules, module );
 
   if( junction.module === module )
@@ -1332,15 +1332,15 @@ function _add( object )
   //   return false
   // }
 
-  if( object instanceof _.Will.ModulesRelation )
+  if( object instanceof _.will.ModulesRelation )
   {
     result = junction._relationAdd( object );
   }
-  else if( object instanceof _.Will.Module )
+  else if( object instanceof _.will.Module )
   {
     result = junction._moduleAdd( object );
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     result = junction._openerAdd( object );
   }
@@ -1368,15 +1368,15 @@ function _remove( object )
   if( _.arrayIs( object ) )
   return _.any( _.map( object, ( object ) => junction._remove( object ) ) );
 
-  if( object instanceof _.Will.ModulesRelation )
+  if( object instanceof _.will.ModulesRelation )
   {
     return junction._relationRemove( object );
   }
-  else if( object instanceof _.Will.Module )
+  else if( object instanceof _.will.Module )
   {
     return junction._moduleRemove( object );
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     return junction._openerRemove( object );
   }
@@ -1401,15 +1401,15 @@ function own( object )
 
   _.assert( arguments.length === 1 );
 
-  if( object instanceof _.Will.Module )
+  if( object instanceof _.will.Module )
   {
     return _.longHas( junction.modules, object );
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     return _.longHas( junction.openers, object );
   }
-  else if( object instanceof _.Will.ModulesRelation )
+  else if( object instanceof _.will.ModulesRelation )
   {
     return _.longHas( junction.relations, object );
   }
@@ -1599,17 +1599,17 @@ submodulesJunctionsFilter.defaults =
 //   {
 //     junction.AssociationsOf( object ).forEach( ( object ) =>
 //     {
-//       if( object instanceof _.Will.Module )
+//       if( object instanceof _.will.Module )
 //       {
 //         if( shadowMap.module === _.unknown )
 //         shadowMap.module = object;
 //       }
-//       else if( object instanceof _.Will.ModuleOpener )
+//       else if( object instanceof _.will.ModuleOpener )
 //       {
 //         if( shadowMap.opener === _.unknown )
 //         shadowMap.opener = object;
 //       }
-//       else if( object instanceof _.Will.ModulesRelation )
+//       else if( object instanceof _.will.ModulesRelation )
 //       {
 //         if( shadowMap.relation === _.unknown )
 //         shadowMap.relation = object;
@@ -1663,7 +1663,7 @@ submodulesJunctionsFilter.defaults =
 //
 //   function peerFrom( peerModule )
 //   {
-//     _.assert( peerModule instanceof _.Will.Module );
+//     _.assert( peerModule instanceof _.will.Module );
 //     _.assert( shadowMap.peer === _.unknown );
 //     shadowMap.peer = junction.Of( peerModule, will );
 //     if( !shadowMap.peer )

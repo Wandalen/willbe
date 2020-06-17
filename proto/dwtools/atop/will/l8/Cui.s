@@ -145,7 +145,7 @@ function _openersCurrentEach( o )
   {
 
     _.assert( will.currentOpeners === null );
-    _.assert( will.currentOpener instanceof will.ModuleOpener );
+    _.assert( will.currentOpener instanceof _.will.ModuleOpener );
 
     let opener = will.currentOpener;
     let it = itFrom( opener );
@@ -253,7 +253,7 @@ function currentOpenerChange( src )
 {
   let will = this;
 
-  _.assert( src === null || src instanceof will.ModuleOpener );
+  _.assert( src === null || src instanceof _.will.ModuleOpener );
   _.assert( arguments.length === 1 );
 
   if( src && will[ currentOpenerSymbol ] === src )
@@ -503,11 +503,11 @@ function _commandListLike( o )
 
         let resourceKindIsGlob = _.path.isGlob( o.resourceKind );
         _.assert( e.request === undefined );
-        e.request = will.Resolver.strRequestParse( e.argument );
+        e.request = _.will.Resolver.strRequestParse( e.argument );
 
-        if( will.Resolver.selectorIs( e.request.subject ) )
+        if( _.will.Resolver.selectorIs( e.request.subject ) )
         {
-          let splits = will.Resolver.selectorShortSplit
+          let splits = _.will.Resolver.selectorShortSplit
           ({
             selector : e.request.subject,
             defaultResourceKind : o.resourceKind,
@@ -516,7 +516,7 @@ function _commandListLike( o )
           resourceKindIsGlob = _.path.isGlob( o.resourceKind );
         }
 
-        if( resourceKindIsGlob && e.request.subject && !will.Resolver.selectorIs( e.request.subject ) )
+        if( resourceKindIsGlob && e.request.subject && !_.will.Resolver.selectorIs( e.request.subject ) )
         {
           e.request.subject = '*::' + e.request.subject;
         }
@@ -975,7 +975,7 @@ function commandImply( e )
   /* qqq xxx : apply to other top modules */
   _.assert( !!isolated );
 
-  let request = will.Resolver.strRequestParse( isolated.argument );
+  let request = _.will.Resolver.strRequestParse( isolated.argument );
   will._propertiesImply( request.map );
 
   // let namesMap =
@@ -1038,6 +1038,7 @@ function commandVersion( e ) /* xxx qqq : move to NpmTools */
 
   logger.log( 'Current version:', will.versionGet() );
 }
+commandVersion.commandProperties = commandImply.commandProperties;
 
 //
 
@@ -1059,7 +1060,8 @@ function commandVersionCheck( e )
 
 commandVersionCheck.commandProperties =
 {
-  throwing : 'Throw an error if utility is not up to date. Default : 1'
+  throwing : 'Throw an error if utility is not up to date. Default : 1',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1212,7 +1214,7 @@ function commandBuildsList( e )
   function act( module )
   {
     let logger = will.logger;
-    let request = will.Resolver.strRequestParse( e.argument );
+    let request = _.will.Resolver.strRequestParse( e.argument );
     let builds = module.openedModule.buildsResolve
     ({
       name : request.subject,
@@ -1243,7 +1245,7 @@ function commandExportsList( e )
   function act( module )
   {
     let logger = will.logger;
-    let request = will.Resolver.strRequestParse( e.argument );
+    let request = _.will.Resolver.strRequestParse( e.argument );
     let builds = module.openedModule.exportsResolve
     ({
       name : request.subject,
@@ -1336,7 +1338,7 @@ function commandModulesTree( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.argument );
   let propertiesMap = _.strStructureParse( e.argument );
   let implyMap = _.mapBut( propertiesMap, commandModulesTree.commandProperties );
   propertiesMap = _.mapBut( propertiesMap, implyMap );
@@ -1363,10 +1365,12 @@ function commandModulesTree( e )
 
 }
 
-var defaults = commandModulesTree.commandProperties = Object.create( null );
-
-defaults.withLocalPath = 'Print local paths. Default is 0';
-defaults.withRemotePath = 'Print remote paths. Default is 0';
+commandModulesTree.commandProperties =
+{
+  withLocalPath : 'Print local paths. Default is 0',
+  withRemotePath : 'Print remote paths. Default is 0',
+  ... commandImply.commandProperties,
+}
 
 //
 
@@ -1470,6 +1474,7 @@ commandSubmodulesFixate.commandProperties =
   dry : 'Dry run without writing. Default is dry:0.',
   negative : 'Reporting attempt of fixation with negative outcome. Default is negative:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1512,6 +1517,7 @@ commandSubmodulesUpgrade.commandProperties =
   dry : 'Dry run without writing. Default is dry:0.',
   negative : 'Reporting attempt of upgrade with negative outcome. Default is negative:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1558,6 +1564,7 @@ commandSubmodulesVersionsDownload.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1598,6 +1605,7 @@ commandSubmodulesVersionsUpdate.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1634,6 +1642,7 @@ function commandSubmodulesVersionsVerify( e )
 commandSubmodulesVersionsVerify.commandProperties =
 {
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1672,6 +1681,7 @@ commandSubmodulesVersionsAgree.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1683,7 +1693,7 @@ function commandModuleNew( e )
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.argument );
 
   if( request.subject )
   request.map.localPath = request.subject;
@@ -1924,7 +1934,8 @@ commandClean.commandProperties =
   cleaningTemp : 'Deleting module-specific temporary directory. Default is cleaningTemp:1.',
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
-  /* qqq2 : should have verbosity and other common options */
+  ... commandImply.commandProperties,
+  /* aaa2 : should have verbosity and other common options */ /* Dmytro : appended to the property commandProperties */
 }
 
 //
@@ -1983,6 +1994,7 @@ commandSubmodulesClean.commandProperties =
   dry : 'Dry run without deleting. Default is dry:0.',
   recursive : 'Recursive cleaning. recursive:0 - only curremt module, recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
   fast : 'Faster implementation, but fewer diagnostic information. Default fast:1 for dry:0 and fast:0 for dry:1.',
+  ... commandImply.commandProperties,
 }
 
 //
@@ -1992,7 +2004,7 @@ function commandBuild( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.argument );
   let doneContainer = [];
 
   return will._commandBuildLike
@@ -2025,7 +2037,7 @@ function commandExport( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.argument );
   let doneContainer = [];
 
   return will._commandBuildLike
@@ -2058,7 +2070,7 @@ function commandExportPurging( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.argument );
   let doneContainer = [];
 
   return will._commandBuildLike
@@ -2092,7 +2104,7 @@ function commandExportRecursive( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.argument );
   let doneContainer = [];
 
   return will._commandBuildLike
@@ -2408,7 +2420,6 @@ function commandWillfileGenerateFromNpm( e )
   let criterionsMap = _.mapBut( request, commandWillfileGenerateFromNpm.defaults );
   request = _.mapBut( request, criterionsMap );
 
-  debugger;
   if( will.currentOpeners && will.currentOpeners.length )
   {
     return will._commandBuildLike
@@ -2429,7 +2440,7 @@ function commandWillfileGenerateFromNpm( e )
 
       will.currentOpeners = it.openers;
       if( !will.currentOpeners.length )
-      return will.Module.prototype.willfileGenerateFromNpm.call( will,
+      return _.will.Module.prototype.willfileGenerateFromNpm.call( will,
       {
         packagePath : request.packagePath,
         willfilePath : request.willfilePath,

@@ -10,7 +10,7 @@
 // }
 
 let _ = _global_.wTools;
-let Parent = _.Will.Resource;
+let Parent = _.will.Resource;
 let Self = wWillPathResource;
 function wWillPathResource( o )
 {
@@ -273,7 +273,7 @@ function pathsRebase( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let Resolver = will.Resolver;
+  let Resolver = _.will.Resolver;
 
   o = _.routineOptions( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
@@ -483,11 +483,13 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

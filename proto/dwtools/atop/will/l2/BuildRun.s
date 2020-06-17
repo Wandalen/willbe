@@ -79,7 +79,7 @@ function form()
   _.assert( !!will );
   _.assert( !!module );
   _.assert( module.preformed > 0  );
-  _.assert( build instanceof will.Build );
+  _.assert( build instanceof _.will.Build );
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
@@ -102,7 +102,7 @@ function frameUp( resource2 )
   _.assert( arguments.length === 1 );
   _.assert( run.formed === 1 );
 
-  let frame2 = new will.BuildFrame
+  let frame2 = new _.will.BuildFrame
   ({
     resource : resource2,
     down : null,
@@ -206,11 +206,13 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

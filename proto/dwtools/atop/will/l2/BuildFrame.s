@@ -47,7 +47,7 @@ function init( o )
   if( o )
   frame.copy( o );
 
-  _.assert( frame.run instanceof _.Will.BuildRun );
+  _.assert( frame.run instanceof _.will.BuildRun );
 
 }
 
@@ -89,7 +89,7 @@ function form()
   _.assert( !!logger );
   _.assert( !!will.formed );
   _.assert( down === null || down instanceof Self );
-  _.assert( run instanceof will.BuildRun );
+  _.assert( run instanceof _.will.BuildRun );
   _.assert( module.preformed >= 1 );
 
   /* */
@@ -137,7 +137,7 @@ function closesBuildGet()
   let logger = will.logger;
   let resource = frame.resource;
 
-  if( frame.resource instanceof _.Will.Build )
+  if( frame.resource instanceof _.will.Build )
   return frame.resource;
 
   _.assert( frame.down && frame.down !== frame );
@@ -232,11 +232,13 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

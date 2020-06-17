@@ -7,7 +7,7 @@ let Tar;
 //
 
 let _ = _global_.wTools;
-let Parent = _.Will.Resource;
+let Parent = _.will.Resource;
 let Self = wWillExported;
 function wWillExported( o )
 {
@@ -37,9 +37,9 @@ function finit()
   {
     if( exported[ name ] )
     {
-      if( !( exported[ name ] instanceof _.Will.Resource ) )
+      if( !( exported[ name ] instanceof _.will.Resource ) )
       exported[ name ] = module.resolveRaw( exported[ name ] );
-      if( exported[ name ] instanceof _.Will.Resource )
+      if( exported[ name ] instanceof _.will.Resource )
       if( !_.workpiece.isFinited( exported[ name ] ) )
       exported[ name ].finit();
     }
@@ -201,8 +201,8 @@ function _verify()
   _.assert( inModule.preformed > 0 );
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
-  _.assert( build instanceof will.Build );
-  _.assert( exported.step instanceof will.Step );
+  _.assert( build instanceof _.will.Build );
+  _.assert( exported.step instanceof _.will.Step );
   _.assert( exported.recursive === 0 || exported.recursive === 1 || exported.recursive === 2 );
   _.assert( exported.withIntegrated === 0 || exported.withIntegrated === 1 || exported.withIntegrated === 2 );
   _.assert( _.boolLike( exported.tar ), 'Expects bool-like {- exported.tar -}' );
@@ -341,7 +341,7 @@ function _performRecursive()
     modules.forEach( ( module2 ) =>
     {
 
-      _.assert( module2 instanceof _.Will.Module );
+      _.assert( module2 instanceof _.will.Module );
 
       con.then( () =>
       {
@@ -478,8 +478,8 @@ function _performExportedReflectors()
   _.assert( will.formed === 1 );
   _.assert( build.formed === 3 );
   _.assert( _.objectIs( exported.criterion ) );
-  _.assert( step instanceof will.Step );
-  _.assert( build instanceof will.Build );
+  _.assert( step instanceof _.will.Step );
+  _.assert( build instanceof _.will.Build );
   _.assert( exported.exportedReflector === null );
   _.assert( exported.exportedDirPath === null );
 
@@ -487,7 +487,6 @@ function _performExportedReflectors()
   let exp;
   let recursive = null;
 
-  // debugger;
   exp = inModule.pathResolve
   ({
     selector : exported.exportPath,
@@ -497,7 +496,7 @@ function _performExportedReflectors()
 
   /* */
 
-  if( exp instanceof will.Reflector )
+  if( exp instanceof _.will.Reflector )
   {
 
     exp.form1();
@@ -575,7 +574,7 @@ function _performExportedReflectors()
   _.assert( exportedReflector.dst.prefixPath === null );
   _.assert( exportedReflector.dst.basePath === null );
   _.assert( path.isAbsolute( exportedReflector.src.prefixPath ) );
-  _.assert( exportedReflector instanceof will.Reflector );
+  _.assert( exportedReflector instanceof _.will.Reflector );
 
   /* srcFilter */
 
@@ -706,7 +705,6 @@ function _performPaths()
   let logger = will.logger;
   let build = outModule.buildMap[ exported.name ];
 
-  // debugger;
   let originalWillFilesPath = outModule.resourceObtain( 'path', 'module.original.willfiles' );
   // originalWillFilesPath.path = path.s.relative( outModule.inPath, _.entityMake( outModule.willfilesPath ) );
   // originalWillFilesPath.criterion.predefined = 1;
@@ -876,7 +874,7 @@ function _performReloadOutFile()
     debugger;
     if( err )
     throw _.err( err, `\nFailed to reopen ${name} after exporting it` );
-    _.assert( outModule2 instanceof _.Will.Module );
+    _.assert( outModule2 instanceof _.will.Module );
     return outModule2;
   });
 
@@ -1058,11 +1056,13 @@ _.Copyable.mixin( Self );
 if( typeof inModule !== 'undefined' && inModule !== null )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

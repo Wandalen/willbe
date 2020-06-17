@@ -1769,8 +1769,8 @@ function moduleClone( test )
     test.description = 'elements';
     test.identical( opener2.willfilesArray.length, 0 );
     test.identical( _.setFrom( _.mapKeys( opener2.willfileWithRoleMap ) ), _.setFrom( [] ) );
-    test.is( opener.openedModule instanceof _.Will.Module );
-    test.is( opener2.openedModule instanceof _.Will.Module );
+    test.is( opener.openedModule instanceof _.will.Module );
+    test.is( opener2.openedModule instanceof _.will.Module );
     test.is( opener.openedModule !== opener2.openedModule );
     test.is( !module.isFinited() );
     test.is( !opener.isFinited() );
@@ -1834,7 +1834,7 @@ function moduleClone( test )
     test.description = 'elements';
     test.identical( opener2.willfilesArray.length, 0 );
     test.identical( _.setFrom( _.mapKeys( opener2.willfileWithRoleMap ) ), _.setFrom( [] ) );
-    test.is( opener.openedModule instanceof _.Will.Module );
+    test.is( opener.openedModule instanceof _.will.Module );
     test.is( opener2.openedModule === null );
     test.is( opener.openedModule !== opener2.openedModule );
     test.is( !module.isFinited() );
@@ -1992,7 +1992,7 @@ function moduleClone( test )
       test.is( resource1 !== resource2 );
       test.is( resource1.module === module1 );
       test.is( resource2.module === module2 );
-      if( resource1 instanceof a.will.Resource )
+      if( resource1 instanceof _.will.Resource )
       {
         test.is( !!resource1.willf || ( resource1.criterion && !!resource1.criterion.predefined ) );
         test.is( resource1.willf === resource2.willf );
@@ -3411,7 +3411,7 @@ function exportRecursive( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve();
     let build = builds[ 0 ];
-    let run = new a.will.BuildRun
+    let run = new _.will.BuildRun
     ({
       build,
       recursive : 2,
@@ -4503,7 +4503,7 @@ function exportCourrputedSubmoduleOutfileUnknownSection( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    let run = new a.will.BuildRun
+    let run = new _.will.BuildRun
     ({
       build,
       recursive : 2,
@@ -4672,7 +4672,7 @@ function exportCourrputedSubmoduleOutfileFormatVersion( test )
     let module = opener.openedModule;
     let builds = module.exportsResolve({ criterion : { debug : 1 } });
     let build = builds[ 0 ];
-    let run = new a.will.BuildRun
+    let run = new _.will.BuildRun
     ({
       build,
       recursive : 2,
@@ -4863,7 +4863,7 @@ function buildsResolve( test )
     test.case = 'build::*, currentContext is build::export.';
 
     var build = opener.openedModule.resolve({ selector : 'build::export.' });
-    test.is( build instanceof a.will.Build );
+    test.is( build instanceof _.will.Build );
     test.identical( build.qualifiedName, 'build::export.' );
     test.identical( build.absoluteName, 'module::supermodule / build::export.' );
 
@@ -8859,7 +8859,7 @@ function submodulesRemoteResolve( test )
 
     test.case = 'trivial';
     var submodule = opener.openedModule.submoduleMap.ModuleForTesting1;
-    test.is( submodule instanceof a.will.ModulesRelation );
+    test.is( submodule instanceof _.will.ModulesRelation );
 
     test.is( !!submodule.opener );
     test.identical( submodule.name, 'ModuleForTesting1' );
@@ -8891,7 +8891,7 @@ function submodulesRemoteResolve( test )
 
     test.case = 'trivial';
     var submodule = opener.openedModule.submodulesResolve({ selector : 'ModuleForTesting1' });
-    test.is( submodule instanceof a.will.ModulesRelation );
+    test.is( submodule instanceof _.will.ModulesRelation );
     test.is( submodule.opener.repo.hasFiles );
     test.is( submodule.opener.repo === submodule.opener.openedModule.repo );
     test.is( !!submodule.opener );
@@ -8918,15 +8918,15 @@ function submodulesRemoteResolve( test )
 
     test.case = 'mask, single module';
     var submodule = opener.openedModule.submodulesResolve({ selector : '*Testing1' });
-    test.is( submodule instanceof a.will.ModulesRelation );
+    test.is( submodule instanceof _.will.ModulesRelation );
     test.identical( submodule.name, 'ModuleForTesting1' );
 
     test.case = 'mask, two modules';
     var submodules = opener.openedModule.submodulesResolve({ selector : '*s*' });
     test.identical( submodules.length, 2 );
-    test.is( submodules[ 0 ] instanceof a.will.ModulesRelation );
+    test.is( submodules[ 0 ] instanceof _.will.ModulesRelation );
     test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
-    test.is( submodules[ 1 ] instanceof a.will.ModulesRelation );
+    test.is( submodules[ 1 ] instanceof _.will.ModulesRelation );
     test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
 
     test.close( 'downloaded' );
@@ -8969,7 +8969,7 @@ function submodulesLocalResolve( test )
 
     test.case = 'trivial';
     var submodule = opener.openedModule.submoduleMap.ModuleForTesting1;
-    test.is( submodule instanceof a.will.ModulesRelation );
+    test.is( submodule instanceof _.will.ModulesRelation );
 
     test.is( !!submodule.opener );
     test.identical( submodule.name, 'ModuleForTesting1' );
@@ -9000,7 +9000,7 @@ function submodulesLocalResolve( test )
 
     test.case = 'trivial';
     var submodule = opener.openedModule.submodulesResolve({ selector : 'ModuleForTesting1' });
-    test.is( submodule instanceof a.will.ModulesRelation );
+    test.is( submodule instanceof _.will.ModulesRelation );
     test.is( submodule.opener.repo.hasFiles );
     test.is( submodule.opener.repo === submodule.opener.openedModule.repo );
     test.is( !!submodule.opener );
@@ -9027,15 +9027,15 @@ function submodulesLocalResolve( test )
 
     test.case = 'mask, single module';
     var submodule = opener.openedModule.submodulesResolve({ selector : '*Testing1' });
-    test.is( submodule instanceof a.will.ModulesRelation );
+    test.is( submodule instanceof _.will.ModulesRelation );
     test.identical( submodule.name, 'ModuleForTesting1' );
 
     test.case = 'mask, two modules';
     var submodules = opener.openedModule.submodulesResolve({ selector : '*s*' });
     test.identical( submodules.length, 2 );
-    test.is( submodules[ 0 ] instanceof a.will.ModulesRelation );
+    test.is( submodules[ 0 ] instanceof _.will.ModulesRelation );
     test.identical( submodules[ 0 ].name, 'ModuleForTesting1' );
-    test.is( submodules[ 1 ] instanceof a.will.ModulesRelation );
+    test.is( submodules[ 1 ] instanceof _.will.ModulesRelation );
     test.identical( submodules[ 1 ].name, 'ModuleForTesting2' );
 
     test.close( 'downloaded' );

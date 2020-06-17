@@ -192,7 +192,7 @@ function MakeSingle( o )
   try
   {
 
-    _.assert( o.resource.module instanceof will.Module );
+    _.assert( o.resource.module instanceof _.will.Module );
     _.assert( !!o.resource.module[ Cls.MapName ] );
     let instance = o.resource.module[ Cls.MapName ][ o.resource.name ];
     if( instance )
@@ -949,7 +949,7 @@ function exportString()
   return result;
 }
 
-var defaults = exportString.defaults = Object.create( _.Will.Module.prototype.exportStructure.defaults );
+var defaults = exportString.defaults = Object.create( _.will.Module.prototype.exportStructure.defaults );
 defaults.copyingNonExportable = 1;
 defaults.formed = 1;
 defaults.strict = 0;
@@ -997,7 +997,7 @@ function exportStructure()
   return fields;
 }
 
-exportStructure.defaults = Object.create( _.Will.Module.prototype.exportStructure.defaults );
+exportStructure.defaults = Object.create( _.will.Module.prototype.exportStructure.defaults );
 
 //
 
@@ -1030,7 +1030,7 @@ function compactField( it )
 
   if( it.src instanceof Self )
   {
-    _.assert( resource instanceof _.Will.Exported, 'not tested' );
+    _.assert( resource instanceof _.will.Exported, 'not tested' );
     it.dst = it.src.qualifiedName;
     return it.dst;
   }
@@ -1119,12 +1119,12 @@ function moduleSet( src )
 {
   let resource = this;
 
-  if( src && src instanceof _.Will.ModuleOpener )
+  if( src && src instanceof _.will.ModuleOpener )
   src = src.openedModule;
 
   resource[ moduleSymbol ] = src;
 
-  _.assert( resource.module === null || resource.module instanceof _.Will.Module );
+  _.assert( resource.module === null || resource.module instanceof _.will.Module );
 
   return src;
 }
@@ -1159,7 +1159,7 @@ function resolve_body( o )
   return resolved;
 }
 
-var defaults = resolve_body.defaults = Object.create( _.Will.Module.prototype.resolve.defaults );
+var defaults = resolve_body.defaults = Object.create( _.will.Module.prototype.resolve.defaults );
 defaults.prefixlessAction = 'default';
 
 let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
@@ -1213,7 +1213,7 @@ function reflectorResolve_body( o )
   return resolved;
 }
 
-reflectorResolve_body.defaults = Object.create( _.Will.Module.prototype.reflectorResolve.defaults );
+reflectorResolve_body.defaults = Object.create( _.will.Module.prototype.reflectorResolve.defaults );
 
 let reflectorResolve = _.routineFromPreAndBody( resolve.pre, reflectorResolve_body );
 
@@ -1228,7 +1228,7 @@ function pathRebase( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let Resolver = will.Resolver;
+  let Resolver = _.will.Resolver;
 
   o = _.routineOptions( pathRebase, arguments );
 
@@ -1442,11 +1442,13 @@ _.classDeclare
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();
