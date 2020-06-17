@@ -26,7 +26,7 @@
 */
 
 let _ = _global_.wTools;
-let Parent = _.Will.AbstractModule;
+let Parent = _.will.AbstractModule;
 let Self = wWillModule;
 function wWillModule( o )
 {
@@ -724,7 +724,7 @@ function _preform()
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( !!module.will );
-  _.assert( module.repo instanceof _.Will.Repository );
+  _.assert( module.repo instanceof _.will.Repository );
 
   module.ready.tap( ( err, arg ) =>
   {
@@ -732,7 +732,7 @@ function _preform()
     for( let u = 0 ; u < module.userArray.length ; u++ )
     {
       let opener = module.userArray[ u ];
-      _.assert( opener instanceof will.ModuleOpener );
+      _.assert( opener instanceof _.will.ModuleOpener );
       opener.error = opener.error || err;
     }
   });
@@ -762,7 +762,7 @@ function _preform()
     _.assert( will.moduleWithIdMap[ module.id ] === module );
     _.assert( module.dirPath === null || _.strDefined( module.dirPath ) );
     _.assert( !!module.willfilesPath || !!module.dirPath );
-    _.assert( module.rootModule instanceof will.Module );
+    _.assert( module.rootModule instanceof _.will.Module );
     _.assert( _.strsAreAll( module.willfilesPath ) || _.strIs( module.dirPath ), 'Expects willfilesPath or dirPath' );
 
   }
@@ -862,7 +862,7 @@ function predefinedForm()
 {
   let module = this;
   let will = module.will;
-  let Predefined = will.Predefined;
+  let Predefined = _.will.Predefined;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( module.predefinedFormed === 0 );
@@ -1315,7 +1315,7 @@ function predefinedForm()
     // }
     // else
     // {
-    //   result = new will.PathResource( o );
+    //   result = new _.will.PathResource( o );
     // }
     //
     // result.form1();
@@ -1339,7 +1339,7 @@ function predefinedForm()
     //
     // _.assert( arguments.length === 1 );
     //
-    // let result = new will.Step( o ).form1();
+    // let result = new _.will.Step( o ).form1();
     // result.writable = 0;
     // return result;
   }
@@ -1360,7 +1360,7 @@ function predefinedForm()
     // _.assert( !!o2.resource.criterion );
     // _.assert( arguments.length === 1 );
     //
-    // let result = will.Reflector.MakeForEachCriterion( o2 );
+    // let result = _.will.Reflector.MakeForEachCriterion( o2 );
     // return result;
   }
 
@@ -1441,7 +1441,7 @@ function predefinedPathMake( o )
   }
   else
   {
-    result = new will.PathResource( o );
+    result = new _.will.PathResource( o );
   }
 
   result.form1();
@@ -1470,7 +1470,7 @@ function predefinedStepMake( o )
   _.assert( arguments.length === 1 );
 
   // debugger;
-  let result = new will.Step( o ).form1();
+  let result = new _.will.Step( o ).form1();
   result.writable = 0;
   return result;
 }
@@ -1494,7 +1494,7 @@ function predefinedReflectorMake( o )
   _.assert( !!o2.resource.criterion );
   _.assert( arguments.length === 1 );
 
-  let result = will.Reflector.MakeForEachCriterion( o2 );
+  let result = _.will.Reflector.MakeForEachCriterion( o2 );
   return result;
 }
 
@@ -1508,7 +1508,7 @@ function releasedBy( user )
 
   _.arrayRemoveOnceStrictly( module.userArray, user );
 
-  if( user instanceof _.Will.ModuleOpener )
+  if( user instanceof _.will.ModuleOpener )
   {
     if( user.superRelation )
     module.superRelationsRemove( user.superRelation );
@@ -1526,7 +1526,7 @@ function usedBy( user )
 
   _.arrayAppendOnceStrictly( module.userArray, user );
 
-  if( user instanceof _.Will.ModuleOpener )
+  if( user instanceof _.will.ModuleOpener )
   {
     if( user.superRelation )
     module.superRelationsAppend( user.superRelation );
@@ -1601,7 +1601,7 @@ function own( object )
 
   _.assert( !!object );
 
-  if( object instanceof _.Will.ModulesRelation )
+  if( object instanceof _.will.ModulesRelation )
   {
     for( let name in module.submoduleMap )
     {
@@ -1616,7 +1616,7 @@ function own( object )
       return true;
     }
   }
-  else if( object instanceof _.Will.Module )
+  else if( object instanceof _.will.Module )
   {
     if( object === module )
     return true;
@@ -1631,7 +1631,7 @@ function own( object )
       return true;
     }
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     for( let name in module.submoduleMap )
     {
@@ -1938,7 +1938,7 @@ function _willfilesOpen()
       },
       steps : [ 'step::module.export' ],
     }
-    let resource2 = new will.Build( o2 ).form1();
+    let resource2 = new _.will.Build( o2 ).form1();
 
     if( module.pathResourceMap.export || module.reflectorMap.export )
     return arg;
@@ -1949,7 +1949,7 @@ function _willfilesOpen()
       name : 'export',
       path : '**',
     }
-    let resource3 = new will.PathResource( o3 ).form1();
+    let resource3 = new _.will.PathResource( o3 ).form1();
 
     return arg;
   });
@@ -2382,7 +2382,7 @@ function moduleBuild_body( o )
   let build = builds[ 0 ];
   will._willfilesReadEnd( module );
 
-  let run = new will.BuildRun
+  let run = new _.will.BuildRun
   ({
     build,
     recursive : 0,
@@ -2445,7 +2445,7 @@ function exportedMake( o )
   let will = module.will;
 
   o = _.routineOptions( exportedMake, arguments );
-  _.assert( o.build instanceof _.Will.Build );
+  _.assert( o.build instanceof _.will.Build );
   _.assert( !module.isFinited() );
 
   if( !module.isOut )
@@ -2494,7 +2494,7 @@ function exportedMake( o )
       _.assert( outModule.exportedMap[ o.build.name ] === undefined );
     }
 
-    let exported = new will.Exported({ outModule : outModule, name : o.build.name }).form1();
+    let exported = new _.will.Exported({ outModule : outModule, name : o.build.name }).form1();
 
     _.assert( outModule.exportedMap[ o.build.name ] === exported );
 
@@ -2663,7 +2663,7 @@ function rootModuleSet( src )
 
   _.each( module.userArray, ( opener ) =>
   {
-    if( opener instanceof _.Will.ModuleOpener )
+    if( opener instanceof _.will.ModuleOpener )
     opener._.rootModule = src;
   });
 
@@ -2698,7 +2698,7 @@ function rootModuleSetAct( src )
   let module = this;
   let will = module.will;
 
-  _.assert( src === null || src instanceof _.Will.Module );
+  _.assert( src === null || src instanceof _.will.Module );
   _.assert( src === null || src.rootModule === src || src.rootModule === null );
 
   let oldRootModule = module.rootModule;
@@ -2730,7 +2730,7 @@ function superRelationsSet( src )
   let module = this;
 
   _.assert( src === null || _.arrayIs( src ) );
-  _.assert( src === null || src.every( ( superRelation ) => superRelation instanceof _.Will.ModulesRelation ) );
+  _.assert( src === null || src.every( ( superRelation ) => superRelation instanceof _.will.ModulesRelation ) );
 
   if( !module[ superRelationsSymbol ] )
   module[ superRelationsSymbol ] = [];
@@ -2756,7 +2756,7 @@ function superRelationsAppend( src )
     return _.map( src, ( src ) => module.supeRelationsAppend( src ) );
   }
 
-  _.assert( src instanceof _.Will.ModulesRelation );
+  _.assert( src instanceof _.will.ModulesRelation );
 
   if( module[ superRelationsSymbol ] === null )
   module[ superRelationsSymbol ] = [];
@@ -2777,7 +2777,7 @@ function superRelationsRemove( src )
     return _.map( src, ( src ) => module.superRelationsRemove( src ) );
   }
 
-  _.assert( src instanceof _.Will.ModulesRelation );
+  _.assert( src instanceof _.will.ModulesRelation );
 
   if( module[ superRelationsSymbol ] )
   _.arrayRemoveOnceStrictly( module[ superRelationsSymbol ], src );
@@ -3068,8 +3068,8 @@ function moduleFixate( o )
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.dry ) );
   _.assert( _.boolLike( o.upgrading ) );
-  _.assert( o.module  === null || o.module instanceof will.Module );
-  _.assert( o.submodule === null || o.submodule instanceof will.ModulesRelation );
+  _.assert( o.module  === null || o.module instanceof _.will.Module );
+  _.assert( o.submodule === null || o.submodule instanceof _.will.ModulesRelation );
   // _.assert( o.module  === null || o.module.rootModule === o.module || _.longHas( o.module.superRelations, module ) );
 
   if( o.module )
@@ -3262,8 +3262,8 @@ function moduleFixateAct( o )
   _.assert( arguments.length === 1 );
   _.assert( _.boolLike( o.dry ) );
   _.assert( _.boolLike( o.upgrading ) );
-  _.assert( o.module  === null || o.module instanceof will.Module );
-  _.assert( o.submodule === null || o.submodule instanceof will.ModulesRelation );
+  _.assert( o.module  === null || o.module instanceof _.will.Module );
+  _.assert( o.submodule === null || o.submodule instanceof _.will.ModulesRelation );
   _.assert( _.strIs( o.willfilePath ) || _.strsAreAll( o.willfilePath ) );
   _.assert( _.strIs( o.originalPath ) );
   _.assert( !o.fixatedPath || _.strIs( o.fixatedPath ) );
@@ -3772,7 +3772,7 @@ function submodulesRelationsOwnFilter( o )
     return;
 
     // _.assert( module instanceof _.will.ModuleJunction );
-    // _.assert( module instanceof _.Will.ModulesRelation || module instanceof _.Will.Module );
+    // _.assert( module instanceof _.will.ModulesRelation || module instanceof _.will.Module );
     _.assert( will.ObjectIs( module ) );
     _.arrayAppendOnce( result, module );
 
@@ -3828,7 +3828,7 @@ function submodulesAdd( o )
     o2.module = module;
     o2.path = junction.remotePath || junction.localPath;
     o2.name = junction.module.originDirNameGet();
-    let relation = new _.Will.ModulesRelation( o2 );
+    let relation = new _.will.ModulesRelation( o2 );
     ready.then( () => relation.form() );
     ready.then( () => counter += 1 );
 
@@ -3916,7 +3916,7 @@ function _subModulesForm()
   // console.log( '_subModulesForm', module.absoluteName ); debugger; /* yyy */
 
   // debugger;
-  module._resourcesAllForm( will.ModulesRelation, con );
+  module._resourcesAllForm( _.will.ModulesRelation, con );
   // debugger;
 
   con.finally( ( err, arg ) =>
@@ -4117,7 +4117,7 @@ function peerModuleSet( src )
   let module = this;
   let will = module.will;
 
-  _.assert( src === null || src instanceof _.Will.Module );
+  _.assert( src === null || src instanceof _.will.Module );
 
   if( module.peerModule === src )
   return src;
@@ -4178,7 +4178,7 @@ function peerWillfilesPathFromWillfiles( willfilesArray )
 
   let peerWillfilesPath = module.willfilesArray.map( ( willf ) =>
   {
-    _.assert( willf instanceof _.Will.Willfile );
+    _.assert( willf instanceof _.will.Willfile );
     return willf.peerWillfilesPathGet();
   });
 
@@ -4332,12 +4332,12 @@ function _resourcesFormAct()
 
   /* */
 
-  module._resourcesAllForm( will.ModulesRelation, con );
-  module._resourcesAllForm( will.Exported, con );
-  module._resourcesAllForm( will.PathResource, con );
-  module._resourcesAllForm( will.Reflector, con );
-  module._resourcesAllForm( will.Step, con );
-  module._resourcesAllForm( will.Build, con );
+  module._resourcesAllForm( _.will.ModulesRelation, con );
+  module._resourcesAllForm( _.will.Exported, con );
+  module._resourcesAllForm( _.will.PathResource, con );
+  module._resourcesAllForm( _.will.Reflector, con );
+  module._resourcesAllForm( _.will.Step, con );
+  module._resourcesAllForm( _.will.Build, con );
 
   /* */
 
@@ -4385,7 +4385,9 @@ function resourceClassForKind( resourceKind )
 {
   let module = this;
   let will = module.will;
-  let result = will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
+  let result;
+  result = _.will[ will.ResourceKindToClassName.forKey( resourceKind ) ];
+  // result = will[ will.ResourceKindToClassName.forKey( resourceKind ) ]; /* Dmytro : previous */
 
   _.assert( arguments.length === 1 );
   _.sure( _.routineIs( result ), () => 'Cant find class for resource kind ' + _.strQuote( resourceKind ) );
@@ -4401,7 +4403,7 @@ function resourceMapForKind( resourceKind )
   let will = module.will;
   let result;
 
-  _.assert( module.rootModule instanceof will.Module );
+  _.assert( module.rootModule instanceof _.will.Module );
 
   if( resourceKind === 'export' )
   result = module.buildMap;
@@ -4500,8 +4502,8 @@ function resourceObtain( resourceKind, resourceName )
   if( !resource )
   resource = module.resourceAllocate( resourceKind, resourceName );
 
-  _.assert( resource instanceof will.Resource );
-  if( resource instanceof will.PathResource )
+  _.assert( resource instanceof _.will.Resource );
+  if( resource instanceof _.will.PathResource )
   _.assert( module.pathResourceMap[ resource.name ] === resource );
 
   return resource;
@@ -4713,13 +4715,13 @@ function cleanWhatSingle( o )
   {
     let resource = module.pathOrReflectorResolve( 'temp' );
 
-    if( resource && resource instanceof _.Will.Reflector )
+    if( resource && resource instanceof _.will.Reflector )
     {
       let o2 = resource.optionsForFindExport();
       o2.mandatory = 0;
       find( o2 );
     }
-    else if( resource && resource instanceof _.Will.PathResource )
+    else if( resource && resource instanceof _.will.PathResource )
     {
       let filePath = resource.path;
       if( !filePath )
@@ -4917,7 +4919,7 @@ function resolve_pre( routine, args )
 
   o.baseModule = module;
 
-  _.Will.Resolver.resolve.pre.call( _.Will.Resolver, routine, [ o ] );
+  _.will.Resolver.resolve.pre.call( _.will.Resolver, routine, [ o ] );
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
@@ -4933,15 +4935,15 @@ function resolve_body( o )
   let module = this;
   let will = module.will;
   _.assert( o.baseModule === module );
-  let result = will.Resolver.resolve.body.call( will.Resolver, o );
+  let result = _.will.Resolver.resolve.body.call( _.will.Resolver, o );
 
   if( o.pathUnwrapping )
-  _.assert( !result || !( result instanceof _.Will.PathResource ) );
+  _.assert( !result || !( result instanceof _.will.PathResource ) );
 
   return result;
 }
 
-_.routineExtend( resolve_body, _.Will.Resolver.resolve );
+_.routineExtend( resolve_body, _.will.Resolver.resolve );
 
 let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
@@ -4949,19 +4951,19 @@ let resolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
 let resolveMaybe = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
-_.routineExtend( resolveMaybe, _.Will.Resolver.resolveMaybe );
+_.routineExtend( resolveMaybe, _.will.Resolver.resolveMaybe );
 
 //
 
 let resolveRaw = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
-_.routineExtend( resolveRaw, _.Will.Resolver.resolveRaw );
+_.routineExtend( resolveRaw, _.will.Resolver.resolveRaw );
 
 //
 
 let pathResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
-_.routineExtend( pathResolve, _.Will.Resolver.pathResolve );
+_.routineExtend( pathResolve, _.will.Resolver.pathResolve );
 
 //
 
@@ -5008,11 +5010,11 @@ function pathOrReflectorResolve_body( o )
   let will = module.will;
   _.assert( o.baseModule === module );
   _.assert( arguments.length === 1 );
-  let result = will.Resolver.pathOrReflectorResolve.body.call( will.Resolver, o );
+  let result = _.will.Resolver.pathOrReflectorResolve.body.call( _.will.Resolver, o );
   return result;
 }
 
-_.routineExtend( pathOrReflectorResolve_body, _.Will.Resolver.pathOrReflectorResolve );
+_.routineExtend( pathOrReflectorResolve_body, _.will.Resolver.pathOrReflectorResolve );
 
 let pathOrReflectorResolve = _.routineFromPreAndBody( resolve_pre, pathOrReflectorResolve_body );
 
@@ -5033,7 +5035,7 @@ function filesFromResource_pre( routine, args )
 
   o.baseModule = module;
 
-  _.Will.Resolver.filesFromResource.pre.call( _.Will.Resolver, routine, [ o ] );
+  _.will.Resolver.filesFromResource.pre.call( _.will.Resolver, routine, [ o ] );
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
@@ -5051,11 +5053,11 @@ function filesFromResource_body( o )
   let module = this;
   let will = module.will;
   _.assert( o.baseModule === module );
-  let result = will.Resolver.filesFromResource.body.call( will.Resolver, o );
+  let result = _.will.Resolver.filesFromResource.body.call( _.will.Resolver, o );
   return result;
 }
 
-_.routineExtend( filesFromResource_body, _.Will.Resolver.filesFromResource );
+_.routineExtend( filesFromResource_body, _.will.Resolver.filesFromResource );
 
 let filesFromResource = _.routineFromPreAndBody( filesFromResource_pre, filesFromResource_body );
 
@@ -5063,9 +5065,9 @@ let filesFromResource = _.routineFromPreAndBody( filesFromResource_pre, filesFro
 
 let submodulesResolve = _.routineFromPreAndBody( resolve_pre, resolve_body );
 
-_.routineExtend( submodulesResolve, _.Will.Resolver.submodulesResolve );
+_.routineExtend( submodulesResolve, _.will.Resolver.submodulesResolve );
 
-_.assert( _.Will.Resolver.submodulesResolve.defaults.defaultResourceKind === 'submodule' );
+_.assert( _.will.Resolver.submodulesResolve.defaults.defaultResourceKind === 'submodule' );
 _.assert( submodulesResolve.defaults.defaultResourceKind === 'submodule' );
 
 //
@@ -5075,11 +5077,11 @@ function reflectorResolve_body( o )
   let module = this;
   let will = module.will;
   _.assert( o.baseModule === module );
-  let result = will.Resolver.reflectorResolve.body.call( will.Resolver, o );
+  let result = _.will.Resolver.reflectorResolve.body.call( _.will.Resolver, o );
   return result;
 }
 
-_.routineExtend( reflectorResolve_body, _.Will.Resolver.reflectorResolve );
+_.routineExtend( reflectorResolve_body, _.will.Resolver.reflectorResolve );
 
 let reflectorResolve = _.routineFromPreAndBody( resolve_pre, reflectorResolve_body );
 
@@ -5311,7 +5313,7 @@ function pathsRebase( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let Resolver = will.Resolver;
+  let Resolver = _.will.Resolver;
 
   o = _.routineOptions( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
@@ -5421,7 +5423,7 @@ function _pathChanged( o )
   {
     module.userArray.forEach( ( opener ) =>
     {
-      if( !( opener instanceof _.Will.ModuleOpener ) )
+      if( !( opener instanceof _.will.ModuleOpener ) )
       return;
       let o2 = _.mapExtend( null, o );
       o2.touching = 0;
@@ -5508,14 +5510,14 @@ function _filePathChanged1( o )
   if( !o.isIdentical )
   module.userArray.forEach( ( opener ) =>
   {
-    if( opener instanceof _.Will.ModuleOpener )
+    if( opener instanceof _.will.ModuleOpener )
     opener._filePathChanged2({ willfilesPath : o.willfilesPath });
   });
 
   return o;
 }
 
-_filePathChanged1.defaults = _.mapExtend( null, _.Will.AbstractModule.prototype._filePathChanged1.defaults );
+_filePathChanged1.defaults = _.mapExtend( null, _.will.AbstractModule.prototype._filePathChanged1.defaults );
 
 //
 
@@ -5580,7 +5582,7 @@ function _filePathChanged2( o )
   return o;
 }
 
-_filePathChanged2.defaults = _.mapExtend( null, _.Will.AbstractModule.prototype._filePathChanged2.defaults );
+_filePathChanged2.defaults = _.mapExtend( null, _.will.AbstractModule.prototype._filePathChanged2.defaults );
 
 //
 
@@ -5782,7 +5784,7 @@ function predefinedPathGet_functor( fieldName, resourceName, absolutize )
     result = null;
 
     if( result )
-    if( _.Will.Resolver.selectorIs( result ) )
+    if( _.will.Resolver.selectorIs( result ) )
     {
       result = module.pathResolve( result );
     }
@@ -5822,7 +5824,7 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
 
     if( !module.pathResourceMap[ resourceName ] )
     {
-      let resource = new _.Will.PathResource({ module : module, name : resourceName }).form1();
+      let resource = new _.will.PathResource({ module : module, name : resourceName }).form1();
       resource.criterion = resource.criterion || Object.create( null );
       resource.criterion.predefined = 1;
       resource.writable = 0;
@@ -5984,7 +5986,7 @@ function remotePathEachAdoptAct( o )
     module.remotePathAdopt( o );
     module.userArray.forEach( ( opener2 ) =>
     {
-      if( !( opener2 instanceof _.Will.ModuleOpener ) )
+      if( !( opener2 instanceof _.will.ModuleOpener ) )
       return;
       opener2.remotePathAdopt( o );
     });
@@ -6241,7 +6243,7 @@ function aliasNamesGet()
   for( let u = 0 ; u < module.userArray.length ; u++ )
   {
     let opener = module.userArray[ u ];
-    if( opener instanceof will.ModuleOpener )
+    if( opener instanceof _.will.ModuleOpener )
     if( opener.aliasName )
     _.arrayAppendElementOnce( result, opener.aliasName )
   }
@@ -6307,7 +6309,7 @@ function toOpener()
   for( let u = 0 ; u < module.userArray.length ; u++ )
   {
     let opener = module.userArray[ u ];
-    if( opener instanceof will.ModuleOpener )
+    if( opener instanceof _.will.ModuleOpener )
     return opener;
   }
 
@@ -6459,7 +6461,7 @@ function resourcesExportInfo( collection )
 
   _.each( collection, ( resource, r ) =>
   {
-    if( resource && resource instanceof will.Module )
+    if( resource && resource instanceof _.will.Module )
     {
       if( _.longHas( modules, resource ) )
       return;
@@ -6600,9 +6602,9 @@ function structureExportOut( o )
   _.assert( !!module.peerModule );
 
   o.dst = o.dst || Object.create( null );
-  o.dst.format = will.Willfile.FormatVersion;
+  // o.dst.format = will.willfile.FormatVersion; /* Dmytro : previous */
+  o.dst.format = _.will.Willfile.FormatVersion;
 
-  // debugger;
   // // if( _.strHas( module.name, 'ModuleForTesting1b' ) )
   // // debugger;
   // if( _.strHas( module.commonPath, 'group1/.module/ModuleForTesting1b' ) )
@@ -6645,7 +6647,7 @@ function structureExportOut( o )
   let modules = [];
   found.result.forEach( ( module2 ) =>
   {
-    if( !( module2 instanceof _.Will.Module ) )
+    if( !( module2 instanceof _.will.Module ) )
     {
       debugger;
       let junction = will.junctionFrom( module2 );
@@ -6752,7 +6754,7 @@ function structureExportModules( modules, op )
   op.dst.module = op.dst.module || Object.create( null );
 
   _.assert( arguments.length === 2 );
-  _.assert( exportModule instanceof will.Module );
+  _.assert( exportModule instanceof _.will.Module );
   _.assert( exportModule.isOut );
 
   _.each( modules, ( module2 ) =>
@@ -6864,13 +6866,13 @@ function resourceImport( o )
 
   _.assert( _.mapIs( o ) );
   _.assert( arguments.length === 1 );
-  _.assert( o.srcResource instanceof will.Resource );
+  _.assert( o.srcResource instanceof _.will.Resource );
   _.routineOptions( resourceImport, arguments );
 
   let srcModule = o.srcResource.module;
 
-  _.assert( module instanceof will.Module );
-  _.assert( srcModule === null || srcModule instanceof will.Module );
+  _.assert( module instanceof _.will.Module );
+  _.assert( srcModule === null || srcModule instanceof _.will.Module );
 
   if( o.srcResource.pathsRebase )
   {
@@ -7571,7 +7573,7 @@ function assertIsValidIntegrity()
   if( module.userArray )
   _.each( module.userArray, ( opener ) =>
   {
-    if( !( opener instanceof _.Will.ModuleOpener ) )
+    if( !( opener instanceof _.will.ModuleOpener ) )
     return;
     _.assert( !opener.isFinited() );
     _.assert( opener.openedModule === module );
@@ -7654,7 +7656,7 @@ let Composes =
 let Aggregates =
 {
 
-  about : _.define.instanceOf( _.Will.ParagraphAbout ),
+  about : _.define.instanceOf( _.will.ParagraphAbout ),
   submoduleMap : _.define.own({}),
   pathResourceMap : _.define.own({}),
   reflectorMap : _.define.own({}),
@@ -7762,7 +7764,7 @@ let Forbids =
 let Accessors =
 {
 
-  about : { set : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.Will.ParagraphAbout }) },
+  about : { set : _.accessor.setter.friend({ name : 'about', friendName : 'module', maker : _.will.ParagraphAbout }) },
   rootModule : { get : rootModuleGet, set : rootModuleSet },
   peerModule : { set : peerModuleSet },
 
@@ -8132,15 +8134,15 @@ _.classDeclare
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-/* qqq2 : move each class under namespace _.will */
+/* aaa2 : move each class under namespace _.will */ /* Dmytro : moved. Main class `Will` is saved */
 
-// _.will[ Self.shortName ] = Self; /* qqq : uncomment */
+_.will[ Self.shortName ] = Self; /* aaa : uncomment */ /* Dmytro : done */
 
-_.staticDeclare /* qqq : commend out */
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+// _.staticDeclare /* aaa : comment out */ /* Dmytro : done */
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

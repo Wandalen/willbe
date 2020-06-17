@@ -88,8 +88,8 @@ function isUsedManually()
     return;
     if( node === module )
     return;
-    if( module instanceof _.Will.Module )
-    if( node instanceof _.Will.Module )
+    if( module instanceof _.will.Module )
+    if( node instanceof _.will.Module )
     return;
     found.push( node );
   }
@@ -658,10 +658,16 @@ function repoVerify( o )
       return false;
     }
 
+    // _.assert /* Dmytro : used option `formed2` as alternative option for class `Module` */
+    // (
+    //   !!module && module.formed >= 2,
+    //   () => 'Submodule', ( module ? module.qualifiedName : n ), 'was not preformed to verify'
+    // );
+
     _.assert
     (
-      !!module && module.formed >= 2,
-      () => 'Submodule', ( module ? module.qualifiedName : n ), 'was not preformed to verify'
+      !!module && ( module instanceof _.will.Module ) ? module.formed2 : module.formed,
+      () => 'Submodule', ( module ? module.qualifiedName : '' ), 'was not preformed to verify'
     );
 
     /* isValid */
@@ -937,11 +943,13 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

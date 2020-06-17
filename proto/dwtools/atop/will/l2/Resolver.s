@@ -46,7 +46,7 @@ function _onSelectorReplicate( o )
     if( !resolver.selectorIs( selector ) )
     if( !it.composite )
     {
-      selector = new _.Will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : selector });
+      selector = new _.will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : selector });
       selector.form1();
       it.src = selector;
     }
@@ -69,7 +69,7 @@ function _onSelectorDown()
 
     for( let d = 0 ; d < it.dst.length ; d++ )
     {
-      if( it.dst[ d ] && it.dst[ d ] instanceof will.PathResource )
+      if( it.dst[ d ] && it.dst[ d ] instanceof _.will.PathResource )
       it.dst[ d ] = it.dst[ d ].path;
       if( _.errIs( it.dst[ d ] ) )
       throw it.dst[ d ];
@@ -79,7 +79,7 @@ function _onSelectorDown()
 
     if( rop.defaultResourceKind === 'path' || rop.selectorIsPath )
     {
-      it.dst = new _.Will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : it.dst });
+      it.dst = new _.will.PathResource({ module : rop.baseModule, name : null, phantom : 1, path : it.dst });
       it.dst.form1();
     }
 
@@ -245,9 +245,9 @@ function _statusPreUpdate()
 
   _.assert( !_.mapHasKey( it.src, 'composite' ) );
 
-  if( it.down && it.down.src && it.down.src instanceof will.ModulesRelation )
+  if( it.down && it.down.src && it.down.src instanceof _.will.ModulesRelation )
   {
-    _.assert( it.src instanceof will.Module )
+    _.assert( it.src instanceof _.will.Module )
     let valid = it.src.isValid();
     if( !valid )
     throw _.errBrief
@@ -258,12 +258,12 @@ function _statusPreUpdate()
   }
 
   // debugger;
-  if( it.src instanceof will.Module )
+  if( it.src instanceof _.will.Module )
   {
     // debugger;
     it.currentModule = it.src;
   }
-  else if( it.src instanceof will.ModulesRelation )
+  else if( it.src instanceof _.will.ModulesRelation )
   {
     _.sure( !!it.src.opener, `${it.src.decoratedAbsoluteName} is not formed` );
     _.sure( !it.selector || !!it.src.opener.openedModule, `${it.src.decoratedAbsoluteName} is not opened` );
@@ -292,7 +292,7 @@ function _statusPreUpdate()
 
     it.currentModule = module2;
   }
-  else if( it.src instanceof will.Exported )
+  else if( it.src instanceof _.will.Exported )
   {
     it.exported = it.src;
   }
@@ -508,7 +508,7 @@ function _pathsTransform( onPath, onStr )
     return resource;
     if( _.strIs( resource ) && onStr )
     return onStr.call( it, resource );
-    if( resource instanceof will.PathResource )
+    if( resource instanceof _.will.PathResource )
     return resourceTransform( resource );
     if( _.arrayIs( resource ) || _.mapIs( resource ) )
     return resourcesTransform( resource );
@@ -553,13 +553,13 @@ function _pathsNormalize()
     return resource;
   });
 
-  // if( it.dst instanceof will.PathResource )
+  // if( it.dst instanceof _.will.PathResource )
   // return resourceNormalize( resource );
   //
   // if( _.arrayIs( it.dst ) || _.mapIs( it.dst ) )
   // it.dst = _.map( it.dst, ( resource ) =>
   // {
-  //   if( resource instanceof will.PathResource )
+  //   if( resource instanceof _.will.PathResource )
   //   return resourceNormalize( resource );
   //   return resource;
   // });
@@ -714,7 +714,7 @@ function _pathsCompositeResolve()
   let currentModule = it.currentModule;
   let resource = it.dst;
 
-  if( resource instanceof will.Reflector )
+  if( resource instanceof _.will.Reflector )
   {
     if( resolver.selectorIsComposite( resource.src.prefixPath ) || resolver.selectorIsComposite( resource.dst.prefixPath ) )
     {
@@ -726,7 +726,7 @@ function _pathsCompositeResolve()
     }
   }
 
-  if( resource instanceof will.PathResource )
+  if( resource instanceof _.will.PathResource )
   {
     if( resolver.selectorIsComposite( resource.path ) )
     {
@@ -845,7 +845,7 @@ function _pathsResolve()
   // {
   //   if( !resource )
   //   return resource;
-  //   if( !( resource instanceof will.PathResource ) )
+  //   if( !( resource instanceof _.will.PathResource ) )
   //   return resource;
   //   resource = resource.cloneDerivative();
   //   _.assert( resource.path === null || _.arrayIs( resource.path ) || _.strIs( resource.path ) );
@@ -1012,7 +1012,7 @@ function resolveContextPrepare( o )
     o.currentThis = o.currentContext;
   }
 
-  if( o.currentThis instanceof will.Reflector )
+  if( o.currentThis instanceof _.will.Reflector )
   {
     let currentThis = Object.create( null );
     currentThis.src = [];
@@ -1032,7 +1032,7 @@ function resolveContextPrepare( o )
   if( _.mapIs( o.currentThis ) )
   {
   }
-  else if( o.currentThis instanceof will.Resource )
+  else if( o.currentThis instanceof _.will.Resource )
   {
     o.currentThis = o.currentThis.exportStructure();
   }
@@ -1080,7 +1080,7 @@ function resolve_body( o )
   let path = fileProvider.path;
   let currentContext = o.currentContext = o.currentContext || module;
 
-  _.assert( o.src instanceof will.Module );
+  _.assert( o.src instanceof _.will.Module );
 
   o.currentThis = resolver.resolveContextPrepare
   ({
@@ -1125,12 +1125,12 @@ function _resolveQualifiedAct( o )
   let currentContext = o.currentContext;
   let result;
 
-  if( !( o.currentContext instanceof will.AbstractModule ) )
+  if( !( o.currentContext instanceof _.will.AbstractModule ) )
   if( o.criterion === null && o.currentContext && o.currentContext.criterion )
   o.criterion = o.currentContext.criterion;
 
   _.assert( o.criterion === null || _.mapIs( o.criterion ) );
-  _.assert( o.baseModule instanceof will.AbstractModule );
+  _.assert( o.baseModule instanceof _.will.AbstractModule );
 
   o.iterationPreserve = o.iterationPreserve || Object.create( null );
   o.iterationPreserve.exported = null;
@@ -1306,7 +1306,7 @@ function filesFromResource_body( o )
     if( resource === null )
     {
     }
-    else if( resource instanceof will.Reflector )
+    else if( resource instanceof _.will.Reflector )
     {
       let o2 = resource.optionsForFindExport();
       let files = filesFind( o2 );
@@ -1384,9 +1384,9 @@ function reflectorResolve_body( o )
   else if( o.missingAction === 'error' && _.errIs( reflector ) )
   return reflector;
 
-  if( reflector instanceof will.Reflector )
+  if( reflector instanceof _.will.Reflector )
   {
-    _.sure( reflector instanceof will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.strType( reflector ) );
+    _.sure( reflector instanceof _.will.Reflector, () => 'Reflector ' + o.selector + ' was not found' + _.strType( reflector ) );
     reflector.form();
     _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
   }
@@ -1499,11 +1499,13 @@ _.mapExtend( Self, Extension );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

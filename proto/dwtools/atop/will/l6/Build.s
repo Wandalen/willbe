@@ -3,7 +3,7 @@
 'use strict';
 
 let _ = _global_.wTools;
-let Parent = _.Will.Resource;
+let Parent = _.will.Resource;
 let Self = wWillBuild;
 function wWillBuild( o )
 {
@@ -105,7 +105,7 @@ function stepsEach( o )
     if( _.arrayIs( step ) )
     return inArray( step );
 
-    _.assert( step instanceof will.Step || step instanceof will.Build, () => 'Cant find ' + arguments[ 0 ] );
+    _.assert( step instanceof _.will.Step || step instanceof _.will.Build, () => 'Cant find ' + arguments[ 0 ] );
     let it = Object.create( null );
     it.element = step;
     handleEach( it )
@@ -250,12 +250,12 @@ function perform( o )
   o = _.routineOptions( build.perform, arguments );
 
   if( !o.run )
-  o.run = new will.BuildRun
+  o.run = new _.will.BuildRun
   ({
     build : build,
   });
 
-  _.assert( o.run instanceof will.BuildRun );
+  _.assert( o.run instanceof _.will.BuildRun );
 
   o.run.form();
 
@@ -354,7 +354,7 @@ function archiveFilePathFor()
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
   _.assert( _.strDefined( build.name ), 'Build should have name' );
-  _.assert( inExportFile instanceof will.Willfile );
+  _.assert( inExportFile instanceof _.will.Willfile );
 
   if( !_.strDefined( module.about.name ) )
   throw _.errBrief( 'Module should have name, declare about.name' );
@@ -458,11 +458,13 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

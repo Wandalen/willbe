@@ -735,13 +735,13 @@ function _importToModule()
 
     /* */
 
-    willf._resourcesImport( will.PathResource, mstructure.path );
+    willf._resourcesImport( _.will.PathResource, mstructure.path );
     if( willf.isOut ) /* xxx */
-    willf._resourcesImport( will.Exported, mstructure.exported );
-    willf._resourcesImport( will.ModulesRelation, mstructure.submodule );
-    willf._resourcesImport( will.Step, mstructure.step );
-    willf._resourcesImport( will.Reflector, mstructure.reflector );
-    willf._resourcesImport( will.Build, mstructure.build );
+    willf._resourcesImport( _.will.Exported, mstructure.exported );
+    willf._resourcesImport( _.will.ModulesRelation, mstructure.submodule );
+    willf._resourcesImport( _.will.Step, mstructure.step );
+    willf._resourcesImport( _.will.Reflector, mstructure.reflector );
+    willf._resourcesImport( _.will.Build, mstructure.build );
 
     _.assert( path.s.allAreAbsolute( openedModule.pathResourceMap[ 'module.dir' ].path ) );
     _.assert( path.s.allAreAbsolute( openedModule.pathResourceMap[ 'module.willfiles' ].path ) );
@@ -1322,7 +1322,7 @@ function structureOf( object )
   let path = fileProvider.path;
 
   _.assert( arguments.length === 1 );
-  _.assert( object instanceof _.Will.AbstractModule || object instanceof _.Will.Willfile );
+  _.assert( object instanceof _.will.AbstractModule || object instanceof _.will.Willfile );
 
   let commonPath = object.commonPath;
 
@@ -1786,11 +1786,13 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

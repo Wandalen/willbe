@@ -3,7 +3,7 @@
 'use strict';
 
 let _ = _global_.wTools;
-let Parent = _.Will.AbstractModule;
+let Parent = _.will.AbstractModule;
 let Self = wWillModuleOpener;
 function wWillModuleOpener( o )
 {
@@ -242,7 +242,7 @@ function preform()
 
   if( !will.mainOpener )
   opener.isMain = true;
-  _.assert( will.mainOpener instanceof _.Will.ModuleOpener );
+  _.assert( will.mainOpener instanceof _.will.ModuleOpener );
 
   will.openerRegister( opener );
   will._willfilesReadBegin();
@@ -312,7 +312,7 @@ function own( object )
 
   _.assert( !!object );
 
-  if( object instanceof _.Will.ModulesRelation )
+  if( object instanceof _.will.ModulesRelation )
   {
     if( object === opener.superRelation )
     return true;
@@ -324,7 +324,7 @@ function own( object )
       return true;
     }
   }
-  else if( object instanceof _.Will.ModuleOpener )
+  else if( object instanceof _.will.ModuleOpener )
   {
     return object === opener;
   }
@@ -619,7 +619,7 @@ function find( o )
 
       _.assert( opener.openedModule === null );
       let o2 = opener.optionsForModuleExport();
-      openedModule = opener.openedModule = new will.Module( o2 );
+      openedModule = opener.openedModule = new _.will.Module( o2 );
       if( openedModule.rootModule === null )
       openedModule.rootModule = openedModule;
       openedModule.preform();
@@ -861,7 +861,7 @@ function moduleAdopt( module )
   _.assert( !module.isFinited() );
   _.assert( opener.openedModule === null );
   _.assert( arguments.length === 1 );
-  _.assert( module instanceof _.Will.Module );
+  _.assert( module instanceof _.will.Module );
   _.assert( !opener.isFinited() );
   _.assert( !module.isFinited() );
 
@@ -895,7 +895,7 @@ function openedModuleSet( module )
   let opener = this;
 
   _.assert( arguments.length === 1 );
-  _.assert( module === null || module instanceof _.Will.Module )
+  _.assert( module === null || module instanceof _.will.Module )
 
   if( opener.openedModule === module )
   return module ;
@@ -925,7 +925,7 @@ function moduleUsePaths( module )
   let opener = this;
 
   _.assert( arguments.length === 1 );
-  _.assert( module instanceof _.Will.Module );
+  _.assert( module instanceof _.will.Module );
 
   opener._.dirPath = module.dirPath;
   opener._.commonPath = module.commonPath;
@@ -945,7 +945,7 @@ function moduleUseError( module )
   let opener = this;
 
   _.assert( arguments.length === 1 );
-  _.assert( module instanceof _.Will.Module );
+  _.assert( module instanceof _.will.Module );
 
   if( module.ready.errorsCount() )
   opener.error = opener.error || module.ready.errorsGet()[ 0 ];
@@ -1051,7 +1051,7 @@ function sharedFieldSet_functor( fieldName )
     let opener = this;
     let openedModule = opener.openedModule;
 
-    _.assert( src === null || src instanceof _.Will.Module );
+    _.assert( src === null || src instanceof _.will.Module );
 
     if( opener.id === 304 )
     if( fieldName === 'peerModule' && src )
@@ -1079,7 +1079,7 @@ function rootModuleSet( src )
   let will = opener.will;
   let openedModule = opener.openedModule;
 
-  _.assert( src === null || src instanceof _.Will.Module );
+  _.assert( src === null || src instanceof _.will.Module );
   _.assert( src === null || src.rootModule === src || src.rootModule === null );
 
   opener[ rootModuleSymbol ] = src;
@@ -1102,7 +1102,7 @@ function rootModuleSet( src )
 function superRelationGet()
 {
   let opener = this;
-  _.assert( opener[ superRelationSymbol ] === undefined || opener[ superRelationSymbol ] === null || opener[ superRelationSymbol ] instanceof _.Will.ModulesRelation );
+  _.assert( opener[ superRelationSymbol ] === undefined || opener[ superRelationSymbol ] === null || opener[ superRelationSymbol ] instanceof _.will.ModulesRelation );
   return opener[ superRelationSymbol ];
 }
 
@@ -1113,7 +1113,7 @@ function superRelationSet( src )
   let opener = this;
   let will = opener.will;
 
-  _.assert( src === null || src instanceof _.Will.ModulesRelation );
+  _.assert( src === null || src instanceof _.will.ModulesRelation );
   _.assert( src === null || src.opener === null || src.opener === opener )
 
   if( opener.openedModule && opener.superRelation )
@@ -1185,7 +1185,7 @@ function _repoForm()
   _.assert( will.openerModuleWithIdMap[ opener.id ] === opener );
   _.assert( downloadPath === undefined || downloadPath === opener._.downloadPath );
   _.assert( remotePath === undefined || remotePath === opener._.remotePath );
-  _.assert( opener.repo instanceof _.Will.Repository );
+  _.assert( opener.repo instanceof _.will.Repository );
 
   if( opener.formed < 2 )
   opener.formed = 2;
@@ -1623,7 +1623,7 @@ function _repoDownload( o )
     }
 
     if( downloading && !o.dry )
-    return will.Predefined.filesReflect.call( fileProvider, o2 );
+    return _.will.Predefined.filesReflect.call( fileProvider, o2 );
 
     return null;
   }
@@ -1992,7 +1992,7 @@ function _filePathChanged1( o )
   return o;
 }
 
-_filePathChanged1.defaults = _.mapExtend( null, _.Will.AbstractModule.prototype._filePathChanged1.defaults );
+_filePathChanged1.defaults = _.mapExtend( null, _.will.AbstractModule.prototype._filePathChanged1.defaults );
 
 //
 
@@ -2034,7 +2034,7 @@ function _filePathChanged2( o )
   return o;
 }
 
-_filePathChanged2.defaults = _.mapExtend( null, _.Will.AbstractModule.prototype._filePathChanged2.defaults );
+_filePathChanged2.defaults = _.mapExtend( null, _.will.AbstractModule.prototype._filePathChanged2.defaults );
 
 //
 
@@ -2137,7 +2137,7 @@ function remotePathEachAdoptAct( o )
     {
       if( opener2 === opener )
       return;
-      if( !( opener2 instanceof _.Will.ModuleOpener ) )
+      if( !( opener2 instanceof _.will.ModuleOpener ) )
       return;
       opener2.remotePathAdopt( o );
     });
@@ -2740,13 +2740,15 @@ _.classDeclare
 
 // Self.prototype[ Symbol.toStringTag ] = Object.prototype.toString;
 
+_.will[ Self.shortName ] = Self;
+
 /* xxx : refactor tree of files */
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 //
 

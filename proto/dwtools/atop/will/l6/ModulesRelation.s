@@ -3,7 +3,7 @@
 'use strict';
 
 let _ = _global_.wTools;
-let Parent = _.Will.Resource;
+let Parent = _.will.Resource;
 let Self = wWillModulesRelation;
 function wWillModulesRelation( o )
 {
@@ -104,11 +104,11 @@ function form1()
   let logger = will.logger;
 
   _.assert( arguments.length === 0, 'Expects no arguments' );
-  _.assert( relation.module instanceof will.Module );
+  _.assert( relation.module instanceof _.will.Module );
 
   /* */
 
-  relation.opener = will.ModuleOpener
+  relation.opener = _.will.ModuleOpener
   ({
     will : will,
     aliasName : relation.name,
@@ -355,7 +355,7 @@ function own( object )
 
   _.assert( !!object );
 
-  if( object instanceof _.Will.ModulesRelation )
+  if( object instanceof _.will.ModulesRelation )
   {
     if( object === relation )
     return relation;
@@ -530,7 +530,7 @@ function moduleSet( src )
 
   resource[ moduleSymbol ] = src;
 
-  _.assert( resource.module === null || resource.module instanceof _.Will.Module );
+  _.assert( resource.module === null || resource.module instanceof _.will.Module );
 
   return src;
 }
@@ -652,7 +652,7 @@ function pathsRebase( o )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let Resolver = will.Resolver;
+  let Resolver = _.will.Resolver;
 
   o = _.routineOptions( pathsRebase, arguments );
   _.assert( path.isAbsolute( o.inPath ) );
@@ -785,7 +785,7 @@ function exportStructure( o )
   return result;
 }
 
-exportStructure.defaults = Object.create( _.Will.Resource.prototype.exportStructure.defaults );
+exportStructure.defaults = Object.create( _.will.Resource.prototype.exportStructure.defaults );
 
 //
 
@@ -1057,11 +1057,13 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : Self.shortName,
-  value : Self,
-});
+_.will[ Self.shortName ] = Self;
+
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : Self.shortName,
+//   value : Self,
+// });
 
 })();

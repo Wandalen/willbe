@@ -45,7 +45,7 @@ function stepRoutineDelete( frame )
     verbosity : 0,
   }
 
-  if( filePath instanceof will.Reflector )
+  if( filePath instanceof _.will.Reflector )
   {
     delete o2.filePath;
     let o3 = filePath.optionsForFindExport();
@@ -120,7 +120,7 @@ function stepRoutineReflect( frame )
 
   let reflector = step.reflectorResolve( opts.filePath );
 
-  _.sure( reflector instanceof will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
+  _.sure( reflector instanceof _.will.Reflector, 'Step "reflect" expects reflector, but got', _.strType( reflector ) )
   _.assert( reflector.formed === 3, () => reflector.qualifiedName + ' is not formed' );
 
   beginLog();
@@ -137,7 +137,7 @@ function stepRoutineReflect( frame )
   return _.Consequence.Try( () =>
   {
     // debugger;
-    return will.Predefined.filesReflect.call( fileProvider, opts );
+    return _.will.Predefined.filesReflect.call( fileProvider, opts );
   })
   .then( ( result ) =>
   {
@@ -377,8 +377,8 @@ function stepRoutineShell( frame )
   if( opts.upToDate === 'preserve' && forEachDstReflector )
   {
 
-    _.assert( forEachDstReflector instanceof will.Reflector );
-    forEachDst = will.Resolver.resolveContextPrepare({ currentThis : forEachDstReflector, baseModule : module });
+    _.assert( forEachDstReflector instanceof _.will.Reflector );
+    forEachDst = _.will.Resolver.resolveContextPrepare({ currentThis : forEachDstReflector, baseModule : module });
 
     for( let dst in forEachDst.filesGrouped )
     {
@@ -1003,14 +1003,14 @@ function stepRoutineExport( frame )
   let build = frame.closesBuildGet();
 
   _.assert( arguments.length === 1 );
-  _.assert( build instanceof _.Will.Build );
+  _.assert( build instanceof _.will.Build );
   // _.assert( _.boolLike( frame.run.isRoot ) ); /* xxx : investigate */
   // _.assert( _.boolLike( frame.run.purging ) ); /* xxx : investigate */
 
   return module.exportedMake({ build, purging : frame.run.isRoot && frame.run.purging })
   .then( ( exported ) =>
   {
-    _.assert( exported instanceof _.Will.Exported );
+    _.assert( exported instanceof _.will.Exported );
     return exported.perform( frame );
   });
 }
@@ -1089,12 +1089,13 @@ let Extension =
 //
 
 _.mapExtend( Self, Extension );
-_.staticDeclare
-({
-  prototype : _.Will.prototype,
-  name : 'Predefined',
-  value : Self,
-});
+_.will[ 'Predefined' ] = Self;
+// _.staticDeclare
+// ({
+//   prototype : _.Will.prototype,
+//   name : 'Predefined',
+//   value : Self,
+// });
 
 //
 
