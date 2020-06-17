@@ -8314,7 +8314,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 0,
   });
 
@@ -8338,7 +8338,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 1,
   });
 
@@ -8361,7 +8361,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 2,
   });
 
@@ -8384,7 +8384,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 8,
   });
 
@@ -8407,7 +8407,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 8,
   });
 
@@ -8434,7 +8434,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : undefined,
   });
 
@@ -8457,7 +8457,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : NaN,
   });
 
@@ -8480,7 +8480,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : null,
   });
 
@@ -8503,7 +8503,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 0,
   });
 
@@ -8526,7 +8526,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 1,
   });
 
@@ -8549,7 +8549,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 2,
   });
 
@@ -8572,7 +8572,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 3,
   });
 
@@ -8597,7 +8597,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 4,
   });
 
@@ -8624,7 +8624,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 0,
   });
 
@@ -8647,7 +8647,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 1,
   });
 
@@ -8670,7 +8670,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 2,
   });
 
@@ -8693,7 +8693,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 3,
   });
 
@@ -8716,7 +8716,7 @@ ghij
   var got = _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 4,
   });
 
@@ -8736,21 +8736,21 @@ ghij
   test.shouldThrowErrorSync( () =>  _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 4,
   }));
 
   test.shouldThrowErrorSync( () =>  _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : null,
+    charsRangeLeft : null,
     numberOfLines : 4,
   }));
 
   test.shouldThrowErrorSync( () =>  _.strLinesNearest
   ({
     src : srcStr,
-    charsRange : 'crange',
+    charsRangeLeft : 'crange',
     numberOfLines : 4,
   }));
 
@@ -8769,42 +8769,42 @@ ghij
   var crange = [ 4, 11 ];
   test.shouldThrowErrorSync( () =>  _.strLinesNearest
   ({
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 4,
   }));
 
   test.shouldThrowErrorSync( () =>  _.strLinesNearest
   ({
     src : null,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 4,
   }));
 
   test.shouldThrowErrorSync( () =>  _.strLinesNearest
   ({
     src : NaN,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 4,
   }));
 
   test.shouldThrowErrorSync( () =>  _.strLinesNearest
   ({
     src : undefined,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 4,
   }));
 
   test.shouldThrowErrorSync( () =>  _.strLinesNearest
   ({
     src : 3,
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 4,
   }));
 
   test.shouldThrowErrorSync( () =>  _.strLinesNearest
   ({
     src : [ 'abd', 'ef' ],
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 4,
   }));
 
@@ -8824,7 +8824,7 @@ ghij
   let o =
   {
     src : [ 'abd', 'ef' ],
-    charsRange : crange,
+    charsRangeLeft : crange,
     numberOfLines : 4,
   };
   test.shouldThrowErrorSync( () =>  _.strLinesNearest(  ));

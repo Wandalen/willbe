@@ -4108,7 +4108,7 @@ function reflectWithOptionLinking( test )
   a.ready
   .then( () =>
   {
-    test.case = 'linking : fileCopy, other options default, should noy throw error';
+    test.case = 'linking : fileCopy, other options default, should not throw error';
     return null;
   })
 
@@ -19288,10 +19288,11 @@ function submodulesDownloadAutoCrlfEnabled( test )
 
   test.description = 'checks that global option core.autocrlf=true does not affect on submodules download'
 
+  prepare()
+
   if( runningInsideTestContainer )
   a.shell( 'git config --global core.autocrlf true' );
 
-  prepare()
   a.appStart({ execPath : '.submodules.download' })
   .then( ( op ) =>
   {
