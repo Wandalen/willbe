@@ -667,7 +667,7 @@ function repoVerify( o )
     _.assert
     (
       !!module && ( module instanceof _.will.Module ) ? module.formed2 : module.formed,
-      () => 'Submodule', ( module ? module.qualifiedName : '{-unknown-}' ), 'was not preformed to verify'
+      () => 'Submodule', ( module ? module.qualifiedName : '' ), 'was not preformed to verify'
     );
 
     /* isValid */
