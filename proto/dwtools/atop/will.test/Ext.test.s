@@ -14314,6 +14314,37 @@ function importOutWithDeletedSource( test )
   return a.ready;
 }
 
+//
+
+function importExperiment( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'import-experiment' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : [ '.with module1/ .export' ] });
+  a.appStart({ args : [ '.with module2/ .export' ] });
+  a.ready.then( () =>
+  {
+    let willfilePath = a.abs( 'module1/.will.yml' );
+    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    willFile.path.somepath = 'somepath';
+    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' })
+    return null;
+  })
+  a.appStart({ args : [ '.with module1/ .export' ] });
+  a.appStart({ args : [ '.build' ] });
+
+  /* - */
+
+  return a.ready;
+}
+
+importExperiment.timeOut = 30000;
+importExperiment.experimental = 1;
+
 // --
 // clean
 // --
@@ -24298,6 +24329,7 @@ var Self =
     importPathLocal,
     // importLocalRepo, /* xxx : later */
     importOutWithDeletedSource,
+    importExperiment,
 
     // clean
 
