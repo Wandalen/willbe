@@ -1,0 +1,23 @@
+about :
+
+  name : clone
+
+path :
+
+  git : '.'
+
+step :
+
+  pull.with.dir :
+    inherit : git.push
+    dirPath : 'path::git'
+
+build :
+
+  git.pull :
+    steps :
+      - git.push
+
+  pull.with.dir :
+    steps :
+      - push.with.dir
