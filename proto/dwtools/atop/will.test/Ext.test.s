@@ -24538,7 +24538,7 @@ function commandGitPull( test )
     test.case = '.with clone/ .git.pull - succefull pulling';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::original at' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::original' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -24573,7 +24573,7 @@ function commandGitPull( test )
     test.case = '.with clone/ .git.pull v:0 - succefull pulling';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::original at' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::original' ), 0 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
@@ -24614,7 +24614,7 @@ function commandGitPull( test )
     test.case = '.with clone/ .git.pull - succefull pulling with hardlinks';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::original at' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::original' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -24799,12 +24799,117 @@ original
 } /* end of function hookGitPullConflict */
 
 commandGitPull.timeOut = 300000;
-commandGitPull.description =
-`
-Routine checks behaviour of command '.git.pull'
-- pull without conflicts
-- hardlink saving
-`
+
+//
+
+function commandGitPush( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+  a.reflect();
+  a.fileProvider.dirMake( a.abs( 'repo' ) );
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  cloneShell( 'git init' );
+  cloneShell( 'git remote add origin ../repo' );
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am first' );
+
+  a.appStart( '.with clone/ .git.push' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.push - succefull pushing of commit';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
+    test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
+    test.identical( _.strCount( op.output, "Branch 'master' set up to track remote branch 'master' from 'origin'." ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart( '.with clone/ .git.push' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.push - second run, nothing to push';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( ( op ) =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'copy\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'copy\n' );
+    return null;
+  })
+
+  cloneShell( 'git commit -am second' );
+  cloneShell( 'git tag -a v1.0 -m v1.0' );
+
+  a.appStart( '.with clone/ .git.push v:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.push v:0 - succefull pushing of tag';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 2 );
+    test.identical( _.strCount( op.output, ' * [new tag]         v1.0 -> v1.0' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart( '.with clone/ .git.push' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.push - second run, nothing to push';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+commandGitPush.timeOut = 300000;
 
 // --
 // declare
@@ -25080,6 +25185,7 @@ var Self =
     commandWillfileFromNpm,
     commandWillfileFromNpmDoubleConversion,
     commandGitPull,
+    commandGitPush,
   }
 
 }
