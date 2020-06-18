@@ -830,9 +830,6 @@ function stepRoutineGitPull( frame )
   let module = run.module;
   let opts = _.mapExtend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
-  opts.moduleName = module.nameWithLocationGet();
-  if( !opts.dirPath )
-  opts.dirPath = module.dirPath;
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
@@ -846,6 +843,31 @@ stepRoutineGitPull.stepOptions =
 }
 
 stepRoutineGitPull.uniqueOptions =
+{
+}
+
+//
+
+function stepRoutineGitPush( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  return module.gitPush( opts );
+}
+
+stepRoutineGitPush.stepOptions =
+{
+  dirPath : null,
+}
+
+stepRoutineGitPush.uniqueOptions =
 {
 }
 
@@ -1100,6 +1122,7 @@ let Extension =
   stepRoutineNpmGenerate,
   stepRoutineWillfileFromNpm,
   stepRoutineGitPull,
+  stepRoutineGitPush,
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpdate,
