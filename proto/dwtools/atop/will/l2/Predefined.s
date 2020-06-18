@@ -636,7 +636,7 @@ function stepRoutineNpmGenerate( frame )
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
 
-  return module.npmGenerate( opts );
+  return module.npmGenerateFromWillfile( opts );
 
   // debugger;
   // opts.packagePath = module.pathResolve

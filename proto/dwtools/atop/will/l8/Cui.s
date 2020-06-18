@@ -2391,7 +2391,7 @@ function commandNpmGenerateFromWillfile( e )
     if( _.mapKeys( criterionsMap ).length > 0 )
     it.opener.openedModule.stepMap[ "npm.generate" ].criterion = criterionsMap;
 
-    return it.opener.openedModule.npmGenerate
+    return it.opener.openedModule.npmGenerateFromWillfile
     ({
       packagePath : request.packagePath,
       entryPath : request.entryPath,

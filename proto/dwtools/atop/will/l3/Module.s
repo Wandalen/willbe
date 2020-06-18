@@ -6954,7 +6954,7 @@ resourceImport.defaults =
 
 //
 
-function npmGenerate( o )
+function npmGenerateFromWillfile( o )
 {
   let module = this;
   let will = module.will;
@@ -7113,7 +7113,7 @@ function npmGenerate( o )
   }
 }
 
-npmGenerate.defaults =
+npmGenerateFromWillfile.defaults =
 {
   packagePath : 'package.json',
   entryPath : 'Index.js',
@@ -8098,7 +8098,7 @@ let Extension =
 
   resourceImport,
 
-  npmGenerate,
+  npmGenerateFromWillfile,
   willfileGenerateFromNpm,
 
   // remote
