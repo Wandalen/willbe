@@ -14328,6 +14328,57 @@ function importOutWithDeletedSource( test )
   return a.ready;
 }
 
+//
+
+function importOutdated( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'import-outdated' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : [ '.with module1/ .export' ] });
+  a.appStart({ args : [ '.with module2/ .export' ] });
+  a.ready.then( () =>
+  {
+    let willfilePath = a.abs( 'module1/.will.yml' );
+    let willFile = a.fileProvider.fileRead({ filePath : willfilePath, encoding : 'yml' });
+    willFile.path.somepath = 'somepath';
+    a.fileProvider.fileWrite({ filePath : willfilePath, data : willFile, encoding : 'yml' });
+    return null;
+  })
+  a.appStart({ args : [ '.with module1/ .export' ] });
+  a.appStartNonThrowing({ args : [ '.build' ] });
+  a.ready.then( ( op ) =>
+  {
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '! Outdated' ), 1 );
+    test.identical( _.strCount( op.output, 'Select constraint "exported::*=1" failed with 0 elements' ), 1 );
+    test.identical( _.strCount( op.output, 'Selector "submodule::*/exported::*=1/reflector::exported.files*=1"' ), 1 );
+    test.identical( _.strCount( op.output, 'module::supermodule / module::submodule1 loaded from module::supermodule / module::submodule2 is outdated!' ), 1 );
+    test.identical( _.strCount( op.output, `Please re-export ${a.abs( './module2/out/submodule2.out.will.yml' )} first.` ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+importOutdated.timeOut = 30000;
+importOutdated.description =
+`
+Problem was : not clear enough information about error.
+Module "module1" is re-exported after export of "module2" and becomes outdated as a part of supermodule.
+Import of "module1" results with the error, because "module1" was not opened.
+Modules structure:
+  supermodule
+    - module1
+    - module2
+      - module1
+`
+
 // --
 // clean
 // --
@@ -24312,6 +24363,7 @@ var Self =
     importPathLocal,
     // importLocalRepo, /* xxx : later */
     importOutWithDeletedSource,
+    importOutdated,
 
     // clean
 

@@ -1,0 +1,16 @@
+
+submodule:
+
+step :
+
+  echo :
+    currentPath : '.'
+    shell : echo .im.will.yml executed
+
+build :
+
+  debug:
+    criterion :
+      default : 1
+    steps :
+      - echo

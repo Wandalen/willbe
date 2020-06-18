@@ -1,0 +1,24 @@
+
+about :
+
+  name : third
+  description : "Third module"
+  version : 0.0.1
+
+path :
+  int : '.'
+  out : '.'
+  fileToExport : './fileToExport'
+
+step  :
+  export.single :
+      tar : 0
+      export : path::fileToExport
+
+build :
+  export :
+      criterion :
+          default : 1
+          export : 1
+      steps :
+          - export.single

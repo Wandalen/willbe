@@ -972,6 +972,7 @@ function commandImply( e )
   let ca = e.ca;
   let logger = will.logger;
   let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+  /* qqq xxx : apply to other top modules */
   _.assert( !!isolated );
 
   let request = _.will.Resolver.strRequestParse( isolated.argument );
@@ -1025,7 +1026,7 @@ commandImply.commandProperties =
 
 //
 
-function commandVersion( e )
+function commandVersion( e ) /* xxx qqq : move to NpmTools */
 {
   let will = this;
   let ca = e.ca;
