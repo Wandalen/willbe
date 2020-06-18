@@ -12045,7 +12045,7 @@ function exportRecursiveLocal( test )
 
     test.identical( _.strCount( op.output, 'About' ), 1 );
     test.identical( _.strCount( op.output, 'module::module-ab / path::export' ), 1 );
-    test.identical( _.strCount( op.output, 'module::module-ab /' ), 53 );
+    test.is( _.strCount( op.output, 'module::module-ab /' ) >= 53 );
 
     return null;
   })
@@ -12061,7 +12061,6 @@ function exportRecursiveLocal( test )
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 9 );
-    // test.identical( _.strCount( op.output, 'Exported module::' ), 15 );
     return null;
   })
 
@@ -12075,7 +12074,7 @@ function exportRecursiveLocal( test )
 
     test.identical( _.strCount( op.output, 'About' ), 1 );
     test.identical( _.strCount( op.output, 'module::module-ab / path::export' ), 1 );
-    test.identical( _.strCount( op.output, 'module::module-ab /' ), 53 );
+    test.is( _.strCount( op.output, 'module::module-ab /' ) >= 53 );
 
     return null;
   })
