@@ -59,6 +59,8 @@ commandPackageVersion
 commandShell
 commandDo
 commandHookCall
+commandNpmGenerateFromWillfile
+commandWillfileGenerateFromNpm
 
 */
 
@@ -373,6 +375,7 @@ function _commandsMake()
     'module new' :                      { e : _.routineJoin( will, will.commandModuleNew ),                   h : 'Create a new module.' },
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               h : 'Make a new module in the current directory and call a specified hook for the module to prepare it.' },
 
+    'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     h : 'Use "git pull" to pull changes from remote repository' },
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks' },
 
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
@@ -1033,7 +1036,7 @@ function commandVersion( e ) /* xxx qqq : move to NpmTools */
   let logger = will.logger;
 
   let implyMap = _.strStructureParse( e.argument );
-  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
   will._propertiesImply( implyMap );
 
   logger.log( 'Current version:', will.versionGet() );
@@ -2132,6 +2135,35 @@ function commandExportRecursive( e )
 
 //
 
+function commandGitPull( e )
+{
+  let will = this;
+  let implyMap = _.strStructureParse( e.argument );
+  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
+  will._propertiesImply( implyMap );
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'git pull',
+    onEach : handleEach,
+    commandRoutine : commandGitPull,
+  });
+
+  function handleEach( it )
+  {
+    let name = it.junction.nameWithLocationGet();
+    return it.opener.openedModule.gitPull
+    ({
+      moduleName : name,
+      dirPath : it.junction.dirPath,
+      verbosity : will.verbosity,
+    });
+  }
+}
+
+//
+
 function commandGitPreservingHardLinks( e )
 {
   let will = this;
@@ -3170,6 +3202,9 @@ let Extension =
   commandExportPurging,
   commandExportRecursive,
 
+  // command git
+
+  commandGitPull,
   commandGitPreservingHardLinks,
 
   // command iterator
@@ -3177,8 +3212,12 @@ let Extension =
   commandWith,
   commandEach,
 
+  // command converters
+
   commandNpmGenerateFromWillfile,
   commandWillfileGenerateFromNpm,
+
+  // command package
 
   commandPackageInstall,
   commandPackageLocalVersions,
