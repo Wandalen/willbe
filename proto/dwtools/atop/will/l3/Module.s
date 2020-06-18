@@ -1073,6 +1073,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'git.pull',
+    stepRoutine : Predefined.stepRoutineGitPull,
+  })
+
+  step
+  ({
     name : 'submodules.download',
     stepRoutine : Predefined.stepRoutineSubmodulesDownload,
   })
@@ -7478,8 +7484,17 @@ function gitPull( o )
   let path = fileProvider.path;
   let logger = will.logger;
 
-  debugger;
   _.routineOptions( gitPull, o );
+
+  debugger;
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git.pull' ],
+  });
 
   let status = _.git.statusFull
   ({
