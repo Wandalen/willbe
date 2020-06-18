@@ -376,6 +376,7 @@ function _commandsMake()
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               h : 'Make a new module in the current directory and call a specified hook for the module to prepare it.' },
 
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     h : 'Use "git pull" to pull changes from remote repository' },
+    'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     h : 'Use "git push" to push commits and tags to remote repository' },
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks' },
 
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
@@ -2152,10 +2153,35 @@ function commandGitPull( e )
 
   function handleEach( it )
   {
-    let name = it.junction.nameWithLocationGet();
     return it.opener.openedModule.gitPull
     ({
-      moduleName : name,
+      dirPath : it.junction.dirPath,
+      verbosity : will.verbosity,
+    });
+  }
+}
+
+//
+
+function commandGitPush( e )
+{
+  let will = this;
+  let implyMap = _.strStructureParse( e.argument );
+  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
+  will._propertiesImply( implyMap );
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'git push',
+    onEach : handleEach,
+    commandRoutine : commandGitPush,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitPush
+    ({
       dirPath : it.junction.dirPath,
       verbosity : will.verbosity,
     });
@@ -3205,6 +3231,7 @@ let Extension =
   // command git
 
   commandGitPull,
+  commandGitPush,
   commandGitPreservingHardLinks,
 
   // command iterator
