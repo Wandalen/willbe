@@ -18418,7 +18418,7 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 32 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 4 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
-    test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 4/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
   })
@@ -18442,7 +18442,7 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     test.identical( _.strCount( op.output, '. Opened .' ), 32 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
-    test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/6 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
   })
