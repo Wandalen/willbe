@@ -7467,6 +7467,90 @@ function _remoteChanged()
 }
 
 // --
+// git
+// --
+
+function gitPull( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  debugger;
+  _.routineOptions( gitPull, o );
+
+  let status = _.git.statusFull
+  ({
+    insidePath : o.dirPath,
+    unpushed : 0,
+    prs : 0,
+    remote : 1,
+  });
+
+  if( !status.isRepository || !status.remote )
+  return null;
+
+  if( o.verbosity )
+  logger.log( `Pulling ${o.moduleName}` );
+
+  if( status.uncommitted )
+  {
+    throw _.errBrief( `${o.moduleName} has local changes!` );
+    return null;
+  }
+
+  let config = fileProvider.configUserRead();
+  let provider = _.FileFilter.Archive();
+  provider.archive.basePath = will.currentOpener.dirPath;
+  if( config && config.path && config.path.link )
+  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.link ) );
+
+  provider.archive.fileMapAutosaving = 1;
+
+  if( o.verbosity )
+  provider.archive.verbosity = 2;
+  else
+  provider.archive.verbosity = 0;
+
+  provider.archive.allowingMissed = 1;
+  provider.archive.allowingCycled = 1;
+  provider.archive.restoreLinksBegin();
+
+  let ready = new _.Consequence().take( null );
+
+  _.process.start
+  ({
+    execPath : `git pull`,
+    currentPath : o.dirPath,
+    ready : ready,
+  });
+
+  ready.tap( () =>
+  {
+    provider.archive.restoreLinksEnd();
+  });
+
+  ready.catch( ( err ) =>
+  {
+    err = _.errBrief( err );
+    logger.log( _.errOnce( err ) );
+    throw err;
+  });
+
+  return ready;
+}
+
+gitPull.defaults =
+{
+  moduleName : null,
+  dirPath : null,
+  v : null,
+  verbosity : 2,
+}
+
+// --
 // etc
 // --
 
@@ -8104,6 +8188,10 @@ let Extension =
   // remote
 
   _remoteChanged,
+
+  // git
+
+  gitPull,
 
   // etc
 
