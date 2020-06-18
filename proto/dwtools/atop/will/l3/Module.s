@@ -1079,6 +1079,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'git.push',
+    stepRoutine : Predefined.stepRoutineGitPush,
+  })
+
+  step
+  ({
     name : 'submodules.download',
     stepRoutine : Predefined.stepRoutineSubmodulesDownload,
   })
@@ -7486,7 +7492,6 @@ function gitPull( o )
 
   _.routineOptions( gitPull, o );
 
-  debugger;
   o.dirPath = module.pathResolve
   ({
     selector : o.dirPath || module.dirPath,
@@ -7508,11 +7513,11 @@ function gitPull( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${o.moduleName}` );
+  logger.log( `Pulling ${module.nameWithLocationGet()}` );
 
   if( status.uncommitted )
   {
-    throw _.errBrief( `${o.moduleName} has local changes!` );
+    throw _.errBrief( `${module.nameWithLocationGet()} has local changes!` );
     return null;
   }
 
@@ -7558,6 +7563,74 @@ function gitPull( o )
 }
 
 gitPull.defaults =
+{
+  dirPath : null,
+  v : null,
+  verbosity : 2,
+}
+
+//
+
+function gitPush( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( gitPush, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git.push' ],
+  });
+
+  let status = _.git.statusFull
+  ({
+    insidePath : o.dirPath,
+    local : 0,
+    uncommitted : 0,
+    unpushed : 1,
+    unpushedTags : 1,
+    remote : 0,
+    prs : 0,
+  });
+
+  if( !status.isRepository )
+  return null;
+  if( !status.unpushed )
+  return null;
+
+  if( o.verbosity )
+  logger.log( `Pushing ${module.nameWithLocationGet()}` );
+
+  let ready = new _.Consequence().take( null );
+  let start = _.process.starter
+  ({
+    currentPath : o.dirPath,
+    ready : ready,
+  });
+
+  start( `git push -u origin --all` );
+  if( status.unpushedTags )
+  start( `git push --tags -f` );
+
+  ready.catch( ( err ) =>
+  {
+    err = _.errBrief( err );
+    logger.log( _.errOnce( err ) );
+    throw err;
+  });
+
+  return ready;
+}
+
+gitPush.defaults =
 {
   moduleName : null,
   dirPath : null,
@@ -8207,6 +8280,7 @@ let Extension =
   // git
 
   gitPull,
+  gitPush,
 
   // etc
 
