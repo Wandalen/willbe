@@ -873,6 +873,33 @@ stepRoutineGitPush.uniqueOptions =
 
 //
 
+function stepRoutineGitReset( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  return module.gitReset( opts );
+}
+
+stepRoutineGitReset.stepOptions =
+{
+  dirPath : null,
+  dry : null,
+}
+
+stepRoutineGitReset.uniqueOptions =
+{
+  removingUntracked : 0,
+}
+
+//
+
 function stepRoutineSubmodulesDownload( frame )
 {
   let step = this;
@@ -1123,6 +1150,7 @@ let Extension =
   stepRoutineWillfileFromNpm,
   stepRoutineGitPull,
   stepRoutineGitPush,
+  stepRoutineGitReset,
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpdate,
