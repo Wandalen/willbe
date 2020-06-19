@@ -25509,6 +25509,175 @@ File.txt
   return a.ready;
 }
 
+//
+
+function commandGitTag( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+  a.reflect();
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  cloneShell( 'git init' );
+  cloneShell( 'git remote add origin ../repo' );
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am first' );
+
+  a.appStart( '.with clone/ .git.tag name:v1.0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.tag name:v1.0 - add tag, only option name';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v1.0' ), 1 );
+    return null;
+  })
+  cloneShell( 'git tag -l -n' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    return null;
+  })
+
+  cloneShell( 'git commit -am second' );
+  a.appStart( '.with clone/ .git.tag name:v2.0 description:"Version 2.0"' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.tag name:v2.0 description:"Version 2.0" - add tag with description';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v2.0' ), 1 );
+    return null;
+  })
+  cloneShell( 'git tag -l -n' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v2.0            Version 2.0' ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    return null;
+  })
+
+  cloneShell( 'git commit -am third' );
+  a.appStart( '.with clone/ .git.tag name:v3.0 description:"Version 3.0" light:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.tag name:v3.0 description:"Version 3.0" light:1 - add tag, only option name';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v3.0' ), 1 );
+    return null;
+  })
+  cloneShell( 'git tag -l -n' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v2.0            Version 2.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v3.0' ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    return null;
+  })
+
+  cloneShell( 'git commit -am fourth' );
+  a.appStart( '.with clone/ .git.tag name:v4.0 description:"Version 4.0" dry:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.tag name:v4.0 description:"Version 4.0" dry:1 - option dry, should not add tag';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
+    return null;
+  })
+  cloneShell( 'git tag -l -n' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v2.0            Version 2.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v3.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v4.0            Version 4.0' ), 0 );
+    return null;
+  })
+
+  /* */
+
+  a.appStart( '.with clone/ .git.tag name:v4.0 description:"Version 4.0" v:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.tag name:v4.0 description:"Version 4.0" v:0 - verbosity';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
+    return null;
+  })
+  cloneShell( 'git tag -l -n' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v2.0            Version 2.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v3.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v4.0            Version 4.0' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
 // --
 // declare
 // --
@@ -25787,6 +25956,7 @@ var Self =
     commandGitPull,
     commandGitPush,
     commandGitReset,
+    commandGitTag,
   }
 
 }
