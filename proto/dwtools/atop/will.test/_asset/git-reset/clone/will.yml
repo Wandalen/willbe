@@ -1,0 +1,40 @@
+about :
+
+  name : git-reset
+
+path :
+
+  git.proto : 'proto'
+
+step :
+
+  git.reset.dir :
+    inherit : git.reset
+    dirPath : 'path::git.proto'
+
+  git.reset.dry :
+    inherit : git.reset
+    dirPath : '.'
+    dry : 1
+
+  git.reset.ignoringUntracked :
+    dirPath : '.'
+    ignoringUntracked : 1
+
+build :
+
+  git.reset.default :
+    steps :
+      - git.reset
+
+  git.reset.dir :
+    steps :
+      - git.reset.dir
+
+  git.reset.dry :
+    steps :
+      - git.reset.dry;
+
+  git.reset.ignoringUntracked :
+    steps :
+      - git.reset.ignoringUntracked
