@@ -1091,6 +1091,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'git.sync',
+    stepRoutine : Predefined.stepRoutineGitSync,
+  })
+
+  step
+  ({
     name : 'git.tag',
     stepRoutine : Predefined.stepRoutineGitTag,
   })

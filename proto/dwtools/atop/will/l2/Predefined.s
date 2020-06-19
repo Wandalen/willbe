@@ -901,6 +901,33 @@ stepRoutineGitReset.uniqueOptions =
 
 //
 
+function stepRoutineGitSync( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  return module.gitSync( opts );
+}
+
+stepRoutineGitSync.stepOptions =
+{
+  commit : '.',
+  dirPath : null,
+}
+
+stepRoutineGitSync.uniqueOptions =
+{
+  commit : '.',
+}
+
+//
+
 function stepRoutineGitTag( frame )
 {
   let step = this;
@@ -1185,6 +1212,7 @@ let Extension =
   stepRoutineGitPull,
   stepRoutineGitPush,
   stepRoutineGitReset,
+  stepRoutineGitSync,
   stepRoutineGitTag,
 
   stepRoutineSubmodulesDownload,
