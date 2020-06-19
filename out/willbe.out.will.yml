@@ -2,10 +2,13 @@ format: outwillfile-2.0
 root:
   - willbe.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  willbe.out.will.yml: &ref_0
+    hash: 7793ea9de4725fe980ebdd09105b51cc
+    size: 231566
+  ../.ex.will.yml: &ref_1
     hash: cf31c436dddfc588f88a85221816655b
     size: 2605
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: 05fb65b5824928ebb330cc9844dd2db3
     size: 7317
 module:
@@ -16,20 +19,20 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters: &ref_2
+      interpreters:
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: &ref_4
+      contributors:
         - Kostiantyn Wandalen <wanalen@01.school>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts: &ref_5
+      npm.scripts:
         test: 'wtest .run proto/** v:5'
         docgen: wdocgen .build proto
         single-process-will: node proto/dwtools/atop/will/entry/Exec
@@ -40,7 +43,7 @@ module:
         docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
         docker-run-centos: docker run --rm willbe-centos
         docker-run-ubuntu: docker run --rm willbe-ubuntu
-      npm.bin: &ref_6
+      npm.bin:
         single-process-will: proto/dwtools/atop/will/entry/Exec
         debug-will: proto/dwtools/atop/will/entry/ExecDebug
         unrestricted-will: proto/dwtools/atop/will/entry/ExecUnrestricted
@@ -1583,425 +1586,9 @@ module:
           - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/b.will.yml
           - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.ex.will.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.gitattributes
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.gitignore
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.im.will.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.travis.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/LICENSE
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/package.json
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/README.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/was.package.json
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/config
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/description
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/FETCH_HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/index
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/packed-refs
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/branches
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/hooks
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/hooks/applypatch-msg.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/hooks/commit-msg.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/hooks/fsmonitor-watchman.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/hooks/post-update.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/hooks/pre-applypatch.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/hooks/pre-commit.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/hooks/pre-push.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/hooks/pre-rebase.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/hooks/pre-receive.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/hooks/prepare-commit-msg.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/hooks/update.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/info
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/info/exclude
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/logs
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/logs/HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/logs/refs
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/logs/refs/heads
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/logs/refs/heads/master
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/logs/refs/remotes
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/logs/refs/remotes/origin
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/logs/refs/remotes/origin/HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/objects
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/objects/info
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/objects/pack
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/objects/pack/pack-48973ba04d8c20eab5f3c193a5b8f1346545a73b.idx
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/objects/pack/pack-48973ba04d8c20eab5f3c193a5b8f1346545a73b.pack
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/refs
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/refs/heads
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/refs/heads/master
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/refs/remotes
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/refs/remotes/origin
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/refs/remotes/origin/HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/.git/refs/tags
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/doc
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/doc/ModuleForTesting1.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/doc/README.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/out
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/proto
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/proto/dwtools
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/proto/dwtools/Tools.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/proto/dwtools/abase
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/proto/dwtools/abase/l1
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1/Include.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1/ModuleForTesting1.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/proto/dwtools/abase/l1.test
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/proto/dwtools/abase/l1.test/ModuleForTesting1.test.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/.module/ModuleForTesting1/sample/Sample.js
-          - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10
           - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/a0.will.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.ex.will.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.gitattributes
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.gitignore
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.im.will.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.travis.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/LICENSE
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/package.json
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/README.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/was.package.json
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/config
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/description
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/index
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/packed-refs
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/branches
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/hooks
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/hooks/applypatch-msg.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/hooks/commit-msg.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/hooks/fsmonitor-watchman.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/hooks/post-update.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/hooks/pre-applypatch.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/hooks/pre-commit.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/hooks/pre-push.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/hooks/pre-rebase.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/hooks/pre-receive.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/hooks/prepare-commit-msg.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/hooks/update.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/info
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/info/exclude
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/logs
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/logs/HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/logs/refs
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/logs/refs/heads
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/logs/refs/heads/master
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/logs/refs/remotes
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/logs/refs/remotes/origin
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/logs/refs/remotes/origin/HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/objects
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/objects/info
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/objects/pack
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/objects/pack/pack-48973ba04d8c20eab5f3c193a5b8f1346545a73b.idx
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/objects/pack/pack-48973ba04d8c20eab5f3c193a5b8f1346545a73b.pack
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/refs
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/refs/heads
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/refs/heads/master
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/refs/remotes
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/refs/remotes/origin
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/refs/remotes/origin/HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/.git/refs/tags
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/doc
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/doc/ModuleForTesting1.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/doc/README.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/out
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/proto
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/proto/dwtools
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/proto/dwtools/Tools.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/proto/dwtools/abase
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/proto/dwtools/abase/l1
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1/Include.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1/ModuleForTesting1.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/proto/dwtools/abase/l1.test
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/proto/dwtools/abase/l1.test/ModuleForTesting1.test.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting1/sample/Sample.js
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.ex.will.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.gitattributes
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.gitignore
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.im.will.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.travis.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/LICENSE
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/package.json
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/README.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/was.package.json
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/config
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/description
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/FETCH_HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/index
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/packed-refs
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/branches
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/hooks
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/hooks/applypatch-msg.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/hooks/commit-msg.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/hooks/fsmonitor-watchman.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/hooks/post-update.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/hooks/pre-applypatch.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/hooks/pre-commit.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/hooks/pre-push.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/hooks/pre-rebase.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/hooks/pre-receive.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/hooks/prepare-commit-msg.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/hooks/update.sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/info
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/info/exclude
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/logs
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/logs/HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/logs/refs
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/logs/refs/heads
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/logs/refs/heads/master
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/logs/refs/remotes
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/logs/refs/remotes/origin
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/logs/refs/remotes/origin/HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/objects
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/objects/info
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/objects/pack
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/objects/pack/pack-bf29a69a0634373d0efad9e4bef259011bd39962.idx
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/objects/pack/pack-bf29a69a0634373d0efad9e4bef259011bd39962.pack
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/refs
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/refs/heads
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/refs/heads/master
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/refs/remotes
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/refs/remotes/origin
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/refs/remotes/origin/HEAD
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/.git/refs/tags
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/doc
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/doc/ModuleForTesting2a.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/doc/README.md
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/out
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/proto
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/proto/dwtools
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/proto/dwtools/Tools.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase/l3
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase/l3/testing2a
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase/l3/testing2a/Include.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase/l3/testing2a/ModuleForTesting2a.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase/l3.test
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase/l3.test/ModuleForTesting2a.test.s
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/sample
-          - >-
-            ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group1/group10/.module/ModuleForTesting2a/sample/Sample.js
           - ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group2
           - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-remote/group2/c.will.yml
@@ -2027,6 +1614,20 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/import-auto/proto
           - >-
             ../proto/dwtools/atop/will.test/_asset/import-auto/proto/WithSubmodules.s
+          - ../proto/dwtools/atop/will.test/_asset/import-outdated
+          - ../proto/dwtools/atop/will.test/_asset/import-outdated/.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/import-outdated/module1
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/import-outdated/module1/.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/import-outdated/module1/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/import-outdated/module1/proto/File1.js
+          - ../proto/dwtools/atop/will.test/_asset/import-outdated/module2
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/import-outdated/module2/.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/import-outdated/module2/proto
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/import-outdated/module2/proto/File2.js
           - ../proto/dwtools/atop/will.test/_asset/import-path-local
           - >-
             ../proto/dwtools/atop/will.test/_asset/import-path-local/.ex.will.yml
@@ -3893,6 +3494,24 @@ module:
           content: prime
         inherit:
           - files.transpile
+      exported.proto.export:
+        opts:
+          filePath: 'reflector::exported.proto.export'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          filePath: 'reflector::exported.files.proto.export'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -3987,8 +3606,9 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      willbe.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: willbe
@@ -3996,14 +3616,35 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - njs >= 10.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: *ref_4
+      contributors:
+        - Kostiantyn Wandalen <wanalen@01.school>
+        - Volodymyr M. <volodymyr.migdal@gmail.com>
+        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts: *ref_5
-      npm.bin: *ref_6
+      npm.scripts:
+        test: 'wtest .run proto/** v:5'
+        docgen: wdocgen .build proto
+        single-process-will: node proto/dwtools/atop/will/entry/Exec
+        debug-will: node proto/dwtools/atop/will/entry/ExecDebug
+        unrestricted-will: node proto/dwtools/atop/will/entry/ExecUnrestricted
+        will: node proto/dwtools/atop/will/entry/ExecUnrestricted
+        docker-build-centos: docker image build -t willbe-centos -f ./docker/centos.dockerfile .
+        docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
+        docker-run-centos: docker run --rm willbe-centos
+        docker-run-ubuntu: docker run --rm willbe-ubuntu
+      npm.bin:
+        single-process-will: proto/dwtools/atop/will/entry/Exec
+        debug-will: proto/dwtools/atop/will/entry/ExecDebug
+        unrestricted-will: proto/dwtools/atop/will/entry/ExecUnrestricted
+        will: proto/dwtools/atop/will/entry/ExecUnrestricted
     path:
       module.willfiles:
         criterion:
@@ -4796,3 +4437,6 @@ module:
       ../.im.will.yml:
         hash: 05fb65b5824928ebb330cc9844dd2db3
         size: 7317
+      willbe.out.will.yml:
+        hash: 7793ea9de4725fe980ebdd09105b51cc
+        size: 231566
