@@ -377,6 +377,7 @@ function _commandsMake()
 
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     h : 'Use "git pull" to pull changes from remote repository' },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     h : 'Use "git push" to push commits and tags to remote repository' },
+    'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    h : 'Use "git reset" to reset changes' },
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks' },
 
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
@@ -2190,6 +2191,41 @@ function commandGitPush( e )
 
 //
 
+function commandGitReset( e )
+{
+  let will = this;
+  let optionsMap = _.strStructureParse( e.argument );
+  _.routineOptions( commandGitReset, optionsMap );
+  optionsMap.verbosity = optionsMap.v ? optionsMap.v : optionsMap.verbosity;
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'git reset',
+    onEach : handleEach,
+    commandRoutine : commandGitReset,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitReset
+    ({
+      ... optionsMap,
+    });
+  }
+}
+
+commandGitReset.defaults =
+{
+  dry : null,
+  removingUntracked : 0,
+  dirPath : '.',
+  v : null,
+  verbosity : 2,
+}
+
+//
+
 function commandGitPreservingHardLinks( e )
 {
   let will = this;
@@ -3232,6 +3268,7 @@ let Extension =
 
   commandGitPull,
   commandGitPush,
+  commandGitReset,
   commandGitPreservingHardLinks,
 
   // command iterator
