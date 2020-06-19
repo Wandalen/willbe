@@ -378,6 +378,7 @@ function _commandsMake()
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     h : 'Use "git pull" to pull changes from remote repository' },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     h : 'Use "git push" to push commits and tags to remote repository' },
     'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    h : 'Use "git reset" to reset changes' },
+    'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     h : 'Use "git sync" to syncronize local and remote repositories' },
     'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      h : 'Use "git tag" to add tag for current commit' },
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks' },
 
@@ -2240,6 +2241,46 @@ commandGitReset.commandProperties =
 
 //
 
+function commandGitSync( e )
+{
+  let will = this;
+  let request = _.will.Resolver.strRequestParse( e.argument );
+  _.routineOptions( commandGitSync, request.map );
+  request.map.verbosity = request.map.v !== null && request.map.v >= 0 ? request.map.v : request.map.verbosity;
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'git sync',
+    onEach : handleEach,
+    commandRoutine : commandGitSync,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitSync
+    ({
+      commit : request.subject,
+      ... request.map,
+    });
+  }
+}
+
+commandGitSync.defaults =
+{
+  dirPath : null,
+  v : null,
+  verbosity : 1,
+}
+
+commandGitSync.commandProperties =
+{
+  v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
+}
+
+//
+
 function commandGitTag( e )
 {
   let will = this;
@@ -3329,6 +3370,7 @@ let Extension =
   commandGitPull,
   commandGitPush,
   commandGitReset,
+  commandGitSync,
   commandGitTag,
   commandGitPreservingHardLinks,
 
