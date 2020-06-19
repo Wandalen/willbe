@@ -7667,7 +7667,7 @@ function gitReset( o )
     prefixlessAction : 'resolved',
     pathNativizing : 0,
     selectorIsPath : 1,
-    currentContext : module.stepMap[ 'git.push' ],
+    currentContext : module.stepMap[ 'git.reset' ],
   });
 
   if( !_.git.isRepository({ localPath : o.dirPath, sync : 1 }) )
@@ -7700,6 +7700,87 @@ gitReset.defaults =
 
 //
 
+function gitSync( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( gitSync, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git.sync' ],
+  });
+
+  let status = _.git.statusFull
+  ({
+    insidePath : o.dirPath,
+  });
+
+  if( o.dry )
+  return null;
+
+  /* */
+
+  let ready =  new _.Consequence().take( null );
+  ready.then( () =>
+  {
+    if( status.uncommitted )
+    return gitCommit();
+    return null;
+  })
+  .then( () =>
+  {
+    if( status.remote )
+    return module.gitPull.call( module, _.mapBut( o, { commit : '.' } ) );
+    return null;
+  })
+  .then( () =>
+  {
+    if( status.local )
+    return module.gitPush.call( module, _.mapBut( o, { commit : '.' } ) );
+    return null;
+  })
+
+  return ready;
+
+  /* */
+
+  function gitCommit()
+  {
+    let con =  new _.Consequence().take( null );
+    let start = _.process.starter
+    ({
+      currentPath : o.dirPath,
+      ready : con,
+    });
+    if( o.verbosity )
+    logger.log( `Committing ${module.nameWithLocationGet()}` );
+
+    start( `git add --all` );
+    start( `git commit ${o.commit}` );
+
+    return con;
+  }
+}
+
+gitSync.defaults =
+{
+  commit : '.',
+  dirPath : null,
+  v : null,
+  verbosity : 1,
+}
+
+//
+
 function gitTag( o )
 {
   let module = this;
@@ -7716,7 +7797,7 @@ function gitTag( o )
     prefixlessAction : 'resolved',
     pathNativizing : 0,
     selectorIsPath : 1,
-    currentContext : module.stepMap[ 'git.push' ],
+    currentContext : module.stepMap[ 'git.tag' ],
   });
 
   if( module.repo.remotePath || !module.about.name )
@@ -8409,6 +8490,7 @@ let Extension =
   gitPull,
   gitPush,
   gitReset,
+  gitSync,
   gitTag,
 
   // etc
