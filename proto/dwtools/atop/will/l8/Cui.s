@@ -2196,7 +2196,7 @@ function commandGitReset( e )
   let will = this;
   let optionsMap = _.strStructureParse( e.argument );
   _.routineOptions( commandGitReset, optionsMap );
-  optionsMap.verbosity = optionsMap.v ? optionsMap.v : optionsMap.verbosity;
+  optionsMap.verbosity = optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
 
   return will._commandBuildLike
   ({
@@ -2220,7 +2220,7 @@ commandGitReset.defaults =
   dry : null,
   removingUntracked : 0,
   dirPath : '.',
-  v : null,
+  v : 2,
   verbosity : 2,
 }
 

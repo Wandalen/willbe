@@ -17,9 +17,9 @@ step :
     dirPath : '.'
     dry : 1
 
-  git.reset.ignoringUntracked :
+  git.reset.removingUntracked :
     dirPath : '.'
-    ignoringUntracked : 1
+    removingUntracked : 1
 
 build :
 
@@ -33,8 +33,8 @@ build :
 
   git.reset.dry :
     steps :
-      - git.reset.dry;
+      - git.reset.dry
 
-  git.reset.ignoringUntracked :
+  git.reset.removingUntracked :
     steps :
-      - git.reset.ignoringUntracked
+      - git.reset.removingUntracked

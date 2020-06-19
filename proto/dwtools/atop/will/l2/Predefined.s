@@ -889,13 +889,14 @@ function stepRoutineGitReset( frame )
 
 stepRoutineGitReset.stepOptions =
 {
+  removingUntracked : null,
   dirPath : null,
   dry : null,
 }
 
 stepRoutineGitReset.uniqueOptions =
 {
-  removingUntracked : 0,
+  removingUntracked : null,
 }
 
 //
