@@ -8,16 +8,16 @@ path :
 
 step :
 
-  pull.with.dir :
+  push.with.dir :
     inherit : git.push
     dirPath : 'path::git'
 
 build :
 
-  git.pull :
+  git.push :
     steps :
       - git.push
 
-  pull.with.dir :
+  push.with.dir :
     steps :
       - push.with.dir
