@@ -43,10 +43,7 @@ function badgeReplace( it )
   return;
 
   logger.log( `Replacing badge ${it.junction.nameWithLocationGet()}` );
-  // debugger;
-  logger.log( _.censor.replace( readmePath, ins, sub ).report );
-  // // logger.log( _.strSearchReport( read, ins ).report );
-  // debugger;
+  logger.log( _.censor.fileReplace( readmePath, ins, sub ).log );
 
   if( o.dry )
   return;

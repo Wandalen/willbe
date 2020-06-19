@@ -4741,12 +4741,12 @@ Dmytro : covered
  * @param {Number} [ o.number=0 ] - If true, puts line counter before each line by using o.range[ 0 ] as initial value of a counter.
  * @param {String} [ o.delimteter='\n' ] - Sets new line character.
  * @param {String} [ o.line=null ] - Sets line number from which to start selecting, is used only if ( o.range ) is null.
- * @param {Number} [ o.numberOfLines=3 ] - Sets maximal number of lines to select, is used only if ( o.range ) is null and ( o.line ) option is specified.
+ * @param {Number} [ o.nearestLines=3 ] - Sets maximal number of lines to select, is used only if ( o.range ) is null and ( o.line ) option is specified.
  * @param {String} [ o.selectMode='center' ] - Determines in what way funtion must select lines, works only if ( o.range ) is null and ( o.line ) option is specified.
  * Possible values:
- * - 'center' - uses ( o.line ) index as center point and selects ( o.numberOfLines ) lines in both directions.
- * - 'begin' - selects ( o.numberOfLines ) lines from start point ( o.line ) in forward direction;
- * - 'end' - selects ( o.numberOfLines ) lines from start point ( o.line ) in backward direction.
+ * - 'center' - uses ( o.line ) index as center point and selects ( o.nearestLines ) lines in both directions.
+ * - 'begin' - selects ( o.nearestLines ) lines from start point ( o.line ) in forward direction;
+ * - 'end' - selects ( o.nearestLines ) lines from start point ( o.line ) in backward direction.
  * @returns {string} Returns selected lines as new string or empty if nothing selected.
  *
  * @example
@@ -4775,19 +4775,19 @@ Dmytro : covered
  *
  * @example
  * // setting preferred number of lines to select, line option must be specified
- * _.strLinesSelect({ src : 'a\nb\nc', line : 2, numberOfLines : 1 });
+ * _.strLinesSelect({ src : 'a\nb\nc', line : 2, nearestLines : 1 });
  * // returns 'b'
  *
  * @example
  * // selecting 2 two next lines starting from second
- * _.strLinesSelect({ src : 'a\nb\nc', line : 2, numberOfLines : 2, selectMode : 'begin' });
+ * _.strLinesSelect({ src : 'a\nb\nc', line : 2, nearestLines : 2, selectMode : 'begin' });
  * // returns
  * // 'b
  * // c'
  *
  * @example
  * // selecting 2 two lines starting from second in backward direction
- * _.strLinesSelect({ src : 'a\nb\nc', line : 2, numberOfLines : 2, selectMode : 'end' });
+ * _.strLinesSelect({ src : 'a\nb\nc', line : 2, nearestLines : 2, selectMode : 'end' });
  * // returns
  * // 'a
  * // b'
@@ -4833,11 +4833,11 @@ function strLinesSelect( o )
     if( o.line !== null )
     {
       if( o.selectMode === 'center' )
-      o.range = [ o.line - Math.ceil( ( o.numberOfLines + 1 ) / 2 ) + 1, o.line + Math.floor( ( o.numberOfLines - 1 ) / 2 ) + 1 ];
+      o.range = [ o.line - Math.ceil( ( o.nearestLines + 1 ) / 2 ) + 1, o.line + Math.floor( ( o.nearestLines - 1 ) / 2 ) + 1 ];
       else if( o.selectMode === 'begin' )
-      o.range = [ o.line, o.line + o.numberOfLines ];
+      o.range = [ o.line, o.line + o.nearestLines ];
       else if( o.selectMode === 'end' )
-      o.range = [ o.line - o.numberOfLines+1, o.line+1 ];
+      o.range = [ o.line - o.nearestLines+1, o.line+1 ];
     }
     else
     {
@@ -4927,7 +4927,7 @@ strLinesSelect.defaults =
   range : null,
 
   line : null,
-  numberOfLines : 3,
+  nearestLines : 3,
   selectMode : 'center',
   highlighting : '*',
 
@@ -4947,7 +4947,7 @@ Dmytro : covered
 //
 
 /**
- * Get the nearest ( o.numberOfLines ) lines to the range ( o.charsRangeLeft ) from source string( o.src ).
+ * Get the nearest ( o.nearestLines ) lines to the range ( o.charsRangeLeft ) from source string( o.src ).
  * Returns object with two elements: .
  * Can be called in two ways:
  * - First by passing all parameters in one options map( o ) ;
@@ -4956,7 +4956,7 @@ Dmytro : covered
  * @param { Object } o - Options.
  * @param { String } [ o.src ] - Source string.
  * @param { Array|Number } [ o.range ] - Sets range of lines to select from( o.src ) or single line number.
- * @param { Number } [ o.numberOfLines ] - Sets number of lines to select.
+ * @param { Number } [ o.nearestLines ] - Sets number of lines to select.
  * @returns { Object } o - Returns object with Options with fields:
  * @returns { Array } [ o.splits ] - Array with three entries:
  * o.splits[ 0 ] and o.splits[ 2 ] contains a string with the nearest lines,
@@ -4969,7 +4969,7 @@ Dmytro : covered
  * ({
  *   src : `\na\nbc\ndef\nghij\n\n`,
  *   charsRangeLeft : [ 2, 4 ],
- *   numberOfLines : 1,
+ *   nearestLines : 1,
  * });
  * // returns o.splits = [ 'a', '\nb', 'c' ];
  * // returns o.spans = [ 1, 2, 4, 5 ];
@@ -4980,7 +4980,7 @@ Dmytro : covered
  * ({
  *   src : `\na\nbc\ndef\nghij\n\n`,
  *   charsRangeLeft : 3,
- *   numberOfLines : 2,
+ *   nearestLines : 2,
  * });
  * // returns o.splits = [ 'a\n', 'b', 'c' ];
  * // returns o.spans = [ 1, 3, 4, 5 ];
@@ -5016,7 +5016,7 @@ function strLinesNearest_body( o )
 {
   let result = Object.create( null );
   // let resultCharRange = [];
-  let i, numberOfLines;
+  let i, nearestLines;
 
   result.splits = [];
   result.spans = [ o.charsRangeLeft[ 0 ], o.charsRangeLeft[ 0 ], o.charsRangeLeft[ 1 ], o.charsRangeLeft[ 1 ] ];
@@ -5024,7 +5024,7 @@ function strLinesNearest_body( o )
   logger.log( )
   /* */
 
-  if( o.numberOfLines === 0 )
+  if( o.nearestLines === 0 )
   {
     // result = [];
     result.splits = [];
@@ -5036,15 +5036,15 @@ function strLinesNearest_body( o )
 
   /* */
 
-  let numberOfLinesLeft = Math.ceil( ( o.numberOfLines+1 ) / 2 );
-  numberOfLines = numberOfLinesLeft;
-  if( numberOfLines > 0 )
+  let nearestLinesLeft = Math.ceil( ( o.nearestLines+1 ) / 2 );
+  nearestLines = nearestLinesLeft;
+  if( nearestLines > 0 )
   {
     for( i = o.charsRangeLeft[ 0 ]-1 ; i >= 0 ; i-- )
     {
       if( o.src[ i ] === '\n' )
-      numberOfLines -= 1;
-      if( numberOfLines <= 0 )
+      nearestLines -= 1;
+      if( nearestLines <= 0 )
       break;
     }
     i = i+1;
@@ -5058,15 +5058,15 @@ function strLinesNearest_body( o )
 
   /* */
 
-  let numberOfLinesRight = o.numberOfLines + 1 - numberOfLinesLeft;
-  numberOfLines = numberOfLinesRight;
-  if( numberOfLines > 0 )
+  let nearestLinesRight = o.nearestLines + 1 - nearestLinesLeft;
+  nearestLines = nearestLinesRight;
+  if( nearestLines > 0 )
   {
     for( i = o.charsRangeLeft[ 1 ] ; i < o.src.length ; i++ )
     {
       if( o.src[ i ] === '\n' )
-      numberOfLines -= 1;
-      if( numberOfLines <= 0 )
+      nearestLines -= 1;
+      if( nearestLines <= 0 )
       break;
     }
   }
@@ -5089,7 +5089,7 @@ strLinesNearest_body.defaults =
 {
   src : null,
   charsRangeLeft : null,
-  numberOfLines : 3,
+  nearestLines : 3,
   // outputFormat : 'map',
 }
 
@@ -5097,7 +5097,7 @@ let strLinesNearest = _.routineFromPreAndBody( strLinesNearest_pre, strLinesNear
 
 //
 
-function strLinesNearestReport_body( o )
+function strLinesNearestLog_body( o )
 {
   let result = Object.create( null );
 
@@ -5134,15 +5134,15 @@ function strLinesNearestReport_body( o )
   return result;
 }
 
-strLinesNearestReport_body.defaults =
+strLinesNearestLog_body.defaults =
 {
   src : null,
   charsRangeLeft : null,
-  numberOfLines : 3,
+  nearestLines : 3,
   gray : 0,
 }
 
-let strLinesNearestReport = _.routineFromPreAndBody( strLinesNearest_pre, strLinesNearestReport_body );
+let strLinesNearestLog = _.routineFromPreAndBody( strLinesNearest_pre, strLinesNearestLog_body );
 
 //
 
@@ -5345,7 +5345,7 @@ let ModuleForTesting12 =
   strLinesNumber,
   strLinesSelect,
   strLinesNearest, /* aaa : check coverage */ /* Dmytro : checked, improved formatting */
-  strLinesNearestReport,
+  strLinesNearestLog,
   strLinesCount,
   strLinesRangeWithCharRange,
 
