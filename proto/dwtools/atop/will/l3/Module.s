@@ -1091,6 +1091,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'git.tag',
+    stepRoutine : Predefined.stepRoutineGitTag,
+  })
+
+  step
+  ({
     name : 'submodules.download',
     stepRoutine : Predefined.stepRoutineSubmodulesDownload,
   })
@@ -7664,7 +7670,6 @@ function gitReset( o )
     currentContext : module.stepMap[ 'git.push' ],
   });
 
-  debugger;
   if( !_.git.isRepository({ localPath : o.dirPath, sync : 1 }) )
   return null;
 
@@ -7691,6 +7696,73 @@ gitReset.defaults =
   dirPath : null,
   v : null,
   verbosity : 2,
+}
+
+//
+
+function gitTag( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( gitTag, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git.push' ],
+  });
+
+  if( module.repo.remotePath || !module.about.name )
+  {
+    throw _.errBrief( 'Module should be local, opened and have name' );
+  }
+
+  if( !_.strDefined( o.name ) )
+  {
+    throw _.errBrief( 'Expects name of tag defined' );
+  }
+
+  if( o.description === null )
+  o.description = o.name;
+
+  let localPath = _.git.localPathFromInside( o.dirPath );
+
+  if( !_.git.isRepository({ localPath }) )
+  return null;
+
+  if( o.dry )
+  return null;
+
+  if( o.verbosity )
+  logger.log( `Creating tag ${o.name}` );
+
+  _.git.tagMake
+  ({
+    localPath,
+    tag : o.name,
+    description : o.description || '',
+    light : o.light,
+    sync : 1,
+  });
+
+  return null;
+}
+
+gitTag.defaults =
+{
+  name : null,
+  description : '',
+  dry : 0,
+  light : 0,
+  v : null,
+  verbosity : 1,
 }
 
 // --
@@ -8337,6 +8409,7 @@ let Extension =
   gitPull,
   gitPush,
   gitReset,
+  gitTag,
 
   // etc
 
