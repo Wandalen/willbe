@@ -908,24 +908,28 @@ function stepRoutineGitTag( frame )
   let module = run.module;
   let opts = _.mapExtend( null, step.opts );
   opts.verbosity = step.verbosityWithDelta( -1 );
+  opts.name = opts[ 'tag.name' ];
+  opts.description = opts[ 'tag.description' ];
+  delete opts[ 'tag.name' ];
+  delete opts[ 'tag.description' ];
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
 
-  return module.gitReset( opts );
+  return module.gitTag( opts );
 }
 
 stepRoutineGitTag.stepOptions =
 {
-  name : '.',
-  description : '',
+  'tag.name' : '.',
+  'tag.description' : '',
   dry : 0,
-  ligth : 0,
+  light : 0,
 }
 
 stepRoutineGitTag.uniqueOptions =
 {
-  name : '.',
+  'tag.name' : '.',
 }
 
 //
@@ -1181,6 +1185,7 @@ let Extension =
   stepRoutineGitPull,
   stepRoutineGitPush,
   stepRoutineGitReset,
+  stepRoutineGitTag,
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpdate,

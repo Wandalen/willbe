@@ -22205,6 +22205,175 @@ File.txt
 
 //
 
+function stepGitTag( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+  a.reflect();
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  cloneShell( 'git init' );
+  cloneShell( 'git remote add origin ../repo' );
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am first' );
+
+  a.appStart( '.with clone/GitTag .build git.tag.default' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitTag .build git.tag.default - add tag, only option name';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v1.0' ), 1 );
+    return null;
+  })
+  cloneShell( 'git tag -l -n' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    return null;
+  })
+
+  cloneShell( 'git commit -am second' );
+  a.appStart( '.with clone/GitTag .build git.tag.description' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitTag .build git.tag.description - add tag with description';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v2.0' ), 1 );
+    return null;
+  })
+  cloneShell( 'git tag -l -n' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v2.0            Version 2.0' ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    return null;
+  })
+
+  cloneShell( 'git commit -am third' );
+  a.appStart( '.with clone/GitTag .build git.tag.light' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitTag .git.tag name:v3.0 description:"Version 3.0" light:1 - add tag, only option name';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v3.0' ), 1 );
+    return null;
+  })
+  cloneShell( 'git tag -l -n' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v2.0            Version 2.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v3.0' ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line' );
+    return null;
+  })
+
+  cloneShell( 'git commit -am fourth' );
+  a.appStart( '.with clone/GitTag .build git.tag.dry' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitTag .build git.tag.dry - option dry, should not add tag';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 1 );
+    test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
+    return null;
+  })
+  cloneShell( 'git tag -l -n' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v2.0            Version 2.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v3.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v4.0            Version 4.0' ), 0 );
+    return null;
+  })
+
+  /* */
+
+  a.appStart( '.imply v:0 .with clone/GitTag .build git.tag.nodry' )
+  .then( ( op ) =>
+  {
+    test.case = '.imply v:0 .with clone/GitTag .build git.tag.nodry - verbosity';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-tag' ), 0 );
+    test.identical( _.strCount( op.output, 'Creating tag v4.0' ), 0 );
+    return null;
+  })
+  cloneShell( 'git tag -l -n' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'v1.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v2.0            Version 2.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v3.0' ), 1 );
+    test.identical( _.strCount( op.output, 'v4.0            Version 4.0' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function upgradeDryDetached( test )
 {
   let context = this;
@@ -25931,6 +26100,7 @@ var Self =
     stepGitPull,
     stepGitPush,
     stepGitReset,
+    stepGitTag,
 
     /* xxx : cover "will .module.new.with prepare" */
 
