@@ -889,14 +889,43 @@ function stepRoutineGitReset( frame )
 
 stepRoutineGitReset.stepOptions =
 {
-  removingUntracked : null,
+  removingUntracked : 0,
   dirPath : null,
-  dry : null,
+  dry : 0,
 }
 
 stepRoutineGitReset.uniqueOptions =
 {
-  removingUntracked : null,
+  removingUntracked : 0,
+}
+
+//
+
+function stepRoutineGitTag( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  return module.gitReset( opts );
+}
+
+stepRoutineGitTag.stepOptions =
+{
+  name : '.',
+  description : '',
+  dry : 0,
+  ligth : 0,
+}
+
+stepRoutineGitTag.uniqueOptions =
+{
+  name : '.',
 }
 
 //
