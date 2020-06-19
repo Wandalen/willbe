@@ -378,6 +378,7 @@ function _commandsMake()
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     h : 'Use "git pull" to pull changes from remote repository' },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     h : 'Use "git push" to push commits and tags to remote repository' },
     'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    h : 'Use "git reset" to reset changes' },
+    'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      h : 'Use "git tag" to add tag for current commit' },
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks' },
 
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
@@ -2162,6 +2163,8 @@ function commandGitPull( e )
   }
 }
 
+commandGitPull.commandProperties = commandImply.commandProperties;
+
 //
 
 function commandGitPush( e )
@@ -2189,6 +2192,8 @@ function commandGitPush( e )
   }
 }
 
+commandGitPush.commandProperties = commandImply.commandProperties;
+
 //
 
 function commandGitReset( e )
@@ -2196,7 +2201,7 @@ function commandGitReset( e )
   let will = this;
   let optionsMap = _.strStructureParse( e.argument );
   _.routineOptions( commandGitReset, optionsMap );
-  optionsMap.verbosity = optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
+  optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
 
   return will._commandBuildLike
   ({
@@ -2217,11 +2222,66 @@ function commandGitReset( e )
 
 commandGitReset.defaults =
 {
-  dry : null,
-  removingUntracked : 0,
   dirPath : '.',
-  v : 2,
+  removingUntracked : 0,
+  dry : 0,
+  v : null,
   verbosity : 2,
+}
+
+commandGitReset.commandProperties =
+{
+  dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
+  removingUntracked : 'Remove untracked files, option does not enable deleting of ignored files. Default is removingUntracked:0.',
+  dry : 'Dry run without resetting. Default is dry:0.',
+  v : 'Set verbosity. Default is 2.',
+  verbosity : 'Set verbosity. Default is 2.',
+}
+
+//
+
+function commandGitTag( e )
+{
+  let will = this;
+  let optionsMap = _.strStructureParse( e.argument );
+  _.routineOptions( commandGitTag, optionsMap );
+  optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'git tag',
+    onEach : handleEach,
+    commandRoutine : commandGitTag,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitTag
+    ({
+      ... optionsMap,
+    });
+  }
+}
+
+commandGitTag.defaults =
+{
+  name : '.',
+  description : '',
+  dry : 0,
+  light : 0,
+  v : null,
+  verbosity : 1,
+}
+
+commandGitTag.commandProperties =
+{
+  name : 'Tag name. Default is name:".".',
+  description : 'Description of annotated tag. Default is description:"".',
+  dry : 'Dry run without tagging. Default is dry:0.',
+  light : 'Enables lightweight tags. Default is light:0.',
+  v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
 }
 
 //
@@ -3269,6 +3329,7 @@ let Extension =
   commandGitPull,
   commandGitPush,
   commandGitReset,
+  commandGitTag,
   commandGitPreservingHardLinks,
 
   // command iterator
