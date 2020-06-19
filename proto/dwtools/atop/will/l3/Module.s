@@ -1085,6 +1085,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'git.reset',
+    stepRoutine : Predefined.stepRoutineGitReset,
+  })
+
+  step
+  ({
     name : 'submodules.download',
     stepRoutine : Predefined.stepRoutineSubmodulesDownload,
   })
@@ -7632,7 +7638,56 @@ function gitPush( o )
 
 gitPush.defaults =
 {
-  moduleName : null,
+  dirPath : null,
+  v : null,
+  verbosity : 2,
+}
+
+//
+
+function gitReset( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( gitReset, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git.push' ],
+  });
+
+  debugger;
+  if( !_.git.isRepository({ localPath : o.dirPath, sync : 1 }) )
+  return null;
+
+  if( o.dry )
+  return null;
+
+  if( o.verbosity )
+  logger.log( `Resetting ${module.nameWithLocationGet()}` );
+
+  _.git.reset
+  ({
+    localPath : o.dirPath,
+    removingUntracked : o.removingUntracked,
+    sync : 1,
+  });
+
+  return null;
+}
+
+gitReset.defaults =
+{
+  dry : null,
+  removingUntracked : 0,
   dirPath : null,
   v : null,
   verbosity : 2,
@@ -8281,6 +8336,7 @@ let Extension =
 
   gitPull,
   gitPush,
+  gitReset,
 
   // etc
 
