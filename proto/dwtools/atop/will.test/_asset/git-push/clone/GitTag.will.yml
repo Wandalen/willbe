@@ -1,0 +1,57 @@
+about :
+
+  name : git-tag
+
+path :
+
+  git.proto : 'proto'
+
+step :
+
+  git.tag.default :
+    tag.name : v1.0
+
+  git.tag.description :
+    tag.name : 'v2.0'
+    tag.description : 'Version 2.0'
+
+  git.tag.light :
+    inherit : git.tag
+    tag.name : 'v3.0'
+    tag.description : 'Version 3.0'
+    light : 1
+
+  git.tag.dry :
+    inherit : git.tag
+    tag.name : 'v4.0'
+    tag.description : 'Version 4.0'
+    dry : 1
+
+  git.tag.nodry :
+    inherit : git.tag
+    tag.name : 'v4.0'
+    tag.description : 'Version 4.0'
+    dry : 0
+
+build :
+
+  git.tag.default :
+    steps :
+      - git.tag.default
+
+  git.tag.description :
+    steps :
+      - git.tag.description
+
+  git.tag.light :
+    steps :
+      - git.tag.light
+
+  git.tag.dry :
+    steps :
+      - git.tag.dry
+
+  git.tag.nodry :
+    steps :
+      - git.tag.nodry
+

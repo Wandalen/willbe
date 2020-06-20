@@ -636,7 +636,7 @@ function stepRoutineNpmGenerate( frame )
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
 
-  return module.npmGenerate( opts );
+  return module.npmGenerateFromWillfile( opts );
 
   // debugger;
   // opts.packagePath = module.pathResolve
@@ -819,6 +819,144 @@ stepRoutineWillfileFromNpm.stepOptions =
 
 stepRoutineWillfileFromNpm.uniqueOptions =
 {
+}
+
+//
+
+function stepRoutineGitPull( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  return module.gitPull( opts );
+}
+
+stepRoutineGitPull.stepOptions =
+{
+  dirPath : null,
+}
+
+stepRoutineGitPull.uniqueOptions =
+{
+}
+
+//
+
+function stepRoutineGitPush( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  return module.gitPush( opts );
+}
+
+stepRoutineGitPush.stepOptions =
+{
+  dirPath : null,
+}
+
+stepRoutineGitPush.uniqueOptions =
+{
+}
+
+//
+
+function stepRoutineGitReset( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  return module.gitReset( opts );
+}
+
+stepRoutineGitReset.stepOptions =
+{
+  removingUntracked : 0,
+  dirPath : null,
+  dry : 0,
+}
+
+stepRoutineGitReset.uniqueOptions =
+{
+  removingUntracked : 0,
+}
+
+//
+
+function stepRoutineGitSync( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  return module.gitSync( opts );
+}
+
+stepRoutineGitSync.stepOptions =
+{
+  commit : '.',
+  dirPath : null,
+}
+
+stepRoutineGitSync.uniqueOptions =
+{
+  commit : '.',
+}
+
+//
+
+function stepRoutineGitTag( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+  opts.name = opts[ 'tag.name' ];
+  opts.description = opts[ 'tag.description' ];
+  delete opts[ 'tag.name' ];
+  delete opts[ 'tag.description' ];
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  return module.gitTag( opts );
+}
+
+stepRoutineGitTag.stepOptions =
+{
+  'tag.name' : '.',
+  'tag.description' : '',
+  dry : 0,
+  light : 0,
+}
+
+stepRoutineGitTag.uniqueOptions =
+{
+  'tag.name' : '.',
 }
 
 //
@@ -1071,6 +1209,11 @@ let Extension =
   stepRoutineView,
   stepRoutineNpmGenerate,
   stepRoutineWillfileFromNpm,
+  stepRoutineGitPull,
+  stepRoutineGitPush,
+  stepRoutineGitReset,
+  stepRoutineGitSync,
+  stepRoutineGitTag,
 
   stepRoutineSubmodulesDownload,
   stepRoutineSubmodulesUpdate,

@@ -1073,6 +1073,36 @@ function predefinedForm()
 
   step
   ({
+    name : 'git.pull',
+    stepRoutine : Predefined.stepRoutineGitPull,
+  })
+
+  step
+  ({
+    name : 'git.push',
+    stepRoutine : Predefined.stepRoutineGitPush,
+  })
+
+  step
+  ({
+    name : 'git.reset',
+    stepRoutine : Predefined.stepRoutineGitReset,
+  })
+
+  step
+  ({
+    name : 'git.sync',
+    stepRoutine : Predefined.stepRoutineGitSync,
+  })
+
+  step
+  ({
+    name : 'git.tag',
+    stepRoutine : Predefined.stepRoutineGitTag,
+  })
+
+  step
+  ({
     name : 'submodules.download',
     stepRoutine : Predefined.stepRoutineSubmodulesDownload,
   })
@@ -6954,7 +6984,7 @@ resourceImport.defaults =
 
 //
 
-function npmGenerate( o )
+function npmGenerateFromWillfile( o )
 {
   let module = this;
   let will = module.will;
@@ -7113,7 +7143,7 @@ function npmGenerate( o )
   }
 }
 
-npmGenerate.defaults =
+npmGenerateFromWillfile.defaults =
 {
   packagePath : 'package.json',
   entryPath : 'Index.js',
@@ -7464,6 +7494,362 @@ function _remoteChanged()
 
   /* */
 
+}
+
+// --
+// git
+// --
+
+function gitPull( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( gitPull, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git.pull' ],
+  });
+
+  let status = _.git.statusFull
+  ({
+    insidePath : o.dirPath,
+    unpushed : 0,
+    prs : 0,
+    remote : 1,
+  });
+
+  if( !status.isRepository || !status.remote )
+  return null;
+
+  if( o.verbosity )
+  logger.log( `Pulling ${module.nameWithLocationGet()}` );
+
+  if( status.uncommitted )
+  {
+    throw _.errBrief( `${module.nameWithLocationGet()} has local changes!` );
+    return null;
+  }
+
+  let config = fileProvider.configUserRead();
+  let provider = _.FileFilter.Archive();
+  provider.archive.basePath = will.currentOpener.dirPath;
+  if( config && config.path && config.path.link )
+  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.link ) );
+
+  provider.archive.fileMapAutosaving = 1;
+
+  if( o.verbosity )
+  provider.archive.verbosity = 2;
+  else
+  provider.archive.verbosity = 0;
+
+  provider.archive.allowingMissed = 1;
+  provider.archive.allowingCycled = 1;
+  provider.archive.restoreLinksBegin();
+
+  let ready = new _.Consequence().take( null );
+
+  _.process.start
+  ({
+    execPath : `git pull`,
+    currentPath : o.dirPath,
+    ready : ready,
+  });
+
+  ready.tap( () =>
+  {
+    provider.archive.restoreLinksEnd();
+  });
+
+  ready.catch( ( err ) =>
+  {
+    err = _.errBrief( err );
+    logger.log( _.errOnce( err ) );
+    throw err;
+  });
+
+  return ready;
+}
+
+gitPull.defaults =
+{
+  dirPath : null,
+  v : null,
+  verbosity : 2,
+}
+
+//
+
+function gitPush( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( gitPush, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git.push' ],
+  });
+
+  let status = _.git.statusFull
+  ({
+    insidePath : o.dirPath,
+    local : 0,
+    uncommitted : 0,
+    unpushed : 1,
+    unpushedTags : 1,
+    remote : 0,
+    prs : 0,
+  });
+
+  if( !status.isRepository )
+  return null;
+  if( !status.unpushed )
+  return null;
+
+  if( o.verbosity )
+  logger.log( `Pushing ${module.nameWithLocationGet()}` );
+
+  let ready = new _.Consequence().take( null );
+  let start = _.process.starter
+  ({
+    currentPath : o.dirPath,
+    ready : ready,
+  });
+
+  start( `git push -u origin --all` );
+  if( status.unpushedTags )
+  start( `git push --tags -f` );
+
+  ready.catch( ( err ) =>
+  {
+    err = _.errBrief( err );
+    logger.log( _.errOnce( err ) );
+    throw err;
+  });
+
+  return ready;
+}
+
+gitPush.defaults =
+{
+  dirPath : null,
+  v : null,
+  verbosity : 2,
+}
+
+//
+
+function gitReset( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( gitReset, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git.reset' ],
+  });
+
+  if( !_.git.isRepository({ localPath : o.dirPath, sync : 1 }) )
+  return null;
+
+  if( o.dry )
+  return null;
+
+  if( o.verbosity )
+  logger.log( `Resetting ${module.nameWithLocationGet()}` );
+
+  _.git.reset
+  ({
+    localPath : o.dirPath,
+    removingUntracked : o.removingUntracked,
+    sync : 1,
+  });
+
+  return null;
+}
+
+gitReset.defaults =
+{
+  dry : null,
+  removingUntracked : 0,
+  dirPath : null,
+  v : null,
+  verbosity : 2,
+}
+
+//
+
+function gitSync( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( gitSync, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git.sync' ],
+  });
+
+  let status = _.git.statusFull
+  ({
+    insidePath : o.dirPath,
+  });
+
+  if( o.dry )
+  return null;
+
+  /* */
+
+  let ready =  new _.Consequence().take( null );
+  ready.then( () =>
+  {
+    if( status.uncommitted )
+    return gitCommit();
+    return null;
+  })
+  .then( () =>
+  {
+    if( status.remote )
+    return module.gitPull.call( module, _.mapBut( o, { commit : '.' } ) );
+    return null;
+  })
+  .then( () =>
+  {
+    if( status.local )
+    return module.gitPush.call( module, _.mapBut( o, { commit : '.' } ) );
+    return null;
+  })
+
+  return ready;
+
+  /* */
+
+  function gitCommit()
+  {
+    let con =  new _.Consequence().take( null );
+    let start = _.process.starter
+    ({
+      currentPath : o.dirPath,
+      ready : con,
+    });
+    if( o.verbosity )
+    logger.log( `Committing ${module.nameWithLocationGet()}` );
+
+    start( `git add --all` );
+    start( `git commit ${o.commit}` );
+
+    return con;
+  }
+}
+
+gitSync.defaults =
+{
+  commit : '.',
+  dirPath : null,
+  v : null,
+  verbosity : 1,
+}
+
+//
+
+function gitTag( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( gitTag, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git.tag' ],
+  });
+
+  if( module.repo.remotePath || !module.about.name )
+  {
+    throw _.errBrief( 'Module should be local, opened and have name' );
+  }
+
+  if( !_.strDefined( o.name ) )
+  {
+    throw _.errBrief( 'Expects name of tag defined' );
+  }
+
+  if( o.description === null )
+  o.description = o.name;
+
+  let localPath = _.git.localPathFromInside( o.dirPath );
+
+  if( !_.git.isRepository({ localPath }) )
+  return null;
+
+  if( o.dry )
+  return null;
+
+  if( o.verbosity )
+  logger.log( `Creating tag ${o.name}` );
+
+  _.git.tagMake
+  ({
+    localPath,
+    tag : o.name,
+    description : o.description || '',
+    light : o.light,
+    sync : 1,
+  });
+
+  return null;
+}
+
+gitTag.defaults =
+{
+  name : null,
+  description : '',
+  dry : 0,
+  light : 0,
+  v : null,
+  verbosity : 1,
 }
 
 // --
@@ -8098,12 +8484,20 @@ let Extension =
 
   resourceImport,
 
-  npmGenerate,
+  npmGenerateFromWillfile,
   willfileGenerateFromNpm,
 
   // remote
 
   _remoteChanged,
+
+  // git
+
+  gitPull,
+  gitPush,
+  gitReset,
+  gitSync,
+  gitTag,
 
   // etc
 
