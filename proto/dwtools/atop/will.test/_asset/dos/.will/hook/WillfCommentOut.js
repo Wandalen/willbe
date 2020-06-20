@@ -1,21 +1,23 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
-  let willfPath = _.arrayAs( it.opener.willfilesPath );
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let willfPath = _.arrayAs( context.opener.willfilesPath );
 
   willfPath.forEach( ( willfPath ) =>
   {
-    let read = _.fileProvider.fileRead( willfPath );
-    let write1 = _.yaml.commentOut( read, it.request.subject );
+    let read = fileProvider.fileRead( willfPath );
+    let write1 = _.yaml.commentOut( read, context.request.subject );
     if( write1 )
     {
       if( o.verbosity )
-      logger.log( `Comment out "${it.request.subject}" in ${it.junction.nameWithLocationGet()}` );
+      logger.log( `Comment out "${context.request.subject}" in ${context.junction.nameWithLocationGet()}` );
       if( !o.dry )
-      _.fileProvider.fileWrite( willfPath, write1 );
+      fileProvider.fileWrite( willfPath, write1 );
     }
   });
 

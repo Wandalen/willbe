@@ -1,24 +1,26 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
-  if( !it.module )
+  if( !context.module )
   return;
 
-  // let status = _.git.statusFull({ insidePath : it.junction.dirPath, checkingPrs : 0, checkingRemoteChanges : 0 });
+  // let status = _.git.statusFull({ insidePath : context.junction.dirPath, checkingPrs : 0, checkingRemoteChanges : 0 });
   // if( !status.isRepository )
   // return null;
 
   if( o.verbosity )
-  logger.log( `${it.junction.nameWithLocationGet()}` );
+  logger.log( `${context.junction.nameWithLocationGet()}` );
 
-  it.startWill( `${it.request.original}` );
+  context.startWill( `${context.request.original}` );
 
-  // let relativeLocalPath = _.path.relative( it.junction.dirPath, it.junction.localPath );
-  // it.start( `local-will .with ${relativeLocalPath} ${it.request.original}` );
+  // let relativeLocalPath = path.relative( context.junction.dirPath, context.junction.localPath );
+  // context.start( `local-will .with ${relativeLocalPath} ${context.request.original}` );
 
 }
 

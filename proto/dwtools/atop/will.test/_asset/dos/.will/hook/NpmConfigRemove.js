@@ -1,30 +1,32 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
-  let inPath = it.module ? it.module.dirPath : it.opener.dirPath;
-  let packagePath = _.path.join( inPath, 'package.json' );
-  let wasPackagePath = _.path.join( inPath, 'was.package.json' );
-  let oldPackagePath = _.path.join( inPath, 'package-old.json' );
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let packagePath = path.join( inPath, 'package.json' );
+  let wasPackagePath = path.join( inPath, 'was.package.json' );
+  let oldPackagePath = path.join( inPath, 'package-old.json' );
 
   if( !o.dry )
-  _.fileProvider.filesDelete( oldPackagePath );
+  fileProvider.filesDelete( oldPackagePath );
 
-  if( !_.fileProvider.fileExists( packagePath ) )
+  if( !fileProvider.fileExists( packagePath ) )
   return;
 
   if( o.verbosity )
-  logger.log( it.junction.nameWithLocationGet() );
+  logger.log( context.junction.nameWithLocationGet() );
   if( o.verbosity )
   logger.log( `Renaming ${wasPackagePath} <- ${packagePath}` );
 
   if( o.dry )
   return;
 
-  _.fileProvider.filesDelete( wasPackagePath );
-  _.fileProvider.fileRename( wasPackagePath, packagePath );
+  fileProvider.filesDelete( wasPackagePath );
+  fileProvider.fileRename( wasPackagePath, packagePath );
 
 }
 

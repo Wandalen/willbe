@@ -1,26 +1,28 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  if( !_.git.isRepository({ localPath : it.junction.dirPath, sync : 1 }) )
+  if( !_.git.isRepository({ localPath : context.junction.dirPath, sync : 1 }) )
   return;
 
   if( o.verbosity )
-  logger.log( `Resetting ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Resetting ${context.junction.nameWithLocationGet()}` );
 
   if( o.dry )
   return;
 
   _.git.reset
   ({
-    localPath : it.junction.dirPath,
+    localPath : context.junction.dirPath,
     sync : 1,
   })
 

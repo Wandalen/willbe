@@ -1,11 +1,13 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
-  if( !it.module )
+  if( !context.module )
   return;
 
   if( o.v !== null && o.v !== undefined )
@@ -13,14 +15,14 @@ function onModule( it )
   _.routineOptions( onModule, o );
 
   let fileProvider = new _.FileFilter.Archive();
-  let config = _.fileProvider.configUserRead();
+  let config = fileProvider.configUserRead();
 
   /* basePath */
 
-  let basePath = _.arrayAs( it.junction.dirPath );
+  let basePath = _.arrayAs( context.junction.dirPath );
   if( config && config.path && config.path.link )
   _.arrayAppendArrayOnce( basePath, _.arrayAs( config.path.link ) );
-  basePath = _.path.s.join( it.will.withPath, basePath );
+  basePath = path.s.join( context.will.withPath, basePath );
   _.assert( _.all( fileProvider.statsResolvedRead( basePath ) ) );
 
   /* mask */
@@ -42,7 +44,7 @@ function onModule( it )
   /* log */
 
   if( o.verbosity )
-  logger.log( `Linking ${_.color.strFormat( _.path.commonTextualReport( basePath ), 'path' )}` );
+  logger.log( `Linking ${_.color.strFormat( path.commonTextualReport( basePath ), 'path' )}` );
 
   if( o.dry )
   return;

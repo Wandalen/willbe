@@ -1,71 +1,73 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
-  let fileProvider = it.fileProvider;
-  let path = it.fileProvider.path;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let fileProvider = context.fileProvider;
+  let path = context.fileProvider.path;
 
-  if( !it.module.about )
+  if( !context.module.about )
   return;
-  if( !it.module.about.name )
+  if( !context.module.about.name )
   return;
 
-  if( it.withPath !== it.junction.localPath )
+  if( context.withPath !== context.junction.localPath )
   {
     debugger;
     throw _.errBrief
     (
-        `Attempt to prepare ${it.junction.localPath}.`
-      , `\nBut called from ${it.withPath}.`
+        `Attempt to prepare ${context.junction.localPath}.`
+      , `\nBut called from ${context.withPath}.`
       , `\nMake a willfile in directory which you want to prepare first then call the hook from the directory.`
     );
   }
 
   if( o.verbosity )
-  logger.log( `Preparing ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Preparing ${context.junction.nameWithLocationGet()}` );
 
-  it.will.hooks.TemplateStandard.call( it );
+  context.will.hooks.TemplateStandard.call( context );
 
-  it.ready.then( () =>
+  context.ready.then( () =>
   {
-    if( !_.Will.IsModuleAt( it.junction.localPath ) )
-    throw _.errBrief( `No module at ${it.junction.localPath}` );
-    let tempWillfPath = it.junction.localPath + ( path.isTrailed( it.junction.localPath ) ? '' : '.' ) + 'will.yml';
+    if( !_.Will.IsModuleAt( context.junction.localPath ) )
+    throw _.errBrief( `No module at ${context.junction.localPath}` );
+    let tempWillfPath = context.junction.localPath + ( path.isTrailed( context.junction.localPath ) ? '' : '.' ) + 'will.yml';
     if( fileProvider.fileExists( tempWillfPath ) )
-    fileProvider.fileRename( path.join( it.junction.dirPath, '-' + path.fullName( tempWillfPath ) ), tempWillfPath );
+    fileProvider.fileRename( path.join( context.junction.dirPath, '-' + path.fullName( tempWillfPath ) ), tempWillfPath );
     return null;
   });
 
   {
-    let it2 = it.will.hookItNew( it );
-    if( it2.request.map.verbosity )
-    it2.request.map.verbosity += 2;
-    it2.will.hooks.GitMake.call( it2 );
+    let context2 = context.will.hookContextNew( context );
+    if( context2.request.map.verbosity )
+    context2.request.map.verbosity += 2;
+    context2.will.hooks.GitMake.call( context2 );
   }
 
-  it.ready.thenGive( ( arg ) =>
+  context.ready.thenGive( ( arg ) =>
   {
-    it.ready.take( arg );
+    context.ready.take( arg );
 
-    it.start( `git add --all` );
-    it.start( `git add --force '*.will.*'` );
-    it.start( `git add --force .gitattributes` );
-    it.start( `git add --force .gitignore` );
-    it.start( `git add --force .github` );
-    it.start( `git add --force .eslintrc.yml` );
+    context.start( `git add --all` );
+    context.start( `git add --force '*.will.*'` );
+    context.start( `git add --force .gitattributes` );
+    context.start( `git add --force .gitignore` );
+    context.start( `git add --force .github` );
+    context.start( `git add --force .eslintrc.yml` );
 
-    it.start({ execPath : `git commit -am "prepare"`, throwingExitCode : 0 });
-    it.start({ execPath : `git push -u origin --all --follow-tags`, throwingExitCode : 0 });
+    context.start({ execPath : `git commit -am "prepare"`, throwingExitCode : 0 });
+    context.start({ execPath : `git push -u origin --all --follow-tags`, throwingExitCode : 0 });
 
   });
 
   {
-    let it2 = it.will.hookItNew( it );
-    if( it2.request.map.verbosity )
-    it2.request.map.verbosity += 2;
-    it2.will.hooks.hlink.call( it2 );
+    let context2 = context.will.hookContextNew( context );
+    if( context2.request.map.verbosity )
+    context2.request.map.verbosity += 2;
+    context2.will.hooks.hlink.call( context2 );
   }
 
 }

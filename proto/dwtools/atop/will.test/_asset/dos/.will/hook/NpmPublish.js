@@ -1,44 +1,46 @@
 
 let aboutCache = Object.create( null );
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
-  let configPath = _.path.join( it.junction.dirPath, 'package.json' );
-  let wasСonfigPath = _.path.join( it.junction.dirPath, 'was.package.json' );
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let configPath = path.join( context.junction.dirPath, 'package.json' );
+  let wasСonfigPath = path.join( context.junction.dirPath, 'was.package.json' );
   let wasPublished = null;
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  if( !it.junction.module )
+  if( !context.junction.module )
   return;
 
-  if( !it.junction.module.about.enabled )
+  if( !context.junction.module.about.enabled )
   return;
 
   if( !o.tag )
   throw _.errBrief( 'Expects option {-tag-}' );
 
-  if( !_.fileProvider.fileExists( wasСonfigPath ) )
+  if( !fileProvider.fileExists( wasСonfigPath ) )
   throw _.errBrief( `Does not have ${wasСonfigPath}` );
 
-  if( !isEnabled( it, wasСonfigPath ) )
+  if( !isEnabled( context, wasСonfigPath ) )
   return;
 
   let diff;
 
   {
-    let it2 = it.will.hookItNew( it );
-    it2.request.subject = `-am "."`
-    it2.request.original = it2.request.subject;
-    delete it2.request.map.tag;
-    delete it2.request.map.dry;
-    delete it2.request.map.force;
-    _.assert( it2.request.map !== it.request.map );
-    it2.will.hooks.GitSync.call( it2 );
+    let context2 = context.will.hookContextNew( context );
+    context2.request.subject = `-am "."`
+    context2.request.original = context2.request.subject;
+    delete context2.request.map.tag;
+    delete context2.request.map.dry;
+    delete context2.request.map.force;
+    _.assert( context2.request.map !== context.request.map );
+    context2.will.hooks.GitSync.call( context2 );
   }
 
   if( !o.force )
@@ -48,7 +50,7 @@ function onModule( it )
       diff = _.git.diff
       ({
         state2 : 'tag::' + o.tag,
-        localPath : it.junction.dirPath,
+        localPath : context.junction.dirPath,
         sync : 1,
       });
     }
@@ -62,7 +64,7 @@ function onModule( it )
   if( o.force || !diff || diff.status )
   {
     if( o.verbosity )
-    logger.log( ` + Publishing ${it.junction.nameWithLocationGet()}` );
+    logger.log( ` + Publishing ${context.junction.nameWithLocationGet()}` );
     if( o.verbosity >= 2 && diff && diff.status )
     {
       logger.up();
@@ -73,7 +75,7 @@ function onModule( it )
   else
   {
     if( o.verbosity )
-    logger.log( ` x Nothing to publish in ${it.junction.nameWithLocationGet()}` );
+    logger.log( ` x Nothing to publish in ${context.junction.nameWithLocationGet()}` );
     return;
   }
 
@@ -87,14 +89,14 @@ function onModule( it )
     verbosity : o.verbosity - 4,
   });
 
-  _.assert( _.path.isTrailed( it.junction.localPath ), 'not tested' );
+  _.assert( path.isTrailed( context.junction.localPath ), 'not tested' );
 
-  it.start( 'local-will .export' ); /* xxx */
+  context.start( 'local-will .export' ); /* xxx */
 
   let activeСonfigPath = wasСonfigPath;
   if( !o.dry )
   {
-    _.fileProvider.fileCopy( configPath, wasСonfigPath );
+    fileProvider.fileCopy( configPath, wasСonfigPath );
     activeСonfigPath = configPath;
   }
 
@@ -103,7 +105,7 @@ function onModule( it )
   _.npm.fixate
   ({
     dry : o.dry,
-    localPath : it.junction.dirPath,
+    localPath : context.junction.dirPath,
     configPath : activeСonfigPath,
     tag : o.tag,
     onDependency,
@@ -111,43 +113,43 @@ function onModule( it )
   });
 
   {
-    let it2 = it.will.hookItNew( it );
-    it2.request.subject = `-am "version ${bumped.config.version}"`
-    it2.request.original = it2.request.subject;
-    delete it2.request.map.tag;
-    delete it2.request.map.dry;
-    delete it2.request.map.force;
-    it2.will.hooks.GitSync.call( it2 );
+    let context2 = context.will.hookContextNew( context );
+    context2.request.subject = `-am "version ${bumped.config.version}"`
+    context2.request.original = context2.request.subject;
+    delete context2.request.map.tag;
+    delete context2.request.map.dry;
+    delete context2.request.map.force;
+    context2.will.hooks.GitSync.call( context2 );
   }
 
   {
-    let it2 = it.will.hookItNew( it );
-    it2.request.subject = '';
-    it2.request.original = '';
-    it2.request.map = { name : 'v' + bumped.config.version };
-    it2.will.hooks.GitTag.call( it2 );
+    let context2 = context.will.hookContextNew( context );
+    context2.request.subject = '';
+    context2.request.original = '';
+    context2.request.map = { name : 'v' + bumped.config.version };
+    context2.will.hooks.GitTag.call( context2 );
   }
 
   {
-    let it2 = it.will.hookItNew( it );
-    it2.request.subject = '';
-    it2.request.original = '';
-    it2.request.map = { name : o.tag };
-    it2.will.hooks.GitTag.call( it2 );
+    let context2 = context.will.hookContextNew( context );
+    context2.request.subject = '';
+    context2.request.original = '';
+    context2.request.map = { name : o.tag };
+    context2.will.hooks.GitTag.call( context2 );
   }
 
   {
-    let it2 = it.will.hookItNew( it );
-    it2.request.subject = '';
-    it2.request.original = '';
-    it2.will.hooks.GitPush.call( it2 );
+    let context2 = context.will.hookContextNew( context );
+    context2.request.subject = '';
+    context2.request.original = '';
+    context2.will.hooks.GitPush.call( context2 );
   }
 
   _.npm.publish
   ({
-    localPath : it.junction.dirPath,
+    localPath : context.junction.dirPath,
     tag : o.tag,
-    ready : it.ready,
+    ready : context.ready,
     verbosity : o.verbosity === 2 ? 2 : o.verbosity -1,
   })
 
@@ -186,12 +188,12 @@ module.exports = onModule;
 
 //
 
-function isEnabled( it, localPath )
+function isEnabled( context, localPath )
 {
-  let _ = it.tools;
-  if( !_.strEnds( _.path.fullName( localPath ), '.json' ) )
-  localPath = _.path.join( localPath, 'package.json' );
-  let config = _.fileProvider.configRead( localPath );
+  let _ = context.tools;
+  if( !_.strEnds( path.fullName( localPath ), '.json' ) )
+  localPath = path.join( localPath, 'package.json' );
+  let config = fileProvider.configRead( localPath );
   if( !config.name )
   return false;
   if( config.enabled !== undefined && !config.enabled )

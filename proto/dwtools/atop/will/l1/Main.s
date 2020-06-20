@@ -1656,26 +1656,26 @@ function modulesFindEachAt( o )
       if( !_.mapIs( resolved ) )
       resolved = _.arrayAs( resolved );
 
-      _.each( resolved, ( it1 ) => con2.then( ( arg ) =>
+      _.each( resolved, ( context ) => con2.then( ( arg ) =>
       {
-        let it2 = Object.create( null );
-        // it2.currentOpener = opener._openerMake(); // zzz
-        // it2.dst = element;
+        let context2 = Object.create( null );
+        // context2.currentOpener = opener._openerMake(); // zzz
+        // context2.dst = element;
 
-        it2.currentModule = it1.currentModule;
-        _.assert( it2.currentModule instanceof _.will.Module );
-        it2.currentOpener = it2.currentModule.userArray[ 0 ];
-        _.assert( it2.currentOpener instanceof _.will.ModuleOpener );
+        context2.currentModule = context.currentModule;
+        _.assert( context2.currentModule instanceof _.will.Module );
+        context2.currentOpener = context2.currentModule.userArray[ 0 ];
+        _.assert( context2.currentOpener instanceof _.will.ModuleOpener );
 
         debugger;
-        if( _.arrayIs( it1.dst ) || _.strIs( it1.dst ) )
-        it2.currentOpenerPath = it1.dst;
-        it2.options = o;
+        if( _.arrayIs( context.dst ) || _.strIs( context.dst ) )
+        context2.currentOpenerPath = context.dst;
+        context2.options = o;
 
         if( o.onBegin )
-        o.onBegin( it2 )
+        o.onBegin( context2 )
         if( o.onEnd )
-        return o.onEnd( it2 );
+        return o.onEnd( context2 );
 
         return null;
       }));
@@ -1752,14 +1752,14 @@ function modulesFindEachAt( o )
 
       opener.find();
 
-      let it = Object.create( null );
-      it.currentOpener = opener;
-      it.options = o;
+      let context = Object.create( null );
+      context.currentOpener = opener;
+      context.options = o;
 
       opener.openedModule.stager.stageConsequence( 'preformed' ).then( ( arg ) =>
       {
         if( o.onBegin )
-        return o.onBegin( it );
+        return o.onBegin( context );
         return arg;
       });
 
@@ -1773,7 +1773,7 @@ function modulesFindEachAt( o )
 
         let r = null;
         if( o.onEnd )
-        r = o.onEnd( it );
+        r = o.onEnd( context );
 
         return r;
       })
@@ -1874,12 +1874,12 @@ function modulesFindWithAt( o )
   /* xxx : replace by concurrent, maybe */
   files.forEach( ( file ) =>
   {
-    let it = Object.create( null );
-    it.file = file;
-    it.opener = null;
+    let context = Object.create( null );
+    context.file = file;
+    context.opener = null;
     con
-    .then( ( arg ) => moduleOpen( it ) )
-    .finally( ( err, arg ) => moduleEnd( it, err, arg ) )
+    .then( ( arg ) => moduleOpen( context ) )
+    .finally( ( err, arg ) => moduleEnd( context, err, arg ) )
   });
 
   con.finally( ( err, arg ) => end( err, arg ) );
@@ -1888,19 +1888,19 @@ function modulesFindWithAt( o )
 
   /* */
 
-  function moduleOpen( it )
+  function moduleOpen( context )
   {
-    if( visitedFilesSet.has( it.file ) )
+    if( visitedFilesSet.has( context.file ) )
     return null;
 
-    let selectedFiles = will.willfilesSelectPaired( it.file, files );
+    let selectedFiles = will.willfilesSelectPaired( context.file, files );
     let willfilesPath = selectedFiles.map( ( file ) =>
     {
       visitedFilesSet.add( file );
       return file.absolute;
     });
 
-    it.opener = will._openerMake
+    context.opener = will._openerMake
     ({
       opener :
       {
@@ -1910,20 +1910,20 @@ function modulesFindWithAt( o )
       }
     });
 
-    it.opener.find();
-    // if( _.boolLike( will.withSubmodules ) && it.opener.openedModule )
+    context.opener.find();
+    // if( _.boolLike( will.withSubmodules ) && context.opener.openedModule )
     // {
     //   debugger;
-    //   it.opener.openedModule.stager.stageStateSkipping( 'subModulesFormed', !will.withSubmodules );
+    //   context.opener.openedModule.stager.stageStateSkipping( 'subModulesFormed', !will.withSubmodules );
     // }
-    it.opener.open();
+    context.opener.open();
 
-    return it.opener.openedModule.ready.split()
+    return context.opener.openedModule.ready.split()
     .then( function( arg )
     {
-      _.assert( it.opener.willfilesArray.length > 0 );
+      _.assert( context.opener.willfilesArray.length > 0 );
       let l = op.openers.length;
-      _.arrayAppendOnce( op.openers, it.opener, ( e ) => e.openedModule );
+      _.arrayAppendOnce( op.openers, context.opener, ( e ) => e.openedModule );
       _.assert( l < op.openers.length );
       _.assert( !_.longHas( op.openers, null ) )
       return arg;
@@ -1932,19 +1932,19 @@ function modulesFindWithAt( o )
 
   /* */
 
-  function moduleEnd( it, err, arg )
+  function moduleEnd( context, err, arg )
   {
     if( err )
     {
       err = _.err( err );
       op.errs.push( err );
-      if( o.withInvalid && it.opener && it.opener.openedModule )
+      if( o.withInvalid && context.opener && context.opener.openedModule )
       {
-        _.arrayAppendOnce( op.openers, it.opener );
+        _.arrayAppendOnce( op.openers, context.opener );
       }
-      else if( it.opener )
+      else if( context.opener )
       {
-        it.opener.finit();
+        context.opener.finit();
       }
       logger.log( _.errOnce( err ) );
       return null;
@@ -2238,25 +2238,25 @@ function modulesEach_body( o )
 
   /* */
 
-  function handleUp( object, it )
+  function handleUp( object, context )
   {
 
     _.assert( will.ObjectIs( object ) );
     let junction = will.junctionFrom( object );
 
-    if( o.withDisabledStem && it.level === 0 )
+    if( o.withDisabledStem && context.level === 0 )
     {
       let filter2 = _.mapExtend( null, filter );
       filter2.withDisabledSubmodules = 1;
       filter2.withDisabledModules = 1;
-      it.continueNode = will.relationFit( object, filter2 );
+      context.continueNode = will.relationFit( object, filter2 );
     }
     else
     {
-      it.continueNode = will.relationFit( object, filter );
+      context.continueNode = will.relationFit( object, filter );
     }
 
-    if( it.continueNode )
+    if( context.continueNode )
     {
       junction.objects.forEach( ( object ) =>
       {
@@ -2268,16 +2268,16 @@ function modulesEach_body( o )
     }
 
     if( o.onUp )
-    o.onUp( outputFrom( object ), it );
+    o.onUp( outputFrom( object ), context );
 
   }
 
   /* */
 
-  function handleDown( object, it )
+  function handleDown( object, context )
   {
     if( o.onDown )
-    o.onDown( outputFrom( object ), it );
+    o.onDown( outputFrom( object ), context );
   }
 
   /* */
@@ -4722,14 +4722,14 @@ function hooksReload()
     let hook = Object.create( null );
     hook.name = path.name( hookFile.absolute );
     hook.file = hookFile;
-    hook.call = function call( it )
+    hook.call = function call( context )
     {
       _.assert( arguments.length === 1 );
-      it = will.resourceWrap( it );
-      let it2 = will.hookItNew( it );
-      it2.execPath = hook.file.absolute;
-      it2 = will.hookItFrom( it2 );
-      return will.hookCall( it2 );
+      context = will.resourceWrap( context );
+      let context2 = will.hookContextNew( context );
+      context2.execPath = hook.file.absolute;
+      context2 = will.hookContextFrom( context2 );
+      return will.hookCall( context2 );
     }
     _.assert( !hooks[ hook.name ], () => `Redefinition of hook::${name}` );
     hooks[ hook.name ] = hook;
@@ -4756,7 +4756,7 @@ function hooksList()
 
 //
 
-function hookItNew( o )
+function hookContextNew( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -4790,7 +4790,7 @@ function hookItNew( o )
 
 //
 
-function hookItFrom( o )
+function hookContextFrom( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
@@ -4800,7 +4800,7 @@ function hookItFrom( o )
 
   o = will.resourceWrap( o );
 
-  o = _.routineOptions( hookItFrom, o );
+  o = _.routineOptions( hookContextFrom, o );
   _.assert( arguments.length === 1 );
 
   if( o.opener && !o.module )
@@ -4896,7 +4896,7 @@ function hookItFrom( o )
   return o;
 }
 
-hookItFrom.defaults =
+hookContextFrom.defaults =
 {
 
   will : null,
@@ -5051,8 +5051,8 @@ function hookCall( o )
         o.request.map.verbosity = o.request.map.v;
         delete o.request.map.v;
       }
-      if( o.request.map.verbosity === undefined )
-      o.request.map.verbosity = 1;
+      // if( o.request.map.verbosity === undefined ) /* yyy */
+      // o.request.map.verbosity = 1;
     }
   }
 
@@ -5079,7 +5079,7 @@ function hookCall( o )
 
 }
 
-hookCall.defaults = _.mapExtend( null, hookItFrom.defaults );
+hookCall.defaults = _.mapExtend( null, hookContextFrom.defaults );
 
 //
 
@@ -5520,8 +5520,8 @@ let Extension =
 
   hooksReload,
   hooksList,
-  hookItNew,
-  hookItFrom,
+  hookContextNew,
+  hookContextFrom,
   hookCall,
   hookFindAt,
   hooksGet,

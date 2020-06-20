@@ -1,12 +1,14 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
   if( o.verbosity )
-  logger.log( `Cleaning ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Cleaning ${context.junction.nameWithLocationGet()}` );
 
   del( '.module' );
   del( 'out' );
@@ -14,9 +16,9 @@ function onModule( it )
 
   function del( filePath )
   {
-    _.fileProvider.filesDelete
+    fileProvider.filesDelete
     ({
-      filePath : _.path.join( it.module ? it.module.inPath : it.opener.dirPath, filePath ),
+      filePath : path.join( context.module ? context.module.inPath : context.opener.dirPath, filePath ),
       writing : !o.dry,
       verbosity : 1,
     });

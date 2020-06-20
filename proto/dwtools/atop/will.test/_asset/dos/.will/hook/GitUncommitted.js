@@ -1,24 +1,28 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
-  _.fileProvider.filesFind({ filePath : it.junction.dirPath + '**', safe : 0 });
+  /* read stats to fix for windows to update edit time of hard linked files */
+  if( process.platform === 'win32' )
+  fileProvider.filesFind({ filePath : context.junction.dirPath + '**', safe : 0 });
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
   let o2 = _.mapOnly( o, _.git.statusFull.defaults );
-  o2.insidePath = it.junction.dirPath;
+  o2.insidePath = context.junction.dirPath;
   let status = _.git.statusFull( o2 );
 
   if( !status.status )
   return null;
 
-  logger.log( it.junction.nameWithLocationGet() );
+  logger.log( context.junction.nameWithLocationGet() );
   logger.log( status.status );
 
 }

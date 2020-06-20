@@ -1,12 +1,12 @@
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
+  let o = context.request.map;
+  let _ = context.tools;
 
-  if( it.module )
-  logger.log( it.module.exportString({ verbosity : 2 }) );
+  if( context.module )
+  logger.log( context.module.exportString({ verbosity : 2 }) );
   else
-  logger.log( `Info for ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Info for ${context.junction.nameWithLocationGet()}` );
 
 }
 module.exports = onModule;

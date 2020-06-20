@@ -1,17 +1,19 @@
 
-function onGitMake( it )
+function onGitMake( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
-  if( !it.module || it.module.repo.remotePath || !it.module.about.name )
+  if( !context.module || context.module.repo.remotePath || !context.module.about.name )
   {
     debugger;
     throw _.errBrief( 'Module should be local, opened and have name' );
   }
 
-  let localPath = it.junction.dirPath;
+  let localPath = context.junction.dirPath;
   let remotePath = null;
 
   debugger;
@@ -23,10 +25,10 @@ function onGitMake( it )
   try
   {
 
-    let config = _.fileProvider.configUserRead();
+    let config = fileProvider.configUserRead();
     if( config && config.about && config.path.remoteRepository )
     {
-      _.mapSupplement( config, it );
+      _.mapSupplement( config, context );
       remotePath = _.resolver.resolveQualified
       ({
         src : config,
@@ -38,10 +40,10 @@ function onGitMake( it )
     if( config.about && config.about[ 'github.token' ] )
     token = config.about[ 'github.token' ];
 
-    _.assert( !_.strEnds( it.junction.localPath, 'git/trunk/' ), 'guard' );
+    _.assert( !_.strEnds( context.junction.localPath, 'git/trunk/' ), 'guard' );
 
     if( o.verbosity )
-    logger.log( `Making repository for ${it.junction.nameWithLocationGet()}` );
+    logger.log( `Making repository for ${context.junction.nameWithLocationGet()}` );
     if( o.verbosity >= 2 )
     logger.log( `localPath : ${_.color.strFormat( String( localPath ), 'path' )}` );
     if( o.verbosity >= 2 )
@@ -65,7 +67,7 @@ function onGitMake( it )
     err = _.err
     (
         err
-      , `\nFailed to make an repository for ${it.junction.nameWithLocationGet()}`
+      , `\nFailed to make an repository for ${context.junction.nameWithLocationGet()}`
       , `\nlocalPath : ${localPath}`
       , `\nremotePath : ${remotePath}`
     );

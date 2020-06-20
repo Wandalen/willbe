@@ -1,45 +1,47 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
-  if( !it.module )
+  if( !context.module )
   return;
 
   if( o.v !== null && o.v !== undefined )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  let config = _.fileProvider.configUserRead();
+  let config = fileProvider.configUserRead();
 
-  if( !it.module.about.name )
+  if( !context.module.about.name )
   return;
 
-  if( !_.git.isRepository({ localPath : it.junction.dirPath }) )
+  if( !_.git.isRepository({ localPath : context.junction.dirPath }) )
   return;
 
   _.sure( _.strDefined( config.about.user ), 'Expects {-config.about.user-}' );
-  _.sure( _.strDefined( it.module.about.name ), 'Expects {-module.about.name-}' );
+  _.sure( _.strDefined( context.module.about.name ), 'Expects {-module.about.name-}' );
 
   /* basePath */
 
-  it.startNonThrowing( `git remote show origin` )
+  context.startNonThrowing( `git remote show origin` )
   .then( ( op ) =>
   {
     debugger;
     if( !_.strHas( op.output, 'https://github.com/' ) )
     {
-      logger.log( `Nothing to patch at ${_.ct.format( it.junction.dirPath, 'path' )}` );
+      logger.log( `Nothing to patch at ${_.ct.format( context.junction.dirPath, 'path' )}` );
       return op;
     }
-    logger.log( `Patching ${_.ct.format( it.junction.dirPath, 'path' )}` );
+    logger.log( `Patching ${_.ct.format( context.junction.dirPath, 'path' )}` );
     if( o.dry )
     return null;
     let ready = new _.Consequence().take( null );
-    it.start({ execPath : `git remote set-url origin git+ssh://git@github.com/${config.about.user}/${it.module.name}.git`, ready });
-    it.start({ execPath : `git remote show origin`, ready });
+    context.start({ execPath : `git remote set-url origin git+ssh://git@github.com/${config.about.user}/${context.module.name}.git`, ready });
+    context.start({ execPath : `git remote show origin`, ready });
     return null;
   })
 

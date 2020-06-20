@@ -1,13 +1,15 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
   let status = _.git.statusFull
   ({
-    insidePath : it.junction.dirPath,
+    insidePath : context.junction.dirPath,
     local : 0,
     uncommitted : 0,
     unpushed : 1,
@@ -22,11 +24,11 @@ function onModule( it )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pushing ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Pushing ${context.junction.nameWithLocationGet()}` );
 
-  it.start( `git push -u origin --all` );
+  context.start( `git push -u origin --all` );
   if( status.unpushedTags )
-  it.start( `git push --tags -f` );
+  context.start( `git push --tags -f` );
 
 }
 

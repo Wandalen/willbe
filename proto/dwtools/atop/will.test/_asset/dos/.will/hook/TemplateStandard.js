@@ -1,18 +1,20 @@
 
 let _;
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
-  if( !it.module.about )
+  if( !context.module.about )
   return;
-  if( !it.module.about.name )
+  if( !context.module.about.name )
   return;
 
   if( o.verbosity )
-  logger.log( `Applying template::Standard to ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Applying template::Standard to ${context.junction.nameWithLocationGet()}` );
 
   if( o.dry )
   return;
@@ -20,10 +22,10 @@ function onModule( it )
   var writer = _.TemplateFileWriter
   ({
     // resolver : _.TemplateTreeResolver(),
-    dst : it.junction.dirPath,
+    dst : context.junction.dirPath,
     srcTemplatePath : __dirname + '/template/Standard.js',
-    name : it.module.about.name,
-    onConfigGet : () => onConfigGet( it ),
+    name : context.module.about.name,
+    onConfigGet : () => onConfigGet( context ),
   });
 
   writer.form();
@@ -34,17 +36,17 @@ module.exports = onModule;
 
 //
 
-function onConfigGet( it )
+function onConfigGet( context )
 {
   let result = Object.create( null );
-  let name = it.module.about.name;
+  let name = context.module.about.name;
   let lowName = name.toLowerCase();
   let highName = name.toUpperCase();
   let shortName = name;
   if( /^w[A-Z]/.test( shortName ) )
   shortName = shortName.substring( 1 );
 
-  let config = _.fileProvider.configUserRead();
+  let config = fileProvider.configUserRead();
   _.mapSupplementRecursive( result, config );
 
   result.package =
@@ -53,8 +55,8 @@ function onConfigGet( it )
     lowName : lowName,
     highName : highName,
     shortName : shortName,
-    description : it.module.about.description || '',
-    version : it.module.about.version || '0.3.0',
+    description : context.module.about.description || '',
+    version : context.module.about.version || '0.3.0',
   };
 
   return result;

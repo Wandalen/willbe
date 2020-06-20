@@ -1747,9 +1747,9 @@ function commandModuleNewWith( e )
 
   function handleEach( it )
   {
-    let it2 = _.mapOnly( it, will.hookItFrom.defaults );
+    let it2 = _.mapOnly( it, will.hookContextFrom.defaults );
     it2.execPath = path.join( will.hooksPath, execPath );
-    it2 = will.hookItFrom( it2 );
+    it2 = will.hookContextFrom( it2 );
     return will.hookCall( it2 );
   }
 
@@ -1816,9 +1816,9 @@ function commandDo( e )
 
   function handleEach( it )
   {
-    let it2 = _.mapOnly( it, will.hookItFrom.defaults );
+    let it2 = _.mapOnly( it, will.hookContextFrom.defaults );
     it2.execPath = execPath;
-    it2 = will.hookItFrom( it2 );
+    it2 = will.hookContextFrom( it2 );
     return will.hookCall( it2 );
   }
 
@@ -1855,9 +1855,9 @@ function commandHookCall( e )
 
   function handleEach( it )
   {
-    let it2 = _.mapOnly( it, will.hookItFrom.defaults );
+    let it2 = _.mapOnly( it, will.hookContextFrom.defaults );
     it2.execPath = path.join( will.hooksPath, execPath );
-    it2 = will.hookItFrom( it2 );
+    it2 = will.hookContextFrom( it2 );
     return will.hookCall( it2 );
   }
 

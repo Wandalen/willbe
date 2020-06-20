@@ -1,17 +1,19 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
-  if( !_.git.insideRepository( it.junction.dirPath ) )
+  if( !_.git.insideRepository( context.junction.dirPath ) )
   return null;
 
   if( o.verbosity )
-  logger.log( `${it.junction.nameWithLocationGet()}` );
+  logger.log( `${context.junction.nameWithLocationGet()}` );
 
-  it.start( `git ${it.request.original}` );
+  context.start( `git ${context.request.original}` );
 
 }
 

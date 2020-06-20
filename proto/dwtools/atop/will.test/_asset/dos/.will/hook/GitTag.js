@@ -1,11 +1,13 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
-  if( !it.module || it.module.repo.remotePath || !it.module.about.name )
+  if( !context.module || context.module.repo.remotePath || !context.module.about.name )
   {
     debugger;
     throw _.errBrief( 'Module should be local, opened and have name' );
@@ -23,7 +25,7 @@ function onModule( it )
   if( o.description === null )
   o.description = o.name;
 
-  let localPath = _.git.localPathFromInside( it.junction.dirPath );
+  let localPath = _.git.localPathFromInside( context.junction.dirPath );
   let isRepository = _.git.isRepository({ localPath });
 
   if( !isRepository )
@@ -45,9 +47,9 @@ function onModule( it )
   });
 
   // if( o.light )
-  // it.start( `git tag ${o.name}` );
+  // context.start( `git tag ${o.name}` );
   // else
-  // it.start( `git tag -a ${o.name} -m "${o.description}"` );
+  // context.start( `git tag -a ${o.name} -m "${o.description}"` );
 
 }
 

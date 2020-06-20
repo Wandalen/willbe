@@ -1,19 +1,21 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
-  let willfPath = _.arrayAs( it.opener.willfilesPath );
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let willfPath = _.arrayAs( context.opener.willfilesPath );
 
   willfPath.forEach( ( willfPath ) =>
   {
-    // pathTmpRelace( it, willfPath );
-    // pathExportExportReplace( it, willfPath );
-    pathExportAdd( it, willfPath );
-    // pathExportUse( it, willfPath );
-    // pathRemotesAdd( it, willfPath );
-    // pathRemotesToOrigins( it, willfPath );
+    // pathTmpRelace( context, willfPath );
+    // pathExportExportReplace( context, willfPath );
+    pathExportAdd( context, willfPath );
+    // pathExportUse( context, willfPath );
+    // pathRemotesAdd( context, willfPath );
+    // pathRemotesToOrigins( context, willfPath );
   });
 
 }
@@ -22,12 +24,14 @@ module.exports = onModule;
 
 //
 
-function pathTmpRelace( it, willfPath )
+function pathTmpRelace( context, willfPath )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
-  let read = _.fileProvider.fileRead( willfPath );
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let logger = context.logger;
+  let read = fileProvider.fileRead( willfPath );
 
   let ins = `temp : 'path::out'`;
   let sub =
@@ -44,7 +48,7 @@ function pathTmpRelace( it, willfPath )
   let write = read.replace( ins, sub.trim() );
 
   if( o.verbosity )
-  logger.log( `Replacing tmp in ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Replacing tmp in ${context.junction.nameWithLocationGet()}` );
 
   if( o.verbosity >= 2 )
   logger.log( write );
@@ -52,17 +56,19 @@ function pathTmpRelace( it, willfPath )
   if( o.dry )
   return;
 
-  _.fileProvider.fileWrite( willfPath, write );
+  fileProvider.fileWrite( willfPath, write );
 }
 
 //
 
-function pathExportExportReplace( it, willfPath )
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;Replace( context, willfPath )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
-  let read = _.fileProvider.fileRead( willfPath );
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let read = fileProvider.fileRead( willfPath );
 
   if( !_.strHas( read, `export : '{path::export}` ) )
   return;
@@ -73,7 +79,7 @@ function pathExportExportReplace( it, willfPath )
   let write = splits.join( '' );
 
   if( o.verbosity )
-  logger.log( `Replacing "export : {path::export}" in ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Replacing "export : {path::export}" in ${context.junction.nameWithLocationGet()}` );
 
   if( o.verbosity >= 2 )
   logger.log( write );
@@ -81,17 +87,19 @@ function pathExportExportReplace( it, willfPath )
   if( o.dry )
   return;
 
-  _.fileProvider.fileWrite( willfPath, write );
+  fileProvider.fileWrite( willfPath, write );
 }
 
-//
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
-function pathExportAdd( it, willfPath )
+function pathExportAdd( context, willfPath )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
-  let read = _.fileProvider.fileRead( willfPath );
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let read = fileProvider.fileRead( willfPath );
   let regexp = new RegExp( '\\n(((?!\\n)\\s)*)(' + _.regexpEscape( `proto : '` ) + ')(.*?)\\n' );
   let splits = _.strIsolateLeftOrAll( read, regexp );
 
@@ -106,7 +114,7 @@ function pathExportAdd( it, willfPath )
   return;
 
   if( o.verbosity )
-  logger.log( `Adding path::export to ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Adding path::export to ${context.junction.nameWithLocationGet()}` );
 
   splits.splice( 2, 0, `${pre}export : '{path::proto}/**'\n` );
   let write = splits.join( '' );
@@ -117,17 +125,19 @@ function pathExportAdd( it, willfPath )
   if( o.dry )
   return;
 
-  _.fileProvider.fileWrite( willfPath, write );
-}
+  fileProvider.fileWrite( willfPath, write );
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
 //
 
-function pathExportUse( it, willfPath )
+function pathExportUse( context, willfPath )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
-  let read = _.fileProvider.fileRead( willfPath );
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let read = fileProvider.fileRead( willfPath );
 
   if( !_.strHas( read, 'export : path::proto' ) )
   return;
@@ -135,27 +145,29 @@ function pathExportUse( it, willfPath )
   let write = _.strReplace( read, 'export : path::proto', 'export : path::export' );
 
   if( o.verbosity )
-  logger.log( `Using path::export in ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Using path::export in ${context.junction.nameWithLocationGet()}` );
 
   if( o.verbosity >= 2 )
   logger.log( write );
 
   if( o.dry )
   return;
-
-  _.fileProvider.fileWrite( willfPath, write );
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  fileProvider.fileWrite( willfPath, write );
 }
 
 //
 
-function pathRemotesAdd( it, willfPath )
+function pathRemotesAdd( context, willfPath )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
-  let read = _.fileProvider.fileRead( willfPath );
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let read = fileProvider.fileRead( willfPath );
 
-  if( !it.module || !it.module.about.name )
+  if( !context.module || !context.module.about.name )
   return;
 
   let line = _.yaml.lineFind( read, `repository : git+` );
@@ -164,12 +176,12 @@ function pathRemotesAdd( it, willfPath )
   return;
 
   if( o.verbosity )
-  logger.log( `Adding path::remotes to ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Adding path::remotes to ${context.junction.nameWithLocationGet()}` );
 
   let remotesPath =
   [
-    `git+https:///github.com/Wandalen/${it.module.name}.git`,
-    `npm:///${it.module.resolve({ selector : 'about::npm.name', missingAction : 'undefine' }) || it.module.name.toLowerCase()}`,
+    `git+https:///github.com/Wandalen/${context.module.name}.git`,
+    `npm:///${context.module.resolve({ selector : 'about::npm.name', missingAction : 'undefine' }) || context.module.name.toLowerCase()}`,
   ];
 
   let ins = `${line.pre}remotes :
@@ -181,20 +193,22 @@ ${line.pre} - ${remotesPath[ 1 ]}`
   if( o.verbosity >= 2 )
   logger.log( write );
 
-  if( o.dry )
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
   return;
 
-  _.fileProvider.fileWrite( willfPath, write );
+  fileProvider.fileWrite( willfPath, write );
 }
 
 //
 
-function pathRemotesToOrigins( it, willfPath )
+function pathRemotesToOrigins( context, willfPath )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
-  let read = _.fileProvider.fileRead( willfPath );
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let read = fileProvider.fileRead( willfPath );
 
   if( !_.strHas( read, ' remotes :' ) )
   return;
@@ -202,7 +216,7 @@ function pathRemotesToOrigins( it, willfPath )
   let write = _.strReplace( read, ' remotes :', ' origins :' );
 
   if( o.verbosity )
-  logger.log( `Replacing path::origins <- path::remotes ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Replacing path::origins <- path::remotes ${context.junction.nameWithLocationGet()}` );
 
   if( o.verbosity >= 2 )
   logger.log( write );
@@ -210,7 +224,7 @@ function pathRemotesToOrigins( it, willfPath )
   if( o.dry )
   return;
 
-  _.fileProvider.fileWrite( willfPath, write );
+  fileProvider.fileWrite( willfPath, write );
 }
 
 //

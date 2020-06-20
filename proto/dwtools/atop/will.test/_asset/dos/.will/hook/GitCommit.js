@@ -1,15 +1,21 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
-  _.fileProvider.filesFind({ filePath : it.junction.dirPath + '**', safe : 0 });
+  /* read stats to fix for windows to update edit time of hard linked files */
+  if( process.platform === 'win32' )
+  fileProvider.filesFind({ filePath : context.junction.dirPath + '**', safe : 0 });
+
+  debugger;
 
   let status = _.git.statusFull
   ({
-    insidePath : it.junction.dirPath,
+    insidePath : context.junction.dirPath,
     unpushed : 0,
     prs : 0,
     remote : 0,
@@ -21,13 +27,13 @@ function onModule( it )
   return null;
 
   if( o.verbosity )
-  logger.log( `Committing ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Committing ${context.junction.nameWithLocationGet()}` );
 
   if( o.dry )
   return;
 
-  it.start( `git add --all` );
-  it.start( `git commit ${it.request.original}` );
+  context.start( `git add --all` );
+  context.start( `git commit ${context.request.original}` );
 
 }
 

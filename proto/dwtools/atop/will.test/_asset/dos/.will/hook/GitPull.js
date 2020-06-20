@@ -1,9 +1,11 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
 
   /* qqq : implement good coverage
     add test routine to cover broken link case
@@ -16,7 +18,7 @@ function onModule( it )
 
   let status = _.git.statusFull
   ({
-    insidePath : it.junction.dirPath,
+    insidePath : context.junction.dirPath,
     unpushed : 0,
     prs : 0,
     remote : 1,
@@ -26,17 +28,17 @@ function onModule( it )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${it.junction.nameWithLocationGet()}` );
+  logger.log( `Pulling ${context.junction.nameWithLocationGet()}` );
 
   if( status.uncommitted )
   {
-    throw _.errBrief( `${it.junction.nameWithLocationGet()} has local changes!` );
+    throw _.errBrief( `${context.junction.nameWithLocationGet()} has local changes!` );
     return null;
   }
 
-  let config = _.fileProvider.configUserRead();
+  let config = fileProvider.configUserRead();
   let provider = _.FileFilter.Archive();
-  provider.archive.basePath = it.opener.dirPath;
+  provider.archive.basePath = context.opener.dirPath;
   if( config && config.path && config.path.link )
   provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.link ) );
   provider.archive.fileMapAutosaving = 1;
@@ -48,14 +50,14 @@ function onModule( it )
   provider.archive.allowingCycled = 1;
   provider.archive.restoreLinksBegin();
 
-  it.start( `git pull` );
+  context.start( `git pull` );
 
-  it.ready.tap( () =>
+  context.ready.tap( () =>
   {
     provider.archive.restoreLinksEnd();
   });
 
-  it.ready.catch( ( err ) =>
+  context.ready.catch( ( err ) =>
   {
     err = _.errBrief( err );
     logger.log( _.errOnce( err ) );

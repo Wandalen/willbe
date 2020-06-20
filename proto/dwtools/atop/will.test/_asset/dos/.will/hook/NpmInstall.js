@@ -1,15 +1,17 @@
 
-function onModule( it )
+function onModule( context )
 {
-  let o = it.request.map;
-  let _ = it.tools;
-  let logger = it.logger;
-  let ready = it.ready;
+  let o = context.request.map;
+  let _ = context.tools;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let ready = context.ready;
 
-  ready.then( () => it.fileProvider.filesDelete( it.path.join( it.junction.dirPath, 'node_modules' ) ) );
-  ready.then( () => it.fileProvider.filesDelete( it.path.join( it.junction.dirPath, 'package-lock.json' ) ) );
+  ready.then( () => context.fileProvider.filesDelete( context.path.join( context.junction.dirPath, 'node_modules' ) ) );
+  ready.then( () => context.fileProvider.filesDelete( context.path.join( context.junction.dirPath, 'package-lock.json' ) ) );
 
-  it.start( 'npm i' );
+  context.start( 'npm i' );
 
 }
 
