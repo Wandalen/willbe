@@ -59,6 +59,8 @@ commandPackageVersion
 commandShell
 commandDo
 commandHookCall
+commandNpmGenerateFromWillfile
+commandWillfileGenerateFromNpm
 
 */
 
@@ -373,6 +375,11 @@ function _commandsMake()
     'module new' :                      { e : _.routineJoin( will, will.commandModuleNew ),                   h : 'Create a new module.' },
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               h : 'Make a new module in the current directory and call a specified hook for the module to prepare it.' },
 
+    'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     h : 'Use "git pull" to pull changes from remote repository' },
+    'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     h : 'Use "git push" to push commits and tags to remote repository' },
+    'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    h : 'Use "git reset" to reset changes' },
+    'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     h : 'Use "git sync" to syncronize local and remote repositories' },
+    'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      h : 'Use "git tag" to add tag for current commit' },
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks' },
 
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
@@ -1033,7 +1040,7 @@ function commandVersion( e ) /* xxx qqq : move to NpmTools */
   let logger = will.logger;
 
   let implyMap = _.strStructureParse( e.argument );
-  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
   will._propertiesImply( implyMap );
 
   logger.log( 'Current version:', will.versionGet() );
@@ -2132,6 +2139,194 @@ function commandExportRecursive( e )
 
 //
 
+function commandGitPull( e )
+{
+  let will = this;
+  let implyMap = _.strStructureParse( e.argument );
+  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
+  will._propertiesImply( implyMap );
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'git pull',
+    onEach : handleEach,
+    commandRoutine : commandGitPull,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitPull
+    ({
+      dirPath : it.junction.dirPath,
+      verbosity : will.verbosity,
+    });
+  }
+}
+
+commandGitPull.commandProperties = commandImply.commandProperties;
+
+//
+
+function commandGitPush( e )
+{
+  let will = this;
+  let implyMap = _.strStructureParse( e.argument );
+  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
+  will._propertiesImply( implyMap );
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'git push',
+    onEach : handleEach,
+    commandRoutine : commandGitPush,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitPush
+    ({
+      dirPath : it.junction.dirPath,
+      verbosity : will.verbosity,
+    });
+  }
+}
+
+commandGitPush.commandProperties = commandImply.commandProperties;
+
+//
+
+function commandGitReset( e )
+{
+  let will = this;
+  let optionsMap = _.strStructureParse( e.argument );
+  _.routineOptions( commandGitReset, optionsMap );
+  optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'git reset',
+    onEach : handleEach,
+    commandRoutine : commandGitReset,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitReset
+    ({
+      ... optionsMap,
+    });
+  }
+}
+
+commandGitReset.defaults =
+{
+  dirPath : '.',
+  removingUntracked : 0,
+  dry : 0,
+  v : null,
+  verbosity : 2,
+}
+
+commandGitReset.commandProperties =
+{
+  dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
+  removingUntracked : 'Remove untracked files, option does not enable deleting of ignored files. Default is removingUntracked:0.',
+  dry : 'Dry run without resetting. Default is dry:0.',
+  v : 'Set verbosity. Default is 2.',
+  verbosity : 'Set verbosity. Default is 2.',
+}
+
+//
+
+function commandGitSync( e )
+{
+  let will = this;
+  let request = _.will.Resolver.strRequestParse( e.argument );
+  _.routineOptions( commandGitSync, request.map );
+  request.map.verbosity = request.map.v !== null && request.map.v >= 0 ? request.map.v : request.map.verbosity;
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'git sync',
+    onEach : handleEach,
+    commandRoutine : commandGitSync,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitSync
+    ({
+      commit : request.subject,
+      ... request.map,
+    });
+  }
+}
+
+commandGitSync.defaults =
+{
+  dirPath : null,
+  v : null,
+  verbosity : 1,
+}
+
+commandGitSync.commandProperties =
+{
+  v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
+}
+
+//
+
+function commandGitTag( e )
+{
+  let will = this;
+  let optionsMap = _.strStructureParse( e.argument );
+  _.routineOptions( commandGitTag, optionsMap );
+  optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'git tag',
+    onEach : handleEach,
+    commandRoutine : commandGitTag,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitTag
+    ({
+      ... optionsMap,
+    });
+  }
+}
+
+commandGitTag.defaults =
+{
+  name : '.',
+  description : '',
+  dry : 0,
+  light : 0,
+  v : null,
+  verbosity : 1,
+}
+
+commandGitTag.commandProperties =
+{
+  name : 'Tag name. Default is name:".".',
+  description : 'Description of annotated tag. Default is description:"".',
+  dry : 'Dry run without tagging. Default is dry:0.',
+  light : 'Enables lightweight tags. Default is light:0.',
+  v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
+}
+
+//
+
 function commandGitPreservingHardLinks( e )
 {
   let will = this;
@@ -2391,7 +2586,7 @@ function commandNpmGenerateFromWillfile( e )
     if( _.mapKeys( criterionsMap ).length > 0 )
     it.opener.openedModule.stepMap[ "npm.generate" ].criterion = criterionsMap;
 
-    return it.opener.openedModule.npmGenerate
+    return it.opener.openedModule.npmGenerateFromWillfile
     ({
       packagePath : request.packagePath,
       entryPath : request.entryPath,
@@ -3170,6 +3365,13 @@ let Extension =
   commandExportPurging,
   commandExportRecursive,
 
+  // command git
+
+  commandGitPull,
+  commandGitPush,
+  commandGitReset,
+  commandGitSync,
+  commandGitTag,
   commandGitPreservingHardLinks,
 
   // command iterator
@@ -3177,8 +3379,12 @@ let Extension =
   commandWith,
   commandEach,
 
+  // command converters
+
   commandNpmGenerateFromWillfile,
   commandWillfileGenerateFromNpm,
+
+  // command package
 
   commandPackageInstall,
   commandPackageLocalVersions,
