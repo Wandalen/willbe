@@ -1,0 +1,23 @@
+about :
+
+  name : git-sync
+
+path :
+
+  git.proto : 'proto'
+
+step :
+
+  git.sync.message :
+    commit : '-am fifth'
+
+build :
+
+  git.sync.default :
+    steps :
+      - git.sync
+
+  git.sync.message :
+    steps :
+      - git.sync.message
+
