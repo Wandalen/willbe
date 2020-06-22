@@ -25680,11 +25680,216 @@ File.txt
 
 //
 
+function commandGitSync( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let clone2Shell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone2' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  cloneShell( 'git init' );
+  cloneShell( 'git remote add origin ../repo' );
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am first' );
+  cloneShell( 'git push -u origin --all' );
+  a.shell( 'git clone repo/ clone2' );
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.with clone/ .git.sync' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone .git.sync - committing and pushing, without message';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+    return null;
+  })
+  clone2Shell( 'git pull' )
+  clone2Shell( 'git log' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /\s\./ ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    return null;
+  })
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am second' );
+  cloneShell( 'git push -u origin --all' );
+
+  a.appStart( '.with clone2/ .git.sync' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone2/ .git.sync - only pulling, without message';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    return null;
+  })
+  clone2Shell( 'git log' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'second' ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    return null;
+  })
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am third' );
+
+  a.appStart( '.with clone/ .git.sync' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.sync - only pushing, without message';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+    return null;
+  })
+  clone2Shell( 'git pull' );
+  clone2Shell( 'git log' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'third' ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am "fourth"' );
+  clone2Shell( 'git push -u origin --all' );
+
+  a.appStart( '.with clone/ .git.sync -am fifth' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.sync -am fifth - committing, pulling and pushing with message';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+    return null;
+  })
+  cloneShell( 'git log' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'fourth' ), 1 );
+    test.identical( _.strCount( op.output, 'fifth' ), 1 );
+    return null;
+  })
+  clone2Shell( 'git pull' )
+  clone2Shell( 'git log' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'fifth' ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am "sixth"' );
+  clone2Shell( 'git push -u origin --all' );
+
+  a.appStart( '.with clone/ .git.sync -am seventh v:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.sync -am seventh v:0 - checking of option verbosity';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandGitTag( test )
 {
   let context = this;
   let a = context.assetFor( test, 'git-push' );
-  a.reflect();
 
   a.ready.then( () =>
   {
@@ -26126,6 +26331,7 @@ var Self =
     commandGitPull,
     commandGitPush,
     commandGitReset,
+    commandGitSync,
     commandGitTag,
   }
 
