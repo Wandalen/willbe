@@ -3368,7 +3368,7 @@ function isGlob( test )
   test.is( _.path.isGlob( 'dir/(a|b).js' ) );
 
   test.is( _.path.isGlob( 'dir/(ab).js' ) );
-  test.is( _.path.isGlob( 'dir/@(ab).js' ) );
+  test.is( _.path.isGlob( 'dir/!(ab).js' ) );
   test.is( _.path.isGlob( 'dir/!(ab).js' ) );
   test.is( _.path.isGlob( 'dir/?(ab).js' ) );
   test.is( _.path.isGlob( 'dir/*(ab).js' ) );

@@ -7409,45 +7409,45 @@ function modulesTreeHierarchyRemoteDownloaded( test )
 `
  +-- module::z
    +-- module::a
-   | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
+   | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
    | | +-- module::Testing - path::remote:=npm:///wTesting
    | +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1!gamma
    | | +-- module::Testing - path::remote:=npm:///wTesting
    | +-- module::a0
    |   +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   |   | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   |   | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1!gamma
    |   | +-- module::Testing - path::remote:=npm:///wTesting
    |   +-- module::wModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
-   |     +-- module::ModuleForTesting2 - path::remote:=git+https://${ a.path.current() }/group1/group10/.module/ModuleForTesting2a/github.com/Wandalen/wModuleForTesting2.git@gamma
+   |     +-- module::ModuleForTesting2 - path::remote:=git+https://${ a.path.current() }/group1/group10/.module/ModuleForTesting2a/github.com/Wandalen/wModuleForTesting2.git!gamma
    |     +-- module::Testing - path::remote:=npm:///wTesting
    +-- module::b
    | +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1!gamma
    | | +-- module::Testing - path::remote:=npm:///wTesting
    | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/
-   |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
-   |   +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git@gamma
+   |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
+   |   +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
    |   +-- module::Testing - path::remote:=npm:///wTesting
    +-- module::c
    | +-- module::a0
    | | +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   | | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1!gamma
    | | | +-- module::Testing - path::remote:=npm:///wTesting
    | | +-- module::wModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
-   | |   +-- module::ModuleForTesting2 - path::remote:=git+https://${ a.path.current() }/group1/group10/.module/ModuleForTesting2a/github.com/Wandalen/wModuleForTesting2.git@gamma
+   | |   +-- module::ModuleForTesting2 - path::remote:=git+https://${ a.path.current() }/group1/group10/.module/ModuleForTesting2a/github.com/Wandalen/wModuleForTesting2.git!gamma
    | |   +-- module::Testing - path::remote:=npm:///wTesting
    | +-- module::wModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12ab.git/
-   |   +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
-   |   +-- module::ModuleForTesting1a - path::remote:=npm:///wmodulefortesting1a@gamma
-   |   +-- module::ModuleForTesting1b - path::remote:=npm:///wmodulefortesting1b@gamma
-   |   +-- module::ModuleForTesting2 - path::remote:=npm:///wmodulefortesting2@gamma
-   |   +-- module::ModuleForTesting2a - path::remote:=npm:///wmodulefortesting2a@gamma
-   |   +-- module::ModuleForTesting2b - path::remote:=npm:///wmodulefortesting2b@gamma
-   |   +-- module::ModuleForTesting12 - path::remote:=npm:///wmodulefortesting12@gamma
+   |   +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1!gamma
+   |   +-- module::ModuleForTesting1a - path::remote:=npm:///wmodulefortesting1a!gamma
+   |   +-- module::ModuleForTesting1b - path::remote:=npm:///wmodulefortesting1b!gamma
+   |   +-- module::ModuleForTesting2 - path::remote:=npm:///wmodulefortesting2!gamma
+   |   +-- module::ModuleForTesting2a - path::remote:=npm:///wmodulefortesting2a!gamma
+   |   +-- module::ModuleForTesting2b - path::remote:=npm:///wmodulefortesting2b!gamma
+   |   +-- module::ModuleForTesting12 - path::remote:=npm:///wmodulefortesting12!gamma
    |   +-- module::Testing - path::remote:=npm:///wTesting
    +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-     +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+     +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1!gamma
      +-- module::Testing - path::remote:=npm:///wTesting
 
 `
@@ -7590,45 +7590,45 @@ function modulesTreeHierarchyRemotePartiallyDownloaded( test )
 `
  +-- module::z
    +-- module::a
-   | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
+   | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
    | | +-- module::Testing - path::remote:=npm:///wTesting
    | +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1!gamma
    | | +-- module::Testing - path::remote:=npm:///wTesting
    | +-- module::a0
    |   +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   |   | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   |   | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1!gamma
    |   | +-- module::Testing - path::remote:=npm:///wTesting
    |   +-- module::wModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
-   |     +-- module::ModuleForTesting2 - path::remote:=git+https://${ a.path.current() }/group1/group10/.module/ModuleForTesting2a/github.com/Wandalen/wModuleForTesting2.git@gamma
+   |     +-- module::ModuleForTesting2 - path::remote:=git+https://${ a.path.current() }/group1/group10/.module/ModuleForTesting2a/github.com/Wandalen/wModuleForTesting2.git!gamma
    |     +-- module::Testing - path::remote:=npm:///wTesting
    +-- module::b
    | +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1!gamma
    | | +-- module::Testing - path::remote:=npm:///wTesting
    | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git/
-   |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
-   |   +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git@gamma
+   |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
+   |   +-- module::ModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
    |   +-- module::Testing - path::remote:=npm:///wTesting
    +-- module::c
    | +-- module::a0
    | | +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-   | | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+   | | | +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1!gamma
    | | | +-- module::Testing - path::remote:=npm:///wTesting
    | | +-- module::wModuleForTesting2a - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2a.git/
-   | |   +-- module::ModuleForTesting2 - path::remote:=git+https://${ a.path.current() }/group1/group10/.module/ModuleForTesting2a/github.com/Wandalen/wModuleForTesting2.git@gamma
+   | |   +-- module::ModuleForTesting2 - path::remote:=git+https://${ a.path.current() }/group1/group10/.module/ModuleForTesting2a/github.com/Wandalen/wModuleForTesting2.git!gamma
    | |   +-- module::Testing - path::remote:=npm:///wTesting
    | +-- module::wModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12ab.git/
-   |   +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
-   |   +-- module::ModuleForTesting1a - path::remote:=npm:///wmodulefortesting1a@gamma
-   |   +-- module::ModuleForTesting1b - path::remote:=npm:///wmodulefortesting1b@gamma
-   |   +-- module::ModuleForTesting2 - path::remote:=npm:///wmodulefortesting2@gamma
-   |   +-- module::ModuleForTesting2a - path::remote:=npm:///wmodulefortesting2a@gamma
-   |   +-- module::ModuleForTesting2b - path::remote:=npm:///wmodulefortesting2b@gamma
-   |   +-- module::ModuleForTesting12 - path::remote:=npm:///wmodulefortesting12@gamma
+   |   +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1!gamma
+   |   +-- module::ModuleForTesting1a - path::remote:=npm:///wmodulefortesting1a!gamma
+   |   +-- module::ModuleForTesting1b - path::remote:=npm:///wmodulefortesting1b!gamma
+   |   +-- module::ModuleForTesting2 - path::remote:=npm:///wmodulefortesting2!gamma
+   |   +-- module::ModuleForTesting2a - path::remote:=npm:///wmodulefortesting2a!gamma
+   |   +-- module::ModuleForTesting2b - path::remote:=npm:///wmodulefortesting2b!gamma
+   |   +-- module::ModuleForTesting12 - path::remote:=npm:///wmodulefortesting12!gamma
    |   +-- module::Testing - path::remote:=npm:///wTesting
    +-- module::wModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
-     +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1@gamma
+     +-- module::ModuleForTesting1 - path::remote:=npm:///wmodulefortesting1!gamma
      +-- module::Testing - path::remote:=npm:///wTesting
 `
 
@@ -7692,15 +7692,15 @@ function modulesTreeDisabledAndCorrupted( test )
 
 `
  +-- module::many
- | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
+ | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
  | | +-- module::Testing - path::remote:=npm:///wTesting
- | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git@gamma
- | | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
+ | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
+ | | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
  | | | +-- module::Testing - path::remote:=npm:///wTesting
  | | +-- module::Testing - path::remote:=npm:///wTesting
- | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git@gamma
- |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git@gamma
- |   +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git@gamma
+ | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git!gamma
+ |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
+ |   +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
  |   +-- module::Testing - path::remote:=npm:///wTesting
  |
  +-- module::corrupted
@@ -17526,8 +17526,8 @@ function submodulesDownloadSwitchBranch( test )
   {
     test.case = 'switch master to dev';
     let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
-    // willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '#dev' );
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
+    // willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '!master', '#dev' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '!master', '!dev' );
     a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     debugger;
     return null;
@@ -17564,7 +17564,7 @@ function submodulesDownloadSwitchBranch( test )
   {
     test.case = 'switch detached state to master';
     let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#9ce409887df0754760a1cbdce249b0fa5f08152e', '@master' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#9ce409887df0754760a1cbdce249b0fa5f08152e', '!master' );
     a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     return null;
   })
@@ -18961,7 +18961,7 @@ function submodulesDownloadNpm( test )
   .then( () =>
   {
     versions[ 'ModuleForTesting1' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting1' );
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a@alpha' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!alpha' );
     versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.31' );
 
     a.reflect();
@@ -19140,7 +19140,7 @@ function submodulesDownloadUpdateNpm( test )
   .then( () =>
   {
     versions[ 'ModuleForTesting1' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting1' );
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a@alpha' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!alpha' );
     versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.31' );
 
     a.reflect();
@@ -19195,11 +19195,11 @@ function submodulesDownloadUpdateNpm( test )
   .then( ( op ) =>
   {
     let willFile = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
-    willFile = _.strReplace( willFile, '@alpha', '@beta' );
-    willFile = _.strReplace( willFile, '@0.0.31', '@0.0.32 ' ); /* Dmytro : need to test writer, it appends zero to last number */
+    willFile = _.strReplace( willFile, '!alpha', '!beta' );
+    willFile = _.strReplace( willFile, '!0.0.31', '!0.0.32 ' ); /* Dmytro : need to test writer, it appends zero to last number */
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a@beta' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!beta' );
     versions[ 'ModuleForTesting12ab' ] = '0.0.32'
 
     return null;
@@ -20046,7 +20046,7 @@ submodulesVersionsAgreeWrongOrigin.timeOut = 300000;
 //
 
 /*
-  Informal module has submodule willbe-experiment@master
+  Informal module has submodule willbe-experiment!master
   Supermodule has informal module and willbe-experiment#dev in submodules list
   First download of submodules works fine.
   After updating submodules of supermodule, branch dev of willbe-experiment is changed to master.
@@ -20263,7 +20263,7 @@ function subModulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch';
     var read = a.fileProvider.fileRead( a.path.join( a.routinePath, '.im.will.yml' ) );
-    read = _.strReplace( read, '#64c96412c81266f119210e7af71e300cce5b2ebd', '@master' )
+    read = _.strReplace( read, '#64c96412c81266f119210e7af71e300cce5b2ebd', '!master' )
     a.fileProvider.fileWrite( a.path.join( a.routinePath, '.im.will.yml' ), read );
     return null;
   })
@@ -20337,7 +20337,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.case = 'switch master to dev';
     let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ]= _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
+    willFile.submodule[ 'willbe-experiment' ]= _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '!master', '!dev' );
     a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     return null;
   })
@@ -20355,7 +20355,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.case = 'switch dev to detached state';
     let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@dev', '#' + detachedVersion );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '!dev', '#' + detachedVersion );
     a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     return null;
   })
@@ -20373,7 +20373,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.case = 'switch detached state to master';
     let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#' + detachedVersion, '@master' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '#' + detachedVersion, '!master' );
     a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     return null;
   })
@@ -20391,7 +20391,7 @@ function subModulesUpdateSwitchBranch( test )
   {
     test.case = 'master has local change, cause conflict when switch to dev';
     let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '!master', '!dev' );
     a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     let filePath = a.abs( '.module/willbe-experiment/File.js' );
     a.fileProvider.fileWrite({ filePath, data : 'master' });
@@ -20442,7 +20442,7 @@ function subModulesUpdateSwitchBranch( test )
   .then( () =>
   {
     let willFile = a.fileProvider.fileRead({ filePath : a.abs( '.will.yml' ), encoding : 'yml' });
-    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '@master', '@dev' );
+    willFile.submodule[ 'willbe-experiment' ] = _.strReplaceAll( willFile.submodule[ 'willbe-experiment' ], '!master', '!dev' );
     a.fileProvider.fileWrite({ filePath : a.abs( '.will.yml' ), data : willFile, encoding : 'yml' });
     return null;
   })
@@ -20853,7 +20853,7 @@ function versionsAgreeNpm( test )
   .then( () =>
   {
     versions[ 'ModuleForTesting1' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting1' );
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a@alpha' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!alpha' );
     versions[ 'ModuleForTesting12ab' ] = _.npm.versionRemoteCurrentRetrive( 'npm:///wmodulefortesting12ab#0.0.31' );
 
     a.reflect();
@@ -20908,11 +20908,11 @@ function versionsAgreeNpm( test )
   .then( ( op ) =>
   {
     let willFile = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
-    willFile = _.strReplace( willFile, '@alpha', '@beta' );
-    willFile = _.strReplace( willFile, '@0.0.31', '@0.0.34' );
+    willFile = _.strReplace( willFile, '!alpha', '!beta' );
+    willFile = _.strReplace( willFile, '!0.0.31', '!0.0.34' );
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
-    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a@beta' );
+    versions[ 'ModuleForTesting2a' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2a!beta' );
     versions[ 'ModuleForTesting12ab' ] = '0.0.34'
 
     return null;
@@ -21097,7 +21097,7 @@ function stepSubmodulesDownload( test )
   {
     test.case = 'list'
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@master` ) );
+    test.is( _.strHas( op.output, `git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!master` ) );
     return null;
   })
 
@@ -22397,7 +22397,7 @@ function upgradeDryDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -22450,7 +22450,7 @@ function upgradeDryDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -22505,7 +22505,7 @@ function upgradeDryDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -22560,7 +22560,7 @@ function upgradeDryDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -22631,7 +22631,7 @@ function upgradeDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -22691,7 +22691,7 @@ function upgradeDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -22861,7 +22861,7 @@ function upgradeDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -22921,7 +22921,7 @@ function upgradeDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -22991,7 +22991,7 @@ function upgradeDetachedExperiment( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -23030,7 +23030,7 @@ function fixateDryDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 1 );
@@ -23083,7 +23083,7 @@ function fixateDryDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 0 );
@@ -23138,7 +23138,7 @@ function fixateDryDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 0 );
     test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 0 );
@@ -23193,7 +23193,7 @@ function fixateDryDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* will be fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDryDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* won't be fixated/ ), 1 );
@@ -23264,7 +23264,7 @@ function fixateDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 1 );
@@ -23324,7 +23324,7 @@ function fixateDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
@@ -23434,7 +23434,7 @@ function fixateDetached( test )
     test.identical( _.strCount( op.output, /will be fixated/ ), 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* was fixated to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 0 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
@@ -23494,7 +23494,7 @@ function fixateDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 0 );
@@ -23554,7 +23554,7 @@ function fixateDetached( test )
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting1.* was fixated to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.@master.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting1\.git\/out\/wModuleForTesting1\.out\.will.* : .* <- .*\.!master.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/out\/wModuleForTesting1\.out\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 1 );
     test.identical( _.strCount( op.output, /! .*fixateDetached\/\.module\/ModuleForTesting1\/\.im\.will\.yml.* was not fixated/ ), 1 );
@@ -23780,7 +23780,7 @@ function resourcesFormReflectorsExperiment( test )
   {
     test.identical( op.exitCode, 0 );
     test.is( _.strHas( op.output, 'module::old-out-file / submodule::Starter' ) );
-    test.is( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter@master' ) );
+    test.is( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter!master' ) );
     test.is( _.strHas( op.output, 'autoExporting : 0' ) );
     test.is( _.strHas( op.output, 'enabled : 1' ) );
     test.is( _.strHas( op.output, "Exported builds : [ 'proto.export' ]" ) );
@@ -23821,7 +23821,7 @@ function resourcesFormReflectorsExperiment( test )
   {
     test.identical( op.exitCode, 0 );
     test.is( _.strHas( op.output, 'module::new-out-file / submodule::Starter' ) );
-    test.is( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter@master' ) );
+    test.is( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter!master' ) );
     test.is( _.strHas( op.output, 'autoExporting : 0' ) );
     test.is( _.strHas( op.output, 'enabled : 1' ) );
     test.is( _.strHas( op.output, "Exported builds : [ 'proto.export' ]" ) );
