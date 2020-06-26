@@ -307,10 +307,12 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/clean-special
           - ../proto/dwtools/atop/will.test/_asset/clean-special/.will.yml
           - ../proto/dwtools/atop/will.test/_asset/clean-special/out
-          - '../proto/dwtools/atop/will.test/_asset/clean-special/out/#dir2'
-          - '../proto/dwtools/atop/will.test/_asset/clean-special/out/#dir2/file'
-          - ../proto/dwtools/atop/will.test/_asset/clean-special/out/@dir1
-          - ../proto/dwtools/atop/will.test/_asset/clean-special/out/@dir1/file
+          - '../proto/dwtools/atop/will.test/_asset/clean-special/out/"#dir2"'
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/clean-special/out/"#dir2"/file
+          - ../proto/dwtools/atop/will.test/_asset/clean-special/out/"@dir1"
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/clean-special/out/"@dir1"/file
           - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath
           - ../proto/dwtools/atop/will.test/_asset/clean-with-inpath/+.module
           - >-
@@ -794,8 +796,8 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/dos/will.yml
           - ../proto/dwtools/atop/will.test/_asset/dos/.will
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook
-          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/-NpmPublish.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/build.js
+          - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/BuilderSync.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/clean.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/export.js
           - ../proto/dwtools/atop/will.test/_asset/dos/.will/hook/git.js
@@ -1388,6 +1390,20 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/git-conflict/original/f2.txt
           - >-
             ../proto/dwtools/atop/will.test/_asset/git-conflict/original/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/git-push
+          - ../proto/dwtools/atop/will.test/_asset/git-push/clone
+          - ../proto/dwtools/atop/will.test/_asset/git-push/clone/.gitignore
+          - ../proto/dwtools/atop/will.test/_asset/git-push/clone/f1.txt
+          - ../proto/dwtools/atop/will.test/_asset/git-push/clone/f2.txt
+          - >-
+            ../proto/dwtools/atop/will.test/_asset/git-push/clone/GitTag.will.yml
+          - ../proto/dwtools/atop/will.test/_asset/git-push/clone/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/git-reset
+          - ../proto/dwtools/atop/will.test/_asset/git-reset/clone
+          - ../proto/dwtools/atop/will.test/_asset/git-reset/clone/File.txt
+          - ../proto/dwtools/atop/will.test/_asset/git-reset/clone/will.yml
+          - ../proto/dwtools/atop/will.test/_asset/git-reset/clone/proto
+          - ../proto/dwtools/atop/will.test/_asset/git-reset/clone/proto/File.js
           - >-
             ../proto/dwtools/atop/will.test/_asset/hierarchy-diff-download-paths-irregular
           - >-
@@ -4437,6 +4453,4 @@ module:
       ../.im.will.yml:
         hash: 05fb65b5824928ebb330cc9844dd2db3
         size: 7317
-      willbe.out.will.yml:
-        hash: 7793ea9de4725fe980ebdd09105b51cc
-        size: 231566
+      willbe.out.will.yml: *ref_0
