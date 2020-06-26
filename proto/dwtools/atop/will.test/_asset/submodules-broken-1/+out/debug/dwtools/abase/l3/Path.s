@@ -76,7 +76,7 @@ function isSafe( filePath,level )
   {
     if( this.isAbsolute( filePath ) )
     {
-      let parts = filePath.split( this._upStr ).filter( ( p ) => p.trim() );
+      let parts = filePath.split( this.upToken ).filter( ( p ) => p.trim() );
       if( process.platform === 'win32' && parts.length && parts[ 0 ].length === 1 )
       parts.splice( 0, 1 );
       if( parts.length <= 1 )
@@ -199,7 +199,7 @@ function isSafe( filePath,level )
 //   _.assert( arguments.length === 1, 'Expects single argument' );
 //   _.assert( _.strIs( filePath ), 'Expects string {-filePath-}, but got', _.strType( filePath ) );
 //   filePath = this.refine( filePath );
-//   return _.strBegins( filePath, this._upStr );
+//   return _.strBegins( filePath, this.upToken );
 // }
 //
 // //
@@ -226,11 +226,11 @@ function isSafe( filePath,level )
 // {
 //   _.assert( arguments.length === 1, 'Expects single argument' );
 //   _.assert( _.strIs( filePath ), 'Expects string {-filePath-}, but got', _.strType( filePath ) );
-//   if( filePath === this._rootStr )
+//   if( filePath === this.rootToken )
 //   return true;
 //   if( this.isRelative( filePath ) )
 //   return false;
-//   if( this.normalize( filePath ) === this._rootStr )
+//   if( this.normalize( filePath ) === this.rootToken )
 //   return true;
 //
 //   return false;
@@ -241,13 +241,13 @@ function isSafe( filePath,level )
 // function _isDotted( srcPath )
 // {
 //   _.assert( arguments.length === 1, 'Expects single argument' );
-//   if( srcPath === this._hereStr )
+//   if( srcPath === this.hereToken )
 //   return true;
-//   if( srcPath === this._downStr )
+//   if( srcPath === this.downToken )
 //   return true;
-//   if( _.strBegins( srcPath, this._hereStr + this._upStr ) )
+//   if( _.strBegins( srcPath, this.hereToken + this.upToken ) )
 //   return true;
-//   if( _.strBegins( srcPath, this._downStr + this._upStr ) )
+//   if( _.strBegins( srcPath, this.downToken + this.upToken ) )
 //   return true;
 //   return false;
 // }
@@ -260,9 +260,9 @@ function isSafe( filePath,level )
 //   if( this._isDotted( srcPath ) )
 //   return true;
 //   /* qqq : cover all casess */
-//   if( _.strBegins( srcPath, this._hereStr + '\\' ) )
+//   if( _.strBegins( srcPath, this.hereToken + '\\' ) )
 //   return true;
-//   if( _.strBegins( srcPath, this._downStr + '\\' ) )
+//   if( _.strBegins( srcPath, this.downToken + '\\' ) )
 //   return true;
 //   return false;
 // }
@@ -272,9 +272,9 @@ function isSafe( filePath,level )
 // function isTrailed( srcPath )
 // {
 //   _.assert( arguments.length === 1, 'Expects single argument' );
-//   if( srcPath === this._rootStr )
+//   if( srcPath === this.rootToken )
 //   return false;
-//   return _.strEnds( srcPath,this._upStr );
+//   return _.strEnds( srcPath,this.upToken );
 // }
 
 //
@@ -339,7 +339,7 @@ function hasSymbolBase( srcPath )
 // //   return false;
 // //
 // //   let begin = _.strRemoveEnd( srcPath,endPath );
-// //   if( begin === '' || _.strEnds( begin,this._upStr ) || _.strEnds( begin,this._hereStr ) )
+// //   if( begin === '' || _.strEnds( begin,this.upToken ) || _.strEnds( begin,this.hereToken ) )
 // //   return true;
 // //
 // //   return false;
@@ -437,7 +437,7 @@ function hasSymbolBase( srcPath )
 //   if( o.tolerant )
 //   {
 //     /* remove "/" duplicates */
-//     result = result.replace( this._delUpDupRegexp, this._upStr );
+//     result = result.replace( this._delUpDupRegexp, this.upToken );
 //   }
 //
 //   let endsWithUp = false;
@@ -445,23 +445,23 @@ function hasSymbolBase( srcPath )
 //
 //   /* remove right "/" */
 //
-//   if( result !== this._upStr && !_.strEnds( result, this._upStr + this._upStr ) && _.strEnds( result, this._upStr ) )
+//   if( result !== this.upToken && !_.strEnds( result, this.upToken + this.upToken ) && _.strEnds( result, this.upToken ) )
 //   {
 //     endsWithUp = true;
-//     result = _.strRemoveEnd( result, this._upStr );
+//     result = _.strRemoveEnd( result, this.upToken );
 //   }
 //
 //   /* undoting */
 //
-//   while( !_.strBegins( result, this._hereUpStr + this._upStr ) && _.strBegins( result, this._hereUpStr ) )
+//   while( !_.strBegins( result, this.hereUpToken + this.upToken ) && _.strBegins( result, this.hereUpToken ) )
 //   {
 //     beginsWithHere = true;
-//     result = _.strRemoveBegin( result, this._hereUpStr );
+//     result = _.strRemoveBegin( result, this.hereUpToken );
 //   }
 //
 //   /* remove second "." */
 //
-//   if( result.indexOf( this._hereStr ) !== -1 )
+//   if( result.indexOf( this.hereToken ) !== -1 )
 //   {
 //
 //     while( this._delHereRegexp.test( result ) )
@@ -470,13 +470,13 @@ function hasSymbolBase( srcPath )
 //       return postSlash || '';
 //     });
 //     if( result === '' )
-//     result = this._upStr;
+//     result = this.upToken;
 //
 //   }
 //
 //   /* remove .. */
 //
-//   if( result.indexOf( this._downStr ) !== -1 )
+//   if( result.indexOf( this.downToken ) !== -1 )
 //   {
 //
 //     while( this._delDownRegexp.test( result ) )
@@ -500,12 +500,12 @@ function hasSymbolBase( srcPath )
 //   /* dot and trail */
 //
 //   if( o.detrailing )
-//   if( result !== this._upStr && !_.strEnds( result, this._upStr + this._upStr ) )
-//   result = _.strRemoveEnd( result, this._upStr );
+//   if( result !== this.upToken && !_.strEnds( result, this.upToken + this.upToken ) )
+//   result = _.strRemoveEnd( result, this.upToken );
 //
 //   if( !o.detrailing && endsWithUp )
-//   if( result !== this._rootStr )
-//   result = result + this._upStr;
+//   if( result !== this.rootToken )
+//   result = result + this.upToken;
 //
 //   if( !o.undoting && beginsWithHere )
 //   result = this._dot( result );
@@ -546,12 +546,12 @@ function hasSymbolBase( srcPath )
 //
 //   _.assert( _.strIs( src ), 'Expects string' );
 //   _.assert( arguments.length === 1, 'Expects single argument' );
-//   _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
-//   _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
+//   _.assert( result.lastIndexOf( this.upToken + this.hereToken + this.upToken ) === -1 );
+//   _.assert( !_.strEnds( result, this.upToken + this.hereToken ) );
 //
 //   if( Config.debug )
 //   {
-//     let i = result.lastIndexOf( this._upStr + this._downStr + this._upStr );
+//     let i = result.lastIndexOf( this.upToken + this.downToken + this.upToken );
 //     _.assert( i === -1 || !/\w/.test( result.substring( 0, i ) ) );
 //   }
 //
@@ -567,9 +567,9 @@ function hasSymbolBase( srcPath )
 //   let result = this._normalize({ src, tolerant : true, detrailing : false, undoting : false });
 //
 //   _.assert( arguments.length === 1, 'Expects single argument' );
-//   _.assert( result === this._upStr || _.strEnds( result, this._upStr ) || !_.strEnds( result, this._upStr + this._upStr ) );
-//   _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
-//   _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
+//   _.assert( result === this.upToken || _.strEnds( result, this.upToken ) || !_.strEnds( result, this.upToken + this.upToken ) );
+//   _.assert( result.lastIndexOf( this.upToken + this.hereToken + this.upToken ) === -1 );
+//   _.assert( !_.strEnds( result, this.upToken + this.hereToken ) );
 //
 //   if( Config.debug )
 //   {
@@ -587,13 +587,13 @@ function hasSymbolBase( srcPath )
 //
 //   _.assert( _.strIs( src ), 'Expects string' );
 //   _.assert( arguments.length === 1, 'Expects single argument' );
-//   _.assert( result === this._upStr || _.strEnds( result, this._upStr + this._upStr ) || !_.strEnds( result, this._upStr ) );
-//   _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
-//   _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
+//   _.assert( result === this.upToken || _.strEnds( result, this.upToken + this.upToken ) || !_.strEnds( result, this.upToken ) );
+//   _.assert( result.lastIndexOf( this.upToken + this.hereToken + this.upToken ) === -1 );
+//   _.assert( !_.strEnds( result, this.upToken + this.hereToken ) );
 //
 //   if( Config.debug )
 //   {
-//     let i = result.lastIndexOf( this._upStr + this._downStr + this._upStr );
+//     let i = result.lastIndexOf( this.upToken + this.downToken + this.upToken );
 //     _.assert( i === -1 || !/\w/.test( result.substring( 0, i ) ) );
 //   }
 //
@@ -609,9 +609,9 @@ function hasSymbolBase( srcPath )
 //   let result = this._normalize({ src, tolerant : true, detrailing : true, undoting : true });
 //
 //   _.assert( arguments.length === 1, 'Expects single argument' );
-//   _.assert( result === this._upStr || _.strEnds( result, this._upStr ) || !_.strEnds( result, this._upStr + this._upStr ) );
-//   _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
-//   _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
+//   _.assert( result === this.upToken || _.strEnds( result, this.upToken ) || !_.strEnds( result, this.upToken + this.upToken ) );
+//   _.assert( result.lastIndexOf( this.upToken + this.hereToken + this.upToken ) === -1 );
+//   _.assert( !_.strEnds( result, this.upToken + this.hereToken ) );
 //
 //   if( Config.debug )
 //   {
@@ -669,8 +669,8 @@ function hasSymbolBase( srcPath )
 //
 //   if( !this._isDotted( filePath ) )
 //   {
-//     _.assert( !_.strBegins( filePath, this._upStr ) );
-//     filePath = this._hereUpStr + filePath;
+//     _.assert( !_.strBegins( filePath, this.upToken ) );
+//     filePath = this.hereUpToken + filePath;
 //   }
 //
 //   return filePath;
@@ -685,7 +685,7 @@ function hasSymbolBase( srcPath )
 //     cant use isAbsolute
 //   */
 //
-//   _.assert( !_.strBegins( filePath, this._upStr ) );
+//   _.assert( !_.strBegins( filePath, this.upToken ) );
 //   _.assert( arguments.length === 1 );
 //
 //   /*
@@ -695,11 +695,11 @@ function hasSymbolBase( srcPath )
 //     not begins with ../
 //   */
 //
-//   // if( filePath !== this._hereStr && !_.strBegins( filePath, this._hereUpStr ) && filePath !== this._downStr && !_.strBegins( filePath, this._downUpStr ) )
+//   // if( filePath !== this.hereToken && !_.strBegins( filePath, this.hereUpToken ) && filePath !== this.downToken && !_.strBegins( filePath, this.downUpToken ) )
 //   if( !this.isDotted( filePath ) )
 //   {
-//     _.assert( !_.strBegins( filePath, this._upStr ) );
-//     filePath = this._hereUpStr + filePath;
+//     _.assert( !_.strBegins( filePath, this.upToken ) );
+//     filePath = this.hereUpToken + filePath;
 //   }
 //
 //   return filePath;
@@ -709,7 +709,7 @@ function hasSymbolBase( srcPath )
 //
 // function undot( filePath )
 // {
-//   return _.strRemoveBegin( filePath, this._hereUpStr );
+//   return _.strRemoveBegin( filePath, this.hereUpToken );
 // }
 //
 // //
@@ -719,8 +719,8 @@ function hasSymbolBase( srcPath )
 //   _.assert( this.is( srcPath ) );
 //   _.assert( arguments.length === 1 );
 //
-//   if( !_.strEnds( srcPath,this._upStr ) )
-//   return srcPath + this._upStr;
+//   if( !_.strEnds( srcPath,this.upToken ) )
+//   return srcPath + this.upToken;
 //
 //   return srcPath;
 // }
@@ -732,8 +732,8 @@ function hasSymbolBase( srcPath )
 //   _.assert( this.is( path ) );
 //   _.assert( arguments.length === 1 );
 //
-//   if( path !== this._rootStr )
-//   return _.strRemoveEnd( path,this._upStr );
+//   if( path !== this.rootToken )
+//   return _.strRemoveEnd( path,this.upToken );
 //
 //   return path;
 // }
@@ -783,51 +783,51 @@ function hasSymbolBase( srcPath )
 //   if( isTrailed )
 //   return o.filePath;
 //
-//   if( o.filePath === this._rootStr )
+//   if( o.filePath === this.rootToken )
 //   {
-//     return o.filePath + this._downStr + ( o.first ? this._upStr : '' );
+//     return o.filePath + this.downToken + ( o.first ? this.upToken : '' );
 //   }
 //
-//   if( _.strEnds( o.filePath, this._upStr + this._downStr ) || o.filePath === this._downStr )
+//   if( _.strEnds( o.filePath, this.upToken + this.downToken ) || o.filePath === this.downToken )
 //   {
-//     return o.filePath + this._upStr + this._downStr + ( o.first ? this._upStr : '' );
+//     return o.filePath + this.upToken + this.downToken + ( o.first ? this.upToken : '' );
 //   }
 //
-//   let i = o.filePath.lastIndexOf( this._upStr );
+//   let i = o.filePath.lastIndexOf( this.upToken );
 //
 //   if( i === 0 )
 //   {
-//     return this._rootStr;
+//     return this.rootToken;
 //   }
 //
 //   if( i === -1 )
 //   {
 //     if( o.first )
 //     {
-//       if( o.filePath === this._hereStr )
-//       return this._downStr + this._upStr;
+//       if( o.filePath === this.hereToken )
+//       return this.downToken + this.upToken;
 //       else
-//       return this._hereStr + this._upStr;
+//       return this.hereToken + this.upToken;
 //     }
 //     else
 //     {
-//       if( o.filePath === this._hereStr )
-//       return this._downStr + ( isTrailed ? this._upStr : '' );
+//       if( o.filePath === this.hereToken )
+//       return this.downToken + ( isTrailed ? this.upToken : '' );
 //       else
-//       return this._hereStr + ( isTrailed ? this._upStr : '' );
+//       return this.hereToken + ( isTrailed ? this.upToken : '' );
 //     }
 //   }
 //
 //   let result;
 //
 //   if( o.first )
-//   result = o.filePath.substr( 0, i + self._upStr.length );
+//   result = o.filePath.substr( 0, i + self.upToken.length );
 //   else
 //   result = o.filePath.substr( 0, i );
 //
 //   if( !o.first )
 //   if( isTrailed )
-//   result = _.strAppendOnce( result, self._upStr );
+//   result = _.strAppendOnce( result, self.upToken );
 //
 //   _.assert( !!result.length )
 //
@@ -1175,12 +1175,12 @@ function join_body( o )
     if( !src )
     return true;
 
-    // src = src.replace( /\\/g, self._upStr );
+    // src = src.replace( /\\/g, self.upToken );
 
     // if( result )
-    if( _.strEnds( src, self._upStr ) )
-    // if( _.strEnds( src, self._upStr ) && !_.strEnds( src, self._upStr + self._upStr ) )
-    // if( src.length > 1 || result[ 0 ] === self._upStr )
+    if( _.strEnds( src, self.upToken ) )
+    // if( _.strEnds( src, self.upToken ) && !_.strEnds( src, self.upToken + self.upToken ) )
+    // if( src.length > 1 || result[ 0 ] === self.upToken )
     {
       if( src.length > 1 )
       {
@@ -1188,12 +1188,12 @@ function join_body( o )
         src = src.substr( 0, src.length-1 );
         trailed = true;
 
-        if( result === self._downStr )
-        result = self._hereStr;
-        else if( result === self._downUpStr )
-        result = self._hereUpStr;
+        if( result === self.downToken )
+        result = self.hereToken;
+        else if( result === self.downUpToken )
+        result = self.hereUpToken;
         else
-        result = _.strRemoveBegin( result, self._downUpStr );
+        result = _.strRemoveBegin( result, self.downUpToken );
 
       }
       else
@@ -1203,14 +1203,14 @@ function join_body( o )
     }
 
     if( src && result )
-    if( !endsWithUp && !_.strBegins( result, self._upStr ) )
-    result = self._upStr + result;
+    if( !endsWithUp && !_.strBegins( result, self.upToken ) )
+    result = self.upToken + result;
 
     result = src + result;
 
     if( !o.reroot )
     {
-      if( _.strBegins( result, self._rootStr ) )
+      if( _.strBegins( result, self.rootToken ) )
       return false;
     }
 
@@ -1575,7 +1575,7 @@ function joinNames()
 
 function _split( path )
 {
-  return path.split( this._upStr );
+  return path.split( this.upToken );
 }
 
 //
@@ -1595,8 +1595,8 @@ function split( path )
 function current()
 {
   _.assert( arguments.length === 0, 'Expects no arguments' );
-  // return this._hereStr;
-  return this._upStr;
+  // return this.hereToken;
+  return this.upToken;
 }
 
 //
@@ -1783,12 +1783,12 @@ function _relative( o )
 
     _.assert
     (
-        !_.strBegins( basePath, this._upStr + this._downStr )
+        !_.strBegins( basePath, this.upToken + this.downToken )
       , 'Resolved o.basePath:', basePath, 'leads out of file system.'
     );
     _.assert
     (
-        !_.strBegins( filePath, this._upStr + this._downStr )
+        !_.strBegins( filePath, this.upToken + this.downToken )
       , 'Resolved o.filePath:', filePath, 'leads out of file system.'
     );
 
@@ -1803,15 +1803,15 @@ function _relative( o )
 
     /* makes common style for relative paths, each should begin with './' */
 
-    // if( !baseIsAbsolute && basePath !== this._hereStr )
-    // basePath = _.strPrependOnce( basePath, this._hereUpStr );
-    // if( !fileIsAbsolute && filePath !== this._hereStr )
-    // filePath = _.strPrependOnce( filePath, this._hereUpStr );
+    // if( !baseIsAbsolute && basePath !== this.hereToken )
+    // basePath = _.strPrependOnce( basePath, this.hereUpToken );
+    // if( !fileIsAbsolute && filePath !== this.hereToken )
+    // filePath = _.strPrependOnce( filePath, this.hereUpToken );
 
     if( !baseIsAbsolute )
-    basePath = _.strRemoveBegin( basePath, this._hereUpStr );
+    basePath = _.strRemoveBegin( basePath, this.hereUpToken );
     if( !fileIsAbsolute )
-    filePath = _.strRemoveBegin( filePath, this._hereUpStr );
+    filePath = _.strRemoveBegin( filePath, this.hereUpToken );
 
     while( beginsWithDown( basePath ) )
     {
@@ -1829,15 +1829,15 @@ function _relative( o )
 
     _.assert
     (
-        // basePath !== this._hereUpStr + this._downStr && !_.strBegins( basePath, this._hereUpStr + this._downUpStr )
+        // basePath !== this.hereUpToken + this.downToken && !_.strBegins( basePath, this.hereUpToken + this.downUpToken )
         !beginsWithDown( basePath )
-      , `Cant get path relative base path "${o.basePath}", it begins with "${this._downStr}"`
+      , `Cant get path relative base path "${o.basePath}", it begins with "${this.downToken}"`
     );
 
-    if( !baseIsAbsolute && basePath !== this._hereStr )
-    basePath = _.strPrependOnce( basePath, this._hereUpStr );
-    if( !fileIsAbsolute && filePath !== this._hereStr )
-    filePath = _.strPrependOnce( filePath, this._hereUpStr );
+    if( !baseIsAbsolute && basePath !== this.hereToken )
+    basePath = _.strPrependOnce( basePath, this.hereUpToken );
+    if( !fileIsAbsolute && filePath !== this.hereToken )
+    filePath = _.strPrependOnce( filePath, this.hereUpToken );
 
   }
 
@@ -1847,11 +1847,11 @@ function _relative( o )
   /* extracts common filePath and checks if its a intermediate dir, otherwise cuts filePath and repeats the check*/
 
   let common = _.strCommonLeft( basePath, filePath );
-  let commonTrailed = _.strAppendOnce( common, this._upStr );
+  let commonTrailed = _.strAppendOnce( common, this.upToken );
   if
   (
-        !_.strBegins( _.strAppendOnce( basePath, this._upStr ), commonTrailed )
-    ||  !_.strBegins( _.strAppendOnce( filePath, this._upStr ), commonTrailed )
+        !_.strBegins( _.strAppendOnce( basePath, this.upToken ), commonTrailed )
+    ||  !_.strBegins( _.strAppendOnce( filePath, this.upToken ), commonTrailed )
   )
   {
     common = this.dir( common );
@@ -1863,53 +1863,53 @@ function _relative( o )
   basePath = _.strRemoveBegin( basePath, common );
   filePath = _.strRemoveBegin( filePath, common );
 
-  let basePath2 = _.strRemoveBegin( _.strRemoveEnd( basePath, this._upStr ), this._upStr );
-  let count = _.strCount( basePath2, this._upStr );
+  let basePath2 = _.strRemoveBegin( _.strRemoveEnd( basePath, this.upToken ), this.upToken );
+  let count = _.strCount( basePath2, this.upToken );
 
-  if( basePath === this._upStr || !basePath )
+  if( basePath === this.upToken || !basePath )
   count = 0;
   else
   count += 1;
 
-  if( !_.strBegins( filePath, this._upStr + this._upStr ) && common !== this._upStr )
-  filePath = _.strRemoveBegin( filePath, this._upStr );
+  if( !_.strBegins( filePath, this.upToken + this.upToken ) && common !== this.upToken )
+  filePath = _.strRemoveBegin( filePath, this.upToken );
 
   /* prepends up steps */
   if( filePath || count === 0 )
-  result = _.strDup( this._downUpStr, count ) + filePath;
+  result = _.strDup( this.downUpToken, count ) + filePath;
   else
-  result = _.strDup( this._downUpStr, count-1 ) + this._downStr;
+  result = _.strDup( this.downUpToken, count-1 ) + this.downToken;
 
   /* removes redundant slash at the end */
-  if( _.strEnds( result, this._upStr ) )
-  _.assert( result.length > this._upStr.length );
+  if( _.strEnds( result, this.upToken ) )
+  _.assert( result.length > this.upToken.length );
 
   if( result === '' )
-  result = this._hereStr;
+  result = this.hereToken;
 
-  if( _.strEnds( o.filePath, this._upStr ) && !_.strEnds( result, this._upStr ) )
-  if( o.basePath !== this._rootStr )
-  result = result + this._upStr;
+  if( _.strEnds( o.filePath, this.upToken ) && !_.strEnds( result, this.upToken ) )
+  if( o.basePath !== this.rootToken )
+  result = result + this.upToken;
 
   if( baseIsTrailed )
   {
-    if( result === this._hereStr )
-    result = this._hereStr;
-    else if( result === this._hereUpStr )
-    result = this._hereUpStr;
+    if( result === this.hereToken )
+    result = this.hereToken;
+    else if( result === this.hereUpToken )
+    result = this.hereUpToken;
     else
-    result = this._hereUpStr + result;
+    result = this.hereUpToken + result;
   }
 
   /* checks if result is normalized */
 
   _.assert( result.length > 0 );
-  _.assert( result.lastIndexOf( this._upStr + this._hereStr + this._upStr ) === -1 );
-  _.assert( !_.strEnds( result, this._upStr + this._hereStr ) );
+  _.assert( result.lastIndexOf( this.upToken + this.hereToken + this.upToken ) === -1 );
+  _.assert( !_.strEnds( result, this.upToken + this.hereToken ) );
 
   if( Config.debug )
   {
-    let i = result.lastIndexOf( this._upStr + this._downStr + this._upStr );
+    let i = result.lastIndexOf( this.upToken + this.downToken + this.upToken );
     _.assert( i === -1 || !/\w/.test( result.substring( 0, i ) ) );
     if( o.resolving )
     _.assert
@@ -1929,14 +1929,14 @@ function _relative( o )
 
   function beginsWithDown( filePath )
   {
-    return filePath === self._downStr || _.strBegins( filePath, self._downUpStr );
+    return filePath === self.downToken || _.strBegins( filePath, self.downUpToken );
   }
 
   function removeBeginDown( filePath )
   {
-    if( filePath === self._downStr )
-    return self._hereStr;
-    return _.strRemoveBegin( filePath, self._downUpStr );
+    if( filePath === self.downToken )
+    return self.hereToken;
+    return _.strRemoveBegin( filePath, self.downUpToken );
   }
 
 }
@@ -2097,7 +2097,7 @@ function _commonPair( src1, src2 )
 
     if( levelsDown > 0 )
     {
-      let prefix = _.longFill( [], self._downStr, levelsDown );
+      let prefix = _.longFill( [], self.downToken, levelsDown );
       prefix = prefix.join( '/' );
       result = prefix + result;
     }
@@ -2105,7 +2105,7 @@ function _commonPair( src1, src2 )
     if( !result.length )
     {
       if( first.isRelativeHereThen && second.isRelativeHereThen )
-      result = self._hereStr;
+      result = self.hereToken;
       else
       result = '.';
     }
@@ -2122,7 +2122,7 @@ function _commonPair( src1, src2 )
     {
       if( first.splitted[ i ] === second.splitted[ i ] )
       {
-        if( first.splitted[ i ] === self._upStr && first.splitted[ i + 1 ] === self._upStr )
+        if( first.splitted[ i ] === self.upToken && first.splitted[ i + 1 ] === self.upToken )
         break;
         result.push( first.splitted[ i ] );
       }
@@ -2151,10 +2151,10 @@ function _commonPair( src1, src2 )
     result.isRelative = !result.isAbsolute;
 
     if( result.isRelative )
-    if( result.splitted[ 0 ] === self._downStr )
+    if( result.splitted[ 0 ] === self.downToken )
     {
-      result.levelsDown = _.longCountElement( result.splitted,self._downStr );
-      let substr = _.longFill( [], self._downStr, result.levelsDown ).join( '/' );
+      result.levelsDown = _.longCountElement( result.splitted,self.downToken );
+      let substr = _.longFill( [], self.downToken, result.levelsDown ).join( '/' );
       let withoutLevels = _.strRemoveBegin( result.normalized,substr );
       result.splitted = split( withoutLevels );
       result.isRelativeDown = true;
@@ -2270,12 +2270,12 @@ let ErrorNotSafe = _.error_functor( 'ErrorNotSafe', _onErrorNotSafe );
 let Parameters =
 {
 
-  _rootStr : '/',
-  _upStr : '/',
-  _hereStr : '.',
-  _downStr : '..',
-  _hereUpStr : null, /* ./ */
-  _downUpStr : null, /* ../ */
+  rootToken : '/',
+  upToken : '/',
+  hereToken : '.',
+  downToken : '..',
+  hereUpToken : null, /* ./ */
+  downUpToken : null, /* ../ */
 
   _rootRegSource : null,
   _upRegSource : null,

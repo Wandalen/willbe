@@ -7,7 +7,7 @@ function onModule( context )
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
 
-  _.assert( _.lengthOf( context.request.map ) === 0 );
+  // _.assert( _.lengthOf( context.request.map ) === 0 );
 
   /* read stats to fix for windows to update edit time of hard linked files */
   if( process.platform === 'win32' )
@@ -35,11 +35,11 @@ function onModule( context )
   if( status.local )
   context.will.hooks.GitPush.call( context );
 
-  {
-    let context2 = context.will.hookContextNew( context );
-    context2.request.map = { verbosity : 2 }
-    context2.will.hooks.BuilderSync.call( context2 );
-  }
+  // {
+  //   let context2 = context.will.hookContextNew( context );
+  //   context2.request.map = { verbosity : 2 }
+  //   context2.will.hooks.BuilderSync.call( context2 );
+  // }
 
 }
 

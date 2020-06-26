@@ -85,7 +85,7 @@ function _fromGlob( glob )
   if( i >= 0 )
   {
 
-    while( i >= 0 && glob[ i ] !== this._upStr )
+    while( i >= 0 && glob[ i ] !== this.upToken )
     i -= 1;
 
     if( i === -1 )
@@ -411,8 +411,8 @@ function _globFullToRegexpSingle( glob, filePath, basePath )
   let related = this.relateForGlob( glob, filePath, basePath );
   // debugger;
   let maybeHere = '';
-  let hereEscapedStr = self._globShortSplitToRegexpSource( self._hereStr );
-  let downEscapedStr = self._globShortSplitToRegexpSource( self._downStr );
+  let hereEscapedStr = self._globShortSplitToRegexpSource( self.hereToken );
+  let downEscapedStr = self._globShortSplitToRegexpSource( self.downToken );
 
   let cache = Object.create( null );
   let result = Object.create( null );
@@ -580,8 +580,8 @@ function _globSplitsToRegexpSourceGroups( globSplits )
 
   let s = 0;
   let depth = 0;
-  let hereEscapedStr = self._globShortSplitToRegexpSource( self._hereStr );
-  let downEscapedStr = self._globShortSplitToRegexpSource( self._downStr );
+  let hereEscapedStr = self._globShortSplitToRegexpSource( self.hereToken );
+  let downEscapedStr = self._globShortSplitToRegexpSource( self.downToken );
   let levels = levelsEval( globSplits );
 
   for( let s = 0 ; s < globSplits.length ; s++ )
@@ -671,7 +671,7 @@ function _globShortSplitToRegexpSource( src )
 
   _.assert( _.strIs( src ) );
   _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( !_.strHas( src, this._downStr ) || src === this._downStr, 'glob should not has splits with ".." combined with something' );
+  _.assert( !_.strHas( src, this.downToken ) || src === this.downToken, 'glob should not has splits with ".." combined with something' );
 
   let transformation1 =
   [

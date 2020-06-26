@@ -14,8 +14,8 @@ function onModule( context )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  let fileProvider = new _.FileFilter.Archive();
-  let config = fileProvider.configUserRead();
+  let fileProvider2 = new _.FileFilter.Archive();
+  let config = fileProvider2.configUserRead();
 
   /* basePath */
 
@@ -23,7 +23,7 @@ function onModule( context )
   if( config && config.path && config.path.link )
   _.arrayAppendArrayOnce( basePath, _.arrayAs( config.path.link ) );
   basePath = path.s.join( context.will.withPath, basePath );
-  _.assert( _.all( fileProvider.statsResolvedRead( basePath ) ) );
+  _.assert( _.all( fileProvider2.statsResolvedRead( basePath ) ) );
 
   /* mask */
 
@@ -52,19 +52,19 @@ function onModule( context )
   /* run */
 
   if( o.verbosity < 2 )
-  fileProvider.archive.verbosity = 0;
+  fileProvider2.archive.verbosity = 0;
   else if( o.verbosity === 2 )
-  fileProvider.archive.verbosity = 2;
+  fileProvider2.archive.verbosity = 2;
   else
-  fileProvider.archive.verbosity = o.verbosity - 1;
-  fileProvider.archive.allowingMissed = 0;
-  fileProvider.archive.allowingCycled = 0;
+  fileProvider2.archive.verbosity = o.verbosity - 1;
+  fileProvider2.archive.allowingMissed = 0;
+  fileProvider2.archive.allowingCycled = 0;
 
-  fileProvider.archive.basePath = basePath;
-  fileProvider.archive.mask = maskAll;
-  fileProvider.archive.fileMapAutosaving = 1;
-  fileProvider.archive.filesUpdate();
-  fileProvider.archive.filesLinkSame();
+  fileProvider2.archive.basePath = basePath;
+  fileProvider2.archive.mask = maskAll;
+  fileProvider2.archive.fileMapAutosaving = 1;
+  fileProvider2.archive.filesUpdate();
+  fileProvider2.archive.filesLinkSame();
 
   if( o.beeping )
   _.diagnosticBeep();

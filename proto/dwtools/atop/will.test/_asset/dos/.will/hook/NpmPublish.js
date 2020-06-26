@@ -191,6 +191,8 @@ module.exports = onModule;
 function isEnabled( context, localPath )
 {
   let _ = context.tools;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;  
   if( !_.strEnds( path.fullName( localPath ), '.json' ) )
   localPath = path.join( localPath, 'package.json' );
   let config = fileProvider.configRead( localPath );

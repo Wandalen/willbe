@@ -589,7 +589,7 @@ let wMathGeometric =
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.math.d2TriPointInside },
 }
 
-let wMathConcepts =
+let wMathModels =
 {
   sourcePath : sourcePath( 'amath/l8/Concepts.s', 'wmathconcepts' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.box },
@@ -804,7 +804,7 @@ let Modules =
   wMathVector,
   wMathMatrix,
   wMathGeometric,
-  wMathConcepts,
+  wMathModels,
 
   // top
 
