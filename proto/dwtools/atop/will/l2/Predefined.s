@@ -917,13 +917,13 @@ function stepRoutineGitSync( frame )
 
 stepRoutineGitSync.stepOptions =
 {
-  commit : '.',
+  commit : '-am "."',
   dirPath : null,
 }
 
 stepRoutineGitSync.uniqueOptions =
 {
-  commit : '.',
+  commit : '-am "."',
 }
 
 //

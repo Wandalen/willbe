@@ -7725,6 +7725,10 @@ function gitSync( o )
     currentContext : module.stepMap[ 'git.sync' ],
   });
 
+  /* read stats to fix for windows to update edit time of hard linked files */
+  if( process.platform === 'win32' )
+  fileProvider.filesFind({ filePath : o.dirPath + '**', safe : 0 });
+
   let status = _.git.statusFull
   ({
     insidePath : o.dirPath,
@@ -7771,7 +7775,10 @@ function gitSync( o )
     logger.log( `Committing ${module.nameWithLocationGet()}` );
 
     start( `git add --all` );
+    if( o.commit )
     start( `git commit ${o.commit}` );
+    else
+    start( 'git commit -am "."' );
 
     return con;
   }
