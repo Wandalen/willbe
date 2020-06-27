@@ -2,13 +2,6 @@
 
 'use strict';
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
 let _ = _global_.wTools;
 let Parent = _.will.Resource;
 let Self = wWillPathResource;
@@ -219,10 +212,11 @@ function exportStructure()
   if( !result )
   return result;
 
+  debugger;
+
   if( o.exportModule && !o.exportModule.isOut )
   if( result.path === null || result.path === undefined )
   {
-    // _.assert( 0, 'not tested' );
     return;
   }
 
@@ -236,7 +230,7 @@ function exportStructure()
   {
     result.path = _.filter( result.path, ( p ) =>
     {
-      let protocols = path.parse( p ).protocols;
+      let protocols = path.parseFull( p ).protocols;
       if( !protocols.length )
       return path.relative( module.inPath, p );
       return p;

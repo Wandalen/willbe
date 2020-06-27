@@ -753,7 +753,7 @@ function exportStructure( o )
   {
     result.path = _.filter( result.path, ( p ) =>
     {
-      let protocols = path.parse( p ).protocols;
+      let protocols = path.parseFull( p ).protocols;
       if( !protocols.length )
       return path.relative( module.inPath, p );
       return p;
@@ -764,7 +764,7 @@ function exportStructure( o )
   {
     result.localPath = _.filter( result.localPath, ( p ) =>
     {
-      let protocols = path.parse( p ).protocols;
+      let protocols = path.parseFull( p ).protocols;
       if( !protocols.length )
       return path.relative( module.inPath, p );
       return p;
@@ -775,7 +775,7 @@ function exportStructure( o )
   {
     result.remotePath = _.filter( result.remotePath, ( p ) =>
     {
-      let protocols = path.parse( p ).protocols;
+      let protocols = path.parseFull( p ).protocols;
       if( !protocols.length )
       return path.relative( module.inPath, p );
       return p;

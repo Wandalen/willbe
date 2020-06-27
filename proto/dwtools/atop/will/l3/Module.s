@@ -6102,7 +6102,7 @@ function originDirNameGet()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let origin = module.originGet();
-  let parsed = _.uri.parse( origin );
+  let parsed = _.uri.parseConsecutive( origin );
   let result = parsed.longPath;
 
   if( path.isAbsolute( result ) )

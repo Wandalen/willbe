@@ -638,7 +638,7 @@ function vcsToolsFor( o )
   _.assert( _.strIs( o.filePath ) );
   _.assert( path.isGlobal( o.filePath ) );
 
-  let parsed = path.parse( o.filePath );
+  let parsed = path.parseFull( o.filePath );
 
   if( _.longHasAny( parsed.protocols, _.git.protocols ) )
   return _.git;
