@@ -4366,9 +4366,9 @@ function exportCourruptedSubmodulesDisabled( test )
     test.identical( localPath, a.abs( exp ) );
     var exp =
     [
-      'git+https:///github.com/X1/X1.git@master',
-      'git+https:///github.com/X2/X2.git@master',
-      'git+https:///github.com/X3/X3.git@master',
+      'git+https:///github.com/X1/X1.git!master',
+      'git+https:///github.com/X2/X2.git!master',
+      'git+https:///github.com/X3/X3.git!master',
     ];
     var remotePath = _.filter( got, ( e ) => e.remotePath );
     test.identical( remotePath, exp );
@@ -8868,8 +8868,8 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    // test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@gamma' ) );
-    test.identical( submodule.opener.remotePath, 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@gamma' );
+    // test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
+    test.identical( submodule.opener.remotePath, 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma' );
 
     test.is( !submodule.opener.repo.hasFiles );
     test.is( !submodule.opener.openedModule );
@@ -8904,7 +8904,7 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@gamma' );
+    test.identical( submodule.opener.remotePath, 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma' );
 
     test.identical( submodule.opener.openedModule.name, 'wModuleForTesting1' );
     test.identical( submodule.opener.openedModule.resourcesFormed, 8 );
@@ -8913,7 +8913,7 @@ function submodulesRemoteResolve( test )
     test.identical( submodule.opener.openedModule.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.openedModule.remotePath, 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will@gamma' );
+    test.identical( submodule.opener.openedModule.remotePath, 'git+https:///github.com/Wandalen/wModuleForTesting1.git/out/wModuleForTesting1.out.will!gamma' );
     test.identical( submodule.opener.openedModule.currentRemotePath, null );
 
     test.case = 'mask, single module';
@@ -8978,7 +8978,7 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@gamma' ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
 
     test.is( !submodule.opener.repo.hasFiles );
     test.is( !submodule.opener.openedModule );
@@ -9013,7 +9013,7 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@gamma' ) );
+    test.identical( submodule.opener.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
 
     test.identical( submodule.opener.openedModule.name, 'wModuleForTesting1' );
     test.identical( submodule.opener.openedModule.resourcesFormed, 8 );
@@ -9022,7 +9022,7 @@ function submodulesLocalResolve( test )
     test.identical( submodule.opener.openedModule.dirPath, a.abs( '.module/ModuleForTesting1/out' ) );
     test.identical( submodule.opener.openedModule.localPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
     test.identical( submodule.opener.openedModule.commonPath, a.abs( '.module/ModuleForTesting1/out/wModuleForTesting1.out' ) );
-    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will@gamma' ) );
+    test.identical( submodule.opener.openedModule.remotePath, _.uri.join( a.abs( '../_repo' ), 'git+hd://ModuleForTesting1?out=out/wModuleForTesting1.out.will!gamma' ) );
     test.identical( submodule.opener.openedModule.currentRemotePath, null );
 
     test.case = 'mask, single module';

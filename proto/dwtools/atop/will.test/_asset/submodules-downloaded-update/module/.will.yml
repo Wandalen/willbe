@@ -3,7 +3,7 @@ about :
   version : 0.0.1
 
 submodule :
-  willbe-experiment : git+https:///github.com/volodymyrmigdal/willbe-experiment.git@master
+  willbe-experiment : git+https:///github.com/volodymyrmigdal/willbe-experiment.git!master
 
 path :
   in : '.'

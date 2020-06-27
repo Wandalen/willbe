@@ -1,5 +1,5 @@
 submodule :
-  submodule : git+hd://module/?out=out/submodule.out.will@master
+  submodule : git+hd://module/?out=out/submodule.out.will!master
 
 about :
 
