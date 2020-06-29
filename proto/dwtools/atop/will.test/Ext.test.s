@@ -9093,7 +9093,7 @@ function buildDetached( test )
     test.is( _.strHas( op.output, /\+ .*module::wModuleForTesting1.* was downloaded version .*master.* in/ ) );
     test.is( _.strHas( op.output, /\+ .*module::wPathBasic.* was downloaded version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.* in/ ) );
     test.is( _.strHas( op.output, /\.module\/ModuleForTesting2a\.informal <- npm:\/\/wprocedure/ ) );
-    test.is( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#13d24b7b6527a1ad83715b12b7bb6f5df5313e90/ ) );
+    test.is( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#c1c31010e1a95c21f43a206b10ee4123316c98d5/ ) );
     test.is( _.strHas( op.output, /\.module\/ModuleForTesting12ab\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git/ ) );
 
     var files = a.fileProvider.dirRead( a.path.join( a.routinePath, '.module' ) );
@@ -17382,7 +17382,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( op.exitCode, 0 );
     // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting1.* will be downloaded version .*/ ) );
-    // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*8031560ec22fd955b0b57430b5d6d96b042fbd99.*/ ) );
+    // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*d6e38fbe78358f3e71693bf098ee804677466af8.*/ ) );
     // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting1a.* will be downloaded version .*$.$.$$$.*/ ) );
     test.is( _.strHas( op.output, '+ 2/5 submodule(s) of module::submodules-detached will be downloaded' ) );
     var files = a.find( a.abs( '.module' ) );
@@ -20228,9 +20228,9 @@ function subModulesUpdate( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version 64c96412c81266f119210e7af71e300cce5b2ebd in' ) );
+    test.is( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version fbfcc8e897be2b7df49dc60b9a35818af195e916 in' ) );
     test.is( _.strHas( op.output, '+ module::wModuleForTesting2a was updated to version master in' ) );
-    test.is( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version b3499c8f6756cad511bb42559e6c3d501ed15061 in' ) );
+    test.is( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version 42862660a13869a743325aeb628103e354d4b14c in' ) );
     test.is( _.strHas( op.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
@@ -20262,7 +20262,7 @@ function subModulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch';
     var read = a.fileProvider.fileRead( a.path.join( a.routinePath, '.im.will.yml' ) );
-    read = _.strReplace( read, '#64c96412c81266f119210e7af71e300cce5b2ebd', '!master' )
+    read = _.strReplace( read, '#fbfcc8e897be2b7df49dc60b9a35818af195e916', '!master' )
     a.fileProvider.fileWrite( a.path.join( a.routinePath, '.im.will.yml' ), read );
     return null;
   })
@@ -22403,6 +22403,30 @@ function stepGitSync( test )
     return null;
   })
 
+  /* */
+
+  clone2Shell( 'git pull' );
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am "sixth"' );
+  clone2Shell( 'git push -u origin --all' );
+
+  a.appStart( '.with clone/GitSync .build git.sync.dry' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitSync .build git.sync.dry - checking of option dry';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
+    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 0 );
+    return null;
+  })
+
   /* - */
 
   return a.ready;
@@ -22609,7 +22633,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#13d24b7b6527a1ad83715b12b7bb6f5df5313e90.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -22628,7 +22652,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#332f0fc961cd47a278a2b56f5b625cf5fa7fbae2.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -22662,7 +22686,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#13d24b7b6527a1ad83715b12b7bb6f5df5313e90.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -22681,7 +22705,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#332f0fc961cd47a278a2b56f5b625cf5fa7fbae2.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -22717,7 +22741,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#13d24b7b6527a1ad83715b12b7bb6f5df5313e90.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -22736,7 +22760,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#332f0fc961cd47a278a2b56f5b625cf5fa7fbae2.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -22772,7 +22796,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#13d24b7b6527a1ad83715b12b7bb6f5df5313e90.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -22791,7 +22815,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#332f0fc961cd47a278a2b56f5b625cf5fa7fbae2.*/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
@@ -22843,7 +22867,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#13d24b7b6527a1ad83715b12b7bb6f5df5313e90.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -22862,7 +22886,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#332f0fc961cd47a278a2b56f5b625cf5fa7fbae2.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -22903,7 +22927,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#13d24b7b6527a1ad83715b12b7bb6f5df5313e90.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -22922,7 +22946,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#332f0fc961cd47a278a2b56f5b625cf5fa7fbae2.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -23073,7 +23097,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#13d24b7b6527a1ad83715b12b7bb6f5df5313e90.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -23092,7 +23116,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#332f0fc961cd47a278a2b56f5b625cf5fa7fbae2.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -23133,7 +23157,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#13d24b7b6527a1ad83715b12b7bb6f5df5313e90.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -23152,7 +23176,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* was upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#332f0fc961cd47a278a2b56f5b625cf5fa7fbae2.*/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 0 );
 
@@ -25885,6 +25909,241 @@ File.txt
 
 //
 
+function commandGitStatus( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let clone2Shell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone2' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  cloneShell( 'git init' );
+  cloneShell( 'git remote add origin ../repo' );
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am first' );
+  cloneShell( 'git push -u origin --all' );
+  a.shell( 'git clone repo/ clone2' );
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.with clone/ .git.status' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone .git.status - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.with clone/ .git.status' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone .git.status - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/ .git.status' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone .git.status - local and remote commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/ .git.status local:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone .git.status local:0 - checks no local changes';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/ .git.status remote:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone .git.status remote:0 - checks no local changes';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/ .git.status uncommittedIgnored:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone .git.status uncommittedIgnored:1 - checks only commited';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/ .git.status remoteBranches:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone .git.status remoteBranches:1 - checks with remote branches';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandGitSync( test )
 {
   let context = this;
@@ -26076,6 +26335,30 @@ function commandGitSync( test )
   .then( ( op ) =>
   {
     test.case = '.with clone/ .git.sync -am seventh v:0 - checking of option verbosity';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 0 );
+    return null;
+  })
+
+  /* */
+
+  clone2Shell( 'git pull' );
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am "sixth"' );
+  clone2Shell( 'git push -u origin --all' );
+
+  a.appStart( '.with clone/ .git.sync -am seventh dry:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.sync -am seventh dry:1 - checking of option dry';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Committing module::clone' ), 0 );
@@ -26537,6 +26820,7 @@ var Self =
     commandGitPull,
     commandGitPush,
     commandGitReset,
+    commandGitStatus,
     commandGitSync,
     commandGitTag,
   }

@@ -7,7 +7,7 @@ path :
 
   in : ..
   out : out
-  remote : 'git+https:///github.com/Wandalen/wModuleForTesting12.git/#332f0fc961cd47a278a2b56f5b625cf5fa7fbae2'
+  remote : 'git+https:///github.com/Wandalen/wModuleForTesting12.git/#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945'
   download : '.module/{about::name}'
   export : '{path::download}/proto/**'
 
