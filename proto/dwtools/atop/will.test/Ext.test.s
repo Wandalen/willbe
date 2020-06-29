@@ -160,7 +160,6 @@ function assetFor( test, name )
     },
   });
 
-
   a.findNoModules = a.fileProvider.filesFinder
   ({
     withTerminals : 1,
