@@ -1396,6 +1396,8 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/git-push/clone/f1.txt
           - ../proto/dwtools/atop/will.test/_asset/git-push/clone/f2.txt
           - >-
+            ../proto/dwtools/atop/will.test/_asset/git-push/clone/GitSync.will.yml
+          - >-
             ../proto/dwtools/atop/will.test/_asset/git-push/clone/GitTag.will.yml
           - ../proto/dwtools/atop/will.test/_asset/git-push/clone/will.yml
           - ../proto/dwtools/atop/will.test/_asset/git-reset
