@@ -26820,7 +26820,7 @@ var Self =
     commandGitPull,
     commandGitPush,
     commandGitReset,
-    commandGitStatus,
+    // commandGitStatus,
     commandGitSync,
     commandGitTag,
   }
