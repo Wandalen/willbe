@@ -192,6 +192,7 @@ function assetFor( test, name )
     }
     catch( err )
     {
+      _.errAttend( err );
       /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
       _.Consequence().take( null ).timeOut( 3000 ).deasync();
       a.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) );
