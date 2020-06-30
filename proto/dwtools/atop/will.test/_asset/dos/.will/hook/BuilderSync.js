@@ -40,9 +40,12 @@ function onModule( context )
   ({
     filter,
     dstRewritingOnlyPreserving : 1,
+    breakingSrcHardLink : 1,
+    breakingDstHardLink : 0,
     linking : 'hardLink',
     verbosity,
   });
+
 }
 
 var defaults = onModule.defaults = Object.create( null );
