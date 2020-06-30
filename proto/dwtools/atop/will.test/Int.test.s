@@ -143,7 +143,8 @@ function assetFor( test, name )
     a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
     try
     {
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
+      /* Dmytro : temporary fix - add option `sync` in call. It needs to investigate why routine works in async mode if option is not defined */
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ), sync : 1 } });
     }
     catch( err )
     {
@@ -9075,6 +9076,7 @@ function submodulesDeleteAndDownload( test )
     let builds = opener.openedModule.buildsResolve({ name : 'build' });
     test.identical( builds.length, 1 );
 
+    debugger;
     let build = builds[ 0 ];
     let con = build.perform();
 
