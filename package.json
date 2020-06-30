@@ -1,89 +1,74 @@
 {
-  "name": "willbe",
-  "version": "0.5.181",
-  "description": "Utility to manage modules of complex modular systems",
-  "author": "Kostiantyn Wandalen <wanalen@01.school>",
-  "contributors": [
-    {
-      "name": "Kostiantyn Wandalen",
-      "email": "wanalen@01.school"
-    },
-    {
-      "name": "Volodymyr M.",
-      "email": "volodymyr.migdal@gmail.com"
-    },
-    {
-      "name": "Dmytro Kryvoruchko",
-      "email": "dm.vict.kr@gmail.com"
-    }
+  "name" : "willbe",
+  "version" : "0.5.182",
+  "description" : "Utility to manage modules of complex modular systems",
+  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
+  "contributors" :
+  [
+    { "name" : "Kostiantyn Wandalen", "email" : "wanalen@01.school" },
+    { "name" : "Volodymyr M.", "email" : "volodymyr.migdal@gmail.com" },
+    { "name" : "Dmytro Kryvoruchko", "email" : "dm.vict.kr@gmail.com" }
   ],
-  "license": "MIT",
-  "main": "proto/dwtools/atop/will/entry/Include.s",
-  "files": [
-    "proto/dwtools/atop/will",
-    "proto/dwtools/Tools.s",
-    "out"
-  ],
-  "bin": {
-    "single-process-will": "proto/dwtools/atop/will/entry/Exec",
-    "debug-will": "proto/dwtools/atop/will/entry/ExecDebug",
-    "unrestricted-will": "proto/dwtools/atop/will/entry/ExecUnrestricted",
-    "will": "proto/dwtools/atop/will/entry/ExecUnrestricted"
+  "license" : "MIT",
+  "main" : "proto/dwtools/atop/will/entry/Include.s",
+  "files" : [ "proto/dwtools/atop/will", "proto/dwtools/Tools.s", "out" ],
+  "bin" :
+  {
+    "single-process-will" : "proto/dwtools/atop/will/entry/Exec",
+    "debug-will" : "proto/dwtools/atop/will/entry/ExecDebug",
+    "unrestricted-will" : "proto/dwtools/atop/will/entry/ExecUnrestricted",
+    "will" : "proto/dwtools/atop/will/entry/ExecUnrestricted"
   },
-  "scripts": {
-    "test": "wtest .run 'proto/**' rapidity:-3",
-    "docgen": "wdocgen .build proto",
-    "single-process-will": "node proto/dwtools/atop/will/entry/Exec",
-    "debug-will": "node proto/dwtools/atop/will/entry/ExecDebug",
-    "unrestricted-will": "node proto/dwtools/atop/will/entry/ExecUnrestricted",
-    "will": "node proto/dwtools/atop/will/entry/ExecUnrestricted",
-    "docker-build-centos": "docker image build -t willbe-centos -f ./docker/centos.dockerfile .",
-    "docker-build-ubuntu": "docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .",
-    "docker-run-centos": "docker run --rm willbe-centos",
-    "docker-run-ubuntu": "docker run --rm willbe-ubuntu"
+  "scripts" :
+  {
+    "test" : "wtest .run 'proto/**' rapidity:-3",
+    "docgen" : "wdocgen .build proto",
+    "single-process-will" : "node proto/dwtools/atop/will/entry/Exec",
+    "debug-will" : "node proto/dwtools/atop/will/entry/ExecDebug",
+    "unrestricted-will" : "node proto/dwtools/atop/will/entry/ExecUnrestricted",
+    "will" : "node proto/dwtools/atop/will/entry/ExecUnrestricted",
+    "docker-build-centos" : "docker image build -t willbe-centos -f ./docker/centos.dockerfile .",
+    "docker-build-ubuntu" : "docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .",
+    "docker-run-centos" : "docker run --rm willbe-centos",
+    "docker-run-ubuntu" : "docker run --rm willbe-ubuntu"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Wandalen/willbe.git"
+  "repository" : { "type" : "git", "url" : "https://github.com/Wandalen/willbe.git" },
+  "bugs" :
+  {
+    "url" : "https://github.com/Wandalen/willbe/issues"
   },
-  "bugs": {
-    "url": "https://github.com/Wandalen/willbe/issues"
+  "dependencies" :
+  {
+    "wTools" : "alpha",
+    "wCopyable" : "alpha",
+    "wLogger" : "alpha",
+    "wverbal" : "alpha",
+    "wtemplatetreeenvironment" : "alpha",
+    "wtemplatefilewriter" : "alpha",
+    "wprocess" : "alpha",
+    "wgraphbasic" : "alpha",
+    "wFiles" : "alpha",
+    "wfilesarchive" : "alpha",
+    "wfilesencoders" : "alpha",
+    "wstatestorage" : "alpha",
+    "wstatesession" : "alpha",
+    "wstager" : "alpha",
+    "wgraphbase" : "alpha",
+    "wselector" : "alpha",
+    "wresolver" : "alpha",
+    "wresolverextra" : "alpha",
+    "wcommandsaggregator" : "alpha",
+    "wcommandsconfig" : "alpha",
+    "wnamemapper" : "alpha",
+    "wtranspile" : "alpha",
+    "wnpmtools" : "alpha",
+    "wyamltools" : "alpha",
+    "wcensorbasic" : "alpha",
+    "tar" : "6.0.2",
+    "gitconfiglocal" : "2.1.0",
+    "open" : "7.0.4",
+    "getos" : "3.2.1"
   },
-  "dependencies": {
-    "wTools": "alpha",
-    "wCopyable": "alpha",
-    "wLogger": "alpha",
-    "wverbal": "alpha",
-    "wtemplatetreeenvironment": "alpha",
-    "wtemplatefilewriter": "alpha",
-    "wprocess": "alpha",
-    "wgraphbasic": "alpha",
-    "wFiles": "alpha",
-    "wfilesarchive": "alpha",
-    "wfilesencoders": "alpha",
-    "wstatestorage": "alpha",
-    "wstatesession": "alpha",
-    "wstager": "alpha",
-    "wgraphbase": "alpha",
-    "wselector": "alpha",
-    "wresolver": "alpha",
-    "wresolverextra": "alpha",
-    "wcommandsaggregator": "alpha",
-    "wcommandsconfig": "alpha",
-    "wnamemapper": "alpha",
-    "wtranspile": "alpha",
-    "wnpmtools": "alpha",
-    "wyamltools": "alpha",
-    "wcensorbasic": "alpha",
-    "tar": "6.0.2",
-    "gitconfiglocal": "2.1.0",
-    "open": "7.0.4",
-    "getos": "3.2.1"
-  },
-  "devDependencies": {
-    "wTesting": "alpha"
-  },
-  "keywords": [
-    "wTools"
-  ]
+  "devDependencies" : { "wTesting" : "alpha" },
+  "keywords" : [ "wTools" ]
 }

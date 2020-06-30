@@ -901,6 +901,40 @@ stepRoutineGitReset.uniqueOptions =
 
 //
 
+function stepRoutineGitStatus( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  return module.gitStatus( opts );
+}
+
+stepRoutineGitStatus.stepOptions =
+{
+  local : 1,
+  uncommittedIgnored : 0,
+  remote : 1,
+  remoteBranches : 0,
+  prs : 1,
+}
+
+stepRoutineGitStatus.uniqueOptions =
+{
+  local : 1,
+  uncommittedIgnored : 0,
+  remote : 1,
+  remoteBranches : 0,
+  prs : 1,
+}
+
+//
+
 function stepRoutineGitSync( frame )
 {
   let step = this;
@@ -919,6 +953,7 @@ stepRoutineGitSync.stepOptions =
 {
   commit : '-am "."',
   dirPath : null,
+  dry : 0,
 }
 
 stepRoutineGitSync.uniqueOptions =
@@ -1212,6 +1247,7 @@ let Extension =
   stepRoutineGitPull,
   stepRoutineGitPush,
   stepRoutineGitReset,
+  stepRoutineGitStatus,
   stepRoutineGitSync,
   stepRoutineGitTag,
 

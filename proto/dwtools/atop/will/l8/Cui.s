@@ -378,6 +378,7 @@ function _commandsMake()
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     h : 'Use "git pull" to pull changes from remote repository' },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     h : 'Use "git push" to push commits and tags to remote repository' },
     'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    h : 'Use "git reset" to reset changes' },
+    'git status' :                      { e : _.routineJoin( will, will.commandGitStatus ),                   h : 'Use "git status" to check the status of the repository' },
     'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     h : 'Use "git sync" to syncronize local and remote repositories' },
     'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      h : 'Use "git tag" to add tag for current commit' },
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks' },
@@ -2241,6 +2242,55 @@ commandGitReset.commandProperties =
 
 //
 
+function commandGitStatus( e )
+{
+  let will = this;
+  let optionsMap = _.strStructureParse( e.argument );
+  _.routineOptions( commandGitStatus, optionsMap );
+  optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
+
+  return will._commandBuildLike
+  ({
+    event : e,
+    name : 'git status',
+    onEach : handleEach,
+    commandRoutine : commandGitStatus,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitStatus
+    ({
+      ... optionsMap,
+    });
+  }
+}
+
+commandGitStatus.defaults =
+{
+  local : 1,
+  uncommittedIgnored : 0,
+  remote : 1,
+  remoteBranches : 0,
+  prs : 1,
+  v : null,
+  verbosity : 1,
+}
+
+commandGitStatus.commandProperties =
+{
+  local : 'Check local commits. Default value is 1.',
+  uncommittedIgnored : 'Check ignored local files. Default value is 0.',
+  remote : 'Check remote unmerged commits. Default value is 1.',
+  remoteBranches : 'Check remote branches. Default value is 0.',
+  prs : 'Check pull requests. Default is dry:1.',
+  v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
+}
+
+
+//
+
 function commandGitSync( e )
 {
   let will = this;
@@ -2269,6 +2319,7 @@ function commandGitSync( e )
 commandGitSync.defaults =
 {
   dirPath : null,
+  dry : 0,
   v : null,
   verbosity : 1,
 }
@@ -3370,6 +3421,7 @@ let Extension =
   commandGitPull,
   commandGitPush,
   commandGitReset,
+  commandGitStatus,
   commandGitSync,
   commandGitTag,
   commandGitPreservingHardLinks,

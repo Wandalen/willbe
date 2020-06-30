@@ -1091,6 +1091,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'git.status',
+    stepRoutine : Predefined.stepRoutineGitStatus,
+  })
+
+  step
+  ({
     name : 'git.sync',
     stepRoutine : Predefined.stepRoutineGitSync,
   })
@@ -7706,6 +7712,76 @@ gitReset.defaults =
 
 //
 
+function gitStatus( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( gitStatus, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git.status' ],
+  });
+
+  /* read stats to fix for windows to update edit time of hard linked files */
+  if( process.platform === 'win32' )
+  fileProvider.filesFind({ filePath : context.junction.dirPath + '**', safe : 0 });
+
+  let config = fileProvider.configUserRead();
+  let token = null;
+  if( config !== null && config.about && config.about[ 'github.token' ] )
+  token = config.about[ 'github.token' ];
+
+  let o2 = _.mapOnly( o, _.git.statusFull.defaults );
+  o2.insidePath = o.dirPath;
+  if( !o2.token )
+  o2.token = token;
+  debugger;
+  let got = _.git.statusFull( o2 );
+
+  if( !got.status )
+  return null;
+
+  logger.log( module.nameWithLocationGet() );
+  logger.log( got.status );
+  return got;
+}
+
+gitStatus.defaults =
+{
+  local : 1,
+  uncommittedIgnored : 0,
+  remote : 1,
+  remoteBranches : 0,
+  prs : 1,
+  v : null,
+  verbosity : 1,
+  uncommitted : null,
+  uncommittedUntracked : null,
+  uncommittedAdded : null,
+  uncommittedChanged : null,
+  uncommittedDeleted : null,
+  uncommittedRenamed : null,
+  uncommittedCopied : null,
+  unpushed : null,
+  unpushedCommits : null,
+  unpushedTags : null,
+  unpushedBranches : null,
+  remoteCommits : null,
+  remoteTags : null,
+  token : null,
+}
+
+//
+
 function gitSync( o )
 {
   let module = this;
@@ -7749,13 +7825,13 @@ function gitSync( o )
   .then( () =>
   {
     if( status.remote )
-    return module.gitPull.call( module, _.mapBut( o, { commit : '.' } ) );
+    return module.gitPull.call( module, _.mapBut( o, { commit : '.', dry : '.' } ) );
     return null;
   })
   .then( () =>
   {
     if( status.local )
-    return module.gitPush.call( module, _.mapBut( o, { commit : '.' } ) );
+    return module.gitPush.call( module, _.mapBut( o, { commit : '.', dry : '.' } ) );
     return null;
   })
 
@@ -7788,6 +7864,7 @@ gitSync.defaults =
 {
   commit : '.',
   dirPath : null,
+  dry : 0,
   v : null,
   verbosity : 1,
 }
@@ -8503,6 +8580,7 @@ let Extension =
   gitPull,
   gitPush,
   gitReset,
+  gitStatus,
   gitSync,
   gitTag,
 
