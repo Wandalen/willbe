@@ -188,7 +188,7 @@ function assetFor( test, name )
     a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
     try
     {
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ), sync : 1 } });
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
     }
     catch( err )
     {
@@ -196,7 +196,7 @@ function assetFor( test, name )
       /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
       _.Consequence().take( null ).timeOut( 3000 ).deasync();
       a.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) );
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ), sync : 1 } });
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
     }
     return null
   }
@@ -22205,6 +22205,272 @@ File.txt
 
 //
 
+function stepGitStatus( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let clone2Shell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone2' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  cloneShell( 'git init' );
+  cloneShell( 'git remote add origin ../repo' );
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am first' );
+  cloneShell( 'git push -u origin --all' );
+  a.shell( 'git clone repo/ clone2' );
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.with clone/GitStatus .build git.status.default' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.default - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.with clone/GitStatus .build git.status.default' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.default - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/GitStatus .build git.status.default' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.default - local and remote commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/GitStatus .build git.status.local0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.local0 - checks no local changes';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/GitStatus .build git.status.remote0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.remote0 - checks no local changes';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/GitStatus .build git.status.uncommittedIgnored1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.uncommittedIgnored1 - checks ignored uncommited';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/GitStatus .build git.status.uncommittedIgnored0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.uncommittedIgnored0 - checks without ignored';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/GitStatus .build git.status.remoteBranches1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.remoteBranches1 - checks with remote branches';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function stepGitSync( test )
 {
   let context = this;
@@ -26051,8 +26317,8 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
     test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
     test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
-    test.identical( _.strCount( op.output, 'List of remote branches' ), 2 ); /* Dmytro : temporary, not known feature in GitTools */
-    test.identical( _.strCount( op.output, 'refs/heads/master' ), 2 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
     return null;
   })
@@ -26826,6 +27092,7 @@ var Self =
     stepGitPush,
     stepGitReset,
     stepGitSync,
+    stepGitStatus,
     stepGitTag,
 
     /* xxx : cover "will .module.new.with prepare" */

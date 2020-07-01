@@ -165,7 +165,6 @@ function status( o )
   else
   {
 
-    debugger;
     if( o.dirExists )
     if( o.invalidating || repo._.dirExists === null )
     ready.also( dirExistsReform );
