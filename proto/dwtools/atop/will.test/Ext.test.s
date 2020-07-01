@@ -192,6 +192,7 @@ function assetFor( test, name )
     }
     catch( err )
     {
+      _.errAttend( err );
       /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
       _.Consequence().take( null ).timeOut( 3000 ).deasync();
       a.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) );
@@ -3984,11 +3985,11 @@ function reflectWithOptionDstRewriting( test )
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
 
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
     a.fileProvider.fileDelete( a.abs( 'proto/File.js') )
     a.fileProvider.fileWrite( a.abs( 'proto/File.js'), 'console.log( "File2.js" )' )
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
 
     a.fileProvider.fileWrite( a.abs( 'proto/File.js' ), `console.log( '123' );` );
@@ -4001,7 +4002,7 @@ function reflectWithOptionDstRewriting( test )
   {
     test.is( !err );
     test.is( !!op.exitCode );
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
     return null;
   })
@@ -4020,7 +4021,7 @@ function reflectWithOptionDstRewriting( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     var read = a.fileProvider.fileRead( a.abs( 'proto/File.js') );
     test.identical( read, `console.log( '123' );` )
     var read = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
@@ -4033,11 +4034,11 @@ function reflectWithOptionDstRewriting( test )
   .then( () =>
   {
     test.case = 'unlink out file and try to restore';
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
     a.fileProvider.fileDelete( a.abs( 'out/debug/File.js' ) )
     a.fileProvider.fileWrite( a.abs( 'out/debug/File.js' ), 'console.log( "Unlinked.js" )' )
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
     return null;
   })
@@ -4047,7 +4048,7 @@ function reflectWithOptionDstRewriting( test )
   {
     test.is( !err );
     test.is( !!op.exitCode );
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
     return null;
   })
@@ -4057,7 +4058,7 @@ function reflectWithOptionDstRewriting( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js' ), a.abs( 'out/debug/File.js' ) ])
     var read = a.fileProvider.fileRead( a.abs( 'proto/File.js') );
     test.identical( read, `console.log( '123' );` )
     var read = a.fileProvider.fileRead( a.abs( 'out/debug/File.js' ) );
@@ -4096,7 +4097,7 @@ function reflectWithOptionLinking( test )
 
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
 
     return null;
@@ -4118,7 +4119,7 @@ function reflectWithOptionLinking( test )
 
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, true );
 
     return null;
@@ -4140,7 +4141,7 @@ function reflectWithOptionLinking( test )
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
 
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
 
     let write = 'console.log( "File2.js" )';
@@ -4180,7 +4181,7 @@ function reflectorFromPredefinedWithOptions( test )
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
 
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
 
     var read1 = a.fileProvider.fileRead( a.abs( 'proto/File.js' ) );
@@ -4206,7 +4207,7 @@ function reflectorFromPredefinedWithOptions( test )
     var files = a.find( a.abs( 'out' ) );
     test.identical( files, [ '.', './debug', './debug/File.js' ] );
 
-    var linked = a.fileProvider.filesAreHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
+    var linked = a.fileProvider.areHardLinked([ a.abs( 'proto/File.js'), a.abs( 'out/debug/File.js' ) ])
     test.identical( linked, false );
 
     var read1 = a.fileProvider.fileRead( a.abs( 'proto/File.js' ) );
@@ -5909,9 +5910,9 @@ function hookHlink( test )
     test.case = '.with original/ .call hlink beeping:0';
 
     test.identical( _.strHas( op.output, '+ hardLink' ), true );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
   })
@@ -5922,9 +5923,9 @@ function hookHlink( test )
     test.case = '.with clone/ .call hlink beeping:0';
 
     test.identical( _.strHas( op.output, '+ hardLink' ), true );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'original/f1.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     return null;
   })
@@ -5989,8 +5990,8 @@ function hookGitPullConflict( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -6042,8 +6043,8 @@ clone
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 1 );
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -6094,8 +6095,8 @@ clone
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -6205,8 +6206,8 @@ function hookGitSyncColflict( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -6263,8 +6264,8 @@ clone
     test.identical( _.strCount( op.output, '> git commit' ), 1 );
     test.identical( _.strCount( op.output, '> git push' ), 0 );
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -21650,8 +21651,8 @@ function stepGitPull( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -21684,8 +21685,8 @@ function stepGitPull( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -21739,8 +21740,8 @@ clone
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 1 );
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -21793,8 +21794,8 @@ clone
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -25350,8 +25351,8 @@ function commandGitPull( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -25384,8 +25385,8 @@ function commandGitPull( test )
   {
     test.description = 'hardlink';
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
@@ -25439,8 +25440,8 @@ clone
     test.notIdentical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'has local changes' ), 1 );
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `
@@ -25493,8 +25494,8 @@ clone
     test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
 
-    test.is( !a.fileProvider.filesAreHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
-    test.is( a.fileProvider.filesAreHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
 
     var exp =
 `

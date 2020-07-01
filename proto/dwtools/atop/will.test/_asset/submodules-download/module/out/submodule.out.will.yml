@@ -3,26 +3,26 @@ root:
   - submodule.out
 consistency:
   ../submodule.will.yml: &ref_0
-    hash: 831c4a52b614efe8774eeed782e81cc9
+    hash: b8749bf2c749e5236b569d6cabd8f2c7
     size: 441
   ../.module/ModuleForTesting1/.ex.will.yml: &ref_1
-    hash: cb8e18ffa43d15a96d796fd81fa20120
+    hash: 41f34ea653c1a23a56599348211b6cc9
     size: 1855
   ../.module/ModuleForTesting1/.im.will.yml: &ref_2
     hash: 61158bfe28020fc446901fcb902af53b
     size: 4862
   ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml: &ref_3
-    hash: 54ae911b147c19797ad80401792063b2
-    size: 38676
+    hash: 834b13def65ab5a9eb579f02734cb58e
+    size: 39278
   ../.module/ModuleForTesting2a/.ex.will.yml: &ref_4
-    hash: e65322bba5e46587b3d1272acc9468c3
+    hash: 6e360c865bacdc8e08f6cd34cfa1f6e6
     size: 1861
   ../.module/ModuleForTesting2a/.im.will.yml: &ref_5
     hash: 5c1adf8e274bbb3704b15e2f31fc5510
     size: 4975
   ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml: &ref_6
-    hash: 28facd70d1725e271cc48e509c8d9172
-    size: 39000
+    hash: 93b2fe1d7401662e368f9271156e4a89
+    size: 39602
 module:
   submodule.out:
     about:
@@ -72,49 +72,6 @@ module:
         path:
           - ..
           - ../submodule.will.yml
-          - ../.git
-          - ../.git/COMMIT_EDITMSG
-          - ../.git/config
-          - ../.git/description
-          - ../.git/HEAD
-          - ../.git/index
-          - ../.git/branches
-          - ../.git/hooks
-          - ../.git/hooks/applypatch-msg.sample
-          - ../.git/hooks/commit-msg.sample
-          - ../.git/hooks/fsmonitor-watchman.sample
-          - ../.git/hooks/post-update.sample
-          - ../.git/hooks/pre-applypatch.sample
-          - ../.git/hooks/pre-commit.sample
-          - ../.git/hooks/pre-push.sample
-          - ../.git/hooks/pre-rebase.sample
-          - ../.git/hooks/pre-receive.sample
-          - ../.git/hooks/prepare-commit-msg.sample
-          - ../.git/hooks/update.sample
-          - ../.git/info
-          - ../.git/info/exclude
-          - ../.git/logs
-          - ../.git/logs/HEAD
-          - ../.git/logs/refs
-          - ../.git/logs/refs/heads
-          - ../.git/logs/refs/heads/master
-          - ../.git/objects
-          - ../.git/objects/0c
-          - ../.git/objects/0c/c60f99498def7537205a95236ccbbef5a7970c
-          - ../.git/objects/51
-          - ../.git/objects/51/f38890c0b546d9cf74228bcd5e1f554776bff7
-          - ../.git/objects/bb
-          - ../.git/objects/bb/4f6203dd3940a451c0cac9de28022b59fd8834
-          - ../.git/objects/ed
-          - ../.git/objects/ed/04cda1dacf3d7f85aea5350523ebf532715489
-          - ../.git/objects/f0
-          - ../.git/objects/f0/514e850c96b324ee0f4e9d532f432aa203af4c
-          - ../.git/objects/info
-          - ../.git/objects/pack
-          - ../.git/refs
-          - ../.git/refs/heads
-          - ../.git/refs/heads/master
-          - ../.git/refs/tags
           - ../.module
           - ../.module/ModuleForTesting1
           - ../.module/ModuleForTesting1/.ex.will.yml
@@ -159,9 +116,9 @@ module:
           - ../.module/ModuleForTesting1/.git/objects/info
           - ../.module/ModuleForTesting1/.git/objects/pack
           - >-
-            ../.module/ModuleForTesting1/.git/objects/pack/pack-20ad45666fec66afcac8ba2c4d01a699232d9758.idx
+            ../.module/ModuleForTesting1/.git/objects/pack/pack-82568dc748c8d48ea55d339b184af87a3b4182a6.idx
           - >-
-            ../.module/ModuleForTesting1/.git/objects/pack/pack-20ad45666fec66afcac8ba2c4d01a699232d9758.pack
+            ../.module/ModuleForTesting1/.git/objects/pack/pack-82568dc748c8d48ea55d339b184af87a3b4182a6.pack
           - ../.module/ModuleForTesting1/.git/refs
           - ../.module/ModuleForTesting1/.git/refs/heads
           - ../.module/ModuleForTesting1/.git/refs/heads/master
@@ -232,9 +189,9 @@ module:
           - ../.module/ModuleForTesting2a/.git/objects/info
           - ../.module/ModuleForTesting2a/.git/objects/pack
           - >-
-            ../.module/ModuleForTesting2a/.git/objects/pack/pack-98ae305e82662f69e77114db0378f676e1d0bc47.idx
+            ../.module/ModuleForTesting2a/.git/objects/pack/pack-e321bc7285d4da8095fbe8813ec503488ad5b756.idx
           - >-
-            ../.module/ModuleForTesting2a/.git/objects/pack/pack-98ae305e82662f69e77114db0378f676e1d0bc47.pack
+            ../.module/ModuleForTesting2a/.git/objects/pack/pack-e321bc7285d4da8095fbe8813ec503488ad5b756.pack
           - ../.module/ModuleForTesting2a/.git/refs
           - ../.module/ModuleForTesting2a/.git/refs/heads
           - ../.module/ModuleForTesting2a/.git/refs/heads/master
@@ -262,13 +219,15 @@ module:
             ../.module/ModuleForTesting2a/proto/dwtools/abase/l3.test/ModuleForTesting2a.test.s
           - ../.module/ModuleForTesting2a/sample
           - ../.module/ModuleForTesting2a/sample/Sample.js
+          - .
+          - submodule.out.will.yml
     submodule:
       ModuleForTesting1:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/@gamma'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma'
         autoExporting: 0
         enabled: 1
       ModuleForTesting2a:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/@gamma'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/!gamma'
         autoExporting: 0
         enabled: 1
     reflector:
@@ -279,6 +238,7 @@ module:
           prefixPath: ..
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           generated: 1
           default: 1
@@ -291,8 +251,6 @@ module:
           prefixPath: 'path::exported.dir.export'
           recursive: 0
         recursive: 0
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           generated: 1
           default: 1
@@ -362,11 +320,11 @@ module:
         path: out
     submodule:
       ModuleForTesting1:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/@gamma'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting1.git/!gamma'
         autoExporting: 0
         enabled: 1
       ModuleForTesting2a:
-        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/@gamma'
+        path: 'git+https:///github.com/Wandalen/wModuleForTesting2a.git/!gamma'
         autoExporting: 0
         enabled: 1
     reflector: {}
@@ -386,7 +344,7 @@ module:
           export: 1
     consistency:
       ../submodule.will.yml:
-        hash: 831c4a52b614efe8774eeed782e81cc9
+        hash: b8749bf2c749e5236b569d6cabd8f2c7
         size: 441
   ../.module/ModuleForTesting1/:
     about:
@@ -398,16 +356,16 @@ module:
       enabled: 1
       version: 0.0.1
       interpreters:
-        - njs >= 10.0.0
+        - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
       keywords:
         - willbe
         - test
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@willbe.so>
+      author: Kostiantyn Wandalen <wanalen@01.school>
       contributors:
-        - Kostiantyn Wandalen <wanalen@willbe.so>
+        - Kostiantyn Wandalen <wanalen@01.school>
         - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
       npm.name: wmodulefortesting1
       npm.scripts:
@@ -534,8 +492,6 @@ module:
         src:
           filePath:
             'path::proto': '{path::out.*=1}/source'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -547,8 +503,6 @@ module:
         src:
           filePath:
             'path::proto': '{path::out.*=1}/source'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -560,8 +514,6 @@ module:
         src:
           filePath:
             'path::proto': '{path::out.*=1}/source'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -573,8 +525,6 @@ module:
         src:
           filePath:
             'path::proto': '{path::out.*=1}/source'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -586,8 +536,6 @@ module:
         src:
           filePath:
             'path::proto': '{path::out.raw.release}'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           raw: raw
           debug: release
@@ -600,8 +548,6 @@ module:
             '**.test*': 0
             '**.test/**': 0
             'path::proto': '{path::out.*=1}/Main.s'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -615,8 +561,6 @@ module:
             '**.test*': 0
             '**.test/**': 0
             'path::proto': '{path::out.*=1}/Main.s'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -629,8 +573,6 @@ module:
           filePath:
             '**.test*': 1
             'path::proto': '{path::out.*=1}/Tests.test.s'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -643,8 +585,6 @@ module:
           filePath:
             '**.test*': 1
             'path::proto': '{path::out.*=1}/Tests.test.s'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -909,7 +849,7 @@ module:
           debug: release
       reflect.proto.debug.raw:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug.raw'
         criterion:
           tests: no.tests
           debug: debug
@@ -919,7 +859,7 @@ module:
           - files.reflect
       reflect.proto.release.raw:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.release.raw'
         criterion:
           tests: no.tests
           debug: release
@@ -929,7 +869,7 @@ module:
           - files.reflect
       reflect.proto.debug.compiled:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug.compiled'
         criterion:
           tests: no.tests
           debug: debug
@@ -939,7 +879,7 @@ module:
           - files.reflect
       reflect.proto.release.compiled:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.release.compiled'
         criterion:
           tests: no.tests
           debug: release
@@ -950,7 +890,7 @@ module:
       transpile.proto.raw:
         opts:
           entry: 'path::entry.proto.no.tests'
-          reflector: 'reflector::transpile.proto.raw*'
+          filePath: 'reflector::transpile.proto.raw'
         criterion:
           raw: raw
           debug: release
@@ -960,7 +900,7 @@ module:
       transpile.proto.no.tests.compiled.debug:
         opts:
           entry: 'path::entry.proto.*=1'
-          reflector: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled.debug'
         criterion:
           tests: no.tests
           raw: compiled
@@ -971,7 +911,7 @@ module:
       transpile.proto.no.tests.compiled.release:
         opts:
           entry: 'path::entry.proto.*=1'
-          reflector: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled.release'
         criterion:
           tests: no.tests
           raw: compiled
@@ -983,7 +923,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          reflector: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled.debug'
         criterion:
           tests: only.tests
           raw: compiled
@@ -995,7 +935,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          reflector: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled.release'
         criterion:
           tests: only.tests
           raw: compiled
@@ -1091,16 +1031,16 @@ module:
       enabled: 1
       version: 0.0.1
       interpreters:
-        - njs >= 10.0.0
+        - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
       keywords:
         - willbe
         - test
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@willbe.so>
+      author: Kostiantyn Wandalen <wanalen@01.school>
       contributors:
-        - Kostiantyn Wandalen <wanalen@willbe.so>
+        - Kostiantyn Wandalen <wanalen@01.school>
         - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
       npm.name: wmodulefortesting1
       npm.scripts:
@@ -1254,6 +1194,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: debug
@@ -1270,6 +1211,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: release
@@ -1286,6 +1228,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: debug
@@ -1302,6 +1245,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: release
@@ -1318,6 +1262,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           raw: raw
           debug: release
@@ -1335,6 +1280,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           raw: compiled
@@ -1353,6 +1299,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           raw: compiled
@@ -1370,6 +1317,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: only.tests
           raw: compiled
@@ -1387,6 +1335,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: only.tests
           raw: compiled
@@ -1401,6 +1350,7 @@ module:
           prefixPath: ../proto
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           generated: 1
           content: proto
@@ -1415,6 +1365,7 @@ module:
         recursive: 0
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           generated: 1
           content: proto
@@ -1676,7 +1627,7 @@ module:
           debug: release
       reflect.proto.debug.raw:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto*'
         criterion:
           tests: no.tests
           debug: debug
@@ -1686,7 +1637,7 @@ module:
           - files.reflect
       reflect.proto.release.raw:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto*'
         criterion:
           tests: no.tests
           debug: release
@@ -1696,7 +1647,7 @@ module:
           - files.reflect
       reflect.proto.debug.compiled:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto*'
         criterion:
           tests: no.tests
           debug: debug
@@ -1706,7 +1657,7 @@ module:
           - files.reflect
       reflect.proto.release.compiled:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto*'
         criterion:
           tests: no.tests
           debug: release
@@ -1717,7 +1668,7 @@ module:
       transpile.proto.raw:
         opts:
           entry: 'path::entry.proto.no.tests'
-          reflector: 'reflector::transpile.proto.raw*'
+          filePath: 'reflector::transpile.proto.raw*'
         criterion:
           raw: raw
           debug: release
@@ -1727,7 +1678,7 @@ module:
       transpile.proto.no.tests.compiled.debug:
         opts:
           entry: 'path::entry.proto.*=1'
-          reflector: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled*'
         criterion:
           tests: no.tests
           raw: compiled
@@ -1738,7 +1689,7 @@ module:
       transpile.proto.no.tests.compiled.release:
         opts:
           entry: 'path::entry.proto.*=1'
-          reflector: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled*'
         criterion:
           tests: no.tests
           raw: compiled
@@ -1750,7 +1701,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          reflector: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled*'
         criterion:
           tests: only.tests
           raw: compiled
@@ -1762,7 +1713,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          reflector: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled*'
         criterion:
           tests: only.tests
           raw: compiled
@@ -1772,7 +1723,7 @@ module:
           - files.transpile
       exported.proto.export:
         opts:
-          reflector: 'reflector::exported.proto.export*'
+          filePath: 'reflector::exported.proto.export'
         criterion:
           generated: 1
           content: proto
@@ -1781,7 +1732,7 @@ module:
           - files.reflect
       exported.files.proto.export:
         opts:
-          reflector: 'reflector::exported.files.proto.export*'
+          filePath: 'reflector::exported.files.proto.export'
         criterion:
           generated: 1
           content: proto
@@ -1877,10 +1828,10 @@ module:
           export: 1
     consistency:
       ../.module/ModuleForTesting1/out/wModuleForTesting1.out.will.yml:
-        hash: 54ae911b147c19797ad80401792063b2
-        size: 38676
+        hash: 834b13def65ab5a9eb579f02734cb58e
+        size: 39278
       ../.module/ModuleForTesting1/.ex.will.yml:
-        hash: cb8e18ffa43d15a96d796fd81fa20120
+        hash: 41f34ea653c1a23a56599348211b6cc9
         size: 1855
       ../.module/ModuleForTesting1/.im.will.yml:
         hash: 61158bfe28020fc446901fcb902af53b
@@ -1895,16 +1846,16 @@ module:
       enabled: 1
       version: 0.0.1
       interpreters:
-        - njs >= 10.0.0
+        - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
       keywords:
         - willbe
         - test
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@willbe.so>
+      author: Kostiantyn Wandalen <wanalen@01.school>
       contributors:
-        - Kostiantyn Wandalen <wanalen@willbe.so>
+        - Kostiantyn Wandalen <wanalen@01.school>
         - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
       npm.name: wmodulefortesting2a
       npm.scripts:
@@ -2035,8 +1986,6 @@ module:
         src:
           filePath:
             'path::proto': '{path::out.*=1}/source'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -2048,8 +1997,6 @@ module:
         src:
           filePath:
             'path::proto': '{path::out.*=1}/source'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -2061,8 +2008,6 @@ module:
         src:
           filePath:
             'path::proto': '{path::out.*=1}/source'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: debug
@@ -2074,8 +2019,6 @@ module:
         src:
           filePath:
             'path::proto': '{path::out.*=1}/source'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           debug: release
@@ -2087,8 +2030,6 @@ module:
         src:
           filePath:
             'path::proto': '{path::out.raw.release}'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           raw: raw
           debug: release
@@ -2101,8 +2042,6 @@ module:
             '**.test*': 0
             '**.test/**': 0
             'path::proto': '{path::out.*=1}/Main.s'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -2116,8 +2055,6 @@ module:
             '**.test*': 0
             '**.test/**': 0
             'path::proto': '{path::out.*=1}/Main.s'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: no.tests
           raw: compiled
@@ -2130,8 +2067,6 @@ module:
           filePath:
             '**.test*': 1
             'path::proto': '{path::out.*=1}/Tests.test.s'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -2144,8 +2079,6 @@ module:
           filePath:
             '**.test*': 1
             'path::proto': '{path::out.*=1}/Tests.test.s'
-        mandatory: 1
-        dstRewritingOnlyPreserving: 1
         criterion:
           tests: only.tests
           raw: compiled
@@ -2410,7 +2343,7 @@ module:
           debug: release
       reflect.proto.debug.raw:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug.raw'
         criterion:
           tests: no.tests
           debug: debug
@@ -2420,7 +2353,7 @@ module:
           - files.reflect
       reflect.proto.release.raw:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.release.raw'
         criterion:
           tests: no.tests
           debug: release
@@ -2430,7 +2363,7 @@ module:
           - files.reflect
       reflect.proto.debug.compiled:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug.compiled'
         criterion:
           tests: no.tests
           debug: debug
@@ -2440,7 +2373,7 @@ module:
           - files.reflect
       reflect.proto.release.compiled:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.release.compiled'
         criterion:
           tests: no.tests
           debug: release
@@ -2451,7 +2384,7 @@ module:
       transpile.proto.raw:
         opts:
           entry: 'path::entry.proto.no.tests'
-          reflector: 'reflector::transpile.proto.raw*'
+          filePath: 'reflector::transpile.proto.raw'
         criterion:
           raw: raw
           debug: release
@@ -2461,7 +2394,7 @@ module:
       transpile.proto.no.tests.compiled.debug:
         opts:
           entry: 'path::entry.proto.*=1'
-          reflector: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled.debug'
         criterion:
           tests: no.tests
           raw: compiled
@@ -2472,7 +2405,7 @@ module:
       transpile.proto.no.tests.compiled.release:
         opts:
           entry: 'path::entry.proto.*=1'
-          reflector: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled.release'
         criterion:
           tests: no.tests
           raw: compiled
@@ -2484,7 +2417,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          reflector: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled.debug'
         criterion:
           tests: only.tests
           raw: compiled
@@ -2496,7 +2429,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          reflector: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled.release'
         criterion:
           tests: only.tests
           raw: compiled
@@ -2592,16 +2525,16 @@ module:
       enabled: 1
       version: 0.0.1
       interpreters:
-        - njs >= 10.0.0
+        - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
       keywords:
         - willbe
         - test
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@willbe.so>
+      author: Kostiantyn Wandalen <wanalen@01.school>
       contributors:
-        - Kostiantyn Wandalen <wanalen@willbe.so>
+        - Kostiantyn Wandalen <wanalen@01.school>
         - Kryvoruchko Dmytro <dm.vict.kr@gmail.com>
       npm.name: wmodulefortesting2a
       npm.scripts:
@@ -2759,6 +2692,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: debug
@@ -2775,6 +2709,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: release
@@ -2791,6 +2726,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: debug
@@ -2807,6 +2743,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: release
@@ -2823,6 +2760,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           raw: raw
           debug: release
@@ -2840,6 +2778,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           raw: compiled
@@ -2858,6 +2797,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           raw: compiled
@@ -2875,6 +2815,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: only.tests
           raw: compiled
@@ -2892,6 +2833,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: only.tests
           raw: compiled
@@ -2906,6 +2848,7 @@ module:
           prefixPath: ../proto
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           generated: 1
           content: proto
@@ -2920,6 +2863,7 @@ module:
         recursive: 0
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           generated: 1
           content: proto
@@ -3181,7 +3125,7 @@ module:
           debug: release
       reflect.proto.debug.raw:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto*'
         criterion:
           tests: no.tests
           debug: debug
@@ -3191,7 +3135,7 @@ module:
           - files.reflect
       reflect.proto.release.raw:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto*'
         criterion:
           tests: no.tests
           debug: release
@@ -3201,7 +3145,7 @@ module:
           - files.reflect
       reflect.proto.debug.compiled:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto*'
         criterion:
           tests: no.tests
           debug: debug
@@ -3211,7 +3155,7 @@ module:
           - files.reflect
       reflect.proto.release.compiled:
         opts:
-          reflector: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto*'
         criterion:
           tests: no.tests
           debug: release
@@ -3222,7 +3166,7 @@ module:
       transpile.proto.raw:
         opts:
           entry: 'path::entry.proto.no.tests'
-          reflector: 'reflector::transpile.proto.raw*'
+          filePath: 'reflector::transpile.proto.raw*'
         criterion:
           raw: raw
           debug: release
@@ -3232,7 +3176,7 @@ module:
       transpile.proto.no.tests.compiled.debug:
         opts:
           entry: 'path::entry.proto.*=1'
-          reflector: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled*'
         criterion:
           tests: no.tests
           raw: compiled
@@ -3243,7 +3187,7 @@ module:
       transpile.proto.no.tests.compiled.release:
         opts:
           entry: 'path::entry.proto.*=1'
-          reflector: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled*'
         criterion:
           tests: no.tests
           raw: compiled
@@ -3255,7 +3199,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          reflector: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled*'
         criterion:
           tests: only.tests
           raw: compiled
@@ -3267,7 +3211,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          reflector: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled*'
         criterion:
           tests: only.tests
           raw: compiled
@@ -3277,7 +3221,7 @@ module:
           - files.transpile
       exported.proto.export:
         opts:
-          reflector: 'reflector::exported.proto.export*'
+          filePath: 'reflector::exported.proto.export'
         criterion:
           generated: 1
           content: proto
@@ -3286,7 +3230,7 @@ module:
           - files.reflect
       exported.files.proto.export:
         opts:
-          reflector: 'reflector::exported.files.proto.export*'
+          filePath: 'reflector::exported.files.proto.export'
         criterion:
           generated: 1
           content: proto
@@ -3382,10 +3326,10 @@ module:
           export: 1
     consistency:
       ../.module/ModuleForTesting2a/out/wModuleForTesting2a.out.will.yml:
-        hash: 28facd70d1725e271cc48e509c8d9172
-        size: 39000
+        hash: 93b2fe1d7401662e368f9271156e4a89
+        size: 39602
       ../.module/ModuleForTesting2a/.ex.will.yml:
-        hash: e65322bba5e46587b3d1272acc9468c3
+        hash: 6e360c865bacdc8e08f6cd34cfa1f6e6
         size: 1861
       ../.module/ModuleForTesting2a/.im.will.yml:
         hash: 5c1adf8e274bbb3704b15e2f31fc5510
