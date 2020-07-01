@@ -14,6 +14,10 @@ function onModule( context )
   if( !context.module.about.name )
   return;
 
+  /* example
+  reset && mkdir ___ && cd ___ && will .module.new.with prepare && will .call publish tag:alpha && cd ..
+  */
+
   if( context.withPath !== context.junction.localPath )
   {
     debugger;
