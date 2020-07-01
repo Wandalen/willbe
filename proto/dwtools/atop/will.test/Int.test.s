@@ -10980,7 +10980,8 @@ var Self =
     repoStatusLocalChanges,
     repoStatusLocalUncommittedChanges
 
-  },
+  }
+
 }
 
 // --
