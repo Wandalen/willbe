@@ -1,0 +1,51 @@
+about :
+
+  name : git-status
+
+path :
+
+  git.proto : 'proto'
+
+step :
+
+  git.status.local0 :
+    local : 0
+
+  git.status.remote0 :
+    remote : 0
+
+  git.status.uncommittedIgnored1 :
+    uncommittedIgnored : 1
+
+  git.status.uncommittedIgnored0 :
+    uncommittedIgnored : 0
+
+  git.status.remoteBranches1 :
+    remoteBranches : 1
+
+build :
+
+  git.status.default :
+    steps :
+      - git.status
+
+  git.status.local0 :
+    steps :
+      - git.status.local0
+
+  git.status.remote0 :
+    steps :
+      - git.status.remote0
+
+  git.status.uncommittedIgnored1 :
+    steps :
+      - git.status.uncommittedIgnored1
+
+  git.status.uncommittedIgnored0 :
+    steps :
+      - git.status.uncommittedIgnored0
+
+  git.status.remoteBranches1 :
+    steps :
+      - git.status.remoteBranches1
+
