@@ -1034,19 +1034,33 @@ commandImply.commandProperties =
 
 //
 
-function commandVersion( e ) /* xxx qqq : move to NpmTools */
+function commandVersion( e )
 {
-  let will = this;
-  let ca = e.ca;
-  let logger = will.logger;
-
-  let implyMap = _.strStructureParse( e.argument );
-  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
-  will._propertiesImply( implyMap );
-
-  logger.log( 'Current version:', will.versionGet() );
+  let cui = this;
+  return _.npm.versionLog
+  ({
+    localPath : _.path.join( __dirname, '../../../../..' ),
+    remotePath : 'willbe',
+  });
 }
-commandVersion.commandProperties = commandImply.commandProperties;
+
+commandVersion.hint = 'Get information about version.';
+
+// function commandVersion( e ) /* xxx qqq : move to NpmTools */
+// {
+//   let will = this;
+//   let ca = e.ca;
+//   let logger = will.logger;
+//
+//   let implyMap = _.strStructureParse( e.argument );
+//   _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
+//   will._propertiesImply( implyMap );
+//
+//   // logger.log( 'Current version:', will.versionGet() );
+// }
+// // commandVersion.commandProperties = commandImply.commandProperties;
+//
+// commandVersion.hint = 'Get information about version.';
 
 //
 
