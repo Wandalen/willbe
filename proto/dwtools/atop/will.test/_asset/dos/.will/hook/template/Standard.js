@@ -1239,7 +1239,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 'README.md' : //
 `
-# module::{:package/shortName:} [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental) [![Status](https://github.com/{:about/user:}/{:package/name:}/workflows/Test/badge.svg)](https://github.com/{:about/user:}/{:package/name:}/actions?query=workflow%3ATest)
+# module::{:package/shortName:} [![Status](https://github.com/{:about/user:}/{:package/name:}/workflows/Test/badge.svg)](https://github.com/{:about/user:}/{:package/name:}/actions?query=workflow%3ATest) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
 ___
 
@@ -1249,7 +1249,7 @@ npm install
 node sample/Sample.s
 \`\`\`
 
-## To add as submodule
+## To install
 \`\`\`
 npm add '{:package/lowName:}@alpha'
 \`\`\`
