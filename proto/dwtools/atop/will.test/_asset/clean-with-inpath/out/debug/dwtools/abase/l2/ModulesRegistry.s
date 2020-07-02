@@ -251,19 +251,19 @@ let wGdf =
 
 let wLogger =
 {
-  sourcePath : sourcePath( 'abase/l9/printer/top/Logger.s', 'wLogger' ),
+  sourcePath : sourcePath( 'abase/l9/logger/Logger.s', 'wLogger' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.Logger; },
 }
 
 let wPrinterToFile =
 {
-  sourcePath : sourcePath( 'abase/l9/printer/top/ToFile.ss', 'wloggertofile' ),
+  sourcePath : sourcePath( 'abase/l9/logger/ToFile.ss', 'wloggertofile' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.PrinterToFile; },
 }
 
 let wPrinterToJs =
 {
-  sourcePath : sourcePath( 'abase/l9/printer/top/ToJstructure.s', 'wloggertojs' ),
+  sourcePath : sourcePath( 'abase/l9/logger/ToJstructure.s', 'wloggertojs' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.PrinterToJs; },
 }
 
@@ -746,118 +746,4 @@ let Modules =
   wSchema,
   wStxt,
 
-  wLoggerSocket,
-
-  // mid / l3
-
-  wStager,
-  wIntrospector,
-  wPersistent,
-  wRemote,
-  wGitTools,
-  wNpmTools,
-  wYamlTools,
-
-  //
-
-  wRegexpObject,
-  wColor,
-  wColor256,
-  wChangeTransactor,
-  wVocabulary,
-  wCommandsAggregator,
-  wCommandsConfig,
-
-  wFiles,
-  wFilesArchive,
-  wFilesEncoders,
-  wFilesSvn,
-  wFileExecutor,
-  wFileExecutorHtmlFormatters,
-  wPathTranslator,
-
-  wTimeMarker,
-  wVerbal,
-  wStateStorage,
-  wStateSession,
-
-  wNameMapper,
-  wTemplateTreeResolver,
-  wTemplateTreeResolver2,
-  wTemplateTreeEnvironment,
-  wTemplateFileWriter,
-
-  wScriptLauncher,
-  wExchangePoint,
-  wCommunicator,
-  wIncubator,
-  wCollectionOfInstances,
-
-  // amid / l5
-
-  wServletTools,
-  wBitmask,
-
-  // math
-
-  wMathScalar,
-  wMathVector,
-  wMathMatrix,
-  wMathGeometric,
-  wMathModels,
-
-  // top
-
-  willbe,
-  wStarter,
-  wTesting,
-  wTranspile,
-  wFilesOperationsDirector,
-  wFilesLinker,
-  wBaker,
-  wBakerWithFileExecutor,
-  wMaker,
-  wPuppet,
-
-}
-
-Object.assign( _.module.modulesToRegister, Modules );
-if( _.module.declareAll )
-_.module.declareAll( _.module.modulesToRegister );
-
-/*
-xxx : remove isIncluded
-*/
-
-// _.mapSupplement( _global.ModulesRegistry, Modules );
-// if( _.module )
-// _.module.registerKnown( _global.ModulesRegistry );
-
-// --
-// export
-// --
-
-if( typeof module !== 'undefined' )
-module[ 'exports' ] = _;
-
-})();
-
-/* xxx : rename
-- wequaler -> wequaler
-- wpathbasic -> wpathbasic
-- wuribasic -> wuribasic
-- wprocess -> wprocess
-- wentitybasic -> wentitybasic
-- wweburibasic -> wweburibasic
-- wroutinebasic -> wroutinebasic
-- wdombasic -> wdombasic
-
-- wEqualer -> wEqualer
-- wPathBasic -> wPathBasic
-- wUriBasic -> wUriBasic
-- wProcess -> wProcessBasic
-- wEntityBasic -> wEntityBasic
-- wWebUriBasic -> wWebUriBasic
-- wRoutineBasic -> wRoutineBasic
-- wDomBasic -> wDomBasic
-*/
+  wLoggerSoc

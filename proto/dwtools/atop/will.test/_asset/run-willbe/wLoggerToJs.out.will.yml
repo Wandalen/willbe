@@ -89,9 +89,9 @@ path:
       - ../proto/dwtools/ModuleForTesting1.s
       - ../proto/dwtools/abase
       - ../proto/dwtools/abase/l9
-      - ../proto/dwtools/abase/l9/printer
-      - ../proto/dwtools/abase/l9/printer/top
-      - ../proto/dwtools/abase/l9/printer/top/ToJs.s
+      - ../proto/dwtools/abase/l9/logger
+      - ../proto/dwtools/abase/l9/logger
+      - ../proto/dwtools/abase/l9/logger/ToJs.s
       - ../proto/dwtools/abase/l9.test
       - ../proto/dwtools/abase/l9.test/printer
       - ../proto/dwtools/abase/l9.test/printer/ToJs.test.s
@@ -387,9 +387,9 @@ module:
           - proto/dwtools/ModuleForTesting1.s
           - proto/dwtools/abase
           - proto/dwtools/abase/l9
-          - proto/dwtools/abase/l9/printer
-          - proto/dwtools/abase/l9/printer/top
-          - proto/dwtools/abase/l9/printer/top/ToJs.s
+          - proto/dwtools/abase/l9/logger
+          - proto/dwtools/abase/l9/logger
+          - proto/dwtools/abase/l9/logger/ToJs.s
           - proto/dwtools/abase/l9.test
           - proto/dwtools/abase/l9.test/printer
           - proto/dwtools/abase/l9.test/printer/ToJs.test.s

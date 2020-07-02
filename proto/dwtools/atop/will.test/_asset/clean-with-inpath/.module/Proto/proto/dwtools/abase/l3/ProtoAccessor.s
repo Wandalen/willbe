@@ -648,7 +648,7 @@ function accessorForbid( o )
   else
   o.message = _.arrayIs( o.message ) ? o.message.join( ' : ' ) : o.message;
 
-  // if( o.protoName === 'wPrinterTop.' && o.names.Static )
+  // if( o.protoName === 'wLoggerTop.' && o.names.Static )
   // debugger;
 
   // /* _accessorDeclareForbid */
