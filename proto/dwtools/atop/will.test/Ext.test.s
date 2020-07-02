@@ -4491,16 +4491,16 @@ function reflectNpmModules( test )
       './out/wModuleForTesting2a.out.will.yml',
       './proto',
       './proto/dwtools',
-      './proto/dwtools/Tools.s',
-      './proto/dwtools/abase',
-      './proto/dwtools/abase/l3',
-      './proto/dwtools/abase/l3/testing2a',
-      './proto/dwtools/abase/l3/testing2a/Include.s',
-      './proto/dwtools/abase/l3/testing2a/ModuleForTesting2a.s',
-      './proto/dwtools/abase/l4',
-      './proto/dwtools/abase/l4/Include.s',
-      './proto/dwtools/abase/l4/l4',
-      './proto/dwtools/abase/l4/l4/ModuleForTesting12ab.s'
+      './proto/dwtools/testing',
+      './proto/dwtools/testing/Basic.s',
+      './proto/dwtools/testing/l3',
+      './proto/dwtools/testing/l3/testing2a',
+      './proto/dwtools/testing/l3/testing2a/Include.s',
+      './proto/dwtools/testing/l3/testing2a/ModuleForTesting2a.s',
+      './proto/dwtools/testing/l4',
+      './proto/dwtools/testing/l4/testing12ab',
+      './proto/dwtools/testing/l4/testing12ab/Include.s',
+      './proto/dwtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
     ]
     var files = a.find( a.abs( 'out' ) )
     test.identical( files, exp );
