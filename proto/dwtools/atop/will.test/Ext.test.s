@@ -18712,7 +18712,7 @@ function submodulesDownloadHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
@@ -18846,7 +18846,7 @@ function submodulesDownloadHierarchyRemote( test )
 
 } /* end of function submodulesDownloadHierarchyRemote */
 
-submodulesDownloadHierarchyRemote.timeOut = 300000;
+submodulesDownloadHierarchyRemote.timeOut = 400000;
 
 //
 
