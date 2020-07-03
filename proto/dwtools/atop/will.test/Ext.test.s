@@ -14143,17 +14143,17 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml',
       './.module/ModuleForTesting12/proto',
       './.module/ModuleForTesting12/proto/dwtools',
-      './.module/ModuleForTesting12/proto/dwtools/Tools.s',
-      './.module/ModuleForTesting12/proto/dwtools/abase',
-      './.module/ModuleForTesting12/proto/dwtools/abase/l3',
-      './.module/ModuleForTesting12/proto/dwtools/abase/l3/testing12',
-      './.module/ModuleForTesting12/proto/dwtools/abase/l3/testing12/Include.s',
-      './.module/ModuleForTesting12/proto/dwtools/abase/l3/testing12/ModuleForTesting12.s',
-      './.module/ModuleForTesting12/proto/dwtools/abase/l3.test',
-      './.module/ModuleForTesting12/proto/dwtools/abase/l3.test/ModuleForTesting12.test.s',
+      './.module/ModuleForTesting12/proto/dwtools/testing',
+      './.module/ModuleForTesting12/proto/dwtools/testing/Basic.s',
+      './.module/ModuleForTesting12/proto/dwtools/testing/l3',
+      './.module/ModuleForTesting12/proto/dwtools/testing/l3/testing12',
+      './.module/ModuleForTesting12/proto/dwtools/testing/l3/testing12/Include.s',
+      './.module/ModuleForTesting12/proto/dwtools/testing/l3/testing12/ModuleForTesting12.s',
+      './.module/ModuleForTesting12/proto/dwtools/testing/l3.test',
+      './.module/ModuleForTesting12/proto/dwtools/testing/l3.test/ModuleForTesting12.test.s',
       './.module/ModuleForTesting12/sample',
-      './.module/ModuleForTesting12/sample/Sample.js'
-    ]
+      './.module/ModuleForTesting12/sample/Sample.js',
+    ];
     var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
     return op;
