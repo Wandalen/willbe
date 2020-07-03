@@ -5449,7 +5449,7 @@ function withDoCommentOut( test )
     test.is( !!outfile.execution );
     return null;
   })
-  a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution' )
+  a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution verbosity:5' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -5469,7 +5469,7 @@ function withDoCommentOut( test )
     test.is( !!outfile.execution );
     return null;
   })
-  a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution dry:1' )
+  a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution dry:1 verbosity:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
