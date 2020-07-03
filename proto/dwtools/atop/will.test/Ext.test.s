@@ -3245,14 +3245,14 @@ function reflectGetPath( test )
       '.',
       './debug',
       './debug/dwtools',
-      './debug/dwtools/Tools.s',
-      './debug/dwtools/abase',
-      './debug/dwtools/abase/l3',
-      './debug/dwtools/abase/l3/testing12',
-      './debug/dwtools/abase/l3/testing12/Include.s',
-      './debug/dwtools/abase/l3/testing12/ModuleForTesting12.s',
-      './debug/dwtools/abase/l3.test',
-      './debug/dwtools/abase/l3.test/ModuleForTesting12.test.s'
+      './debug/dwtools/testing',
+      './debug/dwtools/testing/Basic.s',
+      './debug/dwtools/testing/l3',
+      './debug/dwtools/testing/l3/testing12',
+      './debug/dwtools/testing/l3/testing12/Include.s',
+      './debug/dwtools/testing/l3/testing12/ModuleForTesting12.s',
+      './debug/dwtools/testing/l3.test',
+      './debug/dwtools/testing/l3.test/ModuleForTesting12.test.s',
     ]
     var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 4 );
