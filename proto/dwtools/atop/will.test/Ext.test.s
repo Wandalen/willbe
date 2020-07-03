@@ -13898,8 +13898,6 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
       '../module/opt/out/opt.out',
       '../module/opt/.module/ModuleForTesting2/',
       '../module/opt/.module/ModuleForTesting2/out/wModuleForTesting2.out',
-      '../module/opt/.module/ModuleForTesting1/',
-      '../module/opt/.module/ModuleForTesting1/out/wModuleForTesting1.out'
     ];
     var outfile = a.fileProvider.configRead( a.abs( 'out/Optional.out.will.yml' ) );
     test.identical( _.mapKeys( outfile.module ), exp );
@@ -18405,13 +18403,13 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 20 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 23 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
@@ -18429,12 +18427,12 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 20 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 23 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
