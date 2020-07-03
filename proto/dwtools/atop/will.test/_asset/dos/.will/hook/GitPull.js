@@ -39,8 +39,8 @@ function onModule( context )
   let config = fileProvider.configUserRead( _.censor.configStoragePath );
   let provider = _.FileFilter.Archive();
   provider.archive.basePath = context.opener.dirPath;
-  if( config && config.path && config.path.link )
-  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.link ) );
+  if( config && config.path && config.path.hlink )
+  provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.hlink ) );
   provider.archive.fileMapAutosaving = 1;
   if( o.verbosity )
   provider.archive.verbosity = 2;
