@@ -511,7 +511,7 @@ function _commandListLike( o )
 
         let resourceKindIsGlob = _.path.isGlob( o.resourceKind );
         _.assert( e.request === undefined );
-        e.request = _.will.Resolver.strRequestParse( e.argument );
+        e.request = _.will.Resolver.strRequestParse( e.commandArgument );
 
         if( _.will.Resolver.selectorIs( e.request.subject ) )
         {
@@ -965,10 +965,10 @@ function commandHelp( e )
 
   ca._commandHelp( e );
 
-  if( !e.subject )
-  {
-    _.assert( 0 );
-  }
+  // if( !e.commandName )
+  // {
+  //   _.assert( 0 );
+  // }
 
 }
 
@@ -979,11 +979,11 @@ function commandImply( e )
   let will = this;
   let ca = e.ca;
   let logger = will.logger;
-  let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+  let isolated = ca.commandIsolateSecondFromArgument( e.commandArgument );
   /* qqq xxx : apply to other top modules */
   _.assert( !!isolated );
 
-  let request = _.will.Resolver.strRequestParse( isolated.argument );
+  let request = _.will.Resolver.strRequestParse( isolated.commandArgument );
   will._propertiesImply( request.map );
 
   // let namesMap =
@@ -1052,7 +1052,7 @@ commandVersion.hint = 'Get information about version.';
 //   let ca = e.ca;
 //   let logger = will.logger;
 //
-//   let implyMap = _.strStructureParse( e.argument );
+//   let implyMap = _.strStructureParse( e.commandArgument );
 //   _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
 //   will._propertiesImply( implyMap );
 //
@@ -1070,7 +1070,7 @@ function commandVersionCheck( e )
   let ca = e.ca;
   let logger = will.logger;
 
-  let propertiesMap = _.strStructureParse( e.argument );
+  let propertiesMap = _.strStructureParse( e.commandArgument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 
   let implyMap = _.mapBut( propertiesMap, commandClean.commandProperties );
@@ -1236,7 +1236,7 @@ function commandBuildsList( e )
   function act( module )
   {
     let logger = will.logger;
-    let request = _.will.Resolver.strRequestParse( e.argument );
+    let request = _.will.Resolver.strRequestParse( e.commandArgument );
     let builds = module.openedModule.buildsResolve
     ({
       name : request.subject,
@@ -1267,7 +1267,7 @@ function commandExportsList( e )
   function act( module )
   {
     let logger = will.logger;
-    let request = _.will.Resolver.strRequestParse( e.argument );
+    let request = _.will.Resolver.strRequestParse( e.commandArgument );
     let builds = module.openedModule.exportsResolve
     ({
       name : request.subject,
@@ -1360,8 +1360,8 @@ function commandModulesTree( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = _.will.Resolver.strRequestParse( e.argument );
-  let propertiesMap = _.strStructureParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.commandArgument );
+  let propertiesMap = _.strStructureParse( e.commandArgument );
   let implyMap = _.mapBut( propertiesMap, commandModulesTree.commandProperties );
   propertiesMap = _.mapBut( propertiesMap, implyMap );
   will._propertiesImply( implyMap );
@@ -1414,7 +1414,7 @@ function commandSubmodulesAdd( e )
     let module = it.opener.openedModule;
     let filePath = module.pathResolve
     ({
-      selector : e.argument,
+      selector : e.commandArgument,
       prefixlessAction : 'resolved',
     });
 
@@ -1457,7 +1457,7 @@ function commandSubmodulesFixate( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  let propertiesMap = _.strStructureParse( e.argument );
+  let propertiesMap = _.strStructureParse( e.commandArgument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 
   let implyMap = _.mapBut( propertiesMap, commandSubmodulesFixate.commandProperties );
@@ -1507,7 +1507,7 @@ function commandSubmodulesUpgrade( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  let propertiesMap = _.strStructureParse( e.argument );
+  let propertiesMap = _.strStructureParse( e.commandArgument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 
   let implyMap = _.mapBut( propertiesMap, commandSubmodulesUpgrade.commandProperties );
@@ -1550,7 +1550,7 @@ function commandSubmodulesVersionsDownload( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  let propertiesMap = _.strStructureParse( e.argument );
+  let propertiesMap = _.strStructureParse( e.commandArgument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 
   let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsDownload.commandProperties );
@@ -1597,7 +1597,7 @@ function commandSubmodulesVersionsUpdate( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  let propertiesMap = _.strStructureParse( e.argument );
+  let propertiesMap = _.strStructureParse( e.commandArgument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 
   let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsUpdate.commandProperties );
@@ -1636,7 +1636,7 @@ function commandSubmodulesVersionsVerify( e )
 {
   let will = this;
 
-  let propertiesMap = _.strStructureParse( e.argument );
+  let propertiesMap = _.strStructureParse( e.commandArgument );
   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 
   let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsVerify.commandProperties );
@@ -1673,7 +1673,7 @@ function commandSubmodulesVersionsAgree( e )
 {
   let will = this;
 
-  let propertiesMap = _.strStructureParse( e.argument );
+  let propertiesMap = _.strStructureParse( e.commandArgument );
   _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 
   let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsAgree.commandProperties );
@@ -1715,7 +1715,7 @@ function commandModuleNew( e )
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let ready = new _.Consequence().take( null );
-  let request = _.will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.commandArgument );
 
   if( request.subject )
   request.map.localPath = request.subject;
@@ -1747,8 +1747,8 @@ function commandModuleNewWith( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let time = _.time.now();
-  let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
-  let execPath = e.argument;
+  let isolated = e.ca.commandIsolateSecondFromArgument( e.commandArgument );
+  let execPath = e.commandArgument;
 
   return will._commandNewLike
   ({
@@ -1763,7 +1763,7 @@ function commandModuleNewWith( e )
   .then( ( arg ) =>
   {
     if( will.verbosity >= 2 )
-    logger.log( `Done ${_.color.strFormat( 'hook::' + e.argument, 'entity' )} in ${_.time.spent( time )}` );
+    logger.log( `Done ${_.color.strFormat( 'hook::' + e.commandArgument, 'entity' )} in ${_.time.spent( time )}` );
     return arg;
   });
 
@@ -1799,7 +1799,7 @@ function commandShell( e )
     debugger;
     return it.opener.openedModule.shell
     ({
-      execPath : e.argument,
+      execPath : e.commandArgument,
       currentPath : will.currentOpenerPath || it.opener.openedModule.dirPath,
     });
   }
@@ -1816,8 +1816,8 @@ function commandDo( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let time = _.time.now();
-  let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
-  let execPath = e.argument;
+  let isolated = e.ca.commandIsolateSecondFromArgument( e.commandArgument );
+  let execPath = e.commandArgument;
 
   return will._commandBuildLike
   ({
@@ -1832,7 +1832,7 @@ function commandDo( e )
   .then( ( arg ) =>
   {
     if( will.verbosity >= 2 )
-    logger.log( `Done ${_.color.strFormat( e.argument, 'code' )} in ${_.time.spent( time )}` );
+    logger.log( `Done ${_.color.strFormat( e.commandArgument, 'code' )} in ${_.time.spent( time )}` );
     return arg;
   });
 
@@ -1856,8 +1856,8 @@ function commandHookCall( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let time = _.time.now();
-  let isolated = e.ca.commandIsolateSecondFromArgument( e.argument );
-  let execPath = e.argument;
+  let isolated = e.ca.commandIsolateSecondFromArgument( e.commandArgument );
+  let execPath = e.commandArgument;
 
   return will._commandBuildLike
   ({
@@ -1871,7 +1871,7 @@ function commandHookCall( e )
   .then( ( arg ) =>
   {
     if( will.verbosity >= 2 )
-    logger.log( `Done ${_.color.strFormat( 'hook::' + e.argument, 'entity' )} in ${_.time.spent( time )}` );
+    logger.log( `Done ${_.color.strFormat( 'hook::' + e.commandArgument, 'entity' )} in ${_.time.spent( time )}` );
     return arg;
   });
 
@@ -1908,7 +1908,7 @@ function commandClean( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  let propertiesMap = _.strStructureParse( e.argument );
+  let propertiesMap = _.strStructureParse( e.commandArgument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 
   let implyMap = _.mapBut( propertiesMap, commandClean.commandProperties );
@@ -1968,7 +1968,7 @@ function commandSubmodulesClean( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  let propertiesMap = _.strStructureParse( e.argument );
+  let propertiesMap = _.strStructureParse( e.commandArgument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 
   let implyMap = _.mapBut( propertiesMap, commandSubmodulesClean.commandProperties );
@@ -2026,7 +2026,7 @@ function commandBuild( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = _.will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.commandArgument );
   let doneContainer = [];
 
   return will._commandBuildLike
@@ -2059,7 +2059,7 @@ function commandExport( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = _.will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.commandArgument );
   let doneContainer = [];
 
   return will._commandBuildLike
@@ -2092,7 +2092,7 @@ function commandExportPurging( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = _.will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.commandArgument );
   let doneContainer = [];
 
   return will._commandBuildLike
@@ -2126,7 +2126,7 @@ function commandExportRecursive( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = _.will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.commandArgument );
   let doneContainer = [];
 
   return will._commandBuildLike
@@ -2157,7 +2157,7 @@ function commandExportRecursive( e )
 function commandGitPull( e )
 {
   let will = this;
-  let implyMap = _.strStructureParse( e.argument );
+  let implyMap = _.strStructureParse( e.commandArgument );
   _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
   will._propertiesImply( implyMap );
 
@@ -2186,7 +2186,7 @@ commandGitPull.commandProperties = commandImply.commandProperties;
 function commandGitPush( e )
 {
   let will = this;
-  let implyMap = _.strStructureParse( e.argument );
+  let implyMap = _.strStructureParse( e.commandArgument );
   _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
   will._propertiesImply( implyMap );
 
@@ -2215,7 +2215,7 @@ commandGitPush.commandProperties = commandImply.commandProperties;
 function commandGitReset( e )
 {
   let will = this;
-  let optionsMap = _.strStructureParse( e.argument );
+  let optionsMap = _.strStructureParse( e.commandArgument );
   _.routineOptions( commandGitReset, optionsMap );
   optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
 
@@ -2259,7 +2259,7 @@ commandGitReset.commandProperties =
 function commandGitStatus( e )
 {
   let will = this;
-  let optionsMap = _.strStructureParse( e.argument );
+  let optionsMap = _.strStructureParse( e.commandArgument );
   _.routineOptions( commandGitStatus, optionsMap );
   optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
 
@@ -2308,7 +2308,7 @@ commandGitStatus.commandProperties =
 function commandGitSync( e )
 {
   let will = this;
-  let request = _.will.Resolver.strRequestParse( e.argument );
+  let request = _.will.Resolver.strRequestParse( e.commandArgument );
   _.routineOptions( commandGitSync, request.map );
   request.map.verbosity = request.map.v !== null && request.map.v >= 0 ? request.map.v : request.map.verbosity;
 
@@ -2349,7 +2349,7 @@ commandGitSync.commandProperties =
 function commandGitTag( e )
 {
   let will = this;
-  let optionsMap = _.strStructureParse( e.argument );
+  let optionsMap = _.strStructureParse( e.commandArgument );
   _.routineOptions( commandGitTag, optionsMap );
   optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
 
@@ -2398,7 +2398,7 @@ function commandGitPreservingHardLinks( e )
   let ca = e.ca;
   let logger = will.logger;
 
-  let enable = _.numberFrom( e.argument );
+  let enable = _.numberFrom( e.commandArgument );
 
   if( enable )
   _.git.hookPreservingHardLinksRegister();
@@ -2425,17 +2425,17 @@ function commandWith( e )
     will.currentOpenerChange( null );
   }
 
-  _.sure( _.strDefined( e.argument ), 'Expects path to module' );
+  _.sure( _.strDefined( e.commandArgument ), 'Expects path to module' );
   _.assert( arguments.length === 1 );
 
   will._commandsBegin( commandWith );
 
-  let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+  let isolated = ca.commandIsolateSecondFromArgument( e.commandArgument );
   if( !isolated )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
 
-  will.withPath = path.join( path.current(), will.withPath, path.fromGlob( isolated.argument ) );
-  if( _.strBegins( isolated.secondSubject, '.module.new' ) )
+  will.withPath = path.join( path.current(), will.withPath, path.fromGlob( isolated.commandArgument ) );
+  if( _.strBegins( isolated.secondCommandName, '.module.new' ) )
   {
     return ca.commandPerform
     ({
@@ -2445,8 +2445,8 @@ function commandWith( e )
 
   return will.modulesFindWithAt
   ({
-    selector : isolated.argument,
-    atLeastOne : !path.isGlob( isolated.argument ),
+    selector : isolated.commandArgument,
+    atLeastOne : !path.isGlob( isolated.commandArgument ),
   })
   .then( function( it )
   {
@@ -2456,7 +2456,7 @@ function commandWith( e )
     throw _.errBrief
     (
         `No module sattisfy criteria.`
-      , `\nLooked at ${_.strQuote( path.resolve( isolated.argument ) )}`
+      , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
     );
 
     return ca.commandPerform
@@ -2494,12 +2494,12 @@ function commandEach( e )
     will.currentOpenerChange( null );
   }
 
-  _.sure( _.strDefined( e.argument ), 'Expects path to module' )
+  _.sure( _.strDefined( e.commandArgument ), 'Expects path to module' )
   _.assert( arguments.length === 1 );
 
   will._commandsBegin( commandEach );
 
-  let isolated = ca.commandIsolateSecondFromArgument( e.argument );
+  let isolated = ca.commandIsolateSecondFromArgument( e.commandArgument );
   if( !isolated )
   throw _.errBrief( 'Format of .each command should be: .each {-path-} .command' );
 
@@ -2507,7 +2507,7 @@ function commandEach( e )
 
   let con = will.modulesFindEachAt
   ({
-    selector : isolated.argument,
+    selector : isolated.commandArgument,
     onBegin : handleBegin,
     onEnd : handleEnd,
     onError : handleError,
@@ -2634,7 +2634,7 @@ function commandNpmGenerateFromWillfile( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = _.strStructureParse( e.argument );
+  let request = _.strStructureParse( e.commandArgument );
   let criterionsMap = _.mapBut( request, commandNpmGenerateFromWillfile.defaults );
   request = _.mapBut( request, criterionsMap );
 
@@ -2676,7 +2676,7 @@ function commandWillfileGenerateFromNpm( e )
   let will = this;
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
-  let request = _.strStructureParse( e.argument );
+  let request = _.strStructureParse( e.commandArgument );
   let criterionsMap = _.mapBut( request, commandWillfileGenerateFromNpm.defaults );
   request = _.mapBut( request, criterionsMap );
 
@@ -2742,7 +2742,7 @@ function commandPackageInstall( e )
   let will = this;
   let logger = will.logger;
 
-  let isolated = _.strIsolateLeftOrAll( e.argument, ' ' );
+  let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
 
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
   let options = _.strStructureParse( isolated[ 2 ] );
@@ -2909,7 +2909,7 @@ function commandPackageLocalVersions( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  let isolated = _.strIsolateLeftOrAll( e.argument, ' ' );
+  let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
 
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
   let options = _.strStructureParse( isolated[ 2 ] );
@@ -3035,7 +3035,7 @@ function commandPackageRemoteVersions( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  let isolated = _.strIsolateLeftOrAll( e.argument, ' ' );
+  let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
 
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
   let options = _.strStructureParse( isolated[ 2 ] )
@@ -3190,7 +3190,7 @@ function commandPackageVersion( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  let isolated = _.strIsolateLeftOrAll( e.argument, ' ' );
+  let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
 
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
   let options = _.strStructureParse( isolated[ 2 ] );
