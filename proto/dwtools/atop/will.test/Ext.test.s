@@ -16886,7 +16886,7 @@ function cleanSpecial( test )
   a.reflect();
 
   var files = a.fileProvider.dirRead( a.abs( 'out' ) );
-  var expected = [ '#dir2','@dir1' ];
+  var expected = [ '"#dir2"','"@dir1"' ];
   test.identical( files, expected )
 
   /* - */
