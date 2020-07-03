@@ -24458,7 +24458,7 @@ function commandVersion( test )
   {
     test.identical( op.exitCode, 0 );
     test.isNot( _.strHas( op.output, 'Read' ) );
-    test.is( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    test.is( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
     return null;
   })
 
@@ -24474,8 +24474,8 @@ function commandVersion( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Read' ) );
-    test.is( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    test.isNot( _.strHas( op.output, 'Read' ) );
+    test.is( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
     return null;
   })
 
@@ -24491,8 +24491,8 @@ function commandVersion( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Read' ) );
-    test.is( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    test.isNot( _.strHas( op.output, 'Read' ) );
+    test.is( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
     return null;
   })
 
@@ -24508,8 +24508,8 @@ function commandVersion( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Read' ) );
-    test.is( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    test.isNot( _.strHas( op.output, 'Read' ) );
+    test.is( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
     return null;
   })
 
