@@ -3245,14 +3245,14 @@ function reflectGetPath( test )
       '.',
       './debug',
       './debug/dwtools',
-      './debug/dwtools/Tools.s',
-      './debug/dwtools/abase',
-      './debug/dwtools/abase/l3',
-      './debug/dwtools/abase/l3/testing12',
-      './debug/dwtools/abase/l3/testing12/Include.s',
-      './debug/dwtools/abase/l3/testing12/ModuleForTesting12.s',
-      './debug/dwtools/abase/l3.test',
-      './debug/dwtools/abase/l3.test/ModuleForTesting12.test.s'
+      './debug/dwtools/testing',
+      './debug/dwtools/testing/Basic.s',
+      './debug/dwtools/testing/l3',
+      './debug/dwtools/testing/l3/testing12',
+      './debug/dwtools/testing/l3/testing12/Include.s',
+      './debug/dwtools/testing/l3/testing12/ModuleForTesting12.s',
+      './debug/dwtools/testing/l3.test',
+      './debug/dwtools/testing/l3.test/ModuleForTesting12.test.s',
     ]
     var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 4 );
@@ -4491,16 +4491,16 @@ function reflectNpmModules( test )
       './out/wModuleForTesting2a.out.will.yml',
       './proto',
       './proto/dwtools',
-      './proto/dwtools/Tools.s',
-      './proto/dwtools/abase',
-      './proto/dwtools/abase/l3',
-      './proto/dwtools/abase/l3/testing2a',
-      './proto/dwtools/abase/l3/testing2a/Include.s',
-      './proto/dwtools/abase/l3/testing2a/ModuleForTesting2a.s',
-      './proto/dwtools/abase/l4',
-      './proto/dwtools/abase/l4/Include.s',
-      './proto/dwtools/abase/l4/l4',
-      './proto/dwtools/abase/l4/l4/ModuleForTesting12ab.s'
+      './proto/dwtools/testing',
+      './proto/dwtools/testing/Basic.s',
+      './proto/dwtools/testing/l3',
+      './proto/dwtools/testing/l3/testing2a',
+      './proto/dwtools/testing/l3/testing2a/Include.s',
+      './proto/dwtools/testing/l3/testing2a/ModuleForTesting2a.s',
+      './proto/dwtools/testing/l4',
+      './proto/dwtools/testing/l4/testing12ab',
+      './proto/dwtools/testing/l4/testing12ab/Include.s',
+      './proto/dwtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
     ]
     var files = a.find( a.abs( 'out' ) )
     test.identical( files, exp );
@@ -5449,7 +5449,7 @@ function withDoCommentOut( test )
     test.is( !!outfile.execution );
     return null;
   })
-  a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution' )
+  a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution verbosity:5' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -5469,7 +5469,7 @@ function withDoCommentOut( test )
     test.is( !!outfile.execution );
     return null;
   })
-  a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution dry:1' )
+  a.appStart( '.with ** .do .will/hook/WillfCommentOut.js execution dry:1 verbosity:1' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -7198,7 +7198,7 @@ function modulesTreeHierarchyRemote( test )
 `
  +-- module::z
    +-- module::a
-   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!alpha
    | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    | +-- module::a0
    |   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
@@ -7311,7 +7311,7 @@ function modulesTreeHierarchyRemote( test )
 `
  +-- module::z
    +-- module::a
-   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!alpha
    | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    | +-- module::a0
    |   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
@@ -7326,6 +7326,7 @@ function modulesTreeHierarchyRemote( test )
    | +-- module::ModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12ab.git/out/wModuleForTesting12ab.out
    +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
 `
+
     test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, '+-- module::' ), 16 );
     test.identical( _.strCount( op.output, '+-- module::z' ), 1 );
@@ -7696,7 +7697,6 @@ function modulesTreeDisabledAndCorrupted( test )
  | | +-- module::Testing - path::remote:=npm:///wTesting
  | +-- module::wModuleForTesting2 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting2.git!gamma
  | | +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
- | | | +-- module::Testing - path::remote:=npm:///wTesting
  | | +-- module::Testing - path::remote:=npm:///wTesting
  | +-- module::wModuleForTesting12 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12.git!gamma
  |   +-- module::wModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!gamma
@@ -7707,7 +7707,7 @@ function modulesTreeDisabledAndCorrupted( test )
 `
 
     test.identical( _.strStripCount( op.output, exp ), 1 );
-    test.identical( _.strCount( op.output, '+-- module::' ), 12 );
+    test.identical( _.strCount( op.output, '+-- module::' ), 11 );
 
     return null;
   })
@@ -9094,7 +9094,7 @@ function buildDetached( test )
     test.is( _.strHas( op.output, /\+ .*module::wModuleForTesting1.* was downloaded version .*master.* in/ ) );
     test.is( _.strHas( op.output, /\+ .*module::wPathBasic.* was downloaded version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.* in/ ) );
     test.is( _.strHas( op.output, /\.module\/ModuleForTesting2a\.informal <- npm:\/\/wprocedure/ ) );
-    test.is( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#c1c31010e1a95c21f43a206b10ee4123316c98d5/ ) );
+    test.is( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#c3acc79732d8937740f21091a7802614bdc1dd1d/ ) );
     test.is( _.strHas( op.output, /\.module\/ModuleForTesting12ab\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git/ ) );
 
     var files = a.fileProvider.dirRead( a.path.join( a.routinePath, '.module' ) );
@@ -10379,8 +10379,8 @@ function exportSubmodules( test )
   {
     test.identical( op.exitCode, 0 );
 
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/debug/dwtools/abase/l3/testing2a/ModuleForTesting2a.s' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/debug/dwtools/testing/l1/ModuleForTesting1.s' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/debug/dwtools/testing/l3/testing2a/ModuleForTesting2a.s' ) ) );
     test.is( a.fileProvider.isTerminal( a.abs( 'out/submodules.out.will.yml' ) ) );
     test.is( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
@@ -12509,45 +12509,43 @@ function exportWithRemoteSubmodulesMin( test )
       './group1/out/a.out.will.yml',
       './group1/out/debug',
       './group1/out/debug/dwtools',
-      './group1/out/debug/dwtools/Tools.s',
-      './group1/out/debug/dwtools/abase',
-      './group1/out/debug/dwtools/abase/l1',
-      './group1/out/debug/dwtools/abase/l1/testing1',
-      './group1/out/debug/dwtools/abase/l1/testing1/Include.s',
-      './group1/out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s',
-      './group1/out/debug/dwtools/abase/l1.test',
-      './group1/out/debug/dwtools/abase/l1.test/ModuleForTesting1.test.s',
-      './group1/out/debug/dwtools/abase/l3',
-      './group1/out/debug/dwtools/abase/l3/testing1b',
-      './group1/out/debug/dwtools/abase/l3/testing1b/Include.s',
-      './group1/out/debug/dwtools/abase/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/dwtools/abase/l3.test',
-      './group1/out/debug/dwtools/abase/l3.test/ModuleForTesting1b.test.s',
+      './group1/out/debug/dwtools/testing',
+      './group1/out/debug/dwtools/testing/Basic.s',
+      './group1/out/debug/dwtools/testing/l1',
+      './group1/out/debug/dwtools/testing/l1/Include.s',
+      './group1/out/debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './group1/out/debug/dwtools/testing/l1.test',
+      './group1/out/debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './group1/out/debug/dwtools/testing/l3',
+      './group1/out/debug/dwtools/testing/l3/testing1b',
+      './group1/out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './group1/out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './group1/out/debug/dwtools/testing/l3.test',
+      './group1/out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
       './out',
       './out/z.out.will.yml',
       './out/debug',
       './out/debug/dwtools',
-      './out/debug/dwtools/Tools.s',
-      './out/debug/dwtools/abase',
-      './out/debug/dwtools/abase/l1',
-      './out/debug/dwtools/abase/l1/testing1',
-      './out/debug/dwtools/abase/l1/testing1/Include.s',
-      './out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s',
-      './out/debug/dwtools/abase/l1.test',
-      './out/debug/dwtools/abase/l1.test/ModuleForTesting1.test.s',
-      './out/debug/dwtools/abase/l2',
-      './out/debug/dwtools/abase/l2/testing1a',
-      './out/debug/dwtools/abase/l2/testing1a/Include.s',
-      './out/debug/dwtools/abase/l2/testing1a/ModuleForTesting1a.s',
-      './out/debug/dwtools/abase/l2.test',
-      './out/debug/dwtools/abase/l2.test/ModuleForTesting1a.test.s',
-      './out/debug/dwtools/abase/l3',
-      './out/debug/dwtools/abase/l3/testing1b',
-      './out/debug/dwtools/abase/l3/testing1b/Include.s',
-      './out/debug/dwtools/abase/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/dwtools/abase/l3.test',
-      './out/debug/dwtools/abase/l3.test/ModuleForTesting1b.test.s'
-    ]
+      './out/debug/dwtools/testing',
+      './out/debug/dwtools/testing/Basic.s',
+      './out/debug/dwtools/testing/l1',
+      './out/debug/dwtools/testing/l1/Include.s',
+      './out/debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './out/debug/dwtools/testing/l1.test',
+      './out/debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './out/debug/dwtools/testing/l2',
+      './out/debug/dwtools/testing/l2/testing1a',
+      './out/debug/dwtools/testing/l2/testing1a/Include.s',
+      './out/debug/dwtools/testing/l2/testing1a/ModuleForTesting1a.s',
+      './out/debug/dwtools/testing/l2.test',
+      './out/debug/dwtools/testing/l2.test/ModuleForTesting1a.test.s',
+      './out/debug/dwtools/testing/l3',
+      './out/debug/dwtools/testing/l3/testing1b',
+      './out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './out/debug/dwtools/testing/l3.test',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+    ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
@@ -12582,6 +12580,7 @@ function exportWithRemoteSubmodulesMinRecursive( test )
     return null;
   })
 
+  a.appStart( '.with "**" .clean' )
   a.appStart( '.with "**" .export' )
 
   .then( ( op ) =>
@@ -12606,44 +12605,42 @@ function exportWithRemoteSubmodulesMinRecursive( test )
       './group1/out/a.out.will.yml',
       './group1/out/debug',
       './group1/out/debug/dwtools',
-      './group1/out/debug/dwtools/Tools.s',
-      './group1/out/debug/dwtools/abase',
-      './group1/out/debug/dwtools/abase/l1',
-      './group1/out/debug/dwtools/abase/l1/testing1',
-      './group1/out/debug/dwtools/abase/l1/testing1/Include.s',
-      './group1/out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s',
-      './group1/out/debug/dwtools/abase/l1.test',
-      './group1/out/debug/dwtools/abase/l1.test/ModuleForTesting1.test.s',
-      './group1/out/debug/dwtools/abase/l3',
-      './group1/out/debug/dwtools/abase/l3/testing1b',
-      './group1/out/debug/dwtools/abase/l3/testing1b/Include.s',
-      './group1/out/debug/dwtools/abase/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/dwtools/abase/l3.test',
-      './group1/out/debug/dwtools/abase/l3.test/ModuleForTesting1b.test.s',
+      './group1/out/debug/dwtools/testing',
+      './group1/out/debug/dwtools/testing/Basic.s',
+      './group1/out/debug/dwtools/testing/l1',
+      './group1/out/debug/dwtools/testing/l1/Include.s',
+      './group1/out/debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './group1/out/debug/dwtools/testing/l1.test',
+      './group1/out/debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './group1/out/debug/dwtools/testing/l3',
+      './group1/out/debug/dwtools/testing/l3/testing1b',
+      './group1/out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './group1/out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './group1/out/debug/dwtools/testing/l3.test',
+      './group1/out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
       './out',
       './out/z.out.will.yml',
       './out/debug',
       './out/debug/dwtools',
-      './out/debug/dwtools/Tools.s',
-      './out/debug/dwtools/abase',
-      './out/debug/dwtools/abase/l1',
-      './out/debug/dwtools/abase/l1/testing1',
-      './out/debug/dwtools/abase/l1/testing1/Include.s',
-      './out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s',
-      './out/debug/dwtools/abase/l1.test',
-      './out/debug/dwtools/abase/l1.test/ModuleForTesting1.test.s',
-      './out/debug/dwtools/abase/l2',
-      './out/debug/dwtools/abase/l2/testing1a',
-      './out/debug/dwtools/abase/l2/testing1a/Include.s',
-      './out/debug/dwtools/abase/l2/testing1a/ModuleForTesting1a.s',
-      './out/debug/dwtools/abase/l2.test',
-      './out/debug/dwtools/abase/l2.test/ModuleForTesting1a.test.s',
-      './out/debug/dwtools/abase/l3',
-      './out/debug/dwtools/abase/l3/testing1b',
-      './out/debug/dwtools/abase/l3/testing1b/Include.s',
-      './out/debug/dwtools/abase/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/dwtools/abase/l3.test',
-      './out/debug/dwtools/abase/l3.test/ModuleForTesting1b.test.s'
+      './out/debug/dwtools/testing',
+      './out/debug/dwtools/testing/Basic.s',
+      './out/debug/dwtools/testing/l1',
+      './out/debug/dwtools/testing/l1/Include.s',
+      './out/debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './out/debug/dwtools/testing/l1.test',
+      './out/debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './out/debug/dwtools/testing/l2',
+      './out/debug/dwtools/testing/l2/testing1a',
+      './out/debug/dwtools/testing/l2/testing1a/Include.s',
+      './out/debug/dwtools/testing/l2/testing1a/ModuleForTesting1a.s',
+      './out/debug/dwtools/testing/l2.test',
+      './out/debug/dwtools/testing/l2.test/ModuleForTesting1a.test.s',
+      './out/debug/dwtools/testing/l3',
+      './out/debug/dwtools/testing/l3/testing1b',
+      './out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './out/debug/dwtools/testing/l3.test',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s'
     ]
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
@@ -12706,10 +12703,10 @@ function exportWithRemoteSubmodules( test )
       './.module/ModuleForTesting1b/out',
       './.module/ModuleForTesting1b/proto',
       './.module/ModuleForTesting1b/proto/dwtools',
-      './.module/ModuleForTesting1b/proto/dwtools/abase',
-      './.module/ModuleForTesting1b/proto/dwtools/abase/l3',
-      './.module/ModuleForTesting1b/proto/dwtools/abase/l3/testing1b',
-      './.module/ModuleForTesting1b/proto/dwtools/abase/l3.test',
+      './.module/ModuleForTesting1b/proto/dwtools/testing',
+      './.module/ModuleForTesting1b/proto/dwtools/testing/l3',
+      './.module/ModuleForTesting1b/proto/dwtools/testing/l3/testing1b',
+      './.module/ModuleForTesting1b/proto/dwtools/testing/l3.test',
       './.module/ModuleForTesting1b/sample',
       './group1',
       './group1/.module',
@@ -12718,30 +12715,29 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1/out',
       './group1/.module/ModuleForTesting1/proto',
       './group1/.module/ModuleForTesting1/proto/dwtools',
-      './group1/.module/ModuleForTesting1/proto/dwtools/abase',
-      './group1/.module/ModuleForTesting1/proto/dwtools/abase/l1',
-      './group1/.module/ModuleForTesting1/proto/dwtools/abase/l1/testing1',
-      './group1/.module/ModuleForTesting1/proto/dwtools/abase/l1.test',
+      './group1/.module/ModuleForTesting1/proto/dwtools/testing',
+      './group1/.module/ModuleForTesting1/proto/dwtools/testing/l1',
+      './group1/.module/ModuleForTesting1/proto/dwtools/testing/l1.test',
       './group1/.module/ModuleForTesting1/sample',
       './group1/.module/ModuleForTesting12',
       './group1/.module/ModuleForTesting12/doc',
       './group1/.module/ModuleForTesting12/out',
       './group1/.module/ModuleForTesting12/proto',
       './group1/.module/ModuleForTesting12/proto/dwtools',
-      './group1/.module/ModuleForTesting12/proto/dwtools/abase',
-      './group1/.module/ModuleForTesting12/proto/dwtools/abase/l3',
-      './group1/.module/ModuleForTesting12/proto/dwtools/abase/l3/testing12',
-      './group1/.module/ModuleForTesting12/proto/dwtools/abase/l3.test',
+      './group1/.module/ModuleForTesting12/proto/dwtools/testing',
+      './group1/.module/ModuleForTesting12/proto/dwtools/testing/l3',
+      './group1/.module/ModuleForTesting12/proto/dwtools/testing/l3/testing12',
+      './group1/.module/ModuleForTesting12/proto/dwtools/testing/l3.test',
       './group1/.module/ModuleForTesting12/sample',
       './group1/.module/ModuleForTesting1b',
       './group1/.module/ModuleForTesting1b/doc',
       './group1/.module/ModuleForTesting1b/out',
       './group1/.module/ModuleForTesting1b/proto',
       './group1/.module/ModuleForTesting1b/proto/dwtools',
-      './group1/.module/ModuleForTesting1b/proto/dwtools/abase',
-      './group1/.module/ModuleForTesting1b/proto/dwtools/abase/l3',
-      './group1/.module/ModuleForTesting1b/proto/dwtools/abase/l3/testing1b',
-      './group1/.module/ModuleForTesting1b/proto/dwtools/abase/l3.test',
+      './group1/.module/ModuleForTesting1b/proto/dwtools/testing',
+      './group1/.module/ModuleForTesting1b/proto/dwtools/testing/l3',
+      './group1/.module/ModuleForTesting1b/proto/dwtools/testing/l3/testing1b',
+      './group1/.module/ModuleForTesting1b/proto/dwtools/testing/l3.test',
       './group1/.module/ModuleForTesting1b/sample',
       './group1/group10',
       './group1/group10/.module',
@@ -12750,41 +12746,40 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting1b/out',
       './group1/group10/.module/ModuleForTesting1b/proto',
       './group1/group10/.module/ModuleForTesting1b/proto/dwtools',
-      './group1/group10/.module/ModuleForTesting1b/proto/dwtools/abase',
-      './group1/group10/.module/ModuleForTesting1b/proto/dwtools/abase/l3',
-      './group1/group10/.module/ModuleForTesting1b/proto/dwtools/abase/l3/testing1b',
-      './group1/group10/.module/ModuleForTesting1b/proto/dwtools/abase/l3.test',
+      './group1/group10/.module/ModuleForTesting1b/proto/dwtools/testing',
+      './group1/group10/.module/ModuleForTesting1b/proto/dwtools/testing/l3',
+      './group1/group10/.module/ModuleForTesting1b/proto/dwtools/testing/l3/testing1b',
+      './group1/group10/.module/ModuleForTesting1b/proto/dwtools/testing/l3.test',
       './group1/group10/.module/ModuleForTesting1b/sample',
       './group1/group10/.module/ModuleForTesting2a',
       './group1/group10/.module/ModuleForTesting2a/doc',
       './group1/group10/.module/ModuleForTesting2a/out',
       './group1/group10/.module/ModuleForTesting2a/proto',
       './group1/group10/.module/ModuleForTesting2a/proto/dwtools',
-      './group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase',
-      './group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase/l3',
-      './group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase/l3/testing2a',
-      './group1/group10/.module/ModuleForTesting2a/proto/dwtools/abase/l3.test',
+      './group1/group10/.module/ModuleForTesting2a/proto/dwtools/testing',
+      './group1/group10/.module/ModuleForTesting2a/proto/dwtools/testing/l3',
+      './group1/group10/.module/ModuleForTesting2a/proto/dwtools/testing/l3/testing2a',
+      './group1/group10/.module/ModuleForTesting2a/proto/dwtools/testing/l3.test',
       './group1/group10/.module/ModuleForTesting2a/sample',
       './group1/group10/out',
       './group1/group10/out/debug',
       './group1/group10/out/debug/dwtools',
-      './group1/group10/out/debug/dwtools/abase',
-      './group1/group10/out/debug/dwtools/abase/l3',
-      './group1/group10/out/debug/dwtools/abase/l3/testing1b',
-      './group1/group10/out/debug/dwtools/abase/l3/testing2a',
-      './group1/group10/out/debug/dwtools/abase/l3.test',
+      './group1/group10/out/debug/dwtools/testing',
+      './group1/group10/out/debug/dwtools/testing/l3',
+      './group1/group10/out/debug/dwtools/testing/l3/testing1b',
+      './group1/group10/out/debug/dwtools/testing/l3/testing2a',
+      './group1/group10/out/debug/dwtools/testing/l3.test',
       './group1/out',
       './group1/out/debug',
       './group1/out/debug/dwtools',
-      './group1/out/debug/dwtools/abase',
-      './group1/out/debug/dwtools/abase/l1',
-      './group1/out/debug/dwtools/abase/l1/testing1',
-      './group1/out/debug/dwtools/abase/l1.test',
-      './group1/out/debug/dwtools/abase/l3',
-      './group1/out/debug/dwtools/abase/l3/testing12',
-      './group1/out/debug/dwtools/abase/l3/testing1b',
-      './group1/out/debug/dwtools/abase/l3/testing2a',
-      './group1/out/debug/dwtools/abase/l3.test',
+      './group1/out/debug/dwtools/testing',
+      './group1/out/debug/dwtools/testing/l1',
+      './group1/out/debug/dwtools/testing/l1.test',
+      './group1/out/debug/dwtools/testing/l3',
+      './group1/out/debug/dwtools/testing/l3/testing12',
+      './group1/out/debug/dwtools/testing/l3/testing1b',
+      './group1/out/debug/dwtools/testing/l3/testing2a',
+      './group1/out/debug/dwtools/testing/l3.test',
       './group2',
       './group2/.module',
       './group2/.module/ModuleForTesting12ab',
@@ -12792,37 +12787,36 @@ function exportWithRemoteSubmodules( test )
       './group2/.module/ModuleForTesting12ab/out',
       './group2/.module/ModuleForTesting12ab/proto',
       './group2/.module/ModuleForTesting12ab/proto/dwtools',
-      './group2/.module/ModuleForTesting12ab/proto/dwtools/abase',
-      './group2/.module/ModuleForTesting12ab/proto/dwtools/abase/l4',
-      './group2/.module/ModuleForTesting12ab/proto/dwtools/abase/l4/testing12ab',
-      './group2/.module/ModuleForTesting12ab/proto/dwtools/abase/l4.test',
+      './group2/.module/ModuleForTesting12ab/proto/dwtools/testing',
+      './group2/.module/ModuleForTesting12ab/proto/dwtools/testing/l4',
+      './group2/.module/ModuleForTesting12ab/proto/dwtools/testing/l4/testing12ab',
+      './group2/.module/ModuleForTesting12ab/proto/dwtools/testing/l4.test',
       './group2/.module/ModuleForTesting12ab/sample',
       './group2/out',
       './group2/out/debug',
       './group2/out/debug/dwtools',
-      './group2/out/debug/dwtools/abase',
-      './group2/out/debug/dwtools/abase/l3',
-      './group2/out/debug/dwtools/abase/l3/testing1b',
-      './group2/out/debug/dwtools/abase/l3/testing2a',
-      './group2/out/debug/dwtools/abase/l3.test',
-      './group2/out/debug/dwtools/abase/l4',
-      './group2/out/debug/dwtools/abase/l4/testing12ab',
-      './group2/out/debug/dwtools/abase/l4.test',
+      './group2/out/debug/dwtools/testing',
+      './group2/out/debug/dwtools/testing/l3',
+      './group2/out/debug/dwtools/testing/l3/testing1b',
+      './group2/out/debug/dwtools/testing/l3/testing2a',
+      './group2/out/debug/dwtools/testing/l3.test',
+      './group2/out/debug/dwtools/testing/l4',
+      './group2/out/debug/dwtools/testing/l4/testing12ab',
+      './group2/out/debug/dwtools/testing/l4.test',
       './out',
       './out/debug',
       './out/debug/dwtools',
-      './out/debug/dwtools/abase',
-      './out/debug/dwtools/abase/l1',
-      './out/debug/dwtools/abase/l1/testing1',
-      './out/debug/dwtools/abase/l1.test',
-      './out/debug/dwtools/abase/l3',
-      './out/debug/dwtools/abase/l3/testing12',
-      './out/debug/dwtools/abase/l3/testing1b',
-      './out/debug/dwtools/abase/l3/testing2a',
-      './out/debug/dwtools/abase/l3.test',
-      './out/debug/dwtools/abase/l4',
-      './out/debug/dwtools/abase/l4/testing12ab',
-      './out/debug/dwtools/abase/l4.test'
+      './out/debug/dwtools/testing',
+      './out/debug/dwtools/testing/l1',
+      './out/debug/dwtools/testing/l1.test',
+      './out/debug/dwtools/testing/l3',
+      './out/debug/dwtools/testing/l3/testing12',
+      './out/debug/dwtools/testing/l3/testing1b',
+      './out/debug/dwtools/testing/l3/testing2a',
+      './out/debug/dwtools/testing/l3.test',
+      './out/debug/dwtools/testing/l4',
+      './out/debug/dwtools/testing/l4/testing12ab',
+      './out/debug/dwtools/testing/l4.test'
     ];
     var files = a.findDirs( a.routinePath );
     test.identical( files, exp );
@@ -12859,19 +12853,129 @@ function exportWithRemoteSubmodulesRecursive( test )
     return null;
   })
 
-  a.appStart( '.with ** .clean' )
-  a.appStart( '.with ** .export.recursive' )
+  a.appStart( '.with "**" .clean' )
+  a.appStart( '.with "**" .export.recursive' )
 
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 38 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
-    var exp = [ 'xxx' ];
+    var exp =
+    [
+      '.',
+      './z.will.yml',
+      './.module',
+      './group1',
+      './group1/a.will.yml',
+      './group1/b.will.yml',
+      './group1/.module',
+      './group1/group10',
+      './group1/group10/a0.will.yml',
+      './group1/group10/.module',
+      './group1/group10/out',
+      './group1/group10/out/a0.out.will.yml',
+      './group1/group10/out/debug',
+      './group1/group10/out/debug/dwtools',
+      './group1/group10/out/debug/dwtools/testing',
+      './group1/group10/out/debug/dwtools/testing/Basic.s',
+      './group1/group10/out/debug/dwtools/testing/l3',
+      './group1/group10/out/debug/dwtools/testing/l3/testing1b',
+      './group1/group10/out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './group1/group10/out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './group1/group10/out/debug/dwtools/testing/l3/testing2a',
+      './group1/group10/out/debug/dwtools/testing/l3/testing2a/Include.s',
+      './group1/group10/out/debug/dwtools/testing/l3/testing2a/ModuleForTesting2a.s',
+      './group1/group10/out/debug/dwtools/testing/l3.test',
+      './group1/group10/out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+      './group1/group10/out/debug/dwtools/testing/l3.test/ModuleForTesting2a.test.s',
+      './group1/out',
+      './group1/out/a.out.will.yml',
+      './group1/out/b.out.will.yml',
+      './group1/out/debug',
+      './group1/out/debug/dwtools',
+      './group1/out/debug/dwtools/testing',
+      './group1/out/debug/dwtools/testing/Basic.s',
+      './group1/out/debug/dwtools/testing/l1',
+      './group1/out/debug/dwtools/testing/l1/Include.s',
+      './group1/out/debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './group1/out/debug/dwtools/testing/l1.test',
+      './group1/out/debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './group1/out/debug/dwtools/testing/l3',
+      './group1/out/debug/dwtools/testing/l3/testing12',
+      './group1/out/debug/dwtools/testing/l3/testing12/Include.s',
+      './group1/out/debug/dwtools/testing/l3/testing12/ModuleForTesting12.s',
+      './group1/out/debug/dwtools/testing/l3/testing1b',
+      './group1/out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './group1/out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './group1/out/debug/dwtools/testing/l3/testing2a',
+      './group1/out/debug/dwtools/testing/l3/testing2a/Include.s',
+      './group1/out/debug/dwtools/testing/l3/testing2a/ModuleForTesting2a.s',
+      './group1/out/debug/dwtools/testing/l3.test',
+      './group1/out/debug/dwtools/testing/l3.test/ModuleForTesting12.test.s',
+      './group1/out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+      './group1/out/debug/dwtools/testing/l3.test/ModuleForTesting2a.test.s',
+      './group2',
+      './group2/c.will.yml',
+      './group2/.module',
+      './group2/out',
+      './group2/out/c.out.will.yml',
+      './group2/out/debug',
+      './group2/out/debug/dwtools',
+      './group2/out/debug/dwtools/testing',
+      './group2/out/debug/dwtools/testing/Basic.s',
+      './group2/out/debug/dwtools/testing/l3',
+      './group2/out/debug/dwtools/testing/l3/testing1b',
+      './group2/out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './group2/out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './group2/out/debug/dwtools/testing/l3/testing2a',
+      './group2/out/debug/dwtools/testing/l3/testing2a/Include.s',
+      './group2/out/debug/dwtools/testing/l3/testing2a/ModuleForTesting2a.s',
+      './group2/out/debug/dwtools/testing/l3.test',
+      './group2/out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+      './group2/out/debug/dwtools/testing/l3.test/ModuleForTesting2a.test.s',
+      './group2/out/debug/dwtools/testing/l4',
+      './group2/out/debug/dwtools/testing/l4/testing12ab',
+      './group2/out/debug/dwtools/testing/l4/testing12ab/Include.s',
+      './group2/out/debug/dwtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
+      './group2/out/debug/dwtools/testing/l4.test',
+      './group2/out/debug/dwtools/testing/l4.test/ModuleForTesting12ab.test.s',
+      './out',
+      './out/z.out.will.yml',
+      './out/debug',
+      './out/debug/dwtools',
+      './out/debug/dwtools/testing',
+      './out/debug/dwtools/testing/Basic.s',
+      './out/debug/dwtools/testing/l1',
+      './out/debug/dwtools/testing/l1/Include.s',
+      './out/debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './out/debug/dwtools/testing/l1.test',
+      './out/debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './out/debug/dwtools/testing/l3',
+      './out/debug/dwtools/testing/l3/testing12',
+      './out/debug/dwtools/testing/l3/testing12/Include.s',
+      './out/debug/dwtools/testing/l3/testing12/ModuleForTesting12.s',
+      './out/debug/dwtools/testing/l3/testing1b',
+      './out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './out/debug/dwtools/testing/l3/testing2a',
+      './out/debug/dwtools/testing/l3/testing2a/Include.s',
+      './out/debug/dwtools/testing/l3/testing2a/ModuleForTesting2a.s',
+      './out/debug/dwtools/testing/l3.test',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting12.test.s',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting2a.test.s',
+      './out/debug/dwtools/testing/l4',
+      './out/debug/dwtools/testing/l4/testing12ab',
+      './out/debug/dwtools/testing/l4/testing12ab/Include.s',
+      './out/debug/dwtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
+      './out/debug/dwtools/testing/l4.test',
+      './out/debug/dwtools/testing/l4.test/ModuleForTesting12ab.test.s'
+    ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
@@ -13794,8 +13898,6 @@ function exportWithSubmoduleThatHasModuleDirDeleted( test )
       '../module/opt/out/opt.out',
       '../module/opt/.module/ModuleForTesting2/',
       '../module/opt/.module/ModuleForTesting2/out/wModuleForTesting2.out',
-      '../module/opt/.module/ModuleForTesting1/',
-      '../module/opt/.module/ModuleForTesting1/out/wModuleForTesting1.out'
     ];
     var outfile = a.fileProvider.configRead( a.abs( 'out/Optional.out.will.yml' ) );
     test.identical( _.mapKeys( outfile.module ), exp );
@@ -14039,17 +14141,17 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml',
       './.module/ModuleForTesting12/proto',
       './.module/ModuleForTesting12/proto/dwtools',
-      './.module/ModuleForTesting12/proto/dwtools/Tools.s',
-      './.module/ModuleForTesting12/proto/dwtools/abase',
-      './.module/ModuleForTesting12/proto/dwtools/abase/l3',
-      './.module/ModuleForTesting12/proto/dwtools/abase/l3/testing12',
-      './.module/ModuleForTesting12/proto/dwtools/abase/l3/testing12/Include.s',
-      './.module/ModuleForTesting12/proto/dwtools/abase/l3/testing12/ModuleForTesting12.s',
-      './.module/ModuleForTesting12/proto/dwtools/abase/l3.test',
-      './.module/ModuleForTesting12/proto/dwtools/abase/l3.test/ModuleForTesting12.test.s',
+      './.module/ModuleForTesting12/proto/dwtools/testing',
+      './.module/ModuleForTesting12/proto/dwtools/testing/Basic.s',
+      './.module/ModuleForTesting12/proto/dwtools/testing/l3',
+      './.module/ModuleForTesting12/proto/dwtools/testing/l3/testing12',
+      './.module/ModuleForTesting12/proto/dwtools/testing/l3/testing12/Include.s',
+      './.module/ModuleForTesting12/proto/dwtools/testing/l3/testing12/ModuleForTesting12.s',
+      './.module/ModuleForTesting12/proto/dwtools/testing/l3.test',
+      './.module/ModuleForTesting12/proto/dwtools/testing/l3.test/ModuleForTesting12.test.s',
       './.module/ModuleForTesting12/sample',
-      './.module/ModuleForTesting12/sample/Sample.js'
-    ]
+      './.module/ModuleForTesting12/sample/Sample.js',
+    ];
     var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
     return op;
@@ -14092,7 +14194,21 @@ function importPathLocal( test )
   {
 
     var files = a.find( a.abs( 'out' ) );
-    test.contains( files, [ '.', './debug', './debug/WithSubmodules.s', './debug/dwtools', './debug/dwtools/Tools.s' ] );
+    var exp =
+    [
+      '.',
+      './debug',
+      './debug/WithSubmodules.s',
+      './debug/dwtools',
+      './debug/dwtools/testing',
+      './debug/dwtools/testing/Basic.s',
+      './debug/dwtools/testing/l1',
+      './debug/dwtools/testing/l1/Include.s',
+      './debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './debug/dwtools/testing/l1.test',
+      './debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+    ];
+    test.contains( files, exp );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /Built .*module::submodules \/ build::debug\.raw.* in/ ), 1 );
 
@@ -14366,7 +14482,7 @@ function importOutdated( test )
   return a.ready;
 }
 
-importOutdated.timeOut = 30000;
+importOutdated.timeOut = 60000;
 importOutdated.description =
 `
 Problem was : not clear enough information about error.
@@ -14860,7 +14976,30 @@ function cleanHdBug( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml', './group1/group10', './group1/group10/a0.will.yml' ];
+    var exp =
+    [
+      '.',
+      './z.will.yml',
+      './+',
+      './+/z.will.yml',
+      './+/.module',
+      './+/.module/PathTools',
+      './+/group1',
+      './+/group1/a.will.yml',
+      './+/group1/.module',
+      './+/group1/.module/PathTools',
+      './+/group1/.module/Proto',
+      './+/group1/.module/Tools',
+      './+/group1/group10',
+      './+/group1/group10/a0.will.yml',
+      './+/group1/group10/.module',
+      './+/group1/group10/.module/PathBasic',
+      './+/group1/group10/.module/PathTools',
+      './group1',
+      './group1/a.will.yml',
+      './group1/group10',
+      './group1/group10/a0.will.yml',
+    ];
     var files = a.findAll( a.abs( '.' ) );
     test.identical( files, exp );
 
@@ -15171,45 +15310,43 @@ function cleanRecursiveMin( test )
       './group1/out/a.out.will.yml',
       './group1/out/debug',
       './group1/out/debug/dwtools',
-      './group1/out/debug/dwtools/Tools.s',
-      './group1/out/debug/dwtools/abase',
-      './group1/out/debug/dwtools/abase/l1',
-      './group1/out/debug/dwtools/abase/l1/testing1',
-      './group1/out/debug/dwtools/abase/l1/testing1/Include.s',
-      './group1/out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s',
-      './group1/out/debug/dwtools/abase/l1.test',
-      './group1/out/debug/dwtools/abase/l1.test/ModuleForTesting1.test.s',
-      './group1/out/debug/dwtools/abase/l3',
-      './group1/out/debug/dwtools/abase/l3/testing1b',
-      './group1/out/debug/dwtools/abase/l3/testing1b/Include.s',
-      './group1/out/debug/dwtools/abase/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/dwtools/abase/l3.test',
-      './group1/out/debug/dwtools/abase/l3.test/ModuleForTesting1b.test.s',
+      './group1/out/debug/dwtools/testing',
+      './group1/out/debug/dwtools/testing/Basic.s',
+      './group1/out/debug/dwtools/testing/l1',
+      './group1/out/debug/dwtools/testing/l1/Include.s',
+      './group1/out/debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './group1/out/debug/dwtools/testing/l1.test',
+      './group1/out/debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './group1/out/debug/dwtools/testing/l3',
+      './group1/out/debug/dwtools/testing/l3/testing1b',
+      './group1/out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './group1/out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './group1/out/debug/dwtools/testing/l3.test',
+      './group1/out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
       './out',
       './out/z.out.will.yml',
       './out/debug',
       './out/debug/dwtools',
-      './out/debug/dwtools/Tools.s',
-      './out/debug/dwtools/abase',
-      './out/debug/dwtools/abase/l1',
-      './out/debug/dwtools/abase/l1/testing1',
-      './out/debug/dwtools/abase/l1/testing1/Include.s',
-      './out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s',
-      './out/debug/dwtools/abase/l1.test',
-      './out/debug/dwtools/abase/l1.test/ModuleForTesting1.test.s',
-      './out/debug/dwtools/abase/l2',
-      './out/debug/dwtools/abase/l2/testing1a',
-      './out/debug/dwtools/abase/l2/testing1a/Include.s',
-      './out/debug/dwtools/abase/l2/testing1a/ModuleForTesting1a.s',
-      './out/debug/dwtools/abase/l2.test',
-      './out/debug/dwtools/abase/l2.test/ModuleForTesting1a.test.s',
-      './out/debug/dwtools/abase/l3',
-      './out/debug/dwtools/abase/l3/testing1b',
-      './out/debug/dwtools/abase/l3/testing1b/Include.s',
-      './out/debug/dwtools/abase/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/dwtools/abase/l3.test',
-      './out/debug/dwtools/abase/l3.test/ModuleForTesting1b.test.s'
-    ]
+      './out/debug/dwtools/testing',
+      './out/debug/dwtools/testing/Basic.s',
+      './out/debug/dwtools/testing/l1',
+      './out/debug/dwtools/testing/l1/Include.s',
+      './out/debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './out/debug/dwtools/testing/l1.test',
+      './out/debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './out/debug/dwtools/testing/l2',
+      './out/debug/dwtools/testing/l2/testing1a',
+      './out/debug/dwtools/testing/l2/testing1a/Include.s',
+      './out/debug/dwtools/testing/l2/testing1a/ModuleForTesting1a.s',
+      './out/debug/dwtools/testing/l2.test',
+      './out/debug/dwtools/testing/l2.test/ModuleForTesting1a.test.s',
+      './out/debug/dwtools/testing/l3',
+      './out/debug/dwtools/testing/l3/testing1b',
+      './out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './out/debug/dwtools/testing/l3.test',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+    ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
@@ -15281,45 +15418,43 @@ function cleanGlobMin( test )
       './group1/out/a.out.will.yml',
       './group1/out/debug',
       './group1/out/debug/dwtools',
-      './group1/out/debug/dwtools/Tools.s',
-      './group1/out/debug/dwtools/abase',
-      './group1/out/debug/dwtools/abase/l1',
-      './group1/out/debug/dwtools/abase/l1/testing1',
-      './group1/out/debug/dwtools/abase/l1/testing1/Include.s',
-      './group1/out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s',
-      './group1/out/debug/dwtools/abase/l1.test',
-      './group1/out/debug/dwtools/abase/l1.test/ModuleForTesting1.test.s',
-      './group1/out/debug/dwtools/abase/l3',
-      './group1/out/debug/dwtools/abase/l3/testing1b',
-      './group1/out/debug/dwtools/abase/l3/testing1b/Include.s',
-      './group1/out/debug/dwtools/abase/l3/testing1b/ModuleForTesting1b.s',
-      './group1/out/debug/dwtools/abase/l3.test',
-      './group1/out/debug/dwtools/abase/l3.test/ModuleForTesting1b.test.s',
+      './group1/out/debug/dwtools/testing',
+      './group1/out/debug/dwtools/testing/Basic.s',
+      './group1/out/debug/dwtools/testing/l1',
+      './group1/out/debug/dwtools/testing/l1/Include.s',
+      './group1/out/debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './group1/out/debug/dwtools/testing/l1.test',
+      './group1/out/debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './group1/out/debug/dwtools/testing/l3',
+      './group1/out/debug/dwtools/testing/l3/testing1b',
+      './group1/out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './group1/out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './group1/out/debug/dwtools/testing/l3.test',
+      './group1/out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
       './out',
       './out/z.out.will.yml',
       './out/debug',
       './out/debug/dwtools',
-      './out/debug/dwtools/Tools.s',
-      './out/debug/dwtools/abase',
-      './out/debug/dwtools/abase/l1',
-      './out/debug/dwtools/abase/l1/testing1',
-      './out/debug/dwtools/abase/l1/testing1/Include.s',
-      './out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s',
-      './out/debug/dwtools/abase/l1.test',
-      './out/debug/dwtools/abase/l1.test/ModuleForTesting1.test.s',
-      './out/debug/dwtools/abase/l2',
-      './out/debug/dwtools/abase/l2/testing1a',
-      './out/debug/dwtools/abase/l2/testing1a/Include.s',
-      './out/debug/dwtools/abase/l2/testing1a/ModuleForTesting1a.s',
-      './out/debug/dwtools/abase/l2.test',
-      './out/debug/dwtools/abase/l2.test/ModuleForTesting1a.test.s',
-      './out/debug/dwtools/abase/l3',
-      './out/debug/dwtools/abase/l3/testing1b',
-      './out/debug/dwtools/abase/l3/testing1b/Include.s',
-      './out/debug/dwtools/abase/l3/testing1b/ModuleForTesting1b.s',
-      './out/debug/dwtools/abase/l3.test',
-      './out/debug/dwtools/abase/l3.test/ModuleForTesting1b.test.s'
-    ]
+      './out/debug/dwtools/testing',
+      './out/debug/dwtools/testing/Basic.s',
+      './out/debug/dwtools/testing/l1',
+      './out/debug/dwtools/testing/l1/Include.s',
+      './out/debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './out/debug/dwtools/testing/l1.test',
+      './out/debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './out/debug/dwtools/testing/l2',
+      './out/debug/dwtools/testing/l2/testing1a',
+      './out/debug/dwtools/testing/l2/testing1a/Include.s',
+      './out/debug/dwtools/testing/l2/testing1a/ModuleForTesting1a.s',
+      './out/debug/dwtools/testing/l2.test',
+      './out/debug/dwtools/testing/l2.test/ModuleForTesting1a.test.s',
+      './out/debug/dwtools/testing/l3',
+      './out/debug/dwtools/testing/l3/testing1b',
+      './out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './out/debug/dwtools/testing/l3.test',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+    ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
@@ -16749,7 +16884,7 @@ function cleanSpecial( test )
   a.reflect();
 
   var files = a.fileProvider.dirRead( a.abs( 'out' ) );
-  var expected = [ '#dir2','@dir1' ];
+  var expected = [ '"#dir2"','"@dir1"' ];
   test.identical( files, expected )
 
   /* - */
@@ -17383,7 +17518,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( op.exitCode, 0 );
     // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting1.* will be downloaded version .*/ ) );
-    // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*d6e38fbe78358f3e71693bf098ee804677466af8.*/ ) );
+    // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*41d1daa2ec5714fc70e0096e3015b8700f3fbfcd.*/ ) );
     // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting1a.* will be downloaded version .*$.$.$$$.*/ ) );
     test.is( _.strHas( op.output, '+ 2/5 submodule(s) of module::submodules-detached will be downloaded' ) );
     var files = a.find( a.abs( '.module' ) );
@@ -18268,13 +18403,13 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 20 );
-    test.identical( _.strCount( op.output, '+ Reflected' ), 2 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 23 );
+    test.identical( _.strCount( op.output, '+ Reflected' ), 3 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
@@ -18292,12 +18427,12 @@ function submodulesDownloadDiffDownloadPathsRegular( test )
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a', 'ModuleForTesting2' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
     var files = a.fileProvider.dirRead( a.abs( 'a/.module' ) )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 20 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 23 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -18406,7 +18541,7 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 32 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 4 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
     test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -18430,7 +18565,7 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 32 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
@@ -18465,10 +18600,10 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 4 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 32 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 4 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 4 );
-    test.identical( _.strCount( op.output, '+ 4/6 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 4/5 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
   })
@@ -18489,10 +18624,10 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
     test.identical( files, exp );
 
     test.identical( _.strCount( op.output, '! Failed to open' ), 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 32 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 26 );
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
-    test.identical( _.strCount( op.output, '+ 0/6 submodule(s) of module::c were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 0/5 submodule(s) of module::c were downloaded' ), 1 );
 
     return null;
   })
@@ -18503,7 +18638,7 @@ function submodulesDownloadDiffDownloadPathsIrregular( test )
 
 } /* end of function submodulesDownloadDiffDownloadPathsIrregular */
 
-submodulesDownloadDiffDownloadPathsIrregular.timeOut = 300000;
+submodulesDownloadDiffDownloadPathsIrregular.timeOut = 400000;
 
 //
 
@@ -18609,7 +18744,7 @@ function submodulesDownloadHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
@@ -18716,7 +18851,7 @@ function submodulesDownloadHierarchyRemote( test )
     var files = a.fileProvider.dirRead( a.abs( '.module' ) )
     test.identical( files, exp );
 
-    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1a' ];
+    var exp = [ 'ModuleForTesting1', 'ModuleForTesting12', 'ModuleForTesting1b' ];
     var files = a.fileProvider.dirRead( a.abs( 'group1/.module' ) )
     test.identical( files, exp );
 
@@ -18743,7 +18878,7 @@ function submodulesDownloadHierarchyRemote( test )
 
 } /* end of function submodulesDownloadHierarchyRemote */
 
-submodulesDownloadHierarchyRemote.timeOut = 300000;
+submodulesDownloadHierarchyRemote.timeOut = 400000;
 
 //
 
@@ -20229,9 +20364,9 @@ function subModulesUpdate( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version fbfcc8e897be2b7df49dc60b9a35818af195e916 in' ) );
+    test.is( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version 3fca0bd7bc9f10dec7fe7f7c9870c9c30133ddc3 in' ) );
     test.is( _.strHas( op.output, '+ module::wModuleForTesting2a was updated to version master in' ) );
-    test.is( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version 42862660a13869a743325aeb628103e354d4b14c in' ) );
+    test.is( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version 6b3dfe9b104d1c652cec440f4348d75c8ae23271 in' ) );
     test.is( _.strHas( op.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
@@ -20263,7 +20398,7 @@ function subModulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch';
     var read = a.fileProvider.fileRead( a.path.join( a.routinePath, '.im.will.yml' ) );
-    read = _.strReplace( read, '#fbfcc8e897be2b7df49dc60b9a35818af195e916', '!master' )
+    read = _.strReplace( read, '#3fca0bd7bc9f10dec7fe7f7c9870c9c30133ddc3', '!master' )
     a.fileProvider.fileWrite( a.path.join( a.routinePath, '.im.will.yml' ), read );
     return null;
   })
@@ -22205,6 +22340,272 @@ File.txt
 
 //
 
+function stepGitStatus( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let clone2Shell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone2' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  cloneShell( 'git init' );
+  cloneShell( 'git remote add origin ../repo' );
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am first' );
+  cloneShell( 'git push -u origin --all' );
+  a.shell( 'git clone repo/ clone2' );
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.with clone/GitStatus .build git.status.default' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.default - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.with clone/GitStatus .build git.status.default' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.default - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/GitStatus .build git.status.default' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.default - local and remote commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/GitStatus .build git.status.local0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.local0 - checks no local changes';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/GitStatus .build git.status.remote0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.remote0 - checks no local changes';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/GitStatus .build git.status.uncommittedIgnored1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.uncommittedIgnored1 - checks ignored uncommited';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/.warchive' ), 'warchive\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/GitStatus .build git.status.uncommittedIgnored0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.uncommittedIgnored0 - checks without ignored';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone2/f1.txt' ), 'new line\n' );
+    return null;
+  })
+  clone2Shell( 'git commit -am first' );
+  clone2Shell( 'git push' );
+
+  a.appStart( '.with clone/GitStatus .build git.status.remoteBranches1' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/GitStatus .build git.status.remoteBranches1 - checks with remote branches';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function stepGitSync( test )
 {
   let context = this;
@@ -22634,7 +23035,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -22653,7 +23054,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -22687,7 +23088,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -22706,7 +23107,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -22742,7 +23143,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -22761,7 +23162,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -22797,7 +23198,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -22816,7 +23217,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
@@ -22868,7 +23269,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -22887,7 +23288,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -22928,7 +23329,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -22947,7 +23348,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -23098,7 +23499,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -23117,7 +23518,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -23158,7 +23559,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c1c31010e1a95c21f43a206b10ee4123316c98d5.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -23177,7 +23578,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* was upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#a1c96db3d13a9a37f8046d5c3d4ec9e48d3a1945.*/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 0 );
 
@@ -24089,7 +24490,7 @@ function commandVersion( test )
   {
     test.identical( op.exitCode, 0 );
     test.isNot( _.strHas( op.output, 'Read' ) );
-    test.is( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    test.is( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
     return null;
   })
 
@@ -24105,8 +24506,8 @@ function commandVersion( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Read' ) );
-    test.is( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    test.isNot( _.strHas( op.output, 'Read' ) );
+    test.is( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
     return null;
   })
 
@@ -24122,8 +24523,8 @@ function commandVersion( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Read' ) );
-    test.is( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    test.isNot( _.strHas( op.output, 'Read' ) );
+    test.is( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
     return null;
   })
 
@@ -24139,8 +24540,8 @@ function commandVersion( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, 'Read' ) );
-    test.is( _.strHas( op.output, /Current version: \d+\.\d+\.\d+/ ) );
+    test.isNot( _.strHas( op.output, 'Read' ) );
+    test.is( _.strHas( op.output, /Current version : \d+\.\d+\.\d+/ ) );
     return null;
   })
 
@@ -26051,8 +26452,8 @@ function commandGitStatus( test )
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
     test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
     test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
-    test.identical( _.strCount( op.output, 'List of remote branches' ), 2 ); /* Dmytro : temporary, not known feature in GitTools */
-    test.identical( _.strCount( op.output, 'refs/heads/master' ), 2 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 1 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 1 );
 
     return null;
   })
@@ -26826,6 +27227,7 @@ var Self =
     stepGitPush,
     stepGitReset,
     stepGitSync,
+    stepGitStatus,
     stepGitTag,
 
     /* xxx : cover "will .module.new.with prepare" */
