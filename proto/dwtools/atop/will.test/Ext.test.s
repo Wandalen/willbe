@@ -14196,7 +14196,21 @@ function importPathLocal( test )
   {
 
     var files = a.find( a.abs( 'out' ) );
-    test.contains( files, [ '.', './debug', './debug/WithSubmodules.s', './debug/dwtools', './debug/dwtools/Tools.s' ] );
+    var exp =
+    [
+      '.',
+      './debug',
+      './debug/WithSubmodules.s',
+      './debug/dwtools',
+      './debug/dwtools/testing',
+      './debug/dwtools/testing/Basic.s',
+      './debug/dwtools/testing/l1',
+      './debug/dwtools/testing/l1/Include.s',
+      './debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './debug/dwtools/testing/l1.test',
+      './debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+    ];
+    test.contains( files, exp );
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, /Built .*module::submodules \/ build::debug\.raw.* in/ ), 1 );
 
