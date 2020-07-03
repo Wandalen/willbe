@@ -14484,7 +14484,7 @@ function importOutdated( test )
   return a.ready;
 }
 
-importOutdated.timeOut = 30000;
+importOutdated.timeOut = 60000;
 importOutdated.description =
 `
 Problem was : not clear enough information about error.
