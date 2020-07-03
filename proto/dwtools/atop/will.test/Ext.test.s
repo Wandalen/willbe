@@ -10378,8 +10378,8 @@ function exportSubmodules( test )
   {
     test.identical( op.exitCode, 0 );
 
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/debug/dwtools/abase/l1/testing1/ModuleForTesting1.s' ) ) );
-    test.is( a.fileProvider.isTerminal( a.abs( 'out/debug/dwtools/abase/l3/testing2a/ModuleForTesting2a.s' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/debug/dwtools/testing/l1/ModuleForTesting1.s' ) ) );
+    test.is( a.fileProvider.isTerminal( a.abs( 'out/debug/dwtools/testing/l3/testing2a/ModuleForTesting2a.s' ) ) );
     test.is( a.fileProvider.isTerminal( a.abs( 'out/submodules.out.will.yml' ) ) );
     test.is( _.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
 
