@@ -89,19 +89,19 @@ path:
       - ../proto/dwtools/ModuleForTesting1.s
       - ../proto/dwtools/abase
       - ../proto/dwtools/abase/l9
-      - ../proto/dwtools/abase/l9/printer
-      - ../proto/dwtools/abase/l9/printer/.DS_Store
-      - ../proto/dwtools/abase/l9/printer/aChainer.s
-      - ../proto/dwtools/abase/l9/printer/aChainingMixin.s
-      - ../proto/dwtools/abase/l9/printer/aModuleForTesting1aedMixin.s
-      - ../proto/dwtools/abase/l9/printer/PrinterBase.s
-      - ../proto/dwtools/abase/l9/printer/PrinterMid.s
-      - ../proto/dwtools/abase/l9/printer/PrinterTop.s
-      - ../proto/dwtools/abase/l9/printer/top
-      - ../proto/dwtools/abase/l9/printer/top/Logger.s
-      - ../proto/dwtools/abase/l9/printer/top/LoggerExtra.s
-      - ../proto/dwtools/abase/l9/printer/top/ToLayeredHtml.s
-      - ../proto/dwtools/abase/l9/printer/top/ToString.s
+      - ../proto/dwtools/abase/l9/logger
+      - ../proto/dwtools/abase/l9/logger/.DS_Store
+      - ../proto/dwtools/abase/l9/logger/aChainer.s
+      - ../proto/dwtools/abase/l9/logger/aChainingMixin.s
+      - ../proto/dwtools/abase/l9/logger/aModuleForTesting1aedMixin.s
+      - ../proto/dwtools/abase/l9/logger/PrinterBase.s
+      - ../proto/dwtools/abase/l9/logger/LoggerMid.s
+      - ../proto/dwtools/abase/l9/logger/LoggerTop.s
+      - ../proto/dwtools/abase/l9/logger
+      - ../proto/dwtools/abase/l9/logger/Logger.s
+      - ../proto/dwtools/abase/l9/logger/LoggerExtra.s
+      - ../proto/dwtools/abase/l9/logger/ToLayeredHtml.s
+      - ../proto/dwtools/abase/l9/logger/ToString.s
       - ../proto/dwtools/abase/l9.test
       - ../proto/dwtools/abase/l9.test/printer
       - ../proto/dwtools/abase/l9.test/printer/Backend.test.ss
@@ -405,19 +405,19 @@ module:
           - proto/dwtools/ModuleForTesting1.s
           - proto/dwtools/abase
           - proto/dwtools/abase/l9
-          - proto/dwtools/abase/l9/printer
-          - proto/dwtools/abase/l9/printer/.DS_Store
-          - proto/dwtools/abase/l9/printer/aChainer.s
-          - proto/dwtools/abase/l9/printer/aChainingMixin.s
-          - proto/dwtools/abase/l9/printer/aModuleForTesting1aedMixin.s
-          - proto/dwtools/abase/l9/printer/PrinterBase.s
-          - proto/dwtools/abase/l9/printer/PrinterMid.s
-          - proto/dwtools/abase/l9/printer/PrinterTop.s
-          - proto/dwtools/abase/l9/printer/top
-          - proto/dwtools/abase/l9/printer/top/Logger.s
-          - proto/dwtools/abase/l9/printer/top/LoggerExtra.s
-          - proto/dwtools/abase/l9/printer/top/ToLayeredHtml.s
-          - proto/dwtools/abase/l9/printer/top/ToString.s
+          - proto/dwtools/abase/l9/logger
+          - proto/dwtools/abase/l9/logger/.DS_Store
+          - proto/dwtools/abase/l9/logger/aChainer.s
+          - proto/dwtools/abase/l9/logger/aChainingMixin.s
+          - proto/dwtools/abase/l9/logger/aModuleForTesting1aedMixin.s
+          - proto/dwtools/abase/l9/logger/PrinterBase.s
+          - proto/dwtools/abase/l9/logger/LoggerMid.s
+          - proto/dwtools/abase/l9/logger/LoggerTop.s
+          - proto/dwtools/abase/l9/logger
+          - proto/dwtools/abase/l9/logger/Logger.s
+          - proto/dwtools/abase/l9/logger/LoggerExtra.s
+          - proto/dwtools/abase/l9/logger/ToLayeredHtml.s
+          - proto/dwtools/abase/l9/logger/ToString.s
           - proto/dwtools/abase/l9.test
           - proto/dwtools/abase/l9.test/printer
           - proto/dwtools/abase/l9.test/printer/Backend.test.ss
