@@ -1072,10 +1072,8 @@ function commandVersionCheck( e )
 
   let propertiesMap = _.strStructureParse( e.commandArgument );
   _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-
-  let implyMap = _.mapBut( propertiesMap, commandClean.commandProperties );
-  propertiesMap = _.mapBut( propertiesMap, implyMap );
-  will._propertiesImply( implyMap );
+  propertiesMap = _.mapOnly( propertiesMap, commandVersionCheck.commandProperties );
+  will._propertiesImply( propertiesMap );
 
   return will.versionIsUpToDate( propertiesMap );
 }
