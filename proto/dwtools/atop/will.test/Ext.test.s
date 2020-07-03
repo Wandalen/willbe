@@ -12852,19 +12852,129 @@ function exportWithRemoteSubmodulesRecursive( test )
     return null;
   })
 
-  a.appStart( '.with ** .clean' )
-  a.appStart( '.with ** .export.recursive' )
+  a.appStart( '.with "**" .clean' )
+  a.appStart( '.with "**" .export.recursive' )
 
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 31 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 38 );
     test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
-    var exp = [ 'xxx' ];
+    var exp =
+    [
+      '.',
+      './z.will.yml',
+      './.module',
+      './group1',
+      './group1/a.will.yml',
+      './group1/b.will.yml',
+      './group1/.module',
+      './group1/group10',
+      './group1/group10/a0.will.yml',
+      './group1/group10/.module',
+      './group1/group10/out',
+      './group1/group10/out/a0.out.will.yml',
+      './group1/group10/out/debug',
+      './group1/group10/out/debug/dwtools',
+      './group1/group10/out/debug/dwtools/testing',
+      './group1/group10/out/debug/dwtools/testing/Basic.s',
+      './group1/group10/out/debug/dwtools/testing/l3',
+      './group1/group10/out/debug/dwtools/testing/l3/testing1b',
+      './group1/group10/out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './group1/group10/out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './group1/group10/out/debug/dwtools/testing/l3/testing2a',
+      './group1/group10/out/debug/dwtools/testing/l3/testing2a/Include.s',
+      './group1/group10/out/debug/dwtools/testing/l3/testing2a/ModuleForTesting2a.s',
+      './group1/group10/out/debug/dwtools/testing/l3.test',
+      './group1/group10/out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+      './group1/group10/out/debug/dwtools/testing/l3.test/ModuleForTesting2a.test.s',
+      './group1/out',
+      './group1/out/a.out.will.yml',
+      './group1/out/b.out.will.yml',
+      './group1/out/debug',
+      './group1/out/debug/dwtools',
+      './group1/out/debug/dwtools/testing',
+      './group1/out/debug/dwtools/testing/Basic.s',
+      './group1/out/debug/dwtools/testing/l1',
+      './group1/out/debug/dwtools/testing/l1/Include.s',
+      './group1/out/debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './group1/out/debug/dwtools/testing/l1.test',
+      './group1/out/debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './group1/out/debug/dwtools/testing/l3',
+      './group1/out/debug/dwtools/testing/l3/testing12',
+      './group1/out/debug/dwtools/testing/l3/testing12/Include.s',
+      './group1/out/debug/dwtools/testing/l3/testing12/ModuleForTesting12.s',
+      './group1/out/debug/dwtools/testing/l3/testing1b',
+      './group1/out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './group1/out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './group1/out/debug/dwtools/testing/l3/testing2a',
+      './group1/out/debug/dwtools/testing/l3/testing2a/Include.s',
+      './group1/out/debug/dwtools/testing/l3/testing2a/ModuleForTesting2a.s',
+      './group1/out/debug/dwtools/testing/l3.test',
+      './group1/out/debug/dwtools/testing/l3.test/ModuleForTesting12.test.s',
+      './group1/out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+      './group1/out/debug/dwtools/testing/l3.test/ModuleForTesting2a.test.s',
+      './group2',
+      './group2/c.will.yml',
+      './group2/.module',
+      './group2/out',
+      './group2/out/c.out.will.yml',
+      './group2/out/debug',
+      './group2/out/debug/dwtools',
+      './group2/out/debug/dwtools/testing',
+      './group2/out/debug/dwtools/testing/Basic.s',
+      './group2/out/debug/dwtools/testing/l3',
+      './group2/out/debug/dwtools/testing/l3/testing1b',
+      './group2/out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './group2/out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './group2/out/debug/dwtools/testing/l3/testing2a',
+      './group2/out/debug/dwtools/testing/l3/testing2a/Include.s',
+      './group2/out/debug/dwtools/testing/l3/testing2a/ModuleForTesting2a.s',
+      './group2/out/debug/dwtools/testing/l3.test',
+      './group2/out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+      './group2/out/debug/dwtools/testing/l3.test/ModuleForTesting2a.test.s',
+      './group2/out/debug/dwtools/testing/l4',
+      './group2/out/debug/dwtools/testing/l4/testing12ab',
+      './group2/out/debug/dwtools/testing/l4/testing12ab/Include.s',
+      './group2/out/debug/dwtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
+      './group2/out/debug/dwtools/testing/l4.test',
+      './group2/out/debug/dwtools/testing/l4.test/ModuleForTesting12ab.test.s',
+      './out',
+      './out/z.out.will.yml',
+      './out/debug',
+      './out/debug/dwtools',
+      './out/debug/dwtools/testing',
+      './out/debug/dwtools/testing/Basic.s',
+      './out/debug/dwtools/testing/l1',
+      './out/debug/dwtools/testing/l1/Include.s',
+      './out/debug/dwtools/testing/l1/ModuleForTesting1.s',
+      './out/debug/dwtools/testing/l1.test',
+      './out/debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './out/debug/dwtools/testing/l3',
+      './out/debug/dwtools/testing/l3/testing12',
+      './out/debug/dwtools/testing/l3/testing12/Include.s',
+      './out/debug/dwtools/testing/l3/testing12/ModuleForTesting12.s',
+      './out/debug/dwtools/testing/l3/testing1b',
+      './out/debug/dwtools/testing/l3/testing1b/Include.s',
+      './out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
+      './out/debug/dwtools/testing/l3/testing2a',
+      './out/debug/dwtools/testing/l3/testing2a/Include.s',
+      './out/debug/dwtools/testing/l3/testing2a/ModuleForTesting2a.s',
+      './out/debug/dwtools/testing/l3.test',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting12.test.s',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting2a.test.s',
+      './out/debug/dwtools/testing/l4',
+      './out/debug/dwtools/testing/l4/testing12ab',
+      './out/debug/dwtools/testing/l4/testing12ab/Include.s',
+      './out/debug/dwtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
+      './out/debug/dwtools/testing/l4.test',
+      './out/debug/dwtools/testing/l4.test/ModuleForTesting12ab.test.s'
+    ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
 
