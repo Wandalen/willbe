@@ -7198,7 +7198,7 @@ function modulesTreeHierarchyRemote( test )
 `
  +-- module::z
    +-- module::a
-   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!alpha
    | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    | +-- module::a0
    |   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
@@ -7311,7 +7311,7 @@ function modulesTreeHierarchyRemote( test )
 `
  +-- module::z
    +-- module::a
-   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git/
+   | +-- module::ModuleForTesting1 - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1.git!alpha
    | +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
    | +-- module::a0
    |   +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
@@ -7326,6 +7326,7 @@ function modulesTreeHierarchyRemote( test )
    | +-- module::ModuleForTesting12ab - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting12ab.git/out/wModuleForTesting12ab.out
    +-- module::ModuleForTesting1b - path::remote:=git+https:///github.com/Wandalen/wModuleForTesting1b.git/
 `
+
     test.identical( _.strCount( op.output, exp ), 1 );
     test.identical( _.strCount( op.output, '+-- module::' ), 16 );
     test.identical( _.strCount( op.output, '+-- module::z' ), 1 );
@@ -14963,7 +14964,30 @@ function cleanHdBug( test )
   {
     test.identical( op.exitCode, 0 );
 
-    var exp = [ '.', './z.will.yml', './group1', './group1/a.will.yml', './group1/group10', './group1/group10/a0.will.yml' ];
+    var exp =
+    [
+      '.',
+      './z.will.yml',
+      './+',
+      './+/z.will.yml',
+      './+/.module',
+      './+/.module/PathTools',
+      './+/group1',
+      './+/group1/a.will.yml',
+      './+/group1/.module',
+      './+/group1/.module/PathTools',
+      './+/group1/.module/Proto',
+      './+/group1/.module/Tools',
+      './+/group1/group10',
+      './+/group1/group10/a0.will.yml',
+      './+/group1/group10/.module',
+      './+/group1/group10/.module/PathBasic',
+      './+/group1/group10/.module/PathTools',
+      './group1',
+      './group1/a.will.yml',
+      './group1/group10',
+      './group1/group10/a0.will.yml',
+    ];
     var files = a.findAll( a.abs( '.' ) );
     test.identical( files, exp );
 
