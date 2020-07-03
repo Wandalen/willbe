@@ -15,13 +15,13 @@ function onModule( context )
   _.routineOptions( onModule, o );
 
   let fileProvider2 = new _.FileFilter.Archive();
-  let config = fileProvider2.configUserRead();
+  let config = fileProvider2.configUserRead( _.censor.configStoragePath );
 
   /* basePath */
 
   let basePath = _.arrayAs( context.junction.dirPath );
-  if( config && config.path && config.path.link )
-  _.arrayAppendArrayOnce( basePath, _.arrayAs( config.path.link ) );
+  if( config && config.path && config.path.hlink )
+  _.arrayAppendArrayOnce( basePath, _.arrayAs( config.path.hlink ) );
   basePath = path.s.join( context.will.withPath, basePath );
   _.assert( _.all( fileProvider2.statsResolvedRead( basePath ) ) );
 

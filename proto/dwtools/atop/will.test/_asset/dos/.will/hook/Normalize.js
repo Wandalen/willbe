@@ -36,7 +36,7 @@ function badgeReplace( context )
   if( !fileProvider.fileExists( path.join( inPath, 'README.md' ) ) )
   return;
 
-  let config = fileProvider.configUserRead();
+  let config = fileProvider.configUserRead( _.censor.configStoragePath );
   let moduleName = context.module.about.name;
   let readmePath = path.join( inPath, 'README.md' );
   let read = fileProvider.fileRead( readmePath );
