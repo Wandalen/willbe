@@ -1396,12 +1396,15 @@ module:
           - ../proto/dwtools/atop/will.test/_asset/git-push/clone/f1.txt
           - ../proto/dwtools/atop/will.test/_asset/git-push/clone/f2.txt
           - >-
+            ../proto/dwtools/atop/will.test/_asset/git-push/clone/GitStatus.will.yml
+          - >-
             ../proto/dwtools/atop/will.test/_asset/git-push/clone/GitSync.will.yml
           - >-
             ../proto/dwtools/atop/will.test/_asset/git-push/clone/GitTag.will.yml
           - ../proto/dwtools/atop/will.test/_asset/git-push/clone/will.yml
           - ../proto/dwtools/atop/will.test/_asset/git-reset
           - ../proto/dwtools/atop/will.test/_asset/git-reset/clone
+          - ../proto/dwtools/atop/will.test/_asset/git-reset/clone/.gitignore
           - ../proto/dwtools/atop/will.test/_asset/git-reset/clone/File.txt
           - ../proto/dwtools/atop/will.test/_asset/git-reset/clone/will.yml
           - ../proto/dwtools/atop/will.test/_asset/git-reset/clone/proto
