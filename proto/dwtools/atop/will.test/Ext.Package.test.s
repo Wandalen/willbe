@@ -25,7 +25,7 @@ function onSuiteBegin()
 {
   let self = this;
 
-  self.suiteTempPath = _.path.pathDirTempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
+  self.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
   self.assetsOriginalPath = _.path.join( __dirname, '_asset' );
   self.repoDirPath = _.path.join( self.assetsOriginalPath, '_repo' );
   self.willPath = _.path.nativize( _.Will.WillPathGet() );
@@ -37,7 +37,7 @@ function onSuiteEnd()
 {
   let self = this;
   _.assert( _.strHas( self.suiteTempPath, '/willbe-' ) )
-  _.path.pathDirTempClose( self.suiteTempPath );
+  _.path.tempClose( self.suiteTempPath );
 }
 
 // --

@@ -25,7 +25,7 @@ function onGitMake( context )
   try
   {
 
-    let config = fileProvider.configUserRead( _.censor.configStoragePath );
+    let config = fileProvider.configUserRead( _.censor.storageConfigPath );
     if( config && config.about && config.path.remoteRepository )
     {
       _.mapSupplement( config, context );

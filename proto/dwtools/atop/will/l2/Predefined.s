@@ -10,7 +10,7 @@ let Self = Object.create( null );
 // routines
 // --
 
-let filesReflect = _.routineExtend( null, _.FileProvider.Find.prototype.filesReflect );
+let filesReflect = _.routineExtend( null, _.FileProvider.FindMixin.prototype.filesReflect );
 let defaults = filesReflect.defaults;
 
 defaults.linking = 'hardLinkMaybe';

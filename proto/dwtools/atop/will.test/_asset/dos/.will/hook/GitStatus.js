@@ -15,7 +15,7 @@ function onModule( context )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  let config = fileProvider.configUserRead( _.censor.configStoragePath );
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
   let token = null;
   if( config !== null && config.about && config.about[ 'github.token' ] )
   token = config.about[ 'github.token' ];

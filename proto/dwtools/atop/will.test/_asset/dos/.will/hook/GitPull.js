@@ -36,7 +36,7 @@ function onModule( context )
     return null;
   }
 
-  let config = fileProvider.configUserRead( _.censor.configStoragePath );
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
   let provider = _.FileFilter.Archive();
   provider.archive.basePath = context.opener.dirPath;
   if( config && config.path && config.path.hlink )

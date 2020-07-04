@@ -11,7 +11,7 @@ function onModule( context )
   o.verbosity = o.v;
   _.routineOptions( onModule, o );
 
-  let config = fileProvider.configUserRead( _.censor.configStoragePath );
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
   if( !config )
   return null;
   if( !config.path )

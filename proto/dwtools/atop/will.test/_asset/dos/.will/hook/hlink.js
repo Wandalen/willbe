@@ -15,7 +15,7 @@ function onModule( context )
   _.routineOptions( onModule, o );
 
   let fileProvider2 = new _.FileFilter.Archive();
-  let config = fileProvider2.configUserRead( _.censor.configStoragePath );
+  let config = fileProvider2.configUserRead( _.censor.storageConfigPath );
 
   /* basePath */
 

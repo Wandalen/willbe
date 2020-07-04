@@ -46,7 +46,7 @@ function onConfigGet( context )
   if( /^w[A-Z]/.test( shortName ) )
   shortName = shortName.substring( 1 );
 
-  let config = fileProvider.configUserRead( _.censor.configStoragePath );
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
   _.mapSupplementRecursive( result, config );
 
   result.package =

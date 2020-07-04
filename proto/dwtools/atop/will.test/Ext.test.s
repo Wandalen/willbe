@@ -56,7 +56,7 @@ var _ = _global_.wTools;
 function onSuiteBegin()
 {
   let context = this; /* xxx qqq : rename */
-  context.suiteTempPath = _.path.pathDirTempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
+  context.suiteTempPath = _.path.tempOpen( _.path.join( __dirname, '../..'  ), 'willbe' );
   context.assetsOriginalPath = _.path.join( __dirname, '_asset' );
   context.repoDirPath = _.path.join( context.assetsOriginalPath, '_repo' );
   context.appJsPath = _.path.nativize( _.Will.WillPathGet() );
@@ -108,7 +108,7 @@ function onSuiteEnd()
 {
   let context = this;
   _.assert( _.strHas( context.suiteTempPath, '/willbe-' ) )
-  _.path.pathDirTempClose( context.suiteTempPath );
+  _.path.tempClose( context.suiteTempPath );
 }
 
 //
