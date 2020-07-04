@@ -38,6 +38,8 @@ module.exports = onModule;
 
 function onConfigGet( context )
 {
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
   let result = Object.create( null );
   let name = context.module.about.name;
   let lowName = name.toLowerCase();

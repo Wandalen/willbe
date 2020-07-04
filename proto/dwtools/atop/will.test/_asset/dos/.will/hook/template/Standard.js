@@ -166,7 +166,7 @@ function eslint( test )
     execPath : eslint,
     mode : 'fork',
     currentPath : rootPath,
-    args : [ '-c', '.eslintrc.yml', '--ext', '.js,.s,.ss', '--ignore-pattern', '*.html', '--ignore-pattern', '*.txt', '--ignore-pattern', '*.png', '--ignore-pattern', '*.json' ],
+    args : [ '-c', '.eslintrc.yml', '--ext', '.js,.s,.ss', '--ignore-pattern', '*.html', '--ignore-pattern', '*.txt', '--ignore-pattern', '*.png', '--ignore-pattern', '*.json', '--quiet' ],
     throwingExitCode : 0,
     outputCollecting : 1,
   })
@@ -663,15 +663,15 @@ on :
 
 jobs :
 
-  Cancel:
-    name : 'Cancel Previous Runs'
-    runs-on : ubuntu-latest
-    timeout-minutes : 1
-    steps :
-      - uses : styfle/cancel-workflow-action@0.4.0
-        with :
-          access_token : \${{ github.token }}
-          # workflow_id : \${{ github.workflow }}
+  # Cancel:
+  #   name : 'Cancel Previous Runs'
+  #   runs-on : ubuntu-latest
+  #   timeout-minutes : 1
+  #   steps :
+  #     - uses : styfle/cancel-workflow-action@0.4.0
+  #       with :
+  #         access_token : \${{ github.token }}
+  #         # workflow_id : \${{ github.workflow }}
 
   Fast :
     if : "!startsWith( github.event.head_commit.message, 'version' )"
@@ -683,8 +683,8 @@ jobs :
         node-version : [ 14.x ]
     steps :
     - uses : actions/checkout@v2
-    - run : git config --global user.email "testrunner@example.com"
-    - run : git config --global user.name "TestRunner"
+    - run : git config --global user.email "testing@testing.com"
+    - run : git config --global user.name "Testing"
     - name : \${{ matrix.node-version }}
       uses : actions/setup-node@v1
       with :
@@ -702,8 +702,8 @@ jobs :
         node-version : [ 10.x, 12.x, 13.x, 14.x ]
     steps :
     - uses : actions/checkout@v2
-    - run : git config --global user.email "testrunner@example.com"
-    - run : git config --global user.name "TestRunner"
+    - run : git config --global user.email "testing@testing.com"
+    - run : git config --global user.name "Testing"
     - name : \${{ matrix.node-version }}
       uses : actions/setup-node@v1
       with :
@@ -967,7 +967,7 @@ rules :
   no-mixed-requires : error
   no-multi-assign : off
   no-multi-spaces :
-    - error
+    - warn
     -
       ignoreEOLComments : true
       exceptions :

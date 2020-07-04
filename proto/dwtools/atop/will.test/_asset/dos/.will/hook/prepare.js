@@ -6,8 +6,6 @@ function onModule( context )
   let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
-  let fileProvider = context.fileProvider;
-  let path = context.fileProvider.path;
 
   if( !context.module.about )
   return;
