@@ -78,4 +78,5 @@ onModule.defaults =
   dry : 0,
   beeping : 1,
 }
+
 module.exports = onModule;

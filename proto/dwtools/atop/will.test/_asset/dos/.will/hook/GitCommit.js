@@ -6,12 +6,15 @@ function onModule( context )
   let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return;
 
   /* read stats to fix for windows to update edit time of hard linked files */
   if( process.platform === 'win32' )
   fileProvider.filesFind({ filePath : context.junction.dirPath + '**', safe : 0 });
-
-  debugger;
 
   let status = _.git.statusFull
   ({
@@ -31,6 +34,13 @@ function onModule( context )
 
   if( o.dry )
   return;
+
+  if( fileProvider.fileExists( abs( '.eslintrc.yml' ) ) )
+  context.start( `git add --force .eslintrc.yml` );
+  if( fileProvider.fileExists( abs( '.github' ) ) )
+  context.start( `git add --force .github` );
+  if( fileProvider.fileExists( abs( '.circleci' ) ) )
+  context.start( `git add --force .circleci` );
 
   context.start( `git add --all` );
   context.start( `git commit ${context.request.original}` );

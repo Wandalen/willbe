@@ -35,10 +35,9 @@ function onModule( context )
   if( o.verbosity )
   verbosity = o.verbosity >= 2 ? 5 : 1;
 
-  let filter = { filePath : { [ moduleProtoPath ] : protoPath } }
   return fileProvider.filesReflect
   ({
-    filter,
+    filter : { filePath : { [ moduleProtoPath ] : protoPath } },
     dstRewritingOnlyPreserving : 1,
     breakingSrcHardLink : 1,
     breakingDstHardLink : 0,

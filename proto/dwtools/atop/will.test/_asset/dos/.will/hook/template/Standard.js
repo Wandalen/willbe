@@ -715,6 +715,35 @@ jobs :
 },
 },
 
+'.circleci' : //
+{
+
+'config.yml' : //
+`
+version: 2.1
+orbs :
+  node : circleci/node@3.0.0
+jobs :
+  test :
+    executor :
+      name : node/default
+    steps :
+      - checkout
+      - run : git config --global user.email "testing@testing.com"
+      - run : git config --global user.name "Testing"
+      - run : node -v
+      - node/install-packages:
+          with-cache: false
+          override-ci-command : npm install
+      - run : npm test
+workflows :
+    test :
+      jobs :
+        - test
+`
+
+},
+
 // '.travis.yml' : //
 // `
 // sudo: false
@@ -1238,8 +1267,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 `,
 
 'README.md' : //
-`
-# module::{:package/shortName:} [![Status](https://github.com/{:about/user:}/{:package/name:}/workflows/Test/badge.svg)](https://github.com/{:about/user:}/{:package/name:}/actions?query=workflow%3ATest) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
+`# module::{:package/shortName:} [![Status](https://circleci.com/gh/{:about/user:}/{:package/name:}.svg?style=shield)](https://img.shields.io/circleci/build/github/{:about/user:}/{:package/name:}?label=Test&logo=Test) [![Status](https://github.com/{:about/user:}/{:package/name:}/workflows/Test/badge.svg)](https://github.com/{:about/user:}/{:package/name:}/actions?query=workflow%3ATest) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
 ___
 

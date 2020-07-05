@@ -19,6 +19,14 @@ function onModule( context )
   if( o.dry )
   return;
 
+ let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+ if( !config )
+ return null;
+ if( !config.path )
+ return null;
+ if( !config.path.module || !config.path.module )
+ return null;
+
   var writer = _.TemplateFileWriter
   ({
     // resolver : _.TemplateTreeResolver(),
@@ -26,6 +34,7 @@ function onModule( context )
     srcTemplatePath : __dirname + '/template/Standard.js',
     name : context.module.about.name,
     onConfigGet : () => onConfigGet( context ),
+    resolving : 0,
   });
 
   writer.form();
@@ -44,9 +53,10 @@ function onConfigGet( context )
   let name = context.module.about.name;
   let lowName = name.toLowerCase();
   let highName = name.toUpperCase();
-  let shortName = name;
-  if( /^w[A-Z]/.test( shortName ) )
-  shortName = shortName.substring( 1 );
+  let shortName = _.strDesign( name );
+  // let shortName = name;
+  // if( /^w[A-Z]/.test( shortName ) )
+  // shortName = shortName.substring( 1 );
 
   let config = fileProvider.configUserRead( _.censor.storageConfigPath );
   _.mapSupplementRecursive( result, config );
