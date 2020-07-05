@@ -35,8 +35,9 @@ function onModule( context )
   // badgesSwap( context );
   // badgeStabilityAdd( context );
   // badgeCircleCiAdd( context );
+  badgeCircleCiReplace( context );
 
-  readmeModuleNameAdjust( context );
+  // readmeModuleNameAdjust( context );
 
 }
 
@@ -216,7 +217,52 @@ function badgeCircleCiAdd( context )
   if( _.strHas( read, has ) )
   return false;
 
-  logger.log( `Adding stability badge ${context.junction.nameWithLocationGet()}` );
+  logger.log( `Adding CircleCI badge ${context.junction.nameWithLocationGet()}` );
+
+  if( o.dry )
+  return console.log( filePath );
+
+  logger.log( _.censor.fileReplace( readmePath, ins, sub ).log );
+
+  return true;
+}
+
+//
+
+function badgeCircleCiReplace( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let readmePath = path.join( inPath, 'README.md' );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+  if( !fileProvider.fileExists( readmePath ) )
+  return;
+
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  if( !config )
+  return null;
+  if( !config.about )
+  return null;
+  if( !config.about.user || !config.about.user )
+  return null;
+
+  let moduleName = context.module.about.name;
+  let read = fileProvider.fileRead( readmePath );
+  let ins = `[![Status](https://circleci.com/gh/${config.about.user}/${moduleName}.svg?style=shield)](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)`;
+  let sub = `[![Status](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)](https://circleci.com/gh/${config.about.user}/${moduleName})`;
+
+  if( !_.strHas( read, ins ) )
+  return false;
+
+  logger.log( `Replacing CircleCI badge ${context.junction.nameWithLocationGet()}` );
 
   if( o.dry )
   return console.log( filePath );
