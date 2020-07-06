@@ -6415,6 +6415,7 @@ function implyWithDot( test )
     a.reflect();
     a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.dirMake( a.abs( 'repo' ) );
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( '.clone' ) });
     return null;
   })
 
@@ -6430,7 +6431,7 @@ function implyWithDot( test )
 
   let cloneShell = _.process.starter
   ({
-    currentPath : a.abs( 'clone' ),
+    currentPath : a.abs( '.clone' ),
     outputCollecting : 1,
     outputGraying : 1,
     ready : a.ready,
@@ -6449,7 +6450,7 @@ function implyWithDot( test )
 
   a.ready.then( () =>
   {
-    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( '.clone/File.txt' ), 'new line\n' );
     return null;
   })
 
@@ -6483,6 +6484,7 @@ function implyWithAsterisk( test )
     a.reflect();
     a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.dirMake( a.abs( 'repo' ) );
+    a.fileProvider.fileRename({ srcPath : a.abs( 'module' ), dstPath : a.abs( '.module' ) });
     return null;
   })
 
@@ -6496,9 +6498,9 @@ function implyWithAsterisk( test )
     mode : 'shell',
   })
 
-  let cloneShell = _.process.starter
+  let moduleShell = _.process.starter
   ({
-    currentPath : a.abs( 'clone' ),
+    currentPath : a.abs( '.module' ),
     outputCollecting : 1,
     outputGraying : 1,
     ready : a.ready,
@@ -6507,24 +6509,25 @@ function implyWithAsterisk( test )
 
   /* - */
 
-  cloneShell( 'git init' );
-  cloneShell( 'git remote add origin ../repo' );
-  cloneShell( 'git add --all' );
-  cloneShell( 'git commit -am first' );
-  cloneShell( 'git push -u origin --all' );
+  moduleShell( 'git init' );
+  moduleShell( 'git remote add origin ../repo' );
+  moduleShell( 'git add --all' );
+  moduleShell( 'git commit -am first' );
+  moduleShell( 'git push -u origin --all' );
 
   /* */
 
   a.ready.then( () =>
   {
-    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( '.module/File.txt' ), 'new line\n' );
     return null;
   })
 
-  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./clone/** .call GitStatus' )
+  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./.module/** .call GitStatus' )
   .then( ( op ) =>
   {
-    test.case = '.with clone .git.status - only local commits';
+    debugger;
+    test.case = '.with module .git.status - only local commits';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
