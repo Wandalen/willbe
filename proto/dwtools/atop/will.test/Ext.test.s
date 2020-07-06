@@ -6405,7 +6405,7 @@ hookGitSyncArguments.description =
 
 //
 
-function hookGitStatusExperiment( test )
+function implyWithDot( test )
 {
   let context = this;
   let a = context.assetFor( test, 'git-push' );
@@ -6413,6 +6413,7 @@ function hookGitStatusExperiment( test )
   a.ready.then( () =>
   {
     a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.dirMake( a.abs( 'repo' ) );
     return null;
   })
@@ -6453,6 +6454,74 @@ function hookGitStatusExperiment( test )
   })
 
   a.appStart( '.imply withSubmodules:0 withOut:0 .with "clone/" .call GitStatus' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone .git.status - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function implyWithAsterisk( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  cloneShell( 'git init' );
+  cloneShell( 'git remote add origin ../repo' );
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am first' );
+  cloneShell( 'git push -u origin --all' );
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/File.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./clone/** .call GitStatus' )
   .then( ( op ) =>
   {
     test.case = '.with clone .git.status - only local commits';
@@ -27140,7 +27209,8 @@ var Self =
     hookGitPullConflict,
     hookGitSyncColflict,
     hookGitSyncArguments,
-    hookGitStatusExperiment,
+    implyWithDot,
+    implyWithAsterisk,
 
     // output
 
