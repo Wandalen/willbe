@@ -1906,15 +1906,17 @@ function commandClean( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  let propertiesMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  let screenMap = _.strStructureParse( e.commandArgument );
+  _.assert( _.mapIs( screenMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 
-  let implyMap = _.mapBut( propertiesMap, commandClean.commandProperties );
-  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  let propertiesMap = _.mapBut( screenMap, commandImply.commandProperties );
+  let implyMap = _.mapBut( screenMap, propertiesMap );
+  if( implyMap.withSubmodules === undefined )
+  implyMap.withSubmodules = will.withSubmodules !== null ? will.withSubmodules : 0;
   will._propertiesImply( implyMap );
 
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
-  e.propertiesMap.dry = !!e.propertiesMap.dry;;
+  e.propertiesMap.dry = !!e.propertiesMap.dry;
   let dry = e.propertiesMap.dry;
   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
   e.propertiesMap.fast = !dry;
@@ -1944,6 +1946,11 @@ function commandClean( e )
     return will.modulesClean( o2 );
   }
 
+}
+
+commandClean.defaults =
+{
+  withSubmodules : 0,
 }
 
 commandClean.commandProperties =
@@ -2156,8 +2163,8 @@ function commandGitPull( e )
 {
   let will = this;
   let implyMap = _.strStructureParse( e.commandArgument );
-  implyMap.withSubmodules = implyMap.withSubmodules === undefined ? will.withSubmodules : implyMap.withSubmodules;
-  _.routineOptions( commandGitPull, implyMap );
+  if( implyMap.withSubmodules === undefined )
+  implyMap.withSubmodules = will.withSubmodules !== null ? will.withSubmodules : 0;
   will._propertiesImply( implyMap );
 
   return will._commandBuildLike
@@ -2176,11 +2183,6 @@ function commandGitPull( e )
       verbosity : will.verbosity,
     });
   }
-}
-
-commandGitPull.defaults =
-{
-  withSubmodules : 0,
 }
 
 commandGitPull.commandProperties = commandImply.commandProperties;
