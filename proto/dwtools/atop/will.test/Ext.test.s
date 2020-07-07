@@ -6454,7 +6454,7 @@ function implyWithDot( test )
     return null;
   })
 
-  a.appStart( '.imply withSubmodules:0 withOut:0 .with "clone/" .call GitStatus' )
+  a.appStart( '.imply withSubmodules:0 withOut:0 .with ".clone/" .call GitStatus' )
   .then( ( op ) =>
   {
     test.case = '.with clone .git.status - only local commits';
@@ -25799,8 +25799,7 @@ function commandWillfileFromNpmDoubleConversion( test )
 function commandGitPull( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'git-conflict' );
-  a.reflect();
+  let a = context.assetFor( test, 'git-push' );
 
   let originalShell = _.process.starter
   ({
@@ -25822,6 +25821,13 @@ function commandGitPull( test )
 
   /* - */
 
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( 'original' ) });
+    return null
+  })
+
   originalShell( 'git init' );
   originalShell( 'git add --all' );
   originalShell( 'git commit -am first' );
@@ -25835,13 +25841,14 @@ function commandGitPull( test )
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart( '.with clone/ .git.pull' )
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull' })
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .git.pull - succefull pulling';
+    test.case = '.git.pull - succefull pulling';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::original' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -25853,7 +25860,7 @@ function commandGitPull( test )
   a.ready.then( ( op ) =>
   {
     a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'clone' ) );
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( 'original' ) });
     return null;
   })
 
@@ -25870,13 +25877,14 @@ function commandGitPull( test )
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart( '.with clone/ .git.pull v:0' )
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull v:0' })
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .git.pull v:0 - succefull pulling';
+    test.case = '.git.pull v:0 - succefull pulling';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::original' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
@@ -25889,7 +25897,7 @@ function commandGitPull( test )
   {
     a.reflect();
     a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    a.fileProvider.filesDelete( a.abs( 'clone' ) );
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( 'original' ) });
     return null;
   })
 
@@ -25911,13 +25919,14 @@ function commandGitPull( test )
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart( '.with clone/ .git.pull' )
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull' })
   .then( ( op ) =>
   {
     test.case = '.with clone/ .git.pull - succefull pulling with hardlinks';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::original' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -26096,10 +26105,82 @@ original
     return null;
   })
 
+  /* */
+
+  a.ready.then( ( op ) =>
+  {
+    a.reflect();
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( 'original' ) });
+    return null;
+  })
+
+  originalShell( 'git init' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  a.shell( `git clone original clone` );
+
+  a.ready.then( ( op ) =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+    return null;
+  })
+
+  originalShell( 'git commit -am second' );
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull withSubmodules:1' })
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.pull withSubmodules:1 - succefull pulling';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( ( op ) =>
+  {
+    a.reflect();
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( 'original' ) });
+    return null;
+  })
+
+  originalShell( 'git init' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  a.shell( `git clone original clone` );
+
+  a.ready.then( ( op ) =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+    return null;
+  })
+
+  originalShell( 'git commit -am second' );
+  a.appStart( '.imply withSubmodules:2 .with clone/ .git.pull withSubmodules:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.imply withSubmodules:2 .with clone/ .git.pull - succefull pulling';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+
+    return null;
+  })
+
   /* - */
 
   return a.ready;
-} /* end of function hookGitPullConflict */
+}
 
 commandGitPull.timeOut = 300000;
 
