@@ -2365,6 +2365,8 @@ function commandGitTag( e )
   let optionsMap = _.strStructureParse( e.commandArgument );
   _.routineOptions( commandGitTag, optionsMap );
   optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
+  if( will.withSubmodules === null )
+  will._propertiesImply({ withSubmodules : 0 });
 
   return will._commandBuildLike
   ({
