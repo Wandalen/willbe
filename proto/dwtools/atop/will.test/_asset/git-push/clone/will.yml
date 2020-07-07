@@ -2,6 +2,9 @@ about :
 
   name : clone
 
+submodule :
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/
+
 path :
 
   git : '.'
