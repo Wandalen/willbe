@@ -2193,7 +2193,8 @@ function commandGitPush( e )
 {
   let will = this;
   let implyMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
+  if( implyMap.withSubmodules === undefined )
+  implyMap.withSubmodules = will.withSubmodules !== null ? will.withSubmodules : 0;
   will._propertiesImply( implyMap );
 
   return will._commandBuildLike
