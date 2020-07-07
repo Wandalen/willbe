@@ -201,8 +201,8 @@ function _onQuantitativeFail( err )
     if
     (
          ( it.parsedSelector && it.parsedSelector.kind === 'exported' )
-      || ( it.down.parsedSelector && it.down.parsedSelector.kind === 'module' )
-      || ( it.down.parsedSelector && it.down.parsedSelector.kind === 'submodule' )
+      || ( it.down && it.down.parsedSelector && it.down.parsedSelector.kind === 'module' )
+      || ( it.down && it.down.parsedSelector && it.down.parsedSelector.kind === 'submodule' )
     )
     {
       let willfile = it.currentModule.willfilesArray[ 0 ];

@@ -1853,7 +1853,6 @@ function modulesFindWithAt( o )
   op.errs = [];
   op.openers = [];
 
-  debugger;
   let visitedFilesSet = new Set();
   let files;
   try

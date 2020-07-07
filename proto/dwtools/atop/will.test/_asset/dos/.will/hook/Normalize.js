@@ -31,7 +31,7 @@ function onModule( context )
 
   // fileProvider.filesDelete({ filePath : abs( '.travis.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0 });
 
-  samplesRename();
+  samplesRename( context );
 
   // badgeCiReplace( context );
   // badgesSwap( context );
@@ -113,8 +113,9 @@ function samplesRename( context )
 
   fileProvider.filesRename
   ({
-    filePath : a.abs( 'sample/**' ),
+    filePath : abs( 'sample/**' ),
     onRename : ( r, o ) => r.ext === 'js' ? r.path.changeExt( r.absolute, 's' ) : undefined,
+    verbosity : o.verbosity >= 2 ? o.verbosity : 0,
   });
 
 }
