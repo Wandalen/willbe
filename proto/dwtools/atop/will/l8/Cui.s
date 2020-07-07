@@ -2156,7 +2156,8 @@ function commandGitPull( e )
 {
   let will = this;
   let implyMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
+  implyMap.withSubmodules = implyMap.withSubmodules === undefined ? will.withSubmodules : implyMap.withSubmodules;
+  _.routineOptions( commandGitPull, implyMap );
   will._propertiesImply( implyMap );
 
   return will._commandBuildLike
@@ -2175,6 +2176,11 @@ function commandGitPull( e )
       verbosity : will.verbosity,
     });
   }
+}
+
+commandGitPull.defaults =
+{
+  withSubmodules : 0,
 }
 
 commandGitPull.commandProperties = commandImply.commandProperties;
