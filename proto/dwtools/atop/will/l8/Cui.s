@@ -2322,6 +2322,8 @@ function commandGitSync( e )
   let request = _.will.Resolver.strRequestParse( e.commandArgument );
   _.routineOptions( commandGitSync, request.map );
   request.map.verbosity = request.map.v !== null && request.map.v >= 0 ? request.map.v : request.map.verbosity;
+  if( will.withSubmodules === null )
+  will._propertiesImply({ withSubmodules : 0 });
 
   return will._commandBuildLike
   ({
