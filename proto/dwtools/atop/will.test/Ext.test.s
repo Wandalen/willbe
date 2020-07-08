@@ -15792,6 +15792,7 @@ function cleanGlobMin( test )
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/debug',
+      './group1/out/debug/Integration.test.s',
       './group1/out/debug/dwtools',
       './group1/out/debug/dwtools/testing',
       './group1/out/debug/dwtools/testing/Basic.s',
@@ -15809,6 +15810,7 @@ function cleanGlobMin( test )
       './out',
       './out/z.out.will.yml',
       './out/debug',
+      './out/debug/Integration.test.s',
       './out/debug/dwtools',
       './out/debug/dwtools/testing',
       './out/debug/dwtools/testing/Basic.s',
@@ -15828,7 +15830,7 @@ function cleanGlobMin( test )
       './out/debug/dwtools/testing/l3/testing1b/Include.s',
       './out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
       './out/debug/dwtools/testing/l3.test',
-      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s'
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
