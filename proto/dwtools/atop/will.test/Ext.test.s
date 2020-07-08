@@ -14741,6 +14741,191 @@ clean.timeOut = 300000;
 
 //
 
+function cleanOptionWithSubmodules( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodules' );
+  a.reflect();
+
+  /* - */
+
+  var files;
+  a.appStart( '.build' );
+  a.ready.then( () =>
+  {
+    test.case = '.clean withSubmodules:0';
+    files = a.findAll( a.abs( '.module' ) ).length;
+    files += a.findAll( a.abs( 'out' ) ).length;
+    test.gt( files, 20 );
+    return null;
+  })
+
+  a.appStart( '.clean withSubmodules:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* */
+
+  var files;
+  a.appStart( '.build' );
+  a.ready.then( () =>
+  {
+    test.case = '.clean withSubmodules:1';
+    files = a.findAll( a.abs( '.module' ) ).length;
+    files += a.findAll( a.abs( 'out' ) ).length;
+    test.gt( files, 20 );
+    return null;
+  })
+
+  a.appStart( '.clean withSubmodules:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* */
+
+  var files;
+  a.appStart( '.build' );
+  a.ready.then( () =>
+  {
+    test.case = '.clean withSubmodules:2';
+    files = a.findAll( a.abs( '.module' ) ).length;
+    files += a.findAll( a.abs( 'out' ) ).length;
+    test.gt( files, 20 );
+    return null;
+  })
+
+  a.appStart( '.clean withSubmodules:2' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* - */
+
+  var files;
+  a.appStart( '.build' );
+  a.ready.then( () =>
+  {
+    test.case = '.imply withSubmodules:0 .clean';
+    files = a.findAll( a.abs( '.module' ) ).length;
+    files += a.findAll( a.abs( 'out' ) ).length;
+    test.gt( files, 20 );
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:0 .clean' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* */
+
+  var files;
+  a.appStart( '.build' );
+  a.ready.then( () =>
+  {
+    test.case = '.imply withSubmodules:1 .clean';
+    files = a.findAll( a.abs( '.module' ) ).length;
+    files += a.findAll( a.abs( 'out' ) ).length;
+    test.gt( files, 20 );
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:1 .clean' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* */
+
+  var files;
+  a.appStart( '.build' );
+  a.ready.then( () =>
+  {
+    test.case = '.imply withSubmodules:2 .clean';
+    files = a.findAll( a.abs( '.module' ) ).length;
+    files += a.findAll( a.abs( 'out' ) ).length;
+    test.gt( files, 20 );
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:2 .clean' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* - */
+
+  a.appStart( '.clean withSubmodules:0' )
+  a.appStart( '.clean withSubmodules:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.clean withSubmodules:0 - without downloaded submodules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* - */
+
+  a.appStart( '.clean withSubmodules:2' )
+  .then( ( op ) =>
+  {
+    test.case = '.clean withSubmodules:2 - without downloaded submodules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+cleanOptionWithSubmodules.timeOut = 300000;
+
+//
+
 function cleanSingleModule( test )
 {
   let context = this;
@@ -27393,6 +27578,7 @@ var Self =
     // clean
 
     clean,
+    cleanOptionWithSubmodules,
     cleanSingleModule,
     cleanBroken1,
     cleanBroken2,
