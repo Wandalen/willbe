@@ -7,14 +7,14 @@ about :
 path :
 
   js.path :
-    path : 'server.js'
+    path : 'index.s'
 
 step  :
 
   run.js :
       js : path::js.path
   run.server :
-      shell : node ser*
+      shell : node index.s
 
 build :
 
