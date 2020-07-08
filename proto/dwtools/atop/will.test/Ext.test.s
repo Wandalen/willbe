@@ -14385,6 +14385,7 @@ function importPathLocal( test )
     [
       '.',
       './debug',
+      './debug/Integration.test.s',
       './debug/WithSubmodules.s',
       './debug/dwtools',
       './debug/dwtools/testing',
@@ -14393,7 +14394,7 @@ function importPathLocal( test )
       './debug/dwtools/testing/l1/Include.s',
       './debug/dwtools/testing/l1/ModuleForTesting1.s',
       './debug/dwtools/testing/l1.test',
-      './debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './debug/dwtools/testing/l1.test/ModuleForTesting1.test.s'
     ];
     test.contains( files, exp );
     test.identical( op.exitCode, 0 );
