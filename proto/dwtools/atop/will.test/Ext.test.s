@@ -3244,6 +3244,7 @@ function reflectGetPath( test )
     [
       '.',
       './debug',
+      './debug/Integration.test.s',
       './debug/dwtools',
       './debug/dwtools/testing',
       './debug/dwtools/testing/Basic.s',
@@ -3253,7 +3254,7 @@ function reflectGetPath( test )
       './debug/dwtools/testing/l3/testing12/ModuleForTesting12.s',
       './debug/dwtools/testing/l3.test',
       './debug/dwtools/testing/l3.test/ModuleForTesting12.test.s',
-    ]
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 4 );
     test.identical( files, expected );
@@ -6402,6 +6403,157 @@ hookGitSyncArguments.description =
 `
 - quoted argument passed to git through willbe properly
 `
+
+//
+
+function implyWithDot( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( '.clone' ) });
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( '.clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  cloneShell( 'git init' );
+  cloneShell( 'git remote add origin ../repo' );
+  cloneShell( 'git add --all' );
+  cloneShell( 'git commit -am first' );
+  cloneShell( 'git push -u origin --all' );
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( '.clone/File.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:0 withOut:0 .with ".clone/" .call GitStatus' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone .git.status - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function implyWithAsterisk( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( '.module' ) });
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let moduleShell = _.process.starter
+  ({
+    currentPath : a.abs( '.module' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  moduleShell( 'git init' );
+  moduleShell( 'git remote add origin ../repo' );
+  moduleShell( 'git add --all' );
+  moduleShell( 'git commit -am first' );
+  moduleShell( 'git push -u origin --all' );
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( '.module/File.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./.module/* .call GitStatus' )
+  .then( ( op ) =>
+  {
+    test.case = '.with module .git.status - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 4 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 4 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:0 withOut:0 .with ./.module/** .call GitStatus' )
+  .then( ( op ) =>
+  {
+    test.case = '.with module .git.status - only local commits';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 4 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 4 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
 
 //
 
@@ -12508,6 +12660,7 @@ function exportWithRemoteSubmodulesMin( test )
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/debug',
+      './group1/out/debug/Integration.test.s',
       './group1/out/debug/dwtools',
       './group1/out/debug/dwtools/testing',
       './group1/out/debug/dwtools/testing/Basic.s',
@@ -12525,6 +12678,7 @@ function exportWithRemoteSubmodulesMin( test )
       './out',
       './out/z.out.will.yml',
       './out/debug',
+      './out/debug/Integration.test.s',
       './out/debug/dwtools',
       './out/debug/dwtools/testing',
       './out/debug/dwtools/testing/Basic.s',
@@ -12604,6 +12758,7 @@ function exportWithRemoteSubmodulesMinRecursive( test )
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/debug',
+      './group1/out/debug/Integration.test.s',
       './group1/out/debug/dwtools',
       './group1/out/debug/dwtools/testing',
       './group1/out/debug/dwtools/testing/Basic.s',
@@ -12621,6 +12776,7 @@ function exportWithRemoteSubmodulesMinRecursive( test )
       './out',
       './out/z.out.will.yml',
       './out/debug',
+      './out/debug/Integration.test.s',
       './out/debug/dwtools',
       './out/debug/dwtools/testing',
       './out/debug/dwtools/testing/Basic.s',
@@ -12640,7 +12796,7 @@ function exportWithRemoteSubmodulesMinRecursive( test )
       './out/debug/dwtools/testing/l3/testing1b/Include.s',
       './out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
       './out/debug/dwtools/testing/l3.test',
-      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s'
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
     ]
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
@@ -12699,6 +12855,9 @@ function exportWithRemoteSubmodules( test )
       '.',
       './.module',
       './.module/ModuleForTesting1b',
+      './.module/ModuleForTesting1b/.circleci',
+      './.module/ModuleForTesting1b/.github',
+      './.module/ModuleForTesting1b/.github/workflows',
       './.module/ModuleForTesting1b/doc',
       './.module/ModuleForTesting1b/out',
       './.module/ModuleForTesting1b/proto',
@@ -12711,6 +12870,9 @@ function exportWithRemoteSubmodules( test )
       './group1',
       './group1/.module',
       './group1/.module/ModuleForTesting1',
+      './group1/.module/ModuleForTesting1/.circleci',
+      './group1/.module/ModuleForTesting1/.github',
+      './group1/.module/ModuleForTesting1/.github/workflows',
       './group1/.module/ModuleForTesting1/doc',
       './group1/.module/ModuleForTesting1/out',
       './group1/.module/ModuleForTesting1/proto',
@@ -12720,6 +12882,9 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting1/proto/dwtools/testing/l1.test',
       './group1/.module/ModuleForTesting1/sample',
       './group1/.module/ModuleForTesting12',
+      './group1/.module/ModuleForTesting12/.circleci',
+      './group1/.module/ModuleForTesting12/.github',
+      './group1/.module/ModuleForTesting12/.github/workflows',
       './group1/.module/ModuleForTesting12/doc',
       './group1/.module/ModuleForTesting12/out',
       './group1/.module/ModuleForTesting12/proto',
@@ -12730,6 +12895,9 @@ function exportWithRemoteSubmodules( test )
       './group1/.module/ModuleForTesting12/proto/dwtools/testing/l3.test',
       './group1/.module/ModuleForTesting12/sample',
       './group1/.module/ModuleForTesting1b',
+      './group1/.module/ModuleForTesting1b/.circleci',
+      './group1/.module/ModuleForTesting1b/.github',
+      './group1/.module/ModuleForTesting1b/.github/workflows',
       './group1/.module/ModuleForTesting1b/doc',
       './group1/.module/ModuleForTesting1b/out',
       './group1/.module/ModuleForTesting1b/proto',
@@ -12742,6 +12910,9 @@ function exportWithRemoteSubmodules( test )
       './group1/group10',
       './group1/group10/.module',
       './group1/group10/.module/ModuleForTesting1b',
+      './group1/group10/.module/ModuleForTesting1b/.circleci',
+      './group1/group10/.module/ModuleForTesting1b/.github',
+      './group1/group10/.module/ModuleForTesting1b/.github/workflows',
       './group1/group10/.module/ModuleForTesting1b/doc',
       './group1/group10/.module/ModuleForTesting1b/out',
       './group1/group10/.module/ModuleForTesting1b/proto',
@@ -12752,6 +12923,9 @@ function exportWithRemoteSubmodules( test )
       './group1/group10/.module/ModuleForTesting1b/proto/dwtools/testing/l3.test',
       './group1/group10/.module/ModuleForTesting1b/sample',
       './group1/group10/.module/ModuleForTesting2a',
+      './group1/group10/.module/ModuleForTesting2a/.circleci',
+      './group1/group10/.module/ModuleForTesting2a/.github',
+      './group1/group10/.module/ModuleForTesting2a/.github/workflows',
       './group1/group10/.module/ModuleForTesting2a/doc',
       './group1/group10/.module/ModuleForTesting2a/out',
       './group1/group10/.module/ModuleForTesting2a/proto',
@@ -12783,6 +12957,9 @@ function exportWithRemoteSubmodules( test )
       './group2',
       './group2/.module',
       './group2/.module/ModuleForTesting12ab',
+      './group2/.module/ModuleForTesting12ab/.circleci',
+      './group2/.module/ModuleForTesting12ab/.github',
+      './group2/.module/ModuleForTesting12ab/.github/workflows',
       './group2/.module/ModuleForTesting12ab/doc',
       './group2/.module/ModuleForTesting12ab/out',
       './group2/.module/ModuleForTesting12ab/proto',
@@ -12862,7 +13039,7 @@ function exportWithRemoteSubmodulesRecursive( test )
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 38 );
-    test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z ' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
     var exp =
@@ -12880,6 +13057,7 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group1/group10/out',
       './group1/group10/out/a0.out.will.yml',
       './group1/group10/out/debug',
+      './group1/group10/out/debug/Integration.test.s',
       './group1/group10/out/debug/dwtools',
       './group1/group10/out/debug/dwtools/testing',
       './group1/group10/out/debug/dwtools/testing/Basic.s',
@@ -12897,6 +13075,7 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group1/out/a.out.will.yml',
       './group1/out/b.out.will.yml',
       './group1/out/debug',
+      './group1/out/debug/Integration.test.s',
       './group1/out/debug/dwtools',
       './group1/out/debug/dwtools/testing',
       './group1/out/debug/dwtools/testing/Basic.s',
@@ -12925,6 +13104,7 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group2/out',
       './group2/out/c.out.will.yml',
       './group2/out/debug',
+      './group2/out/debug/Integration.test.s',
       './group2/out/debug/dwtools',
       './group2/out/debug/dwtools/testing',
       './group2/out/debug/dwtools/testing/Basic.s',
@@ -12947,6 +13127,7 @@ function exportWithRemoteSubmodulesRecursive( test )
       './out',
       './out/z.out.will.yml',
       './out/debug',
+      './out/debug/Integration.test.s',
       './out/debug/dwtools',
       './out/debug/dwtools/testing',
       './out/debug/dwtools/testing/Basic.s',
@@ -12974,7 +13155,7 @@ function exportWithRemoteSubmodulesRecursive( test )
       './out/debug/dwtools/testing/l4/testing12ab/Include.s',
       './out/debug/dwtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
       './out/debug/dwtools/testing/l4.test',
-      './out/debug/dwtools/testing/l4.test/ModuleForTesting12ab.test.s'
+      './out/debug/dwtools/testing/l4.test/ModuleForTesting12ab.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
@@ -14125,21 +14306,27 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './will.yml',
       './.module',
       './.module/ModuleForTesting12',
+      './.module/ModuleForTesting12/.eslintrc.yml',
       './.module/ModuleForTesting12/.ex.will.yml',
       './.module/ModuleForTesting12/.gitattributes',
       './.module/ModuleForTesting12/.gitignore',
       './.module/ModuleForTesting12/.im.will.yml',
-      './.module/ModuleForTesting12/.travis.yml',
       './.module/ModuleForTesting12/LICENSE',
       './.module/ModuleForTesting12/package.json',
       './.module/ModuleForTesting12/README.md',
       './.module/ModuleForTesting12/was.package.json',
+      './.module/ModuleForTesting12/.circleci',
+      './.module/ModuleForTesting12/.circleci/config.yml',
+      './.module/ModuleForTesting12/.github',
+      './.module/ModuleForTesting12/.github/workflows',
+      './.module/ModuleForTesting12/.github/workflows/Test.yml',
       './.module/ModuleForTesting12/doc',
       './.module/ModuleForTesting12/doc/ModuleForTesting12.md',
       './.module/ModuleForTesting12/doc/README.md',
       './.module/ModuleForTesting12/out',
       './.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml',
       './.module/ModuleForTesting12/proto',
+      './.module/ModuleForTesting12/proto/Integration.test.s',
       './.module/ModuleForTesting12/proto/dwtools',
       './.module/ModuleForTesting12/proto/dwtools/testing',
       './.module/ModuleForTesting12/proto/dwtools/testing/Basic.s',
@@ -14150,7 +14337,7 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/proto/dwtools/testing/l3.test',
       './.module/ModuleForTesting12/proto/dwtools/testing/l3.test/ModuleForTesting12.test.s',
       './.module/ModuleForTesting12/sample',
-      './.module/ModuleForTesting12/sample/Sample.js',
+      './.module/ModuleForTesting12/sample/Sample.s'
     ];
     var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
@@ -14198,6 +14385,7 @@ function importPathLocal( test )
     [
       '.',
       './debug',
+      './debug/Integration.test.s',
       './debug/WithSubmodules.s',
       './debug/dwtools',
       './debug/dwtools/testing',
@@ -14206,7 +14394,7 @@ function importPathLocal( test )
       './debug/dwtools/testing/l1/Include.s',
       './debug/dwtools/testing/l1/ModuleForTesting1.s',
       './debug/dwtools/testing/l1.test',
-      './debug/dwtools/testing/l1.test/ModuleForTesting1.test.s',
+      './debug/dwtools/testing/l1.test/ModuleForTesting1.test.s'
     ];
     test.contains( files, exp );
     test.identical( op.exitCode, 0 );
@@ -14587,6 +14775,191 @@ function clean( test )
 }
 
 clean.timeOut = 300000;
+
+//
+
+function cleanOptionWithSubmodules( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodules' );
+  a.reflect();
+
+  /* - */
+
+  var files;
+  a.appStart( '.build' );
+  a.ready.then( () =>
+  {
+    test.case = '.clean withSubmodules:0';
+    files = a.findAll( a.abs( '.module' ) ).length;
+    files += a.findAll( a.abs( 'out' ) ).length;
+    test.gt( files, 20 );
+    return null;
+  })
+
+  a.appStart( '.clean withSubmodules:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* */
+
+  var files;
+  a.appStart( '.build' );
+  a.ready.then( () =>
+  {
+    test.case = '.clean withSubmodules:1';
+    files = a.findAll( a.abs( '.module' ) ).length;
+    files += a.findAll( a.abs( 'out' ) ).length;
+    test.gt( files, 20 );
+    return null;
+  })
+
+  a.appStart( '.clean withSubmodules:1' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* */
+
+  var files;
+  a.appStart( '.build' );
+  a.ready.then( () =>
+  {
+    test.case = '.clean withSubmodules:2';
+    files = a.findAll( a.abs( '.module' ) ).length;
+    files += a.findAll( a.abs( 'out' ) ).length;
+    test.gt( files, 20 );
+    return null;
+  })
+
+  a.appStart( '.clean withSubmodules:2' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* - */
+
+  var files;
+  a.appStart( '.build' );
+  a.ready.then( () =>
+  {
+    test.case = '.imply withSubmodules:0 .clean';
+    files = a.findAll( a.abs( '.module' ) ).length;
+    files += a.findAll( a.abs( 'out' ) ).length;
+    test.gt( files, 20 );
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:0 .clean' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* */
+
+  var files;
+  a.appStart( '.build' );
+  a.ready.then( () =>
+  {
+    test.case = '.imply withSubmodules:1 .clean';
+    files = a.findAll( a.abs( '.module' ) ).length;
+    files += a.findAll( a.abs( 'out' ) ).length;
+    test.gt( files, 20 );
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:1 .clean' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( _.strHas( op.output, 'Clean deleted ' + files + ' file(s)' ) );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* */
+
+  var files;
+  a.appStart( '.build' );
+  a.ready.then( () =>
+  {
+    test.case = '.imply withSubmodules:2 .clean';
+    files = a.findAll( a.abs( '.module' ) ).length;
+    files += a.findAll( a.abs( 'out' ) ).length;
+    test.gt( files, 20 );
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:2 .clean' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* - */
+
+  a.appStart( '.clean withSubmodules:0' )
+  a.appStart( '.clean withSubmodules:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.clean withSubmodules:0 - without downloaded submodules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* - */
+
+  a.appStart( '.clean withSubmodules:2' )
+  .then( ( op ) =>
+  {
+    test.case = '.clean withSubmodules:2 - without downloaded submodules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
+    test.is( !a.fileProvider.fileExists( a.abs( '.module' ) ) );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+cleanOptionWithSubmodules.timeOut = 300000;
 
 //
 
@@ -15309,6 +15682,7 @@ function cleanRecursiveMin( test )
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/debug',
+      './group1/out/debug/Integration.test.s',
       './group1/out/debug/dwtools',
       './group1/out/debug/dwtools/testing',
       './group1/out/debug/dwtools/testing/Basic.s',
@@ -15326,6 +15700,7 @@ function cleanRecursiveMin( test )
       './out',
       './out/z.out.will.yml',
       './out/debug',
+      './out/debug/Integration.test.s',
       './out/debug/dwtools',
       './out/debug/dwtools/testing',
       './out/debug/dwtools/testing/Basic.s',
@@ -15345,7 +15720,7 @@ function cleanRecursiveMin( test )
       './out/debug/dwtools/testing/l3/testing1b/Include.s',
       './out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
       './out/debug/dwtools/testing/l3.test',
-      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s'
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
@@ -15417,6 +15792,7 @@ function cleanGlobMin( test )
       './group1/out',
       './group1/out/a.out.will.yml',
       './group1/out/debug',
+      './group1/out/debug/Integration.test.s',
       './group1/out/debug/dwtools',
       './group1/out/debug/dwtools/testing',
       './group1/out/debug/dwtools/testing/Basic.s',
@@ -15434,6 +15810,7 @@ function cleanGlobMin( test )
       './out',
       './out/z.out.will.yml',
       './out/debug',
+      './out/debug/Integration.test.s',
       './out/debug/dwtools',
       './out/debug/dwtools/testing',
       './out/debug/dwtools/testing/Basic.s',
@@ -15453,7 +15830,7 @@ function cleanGlobMin( test )
       './out/debug/dwtools/testing/l3/testing1b/Include.s',
       './out/debug/dwtools/testing/l3/testing1b/ModuleForTesting1b.s',
       './out/debug/dwtools/testing/l3.test',
-      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s',
+      './out/debug/dwtools/testing/l3.test/ModuleForTesting1b.test.s'
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
@@ -22037,10 +22414,10 @@ function stepGitPush( test )
 
   /* */
 
-  a.appStart( '.with clone/ .build git.push' )
+  a.appStart( '.imply withSubmodules:0 .with clone/ .build git.push' )
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .build git.push - second run, nothing to push';
+    test.case = '.imply withSubmodules:0 .with clone/ .build git.push - second run, nothing to push';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::clone' ), 1 );
     test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
@@ -22077,10 +22454,10 @@ function stepGitPush( test )
 
   /* */
 
-  a.appStart( '.imply v:7 .with clone/ .build push.with.dir' )
+  a.appStart( '.imply v:7 withSubmodules:0 .with clone/ .build push.with.dir' )
   .then( ( op ) =>
   {
-    test.case = '.imply v:7 .with clone/ .build push.with.dir - second run, nothing to push';
+    test.case = '.imply v:7 withSubmodules:0 .with clone/ .build push.with.dir - second run, nothing to push';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
@@ -25648,8 +26025,7 @@ function commandWillfileFromNpmDoubleConversion( test )
 function commandGitPull( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'git-conflict' );
-  a.reflect();
+  let a = context.assetFor( test, 'git-push' );
 
   let originalShell = _.process.starter
   ({
@@ -25671,6 +26047,13 @@ function commandGitPull( test )
 
   /* - */
 
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( 'original' ) });
+    return null
+  })
+
   originalShell( 'git init' );
   originalShell( 'git add --all' );
   originalShell( 'git commit -am first' );
@@ -25684,13 +26067,14 @@ function commandGitPull( test )
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart( '.with clone/ .git.pull' )
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull' })
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .git.pull - succefull pulling';
+    test.case = '.git.pull - succefull pulling';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::original' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -25702,7 +26086,7 @@ function commandGitPull( test )
   a.ready.then( ( op ) =>
   {
     a.reflect();
-    a.fileProvider.filesDelete( a.abs( 'clone' ) );
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( 'original' ) });
     return null;
   })
 
@@ -25719,13 +26103,14 @@ function commandGitPull( test )
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart( '.with clone/ .git.pull v:0' )
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull v:0' })
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .git.pull v:0 - succefull pulling';
+    test.case = '.git.pull v:0 - succefull pulling';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::original' ), 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
 
@@ -25738,7 +26123,7 @@ function commandGitPull( test )
   {
     a.reflect();
     a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
-    a.fileProvider.filesDelete( a.abs( 'clone' ) );
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( 'original' ) });
     return null;
   })
 
@@ -25760,13 +26145,14 @@ function commandGitPull( test )
   })
 
   originalShell( 'git commit -am second' );
-  a.appStart( '.with clone/ .git.pull' )
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull' })
   .then( ( op ) =>
   {
     test.case = '.with clone/ .git.pull - succefull pulling with hardlinks';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
-    test.identical( _.strCount( op.output, 'Pulling module::original' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
     test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
     test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
 
@@ -25945,10 +26331,82 @@ original
     return null;
   })
 
+  /* */
+
+  a.ready.then( ( op ) =>
+  {
+    a.reflect();
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( 'original' ) });
+    return null;
+  })
+
+  originalShell( 'git init' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  a.shell( `git clone original clone` );
+
+  a.ready.then( ( op ) =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+    return null;
+  })
+
+  originalShell( 'git commit -am second' );
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git.pull withSubmodules:1' })
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/ .git.pull withSubmodules:1 - succefull pulling';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( ( op ) =>
+  {
+    a.reflect();
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( 'original' ) });
+    return null;
+  })
+
+  originalShell( 'git init' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  a.shell( `git clone original clone` );
+
+  a.ready.then( ( op ) =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
+    return null;
+  })
+
+  originalShell( 'git commit -am second' );
+  a.appStart( '.imply withSubmodules:2 .with clone/ .git.pull withSubmodules:1' )
+  .then( ( op ) =>
+  {
+    test.case = '.imply withSubmodules:2 .with clone/ .git.pull - succefull pulling';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 1 );
+    test.identical( _.strCount( op.output, '2 files changed, 2 insertions(+)' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+
+    return null;
+  })
+
   /* - */
 
   return a.ready;
-} /* end of function hookGitPullConflict */
+}
 
 commandGitPull.timeOut = 300000;
 
@@ -27073,6 +27531,8 @@ var Self =
     hookGitPullConflict,
     hookGitSyncColflict,
     hookGitSyncArguments,
+    implyWithDot,
+    implyWithAsterisk,
 
     // output
 
@@ -27159,6 +27619,7 @@ var Self =
     // clean
 
     clean,
+    cleanOptionWithSubmodules,
     cleanSingleModule,
     cleanBroken1,
     cleanBroken2,

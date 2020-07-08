@@ -4,3 +4,5 @@ function echo()
 }
 
 module.exports = echo;
+
+console.log( 'Exec.js' );

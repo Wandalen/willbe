@@ -375,13 +375,13 @@ function _commandsMake()
     'module new' :                      { e : _.routineJoin( will, will.commandModuleNew ),                   h : 'Create a new module.' },
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               h : 'Make a new module in the current directory and call a specified hook for the module to prepare it.' },
 
-    'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     h : 'Use "git pull" to pull changes from remote repository' },
-    'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     h : 'Use "git push" to push commits and tags to remote repository' },
-    'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    h : 'Use "git reset" to reset changes' },
-    'git status' :                      { e : _.routineJoin( will, will.commandGitStatus ),                   h : 'Use "git status" to check the status of the repository' },
-    'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     h : 'Use "git sync" to syncronize local and remote repositories' },
-    'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      h : 'Use "git tag" to add tag for current commit' },
-    'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks' },
+    'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     h : 'Use "git pull" to pull changes from remote repository.' },
+    'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     h : 'Use "git push" to push commits and tags to remote repository.' },
+    'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    h : 'Use "git reset" to reset changes.' },
+    'git status' :                      { e : _.routineJoin( will, will.commandGitStatus ),                   h : 'Use "git status" to check the status of the repository.' },
+    'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     h : 'Use "git sync" to syncronize local and remote repositories.' },
+    'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      h : 'Use "git tag" to add tag for current commit.' },
+    'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks.' },
 
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
@@ -1906,15 +1906,17 @@ function commandClean( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
 
-  let propertiesMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  let screenMap = _.strStructureParse( e.commandArgument );
+  _.assert( _.mapIs( screenMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
 
-  let implyMap = _.mapBut( propertiesMap, commandClean.commandProperties );
-  propertiesMap = _.mapBut( propertiesMap, implyMap );
+  let propertiesMap = _.mapBut( screenMap, commandImply.commandProperties );
+  let implyMap = _.mapBut( screenMap, propertiesMap );
+  if( implyMap.withSubmodules === undefined )
+  implyMap.withSubmodules = will.withSubmodules !== null ? will.withSubmodules : 0;
   will._propertiesImply( implyMap );
 
   e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
-  e.propertiesMap.dry = !!e.propertiesMap.dry;;
+  e.propertiesMap.dry = !!e.propertiesMap.dry;
   let dry = e.propertiesMap.dry;
   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
   e.propertiesMap.fast = !dry;
@@ -1944,6 +1946,11 @@ function commandClean( e )
     return will.modulesClean( o2 );
   }
 
+}
+
+commandClean.defaults =
+{
+  withSubmodules : 0,
 }
 
 commandClean.commandProperties =
@@ -2156,7 +2163,8 @@ function commandGitPull( e )
 {
   let will = this;
   let implyMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
+  if( implyMap.withSubmodules === undefined )
+  implyMap.withSubmodules = will.withSubmodules !== null ? will.withSubmodules : 0;
   will._propertiesImply( implyMap );
 
   return will._commandBuildLike
@@ -2185,7 +2193,8 @@ function commandGitPush( e )
 {
   let will = this;
   let implyMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( implyMap ), () => 'Expects map, but got ' + _.toStrShort( implyMap ) );
+  if( implyMap.withSubmodules === undefined )
+  implyMap.withSubmodules = will.withSubmodules !== null ? will.withSubmodules : 0;
   will._propertiesImply( implyMap );
 
   return will._commandBuildLike
@@ -2216,6 +2225,8 @@ function commandGitReset( e )
   let optionsMap = _.strStructureParse( e.commandArgument );
   _.routineOptions( commandGitReset, optionsMap );
   optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
+  if( will.withSubmodules === null )
+  will._propertiesImply({ withSubmodules : 0 });
 
   return will._commandBuildLike
   ({
@@ -2260,6 +2271,8 @@ function commandGitStatus( e )
   let optionsMap = _.strStructureParse( e.commandArgument );
   _.routineOptions( commandGitStatus, optionsMap );
   optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
+  if( will.withSubmodules === null )
+  will._propertiesImply({ withSubmodules : 0 });
 
   return will._commandBuildLike
   ({
@@ -2309,6 +2322,8 @@ function commandGitSync( e )
   let request = _.will.Resolver.strRequestParse( e.commandArgument );
   _.routineOptions( commandGitSync, request.map );
   request.map.verbosity = request.map.v !== null && request.map.v >= 0 ? request.map.v : request.map.verbosity;
+  if( will.withSubmodules === null )
+  will._propertiesImply({ withSubmodules : 0 });
 
   return will._commandBuildLike
   ({
@@ -2350,6 +2365,8 @@ function commandGitTag( e )
   let optionsMap = _.strStructureParse( e.commandArgument );
   _.routineOptions( commandGitTag, optionsMap );
   optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
+  if( will.withSubmodules === null )
+  will._propertiesImply({ withSubmodules : 0 });
 
   return will._commandBuildLike
   ({
