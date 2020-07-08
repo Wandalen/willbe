@@ -13039,7 +13039,7 @@ function exportWithRemoteSubmodulesRecursive( test )
 
     test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
     test.identical( _.strCount( op.output, '. Opened .' ), 38 );
-    test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z were downloaded' ), 1 );
+    test.identical( _.strCount( op.output, '+ 1/4 submodule(s) of module::z ' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/4 submodule(s) of module::z were downloaded' ), 1 );
 
     var exp =
@@ -13057,6 +13057,7 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group1/group10/out',
       './group1/group10/out/a0.out.will.yml',
       './group1/group10/out/debug',
+      './group1/group10/out/debug/Integration.test.s',
       './group1/group10/out/debug/dwtools',
       './group1/group10/out/debug/dwtools/testing',
       './group1/group10/out/debug/dwtools/testing/Basic.s',
@@ -13074,6 +13075,7 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group1/out/a.out.will.yml',
       './group1/out/b.out.will.yml',
       './group1/out/debug',
+      './group1/out/debug/Integration.test.s',
       './group1/out/debug/dwtools',
       './group1/out/debug/dwtools/testing',
       './group1/out/debug/dwtools/testing/Basic.s',
@@ -13102,6 +13104,7 @@ function exportWithRemoteSubmodulesRecursive( test )
       './group2/out',
       './group2/out/c.out.will.yml',
       './group2/out/debug',
+      './group2/out/debug/Integration.test.s',
       './group2/out/debug/dwtools',
       './group2/out/debug/dwtools/testing',
       './group2/out/debug/dwtools/testing/Basic.s',
@@ -13124,6 +13127,7 @@ function exportWithRemoteSubmodulesRecursive( test )
       './out',
       './out/z.out.will.yml',
       './out/debug',
+      './out/debug/Integration.test.s',
       './out/debug/dwtools',
       './out/debug/dwtools/testing',
       './out/debug/dwtools/testing/Basic.s',
@@ -13151,7 +13155,7 @@ function exportWithRemoteSubmodulesRecursive( test )
       './out/debug/dwtools/testing/l4/testing12ab/Include.s',
       './out/debug/dwtools/testing/l4/testing12ab/ModuleForTesting12ab.s',
       './out/debug/dwtools/testing/l4.test',
-      './out/debug/dwtools/testing/l4.test/ModuleForTesting12ab.test.s'
+      './out/debug/dwtools/testing/l4.test/ModuleForTesting12ab.test.s',
     ];
     var files = a.findNoModules( a.routinePath );
     test.identical( files, exp );
