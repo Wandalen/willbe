@@ -3244,6 +3244,7 @@ function reflectGetPath( test )
     [
       '.',
       './debug',
+      './debug/Integration.test.s',
       './debug/dwtools',
       './debug/dwtools/testing',
       './debug/dwtools/testing/Basic.s',
@@ -3253,7 +3254,7 @@ function reflectGetPath( test )
       './debug/dwtools/testing/l3/testing12/ModuleForTesting12.s',
       './debug/dwtools/testing/l3.test',
       './debug/dwtools/testing/l3.test/ModuleForTesting12.test.s',
-    ]
+    ];
     var files = a.find( a.abs( 'out' ) );
     test.gt( files.length, 4 );
     test.identical( files, expected );
