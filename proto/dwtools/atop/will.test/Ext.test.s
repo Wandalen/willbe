@@ -22414,10 +22414,10 @@ function stepGitPush( test )
 
   /* */
 
-  a.appStart( '.with clone/ .build git.push' )
+  a.appStart( '.imply withSubmodules:0 .with clone/ .build git.push' )
   .then( ( op ) =>
   {
-    test.case = '.with clone/ .build git.push - second run, nothing to push';
+    test.case = '.imply withSubmodules:0 .with clone/ .build git.push - second run, nothing to push';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'Building module::clone' ), 1 );
     test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
@@ -22454,10 +22454,10 @@ function stepGitPush( test )
 
   /* */
 
-  a.appStart( '.imply v:7 .with clone/ .build push.with.dir' )
+  a.appStart( '.imply v:7 withSubmodules:0 .with clone/ .build push.with.dir' )
   .then( ( op ) =>
   {
-    test.case = '.imply v:7 .with clone/ .build push.with.dir - second run, nothing to push';
+    test.case = '.imply v:7 withSubmodules:0 .with clone/ .build push.with.dir - second run, nothing to push';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, '. Read 1 willfile' ), 1 );
