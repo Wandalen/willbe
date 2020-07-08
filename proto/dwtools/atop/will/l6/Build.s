@@ -273,7 +273,7 @@ function perform( o )
     if( err )
     {
       err = _.err( err );
-      logger.log( _.errOnce( err ) );
+      logger.error( _.errOnce( err ) );
       throw err;
     }
     // throw _.errLogOnce( err );
