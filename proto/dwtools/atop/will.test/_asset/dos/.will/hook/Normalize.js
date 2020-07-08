@@ -31,11 +31,13 @@ function onModule( context )
 
   // fileProvider.filesDelete({ filePath : abs( '.travis.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0 });
 
+  samplesRename( context );
+
   // badgeCiReplace( context );
   // badgesSwap( context );
   // badgeStabilityAdd( context );
   // badgeCircleCiAdd( context );
-  badgeCircleCiReplace( context );
+  // badgeCircleCiReplace( context );
 
   // readmeModuleNameAdjust( context );
 
@@ -88,6 +90,34 @@ function hardLink( context, dstPath, srcPath )
   });
 
   return true;
+}
+
+//
+
+function samplesRename( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+  if( !fileProvider.fileExists( abs( 'sample' ) ) )
+  return;
+
+  fileProvider.filesRename
+  ({
+    filePath : abs( 'sample/**' ),
+    onRename : ( r, o ) => r.ext === 'js' ? r.path.changeExt( r.absolute, 's' ) : undefined,
+    verbosity : o.verbosity >= 2 ? o.verbosity : 0,
+  });
+
 }
 
 //

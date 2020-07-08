@@ -44,7 +44,7 @@ if( typeof module !== 'undefined' )
   },
 
   'Integration.test.s' : //
-`( function _Integration_test_s_()
+`( function _Integration_test_ss_()
 {
 
 'use strict';
