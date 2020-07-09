@@ -1,21 +1,23 @@
 
 let willbePath = require.resolve( '..' );
 let _ = require( 'wTools' )
+let getos = require('getos')
 _.include( 'wFiles' );
 _.include( 'wProcess' );
 _.include( 'wConsequence' );
 
+/* */
 
-if( process.platform === 'linux' )
-{
-  let getos = require('getos')
+if( !( process.platform === 'linux' ) )
+return console.log( 'Unsupported operating system' );
 
-  let con = new _.Consequence();
-  getos( con.tolerantCallback() );
-  let dist = con.deasync().sync().dist;
-  if( dist.toLowerCase() !== 'ubuntu' )
-  return console.log( 'Cannot install package. Unsupported GNU/Linux distribution.' );
-}
+let con = new _.Consequence();
+getos( con.tolerantCallback() );
+let dist = con.deasync().sync().dist;
+if( dist.toLowerCase() !== 'ubuntu' )
+return console.log( 'Cannot install package. Unsupported GNU/Linux distribution.' );
+
+/* */
 
 _.process.start
 ({
