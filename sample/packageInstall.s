@@ -1,7 +1,7 @@
 
 let willbePath = require.resolve( '..' );
-let _ = require( 'wTools' )
-let getos = require('getos')
+let _ = require( 'wTools' );
+let getos = require( 'getos' );
 _.include( 'wFiles' );
 _.include( 'wProcess' );
 _.include( 'wConsequence' );
