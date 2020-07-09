@@ -2681,8 +2681,8 @@ function commandNpmGenerateFromWillfile( e )
 commandNpmGenerateFromWillfile.commandProperties =
 {
   packagePath : 'Path to generated file. Default is "./package.json".',
-  entryPath : 'Path to willfiles. Default is current directory "./" and unnamed willfiles',
-  filesPath : 'Path to files that will be included in section "files" of "package.json". By default "package.json" include not section "files".',
+  entryPath : 'Path to source willfiles. Default is current directory "./" and unnamed willfiles',
+  filesPath : 'Path to directory with files that are included in section "files" of "package.json". By default, "package.json" includes no section "files".',
 };
 
 //
