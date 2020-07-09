@@ -321,6 +321,7 @@ function _propertiesImply( implyMap )
     propertiesMap : implyMap,
     namesMap : namesMap,
   });
+
 }
 
 // --
@@ -3468,6 +3469,21 @@ let Extension =
 
   commandNpmFromWillfile,
   commandWillfileFromNpm,
+  // commandWillfileExtend,
+  // commandWillfileSupplement,
+  /* qqq2 :
+  will .willfile.extend dst/ src1 dir/src2 src/
+  will .willfile.extend dst src1 dir/src2 src/
+  will .willfile.extend dst 'src1/**' dir/src2 src/
+
+  will .willfile.extend dst src submodules:1 npm.name:1, version:1 contributors:1 format:willfile
+
+  algorithm similar to mapExtendAppending
+
+  if anon then will.yml
+  else then name.will.yml
+
+  */
 
   // command package
 
