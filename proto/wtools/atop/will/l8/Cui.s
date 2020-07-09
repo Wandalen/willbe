@@ -2658,7 +2658,8 @@ function commandNpmFromWillfile( e )
 {
   let will = this;
   let request = _.strStructureParse( e.commandArgument );
-  _.assertMapHasOnly( request, commandNpmFromWillfile.commandProperties, `Command does not expect additional options.` );
+  let criterionsMap = _.mapBut( request, commandNpmFromWillfile.commandProperties );
+  request = _.mapBut( request, criterionsMap );
 
   return will._commandBuildLike
   ({
@@ -2670,6 +2671,8 @@ function commandNpmFromWillfile( e )
 
   function handleEach( it )
   {
+    if( _.mapKeys( criterionsMap ).length > 0 )
+    it.opener.openedModule.stepMap[ "npm.generate" ].criterion = criterionsMap;
     let currentContext = it.opener.openedModule.stepMap[ "npm.generate" ];
 
     return it.opener.openedModule.npmGenerateFromWillfile
@@ -2686,9 +2689,9 @@ function commandNpmFromWillfile( e )
 
 commandNpmFromWillfile.commandProperties =
 {
-  packagePath : 'Path to generated file. Default is "./package.json".',
-  entryPath : 'Path to source willfiles. Default is current directory "./" and unnamed willfiles',
-  filesPath : 'Path to directory with files that are included in section "files" of "package.json". By default, "package.json" includes no section "files".',
+  packagePath : 'Path to generated file. Default is "./package.json". Could be a selector. C',
+  entryPath : 'Path to source willfiles. Default is current directory "./" and unnamed willfiles. Could be a selector.',
+  filesPath : 'Path to directory with files that are included in section "files" of "package.json". By default, "package.json" includes no section "files". Could be a selector.',
 };
 
 //
@@ -2697,7 +2700,8 @@ function commandWillfileFromNpm( e )
 {
   let will = this;
   let request = _.strStructureParse( e.commandArgument );
-  _.assertMapHasOnly( request, commandWillfileFromNpm.commandProperties, `Command does not expect additional options.` );
+  let criterionsMap = _.mapBut( request, commandWillfileFromNpm.commandProperties );
+  request = _.mapBut( request, criterionsMap );
 
   if( will.currentOpeners && will.currentOpeners.length )
   {
@@ -2738,6 +2742,8 @@ function commandWillfileFromNpm( e )
 
   function handleEach( it )
   {
+    if( _.mapKeys( criterionsMap ).length > 0 )
+    it.opener.openedModule.stepMap[ "willfile.generate" ].criterion = criterionsMap;
     let currentContext = it.opener.openedModule.stepMap[ "willfile.generate" ];
     return it.opener.openedModule.willfileGenerateFromNpm
     ({
@@ -2751,8 +2757,8 @@ function commandWillfileFromNpm( e )
 
 commandWillfileFromNpm.commandProperties =
 {
-  packagePath : 'Path to source json file. Default is "./package.json".',
-  willfilePath : 'Path to generated willfile. Default is "./.will.yml".',
+  packagePath : 'Path to source json file. Default is "./package.json". Could be a selector.',
+  willfilePath : 'Path to generated willfile. Default is "./.will.yml". Could be a selector.',
 };
 
 //
