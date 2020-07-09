@@ -1,0 +1,2171 @@
+format: willfile-1.0.0
+about:
+  name: wStarter
+  description: >-
+    Collection of tools to generate background service to start and pack
+    application. Use the module to keep files structure of the application and
+    make code aware wherein the file system is it executed.
+  enabled: 1
+  version: 0.3.56
+  interpreters: &ref_0
+    - nodejs >= 10.0.0
+    - chrome >= 60.0.0
+    - firefox >= 60.0.0
+  keywords: &ref_1
+    - wModuleForTesting1
+path:
+  module.willfiles:
+    criterion:
+      predefined: 1
+    path: wStarter.out.will.yml
+  module.common:
+    criterion:
+      predefined: 1
+    path: wStarter.out
+  module.original.willfiles:
+    criterion:
+      predefined: 1
+    path:
+      - ../.im.will.yml
+      - ../.ex.will.yml
+  local:
+    criterion:
+      predefined: 1
+  remote:
+    criterion:
+      predefined: 1
+  in:
+    criterion:
+      predefined: 0
+    path: .
+  temp:
+    path: .
+  out:
+    criterion:
+      predefined: 0
+    path: .
+  out.debug:
+    criterion:
+      debug: 1
+    path: debug
+  out.release:
+    criterion:
+      debug: 0
+    path: release
+  proto:
+    path: ../proto
+  repository:
+    path: 'git+https:///github.com/Wandalen/wStarter.git'
+  bugs:
+    path: 'https:///github.com/Wandalen/wStarter/issues'
+  exported.dir.proto.export:
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+    path: ../proto
+  exported.files.proto.export:
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+    path:
+      - ../proto
+      - ../proto/wtools
+      - ../proto/wtools/ModuleForTesting1.s
+      - ../proto/wtools/abase
+      - ../proto/wtools/amid
+      - ../proto/wtools/amid/---starter
+      - ../proto/wtools/amid/---starter/Exec
+      - ../proto/wtools/amid/---starter/ExecDebug
+      - ../proto/wtools/amid/---starter/ExecUnrestricted
+      - ../proto/wtools/amid/---starter/IncludeBase.s
+      - ../proto/wtools/amid/---starter/IncludeMid.s
+      - ../proto/wtools/amid/---starter/IncludeTop.s
+      - ../proto/wtools/amid/---starter/MainBase.s
+      - ../proto/wtools/amid/---starter/MainTop.s
+      - ../proto/wtools/amid/---starter/legacy
+      - ../proto/wtools/amid/---starter/legacy/StarterConfigBegin.raw.s
+      - ../proto/wtools/amid/---starter/legacy/StarterInitBegin.raw.s
+      - ../proto/wtools/amid/---starter/legacy/StarterInitEnd.raw.s
+      - ../proto/wtools/amid/---starter/legacy/StarterMaker.s
+      - ../proto/wtools/amid/---starter/legacy/StarterPreloadEnd.raw.s
+      - ../proto/wtools/amid/---starter/legacy/StarterServer.ss
+      - ../proto/wtools/amid/---starter/legacy/StarterStart.raw.s
+      - ../proto/wtools/amid/---starter/light
+      - ../proto/wtools/amid/---starter/light/Servlet.ss
+      - ../proto/wtools/amid/---starter/light/StarterMaker.s
+      - ../proto/wtools/amid/---starter/light/StarterWare.s
+      - ../proto/wtools/amid/---starter.test
+      - ../proto/wtools/amid/---starter.test/Starter.test.s
+      - ../proto/wtools/amid/--starter
+      - ../proto/wtools/amid/--starter/StarterConfigBegin.raw.s
+      - ../proto/wtools/amid/--starter/StarterInitBegin.raw.s
+      - ../proto/wtools/amid/--starter/StarterInitEnd.raw.s
+      - ../proto/wtools/amid/--starter/StarterMaker.s
+      - ../proto/wtools/amid/--starter/StarterPreloadEnd.raw.s
+      - ../proto/wtools/amid/--starter/StarterServer.ss
+      - ../proto/wtools/amid/--starter/StarterStart.raw.s
+      - ../proto/wtools/amid/--starter/light
+      - ../proto/wtools/amid/--starter/light/StarterMaker.s
+      - ../proto/wtools/amid/--starter/light/StarterWare.s
+      - ../proto/wtools/amid/-starter
+      - ../proto/wtools/amid/-starter/StarterConfigBegin.raw.s
+      - ../proto/wtools/amid/-starter/StarterInitBegin.raw.s
+      - ../proto/wtools/amid/-starter/StarterInitEnd.raw.s
+      - ../proto/wtools/amid/-starter/StarterMaker.s
+      - ../proto/wtools/amid/-starter/StarterPreloadEnd.raw.s
+      - ../proto/wtools/amid/-starter/StarterServer.ss
+      - ../proto/wtools/amid/-starter/StarterStart.raw.s
+      - ../proto/wtools/atop
+      - ../proto/wtools/atop/starter
+      - ../proto/wtools/atop/starter/Exec
+      - ../proto/wtools/atop/starter/ExecDebug
+      - ../proto/wtools/atop/starter/ExecUnrestricted
+      - ../proto/wtools/atop/starter/IncludeBase.s
+      - ../proto/wtools/atop/starter/IncludeMid.s
+      - ../proto/wtools/atop/starter/IncludeTop.s
+      - ../proto/wtools/atop/starter/MainBase.s
+      - ../proto/wtools/atop/starter/MainTop.s
+      - ../proto/wtools/atop/starter/legacy
+      - ../proto/wtools/atop/starter/legacy/StarterConfigBegin.raw.s
+      - ../proto/wtools/atop/starter/legacy/StarterInitBegin.raw.s
+      - ../proto/wtools/atop/starter/legacy/StarterInitEnd.raw.s
+      - ../proto/wtools/atop/starter/legacy/StarterMaker.s
+      - ../proto/wtools/atop/starter/legacy/StarterPreloadEnd.raw.s
+      - ../proto/wtools/atop/starter/legacy/StarterServer.ss
+      - ../proto/wtools/atop/starter/legacy/StarterStart.raw.s
+      - ../proto/wtools/atop/starter/light
+      - ../proto/wtools/atop/starter/light/Servlet.ss
+      - ../proto/wtools/atop/starter/tools
+      - ../proto/wtools/atop/starter/tools/BrowserCode.s
+      - ../proto/wtools/atop/starter/tools/Maker.s
+      - ../proto/wtools/atop/starter/tools/StarterCode.s
+      - ../proto/wtools/atop/starter/tools/WareCode.s
+      - ../proto/wtools/atop/starter.test
+      - ../proto/wtools/atop/starter.test/StarterLegacy.test.s
+      - ../proto/wtools/atop/starter.test/StarterMaker.test.s
+      - ../proto/wtools/atop/starter.test/_asset
+      - ../proto/wtools/atop/starter.test/_asset/complex
+      - ../proto/wtools/atop/starter.test/_asset/complex/package.json
+      - ../proto/wtools/atop/starter.test/_asset/complex/app0
+      - ../proto/wtools/atop/starter.test/_asset/complex/app0/File1.js
+      - ../proto/wtools/atop/starter.test/_asset/complex/app0/File2.js
+      - ../proto/wtools/atop/starter.test/_asset/complex/app1
+      - ../proto/wtools/atop/starter.test/_asset/complex/app1/File1.js
+      - ../proto/wtools/atop/starter.test/_asset/complex/app1/File2.js
+      - ../proto/wtools/atop/starter.test/_asset/complex/app2
+      - ../proto/wtools/atop/starter.test/_asset/complex/app2/File1.js
+      - ../proto/wtools/atop/starter.test/_asset/complex/app2/File2.js
+      - ../proto/wtools/atop/starter.test/_asset/complex/node_modules
+      - ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/LICENSE
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/package.json
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/README.md
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/package.json
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/wModuleForTesting1.out.will.yml
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/compiled.debug
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/compiled.debug/Main.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/compiled.debug/Tests.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/debug
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/debug/package.json
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/ModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer0.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer2.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/aPredefined.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/aSetup.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/bPremature.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fBool.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fChecker.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fEntity.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fErr.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fLong.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fMap.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fNumber.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRange.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRegexp.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRoutine.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fString.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fTime.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iArrayDescriptor.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iCompose.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iField.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/cErr.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gBool.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gEntity.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gLong.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gMap.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gNumber.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRange.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRegexp.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRoutine.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gString.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gTime.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/rFundamental.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/zSetup.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Diagnostics.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Entity.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Long.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Map.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Regexp.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Routine.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/String.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Time.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Typing.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/IncludeModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/ModulesRegistry.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/NameModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/StringModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2.test
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2.test/StringModuleForTesting1.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/release
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/release/Main.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/release/Tests.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/Layer0.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/Layer1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/Layer2.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/aPredefined.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/aSetup.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/bPremature.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fBool.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fChecker.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fEntity.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fErr.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fLong.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fMap.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fNumber.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRange.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRegexp.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRoutine.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fString.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fTime.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iArrayDescriptor.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iCompose.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iField.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/cErr.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gBool.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gEntity.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gLong.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gMap.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gNumber.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRange.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRegexp.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRoutine.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gString.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gTime.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/rFundamental.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/zSetup.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l2
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l2/IncludeModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l2/ModulesRegistry.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l2/NameModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l2/StringModuleForTesting1.s
+      - ../proto/wtools/atop/starter.test/_asset/dep
+      - ../proto/wtools/atop/starter.test/_asset/dep/package.json
+      - ../proto/wtools/atop/starter.test/_asset/dep/app0
+      - ../proto/wtools/atop/starter.test/_asset/dep/app0/File1.js
+      - ../proto/wtools/atop/starter.test/_asset/dep/app0/File2.js
+      - ../proto/wtools/atop/starter.test/_asset/dep/app2
+      - ../proto/wtools/atop/starter.test/_asset/dep/app2/File1.js
+      - ../proto/wtools/atop/starter.test/_asset/dep/app2/File2.js
+      - ../proto/wtools/atop/starter.test/_asset/dep/ext
+      - ../proto/wtools/atop/starter.test/_asset/dep/ext/RequireApp2File2.js
+      - ../proto/wtools/atop/starter.test/_asset/dep/node_modules
+      - ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/LICENSE
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/package.json
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/README.md
+      - ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/package.json
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/wModuleForTesting1.out.will.yml
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/compiled.debug
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/compiled.debug/Main.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/compiled.debug/Tests.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/debug
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/debug/package.json
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/ModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer0.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer2.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/aPredefined.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/aSetup.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/bPremature.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fBool.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fChecker.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fEntity.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fErr.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fLong.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fMap.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fNumber.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRange.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRegexp.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRoutine.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fString.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fTime.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iArrayDescriptor.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iCompose.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iField.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/cErr.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gBool.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gEntity.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gLong.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gMap.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gNumber.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRange.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRegexp.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRoutine.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gString.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gTime.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/rFundamental.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/zSetup.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Diagnostics.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Entity.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Long.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Map.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Regexp.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Routine.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/String.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Time.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Typing.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/IncludeModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/ModulesRegistry.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/NameModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/StringModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2.test
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2.test/StringModuleForTesting1.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/release
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/release/Main.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/release/Tests.test.s
+      - ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/Layer0.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/Layer1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/Layer2.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/aPredefined.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/aSetup.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/bPremature.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fBool.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fChecker.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fEntity.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fErr.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fLong.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fMap.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fNumber.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRange.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRegexp.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRoutine.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fString.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fTime.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iArrayDescriptor.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iCompose.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iField.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/cErr.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gBool.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gEntity.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gLong.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gMap.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gNumber.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRange.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRegexp.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRoutine.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gString.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gTime.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/rFundamental.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/zSetup.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l2
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l2/IncludeModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l2/ModulesRegistry.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l2/NameModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l2/StringModuleForTesting1.s
+      - ../proto/wtools/atop/starter.test/_asset/dep2
+      - ../proto/wtools/atop/starter.test/_asset/dep2/Index.html
+      - ../proto/wtools/atop/starter.test/_asset/dep2/package.json
+      - ../proto/wtools/atop/starter.test/_asset/dep2/app0
+      - ../proto/wtools/atop/starter.test/_asset/dep2/app0/File1.js
+      - ../proto/wtools/atop/starter.test/_asset/dep2/app0/File2.js
+      - ../proto/wtools/atop/starter.test/_asset/dep2/app2
+      - ../proto/wtools/atop/starter.test/_asset/dep2/app2/File1.js
+      - ../proto/wtools/atop/starter.test/_asset/dep2/app2/File2.js
+      - ../proto/wtools/atop/starter.test/_asset/dep2/ext
+      - ../proto/wtools/atop/starter.test/_asset/dep2/ext/RequireApp2File2.js
+      - ../proto/wtools/atop/starter.test/_asset/dep2/node_modules
+      - ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/LICENSE
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/package.json
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/README.md
+      - ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/package.json
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/wModuleForTesting1.out.will.yml
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/compiled.debug
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/compiled.debug/Main.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/compiled.debug/Tests.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/debug
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/debug/package.json
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/ModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer0.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer2.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/aPredefined.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/aSetup.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/bPremature.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fBool.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fChecker.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fEntity.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fErr.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fLong.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fMap.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fNumber.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRange.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRegexp.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRoutine.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fString.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fTime.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iArrayDescriptor.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iCompose.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iField.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/cErr.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gBool.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gEntity.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gLong.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gMap.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gNumber.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRange.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRegexp.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRoutine.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gString.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gTime.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/rFundamental.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/zSetup.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Diagnostics.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Entity.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Long.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Map.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Regexp.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Routine.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/String.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Time.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Typing.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/IncludeModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/ModulesRegistry.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/NameModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/StringModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2.test
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2.test/StringModuleForTesting1.test.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/release
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/release/Main.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/release/Tests.test.s
+      - ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/Layer0.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/Layer1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/Layer2.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/aPredefined.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/aSetup.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/bPremature.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fBool.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fChecker.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fEntity.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fErr.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fLong.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fMap.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fNumber.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRange.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRegexp.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRoutine.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fString.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fTime.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iArrayDescriptor.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iCompose.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iField.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/cErr.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gBool.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gEntity.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gLong.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gMap.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gNumber.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRange.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRegexp.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRoutine.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gString.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gTime.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/rFundamental.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/zSetup.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l2
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l2/IncludeModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l2/ModulesRegistry.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l2/NameModuleForTesting1.s
+      - >-
+        ../proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l2/StringModuleForTesting1.s
+      - ../proto/wtools/atop/starter.test/_asset/processes
+      - ../proto/wtools/atop/starter.test/_asset/processes/Experiment.js
+      - ../proto/wtools/atop/starter.test/_asset/processes/Experiment2.js
+      - ../proto/wtools/atop/starter.test/_asset/several
+      - ../proto/wtools/atop/starter.test/_asset/several/File1.js
+      - ../proto/wtools/atop/starter.test/_asset/several/File2.js
+submodule: {}
+reflector:
+  reflect.proto.:
+    src:
+      filePath:
+        'path::proto': 'path::out.*=1'
+    mandatory: 1
+    criterion:
+      debug: 0
+    inherit:
+      - predefined.*
+  reflect.proto.debug:
+    src:
+      filePath:
+        'path::proto': 'path::out.*=1'
+    mandatory: 1
+    criterion:
+      debug: 1
+    inherit:
+      - predefined.*
+  reflect.submodules:
+    src:
+      filePath:
+        'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+    mandatory: 1
+    criterion:
+      debug: 1
+    inherit:
+      - predefined.*
+  exported.proto.export:
+    src:
+      filePath:
+        .: ''
+      prefixPath: ../proto
+    mandatory: 1
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+  exported.files.proto.export:
+    src:
+      filePath:
+        'path::exported.files.proto.export': ''
+      basePath: .
+      prefixPath: 'path::exported.dir.proto.export'
+    recursive: 0
+    mandatory: 1
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+step:
+  clean.out.:
+    opts:
+      filePath: 'path::out.debug'
+    criterion:
+      debug: 0
+    inherit:
+      - files.delete
+  clean.out.debug:
+    opts:
+      filePath: 'path::out.debug'
+    criterion:
+      debug: 1
+    inherit:
+      - files.delete
+  reflect.proto.:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    criterion:
+      debug: 0
+      raw: 0
+    inherit:
+      - files.reflect
+  reflect.proto.debug:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    criterion:
+      debug: 1
+      raw: 0
+    inherit:
+      - files.reflect
+  reflect.proto.raw:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    criterion:
+      debug: 0
+      raw: 1
+    inherit:
+      - files.reflect
+  reflect.proto.debug.raw:
+    opts:
+      reflector: 'reflector::reflect.proto.*=1'
+    criterion:
+      debug: 1
+      raw: 1
+    inherit:
+      - files.reflect
+  reflect.submodules.:
+    opts:
+      reflector: 'reflector::reflect.submodules*=1'
+    criterion:
+      debug: 1
+      raw: 0
+    inherit:
+      - files.reflect
+  reflect.submodules.raw:
+    opts:
+      reflector: 'reflector::reflect.submodules*=1'
+    criterion:
+      debug: 1
+      raw: 1
+    inherit:
+      - files.reflect
+  reflect.submodules:
+    opts:
+      reflector: 'reflector::reflect.submodules*'
+    criterion:
+      debug: 1
+    inherit:
+      - files.reflect
+  export.proto:
+    opts:
+      export: 'path::proto'
+      tar: 0
+    criterion:
+      debug: 1
+      proto: 1
+    inherit:
+      - module.export
+build:
+  debug.raw:
+    steps:
+      - 'step::clean.out*=1'
+      - 'step::reflect.proto.*=1'
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+  debug.compiled:
+    steps:
+      - 'step::clean.out*=1'
+      - 'step::reflect.proto.*=1'
+    criterion:
+      debug: 1
+      raw: 0
+  release.raw:
+    steps:
+      - 'step::clean.out*=1'
+      - 'step::reflect.proto.*=1'
+    criterion:
+      debug: 0
+      raw: 1
+  release.compiled:
+    steps:
+      - 'step::clean.out*=1'
+      - 'step::reflect.proto.*=1'
+    criterion:
+      debug: 0
+      raw: 0
+  all:
+    steps:
+      - 'build::debug.raw'
+      - 'build::release.compiled'
+  proto.export:
+    steps:
+      - 'build::debug.raw'
+      - 'step::export.proto'
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+exported:
+  proto.export:
+    version: 0.3.56
+    exportedReflector: 'reflector::exported.proto.export'
+    exportedFilesReflector: 'reflector::exported.files.proto.export'
+    exportedDirPath: 'path::exported.dir.proto.export'
+    exportedFilesPath: 'path::exported.files.proto.export'
+    criterion:
+      default: 1
+      debug: 1
+      raw: 1
+      proto: 1
+      export: 1
+      tar: 1
+      public: 1
+module:
+  ../:
+    about:
+      name: wStarter
+      description: >-
+        Collection of tools to generate background service to start and pack
+        application. Use the module to keep files structure of the application
+        and make code aware wherein the file system is it executed.
+      enabled: 1
+      version: 0.3.56
+      interpreters: *ref_0
+      keywords: *ref_1
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - .im.will.yml
+          - .ex.will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - .im.will.yml
+          - .ex.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: ./
+      local:
+        criterion:
+          predefined: 1
+      remote:
+        criterion:
+          predefined: 1
+      in:
+        criterion:
+          predefined: 0
+        path: .
+      temp:
+        path: out
+      out:
+        criterion:
+          predefined: 0
+        path: out
+      out.debug:
+        criterion:
+          debug: 1
+        path: ./out/debug
+      out.release:
+        criterion:
+          debug: 0
+        path: ./out/release
+      proto:
+        path: ./proto
+      repository:
+        path: 'git+https:///github.com/Wandalen/wStarter.git'
+      bugs:
+        path: 'https:///github.com/Wandalen/wStarter/issues'
+      exported.dir.proto.export:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        path: ./proto
+      exported.files.proto.export:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        path:
+          - proto
+          - proto/wtools
+          - proto/wtools/ModuleForTesting1.s
+          - proto/wtools/abase
+          - proto/wtools/amid
+          - proto/wtools/amid/---starter
+          - proto/wtools/amid/---starter/Exec
+          - proto/wtools/amid/---starter/ExecDebug
+          - proto/wtools/amid/---starter/ExecUnrestricted
+          - proto/wtools/amid/---starter/IncludeBase.s
+          - proto/wtools/amid/---starter/IncludeMid.s
+          - proto/wtools/amid/---starter/IncludeTop.s
+          - proto/wtools/amid/---starter/MainBase.s
+          - proto/wtools/amid/---starter/MainTop.s
+          - proto/wtools/amid/---starter/legacy
+          - proto/wtools/amid/---starter/legacy/StarterConfigBegin.raw.s
+          - proto/wtools/amid/---starter/legacy/StarterInitBegin.raw.s
+          - proto/wtools/amid/---starter/legacy/StarterInitEnd.raw.s
+          - proto/wtools/amid/---starter/legacy/StarterMaker.s
+          - proto/wtools/amid/---starter/legacy/StarterPreloadEnd.raw.s
+          - proto/wtools/amid/---starter/legacy/StarterServer.ss
+          - proto/wtools/amid/---starter/legacy/StarterStart.raw.s
+          - proto/wtools/amid/---starter/light
+          - proto/wtools/amid/---starter/light/Servlet.ss
+          - proto/wtools/amid/---starter/light/StarterMaker.s
+          - proto/wtools/amid/---starter/light/StarterWare.s
+          - proto/wtools/amid/---starter.test
+          - proto/wtools/amid/---starter.test/Starter.test.s
+          - proto/wtools/amid/--starter
+          - proto/wtools/amid/--starter/StarterConfigBegin.raw.s
+          - proto/wtools/amid/--starter/StarterInitBegin.raw.s
+          - proto/wtools/amid/--starter/StarterInitEnd.raw.s
+          - proto/wtools/amid/--starter/StarterMaker.s
+          - proto/wtools/amid/--starter/StarterPreloadEnd.raw.s
+          - proto/wtools/amid/--starter/StarterServer.ss
+          - proto/wtools/amid/--starter/StarterStart.raw.s
+          - proto/wtools/amid/--starter/light
+          - proto/wtools/amid/--starter/light/StarterMaker.s
+          - proto/wtools/amid/--starter/light/StarterWare.s
+          - proto/wtools/amid/-starter
+          - proto/wtools/amid/-starter/StarterConfigBegin.raw.s
+          - proto/wtools/amid/-starter/StarterInitBegin.raw.s
+          - proto/wtools/amid/-starter/StarterInitEnd.raw.s
+          - proto/wtools/amid/-starter/StarterMaker.s
+          - proto/wtools/amid/-starter/StarterPreloadEnd.raw.s
+          - proto/wtools/amid/-starter/StarterServer.ss
+          - proto/wtools/amid/-starter/StarterStart.raw.s
+          - proto/wtools/atop
+          - proto/wtools/atop/starter
+          - proto/wtools/atop/starter/Exec
+          - proto/wtools/atop/starter/ExecDebug
+          - proto/wtools/atop/starter/ExecUnrestricted
+          - proto/wtools/atop/starter/IncludeBase.s
+          - proto/wtools/atop/starter/IncludeMid.s
+          - proto/wtools/atop/starter/IncludeTop.s
+          - proto/wtools/atop/starter/MainBase.s
+          - proto/wtools/atop/starter/MainTop.s
+          - proto/wtools/atop/starter/legacy
+          - proto/wtools/atop/starter/legacy/StarterConfigBegin.raw.s
+          - proto/wtools/atop/starter/legacy/StarterInitBegin.raw.s
+          - proto/wtools/atop/starter/legacy/StarterInitEnd.raw.s
+          - proto/wtools/atop/starter/legacy/StarterMaker.s
+          - proto/wtools/atop/starter/legacy/StarterPreloadEnd.raw.s
+          - proto/wtools/atop/starter/legacy/StarterServer.ss
+          - proto/wtools/atop/starter/legacy/StarterStart.raw.s
+          - proto/wtools/atop/starter/light
+          - proto/wtools/atop/starter/light/Servlet.ss
+          - proto/wtools/atop/starter/tools
+          - proto/wtools/atop/starter/tools/BrowserCode.s
+          - proto/wtools/atop/starter/tools/Maker.s
+          - proto/wtools/atop/starter/tools/StarterCode.s
+          - proto/wtools/atop/starter/tools/WareCode.s
+          - proto/wtools/atop/starter.test
+          - proto/wtools/atop/starter.test/StarterLegacy.test.s
+          - proto/wtools/atop/starter.test/StarterMaker.test.s
+          - proto/wtools/atop/starter.test/_asset
+          - proto/wtools/atop/starter.test/_asset/complex
+          - proto/wtools/atop/starter.test/_asset/complex/package.json
+          - proto/wtools/atop/starter.test/_asset/complex/app0
+          - proto/wtools/atop/starter.test/_asset/complex/app0/File1.js
+          - proto/wtools/atop/starter.test/_asset/complex/app0/File2.js
+          - proto/wtools/atop/starter.test/_asset/complex/app1
+          - proto/wtools/atop/starter.test/_asset/complex/app1/File1.js
+          - proto/wtools/atop/starter.test/_asset/complex/app1/File2.js
+          - proto/wtools/atop/starter.test/_asset/complex/app2
+          - proto/wtools/atop/starter.test/_asset/complex/app2/File1.js
+          - proto/wtools/atop/starter.test/_asset/complex/app2/File2.js
+          - proto/wtools/atop/starter.test/_asset/complex/node_modules
+          - proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/LICENSE
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/package.json
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/README.md
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/package.json
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/wModuleForTesting1.out.will.yml
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/compiled.debug
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/compiled.debug/Main.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/compiled.debug/Tests.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/debug
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/debug/package.json
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/ModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer0.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer2.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/aPredefined.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/aSetup.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/bPremature.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fBool.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fChecker.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fEntity.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fErr.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fLong.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fMap.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fNumber.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRange.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRegexp.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRoutine.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fString.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fTime.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iArrayDescriptor.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iCompose.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iField.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/cErr.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gBool.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gEntity.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gLong.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gMap.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gNumber.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRange.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRegexp.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRoutine.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gString.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gTime.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/rFundamental.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/zSetup.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Diagnostics.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Entity.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Long.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Map.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Regexp.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Routine.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/String.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Time.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Typing.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/IncludeModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/ModulesRegistry.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/NameModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/StringModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2.test
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2.test/StringModuleForTesting1.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/release
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/release/Main.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/out/release/Tests.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/Layer0.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/Layer1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/Layer2.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/aPredefined.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/aSetup.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/bPremature.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fBool.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fChecker.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fEntity.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fErr.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fLong.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fMap.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fNumber.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRange.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRegexp.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRoutine.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fString.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fTime.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iArrayDescriptor.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iCompose.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iField.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/cErr.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gBool.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gEntity.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gLong.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gMap.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gNumber.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRange.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRegexp.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRoutine.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gString.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gTime.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/rFundamental.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l1/zSetup.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l2
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l2/IncludeModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l2/ModulesRegistry.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l2/NameModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/complex/node_modules/wModuleForTesting1/proto/wtools/abase/l2/StringModuleForTesting1.s
+          - proto/wtools/atop/starter.test/_asset/dep
+          - proto/wtools/atop/starter.test/_asset/dep/package.json
+          - proto/wtools/atop/starter.test/_asset/dep/app0
+          - proto/wtools/atop/starter.test/_asset/dep/app0/File1.js
+          - proto/wtools/atop/starter.test/_asset/dep/app0/File2.js
+          - proto/wtools/atop/starter.test/_asset/dep/app2
+          - proto/wtools/atop/starter.test/_asset/dep/app2/File1.js
+          - proto/wtools/atop/starter.test/_asset/dep/app2/File2.js
+          - proto/wtools/atop/starter.test/_asset/dep/ext
+          - proto/wtools/atop/starter.test/_asset/dep/ext/RequireApp2File2.js
+          - proto/wtools/atop/starter.test/_asset/dep/node_modules
+          - proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/LICENSE
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/package.json
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/README.md
+          - proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/package.json
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/wModuleForTesting1.out.will.yml
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/compiled.debug
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/compiled.debug/Main.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/compiled.debug/Tests.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/debug
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/debug/package.json
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/ModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer0.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer2.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/aPredefined.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/aSetup.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/bPremature.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fBool.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fChecker.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fEntity.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fErr.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fLong.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fMap.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fNumber.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRange.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRegexp.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRoutine.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fString.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fTime.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iArrayDescriptor.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iCompose.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iField.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/cErr.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gBool.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gEntity.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gLong.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gMap.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gNumber.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRange.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRegexp.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRoutine.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gString.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gTime.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/rFundamental.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/zSetup.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Diagnostics.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Entity.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Long.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Map.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Regexp.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Routine.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/String.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Time.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Typing.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/IncludeModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/ModulesRegistry.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/NameModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/StringModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2.test
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2.test/StringModuleForTesting1.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/release
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/release/Main.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/out/release/Tests.test.s
+          - proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/Layer0.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/Layer1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/Layer2.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/aPredefined.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/aSetup.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/bPremature.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fBool.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fChecker.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fEntity.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fErr.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fLong.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fMap.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fNumber.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRange.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRegexp.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRoutine.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fString.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fTime.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iArrayDescriptor.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iCompose.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iField.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/cErr.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gBool.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gEntity.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gLong.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gMap.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gNumber.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRange.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRegexp.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRoutine.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gString.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gTime.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/rFundamental.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l1/zSetup.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l2
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l2/IncludeModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l2/ModulesRegistry.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l2/NameModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep/node_modules/wModuleForTesting1/proto/wtools/abase/l2/StringModuleForTesting1.s
+          - proto/wtools/atop/starter.test/_asset/dep2
+          - proto/wtools/atop/starter.test/_asset/dep2/Index.html
+          - proto/wtools/atop/starter.test/_asset/dep2/package.json
+          - proto/wtools/atop/starter.test/_asset/dep2/app0
+          - proto/wtools/atop/starter.test/_asset/dep2/app0/File1.js
+          - proto/wtools/atop/starter.test/_asset/dep2/app0/File2.js
+          - proto/wtools/atop/starter.test/_asset/dep2/app2
+          - proto/wtools/atop/starter.test/_asset/dep2/app2/File1.js
+          - proto/wtools/atop/starter.test/_asset/dep2/app2/File2.js
+          - proto/wtools/atop/starter.test/_asset/dep2/ext
+          - proto/wtools/atop/starter.test/_asset/dep2/ext/RequireApp2File2.js
+          - proto/wtools/atop/starter.test/_asset/dep2/node_modules
+          - proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/LICENSE
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/package.json
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/README.md
+          - proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/package.json
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/wModuleForTesting1.out.will.yml
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/compiled.debug
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/compiled.debug/Main.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/compiled.debug/Tests.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/debug
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/debug/package.json
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/ModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer0.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/Layer2.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/aPredefined.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/aSetup.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/bPremature.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fBool.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fChecker.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fEntity.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fErr.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fLong.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fMap.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fNumber.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRange.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRegexp.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fRoutine.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fString.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/fTime.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iArrayDescriptor.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iCompose.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l0/iField.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/cErr.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gBool.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gEntity.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gLong.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gMap.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gNumber.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRange.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRegexp.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gRoutine.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gString.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/gTime.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/rFundamental.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1/zSetup.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Diagnostics.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Entity.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Long.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Map.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Regexp.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Routine.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/String.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Time.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l1.test/Typing.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/IncludeModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/ModulesRegistry.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/NameModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2/StringModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2.test
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/raw.release/wtools/abase/l2.test/StringModuleForTesting1.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/release
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/release/Main.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/out/release/Tests.test.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/Layer0.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/Layer1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/Layer2.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/aPredefined.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/aSetup.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/bPremature.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fBool.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fChecker.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fEntity.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fErr.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fLong.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fMap.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fNumber.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRange.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRegexp.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fRoutine.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fString.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/fTime.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iArrayDescriptor.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iCompose.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l0/iField.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/cErr.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gBool.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gEntity.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gLong.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gMap.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gNumber.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRange.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRegexp.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gRoutine.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gString.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/gTime.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/rFundamental.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l1/zSetup.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l2
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l2/IncludeModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l2/ModulesRegistry.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l2/NameModuleForTesting1.s
+          - >-
+            proto/wtools/atop/starter.test/_asset/dep2/node_modules/wModuleForTesting1/proto/wtools/abase/l2/StringModuleForTesting1.s
+          - proto/wtools/atop/starter.test/_asset/processes
+          - proto/wtools/atop/starter.test/_asset/processes/Experiment.js
+          - proto/wtools/atop/starter.test/_asset/processes/Experiment2.js
+          - proto/wtools/atop/starter.test/_asset/several
+          - proto/wtools/atop/starter.test/_asset/several/File1.js
+          - proto/wtools/atop/starter.test/_asset/several/File2.js
+    submodule: {}
+    reflector:
+      reflect.proto.:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 0
+        inherit:
+          - predefined.*
+      reflect.proto.debug:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      reflect.submodules:
+        src:
+          filePath:
+            'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      exported.proto.export:
+        src:
+          filePath:
+            .: ''
+          prefixPath: proto
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+      exported.files.proto.export:
+        src:
+          filePath:
+            'path::exported.files.proto.export': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.proto.export'
+        recursive: 0
+        mandatory: 1
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+    step:
+      clean.out.:
+        opts:
+          filePath: 'path::out.debug'
+        criterion:
+          debug: 0
+        inherit:
+          - files.delete
+      clean.out.debug:
+        opts:
+          filePath: 'path::out.debug'
+        criterion:
+          debug: 1
+        inherit:
+          - files.delete
+      reflect.proto.:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.debug:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.raw:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.proto.debug.raw:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules.:
+        opts:
+          reflector: 'reflector::reflect.submodules*=1'
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.submodules.raw:
+        opts:
+          reflector: 'reflector::reflect.submodules*=1'
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules:
+        opts:
+          reflector: 'reflector::reflect.submodules*'
+        criterion:
+          debug: 1
+        inherit:
+          - files.reflect
+      export.proto:
+        opts:
+          export: 'path::proto'
+          tar: 0
+        criterion:
+          debug: 1
+          proto: 1
+        inherit:
+          - module.export
+    build:
+      debug.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+      debug.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 0
+      release.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+      release.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 0
+      all:
+        steps:
+          - 'build::debug.raw'
+          - 'build::release.compiled'
+      proto.export:
+        steps:
+          - 'build::debug.raw'
+          - 'step::export.proto'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+    exported:
+      proto.export:
+        version: 0.3.56
+        exportedReflector: 'reflector::exported.proto.export'
+        exportedFilesReflector: 'reflector::exported.files.proto.export'
+        exportedDirPath: 'path::exported.dir.proto.export'
+        exportedFilesPath: 'path::exported.files.proto.export'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+  wStarter.out: root

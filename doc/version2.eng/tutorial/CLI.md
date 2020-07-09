@@ -371,7 +371,7 @@ About
   enabled : 1
 
 Paths
-  will : '/usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec'
+  will : '/usr/lib/node_modules/willbe/proto/wtools/atop/will/Exec'
   module.willfiles : '/home/user/willbe/sample/version2/CLI/.will.yml'
   module.dir : '/home/user/willbe/sample/version2/CLI'
   proto : 'proto'

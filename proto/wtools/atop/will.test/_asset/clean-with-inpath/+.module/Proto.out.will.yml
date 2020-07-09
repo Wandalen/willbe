@@ -1,0 +1,112 @@
+format: willfile-1.0.0
+about:
+  name: ModuleForTesting12
+  enabled: 1
+  version: 0.1.0
+path:
+  module.willfiles:
+    path: .module/ModuleForTesting12.out.will.yml
+    criterion:
+      predefined: 1
+  module.original.willfiles:
+    path: module/ModuleForTesting12.will.yml
+    criterion:
+      predefined: 1
+  module.dir:
+    path: .module
+    criterion:
+      predefined: 1
+  in:
+    path: ..
+  out:
+    path: .module
+  remote:
+    path: 'git+hd://../_repo/ModuleForTesting12'
+    criterion:
+      predefined: 1
+  download:
+    path: .module/ModuleForTesting12
+    criterion:
+      predefined: 1
+  export:
+    path: '{path::download}/proto'
+  temp:
+    path: out
+  exported.dir.export:
+    path: ./.module/ModuleForTesting12/proto
+    criterion:
+      default: 1
+      export: 1
+  exported.files.export:
+    path:
+      - .module/ModuleForTesting12/proto
+      - .module/ModuleForTesting12/proto/wtools
+      - .module/ModuleForTesting12/proto/wtools/ModuleForTesting1.s
+      - .module/ModuleForTesting12/proto/wtools/abase
+      - .module/ModuleForTesting12/proto/wtools/abase/l3
+      - .module/ModuleForTesting12/proto/wtools/abase/l3/ModuleForTesting12.s
+      - .module/ModuleForTesting12/proto/wtools/abase/l3/ModuleForTesting12Accessor.s
+      - .module/ModuleForTesting12/proto/wtools/abase/l3/ModuleForTesting12Like.s
+      - .module/ModuleForTesting12/proto/wtools/abase/l3.test
+      - .module/ModuleForTesting12/proto/wtools/abase/l3.test/ModuleForTesting12.test.s
+      - .module/ModuleForTesting12/proto/wtools/abase/l3.test/ModuleForTesting12Like.test.s
+    criterion:
+      default: 1
+      export: 1
+submodule: {}
+reflector:
+  download:
+    src:
+      filePath: 'path::remote'
+    dst:
+      filePath: 'path::download'
+    mandatory: 1
+  exported.export:
+    src:
+      filePath: .module/ModuleForTesting12/proto
+    criterion:
+      default: 1
+      export: 1
+    mandatory: 1
+  exported.files.export:
+    src:
+      filePath: 'path::exported.files.export'
+      basePath: .
+      prefixPath: 'path::exported.dir.export'
+    criterion:
+      default: 1
+      export: 1
+    recursive: 0
+    mandatory: 1
+step:
+  export.common:
+    opts:
+      export: 'path::export'
+      tar: 0
+    inherit:
+      - module.export
+  download:
+    opts:
+      reflector: 'reflector::download*'
+    inherit:
+      - files.reflect
+build:
+  export:
+    criterion:
+      default: 1
+      export: 1
+    steps:
+      - 'step::download'
+      - 'step::export.common'
+exported:
+  export:
+    version: 0.1.0
+    criterion:
+      default: 1
+      export: 1
+    exportedReflector: 'reflector::exported.export'
+    exportedFilesReflector: 'reflector::exported.files.export'
+    exportedDirPath: 'path::exported.dir.export'
+    exportedFilesPath: 'path::exported.files.export'
+module:
+  ModuleForTesting12.out: root
