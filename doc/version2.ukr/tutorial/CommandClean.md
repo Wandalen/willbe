@@ -211,7 +211,7 @@ cleanCommand
         ├── out
         │    ├── module.debug
         │    │           ├── debug
-        │    │           └── dwtools
+        │    │           └── wtools
         │    ├── cleanCommand.out.tgs
         │    └── cleanCommand.out.will.yml
         ├── temp
@@ -250,7 +250,7 @@ cleanCommand
         ├── out
         │    └── module.debug
         │                ├── debug
-        │                └── dwtools
+        │                └── wtools
         └── .will.yml
 
 ```

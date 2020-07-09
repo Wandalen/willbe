@@ -1,0 +1,53 @@
+{
+  "name": "wModuleForTesting12",
+  "version": "0.4.154",
+  "engine": "node >= 6.0.0",
+  "description": "Relations module. Collection of routines to define classes and relations between them. ModuleForTesting12 leverages multiple inheritances, mixins, accessors, fields groups defining, introspection and more. Use it as a skeleton of the application.",
+  "author": "Kostiantyn Wandalen <wanalen@01.school>",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Kostiantyn Wandalen",
+      "email": "wanalen@01.school"
+    },
+    {
+      "name": "Volodymyr M.",
+      "email": "volodymyr.migdal@gmail.com"
+    }
+  ],
+  "main": "proto/wtools/abase/l3/ModuleForTesting12.s",
+  "files": [
+    "npm-shrinkwrap.json",
+    "proto/wtools/abase/l3",
+    "proto/wtools/ModuleForTesting1.s",
+    "production"
+  ],
+  "scripts": {
+    "test": "wtest proto",
+    "docgen": "wdocgen proto"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Wandalen/wModuleForTesting12.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Wandalen/wModuleForTesting12/issues"
+  },
+  "dependencies": {
+    "wModuleForTesting1": ""
+  },
+  "devDependencies": {
+    "wModuleForTesting12": "file:.",
+    "wcomparator": "",
+    "wTesting": ""
+  },
+  "keywords": [
+    "wModuleForTesting1",
+    "wModuleForTesting12",
+    "mixin",
+    "Class",
+    "Object",
+    "ModuleForTesting12type",
+    "Incapsulation"
+  ]
+}

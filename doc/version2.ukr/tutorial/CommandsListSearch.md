@@ -115,7 +115,7 @@ path::current.remote
     predefined : 1
 
 path::will
-  path : ../../../../../../../../usr/lib/node_modules/willbe/proto/dwtools/atop/will/Exec 
+  path : ../../../../../../../../usr/lib/node_modules/willbe/proto/wtools/atop/will/Exec 
   criterion : 
     predefined : 1
 

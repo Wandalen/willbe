@@ -204,7 +204,7 @@ informalModule
         │     └── Color.informal.will.yml
         ├── out
         │    ├── module.debug
-        │    │           └── dwtools
+        │    │           └── wtools
         │    └── Color.informal.out.will.yml
         └── .will.yml
 

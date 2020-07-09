@@ -1,0 +1,629 @@
+format: outwillfile-2.0
+root:
+  - wChangeTransactor.out
+consistency:
+  wChangeTransactor.out.will.yml: &ref_0
+    hash: f5ce42ce9061ced59e92147d709336ef
+    size: 13718
+  ../.ex.will.yml: &ref_1
+    hash: dffada4f599f4caec6aed321b354eb22
+    size: 1163
+  ../.im.will.yml: &ref_2
+    hash: 844ab52058e80d039128df770afd6bfa
+    size: 1692
+module:
+  wChangeTransactor.out:
+    about:
+      name: wChangeTransactor
+      org: noorg
+      description: >-
+        Still sketch. Mixin to add the ability to track changes of an object, to
+        reflect changes in a data structure and to make possible to apply the
+        changes to another object. Use the module to mirror object's changes
+        somehow elsewhere, for example on server-side or client-side.
+      enabled: 1
+      version: 0.3.55
+      interpreters:
+        - nodejs >= 10.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wModuleForTesting1
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path: wChangeTransactor.out.will.yml
+      module.common:
+        criterion:
+          predefined: 1
+        path: wChangeTransactor.out
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - ../.ex.will.yml
+          - ../.im.will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - ../.ex.will.yml
+          - ../.im.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: ..
+      download:
+        criterion:
+          predefined: 1
+      repository:
+        path: 'git+https:///github.com/Wandalen/wChangeTransactor.git'
+      origins:
+        path:
+          - 'git+https:///github.com/Wandalen/wChangeTransactor.git'
+          - 'npm:///wchangetransactor'
+      bugs:
+        path: 'https:///github.com/Wandalen/wChangeTransactor/issues'
+      in:
+        criterion:
+          predefined: 0
+        path: .
+      temp:
+        path: .
+      out:
+        criterion:
+          predefined: 0
+        path: .
+      out.debug:
+        criterion:
+          debug: 1
+        path: debug
+      out.release:
+        criterion:
+          debug: 0
+        path: release
+      proto:
+        path: ../proto
+      export:
+        path: '{path::proto}/**'
+      exported.dir.proto.export:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        path: ../proto
+      exported.files.proto.export:
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        path:
+          - ../proto
+          - ../proto/wtools
+          - ../proto/wtools/ModuleForTesting1.s
+          - ../proto/wtools/abase
+          - ../proto/wtools/amid
+          - ../proto/wtools/amid/changes
+          - ../proto/wtools/amid/changes/Changes.s
+          - ../proto/wtools/amid/changes/ChangeTransactor.s
+          - ../proto/wtools/amid/changes.test
+          - ../proto/wtools/amid/changes.test/Changes.test.s
+          - ../proto/wtools/atop
+      exported.dir.proto.export.1:
+        criterion:
+          generated: 1
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        path: ../proto
+      exported.files.proto.export.1:
+        criterion:
+          generated: 1
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        path:
+          - ../proto
+          - ../proto/wtools
+          - ../proto/wtools/ModuleForTesting1.s
+          - ../proto/wtools/abase
+          - ../proto/wtools/amid
+          - ../proto/wtools/amid/changes
+          - ../proto/wtools/amid/changes/Changes.s
+          - ../proto/wtools/amid/changes/ChangeTransactor.s
+          - ../proto/wtools/amid/changes.test
+          - ../proto/wtools/amid/changes.test/Changes.test.s
+          - ../proto/wtools/atop
+    submodule: {}
+    reflector:
+      reflect.proto.:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+          prefixPath: ''
+        dst:
+          prefixPath: ''
+        mandatory: 1
+        criterion:
+          debug: 0
+        inherit:
+          - predefined.*
+      reflect.proto.debug:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      reflect.submodules:
+        src:
+          filePath:
+            'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+          prefixPath: ''
+        dst:
+          prefixPath: ''
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      exported.proto.export:
+        src:
+          filePath:
+            '**': ''
+          prefixPath: ../proto
+        mandatory: 1
+        criterion:
+          generated: 1
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+      exported.files.proto.export:
+        src:
+          filePath:
+            'path::exported.files.proto.export.1': ''
+          basePath: .
+          prefixPath: 'path::exported.dir.proto.export.1'
+          recursive: 0
+        recursive: 0
+        mandatory: 1
+        criterion:
+          generated: 1
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+    step:
+      export.proto:
+        opts:
+          export: 'path::export'
+          tar: 0
+        criterion:
+          debug: 1
+          proto: 1
+        inherit:
+          - module.export
+      clean.out.:
+        opts:
+          filePath: 'path::out.debug'
+        criterion:
+          debug: 0
+        inherit:
+          - files.delete
+      clean.out.debug:
+        opts:
+          filePath: 'path::out.debug'
+        criterion:
+          debug: 1
+        inherit:
+          - files.delete
+      reflect.proto.:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.debug:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.raw:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.proto.debug.raw:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+          verbosity: null
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules.:
+        opts:
+          reflector: 'reflector::reflect.submodules*=1'
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.submodules.raw:
+        opts:
+          reflector: 'reflector::reflect.submodules*=1'
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules:
+        opts:
+          reflector: 'reflector::reflect.submodules*'
+        criterion:
+          debug: 1
+        inherit:
+          - files.reflect
+      exported.proto.export:
+        opts:
+          reflector: 'reflector::exported.proto.export*'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          reflector: 'reflector::exported.files.proto.export*'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        inherit:
+          - files.reflect
+    build:
+      proto.export:
+        steps:
+          - 'build::debug.raw'
+          - 'step::export.proto'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+      debug.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+      debug.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 0
+      release.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+      release.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 0
+      all:
+        steps:
+          - 'build::debug.raw'
+          - 'build::release.compiled'
+    exported:
+      proto.export:
+        version: 0.3.55
+        recursive: 0
+        withIntegrated: 2
+        tar: 0
+        exportedReflector: 'reflector::exported.proto.export'
+        exportedFilesReflector: 'reflector::exported.files.proto.export'
+        exportedDirPath: 'path::exported.dir.proto.export.1'
+        exportedFilesPath: 'path::exported.files.proto.export.1'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+    consistency:
+      wChangeTransactor.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
+  ../:
+    about:
+      name: wChangeTransactor
+      org: noorg
+      description: >-
+        Still sketch. Mixin to add the ability to track changes of an object, to
+        reflect changes in a data structure and to make possible to apply the
+        changes to another object. Use the module to mirror object's changes
+        somehow elsewhere, for example on server-side or client-side.
+      enabled: 1
+      version: 0.3.55
+      interpreters:
+        - nodejs >= 10.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wModuleForTesting1
+    path:
+      module.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - .ex.will.yml
+          - .im.will.yml
+      module.original.willfiles:
+        criterion:
+          predefined: 1
+        path:
+          - .ex.will.yml
+          - .im.will.yml
+      module.peer.willfiles:
+        criterion:
+          predefined: 1
+        path: out/wChangeTransactor.out.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: out
+      module.common:
+        criterion:
+          predefined: 1
+        path: ./
+      download:
+        criterion:
+          predefined: 1
+      repository:
+        path: 'git+https:///github.com/Wandalen/wChangeTransactor.git'
+      origins:
+        path:
+          - 'git+https:///github.com/Wandalen/wChangeTransactor.git'
+          - 'npm:///wchangetransactor'
+      bugs:
+        path: 'https:///github.com/Wandalen/wChangeTransactor/issues'
+      in:
+        path: .
+      temp:
+        path: out
+      out:
+        path: out
+      out.debug:
+        criterion:
+          debug: 1
+        path: out/debug
+      out.release:
+        criterion:
+          debug: 0
+        path: out/release
+      proto:
+        path: proto
+      export:
+        path: '{path::proto}/**'
+    submodule: {}
+    reflector:
+      reflect.proto.:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 0
+        inherit:
+          - predefined.*
+      reflect.proto.debug:
+        src:
+          filePath:
+            'path::proto': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+      reflect.submodules:
+        src:
+          filePath:
+            'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
+        mandatory: 1
+        criterion:
+          debug: 1
+        inherit:
+          - predefined.*
+    step:
+      export.proto:
+        opts:
+          export: 'path::export'
+          tar: 0
+        criterion:
+          debug: 1
+          proto: 1
+        inherit:
+          - module.export
+      clean.out.:
+        opts:
+          filePath: 'path::out.debug'
+        criterion:
+          debug: 0
+        inherit:
+          - files.delete
+      clean.out.debug:
+        opts:
+          filePath: 'path::out.debug'
+        criterion:
+          debug: 1
+        inherit:
+          - files.delete
+      reflect.proto.:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.debug:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.proto.raw:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.proto.debug.raw:
+        opts:
+          reflector: 'reflector::reflect.proto.*=1'
+          verbosity: null
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules.:
+        opts:
+          reflector: 'reflector::reflect.submodules*=1'
+        criterion:
+          debug: 1
+          raw: 0
+        inherit:
+          - files.reflect
+      reflect.submodules.raw:
+        opts:
+          reflector: 'reflector::reflect.submodules*=1'
+        criterion:
+          debug: 1
+          raw: 1
+        inherit:
+          - files.reflect
+      reflect.submodules:
+        opts:
+          reflector: 'reflector::reflect.submodules*'
+        criterion:
+          debug: 1
+        inherit:
+          - files.reflect
+    build:
+      proto.export:
+        steps:
+          - 'build::debug.raw'
+          - 'step::export.proto'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+      debug.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          default: 1
+          debug: 1
+          raw: 1
+      debug.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 1
+          raw: 0
+      release.raw:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 1
+      release.compiled:
+        steps:
+          - 'step::clean.out*=1'
+          - 'step::reflect.proto.*=1'
+        criterion:
+          debug: 0
+          raw: 0
+      all:
+        steps:
+          - 'build::debug.raw'
+          - 'build::release.compiled'
+    consistency:
+      ../.ex.will.yml:
+        hash: dffada4f599f4caec6aed321b354eb22
+        size: 1163
+      ../.im.will.yml:
+        hash: 844ab52058e80d039128df770afd6bfa
+        size: 1692
+      wChangeTransactor.out.will.yml: *ref_0

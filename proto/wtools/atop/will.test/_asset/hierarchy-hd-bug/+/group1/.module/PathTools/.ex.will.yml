@@ -1,0 +1,99 @@
+
+about :
+
+  name : 'wPathModuleForTesting1'
+  description : 'Collection of routines to operate paths reliably and consistently. Implements routines for manipulating paths maps and globing. Extends module ModuleForTesting2.'
+  version : '0.6.0'
+  enabled : 1
+  interpreters :
+  - njs >= 10.0.0
+  - chrome >= 60.0.0
+  - firefox >= 60.0.0
+  keywords :
+  - wModuleForTesting1
+  - wPath
+  - path
+  - url
+  - uri
+  - file
+  license : MIT
+  author : 'Kostiantyn Wandalen <wanalen@01.school>'
+  contributors :
+  - 'Kostiantyn Wandalen <wanalen@01.school>'
+  - 'Volodymyr M. <volodymyr.migdal@gmail.com>'
+  - 'Dmytro Kryvoruchko <dm.vict.kr@gmail.com>'
+  npm.name : 'wpathtools'
+  npm.scripts :
+    test : 'wtest .run proto/**'
+    docgen : 'wdocgen .build proto'
+
+path :
+
+  repository : git+https:///github.com/Wandalen/wPathModuleForTesting1.git
+  origins :
+   - git+https:///github.com/Wandalen/wPathModuleForTesting1.git
+   - npm:///wpathtools
+  bugtracker : https:///github.com/Wandalen/wPathModuleForTesting1/issues
+
+step :
+
+  proto.export :
+    inherit : module.export
+    export : path::export
+    tar : 0
+    criterion :
+      content : 'proto'
+
+  doc.export :
+    inherit : module.export
+    export : path::doc
+    tar : 0
+    criterion :
+      content : 'doc'
+
+  npm.export :
+    inherit : module.export
+    export : out.npm
+    tar : 0
+    criterion :
+      content : 'npm'
+
+  npm.publish :
+    shell : npm publish
+
+build :
+
+  proto.export :
+    criterion :
+      content : 'proto'
+      export : 1
+    steps :
+      # - build::debug.raw
+      - step::proto.export
+
+  doc.export :
+    criterion :
+      content : 'doc'
+      export : 1
+    steps :
+      # - build::debug.raw
+      - step::doc.export
+
+  npm.export :
+    criterion :
+      content : 'npm'
+      export : 1
+    steps :
+      # - build::debug.raw
+      # - step::npm.export
+      - step::npm.publish
+
+  export :
+
+    criterion :
+      default : 1
+      export : 1
+    steps :
+      # - build::npm
+      - build::proto.export
+      # - build::doc.export

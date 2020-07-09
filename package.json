@@ -1,6 +1,6 @@
 {
   "name" : "willbe",
-  "version" : "0.5.200",
+  "version" : "0.5.201",
   "description" : "Utility to manage modules of complex modular systems",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "contributors" :
@@ -10,23 +10,23 @@
     { "name" : "Dmytro Kryvoruchko", "email" : "dm.vict.kr@gmail.com" }
   ],
   "license" : "MIT",
-  "main" : "proto/dwtools/atop/will/entry/Include.s",
-  "files" : [ "proto/dwtools/atop/will", "proto/dwtools/Tools.s", "out" ],
+  "main" : "proto/wtools/atop/will/entry/Include.s",
+  "files" : [ "proto/wtools/atop/will", "proto/wtools/Tools.s", "out" ],
   "bin" :
   {
-    "single-process-will" : "proto/dwtools/atop/will/entry/Exec",
-    "debug-will" : "proto/dwtools/atop/will/entry/ExecDebug",
-    "unrestricted-will" : "proto/dwtools/atop/will/entry/ExecUnrestricted",
-    "will" : "proto/dwtools/atop/will/entry/ExecUnrestricted"
+    "single-process-will" : "proto/wtools/atop/will/entry/Exec",
+    "debug-will" : "proto/wtools/atop/will/entry/ExecDebug",
+    "unrestricted-will" : "proto/wtools/atop/will/entry/ExecUnrestricted",
+    "will" : "proto/wtools/atop/will/entry/ExecUnrestricted"
   },
   "scripts" :
   {
     "test" : "wtest .run 'proto/**' rapidity:-3",
     "docgen" : "wdocgen .build proto",
-    "single-process-will" : "node proto/dwtools/atop/will/entry/Exec",
-    "debug-will" : "node proto/dwtools/atop/will/entry/ExecDebug",
-    "unrestricted-will" : "node proto/dwtools/atop/will/entry/ExecUnrestricted",
-    "will" : "node proto/dwtools/atop/will/entry/ExecUnrestricted",
+    "single-process-will" : "node proto/wtools/atop/will/entry/Exec",
+    "debug-will" : "node proto/wtools/atop/will/entry/ExecDebug",
+    "unrestricted-will" : "node proto/wtools/atop/will/entry/ExecUnrestricted",
+    "will" : "node proto/wtools/atop/will/entry/ExecUnrestricted",
     "docker-build-centos" : "docker image build -t willbe-centos -f ./docker/centos.dockerfile .",
     "docker-build-ubuntu" : "docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .",
     "docker-run-centos" : "docker run --rm willbe-centos",
