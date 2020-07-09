@@ -60,7 +60,7 @@ function onModule( context )
   context.ready.catch( ( err ) =>
   {
     err = _.errBrief( err );
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
     throw err;
   });
 

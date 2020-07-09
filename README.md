@@ -1,5 +1,5 @@
 
-# willbe [![Status](https://img.shields.io/circleci/build/github/Wandalen/willbe?label=Test&logo=Test)](https://circleci.com/gh/Wandalen/willbe) [![Status](https://github.com/Wandalen/willbe/workflows/Test/badge.svg)](https://github.com/Wandalen/willbe/actions?query=workflow%3ATest) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
+# willbe  [![Status](https://github.com/Wandalen/willbe/workflows/Test/badge.svg)](https://github.com/Wandalen/willbe/actions?query=workflow%3ATest) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
 Utility for development which helps to manage modularity of complex modular systems.
 

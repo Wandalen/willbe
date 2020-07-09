@@ -31,12 +31,13 @@ function onModule( context )
 
   // fileProvider.filesDelete({ filePath : abs( '.travis.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0 });
 
-  samplesRename( context );
+  // samplesRename( context );
 
   // badgeCiReplace( context );
   // badgesSwap( context );
   // badgeStabilityAdd( context );
   // badgeCircleCiAdd( context );
+  badgeCircleCiRemove( context );
   // badgeCircleCiReplace( context );
 
   // readmeModuleNameAdjust( context );
@@ -242,12 +243,58 @@ function badgeCircleCiAdd( context )
   let read = fileProvider.fileRead( readmePath );
   let has = `https://circleci.com/gh`;
   let ins = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
-  let sub = `[![Status](https://circleci.com/gh/${config.about.user}/${moduleName}.svg?style=shield)](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test) [![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
+  let sub = `[![Status](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)](https://circleci.com/gh/${config.about.user}/${moduleName}) [![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
 
   if( _.strHas( read, has ) )
   return false;
 
   logger.log( `Adding CircleCI badge ${context.junction.nameWithLocationGet()}` );
+
+  if( o.dry )
+  return console.log( filePath );
+
+  logger.log( _.censor.fileReplace( readmePath, ins, sub ).log );
+
+  return true;
+}
+
+//
+
+function badgeCircleCiRemove( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let readmePath = path.join( inPath, 'README.md' );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+  if( !fileProvider.fileExists( readmePath ) )
+  return;
+
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  if( !config )
+  return null;
+  if( !config.about )
+  return null;
+  if( !config.about.user || !config.about.user )
+  return null;
+
+  let moduleName = context.module.about.name;
+  let read = fileProvider.fileRead( readmePath );
+  let ins = `[![Status](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)](https://circleci.com/gh/${config.about.user}/${moduleName})`;
+  let sub = ``;
+
+  debugger;
+  if( !_.strHas( read, ins ) )
+  return false;
+
+  logger.log( `Removing CircleCI badge ${context.junction.nameWithLocationGet()}` );
 
   if( o.dry )
   return console.log( filePath );

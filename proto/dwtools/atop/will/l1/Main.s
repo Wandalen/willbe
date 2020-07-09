@@ -1946,7 +1946,7 @@ function modulesFindWithAt( o )
       {
         context.opener.finit();
       }
-      logger.log( _.errOnce( err ) );
+      logger.error( _.errOnce( err ) );
       return null;
     }
     return arg;

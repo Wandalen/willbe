@@ -853,13 +853,13 @@ function errorNotFound( err )
 
   if( will.verbosity >= 2 && !_.errIsBrief( err ) )
   {
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
   }
   else if( will.verbosity >= 5 || !relation.opener || relation.opener.isOpened() )
   {
     if( will.verbosity < 5 )
     err = _.errBrief( err );
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
   }
   else
   {

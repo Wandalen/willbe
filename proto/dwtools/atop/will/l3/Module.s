@@ -88,7 +88,7 @@ function finit()
   }
   catch( err )
   {
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
     debugger;
   }
 
@@ -118,7 +118,7 @@ function finit()
   }
   catch( err )
   {
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
     debugger;
   }
 
@@ -7580,7 +7580,7 @@ function gitPull( o )
   ready.catch( ( err ) =>
   {
     err = _.errBrief( err );
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
     throw err;
   });
 
@@ -7648,7 +7648,7 @@ function gitPush( o )
   ready.catch( ( err ) =>
   {
     err = _.errBrief( err );
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
     throw err;
   });
 

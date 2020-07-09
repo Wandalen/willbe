@@ -402,7 +402,7 @@ function _read()
     if( will.verbosity >= 5 )
     {
       logger.up( 2 );
-      logger.log( _.errOnce( err ) );
+      logger.error( _.errOnce( err ) );
       logger.down( 2 );
     }
     throw err;
@@ -567,7 +567,7 @@ function _open()
     if( will.verbosity >= 5 )
     {
       logger.up( 2 );
-      logger.log( _.errOnce( err ) );
+      logger.error( _.errOnce( err ) );
       logger.down( 2 );
     }
     throw err;

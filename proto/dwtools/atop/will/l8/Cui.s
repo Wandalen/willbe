@@ -113,7 +113,7 @@ function exec()
   {
     _.process.exitCode( -1 );
     err = _.err( err );
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
     throw err;
   });
 
@@ -566,7 +566,7 @@ function _commandListLike( o )
   {
     will._commandsEnd( o.commandRoutine );
     if( err )
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
     if( err )
     throw err;
     return arg;
@@ -669,7 +669,7 @@ function _commandBuildLike( o )
     if( err )
     debugger;
     if( err )
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
     if( err )
     throw err;
     return arg;
@@ -763,7 +763,7 @@ function _commandCleanLike( o )
     if( err )
     debugger;
     if( err )
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
     if( err )
     throw err;
     return arg;
@@ -861,7 +861,7 @@ function _commandNewLike( o )
     if( err )
     debugger;
     if( err )
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
     if( err )
     throw err;
     return arg;
@@ -936,7 +936,7 @@ function _commandTreeLike( o )
     if( err )
     err = _.err( err, `\nFailed to ${o.name}` );
     if( err )
-    logger.log( _.errOnce( err ) );
+    logger.error( _.errOnce( err ) );
     if( err )
     throw err;
     return arg;
