@@ -25391,7 +25391,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
 
   /* */
 
-  a.appStart({ args : '.npm.from.willfile packagePath:"{path::out.*=1}/package.json" debug:1' })
+  a.appStart({ args : '.npm.from.willfile packagePath:"{path::out.debug}/package.json"' })
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `packagePath`, `package.json`, resolve path with criterions';
@@ -25470,7 +25470,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::entry.*=1}/File.s" debug:"debug"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::entry.debug}/File.s"' })
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -25539,7 +25539,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"{path::entry.*=1}/**" debug:"debug"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"{path::entry.debug}/**"' })
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -25554,6 +25554,24 @@ function commandNpmFromWillfileOptionsInCommand( test )
       files : [ 'proto/File.s' ]
     };
     test.identical( config, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesDelete( a.abs( 'package.json' ) );
+    return null;
+  });
+  a.appStartNonThrowing({ args : '.with PathMain .npm.from.willfile filesPathx:"{path::entry.debug}/**"' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'wrong option';
+    test.notIdentical( op.exitCode, 0 );
+    let files = a.find( a.abs( '.' ) );
+    test.is( !_.longHas( files, './package.json' ) );
 
     return null;
   })
@@ -25877,13 +25895,17 @@ function commandWillfileFromNpm( test )
       }
     };
     test.identical( config, exp );
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) );
 
     return null;
   })
 
   /* */
 
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) );
+    return null;
+  });
   a.appStartNonThrowing({ args : '.willfile.from.npm packagesPathx:proto/package.json' })
   a.ready.then( ( op ) =>
   {

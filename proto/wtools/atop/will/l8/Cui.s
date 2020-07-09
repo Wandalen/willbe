@@ -2656,11 +2656,8 @@ function commandEach( e )
 function commandNpmFromWillfile( e )
 {
   let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
   let request = _.strStructureParse( e.commandArgument );
-  let criterionsMap = _.mapBut( request, commandNpmFromWillfile.commandProperties );
-  request = _.mapBut( request, criterionsMap );
+  _.assertMapHasOnly( request, commandNpmFromWillfile.commandProperties, `Command does not expect additional options.` );
 
   return will._commandBuildLike
   ({
@@ -2672,8 +2669,6 @@ function commandNpmFromWillfile( e )
 
   function handleEach( it )
   {
-    if( _.mapKeys( criterionsMap ).length > 0 )
-    it.opener.openedModule.stepMap[ "npm.generate" ].criterion = criterionsMap;
     let currentContext = it.opener.openedModule.stepMap[ "npm.generate" ];
 
     return it.opener.openedModule.npmGenerateFromWillfile
@@ -2682,7 +2677,7 @@ function commandNpmFromWillfile( e )
       entryPath : request.entryPath,
       filesPath : request.filesPath,
       currentContext,
-      verbosity : 5,
+      verbosity : 2,
     });
   }
 
