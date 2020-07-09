@@ -29,12 +29,14 @@ function onModule( context )
   // hardLink( context, '.github/workflows/Test.yml', 'hlink/.github/workflows/Test.yml' );
   // hardLink( context, '.circleci/config.yml', 'hlink/.circleci/config.yml' );
 
+  workflowsReplace( context );
+
   // fileProvider.filesDelete({ filePath : abs( '.travis.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0 });
 
   // samplesRename( context );
   // dwtoolsRename( context );
 
-  // badgeCiReplace( context );
+  badgeCiReplace( context );
   // badgesSwap( context );
   // badgeStabilityAdd( context );
   // badgeCircleCiAdd( context );
@@ -92,6 +94,34 @@ function hardLink( context, dstPath, srcPath )
   });
 
   return true;
+}
+
+//
+
+function workflowsReplace( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !fileProvider.fileExists( abs( '.github/workflows/Test.yml' ) ) )
+  return;
+
+  if( o.dry )
+  return;
+
+  logger.log( `Replacing workflows of ${context.junction.nameWithLocationGet()}` );
+
+  hardLink( context, '.github/workflows/Publish.yml', 'hlink/.github/workflows/Publish.yml' );
+  hardLink( context, '.github/workflows/PullRequest.yml', 'hlink/.github/workflows/PullRequest.yml' );
+  hardLink( context, '.github/workflows/Push.yml', 'hlink/.github/workflows/Push.yml' );
+
+  fileProvider.fileDelete( abs( '.github/workflows/Test.yml' ) );
+
 }
 
 //
@@ -160,15 +190,14 @@ function badgeCiReplace( context )
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
-  let readmePath = path.join( inPath, 'README.md' );
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
   return
   if( !context.module.about.name )
   return
-  if( !fileProvider.fileExists( readmePath ) )
+  if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
-
   let config = fileProvider.configUserRead( _.censor.storageConfigPath );
   if( !config )
   return null;
@@ -177,10 +206,13 @@ function badgeCiReplace( context )
   if( !config.about.user || !config.about.user )
   return null;
 
+  if( !fileProvider.fileExists( abs( '.github/workflows/Publish.yml' ) ) )
+  return;
+
   let moduleName = context.module.about.name;
-  let read = fileProvider.fileRead( readmePath );
-  let ins = `[![Build Status](https://travis-ci.org/${config.about.user}/${moduleName}.svg?branch=master)](https://travis-ci.org/${config.about.user}/${moduleName})`;
-  let sub = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}}/actions?query=workflow%3ATest)`;
+  let read = fileProvider.fileRead( abs( 'README.md' ) );
+  let ins = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
+  let sub = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Publish/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3APublish)`;
 
   if( !_.strHas( read, ins ) )
   return false;
@@ -190,7 +222,13 @@ function badgeCiReplace( context )
   if( o.dry )
   return console.log( filePath );
 
-  logger.log( _.censor.fileReplace( readmePath, ins, sub ).log );
+  logger.log( _.censor.fileReplace
+  ({
+    filePath : abs( 'README.md' ),
+    ins,
+    sub,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
 
   return true;
 }
@@ -205,13 +243,13 @@ function badgeStabilityAdd( context )
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
-  let readmePath = path.join( inPath, 'README.md' );
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
   return
   if( !context.module.about.name )
   return
-  if( !fileProvider.fileExists( readmePath ) )
+  if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
   let config = fileProvider.configUserRead( _.censor.storageConfigPath );
@@ -223,10 +261,9 @@ function badgeStabilityAdd( context )
   return null;
 
   let moduleName = context.module.about.name;
-  let read = fileProvider.fileRead( readmePath );
+  let read = fileProvider.fileRead( abs( 'README.md' ) );
   let has = `badge/stability`;
   let ins = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
-  let ins2 = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}}/actions?query=workflow%3ATest)`;
   let sub = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`
           + ` [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)`;
 
@@ -239,8 +276,13 @@ function badgeStabilityAdd( context )
   if( o.dry )
   return console.log( filePath );
 
-  logger.log( _.censor.fileReplace( readmePath, ins, sub ).log );
-  logger.log( _.censor.fileReplace( readmePath, ins2, sub ).log );
+  logger.log( _.censor.fileReplace
+  ({
+    filePath : abs( 'README.md' ),
+    ins,
+    sub,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
 
   return true;
 }
@@ -255,13 +297,13 @@ function badgeCircleCiAdd( context )
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
-  let readmePath = path.join( inPath, 'README.md' );
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
   return
   if( !context.module.about.name )
   return
-  if( !fileProvider.fileExists( readmePath ) )
+  if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
   let config = fileProvider.configUserRead( _.censor.storageConfigPath );
@@ -273,7 +315,7 @@ function badgeCircleCiAdd( context )
   return null;
 
   let moduleName = context.module.about.name;
-  let read = fileProvider.fileRead( readmePath );
+  let read = fileProvider.fileRead( abs( 'README.md' ) );
   let has = `https://circleci.com/gh`;
   let ins = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
   let sub = `[![Status](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)](https://circleci.com/gh/${config.about.user}/${moduleName}) [![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
@@ -286,7 +328,13 @@ function badgeCircleCiAdd( context )
   if( o.dry )
   return console.log( filePath );
 
-  logger.log( _.censor.fileReplace( readmePath, ins, sub ).log );
+  logger.log( _.censor.fileReplace
+  ({
+    filePath : abs( 'README.md' ),
+    ins,
+    sub,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
 
   return true;
 }
@@ -301,13 +349,13 @@ function badgeCircleCiRemove( context )
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
-  let readmePath = path.join( inPath, 'README.md' );
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
   return
   if( !context.module.about.name )
   return
-  if( !fileProvider.fileExists( readmePath ) )
+  if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
   let config = fileProvider.configUserRead( _.censor.storageConfigPath );
@@ -319,7 +367,7 @@ function badgeCircleCiRemove( context )
   return null;
 
   let moduleName = context.module.about.name;
-  let read = fileProvider.fileRead( readmePath );
+  let read = fileProvider.fileRead( abs( 'README.md' ) );
   let ins = `[![Status](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)](https://circleci.com/gh/${config.about.user}/${moduleName})`;
   let sub = ``;
 
@@ -332,7 +380,13 @@ function badgeCircleCiRemove( context )
   if( o.dry )
   return console.log( filePath );
 
-  logger.log( _.censor.fileReplace( readmePath, ins, sub ).log );
+  logger.log( _.censor.fileReplace
+  ({
+    filePath : abs( 'README.md' ),
+    ins,
+    sub,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
 
   return true;
 }
@@ -347,13 +401,13 @@ function badgeCircleCiReplace( context )
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
-  let readmePath = path.join( inPath, 'README.md' );
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
   return
   if( !context.module.about.name )
   return
-  if( !fileProvider.fileExists( readmePath ) )
+  if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
   let config = fileProvider.configUserRead( _.censor.storageConfigPath );
@@ -365,7 +419,7 @@ function badgeCircleCiReplace( context )
   return null;
 
   let moduleName = context.module.about.name;
-  let read = fileProvider.fileRead( readmePath );
+  let read = fileProvider.fileRead( abs( 'README.md' ) );
   let ins = `[![Status](https://circleci.com/gh/${config.about.user}/${moduleName}.svg?style=shield)](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)`;
   let sub = `[![Status](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)](https://circleci.com/gh/${config.about.user}/${moduleName})`;
 
@@ -377,7 +431,13 @@ function badgeCircleCiReplace( context )
   if( o.dry )
   return console.log( filePath );
 
-  logger.log( _.censor.fileReplace( readmePath, ins, sub ).log );
+  logger.log( _.censor.fileReplace
+  ({
+    filePath : abs( 'README.md' ),
+    ins,
+    sub,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
 
   return true;
 }
@@ -392,13 +452,13 @@ function badgesSwap( context )
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
-  let readmePath = path.join( inPath, 'README.md' );
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
   return
   if( !context.module.about.name )
   return
-  if( !fileProvider.fileExists( readmePath ) )
+  if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
   let config = fileProvider.configUserRead( _.censor.storageConfigPath );
@@ -410,7 +470,7 @@ function badgesSwap( context )
   return null;
 
   let moduleName = context.module.about.name;
-  let read = fileProvider.fileRead( readmePath );
+  let read = fileProvider.fileRead( abs( 'README.md' ) );
   let ins = `[![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental) [![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
   let sub = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)`;
 
@@ -422,7 +482,13 @@ function badgesSwap( context )
   if( o.dry )
   return console.log( filePath );
 
-  logger.log( _.censor.fileReplace( readmePath, ins, sub ).log );
+  logger.log( _.censor.fileReplace
+  ({
+    filePath : abs( 'README.md' ),
+    ins,
+    sub,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
 
 }
 
@@ -436,13 +502,13 @@ function readmeModuleNameAdjust( context )
   let path = context.will.fileProvider.path;
   let _ = context.tools;
   let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
-  let readmePath = path.join( inPath, 'README.md' );
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
 
   if( !context.module )
   return
   if( !context.module.about.name )
   return
-  if( !fileProvider.fileExists( readmePath ) )
+  if( !fileProvider.fileExists( abs( 'README.md' ) ) )
   return;
 
   let config = fileProvider.configUserRead( _.censor.storageConfigPath );
@@ -459,7 +525,7 @@ function readmeModuleNameAdjust( context )
   if( shortModuleName === moduleName )
   return;
 
-  let read = fileProvider.fileRead( readmePath );
+  let read = fileProvider.fileRead( abs( 'README.md' ) );
   let has = `# ${moduleName}`;
 
   debugger;
@@ -474,13 +540,25 @@ function readmeModuleNameAdjust( context )
   {
     let ins = `# ${moduleName}  [`;
     let sub = `# module::${shortModuleName}  [`;
-    logger.log( _.censor.fileReplace( readmePath, ins, sub ).log );
+    logger.log( _.censor.fileReplace
+    ({
+      filePath : abs( 'README.md' ),
+      ins,
+      sub,
+      verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+    }).log );
   }
 
   {
     let ins = `# ${moduleName} [`;
     let sub = `# module::${shortModuleName} [`;
-    logger.log( _.censor.fileReplace( readmePath, ins, sub ).log );
+    logger.log( _.censor.fileReplace
+    ({
+      filePath : abs( 'README.md' ),
+      ins,
+      sub,
+      verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+    }).log );
   }
 
   return true;
