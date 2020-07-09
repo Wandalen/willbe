@@ -2700,11 +2700,8 @@ commandNpmFromWillfile.commandProperties =
 function commandWillfileFromNpm( e )
 {
   let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
   let request = _.strStructureParse( e.commandArgument );
-  let criterionsMap = _.mapBut( request, commandWillfileFromNpm.commandProperties );
-  request = _.mapBut( request, criterionsMap );
+  _.assertMapHasOnly( request, commandWillfileFromNpm.commandProperties, `Command does not expect additional options.` );
 
   if( will.currentOpeners && will.currentOpeners.length )
   {

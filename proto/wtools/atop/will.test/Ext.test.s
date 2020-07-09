@@ -25877,6 +25877,20 @@ function commandWillfileFromNpm( test )
       }
     };
     test.identical( config, exp );
+    a.fileProvider.filesDelete( a.abs( '.will.yml' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStartNonThrowing({ args : '.willfile.from.npm packagesPathx:proto/package.json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'wrong option';
+    test.notIdentical( op.exitCode, 0 );
+    let files = a.find( a.abs( '.' ) );
+    test.isNot( _.longHas( files, './.will.yml' ) )
 
     return null;
   })
