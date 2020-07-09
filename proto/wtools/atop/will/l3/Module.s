@@ -7115,7 +7115,6 @@ function npmGenerateFromWillfile( o )
     verbosity : verbosity ? 5 : 0,
   });
 
-  debugger;
   return null;
 
   /* */
@@ -7159,7 +7158,7 @@ npmGenerateFromWillfile.defaults =
 
 //
 
-function willfileGenerateFromNpm( o )
+function _willfileGenerateFromNpm( o )
 {
   let module = this;
   let will = module.will ? module.will : module;
@@ -7260,15 +7259,17 @@ function willfileGenerateFromNpm( o )
   _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
   _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
 
-  fileProvider.fileWrite
-  ({
-    filePath : willfilePath,
-    data : willfile,
-    encoding : 'yaml',
-    verbosity : verbosity ? 5 : 0,
-  });
+  return [ willfilePath, willfile ];
 
-  return null;
+  // fileProvider.fileWrite
+  // ({
+  //   filePath : willfilePath,
+  //   data : willfile,
+  //   encoding : 'yaml',
+  //   verbosity : verbosity ? 5 : 0,
+  // });
+  //
+  // return null;
 
   /* */
 
@@ -7369,12 +7370,212 @@ function willfileGenerateFromNpm( o )
 
 }
 
-willfileGenerateFromNpm.defaults =
+_willfileGenerateFromNpm.defaults =
 {
   packagePath : null,
   willfilePath : null,
   verbosity : null,
 };
+
+//
+
+function willfileGenerateFromNpm( o )
+{
+  let willfilePath, willfile;
+  [ willfilePath, willfile ] = _.will.Module.prototype._willfileGenerateFromNpm.apply( this, arguments );
+
+  /* */
+
+  let fileProvider = this.will ? this.will.fileProvider : this.fileProvider;
+  fileProvider.fileWrite
+  ({
+    filePath : willfilePath,
+    data : willfile,
+    encoding : 'yaml',
+    verbosity : o.verbosity ? 5 : 0,
+  });
+
+  return null;
+}
+
+//
+
+function willfileExtend( o )
+{
+  let module = this;
+  let will = module.will ? module.will : module;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = _.mapExtend( null, o );
+  let verbosity = o.verbosity;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  /* */
+
+  let dstWillfilePath = opts.dstWillfilePath ? opts.dstWillfilePath : '.will.yml';
+  if( opts.currentContext )
+  dstWillfilePath = module.pathResolve
+  ({
+    selector : opts.dstWillfilePath || 'will.yml',
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : opts.currentContext,
+  });
+  else
+  dstWillfilePath = path.join( will.inPath ? will.inPath : path.current(), dstWillfilePath );
+
+  _.sure( !fileProvider.isDir( dstWillfilePath ), () => `${ dstWillfilePath } is dir, not safe to delete` );
+
+  /* */
+
+  let dstWillfileEncoding = _.longHas( path.exts( dstWillfilePath ), 'json' ) ? 'json' : 'yaml';
+  let willfile;
+  if( fileProvider.isTerminal( dstWillfilePath ) )
+  {
+    willfile = fileProvider.configRead({ filePath : dstWillfilePath, encoding : dstWillfileEncoding });
+  }
+  else
+  {
+    willfile = Object.create( null );
+    willfile.about = Object.create( null );
+    willfile.path = Object.create( null );
+    willfile.submodule = Object.create( null );
+  }
+
+  /* destination willfile extending */
+
+  let sectionMap =
+  {
+    about : aboutSectionExtend,
+    build : sectionExtend,
+    path : sectionExtend,
+    reflector : sectionExtend,
+    step : sectionExtend,
+    submodule : sectionExtend,
+  }
+
+  for( let i = 0 ; i < opts.srcs.length ; i++ )
+  {
+    let srcPath = opts.srcs[ i ];
+    if( opts.currentContext )
+    srcPath = module.pathResolve
+    ({
+      selector : srcPath ? srcPath : 'will.yml',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : opts.currentContext,
+    });
+    else
+    srcPath = path.join( will.inPath ? will.inPath : path.current(), srcPath );
+
+    let srcEncoding = _.longHas( path.exts( srcPath ), 'json' ) ? 'json' : 'yaml';
+    let srcConfig;
+    if( srcEncoding === 'json' )
+    {
+      srcConfig = _.will.Module.prototype._willfileGenerateFromNpm.call( this,
+      {
+        packagePath : srcPath,
+      });
+      srcConfig = srcConfig[ 1 ];
+    }
+    else
+    {
+      srcConfig = fileProvider.fileRead({ filePath : srcPath, encoding : srcEncoding });
+    }
+
+    for( let sectionName in srcConfig )
+    sectionMap[ sectionName ]( sectionName );
+
+  }
+
+  /* */
+
+  if( _.mapKeys( willfile.submodule ).length === 0 )
+  delete willfile.submodule;
+  if( _.mapKeys( willfile.path ).length === 0 )
+  delete willfile.path;
+
+  /* write destination willfile */
+
+  fileProvider.fileWrite
+  ({
+    filePath : dstWillfilePath,
+    data : willfile,
+    encoding : dstWillfileEncoding,
+    verbosity : verbosity ? 5 : 0,
+  });
+
+  return null;
+
+  /* */
+
+  function aboutSectionExtend()
+  {
+    let extendingMap =
+    {
+      name :         srcConfig.about.name,
+      version :      srcConfig.about.version,
+      enabled :      srcConfig.about.enabled,
+      description :  srcConfig.about.description,
+      license :      srcConfig.about.license,
+      author :       srcConfig.about.author,
+    }
+
+    opts.onSection( willfile.about, extendingMap );
+
+    if( srcConfig.about.keywords )
+    {
+      if( _.longIs( willfile.about.keywords ) )
+      willfile.about.keywords = _.arrayAppendArraysOnce( willfile.about.keywords, srcConfig.about.keywords );
+      else
+      willfile.about.keywords = _.arrayAppendArraysOnce( null, srcConfig.about.keywords );
+    }
+    if( srcConfig.about.scripts )
+    {
+      if( _.longIs( willfile.about.scripts ) )
+      willfile.about.scripts = _.arrayAppendArraysOnce( willfile.about.scripts, srcConfig.about.scripts );
+      else
+      willfile.about.scripts = _.arrayAppendArraysOnce( null, srcConfig.about.scripts );
+    }
+    if( srcConfig.about.contributors )
+    {
+      _.assert( 0, 'not implemented' );
+      let contributors = contributorsParse( srcConfig.about.contributors );
+
+      if( _.longIs( willfile.about.contributors ) )
+      willfile.about.scripts = _.arrayAppendArraysOnce( willfile.about.contributors, srcConfig.about.contributors );
+      else
+      willfile.about.contributors = _.arrayAppendArraysOnce( null, srcConfig.about.contributors );
+    }
+    if( srcConfig.about.interpreters )
+    {
+      _.assert( 0, 'not implemented' );
+      let interpreters = interpretersParse( srcConfig.about.interpreters );
+
+      if( _.longIs( willfile.about.scripts ) )
+      willfile.about.interpreters = _.arrayAppendArraysOnce( willfile.about.interpreters, srcConfig.about.interpreters );
+      else
+      willfile.about.interpreters = _.arrayAppendArraysOnce( null, srcConfig.about.interpreters );
+    }
+  }
+
+  /* */
+
+  function sectionExtend( name )
+  {
+    opts.onSection( willfile[ name ], srcConfig[ name ] );
+  }
+
+}
+
+willfileExtend.defaults =
+{
+}
 
 //
 
@@ -8570,6 +8771,7 @@ let Extension =
   resourceImport,
 
   npmGenerateFromWillfile,
+  _willfileGenerateFromNpm,
   willfileGenerateFromNpm,
 
   // remote
