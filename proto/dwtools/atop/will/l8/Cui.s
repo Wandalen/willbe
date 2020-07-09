@@ -2650,7 +2650,7 @@ function commandNpmGenerateFromWillfile( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let request = _.strStructureParse( e.commandArgument );
-  let criterionsMap = _.mapBut( request, commandNpmGenerateFromWillfile.defaults );
+  let criterionsMap = _.mapBut( request, commandNpmGenerateFromWillfile.commandProperties );
   request = _.mapBut( request, criterionsMap );
 
   return will._commandBuildLike
@@ -2665,23 +2665,24 @@ function commandNpmGenerateFromWillfile( e )
   {
     if( _.mapKeys( criterionsMap ).length > 0 )
     it.opener.openedModule.stepMap[ "npm.generate" ].criterion = criterionsMap;
+    let currentContext = it.opener.openedModule.stepMap[ "npm.generate" ];
 
     return it.opener.openedModule.npmGenerateFromWillfile
     ({
       packagePath : request.packagePath,
       entryPath : request.entryPath,
       filesPath : request.filesPath,
-      currentContext : it.opener.openedModule.stepMap[ "npm.generate" ],
+      currentContext,
       verbosity : 5,
     });
   }
 }
 
-commandNpmGenerateFromWillfile.defaults =
+commandNpmGenerateFromWillfile.commandProperties =
 {
-  packagePath : null,
-  entryPath : null,
-  filesPath : null,
+  packagePath : 'Path to generated file. Default is "./package.json".',
+  entryPath : 'Path to willfiles. Default is current directory "./" and unnamed willfiles',
+  filesPath : 'Path to files that will be included in section "files" of "package.json". By default "package.json" include not section "files".',
 };
 
 //
@@ -2734,20 +2735,21 @@ function commandWillfileGenerateFromNpm( e )
 
   function handleEach( it )
   {
+    let currentContext = it.opener.openedModule.stepMap[ "willfile.generate" ];
     return it.opener.openedModule.willfileGenerateFromNpm
     ({
       packagePath : request.packagePath,
       willfilePath : request.willfilePath,
-      currentContext : it.opener.openedModule.stepMap[ "willfile.generate" ],
+      currentContext,
       verbosity : 5,
     });
   }
 }
 
-commandWillfileGenerateFromNpm.defaults =
+commandWillfileGenerateFromNpm.commandProperties =
 {
-  packagePath : null,
-  willfilePath : null,
+  packagePath : 'Path to source json file. Default is "./package.json".',
+  willfilePath : 'Path to generated willfile. Default is "./.will.yml".',
 };
 
 //

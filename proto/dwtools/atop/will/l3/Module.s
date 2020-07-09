@@ -7233,7 +7233,8 @@ function willfileGenerateFromNpm( o )
     optionalDependencies :  { propertyAdd : submodulePropertyAdd, name : 'optional' },
   };
 
-  for( let property in config )
+  for( let property in propertiesMap )
+  if( property in config )
   propertiesMap[ property ].propertyAdd( property, propertiesMap[ property ].name );
 
   if( willfile.about.name )
