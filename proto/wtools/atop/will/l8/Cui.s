@@ -2768,7 +2768,6 @@ function commandWillfileExtend( e )
 {
   let will = this;
   let request = _.will.Resolver.strRequestParse( e.commandArgument );
-  debugger;
 
   if( will.currentOpeners && will.currentOpeners.length )
   {
