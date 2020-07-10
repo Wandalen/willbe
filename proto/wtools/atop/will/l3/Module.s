@@ -7526,6 +7526,7 @@ function willfileExtend( o )
   }
   else
   {
+    debugger;
     willfileWrite( dstWillfilePath, willfile, dstWillfileEncoding );
   }
 
@@ -7589,49 +7590,28 @@ function willfileExtend( o )
     }
     if( src.about.contributors )
     {
-      dst.about.contributors = contributorsParse( dst.about.contributors );
-      src.about.contributors = contributorsParse( src.about.contributors );
+      dst.about.contributors = propertyParse( dst.about.contributors, _.strIsolateRightOrAll );
+      src.about.contributors = propertyParse( src.about.contributors, _.strIsolateRightOrAll );
       opts.onSection( dst.about.contributors, src.about.contributors );
     }
     if( src.about.interpreters )
     {
-      dst.about.interpreters = interpretersParse( dst.about.interpreters );
-      src.about.interpreters = interpretersParse( src.about.interpreters );
+      dst.about.interpreters = propertyParse( dst.about.interpreters, _.strIsolateLeftOrAll );
+      src.about.interpreters = propertyParse( src.about.interpreters, _.strIsolateLeftOrAll );
       opts.onSection( dst.about.interpreters, src.about.interpreters );
     }
   }
 
   /* */
 
-  function contributorsParse( src )
+  function propertyParse( src, parser )
   {
     let result = Object.create( null );
     if( _.longIs( src ) )
     {
       for( let i = 0 ; i < src.length ; i++ )
       {
-        let splits = _.strIsolateRightOrAll({ src : src[ i ] });
-        result[ splits[ 0 ] ] = splits[ 2 ];
-      }
-      return result;
-    }
-    else if( src === undefined )
-    {
-      return result;
-    }
-    return src;
-  }
-
-  /* */
-
-  function interpretersParse( src )
-  {
-    let result = Object.create( null );
-    if( _.longIs( src ) )
-    {
-      for( let i = 0 ; i < src.length ; i++ )
-      {
-        let splits = _.strIsolateLeftOrAll({ src : src[ i ] });
+        let splits = parser({ src : src[ i ] });
         result[ splits[ 0 ] ] = splits[ 2 ];
       }
       return result;
@@ -7657,7 +7637,6 @@ function willfileExtend( o )
     if( data.about.contributors )
     data.about.contributors = toArrayOfStrings( data.about.contributors );
 
-    debugger;
     if( data.about.interpreters )
     data.about.interpreters = toArrayOfStrings( data.about.interpreters );
 

@@ -26040,7 +26040,6 @@ function commandWillfileExtend( test )
     test.identical( config.about.name, undefined );
     test.identical( config.about.enabled, undefined );
     test.identical( config.about.contributors.length, 2 );
-    debugger;
     test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.about.interpreters.length, 3 );
     test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
@@ -26049,6 +26048,44 @@ function commandWillfileExtend( test )
   })
 
   /* */
+
+  a.appStart({ args : '.willfile.extend NewFile Author*.yml Contributors Description* Interpreters' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'create new named willfile, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author <author@dot.com>' );
+    test.identical( config.about.name, undefined );
+    test.identical( config.about.enabled, undefined );
+    test.identical( config.about.contributors.length, 2 );
+    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.about.interpreters.length, 3 );
+    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend ./ Author*.yml Contributors Description* Interpreters' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'create new willfile, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author <author@dot.com>' );
+    test.identical( config.about.name, undefined );
+    test.identical( config.about.enabled, undefined );
+    test.identical( config.about.contributors.length, 2 );
+    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.about.interpreters.length, 3 );
+    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+
+    return null;
+  })
+
+  /* - */
 
   return a.ready;
 }
