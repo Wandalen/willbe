@@ -7456,30 +7456,47 @@ function willfileExtend( o )
     }
   }
 
+  if( willfile.about.contributors )
+  {
+    willfile.about.contributors = _.mapToArray( willfile.about.contributors );
+    for( let i = 0 ; i < willfile.about.contributors.length ; i ++ )
+    willfile.about.contributors[ i ] = willfile.about.contributors[ i ].join();
+  }
+
+  if( willfile.about.interpreters )
+  {
+    willfile.about.interpreters = _.mapToArray( willfile.about.interpreters );
+    for( let i = 0 ; i < willfile.about.interpreters.length ; i ++ )
+    willfile.about.interpreters[ i ] = willfile.about.interpreters[ i ].join();
+  }
+
   if( opts.options.submodulesDisabling )
-  for( let dependency in willfile.submodule )
-  willfile.submodule[ dependency ][ 'criterion' ][ 'enabled' ] = 0;
+  {
+    for( let dependency in willfile.submodule )
+    willfile.submodule[ dependency ][ 'criterion' ][ 'enabled' ] = 0;
+  }
 
   for( let sectionName in sectionMap )
-  if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
-  delete willfile[ sectionName ];
+  {
+    if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
+    delete willfile[ sectionName ];
+  }
 
   /* write destination willfile */
 
-  debugger;
   let dstWillfilePath = path.join( will.inPath ? will.inPath : path.current(), request[ 0 ] );
   if( !fileProvider.isTerminal( dstWillfilePath ) )
   {
     if( fileProvider.isDir( dstWillfilePath ) )
     {
-      dstWillfilePath = path.join( request[ 0 ], 'will.yml' );
+      dstWillfilePath = path.join( dstWillfilePath, 'will.yml' );
     }
     else if( !path.isGlob( dstWillfilePath ) )
     {
-      let exts = path.exts( request[ 0 ] );
+      let exts = path.exts( dstWillfilePath );
       if( exts.length === 0 )
       {
-        dstWillfilePath = request[ 0 ] + '.will.yml';
+        dstWillfilePath = dstWillfilePath + '.will.yml';
       }
       else
       {
@@ -7488,7 +7505,7 @@ function willfileExtend( o )
         if( _.longHas( exts ), 'will' )
         exts.splice( exts.length - 1, 0, 'will' );
 
-        dstWillfilePath = path.name( request[ 0 ] ) + '.' + exts.join( '.' );
+        dstWillfilePath = path.dir( dstWillfilePath ) + path.name( dstWillfilePath ) + '.' + exts.join( '.' );
       }
     }
   }
@@ -7515,7 +7532,6 @@ function willfileExtend( o )
 
     }
 
-    debugger;
     config = fileProvider.fileRead({ filePath : dstWillfile[ 0 ].absolute, encoding : dstWillfileEncoding });
     for( let sectionName in willfile )
     {
@@ -7531,14 +7547,16 @@ function willfileExtend( o )
 
   /* */
 
+  debugger;
   return null;
 
   /* */
 
   function configFilesFind( selector )
   {
-
-    let filePath = path.join( will.inPath ? will.inPath : path.current(), selector );
+    let filePath = selector;
+    if( !path.isAbsolute( filePath ) )
+    filePath = path.join( will.inPath ? will.inPath : path.current(), selector );
 
     if( fileProvider.isTerminal( filePath ) )
     return filePath;
@@ -7566,17 +7584,16 @@ function willfileExtend( o )
 
   function aboutSectionExtend( dst, src, name )
   {
-    let extendingMap =
-    {
-      name :         src.about.name,
-      version :      src.about.version,
-      enabled :      src.about.enabled,
-      description :  src.about.description,
-      license :      src.about.license,
-      author :       src.about.author,
-    }
+    let keys = [ 'name', 'version', 'enabled', 'description', 'license', 'author' ];
+    let extendingMap = Object.create( null );
+
+    for( let i = 0 ; i < keys.length ; i++ )
+    if( src.about[ keys[ i ] ] !== undefined )
+    extendingMap[ keys[ i ] ] = src.about[ keys[ i ] ];
 
     opts.onSection( dst.about, extendingMap );
+
+    /* */
 
     if( src.about.keywords )
     {
@@ -7588,13 +7605,15 @@ function willfileExtend( o )
     }
     if( src.about.contributors )
     {
-      let contributors = contributorsParse( src.about.contributors );
-      dst.about.contributors = _.scalarAppendOnce( dst.about.contributors, src.about.contributors );
+      dst.about.contributors = contributorsParse( dst.about.contributors );
+      src.about.contributors = contributorsParse( src.about.contributors );
+      opts.onSection( dst.about.contributors, src.about.contributors );
     }
     if( src.about.interpreters )
     {
-      let interpreters = interpretersParse( src.about.interpreters );
-      dst.about.interpreters = _.scalarAppendOnce( dst.about.interpreters, src.about.interpreters );
+      dst.about.interpreters = interpretersParse( dst.about.interpreters );
+      src.about.interpreters = interpretersParse( src.about.interpreters );
+      opts.onSection( dst.about.interpreters, src.about.interpreters );
     }
   }
 
@@ -7602,15 +7621,18 @@ function willfileExtend( o )
 
   function contributorsParse( src )
   {
+    let result = Object.create( null );
     if( _.longIs( src ) )
     {
-      let result = Object.create( null );
-
       for( let i = 0 ; i < src.length ; i++ )
       {
         let splits = _.strIsolateRightOrAll({ src : src[ i ] });
         result[ splits[ 0 ] ] = splits[ 2 ];
       }
+      return result;
+    }
+    else if( src === undefined )
+    {
       return result;
     }
     return src;
@@ -7620,15 +7642,18 @@ function willfileExtend( o )
 
   function interpretersParse( src )
   {
+    let result = Object.create( null );
     if( _.longIs( src ) )
     {
-      let result = Object.create( null );
-
       for( let i = 0 ; i < src.length ; i++ )
       {
         let splits = _.strLeftOrAll({ src : src[ i ] });
         result[ splits[ 0 ] ] = splits[ 2 ];
       }
+      return result;
+    }
+    else if( src === undefined )
+    {
       return result;
     }
     return src;
