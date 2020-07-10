@@ -7083,6 +7083,7 @@ function npmGenerateFromWillfile( o )
 
   for( let s in module.submoduleMap )
   {
+    debugger;
     let submodule = module.submoduleMap[ s ];
     let p = submodule.path;
     p = path.parseFull( p );
@@ -7499,7 +7500,9 @@ function willfileExtend( o )
   let dstWillfile = configFilesFind( dstWillfilePath );
   if( dstWillfile.length !== 0 )
   {
-    let config
+    _.assert( dstWillfile.length <= 2, 'Please, improve selector, cannot choose willfiles' );
+
+    let config;
     if( dstWillfile.length === 2 )
     {
 

@@ -25291,7 +25291,7 @@ function commandNpmFromWillfile( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "NpmFromWillfile",
+      name : "npmfromwillfile",
       description: "To check the conversion",
       version : "0.0.0",
       enabled : 1,
@@ -25299,8 +25299,9 @@ function commandNpmFromWillfile( test )
       description : "To check the conversion",
       author : "Author <author@dot.com>",
       contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "NpmFromWillfile" : "file:.", "wTesting" : "" },
+      devDependencies : { "npmfromwillfile" : "file:.", "wTesting" : "" },
       repository: "git+https://github.com/author/NpmFromWillfile.git",
       bugs : "https://github.com/author/NpmFromWillfile/issues",
       keywords : ["tools", "export"],
@@ -25335,7 +25336,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "NpmFromWillfile",
+      name : "npmfromwillfile",
       description: "To check the conversion",
       version : "0.0.0",
       enabled : 1,
@@ -25343,8 +25344,9 @@ function commandNpmFromWillfileOptionsInCommand( test )
       description : "To check the conversion",
       author : "Author <author@dot.com>",
       contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "NpmFromWillfile" : "file:.", "wTesting" : "" },
+      devDependencies : { "npmfromwillfile" : "file:.", "wTesting" : "" },
       repository: "git+https://github.com/author/NpmFromWillfile.git",
       bugs : "https://github.com/author/NpmFromWillfile/issues",
       keywords : ["tools", "export"],
@@ -25368,7 +25370,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "NpmFromWillfile",
+      name : "npmfromwillfile",
       description: "To check the conversion",
       version : "0.0.0",
       enabled : 1,
@@ -25376,8 +25378,9 @@ function commandNpmFromWillfileOptionsInCommand( test )
       description : "To check the conversion",
       author : "Author <author@dot.com>",
       contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "NpmFromWillfile" : "file:.", "wTesting" : "" },
+      devDependencies : { "npmfromwillfile" : "file:.", "wTesting" : "" },
       repository: "git+https://github.com/author/NpmFromWillfile.git",
       bugs : "https://github.com/author/NpmFromWillfile/issues",
       keywords : ["tools", "export"],
@@ -25401,7 +25404,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "NpmFromWillfile",
+      name : "npmfromwillfile",
       description: "To check the conversion",
       version : "0.0.0",
       enabled : 1,
@@ -25409,8 +25412,9 @@ function commandNpmFromWillfileOptionsInCommand( test )
       description : "To check the conversion",
       author : "Author <author@dot.com>",
       contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "NpmFromWillfile" : "file:.", "wTesting" : "" },
+      devDependencies : { "npmfromwillfile" : "file:.", "wTesting" : "" },
       repository: "git+https://github.com/author/NpmFromWillfile.git",
       bugs : "https://github.com/author/NpmFromWillfile/issues",
       keywords : ["tools", "export"],
@@ -25470,7 +25474,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::entry.*=1}/File.s" debug:"debug"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::entry.*=1}/File.s" debug:debug' })
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
