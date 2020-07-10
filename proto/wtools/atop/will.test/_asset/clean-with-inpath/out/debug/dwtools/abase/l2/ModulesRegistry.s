@@ -323,7 +323,7 @@ let wSchema =
 
 let wStxt =
 {
-  sourcePath : sourcePath( 'amid/l1/stxt/Include.s', 'wstxtparser' ),
+  sourcePath : sourcePath( 'amid/l1/stxt/entry/Stxt.s', 'wstxtparser' ),
   isIncluded : function(){ return !!_global.wTools && !!_global.wTools.stxt && !!_global.wTools.stxt.Parser },
 }
 
