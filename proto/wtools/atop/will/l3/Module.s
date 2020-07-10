@@ -7402,48 +7402,34 @@ function willfileGenerateFromNpm( o )
 
 function willfileExtend( o )
 {
+  debugger;
   let module = this;
   let will = module.will ? module.will : module;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
   let opts = _.mapExtend( null, o );
-  let verbosity = o.verbosity;
+  let verbosity = opts.verbosity;
+  let pathFind = opts.currentContext ? pathFindFromContext : pathFindRelative;
+  let request = opts.request.split( /\s+/ );
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
 
   /* */
 
-  let dstWillfilePath = opts.dstWillfilePath ? opts.dstWillfilePath : '.will.yml';
-  if( opts.currentContext )
-  dstWillfilePath = module.pathResolve
-  ({
-    selector : opts.dstWillfilePath || 'will.yml',
-    prefixlessAction : 'resolved',
-    pathNativizing : 0,
-    selectorIsPath : 1,
-    currentContext : opts.currentContext,
-  });
-  else
-  dstWillfilePath = path.join( will.inPath ? will.inPath : path.current(), dstWillfilePath );
-
+  let dstWillfilePath = pathFind( request[ 0 ] );
   _.sure( !fileProvider.isDir( dstWillfilePath ), () => `${ dstWillfilePath } is dir, not safe to delete` );
-
-  /* */
-
   let dstWillfileEncoding = _.longHas( path.exts( dstWillfilePath ), 'json' ) ? 'json' : 'yaml';
+
   let willfile;
   if( fileProvider.isTerminal( dstWillfilePath ) )
   {
-    willfile = fileProvider.configRead({ filePath : dstWillfilePath, encoding : dstWillfileEncoding });
+    willfile = new _.Will.will.openerMakeManual({ willfilesPath : dstWillfilePath });
+    willfile = willfile.exportStructure();
   }
-  else
+  if( !willfile )
   {
     willfile = Object.create( null );
-    willfile.about = Object.create( null );
-    willfile.path = Object.create( null );
-    willfile.submodule = Object.create( null );
   }
 
   /* destination willfile extending */
@@ -7458,47 +7444,37 @@ function willfileExtend( o )
     submodule : sectionExtend,
   }
 
-  for( let i = 0 ; i < opts.srcs.length ; i++ )
-  {
-    let srcPath = opts.srcs[ i ];
-    if( opts.currentContext )
-    srcPath = module.pathResolve
-    ({
-      selector : srcPath ? srcPath : 'will.yml',
-      prefixlessAction : 'resolved',
-      pathNativizing : 0,
-      selectorIsPath : 1,
-      currentContext : opts.currentContext,
-    });
-    else
-    srcPath = path.join( will.inPath ? will.inPath : path.current(), srcPath );
+  for( let sectionName in sectionMap )
+  if( !willfile[ sectionName ] )
+  willfile[ sectionName ] = Object.create( null );
 
-    let srcEncoding = _.longHas( path.exts( srcPath ), 'json' ) ? 'json' : 'yaml';
+  for( let i = 1 ; i < request.length ; i++ )
+  {
+    let srcPath = pathFind( request[ i ] );
+    let exts = path.exts( srcPath );
+    let srcEncoding = _.longHas( exts, 'json' ) ? 'json' : 'yaml';
     let srcConfig;
-    if( srcEncoding === 'json' )
+    if( _.longHas( exts, 'will' ) )
     {
-      srcConfig = _.will.Module.prototype._willfileGenerateFromNpm.call( this,
-      {
-        packagePath : srcPath,
-      });
+      srcConfig = fileProvider.fileRead({ filePath : srcPath, encoding : srcEncoding });
+    }
+    else if( srcEncoding === 'json' )
+    {
+      srcConfig = _.will.Module.prototype._willfileGenerateFromNpm.call( this, { packagePath : srcPath });
       srcConfig = srcConfig[ 1 ];
     }
     else
     {
-      srcConfig = fileProvider.fileRead({ filePath : srcPath, encoding : srcEncoding });
+      _.assert( 0, 'not known how to interpret file' );
     }
 
     for( let sectionName in srcConfig )
     sectionMap[ sectionName ]( sectionName );
-
   }
 
-  /* */
-
-  if( _.mapKeys( willfile.submodule ).length === 0 )
-  delete willfile.submodule;
-  if( _.mapKeys( willfile.path ).length === 0 )
-  delete willfile.path;
+  for( let sectionName in sectionMap )
+  if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
+  delete willfile[ sectionName ];
 
   /* write destination willfile */
 
@@ -7511,6 +7487,27 @@ function willfileExtend( o )
   });
 
   return null;
+
+  /* */
+
+  function pathFindFromContext( selector )
+  {
+    return module.pathResolve
+    ({
+      selector : selector || 'will.yml',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : opts.currentContext,
+    });
+  }
+
+  /* */
+
+  function pathFindRelative( srcPath )
+  {
+    return path.join( will.inPath ? will.inPath : path.current(), srcPath );
+  }
 
   /* */
 
@@ -7530,38 +7527,58 @@ function willfileExtend( o )
 
     if( srcConfig.about.keywords )
     {
-      if( _.longIs( willfile.about.keywords ) )
-      willfile.about.keywords = _.arrayAppendArraysOnce( willfile.about.keywords, srcConfig.about.keywords );
-      else
-      willfile.about.keywords = _.arrayAppendArraysOnce( null, srcConfig.about.keywords );
+      willfile.about.keywords = _.scalarAppendOnce( willfile.about.keywords, srcConfig.about.keywords );
     }
     if( srcConfig.about.scripts )
     {
-      if( _.longIs( willfile.about.scripts ) )
-      willfile.about.scripts = _.arrayAppendArraysOnce( willfile.about.scripts, srcConfig.about.scripts );
-      else
-      willfile.about.scripts = _.arrayAppendArraysOnce( null, srcConfig.about.scripts );
+      willfile.about.scripts = _.scalarAppendOnce( willfile.about.scripts, srcConfig.about.scripts );
     }
     if( srcConfig.about.contributors )
     {
-      _.assert( 0, 'not implemented' );
       let contributors = contributorsParse( srcConfig.about.contributors );
-
-      if( _.longIs( willfile.about.contributors ) )
-      willfile.about.scripts = _.arrayAppendArraysOnce( willfile.about.contributors, srcConfig.about.contributors );
-      else
-      willfile.about.contributors = _.arrayAppendArraysOnce( null, srcConfig.about.contributors );
+      willfile.about.contributors = _.scalarAppendOnce( willfile.about.contributors, srcConfig.about.contributors );
     }
     if( srcConfig.about.interpreters )
     {
-      _.assert( 0, 'not implemented' );
       let interpreters = interpretersParse( srcConfig.about.interpreters );
-
-      if( _.longIs( willfile.about.scripts ) )
-      willfile.about.interpreters = _.arrayAppendArraysOnce( willfile.about.interpreters, srcConfig.about.interpreters );
-      else
-      willfile.about.interpreters = _.arrayAppendArraysOnce( null, srcConfig.about.interpreters );
+      willfile.about.interpreters = _.scalarAppendOnce( willfile.about.interpreters, srcConfig.about.interpreters );
     }
+  }
+
+  /* */
+
+  function contributorsParse( src )
+  {
+    if( _.longIs( src ) )
+    {
+      let result = Object.create( null );
+
+      for( let i = 0 ; i < src.length ; i++ )
+      {
+        let splits = _.strIsolateRightOrAll( src[ i ] );
+        result[ splits[ 0 ] ] = splits[ 1 ];
+      }
+      return result;
+    }
+    return src;
+  }
+
+  /* */
+
+  function interpretersParse( src )
+  {
+    if( _.longIs( src ) )
+    {
+      let result = Object.create( null );
+
+      for( let i = 0 ; i < src.length ; i++ )
+      {
+        let splits = _.strLeftOrAll( src[ i ] );
+        result[ splits[ 0 ] ] = splits[ 1 ];
+      }
+      return result;
+    }
+    return src;
   }
 
   /* */
@@ -8773,6 +8790,7 @@ let Extension =
   npmGenerateFromWillfile,
   _willfileGenerateFromNpm,
   willfileGenerateFromNpm,
+  willfileExtend,
 
   // remote
 
