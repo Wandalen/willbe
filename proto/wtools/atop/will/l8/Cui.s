@@ -398,6 +398,7 @@ function _commandsMake()
 
     'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile ),             h : 'Use "npm from willfile" to generate "package.json" file from willfile.' },
     'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm ),             h : 'Use "willfile from npm" to generate ".will.yml" file from "package.json".' },
+    'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend ),              h : 'Use "willfile extend" to generate willfile from source configuration files' },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              h : 'Use "package install" to install target package.' },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        h : 'Use "package local versions" to get list of package versions avaiable locally' },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       h : 'Use "package remote versions" to get list of package versions avaiable in remote archive' },
@@ -2763,6 +2764,67 @@ commandWillfileFromNpm.commandProperties =
 
 //
 
+function commandWillfileExtend( e )
+{
+  let will = this;
+  let request = _.will.Resolver.strRequestParse( e.commandArgument );
+  debugger;
+
+  if( will.currentOpeners && will.currentOpeners.length )
+  {
+    return will._commandBuildLike
+    ({
+      event : e,
+      name : 'npm from willfile',
+      onEach : handleEach,
+      commandRoutine : commandWillfileFromNpm,
+    });
+  }
+  else
+  {
+    will.modulesFindWithAt( { atLeastOne: 1, selector: "./", tracing: 1 } )
+    .finally( function( err, it )
+    {
+      if( err )
+      throw _.err( err );
+
+      will.currentOpeners = it.openers;
+      if( !will.currentOpeners.length )
+      return _.will.Module.prototype.willfileExtend.call( will,
+      {
+        request : request.subject,
+        options : request.map,
+        onSection : _.mapExtend,
+        verbosity : 5,
+      });
+
+      return will._commandBuildLike
+      ({
+        event : e,
+        name : 'npm from willfile',
+        onEach : handleEach,
+        commandRoutine : commandWillfileFromNpm,
+      });
+    })
+  }
+
+  function handleEach( it )
+  {
+    debugger;
+    let currentContext = it.opener.openedModule.stepMap[ "willfile.generate" ];
+    return it.opener.openedModule.willfileExtend
+    ({
+      request : request.subject,
+      options : request.map,
+      onSection : _.mapExtend,
+      currentContext,
+      verbosity : 5,
+    });
+  }
+}
+
+//
+
 function commandPackageInstall( e )
 {
   let will = this;
@@ -3475,6 +3537,7 @@ let Extension =
 
   commandNpmFromWillfile,
   commandWillfileFromNpm,
+  commandWillfileExtend,
   // commandWillfileExtend,
   // commandWillfileSupplement,
   /* qqq2 :
