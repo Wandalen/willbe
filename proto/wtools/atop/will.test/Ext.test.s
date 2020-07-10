@@ -26022,6 +26022,39 @@ function commandWillfileFromNpmDoubleConversion( test )
 
 //
 
+function commandWillfileExtend( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.extend Author* Contributors Description* Interpreters' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'add new data to existing config, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author <author@dot.com>' );
+    test.identical( config.about.name, undefined );
+    test.identical( config.about.enabled, undefined );
+    test.identical( config.about.contributors.length, 2 );
+    debugger;
+    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.about.interpreters.length, 3 );
+    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+//
+
 function commandGitPull( test )
 {
   let context = this;
@@ -27703,7 +27736,7 @@ var Self =
 
     // resourcesFormReflectorsExperiment, // xxx : look
 
-    // commands with implied options
+    // commands
 
     commandVersion,
     commandVersionCheck,
@@ -27712,6 +27745,8 @@ var Self =
     commandNpmFromWillfileOptionsInCommand,
     commandWillfileFromNpm,
     commandWillfileFromNpmDoubleConversion,
+    commandWillfileExtend,
+
     commandGitPull,
     commandGitPush,
     commandGitReset,

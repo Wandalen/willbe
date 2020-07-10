@@ -7456,31 +7456,15 @@ function willfileExtend( o )
     }
   }
 
-  if( willfile.about.contributors )
-  {
-    willfile.about.contributors = _.mapToArray( willfile.about.contributors );
-    for( let i = 0 ; i < willfile.about.contributors.length ; i ++ )
-    willfile.about.contributors[ i ] = willfile.about.contributors[ i ].join();
-  }
-
-  if( willfile.about.interpreters )
-  {
-    willfile.about.interpreters = _.mapToArray( willfile.about.interpreters );
-    for( let i = 0 ; i < willfile.about.interpreters.length ; i ++ )
-    willfile.about.interpreters[ i ] = willfile.about.interpreters[ i ].join();
-  }
-
   if( opts.options.submodulesDisabling )
-  {
-    for( let dependency in willfile.submodule )
-    willfile.submodule[ dependency ][ 'criterion' ][ 'enabled' ] = 0;
-  }
+  for( let dependency in willfile.submodule )
+  willfile.submodule[ dependency ][ 'criterion' ][ 'enabled' ] = 0;
+
 
   for( let sectionName in sectionMap )
-  {
-    if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
-    delete willfile[ sectionName ];
-  }
+  if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
+  delete willfile[ sectionName ];
+
 
   /* write destination willfile */
 
@@ -7647,7 +7631,7 @@ function willfileExtend( o )
     {
       for( let i = 0 ; i < src.length ; i++ )
       {
-        let splits = _.strLeftOrAll({ src : src[ i ] });
+        let splits = _.strIsolateLeftOrAll({ src : src[ i ] });
         result[ splits[ 0 ] ] = splits[ 2 ];
       }
       return result;
@@ -7670,6 +7654,13 @@ function willfileExtend( o )
 
   function willfileWrite( path, data, encoding )
   {
+    if( data.about.contributors )
+    data.about.contributors = toArrayOfStrings( data.about.contributors );
+
+    debugger;
+    if( data.about.interpreters )
+    data.about.interpreters = toArrayOfStrings( data.about.interpreters );
+
     fileProvider.fileWrite
     ({
       filePath : path,
@@ -7677,6 +7668,14 @@ function willfileExtend( o )
       encoding,
       verbosity : verbosity ? 5 : 0,
     });
+  }
+
+  function toArrayOfStrings( src )
+  {
+    src = _.mapToArray( src );
+    for( let i = 0 ; i < src.length ; i++ )
+    src[ i ] = src[ i ].join( ' ' );
+    return src;
   }
 }
 
