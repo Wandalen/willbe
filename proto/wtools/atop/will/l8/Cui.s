@@ -2769,57 +2769,13 @@ function commandWillfileExtend( e )
   let will = this;
   let request = _.will.Resolver.strRequestParse( e.commandArgument );
 
-  if( will.currentOpeners && will.currentOpeners.length )
+  return _.will.Module.prototype.willfileExtend.call( will,
   {
-    return will._commandBuildLike
-    ({
-      event : e,
-      name : 'npm from willfile',
-      onEach : handleEach,
-      commandRoutine : commandWillfileFromNpm,
-    });
-  }
-  else
-  {
-    will.modulesFindWithAt( { atLeastOne: 1, selector: "./", tracing: 1 } )
-    .finally( function( err, it )
-    {
-      if( err )
-      throw _.err( err );
-
-      will.currentOpeners = it.openers;
-      if( !will.currentOpeners.length )
-      return _.will.Module.prototype.willfileExtend.call( will,
-      {
-        request : request.subject,
-        options : request.map,
-        onSection : _.mapExtend,
-        verbosity : 5,
-      });
-
-      return will._commandBuildLike
-      ({
-        event : e,
-        name : 'npm from willfile',
-        onEach : handleEach,
-        commandRoutine : commandWillfileFromNpm,
-      });
-    })
-  }
-
-  function handleEach( it )
-  {
-    debugger;
-    let currentContext = it.opener.openedModule.stepMap[ "willfile.generate" ];
-    return it.opener.openedModule.willfileExtend
-    ({
-      request : request.subject,
-      options : request.map,
-      onSection : _.mapExtend,
-      currentContext,
-      verbosity : 5,
-    });
-  }
+    request : request.subject,
+    options : request.map,
+    onSection : _.mapExtend,
+    verbosity : 5,
+  });
 }
 
 //
