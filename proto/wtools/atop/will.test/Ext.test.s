@@ -26089,6 +26089,91 @@ function commandWillfileExtend( test )
     return null;
   })
 
+  /* */
+
+  a.appStart({ args : '.willfile.extend ./.* ForExtension' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'extend two unnamed willfiles by new data';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    let exp =
+    {
+      about :
+      {
+        name : 'Extension willfile',
+        description : 'To check the extension',
+        version : '1.1.1',
+        enabled : 0,
+        interpreters :
+        [
+          'nodejs = 6.0.0',
+          'chrome >= 60.0.0',
+          'firefox >= 67.0.0',
+          'chromium >= 67.0.0'
+        ],
+        keywords :
+        [
+          'tools',
+          'export',
+          'wtools',
+          'common',
+        ],
+        license : 'GPL',
+        author : 'Author <author1@dot.com>',
+        contributors :
+        [
+          'Contributor1 <contributor1@dot.com>',
+          'Contributor2 <contributor2@xxx.com>',
+          'Contributor3 <contributor3@dot.com>',
+        ],
+        'npm.name' : 'npmfromwillfile',
+        'npm.scripts' :
+        {
+          test : 'wtest .run proto/** v:5',
+          docgen : 'wdocgen .build proto',
+        },
+      },
+
+      path :
+      {
+        repository : 'git+https:///github.com/author/NpmFromWillfile.git',
+        origins :
+        [
+          'git+https:///github.com/author/NpmFromWillfile.git',
+          'npm:///npmfromwillfile',
+        ],
+        bugtracker : 'https:///github.com/author/NpmFromWillfile/issues',
+      },
+
+      step :
+      {
+        'export.debug' :
+        {
+          inherit : 'module.export',
+          export : '{path::out}/**',
+          criterion : { debug : 1 },
+        }
+      },
+
+      build :
+      {
+        'proto.export' :
+        {
+          criterion :
+          {
+            export : 1,
+            debug : 1,
+          },
+          steps : [ 'step::export.*=1' ],
+        }
+      }
+    }
+    test.identical( config, exp );
+
+    return null;
+  })
+
   /* - */
 
   return a.ready;

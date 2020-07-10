@@ -7083,7 +7083,6 @@ function npmGenerateFromWillfile( o )
 
   for( let s in module.submoduleMap )
   {
-    debugger;
     let submodule = module.submoduleMap[ s ];
     let p = submodule.path;
     p = path.parseFull( p );
@@ -7589,7 +7588,7 @@ function willfileExtend( o )
     }
     if( src.about.scripts )
     {
-      dst.about.scripts = _.scalarAppendOnce( dst.about.scripts, src.about.scripts );
+      dst.about.scripts = opts.onSection( dst.about.scripts, src.about.scripts );
     }
     if( src.about.contributors )
     {
@@ -7628,20 +7627,22 @@ function willfileExtend( o )
 
   /* */
 
-  function sectionExtend( name )
+  function sectionExtend( dst, src, name )
   {
-    opts.onSection( willfile[ name ], srcConfig[ name ] );
+    opts.onSection( dst[ name ], src[ name ] );
   }
 
   /* */
 
   function willfileWrite( path, data, encoding )
   {
-    if( data.about.contributors )
-    data.about.contributors = toArrayOfStrings( data.about.contributors );
-
-    if( data.about.interpreters )
-    data.about.interpreters = toArrayOfStrings( data.about.interpreters );
+    if( data.about )
+    {
+      if( data.about.contributors )
+      data.about.contributors = toArrayOfStrings( data.about.contributors );
+      if( data.about.interpreters )
+      data.about.interpreters = toArrayOfStrings( data.about.interpreters );
+    }
 
     fileProvider.fileWrite
     ({
