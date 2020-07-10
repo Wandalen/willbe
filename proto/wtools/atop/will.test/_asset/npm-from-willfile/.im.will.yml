@@ -6,11 +6,13 @@ submodule :
     enabled : 0
     criterion :
       debug : 1
+
   NpmFromWillfile :
     path : hd://.
     enabled : 0
     criterion :
       development : 1
+
   wTesting :
     path : npm:///wTesting
     enabled : 0
@@ -21,10 +23,12 @@ path :
 
   in : '.'
   out : 'out'
+
   out.debug :
     path : 'out/debug'
     criterion :
       debug : 1
+
   out.release :
     path : 'out/release'
     criterion :
@@ -39,6 +43,13 @@ reflector :
     filePath :
       path::proto : '{path::out.*=1}/source'
 
+  proto.release :
+    inherit : predefined.*
+    criterion :
+      debug : 0
+    filePath :
+      path::proto : '{path::out.*=1}/source'
+
 step :
 
   clean.debug :
@@ -47,6 +58,11 @@ step :
     criterion :
       debug : 1
 
+  clean.release :
+    inherit : files.delete
+    filePath : path::out.*=1
+    criterion :
+      debug : 0
 
 build :
 
@@ -54,6 +70,13 @@ build :
     criterion :
       default : 1
       debug : 1
+    steps :
+      - step::clean.*=1
+      - proto.*=1
+
+  release :
+    criterion :
+      debug : 0
     steps :
       - step::clean.*=1
       - proto.*=1
