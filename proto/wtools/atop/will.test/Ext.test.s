@@ -26096,8 +26096,8 @@ function commandWillfileExtend( test )
   {
     test.case = 'extend two unnamed willfiles by new data';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
-    let exp =
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    var exp =
     {
       about :
       {
@@ -26137,13 +26137,13 @@ function commandWillfileExtend( test )
 
       path :
       {
-        repository : 'git+https:///github.com/author/NpmFromWillfile.git',
+        repository : 'git+https:///github.com/author/WillfileExtend.git',
         origins :
         [
-          'git+https:///github.com/author/NpmFromWillfile.git',
-          'npm:///npmfromwillfile',
+          'git+https:///github.com/author/WillfileExtend.git',
+          'npm:///willfileextend',
         ],
-        bugtracker : 'https:///github.com/author/NpmFromWillfile/issues',
+        bugtracker : 'https:///github.com/author/WillfileExtend/issues',
       },
 
       step :
@@ -26168,7 +26168,110 @@ function commandWillfileExtend( test )
           steps : [ 'step::export.*=1' ],
         }
       }
-    }
+    };
+    test.identical( config, exp );
+
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      submodule :
+      {
+        eslint :
+        {
+          path : 'npm:///eslint#7.1.0',
+          enabled : 0,
+          criterion : { debug : 1 },
+        },
+        NpmFromWillfile :
+        {
+          path : 'npm:///npmfromwillfile',
+          enabled : 0,
+          criterion : { development : 0 }
+        },
+        wTesting :
+        {
+          path : 'npm:///wTesting',
+          enabled : 0,
+          criterion : { development : 1 }
+        },
+        newsubmodule :
+        {
+          path : 'hd://.',
+          enabled : 0,
+          criterion : { development : 1 }
+        }
+      },
+      path :
+      {
+        'in' : '..',
+        'out' : 'out',
+        'out.debug' :
+        {
+          'path' : 'out/debug',
+          'criterion' : { debug : 1 }
+        },
+        'out.release' :
+        {
+          'path' : 'out/release',
+          'criterion' : { debug : 0 }
+        },
+        'new' : 'new'
+      },
+      reflector :
+      {
+        'proto.debug' :
+        {
+          'inherit' : 'predefined.*',
+          'criterion' : { debug : 1 },
+          'filePath' : { 'path::proto' : '{path::out.*=1}/source' }
+        },
+        'proto.release' :
+        {
+          'inherit' : 'predefined.*',
+          'criterion' : { debug : 'release' },
+          'filePath' : { 'path::proto' : '{path::out.*=1}/source' }
+        },
+        'proto.clean' :
+        {
+          'inherit' : 'predefined.*',
+          'criterion' : { debug : 'delete' },
+          'filePath' : '{path::out}'
+        }
+      },
+      step :
+      {
+        'clean.debug' :
+        {
+          'inherit' : 'files.delete',
+          'filePath' : 'path::out.*=1',
+          'criterion' : { debug : 1 }
+        },
+        'clean.release' :
+        {
+          'inherit' : 'files.delete',
+          'filePath' : 'path::out.*=1',
+          'criterion' : { debug : 'release' }
+        },
+        'git.sync' : { 'inherit' : 'git.sync' }
+      },
+      build :
+      {
+        'debug' :
+        {
+          'criterion' : { default : 1, debug : 1 },
+          'steps' : [ 'step::clean.*=1', 'proto.*=1' ]
+        },
+        'release' :
+        {
+          'criterion' : { debug : 0 },
+          'steps' : [ 'step::clean.*=1', 'proto.*=1' ]
+        },
+        'git.sync' :
+        {
+          'steps' : [ 'git.sync' ]
+        }
+      }
+    };
     test.identical( config, exp );
 
     return null;

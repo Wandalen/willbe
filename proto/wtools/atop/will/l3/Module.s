@@ -7468,19 +7468,19 @@ function willfileExtend( o )
 
   /* write destination willfile */
 
-  let dstWillfilePath = path.join( will.inPath ? will.inPath : path.current(), request[ 0 ] );
-  if( !fileProvider.isTerminal( dstWillfilePath ) )
+  let dstPath = path.join( will.inPath ? will.inPath : path.current(), request[ 0 ] );
+  if( !fileProvider.isTerminal( dstPath ) )
   {
-    if( fileProvider.isDir( dstWillfilePath ) )
+    if( fileProvider.isDir( dstPath ) )
     {
-      dstWillfilePath = path.join( dstWillfilePath, 'will.yml' );
+      dstPath = path.join( dstPath, 'will.yml' );
     }
-    else if( !path.isGlob( dstWillfilePath ) )
+    else if( !path.isGlob( dstPath ) )
     {
-      let exts = path.exts( dstWillfilePath );
+      let exts = path.exts( dstPath );
       if( exts.length === 0 )
       {
-        dstWillfilePath = dstWillfilePath + '.will.yml';
+        dstPath = dstPath + '.will.yml';
       }
       else
       {
@@ -7489,52 +7489,56 @@ function willfileExtend( o )
         if( _.longHas( exts ), 'will' )
         exts.splice( exts.length - 1, 0, 'will' );
 
-        dstWillfilePath = path.dir( dstWillfilePath ) + path.name( dstWillfilePath ) + '.' + exts.join( '.' );
+        dstPath = path.dir( dstPath ) + path.name( dstPath ) + '.' + exts.join( '.' );
       }
     }
   }
 
-  let dstWillfileEncoding = _.longHas( path.exts( dstWillfilePath ), 'json' ) ? 'json' : 'yaml';
+  let dstEncoding = _.longHas( path.exts( dstPath ), 'json' ) ? 'json' : 'yaml';
 
-  let dstWillfile = configFilesFind( dstWillfilePath );
-  if( dstWillfile.length !== 0 )
+  let dstWillfiles = configFilesFind( dstPath );
+  if( dstWillfiles.length !== 0 )
   {
-    _.assert( dstWillfile.length <= 2, 'Please, improve selector, cannot choose willfiles' );
 
-    let config;
-    if( dstWillfile.length === 2 )
+    _.assert( dstWillfiles.length <= 2, 'Please, improve selector, cannot choose willfiles' );
+
+    let config = fileProvider.fileRead({ filePath : dstWillfiles[ 0 ].absolute, encoding : dstEncoding });
+    if( dstWillfiles.length === 2 )
     {
-
-      config = fileProvider.fileRead({ filePath : dstWillfile[ 1 ].absolute, encoding : dstWillfileEncoding });
-      for( let sectionName in config )
+      let config2 = fileProvider.fileRead({ filePath : dstWillfiles[ 1 ].absolute, encoding : dstEncoding });
+      for( let sectionName in config2 )
       {
         if( sectionName in willfile )
         {
-          sectionMap[ sectionName ]( config, willfile, sectionName );
+          if( sectionName in config )
+          {
+            let screenMap = _.mapBut( willfile[ sectionName ], config[ sectionName ] );
+            let srcMap = _.mapBut( willfile[ sectionName ], screenMap );
+            opts.onSection( config[ sectionName ], srcMap );
+            willfile[ sectionName ] = screenMap;
+          }
+
+          sectionMap[ sectionName ]( config2, willfile, sectionName );
           delete willfile[ sectionName ];
         }
       }
-      willfileWrite( dstWillfile[ 1 ].absolute, config, dstWillfileEncoding );
-
+      willfileWrite( dstWillfiles[ 1 ].absolute, config2, dstEncoding );
     }
 
-    config = fileProvider.fileRead({ filePath : dstWillfile[ 0 ].absolute, encoding : dstWillfileEncoding });
     for( let sectionName in willfile )
     {
       sectionMap[ sectionName ]( config, willfile, sectionName );
     }
-    willfileWrite( dstWillfile[ 0 ].absolute, config, dstWillfileEncoding );
+    willfileWrite( dstWillfiles[ 0 ].absolute, config, dstEncoding );
 
   }
   else
   {
-    debugger;
-    willfileWrite( dstWillfilePath, willfile, dstWillfileEncoding );
+    willfileWrite( dstPath, willfile, dstEncoding );
   }
 
   /* */
 
-  debugger;
   return null;
 
   /* */
@@ -7592,21 +7596,21 @@ function willfileExtend( o )
     }
     if( src.about.contributors )
     {
-      dst.about.contributors = propertyParse( dst.about.contributors, _.strIsolateRightOrAll );
-      src.about.contributors = propertyParse( src.about.contributors, _.strIsolateRightOrAll );
+      dst.about.contributors = arrayPropertyParse( dst.about.contributors, _.strIsolateRightOrAll );
+      src.about.contributors = arrayPropertyParse( src.about.contributors, _.strIsolateRightOrAll );
       opts.onSection( dst.about.contributors, src.about.contributors );
     }
     if( src.about.interpreters )
     {
-      dst.about.interpreters = propertyParse( dst.about.interpreters, _.strIsolateLeftOrAll );
-      src.about.interpreters = propertyParse( src.about.interpreters, _.strIsolateLeftOrAll );
+      dst.about.interpreters = arrayPropertyParse( dst.about.interpreters, _.strIsolateLeftOrAll );
+      src.about.interpreters = arrayPropertyParse( src.about.interpreters, _.strIsolateLeftOrAll );
       opts.onSection( dst.about.interpreters, src.about.interpreters );
     }
   }
 
   /* */
 
-  function propertyParse( src, parser )
+  function arrayPropertyParse( src, parser )
   {
     let result = Object.create( null );
     if( _.longIs( src ) )
@@ -7639,9 +7643,9 @@ function willfileExtend( o )
     if( data.about )
     {
       if( data.about.contributors )
-      data.about.contributors = toArrayOfStrings( data.about.contributors );
+      data.about.contributors = mapToArrayOfStrings( data.about.contributors );
       if( data.about.interpreters )
-      data.about.interpreters = toArrayOfStrings( data.about.interpreters );
+      data.about.interpreters = mapToArrayOfStrings( data.about.interpreters );
     }
 
     fileProvider.fileWrite
@@ -7653,7 +7657,7 @@ function willfileExtend( o )
     });
   }
 
-  function toArrayOfStrings( src )
+  function mapToArrayOfStrings( src )
   {
     src = _.mapToArray( src );
     for( let i = 0 ; i < src.length ; i++ )
