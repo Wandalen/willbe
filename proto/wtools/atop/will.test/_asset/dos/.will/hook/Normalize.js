@@ -29,14 +29,14 @@ function onModule( context )
   // hardLink( context, '.github/workflows/Test.yml', 'hlink/.github/workflows/Test.yml' );
   // hardLink( context, '.circleci/config.yml', 'hlink/.circleci/config.yml' );
 
-  workflowsReplace( context );
+  // workflowsReplace( context );
 
   // fileProvider.filesDelete({ filePath : abs( '.travis.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0 });
 
   // samplesRename( context );
   // dwtoolsRename( context );
 
-  badgeCiReplace( context );
+  badgeGithubReplace( context );
   // badgesSwap( context );
   // badgeStabilityAdd( context );
   // badgeCircleCiAdd( context );
@@ -182,7 +182,7 @@ function dwtoolsRename( context )
 
 //
 
-function badgeCiReplace( context )
+function badgeGithubReplace( context )
 {
   let o = context.request.map;
   let logger = context.logger;
