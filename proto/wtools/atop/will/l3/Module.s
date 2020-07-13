@@ -7105,12 +7105,14 @@ function _npmGenerateFromWillfile( o )
 
   function depAdd( submodule, name, hash )
   {
-    if( submodule.criterion.optional )
-    _depAdd( 'optionalDependencies', name, hash );
-    else if( submodule.criterion.development )
-    _depAdd( 'devDependencies', name, hash );
-    else
-    _depAdd( 'dependencies', name, hash );
+    if( submodule.criterion )
+    {
+      if( submodule.criterion.optional )
+      return _depAdd( 'optionalDependencies', name, hash );
+      else if( submodule.criterion.development )
+      return _depAdd( 'devDependencies', name, hash );
+    }
+    return _depAdd( 'dependencies', name, hash );
   }
 
   function _depAdd( section, name, hash )
@@ -7617,12 +7619,15 @@ function willfileExtend( o )
 
   /* write destination willfile */
 
-  let dstPath = path.join( will.inPath ? will.inPath : path.current(), request[ 0 ] );
-  dstPath = dstPathRefind( dstPath );
-
-  let dstEncoding = _.longHas( path.exts( dstPath ), 'json' ) ? 'json.fine' : 'yaml';
-
+  let dstPath = dstPathFind( request[ 0 ] );
   let dstWillfiles = configFilesFind( dstPath );
+
+  if( opts.format === 'json' )
+  _.assert( dstWillfiles.length === 0, 'Not safe to rewrite existing file' );
+  else if( path.isGlob( dstPath ) && dstWillfiles.length === 0 )
+  _.assert( 0, `Can't find file` );
+
+  let dstEncoding = path.ext( dstPath ) === 'json' ? 'json.fine' : 'yaml';
   dstWillfilesWrite( dstWillfiles );
 
   /* */
@@ -7637,7 +7642,10 @@ function willfileExtend( o )
     if( !path.isAbsolute( filePath ) )
     filePath = path.join( will.inPath ? will.inPath : path.current(), selector );
 
-    if( !fileProvider.isTerminal( filePath ) && !path.isGlob( filePath ) )
+    if( fileProvider.isTerminal( filePath ) )
+    return [ fileProvider.record( filePath ) ];
+
+    if( !path.isGlob( filePath ) )
     {
       if( fileProvider.isDir( filePath ) )
       filePath = path.join( filePath, '*.(yml|yaml|json)' );
@@ -7733,8 +7741,10 @@ function willfileExtend( o )
 
   /* */
 
-  function dstPathRefind( dstPath )
+  function dstPathFind( dstPath )
   {
+    dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
+
     if( fileProvider.isTerminal( dstPath ) )
     return dstPath;
 
@@ -7752,11 +7762,17 @@ function willfileExtend( o )
       }
       else
       {
-        let extension = opts.format === 'willfile' ? 'yml' : 'json';
-        if( !_.longHasNone( exts ), [ 'yml', 'json', 'yaml' ] )
-        exts.push( extension );
-        if( extension === 'will' && !_.longHas( exts ), 'will' )
-        exts.splice( exts.length - 1, 0, 'will' );
+        if( opts.format === 'json' && !_.longHas( exts, 'json' ) )
+        {
+          exts.push( 'json' );
+        }
+        else
+        {
+          if( !_.longHas( [ 'yml', 'json', 'yaml' ], path.ext( dstPath ) ) )
+          exts.push( 'yml' );
+          if( !_.longHas( exts ), 'will' )
+          exts.splice( exts.length - 1, 0, 'will' );
+        }
 
         dstPath = path.dir( dstPath ) + path.name( dstPath ) + '.' + exts.join( '.' );
       }
@@ -7822,6 +7838,8 @@ function willfileExtend( o )
       if( data.about.interpreters )
       data.about.interpreters = mapToArrayOfStrings( data.about.interpreters );
     }
+
+    debugger;
 
     if( opts.format === 'json' )
     data = _.will.Module.prototype._npmGenerateFromWillfile.call( will,
