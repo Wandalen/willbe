@@ -6998,22 +6998,22 @@ function _npmGenerateFromWillfile( o )
   /* */
 
   let config = Object.create( null );
-  if( o.willfile.about )
+  if( o.srcConfig.about )
   {
-    config.name = o.willfile.about.name;
-    config.version = o.willfile.about.version;
-    config.enabled = o.willfile.about.enabled;
+    config.name = o.srcConfig.about.name;
+    config.version = o.srcConfig.about.version;
+    config.enabled = o.srcConfig.about.enabled;
 
-    if( o.willfile.about.description )
-    config.description = o.willfile.about.description;
-    if( o.willfile.about.keywords )
-    config.keywords = o.willfile.about.keywords;
-    if( o.willfile.about.license )
-    config.license = o.willfile.about.license;
+    if( o.srcConfig.about.description )
+    config.description = o.srcConfig.about.description;
+    if( o.srcConfig.about.keywords )
+    config.keywords = o.srcConfig.about.keywords;
+    if( o.srcConfig.about.license )
+    config.license = o.srcConfig.about.license;
 
-    if( o.willfile.about.interpreters )
+    if( o.srcConfig.about.interpreters )
     {
-      let interpreters = _.arrayAs( o.willfile.about.interpreters );
+      let interpreters = _.arrayAs( o.srcConfig.about.interpreters );
       interpreters.forEach( ( interpreter ) =>
       {
         if( _.strHas( interpreter, 'njs' ) )
@@ -7021,51 +7021,51 @@ function _npmGenerateFromWillfile( o )
       });
     }
 
-    if( o.willfile.about.author )
-    config.author = o.willfile.about.author;
-    if( o.willfile.about.contributors )
-    config.contributors = o.willfile.about.contributors;
+    if( o.srcConfig.about.author )
+    config.author = o.srcConfig.about.author;
+    if( o.srcConfig.about.contributors )
+    config.contributors = o.srcConfig.about.contributors;
 
-    for( let n in o.willfile.about )
+    for( let n in o.srcConfig.about )
     {
       if( !_.strBegins( n, 'npm.' ) )
       continue;
-      config[ _.strRemoveBegin( n, 'npm.' ) ] = o.willfile.about[ n ];
+      config[ _.strRemoveBegin( n, 'npm.' ) ] = o.srcConfig.about[ n ];
     }
   }
 
-  if( o.opts.entryPath && o.opts.entryPath.length )
+  if( o.entryPath && o.entryPath.length )
   {
-    config.main = _.scalarFrom( path.s.relative( path.dir( o.opts.packagePath ), o.opts.entryPath ) );
+    config.main = _.scalarFrom( path.s.relative( path.dir( o.packagePath ), o.entryPath ) );
   }
 
-  if( o.opts.filesPath && o.opts.filesPath.length )
+  if( o.filesPath && o.filesPath.length )
   {
-    config.files = path.s.relative( path.dir( o.opts.packagePath ), o.opts.filesPath );
+    config.files = path.s.relative( path.dir( o.packagePath ), o.filesPath );
   }
 
-  if( o.willfile.path )
+  if( o.srcConfig.path )
   {
-    if( o.willfile.path.repository )
-    config.repository = pathSimplify( o.willfile.path.repository );
-    if( o.willfile.path.bugtracker )
-    config.bugs = pathSimplify( o.willfile.path.bugtracker );
-    if( o.willfile.path.entry )
-    config.entry = o.willfile.path.entry;
+    if( o.srcConfig.path.repository )
+    config.repository = pathSimplify( o.srcConfig.path.repository );
+    if( o.srcConfig.path.bugtracker )
+    config.bugs = pathSimplify( o.srcConfig.path.bugtracker );
+    if( o.srcConfig.path.entry )
+    config.entry = o.srcConfig.path.entry;
 
-    for( let n in o.willfile.path )
+    for( let n in o.srcConfig.path )
     {
       if( !_.strBegins( n, 'npm.' ) )
       continue;
-      config[ _.strRemoveBegin( n, 'npm.' ) ] = o.willfile.path[ n ];
+      config[ _.strRemoveBegin( n, 'npm.' ) ] = o.srcConfig.path[ n ];
     }
   }
 
-  if( o.willfile.submodule )
+  if( o.srcConfig.submodule )
   {
-    for( let s in o.willfile.submodule )
+    for( let s in o.srcConfig.submodule )
     {
-      let submodule = o.willfile.submodule[ s ];
+      let submodule = o.srcConfig.submodule[ s ];
       let p = submodule.path;
       p = path.parseFull( p );
 
@@ -7158,13 +7158,13 @@ function npmGenerateFromWillfile( o )
 
   let config = _.will.Module.prototype._npmGenerateFromWillfile.call( will,
   {
-    willfile :
+    srcConfig :
     {
       about : module.about.exportStructure(),
       path : module.pathMap,
       submodule : module.submoduleMap,
     },
-    opts,
+    ... opts,
   });
 
   // let config = Object.create( null );
@@ -7304,48 +7304,12 @@ npmGenerateFromWillfile.defaults =
 
 function _willfileGenerateFromNpm( o )
 {
-  let module = this;
-  let will = module.will ? module.will : module;
+  let will = this;
   let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let opts = _.mapExtend( null, o );
-  let verbosity = o.verbosity;
-
-  _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
-
-  let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
-  let willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
-  if( opts.currentContext )
-  {
-    packagePath = module.pathResolve
-    ({
-      selector : opts.packagePath || '{path::in}/package.json',
-      prefixlessAction : 'resolved',
-      pathNativizing : 0,
-      selectorIsPath : 1,
-      currentContext : opts.currentContext,
-    });
-    willfilePath = module.pathResolve
-    ({
-      selector : opts.willfilePath || '{path::out}/.will.yml',
-      prefixlessAction : 'resolved',
-      pathNativizing : 0,
-      selectorIsPath : 1,
-      currentContext : opts.currentContext,
-    });
-  }
-  else
-  {
-    packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
-    willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
-  }
-
-  let config = fileProvider.fileRead({ filePath : packagePath, encoding : 'json' });
 
   /* */
 
+  let config = o.srcConfig;
   let willfile = Object.create( null );
   willfile.about = Object.create( null );
   willfile.path = Object.create( null );
@@ -7400,10 +7364,10 @@ function _willfileGenerateFromNpm( o )
 
   /* */
 
-  _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
-  _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
+  // _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
+  // _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
 
-  return [ willfilePath, willfile ];
+  return willfile;
 
   // fileProvider.fileWrite
   // ({
@@ -7535,12 +7499,54 @@ _willfileGenerateFromNpm.defaults =
 
 function willfileGenerateFromNpm( o )
 {
-  let willfilePath, willfile;
-  [ willfilePath, willfile ] = _.will.Module.prototype._willfileGenerateFromNpm.apply( this, arguments );
+  let module = this;
+  let will = module.will ? module.will : module;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = _.mapExtend( null, o );
+  let verbosity = o.verbosity;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
+  let willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
+  if( opts.currentContext )
+  {
+    packagePath = module.pathResolve
+    ({
+      selector : opts.packagePath || '{path::in}/package.json',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : opts.currentContext,
+    });
+    willfilePath = module.pathResolve
+    ({
+      selector : opts.willfilePath || '{path::out}/.will.yml',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : opts.currentContext,
+    });
+  }
+  else
+  {
+    packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
+    willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
+  }
 
   /* */
 
-  let fileProvider = this.will ? this.will.fileProvider : this.fileProvider;
+  _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
+  _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
+
+  let srcConfig = fileProvider.fileRead({ filePath : packagePath, encoding : 'json' })
+  let willfile = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig } );
+
+  /* */
+
   fileProvider.fileWrite
   ({
     filePath : willfilePath,
@@ -7587,21 +7593,13 @@ function willfileExtend( o )
 
     for( let j = 0 ; j < files.length ; j++ )
     {
-      let srcConfig;
-      let srcEncoding = _.longHas( files[ j ].exts, 'json' ) ? 'json' : 'yaml';
-      if( _.longHas( files[ j ].exts, 'will' ) )
-      {
-        srcConfig = fileProvider.fileRead({ filePath : files[ j ].absolute, encoding : srcEncoding });
-      }
-      else if( srcEncoding === 'json' )
-      {
-        srcConfig = _.will.Module.prototype._willfileGenerateFromNpm.call( this, { packagePath : files[ j ].relative });
-        srcConfig = srcConfig[ 1 ];
-      }
-      else
-      {
-        continue;
-      }
+      if( _.longHasNone( files[ j ].exts, [ 'yml', 'yaml', 'json' ] ) )
+      continue;
+
+      let srcEncoding = files[ j ].ext === 'json' ? 'json' : 'yaml';
+      let srcConfig = fileProvider.fileRead({ filePath : files[ j ].absolute, encoding : srcEncoding });
+      if( !_.longHas( files[ j ].exts, 'will' ) )
+      srcConfig = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig });
 
       for( let sectionName in srcConfig )
       sectionMap[ sectionName ]( willfile, srcConfig, sectionName );
@@ -7800,6 +7798,8 @@ function willfileExtend( o )
 
       for( let sectionName in willfile )
       {
+        if( config[ sectionName ] === undefined )
+        config[ sectionName ] = Object.create( null );
         sectionMap[ sectionName ]( config, willfile, sectionName );
       }
       willfileWrite( dstWillfiles[ 0 ].absolute, config, dstEncoding );
@@ -7826,8 +7826,8 @@ function willfileExtend( o )
     if( opts.format === 'json' )
     data = _.will.Module.prototype._npmGenerateFromWillfile.call( will,
     {
-      willfile : data,
-      opts : { packagePath : path },
+      srcConfig : data,
+      packagePath : path,
     });
 
     fileProvider.fileWrite
