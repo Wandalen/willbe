@@ -25650,7 +25650,7 @@ function commandWillfileFromNpm( test )
     test.case = 'check field `interpreters`';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
-    test.identical( config.about.interpreters, 'node >= 10.0.0' );
+    test.identical( config.about.interpreters, 'njs >= 10.0.0' );
     test.identical( config.about.name, 'interpreters' );
     test.identical( config.about.enabled, 1 );
 
@@ -26127,11 +26127,12 @@ function commandWillfileExtend( test )
           'Contributor2 <contributor2@xxx.com>',
           'Contributor3 <contributor3@dot.com>',
         ],
-        'npm.name' : 'npmfromwillfile',
+        'npm.name' : 'willfileextend',
         'npm.scripts' :
         {
           test : 'wtest .run proto/** v:5',
-          docgen : 'wdocgen .build proto',
+          docgen : 'wdocgen .build proto/wtools',
+          eslint : 'eslint proto'
         },
       },
 

@@ -2772,9 +2772,9 @@ function commandWillfileExtend( e )
   return _.will.Module.prototype.willfileExtend.call( will,
   {
     request : request.subject,
-    options : request.map,
     onSection : _.mapExtend,
-    verbosity : 5,
+    verbosity : 3,
+    ... request.map,
   });
 }
 
