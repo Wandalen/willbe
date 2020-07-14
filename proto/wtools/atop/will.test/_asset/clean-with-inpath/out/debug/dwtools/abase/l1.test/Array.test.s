@@ -878,7 +878,7 @@ function longMakeWithArrayAndUnrollLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -1062,7 +1062,7 @@ function longMakeWithArgumentsArrayLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
     test.close( `descriptor - ${ name }` );
@@ -1199,7 +1199,7 @@ function longMakeWithBufferTypedLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -1530,7 +1530,7 @@ function longMakeEmptyWithArrayAndUnrollLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -1600,7 +1600,7 @@ function longMakeEmptyWithArgumentsArrayLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
@@ -1659,7 +1659,7 @@ function longMakeEmptyWithBufferTypedLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -2181,7 +2181,7 @@ function _longMakeOfLengthWithArrayAndUnrollLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -2361,7 +2361,7 @@ function _longMakeOfLengthWithArgumentsArrayLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
@@ -2511,7 +2511,7 @@ function _longMakeOfLengthWithBufferTypedLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -3163,7 +3163,7 @@ function longMakeUndefinedWithArrayAndUnrollLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -3343,7 +3343,7 @@ function longMakeUndefinedWithArgumentsArrayLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
@@ -3493,7 +3493,7 @@ function longMakeUndefinedWithBufferTypedLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -4136,7 +4136,7 @@ function longMakeZeroedWithArrayAndUnrollLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -4316,7 +4316,7 @@ function longMakeZeroedWithArgumentsArrayLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
@@ -4466,7 +4466,7 @@ function longMakeZeroedWithBufferTypedLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -4918,7 +4918,7 @@ function longMakeFillingWithArrayAndUnrollLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -5036,7 +5036,7 @@ function longMakeFillingWithArgumentsArrayLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
@@ -5131,7 +5131,7 @@ function longMakeFillingWithBufferTypedLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -5324,7 +5324,7 @@ function longFromLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
@@ -5608,7 +5608,7 @@ function longFromCoercingLongDescriptor( test )
     let name = _.LongDescriptors[ e ].name;
     if( name === 'ArgumentsArray' )
     continue;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
@@ -5792,7 +5792,7 @@ function longFromCoercingLongDescriptor( test )
 
 function longFromCoercingArgumentsArrayLongDescriptor( test )
 {
-  let descriptor = _.withDefaultLong.ArgumentsArray;
+  let descriptor = _.withDefaultLongType.ArgumentsArray;
 
   /* */
 
@@ -14484,7 +14484,7 @@ function longFromRangeWithStepNotDefaultLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLong[ name ];
+    let descriptor = _.withDefaultLongType[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );

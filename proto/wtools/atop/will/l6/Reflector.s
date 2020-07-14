@@ -437,6 +437,8 @@ function _inheritMultiple( o )
 
   reflector._accumulator.prefixesApply();
 
+  if( reflector.id === 56 )
+  debugger;
   reflector.src.and( reflector._accumulator.src ).pathsSupplementJoining( reflector._accumulator.src );
   _.assert( reflector.src.filePath === reflector.dst.filePath );
 

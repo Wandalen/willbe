@@ -331,9 +331,6 @@ function reform()
     if( !peerModule.isPreformed() )
     return;
 
-    // if( peerModule && peerModule.id === 1004 )
-    // debugger;
-
     if( junction.peer )
     {
       _.assert( junction.peer.peer === junction );
@@ -344,7 +341,7 @@ function reform()
       return junction.peer;
     }
 
-    debugger; /* xxx */
+    // debugger; /* xxx */
     let junction2 = _.will.ModuleJunction._Of({ object : peerModule, will });
     peerAssign( junction, junction2 );
 
