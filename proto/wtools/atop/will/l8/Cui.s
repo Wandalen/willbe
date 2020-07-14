@@ -2768,6 +2768,7 @@ function commandWillfileExtend( e )
 {
   let will = this;
   let request = _.will.Resolver.strRequestParse( e.commandArgument );
+  request.map.verbosity = request.map.v !== null && request.map.v >= 0 ? request.map.v : request.map.verbosity;
 
   return _.will.Module.prototype.willfileExtend.call( will,
   {

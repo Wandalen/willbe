@@ -7610,7 +7610,7 @@ function willfileExtend( o )
 
   if( opts.submodulesDisabling )
   for( let dependency in willfile.submodule )
-  willfile.submodule[ dependency ][ 'criterion' ][ 'enabled' ] = 0;
+  willfile.submodule[ dependency ].enabled = 0;
 
   for( let sectionName in sectionMap )
   if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
@@ -7839,7 +7839,6 @@ function willfileExtend( o )
       data.about.interpreters = mapToArrayOfStrings( data.about.interpreters );
     }
 
-    debugger;
 
     if( opts.format === 'json' )
     data = _.will.Module.prototype._npmGenerateFromWillfile.call( will,
@@ -7860,6 +7859,9 @@ function willfileExtend( o )
 
   function mapToArrayOfStrings( src )
   {
+    if( _.longIs( src ) )
+    return src;
+
     src = _.mapToArray( src );
     for( let i = 0 ; i < src.length ; i++ )
     src[ i ] = src[ i ].join( ' ' );
@@ -7893,6 +7895,7 @@ willfileExtend.defaults =
   submodulesDisabling : 0,
   format : 'willfile',
   verbosity : 3,
+  v : null,
 }
 
 //
