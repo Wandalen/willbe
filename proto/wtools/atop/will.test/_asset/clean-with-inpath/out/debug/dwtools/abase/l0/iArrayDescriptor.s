@@ -8,7 +8,7 @@ let Self = _global.wModuleForTesting1;
 
 _.assert( !_.Array );
 _.assert( !_.array );
-_.assert( !_.withDefaultLongType );
+_.assert( !_.withDefaultLong );
 
 //
 
@@ -16,19 +16,19 @@ function _longDescriptorApplyTo( dst,def )
 {
 
   _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( !_.mapOwnKey( dst,'withDefaultLongType' ) );
+  _.assert( !_.mapOwnKey( dst,'withDefaultLong' ) );
   _.assert( !_.mapOwnKey( dst,'array' ) );
   _.assert( !!LongDescriptors[ def ] );
 
-  dst.withDefaultLongType = Object.create( null );
+  dst.withDefaultLong = Object.create( null );
 
   for( let d in LongDescriptors )
   {
-    dst.withDefaultLongType[ d ] = Object.create( dst );
-    _.mapExtend( dst.withDefaultLongType[ d ], LongDescriptors[ d ] );
+    dst.withDefaultLong[ d ] = Object.create( dst );
+    _.mapExtend( dst.withDefaultLong[ d ], LongDescriptors[ d ] );
   }
 
-  dst.array = dst.withDefaultLongType[ def ];
+  dst.array = dst.withDefaultLong[ def ];
   dst.LongDescriptors = LongDescriptors;
 
 }
@@ -76,7 +76,7 @@ function MakeSimilar( src,length )
  * // returns instance of Array
  *
  * @example
- * _.withDefaultLongType.Fx.Make/*makeArrayOfLength*/(1);
+ * _.withDefaultLong.Fx.Make/*makeArrayOfLength*/(1);
  * // returns instance of F32x
  *
  * @function Make/*makeArrayOfLength*/
@@ -109,7 +109,7 @@ function Make/*makeArrayOfLength*/( length )
  * // returns Array [ 0,0 ]
  *
  * @example
- * _.withDefaultLongType.Fx.Make/*makeArrayOfLength*/( 2 );
+ * _.withDefaultLong.Fx.Make/*makeArrayOfLength*/( 2 );
  * // returns F32x [ 0,0 ]
  *
  * @function Make/*makeArrayOfLength*/Zeroed
@@ -143,13 +143,13 @@ function Make/*makeArrayOfLength*/Zeroed( length )
  * @param {} src Source array.
  *
  * @example
- * let src =  _.withDefaultLongType.Fx.Make/*makeArrayOfLength*/( 2 );
+ * let src =  _.withDefaultLong.Fx.Make/*makeArrayOfLength*/( 2 );
  * _.array.arrayFromCoercing( src );
  * // returns Array [ 0,0 ]
  *
  * @example
  * let src =  _.long.longMake( 2 );
- * _.withDefaultLongType.Fx.arrayFromCoercing( src );
+ * _.withDefaultLong.Fx.arrayFromCoercing( src );
  * // returns F32x [ 0,0 ]
  *
  * @example
@@ -365,7 +365,7 @@ let _ArrayNameSpaces =
 
 _.assert( !_.Array );
 _.assert( !_.array );
-_.assert( !_.withDefaultLongType );
+_.assert( !_.withDefaultLong );
 
 // debugger;
 
@@ -388,13 +388,13 @@ _longDescriptorApplyTo( _,'Array' );
 
 _.assert( !_.Array );
 
-_.assert( _.mapOwnKey( _,'withDefaultLongType' ) );
+_.assert( _.mapOwnKey( _,'withDefaultLong' ) );
 _.assert( _.mapOwnKey( _,'array' ) );
 _.assert( _.mapOwnKey( _.array,'array' ) );
-_.assert( !_.mapOwnKey( _.array,'withDefaultLongType' ) );
-_.assert( !!_.array.withDefaultLongType );
+_.assert( !_.mapOwnKey( _.array,'withDefaultLong' ) );
+_.assert( !!_.array.withDefaultLong );
 
-_.assert( _.objectIs( _.withDefaultLongType ) );
+_.assert( _.objectIs( _.withDefaultLong ) );
 _.assert( _.objectIs( _.array ) );
 _.assert( _.routineIs( _.long.longMake ) );
 

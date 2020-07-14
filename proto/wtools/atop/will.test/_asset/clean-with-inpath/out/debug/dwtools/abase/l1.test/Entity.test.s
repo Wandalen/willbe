@@ -389,7 +389,7 @@ function entityMakeConstructingLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLongType[ name ];
+    let descriptor = _.withDefaultLong[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
@@ -569,7 +569,7 @@ function entityMakeConstructingArgumentsArrayLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLongType[ name ];
+    let descriptor = _.withDefaultLong[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
@@ -667,7 +667,7 @@ function entityMakeConstructingBufferTypedLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLongType[ name ];
+    let descriptor = _.withDefaultLong[ name ];
 
     for( let i = 0; i < list.length; i++ )
     {
@@ -911,7 +911,7 @@ function entityMakeEmptyLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLongType[ name ];
+    let descriptor = _.withDefaultLong[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
@@ -1281,7 +1281,7 @@ function entityMakeUndefinedLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLongType[ name ];
+    let descriptor = _.withDefaultLong[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
@@ -1696,7 +1696,7 @@ function entityMakeLongDescriptor( test )
   for( let e in _.LongDescriptors )
   {
     let name = _.LongDescriptors[ e ].name;
-    let descriptor = _.withDefaultLongType[ name ];
+    let descriptor = _.withDefaultLong[ name ];
 
     test.open( `descriptor - ${ name }` );
     testRun( descriptor );
