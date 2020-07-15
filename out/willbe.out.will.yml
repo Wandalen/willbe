@@ -360,7 +360,7 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/clean-with-inpath/+.module/Proto/sample/Sample.html
           - >-
-            ../proto/wtools/atop/will.test/_asset/clean-with-inpath/+.module/Proto/sample/Sample.js
+            ../proto/wtools/atop/will.test/_asset/clean-with-inpath/+.module/Proto/sample/Sample.s
           - >-
             ../proto/wtools/atop/will.test/_asset/clean-with-inpath/+.module/Tools
           - >-
@@ -527,7 +527,7 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/clean-with-inpath/.module/Proto/sample/Sample.html
           - >-
-            ../proto/wtools/atop/will.test/_asset/clean-with-inpath/.module/Proto/sample/Sample.js
+            ../proto/wtools/atop/will.test/_asset/clean-with-inpath/.module/Proto/sample/Sample.s
           - >-
             ../proto/wtools/atop/will.test/_asset/clean-with-inpath/.module/Tools
           - >-

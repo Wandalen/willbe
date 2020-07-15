@@ -10522,7 +10522,7 @@ function repoStatusLocalChanges( test )
     })
     con.then( () =>
     {
-      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.js' ), data : '' })
+      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.s' ), data : '' })
       return null;
     });
     return con;
@@ -10740,12 +10740,12 @@ function repoStatusLocalUncommittedChanges( test )
     })
     con.then( () =>
     {
-      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.js' ), data : '' })
+      a.fileProvider.fileWrite({ filePath : a.abs( '.module/ModuleForTesting1/sample/Sample.s' ), data : '' })
       return null;
     })
     _.process.start
     ({
-      execPath : 'git add sample/Sample.js',
+      execPath : 'git add sample/Sample.s',
       currentPath : a.abs( '.module/ModuleForTesting1' ),
       outputPiping : 0,
       ready : con,

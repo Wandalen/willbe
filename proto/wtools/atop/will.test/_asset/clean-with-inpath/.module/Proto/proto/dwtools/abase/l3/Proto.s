@@ -9,7 +9,7 @@
 
 /**
  * Collection of routines to define classes and relations between them.
- * @namespace ModuleForTesting1.ModuleForTesting12 
+ * @namespace ModuleForTesting1.ModuleForTesting12
  * @augments wModuleForTesting1
  * @memberof module:ModuleForTesting1/base/ModuleForTesting12
  */
@@ -1297,7 +1297,7 @@ function mixinHas( proto,mixin )
  *
  *  let Self = function Betta( o )
  *  {
- *    return Self.prototype.init.apply( this,arguments );
+ *    return _.workpiece.construct( Self, this, arguments );
  *  }
  *
  *  function init()
@@ -2570,7 +2570,7 @@ function prototypeEach( proto,onEach )
   return o;
   else
   return new( _.constructorJoin( Self, arguments ) );
-  return Self.prototype.init.apply( this,arguments );
+  return Self.prototype.init.apply( this,arguments ); /* xxx : remove this file from willbe */
 
 */
 
