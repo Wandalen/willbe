@@ -842,7 +842,7 @@ function accessorDeducingMethods( test )
     fieldName : null,
   }
 
-  symbolPut_functor.rubrics = [ 'accessor', 'put', 'functor' ];
+  symbolPut_functor.identity = [ 'accessor', 'put', 'functor' ];
 
   /* */
 
@@ -1169,7 +1169,7 @@ function accessorUnfunct( test )
       return this.b;
     }
   }
-  getter_functor.rubrics = [ 'accessor', 'getter', 'functor' ];
+  getter_functor.identity = [ 'accessor', 'getter', 'functor' ];
   getter_functor.defaults =
   {
     fieldName : null,
@@ -1211,7 +1211,7 @@ function accessorUnfunct( test )
       return this.b = src;
     }
   }
-  setter_functor.rubrics = [ 'accessor', 'setter', 'functor' ];
+  setter_functor.identity = [ 'accessor', 'setter', 'functor' ];
   setter_functor.defaults =
   {
     fieldName : null,
@@ -1266,7 +1266,7 @@ function accessorUnfunct( test )
       return this.b = src;
     }
   }
-  putter_functor.rubrics = [ 'accessor', 'put', 'functor' ];
+  putter_functor.identity = [ 'accessor', 'put', 'functor' ];
   putter_functor.defaults =
   {
     fieldName : null,
@@ -1324,7 +1324,7 @@ function accessorUnfunct( test )
       }
     }
   }
-  accessor_functor.rubrics = [ 'accessor', 'functor' ];
+  accessor_functor.identity = [ 'accessor', 'functor' ];
   accessor_functor.defaults =
   {
     fieldName : null,
@@ -1420,7 +1420,7 @@ function accessorUnfunctGetSuite( test )
     accessorKind : null,
   }
 
-  get_functor.rubrics = [ 'accessor', 'suite', 'getter', 'functor' ];
+  get_functor.identity = [ 'accessor', 'suite', 'getter', 'functor' ];
 
   /* - */
 

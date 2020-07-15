@@ -2554,7 +2554,7 @@ let Forbids =
 }
 
 _.assert( _.routineIs( _.accessor.getter.toStructure ) );
-_.assert( _.longHas( _.accessor.getter.toStructure.rubrics, 'functor' ) );
+_.assert( _.longHas( _.accessor.getter.toStructure.identity, 'functor' ) );
 
 let Accessors =
 {

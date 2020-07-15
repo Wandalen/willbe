@@ -413,7 +413,7 @@ function _methodUnfunct( o )
   if( !_.routineIs( o.amethod ) )
   return o.amethod;
 
-  if( o.amethod && o.amethod.rubrics && _.longHas( o.amethod.rubrics, 'functor' ) )
+  if( o.amethod && o.amethod.identity && _.longHas( o.amethod.identity, 'functor' ) )
   {
     let o2 = Object.create( null );
     if( o.amethod.defaults )
@@ -1064,7 +1064,7 @@ function declare_body( o )
 
     let o2 = o.names[ n ];
 
-    // if( _.routineIs( o2 ) && o2.rubrics && _.longHas( o2.rubrics, 'functor' ) )
+    // if( _.routineIs( o2 ) && o2.identity && _.longHas( o2.identity, 'functor' ) )
     // {
     //   if( o2.defaults && o2.defaults.fieldName !== undefined )
     //   o2 = o2({ fieldName : n });
@@ -1074,7 +1074,7 @@ function declare_body( o )
 
     // o2 = _.accessor._methodUnfunct({ amethod : o2, accessor : o, kind : 'suite' });
 
-    if( _.routineIs( o2 ) && o2.rubrics && _.longHas( o2.rubrics, 'functor' ) )
+    if( _.routineIs( o2 ) && o2.identity && _.longHas( o2.identity, 'functor' ) )
     o2 = { suite : o2 }
 
     _.assert
