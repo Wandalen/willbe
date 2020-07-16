@@ -1045,47 +1045,59 @@ function commandHelp( e )
 
 function commandImply( e )
 {
-  let will = this;
-  let ca = e.ca;
-  let logger = will.logger;
-  let isolated = ca.commandIsolateSecondFromArgument( e.commandArgument );
-  /* qqq xxx : apply to other top modules */
-  _.assert( !!isolated );
+  let cui = this;
 
-  let request = _.will.Resolver.strRequestParse( isolated.commandArgument );
-  will._propertiesImply( request.map );
+  cui.implied = null;
+  cui._command_pre( commandImply, arguments );
 
-  // let namesMap =
-  // {
-  //
-  //   v : 'verbosity',
-  //   verbosity : 'verbosity',
-  //   beeping : 'beeping',
-  //
-  //   withOut : 'withOut',
-  //   withIn : 'withIn',
-  //   withEnabled : 'withEnabled',
-  //   withDisabled : 'withDisabled',
-  //   withValid : 'withValid',
-  //   withInvalid : 'withInvalid',
-  //   withSubmodules : 'withSubmodules',
-  //
-  // }
-  //
-  // _.process.argsReadTo
-  // ({
-  //   dst : will,
-  //   propertiesMap : request.map,
-  //   namesMap : namesMap,
-  // });
-
-  if( isolated.secondCommand )
-  return ca.commandPerform
-  ({
-    command : isolated.secondCommand,
-  });
+  cui.implied = e.propertiesMap;
+  cui._propertiesImply( cui.implied );
 
 }
+
+// function commandImply( e )
+// {
+//   let will = this;
+//   let ca = e.ca;
+//   let logger = will.logger;
+//   let isolated = ca.commandIsolateSecondFromArgument( e.commandArgument );
+//   /* qqq xxx : apply to other top modules */
+//   _.assert( !!isolated );
+//
+//   let request = _.will.Resolver.strRequestParse( isolated.commandArgument );
+//   will._propertiesImply( request.map );
+//
+//   // let namesMap =
+//   // {
+//   //
+//   //   v : 'verbosity',
+//   //   verbosity : 'verbosity',
+//   //   beeping : 'beeping',
+//   //
+//   //   withOut : 'withOut',
+//   //   withIn : 'withIn',
+//   //   withEnabled : 'withEnabled',
+//   //   withDisabled : 'withDisabled',
+//   //   withValid : 'withValid',
+//   //   withInvalid : 'withInvalid',
+//   //   withSubmodules : 'withSubmodules',
+//   //
+//   // }
+//   //
+//   // _.process.argsReadTo
+//   // ({
+//   //   dst : will,
+//   //   propertiesMap : request.map,
+//   //   namesMap : namesMap,
+//   // });
+//
+//   if( isolated.secondCommand )
+//   return ca.commandPerform
+//   ({
+//     command : isolated.secondCommand,
+//   });
+//
+// }
 
 commandImply.commandProperties =
 {
