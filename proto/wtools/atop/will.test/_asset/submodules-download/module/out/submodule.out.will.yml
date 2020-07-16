@@ -145,7 +145,7 @@ module:
           - >-
             ../.module/ModuleForTesting1/proto/wtools/abase/l1.test/ModuleForTesting1.test.s
           - ../.module/ModuleForTesting1/sample
-          - ../.module/ModuleForTesting1/sample/Sample.js
+          - ../.module/ModuleForTesting1/sample/Sample.s
           - ../.module/ModuleForTesting2a
           - ../.module/ModuleForTesting2a/.ex.will.yml
           - ../.module/ModuleForTesting2a/.gitattributes
@@ -218,7 +218,7 @@ module:
           - >-
             ../.module/ModuleForTesting2a/proto/wtools/abase/l3.test/ModuleForTesting2a.test.s
           - ../.module/ModuleForTesting2a/sample
-          - ../.module/ModuleForTesting2a/sample/Sample.js
+          - ../.module/ModuleForTesting2a/sample/Sample.s
           - .
           - submodule.out.will.yml
     submodule:
