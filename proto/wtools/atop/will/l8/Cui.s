@@ -1130,7 +1130,7 @@ function commandVersion( e )
 }
 
 commandVersion.hint = 'Get information about version.';
-commandStatus.commandSubjectHint = false;
+commandVersion.commandSubjectHint = false;
 
 // function commandVersion( e ) /* xxx qqq : move to NpmTools */
 // {
@@ -1163,7 +1163,7 @@ commandVersionCheck.commandProperties =
 {
   throwing : 'Throw an error if utility is not up to date. Default : 1',
   ... commandImply.commandProperties,
-}
+};
 
 //
 
