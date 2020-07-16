@@ -7707,9 +7707,9 @@ function willfileExtend( o )
 
     let filter;
     if( findDst )
-    filter = { filePath : { [ `${selector}*` ] : true } };
+    filter = { filePath : { [ filePath ] : true } };
     else
-    filter = { filePath : { [ `${selector}*` ] : true, [ dstPath ] : 0 } };
+    filter = { filePath : { [ filePath ] : true, [ dstPath ] : 0 } };
 
     return fileProvider.filesFind
     ({
