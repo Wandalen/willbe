@@ -167,6 +167,8 @@ function _command_pre( o )
   {
     if( o.routine.commandProperties )
     _.mapExtend( e.propertiesMap, _.mapOnly( cui.implied, o.routine.implyProperties ) );
+    else
+    _.mapExtend( e.propertiesMap, cui.implied );
   }
 
   _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( e.propertiesMap ) );
@@ -400,8 +402,8 @@ function _commandsMake()
 
     'help' :                            { e : _.routineJoin( will, will.commandHelp ),                        h : 'Get help.' },
     'imply' :                           { e : _.routineJoin( will, will.commandImply ),                       h : 'Change state or imply value of a variable' },
-    'version' :                         { e : _.routineJoin( will, will.commandVersion ),                     h : 'Get current version.' },
-    'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                h : 'Check if current version of willbe is the latest.' },
+    'version' :                         { e : _.routineJoin( will, will.commandVersion ),                     },
+    'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                },
 
     'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               h : 'List information about resources of the current module.' },
     'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
@@ -1128,6 +1130,7 @@ function commandVersion( e )
 }
 
 commandVersion.hint = 'Get information about version.';
+commandStatus.commandSubjectHint = false;
 
 // function commandVersion( e ) /* xxx qqq : move to NpmTools */
 // {
@@ -1149,18 +1152,13 @@ commandVersion.hint = 'Get information about version.';
 
 function commandVersionCheck( e )
 {
-  let will = this;
-  let ca = e.ca;
-  let logger = will.logger;
+  let cui = this;
+  cui._propertiesImply( e.propertiesMap );
 
-  let propertiesMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
-  propertiesMap = _.mapOnly( propertiesMap, commandVersionCheck.commandProperties );
-  will._propertiesImply( propertiesMap );
-
-  return will.versionIsUpToDate( propertiesMap );
+  return cui.versionIsUpToDate( e.propertiesMap );
 }
 
+commandVersionCheck.hint = 'Check if current version of willbe is the latest.';
 commandVersionCheck.commandProperties =
 {
   throwing : 'Throw an error if utility is not up to date. Default : 1',
