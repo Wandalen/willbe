@@ -1691,6 +1691,8 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/npm-from-willfile/Enabled.will.yml
           - >-
+            ../proto/wtools/atop/will.test/_asset/npm-from-willfile/ForExtension.will.yml
+          - >-
             ../proto/wtools/atop/will.test/_asset/npm-from-willfile/Interpreters.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/npm-from-willfile/Keywords.will.yml
