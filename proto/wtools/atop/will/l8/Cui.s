@@ -398,7 +398,8 @@ function _commandsMake()
 
     'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile ),             h : 'Use "npm from willfile" to generate "package.json" file from willfile.' },
     'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm ),             h : 'Use "willfile from npm" to generate ".will.yml" file from "package.json".' },
-    'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend ),              h : 'Use "willfile extend" to generate willfile from source configuration files' },
+    'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
+    'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              h : 'Use "package install" to install target package.' },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        h : 'Use "package local versions" to get list of package versions avaiable locally' },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       h : 'Use "package remote versions" to get list of package versions avaiable in remote archive' },
@@ -2774,10 +2775,58 @@ function commandWillfileExtend( e )
   {
     request : request.subject,
     onSection : _.mapExtend,
-    verbosity : 3,
     ... request.map,
   });
 }
+
+commandWillfileExtend.hint = 'Use "willfile extend" to extend existing willfile by data from source configuration files.';
+commandWillfileExtend.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
+commandWillfileExtend.commandProperties =
+{
+  about : 'Enables extension of section "about". Default value is 1.',
+  build : 'Enables extension of section "build". Default value is 1.',
+  path : 'Enables extension of section "path". Default value is 1.',
+  reflector : 'Enables extension of section "reflector". Default value is 1.',
+  step : 'Enables extension of section "step". Default value is 1.',
+  submodule : 'Enables extension of section "submodule". Default value is 1.',
+
+  author : 'Enables extension of field "author" in section "about". Default value is 1.',
+  contributors : 'Enables extension of field "contributors" in section "about". Default value is 1.',
+  description : 'Enables extension of field "description" in section "about". Default value is 1.',
+  enabled : 'Enables extension of field "enabled" in section "about". Default value is 1.',
+  interpreters : 'Enables extension of field "interpreters" in section "about". Default value is 1.',
+  keywords : 'Enables extension of field "keywords" in section "about". Default value is 1.',
+  license : 'Enables extension of field "license" in section "about". Default value is 1.',
+  name : 'Enables extension of field "name" in section "about". Default value is 1.',
+  'npm.name' : 'Enables extension of field "npm.name" in section "about". Default value is 1.',
+  'npm.scripts' : 'Enables extension of field "npm.scripts" in section "about". Default value is 1.',
+  version : 'Enables extension of field "version" in section "about". Default value is 1.',
+
+  format : 'Defines output format of config file: "willfile" - output file is willfile, "json" - output is NPM json file. Default value is "willfile".',
+  submodulesDisabling : 'Disables new submodules from source files. Default value is 0.',
+  verbosity : 'Set verbosity. Default is 3.',
+  v : 'Set verbosity. Default is 3.',
+}
+
+//
+
+function commandWillfileSupplement( e )
+{
+  let will = this;
+  let request = _.will.Resolver.strRequestParse( e.commandArgument );
+  request.map.verbosity = request.map.v !== null && request.map.v >= 0 ? request.map.v : request.map.verbosity;
+
+  return _.will.Module.prototype.willfileExtend.call( will,
+  {
+    request : request.subject,
+    onSection : _.mapSupplement,
+    ... request.map,
+  });
+}
+
+commandWillfileSupplement.hint = 'Use "willfile supplement" to supplement existing willfile by new data from source configuration files.';
+commandWillfileSupplement.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
+commandWillfileSupplement.commandProperties = commandWillfileExtend.commandProperties;
 
 //
 
@@ -3494,8 +3543,7 @@ let Extension =
   commandNpmFromWillfile,
   commandWillfileFromNpm,
   commandWillfileExtend,
-  // commandWillfileExtend,
-  // commandWillfileSupplement,
+  commandWillfileSupplement,
   /* qqq2 :
   will .willfile.extend dst/ src1 dir/src2 src/
   will .willfile.extend dst src1 dir/src2 src/
