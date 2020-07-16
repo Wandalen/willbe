@@ -7573,6 +7573,16 @@ function willfileExtend( o )
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
 
+  let dstPath = dstPathFind( request[ 0 ] );
+  let dstWillfiles = configFilesFind( dstPath, 1 );
+
+  if( opts.format === 'json' )
+  _.assert( dstWillfiles.length === 0, 'not implemented' );
+
+  if( path.isGlob( dstPath ) && dstWillfiles.length === 0 )
+  _.assert( 0, `Can't find file` );
+
+
   /* extension file creation */
 
   let sectionMap =
@@ -7619,15 +7629,6 @@ function willfileExtend( o )
 
   /* write destination willfile */
 
-  let dstPath = dstPathFind( request[ 0 ] );
-  let dstWillfiles = configFilesFind( dstPath );
-
-  if( opts.format === 'json' )
-  _.assert( dstWillfiles.length === 0, 'Not safe to rewrite existing file' );
-
-  if( path.isGlob( dstPath ) && dstWillfiles.length === 0 )
-  _.assert( 0, `Can't find file` );
-
   let dstEncoding = path.ext( dstPath ) === 'json' ? 'json.fine' : 'yaml';
   dstWillfilesWrite( dstWillfiles );
 
@@ -7637,14 +7638,64 @@ function willfileExtend( o )
 
   /* */
 
-  function configFilesFind( selector )
+  function dstPathFind( dstPath )
+  {
+    dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
+
+    if( fileProvider.isTerminal( dstPath ) )
+    return dstPath;
+
+    if( fileProvider.isDir( dstPath ) )
+    {
+      dstPath = path.join( dstPath, opts.format === 'willfile' ? 'will.yml' : 'package.json' );
+    }
+    else if( !path.isGlob( dstPath ) )
+    {
+      let exts = path.exts( dstPath );
+      if( exts.length === 0 )
+      {
+        let ext = opts.format === 'willfile' ? '.will.yml' : '.json';
+        dstPath = dstPath + ext;
+      }
+      else
+      {
+        if( opts.format === 'json' && !_.longHas( exts, 'json' ) )
+        {
+          exts.push( 'json' );
+        }
+        else
+        {
+          if( !_.longHas( [ 'yml', 'json', 'yaml' ], path.ext( dstPath ) ) )
+          exts.push( 'yml' );
+          if( !_.longHas( exts ), 'will' )
+          exts.splice( exts.length - 1, 0, 'will' );
+        }
+
+        dstPath = path.dir( dstPath ) + path.name( dstPath ) + '.' + exts.join( '.' );
+      }
+    }
+    return dstPath;
+  }
+
+  /* */
+
+  function configFilesFind( selector, findDst )
   {
     let filePath = selector;
     if( !path.isAbsolute( filePath ) )
     filePath = path.join( will.inPath ? will.inPath : path.current(), selector );
 
     if( fileProvider.isTerminal( filePath ) )
-    return [ fileProvider.record( filePath ) ];
+    {
+      if( !findDst && dstWillfiles.length )
+      {
+        if( dstWillfiles[ 0 ].absolute === filePath )
+        return [];
+        if( dstWillfiles[ 1 ] && dstWillfiles[ 1 ].absolute === filePath )
+        return [];
+      }
+      return [ fileProvider.record( filePath ) ];
+    }
 
     if( !path.isGlob( filePath ) )
     {
@@ -7654,6 +7705,12 @@ function willfileExtend( o )
       filePath = filePath + '*.(yml|yaml|json)';
     }
 
+    let filter;
+    if( findDst )
+    filter = { filePath : { [ `${selector}*` ] : true } };
+    else
+    filter = { filePath : { [ `${selector}*` ] : true, [ dstPath ] : 0 } };
+
     return fileProvider.filesFind
     ({
       filePath : filePath,
@@ -7661,7 +7718,7 @@ function willfileExtend( o )
       withDirs : 0,
       mode : 'distinct',
       mandatory : 0,
-      filter : { filePath : '*' + selector + '*' },
+      filter,
     });
   }
 
@@ -7743,47 +7800,6 @@ function willfileExtend( o )
     if( !opts[ name ] )
     return;
     opts.onSection( dst[ name ], src[ name ] );
-  }
-
-  /* */
-
-  function dstPathFind( dstPath )
-  {
-    dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
-
-    if( fileProvider.isTerminal( dstPath ) )
-    return dstPath;
-
-    if( fileProvider.isDir( dstPath ) )
-    {
-      dstPath = path.join( dstPath, opts.format === 'willfile' ? 'will.yml' : 'package.json' );
-    }
-    else if( !path.isGlob( dstPath ) )
-    {
-      let exts = path.exts( dstPath );
-      if( exts.length === 0 )
-      {
-        let ext = opts.format === 'willfile' ? '.will.yml' : '.json';
-        dstPath = dstPath + ext;
-      }
-      else
-      {
-        if( opts.format === 'json' && !_.longHas( exts, 'json' ) )
-        {
-          exts.push( 'json' );
-        }
-        else
-        {
-          if( !_.longHas( [ 'yml', 'json', 'yaml' ], path.ext( dstPath ) ) )
-          exts.push( 'yml' );
-          if( !_.longHas( exts ), 'will' )
-          exts.splice( exts.length - 1, 0, 'will' );
-        }
-
-        dstPath = path.dir( dstPath ) + path.name( dstPath ) + '.' + exts.join( '.' );
-      }
-    }
-    return dstPath;
   }
 
   /* */
