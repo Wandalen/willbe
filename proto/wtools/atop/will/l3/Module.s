@@ -6990,6 +6990,141 @@ resourceImport.defaults =
 
 //
 
+function _npmGenerateFromWillfile( o )
+{
+  let will = this;
+  let path = will.fileProvider.path;
+
+  /* */
+
+  let config = Object.create( null );
+  if( o.srcConfig.about )
+  {
+    config.name = o.srcConfig.about.name;
+    config.version = o.srcConfig.about.version;
+    config.enabled = o.srcConfig.about.enabled;
+
+    if( o.srcConfig.about.description )
+    config.description = o.srcConfig.about.description;
+    if( o.srcConfig.about.keywords )
+    config.keywords = o.srcConfig.about.keywords;
+    if( o.srcConfig.about.license )
+    config.license = o.srcConfig.about.license;
+
+    if( o.srcConfig.about.interpreters )
+    {
+      let interpreters = _.arrayAs( o.srcConfig.about.interpreters );
+      interpreters.forEach( ( interpreter ) =>
+      {
+        if( _.strHas( interpreter, 'njs' ) )
+        config.engine = _.strReplace( interpreter, 'njs', 'node' );
+      });
+    }
+
+    if( o.srcConfig.about.author )
+    config.author = o.srcConfig.about.author;
+    if( o.srcConfig.about.contributors )
+    config.contributors = o.srcConfig.about.contributors;
+
+    for( let n in o.srcConfig.about )
+    {
+      if( !_.strBegins( n, 'npm.' ) )
+      continue;
+      config[ _.strRemoveBegin( n, 'npm.' ) ] = o.srcConfig.about[ n ];
+    }
+  }
+
+  if( o.entryPath && o.entryPath.length )
+  {
+    config.main = _.scalarFrom( path.s.relative( path.dir( o.packagePath ), o.entryPath ) );
+  }
+
+  if( o.filesPath && o.filesPath.length )
+  {
+    config.files = path.s.relative( path.dir( o.packagePath ), o.filesPath );
+  }
+
+  if( o.srcConfig.path )
+  {
+    if( o.srcConfig.path.repository )
+    config.repository = pathSimplify( o.srcConfig.path.repository );
+    if( o.srcConfig.path.bugtracker )
+    config.bugs = pathSimplify( o.srcConfig.path.bugtracker );
+    if( o.srcConfig.path.entry )
+    config.entry = o.srcConfig.path.entry;
+
+    for( let n in o.srcConfig.path )
+    {
+      if( !_.strBegins( n, 'npm.' ) )
+      continue;
+      config[ _.strRemoveBegin( n, 'npm.' ) ] = o.srcConfig.path[ n ];
+    }
+  }
+
+  if( o.srcConfig.submodule )
+  {
+    for( let s in o.srcConfig.submodule )
+    {
+      let submodule = o.srcConfig.submodule[ s ];
+      let p = submodule.path;
+      p = path.parseFull( p );
+
+      _.assert
+      (
+        p.protocol === 'npm' || p.protocol === 'hd',
+        () => 'Implemented only for "npm" and "hd" dependencies, but got ' + p.full
+      );
+
+      if( p.protocol === 'npm' )
+      {
+        depAdd( submodule, path.relative( '/', p.longPath ), p.hash );
+      }
+      else if( p.protocol === 'hd' )
+      {
+        depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath,  );
+      }
+      else _.assert( 0 );
+    }
+  }
+
+  return config;
+
+  /* */
+
+  function pathSimplify( src )
+  {
+    let r = src;
+    if( !_.strIs( r ) )
+    return r;
+
+    r = r.replace( '///', '//' );
+    r = r.replace( 'npm://', '' );
+
+    return r;
+  }
+
+  function depAdd( submodule, name, hash )
+  {
+    if( submodule.criterion )
+    {
+      if( submodule.criterion.optional )
+      return _depAdd( 'optionalDependencies', name, hash );
+      else if( submodule.criterion.development )
+      return _depAdd( 'devDependencies', name, hash );
+    }
+    return _depAdd( 'dependencies', name, hash );
+  }
+
+  function _depAdd( section, name, hash )
+  {
+    config[ section ] = config[ section ] || Object.create( null );
+    config[ section ][ name ] = hash ? hash : '';
+  }
+
+}
+
+//
+
 function npmGenerateFromWillfile( o )
 {
   let module = this;
@@ -6999,7 +7134,7 @@ function npmGenerateFromWillfile( o )
   let logger = will.logger;
   let opts = _.mapExtend( null, o );
   let verbosity = o.verbosity;
-  let about = module.about.exportStructure();
+  // let about = module.about.exportStructure();
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
@@ -7023,87 +7158,98 @@ function npmGenerateFromWillfile( o )
 
   /* */
 
-  let config = Object.create( null );
-  config.name = about.name;
-  config.version = about.version;
-  config.enabled = about.enabled;
-
-  if( about.description )
-  config.description = about.description;
-  if( about.keywords )
-  config.keywords = about.keywords;
-  if( about.license )
-  config.license = about.license;
-
-  if( about.interpreters )
+  let config = _.will.Module.prototype._npmGenerateFromWillfile.call( will,
   {
-    let interpreters = _.arrayAs( about.interpreters );
-    interpreters.forEach( ( interpreter ) =>
+    srcConfig :
     {
-      if( _.strHas( interpreter, 'njs' ) )
-      config.engine = _.strReplace( interpreter, 'njs', 'node' );
-    });
-  }
+      about : module.about.exportStructure(),
+      path : module.pathMap,
+      submodule : module.submoduleMap,
+    },
+    ... opts,
+  });
 
-  if( about.author )
-  config.author = about.author;
-  if( about.contributors )
-  config.contributors = about.contributors;
-
-  for( let n in about )
-  {
-    if( !_.strBegins( n, 'npm.' ) )
-    continue;
-    config[ _.strRemoveBegin( n, 'npm.' ) ] = about[ n ];
-  }
-
-  if( opts.entryPath && opts.entryPath.length )
-  {
-    config.main = _.scalarFrom( path.s.relative( path.dir( opts.packagePath ), opts.entryPath ) );
-  }
-
-  if( opts.filesPath && opts.filesPath.length )
-  {
-    config.files = path.s.relative( path.dir( opts.packagePath ), opts.filesPath );
-  }
-
-  if( module.pathMap.repository )
-  config.repository = pathSimplify( module.pathMap.repository );
-  if( module.pathMap.bugtracker )
-  config.bugs = pathSimplify( module.pathMap.bugtracker );
-  if( module.pathMap.entry )
-  config.entry = module.pathMap.entry;
-
-  for( let n in module.pathMap )
-  {
-    if( !_.strBegins( n, 'npm.' ) )
-    continue;
-    config[ _.strRemoveBegin( n, 'npm.' ) ] = module.pathMap[ n ];
-  }
-
-  for( let s in module.submoduleMap )
-  {
-    let submodule = module.submoduleMap[ s ];
-    let p = submodule.path;
-    p = path.parseFull( p );
-
-    _.assert
-    (
-      p.protocol === 'npm' || p.protocol === 'hd',
-      () => 'Implemented only for "npm" and "hd" dependencies, but got ' + p.full
-    );
-
-    if( p.protocol === 'npm' )
-    {
-      depAdd( submodule, path.relative( '/', p.longPath ), p.hash );
-    }
-    else if( p.protocol === 'hd' )
-    {
-      depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath,  );
-    }
-    else _.assert( 0 );
-
-  }
+  // let config = Object.create( null );
+  // config.name = about.name;
+  // config.version = about.version;
+  // config.enabled = about.enabled;
+  //
+  // if( about.description )
+  // config.description = about.description;
+  // if( about.keywords )
+  // config.keywords = about.keywords;
+  // if( about.license )
+  // config.license = about.license;
+  //
+  // if( about.interpreters )
+  // {
+  //   let interpreters = _.arrayAs( about.interpreters );
+  //   interpreters.forEach( ( interpreter ) =>
+  //   {
+  //     if( _.strHas( interpreter, 'njs' ) )
+  //     config.engine = _.strReplace( interpreter, 'njs', 'node' );
+  //   });
+  // }
+  //
+  // if( about.author )
+  // config.author = about.author;
+  // if( about.contributors )
+  // config.contributors = about.contributors;
+  //
+  // for( let n in about )
+  // {
+  //   if( !_.strBegins( n, 'npm.' ) )
+  //   continue;
+  //   config[ _.strRemoveBegin( n, 'npm.' ) ] = about[ n ];
+  // }
+  //
+  // if( opts.entryPath && opts.entryPath.length )
+  // {
+  //   config.main = _.scalarFrom( path.s.relative( path.dir( opts.packagePath ), opts.entryPath ) );
+  // }
+  //
+  // if( opts.filesPath && opts.filesPath.length )
+  // {
+  //   config.files = path.s.relative( path.dir( opts.packagePath ), opts.filesPath );
+  // }
+  //
+  // if( module.pathMap.repository )
+  // config.repository = pathSimplify( module.pathMap.repository );
+  // if( module.pathMap.bugtracker )
+  // config.bugs = pathSimplify( module.pathMap.bugtracker );
+  // if( module.pathMap.entry )
+  // config.entry = module.pathMap.entry;
+  //
+  // for( let n in module.pathMap )
+  // {
+  //   if( !_.strBegins( n, 'npm.' ) )
+  //   continue;
+  //   config[ _.strRemoveBegin( n, 'npm.' ) ] = module.pathMap[ n ];
+  // }
+  //
+  // for( let s in module.submoduleMap )
+  // {
+  //   let submodule = module.submoduleMap[ s ];
+  //   let p = submodule.path;
+  //   p = path.parseFull( p );
+  //
+  //   _.assert
+  //   (
+  //     p.protocol === 'npm' || p.protocol === 'hd',
+  //     () => 'Implemented only for "npm" and "hd" dependencies, but got ' + p.full
+  //   );
+  //
+  //   if( p.protocol === 'npm' )
+  //   {
+  //     depAdd( submodule, path.relative( '/', p.longPath ), p.hash );
+  //   }
+  //   else if( p.protocol === 'hd' )
+  //   {
+  //     depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath,  );
+  //   }
+  //   else _.assert( 0 );
+  //
+  // }
 
   _.sure( !fileProvider.isDir( opts.packagePath ), () => packagePath + ' is dir, not safe to delete' );
 
@@ -7115,38 +7261,37 @@ function npmGenerateFromWillfile( o )
     verbosity : verbosity ? 5 : 0,
   });
 
-  debugger;
   return null;
 
   /* */
 
-  function pathSimplify( src )
-  {
-    let r = src;
-    if( !_.strIs( r ) )
-    return r;
-
-    r = r.replace( '///', '//' );
-    r = r.replace( 'npm://', '' );
-
-    return r;
-  }
-
-  function depAdd( submodule, name, hash )
-  {
-    if( submodule.criterion.optional )
-    _depAdd( 'optionalDependencies', name, hash );
-    else if( submodule.criterion.development )
-    _depAdd( 'devDependencies', name, hash );
-    else
-    _depAdd( 'dependencies', name, hash );
-  }
-
-  function _depAdd( section, name, hash )
-  {
-    config[ section ] = config[ section ] || Object.create( null );
-    config[ section ][ name ] = hash ? hash : '';
-  }
+  // function pathSimplify( src )
+  // {
+  //   let r = src;
+  //   if( !_.strIs( r ) )
+  //   return r;
+  //
+  //   r = r.replace( '///', '//' );
+  //   r = r.replace( 'npm://', '' );
+  //
+  //   return r;
+  // }
+  //
+  // function depAdd( submodule, name, hash )
+  // {
+  //   if( submodule.criterion.optional )
+  //   _depAdd( 'optionalDependencies', name, hash );
+  //   else if( submodule.criterion.development )
+  //   _depAdd( 'devDependencies', name, hash );
+  //   else
+  //   _depAdd( 'dependencies', name, hash );
+  // }
+  //
+  // function _depAdd( section, name, hash )
+  // {
+  //   config[ section ] = config[ section ] || Object.create( null );
+  //   config[ section ][ name ] = hash ? hash : '';
+  // }
 }
 
 npmGenerateFromWillfile.defaults =
@@ -7159,50 +7304,14 @@ npmGenerateFromWillfile.defaults =
 
 //
 
-function willfileGenerateFromNpm( o )
+function _willfileGenerateFromNpm( o )
 {
-  let module = this;
-  let will = module.will ? module.will : module;
+  let will = this;
   let fileProvider = will.fileProvider;
-  let path = fileProvider.path;
-  let logger = will.logger;
-  let opts = _.mapExtend( null, o );
-  let verbosity = o.verbosity;
-
-  _.assert( arguments.length === 1 );
-  _.assert( _.objectIs( opts ) );
-
-  let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
-  let willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
-  if( opts.currentContext )
-  {
-    packagePath = module.pathResolve
-    ({
-      selector : opts.packagePath || '{path::in}/package.json',
-      prefixlessAction : 'resolved',
-      pathNativizing : 0,
-      selectorIsPath : 1,
-      currentContext : opts.currentContext,
-    });
-    willfilePath = module.pathResolve
-    ({
-      selector : opts.willfilePath || '{path::out}/.will.yml',
-      prefixlessAction : 'resolved',
-      pathNativizing : 0,
-      selectorIsPath : 1,
-      currentContext : opts.currentContext,
-    });
-  }
-  else
-  {
-    packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
-    willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
-  }
-
-  let config = fileProvider.fileRead({ filePath : packagePath, encoding : 'json' });
 
   /* */
 
+  let config = o.srcConfig;
   let willfile = Object.create( null );
   willfile.about = Object.create( null );
   willfile.path = Object.create( null );
@@ -7217,13 +7326,13 @@ function willfileGenerateFromNpm( o )
     version :       { propertyAdd : aboutPropertyAdd, name : 'version' },
     enabled :       { propertyAdd : aboutPropertyAdd, name : 'enabled' },
     description :   { propertyAdd : aboutPropertyAdd, name : 'description' },
-    interpreters :  { propertyAdd : aboutPropertyAdd, name : 'interpreters' },
-    engine :        { propertyAdd : aboutPropertyAdd, name : 'interpreters' },
     keywords :      { propertyAdd : aboutPropertyAdd, name : 'keywords' },
     license :       { propertyAdd : aboutPropertyAdd, name : 'license' },
     author :        { propertyAdd : aboutPropertyAdd, name : 'author' },
     contributors :  { propertyAdd : aboutPropertyAdd, name : 'contributors' },
     scripts :       { propertyAdd : aboutPropertyAdd, name : 'npm.scripts' },
+    interpreters :  { propertyAdd : interpretersAdd, name : 'interpreters' },
+    engine :        { propertyAdd : interpretersAdd, name : 'interpreters' },
     repository :    { propertyAdd : pathPropertyAdd, name : 'repository' },
     bugs :          { propertyAdd : pathPropertyAdd, name : 'bugs' },
     main :          { propertyAdd : pathPropertyAdd, name : 'main' },
@@ -7233,7 +7342,8 @@ function willfileGenerateFromNpm( o )
     optionalDependencies :  { propertyAdd : submodulePropertyAdd, name : 'optional' },
   };
 
-  for( let property in config )
+  for( let property in propertiesMap )
+  if( property in config )
   propertiesMap[ property ].propertyAdd( property, propertiesMap[ property ].name );
 
   if( willfile.about.name )
@@ -7256,23 +7366,35 @@ function willfileGenerateFromNpm( o )
 
   /* */
 
-  _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
-  _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
+  // _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
+  // _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
 
-  fileProvider.fileWrite
-  ({
-    filePath : willfilePath,
-    data : willfile,
-    encoding : 'yaml',
-    verbosity : verbosity ? 5 : 0,
-  });
+  return willfile;
 
-  return null;
+  // fileProvider.fileWrite
+  // ({
+  //   filePath : willfilePath,
+  //   data : willfile,
+  //   encoding : 'yaml',
+  //   verbosity : verbosity ? 5 : 0,
+  // });
+  //
+  // return null;
 
   /* */
 
   function aboutPropertyAdd( property, name )
   {
+    willfile.about[ name ] = config[ property ];
+  }
+
+  /* */
+
+  function interpretersAdd( property, name )
+  {
+    if( _.strHas( config[ property ], 'node' ) )
+    willfile.about[ name ] = _.strReplace( config[ property ], 'node', 'njs' );
+    else
     willfile.about[ name ] = config[ property ];
   }
 
@@ -7368,12 +7490,433 @@ function willfileGenerateFromNpm( o )
 
 }
 
-willfileGenerateFromNpm.defaults =
+_willfileGenerateFromNpm.defaults =
 {
   packagePath : null,
   willfilePath : null,
   verbosity : null,
 };
+
+//
+
+function willfileGenerateFromNpm( o )
+{
+  let module = this;
+  let will = module.will ? module.will : module;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+  let opts = _.mapExtend( null, o );
+  let verbosity = o.verbosity;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
+  let willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
+  if( opts.currentContext )
+  {
+    packagePath = module.pathResolve
+    ({
+      selector : opts.packagePath || '{path::in}/package.json',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : opts.currentContext,
+    });
+    willfilePath = module.pathResolve
+    ({
+      selector : opts.willfilePath || '{path::out}/.will.yml',
+      prefixlessAction : 'resolved',
+      pathNativizing : 0,
+      selectorIsPath : 1,
+      currentContext : opts.currentContext,
+    });
+  }
+  else
+  {
+    packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
+    willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
+  }
+
+  /* */
+
+  _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
+  _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
+
+  let srcConfig = fileProvider.fileRead({ filePath : packagePath, encoding : 'json' })
+  let willfile = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig } );
+
+  /* */
+
+  fileProvider.fileWrite
+  ({
+    filePath : willfilePath,
+    data : willfile,
+    encoding : 'yaml',
+    verbosity : o.verbosity ? 5 : 0,
+  });
+
+  return null;
+}
+
+//
+
+function willfileExtend( o )
+{
+  let will = this.will ? this.will : this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let opts = _.routineOptions( willfileExtend, o );
+  let request = opts.request.split( /\s+/ );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  let dstPath = dstPathFind( request[ 0 ] );
+  let dstWillfiles = configFilesFind( dstPath, 1 );
+
+  if( opts.format === 'json' )
+  _.assert( dstWillfiles.length === 0, 'not implemented' );
+
+  if( path.isGlob( dstPath ) && dstWillfiles.length === 0 )
+  _.assert( 0, `Can't find file` );
+
+  /* extension file creation */
+
+  let sectionMap =
+  {
+    about : aboutSectionExtend,
+    build : sectionExtend,
+    path : sectionExtend,
+    reflector : sectionExtend,
+    step : sectionExtend,
+    submodule : sectionExtend,
+  };
+
+  let willfile = Object.create( null );
+  for( let sectionName in sectionMap )
+  willfile[ sectionName ] = Object.create( null );
+
+  for( let i = 1 ; i < request.length ; i++ )
+  {
+    let files = configFilesFind( request[ i ] );
+
+    for( let j = 0 ; j < files.length ; j++ )
+    {
+      if( _.longHasNone( files[ j ].exts, [ 'yml', 'yaml', 'json' ] ) )
+      continue;
+
+      let srcEncoding = files[ j ].ext === 'json' ? 'json' : 'yaml';
+      let srcConfig = fileProvider.fileRead({ filePath : files[ j ].absolute, encoding : srcEncoding });
+      if( !_.longHas( files[ j ].exts, 'will' ) )
+      srcConfig = _.will.Module.prototype._willfileGenerateFromNpm.call( will, { srcConfig });
+
+      for( let sectionName in srcConfig )
+      sectionMap[ sectionName ]( willfile, srcConfig, sectionName );
+    }
+  }
+
+  if( opts.submodulesDisabling )
+  for( let dependency in willfile.submodule )
+  willfile.submodule[ dependency ].enabled = 0;
+
+  for( let sectionName in sectionMap )
+  if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
+  delete willfile[ sectionName ];
+
+  /* write destination willfile */
+
+  let dstEncoding = path.ext( dstPath ) === 'json' ? 'json.fine' : 'yaml';
+  dstWillfilesWrite( dstWillfiles );
+
+  /* */
+
+  return null;
+
+  /* */
+
+  function dstPathFind( dstPath )
+  {
+    dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
+
+    if( fileProvider.isTerminal( dstPath ) )
+    return dstPath;
+
+    if( fileProvider.isDir( dstPath ) )
+    {
+      dstPath = path.join( dstPath, opts.format === 'willfile' ? 'will.yml' : 'package.json' );
+    }
+    else if( !path.isGlob( dstPath ) )
+    {
+      let exts = path.exts( dstPath );
+      if( exts.length === 0 )
+      {
+        let ext = opts.format === 'willfile' ? '.will.yml' : '.json';
+        dstPath = dstPath + ext;
+      }
+      else
+      {
+        if( opts.format === 'json' && !_.longHas( exts, 'json' ) )
+        {
+          exts.push( 'json' );
+        }
+        else
+        {
+          if( !_.longHas( [ 'yml', 'json', 'yaml' ], path.ext( dstPath ) ) )
+          exts.push( 'yml' );
+          if( !_.longHas( exts ), 'will' )
+          exts.splice( exts.length - 1, 0, 'will' );
+        }
+
+        dstPath = path.dir( dstPath ) + path.name( dstPath ) + '.' + exts.join( '.' );
+      }
+    }
+    return dstPath;
+  }
+
+  /* */
+
+  function configFilesFind( selector, findDst )
+  {
+    let filePath = selector;
+    if( !path.isAbsolute( filePath ) )
+    filePath = path.join( will.inPath ? will.inPath : path.current(), selector );
+
+    if( fileProvider.isTerminal( filePath ) )
+    {
+      if( !findDst && dstWillfiles.length )
+      {
+        if( dstWillfiles[ 0 ].absolute === filePath )
+        return [];
+        if( dstWillfiles[ 1 ] && dstWillfiles[ 1 ].absolute === filePath )
+        return [];
+      }
+      return [ fileProvider.record( filePath ) ];
+    }
+
+    if( !path.isGlob( filePath ) )
+    {
+      if( fileProvider.isDir( filePath ) )
+      filePath = path.join( filePath, '*.(yml|yaml|json)' );
+      else
+      filePath = filePath + '*.(yml|yaml|json)';
+    }
+
+    let filter;
+    if( findDst )
+    filter = { filePath : { [ filePath ] : true } };
+    else
+    filter = { filePath : { [ filePath ] : true, [ dstPath ] : 0 } };
+
+    return fileProvider.filesFind
+    ({
+      filePath : filePath,
+      withStem : 0,
+      withDirs : 0,
+      mode : 'distinct',
+      mandatory : 0,
+      filter,
+    });
+  }
+
+  /* */
+
+  function aboutSectionExtend( dst, src, name )
+  {
+    if( !opts.about )
+    return;
+
+    let keys =
+    [
+      'name',
+      'version',
+      'enabled',
+      'description',
+      'license',
+      'author',
+      'npm.name',
+    ];
+    let extendingMap = Object.create( null );
+    for( let i = 0 ; i < keys.length ; i++ )
+    if( opts[ keys[ i ] ] && ( src.about[ keys[ i ] ] !== undefined ) )
+    extendingMap[ keys[ i ] ] = src.about[ keys[ i ] ];
+
+    opts.onSection( dst.about, extendingMap );
+
+    /* */
+
+    if( opts.keywords && src.about.keywords )
+    {
+      dst.about.keywords = _.scalarAppendOnce( dst.about.keywords, src.about.keywords );
+    }
+    if( opts.contributors && src.about.contributors )
+    {
+      dst.about.contributors = arrayPropertyParse( dst.about.contributors, _.strIsolateRightOrAll );
+      src.about.contributors = arrayPropertyParse( src.about.contributors, _.strIsolateRightOrAll );
+      opts.onSection( dst.about.contributors, src.about.contributors );
+    }
+    if( opts.interpreters && src.about.interpreters )
+    {
+      dst.about.interpreters = arrayPropertyParse( dst.about.interpreters, _.strIsolateLeftOrAll );
+      src.about.interpreters = arrayPropertyParse( src.about.interpreters, _.strIsolateLeftOrAll );
+      opts.onSection( dst.about.interpreters, src.about.interpreters );
+    }
+    if( opts[ 'npm.scripts' ] && src.about[ 'npm.scripts' ] )
+    {
+      if( dst.about[ 'npm.scripts' ] === undefined )
+      dst.about[ 'npm.scripts' ] = Object.create( null );
+      opts.onSection( dst.about[ 'npm.scripts' ], src.about[ 'npm.scripts' ] );
+    }
+  }
+
+  /* */
+
+  function arrayPropertyParse( src, parser )
+  {
+    let result = Object.create( null );
+    if( _.longIs( src ) )
+    {
+      for( let i = 0 ; i < src.length ; i++ )
+      {
+        let splits = parser({ src : src[ i ] });
+        result[ splits[ 0 ] ] = splits[ 2 ];
+      }
+      return result;
+    }
+    else if( src === undefined )
+    {
+      return result;
+    }
+    return src;
+  }
+
+  /* */
+
+  function sectionExtend( dst, src, name )
+  {
+    if( !opts[ name ] )
+    return;
+    opts.onSection( dst[ name ], src[ name ] );
+  }
+
+  /* */
+
+  function dstWillfilesWrite( dstWillfiles )
+  {
+    if( dstWillfiles.length !== 0 )
+    {
+
+      _.assert( dstWillfiles.length <= 2, 'Please, improve selector, cannot choose willfiles' );
+
+      let config = fileProvider.fileRead({ filePath : dstWillfiles[ 0 ].absolute, encoding : dstEncoding });
+      if( dstWillfiles.length === 2 )
+      {
+        let config2 = fileProvider.fileRead({ filePath : dstWillfiles[ 1 ].absolute, encoding : dstEncoding });
+        for( let sectionName in config2 )
+        {
+          if( sectionName in willfile )
+          {
+            if( sectionName in config )
+            {
+              let screenMap = _.mapBut( willfile[ sectionName ], config[ sectionName ] );
+              let srcMap = _.mapBut( willfile[ sectionName ], screenMap );
+              opts.onSection( config[ sectionName ], srcMap );
+              willfile[ sectionName ] = screenMap;
+            }
+
+            sectionMap[ sectionName ]( config2, willfile, sectionName );
+            delete willfile[ sectionName ];
+          }
+        }
+        willfileWrite( dstWillfiles[ 1 ].absolute, config2, dstEncoding );
+      }
+
+      for( let sectionName in willfile )
+      {
+        if( config[ sectionName ] === undefined )
+        config[ sectionName ] = Object.create( null );
+        sectionMap[ sectionName ]( config, willfile, sectionName );
+      }
+      willfileWrite( dstWillfiles[ 0 ].absolute, config, dstEncoding );
+
+    }
+    else
+    {
+      willfileWrite( dstPath, willfile, dstEncoding );
+    }
+  }
+
+  /* */
+
+  function willfileWrite( path, data, encoding )
+  {
+    if( data.about )
+    {
+      if( data.about.contributors )
+      data.about.contributors = mapToArrayOfStrings( data.about.contributors );
+      if( data.about.interpreters )
+      data.about.interpreters = mapToArrayOfStrings( data.about.interpreters );
+    }
+
+
+    if( opts.format === 'json' )
+    data = _.will.Module.prototype._npmGenerateFromWillfile.call( will,
+    {
+      srcConfig : data,
+      packagePath : path,
+    });
+
+    fileProvider.fileWrite
+    ({
+      filePath : path,
+      data,
+      encoding,
+      verbosity : opts.verbosity,
+    });
+
+  }
+
+  function mapToArrayOfStrings( src )
+  {
+    if( _.longIs( src ) )
+    return src;
+
+    src = _.mapToArray( src );
+    for( let i = 0 ; i < src.length ; i++ )
+    src[ i ] = src[ i ].join( ' ' );
+    return src;
+  }
+}
+
+willfileExtend.defaults =
+{
+  about : 1,
+  build : 1,
+  path : 1,
+  reflector : 1,
+  step : 1,
+  submodule : 1,
+
+  name : 1,
+  version : 1,
+  author : 1,
+  enabled : 1,
+  description : 1,
+  contributors : 1,
+  interpreters : 1,
+  license : 1,
+  keywords : 1,
+  'npm.name' : 1,
+  'npm.scripts' : 1,
+
+  request : null,
+  onSection : null,
+  submodulesDisabling : 0,
+  format : 'willfile',
+  verbosity : 3,
+  v : null,
+}
 
 //
 
@@ -8568,8 +9111,11 @@ let Extension =
 
   resourceImport,
 
+  _npmGenerateFromWillfile,
   npmGenerateFromWillfile,
+  _willfileGenerateFromNpm,
   willfileGenerateFromNpm,
+  willfileExtend,
 
   // remote
 
