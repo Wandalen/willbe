@@ -7582,7 +7582,6 @@ function willfileExtend( o )
   if( path.isGlob( dstPath ) && dstWillfiles.length === 0 )
   _.assert( 0, `Can't find file` );
 
-
   /* extension file creation */
 
   let sectionMap =
@@ -7625,7 +7624,6 @@ function willfileExtend( o )
   for( let sectionName in sectionMap )
   if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
   delete willfile[ sectionName ];
-
 
   /* write destination willfile */
 
