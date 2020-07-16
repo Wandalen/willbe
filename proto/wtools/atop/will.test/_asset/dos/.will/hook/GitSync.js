@@ -35,11 +35,11 @@ function onModule( context )
   if( status.local )
   context.will.hooks.GitPush.call( context );
 
-  // {
-  //   let context2 = context.will.hookContextNew( context );
-  //   context2.request.map = { verbosity : 2 }
-  //   context2.will.hooks.ProtoSync.call( context2 );
-  // }
+  {
+    let context2 = context.will.hookContextNew( context );
+    context2.request.map = { verbosity : 2 }
+    context2.will.hooks.ProtoSync.call( context2 );
+  }
 
 }
 

@@ -1,4 +1,4 @@
-var Self =
+let Self =
 {
 
 // 'builder' : [{ softLink : '../../../app/builder', absolute : 0 }],
@@ -213,7 +213,7 @@ eslint.rapidity = -1;
 // declare
 // --
 
-var Self =
+let Self =
 {
 
   name : 'Integration',

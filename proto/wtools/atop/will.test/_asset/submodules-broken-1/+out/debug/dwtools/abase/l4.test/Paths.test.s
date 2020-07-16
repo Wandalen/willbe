@@ -17,8 +17,8 @@ if( typeof module !== 'undefined' )
 
 }
 
-var _global = _global_;
-var _ = _global_.wModuleForTesting1;
+let _global = _global_;
+let _ = _global_.wModuleForTesting1;
 
 /*
 qqq : fix style problems and non-style problems in the test | Dmytro : fixed

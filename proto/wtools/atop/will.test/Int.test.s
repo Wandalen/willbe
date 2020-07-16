@@ -14,8 +14,8 @@ if( typeof module !== 'undefined' )
 
 }
 
-var _global = _global_;
-var _ = _global_.wTools;
+let _global = _global_;
+let _ = _global_.wTools;
 
 /*
 qqq : implement test checking "will .call link" links files ".dot1" ".dot2"
@@ -10885,7 +10885,7 @@ function repoStatusLocalUncommittedChanges( test )
 // define class
 // --
 
-var Self =
+let Self =
 {
 
   name : 'Tools.atop.Willbe.Int',

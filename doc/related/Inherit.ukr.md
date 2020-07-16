@@ -71,7 +71,7 @@ var x = some_value;
 var y = some_value;
 
 // конструктор функції
-var Self = function wNameFunction( argument )
+let Self = function wNameFunction( argument )
 {
   return constructor( arguments );
 }
@@ -220,7 +220,7 @@ if( typeof module !== 'undefined' )
 
   //
 
-  var _ = _global_.wTools; // змінна, що необхідна для роботи модулів
+  let _ = _global_.wTools; // змінна, що необхідна для роботи модулів
 
 }
 
@@ -245,7 +245,7 @@ var y = some.value;
 
 ```js
 // секція ґлобальних змінних і конструктор функції
-var Self = function wNameFunction( argument )
+let Self = function wNameFunction( argument )
 {
   return constructor( arguments );
 }

@@ -4,8 +4,8 @@
 
 //
 
-var _global = _global_;
-var _ = _global_.wModuleForTesting1;
+let _global = _global_;
+let _ = _global_.wModuleForTesting1;
 
 var Module = null;
 var __nativeInclude;

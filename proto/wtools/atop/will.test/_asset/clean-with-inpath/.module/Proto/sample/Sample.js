@@ -9,9 +9,9 @@ require( 'wModuleForTesting12' );
 // constructor
 // --
 
-var _ = _global_.wModuleForTesting1;
-var Parent = null;
-var Self = function BaseClass()
+let _ = _global_.wModuleForTesting1;
+let Parent = null;
+let Self = function BaseClass()
 {
   return _.workpiece.construct( Self, this, arguments );
 }
