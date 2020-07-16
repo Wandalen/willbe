@@ -27174,6 +27174,143 @@ function commandWillfileSupplementDstIsWillfile( test )
 
 //
 
+function commandWillfileSupplementDstIsJson( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.supplement ./ Author* Contributors*.yml Description* Interpreters.will.yml format:json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'create new willfile, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.author, 'Author <author@dot.com>' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+    test.identical( config.contributors.length, 2 );
+    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.engine, 'node >= 10.0.0' );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement NewFile Author*.yml Contributors Description* Interpreters format:json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'create new named json file, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.json' ), encoding : 'json' });
+    test.identical( config.author, 'Author <author@dot.com>' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+    test.identical( config.contributors.length, 2 );
+    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.engine, 'node >= 10.0.0' );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement Author Contributors Description* Interpreters format:"json"' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'add new data to existing config, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.json' ), encoding : 'json' });
+    test.identical( config.author, undefined );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+    test.identical( config.contributors.length, 2 );
+    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.engine, 'node >= 10.0.0' );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm' ) ] : a.abs( 'files' ) }   });
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.supplement ./ files/p* format:json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'creating new config from package.json file in another directory';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    let exp =
+    {
+      "name" : "willfilefromnpm",
+      "version" : "0.0.0",
+      "enabled" : 1,
+      "description" : "To check the conversion",
+      "keywords" : [ "tools", "export" ],
+      "license" : "MIT",
+      "author" : "Author <author@dot.com>",
+      "contributors" : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      "repository" : "git+https://github.com/author/NpmFromWillfile.git",
+      "bugs" : "https://github.com/author/NpmFromWillfile/issues",
+      "dependencies" : { "eslint" : "7.1.0" },
+      "devDependencies" : { "willfilefromnpm" : "file:.", "wTesting" : "" }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm' ) ] : a.abs( 'files' ) }   });
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.supplement NewFile files/p* format:json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'creating new config from package.json file in another directory';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.json' ), encoding : 'json' });
+    let exp =
+    {
+      "name" : "willfilefromnpm",
+      "version" : "0.0.0",
+      "enabled" : 1,
+      "description" : "To check the conversion",
+      "keywords" : [ "tools", "export" ],
+      "license" : "MIT",
+      "author" : "Author <author@dot.com>",
+      "contributors" : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      "repository" : "git+https://github.com/author/NpmFromWillfile.git",
+      "bugs" : "https://github.com/author/NpmFromWillfile/issues",
+      "dependencies" : { "eslint" : "7.1.0" },
+      "devDependencies" : { "willfilefromnpm" : "file:.", "wTesting" : "" }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandGitPull( test )
 {
   let context = this;
@@ -28869,6 +29006,7 @@ var Self =
     commandWillfileExtendDstIsJson,
     commandWillfileExtendWithOptions,
     commandWillfileSupplementDstIsWillfile,
+    commandWillfileSupplementDstIsJson,
 
     commandGitPull,
     commandGitPush,
