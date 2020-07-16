@@ -7624,7 +7624,8 @@ function willfileExtend( o )
 
   if( opts.format === 'json' )
   _.assert( dstWillfiles.length === 0, 'Not safe to rewrite existing file' );
-  else if( path.isGlob( dstPath ) && dstWillfiles.length === 0 )
+
+  if( path.isGlob( dstPath ) && dstWillfiles.length === 0 )
   _.assert( 0, `Can't find file` );
 
   let dstEncoding = path.ext( dstPath ) === 'json' ? 'json.fine' : 'yaml';
@@ -7680,7 +7681,6 @@ function willfileExtend( o )
       'license',
       'author',
       'npm.name',
-      'npm.scripts'
     ];
     let extendingMap = Object.create( null );
     for( let i = 0 ; i < keys.length ; i++ )
@@ -7706,6 +7706,12 @@ function willfileExtend( o )
       dst.about.interpreters = arrayPropertyParse( dst.about.interpreters, _.strIsolateLeftOrAll );
       src.about.interpreters = arrayPropertyParse( src.about.interpreters, _.strIsolateLeftOrAll );
       opts.onSection( dst.about.interpreters, src.about.interpreters );
+    }
+    if( opts[ 'npm.scripts' ] && src.about[ 'npm.scripts' ] )
+    {
+      if( dst.about[ 'npm.scripts' ] === undefined )
+      dst.about[ 'npm.scripts' ] = Object.create( null );
+      opts.onSection( dst.about[ 'npm.scripts' ], src.about[ 'npm.scripts' ] );
     }
   }
 
