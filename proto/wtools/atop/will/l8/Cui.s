@@ -1118,6 +1118,8 @@ commandImply.commandProperties =
 function commandVersion( e )
 {
   let cui = this;
+  cui._command_pre( commandVersion, arguments );
+
   return _.npm.versionLog
   ({
     localPath : _.path.join( __dirname, '../../../../..' ),
