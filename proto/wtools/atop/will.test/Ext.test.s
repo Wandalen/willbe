@@ -25291,7 +25291,7 @@ function commandNpmFromWillfile( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "NpmFromWillfile",
+      name : "npmfromwillfile",
       description: "To check the conversion",
       version : "0.0.0",
       enabled : 1,
@@ -25299,8 +25299,9 @@ function commandNpmFromWillfile( test )
       description : "To check the conversion",
       author : "Author <author@dot.com>",
       contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "NpmFromWillfile" : "file:.", "wTesting" : "" },
+      devDependencies : { "npmfromwillfile" : "file:.", "wTesting" : "" },
       repository: "git+https://github.com/author/NpmFromWillfile.git",
       bugs : "https://github.com/author/NpmFromWillfile/issues",
       keywords : ["tools", "export"],
@@ -25335,7 +25336,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "NpmFromWillfile",
+      name : "npmfromwillfile",
       description: "To check the conversion",
       version : "0.0.0",
       enabled : 1,
@@ -25343,8 +25344,9 @@ function commandNpmFromWillfileOptionsInCommand( test )
       description : "To check the conversion",
       author : "Author <author@dot.com>",
       contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "NpmFromWillfile" : "file:.", "wTesting" : "" },
+      devDependencies : { "npmfromwillfile" : "file:.", "wTesting" : "" },
       repository: "git+https://github.com/author/NpmFromWillfile.git",
       bugs : "https://github.com/author/NpmFromWillfile/issues",
       keywords : ["tools", "export"],
@@ -25368,7 +25370,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "NpmFromWillfile",
+      name : "npmfromwillfile",
       description: "To check the conversion",
       version : "0.0.0",
       enabled : 1,
@@ -25376,8 +25378,9 @@ function commandNpmFromWillfileOptionsInCommand( test )
       description : "To check the conversion",
       author : "Author <author@dot.com>",
       contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "NpmFromWillfile" : "file:.", "wTesting" : "" },
+      devDependencies : { "npmfromwillfile" : "file:.", "wTesting" : "" },
       repository: "git+https://github.com/author/NpmFromWillfile.git",
       bugs : "https://github.com/author/NpmFromWillfile/issues",
       keywords : ["tools", "export"],
@@ -25401,7 +25404,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "NpmFromWillfile",
+      name : "npmfromwillfile",
       description: "To check the conversion",
       version : "0.0.0",
       enabled : 1,
@@ -25409,8 +25412,9 @@ function commandNpmFromWillfileOptionsInCommand( test )
       description : "To check the conversion",
       author : "Author <author@dot.com>",
       contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "NpmFromWillfile" : "file:.", "wTesting" : "" },
+      devDependencies : { "npmfromwillfile" : "file:.", "wTesting" : "" },
       repository: "git+https://github.com/author/NpmFromWillfile.git",
       bugs : "https://github.com/author/NpmFromWillfile/issues",
       keywords : ["tools", "export"],
@@ -25470,7 +25474,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::entry.*=1}/File.s" debug:"debug"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile entryPath:"{path::entry.*=1}/File.s" debug:debug' })
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -25539,7 +25543,7 @@ function commandNpmFromWillfileOptionsInCommand( test )
 
   /* */
 
-  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"{path::entry.*=1}/**" debug:"debug"' })
+  a.appStart({ args : '.with PathMain .npm.from.willfile filesPath:"{path::entry.*=1}/**" debug:debug' })
   a.ready.then( ( op ) =>
   {
     test.case = 'check option `entryPath`, resolve path without criterions';
@@ -25646,7 +25650,7 @@ function commandWillfileFromNpm( test )
     test.case = 'check field `interpreters`';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
-    test.identical( config.about.interpreters, 'node >= 10.0.0' );
+    test.identical( config.about.interpreters, 'njs >= 10.0.0' );
     test.identical( config.about.name, 'interpreters' );
     test.identical( config.about.enabled, 1 );
 
@@ -25902,7 +25906,7 @@ function commandWillfileFromNpmDoubleConversion( test )
     test.case = 'check default `package.json` file';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
-    var exp =
+    let exp =
     {
       'about' :
       {
@@ -26011,6 +26015,1551 @@ function commandWillfileFromNpmDoubleConversion( test )
     test.identical( config.about.version, '0.0.0' );
     test.identical( config.about.name, 'version' );
     test.identical( config.about.enabled, 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandWillfileExtendDstIsWillfile( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.extend ./ Author*.yml Contributors Description* Interpreters' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'create new willfile, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author <author@dot.com>' );
+    test.identical( config.about.name, undefined );
+    test.identical( config.about.enabled, undefined );
+    test.identical( config.about.contributors.length, 2 );
+    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.about.interpreters.length, 3 );
+    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend NewFile Author*.yml Contributors Description* Interpreters' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'create new named willfile, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author <author@dot.com>' );
+    test.identical( config.about.name, undefined );
+    test.identical( config.about.enabled, undefined );
+    test.identical( config.about.contributors.length, 2 );
+    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.about.interpreters.length, 3 );
+    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend Author* Contributors Description* Interpreters' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'add new data to existing config, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author <author@dot.com>' );
+    test.identical( config.about.name, undefined );
+    test.identical( config.about.enabled, undefined );
+    test.identical( config.about.contributors.length, 2 );
+    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.about.interpreters.length, 3 );
+    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm' ) ] : a.abs( 'files' ) }   });
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.extend NewFile files/p*' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'creating new config from package.json file in another directory';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.will.yml' ), encoding : 'yaml' });
+    let exp =
+    {
+      'about' :
+      {
+        'npm.name' : 'willfilefromnpm',
+        'name' : 'willfilefromnpm',
+        'version' : '0.0.0',
+        'enabled' : 1,
+        'description' : 'To check the conversion',
+        'keywords' : [ 'tools', 'export' ],
+        'license' : 'MIT',
+        'author' : 'Author <author@dot.com>',
+        'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      },
+      'path' :
+      {
+        'origins' :
+        [
+          'git+https:///github.com/author/NpmFromWillfile.git',
+          'npm:///willfilefromnpm'
+        ],
+        'repository' : 'git+https:///github.com/author/NpmFromWillfile.git',
+        'bugtracker' : 'https:///github.com/author/NpmFromWillfile/issues'
+      },
+      'submodule' :
+      {
+        'eslint' :
+        {
+          'path' : 'npm:///eslint#7.1.0',
+          'enabled' : 1
+        },
+        'willfilefromnpm' :
+        {
+          'path' : 'hd://.',
+          'enabled' : 1,
+          'criterion' : { 'development' : 1 }
+        },
+        'wTesting' :
+        {
+          'path' : 'npm:///wTesting',
+          'enabled' : 1,
+          'criterion' : { 'development' : 1 }
+        }
+      }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm' ) ] : a.abs( 'files' ) }   });
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.extend Author* files/p*' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'add new data to existing config from package.json file in another directory';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    let exp =
+    {
+      'about' :
+      {
+        'npm.name' : 'willfilefromnpm',
+        'name' : 'willfilefromnpm',
+        'version' : '0.0.0',
+        'enabled' : 1,
+        'description' : 'To check the conversion',
+        'keywords' : [ 'tools', 'export' ],
+        'license' : 'MIT',
+        'author' : 'Author <author@dot.com>',
+        'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ]
+      },
+      'path' :
+      {
+        'origins' :
+        [
+          'git+https:///github.com/author/NpmFromWillfile.git',
+          'npm:///willfilefromnpm'
+        ],
+        'repository' : 'git+https:///github.com/author/NpmFromWillfile.git',
+        'bugtracker' : 'https:///github.com/author/NpmFromWillfile/issues'
+      },
+      'submodule' :
+      {
+        'eslint' :
+        {
+          'path' : 'npm:///eslint#7.1.0',
+          'enabled' : 1
+        },
+        'willfilefromnpm' :
+        {
+          'path' : 'hd://.',
+          'enabled' : 1,
+          'criterion' : { 'development' : 1 }
+        },
+        'wTesting' :
+        {
+          'path' : 'npm:///wTesting',
+          'enabled' : 1,
+          'criterion' : { 'development' : 1 }
+        }
+      }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend ./.* ForExtension' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'extend two unnamed willfiles by new data';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      about :
+      {
+        name : 'Extension willfile',
+        description : 'To check the extension',
+        version : '1.1.1',
+        enabled : 0,
+        interpreters :
+        [
+          'nodejs = 6.0.0',
+          'chrome >= 60.0.0',
+          'firefox >= 67.0.0',
+          'chromium >= 67.0.0'
+        ],
+        keywords :
+        [
+          'tools',
+          'export',
+          'wtools',
+          'common',
+        ],
+        license : 'GPL',
+        author : 'Author <author1@dot.com>',
+        contributors :
+        [
+          'Contributor1 <contributor1@dot.com>',
+          'Contributor2 <contributor2@xxx.com>',
+          'Contributor3 <contributor3@dot.com>',
+        ],
+        'npm.name' : 'willfileextend',
+        'npm.scripts' :
+        {
+          test : 'wtest .run proto/** v:5',
+          docgen : 'wdocgen .build proto/wtools',
+          eslint : 'eslint proto'
+        },
+      },
+
+      path :
+      {
+        repository : 'git+https:///github.com/author/WillfileExtend.git',
+        origins :
+        [
+          'git+https:///github.com/author/WillfileExtend.git',
+          'npm:///willfileextend',
+        ],
+        bugtracker : 'https:///github.com/author/WillfileExtend/issues',
+      },
+
+      step :
+      {
+        'export.debug' :
+        {
+          inherit : 'module.export',
+          export : '{path::out}/**',
+          criterion : { debug : 1 },
+        }
+      },
+
+      build :
+      {
+        'proto.export' :
+        {
+          criterion :
+          {
+            export : 1,
+            debug : 1,
+          },
+          steps : [ 'step::export.*=1' ],
+        }
+      }
+    };
+    test.identical( config, exp );
+
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      submodule :
+      {
+        eslint :
+        {
+          path : 'npm:///eslint#7.1.0',
+          enabled : 1,
+          criterion : { debug : 1 },
+        },
+        NpmFromWillfile :
+        {
+          path : 'npm:///npmfromwillfile',
+          enabled : 1,
+          criterion : { development : 0 }
+        },
+        wTesting :
+        {
+          path : 'npm:///wTesting',
+          enabled : 0,
+          criterion : { development : 1 }
+        },
+        newsubmodule :
+        {
+          path : 'hd://.',
+          enabled : 1,
+          criterion : { development : 1 }
+        }
+      },
+      path :
+      {
+        'in' : '..',
+        'out' : 'out',
+        'out.debug' :
+        {
+          'path' : 'out/debug',
+          'criterion' : { debug : 1 }
+        },
+        'out.release' :
+        {
+          'path' : 'out/release',
+          'criterion' : { debug : 0 }
+        },
+        'new' : 'new'
+      },
+      reflector :
+      {
+        'proto.debug' :
+        {
+          'inherit' : 'predefined.*',
+          'criterion' : { debug : 1 },
+          'filePath' : { 'path::proto' : '{path::out.*=1}/source' }
+        },
+        'proto.release' :
+        {
+          'inherit' : 'predefined.*',
+          'criterion' : { debug : 'release' },
+          'filePath' : { 'path::proto' : '{path::out.*=1}/source' }
+        },
+        'proto.clean' :
+        {
+          'inherit' : 'predefined.*',
+          'criterion' : { debug : 'delete' },
+          'filePath' : '{path::out}'
+        }
+      },
+      step :
+      {
+        'clean.debug' :
+        {
+          'inherit' : 'files.delete',
+          'filePath' : 'path::out.*=1',
+          'criterion' : { debug : 1 }
+        },
+        'clean.release' :
+        {
+          'inherit' : 'files.delete',
+          'filePath' : 'path::out.*=1',
+          'criterion' : { debug : 'release' }
+        },
+        'git.sync' : { 'inherit' : 'git.sync' }
+      },
+      build :
+      {
+        'debug' :
+        {
+          'criterion' : { default : 1, debug : 1 },
+          'steps' : [ 'step::clean.*=1', 'proto.*=1' ]
+        },
+        'release' :
+        {
+          'criterion' : { debug : 0 },
+          'steps' : [ 'step::clean.*=1', 'proto.*=1' ]
+        },
+        'git.sync' :
+        {
+          'steps' : [ 'git.sync' ]
+        }
+      }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend Version* *will.yml ForExtension Version.will.yml' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'try to rewrite data by self';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.1.1' );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandWillfileExtendDstIsJson( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.extend ./ Author* Contributors*.yml Description* Interpreters.will.yml format:json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'create new willfile, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.author, 'Author <author@dot.com>' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+    test.identical( config.contributors.length, 2 );
+    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.engine, 'node >= 10.0.0' );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend NewFile Author*.yml Contributors Description* Interpreters format:json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'create new named json file, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.json' ), encoding : 'json' });
+    test.identical( config.author, 'Author <author@dot.com>' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+    test.identical( config.contributors.length, 2 );
+    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.engine, 'node >= 10.0.0' );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend Author Contributors Description* Interpreters format:"json"' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'add new data to existing config, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.json' ), encoding : 'json' });
+    test.identical( config.author, undefined );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+    test.identical( config.contributors.length, 2 );
+    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.engine, 'node >= 10.0.0' );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm' ) ] : a.abs( 'files' ) }   });
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.extend ./ files/p* format:json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'creating new config from package.json file in another directory';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    let exp =
+    {
+      "name" : "willfilefromnpm",
+      "version" : "0.0.0",
+      "enabled" : 1,
+      "description" : "To check the conversion",
+      "keywords" : [ "tools", "export" ],
+      "license" : "MIT",
+      "author" : "Author <author@dot.com>",
+      "contributors" : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      "repository" : "git+https://github.com/author/NpmFromWillfile.git",
+      "bugs" : "https://github.com/author/NpmFromWillfile/issues",
+      "dependencies" : { "eslint" : "7.1.0" },
+      "devDependencies" : { "willfilefromnpm" : "file:.", "wTesting" : "" }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm' ) ] : a.abs( 'files' ) }   });
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.extend NewFile files/p* format:json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'creating new config from package.json file in another directory';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.json' ), encoding : 'json' });
+    let exp =
+    {
+      "name" : "willfilefromnpm",
+      "version" : "0.0.0",
+      "enabled" : 1,
+      "description" : "To check the conversion",
+      "keywords" : [ "tools", "export" ],
+      "license" : "MIT",
+      "author" : "Author <author@dot.com>",
+      "contributors" : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      "repository" : "git+https://github.com/author/NpmFromWillfile.git",
+      "bugs" : "https://github.com/author/NpmFromWillfile/issues",
+      "dependencies" : { "eslint" : "7.1.0" },
+      "devDependencies" : { "willfilefromnpm" : "file:.", "wTesting" : "" }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandWillfileExtendWithOptions( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.extend ForExtension Author* author:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled field author';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author <author1@dot.com>' );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend ForExtension Keywords.will.yml keywords:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled field keywords';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.keywords, [ 'wtools', 'common' ] );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend ForExtension Contributors.will.yml contributors:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled field contributors';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    var exp = [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@xxx.com>', 'Contributor3 <contributor3@dot.com>' ];
+    test.identical( config.about.contributors, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend ForExtension Interpreters.will.yml interpreters:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled field interpreters';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    var exp = [ 'nodejs = 6.0.0', 'firefox >= 67.0.0', 'chromium >= 67.0.0' ];
+    test.identical( config.about.interpreters, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.extend .ex* ForExtension about:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled section about';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      'name' : 'NpmFromWillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'interpreters' : [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ],
+      'keywords' : [ 'tools', 'export' ],
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.name' : 'npmfromwillfile',
+      'npm.scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+    };
+    test.identical( config.about, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.extend .ex* ForExtension build:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled section build';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      'proto.export' :
+      {
+        'criterion' : { 'export' : 1, 'debug' : 1 },
+        'steps' : [ 'step::export.*=1' ]
+      }
+    };
+    test.identical( config.build, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.extend .ex* ForExtension step:0 contributors:0 name:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled section step and fields contributors and name';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      'name' : 'NpmFromWillfile',
+      'description' : 'To check the extension',
+      'version' : '1.1.1',
+      'enabled' : 0,
+      'interpreters' : [ 'nodejs = 6.0.0', 'chrome >= 60.0.0', 'firefox >= 67.0.0', 'chromium >= 67.0.0' ],
+      'keywords' : [ 'tools', 'export', 'wtools', 'common' ],
+      'license' : 'GPL',
+      'author' : 'Author <author1@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.name' : 'willfileextend',
+      'npm.scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto/wtools', 'eslint' : 'eslint proto' }
+    };
+    test.identical( config.about, exp );
+    var exp =
+    {
+      'export.debug' :
+      {
+        'inherit' : 'module.export',
+        'export' : '{path::out}/**',
+        'criterion' : { 'debug' : 1 }
+      }
+    };
+    test.identical( config.step, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend .im* ForExtension submodulesDisabling:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'option submodulesDisabling';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      'eslint' :
+      {
+        'path' : 'npm:///eslint#7.1.0',
+        'enabled' : 0,
+        'criterion' : { 'debug' : 1 }
+      },
+      'NpmFromWillfile' :
+      {
+        'path' : 'npm:///npmfromwillfile',
+        'enabled' : 0,
+        'criterion' : { 'development' : 0 }
+      },
+      'wTesting' :
+      {
+        'path' : 'npm:///wTesting',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'newsubmodule' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      }
+    };
+    test.identical( config.submodule, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend Author* ForExtension verbosity:5' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'option verbosity > 2';
+    test.identical( op.exitCode, 0 );
+    test.is( _.strHas( op.output, '+ writing' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.extend Author* ForExtension v:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'option verbosity < 2';
+    test.identical( op.exitCode, 0 );
+    test.is( !_.strHas( op.output, '+ writing' ) );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandWillfileSupplementDstIsWillfile( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.supplement ./ Author*.yml Contributors Description* Interpreters' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'create new willfile, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author <author@dot.com>' );
+    test.identical( config.about.name, undefined );
+    test.identical( config.about.enabled, undefined );
+    test.identical( config.about.contributors.length, 2 );
+    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.about.interpreters.length, 3 );
+    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement NewFile Author*.yml Contributors Description* Interpreters' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'create new named willfile, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author <author@dot.com>' );
+    test.identical( config.about.name, undefined );
+    test.identical( config.about.enabled, undefined );
+    test.identical( config.about.contributors.length, 2 );
+    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.about.interpreters.length, 3 );
+    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement Author* Contributors Description* Interpreters' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'add new data to existing config, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author <author@dot.com>' );
+    test.identical( config.about.name, undefined );
+    test.identical( config.about.enabled, undefined );
+    test.identical( config.about.contributors.length, 2 );
+    test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.about.interpreters.length, 3 );
+    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm' ) ] : a.abs( 'files' ) }   });
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.supplement NewFile files/p*' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'creating new config from package.json file in another directory';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.will.yml' ), encoding : 'yaml' });
+    let exp =
+    {
+      'about' :
+      {
+        'npm.name' : 'willfilefromnpm',
+        'name' : 'willfilefromnpm',
+        'version' : '0.0.0',
+        'enabled' : 1,
+        'description' : 'To check the conversion',
+        'keywords' : [ 'tools', 'export' ],
+        'license' : 'MIT',
+        'author' : 'Author <author@dot.com>',
+        'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      },
+      'path' :
+      {
+        'origins' :
+        [
+          'git+https:///github.com/author/NpmFromWillfile.git',
+          'npm:///willfilefromnpm'
+        ],
+        'repository' : 'git+https:///github.com/author/NpmFromWillfile.git',
+        'bugtracker' : 'https:///github.com/author/NpmFromWillfile/issues'
+      },
+      'submodule' :
+      {
+        'eslint' :
+        {
+          'path' : 'npm:///eslint#7.1.0',
+          'enabled' : 1
+        },
+        'willfilefromnpm' :
+        {
+          'path' : 'hd://.',
+          'enabled' : 1,
+          'criterion' : { 'development' : 1 }
+        },
+        'wTesting' :
+        {
+          'path' : 'npm:///wTesting',
+          'enabled' : 1,
+          'criterion' : { 'development' : 1 }
+        }
+      }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm' ) ] : a.abs( 'files' ) }   });
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.supplement Author* files/p*' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'add new data to existing config from package.json file in another directory';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    let exp =
+    {
+      'about' :
+      {
+        'npm.name' : 'willfilefromnpm',
+        'name' : 'willfilefromnpm',
+        'version' : '0.0.0',
+        'enabled' : 1,
+        'description' : 'To check the conversion',
+        'keywords' : [ 'tools', 'export' ],
+        'license' : 'MIT',
+        'author' : 'Author <author@dot.com>',
+        'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ]
+      },
+      'path' :
+      {
+        'origins' :
+        [
+          'git+https:///github.com/author/NpmFromWillfile.git',
+          'npm:///willfilefromnpm'
+        ],
+        'repository' : 'git+https:///github.com/author/NpmFromWillfile.git',
+        'bugtracker' : 'https:///github.com/author/NpmFromWillfile/issues'
+      },
+      'submodule' :
+      {
+        'eslint' :
+        {
+          'path' : 'npm:///eslint#7.1.0',
+          'enabled' : 1
+        },
+        'willfilefromnpm' :
+        {
+          'path' : 'hd://.',
+          'enabled' : 1,
+          'criterion' : { 'development' : 1 }
+        },
+        'wTesting' :
+        {
+          'path' : 'npm:///wTesting',
+          'enabled' : 1,
+          'criterion' : { 'development' : 1 }
+        }
+      }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement ./.* ForExtension' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'extend two unnamed willfiles by new data';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      about :
+      {
+        name : 'NpmFromWillfile',
+        description : 'To check the conversion',
+        version : '0.0.0',
+        enabled : 1,
+        interpreters :
+        [
+          'nodejs >= 6.0.0',
+          'chrome >= 60.0.0',
+          'firefox >= 60.0.0',
+          'chromium >= 67.0.0'
+        ],
+        keywords :
+        [
+          'tools',
+          'export',
+          'wtools',
+          'common',
+        ],
+        license : 'MIT',
+        author : 'Author <author@dot.com>',
+        contributors :
+        [
+          'Contributor1 <contributor1@dot.com>',
+          'Contributor2 <contributor2@dot.com>',
+          'Contributor3 <contributor3@dot.com>',
+        ],
+        'npm.name' : 'npmfromwillfile',
+        'npm.scripts' :
+        {
+          test : 'wtest .run proto/** v:5',
+          docgen : 'wdocgen .build proto',
+          eslint : 'eslint proto'
+        },
+      },
+
+      path :
+      {
+        repository : 'git+https:///github.com/author/NpmFromWillfile.git',
+        origins :
+        [
+          'git+https:///github.com/author/NpmFromWillfile.git',
+          'npm:///npmfromwillfile'
+        ],
+        bugtracker : 'https:///github.com/author/NpmFromWillfile/issues',
+      },
+      step :
+      {
+        'export.debug' :
+        {
+          inherit : 'module.export',
+          export : '{path::out}/**',
+          criterion : { debug : 1 },
+        }
+      },
+
+      build :
+      {
+        'proto.export' :
+        {
+          criterion :
+          {
+            export : 1,
+            debug : 1,
+          },
+          steps : [ 'step::export.*=1' ],
+        }
+      }
+    };
+    test.identical( config, exp );
+
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      submodule :
+      {
+        eslint :
+        {
+          path : 'npm:///eslint#7.1.0',
+          enabled : 0,
+          criterion : { debug : 1 },
+        },
+        NpmFromWillfile :
+        {
+          path : 'hd://.',
+          enabled : 0,
+          criterion : { 'development' : 1 }
+        },
+        wTesting :
+        {
+          path : 'npm:///wTesting',
+          enabled : 0,
+          criterion : { development : 1 }
+        },
+        newsubmodule :
+        {
+          path : 'hd://.',
+          enabled : 1,
+          criterion : { development : 1 }
+        }
+      },
+      path :
+      {
+        'in' : '.',
+        'out' : 'out',
+        'out.debug' :
+        {
+          'path' : 'out/debug',
+          'criterion' : { debug : 1 }
+        },
+        'out.release' :
+        {
+          'path' : 'out/release',
+          'criterion' : { debug : 0 }
+        },
+        'new' : 'new'
+      },
+      reflector :
+      {
+        'proto.debug' :
+        {
+          'inherit' : 'predefined.*',
+          'criterion' : { debug : 1 },
+          'filePath' : { 'path::proto' : '{path::out.*=1}/source' }
+        },
+        'proto.release' :
+        {
+          'inherit' : 'predefined.*',
+          'criterion' : { debug : 0 },
+          'filePath' : { 'path::proto' : '{path::out.*=1}/source' }
+        },
+        'proto.clean' :
+        {
+          'inherit' : 'predefined.*',
+          'criterion' : { debug : 'delete' },
+          'filePath' : '{path::out}'
+        }
+      },
+      step :
+      {
+        'clean.debug' :
+        {
+          'inherit' : 'files.delete',
+          'filePath' : 'path::out.*=1',
+          'criterion' : { debug : 1 }
+        },
+        'clean.release' :
+        {
+          'inherit' : 'files.delete',
+          'filePath' : 'path::out.*=1',
+          'criterion' : { debug : 0 }
+        },
+        'git.sync' : { 'inherit' : 'git.sync' }
+      },
+      build :
+      {
+        'debug' :
+        {
+          'criterion' : { default : 1, debug : 1 },
+          'steps' : [ 'step::clean.*=1', 'proto.*=1' ]
+        },
+        'release' :
+        {
+          'criterion' : { debug : 0 },
+          'steps' : [ 'step::clean.*=1', 'proto.*=1' ]
+        },
+        'git.sync' :
+        {
+          'steps' : [ 'git.sync' ]
+        }
+      }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement Version* *will.yml ForExtension Version.will.yml' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'try to rewrite data by self';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.0' );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandWillfileSupplementDstIsJson( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.supplement ./ Author* Contributors*.yml Description* Interpreters.will.yml format:json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'create new willfile, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    test.identical( config.author, 'Author <author@dot.com>' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+    test.identical( config.contributors.length, 2 );
+    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.engine, 'node >= 10.0.0' );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement NewFile Author*.yml Contributors Description* Interpreters format:json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'create new named json file, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.json' ), encoding : 'json' });
+    test.identical( config.author, 'Author <author@dot.com>' );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+    test.identical( config.contributors.length, 2 );
+    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.engine, 'node >= 10.0.0' );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement Author Contributors Description* Interpreters format:"json"' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'add new data to existing config, unical data in each file';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.json' ), encoding : 'json' });
+    test.identical( config.author, undefined );
+    test.identical( config.name, undefined );
+    test.identical( config.enabled, undefined );
+    test.identical( config.contributors.length, 2 );
+    test.is( _.longHas( config.contributors, 'Contributor1 <contributor1@dot.com>' ) );
+    test.identical( config.engine, 'node >= 10.0.0' );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm' ) ] : a.abs( 'files' ) }   });
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.supplement ./ files/p* format:json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'creating new config from package.json file in another directory';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
+    let exp =
+    {
+      "name" : "willfilefromnpm",
+      "version" : "0.0.0",
+      "enabled" : 1,
+      "description" : "To check the conversion",
+      "keywords" : [ "tools", "export" ],
+      "license" : "MIT",
+      "author" : "Author <author@dot.com>",
+      "contributors" : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      "repository" : "git+https://github.com/author/NpmFromWillfile.git",
+      "bugs" : "https://github.com/author/NpmFromWillfile/issues",
+      "dependencies" : { "eslint" : "7.1.0" },
+      "devDependencies" : { "willfilefromnpm" : "file:.", "wTesting" : "" }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm' ) ] : a.abs( 'files' ) }   });
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.supplement NewFile files/p* format:json' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'creating new config from package.json file in another directory';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.json' ), encoding : 'json' });
+    let exp =
+    {
+      "name" : "willfilefromnpm",
+      "version" : "0.0.0",
+      "enabled" : 1,
+      "description" : "To check the conversion",
+      "keywords" : [ "tools", "export" ],
+      "license" : "MIT",
+      "author" : "Author <author@dot.com>",
+      "contributors" : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      "repository" : "git+https://github.com/author/NpmFromWillfile.git",
+      "bugs" : "https://github.com/author/NpmFromWillfile/issues",
+      "dependencies" : { "eslint" : "7.1.0" },
+      "devDependencies" : { "willfilefromnpm" : "file:.", "wTesting" : "" }
+    };
+    test.identical( config, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandWillfileSupplementWithOptions( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.supplement ForExtension Author* author:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled field author';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author <author1@dot.com>' );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement ForExtension Keywords.will.yml keywords:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled field keywords';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.keywords, [ 'wtools', 'common' ] );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement ForExtension Contributors.will.yml contributors:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled field contributors';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    var exp = [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@xxx.com>', 'Contributor3 <contributor3@dot.com>' ];
+    test.identical( config.about.contributors, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement ForExtension Interpreters.will.yml interpreters:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled field interpreters';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    var exp = [ 'nodejs = 6.0.0', 'firefox >= 67.0.0', 'chromium >= 67.0.0' ];
+    test.identical( config.about.interpreters, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.supplement .ex* ForExtension about:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled section about';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      'name' : 'NpmFromWillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'interpreters' : [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ],
+      'keywords' : [ 'tools', 'export' ],
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.name' : 'npmfromwillfile',
+      'npm.scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+    };
+    test.identical( config.about, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.supplement .ex* ForExtension build:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled section build';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      'proto.export' :
+      {
+        'criterion' : { 'export' : 1, 'debug' : 1 },
+        'steps' : [ 'step::export.*=1' ]
+      }
+    };
+    test.identical( config.build, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.supplement .ex* ForExtension step:0 contributors:0 name:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled section step and fields contributors and name';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      'name' : 'NpmFromWillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'interpreters' : [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'chromium >= 67.0.0' ],
+      'keywords' : [ 'tools', 'export', 'wtools', 'common' ],
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.name' : 'npmfromwillfile',
+      'npm.scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto', 'eslint' : 'eslint proto' }
+    };
+    test.identical( config.about, exp );
+    var exp =
+    {
+      'export.debug' :
+      {
+        'inherit' : 'module.export',
+        'export' : '{path::out}/**',
+        'criterion' : { 'debug' : 1 }
+      }
+    };
+    test.identical( config.step, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement .im* ForExtension submodulesDisabling:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'option submodulesDisabling';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      'eslint' :
+      {
+        'path' : 'npm:///eslint#7.1.0',
+        'enabled' : 0,
+        'criterion' : { 'debug' : 1 }
+      },
+      'NpmFromWillfile' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'wTesting' :
+      {
+        'path' : 'npm:///wTesting',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'newsubmodule' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      }
+    };
+    test.identical( config.submodule, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement Author* ForExtension verbosity:5' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'option verbosity > 2';
+    test.identical( op.exitCode, 0 );
+    test.is( _.strHas( op.output, '+ writing' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement Author* ForExtension v:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'option verbosity < 2';
+    test.identical( op.exitCode, 0 );
+    test.is( !_.strHas( op.output, '+ writing' ) );
 
     return null;
   })
@@ -27703,7 +29252,7 @@ let Self =
 
     // resourcesFormReflectorsExperiment, // xxx : look
 
-    // commands with implied options
+    // commands
 
     commandVersion,
     commandVersionCheck,
@@ -27712,6 +29261,14 @@ let Self =
     commandNpmFromWillfileOptionsInCommand,
     commandWillfileFromNpm,
     commandWillfileFromNpmDoubleConversion,
+
+    commandWillfileExtendDstIsWillfile,
+    commandWillfileExtendDstIsJson,
+    commandWillfileExtendWithOptions,
+    commandWillfileSupplementDstIsWillfile,
+    commandWillfileSupplementDstIsJson,
+    commandWillfileSupplementWithOptions,
+
     commandGitPull,
     commandGitPush,
     commandGitReset,

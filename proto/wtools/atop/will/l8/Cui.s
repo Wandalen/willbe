@@ -398,6 +398,8 @@ function _commandsMake()
 
     'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile ),             h : 'Use "npm from willfile" to generate "package.json" file from willfile.' },
     'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm ),             h : 'Use "willfile from npm" to generate ".will.yml" file from "package.json".' },
+    'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
+    'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              h : 'Use "package install" to install target package.' },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        h : 'Use "package local versions" to get list of package versions avaiable locally' },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       h : 'Use "package remote versions" to get list of package versions avaiable in remote archive' },
@@ -2657,10 +2659,8 @@ function commandEach( e )
 function commandNpmFromWillfile( e )
 {
   let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
   let request = _.strStructureParse( e.commandArgument );
-  let criterionsMap = _.mapBut( request, commandNpmFromWillfile.defaults );
+  let criterionsMap = _.mapBut( request, commandNpmFromWillfile.commandProperties );
   request = _.mapBut( request, criterionsMap );
 
   return will._commandBuildLike
@@ -2675,34 +2675,34 @@ function commandNpmFromWillfile( e )
   {
     if( _.mapKeys( criterionsMap ).length > 0 )
     it.opener.openedModule.stepMap[ "npm.generate" ].criterion = criterionsMap;
+    let currentContext = it.opener.openedModule.stepMap[ "npm.generate" ];
+
     return it.opener.openedModule.npmGenerateFromWillfile
     ({
       packagePath : request.packagePath,
       entryPath : request.entryPath,
       filesPath : request.filesPath,
-      currentContext : it.opener.openedModule.stepMap[ "npm.generate" ],
-      verbosity : 5,
+      currentContext,
+      verbosity : 2,
     });
   }
 
 }
 
-commandNpmFromWillfile.defaults =
+commandNpmFromWillfile.commandProperties =
 {
-  packagePath : null,
-  entryPath : null,
-  filesPath : null,
-}
+  packagePath : 'Path to generated file. Default is "./package.json". Could be a selector. C',
+  entryPath : 'Path to source willfiles. Default is current directory "./" and unnamed willfiles. Could be a selector.',
+  filesPath : 'Path to directory with files that are included in section "files" of "package.json". By default, "package.json" includes no section "files". Could be a selector.',
+};
 
 //
 
 function commandWillfileFromNpm( e )
 {
   let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
   let request = _.strStructureParse( e.commandArgument );
-  let criterionsMap = _.mapBut( request, commandWillfileFromNpm.defaults );
+  let criterionsMap = _.mapBut( request, commandWillfileFromNpm.commandProperties );
   request = _.mapBut( request, criterionsMap );
 
   if( will.currentOpeners && will.currentOpeners.length )
@@ -2744,21 +2744,89 @@ function commandWillfileFromNpm( e )
 
   function handleEach( it )
   {
+    if( _.mapKeys( criterionsMap ).length > 0 )
+    it.opener.openedModule.stepMap[ "willfile.generate" ].criterion = criterionsMap;
+    let currentContext = it.opener.openedModule.stepMap[ "willfile.generate" ];
     return it.opener.openedModule.willfileGenerateFromNpm
     ({
       packagePath : request.packagePath,
       willfilePath : request.willfilePath,
-      currentContext : it.opener.openedModule.stepMap[ "willfile.generate" ],
+      currentContext,
       verbosity : 5,
     });
   }
 }
 
-commandWillfileFromNpm.defaults =
+commandWillfileFromNpm.commandProperties =
 {
-  packagePath : null,
-  willfilePath : null,
+  packagePath : 'Path to source json file. Default is "./package.json". Could be a selector.',
+  willfilePath : 'Path to generated willfile. Default is "./.will.yml". Could be a selector.',
 };
+
+//
+
+function commandWillfileExtend( e )
+{
+  let will = this;
+  let request = _.will.Resolver.strRequestParse( e.commandArgument );
+  request.map.verbosity = request.map.v !== null && request.map.v >= 0 ? request.map.v : request.map.verbosity;
+
+  return _.will.Module.prototype.willfileExtend.call( will,
+  {
+    request : request.subject,
+    onSection : _.mapExtend,
+    ... request.map,
+  });
+}
+
+commandWillfileExtend.hint = 'Use "willfile extend" to extend existing willfile by data from source configuration files.';
+commandWillfileExtend.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
+commandWillfileExtend.commandProperties =
+{
+  about : 'Enables extension of section "about". Default value is 1.',
+  build : 'Enables extension of section "build". Default value is 1.',
+  path : 'Enables extension of section "path". Default value is 1.',
+  reflector : 'Enables extension of section "reflector". Default value is 1.',
+  step : 'Enables extension of section "step". Default value is 1.',
+  submodule : 'Enables extension of section "submodule". Default value is 1.',
+
+  author : 'Enables extension of field "author" in section "about". Default value is 1.',
+  contributors : 'Enables extension of field "contributors" in section "about". Default value is 1.',
+  description : 'Enables extension of field "description" in section "about". Default value is 1.',
+  enabled : 'Enables extension of field "enabled" in section "about". Default value is 1.',
+  interpreters : 'Enables extension of field "interpreters" in section "about". Default value is 1.',
+  keywords : 'Enables extension of field "keywords" in section "about". Default value is 1.',
+  license : 'Enables extension of field "license" in section "about". Default value is 1.',
+  name : 'Enables extension of field "name" in section "about". Default value is 1.',
+  'npm.name' : 'Enables extension of field "npm.name" in section "about". Default value is 1.',
+  'npm.scripts' : 'Enables extension of field "npm.scripts" in section "about". Default value is 1.',
+  version : 'Enables extension of field "version" in section "about". Default value is 1.',
+
+  format : 'Defines output format of config file: "willfile" - output file is willfile, "json" - output is NPM json file. Default value is "willfile".',
+  submodulesDisabling : 'Disables new submodules from source files. Default value is 0.',
+  verbosity : 'Set verbosity. Default is 3.',
+  v : 'Set verbosity. Default is 3.',
+}
+
+//
+
+function commandWillfileSupplement( e )
+{
+  let will = this;
+  let request = _.will.Resolver.strRequestParse( e.commandArgument );
+  request.map.verbosity = request.map.v !== null && request.map.v >= 0 ? request.map.v : request.map.verbosity;
+
+  return _.will.Module.prototype.willfileExtend.call( will,
+  {
+    request : request.subject,
+    onSection : _.mapSupplement,
+    ... request.map,
+  });
+}
+
+commandWillfileSupplement.hint = 'Use "willfile supplement" to supplement existing willfile by new data from source configuration files.';
+commandWillfileSupplement.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
+commandWillfileSupplement.commandProperties = commandWillfileExtend.commandProperties;
 
 //
 
@@ -3474,8 +3542,8 @@ let Extension =
 
   commandNpmFromWillfile,
   commandWillfileFromNpm,
-  // commandWillfileExtend,
-  // commandWillfileSupplement,
+  commandWillfileExtend,
+  commandWillfileSupplement,
   /* qqq2 :
   will .willfile.extend dst/ src1 dir/src2 src/
   will .willfile.extend dst src1 dir/src2 src/
