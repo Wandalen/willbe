@@ -26408,6 +26408,19 @@ function commandWillfileExtendDstIsWillfile( test )
     return null;
   })
 
+  /* */
+
+  a.appStart({ args : '.willfile.extend Version* *will.yml ForExtension Version.will.yml' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'try to rewrite data by self';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '1.1.1' );
+
+    return null;
+  })
+
   /* - */
 
   return a.ready;
@@ -27167,6 +27180,19 @@ function commandWillfileSupplementDstIsWillfile( test )
     return null;
   })
 
+  /* */
+
+  a.appStart({ args : '.willfile.supplement Version* *will.yml ForExtension Version.will.yml' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'try to rewrite data by self';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.0' );
+
+    return null;
+  })
+
   /* - */
 
   return a.ready;
@@ -27300,6 +27326,240 @@ function commandWillfileSupplementDstIsJson( test )
       "devDependencies" : { "willfilefromnpm" : "file:.", "wTesting" : "" }
     };
     test.identical( config, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandWillfileSupplementWithOptions( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.supplement ForExtension Author* author:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled field author';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author <author1@dot.com>' );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement ForExtension Keywords.will.yml keywords:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled field keywords';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.keywords, [ 'wtools', 'common' ] );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement ForExtension Contributors.will.yml contributors:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled field contributors';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    var exp = [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@xxx.com>', 'Contributor3 <contributor3@dot.com>' ];
+    test.identical( config.about.contributors, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement ForExtension Interpreters.will.yml interpreters:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled field interpreters';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    var exp = [ 'nodejs = 6.0.0', 'firefox >= 67.0.0', 'chromium >= 67.0.0' ];
+    test.identical( config.about.interpreters, exp );
+
+    return null;
+  })
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.supplement .ex* ForExtension about:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled section about';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      'name' : 'NpmFromWillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'interpreters' : [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0' ],
+      'keywords' : [ 'tools', 'export' ],
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.name' : 'npmfromwillfile',
+      'npm.scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
+    };
+    test.identical( config.about, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.supplement .ex* ForExtension build:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled section build';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      'proto.export' :
+      {
+        'criterion' : { 'export' : 1, 'debug' : 1 },
+        'steps' : [ 'step::export.*=1' ]
+      }
+    };
+    test.identical( config.build, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.supplement .ex* ForExtension step:0 contributors:0 name:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'disabled section step and fields contributors and name';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      'name' : 'NpmFromWillfile',
+      'description' : 'To check the conversion',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'interpreters' : [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'chromium >= 67.0.0' ],
+      'keywords' : [ 'tools', 'export', 'wtools', 'common' ],
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'npm.name' : 'npmfromwillfile',
+      'npm.scripts' : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto', 'eslint' : 'eslint proto' }
+    };
+    test.identical( config.about, exp );
+    var exp =
+    {
+      'export.debug' :
+      {
+        'inherit' : 'module.export',
+        'export' : '{path::out}/**',
+        'criterion' : { 'debug' : 1 }
+      }
+    };
+    test.identical( config.step, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement .im* ForExtension submodulesDisabling:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'option submodulesDisabling';
+    test.identical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    var exp =
+    {
+      'eslint' :
+      {
+        'path' : 'npm:///eslint#7.1.0',
+        'enabled' : 0,
+        'criterion' : { 'debug' : 1 }
+      },
+      'NpmFromWillfile' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'wTesting' :
+      {
+        'path' : 'npm:///wTesting',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      },
+      'newsubmodule' :
+      {
+        'path' : 'hd://.',
+        'enabled' : 0,
+        'criterion' : { 'development' : 1 }
+      }
+    };
+    test.identical( config.submodule, exp );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement Author* ForExtension verbosity:5' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'option verbosity > 2';
+    test.identical( op.exitCode, 0 );
+    test.is( _.strHas( op.output, '+ writing' ) );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.willfile.supplement Author* ForExtension v:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'option verbosity < 2';
+    test.identical( op.exitCode, 0 );
+    test.is( !_.strHas( op.output, '+ writing' ) );
 
     return null;
   })
@@ -29007,6 +29267,7 @@ var Self =
     commandWillfileExtendWithOptions,
     commandWillfileSupplementDstIsWillfile,
     commandWillfileSupplementDstIsJson,
+    commandWillfileSupplementWithOptions,
 
     commandGitPull,
     commandGitPush,
