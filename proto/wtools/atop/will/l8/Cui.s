@@ -103,7 +103,8 @@ function exec()
   return _.Consequence
   .Try( () =>
   {
-    return ca.appArgsPerform({ appArgs });
+    return ca.programPerform({ program : appArgs.original });
+    // return ca.appArgsPerform({ appArgs });
     /* qqq2 : make use of
     return ca.programPerform({ program : appArgs.original });
 
@@ -137,6 +138,62 @@ function init( o )
   will[ currentOpenerSymbol ] = null;
 
   return Parent.prototype.init.apply( will, arguments );
+}
+
+//
+
+function _command_pre( o )
+{
+  let cui = this;
+
+  if( arguments.length === 2 )
+  o = { routine : arguments[ 0 ], args : arguments[ 1 ] }
+
+  _.routineOptions( _command_pre, o );
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+  _.assert( o.args.length === 1 );
+
+  let e = o.args[ 0 ];
+
+  if( o.propertiesMapAsProperty )
+  {
+    let propertiesMap = Object.create( null );
+    if( e.propertiesMap )
+    propertiesMap[ o.propertiesMapAsProperty ] = e.propertiesMap;
+    e.propertiesMap = propertiesMap;
+  }
+
+  if( cui.implied )
+  {
+    if( o.routine.commandProperties )
+    _.mapExtend( e.propertiesMap, _.mapOnly( cui.implied, o.routine.implyProperties ) );
+  }
+
+  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( e.propertiesMap ) );
+  if( o.routine.commandProperties )
+  _.sureMapHasOnly( e.propertiesMap, o.routine.commandProperties, `Command does not expect options:` );
+
+  if( _.boolLikeFalse( o.routine.commandSubjectHint ) )
+  if( e.subject.trim() !== '' )
+  throw _.errBrief
+  (
+    `Command .${e.subjectDescriptor.phraseDescriptor.phrase} does not expect subject`
+    + `, but got "${e.subject}"`
+  );
+
+  if( o.routine.commandProperties && o.routine.commandProperties.v )
+  if( e.propertiesMap.v !== undefined )
+  {
+    e.propertiesMap.verbosity = e.propertiesMap.v;
+    delete e.propertiesMap.v;
+  }
+}
+
+_command_pre.defaults =
+{
+  routine : null,
+  args : null,
+  propertiesMapAsProperty : 0,
 }
 
 //
@@ -3426,6 +3483,7 @@ let Associates =
 let Restricts =
 {
   topCommand : null,
+  implied : _.define.own( {} ),
 }
 
 let Statics =
@@ -3455,6 +3513,8 @@ let Extension =
   Exec,
   exec,
   init,
+
+  _command_pre,
 
   // opener
 
