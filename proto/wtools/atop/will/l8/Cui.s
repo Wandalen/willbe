@@ -315,7 +315,7 @@ function _command_pre( o )
   _.sureMapHasOnly( e.propertiesMap, o.routine.commandProperties, `Command does not expect options:` );
 
   if( _.boolLikeFalse( o.routine.commandSubjectHint ) )
-  if( e.subject.trim() !== '' )
+  if( e.subject && e.subject.trim() !== '' ) /* Dmytro : it is check for non-standard map "e" */
   throw _.errBrief
   (
     `Command .${e.subjectDescriptor.phraseDescriptor.phrase} does not expect subject`
@@ -406,7 +406,7 @@ function _commandsMake()
     'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                },
 
     'modules list' :                    { e : _.routineJoin( will, will.commandModulesList ),                 },
-    'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList ),      h : 'List all modules topologically.' },
+    'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList ),      },
     'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree ),                 h : 'List all found modules as a tree.' },
     'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               },
     'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   },
@@ -1430,15 +1430,16 @@ function commandModulesList( e )
 }
 
 commandModulesList.hint = 'List all modules.';
-commandModulesList.commandSubjectHint = 'A selector for path names. Could be a glob.';
+commandModulesList.commandSubjectHint = false;
 
 //
 
 function commandModulesTopologicalList( e )
 {
-  let will = this;
+  let cui = this;
+  cui._command_pre( commandModulesTopologicalList, arguments );
 
-  return will._commandListLike
+  return cui._commandListLike
   ({
     event : e,
     name : 'list topological sorted order',
@@ -1449,12 +1450,14 @@ function commandModulesTopologicalList( e )
 
   function act( module, resources )
   {
-    let logger = will.logger; // xxx
+    let logger = cui.logger; // xxx
     logger.log( module.openedModule.infoExportModulesTopological( resources ) );
   }
 
-  // return will._commandListLike( e, act, 'module' );
 }
+
+commandModulesTopologicalList.hint = 'List all modules topologically.';
+commandModulesTopologicalList.commandSubjectHint = false;
 
 //
 
