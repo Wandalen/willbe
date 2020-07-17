@@ -1150,12 +1150,14 @@ commandVersion.commandSubjectHint = false;
 function commandVersionCheck( e )
 {
   let cui = this;
+  cui._command_pre( commandVersion, arguments );
   cui._propertiesImply( e.propertiesMap );
 
   return cui.versionIsUpToDate( e.propertiesMap );
 }
 
 commandVersionCheck.hint = 'Check if current version of willbe is the latest.';
+commandVersionCheck.commandSubjectHint = false;
 commandVersionCheck.commandProperties =
 {
   throwing : 'Throw an error if utility is not up to date. Default : 1',
