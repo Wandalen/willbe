@@ -400,7 +400,7 @@ function _commandsMake()
   let commands =
   {
 
-    'help' :                            { e : _.routineJoin( will, will.commandHelp ),                        h : 'Get help.' },
+    'help' :                            { e : _.routineJoin( will, will.commandHelp ),                        },
     'imply' :                           { e : _.routineJoin( will, will.commandImply ),                       h : 'Change state or imply value of a variable' },
     'version' :                         { e : _.routineJoin( will, will.commandVersion ),                     },
     'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                },
@@ -1030,18 +1030,15 @@ _commandTreeLike.defaults =
 
 function commandHelp( e )
 {
-  let will = this;
+  let cui = this;
   let ca = e.ca;
-  let logger = will.logger;
+  cui._command_pre( commandHelp, arguments );
 
   ca._commandHelp( e );
-
-  // if( !e.commandName )
-  // {
-  //   _.assert( 0 );
-  // }
-
 }
+
+commandHelp.hint = 'Get help.';
+commandHelp.commandSubjectHint = 'A command name to get help for specific command.';
 
 //
 
