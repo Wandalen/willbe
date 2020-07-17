@@ -142,64 +142,6 @@ function init( o )
 
 //
 
-function _command_pre( o )
-{
-  let cui = this;
-
-  if( arguments.length === 2 )
-  o = { routine : arguments[ 0 ], args : arguments[ 1 ] }
-
-  _.routineOptions( _command_pre, o );
-  _.assert( arguments.length === 1 || arguments.length === 2 );
-  _.assert( o.args.length === 1 );
-
-  let e = o.args[ 0 ];
-
-  if( o.propertiesMapAsProperty )
-  {
-    let propertiesMap = Object.create( null );
-    if( e.propertiesMap )
-    propertiesMap[ o.propertiesMapAsProperty ] = e.propertiesMap;
-    e.propertiesMap = propertiesMap;
-  }
-
-  if( cui.implied )
-  {
-    if( o.routine.commandProperties )
-    _.mapExtend( e.propertiesMap, _.mapOnly( cui.implied, o.routine.implyProperties ) );
-    else
-    _.mapExtend( e.propertiesMap, cui.implied );
-  }
-
-  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( e.propertiesMap ) );
-  if( o.routine.commandProperties )
-  _.sureMapHasOnly( e.propertiesMap, o.routine.commandProperties, `Command does not expect options:` );
-
-  if( _.boolLikeFalse( o.routine.commandSubjectHint ) )
-  if( e.subject.trim() !== '' )
-  throw _.errBrief
-  (
-    `Command .${e.subjectDescriptor.phraseDescriptor.phrase} does not expect subject`
-    + `, but got "${e.subject}"`
-  );
-
-  if( o.routine.commandProperties && o.routine.commandProperties.v )
-  if( e.propertiesMap.v !== undefined )
-  {
-    e.propertiesMap.verbosity = e.propertiesMap.v;
-    delete e.propertiesMap.v;
-  }
-}
-
-_command_pre.defaults =
-{
-  routine : null,
-  args : null,
-  propertiesMapAsProperty : 0,
-}
-
-//
-
 function _openersCurrentEach( o )
 {
   let will = this.form();
@@ -338,6 +280,64 @@ function currentOpenerChange( src )
 // --
 // etc
 // --
+
+function _command_pre( o )
+{
+  let cui = this;
+
+  if( arguments.length === 2 )
+  o = { routine : arguments[ 0 ], args : arguments[ 1 ] }
+
+  _.routineOptions( _command_pre, o );
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+  _.assert( o.args.length === 1 );
+
+  let e = o.args[ 0 ];
+
+  if( o.propertiesMapAsProperty )
+  {
+    let propertiesMap = Object.create( null );
+    if( e.propertiesMap )
+    propertiesMap[ o.propertiesMapAsProperty ] = e.propertiesMap;
+    e.propertiesMap = propertiesMap;
+  }
+
+  if( cui.implied )
+  {
+    if( o.routine.commandProperties )
+    _.mapExtend( e.propertiesMap, _.mapOnly( cui.implied, o.routine.implyProperties ) );
+    else
+    _.mapExtend( e.propertiesMap, cui.implied );
+  }
+
+  _.sure( _.mapIs( e.propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( e.propertiesMap ) );
+  if( o.routine.commandProperties )
+  _.sureMapHasOnly( e.propertiesMap, o.routine.commandProperties, `Command does not expect options:` );
+
+  if( _.boolLikeFalse( o.routine.commandSubjectHint ) )
+  if( e.subject.trim() !== '' )
+  throw _.errBrief
+  (
+    `Command .${e.subjectDescriptor.phraseDescriptor.phrase} does not expect subject`
+    + `, but got "${e.subject}"`
+  );
+
+  if( o.routine.commandProperties && o.routine.commandProperties.v )
+  if( e.propertiesMap.v !== undefined )
+  {
+    e.propertiesMap.verbosity = e.propertiesMap.v;
+    delete e.propertiesMap.v;
+  }
+}
+
+_command_pre.defaults =
+{
+  routine : null,
+  args : null,
+  propertiesMapAsProperty : 0,
+}
+
+//
 
 function errEncounter( error )
 {
@@ -3526,8 +3526,6 @@ let Extension =
   exec,
   init,
 
-  _command_pre,
-
   // opener
 
   _openersCurrentEach,
@@ -3537,6 +3535,7 @@ let Extension =
 
   // etc
 
+  _command_pre,
   errEncounter,
   _propertiesImply,
 
