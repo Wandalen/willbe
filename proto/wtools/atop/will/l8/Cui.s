@@ -407,7 +407,7 @@ function _commandsMake()
 
     'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               },
     'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   },
-    'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              h : 'List submodules of the current module.' },
+    'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              },
     'modules list' :                    { e : _.routineJoin( will, will.commandModulesList ),                 h : 'List all modules.' },
     'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList ),      h : 'List all modules topologically.' },
     'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree ),                 h : 'List all found modules as a tree.' },
@@ -1219,10 +1219,8 @@ function commandPathsList( e )
 
   function act( module, resources )
   {
-
     let logger = cui.logger;
     logger.log( module.openedModule.infoExportPaths( resources ) );
-
   }
 
 }
@@ -1234,9 +1232,9 @@ commandPathsList.commandSubjectHint = 'A selector for path names. Could be a glo
 
 function commandSubmodulesList( e )
 {
-  let will = this;
+  let cui = this;
 
-  return will._commandListLike
+  return cui._commandListLike
   ({
     event : e,
     name : 'list submodules',
@@ -1247,12 +1245,14 @@ function commandSubmodulesList( e )
 
   function act( module, resources )
   {
-    let logger = will.logger;
+    let logger = cui.logger;
     logger.log( module.openedModule.resourcesExportInfo( resources ) );
   }
 
-  // return will._commandListLike( e, act, 'submodule' );
 }
+
+commandSubmodulesList.hint = 'List submodules of the current module.';
+commandSubmodulesList.commandSubjectHint = 'A selector for submodule names. Could be a glob.';
 
 //
 
