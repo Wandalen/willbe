@@ -412,7 +412,7 @@ function _commandsMake()
     'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   },
     'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              },
     'reflectors list' :                 { e : _.routineJoin( will, will.commandReflectorsList ),              },
-    'steps list' :                      { e : _.routineJoin( will, will.commandStepsList ),                   h : 'List avaialable steps the current module.' },
+    'steps list' :                      { e : _.routineJoin( will, will.commandStepsList ),                   },
     'builds list' :                     { e : _.routineJoin( will, will.commandBuildsList ),                  h : 'List avaialable builds the current module.' },
     'exports list' :                    { e : _.routineJoin( will, will.commandExportsList ),                 h : 'List avaialable exports the current module.' },
     'about list' :                      { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
@@ -1286,9 +1286,10 @@ commandReflectorsList.commandSubjectHint = 'A selector for reflectors. Could be 
 
 function commandStepsList( e )
 {
-  let will = this;
+  let cui = this;
+  cui._command_pre( commandStepsList, arguments );
 
-  return will._commandListLike
+  return cui._commandListLike
   ({
     event : e,
     name : 'list steps',
@@ -1299,12 +1300,14 @@ function commandStepsList( e )
 
   function act( module, resources )
   {
-    let logger = will.logger;
+    let logger = cui.logger;
     logger.log( module.openedModule.resourcesExportInfo( resources ) );
   }
 
-  // return will._commandListLike( e, act, 'step' );
 }
+
+commandStepsList.hint = 'List avaialable steps the current module.';
+commandStepsList.commandSubjectHint = 'A selector for steps. Could be a glob.';
 
 //
 
