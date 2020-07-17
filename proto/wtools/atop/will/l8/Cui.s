@@ -405,7 +405,7 @@ function _commandsMake()
     'version' :                         { e : _.routineJoin( will, will.commandVersion ),                     },
     'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                },
 
-    'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               h : 'List information about resources of the current module.' },
+    'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               },
     'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
     'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              h : 'List submodules of the current module.' },
     'modules list' :                    { e : _.routineJoin( will, will.commandModulesList ),                 h : 'List all modules.' },
@@ -1038,7 +1038,7 @@ function commandHelp( e )
 }
 
 commandHelp.hint = 'Get help.';
-commandHelp.commandSubjectHint = 'A command name to get help for specific command.';
+commandHelp.commandSubjectHint = 'A command name to get detailed help for specific command.';
 
 //
 
@@ -1161,7 +1161,7 @@ commandVersionCheck.hint = 'Check if current version of willbe is the latest.';
 commandVersionCheck.commandSubjectHint = false;
 commandVersionCheck.commandProperties =
 {
-  throwing : 'Throw an error if utility is not up to date. Default : 1',
+  throwing : 'Throw an error if utility is not up to date. Default : 1.',
   ... commandImply.commandProperties,
 };
 
@@ -1198,6 +1198,9 @@ function commandResourcesList( e )
 
 }
 
+commandResourcesList.hint = 'List information about resources of the current module.';
+commandResourcesList.commandSubjectHint = 'A selector for resource names. Could be a glob.';
+
 //
 
 function commandPathsList( e )
@@ -1221,7 +1224,6 @@ function commandPathsList( e )
 
   }
 
-  // return will._commandListLike( e, act, 'path' );
 }
 
 //
