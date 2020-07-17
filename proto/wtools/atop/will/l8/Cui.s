@@ -413,7 +413,7 @@ function _commandsMake()
     'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              },
     'reflectors list' :                 { e : _.routineJoin( will, will.commandReflectorsList ),              },
     'steps list' :                      { e : _.routineJoin( will, will.commandStepsList ),                   },
-    'builds list' :                     { e : _.routineJoin( will, will.commandBuildsList ),                  h : 'List avaialable builds the current module.' },
+    'builds list' :                     { e : _.routineJoin( will, will.commandBuildsList ),                  },
     'exports list' :                    { e : _.routineJoin( will, will.commandExportsList ),                 h : 'List avaialable exports the current module.' },
     'about list' :                      { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
     'about' :                           { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
@@ -1313,9 +1313,10 @@ commandStepsList.commandSubjectHint = 'A selector for steps. Could be a glob.';
 
 function commandBuildsList( e )
 {
-  let will = this;
+  let cui = this;
+  cui._command_pre( commandBuildsList, arguments );
 
-  return will._commandListLike
+  return cui._commandListLike
   ({
     event : e,
     name : 'list builds',
@@ -1326,7 +1327,7 @@ function commandBuildsList( e )
 
   function act( module )
   {
-    let logger = will.logger;
+    let logger = cui.logger;
     let request = _.will.Resolver.strRequestParse( e.commandArgument );
     let builds = module.openedModule.buildsResolve
     ({
@@ -1337,8 +1338,10 @@ function commandBuildsList( e )
     logger.log( module.openedModule.resourcesExportInfo( builds ) );
   }
 
-  // return will._commandListLike( e, act, null );
 }
+
+commandBuildsList.hint = 'List avaialable builds the current module.';
+commandBuildsList.commandSubjectHint = 'A selector for builds. Could be a glob.';
 
 //
 
