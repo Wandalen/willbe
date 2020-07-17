@@ -415,8 +415,8 @@ function _commandsMake()
     'steps list' :                      { e : _.routineJoin( will, will.commandStepsList ),                   },
     'builds list' :                     { e : _.routineJoin( will, will.commandBuildsList ),                  },
     'exports list' :                    { e : _.routineJoin( will, will.commandExportsList ),                 },
-    'about list' :                      { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
-    'about' :                           { e : _.routineJoin( will, will.commandAboutList ),                   h : 'List descriptive information about the current module.' },
+    'about list' :                      { e : _.routineJoin( will, will.commandAboutList ),                   },
+    'about' :                           { e : _.routineJoin( will, will.commandAboutList ),                   },
 
     'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean ),             h : 'Delete all downloaded submodules.' },
     'submodules add' :                  { e : _.routineJoin( will, will.commandSubmodulesAdd ),               h : 'Add submodules.' },
@@ -1306,7 +1306,7 @@ function commandStepsList( e )
 
 }
 
-commandStepsList.hint = 'List avaialable steps the current module.';
+commandStepsList.hint = 'List available steps of the current module.';
 commandStepsList.commandSubjectHint = 'A selector for steps. Could be a glob.';
 
 //
@@ -1340,7 +1340,7 @@ function commandBuildsList( e )
 
 }
 
-commandBuildsList.hint = 'List avaialable builds the current module.';
+commandBuildsList.hint = 'List available builds of the current module.';
 commandBuildsList.commandSubjectHint = 'A selector for builds. Could be a glob.';
 
 //
@@ -1374,16 +1374,17 @@ function commandExportsList( e )
 
 }
 
-commandExportsList.hint = 'List avaialable exports the current module.';
+commandExportsList.hint = 'List available exports of the current module.';
 commandExportsList.commandSubjectHint = 'A selector for exports. Could be a glob.';
 
 //
 
 function commandAboutList( e )
 {
-  let will = this;
+  let cui = this;
+  cui._command_pre( commandAboutList, arguments );
 
-  return will._commandListLike
+  return cui._commandListLike
   ({
     event : e,
     name : 'list about',
@@ -1394,13 +1395,15 @@ function commandAboutList( e )
 
   function act( module )
   {
-    let logger = will.logger;
+    let logger = cui.logger;
     logger.log( _.color.strFormat( 'About', 'highlighted' ) );
     logger.log( module.openedModule.about.exportString() );
   }
 
-  // return will._commandListLike( e, act, null );
 }
+
+commandAboutList.hint = 'List descriptive information about the current module.';
+commandAboutList.commandSubjectHint = false;
 
 //
 
