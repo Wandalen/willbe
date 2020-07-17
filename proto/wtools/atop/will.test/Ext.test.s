@@ -46,8 +46,8 @@ function exportCourruptedSubmodulesDisabled( test )
 qqq : fix npm submodules tests
 */
 
-var _global = _global_;
-var _ = _global_.wTools;
+let _global = _global_;
+let _ = _global_.wTools;
 
 // --
 // context
@@ -28984,7 +28984,7 @@ function commandGitTag( test )
 // declare
 // --
 
-var Self =
+let Self =
 {
 
   name : 'Tools.atop.Willbe.Ext',
