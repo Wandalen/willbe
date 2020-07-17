@@ -401,7 +401,7 @@ function _commandsMake()
   {
 
     'help' :                            { e : _.routineJoin( will, will.commandHelp ),                        },
-    'imply' :                           { e : _.routineJoin( will, will.commandImply ),                       h : 'Change state or imply value of a variable' },
+    'imply' :                           { e : _.routineJoin( will, will.commandImply ),                       },
     'version' :                         { e : _.routineJoin( will, will.commandVersion ),                     },
     'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                },
 
@@ -1053,6 +1053,21 @@ function commandImply( e )
   cui._propertiesImply( cui.implied );
 
 }
+commandImply.hint = 'Change state or imply value of a variable';
+commandImply.commandSubjectHint = false;
+commandImply.commandProperties =
+{
+  v : 'Set verbosity. Default is 3.',
+  verbosity : 'Set verbosity. Default is 3.',
+  beeping : 'Make noise when it\'s done. Default is 0.',
+  withOut : 'Include out modules. Default is 1.',
+  withIn : 'Include in modules. Default is 1.',
+  withEnabled : 'Include enabled modules. Default is 1.',
+  withDisabled : 'Include disabled modules. Default is 0.',
+  withValid : 'Include valid modules. Default is 1.',
+  withInvalid : 'Include invalid modules. Default is 1.',
+  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : depends.',
+}
 
 // function commandImply( e )
 // {
@@ -1097,20 +1112,6 @@ function commandImply( e )
 //   });
 //
 // }
-
-commandImply.commandProperties =
-{
-  v : 'Set verbosity. Default is 3.',
-  verbosity : 'Set verbosity. Default is 3.',
-  beeping : 'Make noise when it\'s done. Default is 0.',
-  withOut : 'Include out modules. Default is 1.',
-  withIn : 'Include in modules. Default is 1.',
-  withEnabled : 'Include enabled modules. Default is 1.',
-  withDisabled : 'Include disabled modules. Default is 0.',
-  withValid : 'Include valid modules. Default is 1.',
-  withInvalid : 'Include invalid modules. Default is 1.',
-  withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : depends.',
-}
 
 //
 
@@ -1168,9 +1169,10 @@ commandVersionCheck.commandProperties =
 
 function commandResourcesList( e )
 {
-  let will = this;
+  let cui = this;
+  cui._command_pre( commandResourcesList, arguments );
 
-  return will._commandListLike
+  return cui._commandListLike
   ({
     event : e,
     name : 'list resources',
@@ -1181,7 +1183,7 @@ function commandResourcesList( e )
 
   function act( module, resources )
   {
-    let logger = will.logger;
+    let logger = cui.logger;
 
     if( !e.request.subject && !_.mapKeys( e.request.map ).length )
     {
@@ -1192,10 +1194,8 @@ function commandResourcesList( e )
     }
 
     logger.log( module.openedModule.resourcesExportInfo( resources ) );
-
   }
 
-  // return will._commandListLike( e, act, '*' );
 }
 
 //
