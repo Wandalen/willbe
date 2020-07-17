@@ -419,7 +419,7 @@ function _commandsMake()
     'about' :                           { e : _.routineJoin( will, will.commandAboutList ),                   },
 
     'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean ),             h : 'Delete all downloaded submodules.' },
-    'submodules add' :                  { e : _.routineJoin( will, will.commandSubmodulesAdd ),               h : 'Add submodules.' },
+    'submodules add' :                  { e : _.routineJoin( will, will.commandSubmodulesAdd ),               },
     'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
     'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
 
@@ -1490,6 +1490,7 @@ function commandModulesTree( e )
 
 }
 
+commandModulesTree.defaults = commandImply.commandProperties;
 commandModulesTree.hint = 'List all found modules as a tree.';
 commandModulesTree.commandSubjectHint = 'A selector for path names. Could be a glob.';
 commandModulesTree.commandProperties =
@@ -1498,18 +1499,18 @@ commandModulesTree.commandProperties =
   withRemotePath : 'Print remote paths. Default is 0',
   ... commandImply.commandProperties,
 }
-commandModulesTree.defaults = commandImply.commandProperties;
 
 //
 
 function commandSubmodulesAdd( e )
 {
-  let will = this;
+  let cui = this;
+  cui._command_pre( commandSubmodulesAdd, arguments );
 
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
-    name : 'clean submodules',
+    name : 'add submodules',
     onEach : handleEach,
     commandRoutine : commandSubmodulesAdd,
   });
@@ -1524,28 +1525,27 @@ function commandSubmodulesAdd( e )
       prefixlessAction : 'resolved',
     });
 
-    let found = will.modulesFindWithAt
+    let found = cui.modulesFindWithAt
     ({
       selector : filePath,
       // withDisabledModules : 1,
       // withDisabledSubmodules : 1,
       withInvalid : 1,
       tracing : 0,
-      ... will.filterImplied(),
+      ... cui.filterImplied(),
     });
 
     found.then( ( it ) =>
     {
-      let junctions = will.junctionsFrom( it.sortedOpeners );
+      let junctions = cui.junctionsFrom( it.sortedOpeners );
       return module.submodulesAdd({ modules : junctions });
     })
 
     found.finally( ( err, added ) =>
     {
-      debugger;
       if( err )
       throw _.err( err, `\nFaield to add submodules from ${filePath}` );
-      if( will.verbosity >= 2 )
+      if( cui.verbosity >= 2 )
       logger.log( `Added ${added} submodules to ${module.nameWithLocationGet()}` )
       return added;
     })
@@ -1554,6 +1554,9 @@ function commandSubmodulesAdd( e )
   }
 
 }
+
+commandSubmodulesAdd.hint = 'Add submodules.';
+commandSubmodulesAdd.commandSubjectHint = 'A selector ( path ) for module that will be included in module.';
 
 //
 
