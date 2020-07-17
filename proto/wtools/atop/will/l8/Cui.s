@@ -406,7 +406,7 @@ function _commandsMake()
     'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                },
 
     'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               },
-    'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   h : 'List paths of the current module.' },
+    'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   },
     'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              h : 'List submodules of the current module.' },
     'modules list' :                    { e : _.routineJoin( will, will.commandModulesList ),                 h : 'List all modules.' },
     'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList ),      h : 'List all modules topologically.' },
@@ -1205,9 +1205,10 @@ commandResourcesList.commandSubjectHint = 'A selector for resource names. Could 
 
 function commandPathsList( e )
 {
-  let will = this;
+  let cui = this;
+  cui._command_pre( commandPathsList, arguments );
 
-  return will._commandListLike
+  return cui._commandListLike
   ({
     event : e,
     name : 'list paths',
@@ -1219,12 +1220,15 @@ function commandPathsList( e )
   function act( module, resources )
   {
 
-    let logger = will.logger;
+    let logger = cui.logger;
     logger.log( module.openedModule.infoExportPaths( resources ) );
 
   }
 
 }
+
+commandPathsList.hint = 'List paths of the current module.';
+commandPathsList.commandSubjectHint = 'A selector for path names. Could be a glob.';
 
 //
 
