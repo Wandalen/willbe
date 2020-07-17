@@ -103,7 +103,7 @@ function exec()
   return _.Consequence
   .Try( () =>
   {
-    return ca.programPerform({ program : appArgs.original });
+    return ca.programPerform({ program : _.strUnquote( appArgs.original ) });
     // return ca.appArgsPerform({ appArgs });
     /* qqq2 : make use of
     return ca.programPerform({ program : appArgs.original });
