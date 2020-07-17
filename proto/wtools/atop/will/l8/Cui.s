@@ -405,13 +405,13 @@ function _commandsMake()
     'version' :                         { e : _.routineJoin( will, will.commandVersion ),                     },
     'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                },
 
-    'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               },
-    'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   },
-    'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              },
     'modules list' :                    { e : _.routineJoin( will, will.commandModulesList ),                 h : 'List all modules.' },
     'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList ),      h : 'List all modules topologically.' },
     'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree ),                 h : 'List all found modules as a tree.' },
-    'reflectors list' :                 { e : _.routineJoin( will, will.commandReflectorsList ),              h : 'List avaialable reflectors the current module.' },
+    'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               },
+    'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   },
+    'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              },
+    'reflectors list' :                 { e : _.routineJoin( will, will.commandReflectorsList ),              },
     'steps list' :                      { e : _.routineJoin( will, will.commandStepsList ),                   h : 'List avaialable steps the current module.' },
     'builds list' :                     { e : _.routineJoin( will, will.commandBuildsList ),                  h : 'List avaialable builds the current module.' },
     'exports list' :                    { e : _.routineJoin( will, will.commandExportsList ),                 h : 'List avaialable exports the current module.' },
@@ -1199,7 +1199,7 @@ function commandResourcesList( e )
 }
 
 commandResourcesList.hint = 'List information about resources of the current module.';
-commandResourcesList.commandSubjectHint = 'A selector for resource names. Could be a glob.';
+commandResourcesList.commandSubjectHint = 'A selector for resources. Could be a glob.';
 
 //
 
@@ -1226,13 +1226,14 @@ function commandPathsList( e )
 }
 
 commandPathsList.hint = 'List paths of the current module.';
-commandPathsList.commandSubjectHint = 'A selector for path names. Could be a glob.';
+commandPathsList.commandSubjectHint = 'A selector for paths. Could be a glob.';
 
 //
 
 function commandSubmodulesList( e )
 {
   let cui = this;
+  cui._command_pre( commandSubmodulesList, arguments );
 
   return cui._commandListLike
   ({
@@ -1252,15 +1253,16 @@ function commandSubmodulesList( e )
 }
 
 commandSubmodulesList.hint = 'List submodules of the current module.';
-commandSubmodulesList.commandSubjectHint = 'A selector for submodule names. Could be a glob.';
+commandSubmodulesList.commandSubjectHint = 'A selector for submodules. Could be a glob.';
 
 //
 
 function commandReflectorsList( e )
 {
-  let will = this;
+  let cui = this;
+  cui._command_pre( commandReflectorsList, arguments );
 
-  return will._commandListLike
+  return cui._commandListLike
   ({
     event : e,
     name : 'list reflectors',
@@ -1271,12 +1273,14 @@ function commandReflectorsList( e )
 
   function act( module, resources )
   {
-    let logger = will.logger;
+    let logger = cui.logger;
     logger.log( module.openedModule.resourcesExportInfo( resources ) );
   }
 
-  // return will._commandListLike( e, act, 'reflector' );
 }
+
+commandReflectorsList.hint = 'List available reflectors of the current module.';
+commandReflectorsList.commandSubjectHint = 'A selector for reflectors. Could be a glob.';
 
 //
 
