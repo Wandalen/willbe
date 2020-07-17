@@ -6528,13 +6528,15 @@ function infoExportModulesTopological()
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
 
-  let sorted = will.graphTopologicalSort();
   debugger;
+  let sorted = will.graphTopSort();
+  // let sorted = will.graphTopologicalSort(); /* Dmytro : old routine name */
 
   let result = sorted.map( ( modules ) =>
   {
-    let names = modules.map( ( module ) => module.name );
-    return names.join( ' ' )
+    return modules.name; /* Dmytro : now sorted contains sorted group of modules, we extract names of it */
+    // let names = modules.map( ( module ) => module.name ); /* Dmytro : maybe, previous implementation returned some arrays of relations, needs to improve and minimal coverage */
+    // return names.join( ' ' );
   });
 
   result = result.join( '\n' );
