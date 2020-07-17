@@ -304,8 +304,8 @@ function _command_pre( o )
 
   if( cui.implied )
   {
-    if( o.routine.commandProperties )
-    _.mapExtend( e.propertiesMap, _.mapOnly( cui.implied, o.routine.implyProperties ) );
+    if( o.routine.defaults )
+    _.mapExtend( e.propertiesMap, _.mapOnly( cui.implied, o.routine.defaults ) );
     else
     _.mapExtend( e.propertiesMap, cui.implied );
   }
@@ -407,7 +407,7 @@ function _commandsMake()
 
     'modules list' :                    { e : _.routineJoin( will, will.commandModulesList ),                 },
     'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList ),      },
-    'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree ),                 h : 'List all found modules as a tree.' },
+    'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree ),                 },
     'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               },
     'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   },
     'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              },
@@ -1463,16 +1463,15 @@ commandModulesTopologicalList.commandSubjectHint = false;
 
 function commandModulesTree( e )
 {
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
-  let request = _.will.Resolver.strRequestParse( e.commandArgument );
-  let propertiesMap = _.strStructureParse( e.commandArgument );
-  let implyMap = _.mapBut( propertiesMap, commandModulesTree.commandProperties );
-  propertiesMap = _.mapBut( propertiesMap, implyMap );
-  will._propertiesImply( implyMap );
+  let cui = this;
+  let logger = cui.logger;
+  cui._command_pre( commandModulesTree, arguments );
 
-  return will._commandTreeLike
+  let implyMap = _.mapOnly( e.propertiesMap, commandModulesTree.defaults );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  cui._propertiesImply( implyMap );
+
+  return cui._commandTreeLike
   ({
     event : e,
     name : 'list tree of modules',
@@ -1483,22 +1482,23 @@ function commandModulesTree( e )
   function handleAll( it )
   {
     let modules = it.modules;
-    /*
-    filtering was done earlier
-    */
-    propertiesMap.onlyRoots = 0;
-    logger.log( will.graphExportTreeInfo( modules, propertiesMap ) );
+    /* filtering was done earlier */
+    e.propertiesMap.onlyRoots = 0;
+    logger.log( cui.graphExportTreeInfo( modules, e.propertiesMap ) );
     return null;
   }
 
 }
 
+commandModulesTree.hint = 'List all found modules as a tree.';
+commandModulesTree.commandSubjectHint = 'A selector for path names. Could be a glob.';
 commandModulesTree.commandProperties =
 {
   withLocalPath : 'Print local paths. Default is 0',
   withRemotePath : 'Print remote paths. Default is 0',
   ... commandImply.commandProperties,
 }
+commandModulesTree.defaults = commandImply.commandProperties;
 
 //
 
