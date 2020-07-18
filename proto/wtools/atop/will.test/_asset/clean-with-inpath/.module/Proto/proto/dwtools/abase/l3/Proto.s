@@ -2738,7 +2738,7 @@ function instanceFilterInit( o )
   // ({
   //   cls : Self,
   //   parent : Parent,
-  //   extend : Extend,
+  //   extend : Extension,
   // });
 
   _.assertOwnNoConstructor( o );

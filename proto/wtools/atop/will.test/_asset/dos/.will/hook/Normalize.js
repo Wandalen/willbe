@@ -36,7 +36,7 @@ function onModule( context )
   // samplesRename( context );
   // dwtoolsRename( context );
 
-  badgeGithubReplace( context );
+  // badgeGithubReplace( context );
   // badgesSwap( context );
   // badgeStabilityAdd( context );
   // badgeCircleCiAdd( context );
@@ -44,6 +44,15 @@ function onModule( context )
   // badgeCircleCiReplace( context );
 
   // readmeModuleNameAdjust( context );
+  // readmeTryOutAdjust( context );
+  // readmeToAddRemove( context );
+  // readmeToAddAdjust( context );
+
+  // xxx : delete .DS_Store
+  // xxx : find and replace : `# wInstancing` without badges
+  // xxx : look for `if( _global_.WTOOLS_PRIVATE )`
+  // xxx : look for `@file Color256.s.`
+  // xxx : rename Integration.test.s -> Integration.test.ss
 
 }
 
@@ -203,7 +212,7 @@ function badgeGithubReplace( context )
   return null;
   if( !config.about )
   return null;
-  if( !config.about.user || !config.about.user )
+  if( !config.about.user )
   return null;
 
   if( !fileProvider.fileExists( abs( '.github/workflows/Publish.yml' ) ) )
@@ -212,7 +221,7 @@ function badgeGithubReplace( context )
   let moduleName = context.module.about.name;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
   let ins = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
-  let sub = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Publish/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3APublish)`;
+  let sub = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Publish/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3Apublish)`;
 
   if( !_.strHas( read, ins ) )
   return false;
@@ -257,7 +266,7 @@ function badgeStabilityAdd( context )
   return null;
   if( !config.about )
   return null;
-  if( !config.about.user || !config.about.user )
+  if( !config.about.user )
   return null;
 
   let moduleName = context.module.about.name;
@@ -311,7 +320,7 @@ function badgeCircleCiAdd( context )
   return null;
   if( !config.about )
   return null;
-  if( !config.about.user || !config.about.user )
+  if( !config.about.user )
   return null;
 
   let moduleName = context.module.about.name;
@@ -363,7 +372,7 @@ function badgeCircleCiRemove( context )
   return null;
   if( !config.about )
   return null;
-  if( !config.about.user || !config.about.user )
+  if( !config.about.user )
   return null;
 
   let moduleName = context.module.about.name;
@@ -415,7 +424,7 @@ function badgeCircleCiReplace( context )
   return null;
   if( !config.about )
   return null;
-  if( !config.about.user || !config.about.user )
+  if( !config.about.user )
   return null;
 
   let moduleName = context.module.about.name;
@@ -466,7 +475,7 @@ function badgesSwap( context )
   return null;
   if( !config.about )
   return null;
-  if( !config.about.user || !config.about.user )
+  if( !config.about.user )
   return null;
 
   let moduleName = context.module.about.name;
@@ -516,7 +525,7 @@ function readmeModuleNameAdjust( context )
   return null;
   if( !config.about )
   return null;
-  if( !config.about.user || !config.about.user )
+  if( !config.about.user )
   return null;
 
   let moduleName = context.module.about.name;
@@ -563,3 +572,196 @@ function readmeModuleNameAdjust( context )
 
   return true;
 }
+
+//
+
+function readmeTryOutAdjust( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+  if( !fileProvider.fileExists( abs( 'README.md' ) ) )
+  return;
+
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  if( !config )
+  return null;
+  if( !config.about )
+  return null;
+  if( !config.about.user )
+  return null;
+
+  let moduleName = context.module.about.name; debugger;
+  let read = fileProvider.fileRead( abs( 'README.md' ) );
+  let ins = `## Try out
+\`\`\`
+npm install
+node sample/Sample.s
+\`\`\``;
+  let sub = `## Try out from the repository
+\`\`\`
+git clone https://github.com/${config.about.user}/${moduleName}
+cd ${moduleName}
+npm install
+node sample/Sample.s
+\`\`\``;
+
+  debugger;
+  if( !_.strHas( read, ins ) )
+  return;
+
+  logger.log( `Replacing "Try out" for ${context.junction.nameWithLocationGet()}` );
+
+  if( o.dry )
+  return console.log( filePath );
+
+  logger.log( _.censor.fileReplace
+  ({
+    filePath : abs( 'README.md' ),
+    ins,
+    sub,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
+
+}
+
+//
+
+function readmeToAddRemove( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+  if( !fileProvider.fileExists( abs( 'README.md' ) ) )
+  return;
+
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  if( !config )
+  return null;
+  if( !config.about )
+  return null;
+  if( !config.about.user )
+  return null;
+  debugger;
+  if( !context.module.about.values[ 'npm.name' ] )
+  return null;
+
+  let moduleName = context.module.about.name; debugger;
+  let read = fileProvider.fileRead( abs( 'README.md' ) );
+  let ins = `## To add
+\`\`\`
+npm add '${context.module.about.values[ 'npm.name' ]}@alpha'
+\`\`\``;
+  let sub = '';
+
+  debugger;
+  if( !_.strHas( read, ins ) )
+  return;
+
+  logger.log( `Removing "To add" from ${context.junction.nameWithLocationGet()}` );
+
+  if( o.dry )
+  return console.log( filePath );
+
+  logger.log( _.censor.fileReplace
+  ({
+    filePath : abs( 'README.md' ),
+    ins,
+    sub,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
+
+}
+
+//
+
+function readmeToAddAdjust( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+  if( !fileProvider.fileExists( abs( 'README.md' ) ) )
+  return;
+
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  if( !config )
+  return null;
+  if( !config.about )
+  return null;
+  if( !config.about.user )
+  return null;
+  debugger;
+  if( !context.module.about.values[ 'npm.name' ] )
+  return null;
+
+  let moduleName = context.module.about.name; debugger;
+  let read = fileProvider.fileRead( abs( 'README.md' ) );
+  let ins = `node sample/Sample.s
+\`\`\``;
+  let sub = `node sample/Sample.s
+\`\`\`
+
+## To add to your project
+\`\`\`
+npm add '${context.module.about.values[ 'npm.name' ]}@alpha'
+\`\`\`
+`;
+
+  debugger;
+  if( !_.strHas( read, ins ) )
+  return;
+
+  logger.log( `Adding "To add" for ${context.junction.nameWithLocationGet()}` );
+
+  if( o.dry )
+  return console.log( filePath );
+
+  logger.log( _.censor.fileReplace
+  ({
+    filePath : abs( 'README.md' ),
+    ins,
+    sub,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
+
+}
+
+/*
+## Try out
+```
+npm install
+node sample/Sample.s
+```
+
+## To add
+```
+npm add 'wgittools@alpha'
+```
+*/

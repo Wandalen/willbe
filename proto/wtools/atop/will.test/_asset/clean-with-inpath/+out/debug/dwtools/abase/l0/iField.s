@@ -1152,12 +1152,12 @@ function setup()
 
     if( fi.functionFamily === 'field-mapper' )
     {
-      Extend.mapper[ f ] = fi;
+      Extension.mapper[ f ] = fi;
     }
     else if( fi.functionFamily === 'field-filter' )
     {
-      Extend.filter[ f ] = fi;
-      Extend.mapper[ f ] = mapperFromFilter( fi );
+      Extension.filter[ f ] = fi;
+      Extension.mapper[ f ] = mapperFromFilter( fi );
     }
     else _.assert( 0,'unexpected' );
 
@@ -1247,7 +1247,7 @@ let make =
 // extend
 // --
 
-let Extend =
+let Extension =
 {
 
   make,
@@ -1260,7 +1260,7 @@ let Extend =
 
 setup();
 
-Object.assign( Self, Extend );
+Object.assign( Self, Extension );
 
 // --
 // export
