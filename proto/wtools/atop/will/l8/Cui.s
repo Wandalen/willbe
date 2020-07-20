@@ -100,6 +100,9 @@ function exec()
   let appArgs = _.process.args({ keyValDelimeter : 0 });
   let ca = will._commandsMake();
 
+  if( _.longHasAny( appArgs.scriptArgs, [ '.module.new', '.module.new.with' ] ) )
+  ca.commandsImplicitDelimiting = 0; // Dmytro : temporary, it imitates old behavior of command .module.new
+
   return _.Consequence
   .Try( () =>
   {
@@ -441,7 +444,7 @@ function _commandsMake()
     'export purging' :                  { e : _.routineJoin( will, will.commandExportPurging ),               h : 'Export selected the module with spesified criterion purging output willfile first. Save output to output willfile and archive.' },
     'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
 
-    'module new' :                      { e : _.routineJoin( will, will.commandModuleNew ),                   h : 'Create a new module.' },
+    'module new' :                      { e : _.routineJoin( will, will.commandModuleNew ),                   },
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               h : 'Make a new module in the current directory and call a specified hook for the module to prepare it.' },
 
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     h : 'Use "git pull" to pull changes from remote repository.' },
@@ -1809,30 +1812,31 @@ commandSubmodulesVersionsAgree.commandProperties =
 function commandModuleNew( e )
 {
   let will = this;
-  let logger = will.logger;
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
-  let ready = new _.Consequence().take( null );
-  let request = _.will.Resolver.strRequestParse( e.commandArgument );
+  will._command_pre( commandModuleNew, arguments );
 
-  if( request.subject )
-  request.map.localPath = request.subject;
-  if( request.map.v !== undefined )
-  {
-    request.map.verbosity = request.map.v;
-    delete request.map.v;
-  }
-
-  if( request.map.verbosity === undefined )
-  request.map.verbosity = 1;
+  if( e.commandArgument )
+  e.propertiesMap.localPath = e.commandArgument;
+  if( e.propertiesMap.verbosity === undefined )
+  e.propertiesMap.verbosity = 1;
 
   if( will.withPath )
-  if( request.map.localPath )
-  request.map.localPath = path.join( will.withPath, request.map.localPath );
-  else
-  request.map.localPath = will.withPath;
+  {
+    if( e.propertiesMap.localPath )
+    e.propertiesMap.localPath = path.join( will.withPath, e.propertiesMap.localPath );
+    else
+    e.propertiesMap.localPath = will.withPath;
+  }
 
-  return will.moduleNew( request.map );
+  return will.moduleNew( e.propertiesMap );
+}
+
+commandModuleNew.hint = 'Create a new module.';
+commandModuleNew.commandSubjectHint = 'Path to module file. Default value is ".will.yml".';
+commandModuleNew.commandProperties =
+{
+  localPath : 'Path to module file. Default value is ".will.yml".',
 }
 
 //
@@ -2549,8 +2553,9 @@ function commandWith( e )
   if( !isolated )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
 
+  debugger;
   will.withPath = path.join( path.current(), will.withPath, path.fromGlob( isolated.commandArgument ) );
-  if( _.strBegins( isolated.secondCommandArgument, '.module.new' ) )
+  if( isolated.secondCommandName && _.strBegins( isolated.secondCommandName, '.module.new' ) )
   {
     return ca.commandPerform
     ({
@@ -2567,12 +2572,12 @@ function commandWith( e )
   {
     will.currentOpeners = it.sortedOpeners;
 
-    if( !will.currentOpeners.length )
-    throw _.errBrief
-    (
-        `No module sattisfy criteria.`
-      , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
-    );
+    // if( !will.currentOpeners.length )
+    // throw _.errBrief
+    // (
+    //     `No module sattisfy criteria.`
+    //   , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
+    // );
 
     return it;
 
@@ -3636,7 +3641,7 @@ let Extension =
   commandWillfileFromNpm,
   commandWillfileExtend,
   commandWillfileSupplement,
-  /* qqq2 :
+  /* aaa2 :
   will .willfile.extend dst/ src1 dir/src2 src/
   will .willfile.extend dst src1 dir/src2 src/
   will .willfile.extend dst 'src1/**' dir/src2 src/
