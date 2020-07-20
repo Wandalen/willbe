@@ -420,7 +420,7 @@ function _commandsMake()
 
     'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean ),             h : 'Delete all downloaded submodules.' },
     'submodules add' :                  { e : _.routineJoin( will, will.commandSubmodulesAdd ),               },
-    'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            h : 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.' },
+    'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            },
     'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
 
     'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  h : 'Download each submodule if such was not downloaded so far.' },
@@ -1597,8 +1597,8 @@ function commandSubmodulesFixate( e )
 }
 
 commandSubmodulesFixate.defaults = commandImply.commandProperties;
-commandSubmodulesFixate.hint = 'Add submodules.';
-commandSubmodulesFixate.commandSubjectHint = 'A selector ( path ) for module that will be included in module.';
+commandSubmodulesFixate.hint = 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.';
+commandSubmodulesFixate.commandSubjectHint = false;
 commandSubmodulesFixate.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
