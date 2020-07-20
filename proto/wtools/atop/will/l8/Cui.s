@@ -433,7 +433,7 @@ function _commandsMake()
     'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify ),    },
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     },
 
-    'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       h : 'Run shell command on the module.' },
+    'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       },
     'do' :                              { e : _.routineJoin( will, will.commandDo ),                          h : 'Run JS script on the module.' },
     'call' :                            { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
     'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
@@ -1886,11 +1886,10 @@ commandModuleNewWith.commandSubjectHint = 'A path to hook and arguments';
 
 function commandShell( e )
 {
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let cui = this;
+  cui._command_pre( commandShell, arguments );
 
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'shell',
@@ -1900,16 +1899,17 @@ function commandShell( e )
 
   function handleEach( it )
   {
-    let logger = will.logger;
-    debugger;
     return it.opener.openedModule.shell
     ({
       execPath : e.commandArgument,
-      currentPath : will.currentOpenerPath || it.opener.openedModule.dirPath,
+      currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
     });
   }
 
 }
+
+commandShell.hint = 'Run shell command on the module.';
+commandShell.commandSubjectHint = 'A command to execute is shell';
 
 //
 
