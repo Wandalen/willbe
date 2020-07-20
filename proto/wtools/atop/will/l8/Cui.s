@@ -445,7 +445,7 @@ function _commandsMake()
     'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
 
     'module new' :                      { e : _.routineJoin( will, will.commandModuleNew ),                   },
-    'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               h : 'Make a new module in the current directory and call a specified hook for the module to prepare it.' },
+    'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               },
 
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     h : 'Use "git pull" to pull changes from remote repository.' },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     h : 'Use "git push" to push commits and tags to remote repository.' },
@@ -1843,16 +1843,16 @@ commandModuleNew.commandProperties =
 
 function commandModuleNewWith( e )
 {
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let cui = this;
+  cui._command_pre( commandModuleNewWith, arguments );
+
+  let fileProvider = cui.fileProvider;
+  let path = cui.fileProvider.path;
+  let logger = cui.logger;
   let time = _.time.now();
-  let isolated = e.ca.commandIsolateSecondFromArgument( e.commandArgument );
   let execPath = e.commandArgument;
 
-  return will._commandNewLike
+  return cui._commandNewLike
   ({
     event : e,
     name : 'make a new module and call a hook',
@@ -1864,20 +1864,23 @@ function commandModuleNewWith( e )
   })
   .then( ( arg ) =>
   {
-    if( will.verbosity >= 2 )
+    if( cui.verbosity >= 2 )
     logger.log( `Done ${_.color.strFormat( 'hook::' + e.commandArgument, 'entity' )} in ${_.time.spent( time )}` );
     return arg;
   });
 
   function handleEach( it )
   {
-    let it2 = _.mapOnly( it, will.hookContextFrom.defaults );
-    it2.execPath = path.join( will.hooksPath, execPath );
-    it2 = will.hookContextFrom( it2 );
-    return will.hookCall( it2 );
+    let it2 = _.mapOnly( it, cui.hookContextFrom.defaults );
+    it2.execPath = path.join( cui.hooksPath, execPath );
+    it2 = cui.hookContextFrom( it2 );
+    return cui.hookCall( it2 );
   }
 
 }
+
+commandModuleNewWith.hint = 'Make a new module in the current directory and call a specified hook for the module to prepare it.';
+commandModuleNewWith.commandSubjectHint = 'A path to hook and arguments';
 
 //
 
@@ -2553,7 +2556,6 @@ function commandWith( e )
   if( !isolated )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
 
-  debugger;
   will.withPath = path.join( path.current(), will.withPath, path.fromGlob( isolated.commandArgument ) );
   if( isolated.secondCommandName && _.strBegins( isolated.secondCommandName, '.module.new' ) )
   {
@@ -2572,12 +2574,12 @@ function commandWith( e )
   {
     will.currentOpeners = it.sortedOpeners;
 
-    // if( !will.currentOpeners.length )
-    // throw _.errBrief
-    // (
-    //     `No module sattisfy criteria.`
-    //   , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
-    // );
+    if( !will.currentOpeners.length )
+    throw _.errBrief
+    (
+        `No module sattisfy criteria.`
+      , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
+    );
 
     return it;
 
