@@ -472,6 +472,7 @@ function _commandsMake()
     commands : commands,
     commandPrefix : 'node ',
     logger : will.logger,
+    commandsImplicitDelimiting : 1,
   })
 
   _.assert( ca.logger === will.logger );
@@ -1562,23 +1563,18 @@ commandSubmodulesAdd.commandSubjectHint = 'A selector ( path ) for module that w
 
 function commandSubmodulesFixate( e )
 {
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let cui = this;
+  cui._command_pre( commandSubmodulesFixate, arguments );
 
-  let propertiesMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  let implyMap = _.mapOnly( e.propertiesMap, commandModulesTree.defaults );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  cui._propertiesImply( implyMap );
 
-  let implyMap = _.mapBut( propertiesMap, commandSubmodulesFixate.commandProperties );
-  propertiesMap = _.mapBut( propertiesMap, implyMap );
-  will._propertiesImply( implyMap );
-
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
   e.propertiesMap.upgrading = 0;
   delete e.propertiesMap.negative;
 
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'fixate submodules',
@@ -1588,7 +1584,7 @@ function commandSubmodulesFixate( e )
 
   // function handleEach( it )
   // {
-  //   let o2 = will.filterImplied(); /* Dmytro : it creates options map with field "withDisabledModules", "withEnabledModules", "withOut", "withIn"... but routine submodulesFixate does not expects such options. Below version which used only options "dry", "negative", "recursive" */
+  //   let o2 = cui.filterImplied(); /* Dmytro : it creates options map with field "withDisabledModules", "withEnabledModules", "withOut", "withIn"... but routine submodulesFixate does not expects such options. Below version which used only options "dry", "negative", "recursive" */
   //   o2 = _.mapExtend( o2, e.propertiesMap );
   //   return it.opener.openedModule.submodulesFixate( o2 );
   // }
@@ -1600,6 +1596,9 @@ function commandSubmodulesFixate( e )
 
 }
 
+commandSubmodulesFixate.defaults = commandImply.commandProperties;
+commandSubmodulesFixate.hint = 'Add submodules.';
+commandSubmodulesFixate.commandSubjectHint = 'A selector ( path ) for module that will be included in module.';
 commandSubmodulesFixate.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
