@@ -315,7 +315,7 @@ function _command_pre( o )
   _.sureMapHasOnly( e.propertiesMap, o.routine.commandProperties, `Command does not expect options:` );
 
   if( _.boolLikeFalse( o.routine.commandSubjectHint ) )
-  if( e.subject && e.subject.trim() !== '' ) /* Dmytro : it is check for non-standard map "e" */
+  if( e.subject.trim() !== '' )
   throw _.errBrief
   (
     `Command .${e.subjectDescriptor.phraseDescriptor.phrase} does not expect subject`
@@ -423,9 +423,9 @@ function _commandsMake()
     'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            },
     'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           },
 
-    'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  h : 'Download each submodule if such was not downloaded so far.' },
+    'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  },
     'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
-    'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  h : 'Download each submodule if such was not downloaded so far.' },
+    'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  },
     'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
     'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify ),    h : 'Check whether each submodule is on branch which is specified in willfile' },
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     h : 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.' },
@@ -1652,20 +1652,14 @@ commandSubmodulesUpgrade.commandProperties =
 
 function commandSubmodulesVersionsDownload( e )
 {
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let cui = this;
+  cui._command_pre( commandSubmodulesVersionsDownload, arguments );
 
-  let propertiesMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsDownload.defaults );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  cui._propertiesImply( implyMap );
 
-  let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsDownload.commandProperties );
-  propertiesMap = _.mapBut( propertiesMap, implyMap );
-  will._propertiesImply( implyMap );
-
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
-
-  return will._commandCleanLike
+  return cui._commandCleanLike
   ({
     event : e,
     name : 'download submodules',
@@ -1679,15 +1673,18 @@ function commandSubmodulesVersionsDownload( e )
 
     let o2 = _.mapExtend( null, e.propertiesMap );
     o2.modules = it.openers;
-    _.routineOptions( will.modulesDownload, o2 );
+    _.routineOptions( cui.modulesDownload, o2 );
     if( o2.recursive === 2 )
     o2.modules = it.roots;
 
-    return will.modulesDownload( o2 );
+    return cui.modulesDownload( o2 );
   }
 
 }
 
+commandSubmodulesVersionsDownload.defaults = commandImply.commandProperties;
+commandSubmodulesVersionsDownload.hint = 'Download each submodule if such was not downloaded so far.';
+commandSubmodulesVersionsDownload.commandSubjectHint = false;
 commandSubmodulesVersionsDownload.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
@@ -2558,7 +2555,7 @@ function commandWith( e )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
 
   will.withPath = path.join( path.current(), will.withPath, path.fromGlob( isolated.commandArgument ) );
-  if( _.strBegins( isolated.secondCommandName, '.module.new' ) )
+  if( _.strBegins( isolated.secondCommandArgument, '.module.new' ) )
   {
     return ca.commandPerform
     ({
@@ -2582,21 +2579,23 @@ function commandWith( e )
       , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
     );
 
-    return ca.commandPerform
-    ({
-      command : isolated.secondCommand,
-    });
+    return it;
+
+    // return ca.commandPerform
+    // ({
+    //   command : isolated.secondCommand,
+    // });
 
   })
-  .finally( ( err, arg ) =>
-  {
-    if( err )
-    will.errEncounter( err );
-    will._commandsEnd( commandWith );
-    if( err )
-    throw _.err( err );
-    return arg;
-  });
+  // .finally( ( err, arg ) =>
+  // {
+  //   if( err )
+  //   will.errEncounter( err );
+  //   will._commandsEnd( commandWith );
+  //   if( err )
+  //   throw _.err( err );
+  //   return arg;
+  // });
 
 }
 
