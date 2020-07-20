@@ -385,17 +385,17 @@ function accessorIsClean( test )
     f1 : { readOnly : 1 },
   }
 
-  var Extend =
+  var Extension =
   {
     Accessors : Accessors,
   }
 
-  // Extend.constructor = BasicConstructor;
+  // Extension.constructor = BasicConstructor;
 
   _.classDeclare
   ({
     cls : BasicConstructor,
-    extend : Extend,
+    extend : Extension,
   });
 
   debugger;
@@ -632,17 +632,17 @@ function forbids( test )
     f1 : 'f1',
   }
 
-  var Extend =
+  var Extension =
   {
     Forbids : Forbids,
   }
 
-  // Extend.constructor = BasicConstructor;
+  // Extension.constructor = BasicConstructor;
 
   _.classDeclare
   ({
     cls : BasicConstructor,
-    extend : Extend,
+    extend : Extension,
   });
 
   var instance = new BasicConstructor();
@@ -862,7 +862,7 @@ function classDeclare( test )
     Class : C3,
     Class0 : C1,
     Statics : Statics2,
-    Extend : Extend2,
+    Extension : Extend2,
     keys : [ 'instances', 'f1', 'f4', 'f2', 'f3' ],
     vals : [ C3.Instances, C3.f1, C3.f4, C1.f2, C1.f3 ],
   });
@@ -918,8 +918,8 @@ function classDeclare( test )
     if( !o.Statics )
     o.Statics = Statics1;
 
-    if( !o.Extend )
-    o.Extend = Extend1;
+    if( !o.Extension )
+    o.Extension = Extend1;
 
     if( !o.keys )
     o.keys = _.mapKeys( o.Statics );
@@ -1268,19 +1268,19 @@ function staticsDeclare( test )
     f3 : [ 'Statics' ],
   }
 
-  var Extend =
+  var Extension =
   {
-    f3 : [ 'Extend' ],
+    f3 : [ 'Extension' ],
     Associates : Associates,
     Statics : Statics,
   }
 
-  // Extend.constructor = BasicConstructor;
+  // Extension.constructor = BasicConstructor;
 
   _.classDeclare
   ({
     cls : BasicConstructor,
-    extend : Extend,
+    extend : Extension,
   });
 
   var instance = new BasicConstructor();
@@ -1377,7 +1377,7 @@ function staticsOverwrite( test )
     instances : [],
   }
 
-  var Extend =
+  var Extension =
   {
     Statics : Statics,
   }
@@ -1385,7 +1385,7 @@ function staticsOverwrite( test )
   _.classDeclare
   ({
     cls : BasicConstructor,
-    extend : Extend,
+    extend : Extension,
   });
 
   var instance0 = new BasicConstructor();
@@ -1403,7 +1403,7 @@ function staticsOverwrite( test )
     instances : [],
   }
 
-  var Extend =
+  var Extension =
   {
     Statics : Statics,
   }
@@ -1412,7 +1412,7 @@ function staticsOverwrite( test )
   ({
     parent : BasicConstructor,
     cls : DerivedConstructor1,
-    extend : Extend,
+    extend : Extension,
   });
 
   var instance1 = new DerivedConstructor1();
@@ -1429,18 +1429,18 @@ function staticsOverwrite( test )
   {
   }
 
-  var Extend =
+  var Extension =
   {
     Statics : Statics,
   }
 
-  // Extend.constructor = DerivedConstructor2;
+  // Extension.constructor = DerivedConstructor2;
 
   _.classDeclare
   ({
     parent : BasicConstructor,
     cls : DerivedConstructor2,
-    extend : Extend,
+    extend : Extension,
   });
 
   var instance2 = new DerivedConstructor2();
@@ -1497,7 +1497,7 @@ function mixinStaticsWithDefinition( test )
     wrap : _.define.contained({ value : wrap }),
   }
 
-  var Extend =
+  var Extension =
   {
     Statics : Statics,
   }
@@ -1505,7 +1505,7 @@ function mixinStaticsWithDefinition( test )
   _.classDeclare
   ({
     cls : Mixin,
-    extend : Extend,
+    extend : Extension,
     withMixin : 1,
   });
 
@@ -1704,16 +1704,16 @@ function mixinStaticsWithDefinition( test )
     {
     }
 
-    var Extend =
+    var Extension =
     {
     }
 
-    Extend.constructor = Mixin;
+    Extension.constructor = Mixin;
 
     _.classDeclare
     ({
       cls : Mixin,
-      extend : Extend,
+      extend : Extension,
       withMixin : 1,
     });
 
@@ -1732,14 +1732,14 @@ function customFieldsGroups( test )
 
   function BasicConstructor(){}
 
-  var Extend =
+  var Extension =
   {
   }
 
   _.classDeclare
   ({
     cls : BasicConstructor,
-    extend : Extend,
+    extend : Extension,
   });
 
   /* */
@@ -1757,7 +1757,7 @@ function customFieldsGroups( test )
     b : [ 1 ],
   }
 
-  var Extend =
+  var Extension =
   {
     Names : Names1,
     Groups : Groups,
@@ -1767,7 +1767,7 @@ function customFieldsGroups( test )
   ({
     parent : BasicConstructor,
     cls : DerivedConstructor1,
-    extend : Extend,
+    extend : Extension,
   });
 
   /* */
@@ -1780,7 +1780,7 @@ function customFieldsGroups( test )
     c : [ 2 ],
   }
 
-  var Extend =
+  var Extension =
   {
     Names : Names2,
   }
@@ -1789,7 +1789,7 @@ function customFieldsGroups( test )
   ({
     parent : DerivedConstructor1,
     cls : DerivedConstructor2,
-    extend : Extend,
+    extend : Extension,
   });
 
   /* */
@@ -1883,7 +1883,7 @@ function staticFieldsPreserving( test )
     console.log( 'basicSet' )
   }
 
-  var Extend =
+  var Extension =
   {
     init : init,
     Statics :
@@ -1896,7 +1896,7 @@ function staticFieldsPreserving( test )
   ({
     cls : BasicConstructor,
     parent : null,
-    extend : Extend,
+    extend : Extension,
   });
 
   /* */
@@ -1911,7 +1911,7 @@ function staticFieldsPreserving( test )
     console.log( 'derivedSet' )
   }
 
-  var Extend =
+  var Extension =
   {
     Statics :
     {
@@ -1923,7 +1923,7 @@ function staticFieldsPreserving( test )
   ({
     parent : BasicConstructor,
     cls : DerivedConstructor1,
-    extend : Extend,
+    extend : Extension,
   });
 
   /* problem */
@@ -1961,7 +1961,7 @@ function instanceConstructor( test )
   }
 
   var counter = 0;
-  var Extend =
+  var Extension =
   {
     init,
   }
@@ -1970,7 +1970,7 @@ function instanceConstructor( test )
   ({
     cls : BasicConstructor,
     parent : null,
-    extend : Extend,
+    extend : Extension,
   });
 
   // /* */

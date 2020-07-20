@@ -85,7 +85,7 @@ function intIs( src )
 
 //
 
-function numbersAre( src )
+function numbersAreAll( src )
 {
   _.assert( arguments.length === 1 );
 
@@ -243,7 +243,7 @@ let Routines =
   numberIsInfinite,
   intIs,
 
-  numbersAre,
+  numbersAreAll,
   numbersAreIdentical,
   numbersAreEquivalent,
   numbersAreFinite,

@@ -183,7 +183,7 @@ function arrayFromCoercing( src )
 //
 // --
 
-let Extend =
+let Extension =
 {
 
   MakeSimilar,
@@ -197,7 +197,7 @@ let Extend =
 
 }
 
-_.mapExtend( nameSpace, Extend );
+_.mapExtend( nameSpace, Extension );
 _.assert( !LongDescriptors[ ArrayName ] );
 
 LongDescriptors[ ArrayName ] = nameSpace;
@@ -335,7 +335,7 @@ longDeclare({ name : 'Fx', secondName : 'Float32', aliasName : 'F32x', type : _g
 
 //
 
-let Extend =
+let Extension =
 {
   makeFor_functor,
   fromFor_functor,
@@ -344,7 +344,7 @@ let Extend =
   LongDescriptor,
 }
 
-Object.assign( wModuleForTesting1, Extend );
+Object.assign( wModuleForTesting1, Extension );
 
 // --
 //
