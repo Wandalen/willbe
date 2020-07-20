@@ -428,7 +428,7 @@ function _commandsMake()
     'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  },
     'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    },
     'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify ),    },
-    'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     h : 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.' },
+    'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     },
 
     'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       h : 'Run shell command on the module.' },
     'do' :                              { e : _.routineJoin( will, will.commandDo ),                          h : 'Run JS script on the module.' },
@@ -1770,18 +1770,14 @@ commandSubmodulesVersionsVerify.commandProperties =
 
 function commandSubmodulesVersionsAgree( e )
 {
-  let will = this;
+  let cui = this;
+  cui._command_pre( commandSubmodulesVersionsAgree, arguments );
 
-  let propertiesMap = _.strStructureParse( e.commandArgument );
-  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsAgree.defaults );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  cui._propertiesImply( implyMap );
 
-  let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsAgree.commandProperties );
-  propertiesMap = _.mapBut( propertiesMap, implyMap );
-  will._propertiesImply( implyMap );
-
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
-
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'submodules versions agree',
@@ -1791,13 +1787,16 @@ function commandSubmodulesVersionsAgree( e )
 
   function handleEach( it )
   {
-    let o2 = will.filterImplied();
-    o2 = _.mapExtend( o2, e.propertiesMap )
+    let o2 = cui.filterImplied();
+    o2 = _.mapExtend( o2, e.propertiesMap );
     return it.opener.openedModule.subModulesAgree( o2 );
   }
 
 }
 
+commandSubmodulesVersionsAgree.defaults = commandImply.commandProperties;
+commandSubmodulesVersionsAgree.hint = 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.';
+commandSubmodulesVersionsAgree.commandSubjectHint = false;
 commandSubmodulesVersionsAgree.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
