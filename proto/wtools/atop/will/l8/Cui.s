@@ -2576,8 +2576,9 @@ function commandWith( e )
   {
     will.currentOpeners = it.sortedOpeners;
 
+    debugger;
     if( !will.currentOpeners.length )
-    if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], ( parsed, command ) => parsed.command === command ) )
+    if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], ( parsed, command ) => parsed.commandName === command ) )
     throw _.errBrief
     (
         `No module sattisfy criteria.`
