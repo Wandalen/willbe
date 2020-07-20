@@ -421,7 +421,7 @@ function _commandsMake()
     'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean ),             h : 'Delete all downloaded submodules.' },
     'submodules add' :                  { e : _.routineJoin( will, will.commandSubmodulesAdd ),               },
     'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            },
-    'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           h : 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.' },
+    'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           },
 
     'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  h : 'Download each submodule if such was not downloaded so far.' },
     'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
@@ -1566,7 +1566,7 @@ function commandSubmodulesFixate( e )
   let cui = this;
   cui._command_pre( commandSubmodulesFixate, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandModulesTree.defaults );
+  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesFixate.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
   cui._propertiesImply( implyMap );
 
@@ -1611,23 +1611,18 @@ commandSubmodulesFixate.commandProperties =
 
 function commandSubmodulesUpgrade( e )
 {
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let cui = this;
+  cui._command_pre( commandSubmodulesUpgrade, arguments );
 
-  let propertiesMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesUpgrade.defaults );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  cui._propertiesImply( implyMap );
 
-  let implyMap = _.mapBut( propertiesMap, commandSubmodulesUpgrade.commandProperties );
-  propertiesMap = _.mapBut( propertiesMap, implyMap );
-  will._propertiesImply( implyMap );
-
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
   e.propertiesMap.upgrading = 1;
   e.propertiesMap.reportingNegative = e.propertiesMap.negative;
   delete e.propertiesMap.negative;
 
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'upgrade submodules',
@@ -1642,6 +1637,9 @@ function commandSubmodulesUpgrade( e )
 
 }
 
+commandSubmodulesUpgrade.defaults = commandImply.commandProperties;
+commandSubmodulesUpgrade.hint = 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.';
+commandSubmodulesUpgrade.commandSubjectHint = false;
 commandSubmodulesUpgrade.commandProperties =
 {
   dry : 'Dry run without writing. Default is dry:0.',
