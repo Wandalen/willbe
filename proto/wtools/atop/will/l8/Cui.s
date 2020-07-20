@@ -427,7 +427,7 @@ function _commandsMake()
     'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    },
     'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  },
     'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    },
-    'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify ),    h : 'Check whether each submodule is on branch which is specified in willfile' },
+    'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify ),    },
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     h : 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.' },
 
     'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       h : 'Run shell command on the module.' },
@@ -1734,18 +1734,14 @@ commandSubmodulesVersionsUpdate.commandProperties =
 
 function commandSubmodulesVersionsVerify( e )
 {
-  let will = this;
+  let cui = this;
+  cui._command_pre( commandSubmodulesVersionsVerify, arguments );
 
-  let propertiesMap = _.strStructureParse( e.commandArgument );
-  _.sure( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsVerify.defaults );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  cui._propertiesImply( implyMap );
 
-  let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsVerify.commandProperties );
-  propertiesMap = _.mapBut( propertiesMap, implyMap );
-  will._propertiesImply( implyMap );
-
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
-
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'submodules versions verify',
@@ -1755,12 +1751,15 @@ function commandSubmodulesVersionsVerify( e )
 
   function handleEach( it )
   {
-    let o2 = will.filterImplied();
-    o2 = _.mapExtend( o2, e.propertiesMap )
+    let o2 = cui.filterImplied();
+    o2 = _.mapExtend( o2, e.propertiesMap );
     return it.opener.openedModule.submodulesVerify( o2 );
   }
 }
 
+commandSubmodulesVersionsVerify.defaults = commandImply.commandProperties;
+commandSubmodulesVersionsVerify.hint = 'Check whether each submodule is on branch which is specified in willfile';
+commandSubmodulesVersionsVerify.commandSubjectHint = false;
 commandSubmodulesVersionsVerify.commandProperties =
 {
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
