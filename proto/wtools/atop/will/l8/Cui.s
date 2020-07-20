@@ -424,9 +424,9 @@ function _commandsMake()
     'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           },
 
     'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  },
-    'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
+    'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    },
     'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  },
-    'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    h : 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.' },
+    'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    },
     'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify ),    h : 'Check whether each submodule is on branch which is specified in willfile' },
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     h : 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.' },
 
@@ -1696,20 +1696,14 @@ commandSubmodulesVersionsDownload.commandProperties =
 
 function commandSubmodulesVersionsUpdate( e )
 {
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let cui = this;
+  cui._command_pre( commandSubmodulesVersionsUpdate, arguments );
 
-  let propertiesMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsUpdate.defaults );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  cui._propertiesImply( implyMap );
 
-  let implyMap = _.mapBut( propertiesMap, commandSubmodulesVersionsUpdate.commandProperties );
-  propertiesMap = _.mapBut( propertiesMap, implyMap );
-  will._propertiesImply( implyMap );
-
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap )
-
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'update submodules',
@@ -1719,13 +1713,16 @@ function commandSubmodulesVersionsUpdate( e )
 
   function handleEach( it )
   {
-    let o2 = will.filterImplied();
-    o2 = _.mapExtend( o2, e.propertiesMap )
+    let o2 = cui.filterImplied();
+    o2 = _.mapExtend( o2, e.propertiesMap );
     return it.opener.openedModule.subModulesUpdate( o2 );
   }
 
 }
 
+commandSubmodulesVersionsUpdate.defaults = commandImply.commandProperties;
+commandSubmodulesVersionsUpdate.hint = 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.';
+commandSubmodulesVersionsUpdate.commandSubjectHint = false;
 commandSubmodulesVersionsUpdate.commandProperties =
 {
   dry : 'Dry run without actually writing or deleting files. Default is dry:0.',
