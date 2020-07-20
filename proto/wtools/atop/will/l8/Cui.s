@@ -100,13 +100,14 @@ function exec()
   let appArgs = _.process.args({ keyValDelimeter : 0 });
   let ca = will._commandsMake();
 
-  if( _.longHasAny( appArgs.scriptArgs, [ '.module.new', '.module.new.with' ] ) )
-  ca.commandsImplicitDelimiting = 0; // Dmytro : temporary, it imitates old behavior of command .module.new
-
   return _.Consequence
   .Try( () =>
-  {
-    return ca.programPerform({ program : _.strUnquote( appArgs.original ) });
+    {
+      return ca.programPerform
+      ({
+        program : _.strUnquote( appArgs.original ),
+        withParsed : 1,
+      });
     // return ca.appArgsPerform({ appArgs });
     /* qqq2 : make use of
     return ca.programPerform({ program : appArgs.original });
@@ -1053,7 +1054,7 @@ function commandImply( e )
   cui.implied = null;
   cui._command_pre( commandImply, arguments );
 
-  cui.implied = e.propertiesMap;
+  cui.implied = _.mapExtend( null, e.propertiesMap );
   cui._propertiesImply( cui.implied );
 
 }
@@ -1921,7 +1922,6 @@ function commandDo( e )
   let logger = will.logger;
   let ready = new _.Consequence().take( null );
   let time = _.time.now();
-  let isolated = e.ca.commandIsolateSecondFromArgument( e.commandArgument );
   let execPath = e.commandArgument;
 
   return will._commandBuildLike
@@ -1943,6 +1943,7 @@ function commandDo( e )
 
   function handleEach( it )
   {
+    debugger;
     let it2 = _.mapOnly( it, will.hookContextFrom.defaults );
     it2.execPath = execPath;
     it2 = will.hookContextFrom( it2 );
@@ -2557,13 +2558,14 @@ function commandWith( e )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
 
   will.withPath = path.join( path.current(), will.withPath, path.fromGlob( isolated.commandArgument ) );
-  if( isolated.secondCommandName && _.strBegins( isolated.secondCommandName, '.module.new' ) )
-  {
-    return ca.commandPerform
-    ({
-      command : isolated.secondCommand,
-    });
-  }
+
+  // if( isolated.secondCommandName && _.strBegins( isolated.secondCommandName, '.module.new' ) )
+  // {
+  //   return ca.commandPerform
+  //   ({
+  //     command : isolated.secondCommand,
+  //   });
+  // }
 
   return will.modulesFindWithAt
   ({
@@ -2575,6 +2577,7 @@ function commandWith( e )
     will.currentOpeners = it.sortedOpeners;
 
     if( !will.currentOpeners.length )
+    if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], ( parsed, command ) => parsed.command === command ) )
     throw _.errBrief
     (
         `No module sattisfy criteria.`
