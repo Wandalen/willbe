@@ -466,7 +466,7 @@ function _commandsMake()
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       },
-    'package version' :                 { e : _.routineJoin( will, will.commandPackageVersion ),              h : 'Use "package local version" to get version of installed package.' },
+    'package version' :                 { e : _.routineJoin( will, will.commandPackageVersion ),              },
 
   }
 
@@ -3450,12 +3450,12 @@ commandPackageRemoteVersions.commandProperties =
 
 function commandPackageVersion( e )
 {
-  let will = this;
-  let logger = will.logger;
+  let cui = this;
+  cui._command_pre( commandPackageVersion, arguments );
+
   let ready = new _.Consequence().take( null );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
-
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
   let options = _.strStructureParse( isolated[ 2 ] );
 
@@ -3535,7 +3535,8 @@ function commandPackageVersion( e )
 
     let o =
     {
-      execPath, ready,
+      execPath,
+      ready,
       inputMirroring : 0,
       throwingExitCode : 0
     }
@@ -3548,7 +3549,8 @@ function commandPackageVersion( e )
 
     let o =
     {
-      execPath, ready,
+      execPath,
+      ready,
       inputMirroring : 0,
       throwingExitCode : 0
     }
@@ -3561,7 +3563,8 @@ function commandPackageVersion( e )
 
     let o =
     {
-      execPath, ready,
+      execPath,
+      ready,
       inputMirroring : 0,
       throwingExitCode : 0
     }
@@ -3569,9 +3572,8 @@ function commandPackageVersion( e )
   }
 }
 
-commandPackageVersion.commandProperties =
-{
-}
+commandPackageVersion.hint = 'Use "package local version" to get version of installed package.';
+commandPackageVersion.commandSubjectHint = 'A name of package.';
 
 // --
 // relations
