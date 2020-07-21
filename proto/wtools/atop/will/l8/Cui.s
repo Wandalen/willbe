@@ -457,9 +457,9 @@ function _commandsMake()
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      },
 
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        },
-    'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
+    'each' :                            { e : _.routineJoin( will, will.commandEach ),                        },
 
-    'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile ),             h : 'Use "npm from willfile" to generate "package.json" file from willfile.' },
+    'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile ),             },
     'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm ),             h : 'Use "willfile from npm" to generate ".will.yml" file from "package.json".' },
     'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
     'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
@@ -2594,6 +2594,7 @@ function commandWith( e )
   let cui = this.form();
   let ca = e.ca;
   let path = cui.fileProvider.path;
+  cui._command_pre( commandWith, arguments );
 
   if( cui.currentOpener )
   {
@@ -2665,6 +2666,7 @@ function commandEach( e )
   let isolated = ca.commandIsolateSecondFromArgument( e.commandArgument );
   if( !isolated )
   throw _.errBrief( 'Format of .each command should be: .each {-path-} .command' );
+  let commandIndex = _.longLeftIndex( e.parsedCommands, '.each', ( parsed, command ) => parsed.commandName === command );
 
   _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
 
@@ -2730,10 +2732,10 @@ function commandEach( e )
     logger.up();
     levelUp = 1;
 
-    // debugger;
+    debugger;
     let r = ca.commandPerform
     ({
-      command : isolated.secondCommand,
+      command : e.parsedCommands[ commandIndex + 1 ].command,
     });
 
     _.assert( r !== undefined );
@@ -2790,19 +2792,22 @@ function commandEach( e )
 
 }
 
+commandEach.hint = 'Use "each" to iterate each module in a directory.';
+
 //
 
 function commandNpmFromWillfile( e )
 {
-  let will = this;
-  let request = _.strStructureParse( e.commandArgument );
-  let criterionsMap = _.mapBut( request, commandNpmFromWillfile.commandProperties );
-  request = _.mapBut( request, criterionsMap );
+  let cui = this;
+  let criterionsMap = _.mapBut( e.propertiesMap, commandNpmFromWillfile.defaults );
+  e.propertiesMap = _.mapOnly( e.propertiesMap, commandNpmFromWillfile.defaults );
+  cui._command_pre( commandNpmFromWillfile, arguments );
+  _.routineOptions( commandNpmFromWillfile, e.propertiesMap );
 
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
-    name : 'npm from willfile',
+    name : 'npm from cuifile',
     onEach : handleEach,
     commandRoutine : commandNpmFromWillfile,
   });
@@ -2815,9 +2820,7 @@ function commandNpmFromWillfile( e )
 
     return it.opener.openedModule.npmGenerateFromWillfile
     ({
-      packagePath : request.packagePath,
-      entryPath : request.entryPath,
-      filesPath : request.filesPath,
+      ... e.propertiesMap,
       currentContext,
       verbosity : 2,
     });
@@ -2825,11 +2828,19 @@ function commandNpmFromWillfile( e )
 
 }
 
+commandNpmFromWillfile.defaults =
+{
+  packagePath : null,
+  entryPath : null,
+  filesPath : null,
+};
+commandNpmFromWillfile.hint = 'Use "npm from willfile" to generate "package.json" file from willfile.';
+commandNpmFromWillfile.commandSubjectHint = false;
 commandNpmFromWillfile.commandProperties =
 {
-  packagePath : 'Path to generated file. Default is "./package.json". Could be a selector. C',
-  entryPath : 'Path to source willfiles. Default is current directory "./" and unnamed willfiles. Could be a selector.',
-  filesPath : 'Path to directory with files that are included in section "files" of "package.json". By default, "package.json" includes no section "files". Could be a selector.',
+  packagePath : 'Path to generated file. Default is "./package.json".',
+  entryPath : 'Path to source willfiles. Default is current directory "./" and unnamed willfiles.',
+  filesPath : 'Path to directory with files that are included in section "files" of "package.json". By default, "package.json" includes no section "files".',
 };
 
 //
