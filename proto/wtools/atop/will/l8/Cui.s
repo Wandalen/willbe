@@ -451,7 +451,7 @@ function _commandsMake()
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     },
     'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    },
-    'git status' :                      { e : _.routineJoin( will, will.commandGitStatus ),                   h : 'Use "git status" to check the status of the repository.' },
+    'git status' :                      { e : _.routineJoin( will, will.commandGitStatus ),                   },
     'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     h : 'Use "git sync" to syncronize local and remote repositories.' },
     'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      h : 'Use "git tag" to add tag for current commit.' },
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks.' },
@@ -1087,6 +1087,8 @@ commandImply.commandProperties =
   withInvalid : 'Include invalid modules. Default is 1.',
   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : depends.',
   recursive : 'Recursive action for modules. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
+  dirPath : 'Path to local directory. Default is directory of current module.',
+  dry : 'Dry run without resetting. Default is dry:0.',
 };
 
 // function commandImply( e )
@@ -2420,14 +2422,14 @@ commandGitReset.commandProperties =
 
 function commandGitStatus( e )
 {
-  let will = this;
-  let optionsMap = _.strStructureParse( e.commandArgument );
-  _.routineOptions( commandGitStatus, optionsMap );
-  optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
-  if( will.withSubmodules === null )
-  will._propertiesImply({ withSubmodules : 0 });
+  let cui = this;
+  cui._command_pre( commandGitStatus, arguments );
 
-  return will._commandBuildLike
+  _.routineOptions( commandGitStatus, e.propertiesMap );
+  if( cui.withSubmodules === undefined || cui.withSubmodules === null )
+  cui._propertiesImply({ withSubmodules : 0 });
+
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'git status',
@@ -2439,7 +2441,7 @@ function commandGitStatus( e )
   {
     return it.opener.openedModule.gitStatus
     ({
-      ... optionsMap,
+      ... e.propertiesMap,
     });
   }
 }
@@ -2453,8 +2455,9 @@ commandGitStatus.defaults =
   prs : 1,
   v : null,
   verbosity : 1,
-}
-
+};
+commandGitStatus.hint = 'Use "git status" to check the status of the repository.';
+commandGitStatus.commandSubjectHint = false;
 commandGitStatus.commandProperties =
 {
   local : 'Check local commits. Default value is 1.',
@@ -2464,7 +2467,7 @@ commandGitStatus.commandProperties =
   prs : 'Check pull requests. Default is dry:1.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
-}
+};
 
 
 //
