@@ -453,7 +453,7 @@ function _commandsMake()
     'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    },
     'git status' :                      { e : _.routineJoin( will, will.commandGitStatus ),                   },
     'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     },
-    'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      h : 'Use "git tag" to add tag for current commit.' },
+    'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      },
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks.' },
 
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
@@ -2520,14 +2520,14 @@ commandGitSync.commandProperties =
 
 function commandGitTag( e )
 {
-  let will = this;
-  let optionsMap = _.strStructureParse( e.commandArgument );
-  _.routineOptions( commandGitTag, optionsMap );
-  optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
-  if( will.withSubmodules === null )
-  will._propertiesImply({ withSubmodules : 0 });
+  let cui = this;
+  cui._command_pre( commandGitTag, arguments );
 
-  return will._commandBuildLike
+  _.routineOptions( commandGitTag, e.propertiesMap );
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply({ withSubmodules : 0 });
+
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'git tag',
@@ -2539,7 +2539,7 @@ function commandGitTag( e )
   {
     return it.opener.openedModule.gitTag
     ({
-      ... optionsMap,
+      ... e.propertiesMap,
     });
   }
 }
@@ -2552,8 +2552,9 @@ commandGitTag.defaults =
   light : 0,
   v : null,
   verbosity : 1,
-}
-
+};
+commandGitTag.hint = 'Use "git tag" to add tag for current commit.';
+commandGitTag.commandSubjectHint = false;
 commandGitTag.commandProperties =
 {
   name : 'Tag name. Default is name:".".',
@@ -2562,7 +2563,7 @@ commandGitTag.commandProperties =
   light : 'Enables lightweight tags. Default is light:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
-}
+};
 
 //
 
