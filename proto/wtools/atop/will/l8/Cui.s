@@ -456,7 +456,7 @@ function _commandsMake()
     'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      },
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      },
 
-    'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
+    'with' :                            { e : _.routineJoin( will, will.commandWith ),                        },
     'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
 
     'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile ),             h : 'Use "npm from willfile" to generate "package.json" file from willfile.' },
@@ -2588,76 +2588,57 @@ commandGitPreservingHardLinks.commandSubjectHint = 'Any subject to enable preser
 // --
 
 /* xxx : add test routine checking wrong syntax error handling */
+
 function commandWith( e )
 {
-  let will = this.form();
+  let cui = this.form();
   let ca = e.ca;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
+  let path = cui.fileProvider.path;
 
-  if( will.currentOpener )
+  if( cui.currentOpener )
   {
-    will.currentOpener.finit();
-    will.currentOpenerChange( null );
+    cui.currentOpener.finit();
+    cui.currentOpenerChange( null );
   }
 
   _.sure( _.strDefined( e.commandArgument ), 'Expects path to module' );
   _.assert( arguments.length === 1 );
 
-  will._commandsBegin( commandWith );
+  cui._commandsBegin( commandWith );
 
   let isolated = ca.commandIsolateSecondFromArgument( e.commandArgument );
   if( !isolated )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
 
-  will.withPath = path.join( path.current(), will.withPath, path.fromGlob( isolated.commandArgument ) );
+  cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( isolated.commandArgument ) );
 
-  // if( isolated.secondCommandName && _.strBegins( isolated.secondCommandName, '.module.new' ) )
-  // {
-  //   return ca.commandPerform
-  //   ({
-  //     command : isolated.secondCommand,
-  //   });
-  // }
-
-  return will.modulesFindWithAt
+  return cui.modulesFindWithAt
   ({
     selector : isolated.commandArgument,
     atLeastOne : !path.isGlob( isolated.commandArgument ),
   })
   .then( function( it )
   {
-    will.currentOpeners = it.sortedOpeners;
+    cui.currentOpeners = it.sortedOpeners;
 
-    debugger;
-    if( !will.currentOpeners.length )
-    if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], ( parsed, command ) => parsed.commandName === command ) )
-    throw _.errBrief
-    (
-        `No module sattisfy criteria.`
-      , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
-    );
+    if( !cui.currentOpeners.length )
+    {
+      let equalizer = ( parsed, command ) => parsed.commandName === command;
+      if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
+      throw _.errBrief
+      (
+          `No module sattisfy criteria.`
+        , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
+      );
+    }
 
     return it;
-
-    // return ca.commandPerform
-    // ({
-    //   command : isolated.secondCommand,
-    // });
-
   })
-  // .finally( ( err, arg ) =>
-  // {
-  //   if( err )
-  //   will.errEncounter( err );
-  //   will._commandsEnd( commandWith );
-  //   if( err )
-  //   throw _.err( err );
-  //   return arg;
-  // });
 
 }
+
+commandWith.hint = 'Use "with" to select a module.';
+commandWith.commandSubjectHint = 'A module selector.';
 
 //
 
