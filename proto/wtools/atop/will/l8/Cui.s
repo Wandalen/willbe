@@ -460,7 +460,7 @@ function _commandsMake()
     'each' :                            { e : _.routineJoin( will, will.commandEach ),                        },
 
     'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile ),             },
-    'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm ),             h : 'Use "willfile from npm" to generate ".will.yml" file from "package.json".' },
+    'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm ),             },
     'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
     'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              h : 'Use "package install" to install target package.' },
@@ -2847,42 +2847,42 @@ commandNpmFromWillfile.commandProperties =
 
 function commandWillfileFromNpm( e )
 {
-  let will = this;
-  let request = _.strStructureParse( e.commandArgument );
-  let criterionsMap = _.mapBut( request, commandWillfileFromNpm.commandProperties );
-  request = _.mapBut( request, criterionsMap );
+  let cui = this;
+  let criterionsMap = _.mapBut( e.propertiesMap, commandWillfileFromNpm.defaults );
+  e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileFromNpm.defaults );
+  cui._command_pre( commandWillfileFromNpm, arguments );
+  _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
 
-  if( will.currentOpeners && will.currentOpeners.length )
+  if( cui.currentOpeners && cui.currentOpeners.length )
   {
-    return will._commandBuildLike
+    return cui._commandBuildLike
     ({
       event : e,
-      name : 'npm from willfile',
+      name : 'npm from cuifile',
       onEach : handleEach,
       commandRoutine : commandWillfileFromNpm,
     });
   }
   else
   {
-    will.modulesFindWithAt( { atLeastOne: 1, selector: "./", tracing: 1 } )
+    cui.modulesFindWithAt( { atLeastOne: 1, selector: "./", tracing: 1 } )
     .finally( function( err, it )
     {
       if( err )
       throw _.err( err );
 
-      will.currentOpeners = it.openers;
-      if( !will.currentOpeners.length )
-      return _.will.Module.prototype.willfileGenerateFromNpm.call( will,
+      cui.currentOpeners = it.openers;
+      if( !cui.currentOpeners.length )
+      return _.will.Module.prototype.willfileGenerateFromNpm.call( cui,
       {
-        packagePath : request.packagePath,
-        willfilePath : request.willfilePath,
-        verbosity : 5,
+        ... e.propertiesMap,
+        verbosity : 3,
       });
 
-      return will._commandBuildLike
+      return cui._commandBuildLike
       ({
         event : e,
-        name : 'npm from willfile',
+        name : 'npm from cuifile',
         onEach : handleEach,
         commandRoutine : commandWillfileFromNpm,
       });
@@ -2896,14 +2896,20 @@ function commandWillfileFromNpm( e )
     let currentContext = it.opener.openedModule.stepMap[ "willfile.generate" ];
     return it.opener.openedModule.willfileGenerateFromNpm
     ({
-      packagePath : request.packagePath,
-      willfilePath : request.willfilePath,
+      ... e.propertiesMap,
       currentContext,
-      verbosity : 5,
+      verbosity : 3,
     });
   }
 }
 
+commandWillfileFromNpm.defaults =
+{
+  packagePath : null,
+  willfilePath : null,
+};
+commandWillfileFromNpm.hint = 'Use "willfile from npm" to generate ".will.yml" file from "package.json".';
+commandWillfileFromNpm.commandSubjectHint = false;
 commandWillfileFromNpm.commandProperties =
 {
   packagePath : 'Path to source json file. Default is "./package.json". Could be a selector.',
