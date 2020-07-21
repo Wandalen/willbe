@@ -465,7 +465,7 @@ function _commandsMake()
     'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        },
-    'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       h : 'Use "package remote versions" to get list of package versions avaiable in remote archive' },
+    'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       },
     'package version' :                 { e : _.routineJoin( will, will.commandPackageVersion ),              h : 'Use "package local version" to get version of installed package.' },
 
   }
@@ -3160,8 +3160,9 @@ commandPackageInstall.commandProperties =
 
 function commandPackageLocalVersions( e )
 {
-  let will = this;
+  let cui = this;
   cui._command_pre( commandPackageLocalVersions, arguments );
+
   let ready = new _.Consequence().take( null );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
@@ -3287,8 +3288,10 @@ commandPackageLocalVersions.commandSubjectHint = 'A name of package.';
 
 function commandPackageRemoteVersions( e )
 {
-  let will = this;
-  let logger = will.logger;
+  let cui = this;
+  cui._command_pre( commandPackageRemoteVersions, arguments );
+
+  let logger = cui.logger;
   let ready = new _.Consequence().take( null );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
@@ -3390,7 +3393,8 @@ function commandPackageRemoteVersions( e )
 
     let o =
     {
-      execPath, ready,
+      execPath,
+      ready,
       inputMirroring : 0
     }
     _.process.start( o );
@@ -3415,7 +3419,8 @@ function commandPackageRemoteVersions( e )
     let execPath = 'choco list --all ' + parsed.longPath;
     let o =
     {
-      execPath, ready,
+      execPath,
+      ready,
       inputMirroring : 0
     }
     _.process.start( o );
@@ -3423,7 +3428,7 @@ function commandPackageRemoteVersions( e )
 
   function remoteVersionsDarwin()
   {
-    //Vova: lists only versions known for current version of brew
+    // Vova: lists only versions known for current version of brew
     let execPath = 'brew search ' + parsed.longPath;
     let o =
     {
@@ -3433,6 +3438,9 @@ function commandPackageRemoteVersions( e )
     _.process.start( o );
   }
 }
+
+commandPackageRemoteVersions.hint = 'Use "package remote versions" to get list of package versions avaiable in remote archive.';
+commandPackageRemoteVersions.commandSubjectHint = 'A name of package.';
 commandPackageRemoteVersions.commandProperties =
 {
   all : 'Gets verions of package from remote archive.',
