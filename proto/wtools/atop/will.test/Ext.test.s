@@ -27405,7 +27405,7 @@ function commandWillfileSupplementWithOptions( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement .ex* ForExtension about:0' })
+  a.appStart({ args : '.willfile.supplement ./.ex* ForExtension about:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled section about';
@@ -27438,7 +27438,7 @@ function commandWillfileSupplementWithOptions( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement .ex* ForExtension build:0' })
+  a.appStart({ args : '.willfile.supplement ./.ex* ForExtension build:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled section build';
@@ -27465,7 +27465,7 @@ function commandWillfileSupplementWithOptions( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement .ex* ForExtension step:0 contributors:0 name:0' })
+  a.appStart({ args : '.willfile.supplement ./.ex* ForExtension step:0 contributors:0 name:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled section step and fields contributors and name';
@@ -27502,7 +27502,7 @@ function commandWillfileSupplementWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement .im* ForExtension submodulesDisabling:1' })
+  a.appStart({ args : '.willfile.supplement ./.im* ForExtension submodulesDisabling:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'option submodulesDisabling';

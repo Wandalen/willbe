@@ -2969,18 +2969,22 @@ commandWillfileExtend.commandProperties =
 
 function commandWillfileSupplement( e )
 {
-  let will = this;
-  let request = _.will.Resolver.strRequestParse( e.commandArgument );
-  request.map.verbosity = request.map.v !== null && request.map.v >= 0 ? request.map.v : request.map.verbosity;
+  let cui = this;
+  cui._command_pre( commandWillfileExtend, arguments );
 
-  return _.will.Module.prototype.willfileExtend.call( will,
+  return _.will.Module.prototype.willfileExtend.call( cui,
   {
-    request : request.subject,
+    request : e.subject,
     onSection : _.mapSupplement,
-    ... request.map,
+    ... e.propertiesMap,
   });
 }
 
+commandWillfileSupplement.defaults =
+{
+  verbosity : 3,
+  v : 3,
+};
 commandWillfileSupplement.hint = 'Use "willfile supplement" to supplement existing willfile by new data from source configuration files.';
 commandWillfileSupplement.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
 commandWillfileSupplement.commandProperties = commandWillfileExtend.commandProperties;
