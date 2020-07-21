@@ -443,12 +443,12 @@ function _commandsMake()
     'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       },
     'export' :                          { e : _.routineJoin( will, will.commandExport ),                      },
     'export purging' :                  { e : _.routineJoin( will, will.commandExportPurging ),               },
-    'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
+    'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive ),             },
 
     'module new' :                      { e : _.routineJoin( will, will.commandModuleNew ),                   },
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               },
 
-    'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     h : 'Use "git pull" to pull changes from remote repository.' },
+    'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     h : 'Use "git push" to push commits and tags to remote repository.' },
     'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    h : 'Use "git reset" to reset changes.' },
     'git status' :                      { e : _.routineJoin( will, will.commandGitStatus ),                   h : 'Use "git status" to check the status of the repository.' },
@@ -1061,11 +1061,11 @@ function commandImply( e )
 
 commandImply.defaults =
 {
-  v : null,
-  verbosity : null,
+  v : 3,
+  verbosity : 3,
   beeping : null,
   withOut : null,
-  withIn : null,
+  withIn : 1,
   withEnabled : null,
   withDisabled : null,
   withValid : null,
@@ -2298,20 +2298,20 @@ commandExportRecursive.defaults =
 {
   recursive : 1,
 };
-commandExportRecursive.hint = 'Export selected the module with spesified criterion. Save output to output willfile and archive.';
+commandExportRecursive.hint = 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.';
 commandExportRecursive.commandSubjectHint = 'A name of export scenario.';
 
 //
 
 function commandGitPull( e )
 {
-  let will = this;
-  let implyMap = _.strStructureParse( e.commandArgument );
-  if( implyMap.withSubmodules === undefined )
-  implyMap.withSubmodules = will.withSubmodules !== null ? will.withSubmodules : 0;
-  will._propertiesImply( implyMap );
+  let cui = this;
+  cui._command_pre( commandGitPull, arguments );
 
-  return will._commandBuildLike
+  _.routineOptions( commandGitPull, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'git pull',
@@ -2324,11 +2324,15 @@ function commandGitPull( e )
     return it.opener.openedModule.gitPull
     ({
       dirPath : it.junction.dirPath,
-      verbosity : will.verbosity,
+      verbosity : cui.verbosity,
     });
   }
 }
 
+commandGitPull.defaults = _.mapExtend( null, commandImply.defaults );
+commandGitPull.defaults.withSubmodules = 0;
+commandGitPull.hint = 'Use "git pull" to pull changes from remote repository.';
+commandGitPull.commandSubjectHint = 'A name of export scenario.';
 commandGitPull.commandProperties = commandImply.commandProperties;
 
 //
