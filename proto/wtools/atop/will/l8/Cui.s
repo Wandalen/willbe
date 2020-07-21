@@ -1058,6 +1058,19 @@ function commandImply( e )
   cui._propertiesImply( cui.implied );
 
 }
+commandImply.defaults =
+{
+  v : null,
+  verbosity : null,
+  beeping : null,
+  withOut : null,
+  withIn : null,
+  withEnabled : null,
+  withDisabled : null,
+  withValid : null,
+  withInvalid : null,
+  withSubmodules : null,
+};
 commandImply.hint = 'Change state or imply value of a variable';
 commandImply.commandSubjectHint = false;
 commandImply.commandProperties =
@@ -2022,27 +2035,20 @@ commandHooksList.commandProperties = commandImply.commandProperties;
 
 function commandClean( e )
 {
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let cui = this;
+  cui._command_pre( commandClean, arguments );
 
-  let screenMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( screenMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  let implyMap = _.mapOnly( e.propertiesMap, commandImply.commandProperties );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  _.routineOptions( commandClean, implyMap );
+  cui._propertiesImply( implyMap );
 
-  let propertiesMap = _.mapBut( screenMap, commandImply.commandProperties );
-  let implyMap = _.mapBut( screenMap, propertiesMap );
-  if( implyMap.withSubmodules === undefined )
-  implyMap.withSubmodules = will.withSubmodules !== null ? will.withSubmodules : 0;
-  will._propertiesImply( implyMap );
-
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
   e.propertiesMap.dry = !!e.propertiesMap.dry;
-  let dry = e.propertiesMap.dry;
   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
-  e.propertiesMap.fast = !dry;
+  e.propertiesMap.fast = !e.propertiesMap.dry;
   e.propertiesMap.fast = 0; /* xxx */
 
-  return will._commandCleanLike
+  return cui._commandCleanLike
   ({
     event : e,
     name : 'clean',
@@ -2054,25 +2060,23 @@ function commandClean( e )
   {
     _.assert( _.arrayIs( it.openers ) );
 
-    // let o2 = will.filterImplied();
-    let o2 = { ... will.RelationFilterOn };
+    // let o2 = cui.filterImplied();
+    let o2 = { ... cui.RelationFilterOn };
     o2 = _.mapExtend( o2, e.propertiesMap );
     o2.modules = it.openers;
-    _.routineOptions( will.modulesClean, o2 );
+    _.routineOptions( cui.modulesClean, o2 );
     if( o2.recursive === 2 )
     o2.modules = it.roots;
     o2.asCommand = 1;
 
-    return will.modulesClean( o2 );
+    return cui.modulesClean( o2 );
   }
 
 }
 
-commandClean.defaults =
-{
-  withSubmodules : 0,
-}
-
+commandClean.defaults = _.mapExtend( null, commandImply.defaults );
+commandClean.defaults.withSubmodules = 0;
+commandClean.commandSubjectHint = false;
 commandClean.commandProperties =
 {
   dry : 'Dry run without deleting. Default is dry:0.',
