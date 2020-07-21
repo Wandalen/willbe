@@ -2268,13 +2268,10 @@ commandExportPurging.commandSubjectHint = 'A name of export scenario.';
 
 function commandExportRecursive( e )
 {
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
-  let request = _.will.Resolver.strRequestParse( e.commandArgument );
-  let doneContainer = [];
+  let cui = this;
+  cui._command_pre( commandExportRecursive, arguments );
 
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'export',
@@ -2286,16 +2283,23 @@ function commandExportRecursive( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } ),
-      doneContainer,
-      name : request.subject,
-      criterion : request.map,
+      ... _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      doneContainer : [],
+      name : e.subject,
+      criterion : e.propertiesMap,
       recursive : 2,
       kind : 'export',
     });
   }
 
 }
+
+commandExportRecursive.defaults =
+{
+  recursive : 1,
+};
+commandExportRecursive.hint = 'Export selected the module with spesified criterion. Save output to output willfile and archive.';
+commandExportRecursive.commandSubjectHint = 'A name of export scenario.';
 
 //
 
