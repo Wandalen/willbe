@@ -2038,7 +2038,7 @@ function commandClean( e )
   let cui = this;
   cui._command_pre( commandClean, arguments );
 
-  let implyMap = _.mapOnly( e.propertiesMap, commandImply.commandProperties );
+  let implyMap = _.mapOnly( e.propertiesMap, commandClean.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
   _.routineOptions( commandClean, implyMap );
   cui._propertiesImply( implyMap );
@@ -2076,6 +2076,7 @@ function commandClean( e )
 
 commandClean.defaults = _.mapExtend( null, commandImply.defaults );
 commandClean.defaults.withSubmodules = 0;
+commandClean.defaults.verbosity = 3;
 commandClean.commandSubjectHint = false;
 commandClean.commandProperties =
 {
@@ -2093,25 +2094,20 @@ commandClean.commandProperties =
 
 function commandSubmodulesClean( e )
 {
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let cui = this;
+  cui._command_pre( commandSubmodulesClean, arguments );
 
-  let propertiesMap = _.strStructureParse( e.commandArgument );
-  _.assert( _.mapIs( propertiesMap ), () => 'Expects map, but got ' + _.toStrShort( propertiesMap ) );
+  let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesClean.defaults );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  _.routineOptions( commandSubmodulesClean, implyMap );
+  cui._propertiesImply( implyMap );
 
-  let implyMap = _.mapBut( propertiesMap, commandSubmodulesClean.commandProperties );
-  propertiesMap = _.mapBut( propertiesMap, implyMap );
-  will._propertiesImply( implyMap );
-
-  e.propertiesMap = _.mapExtend( e.propertiesMap, propertiesMap );
   e.propertiesMap.dry = !!e.propertiesMap.dry;;
-  let dry = e.propertiesMap.dry;
   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
-  e.propertiesMap.fast = !dry;
+  e.propertiesMap.fast = !e.propertiesMap.dry;
   e.propertiesMap.fast = 0; /* xxx */
 
-  return will._commandCleanLike
+  return cui._commandCleanLike
   ({
     event : e,
     name : 'clean',
@@ -2123,11 +2119,11 @@ function commandSubmodulesClean( e )
   {
     _.assert( _.arrayIs( it.openers ) );
 
-    // let o2 = will.filterImplied();
-    let o2 = { ... will.RelationFilterOn };
+    // let o2 = cui.filterImplied();
+    let o2 = { ... cui.RelationFilterOn };
     o2 = _.mapExtend( o2, e.propertiesMap );
     o2.modules = it.openers;
-    _.routineOptions( will.modulesClean, o2 );
+    _.routineOptions( cui.modulesClean, o2 );
     if( o2.recursive === 2 )
     o2.modules = it.roots;
     o2.asCommand = 1;
@@ -2135,11 +2131,15 @@ function commandSubmodulesClean( e )
     o2.cleaningOut = 0;
     o2.cleaningTemp = 0;
 
-    return will.modulesClean( o2 );
+    return cui.modulesClean( o2 );
   }
 
 }
 
+commandSubmodulesClean.defaults = _.mapExtend( null, commandImply.defaults );
+commandSubmodulesClean.defaults.withSubmodules = 0;
+commandSubmodulesClean.defaults.verbosity = 3;
+commandSubmodulesClean.commandSubjectHint = false;
 commandSubmodulesClean.commandProperties =
 {
   dry : 'Dry run without deleting. Default is dry:0.',
