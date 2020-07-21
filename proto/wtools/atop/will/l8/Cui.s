@@ -450,7 +450,7 @@ function _commandsMake()
 
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     },
-    'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    h : 'Use "git reset" to reset changes.' },
+    'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    },
     'git status' :                      { e : _.routineJoin( will, will.commandGitStatus ),                   h : 'Use "git status" to check the status of the repository.' },
     'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     h : 'Use "git sync" to syncronize local and remote repositories.' },
     'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      h : 'Use "git tag" to add tag for current commit.' },
@@ -2373,14 +2373,14 @@ commandGitPush.commandProperties = commandImply.commandProperties;
 
 function commandGitReset( e )
 {
-  let will = this;
-  let optionsMap = _.strStructureParse( e.commandArgument );
-  _.routineOptions( commandGitReset, optionsMap );
-  optionsMap.verbosity = optionsMap.v !== null && optionsMap.v >= 0 ? optionsMap.v : optionsMap.verbosity;
-  if( will.withSubmodules === null )
-  will._propertiesImply({ withSubmodules : 0 });
+  let cui = this;
+  cui._command_pre( commandGitReset, arguments );
 
-  return will._commandBuildLike
+  _.routineOptions( commandGitReset, e.propertiesMap );
+  if( cui.withSubmodules === undefined || cui.withSubmodules === null )
+  cui._propertiesImply({ withSubmodules : 0 });
+
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'git reset',
@@ -2392,7 +2392,7 @@ function commandGitReset( e )
   {
     return it.opener.openedModule.gitReset
     ({
-      ... optionsMap,
+      ... e.propertiesMap,
     });
   }
 }
@@ -2404,8 +2404,9 @@ commandGitReset.defaults =
   dry : 0,
   v : null,
   verbosity : 2,
-}
-
+};
+commandGitReset.hint = 'Use "git reset" to reset changes.';
+commandGitReset.commandSubjectHint = false;
 commandGitReset.commandProperties =
 {
   dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
@@ -2413,7 +2414,7 @@ commandGitReset.commandProperties =
   dry : 'Dry run without resetting. Default is dry:0.',
   v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
-}
+};
 
 //
 
