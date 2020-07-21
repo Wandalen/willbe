@@ -452,7 +452,7 @@ function _commandsMake()
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     },
     'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    },
     'git status' :                      { e : _.routineJoin( will, will.commandGitStatus ),                   },
-    'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     h : 'Use "git sync" to syncronize local and remote repositories.' },
+    'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     },
     'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      h : 'Use "git tag" to add tag for current commit.' },
     'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks.' },
 
@@ -2379,7 +2379,7 @@ function commandGitReset( e )
   cui._command_pre( commandGitReset, arguments );
 
   _.routineOptions( commandGitReset, e.propertiesMap );
-  if( cui.withSubmodules === undefined || cui.withSubmodules === null )
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
   cui._propertiesImply({ withSubmodules : 0 });
 
   return cui._commandBuildLike
@@ -2426,7 +2426,7 @@ function commandGitStatus( e )
   cui._command_pre( commandGitStatus, arguments );
 
   _.routineOptions( commandGitStatus, e.propertiesMap );
-  if( cui.withSubmodules === undefined || cui.withSubmodules === null )
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
   cui._propertiesImply({ withSubmodules : 0 });
 
   return cui._commandBuildLike
@@ -2474,14 +2474,14 @@ commandGitStatus.commandProperties =
 
 function commandGitSync( e )
 {
-  let will = this;
-  let request = _.will.Resolver.strRequestParse( e.commandArgument );
-  _.routineOptions( commandGitSync, request.map );
-  request.map.verbosity = request.map.v !== null && request.map.v >= 0 ? request.map.v : request.map.verbosity;
-  if( will.withSubmodules === null )
-  will._propertiesImply({ withSubmodules : 0 });
+  let cui = this;
+  cui._command_pre( commandGitSync, arguments );
 
-  return will._commandBuildLike
+  _.routineOptions( commandGitSync, e.propertiesMap );
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply({ withSubmodules : 0 });
+
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'git sync',
@@ -2493,8 +2493,8 @@ function commandGitSync( e )
   {
     return it.opener.openedModule.gitSync
     ({
-      commit : request.subject,
-      ... request.map,
+      commit : e.subject,
+      ... e.propertiesMap,
     });
   }
 }
@@ -2505,13 +2505,16 @@ commandGitSync.defaults =
   dry : 0,
   v : null,
   verbosity : 1,
-}
-
+};
+commandGitSync.hint = 'Use "git sync" to syncronize local and remote repositories.';
+commandGitSync.commandSubjectHint = 'A commit message. Default value is "."';
 commandGitSync.commandProperties =
 {
+  dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
+  dry : 'Dry run without syncronizing. Default is dry:0.',
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
-}
+};
 
 //
 
