@@ -436,8 +436,8 @@ function _commandsMake()
 
     'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       },
     'do' :                              { e : _.routineJoin( will, will.commandDo ),                          },
-    'call' :                            { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
-    'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
+    'call' :                            { e : _.routineJoin( will, will.commandHookCall ),                    },
+    'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    },
     'hooks list' :                      { e : _.routineJoin( will, will.commandHooksList ),                   h : 'List available hooks.' },
     'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
     'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
@@ -1958,16 +1958,15 @@ commandDo.commandSubjectHint = 'A JS script to execute.';
 
 function commandHookCall( e )
 {
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let cui = this;
+  cui._command_pre( commandDo, arguments );
+
+  let path = cui.fileProvider.path;
+  let logger = cui.logger;
   let time = _.time.now();
-  let isolated = e.ca.commandIsolateSecondFromArgument( e.commandArgument );
   let execPath = e.commandArgument;
 
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'call a hook',
@@ -1978,20 +1977,23 @@ function commandHookCall( e )
   })
   .then( ( arg ) =>
   {
-    if( will.verbosity >= 2 )
+    if( cui.verbosity >= 2 )
     logger.log( `Done ${_.color.strFormat( 'hook::' + e.commandArgument, 'entity' )} in ${_.time.spent( time )}` );
     return arg;
   });
 
   function handleEach( it )
   {
-    let it2 = _.mapOnly( it, will.hookContextFrom.defaults );
-    it2.execPath = path.join( will.hooksPath, execPath );
-    it2 = will.hookContextFrom( it2 );
-    return will.hookCall( it2 );
+    let it2 = _.mapOnly( it, cui.hookContextFrom.defaults );
+    it2.execPath = path.join( cui.hooksPath, execPath );
+    it2 = cui.hookContextFrom( it2 );
+    return cui.hookCall( it2 );
   }
 
 }
+
+commandHookCall.hint = 'Call a specified hook on the module.';
+commandHookCall.commandSubjectHint = 'A hook to execute';
 
 //
 
