@@ -435,7 +435,7 @@ function _commandsMake()
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     },
 
     'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       },
-    'do' :                              { e : _.routineJoin( will, will.commandDo ),                          h : 'Run JS script on the module.' },
+    'do' :                              { e : _.routineJoin( will, will.commandDo ),                          },
     'call' :                            { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
     'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    h : 'Call a specified hook on the module.' },
     'hooks list' :                      { e : _.routineJoin( will, will.commandHooksList ),                   h : 'List available hooks.' },
@@ -1881,7 +1881,7 @@ function commandModuleNewWith( e )
 }
 
 commandModuleNewWith.hint = 'Make a new module in the current directory and call a specified hook for the module to prepare it.';
-commandModuleNewWith.commandSubjectHint = 'A path to hook and arguments';
+commandModuleNewWith.commandSubjectHint = 'A path to hook and arguments.';
 
 //
 
@@ -1910,21 +1910,21 @@ function commandShell( e )
 }
 
 commandShell.hint = 'Run shell command on the module.';
-commandShell.commandSubjectHint = 'A command to execute is shell';
+commandShell.commandSubjectHint = 'A command to execute is shell.';
 
 //
 
 function commandDo( e )
 {
-  let will = this;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
+  let cui = this;
+  cui._command_pre( commandDo, arguments );
+  let fileProvider = cui.fileProvider;
+  let path = cui.fileProvider.path;
+  let logger = cui.logger;
   let time = _.time.now();
   let execPath = e.commandArgument;
 
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'do',
@@ -1936,21 +1936,23 @@ function commandDo( e )
   })
   .then( ( arg ) =>
   {
-    if( will.verbosity >= 2 )
+    if( cui.verbosity >= 2 )
     logger.log( `Done ${_.color.strFormat( e.commandArgument, 'code' )} in ${_.time.spent( time )}` );
     return arg;
   });
 
   function handleEach( it )
   {
-    debugger;
-    let it2 = _.mapOnly( it, will.hookContextFrom.defaults );
+    let it2 = _.mapOnly( it, cui.hookContextFrom.defaults );
     it2.execPath = execPath;
-    it2 = will.hookContextFrom( it2 );
-    return will.hookCall( it2 );
+    it2 = cui.hookContextFrom( it2 );
+    return cui.hookCall( it2 );
   }
 
 }
+
+commandDo.hint = 'Run JS script on the module.';
+commandDo.commandSubjectHint = 'A JS script to execute.';
 
 //
 

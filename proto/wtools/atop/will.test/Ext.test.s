@@ -5384,7 +5384,7 @@ function withDoStatus( test )
 
   /* - */
 
-  a.appStart( '.with ** .do .will/hook/status.js' )
+  a.appStart( '.with ** .do ./.will/hook/status.js' )
   .then( ( op ) =>
   {
     test.case = 'no changes';
@@ -5406,7 +5406,7 @@ function withDoStatus( test )
     return null;
   })
 
-  a.appStart( '.with ** .do .will/hook/status.js' )
+  a.appStart( '.with ** .do ./.will/hook/status.js' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
