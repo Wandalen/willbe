@@ -449,7 +449,7 @@ function _commandsMake()
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               },
 
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     },
-    'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     h : 'Use "git push" to push commits and tags to remote repository.' },
+    'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     },
     'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    h : 'Use "git reset" to reset changes.' },
     'git status' :                      { e : _.routineJoin( will, will.commandGitStatus ),                   h : 'Use "git status" to check the status of the repository.' },
     'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     h : 'Use "git sync" to syncronize local and remote repositories.' },
@@ -2332,20 +2332,20 @@ function commandGitPull( e )
 commandGitPull.defaults = _.mapExtend( null, commandImply.defaults );
 commandGitPull.defaults.withSubmodules = 0;
 commandGitPull.hint = 'Use "git pull" to pull changes from remote repository.';
-commandGitPull.commandSubjectHint = 'A name of export scenario.';
+commandGitPull.commandSubjectHint = false;
 commandGitPull.commandProperties = commandImply.commandProperties;
 
 //
 
 function commandGitPush( e )
 {
-  let will = this;
-  let implyMap = _.strStructureParse( e.commandArgument );
-  if( implyMap.withSubmodules === undefined )
-  implyMap.withSubmodules = will.withSubmodules !== null ? will.withSubmodules : 0;
-  will._propertiesImply( implyMap );
+  let cui = this;
+  cui._command_pre( commandGitPush, arguments );
 
-  return will._commandBuildLike
+  _.routineOptions( commandGitPush, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'git push',
@@ -2358,11 +2358,15 @@ function commandGitPush( e )
     return it.opener.openedModule.gitPush
     ({
       dirPath : it.junction.dirPath,
-      verbosity : will.verbosity,
+      verbosity : cui.verbosity,
     });
   }
 }
 
+commandGitPush.defaults = _.mapExtend( null, commandImply.defaults );
+commandGitPush.defaults.withSubmodules = 0;
+commandGitPush.hint = 'Use "git push" to push commits and tags to remote repository.';
+commandGitPush.commandSubjectHint = false;
 commandGitPush.commandProperties = commandImply.commandProperties;
 
 //
