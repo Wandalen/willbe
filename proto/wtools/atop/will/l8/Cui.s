@@ -454,7 +454,7 @@ function _commandsMake()
     'git status' :                      { e : _.routineJoin( will, will.commandGitStatus ),                   },
     'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     },
     'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      },
-    'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      h : 'Use "git config preserving hard links" to switch on preserve hardlinks.' },
+    'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      },
 
     'with' :                            { e : _.routineJoin( will, will.commandWith ),                        h : 'Use "with" to select a module.' },
     'each' :                            { e : _.routineJoin( will, will.commandEach ),                        h : 'Use "each" to iterate each module in a directory.' },
@@ -2569,9 +2569,8 @@ commandGitTag.commandProperties =
 
 function commandGitPreservingHardLinks( e )
 {
-  let will = this;
-  let ca = e.ca;
-  let logger = will.logger;
+  let cui = this;
+  cui._propertiesImply( e.propertiesMap );
 
   let enable = _.numberFrom( e.commandArgument );
 
@@ -2580,6 +2579,9 @@ function commandGitPreservingHardLinks( e )
   else
   _.git.hookPreservingHardLinksUnregister();
 }
+
+commandGitPreservingHardLinks.hint = 'Use "git config preserving hard links" to switch on preserve hardlinks.';
+commandGitPreservingHardLinks.commandSubjectHint = 'Any subject to enable preserving hardliks.';
 
 // --
 // command iterator
