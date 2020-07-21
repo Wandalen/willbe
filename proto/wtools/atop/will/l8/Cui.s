@@ -441,7 +441,7 @@ function _commandsMake()
     'hooks list' :                      { e : _.routineJoin( will, will.commandHooksList ),                   },
     'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       },
     'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       },
-    'export' :                          { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
+    'export' :                          { e : _.routineJoin( will, will.commandExport ),                      },
     'export purging' :                  { e : _.routineJoin( will, will.commandExportPurging ),               h : 'Export selected the module with spesified criterion purging output willfile first. Save output to output willfile and archive.' },
     'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
 
@@ -2193,13 +2193,10 @@ commandBuild.commandSubjectHint = 'A name of build scenario.';
 
 function commandExport( e )
 {
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
-  let request = _.will.Resolver.strRequestParse( e.commandArgument );
-  let doneContainer = [];
+  let cui = this;
+  cui._command_pre( commandExport, arguments );
 
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'export',
@@ -2211,16 +2208,23 @@ function commandExport( e )
   {
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } ),
-      doneContainer,
-      name : request.subject,
-      criterion : request.map,
+      ... _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      doneContainer : [],
+      name : e.subject,
+      criterion : e.propertiesMap,
       recursive : 0,
       kind : 'export',
     });
   }
 
 }
+
+commandExport.defaults =
+{
+  recursive : 1,
+};
+commandExport.hint = 'Export selected the module with spesified criterion. Save output to output willfile and archive.';
+commandExport.commandSubjectHint = 'A name of export scenario.';
 
 //
 
