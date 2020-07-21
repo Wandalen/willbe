@@ -464,7 +464,7 @@ function _commandsMake()
     'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
     'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              },
-    'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        h : 'Use "package local versions" to get list of package versions avaiable locally' },
+    'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       h : 'Use "package remote versions" to get list of package versions avaiable in remote archive' },
     'package version' :                 { e : _.routineJoin( will, will.commandPackageVersion ),              h : 'Use "package local version" to get version of installed package.' },
 
@@ -2997,7 +2997,6 @@ function commandPackageInstall( e )
   cui._command_pre( commandPackageInstall, arguments );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
-
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
   let options = _.strStructureParse( isolated[ 2 ] );
 
@@ -3162,11 +3161,10 @@ commandPackageInstall.commandProperties =
 function commandPackageLocalVersions( e )
 {
   let will = this;
-  let logger = will.logger;
+  cui._command_pre( commandPackageLocalVersions, arguments );
   let ready = new _.Consequence().take( null );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
-
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
   let options = _.strStructureParse( isolated[ 2 ] );
 
@@ -3248,7 +3246,8 @@ function commandPackageLocalVersions( e )
 
     let o =
     {
-      execPath, ready,
+      execPath,
+      ready,
       inputMirroring : 0,
       throwingExitCode : 0,
     }
@@ -3260,7 +3259,8 @@ function commandPackageLocalVersions( e )
     let execPath = 'choco list --all --local-only ' + parsed.longPath;
     let o =
     {
-      execPath, ready,
+      execPath,
+      ready,
       inputMirroring : 0
     }
     _.process.start( o );
@@ -3271,7 +3271,8 @@ function commandPackageLocalVersions( e )
     let execPath = 'brew list --versions ' + parsed.longPath;
     let o =
     {
-      execPath, ready,
+      execPath,
+      ready,
       inputMirroring : 0
     }
     _.process.start( o );
@@ -3279,9 +3280,8 @@ function commandPackageLocalVersions( e )
 
 }
 
-commandPackageLocalVersions.commandProperties =
-{
-}
+commandPackageLocalVersions.hint = 'Use "package local versions" to get list of package versions avaiable locally.';
+commandPackageLocalVersions.commandSubjectHint = 'A name of package.';
 
 //
 
