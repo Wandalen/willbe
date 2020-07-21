@@ -422,7 +422,7 @@ function _commandsMake()
     'about list' :                      { e : _.routineJoin( will, will.commandAboutList ),                   },
     'about' :                           { e : _.routineJoin( will, will.commandAboutList ),                   },
 
-    'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean ),             h : 'Delete all downloaded submodules.' },
+    'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean ),             },
     'submodules add' :                  { e : _.routineJoin( will, will.commandSubmodulesAdd ),               },
     'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            },
     'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           },
@@ -439,8 +439,8 @@ function _commandsMake()
     'call' :                            { e : _.routineJoin( will, will.commandHookCall ),                    },
     'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    },
     'hooks list' :                      { e : _.routineJoin( will, will.commandHooksList ),                   },
-    'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
-    'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
+    'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       },
+    'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       },
     'export' :                          { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
     'export purging' :                  { e : _.routineJoin( will, will.commandExportPurging ),               h : 'Export selected the module with spesified criterion purging output willfile first. Save output to output willfile and archive.' },
     'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive ),             h : 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.' },
@@ -1054,10 +1054,11 @@ function commandImply( e )
   cui.implied = null;
   cui._command_pre( commandImply, arguments );
 
-  cui.implied = _.mapExtend( null, e.propertiesMap );
-  cui._propertiesImply( cui.implied );
+  cui.implied = e.propertiesMap;
+  cui._propertiesImply( _.mapOnly( e.propertiesMap, commandImply.defaults ) );
 
 }
+
 commandImply.defaults =
 {
   v : null,
@@ -1085,7 +1086,8 @@ commandImply.commandProperties =
   withValid : 'Include valid modules. Default is 1.',
   withInvalid : 'Include invalid modules. Default is 1.',
   withSubmodules : 'Opening submodules. 0 - not opening, 1 - opening immediate children, 2 - opening all descendants recursively. Default : depends.',
-}
+  recursive : 'Recursive action for modules. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:0.',
+};
 
 // function commandImply( e )
 // {
@@ -2077,6 +2079,7 @@ function commandClean( e )
 commandClean.defaults = _.mapExtend( null, commandImply.defaults );
 commandClean.defaults.withSubmodules = 0;
 commandClean.defaults.verbosity = 3;
+commandClean.hint = 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.';
 commandClean.commandSubjectHint = false;
 commandClean.commandProperties =
 {
@@ -2139,6 +2142,7 @@ function commandSubmodulesClean( e )
 commandSubmodulesClean.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesClean.defaults.withSubmodules = 0;
 commandSubmodulesClean.defaults.verbosity = 3;
+commandSubmodulesClean.hint = 'Delete all downloaded submodules.';
 commandSubmodulesClean.commandSubjectHint = false;
 commandSubmodulesClean.commandProperties =
 {
@@ -2152,13 +2156,10 @@ commandSubmodulesClean.commandProperties =
 
 function commandBuild( e )
 {
-  let will = this;
-  let logger = will.logger;
-  let ready = new _.Consequence().take( null );
-  let request = _.will.Resolver.strRequestParse( e.commandArgument );
-  let doneContainer = [];
+  let cui = this;
+  cui._command_pre( commandBuild, arguments );
 
-  return will._commandBuildLike
+  return cui._commandBuildLike
   ({
     event : e,
     name : 'build',
@@ -2170,16 +2171,23 @@ function commandBuild( e )
   {
     return it.opener.openedModule.modulesBuild
     ({
-      ... _.mapBut( will.RelationFilterOn, { withIn : null, withOut : null } ),
-      doneContainer,
-      name : request.subject,
-      criterion : request.map,
+      ... _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      doneContainer : [],
+      name : e.subject,
+      criterion : e.propertiesMap,
       recursive : 0,
       kind : 'build',
     });
   }
 
 }
+
+commandBuild.defaults =
+{
+  recursive : 1,
+};
+commandBuild.hint = 'Build current module with spesified criterion.';
+commandBuild.commandSubjectHint = 'A name of build scenario.';
 
 //
 
