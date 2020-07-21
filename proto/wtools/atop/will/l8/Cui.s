@@ -463,7 +463,7 @@ function _commandsMake()
     'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm ),             },
     'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
     'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
-    'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              h : 'Use "package install" to install target package.' },
+    'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        h : 'Use "package local versions" to get list of package versions avaiable locally' },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       h : 'Use "package remote versions" to get list of package versions avaiable in remote archive' },
     'package version' :                 { e : _.routineJoin( will, will.commandPackageVersion ),              h : 'Use "package local version" to get version of installed package.' },
@@ -2993,8 +2993,8 @@ commandWillfileSupplement.commandProperties = commandWillfileExtend.commandPrope
 
 function commandPackageInstall( e )
 {
-  let will = this;
-  let logger = will.logger;
+  let cui = this;
+  cui._command_pre( commandPackageInstall, arguments );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
 
@@ -3149,6 +3149,8 @@ function commandPackageInstall( e )
   }
 }
 
+commandPackageInstall.hint = 'Use "package install" to install target package.';
+commandPackageInstall.commandSubjectHint = 'A name or path to package.';
 commandPackageInstall.commandProperties =
 {
   sudo : 'Install package with privileges of superuser.',
