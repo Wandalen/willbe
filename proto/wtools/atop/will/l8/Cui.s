@@ -438,7 +438,7 @@ function _commandsMake()
     'do' :                              { e : _.routineJoin( will, will.commandDo ),                          },
     'call' :                            { e : _.routineJoin( will, will.commandHookCall ),                    },
     'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    },
-    'hooks list' :                      { e : _.routineJoin( will, will.commandHooksList ),                   h : 'List available hooks.' },
+    'hooks list' :                      { e : _.routineJoin( will, will.commandHooksList ),                   },
     'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       h : 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.' },
     'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       h : 'Build current module with spesified criterion.' },
     'export' :                          { e : _.routineJoin( will, will.commandExport ),                      h : 'Export selected the module with spesified criterion. Save output to output willfile and archive.' },
@@ -1999,16 +1999,24 @@ commandHookCall.commandSubjectHint = 'A hook to execute';
 
 function commandHooksList( e )
 {
-  let will = this.form();
-  let logger = will.logger;
+  let cui = this.form();
+  cui._command_pre( commandHooksList, arguments );
 
-  will.hooksReload();
+  let implyMap = _.mapOnly( e.propertiesMap, commandHooksList.commandProperties );
+  e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
+  cui._propertiesImply( implyMap );
+  let logger = cui.logger;
+
+  cui.hooksReload();
   logger.log( 'Found hooks' );
   logger.up();
-  will.hooksList();
+  cui.hooksList();
   logger.down();
-
 }
+
+commandHooksList.hint = 'List available hooks.';
+commandHooksList.commandSubjectHint = false;
+commandHooksList.commandProperties = commandImply.commandProperties;
 
 //
 
