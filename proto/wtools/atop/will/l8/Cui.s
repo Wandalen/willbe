@@ -2080,7 +2080,7 @@ function commandClean( e )
 
 commandClean.defaults = _.mapExtend( null, commandImply.defaults );
 commandClean.defaults.withSubmodules = 0;
-commandClean.defaults.verbosity = 3;
+commandClean.defaults.withOut = 1;
 commandClean.hint = 'Clean current module. Delete genrated artifacts, temp files and downloaded submodules.';
 commandClean.commandSubjectHint = false;
 commandClean.commandProperties =
