@@ -21505,10 +21505,10 @@ function versionsAgreeNpm( test )
     test.case = 'change origin of first submodule and run .submodules.versions.agree';
 
     let willFile = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
-    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1\n', 'npm:///wmodulefortesting2b\n' );
+    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1\n', 'npm:///wmodulefortesting2b!gamma\n' );
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
-    versions[ 'ModuleForTesting2b' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2b' );
+    versions[ 'ModuleForTesting2b' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2b!gamma' );
 
     return null;
   })
@@ -21553,11 +21553,12 @@ function versionsAgreeNpm( test )
     [
       '.',
       './wtools',
-      './wtools/abase',
-      './wtools/abase/l2',
-      './wtools/abase/l2/Include.s',
-      './wtools/abase/l2/l2',
-      './wtools/abase/l2/l2/ModuleForTesting2b.s'
+      './wtools/testing',
+      './wtools/testing/Basic.s',
+      './wtools/testing/l4',
+      './wtools/testing/l4/testing2b',
+      './wtools/testing/l4/testing2b/Include.s',
+      './wtools/testing/l4/testing2b/ModuleForTesting2b.s'
     ];
     var files = a.find( a.abs( '.module/ModuleForTesting1/proto' ) );
     test.identical( files,exp );
