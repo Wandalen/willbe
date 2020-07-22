@@ -2670,31 +2670,33 @@ function commandEach( e )
 
   _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
 
-  if( _.will.Resolver.selectorIs( isolated.commandArgument ) )
-  return will.modulesFindEachAt
-  ({
-    selector : isolated.commandArgument,
-    onBegin : handleBegin,
-    onEnd : handleEnd,
-    onError : handleError,
-  })
-  .then( function( it )
+  if( _.will.Resolver.selectorIs( isolated.commandArgument ) ) /* Dmytro : it's ugly not optimal solution. I want to make new routine named like `submodulesFindEachAt`, which is based on current `modulesFindEachAt`. This routine will be standartized with routine `modulesFindWithAt` */
   {
-    will.currentOpeners = it.openers;
-
-    if( !will.currentOpeners.length )
+    return will.modulesFindEachAt
+    ({
+      selector : isolated.commandArgument,
+      onBegin : handleBegin,
+      onEnd : handleEnd,
+      onError : handleError,
+    })
+    .then( function( it )
     {
-      let equalizer = ( parsed, command ) => parsed.commandName === command;
-      if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
-      throw _.errBrief
-      (
-          `No module sattisfy criteria.`
-        , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
-      );
-    }
+      will.currentOpeners = it.openers;
 
-    return it;
-  })
+      if( !will.currentOpeners.length )
+      {
+        let equalizer = ( parsed, command ) => parsed.commandName === command;
+        if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
+        throw _.errBrief
+        (
+            `No module sattisfy criteria.`
+          , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
+        );
+      }
+
+      return it;
+    })
+  }
   else
   {
     if( !path.isGlob( isolated.commandArgument ) )
@@ -2713,6 +2715,7 @@ function commandEach( e )
     ({
       selector : isolated.commandArgument,
       atLeastOne : !path.isGlob( isolated.commandArgument ),
+      withInvalid : 1,
     })
     .then( function( it )
     {

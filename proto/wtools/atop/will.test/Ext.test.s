@@ -2533,7 +2533,7 @@ function eachBrokenNon( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'Read 1 willfile' ), 1 );
-    test.identical( _.strCount( op.output, 'Module at' ), 1 );
+    // test.identical( _.strCount( op.output, 'Module at' ), 1 );
     test.identical( _.strCount( op.output, 'Paths' ), 1 );
     return null;
   })
@@ -2568,7 +2568,7 @@ function eachBrokenCommand( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'Unknown command ".resource.list"' ), 1 );
-    test.identical( _.strCount( op.output, 'Module at' ), 3 );
+    // test.identical( _.strCount( op.output, 'Module at' ), 3 );
     test.identical( _.strCount( op.output, '      ' ), 0 );
     return null;
   })
@@ -5780,12 +5780,6 @@ function hookPrepare( test )
     return null;
   })
 
-  .then( ( op ) =>
-  {
-    debugger;
-    return null;
-  })
-
   /* - */
 
   a.ready
@@ -5846,12 +5840,6 @@ function hookPrepare( test )
     var files = a.find( a.abs( 'New3' ) );
     test.identical( files, exp );
 
-    return null;
-  })
-
-  .then( ( op ) =>
-  {
-    debugger;
     return null;
   })
 
