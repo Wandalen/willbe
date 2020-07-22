@@ -2670,125 +2670,180 @@ function commandEach( e )
 
   _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
 
-  let con = will.modulesFindEachAt
+  if( _.will.Resolver.selectorIs( isolated.commandArgument ) )
+  return will.modulesFindEachAt
   ({
     selector : isolated.commandArgument,
     onBegin : handleBegin,
     onEnd : handleEnd,
     onError : handleError,
-  });
-
-  con.finally( ( err, arg ) =>
+  })
+  .then( function( it )
   {
-    if( err )
-    will.errEncounter( err );
-    will._commandsEnd( commandEach );
-    if( err )
-    throw _.err( err );
-    return arg;
-  });
+    will.currentOpeners = it.openers;
 
-  return con;
-
-  /* */
-
-  function handleBegin( it )
-  {
-
-    // debugger;
-    _.assert( will.currentOpener === null );
-    _.assert( will.currentOpenerPath === null );
-    // _.assert( will.mainModule === null );
-    // _.assert( will.mainOpener === null ); // yyy
-
-    if( will.mainOpener )
-    will.mainOpener.isMain = false;
-    will.currentOpenerChange( it.currentOpener );
-    will.currentOpenerPath = it.currentOpenerPath || null;
-    it.currentOpener.isMain = true;
-    _.assert( will.mainOpener === it.currentOpener );
-    _.assert( will.currentOpener === it.currentOpener );
-    // will.mainOpener = it.currentOpener;
-    // will.mainModule = it.currentOpener.openedModule;
-    // will.mainOpener === it.currentOpener; // yyy
-
-    if( will.verbosity > 1 )
+    if( !will.currentOpeners.length )
     {
-      logger.log( '' );
-      logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.currentOpener.commonPath, 'path' ) );
-      if( will.currentOpenerPath )
-      logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentOpenerPath, 'path' ) );
+      let equalizer = ( parsed, command ) => parsed.commandName === command;
+      if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
+      throw _.errBrief
+      (
+          `No module sattisfy criteria.`
+        , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
+      );
     }
 
-    return null;
-  }
-
-  /* */
-
-  function handleEnd( it )
+    return it;
+  })
+  else
   {
+    if( !path.isGlob( isolated.commandArgument ) )
+    {
+      if( _.strEnds( isolated.commandArgument, '/.' ) )
+      isolated.commandArgument = _.strRemoveEnd( isolated.commandArgument, '/.' ) + '/*';
+      else if( isolated.commandArgument === '.' )
+      isolated.commandArgument = '*';
+      else if( _.strEnds( isolated.commandArgument, '/' ) )
+      isolated.commandArgument += '*';
+      else
+      isolated.commandArgument += '/*';
+    }
 
-    // debugger;
-    logger.up();
-    levelUp = 1;
-
-    debugger;
-    let r = ca.commandPerform
+    return will.modulesFindWithAt
     ({
-      command : e.parsedCommands[ commandIndex + 1 ].command,
-    });
-
-    _.assert( r !== undefined );
-
-    r = _.Consequence.From( r );
-
-    return r.finally( ( err, arg ) =>
+      selector : isolated.commandArgument,
+      atLeastOne : !path.isGlob( isolated.commandArgument ),
+    })
+    .then( function( it )
     {
-      logger.down();
-      levelUp = 0;
+      will.currentOpeners = it.sortedOpeners;
 
-      // debugger;
-      _.assert( will.currentOpener === it.currentOpener || will.currentOpener === null );
-      // _.assert( will.currentOpener === it.currentOpener ); // xxx
-      // _.assert( will.mainModule === will.currentOpener.openedModule );
-      _.assert( will.mainOpener === it.currentOpener );
-      will.currentOpenerChange( null );
-      it.currentOpener.isMain = false;
-      if( !it.currentOpener.isUsed() )
-      it.currentOpener.finit();
-      _.assert( will.mainOpener === null );
-      _.assert( will.currentOpener === null );
-      _.assert( will.currentOpenerPath === null );
-      // will.mainModule = null;
-      // will.mainOpener = null; // yyy
+      if( !will.currentOpeners.length )
+      {
+        let equalizer = ( parsed, command ) => parsed.commandName === command;
+        if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
+        throw _.errBrief
+        (
+            `No module sattisfy criteria.`
+          , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
+        );
+      }
 
-      if( err )
-      logger.log( _.errOnce( _.errBrief( '\n', err, '\n' ) ) );
-      if( err )
-      throw _.err( err );
-      return arg;
-    });
+      return it;
+    })
 
   }
-
-  /* */
-
-  function handleError( err )
-  {
-
-    if( will.currentOpener )
-    will.currentOpener.finit();
-    will.currentOpenerChange( null );
-    // will.mainModule = null;
-    will.mainOpener = null;
-
-    if( levelUp )
-    {
-      levelUp = 0;
-      logger.down();
-    }
-
-  }
+  // con.finally( ( err, arg ) =>
+  // {
+  //   if( err )
+  //   will.errEncounter( err );
+  //   will._commandsEnd( commandEach );
+  //   if( err )
+  //   throw _.err( err );
+  //   return arg;
+  // });
+  //
+  // return con;
+  //
+  // /* */
+  //
+  // function handleBegin( it )
+  // {
+  //
+  //   // debugger;
+  //   _.assert( will.currentOpener === null );
+  //   _.assert( will.currentOpenerPath === null );
+  //   // _.assert( will.mainModule === null );
+  //   // _.assert( will.mainOpener === null ); // yyy
+  //
+  //   if( will.mainOpener )
+  //   will.mainOpener.isMain = false;
+  //   will.currentOpenerChange( it.currentOpener );
+  //   will.currentOpenerPath = it.currentOpenerPath || null;
+  //   it.currentOpener.isMain = true;
+  //   _.assert( will.mainOpener === it.currentOpener );
+  //   _.assert( will.currentOpener === it.currentOpener );
+  //   // will.mainOpener = it.currentOpener;
+  //   // will.mainModule = it.currentOpener.openedModule;
+  //   // will.mainOpener === it.currentOpener; // yyy
+  //
+  //   if( will.verbosity > 1 )
+  //   {
+  //     logger.log( '' );
+  //     logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.currentOpener.commonPath, 'path' ) );
+  //     if( will.currentOpenerPath )
+  //     logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentOpenerPath, 'path' ) );
+  //   }
+  //
+  //   return null;
+  // }
+  //
+  // /* */
+  //
+  // function handleEnd( it )
+  // {
+  //
+  //   // debugger;
+  //   logger.up();
+  //   levelUp = 1;
+  //
+  //   debugger;
+  //   let r = ca.commandPerform
+  //   ({
+  //     command : e.parsedCommands[ commandIndex + 1 ].command,
+  //   });
+  //
+  //   _.assert( r !== undefined );
+  //
+  //   r = _.Consequence.From( r );
+  //
+  //   return r.finally( ( err, arg ) =>
+  //   {
+  //     logger.down();
+  //     levelUp = 0;
+  //
+  //     // debugger;
+  //     _.assert( will.currentOpener === it.currentOpener || will.currentOpener === null );
+  //     // _.assert( will.currentOpener === it.currentOpener ); // xxx
+  //     // _.assert( will.mainModule === will.currentOpener.openedModule );
+  //     _.assert( will.mainOpener === it.currentOpener );
+  //     will.currentOpenerChange( null );
+  //     it.currentOpener.isMain = false;
+  //     if( !it.currentOpener.isUsed() )
+  //     it.currentOpener.finit();
+  //     _.assert( will.mainOpener === null );
+  //     _.assert( will.currentOpener === null );
+  //     _.assert( will.currentOpenerPath === null );
+  //     // will.mainModule = null;
+  //     // will.mainOpener = null; // yyy
+  //
+  //     if( err )
+  //     logger.log( _.errOnce( _.errBrief( '\n', err, '\n' ) ) );
+  //     if( err )
+  //     throw _.err( err );
+  //     return arg;
+  //   });
+  //
+  // }
+  //
+  // /* */
+  //
+  // function handleError( err )
+  // {
+  //
+  //   if( will.currentOpener )
+  //   will.currentOpener.finit();
+  //   will.currentOpenerChange( null );
+  //   // will.mainModule = null;
+  //   will.mainOpener = null;
+  //
+  //   if( levelUp )
+  //   {
+  //     levelUp = 0;
+  //     logger.down();
+  //   }
+  //
+  // }
 
 }
 
