@@ -2663,6 +2663,7 @@ function commandEach( e )
 
   will._commandsBegin( commandEach );
 
+  debugger;
   let isolated = ca.commandIsolateSecondFromArgument( e.commandArgument );
   if( !isolated )
   throw _.errBrief( 'Format of .each command should be: .each {-path-} .command' );
