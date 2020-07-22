@@ -1512,7 +1512,7 @@ function commandModulesTree( e )
 
 }
 
-commandModulesTree.defaults = commandImply.commandProperties;
+commandModulesTree.defaults = commandImply.defaults;
 commandModulesTree.hint = 'List all found modules as a tree.';
 commandModulesTree.commandSubjectHint = 'A selector for path names. Could be a glob.';
 commandModulesTree.commandProperties =
@@ -1617,7 +1617,7 @@ function commandSubmodulesFixate( e )
 
 }
 
-commandSubmodulesFixate.defaults = commandImply.commandProperties;
+commandSubmodulesFixate.defaults = commandImply.defaults;
 commandSubmodulesFixate.hint = 'Fixate remote submodules. If URI of a submodule does not contain a version then version will be appended.';
 commandSubmodulesFixate.commandSubjectHint = false;
 commandSubmodulesFixate.commandProperties =
@@ -1658,7 +1658,7 @@ function commandSubmodulesUpgrade( e )
 
 }
 
-commandSubmodulesUpgrade.defaults = commandImply.commandProperties;
+commandSubmodulesUpgrade.defaults = commandImply.defaults;
 commandSubmodulesUpgrade.hint = 'Upgrade remote submodules. If a remote repository has any newer version of the submodule, then URI of the submodule will be upgraded with the latest available version.';
 commandSubmodulesUpgrade.commandSubjectHint = false;
 commandSubmodulesUpgrade.commandProperties =
@@ -1676,6 +1676,7 @@ function commandSubmodulesVersionsDownload( e )
   let cui = this;
   cui._command_pre( commandSubmodulesVersionsDownload, arguments );
 
+  debugger;
   let implyMap = _.mapOnly( e.propertiesMap, commandSubmodulesVersionsDownload.defaults );
   e.propertiesMap = _.mapBut( e.propertiesMap, implyMap );
   cui._propertiesImply( implyMap );
@@ -1703,7 +1704,7 @@ function commandSubmodulesVersionsDownload( e )
 
 }
 
-commandSubmodulesVersionsDownload.defaults = commandImply.commandProperties;
+commandSubmodulesVersionsDownload.defaults = commandImply.defaults;
 commandSubmodulesVersionsDownload.hint = 'Download each submodule if such was not downloaded so far.';
 commandSubmodulesVersionsDownload.commandSubjectHint = false;
 commandSubmodulesVersionsDownload.commandProperties =
@@ -1741,7 +1742,7 @@ function commandSubmodulesVersionsUpdate( e )
 
 }
 
-commandSubmodulesVersionsUpdate.defaults = commandImply.commandProperties;
+commandSubmodulesVersionsUpdate.defaults = commandImply.defaults;
 commandSubmodulesVersionsUpdate.hint = 'Update each submodule, checking for available updates for each submodule. Does nothing if all submodules have fixated version.';
 commandSubmodulesVersionsUpdate.commandSubjectHint = false;
 commandSubmodulesVersionsUpdate.commandProperties =
@@ -1778,7 +1779,7 @@ function commandSubmodulesVersionsVerify( e )
   }
 }
 
-commandSubmodulesVersionsVerify.defaults = commandImply.commandProperties;
+commandSubmodulesVersionsVerify.defaults = commandImply.defaults;
 commandSubmodulesVersionsVerify.hint = 'Check whether each submodule is on branch which is specified in willfile';
 commandSubmodulesVersionsVerify.commandSubjectHint = false;
 commandSubmodulesVersionsVerify.commandProperties =
@@ -1815,7 +1816,7 @@ function commandSubmodulesVersionsAgree( e )
 
 }
 
-commandSubmodulesVersionsAgree.defaults = commandImply.commandProperties;
+commandSubmodulesVersionsAgree.defaults = commandImply.defaults;
 commandSubmodulesVersionsAgree.hint = 'Update each submodule, checking for available updates for each submodule. Does not change state of module if update is needed and module has local changes.';
 commandSubmodulesVersionsAgree.commandSubjectHint = false;
 commandSubmodulesVersionsAgree.commandProperties =
