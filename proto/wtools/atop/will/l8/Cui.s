@@ -1,4 +1,5 @@
-( function _MainTop_s_( ) {
+( function _MainTop_s_( )
+{
 
 'use strict';
 
@@ -102,12 +103,12 @@ function exec()
 
   return _.Consequence
   .Try( () =>
-    {
-      return ca.programPerform
-      ({
-        program : _.strUnquote( appArgs.original ),
-        withParsed : 1,
-      });
+  {
+    return ca.programPerform
+    ({
+      program : _.strUnquote( appArgs.original ),
+      withParsed : 1,
+    });
     // return ca.appArgsPerform({ appArgs });
     /* qqq2 : make use of
     return ca.programPerform({ program : appArgs.original });
@@ -117,7 +118,7 @@ function exec()
     - field set by .imply should not be reset to null after command which use the field, but should be reset to null bu another .imply command
     - we drop support of `.command1 ; .command2` syntax. we support only `.command1 .commadn2` syntax
 
-    */
+  */
   })
   .then( ( arg ) =>
   {
@@ -382,7 +383,7 @@ function _propertiesImply( implyMap )
   ({
     dst : will,
     propertiesMap : implyMap,
-    namesMap : namesMap,
+    namesMap,
   });
 
 }
@@ -404,76 +405,76 @@ function _commandsMake()
   let commands =
   {
 
-    'help' :                            { e : _.routineJoin( will, will.commandHelp ),                        },
-    'imply' :                           { e : _.routineJoin( will, will.commandImply ),                       },
-    'version' :                         { e : _.routineJoin( will, will.commandVersion ),                     },
-    'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck ),                },
+    'help' :                            { e : _.routineJoin( will, will.commandHelp )                         },
+    'imply' :                           { e : _.routineJoin( will, will.commandImply )                        },
+    'version' :                         { e : _.routineJoin( will, will.commandVersion )                      },
+    'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck )                 },
 
-    'modules list' :                    { e : _.routineJoin( will, will.commandModulesList ),                 },
-    'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList ),      },
-    'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree ),                 },
-    'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList ),               },
-    'paths list' :                      { e : _.routineJoin( will, will.commandPathsList ),                   },
-    'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList ),              },
-    'reflectors list' :                 { e : _.routineJoin( will, will.commandReflectorsList ),              },
-    'steps list' :                      { e : _.routineJoin( will, will.commandStepsList ),                   },
-    'builds list' :                     { e : _.routineJoin( will, will.commandBuildsList ),                  },
-    'exports list' :                    { e : _.routineJoin( will, will.commandExportsList ),                 },
-    'about list' :                      { e : _.routineJoin( will, will.commandAboutList ),                   },
-    'about' :                           { e : _.routineJoin( will, will.commandAboutList ),                   },
+    'modules list' :                    { e : _.routineJoin( will, will.commandModulesList )                  },
+    'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList )       },
+    'modules tree' :                    { e : _.routineJoin( will, will.commandModulesTree )                  },
+    'resources list' :                  { e : _.routineJoin( will, will.commandResourcesList )                },
+    'paths list' :                      { e : _.routineJoin( will, will.commandPathsList )                    },
+    'submodules list' :                 { e : _.routineJoin( will, will.commandSubmodulesList )               },
+    'reflectors list' :                 { e : _.routineJoin( will, will.commandReflectorsList )               },
+    'steps list' :                      { e : _.routineJoin( will, will.commandStepsList )                    },
+    'builds list' :                     { e : _.routineJoin( will, will.commandBuildsList )                   },
+    'exports list' :                    { e : _.routineJoin( will, will.commandExportsList )                  },
+    'about list' :                      { e : _.routineJoin( will, will.commandAboutList )                    },
+    'about' :                           { e : _.routineJoin( will, will.commandAboutList )                    },
 
-    'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean ),             },
-    'submodules add' :                  { e : _.routineJoin( will, will.commandSubmodulesAdd ),               },
-    'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate ),            },
-    'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade ),           },
+    'submodules clean' :                { e : _.routineJoin( will, will.commandSubmodulesClean )              },
+    'submodules add' :                  { e : _.routineJoin( will, will.commandSubmodulesAdd )                },
+    'submodules fixate' :               { e : _.routineJoin( will, will.commandSubmodulesFixate )             },
+    'submodules upgrade' :              { e : _.routineJoin( will, will.commandSubmodulesUpgrade )            },
 
-    'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  },
-    'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    },
-    'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload ),  },
-    'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate ),    },
-    'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify ),    },
-    'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree ),     },
+    'submodules download' :             { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload )   },
+    'submodules update' :               { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate )     },
+    'submodules versions download' :    { e : _.routineJoin( will, will.commandSubmodulesVersionsDownload )   },
+    'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate )     },
+    'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify )     },
+    'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree )      },
 
-    'shell' :                           { e : _.routineJoin( will, will.commandShell ),                       },
-    'do' :                              { e : _.routineJoin( will, will.commandDo ),                          },
-    'call' :                            { e : _.routineJoin( will, will.commandHookCall ),                    },
-    'hook call' :                       { e : _.routineJoin( will, will.commandHookCall ),                    },
-    'hooks list' :                      { e : _.routineJoin( will, will.commandHooksList ),                   },
-    'clean' :                           { e : _.routineJoin( will, will.commandClean ),                       },
-    'build' :                           { e : _.routineJoin( will, will.commandBuild ),                       },
-    'export' :                          { e : _.routineJoin( will, will.commandExport ),                      },
-    'export purging' :                  { e : _.routineJoin( will, will.commandExportPurging ),               },
-    'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive ),             },
+    'shell' :                           { e : _.routineJoin( will, will.commandShell )                        },
+    'do' :                              { e : _.routineJoin( will, will.commandDo )                           },
+    'call' :                            { e : _.routineJoin( will, will.commandHookCall )                     },
+    'hook call' :                       { e : _.routineJoin( will, will.commandHookCall )                     },
+    'hooks list' :                      { e : _.routineJoin( will, will.commandHooksList )                    },
+    'clean' :                           { e : _.routineJoin( will, will.commandClean )                        },
+    'build' :                           { e : _.routineJoin( will, will.commandBuild )                        },
+    'export' :                          { e : _.routineJoin( will, will.commandExport )                       },
+    'export purging' :                  { e : _.routineJoin( will, will.commandExportPurging )                },
+    'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive )              },
 
-    'module new' :                      { e : _.routineJoin( will, will.commandModuleNew ),                   },
-    'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith ),               },
+    'module new' :                      { e : _.routineJoin( will, will.commandModuleNew )                    },
+    'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith )                },
 
-    'git pull' :                        { e : _.routineJoin( will, will.commandGitPull ),                     },
-    'git push' :                        { e : _.routineJoin( will, will.commandGitPush ),                     },
-    'git reset' :                       { e : _.routineJoin( will, will.commandGitReset ),                    },
-    'git status' :                      { e : _.routineJoin( will, will.commandGitStatus ),                   },
-    'git sync' :                        { e : _.routineJoin( will, will.commandGitSync ),                     },
-    'git tag' :                         { e : _.routineJoin( will, will.commandGitTag ),                      },
-    'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks ),      },
+    'git pull' :                        { e : _.routineJoin( will, will.commandGitPull )                      },
+    'git push' :                        { e : _.routineJoin( will, will.commandGitPush )                      },
+    'git reset' :                       { e : _.routineJoin( will, will.commandGitReset )                     },
+    'git status' :                      { e : _.routineJoin( will, will.commandGitStatus )                    },
+    'git sync' :                        { e : _.routineJoin( will, will.commandGitSync )                      },
+    'git tag' :                         { e : _.routineJoin( will, will.commandGitTag )                       },
+    'git config preserving hardlinks' : { e : _.routineJoin( will, will.commandGitPreservingHardLinks )       },
 
-    'with' :                            { e : _.routineJoin( will, will.commandWith ),                        },
-    'each' :                            { e : _.routineJoin( will, will.commandEach ),                        },
+    'with' :                            { e : _.routineJoin( will, will.commandWith )                         },
+    'each' :                            { e : _.routineJoin( will, will.commandEach )                         },
 
-    'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile ),             },
-    'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm ),             },
+    'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile )              },
+    'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm )              },
     'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
     'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
-    'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall ),              },
-    'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions ),        },
-    'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions ),       },
-    'package version' :                 { e : _.routineJoin( will, will.commandPackageVersion ),              },
+    'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
+    'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions )         },
+    'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions )        },
+    'package version' :                 { e : _.routineJoin( will, will.commandPackageVersion )               },
 
   }
 
   let ca = _.CommandsAggregator
   ({
     basePath : fileProvider.path.current(),
-    commands : commands,
+    commands,
     commandPrefix : 'node ',
     logger : will.logger,
     commandsImplicitDelimiting : 1,
@@ -674,7 +675,11 @@ function _commandBuildLike( o )
   _.mapSupplementNulls( o, will.filterImplied() );
   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
 
-  _.all( _.Will.ModuleFilterNulls, ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` ) );
+  _.all
+  (
+    _.Will.ModuleFilterNulls,
+    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` )
+  );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onEach ) );
   _.assert( _.strIs( o.name ) );
@@ -772,7 +777,11 @@ function _commandCleanLike( o )
   _.routineOptions( _commandCleanLike, arguments );
   _.mapSupplementNulls( o, will.filterImplied() );
   _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
-  _.all( _.Will.ModuleFilterNulls, ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` ) );
+  _.all
+  (
+    _.Will.ModuleFilterNulls,
+    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` )
+  );
   _.assert( _.routineIs( o.commandRoutine ) );
   _.assert( _.routineIs( o.onAll ) );
   _.assert( _.strIs( o.name ) );
@@ -878,10 +887,10 @@ function _commandNewLike( o )
   _.assert( _.strIs( o.name ) );
   _.assert( _.objectIs( o.event ) );
 
-//   withIn : 1,
-//   withOut : 1,
-//   withInvalid : 0,
-//   withDisabledModules : 0,
+  // withIn : 1,
+  // withOut : 1,
+  // withInvalid : 0,
+  // withDisabledModules : 0,
 
   will._commandsBegin( o.commandRoutine );
 
@@ -2613,7 +2622,7 @@ function commandWith( e )
       if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
       throw _.errBrief
       (
-          `No module sattisfy criteria.`
+        `No module sattisfy criteria.`
         , `\nLooked at ${ _.strQuote( path.resolve( e.commandArgument ) )}`
       );
     }
@@ -2689,7 +2698,7 @@ function commandEach( e )
       if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
       throw _.errBrief
       (
-          `No module sattisfy criteria.`
+        `No module sattisfy criteria.`
         , `\nLooked at ${ _.strQuote( path.resolve( e.commandArgument ) )}`
       );
     }
@@ -2699,7 +2708,7 @@ function commandEach( e )
 
   /* */
 
-  function handleError( err )
+  function handleError()
   {
 
     if( cui.currentOpener )
@@ -2846,8 +2855,8 @@ function commandNpmFromWillfile( e )
   function handleEach( it )
   {
     if( _.mapKeys( criterionsMap ).length > 0 )
-    it.opener.openedModule.stepMap[ "npm.generate" ].criterion = criterionsMap;
-    let currentContext = it.opener.openedModule.stepMap[ "npm.generate" ];
+    it.opener.openedModule.stepMap[ 'npm.generate' ].criterion = criterionsMap;
+    let currentContext = it.opener.openedModule.stepMap[ 'npm.generate' ];
 
     return it.opener.openedModule.npmGenerateFromWillfile
     ({
@@ -2896,7 +2905,7 @@ function commandWillfileFromNpm( e )
   }
   else
   {
-    cui.modulesFindWithAt( { atLeastOne: 1, selector: "./", tracing: 1 } )
+    cui.modulesFindWithAt( { atLeastOne : 1, selector : './', tracing : 1 } )
     .finally( function( err, it )
     {
       if( err )
@@ -2904,8 +2913,8 @@ function commandWillfileFromNpm( e )
 
       cui.currentOpeners = it.openers;
       if( !cui.currentOpeners.length )
-      return _.will.Module.prototype.willfileGenerateFromNpm.call( cui,
-      {
+      return _.will.Module.prototype.willfileGenerateFromNpm.call
+      ( cui, {
         ... e.propertiesMap,
         verbosity : 3,
       });
@@ -2923,8 +2932,8 @@ function commandWillfileFromNpm( e )
   function handleEach( it )
   {
     if( _.mapKeys( criterionsMap ).length > 0 )
-    it.opener.openedModule.stepMap[ "willfile.generate" ].criterion = criterionsMap;
-    let currentContext = it.opener.openedModule.stepMap[ "willfile.generate" ];
+    it.opener.openedModule.stepMap[ 'willfile.generate' ].criterion = criterionsMap;
+    let currentContext = it.opener.openedModule.stepMap[ 'willfile.generate' ];
     return it.opener.openedModule.willfileGenerateFromNpm
     ({
       ... e.propertiesMap,
@@ -2954,8 +2963,8 @@ function commandWillfileExtend( e )
   let cui = this;
   cui._command_pre( commandWillfileExtend, arguments );
 
-  return _.will.Module.prototype.willfileExtend.call( cui,
-  {
+  return _.will.Module.prototype.willfileExtend.call
+  ( cui, {
     request : e.subject,
     onSection : _.mapExtend,
     ... e.propertiesMap,
@@ -2971,29 +2980,29 @@ commandWillfileExtend.hint = 'Use "willfile extend" to extend existing willfile 
 commandWillfileExtend.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
 commandWillfileExtend.commandProperties =
 {
-  about : 'Enables extension of section "about". Default value is 1.',
-  build : 'Enables extension of section "build". Default value is 1.',
-  path : 'Enables extension of section "path". Default value is 1.',
-  reflector : 'Enables extension of section "reflector". Default value is 1.',
-  step : 'Enables extension of section "step". Default value is 1.',
-  submodule : 'Enables extension of section "submodule". Default value is 1.',
+  'about' : 'Enables extension of section "about". Default value is 1.',
+  'build' : 'Enables extension of section "build". Default value is 1.',
+  'path' : 'Enables extension of section "path". Default value is 1.',
+  'reflector' : 'Enables extension of section "reflector". Default value is 1.',
+  'step' : 'Enables extension of section "step". Default value is 1.',
+  'submodule' : 'Enables extension of section "submodule". Default value is 1.',
 
-  author : 'Enables extension of field "author" in section "about". Default value is 1.',
-  contributors : 'Enables extension of field "contributors" in section "about". Default value is 1.',
-  description : 'Enables extension of field "description" in section "about". Default value is 1.',
-  enabled : 'Enables extension of field "enabled" in section "about". Default value is 1.',
-  interpreters : 'Enables extension of field "interpreters" in section "about". Default value is 1.',
-  keywords : 'Enables extension of field "keywords" in section "about". Default value is 1.',
-  license : 'Enables extension of field "license" in section "about". Default value is 1.',
-  name : 'Enables extension of field "name" in section "about". Default value is 1.',
+  'author' : 'Enables extension of field "author" in section "about". Default value is 1.',
+  'contributors' : 'Enables extension of field "contributors" in section "about". Default value is 1.',
+  'description' : 'Enables extension of field "description" in section "about". Default value is 1.',
+  'enabled' : 'Enables extension of field "enabled" in section "about". Default value is 1.',
+  'interpreters' : 'Enables extension of field "interpreters" in section "about". Default value is 1.',
+  'keywords' : 'Enables extension of field "keywords" in section "about". Default value is 1.',
+  'license' : 'Enables extension of field "license" in section "about". Default value is 1.',
+  'name' : 'Enables extension of field "name" in section "about". Default value is 1.',
   'npm.name' : 'Enables extension of field "npm.name" in section "about". Default value is 1.',
   'npm.scripts' : 'Enables extension of field "npm.scripts" in section "about". Default value is 1.',
-  version : 'Enables extension of field "version" in section "about". Default value is 1.',
+  'version' : 'Enables extension of field "version" in section "about". Default value is 1.',
 
-  format : 'Defines output format of config file: "willfile" - output file is willfile, "json" - output is NPM json file. Default value is "willfile".',
-  submodulesDisabling : 'Disables new submodules from source files. Default value is 0.',
-  verbosity : 'Set verbosity. Default is 3.',
-  v : 'Set verbosity. Default is 3.',
+  'format' : 'Defines output format of config file: "willfile" - output file is willfile, "json" - output is NPM json file. Default value is "willfile".',
+  'submodulesDisabling' : 'Disables new submodules from source files. Default value is 0.',
+  'verbosity' : 'Set verbosity. Default is 3.',
+  'v' : 'Set verbosity. Default is 3.',
 }
 
 //
@@ -3003,8 +3012,8 @@ function commandWillfileSupplement( e )
   let cui = this;
   cui._command_pre( commandWillfileExtend, arguments );
 
-  return _.will.Module.prototype.willfileExtend.call( cui,
-  {
+  return _.will.Module.prototype.willfileExtend.call
+  ( cui, {
     request : e.subject,
     onSection : _.mapSupplement,
     ... e.propertiesMap,
@@ -3145,7 +3154,7 @@ function commandPackageInstall( e )
       [
         // 'sudo apt update',
         // 'sudo apt upgrade',
-          installExec
+        installExec
       ]
     }
     else
@@ -3463,7 +3472,8 @@ function commandPackageRemoteVersions( e )
     let execPath = 'brew search ' + parsed.longPath;
     let o =
     {
-      execPath, ready,
+      execPath,
+      ready,
       inputMirroring : 0
     }
     _.process.start( o );
@@ -3635,7 +3645,7 @@ let Restricts =
 
 let Statics =
 {
-  Exec : Exec,
+  Exec,
 }
 
 let Forbids =
