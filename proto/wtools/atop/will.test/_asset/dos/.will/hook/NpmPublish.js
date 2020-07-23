@@ -49,7 +49,8 @@ function onModule( context )
     {
       diff = _.git.diff
       ({
-        state2 : 'tag::' + o.tag,
+        // state2 : 'tag::' + o.tag,
+        state2 : '!' + o.tag,
         localPath : context.junction.dirPath,
         sync : 1,
       });
@@ -192,7 +193,7 @@ function isEnabled( context, localPath )
 {
   let _ = context.tools;
   let fileProvider = context.will.fileProvider;
-  let path = context.will.fileProvider.path;  
+  let path = context.will.fileProvider.path;
   if( !_.strEnds( path.fullName( localPath ), '.json' ) )
   localPath = path.join( localPath, 'package.json' );
   let config = fileProvider.configRead( localPath );

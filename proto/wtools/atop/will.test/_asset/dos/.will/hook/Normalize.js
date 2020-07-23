@@ -32,6 +32,7 @@ function onModule( context )
   // workflowsReplace( context );
 
   // fileProvider.filesDelete({ filePath : abs( '.travis.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0 });
+  // fileProvider.filesDelete({ filePath : abs( '**/.DS_Store' ), verbosity : o.verbosity >= 2 ? 3 : 0, dry : 1 });
 
   // samplesRename( context );
   // dwtoolsRename( context );
