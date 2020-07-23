@@ -2581,7 +2581,6 @@ commandGitPreservingHardLinks.commandSubjectHint = 'Any subject to enable preser
 function commandWith( e )
 {
   let cui = this.form();
-  let ca = e.ca;
   let path = cui.fileProvider.path;
   cui._command_pre( commandWith, arguments );
 
@@ -2594,18 +2593,15 @@ function commandWith( e )
   _.sure( _.strDefined( e.commandArgument ), 'Expects path to module' );
   _.assert( arguments.length === 1 );
 
-  cui._commandsBegin( commandWith );
-
-  let isolated = ca.commandIsolateSecondFromArgument( e.commandArgument );
-  if( !isolated )
+  if( !e.commandArgument )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
 
-  cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( isolated.commandArgument ) );
+  cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.commandArgument ) );
 
   return cui.modulesFindWithAt
   ({
-    selector : isolated.commandArgument,
-    atLeastOne : !path.isGlob( isolated.commandArgument ),
+    selector : e.commandArgument,
+    atLeastOne : !path.isGlob( e.commandArgument ),
   })
   .then( function( it )
   {
@@ -2618,7 +2614,7 @@ function commandWith( e )
       throw _.errBrief
       (
           `No module sattisfy criteria.`
-        , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
+        , `\nLooked at ${ _.strQuote( path.resolve( e.commandArgument ) )}`
       );
     }
 
@@ -2634,103 +2630,89 @@ commandWith.commandSubjectHint = 'A module selector.';
 
 function commandEach( e )
 {
-  let will = this.form();
-  let ca = e.ca;
-  let fileProvider = will.fileProvider;
-  let path = will.fileProvider.path;
-  let logger = will.logger;
-  let levelUp = 0;
+  let cui = this.form();
+  let path = cui.fileProvider.path;
 
-  if( will.currentOpener )
+  if( cui.currentOpener )
   {
-    will.currentOpener.finit();
-    will.currentOpenerChange( null );
+    cui.currentOpener.finit();
+    cui.currentOpenerChange( null );
   }
 
   _.sure( _.strDefined( e.commandArgument ), 'Expects path to module' )
   _.assert( arguments.length === 1 );
 
-  will._commandsBegin( commandEach );
-
-  debugger;
-  let isolated = ca.commandIsolateSecondFromArgument( e.commandArgument );
-  if( !isolated )
+  if( !e.commandArgument )
   throw _.errBrief( 'Format of .each command should be: .each {-path-} .command' );
+
   let commandIndex = _.longLeftIndex( e.parsedCommands, '.each', ( parsed, command ) => parsed.commandName === command );
+  _.assert( e.parsedCommands[ commandIndex + 1 ], 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
 
-  _.assert( _.objectIs( isolated ), 'Command .each should go with the second command to apply to each module. For example : ".each submodule::* .shell ls -al"' );
-
-  if( _.will.Resolver.selectorIs( isolated.commandArgument ) ) /* Dmytro : it's ugly not optimal solution. I want to make new routine named like `submodulesFindEachAt`, which is based on current `modulesFindEachAt`. This routine will be standartized with routine `modulesFindWithAt` */
+  let con;
+  if( _.will.Resolver.selectorIs( e.commandArgument ) )
   {
-    return will.modulesFindEachAt
+    con = cui.modulesFindEachAt
     ({
-      selector : isolated.commandArgument,
-      onBegin : handleBegin,
-      onEnd : handleEnd,
+      selector : e.commandArgument,
       onError : handleError,
-    })
-    .then( function( it )
-    {
-      will.currentOpeners = it.openers;
-
-      if( !will.currentOpeners.length )
-      {
-        let equalizer = ( parsed, command ) => parsed.commandName === command;
-        if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
-        throw _.errBrief
-        (
-            `No module sattisfy criteria.`
-          , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
-        );
-      }
-
-      return it;
     })
   }
   else
   {
-    if( !path.isGlob( isolated.commandArgument ) )
+    if( !path.isGlob( e.commandArgument ) )
     {
-      if( _.strEnds( isolated.commandArgument, '/.' ) )
-      isolated.commandArgument = _.strRemoveEnd( isolated.commandArgument, '/.' ) + '/*';
-      else if( isolated.commandArgument === '.' )
-      isolated.commandArgument = '*';
-      else if( _.strEnds( isolated.commandArgument, '/' ) )
-      isolated.commandArgument += '*';
+      if( _.strEnds( e.commandArgument, '/.' ) )
+      e.commandArgument = _.strRemoveEnd( e.commandArgument, '/.' ) + '/*';
+      else if( e.commandArgument === '.' )
+      e.commandArgument = '*';
+      else if( _.strEnds( e.commandArgument, '/' ) )
+      e.commandArgument += '*';
       else
-      isolated.commandArgument += '/*';
+      e.commandArgument += '/*';
     }
 
-    return will.modulesFindWithAt
+    con = cui.modulesFindWithAt
     ({
-      selector : isolated.commandArgument,
-      atLeastOne : !path.isGlob( isolated.commandArgument ),
+      selector : e.commandArgument,
+      atLeastOne : !path.isGlob( e.commandArgument ),
       withInvalid : 1,
     })
-    .then( function( it )
-    {
-      will.currentOpeners = it.sortedOpeners;
-
-      if( !will.currentOpeners.length )
-      {
-        let equalizer = ( parsed, command ) => parsed.commandName === command;
-        if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
-        throw _.errBrief
-        (
-            `No module sattisfy criteria.`
-          , `\nLooked at ${_.strQuote( path.resolve( isolated.commandArgument ) )}`
-        );
-      }
-
-      return it;
-    })
-
   }
+
+  return con.then( function( it )
+  {
+    cui.currentOpeners = it.sortedOpeners;
+
+    if( !cui.currentOpeners.length )
+    {
+      let equalizer = ( parsed, command ) => parsed.commandName === command;
+      if( !_.longHasAny( e.parsedCommands, [ '.module.new', '.module.new.with' ], equalizer ) )
+      throw _.errBrief
+      (
+          `No module sattisfy criteria.`
+        , `\nLooked at ${ _.strQuote( path.resolve( e.commandArgument ) )}`
+      );
+    }
+
+    return it;
+  });
+
+  /* */
+
+  function handleError( err )
+  {
+
+    if( cui.currentOpener )
+    cui.currentOpener.finit();
+    cui.currentOpenerChange( null );
+    cui.mainOpener = null;
+  }
+
   // con.finally( ( err, arg ) =>
   // {
   //   if( err )
-  //   will.errEncounter( err );
-  //   will._commandsEnd( commandEach );
+  //   cui.errEncounter( err );
+  //   cui._commandsEnd( commandEach );
   //   if( err )
   //   throw _.err( err );
   //   return arg;
@@ -2744,28 +2726,28 @@ function commandEach( e )
   // {
   //
   //   // debugger;
-  //   _.assert( will.currentOpener === null );
-  //   _.assert( will.currentOpenerPath === null );
-  //   // _.assert( will.mainModule === null );
-  //   // _.assert( will.mainOpener === null ); // yyy
+  //   _.assert( cui.currentOpener === null );
+  //   _.assert( cui.currentOpenerPath === null );
+  //   // _.assert( cui.mainModule === null );
+  //   // _.assert( cui.mainOpener === null ); // yyy
   //
-  //   if( will.mainOpener )
-  //   will.mainOpener.isMain = false;
-  //   will.currentOpenerChange( it.currentOpener );
-  //   will.currentOpenerPath = it.currentOpenerPath || null;
+  //   if( cui.mainOpener )
+  //   cui.mainOpener.isMain = false;
+  //   cui.currentOpenerChange( it.currentOpener );
+  //   cui.currentOpenerPath = it.currentOpenerPath || null;
   //   it.currentOpener.isMain = true;
-  //   _.assert( will.mainOpener === it.currentOpener );
-  //   _.assert( will.currentOpener === it.currentOpener );
-  //   // will.mainOpener = it.currentOpener;
-  //   // will.mainModule = it.currentOpener.openedModule;
-  //   // will.mainOpener === it.currentOpener; // yyy
+  //   _.assert( cui.mainOpener === it.currentOpener );
+  //   _.assert( cui.currentOpener === it.currentOpener );
+  //   // cui.mainOpener = it.currentOpener;
+  //   // cui.mainModule = it.currentOpener.openedModule;
+  //   // cui.mainOpener === it.currentOpener; // yyy
   //
-  //   if( will.verbosity > 1 )
+  //   if( cui.verbosity > 1 )
   //   {
   //     logger.log( '' );
   //     logger.log( _.color.strFormat( 'Module at', { fg : 'bright white' } ), _.color.strFormat( it.currentOpener.commonPath, 'path' ) );
-  //     if( will.currentOpenerPath )
-  //     logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( will.currentOpenerPath, 'path' ) );
+  //     if( cui.currentOpenerPath )
+  //     logger.log( _.color.strFormat( '       at', { fg : 'bright white' } ), _.color.strFormat( cui.currentOpenerPath, 'path' ) );
   //   }
   //
   //   return null;
@@ -2796,19 +2778,19 @@ function commandEach( e )
   //     levelUp = 0;
   //
   //     // debugger;
-  //     _.assert( will.currentOpener === it.currentOpener || will.currentOpener === null );
-  //     // _.assert( will.currentOpener === it.currentOpener ); // xxx
-  //     // _.assert( will.mainModule === will.currentOpener.openedModule );
-  //     _.assert( will.mainOpener === it.currentOpener );
-  //     will.currentOpenerChange( null );
+  //     _.assert( cui.currentOpener === it.currentOpener || cui.currentOpener === null );
+  //     // _.assert( cui.currentOpener === it.currentOpener ); // xxx
+  //     // _.assert( cui.mainModule === cui.currentOpener.openedModule );
+  //     _.assert( cui.mainOpener === it.currentOpener );
+  //     cui.currentOpenerChange( null );
   //     it.currentOpener.isMain = false;
   //     if( !it.currentOpener.isUsed() )
   //     it.currentOpener.finit();
-  //     _.assert( will.mainOpener === null );
-  //     _.assert( will.currentOpener === null );
-  //     _.assert( will.currentOpenerPath === null );
-  //     // will.mainModule = null;
-  //     // will.mainOpener = null; // yyy
+  //     _.assert( cui.mainOpener === null );
+  //     _.assert( cui.currentOpener === null );
+  //     _.assert( cui.currentOpenerPath === null );
+  //     // cui.mainModule = null;
+  //     // cui.mainOpener = null; // yyy
   //
   //     if( err )
   //     logger.log( _.errOnce( _.errBrief( '\n', err, '\n' ) ) );
@@ -2824,11 +2806,11 @@ function commandEach( e )
   // function handleError( err )
   // {
   //
-  //   if( will.currentOpener )
-  //   will.currentOpener.finit();
-  //   will.currentOpenerChange( null );
-  //   // will.mainModule = null;
-  //   will.mainOpener = null;
+  //   if( cui.currentOpener )
+  //   cui.currentOpener.finit();
+  //   cui.currentOpenerChange( null );
+  //   // cui.mainModule = null;
+  //   cui.mainOpener = null;
   //
   //   if( levelUp )
   //   {
@@ -2841,6 +2823,7 @@ function commandEach( e )
 }
 
 commandEach.hint = 'Use "each" to iterate each module in a directory.';
+commandEach.commandSubjectHint = 'A module or resource selector.';
 
 //
 
