@@ -2495,7 +2495,7 @@ function eachBrokenIll( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'Failed to resolve' ), 0 );
-    test.identical( _.strCount( op.output, 'eachBrokenIll/' ), 6 );
+    // test.identical( _.strCount( op.output, 'eachBrokenIll/' ), 6 );
     test.identical( _.strCount( op.output, 'Failed to open willfile' ), 1 );
     return null;
   })
@@ -2533,7 +2533,7 @@ function eachBrokenNon( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'Read 1 willfile' ), 1 );
-    test.identical( _.strCount( op.output, 'Module at' ), 1 );
+    // test.identical( _.strCount( op.output, 'Module at' ), 1 );
     test.identical( _.strCount( op.output, 'Paths' ), 1 );
     return null;
   })
@@ -2568,7 +2568,7 @@ function eachBrokenCommand( test )
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'ncaught' ), 0 )
     test.identical( _.strCount( op.output, 'Unknown command ".resource.list"' ), 1 );
-    test.identical( _.strCount( op.output, 'Module at' ), 3 );
+    // test.identical( _.strCount( op.output, 'Module at' ), 3 );
     test.identical( _.strCount( op.output, '      ' ), 0 );
     return null;
   })
@@ -5384,7 +5384,7 @@ function withDoStatus( test )
 
   /* - */
 
-  a.appStart( '.with ** .do .will/hook/status.js' )
+  a.appStart( '.with ** .do ./.will/hook/status.js' )
   .then( ( op ) =>
   {
     test.case = 'no changes';
@@ -5406,7 +5406,7 @@ function withDoStatus( test )
     return null;
   })
 
-  a.appStart( '.with ** .do .will/hook/status.js' )
+  a.appStart( '.with ** .do ./.will/hook/status.js' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
@@ -5780,12 +5780,6 @@ function hookPrepare( test )
     return null;
   })
 
-  .then( ( op ) =>
-  {
-    debugger;
-    return null;
-  })
-
   /* - */
 
   a.ready
@@ -5846,12 +5840,6 @@ function hookPrepare( test )
     var files = a.find( a.abs( 'New3' ) );
     test.identical( files, exp );
 
-    return null;
-  })
-
-  .then( ( op ) =>
-  {
-    debugger;
     return null;
   })
 
@@ -9246,7 +9234,7 @@ function buildDetached( test )
     test.is( _.strHas( op.output, /\+ .*module::wModuleForTesting1.* was downloaded version .*master.* in/ ) );
     test.is( _.strHas( op.output, /\+ .*module::wPathBasic.* was downloaded version .*622fb3c259013f3f6e2aeec73642645b3ce81dbc.* in/ ) );
     test.is( _.strHas( op.output, /\.module\/ModuleForTesting2a\.informal <- npm:\/\/wprocedure/ ) );
-    test.is( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#c3acc79732d8937740f21091a7802614bdc1dd1d/ ) );
+    test.is( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#48023b1e3d064b473e491be4bd5f7f789ce5c288/ ) );
     test.is( _.strHas( op.output, /\.module\/ModuleForTesting12ab\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git/ ) );
 
     var files = a.fileProvider.dirRead( a.path.join( a.routinePath, '.module' ) );
@@ -14319,7 +14307,9 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/.circleci/config.yml',
       './.module/ModuleForTesting12/.github',
       './.module/ModuleForTesting12/.github/workflows',
-      './.module/ModuleForTesting12/.github/workflows/Test.yml',
+      './.module/ModuleForTesting12/.github/workflows/Publish.yml',
+      './.module/ModuleForTesting12/.github/workflows/PullRequest.yml',
+      './.module/ModuleForTesting12/.github/workflows/Push.yml',
       './.module/ModuleForTesting12/doc',
       './.module/ModuleForTesting12/doc/ModuleForTesting12.md',
       './.module/ModuleForTesting12/doc/README.md',
@@ -14337,7 +14327,7 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/proto/wtools/testing/l3.test',
       './.module/ModuleForTesting12/proto/wtools/testing/l3.test/ModuleForTesting12.test.s',
       './.module/ModuleForTesting12/sample',
-      './.module/ModuleForTesting12/sample/Sample.s'
+      './.module/ModuleForTesting12/sample/Sample.s',
     ];
     var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
@@ -15356,18 +15346,22 @@ function cleanHdBug( test )
       './+',
       './+/z.will.yml',
       './+/.module',
-      './+/.module/PathTools',
+      './+/.module/ModuleForTesting1',
+      './+/.module/ModuleForTesting1/.gitkeep',
       './+/group1',
       './+/group1/a.will.yml',
       './+/group1/.module',
-      './+/group1/.module/PathTools',
-      './+/group1/.module/Proto',
-      './+/group1/.module/Tools',
+      './+/group1/.module/ModuleForTesting1',
+      './+/group1/.module/ModuleForTesting1/.gitkeep',
+      './+/group1/.module/ModuleForTesting1b',
+      './+/group1/.module/ModuleForTesting1b/.gitkeep',
       './+/group1/group10',
       './+/group1/group10/a0.will.yml',
       './+/group1/group10/.module',
-      './+/group1/group10/.module/PathBasic',
-      './+/group1/group10/.module/PathTools',
+      './+/group1/group10/.module/ModuleForTesting1b',
+      './+/group1/group10/.module/ModuleForTesting1b/.gitkeep',
+      './+/group1/group10/.module/ModuleForTesting2a',
+      './+/group1/group10/.module/ModuleForTesting2a/.gitkeep',
       './group1',
       './group1/a.will.yml',
       './group1/group10',
@@ -17895,7 +17889,7 @@ function submodulesDownloadUpdateDry( test )
   {
     test.identical( op.exitCode, 0 );
     // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting1.* will be downloaded version .*/ ) );
-    // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*41d1daa2ec5714fc70e0096e3015b8700f3fbfcd.*/ ) );
+    // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting2.* will be downloaded version .*a37826f11bd1801b1e5d727bdf38a738fb2f783c.*/ ) );
     // test.is( _.strHas( op.output, / \+ .*module::ModuleForTesting1a.* will be downloaded version .*$.$.$$$.*/ ) );
     test.is( _.strHas( op.output, '+ 2/5 submodule(s) of module::submodules-detached will be downloaded' ) );
     var files = a.find( a.abs( '.module' ) );
@@ -20741,9 +20735,9 @@ function subModulesUpdate( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version 3fca0bd7bc9f10dec7fe7f7c9870c9c30133ddc3 in' ) );
+    test.is( _.strHas( op.output, '+ module::wModuleForTesting1 was updated to version e96f5405a2f23912957c4b7baa0a0ddf4ac6ca24 in' ) );
     test.is( _.strHas( op.output, '+ module::wModuleForTesting2a was updated to version master in' ) );
-    test.is( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version 6b3dfe9b104d1c652cec440f4348d75c8ae23271 in' ) );
+    test.is( _.strHas( op.output, '+ module::wModuleForTesting12ab was updated to version cef20499c8dae0bf6d8b288be63b2c031ad34551 in' ) );
     test.is( _.strHas( op.output, '+ 3/3 submodule(s) of module::submodules were updated in' ) );
     return null;
   })
@@ -20775,7 +20769,7 @@ function subModulesUpdate( test )
   {
     test.case = '.submodules.update -- after patch';
     var read = a.fileProvider.fileRead( a.path.join( a.routinePath, '.im.will.yml' ) );
-    read = _.strReplace( read, '#3fca0bd7bc9f10dec7fe7f7c9870c9c30133ddc3', '!master' )
+    read = _.strReplace( read, '#e96f5405a2f23912957c4b7baa0a0ddf4ac6ca24', '!master' )
     a.fileProvider.fileWrite( a.path.join( a.routinePath, '.im.will.yml' ), read );
     return null;
   })
@@ -21517,10 +21511,10 @@ function versionsAgreeNpm( test )
     test.case = 'change origin of first submodule and run .submodules.versions.agree';
 
     let willFile = a.fileProvider.fileRead( a.abs( '.will.yml' ) );
-    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1\n', 'npm:///wmodulefortesting2b\n' );
+    willFile = _.strReplace( willFile, 'npm:///wmodulefortesting1\n', 'npm:///wmodulefortesting2b!gamma\n' );
     a.fileProvider.fileWrite( a.abs( '.will.yml' ), willFile );
 
-    versions[ 'ModuleForTesting2b' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2b' );
+    versions[ 'ModuleForTesting2b' ] = _.npm.versionRemoteRetrive( 'npm:///wmodulefortesting2b!gamma' );
 
     return null;
   })
@@ -21565,11 +21559,12 @@ function versionsAgreeNpm( test )
     [
       '.',
       './wtools',
-      './wtools/abase',
-      './wtools/abase/l2',
-      './wtools/abase/l2/Include.s',
-      './wtools/abase/l2/l2',
-      './wtools/abase/l2/l2/ModuleForTesting2b.s'
+      './wtools/testing',
+      './wtools/testing/Basic.s',
+      './wtools/testing/l4',
+      './wtools/testing/l4/testing2b',
+      './wtools/testing/l4/testing2b/Include.s',
+      './wtools/testing/l4/testing2b/ModuleForTesting2b.s'
     ];
     var files = a.find( a.abs( '.module/ModuleForTesting1/proto' ) );
     test.identical( files,exp );
@@ -23412,7 +23407,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#48023b1e3d064b473e491be4bd5f7f789ce5c288.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -23431,7 +23426,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#5e2aa08b36f97889dc29291292816a0191f7939f.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -23465,7 +23460,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#48023b1e3d064b473e491be4bd5f7f789ce5c288.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -23484,7 +23479,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#5e2aa08b36f97889dc29291292816a0191f7939f.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -23520,7 +23515,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#48023b1e3d064b473e491be4bd5f7f789ce5c288.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 0 );
@@ -23539,7 +23534,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#5e2aa08b36f97889dc29291292816a0191f7939f.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 1 );
 
@@ -23575,7 +23570,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/\.im\.will\.yml.* will be upgraded/ ), 2 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* will be upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#48023b1e3d064b473e491be4bd5f7f789ce5c288.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDryDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* won't be upgraded/ ), 1 );
@@ -23594,7 +23589,7 @@ function upgradeDryDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting12.* will be upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting12\.git.* : .* <- .*\.#5e2aa08b36f97889dc29291292816a0191f7939f.*/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/out\/ModuleForTesting12\.informal\.out\.will\.yml.* will be upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDryDetached\/module\/ModuleForTesting12\.informal\.will\.yml.* will be upgraded/ ), 0 );
 
@@ -23646,7 +23641,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#48023b1e3d064b473e491be4bd5f7f789ce5c288.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -23665,7 +23660,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#5e2aa08b36f97889dc29291292816a0191f7939f.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -23706,7 +23701,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#48023b1e3d064b473e491be4bd5f7f789ce5c288.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -23725,7 +23720,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#5e2aa08b36f97889dc29291292816a0191f7939f.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -23876,7 +23871,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#48023b1e3d064b473e491be4bd5f7f789ce5c288.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 0 );
@@ -23895,7 +23890,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 1 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#5e2aa08b36f97889dc29291292816a0191f7939f.*/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 1 );
 
@@ -23936,7 +23931,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/\.im\.will\.yml.* was upgraded/ ), 3 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::ModuleForTesting2a.* was upgraded to version/ ), 1 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#c3acc79732d8937740f21091a7802614bdc1dd1d.*/ ), 1 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wModuleForTesting2a\.git\/out\/wModuleForTesting2a\.out\.will.* : .* <- .*\.#48023b1e3d064b473e491be4bd5f7f789ce5c288.*/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/out\/wModuleForTesting2a\.out\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
     test.identical( _.strCount( op.output, /! .*upgradeDetached\/\.module\/ModuleForTesting2a\/\.im\.will\.yml.* was not upgraded/ ), 1 );
@@ -23955,7 +23950,7 @@ function upgradeDetached( test )
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/ModuleForTesting12ab\.informal\.will\.yml.* was upgraded/ ), 0 );
 
     test.identical( _.strCount( op.output, /Remote paths of .*module::submodules-detached \/ relation::Proto.* was upgraded to version/ ), 0 );
-    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#ac3939179c581410e5a00a36c4d0ac1ddc64bb62.*/ ), 0 );
+    test.identical( _.strCount( op.output, /.*git\+https:\/\/\/github\.com\/Wandalen\/wProto\.git.* : .* <- .*\.#5e2aa08b36f97889dc29291292816a0191f7939f.*/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/out\/Proto\.informal\.out\.will\.yml.* was upgraded/ ), 0 );
     test.identical( _.strCount( op.output, /\+ .*upgradeDetached\/module\/Proto\.informal\.will\.yml.* was upgraded/ ), 0 );
 
@@ -26026,7 +26021,7 @@ function commandWillfileFromNpmDoubleConversion( test )
 
 //
 
-function commandWillfileExtendDstIsWillfile( test )
+function commandWillfileExtendWillfileDstIsWillfile( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npm-from-willfile' );
@@ -26034,7 +26029,7 @@ function commandWillfileExtendDstIsWillfile( test )
 
   /* - */
 
-  a.appStart({ args : '.willfile.extend ./ Author*.yml Contributors Description* Interpreters' })
+  a.appStart({ args : '.willfile.extend.willfile ./ Author*.yml Contributors Description* Interpreters' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new willfile, unical data in each file';
@@ -26053,7 +26048,7 @@ function commandWillfileExtendDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend NewFile Author*.yml Contributors Description* Interpreters' })
+  a.appStart({ args : '.willfile.extend.willfile NewFile Author*.yml Contributors Description* Interpreters' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new named willfile, unical data in each file';
@@ -26072,7 +26067,7 @@ function commandWillfileExtendDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend Author* Contributors Description* Interpreters' })
+  a.appStart({ args : '.willfile.extend.willfile Author* Contributors Description* Interpreters' })
   a.ready.then( ( op ) =>
   {
     test.case = 'add new data to existing config, unical data in each file';
@@ -26098,7 +26093,7 @@ function commandWillfileExtendDstIsWillfile( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.extend NewFile files/p*' })
+  a.appStart({ args : '.willfile.extend.willfile NewFile files/p*' })
   a.ready.then( ( op ) =>
   {
     test.case = 'creating new config from package.json file in another directory';
@@ -26163,7 +26158,7 @@ function commandWillfileExtendDstIsWillfile( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.extend Author* files/p*' })
+  a.appStart({ args : '.willfile.extend.willfile Author* files/p*' })
   a.ready.then( ( op ) =>
   {
     test.case = 'add new data to existing config from package.json file in another directory';
@@ -26221,7 +26216,7 @@ function commandWillfileExtendDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend ./.* ForExtension' })
+  a.appStart({ args : '.willfile.extend.willfile ./.* ForExtension' })
   a.ready.then( ( op ) =>
   {
     test.case = 'extend two unnamed willfiles by new data';
@@ -26410,7 +26405,7 @@ function commandWillfileExtendDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend Version* *will.yml ForExtension Version.will.yml' })
+  a.appStart({ args : '.willfile.extend.willfile Version* *will.yml ForExtension Version.will.yml' })
   a.ready.then( ( op ) =>
   {
     test.case = 'try to rewrite data by self';
@@ -26428,7 +26423,7 @@ function commandWillfileExtendDstIsWillfile( test )
 
 //
 
-function commandWillfileExtendDstIsJson( test )
+function commandWillfileExtendWillfileDstIsJson( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npm-from-willfile' );
@@ -26436,7 +26431,7 @@ function commandWillfileExtendDstIsJson( test )
 
   /* - */
 
-  a.appStart({ args : '.willfile.extend ./ Author* Contributors*.yml Description* Interpreters.will.yml format:json' })
+  a.appStart({ args : '.willfile.extend.willfile ./ Author* Contributors*.yml Description* Interpreters.will.yml format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new willfile, unical data in each file';
@@ -26454,7 +26449,7 @@ function commandWillfileExtendDstIsJson( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend NewFile Author*.yml Contributors Description* Interpreters format:json' })
+  a.appStart({ args : '.willfile.extend.willfile NewFile Author*.yml Contributors Description* Interpreters format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new named json file, unical data in each file';
@@ -26472,7 +26467,7 @@ function commandWillfileExtendDstIsJson( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend Author Contributors Description* Interpreters format:"json"' })
+  a.appStart({ args : '.willfile.extend.willfile Author Contributors Description* Interpreters format:"json"' })
   a.ready.then( ( op ) =>
   {
     test.case = 'add new data to existing config, unical data in each file';
@@ -26497,7 +26492,7 @@ function commandWillfileExtendDstIsJson( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.extend ./ files/p* format:json' })
+  a.appStart({ args : '.willfile.extend.willfile ./ files/p* format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'creating new config from package.json file in another directory';
@@ -26532,7 +26527,7 @@ function commandWillfileExtendDstIsJson( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.extend NewFile files/p* format:json' })
+  a.appStart({ args : '.willfile.extend.willfile NewFile files/p* format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'creating new config from package.json file in another directory';
@@ -26565,7 +26560,7 @@ function commandWillfileExtendDstIsJson( test )
 
 //
 
-function commandWillfileExtendWithOptions( test )
+function commandWillfileExtendWillfileWithOptions( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npm-from-willfile' );
@@ -26573,7 +26568,7 @@ function commandWillfileExtendWithOptions( test )
 
   /* - */
 
-  a.appStart({ args : '.willfile.extend ForExtension Author* author:0' })
+  a.appStart({ args : '.willfile.extend.willfile ForExtension Author* author:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled field author';
@@ -26586,7 +26581,7 @@ function commandWillfileExtendWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend ForExtension Keywords.will.yml keywords:0' })
+  a.appStart({ args : '.willfile.extend.willfile ForExtension Keywords.will.yml keywords:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled field keywords';
@@ -26599,7 +26594,7 @@ function commandWillfileExtendWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend ForExtension Contributors.will.yml contributors:0' })
+  a.appStart({ args : '.willfile.extend.willfile ForExtension Contributors.will.yml contributors:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled field contributors';
@@ -26613,7 +26608,7 @@ function commandWillfileExtendWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend ForExtension Interpreters.will.yml interpreters:0' })
+  a.appStart({ args : '.willfile.extend.willfile ForExtension Interpreters.will.yml interpreters:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled field interpreters';
@@ -26633,7 +26628,7 @@ function commandWillfileExtendWithOptions( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.extend .ex* ForExtension about:0' })
+  a.appStart({ args : '.willfile.extend.willfile ./.ex* ForExtension about:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled section about';
@@ -26666,7 +26661,7 @@ function commandWillfileExtendWithOptions( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.extend .ex* ForExtension build:0' })
+  a.appStart({ args : '.willfile.extend.willfile ./.ex* ForExtension build:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled section build';
@@ -26693,7 +26688,7 @@ function commandWillfileExtendWithOptions( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.extend .ex* ForExtension step:0 contributors:0 name:0' })
+  a.appStart({ args : '.willfile.extend.willfile ./.ex* ForExtension step:0 contributors:0 name:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled section step and fields contributors and name';
@@ -26730,7 +26725,7 @@ function commandWillfileExtendWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend .im* ForExtension submodulesDisabling:1' })
+  a.appStart({ args : '.willfile.extend.willfile ./.im* ForExtension submodulesDisabling:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'option submodulesDisabling';
@@ -26770,7 +26765,7 @@ function commandWillfileExtendWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend Author* ForExtension verbosity:5' })
+  a.appStart({ args : '.willfile.extend.willfile Author* ForExtension verbosity:5' })
   a.ready.then( ( op ) =>
   {
     test.case = 'option verbosity > 2';
@@ -26782,7 +26777,7 @@ function commandWillfileExtendWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend Author* ForExtension v:1' })
+  a.appStart({ args : '.willfile.extend.willfile Author* ForExtension v:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'option verbosity < 2';
@@ -26799,7 +26794,7 @@ function commandWillfileExtendWithOptions( test )
 
 //
 
-function commandWillfileSupplementDstIsWillfile( test )
+function commandWillfileSupplementWillfileDstIsWillfile( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npm-from-willfile' );
@@ -26807,7 +26802,7 @@ function commandWillfileSupplementDstIsWillfile( test )
 
   /* - */
 
-  a.appStart({ args : '.willfile.supplement ./ Author*.yml Contributors Description* Interpreters' })
+  a.appStart({ args : '.willfile.supplement.willfile ./ Author*.yml Contributors Description* Interpreters' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new willfile, unical data in each file';
@@ -26826,7 +26821,7 @@ function commandWillfileSupplementDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement NewFile Author*.yml Contributors Description* Interpreters' })
+  a.appStart({ args : '.willfile.supplement.willfile NewFile Author*.yml Contributors Description* Interpreters' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new named willfile, unical data in each file';
@@ -26845,7 +26840,7 @@ function commandWillfileSupplementDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement Author* Contributors Description* Interpreters' })
+  a.appStart({ args : '.willfile.supplement.willfile Author* Contributors Description* Interpreters' })
   a.ready.then( ( op ) =>
   {
     test.case = 'add new data to existing config, unical data in each file';
@@ -26871,7 +26866,7 @@ function commandWillfileSupplementDstIsWillfile( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement NewFile files/p*' })
+  a.appStart({ args : '.willfile.supplement.willfile NewFile files/p*' })
   a.ready.then( ( op ) =>
   {
     test.case = 'creating new config from package.json file in another directory';
@@ -26936,7 +26931,7 @@ function commandWillfileSupplementDstIsWillfile( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement Author* files/p*' })
+  a.appStart({ args : '.willfile.supplement.willfile Author* files/p*' })
   a.ready.then( ( op ) =>
   {
     test.case = 'add new data to existing config from package.json file in another directory';
@@ -26994,7 +26989,7 @@ function commandWillfileSupplementDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement ./.* ForExtension' })
+  a.appStart({ args : '.willfile.supplement.willfile ./.* ForExtension' })
   a.ready.then( ( op ) =>
   {
     test.case = 'extend two unnamed willfiles by new data';
@@ -27182,7 +27177,7 @@ function commandWillfileSupplementDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement Version* *will.yml ForExtension Version.will.yml' })
+  a.appStart({ args : '.willfile.supplement.willfile Version* *will.yml ForExtension Version.will.yml' })
   a.ready.then( ( op ) =>
   {
     test.case = 'try to rewrite data by self';
@@ -27200,7 +27195,7 @@ function commandWillfileSupplementDstIsWillfile( test )
 
 //
 
-function commandWillfileSupplementDstIsJson( test )
+function commandWillfileSupplementWillfileDstIsJson( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npm-from-willfile' );
@@ -27208,7 +27203,7 @@ function commandWillfileSupplementDstIsJson( test )
 
   /* - */
 
-  a.appStart({ args : '.willfile.supplement ./ Author* Contributors*.yml Description* Interpreters.will.yml format:json' })
+  a.appStart({ args : '.willfile.supplement.willfile ./ Author* Contributors*.yml Description* Interpreters.will.yml format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new willfile, unical data in each file';
@@ -27226,7 +27221,7 @@ function commandWillfileSupplementDstIsJson( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement NewFile Author*.yml Contributors Description* Interpreters format:json' })
+  a.appStart({ args : '.willfile.supplement.willfile NewFile Author*.yml Contributors Description* Interpreters format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new named json file, unical data in each file';
@@ -27244,7 +27239,7 @@ function commandWillfileSupplementDstIsJson( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement Author Contributors Description* Interpreters format:"json"' })
+  a.appStart({ args : '.willfile.supplement.willfile Author Contributors Description* Interpreters format:"json"' })
   a.ready.then( ( op ) =>
   {
     test.case = 'add new data to existing config, unical data in each file';
@@ -27269,7 +27264,7 @@ function commandWillfileSupplementDstIsJson( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement ./ files/p* format:json' })
+  a.appStart({ args : '.willfile.supplement.willfile ./ files/p* format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'creating new config from package.json file in another directory';
@@ -27304,7 +27299,7 @@ function commandWillfileSupplementDstIsJson( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement NewFile files/p* format:json' })
+  a.appStart({ args : '.willfile.supplement.willfile NewFile files/p* format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'creating new config from package.json file in another directory';
@@ -27337,7 +27332,7 @@ function commandWillfileSupplementDstIsJson( test )
 
 //
 
-function commandWillfileSupplementWithOptions( test )
+function commandWillfileSupplementWillfileWithOptions( test )
 {
   let context = this;
   let a = context.assetFor( test, 'npm-from-willfile' );
@@ -27345,7 +27340,7 @@ function commandWillfileSupplementWithOptions( test )
 
   /* - */
 
-  a.appStart({ args : '.willfile.supplement ForExtension Author* author:0' })
+  a.appStart({ args : '.willfile.supplement.willfile ForExtension Author* author:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled field author';
@@ -27358,7 +27353,7 @@ function commandWillfileSupplementWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement ForExtension Keywords.will.yml keywords:0' })
+  a.appStart({ args : '.willfile.supplement.willfile ForExtension Keywords.will.yml keywords:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled field keywords';
@@ -27371,7 +27366,7 @@ function commandWillfileSupplementWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement ForExtension Contributors.will.yml contributors:0' })
+  a.appStart({ args : '.willfile.supplement.willfile ForExtension Contributors.will.yml contributors:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled field contributors';
@@ -27385,7 +27380,7 @@ function commandWillfileSupplementWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement ForExtension Interpreters.will.yml interpreters:0' })
+  a.appStart({ args : '.willfile.supplement.willfile ForExtension Interpreters.will.yml interpreters:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled field interpreters';
@@ -27405,7 +27400,7 @@ function commandWillfileSupplementWithOptions( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement .ex* ForExtension about:0' })
+  a.appStart({ args : '.willfile.supplement.willfile ./.ex* ForExtension about:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled section about';
@@ -27438,7 +27433,7 @@ function commandWillfileSupplementWithOptions( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement .ex* ForExtension build:0' })
+  a.appStart({ args : '.willfile.supplement.willfile ./.ex* ForExtension build:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled section build';
@@ -27465,7 +27460,7 @@ function commandWillfileSupplementWithOptions( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement .ex* ForExtension step:0 contributors:0 name:0' })
+  a.appStart({ args : '.willfile.supplement.willfile ./.ex* ForExtension step:0 contributors:0 name:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled section step and fields contributors and name';
@@ -27502,7 +27497,7 @@ function commandWillfileSupplementWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement .im* ForExtension submodulesDisabling:1' })
+  a.appStart({ args : '.willfile.supplement.willfile ./.im* ForExtension submodulesDisabling:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'option submodulesDisabling';
@@ -27542,7 +27537,7 @@ function commandWillfileSupplementWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement Author* ForExtension verbosity:5' })
+  a.appStart({ args : '.willfile.supplement.willfile Author* ForExtension verbosity:5' })
   a.ready.then( ( op ) =>
   {
     test.case = 'option verbosity > 2';
@@ -27554,7 +27549,7 @@ function commandWillfileSupplementWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement Author* ForExtension v:1' })
+  a.appStart({ args : '.willfile.supplement.willfile Author* ForExtension v:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'option verbosity < 2';
@@ -29262,12 +29257,12 @@ let Self =
     commandWillfileFromNpm,
     commandWillfileFromNpmDoubleConversion,
 
-    commandWillfileExtendDstIsWillfile,
-    commandWillfileExtendDstIsJson,
-    commandWillfileExtendWithOptions,
-    commandWillfileSupplementDstIsWillfile,
-    commandWillfileSupplementDstIsJson,
-    commandWillfileSupplementWithOptions,
+    commandWillfileExtendWillfileDstIsWillfile,
+    commandWillfileExtendWillfileDstIsJson,
+    commandWillfileExtendWillfileWithOptions,
+    commandWillfileSupplementWillfileDstIsWillfile,
+    commandWillfileSupplementWillfileDstIsJson,
+    commandWillfileSupplementWillfileWithOptions,
 
     commandGitPull,
     commandGitPush,

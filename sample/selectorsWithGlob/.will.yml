@@ -11,12 +11,12 @@ path :
   fileToExport.debug :
     criterion :
       debug : 1
-    path : 'fileDebug'
+    path : 'fileDebug.txt'
 
   fileToExport.release :
     criterion :
       debug : 0
-    path : 'fileRelease'
+    path : 'fileRelease.txt'
 
 step  :
   export.debug :
