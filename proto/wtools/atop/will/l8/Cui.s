@@ -2194,6 +2194,7 @@ function commandBuild( e )
 
 }
 
+commandBuild.defaults = Object.create( null );
 commandBuild.hint = 'Build current module with spesified criterion.';
 commandBuild.commandSubjectHint = 'A name of build scenario.';
 
@@ -2229,6 +2230,7 @@ function commandExport( e )
 
 }
 
+commandExport.defaults = Object.create( null );
 commandExport.hint = 'Export selected the module with spesified criterion. Save output to output willfile and archive.';
 commandExport.commandSubjectHint = 'A name of export scenario.';
 
@@ -2264,6 +2266,7 @@ function commandExportPurging( e )
 
 }
 
+commandExportPurging.defaults = Object.create( null );
 commandExportPurging.hint = 'Export selected the module with spesified criterion purging output willfile first. Save output to output willfile and archive.';
 commandExportPurging.commandSubjectHint = 'A name of export scenario.';
 
@@ -2298,6 +2301,7 @@ function commandExportRecursive( e )
 
 }
 
+commandExportRecursive.defaults = Object.create( null );
 commandExportRecursive.hint = 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.';
 commandExportRecursive.commandSubjectHint = 'A name of export scenario.';
 
