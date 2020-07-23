@@ -1,6 +1,6 @@
 submodule :
   ModuleForTesting2a : npm:///wmodulefortesting2a!alpha
-  ModuleForTesting12ab : npm:///wmodulefortesting12ab!0.0.56
+  ModuleForTesting12ab : npm:///wmodulefortesting12ab!0.0.65
 
 about :
 

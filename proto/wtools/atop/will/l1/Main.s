@@ -1613,7 +1613,6 @@ function modulesFindEachAt( o )
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
-  let con;
   let errs = [];
 
   _.sure( _.strDefined( o.selector ), 'Expects string' );
@@ -1626,198 +1625,299 @@ function modulesFindEachAt( o )
 
   /* */
 
-  if( _.will.Resolver.selectorIs( o.selector ) )
-  {
+  let opener = o.currentOpener;
+  if( !opener )
+  opener = will._openerMake
+  ({
+    opener :
+    {
+      willfilesPath : path.trail( path.current() ),
+      searching : 'strict',
+      reason : 'each',
+    }
+  });
+  opener.find();
+  opener.open();
 
-    let opener = o.currentOpener;
-    if( !opener )
-    opener = will._openerMake
+  let op = Object.create( null );
+  op.options = o;
+  op.errs = [];
+  op.openers = [];
+
+  let con = opener.openedModule.ready.split()
+  .then( () =>
+  {
+    let con2 = new _.Consequence();
+    let resolved = opener.openedModule.submodulesResolve
     ({
-      opener :
-      {
-        willfilesPath : path.trail( path.current() ),
-        searching : 'strict',
-        reason : 'each',
-      }
-    });
-    opener.find();
-
-    con = opener.openedModule.ready.split();
-    con.then( () =>
-    {
-      let con2 = new _.Consequence();
-      let resolved = opener.openedModule.submodulesResolve
-      ({
-        selector : o.selector,
-        preservingIteration : 1,
-        pathUnwrapping : 1,
-      });
-
-      if( !_.mapIs( resolved ) )
-      resolved = _.arrayAs( resolved );
-
-      _.each( resolved, ( context ) => con2.then( ( arg ) =>
-      {
-        let context2 = Object.create( null );
-        // context2.currentOpener = opener._openerMake(); // zzz
-        // context2.dst = element;
-
-        context2.currentModule = context.currentModule;
-        _.assert( context2.currentModule instanceof _.will.Module );
-        context2.currentOpener = context2.currentModule.userArray[ 0 ];
-        _.assert( context2.currentOpener instanceof _.will.ModuleOpener );
-
-        debugger;
-        if( _.arrayIs( context.dst ) || _.strIs( context.dst ) )
-        context2.currentOpenerPath = context.dst;
-        context2.options = o;
-
-        if( o.onBegin )
-        o.onBegin( context2 )
-        if( o.onEnd )
-        return o.onEnd( context2 );
-
-        return null;
-      }));
-      con2.take( null );
-      return con2;
+      selector : o.selector,
+      preservingIteration : 1,
+      pathUnwrapping : 1,
     });
 
-    opener.open();
+    if( !_.mapIs( resolved ) )
+    resolved = _.arrayAs( resolved );
 
-  }
-  else
-  {
-
-    con = new _.Consequence().take( null );
-
-    if( !path.isGlob( o.selector ) )
+    _.each( resolved, ( context ) =>
     {
-      if( _.strEnds( o.selector, '/.' ) )
-      o.selector = _.strRemoveEnd( o.selector, '/.' ) + '/*';
-      else if( o.selector === '.' )
-      o.selector = '*';
-      else if( _.strEnds( o.selector, '/' ) )
-      o.selector += '*';
-      else
-      o.selector += '/*';
-    }
+      _.assert( context.currentModule instanceof _.will.Module );
+      _.assert( context.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
 
-    let files;
-    try
-    {
-      files = will.willfilesFind
-      ({
-        commonPath : o.selector,
-        withIn : 1,
-        withOut : 1,
-        excludingUnderscore : 1,
-      });
-    }
-    catch( err )
-    {
-      throw _.err( err );
-    }
+      _.arrayAppendOnce( op.openers, context.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
 
-    let filesMap = Object.create( null );
-    for( let f = 0 ; f < files.length ; f++ ) con
-    .then( ( arg ) => /* !!! replace by concurrent, maybe */
-    {
-      let file = files[ f ];
-
-      if( filesMap[ file.absolute ] )
-      {
-        return true;
-      }
-
-      let selectedFiles = will.willfilesSelectPaired( file, files );
-      let willfilesPath = selectedFiles.map( ( file ) =>
-      {
-        filesMap[ file.absolute ] = true;
-        return file.absolute;
-      });
-
-      if( willfilesPath.length === 1 )
-      willfilesPath = willfilesPath[ 0 ];
-
-      let opener = will._openerMake
-      ({
-        opener :
-        {
-          willfilesPath : willfilesPath,
-          searching : 'exact',
-          reason : 'each',
-        }
-      });
-
-      opener.find();
-
-      let context = Object.create( null );
-      context.currentOpener = opener;
-      context.options = o;
-
-      opener.openedModule.stager.stageConsequence( 'preformed' ).then( ( arg ) =>
-      {
-        if( o.onBegin )
-        return o.onBegin( context );
-        return arg;
-      });
-
-      opener.open();
-
-      return opener.openedModule.ready.split().then( function( arg )
-      {
-        _.assert( opener.willfilesArray.length > 0 );
-        if( opener.willfilesPath )
-        _.mapSet( filesMap, opener.willfilesPath, true );
-
-        let r = null;
-        if( o.onEnd )
-        r = o.onEnd( context );
-
-        return r;
-      })
-
+      return context;
     })
-    .finally( ( err, arg ) =>
-    {
-      if( err )
-      {
-        debugger;
-        if( o.onError )
-        o.onError( err );
-        errs.push( _.err( err ) );
-        return null;
-      }
-      return arg;
-    });
 
-  }
-
-  /* */
-
-  con.finally( ( err, arg ) =>
+    return op;
+  })
+  .finally( ( err, arg ) =>
   {
-    // debugger;
-    if( errs.length )
-    {
-      errs.forEach( ( err, index ) => index > 0 ? _.errAttend( err ) : null );
-    }
     if( err )
     {
-      throw _.err( err );
+      op.errs.push( _.err( err ) );
+      if( o.onError )
+      o.onError( err );
+      throw err;
     }
-    if( errs.length )
-    {
-      throw errs[ 0 ];
-    }
-    return o;
-  });
 
-  /* */
+    let filter = _.mapOnly( o, will.modulesFilter.defaults );
+    let openers2 = will.modulesFilter( op.openers, filter );
+    if( !o.atLeastOne || openers2.length )
+    op.openers = openers2;
+
+    op.junctions = _.longOnce( will.junctionsFrom( op.openers ) );
+
+    op.sortedOpeners = will.graphTopSort( op.openers );
+    op.sortedOpeners.reverse();
+
+    op.sortedOpeners = op.sortedOpeners.filter( ( object ) =>
+    {
+      _.assert( will.ObjectIs( object ) );
+      if( _.longHas( op.openers, object ) )
+      return object;
+    });
+
+    op.sortedOpeners.forEach( ( opener ) =>
+    {
+      _.assert( opener instanceof _.will.ModuleOpener );
+    });
+
+    return op;
+  });
 
   return con;
 }
+// {
+//   let will = this.form();
+//   let fileProvider = will.fileProvider;
+//   let path = will.fileProvider.path;
+//   let logger = will.logger;
+//   let con;
+//   let errs = [];
+//
+//   _.sure( _.strDefined( o.selector ), 'Expects string' );
+//   _.assert( arguments.length === 1 );
+//
+//   will.readingBegin();
+//
+//   if( _.strEnds( o.selector, '::' ) )
+//   o.selector = o.selector + '*';
+//
+//   /* */
+//
+//   if( _.will.Resolver.selectorIs( o.selector ) )
+//   {
+//
+//     let opener = o.currentOpener;
+//     if( !opener )
+//     opener = will._openerMake
+//     ({
+//       opener :
+//       {
+//         willfilesPath : path.trail( path.current() ),
+//         searching : 'strict',
+//         reason : 'each',
+//       }
+//     });
+//     opener.find();
+//
+//     con = opener.openedModule.ready.split();
+//     con.then( () =>
+//     {
+//       let con2 = new _.Consequence();
+//       let resolved = opener.openedModule.submodulesResolve
+//       ({
+//         selector : o.selector,
+//         preservingIteration : 1,
+//         pathUnwrapping : 1,
+//       });
+//       debugger;
+//
+//       if( !_.mapIs( resolved ) )
+//       resolved = _.arrayAs( resolved );
+//
+//       _.each( resolved, ( context ) => con2.then( ( arg ) =>
+//       {
+//         let context2 = Object.create( null );
+//         // context2.currentOpener = opener._openerMake(); // zzz
+//         // context2.dst = element;
+//
+//         context2.currentModule = context.currentModule;
+//         _.assert( context2.currentModule instanceof _.will.Module );
+//         context2.currentOpener = context2.currentModule.userArray[ 0 ];
+//         _.assert( context2.currentOpener instanceof _.will.ModuleOpener );
+//
+//         debugger;
+//         if( _.arrayIs( context.dst ) || _.strIs( context.dst ) )
+//         context2.currentOpenerPath = context.dst;
+//         context2.options = o;
+//
+//         if( o.onBegin )
+//         o.onBegin( context2 )
+//         if( o.onEnd )
+//         return o.onEnd( context2 );
+//
+//         return null;
+//       }));
+//       con2.take( null );
+//       return con2;
+//     });
+//
+//     opener.open();
+//
+//   }
+//   else
+//   {
+//
+//     con = new _.Consequence().take( null );
+//
+//     if( !path.isGlob( o.selector ) )
+//     {
+//       if( _.strEnds( o.selector, '/.' ) )
+//       o.selector = _.strRemoveEnd( o.selector, '/.' ) + '/*';
+//       else if( o.selector === '.' )
+//       o.selector = '*';
+//       else if( _.strEnds( o.selector, '/' ) )
+//       o.selector += '*';
+//       else
+//       o.selector += '/*';
+//     }
+//
+//     let files;
+//     try
+//     {
+//       files = will.willfilesFind
+//       ({
+//         commonPath : o.selector,
+//         withIn : 1,
+//         withOut : 1,
+//         excludingUnderscore : 1,
+//       });
+//     }
+//     catch( err )
+//     {
+//       throw _.err( err );
+//     }
+//
+//     let filesMap = Object.create( null );
+//     for( let f = 0 ; f < files.length ; f++ ) con
+//     .then( ( arg ) => /* !!! replace by concurrent, maybe */
+//     {
+//       let file = files[ f ];
+//
+//       if( filesMap[ file.absolute ] )
+//       {
+//         return true;
+//       }
+//
+//       let selectedFiles = will.willfilesSelectPaired( file, files );
+//       let willfilesPath = selectedFiles.map( ( file ) =>
+//       {
+//         filesMap[ file.absolute ] = true;
+//         return file.absolute;
+//       });
+//
+//       if( willfilesPath.length === 1 )
+//       willfilesPath = willfilesPath[ 0 ];
+//
+//       let opener = will._openerMake
+//       ({
+//         opener :
+//         {
+//           willfilesPath : willfilesPath,
+//           searching : 'exact',
+//           reason : 'each',
+//         }
+//       });
+//
+//       opener.find();
+//
+//       let context = Object.create( null );
+//       context.currentOpener = opener;
+//       context.options = o;
+//
+//       opener.openedModule.stager.stageConsequence( 'preformed' ).then( ( arg ) =>
+//       {
+//         if( o.onBegin )
+//         return o.onBegin( context );
+//         return arg;
+//       });
+//
+//       opener.open();
+//
+//       return opener.openedModule.ready.split().then( function( arg )
+//       {
+//         _.assert( opener.willfilesArray.length > 0 );
+//         if( opener.willfilesPath )
+//         _.mapSet( filesMap, opener.willfilesPath, true );
+//
+//         let r = null;
+//         if( o.onEnd )
+//         r = o.onEnd( context );
+//
+//         return r;
+//       })
+//
+//     })
+//     .finally( ( err, arg ) =>
+//     {
+//       if( err )
+//       {
+//         debugger;
+//         if( o.onError )
+//         o.onError( err );
+//         errs.push( _.err( err ) );
+//         return null;
+//       }
+//       return arg;
+//     });
+//
+//   }
+//
+//   /* */
+//
+//   con.finally( ( err, arg ) =>
+//   {
+//     // debugger;
+//     if( errs.length )
+//     {
+//       errs.forEach( ( err, index ) => index > 0 ? _.errAttend( err ) : null );
+//     }
+//     if( err )
+//     {
+//       throw _.err( err );
+//     }
+//     if( errs.length )
+//     {
+//       throw errs[ 0 ];
+//     }
+//     return o;
+//   });
+//
+//   /* */
+//
+//   return con;
+// }
 
 modulesFindEachAt.defaults =
 {
