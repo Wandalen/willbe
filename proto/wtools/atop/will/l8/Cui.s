@@ -2600,7 +2600,7 @@ function commandWith( e )
 
   return cui.modulesFindWithAt
   ({
-    selector : e.commandArgument,
+    selector : _.strUnquote( e.commandArgument ),
     atLeastOne : !path.isGlob( e.commandArgument ),
   })
   .then( function( it )
@@ -2653,7 +2653,7 @@ function commandEach( e )
   {
     con = cui.modulesFindEachAt
     ({
-      selector : e.commandArgument,
+      selector : _.strUnquote( e.commandArgument ),
       onError : handleError,
     })
   }
@@ -2673,7 +2673,7 @@ function commandEach( e )
 
     con = cui.modulesFindWithAt
     ({
-      selector : e.commandArgument,
+      selector : _.strUnquote( e.commandArgument ),
       atLeastOne : !path.isGlob( e.commandArgument ),
       withInvalid : 1,
     })
