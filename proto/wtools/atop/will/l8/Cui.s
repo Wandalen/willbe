@@ -2897,8 +2897,33 @@ function commandWillfileFromNpm( e )
   cui._command_pre( commandWillfileFromNpm, arguments );
   _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
 
-  if( cui.currentOpeners && cui.currentOpeners.length )
+  let con = new _.Consequence().take( null );
+  if( !cui.currentOpeners )
   {
+    con = cui.modulesFindWithAt
+    ({
+      atLeastOne : 1,
+      selector : './',
+      tracing : 1,
+    })
+    .finally( ( err, it ) =>
+    {
+      if( err )
+      throw _.err( err );
+      cui.currentOpeners = it.openers;
+      return null;
+    });
+  }
+
+  return con.then( () =>
+  {
+    if( !cui.currentOpeners.length )
+    return _.will.Module.prototype.willfileGenerateFromNpm.call
+    ( cui, {
+      ... e.propertiesMap,
+      verbosity : 3,
+    });
+
     return cui._commandBuildLike
     ({
       event : e,
@@ -2906,32 +2931,7 @@ function commandWillfileFromNpm( e )
       onEach : handleEach,
       commandRoutine : commandWillfileFromNpm,
     });
-  }
-  else
-  {
-    cui.modulesFindWithAt( { atLeastOne : 1, selector : './', tracing : 1 } )
-    .finally( function( err, it )
-    {
-      if( err )
-      throw _.err( err );
-
-      cui.currentOpeners = it.openers;
-      if( !cui.currentOpeners.length )
-      return _.will.Module.prototype.willfileGenerateFromNpm.call
-      ( cui, {
-        ... e.propertiesMap,
-        verbosity : 3,
-      });
-
-      return cui._commandBuildLike
-      ({
-        event : e,
-        name : 'npm from cuifile',
-        onEach : handleEach,
-        commandRoutine : commandWillfileFromNpm,
-      });
-    })
-  }
+  })
 
   function handleEach( it )
   {
