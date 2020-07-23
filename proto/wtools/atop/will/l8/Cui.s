@@ -462,8 +462,8 @@ function _commandsMake()
 
     'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile )              },
     'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm )              },
-    'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
-    'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
+    'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
+    'willfile supplement willfile' :    { e : _.routineJoin( will, will.commandWillfileSupplementWillfile )   },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
     'package local versions' :          { e : _.routineJoin( will, will.commandPackageLocalVersions )         },
     'package remote versions' :         { e : _.routineJoin( will, will.commandPackageRemoteVersions )        },
@@ -2962,10 +2962,10 @@ commandWillfileFromNpm.commandProperties =
 
 //
 
-function commandWillfileExtend( e )
+function commandWillfileExtendWillfile( e )
 {
   let cui = this;
-  cui._command_pre( commandWillfileExtend, arguments );
+  cui._command_pre( commandWillfileExtendWillfile, arguments );
 
   return _.will.Module.prototype.willfileExtend.call
   ( cui, {
@@ -2975,14 +2975,14 @@ function commandWillfileExtend( e )
   });
 }
 
-commandWillfileExtend.defaults =
+commandWillfileExtendWillfile.defaults =
 {
   verbosity : 3,
   v : 3,
 };
-commandWillfileExtend.hint = 'Use "willfile extend" to extend existing willfile by data from source configuration files.';
-commandWillfileExtend.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
-commandWillfileExtend.commandProperties =
+commandWillfileExtendWillfile.hint = 'Use "willfile extend" to extend existing willfile by data from source configuration files.';
+commandWillfileExtendWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
+commandWillfileExtendWillfile.commandProperties =
 {
   'about' : 'Enables extension of section "about". Default value is 1.',
   'build' : 'Enables extension of section "build". Default value is 1.',
@@ -3011,10 +3011,10 @@ commandWillfileExtend.commandProperties =
 
 //
 
-function commandWillfileSupplement( e )
+function commandWillfileSupplementWillfile( e )
 {
   let cui = this;
-  cui._command_pre( commandWillfileExtend, arguments );
+  cui._command_pre( commandWillfileSupplementWillfile, arguments );
 
   return _.will.Module.prototype.willfileExtend.call
   ( cui, {
@@ -3024,14 +3024,14 @@ function commandWillfileSupplement( e )
   });
 }
 
-commandWillfileSupplement.defaults =
+commandWillfileSupplementWillfile.defaults =
 {
   verbosity : 3,
   v : 3,
 };
-commandWillfileSupplement.hint = 'Use "willfile supplement" to supplement existing willfile by new data from source configuration files.';
-commandWillfileSupplement.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
-commandWillfileSupplement.commandProperties = commandWillfileExtend.commandProperties;
+commandWillfileSupplementWillfile.hint = 'Use "willfile supplement" to supplement existing willfile by new data from source configuration files.';
+commandWillfileSupplementWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
+commandWillfileSupplementWillfile.commandProperties = commandWillfileExtendWillfile.commandProperties;
 
 //
 
@@ -3762,8 +3762,8 @@ let Extension =
 
   commandNpmFromWillfile,
   commandWillfileFromNpm,
-  commandWillfileExtend,
-  commandWillfileSupplement,
+  commandWillfileExtendWillfile,
+  commandWillfileSupplementWillfile,
   /* aaa2 :
   will .willfile.extend dst/ src1 dir/src2 src/
   will .willfile.extend dst src1 dir/src2 src/
