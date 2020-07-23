@@ -14307,7 +14307,9 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/.circleci/config.yml',
       './.module/ModuleForTesting12/.github',
       './.module/ModuleForTesting12/.github/workflows',
-      './.module/ModuleForTesting12/.github/workflows/Test.yml',
+      './.module/ModuleForTesting12/.github/workflows/Publish.yml',
+      './.module/ModuleForTesting12/.github/workflows/PullRequest.yml',
+      './.module/ModuleForTesting12/.github/workflows/Push.yml',
       './.module/ModuleForTesting12/doc',
       './.module/ModuleForTesting12/doc/ModuleForTesting12.md',
       './.module/ModuleForTesting12/doc/README.md',
@@ -14325,7 +14327,7 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/proto/wtools/testing/l3.test',
       './.module/ModuleForTesting12/proto/wtools/testing/l3.test/ModuleForTesting12.test.s',
       './.module/ModuleForTesting12/sample',
-      './.module/ModuleForTesting12/sample/Sample.s'
+      './.module/ModuleForTesting12/sample/Sample.s',
     ];
     var got = a.find( a.abs( '.' ) );
     test.identical( got, exp );
