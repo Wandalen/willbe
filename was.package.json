@@ -21,7 +21,7 @@
   },
   "scripts" :
   {
-    "test" : "wtest .run 'proto/**' rapidity:-3",
+    "test" : "wtest .run 'proto/**' rapidity:-1",
     "docgen" : "wdocgen .build proto",
     "single-process-will" : "node proto/wtools/atop/will/entry/Exec",
     "debug-will" : "node proto/wtools/atop/will/entry/ExecDebug",
@@ -69,6 +69,6 @@
     "open" : "7.0.4",
     "getos" : "3.2.1"
   },
-  "devDependencies" : { "wTesting" : "" },
+  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0" },
   "keywords" : [ "wTools" ]
 }

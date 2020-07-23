@@ -19,7 +19,7 @@ about :
   - 'Dmytro Kryvoruchko <dm.vict.kr@gmail.com>'
   npm.name : 'willbe'
   npm.scripts :
-    test : wtest .run proto/** v:5
+    test : wtest .run proto/** rapidity:-1
     docgen : wdocgen .build proto
     single-process-will : node proto/wtools/atop/will/entry/Exec
     debug-will : node proto/wtools/atop/will/entry/ExecDebug

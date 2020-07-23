@@ -79,6 +79,11 @@ submodule :
   wCensorBasic :
     path : npm:///wcensorbasic
     enabled : 0 # submodule
+  eslint :
+    path : npm:///eslint#7.1.0
+    enabled : 0 # submodule
+    criterion :
+      debug : 1
   wTesting :
     path : npm:///wTesting
     enabled : 0 # submodule
