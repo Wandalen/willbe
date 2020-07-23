@@ -2967,7 +2967,7 @@ function commandWillfileExtendWillfile( e )
   let cui = this;
   cui._command_pre( commandWillfileExtendWillfile, arguments );
 
-  return _.will.Module.prototype.willfileExtend.call
+  return _.will.Module.prototype.willfileExtendWillfile.call
   ( cui, {
     request : e.subject,
     onSection : _.mapExtend,
@@ -3016,7 +3016,7 @@ function commandWillfileSupplementWillfile( e )
   let cui = this;
   cui._command_pre( commandWillfileSupplementWillfile, arguments );
 
-  return _.will.Module.prototype.willfileExtend.call
+  return _.will.Module.prototype.willfileExtendWillfile.call
   ( cui, {
     request : e.subject,
     onSection : _.mapSupplement,

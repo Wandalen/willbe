@@ -6669,12 +6669,11 @@ function structureExportOut( o )
     let module = handle.toModule();
     if( !module )
     {
-      debugger;
       if( junction.relation && junction.relation.criterion.optional )
       return;
       throw _.err
       (
-          `${junction.object.absoluteName} is not available. `
+        `${junction.object.absoluteName} is not available. `
         + `\nRemote path is ${junction.remotePath}`
         + `\nLocal path is ${junction.localPath}`
       );
@@ -7564,12 +7563,12 @@ function willfileGenerateFromNpm( o )
 
 //
 
-function willfileExtend( o )
+function willfileExtendWillfile( o )
 {
   let will = this.will ? this.will : this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let opts = _.routineOptions( willfileExtend, o );
+  let opts = _.routineOptions( willfileExtendWillfile, o );
   let request = opts.request.split( /\s+/ );
 
   _.assert( arguments.length === 1 );
@@ -7891,7 +7890,7 @@ function willfileExtend( o )
   }
 }
 
-willfileExtend.defaults =
+willfileExtendWillfile.defaults =
 {
   about : 1,
   build : 1,
@@ -9117,7 +9116,7 @@ let Extension =
   npmGenerateFromWillfile,
   _willfileGenerateFromNpm,
   willfileGenerateFromNpm,
-  willfileExtend,
+  willfileExtendWillfile,
 
   // remote
 
