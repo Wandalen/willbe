@@ -1613,7 +1613,6 @@ function modulesFindEachAt( o )
   let fileProvider = will.fileProvider;
   let path = will.fileProvider.path;
   let logger = will.logger;
-  let con;
   let errs = [];
 
   _.sure( _.strDefined( o.selector ), 'Expects string' );
@@ -1645,7 +1644,7 @@ function modulesFindEachAt( o )
   op.errs = [];
   op.openers = [];
 
-  return opener.openedModule.ready.split()
+  let con = opener.openedModule.ready.split()
   .then( () =>
   {
     let con2 = new _.Consequence();
@@ -1664,18 +1663,49 @@ function modulesFindEachAt( o )
       _.assert( context.currentModule instanceof _.will.Module );
       _.assert( context.currentModule.userArray[ 0 ] instanceof _.will.ModuleOpener );
 
-      if( _.arrayIs( context.dst ) || _.strIs( context.dst ) )
-      context2.currentOpenerPath = context.dst;
-      context2.options = o;
-
       _.arrayAppendOnce( op.openers, context.currentModule.userArray[ 0 ], ( e ) => e.openedModule );
 
       return context;
     })
 
     return op;
+  })
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    {
+      op.errs.push( _.err( err ) );
+      if( o.onError )
+      o.onError( err );
+      throw err;
+    }
+
+    let filter = _.mapOnly( o, will.modulesFilter.defaults );
+    let openers2 = will.modulesFilter( op.openers, filter );
+    if( !o.atLeastOne || openers2.length )
+    op.openers = openers2;
+
+    op.junctions = _.longOnce( will.junctionsFrom( op.openers ) );
+
+    op.sortedOpeners = will.graphTopSort( op.openers );
+    op.sortedOpeners.reverse();
+
+    op.sortedOpeners = op.sortedOpeners.filter( ( object ) =>
+    {
+      _.assert( will.ObjectIs( object ) );
+      if( _.longHas( op.openers, object ) )
+      return object;
+    });
+
+    op.sortedOpeners.forEach( ( opener ) =>
+    {
+      _.assert( opener instanceof _.will.ModuleOpener );
+    });
+
+    return op;
   });
 
+  return con;
 }
 // {
 //   let will = this.form();
