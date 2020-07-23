@@ -1,6 +1,6 @@
 {
   "name" : "willbe",
-  "version" : "0.5.213",
+  "version" : "0.5.214",
   "description" : "Utility to manage modules of complex modular systems",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "contributors" :
@@ -21,7 +21,7 @@
   },
   "scripts" :
   {
-    "test" : "wtest .run 'proto/**' rapidity:-3",
+    "test" : "wtest .run 'proto/**' rapidity:-1",
     "docgen" : "wdocgen .build proto",
     "single-process-will" : "node proto/wtools/atop/will/entry/Exec",
     "debug-will" : "node proto/wtools/atop/will/entry/ExecDebug",
@@ -69,6 +69,6 @@
     "wyamltools" : "alpha",
     "wcensorbasic" : "alpha"
   },
-  "devDependencies" : { "wTesting" : "alpha" },
+  "devDependencies" : { "eslint" : "7.1.0", "wTesting" : "alpha" },
   "keywords" : [ "wTools" ]
 }
