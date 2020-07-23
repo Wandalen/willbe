@@ -2144,7 +2144,6 @@ function commandSubmodulesClean( e )
 
 commandSubmodulesClean.defaults = _.mapExtend( null, commandImply.defaults );
 commandSubmodulesClean.defaults.withSubmodules = 0;
-commandSubmodulesClean.defaults.verbosity = 3;
 commandSubmodulesClean.hint = 'Delete all downloaded submodules.';
 commandSubmodulesClean.commandSubjectHint = false;
 commandSubmodulesClean.commandProperties =
@@ -2161,6 +2160,7 @@ function commandBuild( e )
 {
   let cui = this;
   cui._command_pre( commandBuild, arguments );
+  let doneContainer = [];
 
   return cui._commandBuildLike
   ({
@@ -2175,7 +2175,7 @@ function commandBuild( e )
     return it.opener.openedModule.modulesBuild
     ({
       ... _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } ),
-      doneContainer : [],
+      doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
       recursive : 0,
@@ -2185,10 +2185,6 @@ function commandBuild( e )
 
 }
 
-commandBuild.defaults =
-{
-  recursive : 1,
-};
 commandBuild.hint = 'Build current module with spesified criterion.';
 commandBuild.commandSubjectHint = 'A name of build scenario.';
 
@@ -2198,6 +2194,7 @@ function commandExport( e )
 {
   let cui = this;
   cui._command_pre( commandExport, arguments );
+  let doneContainer = [];
 
   return cui._commandBuildLike
   ({
@@ -2209,10 +2206,11 @@ function commandExport( e )
 
   function handleEach( it )
   {
+    let a = _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } )
     return it.opener.openedModule.modulesExport
     ({
       ... _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } ),
-      doneContainer : [],
+      doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
       recursive : 0,
@@ -2222,10 +2220,6 @@ function commandExport( e )
 
 }
 
-commandExport.defaults =
-{
-  recursive : 1,
-};
 commandExport.hint = 'Export selected the module with spesified criterion. Save output to output willfile and archive.';
 commandExport.commandSubjectHint = 'A name of export scenario.';
 
@@ -2235,6 +2229,7 @@ function commandExportPurging( e )
 {
   let cui = this;
   cui._command_pre( commandExportPurging, arguments );
+  let doneContainer = [];
 
   return cui._commandBuildLike
   ({
@@ -2249,7 +2244,7 @@ function commandExportPurging( e )
     return it.opener.openedModule.modulesExport
     ({
       ... _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } ),
-      doneContainer : [],
+      doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
       recursive : 0,
@@ -2260,10 +2255,6 @@ function commandExportPurging( e )
 
 }
 
-commandExportPurging.defaults =
-{
-  recursive : 1,
-};
 commandExportPurging.hint = 'Export selected the module with spesified criterion purging output willfile first. Save output to output willfile and archive.';
 commandExportPurging.commandSubjectHint = 'A name of export scenario.';
 
@@ -2273,6 +2264,7 @@ function commandExportRecursive( e )
 {
   let cui = this;
   cui._command_pre( commandExportRecursive, arguments );
+  let doneContainer = [];
 
   return cui._commandBuildLike
   ({
@@ -2287,7 +2279,7 @@ function commandExportRecursive( e )
     return it.opener.openedModule.modulesExport
     ({
       ... _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } ),
-      doneContainer : [],
+      doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
       recursive : 2,
@@ -2297,10 +2289,6 @@ function commandExportRecursive( e )
 
 }
 
-commandExportRecursive.defaults =
-{
-  recursive : 1,
-};
 commandExportRecursive.hint = 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.';
 commandExportRecursive.commandSubjectHint = 'A name of export scenario.';
 
