@@ -2,15 +2,12 @@ format: outwillfile-2.0
 root:
   - willbe.out
 consistency:
-  willbe.out.will.yml: &ref_0
-    hash: 74ee034525d1ceb9b8a470ed772e7a18
-    size: 201469
-  ../.ex.will.yml: &ref_1
-    hash: ba9024610339bcd7a9c30201f941f069
-    size: 2597
-  ../.im.will.yml: &ref_2
-    hash: d214e3035fbe9965508d629c4dc56ef2
-    size: 7314
+  ../.ex.will.yml: &ref_0
+    hash: fd9115e082204dc96496882797909fba
+    size: 2605
+  ../.im.will.yml: &ref_1
+    hash: 1ca706aa6f4796dbbd86e084a1286608
+    size: 7416
 module:
   willbe.out:
     about:
@@ -19,21 +16,21 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@01.school>
         - Volodymyr M. <volodymyr.migdal@gmail.com>
         - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       npm.name: willbe
-      npm.scripts:
-        test: 'wtest .run proto/** v:5'
+      npm.scripts: &ref_5
+        test: 'wtest .run proto/** rapidity:-1'
         docgen: wdocgen .build proto
         single-process-will: node proto/wtools/atop/will/entry/Exec
         debug-will: node proto/wtools/atop/will/entry/ExecDebug
@@ -43,7 +40,7 @@ module:
         docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
         docker-run-centos: docker run --rm willbe-centos
         docker-run-ubuntu: docker run --rm willbe-ubuntu
-      npm.bin:
+      npm.bin: &ref_6
         single-process-will: proto/wtools/atop/will/entry/Exec
         debug-will: proto/wtools/atop/will/entry/ExecDebug
         unrestricted-will: proto/wtools/atop/will/entry/ExecUnrestricted
@@ -1415,50 +1412,22 @@ module:
           - ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/z.will.yml
           - ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module/PathTools
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module/ModuleForTesting1
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module/PathTools/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module/PathTools/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module/PathTools/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module/PathTools/out/wPathTools.out.will.yml
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/.module/ModuleForTesting1/.gitkeep
           - ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/a.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/PathTools
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/ModuleForTesting1
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/PathTools/.ex.will.yml
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/ModuleForTesting1/.gitkeep
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/PathTools/.im.will.yml
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/ModuleForTesting1b
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/PathTools/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/PathTools/out/wPathTools.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Proto/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Proto/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Proto/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Proto/out/wProto.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Tools
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Tools/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Tools/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Tools/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/Tools/out/wTools.out.will.yml
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/.module/ModuleForTesting1b/.gitkeep
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10
           - >-
@@ -1466,83 +1435,31 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathBasic
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/ModuleForTesting1b
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathBasic/.ex.will.yml
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/ModuleForTesting1b/.gitkeep
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathBasic/.im.will.yml
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/ModuleForTesting2a
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathBasic/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathBasic/out/wPathBasic.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathTools
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathTools/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathTools/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathTools/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/PathTools/out/wPathTools.out.will.yml
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/+/group1/group10/.module/ModuleForTesting2a/.gitkeep
           - ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/.module
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/.module/ModuleForTesting1
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/.module/ModuleForTesting1/.gitkeep
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools/out/wPathTools.out.will.yml
           - ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/a.will.yml
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/ModuleForTesting12
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/ModuleForTesting1
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/ModuleForTesting12/.gitkeep
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/ModuleForTesting1/.gitkeep
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/ModuleForTesting2b
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/ModuleForTesting1b
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/ModuleForTesting2b/.gitkeep
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/PathTools
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/PathTools/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/PathTools/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/PathTools/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/PathTools/out/wPathTools.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Proto
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Proto/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Proto/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Proto/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Proto/out/wProto.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Tools
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Tools/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Tools/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Tools/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/Tools/out/wTools.out.will.yml
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/.module/ModuleForTesting1b/.gitkeep
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10
           - >-
@@ -1550,33 +1467,13 @@ module:
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/ModuleForTesting1
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/ModuleForTesting1b
           - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/ModuleForTesting1/.gitkeep
+            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/ModuleForTesting1b/.gitkeep
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/ModuleForTesting2a
           - >-
             ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/ModuleForTesting2a/.gitkeep
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathBasic
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathBasic/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathBasic/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathBasic/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathBasic/out/wPathBasic.out.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools/.ex.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools/.im.will.yml
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools/out
-          - >-
-            ../proto/wtools/atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools/out/wPathTools.out.will.yml
           - ../proto/wtools/atop/will.test/_asset/hierarchy-remote
           - ../proto/wtools/atop/will.test/_asset/hierarchy-remote/z.will.yml
           - ../proto/wtools/atop/will.test/_asset/hierarchy-remote/group1
@@ -2914,6 +2811,12 @@ module:
         path: 'npm:///wcensorbasic'
         autoExporting: 0
         enabled: 0
+      eslint:
+        path: 'npm:///eslint#7.1.0'
+        autoExporting: 0
+        enabled: 0
+        criterion:
+          debug: 1
       wTesting:
         path: 'npm:///wTesting'
         autoExporting: 0
@@ -3457,24 +3360,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          filePath: 'reflector::exported.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          filePath: 'reflector::exported.files.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -3569,9 +3454,8 @@ module:
           content: proto
           export: 1
     consistency:
-      willbe.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: willbe
@@ -3579,35 +3463,14 @@ module:
       description: Utility to manage modules of complex modular systems.
       enabled: 1
       version: 0.6.0
-      interpreters:
-        - njs >= 10.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - wTools
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
-        - Volodymyr M. <volodymyr.migdal@gmail.com>
-        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
+      contributors: *ref_4
       npm.name: willbe
-      npm.scripts:
-        test: 'wtest .run proto/** v:5'
-        docgen: wdocgen .build proto
-        single-process-will: node proto/wtools/atop/will/entry/Exec
-        debug-will: node proto/wtools/atop/will/entry/ExecDebug
-        unrestricted-will: node proto/wtools/atop/will/entry/ExecUnrestricted
-        will: node proto/wtools/atop/will/entry/ExecUnrestricted
-        docker-build-centos: docker image build -t willbe-centos -f ./docker/centos.dockerfile .
-        docker-build-ubuntu: docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .
-        docker-run-centos: docker run --rm willbe-centos
-        docker-run-ubuntu: docker run --rm willbe-ubuntu
-      npm.bin:
-        single-process-will: proto/wtools/atop/will/entry/Exec
-        debug-will: proto/wtools/atop/will/entry/ExecDebug
-        unrestricted-will: proto/wtools/atop/will/entry/ExecUnrestricted
-        will: proto/wtools/atop/will/entry/ExecUnrestricted
+      npm.scripts: *ref_5
+      npm.bin: *ref_6
     path:
       module.willfiles:
         criterion:
@@ -3821,6 +3684,12 @@ module:
         path: 'npm:///wcensorbasic'
         autoExporting: 0
         enabled: 0
+      eslint:
+        path: 'npm:///eslint#7.1.0'
+        autoExporting: 0
+        enabled: 0
+        criterion:
+          debug: 1
       wTesting:
         path: 'npm:///wTesting'
         autoExporting: 0
@@ -4395,9 +4264,8 @@ module:
           - 'build::npm'
     consistency:
       ../.ex.will.yml:
-        hash: ba9024610339bcd7a9c30201f941f069
-        size: 2597
+        hash: fd9115e082204dc96496882797909fba
+        size: 2605
       ../.im.will.yml:
-        hash: d214e3035fbe9965508d629c4dc56ef2
-        size: 7314
-      willbe.out.will.yml: *ref_0
+        hash: 1ca706aa6f4796dbbd86e084a1286608
+        size: 7416
