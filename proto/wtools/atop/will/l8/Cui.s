@@ -462,6 +462,7 @@ function _commandsMake()
 
     'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile )              },
     'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm )              },
+    'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
     'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
     'willfile supplement willfile' :    { e : _.routineJoin( will, will.commandWillfileSupplementWillfile )   },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
@@ -2962,6 +2963,35 @@ commandWillfileFromNpm.commandProperties =
 
 //
 
+function commandWillfileExtend( e )
+{
+  let cui = this;
+  _.mapExtend( commandWillfileExtend.commandProperties, e.propertiesMap );
+  cui._command_pre( commandWillfileExtend, arguments );
+
+  return _.will.Module.prototype.willfileExtendProperty.call
+  ( cui, {
+    request : e.subject,
+    onProperty : _.mapExtend,
+    ... e.propertiesMap,
+  });
+}
+
+commandWillfileExtendWillfile.defaults =
+{
+  verbosity : 3,
+  v : 3,
+};
+commandWillfileExtend.hint = 'Use "willfile extend" to extend separate properties of existing willfile.';
+commandWillfileExtend.commandSubjectHint = 'A path to destination willfile.';
+commandWillfileExtend.commandProperties =
+{
+  'verbosity' : 'Set verbosity. Default is 3.',
+  'v' : 'Set verbosity. Default is 3.',
+}
+
+//
+
 function commandWillfileExtendWillfile( e )
 {
   let cui = this;
@@ -2980,7 +3010,7 @@ commandWillfileExtendWillfile.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileExtendWillfile.hint = 'Use "willfile extend" to extend existing willfile by data from source configuration files.';
+commandWillfileExtendWillfile.hint = 'Use "willfile extend willfile" to extend existing willfile by data from source configuration files.';
 commandWillfileExtendWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
 commandWillfileExtendWillfile.commandProperties =
 {
@@ -3029,7 +3059,7 @@ commandWillfileSupplementWillfile.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileSupplementWillfile.hint = 'Use "willfile supplement" to supplement existing willfile by new data from source configuration files.';
+commandWillfileSupplementWillfile.hint = 'Use "willfile supplement willfile" to supplement existing willfile by new data from source configuration files.';
 commandWillfileSupplementWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
 commandWillfileSupplementWillfile.commandProperties = commandWillfileExtendWillfile.commandProperties;
 
@@ -3649,7 +3679,7 @@ let Restricts =
 
 let Statics =
 {
-  Exec,
+  Exec : Exec,
 }
 
 let Forbids =
@@ -3762,6 +3792,8 @@ let Extension =
 
   commandNpmFromWillfile,
   commandWillfileFromNpm,
+
+  commandWillfileExtend,
   commandWillfileExtendWillfile,
   commandWillfileSupplementWillfile,
   /* aaa2 :
