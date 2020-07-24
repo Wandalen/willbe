@@ -7926,6 +7926,7 @@ function willfileExtendProperty( o )
   let will = this.will ? this.will : this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
+  let logger = will.logger;
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( o ) );
@@ -7971,7 +7972,10 @@ function willfileExtendProperty( o )
       {
         if( i === splits.length -1 )
         {
-          o.onProperty( dstConfig, { [ key ] : _.strStructureParse({ src : extensionMap[ option ], depth : 1, parsingArrays : 1 }) } );
+          let value = extensionMap[ option ];
+          if( o.structureParse )
+          value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+          o.onProperty( dstConfig, { [ key ] : value } );
         }
         else
         {
@@ -7981,19 +7985,16 @@ function willfileExtendProperty( o )
       }
       else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
       {
-        if( !_.mapIs( dstConfig[ key ] )
-        {
-          dstConfig = Object.create( null );
-        }
-        else
-        {
-          dstConfig = dstConfig[ key ];
-        }
+        _.sure( _.mapIs( dstConfig[ key ] ), `Not safe to delete property : ${ key }.` )
+        dstConfig = dstConfig[ key ];
         continue;
       }
       else
       {
-        o.onProperty( dstConfig, { [ key ] : _.strStructureParse({ src : extensionMap[ option ], depth : 1, parsingArrays : 1 }) } );
+        let value = extensionMap[ option ];
+        if( o.structureParse )
+        value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+        o.onProperty( dstConfig, { [ key ] : value } );
       }
     }
 
@@ -8067,6 +8068,7 @@ willfileExtendProperty.defaults =
   verbosity : 3,
   v : 3,
   onProperty : null,
+  structureParse : 0,
 };
 
 //
