@@ -1,4 +1,5 @@
-( function _Module_s_( ) {
+( function _Module_s_()
+{
 
 'use strict';
 
@@ -1254,7 +1255,7 @@ function predefinedForm()
   _.assert( !module.pathResourceMap[ 'module.common' ].importableFromIn );
   _.assert( !module.pathResourceMap[ 'module.common' ].importableFromOut );
 
-/*
+  /*
   .predefined.common :
     src :
       maskAll :
@@ -1276,7 +1277,7 @@ function predefinedForm()
         - !!js/regexp '/\.debug($|\.|\/)/i'
         - !!js/regexp '/\.test($|\.|\/)/i'
         - !!js/regexp '/\.experiment($|\.|\/)/i'
-*/
+  */
 
   // /* - */
   //
@@ -1411,7 +1412,7 @@ function _predefinedOptionsPrepare( defaults, o )
 
   let commonDefaults =
   {
-    module : module,
+    module,
     writable : 0,
     exportable : 0,
     importableFromIn : 0,
@@ -1965,7 +1966,7 @@ function _willfilesOpen()
 
     let o2 =
     {
-      module : module,
+      module,
       name : 'export',
       criterion :
       {
@@ -1981,7 +1982,7 @@ function _willfilesOpen()
 
     let o3 =
     {
-      module : module,
+      module,
       name : 'export',
       path : '**',
     }
@@ -2243,7 +2244,7 @@ function _attachedWillfilesOpen( o ) /* xxx : does this stage do anything useful
 
       module._attachedWillfileOpen
       ({
-        modulePath : modulePath,
+        modulePath,
         structure : moduleStructure,
         rootModule : o.rootModule,
         storagePath : willfile.filePath,
@@ -2290,7 +2291,7 @@ function _attachedWillfileOpen( o )
 
   let willfOptions =
   {
-    filePath : filePath,
+    filePath,
     structure : o.structure,
     storagePath : o.storagePath,
     storageWillfile : o.storageWillfile,
@@ -2530,7 +2531,7 @@ function exportedMake( o )
       _.assert( outModule.exportedMap[ o.build.name ] === undefined );
     }
 
-    let exported = new _.will.Exported({ outModule : outModule, name : o.build.name }).form1();
+    let exported = new _.will.Exported({ outModule, name : o.build.name }).form1();
 
     _.assert( outModule.exportedMap[ o.build.name ] === exported );
 
@@ -3270,7 +3271,7 @@ function moduleFixate( o )
   {
     if( resolved[ originalPath ] )
     return resolved[ originalPath ];
-    resolved[ originalPath ] = module.moduleFixatePathFor({ originalPath : originalPath, upgrading : o.upgrading });
+    resolved[ originalPath ] = module.moduleFixatePathFor({ originalPath, upgrading : o.upgrading });
     return resolved[ originalPath ];
   }
 
@@ -4185,7 +4186,7 @@ function peerModuleSet( src )
       debugger;
       throw _.err
       (
-          'Several peer modules'
+        'Several peer modules'
         + `\n  ${path.moveTextualReport( module.commonPath, path.common( module.peerWillfilesPath ) )}`
         + `\n  ${path.moveTextualReport( src.commonPath, path.common( src.peerWillfilesPath ) )}`
       );
@@ -4280,7 +4281,7 @@ function peerModuleFromJunction( junction )
         );
         logger.error
         (
-            `Probably something wrong because modules should be aware of its peer.`
+          `Probably something wrong because modules should be aware of its peer.`
           , `\nBut ${module.absoluteName} at ${module.localPath} is not aware`
         )
         module.peerModule = module2;
@@ -4601,7 +4602,7 @@ function resourceAllocate_body( o )
 
   }
 
-  let o2 = { module : module, name : resourceName2 };
+  let o2 = { module, name : resourceName2 };
   o2.criterion = { generated : 1 };
   resource = new cls( o2 ).form1();
 
@@ -5385,7 +5386,7 @@ function pathsRebase( o )
 
     resource.pathsRebase
     ({
-      relative : relative,
+      relative,
       exInPath : o.exInPath,
       inPath : o.inPath,
     });
@@ -5406,7 +5407,7 @@ function pathsRebase( o )
 
     resource.pathsRebase
     ({
-      relative : relative,
+      relative,
       exInPath : o.exInPath,
       inPath : o.inPath,
     });
@@ -5421,7 +5422,7 @@ function pathsRebase( o )
 
     resource.pathsRebase
     ({
-      relative : relative,
+      relative,
       exInPath : o.exInPath,
       inPath : o.inPath,
     });
@@ -5860,7 +5861,7 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
 
     if( !module.pathResourceMap[ resourceName ] )
     {
-      let resource = new _.will.PathResource({ module : module, name : resourceName }).form1();
+      let resource = new _.will.PathResource({ module, name : resourceName }).form1();
       resource.criterion = resource.criterion || Object.create( null );
       resource.criterion.predefined = 1;
       resource.writable = 0;
@@ -5894,7 +5895,7 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
     will._pathChanged
     ({
       object : module,
-      fieldName : fieldName,
+      fieldName,
       val : filePath,
       ex,
       isIdentical,
@@ -5951,7 +5952,7 @@ function predefinedPathSet_functor( fieldName, resourceName )
     will._pathChanged
     ({
       object : module,
-      fieldName : fieldName,
+      fieldName,
       val : filePath,
       ex,
       kind : 'set',
@@ -6690,7 +6691,7 @@ function structureExportOut( o )
       let junction = will.junctionFrom( module2 );
       throw _.err
       (
-          `${junction.object.absoluteName} is not available. `
+        `${junction.object.absoluteName} is not available. `
         + `\nRemote path is ${junction.remotePath}`
         + `\nLocal path is ${junction.localPath}`
       );
@@ -6804,8 +6805,11 @@ function structureExportModules( modules, op )
 
     _.sure
     (
-      module2.isOut || module.commonPath === module2.commonPath || ( module2.peerModule && module2.peerModule.isOut && module2.peerModule.isValid() ),
-      () => `Submodules should be loaded from out-willfiles, but ${module2.decoratedAbsoluteName} is loaded from\n${module2.willfilesPath}`
+      module2.isOut || module.commonPath === module2.commonPath
+      || ( module2.peerModule && module2.peerModule.isOut && module2.peerModule.isValid() ),
+
+      () => `Submodules should be loaded from out-willfiles,
+      but ${module2.decoratedAbsoluteName} is loaded from\n${module2.willfilesPath}`
     );
 
     if( op.dst.module[ relative ] )
@@ -6831,8 +6835,8 @@ function structureExportModules( modules, op )
   _.assert
   (
     op.dst.root.length === 1,
-    () => `Failed to find exactly one root, found ${op.dst.root.length}`
-        , `\n Common path : ${module.commonPath}`
+    () => `Failed to find exactly one root, found ${op.dst.root.length}`,
+    `\n Common path : ${module.commonPath}`
   );
 
   return op.dst;
@@ -6978,7 +6982,8 @@ function resourceImport( o )
 
   let resource = new o.srcResource.Self( resourceData );
   resource.form1();
-  _.assert( module.resolve({ selector : resource.qualifiedName, pathUnwrapping : 0, pathResolving : 0 }).absoluteName === resource.absoluteName );
+  let absoluteName = module.resolve({ selector : resource.qualifiedName, pathUnwrapping : 0, pathResolving : 0 }).absoluteName;
+  _.assert( absoluteName === resource.absoluteName );
 
   return resource;
 }
@@ -7082,7 +7087,7 @@ function _npmGenerateFromWillfile( o )
       }
       else if( p.protocol === 'hd' )
       {
-        depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath,  );
+        depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath );
       }
       else _.assert( 0 );
     }
@@ -7147,15 +7152,15 @@ function npmGenerateFromWillfile( o )
     prefixlessAction : 'resolved',
     pathNativizing : 0,
     selectorIsPath : 1,
-    currentContext : currentContext,
+    currentContext,
   });
   // opts.packagePath = path.join( module.inPath, opts.packagePath );
 
 
   if( opts.entryPath )
-  opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext : currentContext });
+  opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext });
   if( opts.filesPath )
-  opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext : currentContext });
+  opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext });
 
   /* */
 
@@ -7666,7 +7671,7 @@ function willfileExtendWillfile( o )
         {
           if( !_.longHas( [ 'yml', 'json', 'yaml' ], path.ext( dstPath ) ) )
           exts.push( 'yml' );
-          if( !_.longHas( exts ), 'will' )
+          if( !_.longHas( exts, 'will' ) )
           exts.splice( exts.length - 1, 0, 'will' );
         }
 
@@ -7892,31 +7897,31 @@ function willfileExtendWillfile( o )
 
 willfileExtendWillfile.defaults =
 {
-  about : 1,
-  build : 1,
-  path : 1,
-  reflector : 1,
-  step : 1,
-  submodule : 1,
+  'about' : 1,
+  'build' : 1,
+  'path' : 1,
+  'reflector' : 1,
+  'step' : 1,
+  'submodule' : 1,
 
-  name : 1,
-  version : 1,
-  author : 1,
-  enabled : 1,
-  description : 1,
-  contributors : 1,
-  interpreters : 1,
-  license : 1,
-  keywords : 1,
+  'name' : 1,
+  'version' : 1,
+  'author' : 1,
+  'enabled' : 1,
+  'description' : 1,
+  'contributors' : 1,
+  'interpreters' : 1,
+  'license' : 1,
+  'keywords' : 1,
   'npm.name' : 1,
   'npm.scripts' : 1,
 
-  request : null,
-  onSection : null,
-  submodulesDisabling : 0,
-  format : 'willfile',
-  verbosity : 3,
-  v : null,
+  'request' : null,
+  'onSection' : null,
+  'submodulesDisabling' : 0,
+  'format' : 'willfile',
+  'verbosity' : 3,
+  'v' : null,
 }
 
 //
@@ -7960,7 +7965,7 @@ function willfileExtendProperty( o )
 
     let splits = option.split( '/' );
 
-    if( !splits[ 0 ] in sectionMap )
+    if( !( splits[ 0 ] in sectionMap ) )
     _.assert( 0, `Expexts sections "about", "build", "path", "reflector", "step", "submodule", but got "${ splits[ 0 ] }"` );
 
     let dstConfig = configChooseBySection( splits[ 0 ] );
@@ -8026,7 +8031,7 @@ function willfileExtendProperty( o )
 
     return fileProvider.filesFind
     ({
-      filePath : filePath,
+      filePath,
       withStem : 0,
       withDirs : 0,
       mode : 'distinct',
@@ -8264,7 +8269,7 @@ function gitPull( o )
   ({
     execPath : `git pull`,
     currentPath : o.dirPath,
-    ready : ready,
+    ready,
   });
 
   ready.tap( () =>
@@ -8333,7 +8338,7 @@ function gitPush( o )
   let start = _.process.starter
   ({
     currentPath : o.dirPath,
-    ready : ready,
+    ready,
   });
 
   start( `git push -u origin --all` );
@@ -8674,7 +8679,7 @@ function shell( o )
   });
   _.sure
   (
-      o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath )
+    o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath )
     , 'Current path should be string if defined'
   );
 
@@ -8687,7 +8692,7 @@ function shell( o )
     execPath : o.execPath,
     currentPath : o.currentPath,
     verbosity : o.verbosity !== null ? o.verbosity : will.verbosity - 1,
-    ready : ready,
+    ready,
   });
 
   return ready;
@@ -8760,7 +8765,7 @@ function assertIsValidIntegrity()
     _.assert( !relation.isFinited() );
     _.assert
     (
-        _.longHas( module.userArray, relation.opener )
+      _.longHas( module.userArray, relation.opener )
       , `${module.nameWithLocationGet()} does not have reference on its`
       + `\n${relation.opener.nameWithLocationGet}`
     );
@@ -8960,12 +8965,12 @@ let Accessors =
   peerWillfilesPath : { get : peerWillfilesPathGet, readOnly : 1 },
   peerInPath : { get : peerInPathGet, readOnly : 1 },
 
-  decoratedWillfilesPath : { get : decoratedWillfilesPathGet, readOnly : 1, },
-  decoratedInPath : { get : decoratedInPathGet, readOnly : 1, },
-  decoratedOutPath : { get : decoratedOutPathGet, readOnly : 1, },
-  decoratedLocalPath : { get : decoratedLocalPathGet, readOnly : 1, },
-  decoratedDownloadPath : { get : decoratedDownloadPathGet, readOnly : 1, },
-  decoratedRemotePath : { get : decoratedRemotePathGet, readOnly : 1, },
+  decoratedWillfilesPath : { get : decoratedWillfilesPathGet, readOnly : 1 },
+  decoratedInPath : { get : decoratedInPathGet, readOnly : 1 },
+  decoratedOutPath : { get : decoratedOutPathGet, readOnly : 1 },
+  decoratedLocalPath : { get : decoratedLocalPathGet, readOnly : 1 },
+  decoratedDownloadPath : { get : decoratedDownloadPathGet, readOnly : 1 },
+  decoratedRemotePath : { get : decoratedRemotePathGet, readOnly : 1 },
   decoratedDirPath : { get : decoratedDirPathGet, readOnly : 1 },
   decoratedCommonPath : { get : decoratedCommonPathGet, readOnly : 1 },
   decoratedCurrentRemotePath : { get : decoratedCurrentRemotePathGet, readOnly : 1 },
@@ -9191,7 +9196,6 @@ let Extension =
   willPathGet,
   originalWillfilesPathGet,
   peerWillfilesPathGet,
-  peerInPathGet,
 
   decoratedWillfilesPathGet,
   decoratedInPathGet,
@@ -9243,7 +9247,6 @@ let Extension =
   toModule,
   toOpener,
   toRelation,
-  toOpener,
   toJunction,
 
   // exporter

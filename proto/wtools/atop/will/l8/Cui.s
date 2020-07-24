@@ -2920,8 +2920,8 @@ function commandWillfileFromNpm( e )
   return con.then( () =>
   {
     if( !cui.currentOpeners.length )
-    return _.will.Module.prototype.willfileGenerateFromNpm.call
-    ( cui, {
+    return _.will.Module.prototype.willfileGenerateFromNpm.call( cui,
+    {
       ... e.propertiesMap,
       verbosity : 3,
     });
@@ -2970,8 +2970,8 @@ function commandWillfileExtend( e )
   _.mapExtend( commandWillfileExtend.commandProperties, e.propertiesMap );
   cui._command_pre( commandWillfileExtend, arguments );
 
-  return _.will.Module.prototype.willfileExtendProperty.call
-  ( cui, {
+  return _.will.Module.prototype.willfileExtendProperty.call( cui,
+  {
     request : e.subject,
     onProperty : _.mapExtend,
     ... e.propertiesMap,
@@ -2999,8 +2999,8 @@ function commandWillfileExtend( e )
   _.mapExtend( commandWillfileExtend.commandProperties, e.propertiesMap );
   cui._command_pre( commandWillfileExtend, arguments );
 
-  return _.will.Module.prototype.willfileExtendProperty.call
-  ( cui, {
+  return _.will.Module.prototype.willfileExtendProperty.call( cui,
+  {
     request : e.subject,
     onProperty : _.mapExtend,
     ... e.propertiesMap,
@@ -3029,8 +3029,8 @@ function commandWillfileSupplement( e )
   _.mapExtend( commandWillfileSupplement.commandProperties, e.propertiesMap );
   cui._command_pre( commandWillfileSupplement, arguments );
 
-  return _.will.Module.prototype.willfileExtendProperty.call
-  ( cui, {
+  return _.will.Module.prototype.willfileExtendProperty.call( cui,
+  {
     request : e.subject,
     onProperty : _.mapSupplement,
     ... e.propertiesMap,
@@ -3053,8 +3053,8 @@ function commandWillfileExtendWillfile( e )
   let cui = this;
   cui._command_pre( commandWillfileExtendWillfile, arguments );
 
-  return _.will.Module.prototype.willfileExtendWillfile.call
-  ( cui, {
+  return _.will.Module.prototype.willfileExtendWillfile.call( cui,
+  {
     request : e.subject,
     onSection : _.mapExtend,
     ... e.propertiesMap,
@@ -3102,8 +3102,8 @@ function commandWillfileSupplementWillfile( e )
   let cui = this;
   cui._command_pre( commandWillfileSupplementWillfile, arguments );
 
-  return _.will.Module.prototype.willfileExtendWillfile.call
-  ( cui, {
+  return _.will.Module.prototype.willfileExtendWillfile.call( cui,
+  {
     request : e.subject,
     onSection : _.mapSupplement,
     ... e.propertiesMap,
@@ -3735,7 +3735,7 @@ let Restricts =
 
 let Statics =
 {
-  Exec : Exec,
+  Exec,
 }
 
 let Forbids =
