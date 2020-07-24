@@ -7921,6 +7921,156 @@ willfileExtendWillfile.defaults =
 
 //
 
+function willfileExtendProperty( o )
+{
+  let will = this.will ? this.will : this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( o ) );
+
+  let dstRecords = dstRecordsFind( o.request );
+  _.assert( 1 <= dstRecords.length && dstRecords.length <= 2, `Expexts one or two willfiles, but got : ${ dstRecords.length }` );
+  _.assert( _.longHas( dstRecords[ 0 ].exts, 'will' ), 'Expexts willfiles' );
+
+  let config, config2;
+  let dstEncoding = _.longHas( dstRecords[ 0 ].exts, 'json' ) ? 'json.fine' : 'yaml';
+  config = fileProvider.fileRead({ filePath : dstRecords[ 0 ].absolute, encoding : dstEncoding });
+  if( dstRecords.length === 2 )
+  config2 = fileProvider.fileRead({ filePath : dstRecords[ 1 ].absolute, encoding : dstEncoding });
+
+  /* */
+
+  let extensionMap = _.mapBut( o, willfileExtendProperty.defaults );
+
+  let sectionMap =
+  {
+    about : 'about',
+    build : 'build',
+    path : 'path',
+    reflector : 'reflector',
+    step : 'step',
+    submodule : 'submodule',
+  };
+
+  for( let option in extensionMap )
+  {
+
+    let splits = option.split( '/' );
+
+    if( !splits[ 0 ] in sectionMap )
+    _.assert( 0, `Expexts sections "about", "build", "path", "reflector", "step", "submodule", but got "${ splits[ 0 ] }"` );
+
+    let dstConfig = configChooseBySection( splits[ 0 ] );
+
+    for( let i = 0 ; i < splits.length ; i++ )
+    {
+      let key = splits[ i ];
+      if( dstConfig[ key ] === undefined )
+      {
+        if( i === splits.length -1 )
+        {
+          o.onProperty( dstConfig, { [ key ] : _.strStructureParse({ src : extensionMap[ option ], depth : 1, parsingArrays : 1 }) } );
+        }
+        else
+        {
+          dstConfig[ key ] = Object.create( null );
+          dstConfig = dstConfig[ key ];
+        }
+      }
+      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+      {
+        if( !_.mapIs( dstConfig[ key ] )
+        {
+          dstConfig = Object.create( null );
+        }
+        else
+        {
+          dstConfig = dstConfig[ key ];
+        }
+        continue;
+      }
+      else
+      {
+        o.onProperty( dstConfig, { [ key ] : _.strStructureParse({ src : extensionMap[ option ], depth : 1, parsingArrays : 1 }) } );
+      }
+    }
+
+  }
+
+  /* */
+
+  configWrite( dstRecords[ 0 ].absolute, config );
+  if( dstRecords.length === 2 )
+  configWrite( dstRecords[ 1 ].absolute, config2 );
+
+  return null;
+
+  /* */
+
+  function dstRecordsFind( selector )
+  {
+    let filePath = selector;
+    if( !path.isAbsolute( filePath ) )
+    filePath = path.join( will.inPath ? will.inPath : path.current(), selector );
+
+    if( fileProvider.isTerminal( filePath ) )
+    return [ fileProvider.record( filePath ) ];
+
+    _.sure( !fileProvider.isDir( filePath ), () => `${ filePath } is dir, not safe to delete` );
+
+    if( !path.isGlob( filePath ) )
+    filePath = filePath + '*.(yml|yaml|json)';
+
+    return fileProvider.filesFind
+    ({
+      filePath : filePath,
+      withStem : 0,
+      withDirs : 0,
+      mode : 'distinct',
+      mandatory : 0,
+    });
+  }
+
+  /* */
+
+  function configChooseBySection( section )
+  {
+    if( !config2 )
+    return config;
+
+    if( section in config2 )
+    return config2;
+
+    return config;
+  }
+
+  /* */
+
+  function configWrite( path, data )
+  {
+    fileProvider.fileWrite
+    ({
+      filePath : path,
+      data,
+      encoding : dstEncoding,
+      verbosity : o.verbosity,
+    });
+  }
+
+}
+
+willfileExtendProperty.defaults =
+{
+  request : null,
+  verbosity : 3,
+  v : 3,
+  onProperty : null,
+};
+
+//
+
 function ResourceSetter_functor( op )
 {
   _.routineOptions( ResourceSetter_functor, arguments );
@@ -9116,6 +9266,8 @@ let Extension =
   npmGenerateFromWillfile,
   _willfileGenerateFromNpm,
   willfileGenerateFromNpm,
+
+  willfileExtendProperty,
   willfileExtendWillfile,
 
   // remote
