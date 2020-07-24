@@ -463,6 +463,7 @@ function _commandsMake()
     'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile )              },
     'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm )              },
     'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
+    'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
     'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
     'willfile supplement willfile' :    { e : _.routineJoin( will, will.commandWillfileSupplementWillfile )   },
     'package install' :                 { e : _.routineJoin( will, will.commandPackageInstall )               },
@@ -2977,7 +2978,7 @@ function commandWillfileExtend( e )
   });
 }
 
-commandWillfileExtendWillfile.defaults =
+commandWillfileExtend.defaults =
 {
   verbosity : 3,
   v : 3,
@@ -2989,6 +2990,61 @@ commandWillfileExtend.commandProperties =
   'verbosity' : 'Set verbosity. Default is 3.',
   'v' : 'Set verbosity. Default is 3.',
 }
+
+//
+
+function commandWillfileExtend( e )
+{
+  let cui = this;
+  _.mapExtend( commandWillfileExtend.commandProperties, e.propertiesMap );
+  cui._command_pre( commandWillfileExtend, arguments );
+
+  return _.will.Module.prototype.willfileExtendProperty.call
+  ( cui, {
+    request : e.subject,
+    onProperty : _.mapExtend,
+    ... e.propertiesMap,
+  });
+}
+
+commandWillfileExtend.defaults =
+{
+  verbosity : 3,
+  v : 3,
+};
+commandWillfileExtend.hint = 'Use "willfile extend" to extend separate properties of destination willfile.';
+commandWillfileExtend.commandSubjectHint = 'A path to destination willfile.';
+commandWillfileExtend.commandProperties =
+{
+  structureParse : 'Enable parsing of property value. Default is 0.',
+  verbosity : 'Set verbosity. Default is 3.',
+  v : 'Set verbosity. Default is 3.',
+}
+
+//
+
+function commandWillfileSupplement( e )
+{
+  let cui = this;
+  _.mapExtend( commandWillfileSupplement.commandProperties, e.propertiesMap );
+  cui._command_pre( commandWillfileSupplement, arguments );
+
+  return _.will.Module.prototype.willfileExtendProperty.call
+  ( cui, {
+    request : e.subject,
+    onProperty : _.mapSupplement,
+    ... e.propertiesMap,
+  });
+}
+
+commandWillfileSupplement.defaults =
+{
+  verbosity : 3,
+  v : 3,
+};
+commandWillfileSupplement.hint = 'Use "willfile supplement" to extend separate not existed properties of destination willfile.';
+commandWillfileSupplement.commandSubjectHint = 'A path to destination willfile.';
+commandWillfileSupplement.commandProperties = commandWillfileExtend.commandProperties;
 
 //
 
@@ -3794,6 +3850,7 @@ let Extension =
   commandWillfileFromNpm,
 
   commandWillfileExtend,
+  commandWillfileSupplement,
   commandWillfileExtendWillfile,
   commandWillfileSupplementWillfile,
   /* aaa2 :
