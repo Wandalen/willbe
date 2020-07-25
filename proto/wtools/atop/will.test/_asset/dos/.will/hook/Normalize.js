@@ -32,8 +32,10 @@ function onModule( context )
   // workflowsReplace( context );
 
   // fileProvider.filesDelete({ filePath : abs( '.travis.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0 });
-  // fileProvider.filesDelete({ filePath : abs( '**/.DS_Store' ), verbosity : o.verbosity >= 2 ? 3 : 0, dry : 1 });
+  // fileProvider.filesDelete({ filePath : abs( '**/.DS_Store' ), verbosity : o.verbosity >= 2 ? 3 : 0, writing : !o.dry });
+  // fileProvider.filesDelete({ filePath : abs( 'appveyor.yml' ), verbosity : o.verbosity >= 2 ? 3 : 0, writing : !o.dry });
 
+  // integrationTestRename( context );
   // samplesRename( context );
   // dwtoolsRename( context );
 
@@ -49,11 +51,18 @@ function onModule( context )
   // readmeToAddRemove( context );
   // readmeToAddAdjust( context );
 
+  // sourcesRemoveOld( context );
+  sourcesRemoveOld2( context );
+  sampleFix( context );
+
   // xxx : delete .DS_Store
-  // xxx : find and replace : `# wInstancing` without badges
+  // xxx : delete appveyor.yml
+  // xxx : rename Integration.test.s -> Integration.test.ss
   // xxx : look for `if( _global_.WTOOLS_PRIVATE )`
   // xxx : look for `@file Color256.s.`
-  // xxx : rename Integration.test.s -> Integration.test.ss
+
+  // xxx : find and replace : `# wInstancing` without badges
+  // xxx : replace `  //` -> `  /* */`
 
 }
 
@@ -131,6 +140,31 @@ function workflowsReplace( context )
   hardLink( context, '.github/workflows/Push.yml', 'hlink/.github/workflows/Push.yml' );
 
   fileProvider.fileDelete( abs( '.github/workflows/Test.yml' ) );
+
+}
+
+//
+
+function integrationTestRename( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+  if( !fileProvider.fileExists( abs( 'sample' ) ) )
+  return;
+
+  if( !o.dry )
+  if( fileProvider.fileExists( abs( 'proto/Integration.test.s' ) ) )
+  fileProvider.fileRename({ dstPath : abs( 'proto/Integration.test.ss' ), srcPath : abs( 'proto/Integration.test.s' ), verbosity : o.verbosity >= 2 ? 3 : 0 });
 
 }
 
@@ -221,8 +255,8 @@ function badgeGithubReplace( context )
 
   let moduleName = context.module.about.name;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
-  let ins = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
-  let sub = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Publish/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3Apublish)`;
+  let ins = `[![status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
+  let sub = `[![status](https://github.com/${config.about.user}/${moduleName}/workflows/Publish/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3Apublish)`;
 
   if( !_.strHas( read, ins ) )
   return false;
@@ -273,8 +307,8 @@ function badgeStabilityAdd( context )
   let moduleName = context.module.about.name;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
   let has = `badge/stability`;
-  let ins = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
-  let sub = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`
+  let ins = `[![status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
+  let sub = `[![status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`
           + ` [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)`;
 
   if( _.strHas( read, has ) )
@@ -327,8 +361,8 @@ function badgeCircleCiAdd( context )
   let moduleName = context.module.about.name;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
   let has = `https://circleci.com/gh`;
-  let ins = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
-  let sub = `[![Status](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)](https://circleci.com/gh/${config.about.user}/${moduleName}) [![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
+  let ins = `[![status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
+  let sub = `[![status](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)](https://circleci.com/gh/${config.about.user}/${moduleName}) [![status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
 
   if( _.strHas( read, has ) )
   return false;
@@ -378,7 +412,7 @@ function badgeCircleCiRemove( context )
 
   let moduleName = context.module.about.name;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
-  let ins = `[![Status](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)](https://circleci.com/gh/${config.about.user}/${moduleName})`;
+  let ins = `[![status](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)](https://circleci.com/gh/${config.about.user}/${moduleName})`;
   let sub = ``;
 
   debugger;
@@ -430,8 +464,8 @@ function badgeCircleCiReplace( context )
 
   let moduleName = context.module.about.name;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
-  let ins = `[![Status](https://circleci.com/gh/${config.about.user}/${moduleName}.svg?style=shield)](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)`;
-  let sub = `[![Status](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)](https://circleci.com/gh/${config.about.user}/${moduleName})`;
+  let ins = `[![status](https://circleci.com/gh/${config.about.user}/${moduleName}.svg?style=shield)](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)`;
+  let sub = `[![status](https://img.shields.io/circleci/build/github/${config.about.user}/${moduleName}?label=Test&logo=Test)](https://circleci.com/gh/${config.about.user}/${moduleName})`;
 
   if( !_.strHas( read, ins ) )
   return false;
@@ -481,8 +515,8 @@ function badgesSwap( context )
 
   let moduleName = context.module.about.name;
   let read = fileProvider.fileRead( abs( 'README.md' ) );
-  let ins = `[![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental) [![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
-  let sub = `[![Status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)`;
+  let ins = `[![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental) [![status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest)`;
+  let sub = `[![status](https://github.com/${config.about.user}/${moduleName}/workflows/Test/badge.svg)](https://github.com/${config.about.user}/${moduleName}/actions?query=workflow%3ATest) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)`;
 
   if( !_.strHas( read, ins ) )
   return;
@@ -754,15 +788,125 @@ npm add '${context.module.about.values[ 'npm.name' ]}@alpha'
 
 }
 
-/*
-## Try out
-```
-npm install
-node sample/Sample.s
-```
+//
 
-## To add
-```
-npm add 'wgittools@alpha'
-```
-*/
+function sourcesRemoveOld( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+
+  let ins1 = `// if( typeof module !== 'undefined' )
+// if( _global_.WTOOLS_PRIVATE )
+// { /* delete require.cache[ module.id ]; */ }`
+  let sub1 = ``;
+  logger.log( _.censor.filesReplace
+  ({
+    filePath : abs( inPath, '**/*.(js|ss|s)' ),
+    ins : ins1,
+    sub : sub1,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
+
+  let ins2 = `if( typeof module !== 'undefined' )
+if( _global_.WTOOLS_PRIVATE )
+{ /* delete require.cache[ module.id ]; */ }`
+  let sub2 = ``;
+  logger.log( _.censor.filesReplace
+  ({
+    filePath : abs( inPath, '**/*.(js|ss|s)' ),
+    ins : ins2,
+    sub : sub2,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
+
+  let ins3 = `if( typeof module !== 'undefined' )
+if( _global_.WTOOLS_PRIVATE )
+{ delete require.cache[ module.id ]; }`
+  let sub3 = ``;
+  logger.log( _.censor.filesReplace
+  ({
+    filePath : abs( inPath, '**/*.(js|ss|s)' ),
+    ins : ins3,
+    sub : sub3,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
+
+}
+
+//
+
+function sourcesRemoveOld2( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+
+  let ins1 = /@file .+\n/
+  let sub1 = ``;
+  logger.log( _.censor.filesReplace
+  ({
+    filePath : abs( inPath, '**/*.(js|ss|s)' ),
+    ins : ins1,
+    sub : sub1,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
+
+}
+
+//
+
+function sampleFix( context )
+{
+  let o = context.request.map;
+  let logger = context.logger;
+  let fileProvider = context.will.fileProvider;
+  let path = context.will.fileProvider.path;
+  let _ = context.tools;
+  let inPath = context.module ? context.module.dirPath : context.opener.dirPath;
+  let abs = _.routineJoin( path, path.join, [ inPath ] );
+
+  if( !context.module )
+  return
+  if( !context.module.about.name )
+  return
+
+  let ins = `___`;
+  let sub = `console.log( '___ not implemented ___' );`;
+
+  if( !fileProvider.fileExists( abs( 'sample/Sample.s' ) ) )
+  return null;
+
+  logger.log( _.censor.fileReplace
+  ({
+    filePath : abs( 'sample/Sample.s' ),
+    ins,
+    sub,
+    verbosity : o.verbosity >= 2 ? o.verbosity-1 : 0,
+  }).log );
+
+}
+
+// sample/Sample.s
+// ___
+// console.log( '___ not implemented ___' );
+
+//
