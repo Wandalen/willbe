@@ -583,7 +583,7 @@ build :
   ],
   "scripts" :
   {
-    "test" : "wtest .run proto",
+    "test" : "wtest .run proto rapidity:-3",
     "docgen" : "wdocgen .build proto"
   },
   "repository" :

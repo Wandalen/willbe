@@ -52,14 +52,8 @@ function onModule( context )
   // readmeToAddAdjust( context );
 
   // sourcesRemoveOld( context );
-  sourcesRemoveOld2( context );
-  sampleFix( context );
-
-  // xxx : delete .DS_Store
-  // xxx : delete appveyor.yml
-  // xxx : rename Integration.test.s -> Integration.test.ss
-  // xxx : look for `if( _global_.WTOOLS_PRIVATE )`
-  // xxx : look for `@file Color256.s.`
+  // sourcesRemoveOld2( context );
+  // sampleFix( context );
 
   // xxx : find and replace : `# wInstancing` without badges
   // xxx : replace `  //` -> `  /* */`
@@ -904,9 +898,5 @@ function sampleFix( context )
   }).log );
 
 }
-
-// sample/Sample.s
-// ___
-// console.log( '___ not implemented ___' );
 
 //
