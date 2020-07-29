@@ -2853,7 +2853,7 @@ function commandNpmFromWillfile( e )
   return cui._commandBuildLike
   ({
     event : e,
-    name : 'npm from cuifile',
+    name : 'npm from willfile',
     onEach : handleEach,
     commandRoutine : commandNpmFromWillfile,
   });
@@ -2929,7 +2929,7 @@ function commandWillfileFromNpm( e )
     return cui._commandBuildLike
     ({
       event : e,
-      name : 'npm from cuifile',
+      name : 'npm from willfile',
       onEach : handleEach,
       commandRoutine : commandWillfileFromNpm,
     });
@@ -2970,41 +2970,41 @@ function commandWillfileExtend( e )
   _.mapExtend( commandWillfileExtend.commandProperties, e.propertiesMap );
   cui._command_pre( commandWillfileExtend, arguments );
 
+  if( !e.subject && !cui.currentOpeners )
+  e.subject = './(.im|.ex|will)*';
+
+  if( e.subject )
   return _.will.Module.prototype.willfileExtendProperty.call( cui,
   {
     request : e.subject,
     onProperty : _.mapExtend,
     ... e.propertiesMap,
   });
-}
 
-commandWillfileExtend.defaults =
-{
-  verbosity : 3,
-  v : 3,
-};
-commandWillfileExtend.hint = 'Use "willfile extend" to extend separate properties of existing willfile.';
-commandWillfileExtend.commandSubjectHint = 'A path to destination willfile.';
-commandWillfileExtend.commandProperties =
-{
-  'verbosity' : 'Set verbosity. Default is 3.',
-  'v' : 'Set verbosity. Default is 3.',
-}
-
-//
-
-function commandWillfileExtend( e )
-{
-  let cui = this;
-  _.mapExtend( commandWillfileExtend.commandProperties, e.propertiesMap );
-  cui._command_pre( commandWillfileExtend, arguments );
-
-  return _.will.Module.prototype.willfileExtendProperty.call( cui,
-  {
-    request : e.subject,
-    onProperty : _.mapExtend,
-    ... e.propertiesMap,
+  if( cui.currentOpeners )
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'willfile extend',
+    onEach : handleEach,
+    commandRoutine : commandWillfileFromNpm,
   });
+  else
+  throw _.err( 'Cant find destination willfile' );
+
+  function handleEach( it )
+  {
+    let request = it.opener.commonPath;
+    if( cui.fileProvider.isDir( request ) )
+    request = cui.fileProvider.path.join( request, './.*' );
+
+    return it.opener.openedModule.willfileExtendProperty
+    ({
+      request,
+      onProperty : _.mapExtend,
+      ... e.propertiesMap,
+    });
+  }
 }
 
 commandWillfileExtend.defaults =
