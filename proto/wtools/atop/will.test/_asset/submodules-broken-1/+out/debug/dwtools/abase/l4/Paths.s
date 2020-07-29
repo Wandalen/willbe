@@ -3,8 +3,7 @@
 'use strict';
 
 /**
- * @file PathsBasic.s.
- */
+ *  */
 
 /**
  * Collection of routines to operate multiple paths in the reliable and consistent way.

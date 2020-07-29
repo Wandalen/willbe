@@ -575,7 +575,7 @@ build :
   "description" : "___",
   "author" : "{:about/full.name:} <{:about/email:}>",
   "license" : "MIT",
-  "main" : "proto/wtools/___",
+  "main" : "proto/wtools/Tools.s",
   "files" :
   [
     "proto/wtools/___",
@@ -583,7 +583,7 @@ build :
   ],
   "scripts" :
   {
-    "test" : "wtest .run proto",
+    "test" : "wtest .run proto rapidity:-3",
     "docgen" : "wdocgen .build proto"
   },
   "repository" :
@@ -621,7 +621,7 @@ let _ = require( '{:package/lowName:}' );
 
 /**/
 
-___
+console.log( '___ not implemented ___' );
 
 `,
 
@@ -1267,7 +1267,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 `,
 
 'README.md' : //
-`# module::{:package/shortName:} [![Status](https://github.com/{:about/user:}/{:package/name:}/workflows/Test/badge.svg)](https://github.com/{:about/user:}/{:package/name:}/actions?query=workflow%3ATest) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
+`# module::{:package/shortName:} [![status](https://github.com/{:about/user:}/{:package/name:}/workflows/Test/badge.svg)](https://github.com/{:about/user:}/{:package/name:}/actions?query=workflow%3ATest) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
 ___
 

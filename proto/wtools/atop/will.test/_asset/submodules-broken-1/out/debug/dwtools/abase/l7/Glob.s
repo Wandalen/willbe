@@ -3,8 +3,7 @@
 'use strict';
 
 /**
- * @file Glob.s.
- */
+ *  */
 
 if( typeof module !== 'undefined' )
 {
@@ -1662,9 +1661,7 @@ Self.Init();
 // export
 // --
 
-// if( typeof module !== 'undefined' )
-// if( _global_.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
+
 
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
