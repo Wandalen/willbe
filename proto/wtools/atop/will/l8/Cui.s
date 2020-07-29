@@ -3029,12 +3029,41 @@ function commandWillfileSupplement( e )
   _.mapExtend( commandWillfileSupplement.commandProperties, e.propertiesMap );
   cui._command_pre( commandWillfileSupplement, arguments );
 
+  if( !e.subject && !cui.currentOpeners )
+  e.subject = './(.im|.ex|will)*';
+
+  if( e.subject )
   return _.will.Module.prototype.willfileExtendProperty.call( cui,
   {
     request : e.subject,
     onProperty : _.mapSupplement,
     ... e.propertiesMap,
   });
+
+  if( cui.currentOpeners )
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'willfile extend',
+    onEach : handleEach,
+    commandRoutine : commandWillfileFromNpm,
+  });
+  else
+  throw _.err( 'Cant find destination willfile' );
+
+  function handleEach( it )
+  {
+    let request = it.opener.commonPath;
+    if( cui.fileProvider.isDir( request ) )
+    request = cui.fileProvider.path.join( request, './.*' );
+
+    return it.opener.openedModule.willfileExtendProperty
+    ({
+      request,
+      onProperty : _.mapSupplement,
+      ... e.propertiesMap,
+    });
+  }
 }
 
 commandWillfileSupplement.defaults =
