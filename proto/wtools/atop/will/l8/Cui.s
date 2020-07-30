@@ -2967,7 +2967,8 @@ commandWillfileFromNpm.commandProperties =
 function commandWillfileExtend( e )
 {
   let cui = this;
-  _.mapExtend( commandWillfileExtend.commandProperties, e.propertiesMap );
+  let extensionMap = _.mapBut( e.propertiesMap, commandWillfileExtend.defaults );
+  e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileExtend.defaults );
   cui._command_pre( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
@@ -2978,6 +2979,7 @@ function commandWillfileExtend( e )
   {
     request : e.subject,
     onProperty : _.mapExtend,
+    extensionMap,
     ... e.propertiesMap,
   });
 
@@ -2989,8 +2991,6 @@ function commandWillfileExtend( e )
     onEach : handleEach,
     commandRoutine : commandWillfileFromNpm,
   });
-  else
-  throw _.err( 'Cant find destination willfile' );
 
   function handleEach( it )
   {
@@ -3002,6 +3002,7 @@ function commandWillfileExtend( e )
     ({
       request,
       onProperty : _.mapExtend,
+      extensionMap,
       ... e.propertiesMap,
     });
   }
@@ -3011,6 +3012,7 @@ commandWillfileExtend.defaults =
 {
   verbosity : 3,
   v : 3,
+  structureParse : 0,
 };
 commandWillfileExtend.hint = 'Use "willfile extend" to extend separate properties of destination willfile.';
 commandWillfileExtend.commandSubjectHint = 'A path to destination willfile.';
@@ -3026,7 +3028,8 @@ commandWillfileExtend.commandProperties =
 function commandWillfileSupplement( e )
 {
   let cui = this;
-  _.mapExtend( commandWillfileSupplement.commandProperties, e.propertiesMap );
+  let extensionMap = _.mapBut( e.propertiesMap, commandWillfileSupplement.defaults );
+  e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileSupplement.defaults );
   cui._command_pre( commandWillfileSupplement, arguments );
 
   if( !e.subject && !cui.currentOpeners )
@@ -3037,6 +3040,7 @@ function commandWillfileSupplement( e )
   {
     request : e.subject,
     onProperty : _.mapSupplement,
+    extensionMap,
     ... e.propertiesMap,
   });
 
@@ -3048,8 +3052,6 @@ function commandWillfileSupplement( e )
     onEach : handleEach,
     commandRoutine : commandWillfileFromNpm,
   });
-  else
-  throw _.err( 'Cant find destination willfile' );
 
   function handleEach( it )
   {
@@ -3061,6 +3063,7 @@ function commandWillfileSupplement( e )
     ({
       request,
       onProperty : _.mapSupplement,
+      extensionMap,
       ... e.propertiesMap,
     });
   }
@@ -3070,6 +3073,7 @@ commandWillfileSupplement.defaults =
 {
   verbosity : 3,
   v : 3,
+  structureParse : 0,
 };
 commandWillfileSupplement.hint = 'Use "willfile supplement" to extend separate not existed properties of destination willfile.';
 commandWillfileSupplement.commandSubjectHint = 'A path to destination willfile.';

@@ -7926,29 +7926,28 @@ willfileExtendWillfile.defaults =
 
 //
 
-function willfileExtendProperty( o )
+function _willfilePropertyAct( o )
 {
   let will = this.will ? this.will : this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
+  _.routineOptions( _willfilePropertyAct, o );
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( o ) );
 
-  let dstRecords = dstRecordsFind( o.request );
-  _.assert( 1 <= dstRecords.length && dstRecords.length <= 2, `Expexts one or two willfiles, but got : ${ dstRecords.length }` );
-  _.assert( _.longHas( dstRecords[ 0 ].exts, 'will' ), 'Expexts willfiles' );
+  let dstWillfileRecords = dstRecordsFind( o.request );
+  _.assert( 1 <= dstWillfileRecords.length && dstWillfileRecords.length <= 2, `Expexts one or two willfiles, but got : ${ dstWillfileRecords.length }` );
+  _.assert( _.longHas( dstWillfileRecords[ 0 ].exts, 'will' ), 'Expexts willfiles' );
 
-  let config, config2;
-  let dstEncoding = _.longHas( dstRecords[ 0 ].exts, 'json' ) ? 'json.fine' : 'yaml';
-  config = fileProvider.fileRead({ filePath : dstRecords[ 0 ].absolute, encoding : dstEncoding });
-  if( dstRecords.length === 2 )
-  config2 = fileProvider.fileRead({ filePath : dstRecords[ 1 ].absolute, encoding : dstEncoding });
+  let willfile, willfile2;
+  let dstEncoding = _.longHas( dstWillfileRecords[ 0 ].exts, 'json' ) ? 'json.fine' : 'yaml';
+  willfile = fileProvider.fileRead({ filePath : dstWillfileRecords[ 0 ].absolute, encoding : dstEncoding });
+  if( dstWillfileRecords.length === 2 )
+  willfile2 = fileProvider.fileRead({ filePath : dstWillfileRecords[ 1 ].absolute, encoding : dstEncoding });
 
   /* */
-
-  let extensionMap = _.mapBut( o, willfileExtendProperty.defaults );
 
   let sectionMap =
   {
@@ -7960,7 +7959,7 @@ function willfileExtendProperty( o )
     submodule : 'submodule',
   };
 
-  for( let option in extensionMap )
+  for( let option in o.extensionMap )
   {
 
     let splits = option.split( '/' );
@@ -7968,48 +7967,20 @@ function willfileExtendProperty( o )
     if( !( splits[ 0 ] in sectionMap ) )
     _.assert( 0, `Expexts sections "about", "build", "path", "reflector", "step", "submodule", but got "${ splits[ 0 ] }"` );
 
-    let dstConfig = configChooseBySection( splits[ 0 ] );
+    let dstConfig = o.onConfig( willfile, willfile2, splits );
 
-    for( let i = 0 ; i < splits.length ; i++ )
-    {
-      let key = splits[ i ];
-      if( dstConfig[ key ] === undefined )
-      {
-        if( i === splits.length -1 )
-        {
-          let value = extensionMap[ option ];
-          if( o.structureParse )
-          value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
-          o.onProperty( dstConfig, { [ key ] : value } );
-        }
-        else
-        {
-          dstConfig[ key ] = Object.create( null );
-          dstConfig = dstConfig[ key ];
-        }
-      }
-      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
-      {
-        _.sure( _.mapIs( dstConfig[ key ] ), `Not safe to delete property : ${ key }.` )
-        dstConfig = dstConfig[ key ];
-        continue;
-      }
-      else
-      {
-        let value = extensionMap[ option ];
-        if( o.structureParse )
-        value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
-        o.onProperty( dstConfig, { [ key ] : value } );
-      }
-    }
+    o.act( dstConfig, splits, option );
 
   }
 
   /* */
 
-  configWrite( dstRecords[ 0 ].absolute, config );
-  if( dstRecords.length === 2 )
-  configWrite( dstRecords[ 1 ].absolute, config2 );
+  if( o.writing )
+  {
+    configWrite( dstWillfileRecords[ 0 ].absolute, willfile );
+    if( dstWillfileRecords.length === 2 )
+    configWrite( dstWillfileRecords[ 1 ].absolute, willfile2 );
+  }
 
   return null;
 
@@ -8041,19 +8012,6 @@ function willfileExtendProperty( o )
 
   /* */
 
-  function configChooseBySection( section )
-  {
-    if( !config2 )
-    return config;
-
-    if( section in config2 )
-    return config2;
-
-    return config;
-  }
-
-  /* */
-
   function configWrite( path, data )
   {
     fileProvider.fileWrite
@@ -8067,14 +8025,94 @@ function willfileExtendProperty( o )
 
 }
 
+_willfilePropertyAct.defaults =
+{
+  request : null,
+  extensionMap : null,
+  onProperty : null,
+  onConfig : null,
+  act : null,
+  structureParse : 0,
+  writing : 1,
+  verbosity : 3,
+  v : 3,
+};
+
+//
+
+function willfileExtendProperty( o )
+{
+  let will = this;
+
+  _.routineOptions( willfileExtendProperty, o );
+  o.act = handleProperty;
+  o.onConfig = configChooseBySection;
+
+  return _willfilePropertyAct.call( will, o );
+
+  /* */
+
+  function handleProperty( dstConfig, splits, option )
+  {
+    for( let i = 0 ; i < splits.length ; i++ )
+    {
+      let key = splits[ i ];
+      if( dstConfig[ key ] === undefined )
+      {
+        if( i === splits.length -1 )
+        {
+          let value = o.extensionMap[ option ];
+          if( o.structureParse )
+          value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+          o.onProperty( dstConfig, { [ key ] : value } );
+        }
+        else
+        {
+          dstConfig[ key ] = Object.create( null );
+          dstConfig = dstConfig[ key ];
+        }
+      }
+      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+      {
+        _.sure( _.mapIs( dstConfig[ key ] ), `Not safe to delete property : ${ key }.` )
+        dstConfig = dstConfig[ key ];
+        continue;
+      }
+      else
+      {
+        let value = o.extensionMap[ option ];
+        if( o.structureParse )
+        value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+        o.onProperty( dstConfig, { [ key ] : value } );
+      }
+    }
+  }
+
+  function configChooseBySection( config, config2, keys )
+  {
+    if( !config2 )
+    return config;
+
+    if( keys[ 0 ] in config2 )
+    return config2;
+
+    return config;
+  }
+
+}
+
 willfileExtendProperty.defaults =
 {
   request : null,
+  extensionMap : null,
+  onProperty : null,
+  onConfig : null,
+  act : null,
+  structureParse : 0,
+  writing : 1,
   verbosity : 3,
   v : 3,
-  onProperty : null,
-  structureParse : 0,
-};
+}
 
 //
 
@@ -9272,6 +9310,7 @@ let Extension =
   _willfileGenerateFromNpm,
   willfileGenerateFromNpm,
 
+  _willfilePropertyAct,
   willfileExtendProperty,
   willfileExtendWillfile,
 
