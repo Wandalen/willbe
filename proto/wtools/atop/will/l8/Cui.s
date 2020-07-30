@@ -462,6 +462,7 @@ function _commandsMake()
 
     'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile )              },
     'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm )              },
+    'willfile get' :                    { e : _.routineJoin( will, will.commandWillfileGet )                  },
     'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
     'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
     'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
@@ -2964,10 +2965,70 @@ commandWillfileFromNpm.commandProperties =
 
 //
 
+function commandWillfileGet( e )
+{
+  let cui = this;
+  let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileGet.defaults );
+  e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileGet.defaults );
+  cui._command_pre( commandWillfileExtend, arguments );
+
+  if( !e.subject && !cui.currentOpeners )
+  e.subject = './(.im|.ex|will)*';
+
+  if( !willfilePropertiesMap )
+  throw _.errBrief( 'Expects option(s) to get info in willfile. Format : will .willfile.get about/name:1' );
+
+  if( e.subject )
+  return _.will.Module.prototype.willfileGetProperty.call( cui,
+  {
+    request : e.subject,
+    willfilePropertiesMap,
+    ... e.propertiesMap,
+  });
+
+  if( cui.currentOpeners )
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'willfile extend',
+    onEach : handleEach,
+    commandRoutine : commandWillfileGet,
+  });
+
+  function handleEach( it )
+  {
+    let request = it.opener.commonPath;
+    if( cui.fileProvider.isDir( request ) )
+    request = cui.fileProvider.path.join( request, './.*' );
+
+    return it.opener.openedModule.willfileGetProperty
+    ({
+      request,
+      willfilePropertiesMap,
+      ... e.propertiesMap,
+    });
+  }
+}
+
+commandWillfileGet.defaults =
+{
+  verbosity : 3,
+  v : 3,
+};
+commandWillfileGet.hint = 'Use "willfile get" to get value of separate properties of source willfile.';
+commandWillfileGet.commandSubjectHint = 'A path to destination willfile.';
+commandWillfileGet.commandProperties =
+{
+  verbosity : 'Set verbosity. Default is 3.',
+  v : 'Set verbosity. Default is 3.',
+};
+
+//
+
 function commandWillfileExtend( e )
 {
   let cui = this;
-  let extensionMap = _.mapBut( e.propertiesMap, commandWillfileExtend.defaults );
+  let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileExtend.defaults );
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileExtend.defaults );
   cui._command_pre( commandWillfileExtend, arguments );
 
@@ -2979,7 +3040,7 @@ function commandWillfileExtend( e )
   {
     request : e.subject,
     onProperty : _.mapExtend,
-    extensionMap,
+    willfilePropertiesMap,
     ... e.propertiesMap,
   });
 
@@ -2989,7 +3050,7 @@ function commandWillfileExtend( e )
     event : e,
     name : 'willfile extend',
     onEach : handleEach,
-    commandRoutine : commandWillfileFromNpm,
+    commandRoutine : commandWillfileExtend,
   });
 
   function handleEach( it )
@@ -3002,7 +3063,7 @@ function commandWillfileExtend( e )
     ({
       request,
       onProperty : _.mapExtend,
-      extensionMap,
+      willfilePropertiesMap,
       ... e.propertiesMap,
     });
   }
@@ -3021,14 +3082,14 @@ commandWillfileExtend.commandProperties =
   structureParse : 'Enable parsing of property value. Default is 0.',
   verbosity : 'Set verbosity. Default is 3.',
   v : 'Set verbosity. Default is 3.',
-}
+};
 
 //
 
 function commandWillfileSupplement( e )
 {
   let cui = this;
-  let extensionMap = _.mapBut( e.propertiesMap, commandWillfileSupplement.defaults );
+  let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileSupplement.defaults );
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileSupplement.defaults );
   cui._command_pre( commandWillfileSupplement, arguments );
 
@@ -3040,7 +3101,7 @@ function commandWillfileSupplement( e )
   {
     request : e.subject,
     onProperty : _.mapSupplement,
-    extensionMap,
+    willfilePropertiesMap,
     ... e.propertiesMap,
   });
 
@@ -3050,7 +3111,7 @@ function commandWillfileSupplement( e )
     event : e,
     name : 'willfile extend',
     onEach : handleEach,
-    commandRoutine : commandWillfileFromNpm,
+    commandRoutine : commandWillfileSupplement,
   });
 
   function handleEach( it )
@@ -3063,7 +3124,7 @@ function commandWillfileSupplement( e )
     ({
       request,
       onProperty : _.mapSupplement,
-      extensionMap,
+      willfilePropertiesMap,
       ... e.propertiesMap,
     });
   }
@@ -3882,6 +3943,7 @@ let Extension =
   commandNpmFromWillfile,
   commandWillfileFromNpm,
 
+  commandWillfileGet,
   commandWillfileExtend,
   commandWillfileSupplement,
   commandWillfileExtendWillfile,
