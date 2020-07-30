@@ -7938,7 +7938,11 @@ function _willfilePropertyAct( o )
   _.assert( _.objectIs( o ) );
 
   let dstWillfileRecords = dstRecordsFind( o.request );
-  _.assert( 1 <= dstWillfileRecords.length && dstWillfileRecords.length <= 2, `Expexts one or two willfiles, but got : ${ dstWillfileRecords.length }` );
+  _.assert
+  (
+    1 <= dstWillfileRecords.length && dstWillfileRecords.length <= 2,
+    `Expexts one or two willfiles, but got : ${ dstWillfileRecords.length }`
+  );
   _.assert( _.longHas( dstWillfileRecords[ 0 ].exts, 'will' ), 'Expexts willfiles' );
 
   let willfile, willfile2;
@@ -7959,7 +7963,7 @@ function _willfilePropertyAct( o )
     submodule : 'submodule',
   };
 
-  for( let option in o.extensionMap )
+  for( let option in o.willfilePropertiesMap )
   {
 
     let splits = option.split( '/' );
@@ -8028,7 +8032,7 @@ function _willfilePropertyAct( o )
 _willfilePropertyAct.defaults =
 {
   request : null,
-  extensionMap : null,
+  willfilePropertiesMap : null,
   onProperty : null,
   onConfig : null,
   act : null,
@@ -8040,19 +8044,83 @@ _willfilePropertyAct.defaults =
 
 //
 
-function willfileExtendProperty( o )
+function willfileGetProperty( o )
 {
-  let will = this;
+  let will = this.will ? this.will : this;
+  let logger = will.logger;
 
-  _.routineOptions( willfileExtendProperty, o );
-  o.act = handleProperty;
+  _.routineOptions( willfileGetProperty, o );
+
+  o.act = getProperty;
   o.onConfig = configChooseBySection;
 
   return _willfilePropertyAct.call( will, o );
 
   /* */
 
-  function handleProperty( dstConfig, splits, option )
+  function getProperty( dstConfig, splits, option )
+  {
+    for( let i = 0 ; i < splits.length ; i++ )
+    {
+      let key = splits[ i ];
+      if( dstConfig[ key ] === undefined )
+      {
+        logger.log( `${ option } :: undefined` );
+        break;
+      }
+      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+      {
+        dstConfig = dstConfig[ key ];
+      }
+      else
+      {
+        if( o.willfilePropertiesMap[ option ] )
+        logger.log( `${ option } :: ${ _.toStrNice( dstConfig[ key ] ) }` );
+      }
+    }
+  }
+
+  /* */
+
+  function configChooseBySection( config, config2, keys )
+  {
+    if( !config2 )
+    return config;
+
+    if( keys[ 0 ] in config2 && keys[ 0 ] in config )
+    _.mapExtend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] );
+
+    return config;
+  }
+
+}
+
+willfileGetProperty.defaults =
+{
+  request : null,
+  willfilePropertiesMap : null,
+  onProperty : null,
+  structureParse : 0,
+  writing : 0,
+  verbosity : 3,
+  v : 3,
+}
+
+//
+
+function willfileExtendProperty( o )
+{
+  let will = this;
+
+  _.routineOptions( willfileExtendProperty, o );
+  o.act = extendProperty;
+  o.onConfig = configChooseBySection;
+
+  return _willfilePropertyAct.call( will, o );
+
+  /* */
+
+  function extendProperty( dstConfig, splits, option )
   {
     for( let i = 0 ; i < splits.length ; i++ )
     {
@@ -8061,7 +8129,7 @@ function willfileExtendProperty( o )
       {
         if( i === splits.length -1 )
         {
-          let value = o.extensionMap[ option ];
+          let value = o.willfilePropertiesMap[ option ];
           if( o.structureParse )
           value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
           o.onProperty( dstConfig, { [ key ] : value } );
@@ -8080,13 +8148,15 @@ function willfileExtendProperty( o )
       }
       else
       {
-        let value = o.extensionMap[ option ];
+        let value = o.willfilePropertiesMap[ option ];
         if( o.structureParse )
         value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
         o.onProperty( dstConfig, { [ key ] : value } );
       }
     }
   }
+
+  /* */
 
   function configChooseBySection( config, config2, keys )
   {
@@ -8104,10 +8174,8 @@ function willfileExtendProperty( o )
 willfileExtendProperty.defaults =
 {
   request : null,
-  extensionMap : null,
+  willfilePropertiesMap : null,
   onProperty : null,
-  onConfig : null,
-  act : null,
   structureParse : 0,
   writing : 1,
   verbosity : 3,
@@ -9311,6 +9379,7 @@ let Extension =
   willfileGenerateFromNpm,
 
   _willfilePropertyAct,
+  willfileGetProperty,
   willfileExtendProperty,
   willfileExtendWillfile,
 
