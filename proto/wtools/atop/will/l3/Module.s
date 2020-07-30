@@ -8065,17 +8065,20 @@ function willfileGetProperty( o )
       let key = splits[ i ];
       if( dstConfig[ key ] === undefined )
       {
-        logger.log( `${ option } :: undefined` );
+        logger.log( `${ option } :: {-undefined-}` );
         break;
       }
       else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
       {
         dstConfig = dstConfig[ key ];
       }
-      else
+      else if( o.willfilePropertiesMap[ option ] )
       {
-        if( o.willfilePropertiesMap[ option ] )
-        logger.log( `${ option } :: ${ _.toStrNice( dstConfig[ key ] ) }` );
+        let value = _.toStrNice( dstConfig[ key ] );
+        if( _.strLinesCount( value ) > 1 )
+        logger.log( `${ option } ::\n${ value }` );
+        else
+        logger.log( `${ option } :: ${ value }` );
       }
     }
   }
@@ -8086,6 +8089,9 @@ function willfileGetProperty( o )
   {
     if( !config2 )
     return config;
+
+    if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
+    return config2;
 
     if( keys[ 0 ] in config2 && keys[ 0 ] in config )
     _.mapExtend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] );

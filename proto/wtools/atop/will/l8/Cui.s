@@ -2973,10 +2973,14 @@ function commandWillfileGet( e )
   cui._command_pre( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
+  if( _.mapKeys( willfilePropertiesMap ).length >= 1 )
   e.subject = './(.im|.ex|will)*';
 
-  if( !willfilePropertiesMap )
+  if( !e.subject && _.mapKeys( willfilePropertiesMap ).length === 0 )
   throw _.errBrief( 'Expects option(s) to get info in willfile. Format : will .willfile.get about/name:1' );
+
+  if( e.subject )
+  subjectNormalize();
 
   if( e.subject )
   return _.will.Module.prototype.willfileGetProperty.call( cui,
@@ -3007,6 +3011,34 @@ function commandWillfileGet( e )
       willfilePropertiesMap,
       ... e.propertiesMap,
     });
+  }
+
+  /* */
+
+  function subjectNormalize()
+  {
+    let subject = e.subject;
+    let isolated = _.strIsolateLeftOrAll( e.subject, ' ' );
+    if( cui.fileProvider.path.isGlob( isolated[ 0 ] ) )
+    {
+      e.subject = isolated[ 0 ];
+    }
+    else
+    {
+      let firstKey = isolated[ 0 ].split( '/' )[ 0 ];
+      if( _.longHas( [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ], firstKey ) )
+      e.subject = undefined;
+      else
+      e.subject = isolated[ 0 ];
+    }
+
+    let splits = subject.split( /\s+/ );
+    let i = e.subject === undefined ? 0 : 1;
+    for( ; i < splits.length ; i++ )
+    willfilePropertiesMap[ splits[ i ] ] = 1;
+
+    if( !e.subject && !cui.currentOpeners )
+    e.subject = './(.im|.ex|will)*';
   }
 }
 
