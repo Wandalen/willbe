@@ -2994,7 +2994,7 @@ function commandWillfileGet( e )
   return cui._commandBuildLike
   ({
     event : e,
-    name : 'willfile extend',
+    name : 'willfile get',
     onEach : handleEach,
     commandRoutine : commandWillfileGet,
   });

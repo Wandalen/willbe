@@ -7969,7 +7969,7 @@ function _willfilePropertyAct( o )
     let splits = option.split( '/' );
 
     if( !( splits[ 0 ] in sectionMap ) )
-    _.assert( 0, `Expexts sections "about", "build", "path", "reflector", "step", "submodule", but got "${ splits[ 0 ] }"` );
+    throw _.errBrief( `Expexts sections "about", "build", "path", "reflector", "step", "submodule", but got "${ splits[ 0 ] }"` );
 
     let dstConfig = o.onConfig( willfile, willfile2, splits );
 
