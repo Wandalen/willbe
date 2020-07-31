@@ -1,4 +1,5 @@
-( function _WillInternals_test_s_( ) {
+( function _WillInternals_test_s_()
+{
 
 'use strict';
 
@@ -151,7 +152,9 @@ function assetFor( test, name )
     {
       _.errAttend( err );
       /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
-      _.Consequence().take( null ).timeOut( 3000 ).deasync();
+      _.Consequence().take( null )
+      .timeOut( 3000 )
+      .deasync();
       a.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) );
       a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
     }
@@ -333,7 +336,8 @@ function buildSimple( test )
   var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
   opener.find();
 
-  return opener.open().split().then( () =>
+  return opener.open().split()
+  .then( () =>
   {
 
     var expected = [];
@@ -773,10 +777,7 @@ function openSkippingSubButAttachedWillfilesSkippingMainPeers( test )
 {
   let context = this;
   let a = context.assetFor( test, 'two-exported' );
-  let opener1;
-  let ready1;
-  let opener2;
-  let ready2;
+  let opener1, ready1, opener2, ready2;
   a.reflect();
 
   /* - */
@@ -908,10 +909,7 @@ function openSkippingSubButAttachedWillfiles( test )
 {
   let context = this;
   let a = context.assetFor( test, 'two-exported' );
-  let opener1;
-  let ready1;
-  let opener2;
-  let ready2;
+  let opener1, ready1, opener2, ready2;
   a.reflect();
 
   /* - */
@@ -4063,9 +4061,9 @@ function exportSteps( test )
     test.identical( names, exp );
     var exp =
     [
-      { "export" : null, "tar" : 0 },
-      { "export" : `{path::out.*=1}/**`, "tar" : 1 },
-      { "export" : `{path::out.*=1}/**`, "tar" : 1 },
+      { 'export' : null, 'tar' : 0 },
+      { 'export' : `{path::out.*=1}/**`, 'tar' : 1 },
+      { 'export' : `{path::out.*=1}/**`, 'tar' : 1 },
     ]
     var opts = _.select( got, '*/opts' )
     test.identical( opts, exp );
@@ -4082,9 +4080,9 @@ function exportSteps( test )
     test.identical( names, exp );
     var exp =
     [
-      { "export" : null, "tar" : 0 },
-      { "export" : `{path::out.*=1}/**`, "tar" : 1 },
-      { "export" : `{path::out.*=1}/**`, "tar" : 1 },
+      { 'export' : null, 'tar' : 0 },
+      { 'export' : `{path::out.*=1}/**`, 'tar' : 1 },
+      { 'export' : `{path::out.*=1}/**`, 'tar' : 1 },
     ]
     var opts = _.select( got, '*/opts' )
     test.identical( opts, exp );
@@ -5218,7 +5216,7 @@ function reflectorResolve( test )
       'dstRewritingOnlyPreserving' : 1,
       'linking' : 'hardLinkMaybe',
     }
-    var resolvedData = resolved.exportStructure({ formed:1 });
+    var resolvedData = resolved.exportStructure({ formed : 1 });
     if( resolvedData.src && resolvedData.src.maskAll )
     resolvedData.src.maskAll.excludeAny = !!resolvedData.src.maskAll.excludeAny;
     test.identical( resolved.formed, 3 );
@@ -6439,13 +6437,13 @@ function pathsResolveImportIn( test )
   a.ready.then( ( arg ) =>
   {
 
-/*
-  pathUnwrapping : 1,
-  pathResolving : 0,
-  mapFlattening : 1,
-  singleUnwrapping : 1,
-  mapValsUnwrapping : 1,
-*/
+    /*
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      mapFlattening : 1,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 1,
+    */
 
     /* - */
 
@@ -7430,13 +7428,13 @@ function pathsResolveOutFileOfExports( test )
   a.ready.then( ( arg ) =>
   {
 
-/*
-  pathUnwrapping : 1,
-  pathResolving : 0,
-  mapFlattening : 1,
-  singleUnwrapping : 1,
-  mapValsUnwrapping : 1,
-*/
+    /*
+      pathUnwrapping : 1,
+      pathResolving : 0,
+      mapFlattening : 1,
+      singleUnwrapping : 1,
+      mapValsUnwrapping : 1,
+    */
 
     /* - */
 
@@ -9182,7 +9180,8 @@ function customLogger( test )
   var opener = a.will.openerMakeManual({ willfilesPath : a.abs( './' ) });
   opener.find();
 
-  return opener.open().split().then( () =>
+  return opener.open().split()
+  .then( () =>
   {
 
     var expected = [];
@@ -10891,8 +10890,8 @@ let Self =
   name : 'Tools.atop.Willbe.Int',
   silencing : 1,
 
-  onSuiteBegin : onSuiteBegin,
-  onSuiteEnd : onSuiteEnd,
+  onSuiteBegin,
+  onSuiteEnd,
   routineTimeOut : 300000,
 
   context :
