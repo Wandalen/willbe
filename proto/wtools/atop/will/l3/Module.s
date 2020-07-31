@@ -7926,14 +7926,14 @@ willfileExtendWillfile.defaults =
 
 //
 
-function _willfilePropertyAct( o )
+function _willfileOnPropertyAct( o )
 {
   let will = this.will ? this.will : this;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
 
-  _.routineOptions( _willfilePropertyAct, o );
+  _.routineOptions( _willfileOnPropertyAct, o );
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( o ) );
 
@@ -8029,7 +8029,7 @@ function _willfilePropertyAct( o )
 
 }
 
-_willfilePropertyAct.defaults =
+_willfileOnPropertyAct.defaults =
 {
   request : null,
   willfilePropertiesMap : null,
@@ -8054,7 +8054,7 @@ function willfileGetProperty( o )
   o.act = getProperty;
   o.onConfig = configChooseByKeys;
 
-  return _willfilePropertyAct.call( will, o );
+  return _willfileOnPropertyAct.call( will, o );
 
   /* */
 
@@ -8122,7 +8122,7 @@ function willfileSetProperty( o )
   o.act = setProperty;
   o.onConfig = configChooseByKeys;
 
-  return _willfilePropertyAct.call( will, o );
+  return _willfileOnPropertyAct.call( will, o );
 
   /* */
 
@@ -8197,6 +8197,76 @@ willfileSetProperty.defaults =
 
 //
 
+function willfileDeleteProperty( o )
+{
+  let will = this.will ? this.will : this;
+  let logger = will.logger;
+
+  _.routineOptions( willfileDeleteProperty, o );
+
+  o.act = deleteProperty;
+  o.onConfig = configChooseByKeys;
+
+  return _willfileOnPropertyAct.call( will, o );
+
+  /* */
+
+  function deleteProperty( dstConfig, splits, option )
+  {
+    for( let i = 0 ; i < splits.length ; i++ )
+    {
+      let key = splits[ i ];
+      if( dstConfig[ key ] === undefined )
+      {
+        logger.log( `Option "${ option }" does not exist.` );
+        break;
+      }
+      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+      {
+        dstConfig = dstConfig[ key ];
+      }
+      else if( o.willfilePropertiesMap[ option ] )
+      {
+        if( o.verbosity > 3 )
+        logger.log( `${ option } is deleted.` );
+        delete dstConfig[ key ];
+      }
+    }
+  }
+
+  /* */
+
+  function configChooseByKeys( config, config2, keys )
+  {
+    if( !config2 )
+    return config;
+
+    if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
+    return config2;
+
+    if( keys[ 0 ] in config2 && keys[ 0 ] in config )
+    {
+      if( keys[ 1 ] in config2[ keys[ 0 ] ] )
+      return config2;
+      return config;
+    }
+
+    return config;
+  }
+}
+
+willfileDeleteProperty.defaults =
+{
+  request : null,
+  willfilePropertiesMap : null,
+  structureParse : 0,
+  writing : 1,
+  verbosity : 3,
+  v : 3,
+}
+
+//
+
 function willfileExtendProperty( o )
 {
   let will = this;
@@ -8205,7 +8275,7 @@ function willfileExtendProperty( o )
   o.act = extendProperty;
   o.onConfig = configChooseByKeys;
 
-  return _willfilePropertyAct.call( will, o );
+  return _willfileOnPropertyAct.call( will, o );
 
   /* */
 
@@ -9466,9 +9536,10 @@ let Extension =
   _willfileGenerateFromNpm,
   willfileGenerateFromNpm,
 
-  _willfilePropertyAct,
+  _willfileOnPropertyAct,
   willfileGetProperty,
   willfileSetProperty,
+  willfileDeleteProperty,
   willfileExtendProperty,
 
   willfileExtendWillfile,
