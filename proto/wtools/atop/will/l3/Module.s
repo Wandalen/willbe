@@ -8052,7 +8052,7 @@ function willfileGetProperty( o )
   _.routineOptions( willfileGetProperty, o );
 
   o.act = getProperty;
-  o.onConfig = configChooseBySection;
+  o.onConfig = configChooseByKeys;
 
   return _willfilePropertyAct.call( will, o );
 
@@ -8085,7 +8085,7 @@ function willfileGetProperty( o )
 
   /* */
 
-  function configChooseBySection( config, config2, keys )
+  function configChooseByKeys( config, config2, keys )
   {
     if( !config2 )
     return config;
@@ -8105,9 +8105,92 @@ willfileGetProperty.defaults =
 {
   request : null,
   willfilePropertiesMap : null,
-  onProperty : null,
   structureParse : 0,
   writing : 0,
+  verbosity : 3,
+  v : 3,
+}
+
+//
+
+function willfileSetProperty( o )
+{
+  let will = this.will ? this.will : this;
+
+  _.routineOptions( willfileSetProperty, o );
+
+  o.act = setProperty;
+  o.onConfig = configChooseByKeys;
+
+  return _willfilePropertyAct.call( will, o );
+
+  /* */
+
+  function setProperty( dstConfig, splits, option )
+  {
+    for( let i = 0 ; i < splits.length ; i++ )
+    {
+      let key = splits[ i ];
+      if( dstConfig[ key ] === undefined )
+      {
+        if( i === splits.length -1 )
+        {
+          let value = o.willfilePropertiesMap[ option ];
+          if( o.structureParse )
+          value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+          dstConfig[ key ] = value;
+        }
+        else
+        {
+          dstConfig[ key ] = Object.create( null );
+          dstConfig = dstConfig[ key ];
+        }
+      }
+      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+      {
+        if( _.mapIs( dstConfig[ key ] ) )
+        dstConfig = dstConfig[ key ];
+        else
+        dstConfig = Object.create( null );
+      }
+      else
+      {
+        let value = o.willfilePropertiesMap[ option ];
+        if( o.structureParse )
+        value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+        dstConfig[ key ] = value;
+      }
+    }
+  }
+
+  /* */
+
+  function configChooseByKeys( config, config2, keys )
+  {
+    if( !config2 )
+    return config;
+
+    if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
+    return config2;
+
+    if( keys[ 0 ] in config2 && keys[ 0 ] in config )
+    {
+      if( keys[ 1 ] in config2[ keys[ 0 ] ] )
+      return config2;
+      return config;
+    }
+
+    return config;
+  }
+
+}
+
+willfileSetProperty.defaults =
+{
+  request : null,
+  willfilePropertiesMap : null,
+  structureParse : 0,
+  writing : 1,
   verbosity : 3,
   v : 3,
 }
@@ -8120,7 +8203,7 @@ function willfileExtendProperty( o )
 
   _.routineOptions( willfileExtendProperty, o );
   o.act = extendProperty;
-  o.onConfig = configChooseBySection;
+  o.onConfig = configChooseByKeys;
 
   return _willfilePropertyAct.call( will, o );
 
@@ -8150,7 +8233,6 @@ function willfileExtendProperty( o )
       {
         _.sure( _.mapIs( dstConfig[ key ] ), `Not safe to delete property : ${ key }.` )
         dstConfig = dstConfig[ key ];
-        continue;
       }
       else
       {
@@ -8164,7 +8246,7 @@ function willfileExtendProperty( o )
 
   /* */
 
-  function configChooseBySection( config, config2, keys )
+  function configChooseByKeys( config, config2, keys )
   {
     if( !config2 )
     return config;
@@ -9386,7 +9468,9 @@ let Extension =
 
   _willfilePropertyAct,
   willfileGetProperty,
+  willfileSetProperty,
   willfileExtendProperty,
+
   willfileExtendWillfile,
 
   // remote
