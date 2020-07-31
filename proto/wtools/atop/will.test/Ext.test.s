@@ -26264,6 +26264,7 @@ function commandWillfileSet( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - glob for two unnamed willfiles';
+    test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.in, undefined );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
@@ -26276,6 +26277,7 @@ function commandWillfileSet( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'with parsed structure';
+    test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.in.criterion, { debug : 1 } );
 
@@ -26332,6 +26334,7 @@ function commandWillfileSet( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile from context, two unnamed willfiles';
+    test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.in, undefined );
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
@@ -26344,6 +26347,7 @@ function commandWillfileSet( test )
   a.ready.then( ( op ) =>
   {
     test.case = 'with parsed structure';
+    test.identical( op.exitCode, 0 );
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
     test.identical( config.path.in.criterion, { debug : 1 } );
 
@@ -26361,8 +26365,6 @@ function commandWillfileSet( test )
     return null;
   })
 
-  /* */
-
   a.appStartNonThrowing({ args : '.willfile.set Unknown* about/name:name' })
   a.ready.then( ( op ) =>
   {
@@ -26372,9 +26374,227 @@ function commandWillfileSet( test )
     return null;
   })
 
+  a.appStartNonThrowing({ args : '.willfile.set .* notSection/option:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'unknown section';
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  })
+
   /* */
 
-  a.appStartNonThrowing({ args : '.willfile.get .* notSection/option:1' })
+  return a.ready;
+}
+
+//
+
+function commandWillfileDel( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.del about/author' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - without name, only subject';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, undefined );
+    test.ge( _.mapKeys( config.about ).length, 4 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about, undefined );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.del about/name:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - without name, only enabled option';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.name, undefined );
+    test.ge( _.mapKeys( config.about ).length, 4 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about, undefined );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.del Author about/author about/name' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - only name, subjects with not existed property';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, undefined );
+    test.identical( _.mapKeys( config.about ).length, 0 );
+    test.is( _.strHas( op.output, 'Option "about/name" does not exist.' ) );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.del Name.will.yml about/author:1 about/name:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile with - full form and enabled options';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'Name.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.name, undefined );
+    test.identical( _.mapKeys( config.about ).length, 0 );
+    test.is( _.strHas( op.output, 'Option "about/author" does not exist.' ) );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.del ForExtension* submodule/eslint about/author:1 about/name:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - glob, subject and enabled options';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, undefined );
+    test.identical( config.about.name, undefined );
+    test.ge( _.mapKeys( config.about ).length, 4 );
+    test.is( !_.longHas( _.mapKeys( config.submodule ), 'eslint' ) );
+    test.identical( _.mapKeys( config.submodule ).length, 2 );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.del ForExtension* submodule/NpmFromWillfile about/description:0 about/version:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - glob, subject and disabled options';
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.description, 'To check the extension' );
+    test.identical( config.about.version, '1.1.1' );
+    test.ge( _.mapKeys( config.about ).length, 4 );
+    test.is( !_.longHas( _.mapKeys( config.submodule ), 'NpmFromWillfile' ) );
+    test.ge( _.mapKeys( config.submodule ).length, 1 );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.del .* path/in' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - glob for two unnamed willfiles';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    test.identical( config.path.in, undefined );
+    test.ge( _.mapKeys( config.path ).length, 3 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    test.ge( _.mapKeys( config.path ).length, 3 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with Author .willfile.del about/author about/name' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile from context, subjects with not existed property';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, undefined );
+    test.identical( _.mapKeys( config.about ).length, 0 );
+    test.is( _.strHas( op.output, 'Option "about/name" does not exist.' ) );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.del Name.will.yml about/author:1 about/name:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile from context, enabled options';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'Name.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.name, undefined );
+    test.identical( _.mapKeys( config.about ).length, 0 );
+    test.is( _.strHas( op.output, 'Option "about/author" does not exist.' ) );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.del ForExtension* submodule/eslint about/author:1 about/name:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile from context, enabled options';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, undefined );
+    test.identical( config.about.name, undefined );
+    test.ge( _.mapKeys( config.about ).length, 4 );
+    test.is( !_.longHas( _.mapKeys( config.submodule ), 'eslint' ) );
+    test.identical( _.mapKeys( config.submodule ).length, 2 );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.del ForExtension* submodule/NpmFromWillfile about/description:0 about/version:0' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile from context, subject and disabled options';
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'ForExtension.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.description, 'To check the extension' );
+    test.identical( config.about.version, '1.1.1' );
+    test.ge( _.mapKeys( config.about ).length, 4 );
+    test.is( !_.longHas( _.mapKeys( config.submodule ), 'NpmFromWillfile' ) );
+    test.ge( _.mapKeys( config.submodule ).length, 1 );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.del .* path/in' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile from context, two unnamed willfiles';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    test.identical( config.path.in, undefined );
+    test.ge( _.mapKeys( config.path ).length, 3 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    test.ge( _.mapKeys( config.path ).length, 3 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStartNonThrowing({ args : '.willfile.del' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'without any options and subject';
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  })
+
+  a.appStartNonThrowing({ args : '.willfile.del Unknown* about' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'call not existed file';
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  })
+
+  a.appStartNonThrowing({ args : '.willfile.del .* notSection/option:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'unknown section';
@@ -29979,6 +30199,7 @@ let Self =
 
     commandWillfileGet,
     commandWillfileSet,
+    commandWillfileDel,
     commandWillfileExtend,
     commandWillfileSupplement,
     commandWillfileExtendWillfileDstIsWillfile,
