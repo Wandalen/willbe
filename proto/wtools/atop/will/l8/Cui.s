@@ -449,6 +449,7 @@ function _commandsMake()
     'module new' :                      { e : _.routineJoin( will, will.commandModuleNew )                    },
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith )                },
 
+    'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull )                      },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush )                      },
     'git reset' :                       { e : _.routineJoin( will, will.commandGitReset )                     },
@@ -709,6 +710,7 @@ function _commandBuildLike( o )
 
   function filter()
   {
+    debugger;
     if( will.currentOpeners )
     {
       let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly( o, will.modulesFilter.defaults ) );
@@ -2310,6 +2312,50 @@ commandExportRecursive.defaults = Object.create( null );
 commandExportRecursive.hint = 'Export selected the module with spesified criterion and its submodules. Save output to output willfile and archive.';
 commandExportRecursive.commandSubjectHint = 'A name of export scenario.';
 
+//
+
+function commandGit( e )
+{
+  let cui = this;
+  let commandOptions = _.mapBut( e.propertiesMap, commandImply.defaults );
+  let hardLinkMaybe = commandOptions.hardLinkMaybe;
+  if( hardLinkMaybe !== undefined )
+  delete commandOptions.hardLinkMaybe;
+
+  e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
+  if( _.mapKeys( commandOptions ).length >= 1 )
+  e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+  cui._command_pre( commandGit, arguments );
+
+  _.routineOptions( commandGit, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git',
+    onEach : handleEach,
+    commandRoutine : commandGit,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitExecCommand
+    ({
+      dirPath : it.junction.dirPath,
+      command : e.subject,
+      verbosity : cui.verbosity,
+      hardLinkMaybe,
+    });
+  }
+}
+
+commandGit.defaults = _.mapExtend( null, commandImply.defaults );
+commandGit.defaults.withSubmodules = 0;
+commandGit.hint = 'Use "git" to run custom Git command in repository of module.';
+commandGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
+commandGit.commandProperties = commandImply.commandProperties;
+commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
 //
 
 function commandGitPull( e )
@@ -4111,6 +4157,7 @@ let Extension =
 
   // command git
 
+  commandGit,
   commandGitPull,
   commandGitPush,
   commandGitReset,
