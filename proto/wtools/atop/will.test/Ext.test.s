@@ -28906,7 +28906,7 @@ original
   return a.ready;
 }
 
-commandGit.timeOut = 300000;
+commandGitCheckHardLinkRestoring.timeOut = 300000;
 
 //
 

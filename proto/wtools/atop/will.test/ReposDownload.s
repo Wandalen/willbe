@@ -3,14 +3,14 @@ let _ = require( '../../../wtools/Tools.s' );
 _.include( 'wProcess' );
 _.include( 'wFiles' );
 
-let = assetsOriginalPath = _.path.join( __dirname, '_asset' );
+let assetsOriginalPath = _.path.join( __dirname, '_asset' );
 let repoDirPath = _.path.join( assetsOriginalPath, '_repo' );
 let ready = new _.Consequence().take( null );
 let start = _.process.starter
 ({
   currentPath : repoDirPath,
   outputCollecting : 1,
-  ready : ready,
+  ready,
 })
 
 module.exports = reposRedownload;
