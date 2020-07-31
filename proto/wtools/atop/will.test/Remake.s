@@ -11,7 +11,7 @@ let start = _.process.starter
 ({
   currentPath : repoDirPath,
   outputCollecting : 1,
-  ready : ready,
+  ready,
 })
 
 let will = _.process.starter
@@ -20,7 +20,7 @@ let will = _.process.starter
   execPath : `node ` + execPath,
   outputCollecting : 1,
   outputGraying : 1,
-  ready : ready,
+  ready,
   throwingExitCode : 0,
   deasync : 1,
 })
