@@ -463,6 +463,7 @@ function _commandsMake()
     'npm from willfile' :               { e : _.routineJoin( will, will.commandNpmFromWillfile )              },
     'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm )              },
     'willfile get' :                    { e : _.routineJoin( will, will.commandWillfileGet )                  },
+    'willfile set' :                    { e : _.routineJoin( will, will.commandWillfileSet )                  },
     'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
     'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
     'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
@@ -3048,9 +3049,71 @@ commandWillfileGet.defaults =
   v : 3,
 };
 commandWillfileGet.hint = 'Use "willfile get" to get value of separate properties of source willfile.';
-commandWillfileGet.commandSubjectHint = 'A path to destination willfile.';
+commandWillfileGet.commandSubjectHint = 'A path to source willfile.';
 commandWillfileGet.commandProperties =
 {
+  verbosity : 'Set verbosity. Default is 3.',
+  v : 'Set verbosity. Default is 3.',
+};
+
+//
+
+function commandWillfileSet( e )
+{
+  let cui = this;
+  let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileSet.defaults );
+  e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileSet.defaults );
+  cui._command_pre( commandWillfileSet, arguments );
+
+  if( !e.subject && !cui.currentOpeners )
+  if( _.mapKeys( willfilePropertiesMap ).length >= 1 )
+  e.subject = './(.im|.ex|will)*';
+
+  if( e.subject )
+  return _.will.Module.prototype.willfileSetProperty.call( cui,
+  {
+    request : e.subject,
+    willfilePropertiesMap,
+    ... e.propertiesMap,
+  });
+
+  if( cui.currentOpeners )
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'willfile set',
+    onEach : handleEach,
+    commandRoutine : commandWillfileSet,
+  });
+
+  throw _.errBrief( 'Please, specify at least one option. Format: will .willfile.set about/name:name' );
+
+  function handleEach( it )
+  {
+    let request = it.opener.commonPath;
+    if( cui.fileProvider.isDir( request ) )
+    request = cui.fileProvider.path.join( request, './.*' );
+
+    return it.opener.openedModule.willfileSetProperty
+    ({
+      request,
+      willfilePropertiesMap,
+      ... e.propertiesMap,
+    });
+  }
+}
+
+commandWillfileSet.defaults =
+{
+  verbosity : 3,
+  v : 3,
+  structureParse : 0,
+};
+commandWillfileSet.hint = 'Use "willfile set" to set separate properties of destination willfile.';
+commandWillfileSet.commandSubjectHint = 'A path to destination willfile.';
+commandWillfileSet.commandProperties =
+{
+  structureParse : 'Enable parsing of property value. Default is 0.',
   verbosity : 'Set verbosity. Default is 3.',
   v : 'Set verbosity. Default is 3.',
 };
@@ -3976,8 +4039,10 @@ let Extension =
   commandWillfileFromNpm,
 
   commandWillfileGet,
+  commandWillfileSet,
   commandWillfileExtend,
   commandWillfileSupplement,
+
   commandWillfileExtendWillfile,
   commandWillfileSupplementWillfile,
   /* aaa2 :
