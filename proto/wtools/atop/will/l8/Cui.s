@@ -464,6 +464,7 @@ function _commandsMake()
     'willfile from npm' :               { e : _.routineJoin( will, will.commandWillfileFromNpm )              },
     'willfile get' :                    { e : _.routineJoin( will, will.commandWillfileGet )                  },
     'willfile set' :                    { e : _.routineJoin( will, will.commandWillfileSet )                  },
+    'willfile del' :                    { e : _.routineJoin( will, will.commandWillfileDel )                  },
     'willfile extend' :                 { e : _.routineJoin( will, will.commandWillfileExtend )               },
     'willfile supplement' :             { e : _.routineJoin( will, will.commandWillfileSupplement )           },
     'willfile extend willfile' :        { e : _.routineJoin( will, will.commandWillfileExtendWillfile )       },
@@ -3120,6 +3121,98 @@ commandWillfileSet.commandProperties =
 
 //
 
+function commandWillfileDel( e )
+{
+  let cui = this;
+  let willfilePropertiesMap = _.mapBut( e.propertiesMap, commandWillfileGet.defaults );
+  e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileDel.defaults );
+  cui._command_pre( commandWillfileExtend, arguments );
+
+  if( !e.subject && !cui.currentOpeners )
+  if( _.mapKeys( willfilePropertiesMap ).length >= 1 )
+  e.subject = './(.im|.ex|will)*';
+
+  if( !e.subject && _.mapKeys( willfilePropertiesMap ).length === 0 )
+  throw _.errBrief( 'Expects option(s) to delete from willfile. Format : will .willfile.del about/name:1' );
+
+  if( e.subject )
+  subjectNormalize();
+
+  if( e.subject )
+  return _.will.Module.prototype.willfileDeleteProperty.call( cui,
+  {
+    request : e.subject,
+    willfilePropertiesMap,
+    ... e.propertiesMap,
+  });
+
+  if( cui.currentOpeners )
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'willfile del',
+    onEach : handleEach,
+    commandRoutine : commandWillfileDel,
+  });
+
+  function handleEach( it )
+  {
+    let request = it.opener.commonPath;
+    if( cui.fileProvider.isDir( request ) )
+    request = cui.fileProvider.path.join( request, './.*' );
+
+    return it.opener.openedModule.willfileDeleteProperty
+    ({
+      request,
+      willfilePropertiesMap,
+      ... e.propertiesMap,
+    });
+  }
+
+  /* */
+
+  function subjectNormalize()
+  {
+    let subject = e.subject;
+    let isolated = _.strIsolateLeftOrAll( e.subject, ' ' );
+    if( cui.fileProvider.path.isGlob( isolated[ 0 ] ) )
+    {
+      e.subject = isolated[ 0 ];
+    }
+    else
+    {
+      let firstKey = isolated[ 0 ].split( '/' )[ 0 ];
+      if( _.longHas( [ 'about', 'build', 'path', 'reflector', 'step', 'submodule' ], firstKey ) )
+      e.subject = undefined;
+      else
+      e.subject = isolated[ 0 ];
+    }
+
+    let splits = subject.split( /\s+/ );
+    let i = e.subject === undefined ? 0 : 1;
+    for( ; i < splits.length ; i++ )
+    willfilePropertiesMap[ splits[ i ] ] = 1;
+
+    if( !e.subject && !cui.currentOpeners )
+    e.subject = './(.im|.ex|will)*';
+  }
+}
+
+commandWillfileDel.defaults =
+{
+  verbosity : 3,
+  v : 3,
+};
+commandWillfileDel.hint = 'Use "willfile del" to delete separate properties of destination willfile.';
+commandWillfileDel.commandSubjectHint = 'A path to source willfile.';
+commandWillfileDel.commandProperties =
+{
+  verbosity : 'Set verbosity. Default is 3.',
+  v : 'Set verbosity. Default is 3.',
+};
+
+//
+
 function commandWillfileExtend( e )
 {
   let cui = this;
@@ -4040,6 +4133,7 @@ let Extension =
 
   commandWillfileGet,
   commandWillfileSet,
+  commandWillfileDel,
   commandWillfileExtend,
   commandWillfileSupplement,
 
