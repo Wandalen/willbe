@@ -1074,6 +1074,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'git',
+    stepRoutine : Predefined.stepRoutineGitExecCommand,
+  })
+
+  step
+  ({
     name : 'git.pull',
     stepRoutine : Predefined.stepRoutineGitPull,
   })
@@ -8478,6 +8484,97 @@ function _remoteChanged()
 // git
 // --
 
+function gitExecCommand( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( gitExecCommand, o );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git' ],
+  });
+
+  let status = _.git.statusFull
+  ({
+    insidePath : o.dirPath,
+    unpushed : 0,
+    prs : 0,
+    remote : 1,
+  });
+
+  if( !status.isRepository )
+  return null;
+
+  if( o.verbosity )
+  logger.log( `Executing command "git ${ o.command }", ${module.nameWithLocationGet()}` );
+
+  let provider = _.FileFilter.Archive();
+  if( o.hardLinkMaybe )
+  {
+    let config = fileProvider.configUserRead();
+    provider.archive.basePath = will.currentOpener.dirPath;
+    if( config && config.path && config.path.link )
+    provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.link ) );
+
+    provider.archive.fileMapAutosaving = 1;
+
+    if( o.verbosity )
+    provider.archive.verbosity = 2;
+    else
+    provider.archive.verbosity = 0;
+
+    provider.archive.allowingMissed = 1;
+    provider.archive.allowingCycled = 1;
+    provider.archive.restoreLinksBegin();
+  }
+
+  let ready = new _.Consequence().take( null );
+
+  _.process.start
+  ({
+    execPath : `git ${ o.command }`,
+    currentPath : o.dirPath,
+    ready,
+  });
+
+  if( o.hardLinkMaybe )
+  {
+    ready.tap( () =>
+    {
+      provider.archive.restoreLinksEnd();
+    });
+  }
+
+  ready.catch( ( err ) =>
+  {
+    err = _.errBrief( err );
+    logger.error( _.errOnce( err ) );
+    throw err;
+  });
+
+  return ready;
+}
+
+gitExecCommand.defaults =
+{
+  command : null,
+  dirPath : null,
+  hardLinkMaybe : 1,
+  v : null,
+  verbosity : 2,
+};
+
+//
+
 function gitPull( o )
 {
   let module = this;
@@ -9557,6 +9654,7 @@ let Extension =
 
   // git
 
+  gitExecCommand,
   gitPull,
   gitPush,
   gitReset,
