@@ -2975,14 +2975,13 @@ function commandWillfileGet( e )
   cui._command_pre( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  if( _.mapKeys( willfilePropertiesMap ).length >= 1 )
   e.subject = './(.im|.ex|will)*';
-
-  if( !e.subject && _.mapKeys( willfilePropertiesMap ).length === 0 )
-  throw _.errBrief( 'Expects option(s) to get info in willfile. Format : will .willfile.get about/name:1' );
 
   if( e.subject )
   subjectNormalize();
+
+  if( _.mapKeys( willfilePropertiesMap ).length === 0 )
+  willfilePropertiesMap = { about : 1, build : 1, path : 1, reflector : 1, step : 1, submodule : 1 };
 
   if( e.subject )
   return _.will.Module.prototype.willfileGetProperty.call( cui,
@@ -3129,14 +3128,13 @@ function commandWillfileDel( e )
   cui._command_pre( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  if( _.mapKeys( willfilePropertiesMap ).length >= 1 )
   e.subject = './(.im|.ex|will)*';
-
-  if( !e.subject && _.mapKeys( willfilePropertiesMap ).length === 0 )
-  throw _.errBrief( 'Expects option(s) to delete from willfile. Format : will .willfile.del about/name:1' );
 
   if( e.subject )
   subjectNormalize();
+
+  if( _.mapKeys( willfilePropertiesMap ).length === 0 )
+  willfilePropertiesMap = { about : 1, build : 1, path : 1, reflector : 1, step : 1, submodule : 1 };
 
   if( e.subject )
   return _.will.Module.prototype.willfileDeleteProperty.call( cui,

@@ -26029,6 +26029,22 @@ function commandWillfileGet( test )
 
   /* - */
 
+  a.appStart({ args : '.willfile.get' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - without name, without options and subject';
+    test.identical( op.exitCode, 0 );
+    test.ge( _.strLinesCount( op.output ), 100 );
+    test.is( _.strHas( op.output, 'about ::' ) );
+    test.is( _.strHas( op.output, 'build ::' ) );
+    test.is( _.strHas( op.output, 'path ::' ) );
+    test.is( _.strHas( op.output, 'reflector ::' ) );
+    test.is( _.strHas( op.output, 'step ::' ) );
+    test.is( _.strHas( op.output, 'submodule ::' ) );
+
+    return null;
+  })
+
   a.appStart({ args : '.willfile.get about/author' })
   a.ready.then( ( op ) =>
   {
@@ -26049,7 +26065,7 @@ function commandWillfileGet( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.get Author about/author about/name' })
+  a.appStart({ args : '.willfile.get Author about/author about/name v:4' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - only name and subjects';
@@ -26060,7 +26076,7 @@ function commandWillfileGet( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.get Author.will.yml about/author:1 about/name:1' })
+  a.appStart({ args : '.willfile.get Author.will.yml about/author:1 about/name:1 v:5' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile with - full form and enabled options';
@@ -26114,7 +26130,7 @@ function commandWillfileGet( test )
     test.case = 'source willfile from context module, subjects';
     test.identical( op.exitCode, 0 );
     test.is( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
-    test.is( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
+    test.isNot( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
   })
@@ -26125,7 +26141,7 @@ function commandWillfileGet( test )
     test.case = 'source willfile from context module, enabled options';
     test.identical( op.exitCode, 0 );
     test.is( _.strHas( op.output, 'about/author :: Author <author@dot.com>' ) );
-    test.is( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
+    test.isNot( _.strHas( op.output, 'about/name :: {-undefined-}' ) );
 
     return null;
   })
@@ -26165,17 +26181,6 @@ function commandWillfileGet( test )
 
   /* */
 
-  a.appStartNonThrowing({ args : '.willfile.get' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'without any options and subject';
-    test.notIdentical( op.exitCode, 0 );
-
-    return null;
-  })
-
-  /* */
-
   a.appStartNonThrowing({ args : '.willfile.get Unknown* about' })
   a.ready.then( ( op ) =>
   {
@@ -26184,8 +26189,6 @@ function commandWillfileGet( test )
 
     return null;
   })
-
-  /* */
 
   a.appStartNonThrowing({ args : '.willfile.get .* notSection/option:1' })
   a.ready.then( ( op ) =>
@@ -26398,6 +26401,27 @@ function commandWillfileDel( test )
 
   /* - */
 
+  a.appStart({ args : '.willfile.del' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - without name, without options';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    test.identical( config, {} );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    test.identical( config, {} );
+
+    return null;
+  })
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  /* */
+
   a.appStart({ args : '.willfile.del about/author' })
   a.ready.then( ( op ) =>
   {
@@ -26426,7 +26450,7 @@ function commandWillfileDel( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.del Author about/author about/name' })
+  a.appStart({ args : '.willfile.del Author about/author about/name v:4' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile - only name, subjects with not existed property';
@@ -26439,7 +26463,7 @@ function commandWillfileDel( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.del Name.will.yml about/author:1 about/name:1' })
+  a.appStart({ args : '.willfile.del Name.will.yml about/author:1 about/name:1 verbosity:5' })
   a.ready.then( ( op ) =>
   {
     test.case = 'source willfile with - full form and enabled options';
@@ -26513,7 +26537,7 @@ function commandWillfileDel( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, undefined );
     test.identical( _.mapKeys( config.about ).length, 0 );
-    test.is( _.strHas( op.output, 'Option "about/name" does not exist.' ) );
+    test.isNot( _.strHas( op.output, 'Option "about/name" does not exist.' ) );
 
     return null;
   })
@@ -26526,7 +26550,7 @@ function commandWillfileDel( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( 'Name.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.name, undefined );
     test.identical( _.mapKeys( config.about ).length, 0 );
-    test.is( _.strHas( op.output, 'Option "about/author" does not exist.' ) );
+    test.isNot( _.strHas( op.output, 'Option "about/author" does not exist.' ) );
 
     return null;
   })
@@ -26575,15 +26599,6 @@ function commandWillfileDel( test )
   })
 
   /* */
-
-  a.appStartNonThrowing({ args : '.willfile.del' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'without any options and subject';
-    test.notIdentical( op.exitCode, 0 );
-
-    return null;
-  })
 
   a.appStartNonThrowing({ args : '.willfile.del Unknown* about' })
   a.ready.then( ( op ) =>

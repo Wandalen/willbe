@@ -7972,7 +7972,6 @@ function _willfileOnPropertyAct( o )
     throw _.errBrief( `Expexts sections "about", "build", "path", "reflector", "step", "submodule", but got "${ splits[ 0 ] }"` );
 
     let dstConfig = o.onConfig( willfile, willfile2, splits );
-
     o.act( dstConfig, splits, option );
 
   }
@@ -8065,6 +8064,7 @@ function willfileGetProperty( o )
       let key = splits[ i ];
       if( dstConfig[ key ] === undefined )
       {
+        if( o.verbosity > 3 )
         logger.log( `${ option } :: {-undefined-}` );
         break;
       }
@@ -8218,6 +8218,7 @@ function willfileDeleteProperty( o )
       let key = splits[ i ];
       if( dstConfig[ key ] === undefined )
       {
+        if( o.verbosity > 3 )
         logger.log( `Option "${ option }" does not exist.` );
         break;
       }
@@ -8228,7 +8229,7 @@ function willfileDeleteProperty( o )
       else if( o.willfilePropertiesMap[ option ] )
       {
         if( o.verbosity > 3 )
-        logger.log( `${ option } is deleted.` );
+        logger.log( `Option "${ option }" is deleted.` );
         delete dstConfig[ key ];
       }
     }
@@ -8246,6 +8247,12 @@ function willfileDeleteProperty( o )
 
     if( keys[ 0 ] in config2 && keys[ 0 ] in config )
     {
+      if( !keys[ 1 ] )
+      {
+        _.mapExtend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] )
+        delete config2[ keys[ 0 ] ];
+        return config;
+      }
       if( keys[ 1 ] in config2[ keys[ 0 ] ] )
       return config2;
       return config;
