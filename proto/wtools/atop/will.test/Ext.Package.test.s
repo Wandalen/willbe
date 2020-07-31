@@ -1,4 +1,5 @@
-( function _WillExternalsPackage_test_s_( ) {
+( function _WillExternalsPackage_test_s_()
+{
 
 'use strict';
 
@@ -77,7 +78,7 @@ function packageInstall( test )
     throwingExitCode : 0,
     outputGraying : 1,
     mode : 'fork',
-    ready : ready
+    ready,
   });
 
   start( '.package.install package:///git' )
@@ -275,7 +276,7 @@ function packageLocalVersions( test )
     throwingExitCode : 0,
     outputGraying : 1,
     mode : 'fork',
-    ready : ready
+    ready,
   });
 
   let shell = _.process.starter
@@ -285,7 +286,7 @@ function packageLocalVersions( test )
     throwingExitCode : 0,
     outputGraying : 1,
     mode : 'spawn',
-    ready : ready
+    ready,
   });
 
   //
@@ -433,7 +434,7 @@ function packageRemoteVersions( test )
     throwingExitCode : 0,
     outputGraying : 1,
     mode : 'fork',
-    ready : ready
+    ready,
   });
 
   //
@@ -566,7 +567,7 @@ function packageVersion( test )
     throwingExitCode : 0,
     outputGraying : 1,
     mode : 'fork',
-    ready : ready
+    ready,
   });
 
   let shell = _.process.starter
@@ -576,7 +577,7 @@ function packageVersion( test )
     throwingExitCode : 0,
     outputGraying : 1,
     mode : 'spawn',
-    ready : ready
+    ready,
   });
 
   //
@@ -721,7 +722,7 @@ let Self =
     packageInstall, /* aaa Vova : impelemnt test checks for Windows and MacOS */
     packageLocalVersions, /* aaa Vova : impelemnt test checks for Windows and MacOS */
     packageRemoteVersions, /* aaa Vova : impelemnt test checks for Windows and MacOS */
-    packageVersion,/* aaa Vova : impelemnt test checks for Windows and MacOS */
+    packageVersion, /* aaa Vova : impelemnt test checks for Windows and MacOS */
   }
 
 }
