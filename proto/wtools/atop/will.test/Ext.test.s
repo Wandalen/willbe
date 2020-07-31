@@ -26203,6 +26203,193 @@ function commandWillfileGet( test )
 
 //
 
+function commandWillfileSet( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart({ args : '.willfile.set about/author:"Author author@some.dot.com"' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - without name, only options';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author author@some.dot.com' );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about, undefined );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.set PathMain.will.yml about/author:Author author@some.dot.com about/name:author' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - full name and options';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author author@some.dot.com' );
+    test.identical( config.about.name, 'author' );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.set Author about/author:Author author@some.dot.com about/name:author' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - only name, options';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author author@some.dot.com' );
+    test.identical( config.about.name, 'author' );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.set Name* about/author:Author author@some.dot.com about/name:author' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - glob, options';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'Name.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author author@some.dot.com' );
+    test.identical( config.about.name, 'author' );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.set .* path/in:in' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile - glob for two unnamed willfiles';
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    test.identical( config.path.in, undefined );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    test.identical( config.path.in, 'in' );
+
+    return null;
+  })
+
+  a.appStart({ args : '.willfile.set Author path/in/criterion:{debug:1} structureParse:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'with parsed structure';
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.path.in.criterion, { debug : 1 } );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ args : '.with PathMain.will.yml .willfile.set about/author:Author author@some.dot.com about/name:author' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile from context, options';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'PathMain.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author author@some.dot.com' );
+    test.identical( config.about.name, 'author' );
+
+    return null;
+  })
+
+  a.appStart({ args : '.with Author .willfile.set about/author:Author author@some.dot.com about/name:author' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile from context, options';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author author@some.dot.com' );
+    test.identical( config.about.name, 'author' );
+
+    return null;
+  })
+
+  a.appStart({ args : '.with Name* .willfile.set about/author:Author author@some.dot.com about/name:author' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile from context, options';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'Name.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.author, 'Author author@some.dot.com' );
+    test.identical( config.about.name, 'author' );
+
+    return null;
+  })
+
+  a.appStart({ args : '.with .* .willfile.set path/in:in' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'source willfile from context, two unnamed willfiles';
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    test.identical( config.path.in, undefined );
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    test.identical( config.path.in, 'in' );
+
+    return null;
+  })
+
+  a.appStart({ args : '.with Author .willfile.set path/in/criterion:{debug:1} structureParse:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'with parsed structure';
+    var config = a.fileProvider.fileRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.path.in.criterion, { debug : 1 } );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStartNonThrowing({ args : '.willfile.set' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'without any options and subject';
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStartNonThrowing({ args : '.willfile.set Unknown* about/name:name' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'call not existed file';
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStartNonThrowing({ args : '.willfile.get .* notSection/option:1' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'unknown section';
+    test.notIdentical( op.exitCode, 0 );
+
+    return null;
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+//
+
 function commandWillfileExtend( test )
 {
   let context = this;
@@ -29791,6 +29978,7 @@ let Self =
     commandWillfileFromNpmDoubleConversion,
 
     commandWillfileGet,
+    commandWillfileSet,
     commandWillfileExtend,
     commandWillfileSupplement,
     commandWillfileExtendWillfileDstIsWillfile,
