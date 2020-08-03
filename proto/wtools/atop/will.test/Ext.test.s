@@ -22400,6 +22400,120 @@ stepGitCheckHardLinkRestoring.timeOut = 300000;
 
 //
 
+function stepGitDifferentCommands( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    return null
+  })
+
+  originalShell( 'git init' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  a.shell( `git clone original clone` );
+
+  a.ready.then( ( op ) =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'copy\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'copy\n' );
+    return null;
+  })
+
+  a.appStart( '.with clone/Git.* .build git.status' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/Git.* .build git.status';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Executing command "git status", module::git' ), 1 );
+    test.identical( _.strCount( op.output, 'Changes not staged for commit' ), 1 );
+    test.identical( _.strCount( op.output, 'modified' ), 2 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+
+    return null;
+  })
+
+  a.appStart( '.imply v:0 .with clone/Git.* .build git.log' )
+  .then( ( op ) =>
+  {
+    test.case = '.imply v:0 .with clone/Git.* .build git.log';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Executing command "git log", module::git' ), 0 );
+    test.identical( _.strCount( op.output, 'commit' ), 1 );
+    test.identical( _.strCount( op.output, 'Author:' ), 1 );
+    test.identical( _.strCount( op.output, 'Date:' ), 1 );
+    test.identical( _.strCount( op.output, 'first' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart( '.with clone/Git.* .build git.log.hardlink' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/Git.* .build git.log.hardlink';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
+    test.identical( _.strCount( op.output, 'Executing command "git log", module::git' ), 1 );
+    test.identical( _.strCount( op.output, 'commit' ), 1 );
+    test.identical( _.strCount( op.output, 'Author:' ), 1 );
+    test.identical( _.strCount( op.output, 'Date:' ), 1 );
+    test.identical( _.strCount( op.output, 'first' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    return null;
+  })
+
+  /* */
+
+  a.appStart( '.imply withSubmodules:0 .with clone/Git.* .build git.commit' )
+  .then( ( op ) =>
+  {
+    test.case = '.with clone/Git.* .build git.commit';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Building module::git' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Executing command "git commit -am second", module::git' ), 1 );
+    test.identical( _.strCount( op.output, '2 files changed, 2 insertions' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function stepGitPull( test )
 {
   let context = this;
@@ -31035,6 +31149,7 @@ let Self =
     stepSubmodulesAreUpdated,
     stepBuild,
     stepGitCheckHardLinkRestoring,
+    stepGitDifferentCommands,
     stepGitPull,
     stepGitPush,
     stepGitReset,
