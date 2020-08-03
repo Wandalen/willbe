@@ -446,6 +446,7 @@ function _commandsMake()
     'export purging' :                  { e : _.routineJoin( will, will.commandExportPurging )                },
     'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive )              },
 
+    'submodules shell' :                { e : _.routineJoin( will, will.commandSubmodulesShell )              },
     'module new' :                      { e : _.routineJoin( will, will.commandModuleNew )                    },
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith )                },
 
@@ -1963,6 +1964,36 @@ commandSubmodulesVersionsAgree.commandProperties =
   recursive : 'Recursive downloading. recursive:1 - current module and its submodules, recirsive:2 - current module and all submodules, direct and indirect. Default is recursive:1.',
   ... commandImply.commandProperties,
 }
+
+//
+
+function commandSubmodulesShell( e )
+{
+  let cui = this;
+  cui._command_pre( commandSubmodulesShell, arguments );
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'submodules shell',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesShell,
+    withRoot : 0,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.shell
+    ({
+      execPath : e.commandArgument,
+      currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+    });
+  }
+
+}
+
+commandSubmodulesShell.hint = 'Run shell command on each submodule of current module.';
+commandSubmodulesShell.commandSubjectHint = 'A command to execute in shell. Command executes for each submodule of current module.';
 
 //
 
@@ -4263,6 +4294,8 @@ let Extension =
   commandSubmodulesVersionsUpdate,
   commandSubmodulesVersionsVerify,
   commandSubmodulesVersionsAgree,
+
+  commandSubmodulesShell,
 
   commandModuleNew,
   commandModuleNewWith,
