@@ -28910,6 +28910,122 @@ commandGitCheckHardLinkRestoring.timeOut = 300000;
 
 //
 
+function commandGitDifferentCommands( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( 'original' ) });
+    return null
+  })
+
+  originalShell( 'git init' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  a.shell( `git clone original clone` );
+
+  a.ready.then( ( op ) =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'copy\n' );
+    a.fileProvider.fileAppend( a.abs( 'clone/f2.txt' ), 'copy\n' );
+    return null;
+  })
+
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git status' })
+  .then( ( op ) =>
+  {
+    test.case = '.git status';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Executing command "git status", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Changes not staged for commit' ), 1 );
+    test.identical( _.strCount( op.output, 'modified' ), 2 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+
+    return null;
+  })
+
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git log v:0' })
+  .then( ( op ) =>
+  {
+    test.case = '.git log v:0';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 0 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Executing command "git log", module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'commit' ), 1 );
+    test.identical( _.strCount( op.output, 'Author:' ), 1 );
+    test.identical( _.strCount( op.output, 'Date:' ), 1 );
+    test.identical( _.strCount( op.output, 'first' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git log hardLinkMaybe:0' })
+  .then( ( op ) =>
+  {
+    test.case = '.git log hardLinkMaybe:0';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Executing command "git log", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'commit' ), 1 );
+    test.identical( _.strCount( op.output, 'Author:' ), 1 );
+    test.identical( _.strCount( op.output, 'Date:' ), 1 );
+    test.identical( _.strCount( op.output, 'first' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 0 );
+    return null;
+  })
+
+  /* */
+
+  a.appStart({ currentPath : a.abs( 'clone' ), execPath : '.git commit -am second' })
+  .then( ( op ) =>
+  {
+    test.case = '.git commit -am second';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Executing command "git commit -am second", module::clone' ), 1 );
+    test.identical( _.strCount( op.output, '2 files changed, 2 insertions' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 0 hardlinks' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandGitPull( test )
 {
   let context = this;
@@ -30614,6 +30730,7 @@ let Self =
     commandWillfileSupplementWillfileWithOptions,
 
     commandGitCheckHardLinkRestoring,
+    commandGitDifferentCommands,
     commandGitPull,
     commandGitPush,
     commandGitReset,
