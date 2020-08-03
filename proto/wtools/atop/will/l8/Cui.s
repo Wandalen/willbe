@@ -1045,6 +1045,128 @@ _commandTreeLike.defaults =
   name : null,
 }
 
+//
+
+function _commandModulesLike( o )
+{
+  let cui = this;
+  let logger = cui.logger;
+  let ready = new _.Consequence().take( null );
+
+  _.routineOptions( _commandModulesLike, arguments );
+  _.mapSupplementNulls( o, cui.filterImplied() );
+  _.mapSupplementNulls( o, _.Will.ModuleFilterDefaults );
+
+  _.all
+  (
+    _.Will.ModuleFilterNulls,
+    ( e, k ) => _.assert( _.boolLike( o[ k ] ), `Expects bool-like ${k}, but it is ${_.strType( k )}` )
+  );
+  _.assert( _.routineIs( o.commandRoutine ) );
+  _.assert( _.routineIs( o.onEach ) );
+  _.assert( _.strIs( o.name ) );
+  _.assert( _.objectIs( o.event ) );
+
+  cui._commandsBegin( o.commandRoutine );
+
+  if( cui.currentOpeners === null && cui.currentOpener === null )
+  ready.then( () => cui.openersFind() )
+  .then( () => filter() );
+
+  let openers = cui.currentOpeners;
+  cui.currentOpeners = null; // Dmytro : need to improve
+
+  for( let i = 0 ; i < openers.length ; i++ )
+  ready.then( () => submodulesEach( openers[ i ] ) );
+
+  return ready.finally( ( err, arg ) =>
+  {
+    cui.currentOpeners = openers;
+    cui._commandsEnd( o.commandRoutine );
+    if( err )
+    logger.error( _.errOnce( err ) );
+    if( err )
+    throw err;
+    return arg;
+  })
+
+  /* */
+
+  function submodulesEach( opener )
+  {
+    let ready2 = cui.modulesFindEachAt
+    ({
+      selector : _.strUnquote( 'submodule::*' ),
+      currentOpener : opener,
+    })
+    .then( function( it )
+    {
+      if( o.withRoot )
+      _.arrayPrependOnce( it.sortedOpeners, opener );
+      else
+      _.arrayRemove( it.sortedOpeners, opener );
+
+      cui.currentOpeners = it.sortedOpeners;
+      return it;
+    })
+
+    ready2
+    .then( () => cui.openersCurrentEach( forSingle ) )
+
+    return ready2;
+  }
+
+  /* */
+
+  function filter()
+  {
+    if( cui.currentOpeners )
+    {
+      let openers2 = cui.modulesFilter( cui.currentOpeners, _.mapOnly( o, cui.modulesFilter.defaults ) );
+      if( openers2.length )
+      cui.currentOpeners = openers2;
+    }
+    return null;
+  }
+
+  /* */
+
+  function forSingle( it )
+  {
+    let ready3 = new _.Consequence().take( null );
+    let it2 = _.mapExtend( null, o, it );
+
+    ready3.then( () =>
+    {
+      return cui.currentOpenerChange( it.opener );
+    });
+
+    ready3.then( () =>
+    {
+      cui.readingEnd();
+      return o.onEach.call( cui, it2 );
+    });
+
+    ready3.finally( ( err, arg ) =>
+    {
+      cui.currentOpenerChange( null );
+      if( err )
+      throw _.err( err, `\nFailed to ${o.name} at ${it.opener ? it.opener.commonPath : ''}` );
+      return arg;
+    });
+
+    return ready3;
+  }
+
+}
+
+var defaults = _commandModulesLike.defaults = _.mapExtend( null, _.Will.ModuleFilterNulls );
+defaults.event = null;
+defaults.onEach = null;
+defaults.commandRoutine = null;
+defaults.name = null;
+defaults.withRoot = 1;
+
 // --
 // command
 // --
@@ -4111,6 +4233,7 @@ let Extension =
   _commandCleanLike,
   _commandNewLike,
   _commandTreeLike,
+  _commandModulesLike,
 
   // command
 
