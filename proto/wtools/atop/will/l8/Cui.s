@@ -447,8 +447,11 @@ function _commandsMake()
     'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive )              },
 
     'submodules shell' :                { e : _.routineJoin( will, will.commandSubmodulesShell )              },
+
     'module new' :                      { e : _.routineJoin( will, will.commandModuleNew )                    },
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith )                },
+
+    'modules shell' :                   { e : _.routineJoin( will, will.commandModulesShell )                 },
 
     'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull )                      },
@@ -2073,6 +2076,37 @@ function commandModuleNewWith( e )
 
 commandModuleNewWith.hint = 'Make a new module in the current directory and call a specified hook for the module to prepare it.';
 commandModuleNewWith.commandSubjectHint = 'A path to hook and arguments.';
+
+//
+
+function commandModulesShell( e )
+{
+  let cui = this;
+  cui._command_pre( commandModulesShell, arguments );
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'modules shell',
+    onEach : handleEach,
+    commandRoutine : commandModulesShell,
+    withRoot : 1,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.shell
+    ({
+      execPath : e.commandArgument,
+      currentPath : cui.currentOpenerPath || it.opener.openedModule.dirPath,
+    });
+  }
+
+}
+
+commandModulesShell.hint = 'Run shell command on current module including each submodule of the module.';
+commandModulesShell.commandSubjectHint =
+'A command to execute in shell. Command executes for current module including each submodule of the module.';
 
 //
 
@@ -4303,6 +4337,8 @@ let Extension =
 
   commandModuleNew,
   commandModuleNewWith,
+
+  commandModulesShell,
 
   commandShell,
   commandDo,
