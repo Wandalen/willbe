@@ -435,6 +435,7 @@ function _commandsMake()
     'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify )     },
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree )      },
     'submodules shell' :                { e : _.routineJoin( will, will.commandSubmodulesShell )              },
+    'submodules git sync' :             { e : _.routineJoin( will, will.commandSubmodulesGitSync )            },
 
     'shell' :                           { e : _.routineJoin( will, will.commandShell )                        },
     'do' :                              { e : _.routineJoin( will, will.commandDo )                           },
@@ -1995,6 +1996,54 @@ function commandSubmodulesShell( e )
 
 commandSubmodulesShell.hint = 'Run shell command on each submodule of current module.';
 commandSubmodulesShell.commandSubjectHint = 'A command to execute in shell. Command executes for each submodule of current module.';
+
+//
+
+function commandSubmodulesGitSync( e )
+{
+  let cui = this;
+  cui._command_pre( commandSubmodulesGitSync, arguments );
+
+  _.routineOptions( commandSubmodulesGitSync, e.propertiesMap );
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply({ withSubmodules : 0 });
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'submodules git sync',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesGitSync,
+    withRoot : 0,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitSync
+    ({
+      commit : e.subject,
+      ... e.propertiesMap,
+    });
+  }
+}
+
+commandSubmodulesGitSync.defaults =
+{
+  dirPath : null,
+  dry : 0,
+  v : null,
+  verbosity : 1,
+};
+commandSubmodulesGitSync.hint =
+'Use "submodules git sync" to syncronize repositories of submodules of current module.';
+commandSubmodulesGitSync.commandSubjectHint = 'A commit message. Default value is "."';
+commandSubmodulesGitSync.commandProperties =
+{
+  dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
+  dry : 'Dry run without syncronizing. Default is dry:0.',
+  v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
+};
 
 //
 
@@ -4375,6 +4424,7 @@ let Extension =
   commandSubmodulesVersionsAgree,
 
   commandSubmodulesShell,
+  commandSubmodulesGitSync,
 
   commandModuleNew,
   commandModuleNewWith,
