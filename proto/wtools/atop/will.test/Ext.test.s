@@ -25532,6 +25532,69 @@ function commandVersionCheck( test )
 
 //
 
+function commandSubmodulesShell( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'submodules-shell' );
+  a.reflect();
+
+  /* - */
+
+  a.appStart( '.with ./* .submodules.shell ls' )
+  .then( ( op ) =>
+  {
+    test.case = '.with ./* .submodules.shell ls - without submodules, no executed commands';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 2 );
+    test.identical( _.strCount( op.output, '> ls' ), 0 );
+    test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, 'wModuleForTesting2.out.will.yml' ), 0 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with ./* .submodules.download' );
+  a.appStart( '.with ./* .submodules.shell ls' )
+  .then( ( op ) =>
+  {
+    test.case = '.with ./* .submodules.shell ls - with submodules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 8 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, '> ls' ), 2 );
+    test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, 'wModuleForTesting2.out.will.yml' ), 2 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with ./* .submodules.download' );
+  a.appStart( '.imply withSubmodules:0 .with ./* .submodules.shell ls' )
+  .then( ( op ) =>
+  {
+    test.case = '.imply withSubmodules:0 .with ./* .submodules.shell ls - disabled submodules';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, '> ls' ), 0 );
+    test.identical( _.strCount( op.output, 'wModuleForTesting1.out.will.yml' ), 0 );
+    test.identical( _.strCount( op.output, 'wModuleForTesting2.out.will.yml' ), 0 );
+
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandGitCheckHardLinkRestoring( test )
 {
   let context = this;
@@ -31174,6 +31237,8 @@ let Self =
     commandVersion,
     commandVersionCheck,
 
+    commandSubmodulesShell,
+
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
     commandGitPull,
@@ -31182,6 +31247,7 @@ let Self =
     commandGitStatus,
     commandGitSync,
     commandGitTag,
+
     commandNpmFromWillfile,
     commandNpmFromWillfileOptionsInCommand,
     commandWillfileFromNpm,
@@ -31192,6 +31258,7 @@ let Self =
     commandWillfileDel,
     commandWillfileExtend,
     commandWillfileSupplement,
+
     commandWillfileExtendWillfileDstIsWillfile,
     commandWillfileExtendWillfileDstIsJson,
     commandWillfileExtendWillfileWithOptions,
