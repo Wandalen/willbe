@@ -1070,15 +1070,20 @@ function _commandModulesLike( o )
 
   cui._commandsBegin( o.commandRoutine );
 
+  debugger;
   if( cui.currentOpeners === null && cui.currentOpener === null )
   ready.then( () => cui.openersFind() )
   .then( () => filter() );
 
   let openers = cui.currentOpeners;
-  cui.currentOpeners = null; // Dmytro : need to improve
+  cui.currentOpeners = null;
 
   for( let i = 0 ; i < openers.length ; i++ )
-  ready.then( () => submodulesEach( openers[ i ] ) );
+  {
+
+    debugger;
+    ready.then( () => submodulesEach( openers[ i ] ) );
+  }
 
   return ready.finally( ( err, arg ) =>
   {
@@ -1091,6 +1096,18 @@ function _commandModulesLike( o )
     return arg;
   })
 
+  /* */
+
+  function filter()
+  {
+    if( cui.currentOpeners )
+    {
+      let openers2 = cui.modulesFilter( cui.currentOpeners, _.mapOnly( o, cui.modulesFilter.defaults ) );
+      if( openers2.length )
+      cui.currentOpeners = openers2;
+    }
+    return null;
+  }
   /* */
 
   function submodulesEach( opener )
@@ -1115,19 +1132,6 @@ function _commandModulesLike( o )
     .then( () => cui.openersCurrentEach( forSingle ) )
 
     return ready2;
-  }
-
-  /* */
-
-  function filter()
-  {
-    if( cui.currentOpeners )
-    {
-      let openers2 = cui.modulesFilter( cui.currentOpeners, _.mapOnly( o, cui.modulesFilter.defaults ) );
-      if( openers2.length )
-      cui.currentOpeners = openers2;
-    }
-    return null;
   }
 
   /* */
