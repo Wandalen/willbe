@@ -434,6 +434,7 @@ function _commandsMake()
     'submodules versions update' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsUpdate )     },
     'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify )     },
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree )      },
+    'submodules shell' :                { e : _.routineJoin( will, will.commandSubmodulesShell )              },
 
     'shell' :                           { e : _.routineJoin( will, will.commandShell )                        },
     'do' :                              { e : _.routineJoin( will, will.commandDo )                           },
@@ -446,12 +447,10 @@ function _commandsMake()
     'export purging' :                  { e : _.routineJoin( will, will.commandExportPurging )                },
     'export recursive' :                { e : _.routineJoin( will, will.commandExportRecursive )              },
 
-    'submodules shell' :                { e : _.routineJoin( will, will.commandSubmodulesShell )              },
-
     'module new' :                      { e : _.routineJoin( will, will.commandModuleNew )                    },
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith )                },
-
     'modules shell' :                   { e : _.routineJoin( will, will.commandModulesShell )                 },
+    'modules git sync' :                { e : _.routineJoin( will, will.commandModulesGitSync )               },
 
     'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull )                      },
@@ -1073,7 +1072,6 @@ function _commandModulesLike( o )
 
   cui._commandsBegin( o.commandRoutine );
 
-  debugger;
   if( cui.currentOpeners === null && cui.currentOpener === null )
   ready.then( () => cui.openersFind() )
   .then( () => filter() );
@@ -1082,11 +1080,7 @@ function _commandModulesLike( o )
   cui.currentOpeners = null;
 
   for( let i = 0 ; i < openers.length ; i++ )
-  {
-
-    debugger;
-    ready.then( () => submodulesEach( openers[ i ] ) );
-  }
+  ready.then( () => openersEach( openers[ i ] ) );
 
   return ready.finally( ( err, arg ) =>
   {
@@ -1113,7 +1107,7 @@ function _commandModulesLike( o )
   }
   /* */
 
-  function submodulesEach( opener )
+  function openersEach( opener )
   {
     let ready2 = cui.modulesFindEachAt
     ({
@@ -2110,6 +2104,54 @@ commandModulesShell.commandSubjectHint =
 
 //
 
+function commandModulesGitSync( e )
+{
+  let cui = this;
+  cui._command_pre( commandModulesGitSync, arguments );
+
+  _.routineOptions( commandModulesGitSync, e.propertiesMap );
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply({ withSubmodules : 0 });
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'modules git sync',
+    onEach : handleEach,
+    commandRoutine : commandModulesGitSync,
+    withRoot : 1,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitSync
+    ({
+      commit : e.subject,
+      ... e.propertiesMap,
+    });
+  }
+}
+
+commandModulesGitSync.defaults =
+{
+  dirPath : null,
+  dry : 0,
+  v : null,
+  verbosity : 1,
+};
+commandModulesGitSync.hint =
+'Use "modules git sync" to syncronize repositories of current module and all submodules of the module.';
+commandModulesGitSync.commandSubjectHint = 'A commit message. Default value is "."';
+commandModulesGitSync.commandProperties =
+{
+  dirPath : 'Path to local cloned Git directory. Default is directory of current module.',
+  dry : 'Dry run without syncronizing. Default is dry:0.',
+  v : 'Set verbosity. Default is 1.',
+  verbosity : 'Set verbosity. Default is 1.',
+};
+
+//
+
 function commandShell( e )
 {
   let cui = this;
@@ -2712,7 +2754,6 @@ commandGitStatus.commandProperties =
   v : 'Set verbosity. Default is 1.',
   verbosity : 'Set verbosity. Default is 1.',
 };
-
 
 //
 
@@ -4339,6 +4380,7 @@ let Extension =
   commandModuleNewWith,
 
   commandModulesShell,
+  commandModulesGitSync,
 
   commandShell,
   commandDo,
