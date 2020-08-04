@@ -25661,6 +25661,185 @@ function commandModulesShell( test )
 
 //
 
+function commandModulesGitSync( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  a.ready.then( () =>
+  {
+    a.reflect();
+    a.fileProvider.dirMake( a.abs( 'repo' ) );
+    a.fileProvider.dirMake( a.abs( 'repo2' ) );
+    return null;
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  _.process.start
+  ({
+    execPath : 'git init --bare',
+    currentPath : a.abs( 'repo2' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let cloneShell = _.process.starter
+  ({
+    currentPath : a.abs( 'clone' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  let localShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original/.local' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+
+  /* - */
+
+  originalShell( 'git init' );
+  originalShell( 'git remote add origin ../repo' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  originalShell( 'git push -u origin --all' );
+  a.shell( 'git clone repo/ clone' );
+
+  localShell( 'git init' );
+  localShell( 'git remote add origin ../../repo2' );
+  localShell( 'git add --all' );
+  localShell( 'git commit -am first' );
+  localShell( 'git push -u origin --all' );
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.with original/ .modules.git.sync' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original .git.sync - committing and pushing, without remote submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::clone' ), 0 );
+    test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+  cloneShell( 'git log' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, /\s\./ ), 1 );
+    return null;
+  })
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.with original/GitSync .modules.git.sync -am "new lines"' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original/GitSync .git.sync -am "new lines" - committing and pushing with local submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 2 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
+    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::local' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::local' ), 0 );
+    test.identical( _.strCount( op.output, 'Pushing module::local' ), 1 );
+    test.identical( _.strCount( op.output, 'To ../../repo2' ), 1 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+  cloneShell( 'git log' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'new lines' ), 1 );
+    return null;
+  })
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/File.txt' ), 'new line\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/.local/f1.txt' ), 'new line\n' );
+    return null;
+  })
+
+  a.appStart( '.imply withSubmodules:0 .with original/GitSync .modules.git.sync -am "new lines2"' )
+  .then( ( op ) =>
+  {
+    test.case = '.imply withSubmodules:0 .with original/GitSync .git.sync -am "new lines2" - committing and pushing with local submodule';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
+    test.identical( _.strCount( op.output, 'Committing module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'Pulling module::git-sync' ), 0 );
+    test.identical( _.strCount( op.output, 'Pushing module::git-sync' ), 1 );
+    test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
+    test.identical( _.strCount( op.output, 'Committing module::local' ), 0 );
+    test.identical( _.strCount( op.output, 'Pulling module::local' ), 0 );
+    test.identical( _.strCount( op.output, 'Pushing module::local' ), 0 );
+    test.identical( _.strCount( op.output, 'To ../../repo2' ), 0 );
+    return null;
+  })
+  cloneShell( 'git pull' )
+  cloneShell( 'git log' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'new lines2' ), 1 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandGitCheckHardLinkRestoring( test )
 {
   let context = this;
@@ -31305,6 +31484,7 @@ let Self =
 
     commandSubmodulesShell,
     commandModulesShell,
+    commandModulesGitSync,
 
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
