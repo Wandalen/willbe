@@ -8494,6 +8494,8 @@ function gitExecCommand( o )
 
   _.routineOptions( gitExecCommand, o );
 
+  o.command = module.resolve( o.command );
+
   o.dirPath = module.pathResolve
   ({
     selector : o.dirPath || module.dirPath,
