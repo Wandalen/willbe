@@ -451,6 +451,7 @@ function _commandsMake()
     'module new' :                      { e : _.routineJoin( will, will.commandModuleNew )                    },
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith )                },
     'modules shell' :                   { e : _.routineJoin( will, will.commandModulesShell )                 },
+    'modules git' :                     { e : _.routineJoin( will, will.commandModulesGit )                   },
     'modules git sync' :                { e : _.routineJoin( will, will.commandModulesGitSync )               },
 
     'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
@@ -2150,6 +2151,52 @@ function commandModulesShell( e )
 commandModulesShell.hint = 'Run shell command on current module including each submodule of the module.';
 commandModulesShell.commandSubjectHint =
 'A command to execute in shell. Command executes for current module including each submodule of the module.';
+
+//
+
+function commandModulesGit( e )
+{
+  let cui = this;
+  let commandOptions = _.mapBut( e.propertiesMap, commandImply.defaults );
+  let hardLinkMaybe = commandOptions.hardLinkMaybe;
+  if( hardLinkMaybe !== undefined )
+  delete commandOptions.hardLinkMaybe;
+
+  e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
+  if( _.mapKeys( commandOptions ).length >= 1 )
+  e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+  cui._command_pre( commandGit, arguments );
+
+  _.routineOptions( commandModulesGit, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'modules git',
+    onEach : handleEach,
+    commandRoutine : commandModulesGit,
+    withRoot : 1,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitExecCommand
+    ({
+      dirPath : it.junction.dirPath,
+      command : e.subject,
+      verbosity : cui.verbosity,
+      hardLinkMaybe,
+    });
+  }
+}
+
+commandModulesGit.defaults = _.mapExtend( null, commandImply.defaults );
+commandModulesGit.defaults.withSubmodules = 0;
+commandModulesGit.hint = 'Use "modules git" to run custom Git command on module and its submodules.';
+commandModulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
+commandModulesGit.commandProperties = commandImply.commandProperties;
+commandModulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
 
 //
 
@@ -4430,6 +4477,7 @@ let Extension =
   commandModuleNewWith,
 
   commandModulesShell,
+  commandModulesGit,
   commandModulesGitSync,
 
   commandShell,
