@@ -2,6 +2,10 @@ about :
 
   name : git-sync
 
+submodule :
+
+  Local : ./.local/
+
 path :
 
   git.proto : 'proto'
