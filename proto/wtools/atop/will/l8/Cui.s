@@ -435,6 +435,7 @@ function _commandsMake()
     'submodules versions verify' :      { e : _.routineJoin( will, will.commandSubmodulesVersionsVerify )     },
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree )      },
     'submodules shell' :                { e : _.routineJoin( will, will.commandSubmodulesShell )              },
+    'submodules git' :                  { e : _.routineJoin( will, will.commandSubmodulesGit )                },
     'submodules git sync' :             { e : _.routineJoin( will, will.commandSubmodulesGitSync )            },
 
     'shell' :                           { e : _.routineJoin( will, will.commandShell )                        },
@@ -1997,6 +1998,52 @@ function commandSubmodulesShell( e )
 
 commandSubmodulesShell.hint = 'Run shell command on each submodule of current module.';
 commandSubmodulesShell.commandSubjectHint = 'A command to execute in shell. Command executes for each submodule of current module.';
+
+//
+
+function commandSubmodulesGit( e )
+{
+  let cui = this;
+  let commandOptions = _.mapBut( e.propertiesMap, commandImply.defaults );
+  let hardLinkMaybe = commandOptions.hardLinkMaybe;
+  if( hardLinkMaybe !== undefined )
+  delete commandOptions.hardLinkMaybe;
+
+  e.propertiesMap = _.mapOnly( e.propertiesMap, commandImply.defaults );
+  if( _.mapKeys( commandOptions ).length >= 1 )
+  e.subject += ' ' + _.mapToStr({ src : commandOptions, entryDelimeter : ' ' });
+  cui._command_pre( commandGit, arguments );
+
+  _.routineOptions( commandSubmodulesGit, e.propertiesMap );
+  cui._propertiesImply( e.propertiesMap );
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'submodules git',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesGit,
+    withRoot : 0,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitExecCommand
+    ({
+      dirPath : it.junction.dirPath,
+      command : e.subject,
+      verbosity : cui.verbosity,
+      hardLinkMaybe,
+    });
+  }
+}
+
+commandSubmodulesGit.defaults = _.mapExtend( null, commandImply.defaults );
+commandSubmodulesGit.defaults.withSubmodules = 0;
+commandSubmodulesGit.hint = 'Use "submodules git" to run custom Git command on submodules of the module.';
+commandSubmodulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
+commandSubmodulesGit.commandProperties = commandImply.commandProperties;
+commandSubmodulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
 
 //
 
@@ -4471,6 +4518,7 @@ let Extension =
   commandSubmodulesVersionsAgree,
 
   commandSubmodulesShell,
+  commandSubmodulesGit,
   commandSubmodulesGitSync,
 
   commandModuleNew,
