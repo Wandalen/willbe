@@ -453,6 +453,7 @@ function _commandsMake()
     'module new with' :                 { e : _.routineJoin( will, will.commandModuleNewWith )                },
     'modules shell' :                   { e : _.routineJoin( will, will.commandModulesShell )                 },
     'modules git' :                     { e : _.routineJoin( will, will.commandModulesGit )                   },
+    'modules git pr open' :             { e : _.routineJoin( will, will.commandModulesGitPrOpen )             },
     'modules git sync' :                { e : _.routineJoin( will, will.commandModulesGitSync )               },
 
     'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
@@ -2247,6 +2248,59 @@ commandModulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlink
 
 //
 
+function commandModulesGitPrOpen( e )
+{
+  let cui = this;
+  cui._command_pre( commandModulesGitPrOpen, arguments );
+
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 0  } ) );
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'modules git pr open',
+    onEach : handleEach,
+    commandRoutine : commandModulesGitPrOpen,
+    withRoot : 1,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitPrOpen
+    ({
+      title : e.subject,
+      ... e.propertiesMap,
+    });
+  }
+}
+
+commandModulesGitPrOpen.defaults =
+{
+  token : null,
+  remotePath : null,
+  srcBranch : null,
+  dstBranch : null,
+  title : null,
+  body : null,
+  v : null,
+  verbosity : null,
+};
+commandModulesGitPrOpen.hint = 'Use "modules git pr open" to open pull requests from current modules and its submodules.';
+commandModulesGitPrOpen.commandSubjectHint = 'A title for PR';
+commandModulesGitPrOpen.commandProperties =
+{
+  token : 'An individual authorization token. By default reads from user config file.',
+  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+  dstBranch : 'A destination branch. Default is "master".',
+  title : "Option that rewrite title in provided argument.",
+  body : "Body message.",
+  v : 'Set verbosity. Default is 2.',
+  verbosity : 'Set verbosity. Default is 2.',
+};
+
+//
+
 function commandModulesGitSync( e )
 {
   let cui = this;
@@ -2772,7 +2826,7 @@ commandGitPrOpen.defaults =
   v : null,
   verbosity : null,
 };
-commandGitPrOpen.hint = 'Use "git pull" to pull changes from remote repository.';
+commandGitPrOpen.hint = 'Use "git pr open" to open pull request from current modules.';
 commandGitPrOpen.commandSubjectHint = 'A title for PR';
 commandGitPrOpen.commandProperties =
 {
@@ -4579,6 +4633,7 @@ let Extension =
 
   commandModulesShell,
   commandModulesGit,
+  commandModulesGitPrOpen,
   commandModulesGitSync,
 
   commandShell,
