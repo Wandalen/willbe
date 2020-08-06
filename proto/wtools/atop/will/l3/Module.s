@@ -8577,6 +8577,75 @@ gitExecCommand.defaults =
 
 //
 
+function gitPrOpen( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+
+  _.routineOptions( gitPrOpen, o );
+
+  if( !_.git.isRepository )
+  return null;
+
+  let token = o.token ? o.token : null;
+  let config = fileProvider.configUserRead();
+  if( config !== null && config.about && config.about[ 'github.token' ] )
+  token = config.about[ 'github.token' ];
+
+  if( !o.remotePath )
+  {
+    if( module.pathMap.repository )
+    o.remotePath = module.pathMap.repository;
+    else
+    o.remotePath = _.git.remotePathFromLocal( module.dirPath );
+  }
+  o.remotePath = _.git.remotePathNativize( o.remotePath );
+
+  let title = o.title ? o.title : o.subject;
+  title = _.strUnquote( title );
+
+  /* */
+
+  let ready = new _.Consequence().take( null );
+  ready.then( () =>
+  {
+    return _.git.prOpen
+    ({
+      token,
+      remotePath : o.remotePath,
+      title,
+      body : o.body,
+      srcBranch : o.srcBranch,
+      dstBranch : o.dstBranch,
+      sync : 1,
+      throwing : 1,
+      verbosity : o.verbosity,
+    });
+  })
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    throw _.errBrief( err );
+    return arg;
+  });
+
+  return ready;
+}
+
+gitPrOpen.defaults =
+{
+  token : null,
+  remotePath : null,
+  srcBranch : null,
+  dstBranch : 'master',
+  title : null,
+  body : null,
+  verbosity : 2,
+};
+
+//
+
 function gitPull( o )
 {
   let module = this;
@@ -8662,7 +8731,7 @@ gitPull.defaults =
   dirPath : null,
   v : null,
   verbosity : 2,
-}
+};
 
 //
 
@@ -9657,6 +9726,7 @@ let Extension =
   // git
 
   gitExecCommand,
+  gitPrOpen,
   gitPull,
   gitPush,
   gitReset,
