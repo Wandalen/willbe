@@ -26910,6 +26910,83 @@ function commandGitDifferentCommands( test )
 
 //
 
+function commandGitPrOpen( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+  a.reflect();
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .git.pr.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStartNonThrowing( '.with original/Git.* .git.pr.open "some title" srcBranch:new token:$GIT_TOKEN' )
+  .then( ( op ) =>
+  {
+    test.case = 'token from environment variables, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStartNonThrowing( '.with original/Git.* .git.pr.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStartNonThrowing( '.with original/Git.* .git.pr.open "some title" srcBranch:"user:new" dstBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'custom srcBranch and dstBranch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to git pr open at' ), 1 );
+
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandGitPull( test )
 {
   let context = this;
@@ -32063,6 +32140,7 @@ let Self =
 
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
+    commandGitPrOpen,
     commandGitPull,
     commandGitPush,
     commandGitReset,
