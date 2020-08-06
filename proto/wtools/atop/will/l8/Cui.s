@@ -456,6 +456,7 @@ function _commandsMake()
     'modules git sync' :                { e : _.routineJoin( will, will.commandModulesGitSync )               },
 
     'git' :                             { e : _.routineJoin( will, will.commandGit )                          },
+    'git pr open' :                     { e : _.routineJoin( will, will.commandGitPrOpen )                    },
     'git pull' :                        { e : _.routineJoin( will, will.commandGitPull )                      },
     'git push' :                        { e : _.routineJoin( will, will.commandGitPush )                      },
     'git reset' :                       { e : _.routineJoin( will, will.commandGitReset )                     },
@@ -716,7 +717,6 @@ function _commandBuildLike( o )
 
   function filter()
   {
-    debugger;
     if( will.currentOpeners )
     {
       let openers2 = will.modulesFilter( will.currentOpeners, _.mapOnly( o, will.modulesFilter.defaults ) );
@@ -2732,6 +2732,59 @@ commandGit.hint = 'Use "git" to run custom Git command in repository of module.'
 commandGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandGit.commandProperties = commandImply.commandProperties;
 commandGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+
+//
+
+function commandGitPrOpen( e )
+{
+  let cui = this;
+  cui._command_pre( commandGitPrOpen, arguments );
+
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 0  } ) );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'git pr open',
+    onEach : handleEach,
+    commandRoutine : commandGitPrOpen,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitPrOpen
+    ({
+      title : e.subject,
+      ... e.propertiesMap,
+    });
+  }
+}
+
+commandGitPrOpen.defaults =
+{
+  token : null,
+  remotePath : null,
+  srcBranch : null,
+  dstBranch : null,
+  title : null,
+  body : null,
+  v : null,
+  verbosity : null,
+};
+commandGitPrOpen.hint = 'Use "git pull" to pull changes from remote repository.';
+commandGitPrOpen.commandSubjectHint = 'A title for PR';
+commandGitPrOpen.commandProperties =
+{
+  token : 'An individual authorization token. By default reads from user config file.',
+  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+  dstBranch : 'A destination branch. Default is "master".',
+  title : "Option that rewrite title in provided argument.",
+  body : "Body message.",
+  v : 'Set verbosity. Default is 2.',
+  verbosity : 'Set verbosity. Default is 2.',
+};
+
 //
 
 function commandGitPull( e )
@@ -4542,6 +4595,7 @@ let Extension =
   // command git
 
   commandGit,
+  commandGitPrOpen,
   commandGitPull,
   commandGitPush,
   commandGitReset,
