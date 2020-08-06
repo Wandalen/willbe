@@ -26175,7 +26175,7 @@ function commandModulesGit( test )
   a.appStart( '.imply withSubmodules:0 .with original/GitSync .modules.git commit -am "new lines2"' )
   .then( ( op ) =>
   {
-    test.case = '.with original/GitSync .modules.git commit -am "new lines"';
+    test.case = '.imply withSubmodules:0 .with original/GitSync .modules.git commit -am "new lines2"';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'Failed to open' ), 0 );
@@ -26222,6 +26222,51 @@ function commandModulesGit( test )
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'origin1	https://github.com/user/local.git' ), 2 );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
+function commandModulesGitPrOpen( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+  a.reflect();
+
+  /* - */
+
+  a.appStartNonThrowing( '.with original/Git.* .modules.git.pr.open "some title" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'all defaults exept title and source branch, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 1 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.appStartNonThrowing( '.imply withSubmodules:0 .with original/Git.* .modules.git.pr.open "some title" srcBranch:new token:"token"' )
+  .then( ( op ) =>
+  {
+    test.case = 'direct declaration of token, withSubmodules:0, wrong data, throwing';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open module' ), 0 );
+    test.identical( _.strCount( op.output, /Error code : 4\d\d/ ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to open pull request' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to modules git pr open at' ), 1 );
+
     return null;
   })
 
@@ -32136,6 +32181,7 @@ let Self =
 
     commandModulesShell,
     commandModulesGit,
+    commandModulesGitPrOpen,
     commandModulesGitSync,
 
     commandGitCheckHardLinkRestoring,
