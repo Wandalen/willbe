@@ -436,6 +436,7 @@ function _commandsMake()
     'submodules versions agree' :       { e : _.routineJoin( will, will.commandSubmodulesVersionsAgree )      },
     'submodules shell' :                { e : _.routineJoin( will, will.commandSubmodulesShell )              },
     'submodules git' :                  { e : _.routineJoin( will, will.commandSubmodulesGit )                },
+    'submodules git pr open' :          { e : _.routineJoin( will, will.commandSubmodulesGitPrOpen )          },
     'submodules git sync' :             { e : _.routineJoin( will, will.commandSubmodulesGitSync )            },
 
     'shell' :                           { e : _.routineJoin( will, will.commandShell )                        },
@@ -2045,6 +2046,59 @@ commandSubmodulesGit.hint = 'Use "submodules git" to run custom Git command on s
 commandSubmodulesGit.commandSubjectHint = 'Custom git command exclude name of command "git".';
 commandSubmodulesGit.commandProperties = commandImply.commandProperties;
 commandSubmodulesGit.commandProperties.hardLinkMaybe = 'Disables saving of hardlinks. Default value is 1.';
+
+//
+
+function commandSubmodulesGitPrOpen( e )
+{
+  let cui = this;
+  cui._command_pre( commandSubmodulesGitPrOpen, arguments );
+
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply( _.mapExtend( commandImply.defaults, { withSubmodules : 0  } ) );
+
+  return cui._commandModulesLike
+  ({
+    event : e,
+    name : 'submodules git pr open',
+    onEach : handleEach,
+    commandRoutine : commandSubmodulesGitPrOpen,
+    withRoot : 0,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.gitPrOpen
+    ({
+      title : e.subject,
+      ... e.propertiesMap,
+    });
+  }
+}
+
+commandSubmodulesGitPrOpen.defaults =
+{
+  token : null,
+  remotePath : null,
+  srcBranch : null,
+  dstBranch : null,
+  title : null,
+  body : null,
+  v : null,
+  verbosity : null,
+};
+commandSubmodulesGitPrOpen.hint = 'Use "modules git pr open" to open pull requests from current modules and its submodules.';
+commandSubmodulesGitPrOpen.commandSubjectHint = 'A title for PR';
+commandSubmodulesGitPrOpen.commandProperties =
+{
+  token : 'An individual authorization token. By default reads from user config file.',
+  srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
+  dstBranch : 'A destination branch. Default is "master".',
+  title : "Option that rewrite title in provided argument.",
+  body : "Body message.",
+  v : 'Set verbosity. Default is 2.',
+  verbosity : 'Set verbosity. Default is 2.',
+};
 
 //
 
@@ -4626,6 +4680,7 @@ let Extension =
 
   commandSubmodulesShell,
   commandSubmodulesGit,
+  commandSubmodulesGitPrOpen,
   commandSubmodulesGitSync,
 
   commandModuleNew,
