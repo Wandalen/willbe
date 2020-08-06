@@ -3,11 +3,13 @@ about :
   name : git
 
 submodule :
+
   ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/
 
 path :
 
   git.proto : 'proto'
+  repository : 'git+https:///github.com/author/NpmFromWillfile.git'
 
 step :
 
