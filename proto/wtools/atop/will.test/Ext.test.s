@@ -6404,7 +6404,7 @@ function implyWithDot( test )
     a.reflect();
     a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.dirMake( a.abs( 'repo' ) );
-    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( '.clone' ) });
+    a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.clone' ) });
     return null;
   })
 
@@ -6446,7 +6446,7 @@ function implyWithDot( test )
   a.appStart( '.imply withSubmodules:0 withOut:0 .with ".clone/" .call GitStatus' )
   .then( ( op ) =>
   {
-    test.case = '.with clone .git.status - only local commits';
+    test.case = '.with .clone/ .git.status - only local commits';
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, 'List of uncommited changes' ), 1 );
@@ -6473,7 +6473,7 @@ function implyWithAsterisk( test )
     a.reflect();
     a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.dirMake( a.abs( 'repo' ) );
-    a.fileProvider.fileRename({ srcPath : a.abs( 'clone' ), dstPath : a.abs( '.module' ) });
+    a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.module' ) });
     return null;
   })
 
@@ -6517,9 +6517,9 @@ function implyWithAsterisk( test )
   {
     test.case = '.with module .git.status - only local commits';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 4 );
-    test.identical( _.strCount( op.output, '?? File.txt' ), 4 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 5 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 5 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 5 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
 
     return null;
@@ -6530,9 +6530,9 @@ function implyWithAsterisk( test )
   {
     test.case = '.with module .git.status - only local commits';
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, '. Opened .' ), 4 );
-    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 4 );
-    test.identical( _.strCount( op.output, '?? File.txt' ), 4 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 6 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 6 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 6 );
     test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
 
     return null;
