@@ -14309,7 +14309,7 @@ function exportWithSubmoduleWithNotDownloadedSubmodule( test )
       './.module/ModuleForTesting12/out',
       './.module/ModuleForTesting12/out/wModuleForTesting12.out.will.yml',
       './.module/ModuleForTesting12/proto',
-      './.module/ModuleForTesting12/proto/Integration.test.s',
+      './.module/ModuleForTesting12/proto/Integration.test.ss',
       './.module/ModuleForTesting12/proto/wtools',
       './.module/ModuleForTesting12/proto/wtools/testing',
       './.module/ModuleForTesting12/proto/wtools/testing/Basic.s',
