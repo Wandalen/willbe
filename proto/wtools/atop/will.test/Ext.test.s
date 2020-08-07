@@ -20701,26 +20701,6 @@ function subModulesUpdate( test )
   let a = context.assetFor( test, 'submodules-update' );
   a.reflect();
 
-//   let context = this;
-//   let originalAssetPath = _.path.join( context.assetsOriginalPath, 'submodules-update' );
-//   let routinePath = _.path.join( context.suiteTempPath, test.name );
-//   let abs = context.abs_functor( routinePath );
-//   let rel = context.rel_functor( routinePath );
-//   let submodulesPath = _.path.join( routinePath, '.module' );
-//
-//
-//   let ready = new _.Consequence().take( null )
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + context.appJsPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-//
-//   a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-
   /* */
 
   a.ready
