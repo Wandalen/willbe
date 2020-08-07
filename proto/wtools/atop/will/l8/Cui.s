@@ -3986,11 +3986,12 @@ commandWillfileSupplementWillfile.commandProperties = commandWillfileExtendWillf
 function commandPackageInstall( e )
 {
   let cui = this;
-  cui._command_pre( commandPackageInstall, arguments );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
-  let options = _.strStructureParse( isolated[ 2 ] );
+  let options = e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
+
+  cui._command_pre( commandPackageInstall, arguments );
 
   _.assertMapHasOnly( options, commandPackageInstall.commandProperties, `Command does not expect options:` );
 
@@ -4153,13 +4154,13 @@ commandPackageInstall.commandProperties =
 function commandPackageLocalVersions( e )
 {
   let cui = this;
-  cui._command_pre( commandPackageLocalVersions, arguments );
-
   let ready = new _.Consequence().take( null );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
-  let options = _.strStructureParse( isolated[ 2 ] );
+  let options = e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
+
+  cui._command_pre( commandPackageLocalVersions, arguments );
 
   _.assertMapHasOnly( options, commandPackageLocalVersions.commandProperties, `Command does not expect options:` );
 
@@ -4281,20 +4282,18 @@ commandPackageLocalVersions.commandSubjectHint = 'A name of package.';
 function commandPackageRemoteVersions( e )
 {
   let cui = this;
-  cui._command_pre( commandPackageRemoteVersions, arguments );
-
   let logger = cui.logger;
   let ready = new _.Consequence().take( null );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
-
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
-  let options = _.strStructureParse( isolated[ 2 ] )
+  let options = e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
+
+  cui._command_pre( commandPackageRemoteVersions, arguments );
 
   _.assertMapHasOnly( options, commandPackageRemoteVersions.commandProperties, `Command does not expect options:` );
 
   let tool  = parsed.protocol;
-
   parsed.protocol = null;
   parsed.longPath = _.path.normalize( parsed.longPath );
   parsed.longPath = _.strRemoveBegin( parsed.longPath, '/' );
@@ -4444,13 +4443,13 @@ commandPackageRemoteVersions.commandProperties =
 function commandPackageVersion( e )
 {
   let cui = this;
-  cui._command_pre( commandPackageVersion, arguments );
-
   let ready = new _.Consequence().take( null );
 
   let isolated = _.strIsolateLeftOrAll( e.commandArgument, ' ' );
   let parsed = _.uri.parseConsecutive( isolated[ 0 ] );
-  let options = _.strStructureParse( isolated[ 2 ] );
+  let options = e.propertiesMap = _.strStructureParse( isolated[ 2 ] );
+
+  cui._command_pre( commandPackageVersion, arguments );
 
   _.assertMapHasOnly( options, commandPackageVersion.commandProperties, `Command does not expect options:` );
 
