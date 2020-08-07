@@ -13575,23 +13575,22 @@ function exportOutResourceWithoutGeneratedCriterion( test )
   })
 
   a.appStart( '.export' )
-
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'ncaught' ), 0 )
+    test.identical( _.strCount( op.output, 'ncaught' ), 0 );
     test.identical( _.strCount( op.output, 'nhandled' ), 0 );
     test.identical( _.strCount( op.output, 'Exported module::' ), 1 );
 
     var exp = null;
-    var files = a.fileProvider.dirRead( a.abs( '.module' ) )
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, exp );
 
-    var exp = [ 'debug', 'wChangeTransactor.out.will.yml' ];
-    var files = a.fileProvider.dirRead( a.abs( 'out' ) )
+    var exp = [ 'debug', 'wModuleForTesting12ab.out.will.yml' ];
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, exp );
 
-    var outfile = a.fileProvider.configRead( a.abs( 'out/wChangeTransactor.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/wModuleForTesting12ab.out.will.yml' ) );
     var exp =
     [
       'module.willfiles',
@@ -13602,20 +13601,27 @@ function exportOutResourceWithoutGeneratedCriterion( test )
       'download',
       'repository',
       'origins',
-      'bugs',
+      'bugtracker',
       'in',
-      'temp',
       'out',
-      'out.debug',
-      'out.release',
+      'temp',
       'proto',
       'export',
+      'doc',
+      'out.raw.debug',
+      'out.compiled.debug',
+      'out.raw.release',
+      'out.compiled.release',
+      'entry.proto.no.tests',
+      'entry.proto.only.tests',
+      'entry.out.raw.debug.debug',
+      'entry.out.raw.debug.release',
+      'entry.out.compiled.debug.debug',
+      'entry.out.compiled.debug.release',
       'exported.dir.proto.export',
       'exported.files.proto.export',
-      // 'exported.dir.proto.export.1',
-      // 'exported.files.proto.export.1'
-    ]
-    var got = _.mapKeys( outfile.module[ 'wChangeTransactor.out' ].path );
+    ];
+    var got = _.mapKeys( outfile.module[ 'wModuleForTesting12ab.out' ].path );
     test.identical( _.setFrom( got ), _.setFrom( exp ) );
 
     return null;

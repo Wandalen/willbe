@@ -2707,10 +2707,10 @@ function commandExport( e )
 
   function handleEach( it )
   {
-    let a = _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } )
+    let filterProperties = _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } );
     return it.opener.openedModule.modulesExport
     ({
-      ... _.mapBut( cui.RelationFilterOn, { withIn : null, withOut : null } ),
+      ... filterProperties,
       doneContainer,
       name : e.subject,
       criterion : e.propertiesMap,
