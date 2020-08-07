@@ -15590,6 +15590,7 @@ function cleanWithInPath( test )
   {
     test.case = '.with module/ModuleForTesting12 .clean';
     a.reflect();
+    debugger;
     hadFiles = a.find( a.abs( 'out' ) ).length + a.find( a.abs( '.module' ) ).length;
 
     return null;
@@ -15598,7 +15599,6 @@ function cleanWithInPath( test )
   a.appStart({ execPath : '.with module/ModuleForTesting12 .clean' })
   a.ready.then( ( op ) =>
   {
-
     var expectedFiles =
     [
       '.',
@@ -15614,7 +15614,7 @@ function cleanWithInPath( test )
     var files = a.find({ filePath : { [ a.routinePath ] : '', '+**' : 0 } });
     test.identical( files, expectedFiles );
 
-    test.identical( op.exitCode, 0 ); debugger;
+    test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, '- Clean deleted ' + hadFiles + ' file(s)' ), 1 );
 
     return null;
