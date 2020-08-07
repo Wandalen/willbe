@@ -3244,7 +3244,7 @@ function reflectGetPath( test )
     [
       '.',
       './debug',
-      './debug/Integration.test.s',
+      './debug/Integration.test.ss',
       './debug/wtools',
       './debug/wtools/testing',
       './debug/wtools/testing/Basic.s',
