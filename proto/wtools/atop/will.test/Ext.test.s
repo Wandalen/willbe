@@ -15187,6 +15187,7 @@ function cleanBroken2( test )
   a.appStart({ execPath : '.export', throwingExitCode : 0 })
   .then( ( op ) =>
   {
+    debugger;
     test.case = '.export';
 
     test.will = 'update should throw error if submodule is not downloaded but download path exists';

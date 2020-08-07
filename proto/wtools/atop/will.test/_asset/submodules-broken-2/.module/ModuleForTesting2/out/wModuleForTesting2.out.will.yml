@@ -1,4 +1,5 @@
 format: outwillfile-2.0
+brokenFile : '!'
 root:
   - wModuleForTesting2.out
 consistency:
