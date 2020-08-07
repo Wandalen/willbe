@@ -11531,18 +11531,10 @@ function exportCourruptedOutfileSyntax( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
-  {
-    test.case = '.with sub .export debug:1';
-    return null;
-  })
-
   a.appStart( '.with sub .export debug:1' )
-
   .then( ( op ) =>
   {
+    test.case = '.with sub .export debug:1';
     test.identical( op.exitCode, 0 );
 
     var files = a.find( a.abs( 'sub.out' ) );
@@ -11557,10 +11549,11 @@ function exportCourruptedOutfileSyntax( test )
     test.identical( _.strCount( op.output, '. Read 2 willfile(s)' ), 1 );
     test.identical( _.strCount( op.output, '! Failed to open .' ), 2 );
     test.identical( _.strCount( op.output, 'Failed to open willfile' ), 1 );
-    test.identical( _.strCount( op.output, 'Failed to convert from "string" to "structure" by converter yaml-string->structure' ), 1 );
+    test.identical( _.strCount( op.output, 'Failed to convert from "string" to "structure" by converter yaml:string->structure' ), 1 );
     test.identical( _.strCount( op.output, /Exported .*module::sub \/ build::export.debug.*/ ), 1 );
 
     return null;
+
   })
 
   /* - */
