@@ -25211,10 +25211,10 @@ Disappeared as mystically as appeared.
 function resourcesFormReflectorsExperiment( test )
 {
   let context = this;
-  let a = context.assetFor( test, 'performance2' );
+  let a = context.assetFor( test, 'performance' );
   a.reflect()
 
-  // let originalAssetPath = _.path.join( context.assetsOriginalPath, 'performance2' );
+  // let originalAssetPath = _.path.join( context.assetsOriginalPath, 'performance' );
   // let routinePath = _.path.join( context.suiteTempPath, test.name );
   // let abs = context.abs_functor( routinePath );
   // let rel = context.rel_functor( routinePath );
