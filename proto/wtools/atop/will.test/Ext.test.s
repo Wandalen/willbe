@@ -14368,7 +14368,7 @@ function importPathLocal( test )
     [
       '.',
       './debug',
-      './debug/Integration.test.s',
+      './debug/Integration.test.ss',
       './debug/WithSubmodules.s',
       './debug/wtools',
       './debug/wtools/testing',
