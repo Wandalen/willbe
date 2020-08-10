@@ -3196,6 +3196,13 @@ function commandWith( e )
   if( !e.commandArgument )
   throw _.errBrief( 'Format of .with command should be: .with {-path-} .command' );
 
+  if( process.platform === 'linux' )
+  {
+    let splits = e.commandArgument.split( ' ' );
+    if( splits.length > 1 )
+    e.commandArgument = _.strCommonLeft( ... splits ) + '*';
+  }
+
   cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.commandArgument ) );
 
   return cui.modulesFindWithAt
