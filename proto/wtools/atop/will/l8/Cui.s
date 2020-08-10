@@ -3200,7 +3200,18 @@ function commandWith( e )
   {
     let splits = e.commandArgument.split( ' ' );
     if( splits.length > 1 )
-    e.commandArgument = _.strCommonLeft( ... splits ) + '*';
+    {
+      let screenMap = _.paths.ext( splits );
+      for( let i = screenMap.length - 1 ; i >= 0 ; i-- )
+      {
+        if( screenMap[ i ] === '' )
+        {
+          splits[ i ] = _.strUnquote( `${ splits[ i ] } ${ splits[ i + 1 ] }` );
+          splits.splice( i + 1, 1 );
+        }
+      }
+      e.commandArgument = _.strCommonLeft( ... splits ) + '*';
+    }
   }
 
   cui.withPath = path.join( path.current(), cui.withPath, path.fromGlob( e.commandArgument ) );
