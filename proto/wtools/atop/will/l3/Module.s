@@ -7949,7 +7949,7 @@ function _willfileOnPropertyAct( o )
     1 <= dstWillfileRecords.length && dstWillfileRecords.length <= 2,
     `Expexts one or two willfiles, but got : ${ dstWillfileRecords.length }`
   );
-  _.assert( _.longHas( dstWillfileRecords[ 0 ].exts, 'will' ), 'Expexts willfiles' );
+  _.assert( _.longHas( dstWillfileRecords[ 0 ].exts, 'will' ) || dstWillfileRecords[ 0 ].name === 'will', 'Expexts willfiles' );
 
   let willfile, willfile2;
   let dstEncoding = _.longHas( dstWillfileRecords[ 0 ].exts, 'json' ) ? 'json.fine' : 'yaml';
