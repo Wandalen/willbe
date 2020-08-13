@@ -2094,8 +2094,8 @@ commandSubmodulesGitPrOpen.commandProperties =
   token : 'An individual authorization token. By default reads from user config file.',
   srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
   dstBranch : 'A destination branch. Default is "master".',
-  title : "Option that rewrite title in provided argument.",
-  body : "Body message.",
+  title : 'Option that rewrite title in provided argument.',
+  body : 'Body message.',
   v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
 };
@@ -2347,8 +2347,8 @@ commandModulesGitPrOpen.commandProperties =
   token : 'An individual authorization token. By default reads from user config file.',
   srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
   dstBranch : 'A destination branch. Default is "master".',
-  title : "Option that rewrite title in provided argument.",
-  body : "Body message.",
+  title : 'Option that rewrite title in provided argument.',
+  body : 'Body message.',
   v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
 };
@@ -2887,8 +2887,8 @@ commandGitPrOpen.commandProperties =
   token : 'An individual authorization token. By default reads from user config file.',
   srcBranch : 'A source branch. If PR opens from fork format should be "{user}:{branch}".',
   dstBranch : 'A destination branch. Default is "master".',
-  title : "Option that rewrite title in provided argument.",
-  body : "Body message.",
+  title : 'Option that rewrite title in provided argument.',
+  body : 'Body message.',
   v : 'Set verbosity. Default is 2.',
   verbosity : 'Set verbosity. Default is 2.',
 };
@@ -3522,12 +3522,16 @@ function commandWillfileFromNpm( e )
 
   return con.then( () =>
   {
+
     if( !cui.currentOpeners.length )
-    return _.will.Module.prototype.willfileGenerateFromNpm.call( cui,
     {
-      ... e.propertiesMap,
-      verbosity : 3,
-    });
+      let o =
+      {
+        ... e.propertiesMap,
+        verbosity : 3,
+      };
+      return _.will.Module.prototype.willfileGenerateFromNpm.call( cui, o );
+    }
 
     return cui._commandBuildLike
     ({
@@ -3584,12 +3588,15 @@ function commandWillfileGet( e )
   willfilePropertiesMap = { about : 1, build : 1, path : 1, reflector : 1, step : 1, submodule : 1 };
 
   if( e.subject )
-  return _.will.Module.prototype.willfileGetProperty.call( cui,
   {
-    request : e.subject,
-    willfilePropertiesMap,
-    ... e.propertiesMap,
-  });
+    let o =
+    {
+      request : e.subject,
+      willfilePropertiesMap,
+      ... e.propertiesMap,
+    };
+    return _.will.Module.prototype.willfileGetProperty.call( cui, o );
+  }
 
   if( cui.currentOpeners )
   return cui._commandBuildLike
@@ -3670,12 +3677,15 @@ function commandWillfileSet( e )
   e.subject = './(.im|.ex|will)*';
 
   if( e.subject )
-  return _.will.Module.prototype.willfileSetProperty.call( cui,
   {
-    request : e.subject,
-    willfilePropertiesMap,
-    ... e.propertiesMap,
-  });
+    let o =
+    {
+      request : e.subject,
+      willfilePropertiesMap,
+      ... e.propertiesMap,
+    };
+    return _.will.Module.prototype.willfileSetProperty.call( cui, o );
+  }
 
   if( cui.currentOpeners )
   return cui._commandBuildLike
@@ -3737,12 +3747,15 @@ function commandWillfileDel( e )
   willfilePropertiesMap = { about : 1, build : 1, path : 1, reflector : 1, step : 1, submodule : 1 };
 
   if( e.subject )
-  return _.will.Module.prototype.willfileDeleteProperty.call( cui,
   {
-    request : e.subject,
-    willfilePropertiesMap,
-    ... e.propertiesMap,
-  });
+    let o =
+    {
+      request : e.subject,
+      willfilePropertiesMap,
+      ... e.propertiesMap,
+    };
+    return _.will.Module.prototype.willfileDeleteProperty.call( cui, o );
+  }
 
   if( cui.currentOpeners )
   return cui._commandBuildLike
@@ -3822,13 +3835,16 @@ function commandWillfileExtend( e )
   e.subject = './(.im|.ex|will)*';
 
   if( e.subject )
-  return _.will.Module.prototype.willfileExtendProperty.call( cui,
   {
-    request : e.subject,
-    onProperty : _.mapExtend,
-    willfilePropertiesMap,
-    ... e.propertiesMap,
-  });
+    let o =
+    {
+      request : e.subject,
+      onProperty : _.mapExtend,
+      willfilePropertiesMap,
+      ... e.propertiesMap,
+    };
+    return _.will.Module.prototype.willfileExtendProperty.call( cui, o );
+  }
 
   if( cui.currentOpeners )
   return cui._commandBuildLike
@@ -3883,13 +3899,16 @@ function commandWillfileSupplement( e )
   e.subject = './(.im|.ex|will)*';
 
   if( e.subject )
-  return _.will.Module.prototype.willfileExtendProperty.call( cui,
   {
-    request : e.subject,
-    onProperty : _.mapSupplement,
-    willfilePropertiesMap,
-    ... e.propertiesMap,
-  });
+    let o =
+    {
+      request : e.subject,
+      onProperty : _.mapSupplement,
+      willfilePropertiesMap,
+      ... e.propertiesMap,
+    };
+    return _.will.Module.prototype.willfileExtendProperty.call( cui, o );
+  }
 
   if( cui.currentOpeners )
   return cui._commandBuildLike
@@ -3933,12 +3952,13 @@ function commandWillfileExtendWillfile( e )
   let cui = this;
   cui._command_pre( commandWillfileExtendWillfile, arguments );
 
-  return _.will.Module.prototype.willfileExtendWillfile.call( cui,
+  let o =
   {
     request : e.subject,
     onSection : _.mapExtend,
     ... e.propertiesMap,
-  });
+  };
+  return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
 }
 
 commandWillfileExtendWillfile.defaults =
@@ -3982,12 +4002,13 @@ function commandWillfileSupplementWillfile( e )
   let cui = this;
   cui._command_pre( commandWillfileSupplementWillfile, arguments );
 
-  return _.will.Module.prototype.willfileExtendWillfile.call( cui,
+  let o =
   {
     request : e.subject,
     onSection : _.mapSupplement,
     ... e.propertiesMap,
-  });
+  };
+  return _.will.Module.prototype.willfileExtendWillfile.call( cui, o );
 }
 
 commandWillfileSupplementWillfile.defaults =
