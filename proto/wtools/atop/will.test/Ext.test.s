@@ -27091,6 +27091,129 @@ function commandGitPrOpen( test )
 
 //
 
+function commandGitPrOpenRemote( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  })
+  a.reflect();
+
+  /* - */
+
+  let config = a.fileProvider.configUserRead();
+  if( !config || !config.about || !config.about[ 'github.token' ] )
+  {
+    test.is( true );
+    return null;
+  }
+  let user = config.about.user;
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    return null;
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token : config.about[ 'github.token' ],
+    });
+  })
+
+  a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
+    test.identical( _.strCount( op.output, `localPath :` ), 1 );
+    test.identical( _.strCount( op.output, `remotePath : https://github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( op.output, `Making remote repository git+https:///github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( op.output, `Making a new local repository at` ), 1 );
+    test.identical( _.strCount( op.output, `git init .` ), 1 );
+    test.identical( _.strCount( op.output, `git remote add origin https://github.com/${user}/New2.git` ), 1 );
+    test.identical( _.strCount( op.output, `> ` ), 3 );
+
+    return null;
+  })
+
+  originalShell
+  (
+    `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
+  );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -m first' );
+  originalShell( 'git push -u origin master' );
+  originalShell( 'git checkout -b new' );
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  originalShell( 'git commit -am second' );
+  originalShell( 'git push -u origin new' );
+
+  a.appStart( '.with original/GitPrOpen .git.pr.open "New PR" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'opened pull request, only title and srcBranch';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Succefully created pull request "New PR" in https://github.com/' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  originalShell( 'git checkout master' );
+  originalShell( 'git checkout -b new2' );
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  originalShell( 'git commit -am second' );
+  originalShell( 'git push -u origin new2' );
+
+  a.appStart( '.with original/GitPrOpen .git.pr.open "new2" srcBranch:new2 dstBranch:master body:description' )
+  .then( ( op ) =>
+  {
+    test.case = 'opened pull request, body and dstBranch';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Succefully created pull request "new2" in https://github.com/' ), 1 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token : config.about[ 'github.token' ],
+    });
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+//
+
 function commandGitPull( test )
 {
   let context = this;
@@ -32247,6 +32370,7 @@ let Self =
     commandGitCheckHardLinkRestoring,
     commandGitDifferentCommands,
     commandGitPrOpen,
+    commandGitPrOpenRemote,
     commandGitPull,
     commandGitPush,
     commandGitReset,
