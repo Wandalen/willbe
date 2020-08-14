@@ -28222,6 +28222,138 @@ function commandGitStatus( test )
 
 //
 
+function commandGitStatusWithPR( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  });
+  a.reflect();
+
+  /* - */
+
+  let config = a.fileProvider.configUserRead();
+  if( !config || !config.about || !config.about[ 'github.token' ] )
+  {
+    test.is( true );
+    return null;
+  }
+  let user = config.about.user;
+
+  /* prepare data */
+
+  a.ready.then( () =>
+  {
+    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    return null;
+  });
+
+  a.ready.then( ( op ) =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token : config.about[ 'github.token' ],
+    });
+  });
+
+  a.appStart({ execPath : '.with original/GitPrOpen .hook.call GitMake v:3' })
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, `Making repository for module::New2 at` ), 1 );
+    return null;
+  });
+
+  originalShell
+  (
+    `git config credential.helper '!f(){ echo "username=bot-w" && echo "password=${ process.env.WTOOLS_BOT_TOKEN }"; }; f'`
+  );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -m first' );
+  originalShell( 'git push -u origin master' );
+  originalShell( 'git checkout -b new' );
+  a.ready.then( () =>
+  {
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'new line\n' );
+    return null;
+  });
+  originalShell( 'git commit -am second' );
+  originalShell( 'git push -u origin new' );
+
+  a.appStart( '.with original/GitPrOpen .git.pr.open "New PR" srcBranch:new' )
+  .then( ( op ) =>
+  {
+    test.case = 'opened pull request';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'Succefully created pull request "New PR" in https://github.com/' ), 1 );
+    return null;
+  })
+
+  /* test */
+
+  a.appStart( '.with original/ .git.status' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original .git.status - checks repository with only one pull request';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 2 );
+    test.identical( _.strCount( op.output, 'Has 1 opened pull request(s)' ), 1 );
+
+    return null;
+  });
+
+  /* */
+
+  a.appStart( '.with original/ .git.status prs:0' )
+  .then( ( op ) =>
+  {
+    test.case = '.with original .git.status prs:0 - checks repository with only one pull request';
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '. Opened .' ), 1 );
+    test.identical( _.strCount( op.output, 'List of uncommited changes' ), 0 );
+    test.identical( _.strCount( op.output, '?? File.txt' ), 0 );
+    test.identical( _.strCount( op.output, 'M f1.txt' ), 0 );
+    test.identical( _.strCount( op.output, '!! .warchive' ), 0 );
+    test.identical( _.strCount( op.output, 'List of remote branches' ), 0 );
+    test.identical( _.strCount( op.output, 'refs/heads/master' ), 0 );
+    test.identical( _.strCount( op.output, 'module::clone' ), 1 );
+    test.identical( _.strCount( op.output, 'Has 1 opened pull request(s)' ), 0 );
+
+    return null;
+  })
+
+  /* */
+
+  a.ready.finally( () =>
+  {
+    return _.git.repositoryDelete
+    ({
+      remotePath : `https://github.com/${user}/New2`,
+      token : config.about[ 'github.token' ],
+    });
+  })
+
+  /* */
+
+  return a.ready;
+}
+
+//
+
 function commandGitSync( test )
 {
   let context = this;
@@ -32375,6 +32507,7 @@ let Self =
     commandGitPush,
     commandGitReset,
     commandGitStatus,
+    commandGitStatusWithPR,
     commandGitSync,
     commandGitTag,
 
