@@ -189,7 +189,7 @@ function assetFor( test, name )
     a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.routinePath } });
     try
     {
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
     }
     catch( err )
     {
@@ -198,8 +198,8 @@ function assetFor( test, name )
       _.Consequence().take( null )
       .timeOut( 3000 )
       .deasync();
-      a.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) );
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
+      a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '_repo' ) );
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
     }
     return null
   }
@@ -287,7 +287,7 @@ function preCloneRepos( test )
 
   a.ready.then( () =>
   {
-    test.is( a.fileProvider.isDir( a.path.join( context.repoDirPath, 'ModuleForTesting1' ) ) );
+    test.is( a.fileProvider.isDir( a.abs( context.repoDirPath, 'ModuleForTesting1' ) ) );
     return null;
   })
 
@@ -5884,7 +5884,7 @@ function hookHlink( test )
   .then( ( op ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), '\ncopy' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), '\ncopy' );
     return null;
@@ -5964,7 +5964,7 @@ function hookGitPullConflict( test )
   .then( ( op ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -6180,7 +6180,7 @@ function hookGitSyncColflict( test )
   .then( ( op ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -6349,7 +6349,7 @@ function hookGitSyncArguments( test )
   .then( ( op ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'copy\n' );
     a.fileProvider.fileAppend( a.abs( 'original/f2.txt' ), 'copy\n' );
     return null;
@@ -6404,7 +6404,7 @@ function implyWithDot( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.dirMake( a.abs( 'repo' ) );
     a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.clone' ) });
     return null;
@@ -6473,7 +6473,7 @@ function implyWithAsterisk( test )
   a.ready.then( () =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.dirMake( a.abs( 'repo' ) );
     a.fileProvider.fileRename({ srcPath : a.abs( 'original' ), dstPath : a.abs( '.module' ) });
     return null;
@@ -9227,10 +9227,10 @@ function buildDetached( test )
     test.is( _.strHas( op.output, /\.module\/ModuleForTesting12\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12\.git#48023b1e3d064b473e491be4bd5f7f789ce5c288/ ) );
     test.is( _.strHas( op.output, /\.module\/ModuleForTesting12ab\.informal <- git\+https:\/\/github\.com\/Wandalen\/wModuleForTesting12ab\.git/ ) );
 
-    var files = a.fileProvider.dirRead( a.path.join( a.routinePath, '.module' ) );
+    var files = a.fileProvider.dirRead( a.abs( '.module' ) );
     test.identical( files, [ 'ModuleForTesting1', 'ModuleForTesting12.informal', 'ModuleForTesting12ab.informal', 'ModuleForTesting2a.informal', 'ModuleForTesting2b' ] );
 
-    var files = a.fileProvider.dirRead( a.path.join( a.routinePath, 'out' ) );
+    var files = a.fileProvider.dirRead( a.abs( 'out' ) );
     test.identical( files, [ 'debug', 'ModuleForTesting12.informal.out.will.yml', 'ModuleForTesting12ab.informal.out.will.yml', 'ModuleForTesting2a.informal.out.will.yml' ] );
 
     return null;
@@ -9832,7 +9832,7 @@ function exportMixed( test )
     var files = a.fileProvider.dirRead( a.abs( 'module' ) );
     test.identical( files, expected );
 
-    var outfile = a.fileProvider.configRead( a.path.join( a.routinePath, 'out/ModuleForTesting12.informal.out.will.yml' ) );
+    var outfile = a.fileProvider.configRead( a.abs( 'out/ModuleForTesting12.informal.out.will.yml' ) );
     outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
@@ -20513,7 +20513,7 @@ function submodulesVersionsAgreeWrongOrigin( test )
   {
     test.case = 'donwloaded repo has different origin, should be deleted and downloaded again';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
-    a.fileProvider.dirMake( a.path.join( a.routinePath, '.module/ModuleForTesting2a' ) );
+    a.fileProvider.dirMake( a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
 
@@ -20524,8 +20524,8 @@ function submodulesVersionsAgreeWrongOrigin( test )
   {
     test.identical( op.exitCode, 0 );
     test.is( _.strHas( op.output, '+ 1/1 submodule(s) of module::submodules-download-errors-good were agreed' ) );
-    test.is( a.fileProvider.fileExists( a.path.join( a.routinePath, '.module/ModuleForTesting2a' ) ) )
-    let files = a.find( a.path.join( a.routinePath, '.module/ModuleForTesting2a' ) );
+    test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
+    let files = a.find( a.abs( '.module/ModuleForTesting2a' ) );
     test.gt( files.length, 10 );
 
     return null;
@@ -20553,26 +20553,6 @@ function submodulesDownloadedUpdate( test )
   let context = this;
   let a = context.assetFor( test, 'submodules-downloaded-update' );
   a.reflect();
-
-  // let context = this;
-  // let originalAssetPath = _.path.join( context.assetsOriginalPath, 'submodules-downloaded-update' );
-  // let routinePath = _.path.join( context.suiteTempPath, test.name );
-  // let abs = context.abs_functor( routinePath );
-  // let rel = context.rel_functor( routinePath );
-  // let submodulesPath = _.path.join( routinePath, '.module' );
-  //
-  //
-  // let ready = new _.Consequence().take( null )
-  // let start = _.process.starter
-  // ({
-  //   execPath : 'node ' + context.appJsPath,
-  //   currentPath : routinePath,
-  //   outputCollecting : 1,
-  //   outputGraying : 1,
-  //   ready : ready,
-  // })
-  //
-  // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* */
 
@@ -20737,9 +20717,9 @@ function subModulesUpdate( test )
   .then( () =>
   {
     test.case = '.submodules.update -- after patch';
-    var read = a.fileProvider.fileRead( a.path.join( a.routinePath, '.im.will.yml' ) );
+    var read = a.fileProvider.fileRead( a.abs( '.im.will.yml' ) );
     read = _.strReplace( read, '#e96f5405a2f23912957c4b7baa0a0ddf4ac6ca24', '!master' )
-    a.fileProvider.fileWrite( a.path.join( a.routinePath, '.im.will.yml' ), read );
+    a.fileProvider.fileWrite( a.abs( '.im.will.yml' ), read );
     return null;
   })
 
@@ -21633,7 +21613,7 @@ function stepWillbeVersionCheck( test )
   let context = this;
   let a = context.assetFor( test, 'step-willbe-version-check' );
 
-  if( !a.fileProvider.fileExists( a.path.join( a.path.join( __dirname, '../../../..' ), 'package.json' ) ) )
+  if( !a.fileProvider.fileExists( a.abs( a.abs( __dirname, '../../../..' ), 'package.json' ) ) )
   {
     test.is( true );
     return;
@@ -21647,11 +21627,11 @@ function stepWillbeVersionCheck( test )
       'proto/wtools/atop/will' : 'proto/wtools/atop/will',
       'package.json' : 'package.json',
     },
-    src : { prefixPath : a.path.join( __dirname, '../../../..' ) },
+    src : { prefixPath : a.abs( __dirname, '../../../..' ) },
     dst : { prefixPath : a.abs( 'willbe' ) },
   })
   a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'asset' ) } });
-  a.fileProvider.softLink( a.abs( 'willbe/node_modules' ), a.path.join( a.path.join( __dirname, '../../../..' ), 'node_modules' ) );
+  a.fileProvider.softLink( a.abs( 'willbe/node_modules' ), a.abs( a.abs( __dirname, '../../../..' ), 'node_modules' ) );
 
   let execPath = a.path.nativize( a.abs( 'willbe/proto/wtools/atop/will/entry/Exec' ) );
   a.appStart = _.process.starter
@@ -22118,7 +22098,7 @@ function stepGitCheckHardLinkRestoring( test )
   a.ready.then( ( op ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
   })
 
@@ -22158,7 +22138,7 @@ function stepGitCheckHardLinkRestoring( test )
 
   a.ready.then( ( op ) =>
   {
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
   })
 
@@ -22583,7 +22563,7 @@ function stepGitPull( test )
   a.ready.then( ( op ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     a.fileProvider.filesDelete( a.abs( 'clone' ) );
     return null;
   })
@@ -22623,7 +22603,7 @@ function stepGitPull( test )
 
   a.ready.then( ( op ) =>
   {
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
   })
 
@@ -25088,7 +25068,7 @@ function runWillbe( test )
   .then( () =>
   {
     test.case = 'execUnrestricted: terminate utility during heavy load of will files, should be terminated';
-    let o = { args : [ a.path.nativize( a.path.join( __dirname, '../will/ExecUnrestricted' ) ), '.submodules.list' ], ready : null };
+    let o = { args : [ a.path.nativize( a.abs( __dirname, '../will/ExecUnrestricted' ) ), '.submodules.list' ], ready : null };
 
     let con = a.fork( o );
 
@@ -25184,15 +25164,6 @@ function resourcesFormReflectorsExperiment( test )
   let a = context.assetFor( test, 'performance' );
   a.reflect()
 
-  // let originalAssetPath = _.path.join( context.assetsOriginalPath, 'performance' );
-  // let routinePath = _.path.join( context.suiteTempPath, test.name );
-  // let abs = context.abs_functor( routinePath );
-  // let rel = context.rel_functor( routinePath );
-  // _.fileProvider.filesDelete( routinePath );
-  // _.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
-  //
-  // let ready = new _.Consequence().take( null )
-
   /* */
 
   a.ready.then( () =>
@@ -25203,7 +25174,7 @@ function resourcesFormReflectorsExperiment( test )
     let o2 =
     {
       execPath : execPath,
-      currentPath : a.path.join( routinePath, './old-out-file/' ),
+      currentPath : a.abs( './old-out-file/' ),
       args : [ '.submodules.list' ],
       mode : 'fork',
       outputCollecting : 1
@@ -25244,7 +25215,7 @@ function resourcesFormReflectorsExperiment( test )
     let o2 =
     {
       execPath : execPath,
-      currentPath : a.path.join( routinePath, './new-out-file/' ),
+      currentPath : a.abs( './new-out-file/' ),
       args : [ '.submodules.list' ],
       mode : 'fork',
       outputCollecting : 1
@@ -25369,7 +25340,7 @@ function commandVersionCheck( test )
   let context = this;
   let a = context.assetFor( test, 'step-willbe-version-check' );
 
-  if( !a.fileProvider.fileExists( a.path.join( a.path.join( __dirname, '../../../..' ), 'package.json' ) ) )
+  if( !a.fileProvider.fileExists( a.abs( a.abs( __dirname, '../../../..' ), 'package.json' ) ) )
   {
     test.is( true );
     return;
@@ -25383,11 +25354,11 @@ function commandVersionCheck( test )
       'proto/wtools/atop/will' : 'proto/wtools/atop/will',
       'package.json' : 'package.json',
     },
-    src : { prefixPath : a.path.join( __dirname, '../../../..' ) },
+    src : { prefixPath : a.abs( __dirname, '../../../..' ) },
     dst : { prefixPath : a.abs( 'willbe' ) },
   })
   a.fileProvider.filesReflect({ reflectMap : { [ a.originalAssetPath ] : a.abs( 'asset' ) } });
-  a.fileProvider.softLink( a.abs( 'willbe/node_modules' ), a.path.join( __dirname, '../../../../node_modules' ) );
+  a.fileProvider.softLink( a.abs( 'willbe/node_modules' ), a.abs( __dirname, '../../../../node_modules' ) );
 
   let execPath = a.path.nativize( a.abs( 'willbe/proto/wtools/atop/will/entry/Exec' ) );
   a.appStart = _.process.starter
@@ -26602,7 +26573,7 @@ function commandGitCheckHardLinkRestoring( test )
   a.ready.then( ( op ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
   })
 
@@ -26642,7 +26613,7 @@ function commandGitCheckHardLinkRestoring( test )
 
   a.ready.then( ( op ) =>
   {
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
   })
 
@@ -27108,7 +27079,7 @@ function commandGitPrOpenRemote( test )
 
   a.ready.then( () =>
   {
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
   });
 
@@ -27301,7 +27272,7 @@ function commandGitPull( test )
   a.ready.then( ( op ) =>
   {
     a.reflect();
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
   })
 
@@ -27341,7 +27312,7 @@ function commandGitPull( test )
 
   a.ready.then( ( op ) =>
   {
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
   })
 
@@ -28239,7 +28210,7 @@ function commandGitStatusWithPR( test )
 
   a.ready.then( () =>
   {
-    a.fileProvider.filesReflect({ reflectMap : { [ a.path.join( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
     return null;
   });
 
