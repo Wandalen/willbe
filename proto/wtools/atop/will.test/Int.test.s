@@ -146,7 +146,7 @@ function assetFor( test, name )
     {
       // debugger;
       /* Dmytro : all default values for option `sync` is `null`, so each routine checks the option and applies `null`. Last time, the routine `_fileCopyDo` run async copy and throw error */
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
     }
     catch( err )
     {
@@ -155,8 +155,8 @@ function assetFor( test, name )
       _.Consequence().take( null )
       .timeOut( 3000 )
       .deasync();
-      a.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) );
-      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
+      a.fileProvider.filesDelete( a.abs( context.suiteTempPath, '_repo' ) );
+      a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.abs( context.suiteTempPath, '_repo' ) } });
     }
   }
 
@@ -317,7 +317,7 @@ function preCloneRepos( test )
 
   a.ready.then( () =>
   {
-    test.is( a.fileProvider.isDir( a.path.join( context.repoDirPath, 'ModuleForTesting1' ) ) );
+    test.is( a.fileProvider.isDir( a.abs( context.repoDirPath, 'ModuleForTesting1' ) ) );
     return null;
   })
 
@@ -506,7 +506,7 @@ function openNamedFast( test )
       'local' : a.abs( 'super' ),
       'remote' : null,
       'current.remote' : null,
-      'will' : a.path.join( __dirname, '../will/entry/Exec' ),
+      'will' : a.abs( __dirname, '../will/entry/Exec' ),
       'module.dir' : a.abs( '.' ),
       'module.willfiles' : a.abs( [ 'super.ex.will.yml', 'super.im.will.yml' ] ),
       'module.peer.willfiles' : a.abs( 'super.out/supermodule.out.will.yml' ),
@@ -536,7 +536,7 @@ function openNamedFast( test )
     test.identical( opener.openedModule.localPath, a.abs( 'super' ) );
     test.identical( opener.openedModule.remotePath, null );
     test.identical( opener.openedModule.currentRemotePath, null );
-    test.identical( opener.openedModule.willPath, a.path.join( __dirname, '../will/entry/Exec' ) );
+    test.identical( opener.openedModule.willPath, a.abs( __dirname, '../will/entry/Exec' ) );
     test.identical( opener.openedModule.outPath, a.abs( 'super.out' ) );
     test.identical( opener.openedModule.commonPath, a.abs( 'super' ) );
     test.identical( opener.openedModule.willfilesPath, a.abs( [ './super.ex.will.yml', './super.im.will.yml' ] ) );
@@ -719,7 +719,7 @@ function openNamedForming( test )
       'local' : a.abs( 'super' ),
       'remote' : null,
       'current.remote' : null,
-      'will' : a.path.join( __dirname, '../will/entry/Exec' ),
+      'will' : a.abs( __dirname, '../will/entry/Exec' ),
       'module.dir' : a.abs( '.' ),
       'module.willfiles' : a.abs( [ 'super.ex.will.yml', 'super.im.will.yml' ] ),
       'module.original.willfiles' : a.abs( [ 'super.ex.will.yml', 'super.im.will.yml' ] ),
@@ -749,7 +749,7 @@ function openNamedForming( test )
     test.identical( opener.openedModule.localPath, a.abs( 'super' ) );
     test.identical( opener.openedModule.remotePath, null );
     test.identical( opener.openedModule.currentRemotePath, null );
-    test.identical( opener.openedModule.willPath, a.path.join( __dirname, '../will/entry/Exec' ) );
+    test.identical( opener.openedModule.willPath, a.abs( __dirname, '../will/entry/Exec' ) );
     test.identical( opener.openedModule.outPath, a.abs( 'super.out' ) );
     test.identical( opener.openedModule.commonPath, a.abs( 'super' ) );
     test.identical( opener.openedModule.willfilesPath, a.abs( [ './super.ex.will.yml', './super.im.will.yml' ] ) );
@@ -1130,7 +1130,7 @@ function openAnon( test )
     let pathMap =
     {
       'current.remote' : null,
-      'will' : a.path.join( __dirname, '../will/entry/Exec' ),
+      'will' : a.abs( __dirname, '../will/entry/Exec' ),
       'local' : a.abs( './' ),
       'remote' : null,
       'proto' : 'proto',
@@ -1170,7 +1170,7 @@ function openAnon( test )
     test.identical( opener.openedModule.localPath, a.abs( './' ) );
     test.identical( opener.openedModule.remotePath, null );
     test.identical( opener.openedModule.currentRemotePath, null );
-    test.identical( opener.openedModule.willPath, a.path.join( __dirname, '../will/entry/Exec' ) );
+    test.identical( opener.openedModule.willPath, a.abs( __dirname, '../will/entry/Exec' ) );
     test.identical( opener.openedModule.willfilesArray.length, 2 );
     test.identical( _.setFrom( _.mapKeys( opener.openedModule.willfileWithRoleMap ) ), _.setFrom( [ 'import', 'export' ] ) );
 
@@ -1255,7 +1255,7 @@ function openOutNamed( test )
     let pathMap =
     {
       'current.remote' : null,
-      'will' : a.path.join( __dirname, '../will/entry/Exec' ),
+      'will' : a.abs( __dirname, '../will/entry/Exec' ),
       'module.original.willfiles' :
       [
         a.abs( './super.ex.will.yml' ),
@@ -1398,7 +1398,7 @@ function openCurruptedUnknownField( test )
 
       'remote' : null,
       'current.remote' : null,
-      'will' : a.path.join( __dirname, '../will/entry/Exec' ),
+      'will' : a.abs( __dirname, '../will/entry/Exec' ),
       'module.dir' : a.abs( '.' ),
       'local' : a.abs( 'sub' ),
       'module.willfiles' : a.abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ),
@@ -1427,7 +1427,7 @@ function openCurruptedUnknownField( test )
     test.identical( opener.openedModule.dirPath, a.abs( '.' ) );
     test.identical( opener.openedModule.remotePath, null );
     test.identical( opener.openedModule.currentRemotePath, null );
-    test.identical( opener.openedModule.willPath, a.path.join( __dirname, '../will/entry/Exec' ) );
+    test.identical( opener.openedModule.willPath, a.abs( __dirname, '../will/entry/Exec' ) );
     test.identical( opener.openedModule.outPath, a.abs( 'sub.out' ) );
     test.identical( opener.openedModule.commonPath, a.abs( 'sub' ) );
     test.identical( opener.openedModule.willfilesPath, a.abs( [ './sub.ex.will.yml', './sub.im.will.yml' ] ) );
@@ -1483,7 +1483,7 @@ function openerClone( test )
     test.identical( a.rel( opener.openedModule.outPath ), 'super.out' );
     test.identical( a.rel( opener.openedModule.localPath ), 'super' );
     test.identical( a.rel( opener.openedModule.remotePath ), null );
-    test.identical( opener.openedModule.willPath, a.path.join( __dirname, '../will/entry/Exec' ) );
+    test.identical( opener.openedModule.willPath, a.abs( __dirname, '../will/entry/Exec' ) );
 
     test.description = 'paths of original opener';
     test.identical( a.rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
@@ -1567,7 +1567,7 @@ function openerClone( test )
     test.identical( a.rel( opener.openedModule.outPath ), 'super.out' );
     test.identical( a.rel( opener.openedModule.localPath ), 'super' );
     test.identical( a.rel( opener.openedModule.remotePath ), null );
-    test.identical( opener.openedModule.willPath, a.path.join( __dirname, '../will/entry/Exec' ) );
+    test.identical( opener.openedModule.willPath, a.abs( __dirname, '../will/entry/Exec' ) );
 
     test.description = 'paths of original opener';
     test.identical( a.rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
@@ -1713,7 +1713,7 @@ function moduleClone( test )
     test.identical( a.rel( opener.openedModule.outPath ), 'super.out' );
     test.identical( a.rel( opener.openedModule.localPath ), 'super' );
     test.identical( a.rel( opener.openedModule.remotePath ), null );
-    test.identical( opener.openedModule.willPath, a.path.join( __dirname, '../will/entry/Exec' ) );
+    test.identical( opener.openedModule.willPath, a.abs( __dirname, '../will/entry/Exec' ) );
 
     test.description = 'paths of original opener';
     test.identical( a.rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
@@ -1749,7 +1749,7 @@ function moduleClone( test )
     test.identical( a.rel( module2.outPath ), 'super2.out/super.out' );
     test.identical( a.rel( module2.localPath ), 'super2.out/super.out' );
     test.identical( a.rel( module2.remotePath ), null );
-    test.identical( module2.willPath, a.path.join( __dirname, '../will/entry/Exec' ) );
+    test.identical( module2.willPath, a.abs( __dirname, '../will/entry/Exec' ) );
 
     opener2.moduleAdopt( module2 );
 
@@ -1790,7 +1790,7 @@ function moduleClone( test )
     test.identical( a.rel( opener.openedModule.outPath ), 'super.out' );
     test.identical( a.rel( opener.openedModule.localPath ), 'super' );
     test.identical( a.rel( opener.openedModule.remotePath ), null );
-    test.identical( opener.openedModule.willPath, a.path.join( __dirname, '../will/entry/Exec' ) );
+    test.identical( opener.openedModule.willPath, a.abs( __dirname, '../will/entry/Exec' ) );
 
     test.description = 'paths of original opener';
     test.identical( a.rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
@@ -1807,7 +1807,7 @@ function moduleClone( test )
     test.identical( a.rel( opener2.openedModule.outPath ), 'super2.out/super.out' );
     test.identical( a.rel( opener2.openedModule.localPath ), 'super2.out/super.out' );
     test.identical( a.rel( opener2.openedModule.remotePath ), null );
-    test.identical( opener2.openedModule.willPath, a.path.join( __dirname, '../will/entry/Exec' ) );
+    test.identical( opener2.openedModule.willPath, a.abs( __dirname, '../will/entry/Exec' ) );
 
     test.description = 'paths of opener2';
     test.identical( a.rel( opener2.willfilesPath ), 'super2.out/super.out.will.yml' );
@@ -1855,7 +1855,7 @@ function moduleClone( test )
     test.identical( a.rel( opener.openedModule.outPath ), 'super.out' );
     test.identical( a.rel( opener.openedModule.localPath ), 'super' );
     test.identical( a.rel( opener.openedModule.remotePath ), null );
-    test.identical( opener.openedModule.willPath, a.path.join( __dirname, '../will/entry/Exec' ) );
+    test.identical( opener.openedModule.willPath, a.abs( __dirname, '../will/entry/Exec' ) );
 
     test.description = 'paths of original opener';
     test.identical( a.rel( opener.willfilesPath ), [ 'super.ex.will.yml', 'super.im.will.yml' ] );
@@ -5914,7 +5914,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'proto',
       'super.out',
       '.',
@@ -5943,7 +5943,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'proto',
       'super.out',
       '.',
@@ -5977,7 +5977,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'proto',
       'super.out',
       '.',
@@ -6011,7 +6011,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'super.out/proto',
       'super.out/super.out',
       'super.out',
@@ -6045,7 +6045,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'proto',
       'super.out',
       '.',
@@ -6075,7 +6075,7 @@ function pathsResolve( test )
       'out' : 'super.out',
       'out.debug' : 'super.out/debug',
       'out.release' : 'super.out/release',
-      'will' : a.path.join( __dirname, '../will/entry/Exec' ),
+      'will' : a.abs( __dirname, '../will/entry/Exec' ),
       'module.dir' : a.abs( '.' ),
       'module.willfiles' : a.abs([ 'super.ex.will.yml', 'super.im.will.yml' ]),
       'module.peer.willfiles' : a.abs( 'super.out/supermodule.out.will.yml' ),
@@ -6113,7 +6113,7 @@ function pathsResolve( test )
       'out' : ( 'super.out' ),
       'out.debug' : ( 'super.out/debug' ),
       'out.release' : ( 'super.out/release' ),
-      'will' : a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      'will' : a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'module.dir' : '.',
       'module.willfiles' : [ 'super.ex.will.yml', 'super.im.will.yml' ],
       'module.common' : 'super',
@@ -6149,7 +6149,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
-      'will' : a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      'will' : a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'proto' : 'super.out/proto',
       'temp' : 'super.out/super.out',
       'download' : null,
@@ -6183,7 +6183,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
-      'will' : a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      'will' : a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'proto' : 'proto',
       'temp' : 'super.out',
       'in' : '.',
@@ -6216,7 +6216,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
-      'will' : a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      'will' : a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'proto' : 'proto',
       'temp' : 'super.out',
       'in' : '.',
@@ -6249,7 +6249,7 @@ function pathsResolve( test )
       'local' : 'super',
       'remote' : null,
       'current.remote' : null,
-      'will' : a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      'will' : a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'proto' : 'super.out/proto',
       'temp' : 'super.out/super.out',
       'in' : 'super.out',
@@ -6282,7 +6282,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'proto',
       'super.out',
       '.',
@@ -6315,7 +6315,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'proto',
       'super.out',
       '.',
@@ -6348,7 +6348,7 @@ function pathsResolve( test )
       'super',
       null,
       null,
-      a.rel( a.path.join( __dirname, '../will/entry/Exec' ) ),
+      a.rel( a.abs( __dirname, '../will/entry/Exec' ) ),
       'super.out/proto',
       'super.out/super.out',
       'super.out',
@@ -7141,31 +7141,31 @@ function pathsResolveOfSubmodulesLocal( test )
 
     test.case = 'path::in, supermodule';
     var resolved = opener.openedModule.resolve( 'path::in' );
-    var expected = path.join( a.routinePath );
+    var expected = a.abs( '.' );
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::in' );
-    var expected = path.join( a.abs( '.module' ), 'ModuleForTesting1/out' ); /* qqq xxx : ask */
+    var expected = a.abs( a.abs( '.module' ), 'ModuleForTesting1/out' ); /* qqq xxx : ask */
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::in' );
-    var expected = path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
+    var expected = a.abs( a.abs( '.module' ), 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1';
     var submodule = submodules[ 0 ];
     var resolved = submodule.resolve( 'path::out' );
-    var expected = path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
+    var expected = a.abs( a.abs( '.module' ), 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     test.case = 'path::out, wModuleForTesting1, through opener';
     var submodule = submodules[ 0 ].opener;
     var resolved = submodule.openedModule.resolve( 'path::out' );
-    var expected = path.join( a.abs( '.module' ), 'ModuleForTesting1/out' );
+    var expected = a.abs( a.abs( '.module' ), 'ModuleForTesting1/out' );
     test.identical( resolved, expected );
 
     return null;
@@ -7219,7 +7219,7 @@ function pathsResolveOfSubmodulesRemote( test )
 
     test.case = 'path::in, supermodule';
     var resolved = opener.openedModule.resolve( 'path::in' );
-    var expected = a.path.join( a.routinePath );
+    var expected = a.abs( '.' );
     test.identical( resolved, expected );
 
     test.case = 'path::in, wModuleForTesting1';
