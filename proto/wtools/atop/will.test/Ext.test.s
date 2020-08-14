@@ -1,4 +1,5 @@
-( function _WillExternals_test_s_( ) {
+( function _WillExternals_test_s_()
+{
 
 'use strict';
 
@@ -194,7 +195,9 @@ function assetFor( test, name )
     {
       _.errAttend( err );
       /* Dmytro : temporary, clean _repo directory before copying files, prevents fails in *nix systems */
-      _.Consequence().take( null ).timeOut( 3000 ).deasync();
+      _.Consequence().take( null )
+      .timeOut( 3000 )
+      .deasync();
       a.fileProvider.filesDelete( a.path.join( context.suiteTempPath, '_repo' ) );
       a.fileProvider.filesReflect({ reflectMap : { [ context.repoDirPath ] : a.path.join( context.suiteTempPath, '_repo' ) } });
     }
@@ -1867,7 +1870,7 @@ function openWith( test )
   })
 
   a.appStart({ execPath : '.clean' })
-  a.appStartNonThrowing({ execPath :'.with do .export' })
+  a.appStartNonThrowing({ execPath : '.with do .export' })
 
   .then( ( op ) =>
   {
@@ -2935,7 +2938,7 @@ function reflectorOptionsCheckDefaultOptionsAndWithoutOptions( test )
   {
     test.case = '".with import .build withoutOptions", throw error - different files';
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, "Can't rewrite terminal file" ) );
+    test.is( _.strHas( op.output, 'Can\'t rewrite terminal file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
@@ -3000,7 +3003,7 @@ function reflectorOptionsCheckWithoutOptionsAndDefaultOptions( test )
   {
     test.case = '".with import .build defaultOptions", throw error - different files';
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, "Can't rewrite terminal file" ) );
+    test.is( _.strHas( op.output, 'Can\'t rewrite terminal file' ) );
     var files = a.find( a.abs( 'out/debug' ) );
     test.identical( files, [ '.', './File.js' ] );
 
@@ -3131,52 +3134,49 @@ function reflectNothingFromSubmodules( test )
 
     var expectedReflector =
     {
-      "reflect.proto" :
+      'reflect.proto' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "path::proto" : "path::out.*=1" }
+          'filePath' : { 'path::proto' : 'path::out.*=1' }
         },
         'criterion' : { 'debug' : 1 },
-        "inherit" : [ "predefined.*" ],
+        'inherit' : [ 'predefined.*' ],
       },
-      "reflect.submodules1" :
+      'reflect.submodules1' :
       {
-        "dst" : { "basePath" : ".", "prefixPath" : "path::out.debug" },
-        "criterion" : { "debug" : 1 },
-        "inherit" :
-        [
-          "submodule::*/exported::*=1/reflector::exported.files*=1"
-        ],
+        'dst' : { 'basePath' : '.', 'prefixPath' : 'path::out.debug' },
+        'criterion' : { 'debug' : 1 },
+        'inherit' : [ 'submodule::*/exported::*=1/reflector::exported.files*=1' ],
       },
-      "reflect.submodules2" :
+      'reflect.submodules2' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "submodule::*/exported::*=1/path::exported.dir*=1" : "path::out.*=1" },
-          "prefixPath" : ''
+          'filePath' : { 'submodule::*/exported::*=1/path::exported.dir*=1' : 'path::out.*=1' },
+          'prefixPath' : ''
         },
-        "dst" : { "prefixPath" : '' },
-        "criterion" : { "debug" : 1 },
-        "inherit" : [ "predefined.*" ],
+        'dst' : { 'prefixPath' : '' },
+        'criterion' : { 'debug' : 1 },
+        'inherit' : [ 'predefined.*' ],
       },
-      "exported.proto.export" :
+      'exported.proto.export' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "**" : "" },
-          "prefixPath" : "../proto"
+          'filePath' : { '**' : '' },
+          'prefixPath' : '../proto'
         },
-        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "mandatory" : 1,
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
+        'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 },
+        'mandatory' : 1,
+        'dstRewritingOnlyPreserving' : 1,
+        'linking' : 'hardLinkMaybe',
       },
-      "exported.files.proto.export" :
+      'exported.files.proto.export' :
       {
-        "src" : { "filePath" : { 'path::exported.files.proto.export' : '' }, "basePath" : ".", "prefixPath" : "path::exported.dir.proto.export", 'recursive' : 0 },
-        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "recursive" : 0,
+        'src' : { 'filePath' : { 'path::exported.files.proto.export' : '' }, 'basePath' : '.', 'prefixPath' : 'path::exported.dir.proto.export', 'recursive' : 0 },
+        'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 },
+        'recursive' : 0,
       }
     }
     test.identical( outfile.reflector, expectedReflector );
@@ -4131,7 +4131,7 @@ function reflectWithOptionLinking( test )
   a.ready
   .then( () =>
   {
-    test.case = 'linking : fileCopy,dstRewritingOnlyPreserving : 0, breakingDstHardLink : 1';
+    test.case = 'linking : fileCopy, dstRewritingOnlyPreserving : 0, breakingDstHardLink : 1';
     return null;
   })
 
@@ -4241,7 +4241,7 @@ function reflectWithSelectorInDstFilter( test )
         prefixPath : path::out.*=1 #<-- doesn't work
         # prefixPath : "{path::out.*=1}" #<-- this works
       criterion :
-        debug : [ 0,1 ]
+        debug : [ 0, 1 ]
   */
 
   /* - */
@@ -5064,7 +5064,8 @@ function reflectorMasks( test )
     test.identical( files, [ '.', './release', './release/proto.two' ] );
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, new RegExp( `\\+ reflector::reflect.copy. reflected ${files.length-1} file\\(s\\) .* in .*` ) ) );
+    var outputString = `\\+ reflector::reflect.copy. reflected ${files.length-1} file\\(s\\) .* in .*`;
+    test.is( _.strHas( op.output, new RegExp( outputString ) ) );
 
     return null;
   })
@@ -5082,7 +5083,8 @@ function reflectorMasks( test )
     test.identical( files, [ '.', './debug', './debug/build.txt.js', './debug/manual.md', './debug/package.json', './debug/tutorial.md' ] );
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, new RegExp( `\\+ reflector::reflect.copy.debug reflected ${files.length -1} file\\(s\\) .* in .*` ) ) );
+    var outputString = `\\+ reflector::reflect.copy.debug reflected ${files.length -1} file\\(s\\) .* in .*`;
+    test.is( _.strHas( op.output, new RegExp( outputString ) ) );
 
     return null;
   })
@@ -5112,8 +5114,8 @@ function reflectorsCommonPrefix( test )
     test.identical( files, [ '.', './debug', './debug/Source.js' ] );
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, new RegExp( `\\+ reflector::reflect.copy reflected 2 file\\(s\\) .* in .*` ) ) );
-    test.is( _.strHas( op.output, new RegExp( `\\+ reflector::reflect.copy.second reflected 2 file\\(s\\) .* in .*` ) ) );
+    test.is( _.strHas( op.output, /\+ reflector::reflect.copy reflected 2 file\(s\) .* in .*/ ) );
+    test.is( _.strHas( op.output, /\+ reflector::reflect.copy.second reflected 2 file\(s\) .* in .*/ ) );
 
     return null;
   })
@@ -5142,8 +5144,8 @@ function reflectorOptionStep( test )
     test.is( !a.fileProvider.fileExists( a.abs( 'out' ) ) );
 
     test.identical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, new RegExp( `\\+ reflector::reflector.proto reflected 2 file\\(s\\) .* in .*` ) ) );
-    test.is( _.strHas( op.output, new RegExp( `\\- step::reflector.delete deleted 2 file\\(s\\), at .* in .*` ) ) );
+    test.is( _.strHas( op.output, /\+ reflector::reflector.proto reflected 2 file\(s\) .* in .*/ ) );
+    test.is( _.strHas( op.output, /\- step::reflector.delete deleted 2 file\(s\), at .* in .*/ ) );
 
     return null;
   })
@@ -7103,7 +7105,7 @@ function verbosityStepPrintName( test )
 
   /* - */
 
-/*
+  /*
   Building module::verbosity-step-print-name / build::debug
    : reflector::reflect.file
    + reflector::reflect.file reflected 1 file(s) /C/pro/web/Dave/git/trunk/builder/include/wtools/atop/will.test/asset/verbosity-step-print-name/ : out <- file in 0.290s
@@ -7115,7 +7117,7 @@ shell.step
      1 at .
    - step::delete.step deleted 1 file(s), at /C/pro/web/Dave/git/trunk/builder/include/wtools/atop/will.test/asset/verbosity-step-print-name/out0.017s
   Built module::verbosity-step-print-name / build::debug in 0.643s
-*/
+  */
 
   return a.ready;
 } /* end of function verbosityStepPrintName */
@@ -8772,21 +8774,18 @@ function buildOptionWithSubmodules( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with withSubmodulesDef .build'
+    test.case = '.with withSubmodulesDef .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
   a.appStart({ execPath : '.with withSubmodulesDef .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
     test.identical( _.strCount( op.output, '. Opened .' ), 4 );
     test.identical( _.strCount( op.output, '/withSubmodulesDef.will.yml' ), 1 );
     test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
@@ -8798,21 +8797,18 @@ function buildOptionWithSubmodules( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with withSubmodules2 .build'
+    test.case = '.with withSubmodules2 .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
   a.appStart({ execPath : '.with withSubmodules2 .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
     test.identical( _.strCount( op.output, '. Opened .' ), 4 );
     test.identical( _.strCount( op.output, '/withSubmodules2.will.yml' ), 1 );
     test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
@@ -8824,21 +8820,18 @@ function buildOptionWithSubmodules( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with withSubmodules1 .build'
+    test.case = '.with withSubmodules1 .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
   a.appStart({ execPath : '.with withSubmodules1 .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
     test.identical( _.strCount( op.output, '. Opened .' ), 2 );
     test.identical( _.strCount( op.output, '/withSubmodules1.will.yml' ), 1 );
     test.identical( _.strCount( op.output, '/l3.will.yml' ), 1 );
@@ -8850,21 +8843,18 @@ function buildOptionWithSubmodules( test )
 
   /* - */
 
-  a.ready
-
-  .then( () =>
+  a.ready.then( () =>
   {
-    test.case = '.with withSubmodules0 .build'
+    test.case = '.with withSubmodules0 .build';
     a.fileProvider.filesDelete( a.abs( 'out' ) );
     return null;
   })
 
   a.appStart({ execPath : '.with withSubmodules0 .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
-
     test.identical( _.strCount( op.output, '. Opened .' ), 1 );
     test.identical( _.strCount( op.output, '/withSubmodules0.will.yml' ), 1 );
     test.identical( _.strCount( op.output, '/l3.will.yml' ), 0 );
@@ -9517,44 +9507,44 @@ function exportStringrmal( test )
     outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
-      "module.willfiles" :
+      'module.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `ModuleForTesting12.informal.out.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `ModuleForTesting12.informal.out.will.yml`
       },
-      "module.common" :
+      'module.common' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `ModuleForTesting12.informal.out`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `ModuleForTesting12.informal.out`
       },
-      "module.original.willfiles" :
+      'module.original.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `../module/ModuleForTesting12.informal.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `../module/ModuleForTesting12.informal.will.yml`
       },
-      "module.peer.willfiles" :
+      'module.peer.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `../module/ModuleForTesting12.informal.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `../module/ModuleForTesting12.informal.will.yml`
       },
-      "in" :
+      'in' :
       {
-        "path" : `.`
+        'path' : `.`
       },
-      "out" :
+      'out' :
       {
-        "path" : `.`
+        'path' : `.`
       },
-      // "remote" :
+      // 'remote' :
       // {
-      //   "criterion" : { "predefined" : 1 }
+      //   'criterion' : { 'predefined' : 1 }
       // },
-      "download" : { "path" : `../.module/ModuleForTesting12`, "criterion" : { "predefined" : 1 } },
-      "export" : { "path" : `{path::download}/proto/**` },
-      "exported.dir.export" :
+      'download' : { 'path' : `../.module/ModuleForTesting12`, 'criterion' : { 'predefined' : 1 } },
+      'export' : { 'path' : `{path::download}/proto/**` },
+      'exported.dir.export' :
       {
-        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "path" : `../.module/ModuleForTesting12/proto`
+        'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : `../.module/ModuleForTesting12/proto`
       },
       'module.peer.in' :
       {
@@ -9594,44 +9584,44 @@ function exportStringrmal( test )
     outfile = outfile.module[ 'ModuleForTesting12.informal.out' ];
     var expected =
     {
-      "module.willfiles" :
+      'module.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `ModuleForTesting12.informal.out.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `ModuleForTesting12.informal.out.will.yml`
       },
-      "module.common" :
+      'module.common' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `ModuleForTesting12.informal.out`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `ModuleForTesting12.informal.out`
       },
-      "module.original.willfiles" :
+      'module.original.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `../module/ModuleForTesting12.informal.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `../module/ModuleForTesting12.informal.will.yml`
       },
-      "module.peer.willfiles" :
+      'module.peer.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `../module/ModuleForTesting12.informal.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `../module/ModuleForTesting12.informal.will.yml`
       },
-      "in" :
+      'in' :
       {
-        "path" : `.`
+        'path' : `.`
       },
-      "out" :
+      'out' :
       {
-        "path" : `.`
+        'path' : `.`
       },
-      // "remote" :
+      // 'remote' :
       // {
-      //   "criterion" : { "predefined" : 1 }
+      //   'criterion' : { 'predefined' : 1 }
       // },
-      "download" : { "path" : `../.module/ModuleForTesting12`, "criterion" : { "predefined" : 1 } },
-      "export" : { "path" : `{path::download}/proto/**` },
-      "exported.dir.export" :
+      'download' : { 'path' : `../.module/ModuleForTesting12`, 'criterion' : { 'predefined' : 1 } },
+      'export' : { 'path' : `{path::download}/proto/**` },
+      'exported.dir.export' :
       {
-        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "path" : `../.module/ModuleForTesting12/proto`
+        'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : `../.module/ModuleForTesting12/proto`
       },
       'module.peer.in' :
       {
@@ -9672,44 +9662,44 @@ function exportStringrmal( test )
     outfile = outfile.module[ 'ModuleForTesting12ab.informal.out' ];
     var expected =
     {
-      "module.willfiles" :
+      'module.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `ModuleForTesting12ab.informal.out.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `ModuleForTesting12ab.informal.out.will.yml`
       },
-      "module.common" :
+      'module.common' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `ModuleForTesting12ab.informal.out`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `ModuleForTesting12ab.informal.out`
       },
-      "module.original.willfiles" :
+      'module.original.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `../module/ModuleForTesting12ab.informal.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `../module/ModuleForTesting12ab.informal.will.yml`
       },
-      "module.peer.willfiles" :
+      'module.peer.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `../module/ModuleForTesting12ab.informal.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `../module/ModuleForTesting12ab.informal.will.yml`
       },
-      "in" :
+      'in' :
       {
-        "path" : `.`
+        'path' : `.`
       },
-      "out" :
+      'out' :
       {
-        "path" : `.`
+        'path' : `.`
       },
-      // "remote" :
+      // 'remote' :
       // {
-      //   "criterion" : { "predefined" : 1 }
+      //   'criterion' : { 'predefined' : 1 }
       // },
-      "download" : { "path" : `../.module/ModuleForTesting12ab`, "criterion" : { "predefined" : 1 } },
-      "export" : { "path" : `{path::download}/proto/**` },
-      "exported.dir.export" :
+      'download' : { 'path' : `../.module/ModuleForTesting12ab`, 'criterion' : { 'predefined' : 1 } },
+      'export' : { 'path' : `{path::download}/proto/**` },
+      'exported.dir.export' :
       {
-        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "path" : `../.module/ModuleForTesting12ab/proto`
+        'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : `../.module/ModuleForTesting12ab/proto`
       },
       'module.peer.in' :
       {
@@ -9875,54 +9865,54 @@ function exportMixed( test )
 
     var expected =
     {
-      "module.willfiles" :
+      'module.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `ModuleForTesting12.informal.out.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `ModuleForTesting12.informal.out.will.yml`
       },
-      "module.common" :
+      'module.common' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `ModuleForTesting12.informal.out`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `ModuleForTesting12.informal.out`
       },
-      "module.original.willfiles" :
+      'module.original.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `../module/ModuleForTesting12.informal.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `../module/ModuleForTesting12.informal.will.yml`
       },
-      "module.peer.willfiles" :
+      'module.peer.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `../module/ModuleForTesting12.informal.will.yml`,
+        'criterion' : { 'predefined' : 1 },
+        'path' : `../module/ModuleForTesting12.informal.will.yml`,
       },
       'module.peer.in' :
       {
         'criterion' : { 'predefined' : 1 },
         'path' : '..',
       },
-      "in" :
+      'in' :
       {
-        "path" : `.`
+        'path' : `.`
       },
-      "out" :
+      'out' :
       {
-        "path" : `.`
+        'path' : `.`
       },
-      // "remote" :
+      // 'remote' :
       // {
-      //   "criterion" : { "predefined" : 1 }
+      //   'criterion' : { 'predefined' : 1 }
       // },
-      "download" : { "path" : `../.module/ModuleForTesting12`/*, "criterion" : { "predefined" : 1 }*/ },
-      "export" : { "path" : `{path::download}/proto/**` },
-      "exported.dir.export" :
+      'download' : { 'path' : `../.module/ModuleForTesting12`/*, 'criterion' : { 'predefined' : 1 }*/ },
+      'export' : { 'path' : `{path::download}/proto/**` },
+      'exported.dir.export' :
       {
-        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "path" : `../.module/ModuleForTesting12/proto`
+        'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : `../.module/ModuleForTesting12/proto`
       },
-      "exported.files.export" :
+      'exported.files.export' :
       {
-        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "path" :
+        'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 },
+        'path' :
         [
           `../.module/ModuleForTesting12/proto`,
           `../.module/ModuleForTesting12/proto/wtools`,
@@ -10089,73 +10079,73 @@ function exportSecond( test )
 
     var expected =
     {
-      "reflect.proto." :
+      'reflect.proto.' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "path::proto" : "path::out.*=1" },
-          "prefixPath" : ""
+          'filePath' : { 'path::proto' : 'path::out.*=1' },
+          'prefixPath' : ''
         },
-        "dst" : { "prefixPath" : "" },
-        "criterion" : { "debug" : 0 },
-        "inherit" : [ "predefined.*" ],
+        'dst' : { 'prefixPath' : '' },
+        'criterion' : { 'debug' : 0 },
+        'inherit' : [ 'predefined.*' ],
       },
-      "reflect.proto.debug" :
+      'reflect.proto.debug' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "path::proto" : "path::out.*=1" }
+          'filePath' : { 'path::proto' : 'path::out.*=1' }
         },
-        "criterion" : { "debug" : 1 },
-        "inherit" : [ "predefined.*" ],
+        'criterion' : { 'debug' : 1 },
+        'inherit' : [ 'predefined.*' ],
       },
-      "exported.doc.export" :
+      'exported.doc.export' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "**" : "" },
-          "prefixPath" : "../doc"
+          'filePath' : { '**' : '' },
+          'prefixPath' : '../doc'
         },
-        "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 },
-        "mandatory" : 1,
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
+        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
+        'mandatory' : 1,
+        'dstRewritingOnlyPreserving' : 1,
+        'linking' : 'hardLinkMaybe',
       },
-      "exported.files.doc.export" :
+      'exported.files.doc.export' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "path::exported.files.doc.export" : "" },
-          "basePath" : ".",
-          "prefixPath" : "path::exported.dir.doc.export",
-          "recursive" : 0
+          'filePath' : { 'path::exported.files.doc.export' : '' },
+          'basePath' : '.',
+          'prefixPath' : 'path::exported.dir.doc.export',
+          'recursive' : 0
         },
-        "recursive" : 0,
-        "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 },
+        'recursive' : 0,
+        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
       },
-      "exported.proto.export" :
+      'exported.proto.export' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "**" : "" },
-          "prefixPath" : "../proto"
+          'filePath' : { '**' : '' },
+          'prefixPath' : '../proto'
         },
-        "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
-        "mandatory" : 1,
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
+        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
+        'mandatory' : 1,
+        'dstRewritingOnlyPreserving' : 1,
+        'linking' : 'hardLinkMaybe',
       },
-      "exported.files.proto.export" :
+      'exported.files.proto.export' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "path::exported.files.proto.export" : "" },
-          "basePath" : ".",
-          "prefixPath" : "path::exported.dir.proto.export",
-          "recursive" : 0
+          'filePath' : { 'path::exported.files.proto.export' : '' },
+          'basePath' : '.',
+          'prefixPath' : 'path::exported.dir.proto.export',
+          'recursive' : 0
         },
-        "recursive" : 0,
-        "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
+        'recursive' : 0,
+        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
       }
     }
     test.identical( outfile.reflector, expected );
@@ -10163,74 +10153,74 @@ function exportSecond( test )
 
     var expected =
     {
-      "module.willfiles" :
+      'module.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : "ExportSecond.out.will.yml"
+        'criterion' : { 'predefined' : 1 },
+        'path' : 'ExportSecond.out.will.yml'
       },
-      "module.common" :
+      'module.common' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : "ExportSecond.out"
+        'criterion' : { 'predefined' : 1 },
+        'path' : 'ExportSecond.out'
       },
-      "module.original.willfiles" :
+      'module.original.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : [ "../.ex.will.yml", "../.im.will.yml" ]
+        'criterion' : { 'predefined' : 1 },
+        'path' : [ '../.ex.will.yml', '../.im.will.yml' ]
       },
-      "module.peer.willfiles" :
+      'module.peer.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : [ "../.ex.will.yml", "../.im.will.yml" ]
+        'criterion' : { 'predefined' : 1 },
+        'path' : [ '../.ex.will.yml', '../.im.will.yml' ]
       },
-      "download" :
+      'download' :
       {
-        "criterion" : { "predefined" : 1 }
+        'criterion' : { 'predefined' : 1 }
       },
-      // "remote" :
+      // 'remote' :
       // {
-      //   "criterion" : { "predefined" : 1 }
+      //   'criterion' : { 'predefined' : 1 }
       // },
-      "in" :
+      'in' :
       {
-        "path" : "."
+        'path' : '.'
       },
-      "temp" : { "path" : "." },
-      "out" :
+      'temp' : { 'path' : '.' },
+      'out' :
       {
-        "path" : "."
+        'path' : '.'
       },
-      "out.debug" :
+      'out.debug' :
       {
-        "criterion" : { "debug" : 1 },
-        "path" : "debug/*"
+        'criterion' : { 'debug' : 1 },
+        'path' : 'debug/*'
       },
-      "out.release" :
+      'out.release' :
       {
-        "criterion" : { "debug" : 0 },
-        "path" : "release/*"
+        'criterion' : { 'debug' : 0 },
+        'path' : 'release/*'
       },
-      "proto" : { "path" : "../proto/**" },
-      "doc" : { "path" : "../doc/**" },
-      "exported.dir.doc.export" :
+      'proto' : { 'path' : '../proto/**' },
+      'doc' : { 'path' : '../doc/**' },
+      'exported.dir.doc.export' :
       {
-        "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
-        "path" : "../doc"
+        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : '../doc'
       },
-      "exported.files.doc.export" :
+      'exported.files.doc.export' :
       {
-        "criterion" : { "doc" : 1, "export" : 1, 'generated' : 1 },
-        "path" : [ "../doc", "../doc/File.md" ]
+        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : [ '../doc', '../doc/File.md' ]
       },
-      "exported.dir.proto.export" :
+      'exported.dir.proto.export' :
       {
-        "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
-        "path" : "../proto"
+        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : '../proto'
       },
-      "exported.files.proto.export" :
+      'exported.files.proto.export' :
       {
-        "criterion" : { "proto" : 1, "export" : 1, 'generated' : 1 },
-        "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ]
+        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : [ '../proto', '../proto/-NotExecluded.js', '../proto/.NotExecluded.js', '../proto/File.js' ]
       },
       'module.peer.in' :
       {
@@ -10303,73 +10293,73 @@ function exportSecond( test )
 
     var expected =
     {
-      "reflect.proto." :
+      'reflect.proto.' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "path::proto" : "path::out.*=1" },
-          "prefixPath" : ""
+          'filePath' : { 'path::proto' : 'path::out.*=1' },
+          'prefixPath' : ''
         },
-        "dst" : { "prefixPath" : "" },
-        "criterion" : { "debug" : 0 },
-        "inherit" : [ "predefined.*" ],
+        'dst' : { 'prefixPath' : '' },
+        'criterion' : { 'debug' : 0 },
+        'inherit' : [ 'predefined.*' ],
       },
-      "reflect.proto.debug" :
+      'reflect.proto.debug' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "path::proto" : "path::out.*=1" }
+          'filePath' : { 'path::proto' : 'path::out.*=1' }
         },
-        "criterion" : { "debug" : 1 },
-        "inherit" : [ "predefined.*" ],
+        'criterion' : { 'debug' : 1 },
+        'inherit' : [ 'predefined.*' ],
       },
-      "exported.doc.export" :
+      'exported.doc.export' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "**" : "" },
-          "prefixPath" : "../doc"
+          'filePath' : { '**' : '' },
+          'prefixPath' : '../doc'
         },
-        "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
-        "mandatory" : 1,
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
+        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
+        'mandatory' : 1,
+        'dstRewritingOnlyPreserving' : 1,
+        'linking' : 'hardLinkMaybe',
       },
-      "exported.files.doc.export" :
+      'exported.files.doc.export' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "path::exported.files.doc.export" : "" },
-          "basePath" : ".",
-          "prefixPath" : "path::exported.dir.doc.export",
-          "recursive" : 0
+          'filePath' : { 'path::exported.files.doc.export' : '' },
+          'basePath' : '.',
+          'prefixPath' : 'path::exported.dir.doc.export',
+          'recursive' : 0
         },
-        "recursive" : 0,
-        "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
+        'recursive' : 0,
+        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
       },
-      "exported.proto.export" :
+      'exported.proto.export' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "**" : "" },
-          "prefixPath" : "../proto"
+          'filePath' : { '**' : '' },
+          'prefixPath' : '../proto'
         },
-        "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 },
-        "mandatory" : 1,
-        "dstRewritingOnlyPreserving" : 1,
-        "linking" : "hardLinkMaybe",
+        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
+        'mandatory' : 1,
+        'dstRewritingOnlyPreserving' : 1,
+        'linking' : 'hardLinkMaybe',
       },
-      "exported.files.proto.export" :
+      'exported.files.proto.export' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "path::exported.files.proto.export" : "" },
-          "basePath" : ".",
-          "prefixPath" : "path::exported.dir.proto.export",
-          "recursive" : 0
+          'filePath' : { 'path::exported.files.proto.export' : '' },
+          'basePath' : '.',
+          'prefixPath' : 'path::exported.dir.proto.export',
+          'recursive' : 0
         },
-        "recursive" : 0,
-        "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 },
+        'recursive' : 0,
+        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
       }
     }
     test.identical( outfile.reflector, expected );
@@ -10377,74 +10367,74 @@ function exportSecond( test )
 
     var expected =
     {
-      "module.willfiles" :
+      'module.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : "ExportSecond.out.will.yml"
+        'criterion' : { 'predefined' : 1 },
+        'path' : 'ExportSecond.out.will.yml'
       },
-      "module.common" :
+      'module.common' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : "ExportSecond.out"
+        'criterion' : { 'predefined' : 1 },
+        'path' : 'ExportSecond.out'
       },
-      "module.original.willfiles" :
+      'module.original.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : [ "../.ex.will.yml", "../.im.will.yml" ]
+        'criterion' : { 'predefined' : 1 },
+        'path' : [ '../.ex.will.yml', '../.im.will.yml' ]
       },
-      "module.peer.willfiles" :
+      'module.peer.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : [ "../.ex.will.yml", "../.im.will.yml" ]
+        'criterion' : { 'predefined' : 1 },
+        'path' : [ '../.ex.will.yml', '../.im.will.yml' ]
       },
-      "download" :
+      'download' :
       {
-        "criterion" : { "predefined" : 1 }
+        'criterion' : { 'predefined' : 1 }
       },
-      // "remote" :
+      // 'remote' :
       // {
-      //   "criterion" : { "predefined" : 1 }
+      //   'criterion' : { 'predefined' : 1 }
       // },
-      "in" :
+      'in' :
       {
-        "path" : "."
+        'path' : '.'
       },
-      "temp" : { "path" : "." },
-      "out" :
+      'temp' : { 'path' : '.' },
+      'out' :
       {
-        "path" : "."
+        'path' : '.'
       },
-      "out.debug" :
+      'out.debug' :
       {
-        "criterion" : { "debug" : 1 },
-        "path" : "debug/*"
+        'criterion' : { 'debug' : 1 },
+        'path' : 'debug/*'
       },
-      "out.release" :
+      'out.release' :
       {
-        "criterion" : { "debug" : 0 },
-        "path" : "release/*"
+        'criterion' : { 'debug' : 0 },
+        'path' : 'release/*'
       },
-      "proto" : { "path" : "../proto/**" },
-      "doc" : { "path" : "../doc/**" },
-      "exported.dir.doc.export" :
+      'proto' : { 'path' : '../proto/**' },
+      'doc' : { 'path' : '../doc/**' },
+      'exported.dir.doc.export' :
       {
-        "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
-        "path" : "../doc"
+        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : '../doc'
       },
-      "exported.files.doc.export" :
+      'exported.files.doc.export' :
       {
-        "criterion" : { "doc" : 1, "export" : 1, "generated" : 1 },
-        "path" : [ "../doc", "../doc/File.md" ]
+        'criterion' : { 'doc' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : [ '../doc', '../doc/File.md' ]
       },
-      "exported.dir.proto.export" :
+      'exported.dir.proto.export' :
       {
-        "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 },
-        "path" : "../proto"
+        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : '../proto'
       },
-      "exported.files.proto.export" :
+      'exported.files.proto.export' :
       {
-        "criterion" : { "proto" : 1, "export" : 1, "generated" : 1 },
-        "path" : [ "../proto", "../proto/-NotExecluded.js", "../proto/.NotExecluded.js", "../proto/File.js" ]
+        'criterion' : { 'proto' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : [ '../proto', '../proto/-NotExecluded.js', '../proto/.NotExecluded.js', '../proto/File.js' ]
       },
       'module.peer.in' :
       {
@@ -10647,88 +10637,88 @@ function exportMultiple( test )
 
     let outfilePath =
     {
-      "module.willfiles" :
+      'module.willfiles' :
       {
-        "path" : "submodule.out.will.yml",
-        "criterion" : { "predefined" : 1 }
+        'path' : 'submodule.out.will.yml',
+        'criterion' : { 'predefined' : 1 }
       },
-      "module.original.willfiles" :
+      'module.original.willfiles' :
       {
-        "path" : [ "../.ex.will.yml", "../.im.will.yml" ],
-        "criterion" : { "predefined" : 1 }
+        'path' : [ '../.ex.will.yml', '../.im.will.yml' ],
+        'criterion' : { 'predefined' : 1 }
       },
-      "module.peer.willfiles" :
+      'module.peer.willfiles' :
       {
-        "path" : [ "../.ex.will.yml", "../.im.will.yml" ],
-        "criterion" : { "predefined" : 1 }
+        'path' : [ '../.ex.will.yml', '../.im.will.yml' ],
+        'criterion' : { 'predefined' : 1 }
       },
-      "download" :
+      'download' :
       {
-        "criterion" : { "predefined" : 1 }
+        'criterion' : { 'predefined' : 1 }
       },
-      "module.common" :
+      'module.common' :
       {
-        "path" : "submodule.out",
-        "criterion" : { "predefined" : 1 }
+        'path' : 'submodule.out',
+        'criterion' : { 'predefined' : 1 }
       },
-      // "remote" :
+      // 'remote' :
       // {
-      //   "criterion" : { "predefined" : 1 }
+      //   'criterion' : { 'predefined' : 1 }
       // },
-      "proto" : { "path" : "../proto" },
-      "temp" : { "path" : "." },
-      "in" :
+      'proto' : { 'path' : '../proto' },
+      'temp' : { 'path' : '.' },
+      'in' :
       {
-        "path" : ".",
+        'path' : '.',
       },
-      "out" :
+      'out' :
       {
-        "path" : ".",
+        'path' : '.',
       },
-      "out.debug" :
+      'out.debug' :
       {
-        "path" : "debug",
-        "criterion" : { "debug" : 1 }
+        'path' : 'debug',
+        'criterion' : { 'debug' : 1 }
       },
-      "out.release" :
+      'out.release' :
       {
-        "path" : "release",
-        "criterion" : { "debug" : 0 }
+        'path' : 'release',
+        'criterion' : { 'debug' : 0 }
       },
-      "exported.dir.export.debug" :
+      'exported.dir.export.debug' :
       {
-        "path" : "debug",
-        "criterion" :
+        'path' : 'debug',
+        'criterion' :
         {
-          "default" : 1,
-          "debug" : 1,
-          "raw" : 1,
-          "export" : 1,
-          "generated" : 1,
-        }
-      },
-      "exported.files.export.debug" :
-      {
-        "path" : [ "debug", "debug/File.debug.js" ],
-        "criterion" :
-        {
-          "default" : 1,
-          "debug" : 1,
-          "raw" : 1,
-          "export" : 1,
+          'default' : 1,
+          'debug' : 1,
+          'raw' : 1,
+          'export' : 1,
           'generated' : 1,
         }
       },
-      "archiveFile.export.debug" :
+      'exported.files.export.debug' :
       {
-        "path" : "submodule.debug.out.tgs",
-        "criterion" :
+        'path' : [ 'debug', 'debug/File.debug.js' ],
+        'criterion' :
         {
-          "default" : 1,
-          "debug" : 1,
-          "raw" : 1,
-          "export" : 1,
-          "generated" : 1,
+          'default' : 1,
+          'debug' : 1,
+          'raw' : 1,
+          'export' : 1,
+          'generated' : 1,
+        }
+      },
+      'archiveFile.export.debug' :
+      {
+        'path' : 'submodule.debug.out.tgs',
+        'criterion' :
+        {
+          'default' : 1,
+          'debug' : 1,
+          'raw' : 1,
+          'export' : 1,
+          'generated' : 1,
         }
       },
       'module.peer.in' :
@@ -10824,11 +10814,11 @@ function exportMultiple( test )
 
     var exportedReflector =
     {
-      'mandatory' : 1,
-      'src' :
+      mandatory : 1,
+      src :
       {
-        'filePath' : { '**' : '' },
-        'prefixPath' : 'debug',
+        filePath : { '**' : '' },
+        prefixPath : 'debug',
       },
       criterion :
       {
@@ -10846,12 +10836,12 @@ function exportMultiple( test )
 
     var exportedReflector =
     {
-      'mandatory' : 1,
+      mandatory : 1,
       src :
       {
-        // 'filePath' : { '.' : '' },
-        'filePath' : { '**' : '' },
-        'prefixPath' : 'release'
+        // filePath : { '.' : '' },
+        filePath : { '**' : '' },
+        prefixPath : 'release'
       },
       criterion :
       {
@@ -10919,124 +10909,124 @@ function exportMultiple( test )
 
     let outfilePath =
     {
-      "module.willfiles" :
+      'module.willfiles' :
       {
-        "path" : "submodule.out.will.yml",
-        "criterion" : { "predefined" : 1 }
+        'path' : 'submodule.out.will.yml',
+        'criterion' : { 'predefined' : 1 }
       },
-      "module.original.willfiles" :
+      'module.original.willfiles' :
       {
-        "path" : [ "../.ex.will.yml", "../.im.will.yml" ],
-        "criterion" : { "predefined" : 1 }
+        'path' : [ '../.ex.will.yml', '../.im.will.yml' ],
+        'criterion' : { 'predefined' : 1 }
       },
-      "module.peer.willfiles" :
+      'module.peer.willfiles' :
       {
-        "path" : [ "../.ex.will.yml", "../.im.will.yml" ],
-        "criterion" : { "predefined" : 1 }
+        'path' : [ '../.ex.will.yml', '../.im.will.yml' ],
+        'criterion' : { 'predefined' : 1 }
       },
-      "download" :
+      'download' :
       {
-        "criterion" : { "predefined" : 1 }
+        'criterion' : { 'predefined' : 1 }
       },
-      "module.common" :
+      'module.common' :
       {
-        "path" : "submodule.out",
-        "criterion" : { "predefined" : 1 }
+        'path' : 'submodule.out',
+        'criterion' : { 'predefined' : 1 }
       },
-      // "remote" :
+      // 'remote' :
       // {
-      //   "criterion" : { "predefined" : 1 }
+      //   'criterion' : { 'predefined' : 1 }
       // },
-      "proto" : { "path" : "../proto" },
-      "temp" : { "path" : "." },
-      "in" :
+      'proto' : { 'path' : '../proto' },
+      'temp' : { 'path' : '.' },
+      'in' :
       {
-        "path" : ".",
+        'path' : '.',
       },
-      "out" :
+      'out' :
       {
-        "path" : ".",
+        'path' : '.',
       },
-      "out.debug" :
+      'out.debug' :
       {
-        "path" : "debug",
-        "criterion" : { "debug" : 1 }
+        'path' : 'debug',
+        'criterion' : { 'debug' : 1 }
       },
-      "out.release" :
+      'out.release' :
       {
-        "path" : "release",
-        "criterion" : { "debug" : 0 }
+        'path' : 'release',
+        'criterion' : { 'debug' : 0 }
       },
-      "exported.dir.export.debug" :
+      'exported.dir.export.debug' :
       {
-        "path" : "debug",
-        "criterion" :
+        'path' : 'debug',
+        'criterion' :
         {
-          "default" : 1,
-          "debug" : 1,
-          "raw" : 1,
-          "export" : 1,
-          "generated" : 1,
+          'default' : 1,
+          'debug' : 1,
+          'raw' : 1,
+          'export' : 1,
+          'generated' : 1,
         }
       },
-      "exported.files.export.debug" :
+      'exported.files.export.debug' :
       {
-        "path" : [ "debug", "debug/File.debug.js" ],
-        "criterion" :
+        'path' : [ 'debug', 'debug/File.debug.js' ],
+        'criterion' :
         {
-          "default" : 1,
-          "debug" : 1,
-          "raw" : 1,
-          "export" : 1,
-          "generated" : 1,
+          'default' : 1,
+          'debug' : 1,
+          'raw' : 1,
+          'export' : 1,
+          'generated' : 1,
         }
       },
-      "archiveFile.export.debug" :
+      'archiveFile.export.debug' :
       {
-        "path" : "submodule.debug.out.tgs",
-        "criterion" :
+        'path' : 'submodule.debug.out.tgs',
+        'criterion' :
         {
-          "default" : 1,
-          "debug" : 1,
-          "raw" : 1,
-          "export" : 1,
-          "generated" : 1,
+          'default' : 1,
+          'debug' : 1,
+          'raw' : 1,
+          'export' : 1,
+          'generated' : 1,
         }
       },
-      "exported.dir.export." :
+      'exported.dir.export.' :
       {
-        "path" : "release",
-        "criterion" :
+        'path' : 'release',
+        'criterion' :
         {
-          "default" : 1,
-          "debug" : 0,
-          "raw" : 1,
-          "export" : 1,
-          "generated" : 1,
+          'default' : 1,
+          'debug' : 0,
+          'raw' : 1,
+          'export' : 1,
+          'generated' : 1,
         }
       },
-      "exported.files.export." :
+      'exported.files.export.' :
       {
-        "path" : [ "release", "release/File.release.js" ],
-        "criterion" :
+        'path' : [ 'release', 'release/File.release.js' ],
+        'criterion' :
         {
-          "default" : 1,
-          "debug" : 0,
-          "raw" : 1,
-          "export" : 1,
-          "generated" : 1,
+          'default' : 1,
+          'debug' : 0,
+          'raw' : 1,
+          'export' : 1,
+          'generated' : 1,
         }
       },
-      "archiveFile.export." :
+      'archiveFile.export.' :
       {
-        "path" : "submodule.out.tgs",
-        "criterion" :
+        'path' : 'submodule.out.tgs',
+        'criterion' :
         {
-          "default" : 1,
-          "debug" : 0,
-          "raw" : 1,
-          "export" : 1,
-          "generated" : 1,
+          'default' : 1,
+          'debug' : 0,
+          'raw' : 1,
+          'export' : 1,
+          'generated' : 1,
         }
       },
       'module.peer.in' :
@@ -11296,7 +11286,7 @@ function exportBroken( test )
 
     var exportedReflector =
     {
-      'mandatory' : 1,
+      mandatory : 1,
       src :
       {
         // filePath : { '.' : '' },
@@ -14435,93 +14425,93 @@ function importLocalRepo( test )
 
     var expectedReflector =
     {
-      "download" :
+      'download' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "." : `.` },
-          "prefixPath" : `path::remote`
+          'filePath' : { '.' : `.` },
+          'prefixPath' : `path::remote`
         },
-        "dst" : { "prefixPath" : `path::download` },
-        "mandatory" : 1
+        'dst' : { 'prefixPath' : `path::download` },
+        'mandatory' : 1
       },
-      "exported.export" :
+      'exported.export' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "**" : `` },
-          "prefixPath" : `ModuleForTesting12/proto`
+          'filePath' : { '**' : `` },
+          'prefixPath' : `ModuleForTesting12/proto`
         },
-        "mandatory" : 1,
-        "criterion" : { "default" : 1, "export" : 1, 'generated' : 1 }
+        'mandatory' : 1,
+        'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 }
       },
-      "exported.files.export" :
+      'exported.files.export' :
       {
-        "src" :
+        'src' :
         {
-          "filePath" : { "path::exported.files.export" : `` },
-          "basePath" : `.`,
-          "prefixPath" : `path::exported.dir.export`,
-          "recursive" : 0
+          'filePath' : { 'path::exported.files.export' : `` },
+          'basePath' : `.`,
+          'prefixPath' : `path::exported.dir.export`,
+          'recursive' : 0
         },
-        "recursive" : 0,
-        "mandatory" : 1,
-        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 }
+        'recursive' : 0,
+        'mandatory' : 1,
+        'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 }
       }
     }
     test.identical( outfile.reflector, expectedReflector );
 
     var expectedPath =
     {
-      "module.willfiles" :
+      'module.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `ModuleForTesting12.out.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `ModuleForTesting12.out.will.yml`
       },
-      "module.common" :
+      'module.common' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `ModuleForTesting12.out`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `ModuleForTesting12.out`
       },
-      "module.original.willfiles" :
+      'module.original.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `../module/ModuleForTesting12.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `../module/ModuleForTesting12.will.yml`
       },
-      "module.peer.willfiles" :
+      'module.peer.willfiles' :
       {
-        "criterion" : { "predefined" : 1 },
-        "path" : `../module/ModuleForTesting12.will.yml`
+        'criterion' : { 'predefined' : 1 },
+        'path' : `../module/ModuleForTesting12.will.yml`
       },
-      "in" :
+      'in' :
       {
-        "path" : `.`
+        'path' : `.`
       },
-      "out" :
+      'out' :
       {
-        "path" : `.`
+        'path' : `.`
       },
-      // "remote" :
+      // 'remote' :
       // {
-      //   "criterion" : { "predefined" : 1 }
+      //   'criterion' : { 'predefined' : 1 }
       // },
-      "download" : { "path" : `ModuleForTesting12` },
-      "export" : { "path" : `{path::download}/proto/**` },
-      "temp" : { "path" : `../out` },
-      "exported.dir.export" :
+      'download' : { 'path' : `ModuleForTesting12` },
+      'export' : { 'path' : `{path::download}/proto/**` },
+      'temp' : { 'path' : `../out` },
+      'exported.dir.export' :
       {
-        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "path" : `ModuleForTesting12/proto`
+        'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 },
+        'path' : `ModuleForTesting12/proto`
       },
-      "module.peer.in" :
+      'module.peer.in' :
       {
         'criterion' : { 'predefined' : 1 },
         'path' : '..'
       },
-      "exported.files.export" :
+      'exported.files.export' :
       {
-        "criterion" : { "default" : 1, "export" : 1, "generated" : 1 },
-        "path" :
+        'criterion' : { 'default' : 1, 'export' : 1, 'generated' : 1 },
+        'path' :
         [
           `ModuleForTesting12/proto`,
           `ModuleForTesting12/proto/wtools`,
@@ -15194,7 +15184,8 @@ function cleanBroken2( test )
 
     test.notIdentical( op.exitCode, 0 );
     test.is( !_.strHas( op.output, /Exported .*module::submodules \/ build::proto\.export.* in/ ) );
-    test.is( _.strHas( op.output, `Module module::submodules / opener::ModuleForTesting2 is downloaded, but it's not a git repository` ) );
+    var expected = `Module module::submodules / opener::ModuleForTesting2 is downloaded, but it's not a git repository`;
+    test.is( _.strHas( op.output, expected ) );
 
     // var files = a.find( a.abs( 'out/debug' ) );
     // test.gt( files.length, 9 );
@@ -17255,7 +17246,7 @@ function cleanSpecial( test )
   a.reflect();
 
   var files = a.fileProvider.dirRead( a.abs( 'out' ) );
-  var expected = [ '"#dir2"','"@dir1"' ];
+  var expected = [ '"#dir2"', '"@dir1"' ];
   test.identical( files, expected )
 
   /* - */
@@ -18598,7 +18589,8 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `Module module::submodules-download-errors-bad / opener::ModuleForTesting2a is not downloaded, but file at` ) );
+    var expected = `Module module::submodules-download-errors-bad / opener::ModuleForTesting2a is not downloaded, but file at`;
+    test.is( _.strHas( op.output, expected ) );
     test.is( _.strHas( op.output, 'Failed to download module' ) );
     test.is( a.fileProvider.isTerminal( a.abs( '.module/ModuleForTesting2a' ) ) )
     return null;
@@ -18627,7 +18619,6 @@ function submodulesDownloadThrowing( test )
   a.appStartNonThrowing({ execPath : '.with good .submodules.download' })
   .then( ( op ) =>
   {
-    debugger;
     test.identical( op.exitCode, 0 );
     test.is( _.strHas( op.output, '0/1 submodule(s) of module::submodules-download-errors-good were downloaded' ) );
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
@@ -18653,7 +18644,7 @@ function submodulesDownloadThrowing( test )
     let inWillFilePath = a.abs( '.module/ModuleForTesting2a/.im.will.yml' );
     let inWillFile = a.fileProvider.configRead( inWillFilePath );
     inWillFile.section = { field : 'value' };
-    a.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile,encoding : 'yml' });
+    a.fileProvider.fileWrite({ filePath : inWillFilePath, data : inWillFile, encoding : 'yml' });
     return null;
   })
   .then( () =>
@@ -19495,9 +19486,9 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( op.output, 'was downloaded' ), 3 );
     test.identical( _.strCount( op.output, '+ 3/3 submodule(s) of module::supermodule were downloaded' ), 1 );
 
-    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was downloaded version ${versions['ModuleForTesting1']}` ), 1 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was downloaded version ${versions['ModuleForTesting2a']}` ), 1 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was downloaded version ${versions['ModuleForTesting12ab']}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was downloaded version ${versions[ 'ModuleForTesting1' ]}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was downloaded version ${versions[ 'ModuleForTesting2a' ]}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was downloaded version ${versions[ 'ModuleForTesting12ab' ]}` ), 1 );
 
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting1` ), 2 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
@@ -19537,9 +19528,9 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( op.output, 'was downloaded' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::supermodule were downloaded' ), 1 );
 
-    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was downloaded version ${versions['ModuleForTesting1']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was downloaded version ${versions['ModuleForTesting2a']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was downloaded version ${versions['ModuleForTesting12ab']}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was downloaded version ${versions[ 'ModuleForTesting1' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was downloaded version ${versions[ 'ModuleForTesting2a' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was downloaded version ${versions[ 'ModuleForTesting12ab' ]}` ), 0 );
 
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting1` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
@@ -19590,9 +19581,9 @@ function submodulesDownloadNpm( test )
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::supermodule were downloaded' ), 1 );
 
-    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was downloaded version ${versions['ModuleForTesting1']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was downloaded version ${versions['ModuleForTesting2a']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was downloaded version ${versions['ModuleForTesting12ab']}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was downloaded version ${versions[ 'ModuleForTesting1' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was downloaded version ${versions[ 'ModuleForTesting2a' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was downloaded version ${versions[ 'ModuleForTesting12ab' ]}` ), 0 );
 
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting1` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
@@ -19610,7 +19601,7 @@ function submodulesDownloadNpm( test )
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a/ModuleForTesting2a.out.will.yml' ) ) )
 
     var files = a.find( a.abs( '.module/ModuleForTesting1' ) );
-    test.identical( files,filesBefore );
+    test.identical( files, filesBefore );
 
     return null;
   })
@@ -19674,9 +19665,9 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( op.output, 'were updated' ), 1 );
     test.identical( _.strCount( op.output, '+ 3/3 submodule(s) of module::supermodule were updated' ), 1 );
 
-    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was updated to version ${versions['ModuleForTesting1']}` ), 1 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was updated to version ${versions['ModuleForTesting2a']}` ), 1 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was updated to version ${versions['ModuleForTesting12ab']}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was updated to version ${versions[ 'ModuleForTesting1' ]}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was updated to version ${versions[ 'ModuleForTesting2a' ]}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was updated to version ${versions[ 'ModuleForTesting12ab' ]}` ), 1 );
 
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting1` ), 2 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
@@ -19729,9 +19720,9 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( op.output, 'were updated' ), 1 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::supermodule were updated' ), 1 );
 
-    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was updated to version ${versions['ModuleForTesting1']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was updated to version ${versions['ModuleForTesting2a']}` ), 1 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was updated to version ${versions['ModuleForTesting12ab']}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was updated to version ${versions[ 'ModuleForTesting1' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was updated to version ${versions[ 'ModuleForTesting2a' ]}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was updated to version ${versions[ 'ModuleForTesting12ab' ]}` ), 1 );
 
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting1` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
@@ -19771,9 +19762,9 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( op.output, 'were updated' ), 1 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::supermodule were updated' ), 1 );
 
-    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was updated to version ${versions['ModuleForTesting1']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was updated to version ${versions['ModuleForTesting2a']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was updated to version ${versions['ModuleForTesting12ab']}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was updated to version ${versions[ 'ModuleForTesting1' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was updated to version ${versions[ 'ModuleForTesting2a' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was updated to version ${versions[ 'ModuleForTesting12ab' ]}` ), 0 );
 
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting1` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
@@ -19815,7 +19806,7 @@ function submodulesDownloadUpdateNpm( test )
     test.notIdentical( op.exitCode, 1 );
 
     var files = a.find( a.abs( '.module' ) );
-    test.identical( files,filesBefore );
+    test.identical( files, filesBefore );
 
     test.identical( _.strCount( op.output, 'opener::ModuleForTesting1 is already downloaded, but has different origin url: wmodulefortesting1 , expected url: wmodulefortesting2b' ), 1 );
 
@@ -19824,9 +19815,9 @@ function submodulesDownloadUpdateNpm( test )
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::supermodule were updated' ), 0 );
 
-    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was updated to version ${versions['ModuleForTesting1']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was updated to version ${versions['ModuleForTesting2a']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was updated to version ${versions['ModuleForTesting12ab']}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was updated to version ${versions[ 'ModuleForTesting1' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was updated to version ${versions[ 'ModuleForTesting2a' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was updated to version ${versions[ 'ModuleForTesting12ab' ]}` ), 0 );
 
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting1` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
@@ -20174,7 +20165,7 @@ function submodulesUpdateThrowing( test )
   {
     test.case = 'error if download path exists and its terminal';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
-    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a' ),a.abs( '.module/ModuleForTesting2a' ) );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a' ), a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.appStart({ execPath : '.with good .submodules.update' })
@@ -20391,7 +20382,7 @@ function submodulesAgreeThrowing( test )
   {
     test.case = 'error on download, download path exists and its terminal, file will be removed';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
-    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a' ),a.abs( '.module/ModuleForTesting2a' ) );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a' ), a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.appStart({ execPath : '.with bad .submodules.versions.agree' })
@@ -20409,7 +20400,7 @@ function submodulesAgreeThrowing( test )
   {
     test.case = 'download path exists and its terminal, file will be removed';
     a.fileProvider.filesDelete( a.abs( '.module' ) );
-    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a' ),a.abs( '.module/ModuleForTesting2a' ) );
+    a.fileProvider.fileWrite( a.abs( '.module/ModuleForTesting2a' ), a.abs( '.module/ModuleForTesting2a' ) );
     return null;
   })
   a.appStart({ execPath : '.with good .submodules.versions.agree' })
@@ -20445,8 +20436,6 @@ function submodulesAgreeThrowing( test )
 
     return null;
   })
-
-
 
   .then( () =>
   {
@@ -20565,25 +20554,25 @@ function submodulesDownloadedUpdate( test )
   let a = context.assetFor( test, 'submodules-downloaded-update' );
   a.reflect();
 
-//   let context = this;
-//   let originalAssetPath = _.path.join( context.assetsOriginalPath, 'submodules-downloaded-update' );
-//   let routinePath = _.path.join( context.suiteTempPath, test.name );
-//   let abs = context.abs_functor( routinePath );
-//   let rel = context.rel_functor( routinePath );
-//   let submodulesPath = _.path.join( routinePath, '.module' );
-//
-//
-//   let ready = new _.Consequence().take( null )
-//   let start = _.process.starter
-//   ({
-//     execPath : 'node ' + context.appJsPath,
-//     currentPath : routinePath,
-//     outputCollecting : 1,
-//     outputGraying : 1,
-//     ready : ready,
-//   })
-//
-//   a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
+  // let context = this;
+  // let originalAssetPath = _.path.join( context.assetsOriginalPath, 'submodules-downloaded-update' );
+  // let routinePath = _.path.join( context.suiteTempPath, test.name );
+  // let abs = context.abs_functor( routinePath );
+  // let rel = context.rel_functor( routinePath );
+  // let submodulesPath = _.path.join( routinePath, '.module' );
+  //
+  //
+  // let ready = new _.Consequence().take( null )
+  // let start = _.process.starter
+  // ({
+  //   execPath : 'node ' + context.appJsPath,
+  //   currentPath : routinePath,
+  //   outputCollecting : 1,
+  //   outputGraying : 1,
+  //   ready : ready,
+  // })
+  //
+  // a.fileProvider.filesReflect({ reflectMap : { [ originalAssetPath ] : routinePath } });
 
   /* */
 
@@ -21367,9 +21356,9 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, 'were agreed' ), 1 );
     test.identical( _.strCount( op.output, '+ 3/3 submodule(s) of module::supermodule were agreed' ), 1 );
 
-    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was agreed with version ${versions['ModuleForTesting1']}` ), 1 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was agreed with version ${versions['ModuleForTesting2a']}` ), 1 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was agreed with version ${versions['ModuleForTesting12ab']}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was agreed with version ${versions[ 'ModuleForTesting1' ]}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was agreed with version ${versions[ 'ModuleForTesting2a' ]}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was agreed with version ${versions[ 'ModuleForTesting12ab' ]}` ), 1 );
 
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting1` ), 2 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
@@ -21421,9 +21410,9 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, '+ 2/3 submodule(s) of module::supermodule were agreed' ), 1 );
 
-    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was agreed with version ${versions['ModuleForTesting1']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was agreed with version ${versions['ModuleForTesting2a']}` ), 1 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was agreed with version ${versions['ModuleForTesting12ab']}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was agreed with version ${versions[ 'ModuleForTesting1' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was agreed with version ${versions[ 'ModuleForTesting2a' ]}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was agreed with version ${versions[ 'ModuleForTesting12ab' ]}` ), 1 );
 
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting1` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 1 );
@@ -21462,9 +21451,9 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, '+ 0/3 submodule(s) of module::supermodule were agreed' ), 1 );
 
-    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was agreed with version ${versions['ModuleForTesting1']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was agreed with version ${versions['ModuleForTesting2a']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was agreed with version ${versions['ModuleForTesting12ab']}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was agreed with version ${versions[ 'ModuleForTesting1' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was agreed with version ${versions[ 'ModuleForTesting2a' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was agreed with version ${versions[ 'ModuleForTesting12ab' ]}` ), 0 );
 
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting1` ), 0 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
@@ -21516,9 +21505,9 @@ function versionsAgreeNpm( test )
     test.identical( _.strCount( op.output, '+ Reflected' ), 0 );
     test.identical( _.strCount( op.output, '+ 1/3 submodule(s) of module::supermodule were agreed' ), 1 );
 
-    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was agreed with version ${versions['ModuleForTesting2b']}` ), 1 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was agreed with version ${versions['ModuleForTesting2a']}` ), 0 );
-    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was agreed with version ${versions['ModuleForTesting12ab']}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting1 was agreed with version ${versions[ 'ModuleForTesting2b' ]}` ), 1 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting2a was agreed with version ${versions[ 'ModuleForTesting2a' ]}` ), 0 );
+    test.identical( _.strCount( op.output, `module::ModuleForTesting12ab was agreed with version ${versions[ 'ModuleForTesting12ab' ]}` ), 0 );
 
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting1` ), 1 );
     test.identical( _.strCount( op.output, `Exported module::supermodule / module::ModuleForTesting2a` ), 0 );
@@ -21547,7 +21536,7 @@ function versionsAgreeNpm( test )
       './wtools/testing/l4/testing2b/ModuleForTesting2b.s'
     ];
     var files = a.find( a.abs( '.module/ModuleForTesting1/proto' ) );
-    test.identical( files,exp );
+    test.identical( files, exp );
 
     return null;
   })
@@ -28781,7 +28770,7 @@ function commandNpmFromWillfile( test )
     test.case = 'check field `contributors`';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
-    test.identical( config.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>'] );
+    test.identical( config.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ] );
     test.identical( config.name, null );
     test.identical( config.enabled, 1 );
 
@@ -29056,20 +29045,20 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "npmfromwillfile",
-      description: "To check the conversion",
-      version : "0.0.0",
+      name : 'npmfromwillfile',
+      description: 'To check the conversion',
+      version : '0.0.0',
       enabled : 1,
-      license : "MIT",
-      description : "To check the conversion",
-      author : "Author <author@dot.com>",
-      contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      license : 'MIT',
+      description : 'To check the conversion',
+      author : 'Author <author@dot.com>',
+      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
-      dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "npmfromwillfile" : "file:.", "wTesting" : "" },
-      repository: "git+https://github.com/author/NpmFromWillfile.git",
-      bugs : "https://github.com/author/NpmFromWillfile/issues",
-      keywords : ["tools", "export"],
+      dependencies : { 'eslint' : '7.1.0' },
+      devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
+      repository: 'git+https://github.com/author/NpmFromWillfile.git',
+      bugs : 'https://github.com/author/NpmFromWillfile/issues',
+      keywords : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
@@ -29090,20 +29079,20 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "npmfromwillfile",
-      description: "To check the conversion",
-      version : "0.0.0",
+      name : 'npmfromwillfile',
+      description: 'To check the conversion',
+      version : '0.0.0',
       enabled : 1,
-      license : "MIT",
-      description : "To check the conversion",
-      author : "Author <author@dot.com>",
-      contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      license : 'MIT',
+      description : 'To check the conversion',
+      author : 'Author <author@dot.com>',
+      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
-      dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "npmfromwillfile" : "file:.", "wTesting" : "" },
-      repository: "git+https://github.com/author/NpmFromWillfile.git",
-      bugs : "https://github.com/author/NpmFromWillfile/issues",
-      keywords : ["tools", "export"],
+      dependencies : { 'eslint' : '7.1.0' },
+      devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
+      repository: 'git+https://github.com/author/NpmFromWillfile.git',
+      bugs : 'https://github.com/author/NpmFromWillfile/issues',
+      keywords : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
@@ -29286,7 +29275,7 @@ function commandWillfileFromNpm( test )
     test.case = 'check field `contributors`';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
-    test.identical( config.about.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>'] );
+    test.identical( config.about.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ] );
     test.identical( config.about.name, 'contributors' );
     test.identical( config.about.enabled, 1 );
 
@@ -29652,19 +29641,19 @@ function commandWillfileFromNpmDoubleConversion( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "willfilefromnpm",
-      description: "To check the conversion",
-      version : "0.0.0",
+      name : 'willfilefromnpm',
+      description: 'To check the conversion',
+      version : '0.0.0',
       enabled : 1,
-      license : "MIT",
-      description : "To check the conversion",
-      author : "Author <author@dot.com>",
-      contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
-      dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "willfilefromnpm" : "file:.", "wTesting" : "" },
-      repository: "git+https://github.com/author/NpmFromWillfile.git",
-      bugs : "https://github.com/author/NpmFromWillfile/issues",
-      keywords : ["tools", "export"],
+      license : 'MIT',
+      description : 'To check the conversion',
+      author : 'Author <author@dot.com>',
+      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      dependencies : { 'eslint' : '7.1.0' },
+      devDependencies : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' },
+      repository: 'git+https://github.com/author/NpmFromWillfile.git',
+      bugs : 'https://github.com/author/NpmFromWillfile/issues',
+      keywords : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
@@ -31146,18 +31135,18 @@ function commandWillfileExtendWillfileDstIsJson( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     let exp =
     {
-      "name" : "willfilefromnpm",
-      "version" : "0.0.0",
-      "enabled" : 1,
-      "description" : "To check the conversion",
-      "keywords" : [ "tools", "export" ],
-      "license" : "MIT",
-      "author" : "Author <author@dot.com>",
-      "contributors" : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
-      "repository" : "git+https://github.com/author/NpmFromWillfile.git",
-      "bugs" : "https://github.com/author/NpmFromWillfile/issues",
-      "dependencies" : { "eslint" : "7.1.0" },
-      "devDependencies" : { "willfilefromnpm" : "file:.", "wTesting" : "" }
+      'name' : 'willfilefromnpm',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'description' : 'To check the conversion',
+      'keywords' : [ 'tools', 'export' ],
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'repository' : 'git+https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' }
     };
     test.identical( config, exp );
 
@@ -31181,18 +31170,18 @@ function commandWillfileExtendWillfileDstIsJson( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.json' ), encoding : 'json' });
     let exp =
     {
-      "name" : "willfilefromnpm",
-      "version" : "0.0.0",
-      "enabled" : 1,
-      "description" : "To check the conversion",
-      "keywords" : [ "tools", "export" ],
-      "license" : "MIT",
-      "author" : "Author <author@dot.com>",
-      "contributors" : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
-      "repository" : "git+https://github.com/author/NpmFromWillfile.git",
-      "bugs" : "https://github.com/author/NpmFromWillfile/issues",
-      "dependencies" : { "eslint" : "7.1.0" },
-      "devDependencies" : { "willfilefromnpm" : "file:.", "wTesting" : "" }
+      'name' : 'willfilefromnpm',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'description' : 'To check the conversion',
+      'keywords' : [ 'tools', 'export' ],
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'repository' : 'git+https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' }
     };
     test.identical( config, exp );
 
@@ -31918,18 +31907,18 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'package.json' ), encoding : 'json' });
     let exp =
     {
-      "name" : "willfilefromnpm",
-      "version" : "0.0.0",
-      "enabled" : 1,
-      "description" : "To check the conversion",
-      "keywords" : [ "tools", "export" ],
-      "license" : "MIT",
-      "author" : "Author <author@dot.com>",
-      "contributors" : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
-      "repository" : "git+https://github.com/author/NpmFromWillfile.git",
-      "bugs" : "https://github.com/author/NpmFromWillfile/issues",
-      "dependencies" : { "eslint" : "7.1.0" },
-      "devDependencies" : { "willfilefromnpm" : "file:.", "wTesting" : "" }
+      'name' : 'willfilefromnpm',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'description' : 'To check the conversion',
+      'keywords' : [ 'tools', 'export' ],
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'repository' : 'git+https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' }
     };
     test.identical( config, exp );
 
@@ -31953,18 +31942,18 @@ function commandWillfileSupplementWillfileDstIsJson( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'NewFile.json' ), encoding : 'json' });
     let exp =
     {
-      "name" : "willfilefromnpm",
-      "version" : "0.0.0",
-      "enabled" : 1,
-      "description" : "To check the conversion",
-      "keywords" : [ "tools", "export" ],
-      "license" : "MIT",
-      "author" : "Author <author@dot.com>",
-      "contributors" : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
-      "repository" : "git+https://github.com/author/NpmFromWillfile.git",
-      "bugs" : "https://github.com/author/NpmFromWillfile/issues",
-      "dependencies" : { "eslint" : "7.1.0" },
-      "devDependencies" : { "willfilefromnpm" : "file:.", "wTesting" : "" }
+      'name' : 'willfilefromnpm',
+      'version' : '0.0.0',
+      'enabled' : 1,
+      'description' : 'To check the conversion',
+      'keywords' : [ 'tools', 'export' ],
+      'license' : 'MIT',
+      'author' : 'Author <author@dot.com>',
+      'contributors' : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
+      'repository' : 'git+https://github.com/author/NpmFromWillfile.git',
+      'bugs' : 'https://github.com/author/NpmFromWillfile/issues',
+      'dependencies' : { 'eslint' : '7.1.0' },
+      'devDependencies' : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' }
     };
     test.identical( config, exp );
 
