@@ -1,0 +1,35 @@
+about :
+
+  name : git-sync
+
+submodule :
+
+  Local : ./.local/
+
+path :
+
+  git.proto : 'proto'
+
+step :
+
+  git.sync.message :
+    commit : '-am fifth'
+
+  git.sync.dry :
+    commit : '-am fifth'
+    dry : 1
+
+build :
+
+  git.sync.default :
+    steps :
+      - git.sync
+
+  git.sync.message :
+    steps :
+      - git.sync.message
+
+  git.sync.dry :
+    steps :
+      - git.sync.dry
+
