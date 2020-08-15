@@ -83,6 +83,8 @@ function onModule( context )
   if( o.dry )
   return;
 
+  // debugger;
+
   let bumped = _.npm.bump
   ({
     dry : o.dry,
@@ -101,7 +103,7 @@ function onModule( context )
     activeСonfigPath = configPath;
   }
 
-  // debugger; return; xxx
+  debugger;
 
   _.npm.fixate
   ({

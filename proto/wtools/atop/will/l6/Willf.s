@@ -476,6 +476,7 @@ function _open()
         inFormat : 'string',
         outFormat : 'structure',
         ext : willf._found[ 0 ].ext,
+        // feature : { fine : 1 },
       });
       _.assert( !!encoder, `No encoder for ${willf.filePath}` );
 
