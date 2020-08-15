@@ -1,1 +1,74 @@
-{"name":"willbe","version":"0.5.217","description":"Utility to manage modules of complex modular systems","author":"Kostiantyn Wandalen <wanalen@01.school>","contributors":[{"name":"Kostiantyn Wandalen","email":"wanalen@01.school"},{"name":"Volodymyr M.","email":"volodymyr.migdal@gmail.com"},{"name":"Dmytro Kryvoruchko","email":"dm.vict.kr@gmail.com"}],"license":"MIT","main":"proto/wtools/atop/will/entry/Include.s","files":["proto/wtools/atop/will","proto/wtools/Tools.s","out"],"bin":{"single-process-will":"proto/wtools/atop/will/entry/Exec","debug-will":"proto/wtools/atop/will/entry/ExecDebug","unrestricted-will":"proto/wtools/atop/will/entry/ExecUnrestricted","will":"proto/wtools/atop/will/entry/ExecUnrestricted"},"scripts":{"test":"wtest .run 'proto/**' rapidity:-1","docgen":"wdocgen .build proto","single-process-will":"node proto/wtools/atop/will/entry/Exec","debug-will":"node proto/wtools/atop/will/entry/ExecDebug","unrestricted-will":"node proto/wtools/atop/will/entry/ExecUnrestricted","will":"node proto/wtools/atop/will/entry/ExecUnrestricted","docker-build-centos":"docker image build -t willbe-centos -f ./docker/centos.dockerfile .","docker-build-ubuntu":"docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .","docker-run-centos":"docker run --rm willbe-centos","docker-run-ubuntu":"docker run --rm willbe-ubuntu"},"repository":{"type":"git","url":"https://github.com/Wandalen/willbe.git"},"bugs":{"url":"https://github.com/Wandalen/willbe/issues"},"dependencies":{"tar":"6.0.2","gitconfiglocal":"2.1.0","open":"7.0.4","getos":"3.2.1","wTools":"alpha","wCopyable":"alpha","wLogger":"alpha","wverbal":"alpha","wtemplatetreeenvironment":"alpha","wtemplatefilewriter":"alpha","wprocess":"alpha","wgraphbasic":"alpha","wFiles":"alpha","wfilesarchive":"alpha","wfilesencoders":"alpha","wstatestorage":"alpha","wstatesession":"alpha","wstager":"alpha","wgraphbase":"alpha","wselector":"alpha","wresolver":"alpha","wresolverextra":"alpha","wcommandsaggregator":"alpha","wcommandsconfig":"alpha","wnamemapper":"alpha","wtranspile":"alpha","wnpmtools":"alpha","wyamltools":"alpha","wcensorbasic":"alpha"},"devDependencies":{"eslint":"7.1.0","wTesting":"alpha"},"keywords":["wTools"]}
+{
+  "name" : "willbe",
+  "version" : "0.5.218",
+  "description" : "Utility to manage modules of complex modular systems",
+  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
+  "contributors" :
+  [
+    { "name" : "Kostiantyn Wandalen", "email" : "wanalen@01.school" },
+    { "name" : "Volodymyr M.", "email" : "volodymyr.migdal@gmail.com" },
+    { "name" : "Dmytro Kryvoruchko", "email" : "dm.vict.kr@gmail.com" }
+  ],
+  "license" : "MIT",
+  "main" : "proto/wtools/atop/will/entry/Include.s",
+  "files" : [ "proto/wtools/atop/will", "proto/wtools/Tools.s", "out" ],
+  "bin" :
+  {
+    "single-process-will" : "proto/wtools/atop/will/entry/Exec",
+    "debug-will" : "proto/wtools/atop/will/entry/ExecDebug",
+    "unrestricted-will" : "proto/wtools/atop/will/entry/ExecUnrestricted",
+    "will" : "proto/wtools/atop/will/entry/ExecUnrestricted"
+  },
+  "scripts" :
+  {
+    "test" : "wtest .run 'proto/**' rapidity:-1",
+    "docgen" : "wdocgen .build proto",
+    "single-process-will" : "node proto/wtools/atop/will/entry/Exec",
+    "debug-will" : "node proto/wtools/atop/will/entry/ExecDebug",
+    "unrestricted-will" : "node proto/wtools/atop/will/entry/ExecUnrestricted",
+    "will" : "node proto/wtools/atop/will/entry/ExecUnrestricted",
+    "docker-build-centos" : "docker image build -t willbe-centos -f ./docker/centos.dockerfile .",
+    "docker-build-ubuntu" : "docker image build -t willbe-ubuntu -f ./docker/ubuntu.dockerfile .",
+    "docker-run-centos" : "docker run --rm willbe-centos",
+    "docker-run-ubuntu" : "docker run --rm willbe-ubuntu"
+  },
+  "repository" : { "type" : "git", "url" : "https://github.com/Wandalen/willbe.git" },
+  "bugs" :
+  {
+    "url" : "https://github.com/Wandalen/willbe/issues"
+  },
+  "dependencies" :
+  {
+    "tar" : "6.0.2",
+    "gitconfiglocal" : "2.1.0",
+    "open" : "7.0.4",
+    "getos" : "3.2.1",
+    "wTools" : "alpha",
+    "wCopyable" : "alpha",
+    "wLogger" : "alpha",
+    "wverbal" : "alpha",
+    "wtemplatetreeenvironment" : "alpha",
+    "wtemplatefilewriter" : "alpha",
+    "wprocess" : "alpha",
+    "wgraphbasic" : "alpha",
+    "wFiles" : "alpha",
+    "wfilesarchive" : "alpha",
+    "wfilesencoders" : "alpha",
+    "wstatestorage" : "alpha",
+    "wstatesession" : "alpha",
+    "wstager" : "alpha",
+    "wgraphbase" : "alpha",
+    "wselector" : "alpha",
+    "wresolver" : "alpha",
+    "wresolverextra" : "alpha",
+    "wcommandsaggregator" : "alpha",
+    "wcommandsconfig" : "alpha",
+    "wnamemapper" : "alpha",
+    "wtranspile" : "alpha",
+    "wnpmtools" : "alpha",
+    "wyamltools" : "alpha",
+    "wcensorbasic" : "alpha"
+  },
+  "devDependencies" : { "eslint" : "7.1.0", "wTesting" : "alpha" },
+  "keywords" : [ "wTools" ]
+}
