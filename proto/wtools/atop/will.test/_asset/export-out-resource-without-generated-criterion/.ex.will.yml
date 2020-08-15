@@ -1,31 +1,25 @@
 
-
 about :
 
-  name : "wChangeTransactor"
-  description : "Still sketch. Mixin to add the ability to track changes of an object, to reflect changes in a data structure and to make possible to apply the changes to another object. Use the module to mirror object's changes somehow elsewhere, for example on server-side or client-side."
-  version : "0.3.55"
+  name : 'wModuleForTesting12ab'
+  description : 'Module for testing. This module is a test asset and not intended to be used with another purpose.'
+  version : '0.0.1'
   enabled : 1
   interpreters :
-  - nodejs >= 10.0.0
+  - njs >= 10.0.0
   - chrome >= 60.0.0
   - firefox >= 60.0.0
   keywords :
-  - wModuleForTesting1
+  - willbe
+  - test
 
-# execution :
-# 
-# scripts :
-# test : wtest .run proto/**
-# docgen : wdocgen staging
-# 
 path :
 
-  repository : git+https:///github.com/Wandalen/wChangeTransactor.git
+  repository : git+https:///github.com/Wandalen/wModuleForTesting12ab.git
   origins :
-   - git+https:///github.com/Wandalen/wChangeTransactor.git
-   - npm:///wchangetransactor
-  bugs : https:///github.com/Wandalen/wChangeTransactor/issues
+   - git+https:///github.com/Wandalen/wModuleForTesting12ab.git
+   - npm:///wmodulefortesting12ab
+  bugtracker : https:///github.com/Wandalen/wModuleForTesting12ab/issues
 
 step :
 
@@ -49,6 +43,6 @@ build :
       tar : 1
       public : 1
     steps :
-      - build::debug.raw
+      - build::debug
       - step::export.proto
 

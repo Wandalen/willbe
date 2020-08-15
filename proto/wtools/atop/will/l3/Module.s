@@ -1,4 +1,5 @@
-( function _Module_s_( ) {
+( function _Module_s_()
+{
 
 'use strict';
 
@@ -1073,6 +1074,12 @@ function predefinedForm()
 
   step
   ({
+    name : 'git',
+    stepRoutine : Predefined.stepRoutineGitExecCommand,
+  })
+
+  step
+  ({
     name : 'git.pull',
     stepRoutine : Predefined.stepRoutineGitPull,
   })
@@ -1254,7 +1261,7 @@ function predefinedForm()
   _.assert( !module.pathResourceMap[ 'module.common' ].importableFromIn );
   _.assert( !module.pathResourceMap[ 'module.common' ].importableFromOut );
 
-/*
+  /*
   .predefined.common :
     src :
       maskAll :
@@ -1276,7 +1283,7 @@ function predefinedForm()
         - !!js/regexp '/\.debug($|\.|\/)/i'
         - !!js/regexp '/\.test($|\.|\/)/i'
         - !!js/regexp '/\.experiment($|\.|\/)/i'
-*/
+  */
 
   // /* - */
   //
@@ -1411,7 +1418,7 @@ function _predefinedOptionsPrepare( defaults, o )
 
   let commonDefaults =
   {
-    module : module,
+    module,
     writable : 0,
     exportable : 0,
     importableFromIn : 0,
@@ -1965,7 +1972,7 @@ function _willfilesOpen()
 
     let o2 =
     {
-      module : module,
+      module,
       name : 'export',
       criterion :
       {
@@ -1981,7 +1988,7 @@ function _willfilesOpen()
 
     let o3 =
     {
-      module : module,
+      module,
       name : 'export',
       path : '**',
     }
@@ -2243,7 +2250,7 @@ function _attachedWillfilesOpen( o ) /* xxx : does this stage do anything useful
 
       module._attachedWillfileOpen
       ({
-        modulePath : modulePath,
+        modulePath,
         structure : moduleStructure,
         rootModule : o.rootModule,
         storagePath : willfile.filePath,
@@ -2290,7 +2297,7 @@ function _attachedWillfileOpen( o )
 
   let willfOptions =
   {
-    filePath : filePath,
+    filePath,
     structure : o.structure,
     storagePath : o.storagePath,
     storageWillfile : o.storageWillfile,
@@ -2530,7 +2537,7 @@ function exportedMake( o )
       _.assert( outModule.exportedMap[ o.build.name ] === undefined );
     }
 
-    let exported = new _.will.Exported({ outModule : outModule, name : o.build.name }).form1();
+    let exported = new _.will.Exported({ outModule, name : o.build.name }).form1();
 
     _.assert( outModule.exportedMap[ o.build.name ] === exported );
 
@@ -3270,7 +3277,7 @@ function moduleFixate( o )
   {
     if( resolved[ originalPath ] )
     return resolved[ originalPath ];
-    resolved[ originalPath ] = module.moduleFixatePathFor({ originalPath : originalPath, upgrading : o.upgrading });
+    resolved[ originalPath ] = module.moduleFixatePathFor({ originalPath, upgrading : o.upgrading });
     return resolved[ originalPath ];
   }
 
@@ -4185,7 +4192,7 @@ function peerModuleSet( src )
       debugger;
       throw _.err
       (
-          'Several peer modules'
+        'Several peer modules'
         + `\n  ${path.moveTextualReport( module.commonPath, path.common( module.peerWillfilesPath ) )}`
         + `\n  ${path.moveTextualReport( src.commonPath, path.common( src.peerWillfilesPath ) )}`
       );
@@ -4280,7 +4287,7 @@ function peerModuleFromJunction( junction )
         );
         logger.error
         (
-            `Probably something wrong because modules should be aware of its peer.`
+          `Probably something wrong because modules should be aware of its peer.`
           , `\nBut ${module.absoluteName} at ${module.localPath} is not aware`
         )
         module.peerModule = module2;
@@ -4601,7 +4608,7 @@ function resourceAllocate_body( o )
 
   }
 
-  let o2 = { module : module, name : resourceName2 };
+  let o2 = { module, name : resourceName2 };
   o2.criterion = { generated : 1 };
   resource = new cls( o2 ).form1();
 
@@ -5385,7 +5392,7 @@ function pathsRebase( o )
 
     resource.pathsRebase
     ({
-      relative : relative,
+      relative,
       exInPath : o.exInPath,
       inPath : o.inPath,
     });
@@ -5406,7 +5413,7 @@ function pathsRebase( o )
 
     resource.pathsRebase
     ({
-      relative : relative,
+      relative,
       exInPath : o.exInPath,
       inPath : o.inPath,
     });
@@ -5421,7 +5428,7 @@ function pathsRebase( o )
 
     resource.pathsRebase
     ({
-      relative : relative,
+      relative,
       exInPath : o.exInPath,
       inPath : o.inPath,
     });
@@ -5860,7 +5867,7 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
 
     if( !module.pathResourceMap[ resourceName ] )
     {
-      let resource = new _.will.PathResource({ module : module, name : resourceName }).form1();
+      let resource = new _.will.PathResource({ module, name : resourceName }).form1();
       resource.criterion = resource.criterion || Object.create( null );
       resource.criterion.predefined = 1;
       resource.writable = 0;
@@ -5894,7 +5901,7 @@ function predefinedPathPut_functor( fieldName, resourceName, relativizing )
     will._pathChanged
     ({
       object : module,
-      fieldName : fieldName,
+      fieldName,
       val : filePath,
       ex,
       isIdentical,
@@ -5951,7 +5958,7 @@ function predefinedPathSet_functor( fieldName, resourceName )
     will._pathChanged
     ({
       object : module,
-      fieldName : fieldName,
+      fieldName,
       val : filePath,
       ex,
       kind : 'set',
@@ -6690,7 +6697,7 @@ function structureExportOut( o )
       let junction = will.junctionFrom( module2 );
       throw _.err
       (
-          `${junction.object.absoluteName} is not available. `
+        `${junction.object.absoluteName} is not available. `
         + `\nRemote path is ${junction.remotePath}`
         + `\nLocal path is ${junction.localPath}`
       );
@@ -6804,8 +6811,11 @@ function structureExportModules( modules, op )
 
     _.sure
     (
-      module2.isOut || module.commonPath === module2.commonPath || ( module2.peerModule && module2.peerModule.isOut && module2.peerModule.isValid() ),
-      () => `Submodules should be loaded from out-willfiles, but ${module2.decoratedAbsoluteName} is loaded from\n${module2.willfilesPath}`
+      module2.isOut || module.commonPath === module2.commonPath
+      || ( module2.peerModule && module2.peerModule.isOut && module2.peerModule.isValid() ),
+
+      () => `Submodules should be loaded from out-willfiles,
+      but ${module2.decoratedAbsoluteName} is loaded from\n${module2.willfilesPath}`
     );
 
     if( op.dst.module[ relative ] )
@@ -6831,8 +6841,8 @@ function structureExportModules( modules, op )
   _.assert
   (
     op.dst.root.length === 1,
-    () => `Failed to find exactly one root, found ${op.dst.root.length}`
-        , `\n Common path : ${module.commonPath}`
+    () => `Failed to find exactly one root, found ${op.dst.root.length}`,
+    `\n Common path : ${module.commonPath}`
   );
 
   return op.dst;
@@ -6978,7 +6988,8 @@ function resourceImport( o )
 
   let resource = new o.srcResource.Self( resourceData );
   resource.form1();
-  _.assert( module.resolve({ selector : resource.qualifiedName, pathUnwrapping : 0, pathResolving : 0 }).absoluteName === resource.absoluteName );
+  let absoluteName = module.resolve({ selector : resource.qualifiedName, pathUnwrapping : 0, pathResolving : 0 }).absoluteName;
+  _.assert( absoluteName === resource.absoluteName );
 
   return resource;
 }
@@ -7082,7 +7093,7 @@ function _npmGenerateFromWillfile( o )
       }
       else if( p.protocol === 'hd' )
       {
-        depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath,  );
+        depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath );
       }
       else _.assert( 0 );
     }
@@ -7147,15 +7158,15 @@ function npmGenerateFromWillfile( o )
     prefixlessAction : 'resolved',
     pathNativizing : 0,
     selectorIsPath : 1,
-    currentContext : currentContext,
+    currentContext,
   });
   // opts.packagePath = path.join( module.inPath, opts.packagePath );
 
 
   if( opts.entryPath )
-  opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext : currentContext });
+  opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext });
   if( opts.filesPath )
-  opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext : currentContext });
+  opts.filesPath = module.filesFromResource({ selector : opts.filesPath, currentContext });
 
   /* */
 
@@ -7666,7 +7677,7 @@ function willfileExtendWillfile( o )
         {
           if( !_.longHas( [ 'yml', 'json', 'yaml' ], path.ext( dstPath ) ) )
           exts.push( 'yml' );
-          if( !_.longHas( exts ), 'will' )
+          if( !_.longHas( exts, 'will' ) )
           exts.splice( exts.length - 1, 0, 'will' );
         }
 
@@ -7892,31 +7903,454 @@ function willfileExtendWillfile( o )
 
 willfileExtendWillfile.defaults =
 {
-  about : 1,
-  build : 1,
-  path : 1,
-  reflector : 1,
-  step : 1,
-  submodule : 1,
+  'about' : 1,
+  'build' : 1,
+  'path' : 1,
+  'reflector' : 1,
+  'step' : 1,
+  'submodule' : 1,
 
-  name : 1,
-  version : 1,
-  author : 1,
-  enabled : 1,
-  description : 1,
-  contributors : 1,
-  interpreters : 1,
-  license : 1,
-  keywords : 1,
+  'name' : 1,
+  'version' : 1,
+  'author' : 1,
+  'enabled' : 1,
+  'description' : 1,
+  'contributors' : 1,
+  'interpreters' : 1,
+  'license' : 1,
+  'keywords' : 1,
   'npm.name' : 1,
   'npm.scripts' : 1,
 
+  'request' : null,
+  'onSection' : null,
+  'submodulesDisabling' : 0,
+  'format' : 'willfile',
+  'verbosity' : 3,
+  'v' : null,
+}
+
+//
+
+function _willfileOnPropertyAct( o )
+{
+  let will = this.will ? this.will : this;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( _willfileOnPropertyAct, o );
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( o ) );
+
+  let dstWillfileRecords = dstRecordsFind( o.request );
+  _.assert
+  (
+    1 <= dstWillfileRecords.length && dstWillfileRecords.length <= 2,
+    `Expexts one or two willfiles, but got : ${ dstWillfileRecords.length }`
+  );
+  _.assert( _.longHas( dstWillfileRecords[ 0 ].exts, 'will' ) || dstWillfileRecords[ 0 ].name === 'will', 'Expexts willfiles' );
+
+  let willfile, willfile2;
+  let dstEncoding = _.longHas( dstWillfileRecords[ 0 ].exts, 'json' ) ? 'json.fine' : 'yaml';
+  willfile = fileProvider.fileRead({ filePath : dstWillfileRecords[ 0 ].absolute, encoding : dstEncoding });
+  if( dstWillfileRecords.length === 2 )
+  willfile2 = fileProvider.fileRead({ filePath : dstWillfileRecords[ 1 ].absolute, encoding : dstEncoding });
+
+  /* */
+
+  let sectionMap =
+  {
+    about : 'about',
+    build : 'build',
+    path : 'path',
+    reflector : 'reflector',
+    step : 'step',
+    submodule : 'submodule',
+  };
+
+  for( let option in o.willfilePropertiesMap )
+  {
+
+    let splits = option.split( '/' );
+
+    if( !( splits[ 0 ] in sectionMap ) )
+    throw _.errBrief( `Expexts sections "about", "build", "path", "reflector", "step", "submodule", but got "${ splits[ 0 ] }"` );
+
+    let dstConfig = o.onConfig( willfile, willfile2, splits );
+    o.act( dstConfig, splits, option );
+
+  }
+
+  /* */
+
+  if( o.writing )
+  {
+    configWrite( dstWillfileRecords[ 0 ].absolute, willfile );
+    if( dstWillfileRecords.length === 2 )
+    configWrite( dstWillfileRecords[ 1 ].absolute, willfile2 );
+  }
+
+  return null;
+
+  /* */
+
+  function dstRecordsFind( selector )
+  {
+    let filePath = selector;
+    if( !path.isAbsolute( filePath ) )
+    filePath = path.join( will.inPath ? will.inPath : path.current(), selector );
+
+    if( fileProvider.isTerminal( filePath ) )
+    return [ fileProvider.record( filePath ) ];
+
+    _.sure( !fileProvider.isDir( filePath ), () => `${ filePath } is dir, not safe to delete` );
+
+    if( !path.isGlob( filePath ) )
+    filePath = filePath + '*.(yml|yaml|json)';
+
+    return fileProvider.filesFind
+    ({
+      filePath,
+      withStem : 0,
+      withDirs : 0,
+      mode : 'distinct',
+      mandatory : 0,
+    });
+  }
+
+  /* */
+
+  function configWrite( path, data )
+  {
+    fileProvider.fileWrite
+    ({
+      filePath : path,
+      data,
+      encoding : dstEncoding,
+      verbosity : o.verbosity,
+    });
+  }
+
+}
+
+_willfileOnPropertyAct.defaults =
+{
   request : null,
-  onSection : null,
-  submodulesDisabling : 0,
-  format : 'willfile',
+  willfilePropertiesMap : null,
+  onProperty : null,
+  onConfig : null,
+  act : null,
+  structureParse : 0,
+  writing : 1,
   verbosity : 3,
-  v : null,
+  v : 3,
+};
+
+//
+
+function willfileGetProperty( o )
+{
+  let will = this.will ? this.will : this;
+  let logger = will.logger;
+
+  _.routineOptions( willfileGetProperty, o );
+
+  o.act = getProperty;
+  o.onConfig = configChooseByKeys;
+
+  return _willfileOnPropertyAct.call( will, o );
+
+  /* */
+
+  function getProperty( dstConfig, splits, option )
+  {
+    for( let i = 0 ; i < splits.length ; i++ )
+    {
+      let key = splits[ i ];
+      if( dstConfig[ key ] === undefined )
+      {
+        if( o.verbosity > 3 )
+        logger.log( `${ option } :: {-undefined-}` );
+        break;
+      }
+      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+      {
+        dstConfig = dstConfig[ key ];
+      }
+      else if( o.willfilePropertiesMap[ option ] )
+      {
+        let value = _.toStrNice( dstConfig[ key ] );
+        if( _.strLinesCount( value ) > 1 )
+        logger.log( `${ option } ::\n${ value }` );
+        else
+        logger.log( `${ option } :: ${ value }` );
+      }
+    }
+  }
+
+  /* */
+
+  function configChooseByKeys( config, config2, keys )
+  {
+    if( !config2 )
+    return config;
+
+    if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
+    return config2;
+
+    if( keys[ 0 ] in config2 && keys[ 0 ] in config )
+    _.mapExtend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] );
+
+    return config;
+  }
+
+}
+
+willfileGetProperty.defaults =
+{
+  request : null,
+  willfilePropertiesMap : null,
+  structureParse : 0,
+  writing : 0,
+  verbosity : 3,
+  v : 3,
+}
+
+//
+
+function willfileSetProperty( o )
+{
+  let will = this.will ? this.will : this;
+
+  _.routineOptions( willfileSetProperty, o );
+
+  o.act = setProperty;
+  o.onConfig = configChooseByKeys;
+
+  return _willfileOnPropertyAct.call( will, o );
+
+  /* */
+
+  function setProperty( dstConfig, splits, option )
+  {
+    for( let i = 0 ; i < splits.length ; i++ )
+    {
+      let key = splits[ i ];
+      if( dstConfig[ key ] === undefined )
+      {
+        if( i === splits.length -1 )
+        {
+          let value = o.willfilePropertiesMap[ option ];
+          if( o.structureParse )
+          value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+          dstConfig[ key ] = value;
+        }
+        else
+        {
+          dstConfig[ key ] = Object.create( null );
+          dstConfig = dstConfig[ key ];
+        }
+      }
+      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+      {
+        if( _.mapIs( dstConfig[ key ] ) )
+        dstConfig = dstConfig[ key ];
+        else
+        dstConfig = Object.create( null );
+      }
+      else
+      {
+        let value = o.willfilePropertiesMap[ option ];
+        if( o.structureParse )
+        value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+        dstConfig[ key ] = value;
+      }
+    }
+  }
+
+  /* */
+
+  function configChooseByKeys( config, config2, keys )
+  {
+    if( !config2 )
+    return config;
+
+    if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
+    return config2;
+
+    if( keys[ 0 ] in config2 && keys[ 0 ] in config )
+    {
+      if( keys[ 1 ] in config2[ keys[ 0 ] ] )
+      return config2;
+      return config;
+    }
+
+    return config;
+  }
+
+}
+
+willfileSetProperty.defaults =
+{
+  request : null,
+  willfilePropertiesMap : null,
+  structureParse : 0,
+  writing : 1,
+  verbosity : 3,
+  v : 3,
+}
+
+//
+
+function willfileDeleteProperty( o )
+{
+  let will = this.will ? this.will : this;
+  let logger = will.logger;
+
+  _.routineOptions( willfileDeleteProperty, o );
+
+  o.act = deleteProperty;
+  o.onConfig = configChooseByKeys;
+
+  return _willfileOnPropertyAct.call( will, o );
+
+  /* */
+
+  function deleteProperty( dstConfig, splits, option )
+  {
+    for( let i = 0 ; i < splits.length ; i++ )
+    {
+      let key = splits[ i ];
+      if( dstConfig[ key ] === undefined )
+      {
+        if( o.verbosity > 3 )
+        logger.log( `Option "${ option }" does not exist.` );
+        break;
+      }
+      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+      {
+        dstConfig = dstConfig[ key ];
+      }
+      else if( o.willfilePropertiesMap[ option ] )
+      {
+        if( o.verbosity > 3 )
+        logger.log( `Option "${ option }" is deleted.` );
+        delete dstConfig[ key ];
+      }
+    }
+  }
+
+  /* */
+
+  function configChooseByKeys( config, config2, keys )
+  {
+    if( !config2 )
+    return config;
+
+    if( keys[ 0 ] in config2 && !( keys[ 0 ] in config ) )
+    return config2;
+
+    if( keys[ 0 ] in config2 && keys[ 0 ] in config )
+    {
+      if( !keys[ 1 ] )
+      {
+        _.mapExtend( config[ keys[ 0 ] ], config2[ keys[ 0 ] ] )
+        delete config2[ keys[ 0 ] ];
+        return config;
+      }
+      if( keys[ 1 ] in config2[ keys[ 0 ] ] )
+      return config2;
+      return config;
+    }
+
+    return config;
+  }
+}
+
+willfileDeleteProperty.defaults =
+{
+  request : null,
+  willfilePropertiesMap : null,
+  structureParse : 0,
+  writing : 1,
+  verbosity : 3,
+  v : 3,
+}
+
+//
+
+function willfileExtendProperty( o )
+{
+  let will = this;
+
+  _.routineOptions( willfileExtendProperty, o );
+  o.act = extendProperty;
+  o.onConfig = configChooseByKeys;
+
+  return _willfileOnPropertyAct.call( will, o );
+
+  /* */
+
+  function extendProperty( dstConfig, splits, option )
+  {
+    for( let i = 0 ; i < splits.length ; i++ )
+    {
+      let key = splits[ i ];
+      if( dstConfig[ key ] === undefined )
+      {
+        if( i === splits.length -1 )
+        {
+          let value = o.willfilePropertiesMap[ option ];
+          if( o.structureParse )
+          value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+          o.onProperty( dstConfig, { [ key ] : value } );
+        }
+        else
+        {
+          dstConfig[ key ] = Object.create( null );
+          dstConfig = dstConfig[ key ];
+        }
+      }
+      else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
+      {
+        _.sure( _.mapIs( dstConfig[ key ] ), `Not safe to delete property : ${ key }.` )
+        dstConfig = dstConfig[ key ];
+      }
+      else
+      {
+        let value = o.willfilePropertiesMap[ option ];
+        if( o.structureParse )
+        value = _.strStructureParse({ src : value, parsingArrays : 1, quoting : 0 });
+        o.onProperty( dstConfig, { [ key ] : value } );
+      }
+    }
+  }
+
+  /* */
+
+  function configChooseByKeys( config, config2, keys )
+  {
+    if( !config2 )
+    return config;
+
+    if( keys[ 0 ] in config2 )
+    return config2;
+
+    return config;
+  }
+
+}
+
+willfileExtendProperty.defaults =
+{
+  request : null,
+  willfilePropertiesMap : null,
+  onProperty : null,
+  structureParse : 0,
+  writing : 1,
+  verbosity : 3,
+  v : 3,
 }
 
 //
@@ -8050,6 +8484,168 @@ function _remoteChanged()
 // git
 // --
 
+function gitExecCommand( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+  let logger = will.logger;
+
+  _.routineOptions( gitExecCommand, o );
+
+  o.command = module.resolve( o.command );
+
+  o.dirPath = module.pathResolve
+  ({
+    selector : o.dirPath || module.dirPath,
+    prefixlessAction : 'resolved',
+    pathNativizing : 0,
+    selectorIsPath : 1,
+    currentContext : module.stepMap[ 'git' ],
+  });
+
+  let status = _.git.statusFull
+  ({
+    insidePath : o.dirPath,
+    unpushed : 0,
+    prs : 0,
+    remote : 1,
+  });
+
+  if( !status.isRepository )
+  return null;
+
+  if( o.verbosity )
+  logger.log( `Executing command "git ${ o.command }", ${module.nameWithLocationGet()}` );
+
+  let provider = _.FileFilter.Archive();
+  if( o.hardLinkMaybe )
+  {
+    let config = fileProvider.configUserRead();
+    provider.archive.basePath = will.currentOpener.dirPath;
+    if( config && config.path && config.path.link )
+    provider.archive.basePath = _.arrayAppendArraysOnce( _.arrayAs( provider.archive.basePath ), _.arrayAs( config.path.link ) );
+
+    provider.archive.fileMapAutosaving = 1;
+
+    if( o.verbosity )
+    provider.archive.verbosity = 2;
+    else
+    provider.archive.verbosity = 0;
+
+    provider.archive.allowingMissed = 1;
+    provider.archive.allowingCycled = 1;
+    provider.archive.restoreLinksBegin();
+  }
+
+  let ready = new _.Consequence().take( null );
+
+  _.process.start
+  ({
+    execPath : `git ${ o.command }`,
+    currentPath : o.dirPath,
+    ready,
+  });
+
+  if( o.hardLinkMaybe )
+  {
+    ready.tap( () =>
+    {
+      provider.archive.restoreLinksEnd();
+    });
+  }
+
+  ready.catch( ( err ) =>
+  {
+    err = _.errBrief( err );
+    logger.error( _.errOnce( err ) );
+    throw err;
+  });
+
+  return ready;
+}
+
+gitExecCommand.defaults =
+{
+  command : null,
+  dirPath : null,
+  hardLinkMaybe : 1,
+  v : null,
+  verbosity : 2,
+};
+
+//
+
+function gitPrOpen( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+
+  _.routineOptions( gitPrOpen, o );
+
+  if( !_.git.isRepository )
+  return null;
+
+  let token = o.token ? o.token : null;
+  let config = fileProvider.configUserRead();
+  if( config !== null && config.about && config.about[ 'github.token' ] )
+  token = config.about[ 'github.token' ];
+
+  if( !o.remotePath )
+  {
+    if( module.pathMap.repository )
+    o.remotePath = module.pathMap.repository;
+    else
+    o.remotePath = _.git.remotePathFromLocal( module.dirPath );
+  }
+  o.remotePath = _.git.remotePathNativize( o.remotePath );
+
+  let title = o.title ? o.title : o.subject;
+  title = _.strUnquote( title );
+
+  /* */
+
+  let ready = new _.Consequence().take( null );
+  ready.then( () =>
+  {
+    return _.git.prOpen
+    ({
+      token,
+      remotePath : o.remotePath,
+      title,
+      body : o.body,
+      srcBranch : o.srcBranch,
+      dstBranch : o.dstBranch,
+      sync : 1,
+      throwing : 1,
+      verbosity : o.verbosity,
+    });
+  })
+  .finally( ( err, arg ) =>
+  {
+    if( err )
+    throw _.errBrief( err );
+    return arg;
+  });
+
+  return ready;
+}
+
+gitPrOpen.defaults =
+{
+  token : null,
+  remotePath : null,
+  srcBranch : null,
+  dstBranch : 'master',
+  title : null,
+  body : null,
+  verbosity : 2,
+};
+
+//
+
 function gitPull( o )
 {
   let module = this;
@@ -8112,7 +8708,7 @@ function gitPull( o )
   ({
     execPath : `git pull`,
     currentPath : o.dirPath,
-    ready : ready,
+    ready,
   });
 
   ready.tap( () =>
@@ -8135,7 +8731,7 @@ gitPull.defaults =
   dirPath : null,
   v : null,
   verbosity : 2,
-}
+};
 
 //
 
@@ -8181,7 +8777,7 @@ function gitPush( o )
   let start = _.process.starter
   ({
     currentPath : o.dirPath,
-    ready : ready,
+    ready,
   });
 
   start( `git push -u origin --all` );
@@ -8522,7 +9118,7 @@ function shell( o )
   });
   _.sure
   (
-      o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath )
+    o.currentPath === null || _.strIs( o.currentPath ) || _.strsAreAll( o.currentPath )
     , 'Current path should be string if defined'
   );
 
@@ -8535,7 +9131,7 @@ function shell( o )
     execPath : o.execPath,
     currentPath : o.currentPath,
     verbosity : o.verbosity !== null ? o.verbosity : will.verbosity - 1,
-    ready : ready,
+    ready,
   });
 
   return ready;
@@ -8608,7 +9204,7 @@ function assertIsValidIntegrity()
     _.assert( !relation.isFinited() );
     _.assert
     (
-        _.longHas( module.userArray, relation.opener )
+      _.longHas( module.userArray, relation.opener )
       , `${module.nameWithLocationGet()} does not have reference on its`
       + `\n${relation.opener.nameWithLocationGet}`
     );
@@ -8808,12 +9404,12 @@ let Accessors =
   peerWillfilesPath : { get : peerWillfilesPathGet, readOnly : 1 },
   peerInPath : { get : peerInPathGet, readOnly : 1 },
 
-  decoratedWillfilesPath : { get : decoratedWillfilesPathGet, readOnly : 1, },
-  decoratedInPath : { get : decoratedInPathGet, readOnly : 1, },
-  decoratedOutPath : { get : decoratedOutPathGet, readOnly : 1, },
-  decoratedLocalPath : { get : decoratedLocalPathGet, readOnly : 1, },
-  decoratedDownloadPath : { get : decoratedDownloadPathGet, readOnly : 1, },
-  decoratedRemotePath : { get : decoratedRemotePathGet, readOnly : 1, },
+  decoratedWillfilesPath : { get : decoratedWillfilesPathGet, readOnly : 1 },
+  decoratedInPath : { get : decoratedInPathGet, readOnly : 1 },
+  decoratedOutPath : { get : decoratedOutPathGet, readOnly : 1 },
+  decoratedLocalPath : { get : decoratedLocalPathGet, readOnly : 1 },
+  decoratedDownloadPath : { get : decoratedDownloadPathGet, readOnly : 1 },
+  decoratedRemotePath : { get : decoratedRemotePathGet, readOnly : 1 },
   decoratedDirPath : { get : decoratedDirPathGet, readOnly : 1 },
   decoratedCommonPath : { get : decoratedCommonPathGet, readOnly : 1 },
   decoratedCurrentRemotePath : { get : decoratedCurrentRemotePathGet, readOnly : 1 },
@@ -9039,7 +9635,6 @@ let Extension =
   willPathGet,
   originalWillfilesPathGet,
   peerWillfilesPathGet,
-  peerInPathGet,
 
   decoratedWillfilesPathGet,
   decoratedInPathGet,
@@ -9091,7 +9686,6 @@ let Extension =
   toModule,
   toOpener,
   toRelation,
-  toOpener,
   toJunction,
 
   // exporter
@@ -9116,6 +9710,13 @@ let Extension =
   npmGenerateFromWillfile,
   _willfileGenerateFromNpm,
   willfileGenerateFromNpm,
+
+  _willfileOnPropertyAct,
+  willfileGetProperty,
+  willfileSetProperty,
+  willfileDeleteProperty,
+  willfileExtendProperty,
+
   willfileExtendWillfile,
 
   // remote
@@ -9124,6 +9725,8 @@ let Extension =
 
   // git
 
+  gitExecCommand,
+  gitPrOpen,
   gitPull,
   gitPush,
   gitReset,

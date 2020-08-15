@@ -823,6 +823,33 @@ stepRoutineWillfileFromNpm.uniqueOptions =
 
 //
 
+function stepRoutineGitExecCommand( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+  _.assert( _.objectIs( opts ) );
+
+  return module.gitExecCommand( opts );
+}
+
+stepRoutineGitExecCommand.stepOptions =
+{
+  command : null,
+  hardLinkMaybe : 1,
+}
+
+stepRoutineGitExecCommand.uniqueOptions =
+{
+  command : null,
+}
+
+//
+
 function stepRoutineGitPull( frame )
 {
   let step = this;
@@ -1244,6 +1271,8 @@ let Extension =
   stepRoutineView,
   stepRoutineNpmGenerate,
   stepRoutineWillfileFromNpm,
+
+  stepRoutineGitExecCommand,
   stepRoutineGitPull,
   stepRoutineGitPush,
   stepRoutineGitReset,

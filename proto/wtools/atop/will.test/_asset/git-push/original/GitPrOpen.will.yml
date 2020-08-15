@@ -1,0 +1,12 @@
+about :
+
+  name : New2
+
+submodule :
+
+  ModuleForTesting1 : git+https:///github.com/Wandalen/wModuleForTesting1.git/
+
+path :
+
+  repository : 'git+https:///github.com/bot-w/New2.git'
+

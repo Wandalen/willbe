@@ -1627,16 +1627,18 @@ function modulesFindEachAt( o )
 
   let opener = o.currentOpener;
   if( !opener )
-  opener = will._openerMake
-  ({
-    opener :
-    {
-      willfilesPath : path.trail( path.current() ),
-      searching : 'strict',
-      reason : 'each',
-    }
-  });
-  opener.find();
+  {
+    opener = will._openerMake
+    ({
+      opener :
+      {
+        willfilesPath : path.trail( path.current() ),
+        searching : 'strict',
+        reason : 'each',
+      }
+    });
+    opener.find();
+  }
   opener.open();
 
   let op = Object.create( null );
