@@ -462,26 +462,26 @@ function _open()
 
 /*
       zzz qqq : make it working
-      let encoder = _.gdf.select
+      let encoder = _.gdf.selectContext
       ({
-        in : 'buffer.raw',
-        out : 'structure',
+        inFormat : 'buffer.raw',
+        outFormat : 'structure',
         ext : 'yml',
       })[ 0 ];
       let structure = encoder.encode( bufferRaw );
 */
 
-      let encoder = _.gdf.select
+      let encoder = _.gdf.selectSingleContext
       ({
-        in : 'string',
-        out : 'structure',
+        inFormat : 'string',
+        outFormat : 'structure',
         ext : willf._found[ 0 ].ext,
-      })[ 0 ];
+      });
       _.assert( !!encoder, `No encoder for ${willf.filePath}` );
 
       try
       {
-        willf.structure = encoder.encode({ data : _.bufferToStr( willf.data ) }).data;
+        willf.structure = encoder.encode({ data : _.bufferToStr( willf.data ) }).out.data;
       }
       catch( err )
       {
