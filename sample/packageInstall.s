@@ -22,8 +22,7 @@ return console.log( 'Cannot install package. Unsupported GNU/Linux distribution.
 _.process.start
 ({
   execPath : 'node ' + willbePath,
-  args : [ '.package.install package:///htop#1:2.0.1-1' ],
+  args : [ '.package.install package:///htop#1:2.0.1-1 sudo:1' ],
   // args : [ '.package.install package:///git#1:2.7.4-0ubuntu1.7' ],
   mode : 'spawn',
-  sudo : 1,
 })
