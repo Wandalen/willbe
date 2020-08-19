@@ -10887,7 +10887,7 @@ function repoStatusLocalUncommittedChanges( test )
 let Self =
 {
 
-  name : 'Tools.atop.Willbe.Int',
+  name : 'Tools.Willbe.Int',
   silencing : 1,
 
   onSuiteBegin,

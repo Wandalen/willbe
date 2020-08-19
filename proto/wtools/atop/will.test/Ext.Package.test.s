@@ -701,7 +701,7 @@ packageVersion.experimental = 1;
 let Self =
 {
 
-  name : 'Tools.atop.WillExternals.Package',
+  name : 'Tools.WillExternals.Package',
   silencing : 1,
 
   onSuiteBegin,
