@@ -1,0 +1,401 @@
+{
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook" : 
+  {
+    "mtime" : 1597901411241, 
+    "ctime" : 1597901411241, 
+    "birthtime" : 1591933981749, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook`
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/.warchive" : 
+  {
+    "mtime" : 1597901411241, 
+    "ctime" : 1597901411241, 
+    "birthtime" : 1597901411241, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/.warchive`, 
+    "size" : 14835n, 
+    "hash" : `ae217a8203b2b375a332033b3a63b957`, 
+    "hashOfStat" : 10226008n, 
+    "nlink" : 1n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/build.js" : 
+  {
+    "mtime" : 1591876432391, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347304, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/build.js`, 
+    "size" : 48n, 
+    "hash" : `b84265f79344483a368f855aaf6ddb60`, 
+    "hashOfStat" : 21894540n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/clean.js" : 
+  {
+    "mtime" : 1592651736797, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347304, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/clean.js`, 
+    "size" : 626n, 
+    "hash" : `94d4e189431c5d5dec60bdd89d492afb`, 
+    "hashOfStat" : 21894541n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/export.js" : 
+  {
+    "mtime" : 1591876432491, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347304, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/export.js`, 
+    "size" : 47n, 
+    "hash" : `6007aef6d049736173b8dd55726a2637`, 
+    "hashOfStat" : 21894542n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/git.js" : 
+  {
+    "mtime" : 1592651736797, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347304, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/git.js`, 
+    "size" : 456n, 
+    "hash" : `ee3c5ffe83855dcd337271d3780949d6`, 
+    "hashOfStat" : 21894543n, 
+    "nlink" : 18n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitCommit.js" : 
+  {
+    "mtime" : 1594297827437, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347296, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitCommit.js`, 
+    "size" : 1479n, 
+    "hash" : `ed33d96fd7a69bdd2a9082ef97c57493`, 
+    "hashOfStat" : 21894523n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitDiff.js" : 
+  {
+    "mtime" : 1592651736797, 
+    "ctime" : 1594528603211, 
+    "birthtime" : 1588507708908, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitDiff.js`, 
+    "size" : 701n, 
+    "hash" : `9adf16a34e9e4bca0222b750e59182fc`, 
+    "hashOfStat" : 24903696n, 
+    "nlink" : 9n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitHubPatchOrigin.js" : 
+  {
+    "mtime" : 1593847573659, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588335498446, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitHubPatchOrigin.js`, 
+    "size" : 1556n, 
+    "hash" : `0d262ea74e4900dd8f195bad7d2d90e6`, 
+    "hashOfStat" : 24903683n, 
+    "nlink" : 9n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitMake.js" : 
+  {
+    "mtime" : 1593847573659, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitMake.js`, 
+    "size" : 2089n, 
+    "hash" : `a82a30b76b9da1a67dc6daacf6a351cd`, 
+    "hashOfStat" : 21894524n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitPull.js" : 
+  {
+    "mtime" : 1594222481771, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitPull.js`, 
+    "size" : 1800n, 
+    "hash" : `6939ff45e2ecab43282d05a6c0ba41e9`, 
+    "hashOfStat" : 21894525n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitPush.js" : 
+  {
+    "mtime" : 1592651736797, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitPush.js`, 
+    "size" : 727n, 
+    "hash" : `1b6b1b84e813a28be62151aa900ab5e8`, 
+    "hashOfStat" : 21894526n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitReset.js" : 
+  {
+    "mtime" : 1592651736797, 
+    "ctime" : 1594528603211, 
+    "birthtime" : 1588507708908, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitReset.js`, 
+    "size" : 806n, 
+    "hash" : `eaa862edcbe777794ee59ddbbe95d986`, 
+    "hashOfStat" : 24903701n, 
+    "nlink" : 9n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitStatus.js" : 
+  {
+    "mtime" : 1593929212116, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitStatus.js`, 
+    "size" : 1721n, 
+    "hash" : `834b2a986a331fb612290d274cebd4a4`, 
+    "hashOfStat" : 21894527n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitSync.js" : 
+  {
+    "mtime" : 1594992410205, 
+    "ctime" : 1594992410205, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitSync.js`, 
+    "size" : 1176n, 
+    "hash" : `e4d237226e2840375e3ae264f0f30e11`, 
+    "hashOfStat" : 21894528n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitTag.js" : 
+  {
+    "mtime" : 1595512944608, 
+    "ctime" : 1595512944608, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitTag.js`, 
+    "size" : 1337n, 
+    "hash" : `82982be704b87f5ef9e12f46b1979229`, 
+    "hashOfStat" : 21894529n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitUncommitted.js" : 
+  {
+    "mtime" : 1592652383516, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitUncommitted.js`, 
+    "size" : 1452n, 
+    "hash" : `23e0b3f7e868cec14bbd8c333131af9e`, 
+    "hashOfStat" : 21894530n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitUnpushed.js" : 
+  {
+    "mtime" : 1592652387083, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/GitUnpushed.js`, 
+    "size" : 1452n, 
+    "hash" : `255fe9b5570dd8f45727e9169914c6a3`, 
+    "hashOfStat" : 21894531n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/hlink.js" : 
+  {
+    "mtime" : 1593894517302, 
+    "ctime" : 1594528659103, 
+    "birthtime" : 1588314347304, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/hlink.js`, 
+    "size" : 1858n, 
+    "hash" : `e6187793801f62542dd9b2f776f369dd`, 
+    "hashOfStat" : 21894545n, 
+    "nlink" : 9n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/info.js" : 
+  {
+    "mtime" : 1592651736797, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347304, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/info.js`, 
+    "size" : 282n, 
+    "hash" : `e1932bd9e071a8dd7ebe7998bf79a40e`, 
+    "hashOfStat" : 21894544n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/ModuleIsEnabled.js" : 
+  {
+    "mtime" : 1592651736797, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/ModuleIsEnabled.js`, 
+    "size" : 740n, 
+    "hash" : `6d5758d14d91e0685f8815c3b577d686`, 
+    "hashOfStat" : 21894532n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/Normalize.js" : 
+  {
+    "mtime" : 1595742395471, 
+    "ctime" : 1595742395471, 
+    "birthtime" : 1593810346300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/Normalize.js`, 
+    "size" : 24755n, 
+    "hash" : `90cc9ad005f8ab75f25f32af8c27287e`, 
+    "hashOfStat" : 25037804n, 
+    "nlink" : 2n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/NpmConfigRemove.js" : 
+  {
+    "mtime" : 1592651736797, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/NpmConfigRemove.js`, 
+    "size" : 921n, 
+    "hash" : `92c48ae680c8a981c199c750cf6c5fe7`, 
+    "hashOfStat" : 21894533n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/NpmInstall.js" : 
+  {
+    "mtime" : 1592651736645, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/NpmInstall.js`, 
+    "size" : 549n, 
+    "hash" : `a29367e0671dc7eab8bf56fca6c5f969`, 
+    "hashOfStat" : 21894534n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/NpmPublish.js" : 
+  {
+    "mtime" : 1597514691274, 
+    "ctime" : 1597514691274, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/NpmPublish.js`, 
+    "size" : 4999n, 
+    "hash" : `46082d190b4c23594c21a00afc822fb7`, 
+    "hashOfStat" : 21894535n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/prepare.js" : 
+  {
+    "mtime" : 1593863976266, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347304, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/prepare.js`, 
+    "size" : 2380n, 
+    "hash" : `d8b7f22ab682896381002c588128bf9a`, 
+    "hashOfStat" : 21894546n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/ProtoSync.js" : 
+  {
+    "mtime" : 1594237089569, 
+    "ctime" : 1594237089569, 
+    "birthtime" : 1593810346300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/ProtoSync.js`, 
+    "size" : 1274n, 
+    "hash" : `a83135ab6966c0b2be132c22e305db93`, 
+    "hashOfStat" : 25037803n, 
+    "nlink" : 2n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/publish.js" : 
+  {
+    "mtime" : 1591876433531, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347304, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/publish.js`, 
+    "size" : 47n, 
+    "hash" : `b7171913ac5c3e98be7c7d6ce6047dee`, 
+    "hashOfStat" : 21894547n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/status.js" : 
+  {
+    "mtime" : 1591876433571, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347304, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/status.js`, 
+    "size" : 46n, 
+    "hash" : `7a5515bdec06027e2fddf42710681092`, 
+    "hashOfStat" : 21894548n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/TemplateStandard.js" : 
+  {
+    "mtime" : 1593928168688, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/TemplateStandard.js`, 
+    "size" : 1787n, 
+    "hash" : `61d51de92c21734325f8b21ff56772e6`, 
+    "hashOfStat" : 21894536n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/will.js" : 
+  {
+    "mtime" : 1592651736801, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347308, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/will.js`, 
+    "size" : 781n, 
+    "hash" : `8ce39ff40e7cb2f78572db5bcee7d28f`, 
+    "hashOfStat" : 21894551n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/WillExport.js" : 
+  {
+    "mtime" : 1592651736797, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/WillExport.js`, 
+    "size" : 1305n, 
+    "hash" : `b270e724d13774d20912813c1bcc27ec`, 
+    "hashOfStat" : 21894537n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/WillfCommentOut.js" : 
+  {
+    "mtime" : 1592651736797, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/WillfCommentOut.js`, 
+    "size" : 705n, 
+    "hash" : `c46b2d3eab6c4b973d2bd5bf4c557433`, 
+    "hashOfStat" : 21894538n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/WillfileNormalize.js" : 
+  {
+    "mtime" : 1597901116662, 
+    "ctime" : 1597901363131, 
+    "birthtime" : 1597901363131, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/WillfileNormalize.js`, 
+    "size" : 2472n, 
+    "hash" : `4ce8ca82c19809fc96ff002c044c8be4`, 
+    "hashOfStat" : 10226007n, 
+    "nlink" : 1n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/WillfPatch.js" : 
+  {
+    "mtime" : 1592651736645, 
+    "ctime" : 1594528753911, 
+    "birthtime" : 1588314347300, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/WillfPatch.js`, 
+    "size" : 5637n, 
+    "hash" : `a4bb77a26fd16cbf5311373e91650016`, 
+    "hashOfStat" : 21894539n, 
+    "nlink" : 10n
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/template" : 
+  {
+    "mtime" : 1591957372735, 
+    "ctime" : 1591957372735, 
+    "birthtime" : 1591933981761, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/template`
+  }, 
+  "/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/template/Standard.js" : 
+  {
+    "mtime" : 1595740604931, 
+    "ctime" : 1595740604931, 
+    "birthtime" : 1588314347304, 
+    "absolutePath" : `/pro/module/willbe/proto/wtools/atop/will.test/_asset/dos/.will/hook/template/Standard.js`, 
+    "size" : 26685n, 
+    "hash" : `28161468fe4ea5a4af29dfec52eca050`, 
+    "hashOfStat" : 21894550n, 
+    "nlink" : 10n
+  }
+}
