@@ -31011,13 +31011,49 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.extend.willfile Version *will.yml ForExtension Version.will.yml' })
+  a.appStart({ args : '.willfile.extend.willfile Version *will.yml' })
   a.ready.then( ( op ) =>
   {
     test.case = 'try to rewrite data by self';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.version, '1.1.1' );
+
+    return null;
+  })
+
+  /* - */
+
+  a.appStartNonThrowing({ args : '.willfile.extend.willfile Description* Author' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'dst willfile selector has glob, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Description.will.yml' ), encoding : 'yaml' });
+    test.identical( _.mapKeys( config.about ).length, 1 );
+    test.identical( config.about.author, undefined );
+
+    return null;
+  })
+
+  a.appStartNonThrowing({ args : '.willfile.extend.willfile Description Description' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'extend by self, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Description.will.yml' ), encoding : 'yaml' });
+    test.identical( _.mapKeys( config.about ).length, 1 );
+
+    return null;
+  })
+
+  a.appStartNonThrowing({ args : '.willfile.extend.willfile Description NotKnown' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'extend by not existed file, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Description.will.yml' ), encoding : 'yaml' });
+    test.identical( _.mapKeys( config.about ).length, 1 );
 
     return null;
   })
@@ -31785,13 +31821,49 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement.willfile Version *will.yml ForExtension Version.will.yml' })
+  a.appStart({ args : '.willfile.supplement.willfile Version *will.yml' })
   a.ready.then( ( op ) =>
   {
     test.case = 'try to rewrite data by self';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.version, '0.0.0' );
+
+    return null;
+  })
+
+  /* - */
+
+  a.appStartNonThrowing({ args : '.willfile.supplement.willfile Description* Author' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'dst willfile selector has glob, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Description.will.yml' ), encoding : 'yaml' });
+    test.identical( _.mapKeys( config.about ).length, 1 );
+    test.identical( config.about.author, undefined );
+
+    return null;
+  })
+
+  a.appStartNonThrowing({ args : '.willfile.supplement.willfile Description Description' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'extend by self, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Description.will.yml' ), encoding : 'yaml' });
+    test.identical( _.mapKeys( config.about ).length, 1 );
+
+    return null;
+  })
+
+  a.appStartNonThrowing({ args : '.willfile.supplement.willfile Description NotKnown' })
+  a.ready.then( ( op ) =>
+  {
+    test.case = 'extend by not existed file, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    let config = a.fileProvider.fileRead({ filePath : a.abs( 'Description.will.yml' ), encoding : 'yaml' });
+    test.identical( _.mapKeys( config.about ).length, 1 );
 
     return null;
   })
