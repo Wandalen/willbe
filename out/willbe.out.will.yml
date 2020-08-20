@@ -675,6 +675,7 @@ module:
           - ../proto/wtools/atop/will.test/_asset/dos/will.yml
           - ../proto/wtools/atop/will.test/_asset/dos/.will
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook
+          - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/.warchive
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/build.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/clean.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/export.js
@@ -712,6 +713,8 @@ module:
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/WillExport.js
           - >-
             ../proto/wtools/atop/will.test/_asset/dos/.will/hook/WillfCommentOut.js
+          - >-
+            ../proto/wtools/atop/will.test/_asset/dos/.will/hook/WillfileNormalize.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/WillfPatch.js
           - ../proto/wtools/atop/will.test/_asset/dos/.will/hook/template
           - >-
