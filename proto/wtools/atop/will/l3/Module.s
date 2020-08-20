@@ -7320,6 +7320,7 @@ function _willfileGenerateFromNpm( o )
 {
   let will = this;
   let fileProvider = will.fileProvider;
+  let path = will.fileProvider.path;
 
   /* */
 
@@ -7787,12 +7788,23 @@ function willfileExtendWillfile( o )
   function arrayPropertyParse( src, parser )
   {
     let result = Object.create( null );
+
+    if( _.strIs( src ) )
+    src = [ src ];
+
     if( _.longIs( src ) )
     {
       for( let i = 0 ; i < src.length ; i++ )
       {
-        let splits = parser({ src : src[ i ] });
-        result[ splits[ 0 ] ] = splits[ 2 ];
+        if( _.mapIs( src[ i ] ) )
+        {
+          result[ src[ i ].name ] = `<${ src[ i ].email }>`;
+        }
+        else
+        {
+          let splits = parser({ src : src[ i ] });
+          result[ splits[ 0 ] ] = splits[ 2 ];
+        }
       }
       return result;
     }
