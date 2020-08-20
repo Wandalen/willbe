@@ -31415,14 +31415,14 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
   {
     test.case = 'create new willfile, unical data in each file';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.fileRead({ filePath : a.abs( 'will.yml' ), encoding : 'yaml' });
+    let config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     test.identical( config.about.author, 'Author <author@dot.com>' );
-    test.identical( config.about.name, undefined );
-    test.identical( config.about.enabled, undefined );
+    test.identical( config.about.name, 'NpmFromWillfile' );
+    test.identical( config.about.enabled, 1 );
     test.identical( config.about.contributors.length, 2 );
     test.is( _.longHas( config.about.contributors, 'Contributor1 <contributor1@dot.com>' ) );
     test.identical( config.about.interpreters.length, 3 );
-    test.is( _.longHas( config.about.interpreters, 'njs >= 10.0.0' ) );
+    test.is( _.longHas( config.about.interpreters, 'njs >= 6.0.0' ) );
 
     return null;
   })
@@ -31448,7 +31448,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement.willfile Author* Contributors Description* Interpreters' })
+  a.appStart({ args : '.willfile.supplement.willfile Author Contributors Description* Interpreters' })
   a.ready.then( ( op ) =>
   {
     test.case = 'add new data to existing config, unical data in each file';
@@ -31539,7 +31539,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement.willfile Author* files/p*' })
+  a.appStart({ args : '.willfile.supplement.willfile Author files/p*' })
   a.ready.then( ( op ) =>
   {
     test.case = 'add new data to existing config from package.json file in another directory';
@@ -31597,7 +31597,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement.willfile ./.* ForExtension' })
+  a.appStart({ args : '.willfile.supplement.willfile . ForExtension' })
   a.ready.then( ( op ) =>
   {
     test.case = 'extend two unnamed willfiles by new data';
@@ -31613,9 +31613,9 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
         enabled : 1,
         interpreters :
         [
-          'nodejs >= 6.0.0',
           'chrome >= 60.0.0',
           'firefox >= 60.0.0',
+          'njs >= 6.0.0',
           'chromium >= 67.0.0'
         ],
         keywords :
@@ -31785,7 +31785,7 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement.willfile Version* *will.yml ForExtension Version.will.yml' })
+  a.appStart({ args : '.willfile.supplement.willfile Version *will.yml ForExtension Version.will.yml' })
   a.ready.then( ( op ) =>
   {
     test.case = 'try to rewrite data by self';
@@ -31811,7 +31811,7 @@ function commandWillfileSupplementWillfileDstIsJson( test )
 
   /* - */
 
-  a.appStart({ args : '.willfile.supplement.willfile ./ Author* Contributors*.yml Description* Interpreters.will.yml format:json' })
+  a.appStart({ args : '.willfile.supplement.willfile package Author* Contributors*.yml Description* Interpreters.will.yml format:json' })
   a.ready.then( ( op ) =>
   {
     test.case = 'create new willfile, unical data in each file';
@@ -31868,6 +31868,8 @@ function commandWillfileSupplementWillfileDstIsJson( test )
   a.ready.then( () =>
   {
     a.reflect();
+    a.fileProvider.filesDelete( a.abs( '.ex.will.yml' ) );
+    a.fileProvider.filesDelete( a.abs( '.im.will.yml' ) );
     a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'willfile-from-npm' ) ] : a.abs( 'files' ) }   });
     return null;
   })
@@ -32008,7 +32010,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement.willfile ./.ex* ForExtension about:0' })
+  a.appStart({ args : '.willfile.supplement.willfile ./.ex ForExtension about:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled section about';
@@ -32041,7 +32043,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement.willfile ./.ex* ForExtension build:0' })
+  a.appStart({ args : '.willfile.supplement.willfile ./.ex ForExtension build:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled section build';
@@ -32068,7 +32070,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
     return null;
   })
 
-  a.appStart({ args : '.willfile.supplement.willfile ./.ex* ForExtension step:0 contributors:0 name:0' })
+  a.appStart({ args : '.willfile.supplement.willfile ./.ex ForExtension step:0 contributors:0 name:0' })
   a.ready.then( ( op ) =>
   {
     test.case = 'disabled section step and fields contributors and name';
@@ -32080,7 +32082,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
       'description' : 'To check the conversion',
       'version' : '0.0.0',
       'enabled' : 1,
-      'interpreters' : [ 'nodejs >= 6.0.0', 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'chromium >= 67.0.0' ],
+      'interpreters' : [ 'chrome >= 60.0.0', 'firefox >= 60.0.0', 'njs >= 6.0.0', 'chromium >= 67.0.0' ],
       'keywords' : [ 'tools', 'export', 'wtools', 'common' ],
       'license' : 'MIT',
       'author' : 'Author <author@dot.com>',
@@ -32105,7 +32107,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement.willfile ./.im* ForExtension submodulesDisabling:1' })
+  a.appStart({ args : '.willfile.supplement.willfile ./.im ForExtension submodulesDisabling:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'option submodulesDisabling';
@@ -32145,7 +32147,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement.willfile Author* ForExtension verbosity:5' })
+  a.appStart({ args : '.willfile.supplement.willfile Author ForExtension verbosity:5' })
   a.ready.then( ( op ) =>
   {
     test.case = 'option verbosity > 2';
@@ -32157,7 +32159,7 @@ function commandWillfileSupplementWillfileWithOptions( test )
 
   /* */
 
-  a.appStart({ args : '.willfile.supplement.willfile Author* ForExtension v:1' })
+  a.appStart({ args : '.willfile.supplement.willfile Author ForExtension v:1' })
   a.ready.then( ( op ) =>
   {
     test.case = 'option verbosity < 2';
