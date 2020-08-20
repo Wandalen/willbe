@@ -7587,7 +7587,8 @@ function willfileExtendWillfile( o )
   _.assert( _.objectIs( opts ) );
 
   let dstWillfiles = dstFilesFind( request[ 0 ] );
-  _.assert( dstWillfiles.length <= 2, 'Please, improve selector, cannot choose willfiles' );
+  if( dstWillfiles.length > 2 )
+  throw _.errBrief( 'Please, improve selector, cannot choose willfiles.' );
 
   let ext;
   if( dstWillfiles.length )
@@ -7621,10 +7622,13 @@ function willfileExtendWillfile( o )
   {
     let files = configFilesFind( request[ i ] );
 
+    if( files.length === 0 )
+    throw _.errBrief( 'Source configuration files does not exist.' )
+
     for( let j = 0 ; j < files.length ; j++ )
     {
       if( _.longHasNone( files[ j ].exts, [ 'yml', 'yaml', 'json' ] ) )
-      continue;
+      throw _.errBrief( 'Unexpected configuration files. Please, improve selector.' );
 
       let srcEncoding = files[ j ].ext === 'json' ? 'json' : 'yaml';
       let srcConfig = fileProvider.fileRead({ filePath : files[ j ].absolute, encoding : srcEncoding });
@@ -7655,7 +7659,7 @@ function willfileExtendWillfile( o )
   function dstFilesFind( dstPath )
   {
     if( path.isGlob( dstPath ) )
-    throw _.err( 'Path to destination file should has not globs.' );
+    throw _.err( 'Path to destination file should have not globs.' );
 
     dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
 
