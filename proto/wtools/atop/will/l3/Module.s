@@ -7586,16 +7586,22 @@ function willfileExtendWillfile( o )
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
 
-  let dstPath = dstPathFind( request[ 0 ] );
-  let dstWillfiles = configFilesFind( dstPath, 1 );
+  let dstWillfiles = dstFilesFind( request[ 0 ] );
+  _.assert( dstWillfiles.length <= 2, 'Please, improve selector, cannot choose willfiles' );
+
+  let ext;
+  if( dstWillfiles.length )
+  ext = dstWillfiles[ 0 ].ext;
+  else
+  ext = opts.format === 'json' ? 'json' : 'yaml';
+  let dstEncoding = ext === 'json' ? 'json.fine' : ext;
+
+  let dstPath = dstPathFind();
 
   if( opts.format === 'json' )
   _.assert( dstWillfiles.length === 0, 'not implemented' );
 
-  if( path.isGlob( dstPath ) && dstWillfiles.length === 0 )
-  _.assert( 0, `Can't find file` );
-
-  /* extension file creation */
+  /* extension */
 
   let sectionMap =
   {
@@ -7640,57 +7646,60 @@ function willfileExtendWillfile( o )
 
   /* write destination willfile */
 
-  let dstEncoding = path.ext( dstPath ) === 'json' ? 'json.fine' : 'yaml';
   dstWillfilesWrite( dstWillfiles );
-
-  /* */
 
   return null;
 
   /* */
 
-  function dstPathFind( dstPath )
+  function dstFilesFind( dstPath )
   {
+    if( path.isGlob( dstPath ) )
+    throw _.err( 'Path to destination file should has not globs.' );
+
     dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
 
-    if( fileProvider.isTerminal( dstPath ) )
-    return dstPath;
-
     if( fileProvider.isDir( dstPath ) )
-    {
-      dstPath = path.join( dstPath, opts.format === 'willfile' ? 'will.yml' : 'package.json' );
-    }
-    else if( !path.isGlob( dstPath ) )
-    {
-      let exts = path.exts( dstPath );
-      if( exts.length === 0 )
-      {
-        let ext = opts.format === 'willfile' ? '.will.yml' : '.json';
-        dstPath = dstPath + ext;
-      }
-      else
-      {
-        if( opts.format === 'json' && !_.longHas( exts, 'json' ) )
-        {
-          exts.push( 'json' );
-        }
-        else
-        {
-          if( !_.longHas( [ 'yml', 'json', 'yaml' ], path.ext( dstPath ) ) )
-          exts.push( 'yml' );
-          if( !_.longHas( exts, 'will' ) )
-          exts.splice( exts.length - 1, 0, 'will' );
-        }
+    dstPath = path.join( dstPath, './' );
+    else if( !fileProvider.isTerminal( dstPath ) && opts.format === 'json' )
+    dstPath = dstPath + '*.json';
 
-        dstPath = path.dir( dstPath ) + path.name( dstPath ) + '.' + exts.join( '.' );
-      }
-    }
-    return dstPath;
+    return will.willfilesFind
+    ({
+      commonPath : dstPath,
+      withIn : 1,
+      withOut : 0,
+    });
   }
 
   /* */
 
-  function configFilesFind( selector, findDst )
+  function dstPathFind()
+  {
+    if( dstWillfiles.length === 1 )
+    {
+      return dstWillfiles[ 0 ].absolute;
+    }
+    else if( dstWillfiles.length === 2 )
+    {
+      return path.join( dstWillfiles[ 0 ].dir, _.strCommonLeft( dstWillfiles[ 0 ].fullName, dstWillfiles[ 1 ].fullName ) + '*' );
+    }
+    else
+    {
+      let willPath = will.inPath ? will.inPath : path.current();
+      let firstExt = ext === 'yaml' ? 'yml' : ext;
+      let secondExt = opts.format === 'json' ? '.' : '.will.';
+
+      if( fileProvider.isDir( path.join( willPath, request[ 0 ] ) ) )
+      return path.join( willPath, opts.format === 'json' ? 'package.json' : 'will.yml' );
+      else
+      return path.join( willPath, path.name( request[ 0 ] ) + secondExt + firstExt );
+    }
+  }
+
+  /* */
+
+  function configFilesFind( selector )
   {
     let filePath = selector;
     if( !path.isAbsolute( filePath ) )
@@ -7698,7 +7707,7 @@ function willfileExtendWillfile( o )
 
     if( fileProvider.isTerminal( filePath ) )
     {
-      if( !findDst && dstWillfiles.length )
+      if( dstWillfiles.length )
       {
         if( dstWillfiles[ 0 ].absolute === filePath )
         return [];
@@ -7716,11 +7725,7 @@ function willfileExtendWillfile( o )
       filePath = filePath + '*.(yml|yaml|json)';
     }
 
-    let filter;
-    if( findDst )
-    filter = { filePath : { [ filePath ] : true } };
-    else
-    filter = { filePath : { [ filePath ] : true, [ dstPath ] : 0 } };
+    let filter = { filePath : { [ filePath ] : true, [ dstPath ] : 0 } };
 
     return fileProvider.filesFind
     ({
@@ -7747,7 +7752,6 @@ function willfileExtendWillfile( o )
       'enabled',
       'description',
       'license',
-      'author',
       'npm.name',
     ];
     let extendingMap = Object.create( null );
@@ -7759,6 +7763,13 @@ function willfileExtendWillfile( o )
 
     /* */
 
+    if( opts.author && src.about.author )
+    {
+      if( _.strIs( src.about.author ) )
+      opts.onSection( dst.about, { author : src.about.author } );
+      else
+      opts.onSection( dst.about, { author : `${ src.about.author.name } <${ src.about.author.email }>` } );
+    }
     if( opts.keywords && src.about.keywords )
     {
       dst.about.keywords = _.scalarAppendOnce( dst.about.keywords, src.about.keywords );
@@ -7772,7 +7783,9 @@ function willfileExtendWillfile( o )
     if( opts.interpreters && src.about.interpreters )
     {
       dst.about.interpreters = arrayPropertyParse( dst.about.interpreters, _.strIsolateLeftOrAll );
+      propertyReplace( dst.about.interpreters, 'njs', 'nodejs' );
       src.about.interpreters = arrayPropertyParse( src.about.interpreters, _.strIsolateLeftOrAll );
+      propertyReplace( src.about.interpreters, 'njs', 'nodejs' );
       opts.onSection( dst.about.interpreters, src.about.interpreters );
     }
     if( opts[ 'npm.scripts' ] && src.about[ 'npm.scripts' ] )
@@ -7817,6 +7830,17 @@ function willfileExtendWillfile( o )
 
   /* */
 
+  function propertyReplace( srcMap, dstProperty, srcProperty )
+  {
+    if( srcMap[ srcProperty ] !== undefined )
+    {
+      srcMap[ dstProperty ] = srcMap[ srcProperty ];
+      delete srcMap[ srcProperty ];
+    }
+  }
+
+  /* */
+
   function sectionExtend( dst, src, name )
   {
     if( !opts[ name ] )
@@ -7830,9 +7854,6 @@ function willfileExtendWillfile( o )
   {
     if( dstWillfiles.length !== 0 )
     {
-
-      _.assert( dstWillfiles.length <= 2, 'Please, improve selector, cannot choose willfiles' );
-
       let config = fileProvider.fileRead({ filePath : dstWillfiles[ 0 ].absolute, encoding : dstEncoding });
       if( dstWillfiles.length === 2 )
       {
