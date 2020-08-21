@@ -7063,7 +7063,7 @@ function _npmGenerateFromWillfile( o )
     if( o.srcConfig.path.bugtracker )
     config.bugs = pathSimplify( o.srcConfig.path.bugtracker );
     if( o.srcConfig.path.entry )
-    config.entry = o.srcConfig.path.entry;
+    config.main = o.srcConfig.path.entry; /* Dmytro : the previous version sets field `entry` */
 
     for( let n in o.srcConfig.path )
     {
