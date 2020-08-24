@@ -1,4 +1,5 @@
-( function _Main_s_( ) {
+( function _Main_s_()
+{
 
 'use strict';
 
@@ -1511,7 +1512,8 @@ function modulePathRegister( openedModule )
 
   _.assert
   (
-    will.moduleWithCommonPathMap[ openedModule.commonPath ] === openedModule || will.moduleWithCommonPathMap[ openedModule.commonPath ] === undefined,
+    will.moduleWithCommonPathMap[ openedModule.commonPath ] === openedModule
+    || will.moduleWithCommonPathMap[ openedModule.commonPath ] === undefined,
     () => 'Different instance of ' + openedModule.constructor.name + ' is registered at ' + openedModule.commonPath
   );
   will.moduleWithCommonPathMap[ openedModule.commonPath ] = openedModule;
@@ -2006,7 +2008,7 @@ function modulesFindWithAt( o )
     ({
       opener :
       {
-        willfilesPath : willfilesPath,
+        willfilesPath,
         searching : 'exact',
         reason : 'with',
       }
@@ -2155,11 +2157,11 @@ function modulesOnlyRoots( modules )
   let o2 =
   {
     ... filter,
-    modules : modules,
+    modules,
     revisiting : 0,
     recursive : 2,
     outputFormat : '*/object',
-    nodesGroup : nodesGroup,
+    nodesGroup,
   }
 
   // _global_.debugger = 1;
@@ -2186,7 +2188,7 @@ function modulesOnlyRoots( modules )
     withPeers : 1,
     recursive : 2,
     outputFormat : '*/object',
-    nodesGroup : nodesGroup,
+    nodesGroup,
   }
 
   // _global_.debugger = true;
@@ -2326,7 +2328,7 @@ function modulesEach_body( o )
     _.assert( !!object );
     _.assert
     (
-         object instanceof _.will.Module
+      object instanceof _.will.Module
       || object instanceof _.will.ModuleOpener
       || object instanceof _.will.ModulesRelation
       || object instanceof _.will.ModuleJunction
@@ -3834,18 +3836,19 @@ function graphGroupMake( o )
     // if( _global_.debugger )
     // if( will.junctionFrom( object ).id === 51 )
     // debugger;
-/*
-"junction:: : #1448
-  path::local : hd:///atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools
-  module::z / module::wPathTools / opener::wPathTools #1447 #1576
-  module::z / module::wPathTools / relation::wPathTools #1446 #1575
-"
-will.junctionWithId( 922 ).exportString()
-"junction:: : #922
-  path::local : hd:///atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools
-  module::z / module::wPathTools / opener::wPathTools #921 #1050
-  module::z / module::wPathTools / relation::wPathTools #920 #1049
-*/
+
+    /*
+    "junction:: : #1448
+      path::local : hd:///atop/will.test/_asset/hierarchy-hd-bug/.module/PathTools
+      module::z / module::wPathTools / opener::wPathTools #1447 #1576
+      module::z / module::wPathTools / relation::wPathTools #1446 #1575
+    "
+    will.junctionWithId( 922 ).exportString()
+    "junction:: : #922
+      path::local : hd:///atop/will.test/_asset/hierarchy-hd-bug/group1/group10/.module/PathTools
+      module::z / module::wPathTools / opener::wPathTools #921 #1050
+      module::z / module::wPathTools / relation::wPathTools #920 #1049
+    */
 
     // if( _global_.debugger )
     // debugger;
@@ -4088,7 +4091,7 @@ function openersAdoptModule( module )
   {
     if( opener.commonPath !== commonPath )
     return;
-    if( opener.openedModule == module )
+    if( opener.openedModule === module )
     return;
 
     _.assert( opener.openedModule === null );
@@ -4389,7 +4392,7 @@ function WillfilesFind( o )
 
     let o2 =
     {
-      filter : filter,
+      filter,
       maskPreset : 0,
       mandatory : 0,
       safe : 0,
@@ -4768,7 +4771,7 @@ function cleanDelete( o )
     if( o.fast )
     fileProvider.filesDelete
     ({
-      filePath : filePath,
+      filePath,
       verbosity : 0,
       throwing : 0,
       late : 1,
@@ -4776,7 +4779,7 @@ function cleanDelete( o )
     else
     fileProvider.fileDelete
     ({
-      filePath : filePath,
+      filePath,
       verbosity : 0,
       throwing : 0,
     });
@@ -5047,11 +5050,7 @@ function hookCall( o )
     prefixlessAction : 'resolved',
   });
 
-  _.sure
-  (
-      o.withPath === null || _.strIs( o.withPath ) || _.strsAreAll( o.withPath )
-    , 'Current path should be string if defined'
-  );
+  _.sure( o.withPath === null || _.strIs( o.withPath ) || _.strsAreAll( o.withPath ), 'Current path should be string if defined' );
 
   if( o.module && o.withPath )
   o.withPath = path.s.join( o.module.inPath, o.withPath );
@@ -5448,10 +5447,10 @@ let Forbids =
 let Accessors =
 {
 
-  _ : { get : _.accessor.getter.withSymbol, readOnly : 1, },
-  hooks : { get : hooksGet, readOnly : 1, },
+  _ : { get : _.accessor.getter.withSymbol, readOnly : 1 },
+  hooks : { get : hooksGet, readOnly : 1 },
   environmentPath : { set : environmentPathSet },
-  hooksPath : { get : hooksPathGet, readOnly : 1, },
+  hooksPath : { get : hooksPathGet, readOnly : 1 },
   withSubmodules : {},
 
 }
