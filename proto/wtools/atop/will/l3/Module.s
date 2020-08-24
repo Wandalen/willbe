@@ -8614,15 +8614,15 @@ function gitPull( o )
   return null;
 
   if( o.verbosity )
-  logger.log( `Pulling ${module.nameWithLocationGet()}` );
+  logger.log( `Pulling ${ module.nameWithLocationGet() }` );
 
   if( status.uncommitted )
   {
-    throw _.errBrief( `${module.nameWithLocationGet()} has local changes!` );
+    throw _.errBrief( `${ module.nameWithLocationGet() } has local changes!` );
     return null;
   }
 
-  let config = fileProvider.configUserRead();
+  let config = fileProvider.configUserRead( _.censor ? _.censor.storageConfigPath : undefined );
   let provider = _.FileFilter.Archive();
   provider.archive.basePath = will.currentOpener.dirPath;
   if( config && config.path && config.path.link )
