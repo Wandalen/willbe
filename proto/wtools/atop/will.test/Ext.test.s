@@ -29381,7 +29381,7 @@ function commandWillfileFromNpm( test )
     test.case = 'check field `main`, should not read path';
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
-    test.identical( config.path.entryPath, 'path/to' );
+    test.identical( config.path.entry, 'path/to' );
     test.identical( config.about.name, 'pathmain' );
     test.identical( config.about.enabled, 1 );
 
