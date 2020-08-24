@@ -3512,6 +3512,12 @@ function commandWillfileFromNpm( e )
   cui._command_pre( commandWillfileFromNpm, arguments );
   _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
 
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply({ withSubmodules : 0 });
+
+  if( e.subject )
+  e.propertiesMap.willfilePath = e.subject;
+
   let con = new _.Consequence().take( null );
   if( !cui.currentOpeners )
   {
@@ -3572,7 +3578,7 @@ commandWillfileFromNpm.defaults =
   willfilePath : null,
 };
 commandWillfileFromNpm.hint = 'Use "willfile from npm" to generate ".will.yml" file from "package.json".';
-commandWillfileFromNpm.commandSubjectHint = false;
+commandWillfileFromNpm.commandSubjectHint = 'A name of resulted willfile. It has priority over option "willfilePath".';
 commandWillfileFromNpm.commandProperties =
 {
   packagePath : 'Path to source json file. Default is "./package.json". Could be a selector.',
