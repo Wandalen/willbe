@@ -28545,6 +28545,145 @@ function commandGitSync( test )
 
 //
 
+function commandGitSyncRestoringHardlinks( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'git-push' );
+
+  let originalShell = _.process.starter
+  ({
+    currentPath : a.abs( 'original' ),
+    outputCollecting : 1,
+    outputGraying : 1,
+    ready : a.ready,
+    mode : 'shell',
+  });
+
+  /* - */
+
+  a.ready.then( ( op ) =>
+  {
+    a.reflect();
+    a.fileProvider.filesReflect({ reflectMap : { [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' ) } });
+    return null;
+  })
+
+  originalShell( 'git init' );
+  originalShell( 'git add --all' );
+  originalShell( 'git commit -am first' );
+  a.shell( `git clone original clone` );
+
+  a.appStart( '.with clone/ .call hlink beeping:0' )
+  .then( ( op ) =>
+  {
+    test.description = 'hardlink';
+
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+
+    a.fileProvider.fileAppend( a.abs( 'clone/f1.txt' ), 'clone\n' );
+    a.fileProvider.fileAppend( a.abs( 'original/f1.txt' ), 'original\n' );
+
+    var exp =
+`
+original/f.txt
+original
+`
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+`
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+clone
+`
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+clone
+`
+    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+    test.equivalent( orignalRead2, exp );
+
+    return null;
+  })
+
+  /* */
+
+  originalShell( 'git commit -am second' );
+
+  a.appStartNonThrowing( '.with clone/ .git.sync v:5' )
+  .then( ( op ) =>
+  {
+    test.case = 'conflict';
+    test.notIdentical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, 'has local changes' ), 0 );
+    test.identical( _.strCount( op.output, 'CONFLICT (content): Merge conflict in f1.txt' ), 1 );
+    test.identical( _.strCount( op.output, 'Restored 1 hardlinks' ), 1 );
+
+    test.is( !a.fileProvider.areHardLinked( a.abs( 'original/f1.txt' ), a.abs( 'original/f2.txt' ) ) );
+    test.is( a.fileProvider.areHardLinked( a.abs( 'clone/f1.txt' ), a.abs( 'clone/f2.txt' ) ) );
+
+    var exp =
+`
+original/f.txt
+original
+`
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f1.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+`
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'original/f2.txt' ) );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+ <<<<<<< HEAD
+clone
+=======
+original
+ >>>>>>>
+`
+    var orignalRead1 = a.fileProvider.fileRead( a.abs( 'clone/f1.txt' ) );
+    orignalRead1 = orignalRead1.replace( />>>> .+/, '>>>>' );
+    test.equivalent( orignalRead1, exp );
+
+    var exp =
+`
+original/f.txt
+ <<<<<<< HEAD
+clone
+=======
+original
+ >>>>>>>
+`
+    var orignalRead2 = a.fileProvider.fileRead( a.abs( 'clone/f2.txt' ) );
+    orignalRead2 = orignalRead2.replace( />>>> .+/, '>>>>' );
+    test.equivalent( orignalRead2, exp );
+    return null;
+  })
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandGitTag( test )
 {
   let context = this;
@@ -32541,6 +32680,7 @@ let Self =
     commandGitStatus,
     commandGitStatusWithPR,
     commandGitSync,
+    commandGitSyncRestoringHardlinks,
     commandGitTag,
 
     commandNpmFromWillfile,
