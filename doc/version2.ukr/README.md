@@ -239,7 +239,7 @@
 
 <details>
   <summary><a href="./concept/Selector.md#Ґлоб-з-ассертом">
-    Ґлоб з ассертом  
+    Ґлоб з ассертом
   </a></summary>
     Спеціальна синтаксична конструкція, що додається до ґлоба для обмеження кількості ресурсів, що мають бути знайдені селектором із цим ґлобом.
 </details>
@@ -531,5 +531,12 @@
     Обробка масивів рядкових значень в ресурсах <code>вілфайла</code>
   </a></summary>
     Як використовувати функцію об'єднання масивів рядкових значень в <code>вілфайлі</code>.
+</details>
+
+<details>
+  <summary><a href="./tutorial/CommandGitPrOpen.md">
+    Створення <code>pull request</code>-ів на <code>Github</code>-i
+  </a></summary>
+    Використання команди <code>.git.pr.open</code> для створення <code>pull request</code>-ів на <code>Github</code>-i.
 </details>
 
