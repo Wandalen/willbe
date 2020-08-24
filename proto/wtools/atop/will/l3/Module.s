@@ -7219,21 +7219,21 @@ function _willfileGenerateFromNpm( o )
 
   let propertiesMap =
   {
-    name :          { propertyAdd : aboutPropertyAdd, name : 'name' },
-    version :       { propertyAdd : aboutPropertyAdd, name : 'version' },
-    enabled :       { propertyAdd : aboutPropertyAdd, name : 'enabled' },
-    description :   { propertyAdd : aboutPropertyAdd, name : 'description' },
-    keywords :      { propertyAdd : aboutPropertyAdd, name : 'keywords' },
-    license :       { propertyAdd : aboutPropertyAdd, name : 'license' },
-    author :        { propertyAdd : aboutPropertyAdd, name : 'author' },
-    contributors :  { propertyAdd : aboutPropertyAdd, name : 'contributors' },
-    scripts :       { propertyAdd : aboutPropertyAdd, name : 'npm.scripts' },
-    interpreters :  { propertyAdd : interpretersAdd, name : 'interpreters' },
-    engine :        { propertyAdd : interpretersAdd, name : 'interpreters' },
-    repository :    { propertyAdd : pathPropertyAdd, name : 'repository' },
-    bugs :          { propertyAdd : pathPropertyAdd, name : 'bugs' },
-    main :          { propertyAdd : pathPropertyAdd, name : 'main' },
-    files :         { propertyAdd : pathPropertyAdd, name : 'files' },
+    name :          { propertyAdd : aboutPropertyAdd,          name : 'name' },
+    version :       { propertyAdd : aboutPropertyAdd,          name : 'version' },
+    enabled :       { propertyAdd : aboutPropertyAdd,          name : 'enabled' },
+    description :   { propertyAdd : aboutPropertyAdd,          name : 'description' },
+    keywords :      { propertyAdd : aboutPropertyAdd,          name : 'keywords' },
+    license :       { propertyAdd : aboutPropertyAdd,          name : 'license' },
+    author :        { propertyAdd : aboutFormattedPropertyAdd, name : 'author' },
+    contributors :  { propertyAdd : aboutFormattedPropertyAdd, name : 'contributors' },
+    scripts :       { propertyAdd : aboutPropertyAdd,          name : 'npm.scripts' },
+    interpreters :  { propertyAdd : interpretersAdd,           name : 'interpreters' },
+    engine :        { propertyAdd : interpretersAdd,           name : 'interpreters' },
+    repository :    { propertyAdd : pathPropertyAdd,           name : 'repository' },
+    bugs :          { propertyAdd : pathPropertyAdd,           name : 'bugs' },
+    main :          { propertyAdd : pathPropertyAdd,           name : 'main' },
+    files :         { propertyAdd : pathPropertyAdd,           name : 'files' },
     dependencies :          { propertyAdd : submodulePropertyAdd, name : undefined },
     devDependencies :       { propertyAdd : submodulePropertyAdd, name : 'development' },
     optionalDependencies :  { propertyAdd : submodulePropertyAdd, name : 'optional' },
@@ -7271,6 +7271,22 @@ function _willfileGenerateFromNpm( o )
   function aboutPropertyAdd( property, name )
   {
     willfile.about[ name ] = config[ property ];
+  }
+
+  /* */
+
+  function aboutFormattedPropertyAdd( property, name )
+  {
+    if( _.strIs( config[ property ] ) || ( _.arrayIs( config[ property ] ) && _.strIs( config[ property ][ 0 ] ) ) )
+    {
+      willfile.about[ name ] = config[ property ];
+    }
+    else if( _.mapIs( config[ property ][ 0 ] ) )
+    {
+      willfile.about[ name ] = [];
+      for( let i = 0; i < config[ property ].length; i++ )
+      willfile.about[ name ][ i ] = `${ config[ property ][ i ].name } <${ config[ property ][ i ].email }>`;
+    }
   }
 
   /* */
