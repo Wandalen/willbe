@@ -7166,7 +7166,7 @@ function npmGenerateFromWillfile( o )
 
   /* */
 
-  let config = _.will.Module.prototype._npmGenerateFromWillfile.call( will,
+  let o2 =
   {
     srcConfig :
     {
@@ -7175,7 +7175,8 @@ function npmGenerateFromWillfile( o )
       submodule : module.submoduleMap,
     },
     ... opts,
-  });
+  };
+  let config = _.will.Module.prototype._npmGenerateFromWillfile.call( will, o2 );
 
   _.sure( !fileProvider.isDir( opts.packagePath ), () => packagePath + ' is dir, not safe to delete' );
 
@@ -7244,7 +7245,7 @@ function _willfileGenerateFromNpm( o )
   propertiesMap[ property ].propertyAdd( property, propertiesMap[ property ].name );
 
   for( let property in config )
-  if( !property in propertiesMap )
+  if( !( property in propertiesMap ) )
   willfile.about[ `npm.${ property }` ] = config[ property ];
 
   if( willfile.about.name )
@@ -7535,12 +7536,16 @@ function willfileExtendWillfile( o )
   }
 
   if( opts.submodulesDisabling )
-  for( let dependency in willfile.submodule )
-  willfile.submodule[ dependency ].enabled = 0;
+  {
+    for( let dependency in willfile.submodule )
+    willfile.submodule[ dependency ].enabled = 0;
+  }
 
   for( let sectionName in sectionMap )
-  if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
-  delete willfile[ sectionName ];
+  {
+    if( _.mapKeys( willfile[ sectionName ] ).length === 0 )
+    delete willfile[ sectionName ];
+  }
 
   /* write destination willfile */
 
@@ -7627,7 +7632,7 @@ function willfileExtendWillfile( o )
 
     return fileProvider.filesFind
     ({
-      filePath : filePath,
+      filePath,
       withStem : 0,
       withDirs : 0,
       mode : 'distinct',
@@ -7810,11 +7815,14 @@ function willfileExtendWillfile( o )
 
 
     if( opts.format === 'json' )
-    data = _.will.Module.prototype._npmGenerateFromWillfile.call( will,
     {
-      srcConfig : data,
-      packagePath : path,
-    });
+      let o =
+      {
+        srcConfig : data,
+        packagePath : path,
+      };
+      data = _.will.Module.prototype._npmGenerateFromWillfile.call( will, o );
+    }
 
     fileProvider.fileWrite
     ({
