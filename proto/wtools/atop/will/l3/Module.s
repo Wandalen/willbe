@@ -7062,7 +7062,7 @@ function _npmGenerateFromWillfile( o )
     config.repository = pathSimplify( o.srcConfig.path.repository );
     if( o.srcConfig.path.bugtracker )
     config.bugs = pathSimplify( o.srcConfig.path.bugtracker );
-    if( o.srcConfig.path.entry )
+    if( o.srcConfig.path.entry && !config.main )
     config.main = o.srcConfig.path.entry; /* Dmytro : the previous version sets field `entry` */
 
     for( let n in o.srcConfig.path )
@@ -7143,10 +7143,8 @@ function npmGenerateFromWillfile( o )
   let will = module.will;
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
-  let logger = will.logger;
   let opts = _.mapExtend( null, o );
   let verbosity = o.verbosity;
-  // let about = module.about.exportStructure();
 
   _.assert( arguments.length === 1 );
   _.assert( _.objectIs( opts ) );
@@ -7160,8 +7158,6 @@ function npmGenerateFromWillfile( o )
     selectorIsPath : 1,
     currentContext,
   });
-  // opts.packagePath = path.join( module.inPath, opts.packagePath );
-
 
   if( opts.entryPath )
   opts.entryPath = module.filesFromResource({ selector : opts.entryPath, currentContext });
@@ -7181,88 +7177,6 @@ function npmGenerateFromWillfile( o )
     ... opts,
   });
 
-  // let config = Object.create( null );
-  // config.name = about.name;
-  // config.version = about.version;
-  // config.enabled = about.enabled;
-  //
-  // if( about.description )
-  // config.description = about.description;
-  // if( about.keywords )
-  // config.keywords = about.keywords;
-  // if( about.license )
-  // config.license = about.license;
-  //
-  // if( about.interpreters )
-  // {
-  //   let interpreters = _.arrayAs( about.interpreters );
-  //   interpreters.forEach( ( interpreter ) =>
-  //   {
-  //     if( _.strHas( interpreter, 'njs' ) )
-  //     config.engine = _.strReplace( interpreter, 'njs', 'node' );
-  //   });
-  // }
-  //
-  // if( about.author )
-  // config.author = about.author;
-  // if( about.contributors )
-  // config.contributors = about.contributors;
-  //
-  // for( let n in about )
-  // {
-  //   if( !_.strBegins( n, 'npm.' ) )
-  //   continue;
-  //   config[ _.strRemoveBegin( n, 'npm.' ) ] = about[ n ];
-  // }
-  //
-  // if( opts.entryPath && opts.entryPath.length )
-  // {
-  //   config.main = _.scalarFrom( path.s.relative( path.dir( opts.packagePath ), opts.entryPath ) );
-  // }
-  //
-  // if( opts.filesPath && opts.filesPath.length )
-  // {
-  //   config.files = path.s.relative( path.dir( opts.packagePath ), opts.filesPath );
-  // }
-  //
-  // if( module.pathMap.repository )
-  // config.repository = pathSimplify( module.pathMap.repository );
-  // if( module.pathMap.bugtracker )
-  // config.bugs = pathSimplify( module.pathMap.bugtracker );
-  // if( module.pathMap.entry )
-  // config.entry = module.pathMap.entry;
-  //
-  // for( let n in module.pathMap )
-  // {
-  //   if( !_.strBegins( n, 'npm.' ) )
-  //   continue;
-  //   config[ _.strRemoveBegin( n, 'npm.' ) ] = module.pathMap[ n ];
-  // }
-  //
-  // for( let s in module.submoduleMap )
-  // {
-  //   let submodule = module.submoduleMap[ s ];
-  //   let p = submodule.path;
-  //   p = path.parseFull( p );
-  //
-  //   _.assert
-  //   (
-  //     p.protocol === 'npm' || p.protocol === 'hd',
-  //     () => 'Implemented only for "npm" and "hd" dependencies, but got ' + p.full
-  //   );
-  //
-  //   if( p.protocol === 'npm' )
-  //   {
-  //     depAdd( submodule, path.relative( '/', p.longPath ), p.hash );
-  //   }
-  //   else if( p.protocol === 'hd' )
-  //   {
-  //     depAdd( submodule, config.name ? config.name : submodule.name, 'file:' + p.longPath,  );
-  //   }
-  //   else _.assert( 0 );
-  //
-  // }
-
   _.sure( !fileProvider.isDir( opts.packagePath ), () => packagePath + ' is dir, not safe to delete' );
 
   fileProvider.fileWrite
@@ -7274,42 +7188,12 @@ function npmGenerateFromWillfile( o )
   });
 
   return null;
-
-  /* */
-
-  // function pathSimplify( src )
-  // {
-  //   let r = src;
-  //   if( !_.strIs( r ) )
-  //   return r;
-  //
-  //   r = r.replace( '///', '//' );
-  //   r = r.replace( 'npm://', '' );
-  //
-  //   return r;
-  // }
-  //
-  // function depAdd( submodule, name, hash )
-  // {
-  //   if( submodule.criterion.optional )
-  //   _depAdd( 'optionalDependencies', name, hash );
-  //   else if( submodule.criterion.development )
-  //   _depAdd( 'devDependencies', name, hash );
-  //   else
-  //   _depAdd( 'dependencies', name, hash );
-  // }
-  //
-  // function _depAdd( section, name, hash )
-  // {
-  //   config[ section ] = config[ section ] || Object.create( null );
-  //   config[ section ][ name ] = hash ? hash : '';
-  // }
 }
 
 npmGenerateFromWillfile.defaults =
 {
-  packagePath : 'package.json',
-  entryPath : 'Index.js',
+  packagePath : null,
+  entryPath : null,
   filesPath : null,
   verbosity : null,
 }
@@ -7359,10 +7243,15 @@ function _willfileGenerateFromNpm( o )
   if( property in config )
   propertiesMap[ property ].propertyAdd( property, propertiesMap[ property ].name );
 
+  for( let property in config )
+  if( !property in propertiesMap )
+  willfile.about[ `npm.${ property }` ] = config[ property ];
+
   if( willfile.about.name )
   {
+    if( !willfile.about[ 'npm.name' ] )
     willfile.about[ 'npm.name' ] = willfile.about.name;
-    willfile.path.origins.push( `npm:///${ willfile.about.name }` );
+    willfile.path.origins.push( `npm:///${ willfile.about[ 'npm.name' ] }` );
   }
   if( willfile.path.origins.length === 0 )
   {
@@ -7376,23 +7265,6 @@ function _willfileGenerateFromNpm( o )
   {
     delete willfile.path;
   }
-
-  /* */
-
-  // _.sure( !fileProvider.isDir( willfilePath ), () => `${ willfilePath } is dir, not safe to delete` );
-  // _.sure( !fileProvider.isTerminal( willfilePath ), () => `${ willfilePath } is exists, not safe to rewrite` );
-
-  return willfile;
-
-  // fileProvider.fileWrite
-  // ({
-  //   filePath : willfilePath,
-  //   data : willfile,
-  //   encoding : 'yaml',
-  //   verbosity : verbosity ? 5 : 0,
-  // });
-  //
-  // return null;
 
   /* */
 
@@ -7426,13 +7298,17 @@ function _willfileGenerateFromNpm( o )
     }
     if( property === 'main' )
     {
-      willfile.path.entryPath = config.main;
+      willfile.path.entry = config.main;
     }
     if( property === 'files' )
     {
-      willfile.path.export = path.common( config.files );
+      willfile.path[ 'npm.files' ] = config.files;
     }
   }
+
+  /* return config */
+
+  return willfile;
 
   /* */
 
@@ -7452,8 +7328,10 @@ function _willfileGenerateFromNpm( o )
       return str;
     }
 
-    let result = src.type;
-    result += '+' + src.url.replace( '//', '///' );
+    let result = '';
+    if( src.type )
+    result = src.type + '+';
+    result += src.url.replace( '//', '///' );
     return result;
   }
 
@@ -7749,20 +7627,26 @@ function willfileExtendWillfile( o )
     if( !opts.about )
     return;
 
-    let keys =
-    [
-      'name',
-      'version',
-      'enabled',
-      'description',
-      'license',
-      'npm.name',
-    ];
-    let extendingMap = Object.create( null );
-    for( let i = 0 ; i < keys.length ; i++ )
-    if( opts[ keys[ i ] ] && ( src.about[ keys[ i ] ] !== undefined ) )
-    extendingMap[ keys[ i ] ] = src.about[ keys[ i ] ];
+    let exclusionMap =
+    {
+      'author' : 1,
+      'keywords' : 1,
+      'contributors' : 1,
+      'interpreters' : 1,
+      'npm.scripts' : 1,
+    };
 
+    let extendingMap = Object.create( null );
+    for( let property in src.about )
+    {
+      if( !( property in exclusionMap ) )
+      {
+        if( ( property in willfileExtendWillfile.defaults ) && opts[ property ] )
+        extendingMap[ property ] = src.about[ property ];
+        else if( !( property in willfileExtendWillfile.defaults ) )
+        extendingMap[ property ] = src.about[ property ];
+      }
+    }
     opts.onSection( dst.about, extendingMap );
 
     /* */
