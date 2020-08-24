@@ -3457,6 +3457,12 @@ function commandNpmFromWillfile( e )
   cui._command_pre( commandNpmFromWillfile, arguments );
   _.routineOptions( commandNpmFromWillfile, e.propertiesMap );
 
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply({ withSubmodules : 0 });
+
+  if( e.subject )
+  e.propertiesMap.packagePath = e.subject;
+
   return cui._commandBuildLike
   ({
     event : e,
@@ -3483,17 +3489,17 @@ function commandNpmFromWillfile( e )
 
 commandNpmFromWillfile.defaults =
 {
-  packagePath : null,
+  packagePath : '{path::out}/package.json',
   entryPath : null,
   filesPath : null,
 };
-commandNpmFromWillfile.hint = 'Use "npm from willfile" to generate "package.json" file from willfile.';
-commandNpmFromWillfile.commandSubjectHint = false;
+commandNpmFromWillfile.hint = 'Use "npm from willfile" to generate "package.json" file from willfile.\n\t"will .npm.from.willfile" - generate "package.json" from unnamed willfiles, file locates in directory "out" of module;\n\t"will .npm.from.willfile package.json" - generate "package.json" from unnamed willfiles, file locates in directory of module.';
+commandNpmFromWillfile.commandSubjectHint = 'A name of resulted JSON file. It has priority over option "packagePath".';
 commandNpmFromWillfile.commandProperties =
 {
-  packagePath : 'Path to generated file. Default is "./package.json".',
-  entryPath : 'Path to source willfiles. Default is current directory "./" and unnamed willfiles.',
-  filesPath : 'Path to directory with files that are included in section "files" of "package.json". By default, "package.json" includes no section "files".',
+  packagePath : 'Path to generated JSON file. Default is "{path::out}/package.json".\n\t"will .npm.from.willfile packagePath:out/package.json" - generate "package.json" from unnamed willfiles, file locates in directory "out" of module.',
+  entryPath : 'Path to file that for field "main" of "package.json". By default "entryPath" is generated from module with path "path/entry".\n\t"will .npm.from.willfile entryPath:proto/wtools/Include.s" - generate "package.json" with field "main" : "proto/wtools/Include.s".',
+  filesPath : 'Path to directory or file for field "files" of "package.json". By default, field "files" is generated from module\n\twith path "path/npm.files"a.\n\t"will .npm.from.willfile filesPath:proto" - generate "package.json" from unnamed willfiles, field "files" will contain all files from directory "proto".',
 };
 
 //
