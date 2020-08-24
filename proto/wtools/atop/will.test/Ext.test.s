@@ -8891,7 +8891,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   })
 
   a.appStart({ execPath : '.imply withSubmodules:0 ; .with withSubmodulesDef .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
@@ -8917,7 +8917,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   })
 
   a.appStart({ execPath : '.imply withSubmodules:0 ; .with withSubmodules2 .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
@@ -8943,7 +8943,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   })
 
   a.appStart({ execPath : '.imply withSubmodules:0 ; .with withSubmodules1 .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
@@ -8969,7 +8969,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   })
 
   a.appStart({ execPath : '.imply withSubmodules:0 ; .with withSubmodules0 .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
@@ -8995,7 +8995,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   })
 
   a.appStart({ execPath : '.imply withSubmodules:1 ; .with withSubmodulesDef .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
@@ -9021,7 +9021,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   })
 
   a.appStart({ execPath : '.imply withSubmodules:1 ; .with withSubmodules2 .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
@@ -9047,7 +9047,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   })
 
   a.appStart({ execPath : '.imply withSubmodules:1 ; .with withSubmodules1 .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
@@ -9073,7 +9073,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   })
 
   a.appStart({ execPath : '.imply withSubmodules:1 ; .with withSubmodules0 .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
@@ -9099,7 +9099,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   })
 
   a.appStart({ execPath : '.imply withSubmodules:2 ; .with withSubmodulesDef .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
@@ -9125,7 +9125,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   })
 
   a.appStart({ execPath : '.imply withSubmodules:2 ; .with withSubmodules2 .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
@@ -9151,7 +9151,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   })
 
   a.appStart({ execPath : '.imply withSubmodules:2 ; .with withSubmodules1 .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
@@ -9177,7 +9177,7 @@ function buildOptionWithSubmodulesExplicitRunOption( test )
   })
 
   a.appStart({ execPath : '.imply withSubmodules:2 ; .with withSubmodules0 .build' })
-  .finally( ( err, op ) =>
+  .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
     test.identical( _.strCount( op.output, 'echo1' ), 1 );
@@ -18569,7 +18569,8 @@ function submodulesDownloadThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `Module module::submodules-download-errors-bad / opener::ModuleForTesting2a is downloaded, but it's not a git repository` ) );
+    var exp = `Module module::submodules-download-errors-bad / opener::ModuleForTesting2a is downloaded, but it's not a git repo`;
+    test.is( _.strHas( op.output, exp ) );
     test.is( _.strHas( op.output, 'Failed to download module' ) );
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [ 'file' ] );
@@ -20152,7 +20153,8 @@ function submodulesUpdateThrowing( test )
   .then( ( op ) =>
   {
     test.notIdentical( op.exitCode, 0 );
-    test.is( _.strHas( op.output, `Module module::submodules-download-errors-good / opener::ModuleForTesting2a is downloaded, but it's not a git repository` ) );
+    var exp = `Module module::submodules-download-errors-good / opener::ModuleForTesting2a is downloaded, but it's not a git rep`;
+    test.is( _.strHas( op.output, exp ) );
     test.is( _.strHas( op.output, 'Failed to update module' ) );
     test.is( a.fileProvider.fileExists( a.abs( '.module/ModuleForTesting2a' ) ) )
     test.identical( a.fileProvider.dirRead( a.abs( '.module/ModuleForTesting2a' ) ), [ 'file' ] );
@@ -22822,7 +22824,7 @@ function stepGitPush( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
-    test.identical( _.strCount( op.output, "Branch 'master' set up to track remote branch 'master' from 'origin'." ), 1 );
+    test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
 
     return null;
   })
@@ -25048,7 +25050,6 @@ function runWillbe( test )
     currentPath : a.routinePath,
     outputCollecting : 1,
     outputGraying : 1,
-    mode : 'fork',
     ready : a.ready,
     mode : 'shell',
   });
@@ -25173,7 +25174,7 @@ function resourcesFormReflectorsExperiment( test )
     test.case = 'old version of out file from Starter module, works really slow';
     let o2 =
     {
-      execPath : execPath,
+      execPath,
       currentPath : a.abs( './old-out-file/' ),
       args : [ '.submodules.list' ],
       mode : 'fork',
@@ -25197,9 +25198,9 @@ function resourcesFormReflectorsExperiment( test )
     test.is( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter!master' ) );
     test.is( _.strHas( op.output, 'autoExporting : 0' ) );
     test.is( _.strHas( op.output, 'enabled : 1' ) );
-    test.is( _.strHas( op.output, "Exported builds : [ 'proto.export' ]" ) );
-    test.is( _.strHas( op.output, "isDownloaded : false" ) );
-    test.is( _.strHas( op.output, "isAvailable : false" ) );
+    test.is( _.strHas( op.output, 'Exported builds : [ \'proto.export\' ]' ) );
+    test.is( _.strHas( op.output, 'isDownloaded : false' ) );
+    test.is( _.strHas( op.output, 'isAvailable : false' ) );
 
     return null;
   })
@@ -25214,7 +25215,7 @@ function resourcesFormReflectorsExperiment( test )
 
     let o2 =
     {
-      execPath : execPath,
+      execPath,
       currentPath : a.abs( './new-out-file/' ),
       args : [ '.submodules.list' ],
       mode : 'fork',
@@ -25238,9 +25239,9 @@ function resourcesFormReflectorsExperiment( test )
     test.is( _.strHas( op.output, 'path : git+https:///github.com/Wandalen/wStarter.git/out/wStarter!master' ) );
     test.is( _.strHas( op.output, 'autoExporting : 0' ) );
     test.is( _.strHas( op.output, 'enabled : 1' ) );
-    test.is( _.strHas( op.output, "Exported builds : [ 'proto.export' ]" ) );
-    test.is( _.strHas( op.output, "isDownloaded : false" ) );
-    test.is( _.strHas( op.output, "isAvailable : false" ) );
+    test.is( _.strHas( op.output, 'Exported builds : [ \'proto.export\' ]' ) );
+    test.is( _.strHas( op.output, 'isDownloaded : false' ) );
+    test.is( _.strHas( op.output, 'isAvailable : false' ) );
 
     return null;
   })
@@ -25713,14 +25714,14 @@ function commandSubmodulesGit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'origin1	https://github.com/user/git-sync.git' ), 0 );
+    test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/git-sync.git' ), 0 );
     return null;
   })
   localShell( 'git remote -v' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'origin1	https://github.com/user/local.git' ), 2 );
+    test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/local.git' ), 2 );
     return null;
   })
 
@@ -26216,14 +26217,14 @@ function commandModulesGit( test )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'origin1	https://github.com/user/git-sync.git' ), 2 );
+    test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/git-sync.git' ), 2 );
     return null;
   })
   localShell( 'git remote -v' )
   .then( ( op ) =>
   {
     test.identical( op.exitCode, 0 );
-    test.identical( _.strCount( op.output, 'origin1	https://github.com/user/local.git' ), 2 );
+    test.identical( _.strCount( op.output, 'origin1\thttps://github.com/user/local.git' ), 2 );
     return null;
   })
 
@@ -27606,7 +27607,7 @@ function commandGitPush( test )
     test.identical( _.strCount( op.output, 'Pushing module::clone' ), 1 );
     test.identical( _.strCount( op.output, 'To ../repo' ), 1 );
     test.identical( _.strCount( op.output, ' * [new branch]      master -> master' ), 1 );
-    test.identical( _.strCount( op.output, "Branch 'master' set up to track remote branch 'master' from 'origin'." ), 1 );
+    test.identical( _.strCount( op.output, 'Branch \'master\' set up to track remote branch \'master\' from \'origin\'.' ), 1 );
 
     return null;
   })
@@ -28937,20 +28938,19 @@ function commandNpmFromWillfile( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "npmfromwillfile",
-      description: "To check the conversion",
-      version : "0.0.0",
+      name : 'npmfromwillfile',
+      description : 'To check the conversion',
+      version : '0.0.0',
       enabled : 1,
-      license : "MIT",
-      description : "To check the conversion",
-      author : "Author <author@dot.com>",
-      contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      license : 'MIT',
+      author : 'Author <author@dot.com>',
+      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
-      dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "npmfromwillfile" : "file:.", "wTesting" : "" },
-      repository: "git+https://github.com/author/NpmFromWillfile.git",
-      bugs : "https://github.com/author/NpmFromWillfile/issues",
-      keywords : ["tools", "export"],
+      dependencies : { 'eslint' : '7.1.0' },
+      devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
+      repository : 'git+https://github.com/author/NpmFromWillfile.git',
+      bugs : 'https://github.com/author/NpmFromWillfile/issues',
+      keywords : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
@@ -28982,20 +28982,19 @@ function commandNpmFromWillfileOptionsInCommand( test )
     let config = a.fileProvider.fileRead({ filePath : a.abs( 'out/debug/package.json' ), encoding : 'json' });
     var exp =
     {
-      name : "npmfromwillfile",
-      description: "To check the conversion",
-      version : "0.0.0",
+      name : 'npmfromwillfile',
+      description : 'To check the conversion',
+      version : '0.0.0',
       enabled : 1,
-      license : "MIT",
-      description : "To check the conversion",
-      author : "Author <author@dot.com>",
-      contributors : [ "Contributor1 <contributor1@dot.com>", "Contributor2 <contributor2@dot.com>" ],
+      license : 'MIT',
+      author : 'Author <author@dot.com>',
+      contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
-      dependencies : { "eslint" : "7.1.0" },
-      devDependencies : { "npmfromwillfile" : "file:.", "wTesting" : "" },
-      repository: "git+https://github.com/author/NpmFromWillfile.git",
-      bugs : "https://github.com/author/NpmFromWillfile/issues",
-      keywords : ["tools", "export"],
+      dependencies : { 'eslint' : '7.1.0' },
+      devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
+      repository : 'git+https://github.com/author/NpmFromWillfile.git',
+      bugs : 'https://github.com/author/NpmFromWillfile/issues',
+      keywords : [ 'tools', 'export' ],
     };
     test.identical( config, exp );
 
@@ -29017,17 +29016,16 @@ function commandNpmFromWillfileOptionsInCommand( test )
     var exp =
     {
       name : 'npmfromwillfile',
-      description: 'To check the conversion',
+      description : 'To check the conversion',
       version : '0.0.0',
       enabled : 1,
       license : 'MIT',
-      description : 'To check the conversion',
       author : 'Author <author@dot.com>',
       contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { 'eslint' : '7.1.0' },
       devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
-      repository: 'git+https://github.com/author/NpmFromWillfile.git',
+      repository : 'git+https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
     };
@@ -29051,17 +29049,16 @@ function commandNpmFromWillfileOptionsInCommand( test )
     var exp =
     {
       name : 'npmfromwillfile',
-      description: 'To check the conversion',
+      description : 'To check the conversion',
       version : '0.0.0',
       enabled : 1,
       license : 'MIT',
-      description : 'To check the conversion',
       author : 'Author <author@dot.com>',
       contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
       scripts : { 'test' : 'wtest .run proto/** v:5', 'docgen' : 'wdocgen .build proto' },
       dependencies : { 'eslint' : '7.1.0' },
       devDependencies : { 'npmfromwillfile' : 'file:.', 'wTesting' : '' },
-      repository: 'git+https://github.com/author/NpmFromWillfile.git',
+      repository : 'git+https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
     };
@@ -29348,7 +29345,7 @@ function commandWillfileFromNpm( test )
     test.identical( op.exitCode, 0 );
     let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
     test.identical( config.about.name, 'willfilefromnpm' );
-    test.identical( config.about[ "npm.name" ], 'willfilefromnpm' );
+    test.identical( config.about[ 'npm.name' ], 'willfilefromnpm' );
     test.identical( config.about.enabled, 1 );
 
     a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
@@ -29613,16 +29610,15 @@ function commandWillfileFromNpmDoubleConversion( test )
     var exp =
     {
       name : 'willfilefromnpm',
-      description: 'To check the conversion',
+      description : 'To check the conversion',
       version : '0.0.0',
       enabled : 1,
       license : 'MIT',
-      description : 'To check the conversion',
       author : 'Author <author@dot.com>',
       contributors : [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ],
       dependencies : { 'eslint' : '7.1.0' },
       devDependencies : { 'willfilefromnpm' : 'file:.', 'wTesting' : '' },
-      repository: 'git+https://github.com/author/NpmFromWillfile.git',
+      repository : 'git+https://github.com/author/NpmFromWillfile.git',
       bugs : 'https://github.com/author/NpmFromWillfile/issues',
       keywords : [ 'tools', 'export' ],
     };
@@ -30830,29 +30826,29 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
     var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
     var exp =
     {
-      about :
+      'about' :
       {
-        name : 'Extension willfile',
-        description : 'To check the extension',
-        version : '1.1.1',
-        enabled : 0,
-        interpreters :
+        'name' : 'Extension willfile',
+        'description' : 'To check the extension',
+        'version' : '1.1.1',
+        'enabled' : 0,
+        'interpreters' :
         [
           'chrome >= 60.0.0',
           'firefox >= 67.0.0',
           'njs = 6.0.0',
           'chromium >= 67.0.0'
         ],
-        keywords :
+        'keywords' :
         [
           'tools',
           'export',
           'wtools',
           'common',
         ],
-        license : 'GPL',
-        author : 'Author <author1@dot.com>',
-        contributors :
+        'license' : 'GPL',
+        'author' : 'Author <author1@dot.com>',
+        'contributors' :
         [
           'Contributor1 <contributor1@dot.com>',
           'Contributor2 <contributor2@xxx.com>',
@@ -30861,43 +30857,43 @@ function commandWillfileExtendWillfileDstIsWillfile( test )
         'npm.name' : 'willfileextend',
         'npm.scripts' :
         {
-          test : 'wtest .run proto/** v:5',
-          docgen : 'wdocgen .build proto/wtools',
-          eslint : 'eslint proto'
+          'test' : 'wtest .run proto/** v:5',
+          'docgen' : 'wdocgen .build proto/wtools',
+          'eslint' : 'eslint proto'
         },
       },
 
-      path :
+      'path' :
       {
-        repository : 'git+https:///github.com/author/WillfileExtend.git',
-        origins :
+        'repository' : 'git+https:///github.com/author/WillfileExtend.git',
+        'origins' :
         [
           'git+https:///github.com/author/WillfileExtend.git',
           'npm:///willfileextend',
         ],
-        bugtracker : 'https:///github.com/author/WillfileExtend/issues',
+        'bugtracker' : 'https:///github.com/author/WillfileExtend/issues',
       },
 
-      step :
+      'step' :
       {
         'export.debug' :
         {
-          inherit : 'module.export',
-          export : '{path::out}/**',
-          criterion : { debug : 1 },
+          'inherit' : 'module.export',
+          'export' : '{path::out}/**',
+          'criterion' : { debug : 1 },
         }
       },
 
-      build :
+      'build' :
       {
         'proto.export' :
         {
-          criterion :
+          'criterion' :
           {
-            export : 1,
-            debug : 1,
+            'export' : 1,
+            'debug' : 1,
           },
-          steps : [ 'step::export.*=1' ],
+          'steps' : [ 'step::export.*=1' ],
         }
       }
     };
@@ -31643,27 +31639,27 @@ function commandWillfileSupplementWillfileDstIsWillfile( test )
     {
       about :
       {
-        name : 'NpmFromWillfile',
-        description : 'To check the conversion',
-        version : '0.0.0',
-        enabled : 1,
-        interpreters :
+        'name' : 'NpmFromWillfile',
+        'description' : 'To check the conversion',
+        'version' : '0.0.0',
+        'enabled' : 1,
+        'interpreters' :
         [
           'chrome >= 60.0.0',
           'firefox >= 60.0.0',
           'njs >= 6.0.0',
           'chromium >= 67.0.0'
         ],
-        keywords :
+        'keywords' :
         [
           'tools',
           'export',
           'wtools',
           'common',
         ],
-        license : 'MIT',
-        author : 'Author <author@dot.com>',
-        contributors :
+        'license' : 'MIT',
+        'author' : 'Author <author@dot.com>',
+        'contributors' :
         [
           'Contributor1 <contributor1@dot.com>',
           'Contributor2 <contributor2@dot.com>',
