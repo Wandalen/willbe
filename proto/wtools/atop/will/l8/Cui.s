@@ -2079,7 +2079,6 @@ function commandSubmodulesGitPrOpen( e )
 commandSubmodulesGitPrOpen.defaults =
 {
   token : null,
-  remotePath : null,
   srcBranch : null,
   dstBranch : null,
   title : null,
@@ -2332,7 +2331,6 @@ function commandModulesGitPrOpen( e )
 commandModulesGitPrOpen.defaults =
 {
   token : null,
-  remotePath : null,
   srcBranch : null,
   dstBranch : null,
   title : null,
@@ -2872,7 +2870,6 @@ function commandGitPrOpen( e )
 commandGitPrOpen.defaults =
 {
   token : null,
-  remotePath : null,
   srcBranch : null,
   dstBranch : null,
   title : null,

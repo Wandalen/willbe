@@ -8530,13 +8530,18 @@ function gitPrOpen( o )
 
   _.routineOptions( gitPrOpen, o );
 
-  if( !_.git.isRepository )
+  if( !_.git.isRepository({ localPath : module.dirPath, sync : 1 }) )
   return null;
 
-  let token = o.token ? o.token : null;
-  let config = fileProvider.configUserRead();
-  if( config !== null && config.about && config.about[ 'github.token' ] )
-  token = config.about[ 'github.token' ];
+  if( !o.token )
+  {
+    let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+    if( !config )
+    config = fileProvider.configUserRead();
+
+    if( config !== null && config.about && config.about[ 'github.token' ] )
+    o.token = config.about[ 'github.token' ];
+  }
 
   if( !o.remotePath )
   {
@@ -8547,8 +8552,7 @@ function gitPrOpen( o )
   }
   o.remotePath = _.git.remotePathNativize( o.remotePath );
 
-  let title = o.title ? o.title : o.subject;
-  title = _.strUnquote( title );
+  o.title = _.strUnquote( o.title );
 
   /* */
 
@@ -8557,9 +8561,9 @@ function gitPrOpen( o )
   {
     return _.git.prOpen
     ({
-      token,
+      token : o.token,
       remotePath : o.remotePath,
-      title,
+      title : o.title,
       body : o.body,
       srcBranch : o.srcBranch,
       dstBranch : o.dstBranch,
@@ -8630,7 +8634,10 @@ function gitPull( o )
     return null;
   }
 
-  let config = fileProvider.configUserRead( _.censor ? _.censor.storageConfigPath : undefined );
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  if( !config )
+  config = fileProvider.configUserRead();
+
   let provider = _.FileFilter.Archive();
   provider.archive.basePath = will.currentOpener.dirPath;
   if( config && config.path && config.path.link )
