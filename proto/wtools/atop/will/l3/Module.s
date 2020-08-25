@@ -8085,7 +8085,7 @@ function willfileSetProperty( o )
       let key = splits[ i ];
       if( dstConfig[ key ] === undefined )
       {
-        if( i === splits.length -1 )
+        if( i === splits.length - 1 )
         {
           let value = o.willfilePropertiesMap[ option ];
           if( o.structureParse )
@@ -8101,9 +8101,15 @@ function willfileSetProperty( o )
       else if( dstConfig[ key ] !== undefined && i < splits.length - 1 )
       {
         if( _.mapIs( dstConfig[ key ] ) )
-        dstConfig = dstConfig[ key ];
+        {
+          dstConfig = dstConfig[ key ];
+        }
         else
-        dstConfig = Object.create( null );
+        {
+          if( o.verbosity > 3 )
+          logger.log( `${ dstConfig[ key ] } is removed` );
+          dstConfig = Object.create( null );
+        }
       }
       else
       {
