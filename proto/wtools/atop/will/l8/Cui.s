@@ -3668,12 +3668,12 @@ commandWillfileGet.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileGet.hint = 'Use "willfile get" to get value of separate properties of source willfile.';
+commandWillfileGet.hint = 'Use ".willfile.get" to get value of separate properties of source willfile. Default willfile is unnamed willfile. If no options are provided, command shows all willfile data.\n\t"will .willfile.get" - show all unnamed willfile.\n\t"will .willfile.get Named about/author" - show property "about/author" in willfile "Named.will.yml".';
 commandWillfileGet.commandSubjectHint = 'A path to source willfile.';
 commandWillfileGet.commandProperties =
 {
-  verbosity : 'Set verbosity. Default is 3.',
-  v : 'Set verbosity. Default is 3.',
+  verbosity : 'Enables output of missed preperties. Output is enabled if verbosity >= 3. Default value is 3.\n\t"will .willfile.get path/to/not/existed:1 verbosity:0" - disable output for not existed property.',
+  v : 'Enables output of missed preperties. Output is enabled if verbosity >= 3. Default value is 3.\n\t"will .willfile.get path/to/not/existed:1 verbosity:0" - disable output for not existed property.',
 };
 
 //
