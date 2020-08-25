@@ -3490,13 +3490,13 @@ commandNpmFromWillfile.defaults =
   entryPath : null,
   filesPath : null,
 };
-commandNpmFromWillfile.hint = 'Use "npm from willfile" to generate "package.json" file from willfile.\n\t"will .npm.from.willfile" - generate "package.json" from unnamed willfiles, file locates in directory "out" of module;\n\t"will .npm.from.willfile package.json" - generate "package.json" from unnamed willfiles, file locates in directory of module.';
+commandNpmFromWillfile.hint = 'Use ".npm.from.willfile" to generate JSON file from willfile of current module. Default JSON file is "package.json" in directory "out"\n\t"will .npm.from.willfile" - generate "package.json" from unnamed willfiles, file locates in directory "out";\n\t"will .npm.from.willfile package.json" - generate "package.json" from unnamed willfiles, file locates in directory of module.';
 commandNpmFromWillfile.commandSubjectHint = 'A name of resulted JSON file. It has priority over option "packagePath".';
 commandNpmFromWillfile.commandProperties =
 {
-  packagePath : 'Path to generated JSON file. Default is "{path::out}/package.json".\n\t"will .npm.from.willfile packagePath:out/package.json" - generate "package.json" from unnamed willfiles, file locates in directory "out" of module.',
-  entryPath : 'Path to file that for field "main" of "package.json". By default "entryPath" is generated from module with path "path/entry".\n\t"will .npm.from.willfile entryPath:proto/wtools/Include.s" - generate "package.json" with field "main" : "proto/wtools/Include.s".',
-  filesPath : 'Path to directory or file for field "files" of "package.json". By default, field "files" is generated from module\n\twith path "path/npm.files"a.\n\t"will .npm.from.willfile filesPath:proto" - generate "package.json" from unnamed willfiles, field "files" will contain all files from directory "proto".',
+  packagePath : 'Path to generated JSON file. Default is "{path::out}/package.json".\n\t"will .npm.from.willfile packagePath:out/package.json" - generate "package.json" from unnamed willfiles, file locates in directory "out".',
+  entryPath : 'Path for field "main" of "package.json". By default "entryPath" is generated from module with path "path/entry".\n\t"will .npm.from.willfile entryPath:proto/wtools/Include.s" - generate "package.json" with field "main" : "proto/wtools/Include.s".',
+  filesPath : 'Path to directory ( file ) for field "files" of "package.json". By default, field "files" is generated from module\n\twith path "path/npm.files"a.\n\t"will .npm.from.willfile filesPath:proto" - generate "package.json" from unnamed willfiles, field "files" will contain all files from directory "proto".',
 };
 
 //
@@ -3574,12 +3574,12 @@ commandWillfileFromNpm.defaults =
   packagePath : null,
   willfilePath : null,
 };
-commandWillfileFromNpm.hint = 'Use "willfile from npm" to generate ".will.yml" file from "package.json".';
+commandWillfileFromNpm.hint = 'Use ".willfile.from.npm" to generate willfile from JSON file. Default willfile - "will.yml", default JSON file - "package.json".\n\t"will .npm.from.willfile" - generate willfile "will.yml" from file "package.json".\n\t"will .npm.from.willfile Named" - generate willfile "Named.will.yml" from file "package.json".';
 commandWillfileFromNpm.commandSubjectHint = 'A name of resulted willfile. It has priority over option "willfilePath".';
 commandWillfileFromNpm.commandProperties =
 {
-  packagePath : 'Path to source json file. Default is "./package.json". Could be a selector.',
-  willfilePath : 'Path to generated willfile. Default is "./.will.yml". Could be a selector.',
+  packagePath : 'Path to source json file. Default is "./package.json".\n\t"will .willfile.from.npm packagePath:old.package.json" - generate willfile "will.yml" from JSON file "old.package.json".',
+  willfilePath : 'Path to generated willfile. Default is "./.will.yml".\n\t"will .willfile.from.npm willfilePath:Named" - generate willfile "Named.will.yml" from file "package.json".',
 };
 
 //
