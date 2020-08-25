@@ -3659,7 +3659,7 @@ function commandWillfileGet( e )
     willfilePropertiesMap[ splits[ i ] ] = 1;
 
     if( !e.subject && !cui.currentOpeners )
-    e.subject = './(.im|.ex|will)*';
+    e.subject = './';
   }
 }
 
@@ -3672,8 +3672,8 @@ commandWillfileGet.hint = 'Use ".willfile.get" to get value of separate properti
 commandWillfileGet.commandSubjectHint = 'A path to source willfile.';
 commandWillfileGet.commandProperties =
 {
-  verbosity : 'Enables output of missed preperties. Output is enabled if verbosity >= 3. Default value is 3.\n\t"will .willfile.get path/to/not/existed:1 verbosity:0" - disable output for not existed property.',
-  v : 'Enables output of missed preperties. Output is enabled if verbosity >= 3. Default value is 3.\n\t"will .willfile.get path/to/not/existed:1 verbosity:0" - disable output for not existed property.',
+  verbosity : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.get path/to/not/existed:1 verbosity:4" - enable output for not existed property.',
+  v : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.get path/to/not/existed:1 v:4" - enable output for not existed property.',
 };
 
 //
@@ -3732,13 +3732,13 @@ commandWillfileSet.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileSet.hint = 'Use ".willfile.set" to set separate properties in destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.set about/name:MyName path/out.debug/criterion/debug:0" - sets in unnamed willfile option "about/name" and change criterion "debug" in path "out.debug".';
+commandWillfileSet.hint = 'Use ".willfile.set" to set separate properties in destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.set about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName".\n\t"will .willfile.set Named about/name:MyName" - sets willfile "Named.will.yml" option "about/name" to "MyName".';
 commandWillfileSet.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileSet.commandProperties =
 {
-  structureParse : 'Enable parsing of property value. Default is 0.',
-  verbosity : 'Set verbosity. Default is 3.',
-  v : 'Set verbosity. Default is 3.',
+  structureParse : 'Enable parsing of property value. Experimental feature. Default is 0.\n\t"will .willfile.set path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
+  verbosity : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.set about/author/name:author verbosity:4" - enable output if option "author" has string value.',
+  v : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.set about/author/name:author v:4" - enable output if option "author" has string value.',
 };
 
 //
@@ -3818,7 +3818,7 @@ function commandWillfileDel( e )
     willfilePropertiesMap[ splits[ i ] ] = 1;
 
     if( !e.subject && !cui.currentOpeners )
-    e.subject = './(.im|.ex|will)*';
+    e.subject = './';
   }
 }
 
@@ -3909,7 +3909,7 @@ function commandWillfileSupplement( e )
   cui._command_pre( commandWillfileSupplement, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './(.im|.ex|will)*';
+  e.subject = './';
 
   if( e.subject )
   {
@@ -3927,7 +3927,7 @@ function commandWillfileSupplement( e )
   return cui._commandBuildLike
   ({
     event : e,
-    name : 'willfile extend',
+    name : 'willfile supplement',
     onEach : handleEach,
     commandRoutine : commandWillfileSupplement,
   });
