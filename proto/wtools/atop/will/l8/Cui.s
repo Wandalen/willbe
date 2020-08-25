@@ -3592,7 +3592,7 @@ function commandWillfileGet( e )
   cui._command_pre( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './(.im|.ex|will)*';
+  e.subject = './';
 
   if( e.subject )
   subjectNormalize();
@@ -3687,7 +3687,7 @@ function commandWillfileSet( e )
 
   if( !e.subject && !cui.currentOpeners )
   if( _.mapKeys( willfilePropertiesMap ).length >= 1 )
-  e.subject = './(.im|.ex|will)*';
+  e.subject = './';
 
   if( e.subject )
   {
@@ -3732,7 +3732,7 @@ commandWillfileSet.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileSet.hint = 'Use "willfile set" to set separate properties of destination willfile.';
+commandWillfileSet.hint = 'Use ".willfile.set" to set separate properties in destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.set about/name:MyName path/out.debug/criterion/debug:0" - sets in unnamed willfile option "about/name" and change criterion "debug" in path "out.debug".';
 commandWillfileSet.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileSet.commandProperties =
 {
@@ -3751,7 +3751,7 @@ function commandWillfileDel( e )
   cui._command_pre( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './(.im|.ex|will)*';
+  e.subject = './';
 
   if( e.subject )
   subjectNormalize();
@@ -3845,7 +3845,7 @@ function commandWillfileExtend( e )
   cui._command_pre( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './(.im|.ex|will)*';
+  e.subject = './';
 
   if( e.subject )
   {
