@@ -29364,12 +29364,12 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check field `author`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.about.author, 'Author <author@dot.com>' );
     test.identical( config.about.name, 'author' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29381,12 +29381,12 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check field `contributors`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.about.contributors, [ 'Contributor1 <contributor1@dot.com>', 'Contributor2 <contributor2@dot.com>' ] );
     test.identical( config.about.name, 'contributors' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29398,12 +29398,12 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check field `description`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.about.description, 'To check the conversion' );
     test.identical( config.about.name, 'description' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29415,11 +29415,11 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check field `enabled`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.about.name, 'enabled' );
     test.identical( config.about.enabled, 0 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29431,12 +29431,12 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check field `interpreters`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.about.interpreters, 'njs >= 10.0.0' );
     test.identical( config.about.name, 'interpreters' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29448,12 +29448,12 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check field `keywords`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.about.keywords, [ 'tools', 'export' ] );
     test.identical( config.about.name, 'keywords' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29465,12 +29465,12 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check field `license`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.about.license, 'MIT' );
     test.identical( config.about.name, 'license' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29482,12 +29482,12 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check field `name`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.about.name, 'willfilefromnpm' );
     test.identical( config.about[ 'npm.name' ], 'willfilefromnpm' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29499,12 +29499,12 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check field `scripts`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.about[ 'npm.scripts' ], { 'test' : 'wtest .run proto/**', 'docgen' : 'wdocgen .build proto' } );
     test.identical( config.about.name, 'npmscripts' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29516,12 +29516,12 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check field `main`, should not read path';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.path.entry, 'path/to' );
     test.identical( config.about.name, 'pathmain' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29533,13 +29533,13 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check fields `repository` and `bugs`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.path.repository, 'git+https:///github.com/author/NpmFromWillfile.git' );
     test.identical( config.path.bugtracker, 'https:///github.com/author/NpmFromWillfile/issues' );
     test.identical( config.about.name, 'pathrepository' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29551,7 +29551,7 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check fields `dependencies` and `devDependencies`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     var exp =
     {
       'eslint' :
@@ -29587,7 +29587,7 @@ function commandWillfileFromNpm( test )
     test.identical( config.about.name, 'submodule' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29599,12 +29599,12 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check field `version`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.about.version, '0.0.0' );
     test.identical( config.about.name, 'version' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29616,7 +29616,7 @@ function commandWillfileFromNpm( test )
   {
     test.case = 'check default `package.json` file';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     var exp =
     {
       'about' :
@@ -29687,7 +29687,7 @@ function commandWillfileFromNpmDoubleConversion( test )
   {
     test.case = 'check default `package.json` file';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     let exp =
     {
       'about' :
@@ -29763,7 +29763,7 @@ function commandWillfileFromNpmDoubleConversion( test )
     };
     test.identical( config, exp );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })
@@ -29775,12 +29775,12 @@ function commandWillfileFromNpmDoubleConversion( test )
   {
     test.case = 'check of using command `.with`';
     test.identical( op.exitCode, 0 );
-    let config = a.fileProvider.configRead( a.abs( '.will.yml' ) );
+    let config = a.fileProvider.configRead( a.abs( 'will.yml' ) );
     test.identical( config.about.version, '0.0.0' );
     test.identical( config.about.name, 'version' );
     test.identical( config.about.enabled, 1 );
 
-    a.fileProvider.filesDelete( a.abs( '.will.yml' ) )
+    a.fileProvider.filesDelete( a.abs( 'will.yml' ) )
 
     return null;
   })

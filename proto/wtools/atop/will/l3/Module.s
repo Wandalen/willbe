@@ -7421,7 +7421,7 @@ function willfileGenerateFromNpm( o )
   _.assert( _.objectIs( opts ) );
 
   let packagePath = opts.packagePath ? opts.packagePath : 'package.json';
-  let willfilePath = opts.willfilePath ? opts.willfilePath : '.will.yml';
+  let willfilePath = opts.willfilePath ? opts.willfilePath : 'will.yml';
   if( opts.currentContext )
   {
     packagePath = module.pathResolve
@@ -7434,7 +7434,7 @@ function willfileGenerateFromNpm( o )
     });
     willfilePath = module.pathResolve
     ({
-      selector : opts.willfilePath || '{path::out}/.will.yml',
+      selector : opts.willfilePath || '{path::out}/will.yml',
       prefixlessAction : 'resolved',
       pathNativizing : 0,
       selectorIsPath : 1,
@@ -7445,6 +7445,15 @@ function willfileGenerateFromNpm( o )
   {
     packagePath = path.join( will.inPath ? will.inPath : path.current(), packagePath );
     willfilePath = path.join( will.inPath ? will.inPath : path.current(), willfilePath );
+  }
+
+  if( !fileProvider.isTerminal( willfilePath ) || fileProvider.isDir( willfilePath ) )
+  {
+    let ext = path.ext( willfilePath );
+    if( ext === '' || ( ext !== 'will' && !_.longHasAny( [ 'yml', 'yaml' ], ext ) ) )
+    willfilePath += '.will.yml';
+    else if( ext === 'will' )
+    willfilePath += '.yml';
   }
 
   /* */
