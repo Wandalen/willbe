@@ -30544,15 +30544,6 @@ function commandWillfileExtend( test )
 
   /* - */
 
-  a.appStartNonThrowing({ args : '.willfile.extend ./ about/name:throwing' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'dstFile is directory';
-    test.notIdentical( op.exitCode, 0 );
-
-    return null;
-  })
-
   a.appStartNonThrowing({ args : '.willfile.extend NotExisted about/name:throwing' })
   a.ready.then( ( op ) =>
   {
@@ -30718,15 +30709,6 @@ function commandWillfileSupplement( test )
   })
 
   /* - */
-
-  a.appStartNonThrowing({ args : '.willfile.supplement ./ about/name:throwing' })
-  a.ready.then( ( op ) =>
-  {
-    test.case = 'dstFile is directory';
-    test.notIdentical( op.exitCode, 0 );
-
-    return null;
-  })
 
   a.appStartNonThrowing({ args : '.willfile.supplement NotExisted about/name:throwing' })
   a.ready.then( ( op ) =>

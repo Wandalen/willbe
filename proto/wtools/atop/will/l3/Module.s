@@ -7949,27 +7949,19 @@ function _willfileOnPropertyAct( o )
 
   /* */
 
-  function dstRecordsFind( selector )
+  function dstRecordsFind( dstPath )
   {
-    let filePath = selector;
-    if( !path.isAbsolute( filePath ) )
-    filePath = path.join( will.inPath ? will.inPath : path.current(), selector );
+    if( !path.isAbsolute( dstPath ) )
+    dstPath = path.join( will.inPath ? will.inPath : path.current(), dstPath );
 
-    if( fileProvider.isTerminal( filePath ) )
-    return [ fileProvider.record( filePath ) ];
+    if( fileProvider.isDir( dstPath ) )
+    dstPath = path.join( dstPath, './' );
 
-    _.sure( !fileProvider.isDir( filePath ), () => `${ filePath } is dir, not safe to delete` );
-
-    if( !path.isGlob( filePath ) )
-    filePath = filePath + '*.(yml|yaml|json)';
-
-    return fileProvider.filesFind
+    return will.willfilesFind
     ({
-      filePath,
-      withStem : 0,
-      withDirs : 0,
-      mode : 'distinct',
-      mandatory : 0,
+      commonPath : dstPath,
+      withIn : 1,
+      withOut : 0,
     });
   }
 
