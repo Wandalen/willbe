@@ -3574,7 +3574,7 @@ commandWillfileFromNpm.defaults =
   packagePath : null,
   willfilePath : null,
 };
-commandWillfileFromNpm.hint = 'Use ".willfile.from.npm" to generate willfile from JSON file. Default willfile - "will.yml", default JSON file - "package.json".\n\t"will .npm.from.willfile" - generate willfile "will.yml" from file "package.json".\n\t"will .npm.from.willfile Named" - generate willfile "Named.will.yml" from file "package.json".';
+commandWillfileFromNpm.hint = 'Use ".willfile.from.npm" to generate willfile from JSON file. Default willfile - "will.yml", default JSON file - "package.json".\n\t"will .npm.from.willfile" - generate willfile "will.yml" from file "package.json";\n\t"will .npm.from.willfile Named" - generate willfile "Named.will.yml" from file "package.json".';
 commandWillfileFromNpm.commandSubjectHint = 'A name of resulted willfile. It has priority over option "willfilePath".';
 commandWillfileFromNpm.commandProperties =
 {
@@ -3668,7 +3668,7 @@ commandWillfileGet.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileGet.hint = 'Use ".willfile.get" to get value of separate properties of source willfile. Default willfile is unnamed willfile. If no options are provided, command shows all willfile data.\n\t"will .willfile.get" - show all unnamed willfile.\n\t"will .willfile.get Named about/author" - show property "about/author" in willfile "Named.will.yml".';
+commandWillfileGet.hint = 'Use ".willfile.get" to get value of separate properties of source willfile. Default willfile is unnamed willfile. If no options are provided, command shows all willfile data.\n\t"will .willfile.get" - show all unnamed willfile;\n\t"will .willfile.get Named about/author" - show property "about/author" in willfile "Named.will.yml".';
 commandWillfileGet.commandSubjectHint = 'A path to source willfile.';
 commandWillfileGet.commandProperties =
 {
@@ -3732,7 +3732,7 @@ commandWillfileSet.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileSet.hint = 'Use ".willfile.set" to set separate properties in destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.set about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName".\n\t"will .willfile.set Named about/name:MyName" - sets willfile "Named.will.yml" option "about/name" to "MyName".';
+commandWillfileSet.hint = 'Use ".willfile.set" to set separate properties in destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.set about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.set Named about/name:MyName" - sets willfile "Named.will.yml" option "about/name" to "MyName".';
 commandWillfileSet.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileSet.commandProperties =
 {
@@ -3827,12 +3827,12 @@ commandWillfileDel.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileDel.hint = 'Use "willfile del" to delete separate properties of destination willfile.';
+commandWillfileDel.hint = 'Use ".willfile.del" to delete separate properties in destination willfile. Default willfile is unnamed willfile. If no options are provided, command clear all config file.\n\t"will .willfile.del" - clear all unnamed willfile;\n\t"will .willfile.del Named about/interpreters" - delete property "interpreters" in willfile "Named.will.yml"';
 commandWillfileDel.commandSubjectHint = 'A path to source willfile.';
 commandWillfileDel.commandProperties =
 {
-  verbosity : 'Set verbosity. Default is 3.',
-  v : 'Set verbosity. Default is 3.',
+  verbosity : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.del about/author verbosity:4" - enable output.',
+  v : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.del about/author v:4" - enable output.',
 };
 
 //
