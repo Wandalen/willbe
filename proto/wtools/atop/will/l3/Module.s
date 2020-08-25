@@ -8251,7 +8251,7 @@ function willfileExtendProperty( o )
       let key = splits[ i ];
       if( dstConfig[ key ] === undefined )
       {
-        if( i === splits.length -1 )
+        if( i === splits.length - 1 )
         {
           let value = o.willfilePropertiesMap[ option ];
           if( o.structureParse )

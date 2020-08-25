@@ -3686,7 +3686,7 @@ function commandWillfileSet( e )
   cui._command_pre( commandWillfileSet, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  if( _.mapKeys( willfilePropertiesMap ).length >= 1 )
+  if( _.mapKeys( willfilePropertiesMap ).length > 0 )
   e.subject = './';
 
   if( e.subject )
@@ -3845,6 +3845,7 @@ function commandWillfileExtend( e )
   cui._command_pre( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
+  if( _.mapKeys( willfilePropertiesMap ).length > 0 )
   e.subject = './';
 
   if( e.subject )
@@ -3868,6 +3869,8 @@ function commandWillfileExtend( e )
     commandRoutine : commandWillfileExtend,
   });
 
+  throw _.errBrief( 'Please, specify at least one option. Format: will .willfile.set about/name:name' );
+
   function handleEach( it )
   {
     let request = it.opener.commonPath;
@@ -3890,11 +3893,11 @@ commandWillfileExtend.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileExtend.hint = 'Use "willfile extend" to extend separate properties of destination willfile.';
+commandWillfileExtend.hint = 'Use ".willfile.extend" to extend separate properties of destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.extend about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.extend Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.';
 commandWillfileExtend.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileExtend.commandProperties =
 {
-  structureParse : 'Enable parsing of property value. Default is 0.',
+  structureParse : 'Enable parsing of property value. Experimental feature. Default is 0.\n\t"will .willfile.extend path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
   verbosity : 'Set verbosity. Default is 3.',
   v : 'Set verbosity. Default is 3.',
 };
@@ -3954,9 +3957,10 @@ commandWillfileSupplement.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileSupplement.hint = 'Use "willfile supplement" to extend separate not existed properties of destination willfile.';
+commandWillfileSupplement.hint = 'Use "willfile supplement" to extend separate not existed properties of destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.supplement about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.supplement Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.';
 commandWillfileSupplement.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileSupplement.commandProperties = commandWillfileExtend.commandProperties;
+commandWillfileSupplement.commandProperties.structureParse = 'Enable parsing of property value. Experimental feature. Default is 0.\n\t"will .willfile.supplement path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.';
 
 //
 
