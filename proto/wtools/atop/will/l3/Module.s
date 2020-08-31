@@ -8351,13 +8351,17 @@ function willfileVersionBump( o )
 
   let willfilePath = _.arrayIs( module.willfilesPath ) ? module.willfilesPath[ 0 ] : module.willfilesPath;
 
-  return module.willfileSetProperty
+  module.willfileSetProperty
   ({
     request : willfilePath,
     willfilePropertiesMap : extensionMap,
     structureParse : 0,
     verbosity : o.verbosity,
-  })
+  });
+
+  /* */
+
+  return version;
 }
 
 willfileVersionBump.defaults =
