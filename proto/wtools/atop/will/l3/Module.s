@@ -1168,6 +1168,12 @@ function predefinedForm()
     stepRoutine : Predefined.stepRoutineWillbeIsUpToDate,
   })
 
+  step
+  ({
+    name : 'version.bump',
+    stepRoutine : Predefined.stepRoutineWillfileVersionBump,
+  })
+
   /* */
 
   reflector
@@ -8307,6 +8313,61 @@ willfileExtendProperty.defaults =
 
 //
 
+function willfileVersionBump( o )
+{
+  let module = this;
+  let will = module.will;
+  let fileProvider = will.fileProvider;
+  let path = fileProvider.path;
+
+  _.routineOptions( willfileVersionBump, o );
+
+  let version = module.willfilesArray[ 0 ].structure.about.version;
+  _.assert( _.strIs( version ), 'Expexts version in format "x.x.x".' );
+
+  let versionArray = version.split( '.' );
+
+  let deltaArray;
+  if( _.strIs( o.versionDelta ) )
+  deltaArray = o.versionDelta.split( '.' );
+  else if( _.numberIs( o.versionDelta ) )
+  deltaArray = _.arrayAs( o.versionDelta );
+  else
+  _.assert( 0, 'Not known how to handle delta.' );
+
+  _.assert( versionArray.length >= deltaArray.length, 'Not known how to change version.' );
+
+  for( let i = deltaArray.length - 1, offset = 0 ; i >= 0 ; i--, offset++ )
+  {
+    let delta = Number( deltaArray[ i ] );
+    let versionArrayOffset = versionArray.length - 1 - offset;
+    _.assert( _.intIs( delta ), 'Expects integer as delta.' );
+    _.assert( delta >= 0, 'Expects positive delta.' );
+    versionArray[ versionArrayOffset ] = Number( versionArray[ versionArrayOffset ] ) + delta;
+  }
+
+  let extensionMap = Object.create( null );
+  extensionMap[ 'about/version' ] = versionArray.join( '.' );
+
+  let willfilePath = _.arrayIs( module.willfilesPath ) ? module.willfilesPath[ 0 ] : module.willfilesPath;
+
+  return module.willfileSetProperty
+  ({
+    request : willfilePath,
+    willfilePropertiesMap : extensionMap,
+    structureParse : 0,
+    verbosity : o.verbosity,
+  })
+}
+
+willfileVersionBump.defaults =
+{
+  verbosity : 3,
+  versionDelta : 1,
+}
+
+//
+
 function ResourceSetter_functor( op )
 {
   _.routineOptions( ResourceSetter_functor, arguments );
@@ -9670,13 +9731,15 @@ let Extension =
   _willfileGenerateFromNpm,
   willfileGenerateFromNpm,
 
+  willfileExtendWillfile,
+
   _willfileOnPropertyAct,
   willfileGetProperty,
   willfileSetProperty,
   willfileDeleteProperty,
   willfileExtendProperty,
 
-  willfileExtendWillfile,
+  willfileVersionBump,
 
   // remote
 
