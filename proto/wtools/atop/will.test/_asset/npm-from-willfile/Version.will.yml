@@ -1,2 +1,46 @@
 about :
   version : '0.0.0'
+
+step :
+
+  bump.number :
+    versionDelta : 1
+
+  bump.string :
+    versionDelta : 0.1.1
+
+  bump.string.partial :
+    versionDelta : '1.1'
+
+  bump.throwing.notInt :
+    versionDelta : 1.1
+
+  bump.throwing.negative :
+    versionDelta : -1
+
+build :
+
+  bump :
+    steps :
+      - version.bump
+
+  bump.number :
+    steps :
+      - bump.number
+
+  bump.string :
+    steps :
+      - bump.string
+
+  bump.string.partial :
+    steps :
+      - bump.string.partial
+
+  bump.throwing.notInt :
+    steps :
+      - bump.throwing.notInt
+
+  bump.throwing.negative :
+    steps :
+      - bump.throwing.negative
+
