@@ -1250,6 +1250,31 @@ stepRoutineWillbeIsUpToDate.uniqueOptions =
 {
 }
 
+//
+
+function stepRoutineWillfileVersionBump( frame )
+{
+  let step = this;
+  let run = frame.run;
+  let module = run.module;
+  let opts = _.mapExtend( null, step.opts );
+  opts.verbosity = step.verbosityWithDelta( -1 );
+
+  _.assert( arguments.length === 1 );
+
+  return module.willfileVersionBump( opts );
+}
+
+stepRoutineWillfileVersionBump.stepOptions =
+{
+  versionDelta : 1,
+}
+
+stepRoutineWillfileVersionBump.uniqueOptions =
+{
+  versionDelta : 1,
+}
+
 // --
 // declare
 // --
@@ -1269,6 +1294,7 @@ let Extension =
   stepRoutineShell,
   stepRoutineTranspile,
   stepRoutineView,
+
   stepRoutineNpmGenerate,
   stepRoutineWillfileFromNpm,
 
@@ -1290,8 +1316,9 @@ let Extension =
   stepRoutineClean,
   stepRoutineExport,
 
-  stepRoutineWillbeIsUpToDate
+  stepRoutineWillbeIsUpToDate,
 
+  stepRoutineWillfileVersionBump,
 }
 
 //
