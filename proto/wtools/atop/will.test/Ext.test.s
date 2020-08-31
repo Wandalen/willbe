@@ -25473,6 +25473,185 @@ function commandVersionCheck( test )
 
 //
 
+function commandVersionBump( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+  a.reflect();
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'initial check';
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.0' );
+
+    return null;
+  })
+
+  a.appStart({ args : '.with Version .version.bump' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump", bump with defaults';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  })
+
+  a.appStart({ args : '.with Version .version.bump 1' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump 1", bump with number delta';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  })
+
+  a.appStart({ args : '.with Version .version.bump 0.1.1' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump 0.1.1", bump with string delta, full form';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  })
+
+  a.appStart({ args : '.with Version .version.bump 1.1' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump 1.1", bump with string delta, not full form';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  })
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:1' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:1", bump with option, number delta';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  })
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:0.1.1' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:0.1.1", bump with option, string delta, full form';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  })
+
+  a.appStart({ args : '.with Version .version.bump versionDelta:1.1' })
+  .then( ( op ) =>
+  {
+    test.case = '".version.bump versionDelta:1.1", bump with option, string delta, not full form';
+    test.identical( op.exitCode, 0 );
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.1.1' );
+
+    config.about.version = '0.0.0';
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Version.will.yml' ), data : config, encoding : 'yaml' });
+
+    return null;
+  })
+
+  /* - */
+
+  a.appStartNonThrowing({ args : '.with Author .version.bump' })
+  .then( ( op ) =>
+  {
+    test.case = 'willfile has not version';
+    test.notIdentical( op.exitCode, 0 );
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, undefined );
+    return null;
+  });
+
+  /* */
+
+  a.ready.then( () =>
+  {
+    test.case = 'willfile has version as number';
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    config.about.version = 1.1;
+    a.fileProvider.fileWrite({ filePath : a.abs( 'Author.will.yml' ), data : config, encoding : 'yaml' });
+    return null;
+  });
+
+  a.appStartNonThrowing({ args : '.with Author .version.bump' })
+  .then( ( op ) =>
+  {
+    test.case = 'willfile has version as number';
+    test.notIdentical( op.exitCode, 0 );
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Author.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, 1.1 );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing({ args : '.with Version .version.bump -1' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump with negative number';
+    test.notIdentical( op.exitCode, 0 );
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.0' );
+    return null;
+  });
+
+  /* */
+
+  a.appStartNonThrowing({ args : '.with Version .version.bump versionDelta:-1' })
+  .then( ( op ) =>
+  {
+    test.case = 'bump with negative number';
+    test.notIdentical( op.exitCode, 0 );
+    var config = a.fileProvider.configRead({ filePath : a.abs( 'Version.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.version, '0.0.0' );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function commandSubmodulesShell( test )
 {
   let context = this;
@@ -32641,6 +32820,7 @@ let Self =
 
     commandVersion,
     commandVersionCheck,
+    commandVersionBump,
 
     commandSubmodulesShell,
     commandSubmodulesGit,
@@ -32693,4 +32873,4 @@ Self = wTestSuite( Self );
 if( typeof module !== 'undefined' && !module.parent )
 wTester.test( Self.name );
 
-})();
+})()
