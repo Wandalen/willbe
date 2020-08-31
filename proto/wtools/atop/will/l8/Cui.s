@@ -409,6 +409,7 @@ function _commandsMake()
     'imply' :                           { e : _.routineJoin( will, will.commandImply )                        },
     'version' :                         { e : _.routineJoin( will, will.commandVersion )                      },
     'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck )                 },
+    'version bump' :                    { e : _.routineJoin( will, will.commandVersionBump )                  },
 
     'modules list' :                    { e : _.routineJoin( will, will.commandModulesList )                  },
     'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList )       },
@@ -1330,6 +1331,48 @@ commandVersionCheck.commandProperties =
 {
   throwing : 'Throw an error if utility is not up to date. Default : 1.',
   ... commandImply.commandProperties,
+};
+
+//
+
+function commandVersionBump( e )
+{
+  let cui = this;
+  let properties = e.propertiesMap;
+  cui._command_pre( commandVersionBump, arguments );
+
+  if( e.subject )
+  properties.versionDelta = e.subject;
+
+  if( _.numberIs( properties.versionDelta ) && !_.intIs( properties.versionDelta ) )
+  properties.versionDelta = _.toStr( properties.versionDelta );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'version bump',
+    onEach : handleEach,
+    commandRoutine : commandVersionBump,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.willfileVersionBump( properties );
+  }
+}
+
+commandVersionBump.defaults =
+{
+  verbosity : 3,
+  v : 3,
+};
+commandVersionBump.hint = 'Use ".version.bump" to increase version in willfile on specified delta.\n\t"will .version.bump 0.1.0" - add 1 to minor version of module.';
+commandVersionBump.commandSubjectHint = 'A string in format "x.x.x" that declares delta for each version.';
+commandVersionBump.commandProperties =
+{
+  versionDelta : 'A string in format "x.x.x" that defines delta for version.',
+  verbosity : 'Set verbosity. Default is 3.',
+  v : 'Set verbosity. Default is 3.',
 };
 
 //
@@ -2606,7 +2649,7 @@ function commandSubmodulesClean( e )
   _.routineOptions( commandSubmodulesClean, implyMap );
   cui._propertiesImply( implyMap );
 
-  e.propertiesMap.dry = !!e.propertiesMap.dry;;
+  e.propertiesMap.dry = !!e.propertiesMap.dry;
   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
   e.propertiesMap.fast = !e.propertiesMap.dry;
   e.propertiesMap.fast = 0; /* xxx */
@@ -4033,7 +4076,7 @@ commandWillfileSupplementWillfile.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileSupplementWillfile.hint = 'Use ".willfile.supplement.willfile" to supplement willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.supplement.willfile ./ Named package.json" - supplement unnamed willfile by data from willfile "Named.will.yml" and "package.json".';;
+commandWillfileSupplementWillfile.hint = 'Use ".willfile.supplement.willfile" to supplement willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.supplement.willfile ./ Named package.json" - supplement unnamed willfile by data from willfile "Named.will.yml" and "package.json".';
 commandWillfileSupplementWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
 commandWillfileSupplementWillfile.commandProperties = commandWillfileExtendWillfile.commandProperties;
 
@@ -4708,8 +4751,10 @@ let Extension =
 
   commandHelp,
   commandImply,
+
   commandVersion,
   commandVersionCheck,
+  commandVersionBump,
 
   commandResourcesList,
   commandPathsList,
