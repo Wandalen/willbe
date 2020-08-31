@@ -6396,6 +6396,104 @@ hookGitSyncArguments.description =
 
 //
 
+function hookWasPackageExtendWillfile( test )
+{
+  let context = this;
+  let a = context.assetFor( test, 'npm-from-willfile' );
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'extend unnamed willfiles without options';
+    a.reflect();
+    a.fileProvider.filesReflect
+    ({
+      reflectMap :
+      {
+        [ a.abs( context.assetsOriginalPath, 'willfile-from-npm/package.json' ) ] : a.abs( 'was.package.json' ),
+        [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' )
+      }
+    });
+
+    return null;
+  });
+
+  a.appStart( '.call WasPackageExtendWillfile' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ writing' ), 2 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 2 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 2 );
+
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.name, 'willfilefromnpm' );
+    test.identical( config.about.version, '0.0.0' );
+    test.identical( config.about.description, 'To check the conversion' );
+
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    test.identical( _.mapKeys( config.submodule ).length, 4 );
+    test.identical( config.submodule.eslint.enabled, 1 );
+
+    return null;
+  });
+
+  /* - */
+
+  a.ready.then( () =>
+  {
+    test.case = 'extend unnamed willfiles with options';
+    a.reflect();
+    a.fileProvider.filesReflect
+    ({
+      reflectMap :
+      {
+        [ a.abs( context.assetsOriginalPath, 'willfile-from-npm/package.json' ) ] : a.abs( 'was.package.json' ),
+        [ a.abs( context.assetsOriginalPath, 'dos/.will' ) ] : a.abs( '.will' )
+      }
+    });
+
+    return null;
+  });
+
+  a.appStart( '.call WasPackageExtendWillfile submodulesDisabling:1 v:0' )
+  .then( ( op ) =>
+  {
+    test.identical( op.exitCode, 0 );
+    test.identical( _.strCount( op.output, '+ writing' ), 0 );
+    test.identical( _.strCount( op.output, '.ex.will.yml' ), 1 );
+    test.identical( _.strCount( op.output, '.im.will.yml' ), 1 );
+
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.ex.will.yml' ), encoding : 'yaml' });
+    test.identical( config.about.name, 'willfilefromnpm' );
+    test.identical( config.about.version, '0.0.0' );
+    test.identical( config.about.description, 'To check the conversion' );
+
+    var config = a.fileProvider.fileRead({ filePath : a.abs( '.im.will.yml' ), encoding : 'yaml' });
+    test.identical( _.mapKeys( config.submodule ).length, 4 );
+    test.identical( config.submodule.eslint.enabled, 0 );
+
+    return null;
+  });
+
+  /* - */
+
+  a.appStartNonThrowing( '.call WasPackageExtendWillfile unknown:1' )
+  .then( ( op ) =>
+  {
+    test.case = 'unknown option, should throw error';
+    test.notIdentical( op.exitCode, 0 );
+    return null;
+  });
+
+  /* - */
+
+  return a.ready;
+}
+
+//
+
 function implyWithDot( test )
 {
   let context = this;
@@ -32793,6 +32891,8 @@ let Self =
     hookGitPullConflict,
     hookGitSyncColflict,
     hookGitSyncArguments,
+    hookWasPackageExtendWillfile,
+
     implyWithDot,
     implyWithAsterisk,
 
