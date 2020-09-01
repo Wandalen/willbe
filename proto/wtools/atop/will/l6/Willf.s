@@ -9,6 +9,12 @@
 //
 // }
 
+/**
+ * @classdesc Class wWillfile provides interface for work with willfiles. Interface is a collection of routines to open, read, get data, set data and save willfiles.
+ * @class wWillfile
+ * @module Tools/atop/willbe
+ */
+
 //
 
 let _ = _global_.wTools;
