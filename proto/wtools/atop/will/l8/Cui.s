@@ -1,69 +1,13 @@
-( function _MainTop_s_( )
+( function _Cui_s_()
 {
 
 'use strict';
 
-/*
-
-Command routines list
-
-Without selectors :
-
-commandVersion
-commandVersionCheck
-commandSubmodulesFixate
-commandSubmodulesUpgrade
-commandSubmodulesVersionsDownload
-commandSubmodulesVersionsUpdate
-commandSubmodulesVersionsVerify
-commandSubmodulesVersionsAgree
-commandHooksList
-commandClean
-commandSubmodulesClean
-commandModulesTree
-
-With resource selector :
-
-commandResourcesList
-commandPathsList
-commandSubmodulesList
-commandReflectorsList
-commandStepsList
-commandBuildsList
-commandExportsList
-commandAboutList
-commandModulesList
-commandModulesTopologicalList
-commandSubmodulesAdd
-commandGitPreservingHardLinks
-
-With selector of build :
-
-commandBuild
-commandExport
-commandExportPurging
-commandExportRecursive
-
-With other selectors :
-
-commandHelp
-commandImply,
-commandModuleNew
-commandModuleNewWith
-commandWith
-commandEach
-commandPackageInstall
-commandPackageLocalVersions
-commandPackageRemoteVersions
-commandPackageVersion
-
-commandShell
-commandDo
-commandHookCall
-commandNpmFromWillfile
-commandWillfileFromNpm
-
-*/
+/**
+ * @classdesc Class wWillCli implements command line interface of utility. Interface is a collection of routines to run specified commands.
+ * @class wWillCli
+ * @module Tools/atop/willbe
+ */
 
 let _ = _global_.wTools;
 let Parent = _.Will;
