@@ -94,7 +94,7 @@ function onModule( context )
   ({
     dry : o.dry,
     localPath : context.junction.dirPath,
-    configPath : configPath,
+    configPath,
     tag : o.tag,
     onDependency,
     verbosity : o.verbosity - 2,

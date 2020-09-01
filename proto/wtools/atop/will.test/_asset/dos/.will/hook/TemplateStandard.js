@@ -19,13 +19,13 @@ function onModule( context )
   if( o.dry )
   return;
 
- let config = fileProvider.configUserRead( _.censor.storageConfigPath );
- if( !config )
- return null;
- if( !config.path )
- return null;
- if( !config.path.module || !config.path.module )
- return null;
+  let config = fileProvider.configUserRead( _.censor.storageConfigPath );
+  if( !config )
+  return null;
+  if( !config.path )
+  return null;
+  if( !config.path.module || !config.path.module )
+  return null;
 
   var writer = _.TemplateFileWriter
   ({
@@ -63,10 +63,10 @@ function onConfigGet( context )
 
   result.package =
   {
-    name : name,
-    lowName : lowName,
-    highName : highName,
-    shortName : shortName,
+    name,
+    lowName,
+    highName,
+    shortName,
     description : context.module.about.description || '',
     version : context.module.about.version || '0.3.0',
   };
