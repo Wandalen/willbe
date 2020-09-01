@@ -3,6 +3,12 @@
 
 'use strict';
 
+/**
+ * @classdesc Class wWill provides main functionality to work with modules and  willfiles.
+ * @class wWill
+ * @module Tools/atop/willbe
+ */
+
 // --
 // relations
 // --
