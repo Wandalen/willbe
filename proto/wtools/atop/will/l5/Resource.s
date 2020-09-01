@@ -243,12 +243,12 @@ function MakeSingle( o )
   }
   catch( err )
   {
-    let cirterion = '';
+    let criterion = '';
     if( o.resource.criterion )
-    cirterion += '\nCriterions\n' + _.toStr( o.resource.criterion );
+    criterion += '\nCriterions\n' + _.toStr( o.resource.criterion );
     if( err.message && _.strHas( err.message, 'Options map for' ) )
-    err = _.errBrief( err );
-    throw _.err( err, `\nFailed to make resource ${Cls.KindName}::${o.resource.name}`, cirterion );
+    let error = _.errBrief( err );
+    throw _.err( error, `\nFailed to make resource ${Cls.KindName}::${o.resource.name}`, criterion );
   }
 
 }
