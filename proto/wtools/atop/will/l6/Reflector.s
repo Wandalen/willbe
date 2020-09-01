@@ -418,7 +418,7 @@ function _inheritMultiple( o )
   _.assert( reflector._accumulator === null );
   _.routineOptions( _inheritMultiple, arguments );
 
-  reflector._accumulator = new _.will.Reflector({ module : module, original : reflector, name : reflector.name });
+  reflector._accumulator = new _.will.Reflector({ module, original : reflector, name : reflector.name });
   reflector._accumulator.src.pairWithDst( reflector._accumulator.dst );
   reflector._accumulator.src.pairRefineLight();
 
@@ -608,7 +608,7 @@ function _inheritPathMap( o )
 
   reflector._inheritPathMapAct1
   ({
-    pathMap : pathMap,
+    pathMap,
     visited : o.visited,
   });
 
@@ -646,8 +646,8 @@ function _inheritPathMapAct1( o )
     {
       reflector._inheritPathMapAct2
       ({
-        dst : dst,
-        src : src,
+        dst,
+        src,
         visited : o.visited,
       });
     }
@@ -668,9 +668,9 @@ function _inheritPathMapAct1( o )
     _.assert
     (
       reflector.filePath[ resolvedSrc ] === undefined || reflector.filePath[ resolvedSrc ] === dst,
-      () => 'Source path ' + resolvedSrc + ' already has value\n' +
-            _.strQuote( reflector.filePath[ resolvedSrc ] ) + ' <> ' +
-            _.strQuote( dst )
+      () => 'Source path ' + resolvedSrc + ' already has value\n'
+      + _.strQuote( reflector.filePath[ resolvedSrc ] ) + ' <> '
+      + _.strQuote( dst )
     );
 
     // if( reflector.qualifiedName === "reflector::exported.export" )
@@ -728,7 +728,11 @@ function _inheritPathMapAct2( o )
     pathResolving : 'in', /* yyy */
   });
 
-  if( !_.errIs( resolvedSrc ) && !_.strIs( resolvedSrc ) && !_.arrayIs( resolvedSrc ) && !( resolvedSrc instanceof _.will.Reflector ) )
+  if
+  (
+    !_.errIs( resolvedSrc ) && !_.strIs( resolvedSrc ) && !_.arrayIs( resolvedSrc )
+    && !( resolvedSrc instanceof _.will.Reflector )
+  )
   {
     debugger;
     resolvedSrc = _.err( 'Source of path map was resolved to unexpected type', _.strType( resolvedSrc ) );
@@ -861,9 +865,9 @@ function _inheritPathMapAct3( o )
     _.assert
     (
       reflector.filePath[ resolvedSrc ] === undefined || reflector.filePath[ resolvedSrc ] === dst,
-      () => 'Source path ' + resolvedSrc + ' already has value\n' +
-            _.strQuote( reflector.filePath[ resolvedSrc ] ) + ' <> ' +
-            _.strQuote( dst )
+      () => 'Source path ' + resolvedSrc + ' already has value\n'
+      + _.strQuote( reflector.filePath[ resolvedSrc ] ) + ' <> '
+      + _.strQuote( dst )
     );
     if( resolvedSrc === '' )
     path.mapExtend( reflector.filePath, { '' : dst } );
@@ -1655,7 +1659,7 @@ function pathsRebase( o )
     return o.relative;
     return resource.pathRebase
     ({
-      filePath : filePath,
+      filePath,
       exInPath : o.exInPath,
       inPath : o.inPath,
     });
@@ -1668,7 +1672,7 @@ function pathsRebase( o )
     return o.relative;
     return resource.pathRebase
     ({
-      filePath : filePath,
+      filePath,
       exInPath : o.exInPath,
       inPath : o.inPath,
     });
@@ -1826,7 +1830,11 @@ function exportStructure()
   delete result.filePath;
 
   if( result.dst )
-  if( _.mapIs( reflector.src.filePath ) || ( _.strIs( reflector.src.filePath ) && _.will.Resolver.selectorIs( reflector.src.filePath ) ) )
+  if
+  (
+    _.mapIs( reflector.src.filePath )
+    || ( _.strIs( reflector.src.filePath ) && _.will.Resolver.selectorIs( reflector.src.filePath ) )
+  )
   if( _.entityIdentical( reflector.src.filePath, reflector.dst.filePath ) )
   delete result.dst.filePath;
 
