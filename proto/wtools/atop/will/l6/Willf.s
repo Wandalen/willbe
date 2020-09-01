@@ -1,4 +1,5 @@
-( function _Willf_s_( ) {
+( function _Willf_s_()
+{
 
 'use strict';
 
@@ -39,7 +40,12 @@ function finit()
   if( willf.storageWillfile )
   {
     _.arrayRemoveOnce( willf.storageWillfile.storedWillfiles, willf );
-    _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.longCountElement( willf.storageWillfile.storedWillfiles, willf ) === 0 );
+    _.assert
+    (
+      !willf.storageWillfile
+      || willf.storageWillfile === willf
+      || _.longCountElement( willf.storageWillfile.storedWillfiles, willf ) === 0
+    );
     if( willf.storageWillfile && willf.storageWillfile !== willf )
     if( !willf.storageWillfile.isUsed() )
     {
@@ -140,7 +146,12 @@ function unform()
 
   if( willf.storageWillfile )
   _.arrayRemoveOnce( willf.storageWillfile.storedWillfiles, willf );
-  _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.longCountElement( willf.storageWillfile.storedWillfiles, willf ) === 0 );
+  _.assert
+  (
+    !willf.storageWillfile
+    || willf.storageWillfile === willf
+    || _.longCountElement( willf.storageWillfile.storedWillfiles, willf ) === 0
+  );
 
   /* end */
 
@@ -252,7 +263,12 @@ function _registerForm()
 
   if( willf.storageWillfile )
   _.arrayAppendOnce( willf.storageWillfile.storedWillfiles, willf );
-  _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.longCountElement( willf.storageWillfile.storedWillfiles, willf ) === 1 );
+  _.assert
+  (
+    !willf.storageWillfile
+    || willf.storageWillfile === willf
+    || _.longCountElement( willf.storageWillfile.storedWillfiles, willf ) === 1
+  );
 
   /* end */
 
@@ -387,8 +403,16 @@ function _read()
 
     willf.formed = 3;
 
-    _.assert( _.bufferBytesIs( willf.data ) || willf.data === null, `Something wrong with content of willfile ${willf.filePath}` );
-    _.assert( _.bufferBytesIs( willf.data ) || willf.filePath !== willf.storagePath, `Something wrong with content of willfile ${willf.filePath}` );
+    _.assert
+    (
+      _.bufferBytesIs( willf.data ) || willf.data === null,
+      `Something wrong with content of willfile ${willf.filePath}`
+    );
+    _.assert
+    (
+      _.bufferBytesIs( willf.data ) || willf.filePath !== willf.storagePath,
+      `Something wrong with content of willfile ${willf.filePath}`
+    );
     _.assert( willf.dirPath === path.detrail( path.dir( _.arrayAs( willf.filePath )[ 0 ] ) ) );
 
     // if( will.verbosity >= 3 )
@@ -397,10 +421,10 @@ function _read()
   }
   catch( err )
   {
-    err = _.err( err, `\nFailed to read willfile ${willf.filePath}` );
+    let error = _.err( err, `\nFailed to read willfile ${willf.filePath}` );
     // err = _.err( _.errBrief( err ), `\nFailed to read willfile ${willf.filePath}` );
 
-    willf.error = willf.error || err;
+    willf.error = willf.error || error;
 
     if( err )
     willf._readLog( 1, 1 );
@@ -408,10 +432,10 @@ function _read()
     if( will.verbosity >= 5 )
     {
       logger.up( 2 );
-      logger.error( _.errOnce( err ) );
+      logger.error( _.errOnce( error ) );
       logger.down( 2 );
     }
-    throw err;
+    throw error;
   }
 
   /* */
@@ -445,7 +469,12 @@ function _open()
   _.assert( !!fileProvider );
   _.assert( !!logger );
   _.assert( !!will.formed );
-  _.assert( !willf.storageWillfile || willf.storageWillfile === willf || _.longCountElement( willf.storageWillfile.storedWillfiles, willf ) === 1 );
+  _.assert
+  (
+    !willf.storageWillfile
+    || willf.storageWillfile === willf
+    || _.longCountElement( willf.storageWillfile.storedWillfiles, willf ) === 1
+  );
 
   /* read */
 
@@ -466,16 +495,16 @@ function _open()
       _.assert( willf._found.length === 1, `Found ${willf._found.length} files at ${willf.filePath}` );
       _.assert( _.strIs( willf._found[ 0 ].ext ), `Cant open ${willf.filePath}` );
 
-/*
-      zzz qqq : make it working
-      let encoder = _.gdf.selectContext
-      ({
-        inFormat : 'buffer.raw',
-        outFormat : 'structure',
-        ext : 'yml',
-      })[ 0 ];
-      let structure = encoder.encode( bufferRaw );
-*/
+      /*
+        zzz qqq : make it working
+        let encoder = _.gdf.selectContext
+        ({
+          inFormat : 'buffer.raw',
+          outFormat : 'structure',
+          ext : 'yml',
+        })[ 0 ];
+        let structure = encoder.encode( bufferRaw );
+      */
 
       let encoder = _.gdf.selectSingleContext
       ({
@@ -527,7 +556,11 @@ function _open()
       let relativePath2 = path.relative( willf.storageWillfile.dirPath, absolutePath );
       if( relativePath2 === relativePath )
       continue;
-      _.sure( willf.structure.consistency[ relativePath2 ] === undefined || willf.structure.consistency[ relativePath2 ] === willf.structure.consistency[ relativePath ] );
+      _.sure
+      (
+        willf.structure.consistency[ relativePath2 ] === undefined
+        || willf.structure.consistency[ relativePath2 ] === willf.structure.consistency[ relativePath ]
+      );
       willf.structure.consistency[ relativePath2 ] = willf.structure.consistency[ relativePath ];
       // delete willf.structure.consistency[ relativePath ]; /* xxx : enable later */
     }
@@ -547,7 +580,7 @@ function _open()
       willf.openedModule.peerModule.peerModuleIsOutdated = true;
       throw _.errBrief
       (
-          `Out-willfile is inconsistent with its in-willfiles:`
+        `Out-willfile is inconsistent with its in-willfiles:`
         + `\n${peerWillfilesPath.join( '\n' )}`
         + `\nProbably it's outdated. Consider reexporting submodules recursively with command "will .export.recursive"`
         // + `\nProbably it's outdated. Consider reexporting submodules recursively with command "will .recursive.export"`
@@ -565,19 +598,19 @@ function _open()
   }
   catch( err )
   {
-    err = _.err( err, `\nFailed to open willfile ${willf.filePath}` );
+    let error = _.err( err, `\nFailed to open willfile ${willf.filePath}` );
     // err = _.err( _.errBrief( err ), `Failed to open willfile ${willf.filePath}\n` );
 
-    willf.error = willf.error || err;
+    willf.error = willf.error || error;
     willf._readLog( 0, inconsistent ? 2 : 1 );
 
     if( will.verbosity >= 5 )
     {
       logger.up( 2 );
-      logger.error( _.errOnce( err ) );
+      logger.error( _.errOnce( error ) );
       logger.down( 2 );
     }
-    throw err;
+    throw error;
   }
 
   /* */
@@ -725,8 +758,8 @@ function _importToModule()
       _.sureMapHasOnly( structure, willf.KnownSectionsOfOut, () => 'Out-willfile should not have section(s) :' );
       _.assert
       (
-          _.arrayIs( structure.root ) && structure.root.length === 1
-        , `Found ${structure.root.length} roots. Implemented only for single root.`
+        _.arrayIs( structure.root ) && structure.root.length === 1,
+        `Found ${structure.root.length} roots. Implemented only for single root.`
       )
     }
     else
@@ -814,8 +847,8 @@ function _resourcesImport_body( o )
     o.resourceClass.MakeFor
     ({
       module : openedModule,
-      willf : willf,
-      resource : resource,
+      willf,
+      resource,
       name : k,
     });
 
@@ -887,7 +920,10 @@ function peerWillfilesOpen()
     if( got && got.willf )
     {
       peerWillfiles.push( got.willf );
-      _.assert( got.willf.peerWillfiles === null || ( got.willf.peerWillfiles.length === 1 && got.willf.peerWillfiles[ 0 ] === willf ) );
+      _.assert
+      (
+        got.willf.peerWillfiles === null || ( got.willf.peerWillfiles.length === 1 && got.willf.peerWillfiles[ 0 ] === willf )
+      );
       if( got.willf.peerWillfiles === null )
       got.willf.peerWillfiles = [ willf ];
       _.assert( _.longHas( got.willf.peerWillfiles, willf ) );
