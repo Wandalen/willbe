@@ -4,7 +4,7 @@
 'use strict';
 
 /**
- * @classdesc Class wWillReflector provides interface for creating and handling reflector resources.
+ * @classdesc Class wWillReflector provides interface for forming and handling reflector resources.
  * @class wWillReflector
  * @module Tools/atop/willbe
  */

@@ -1,6 +1,13 @@
-( function _PathResource_s_( ) {
+( function _PathResource_s_()
+{
 
 'use strict';
+
+/**
+ * @classdesc Class wWillPathResource provides interface for forming path resources.
+ * @class wWillPathResource
+ * @module Tools/atop/willbe
+ */
 
 let _ = _global_.wTools;
 let Parent = _.will.Resource;
@@ -293,7 +300,7 @@ function pathsRebase( o )
   {
     return resource.pathRebase
     ({
-      filePath : filePath,
+      filePath,
       exInPath : o.exInPath,
       inPath : o.inPath,
     });
@@ -358,7 +365,12 @@ function _pathSet( src )
 
   if( module && !resource.original && !resource.phantom )
   {
-    module._pathResourceChanged({ name : resource.name, ex : ex, val : src });
+    module._pathResourceChanged
+    ({
+      name : resource.name,
+      ex,
+      val : src
+    });
   }
 
   // if( module )

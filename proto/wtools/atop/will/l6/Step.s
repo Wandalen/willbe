@@ -4,7 +4,7 @@
 'use strict';
 
 /**
- * @classdesc Class wWillStep provides interface for creating step resources from willfile.
+ * @classdesc Class wWillStep provides interface for forming step resources from willfile.
  * @class wWillStep
  * @module Tools/atop/willbe
  */
