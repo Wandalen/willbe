@@ -1,6 +1,13 @@
-( function _Reflector_s_( ) {
+( function _Reflector_s_()
+{
 
 'use strict';
+
+/**
+ * @classdesc Class wWillReflector provides interface for creating and handling reflector resources.
+ * @class wWillReflector
+ * @module Tools/atop/willbe
+ */
 
 let _ = _global_.wTools;
 let Parent = _.will.Resource;

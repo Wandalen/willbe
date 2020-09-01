@@ -1,4 +1,5 @@
-( function _Step_s_( ) {
+( function _Step_s_()
+{
 
 'use strict';
 
