@@ -2,6 +2,12 @@
 
 'use strict';
 
+/**
+ * @classdesc Class wWillModuleJunction implements interface that allows different interfaces : module, relation, opener, object as single instance.
+ * @class wWillModuleJunction
+ * @module Tools/atop/willbe
+ */
+
 let _ = _global_.wTools;
 let Parent = null;
 let Self = wWillModuleJunction;
