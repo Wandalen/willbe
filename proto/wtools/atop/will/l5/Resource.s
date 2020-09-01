@@ -1,6 +1,13 @@
-( function _Resource_s_( ) {
+( function _Resource_s_()
+{
 
 'use strict';
+
+/**
+ * @classdesc Class wWillResource provides common interface for forming, handling different kinds of resources.
+ * @class wWillResource
+ * @module Tools/atop/willbe
+ */
 
 let _ = _global_.wTools;
 let Parent = null;
