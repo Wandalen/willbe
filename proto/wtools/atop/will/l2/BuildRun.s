@@ -1,4 +1,5 @@
-( function _BuildRun_s_( ) {
+( function _BuildRun_s_()
+{
 
 'use strict';
 
@@ -106,7 +107,7 @@ function frameUp( resource2 )
   ({
     resource : resource2,
     down : null,
-    run : run,
+    run,
   });
 
   _.assert( frame2.resource === resource2 );

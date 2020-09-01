@@ -1,4 +1,5 @@
-( function _Repository_s_( ) {
+( function _Repository_s_()
+{
 
 'use strict';
 
@@ -153,7 +154,7 @@ function status( o )
     _.assert( !!remoteProvider );
   }
 
-  if( repo.isRemote === false || _.longHasNone( vcs.protocols, [ 'git','npm' ] ) )
+  if( repo.isRemote === false || _.longHasNone( vcs.protocols, [ 'git', 'npm' ] ) )
   {
 
     for( let k in o )
