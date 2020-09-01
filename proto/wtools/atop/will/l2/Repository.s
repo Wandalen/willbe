@@ -2,6 +2,12 @@
 
 'use strict';
 
+/**
+ * @classdesc Class wWillRepository implements interface for work with repository of module.
+ * @class wWillRepository
+ * @module Tools/atop/willbe
+ */
+
 let _ = _global_.wTools;
 let Parent = null;
 let Self = wWillRepository;
