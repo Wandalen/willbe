@@ -3,6 +3,12 @@
 
 'use strict';
 
+/**
+ * @classdesc Class wWillBuild provides interface for forming and handling build resources.
+ * @class wWillBuild
+ * @module Tools/atop/willbe
+ */
+
 let _ = _global_.wTools;
 let Parent = _.will.Resource;
 let Self = wWillBuild;
