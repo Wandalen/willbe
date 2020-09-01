@@ -54,7 +54,7 @@ function exec()
       withParsed : 1,
     });
     // return ca.appArgsPerform({ appArgs });
-    /* qqq2 : make use of
+    /* aaa2 : make use of
     return ca.programPerform({ program : appArgs.original });
 
     - commands like .with and .imply should set some field
@@ -62,6 +62,7 @@ function exec()
     - field set by .imply should not be reset to null after command which use the field, but should be reset to null bu another .imply command
     - we drop support of `.command1 ; .command2` syntax. we support only `.command1 .commadn2` syntax
 
+    Dmytro : done
   */
   })
   .then( ( arg ) =>

@@ -2,6 +2,12 @@
 
 'use strict';
 
+/**
+ * @classdesc Class wWillModuleOpener allows to keep all parts of module as single instance. Interface keeps data with module paths, willfiles, cli and other.
+ * @class wWillModuleOpener
+ * @module Tools/atop/willbe
+ */
+
 let _ = _global_.wTools;
 let Parent = _.will.AbstractModule;
 let Self = wWillModuleOpener;
