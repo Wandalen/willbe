@@ -1,4 +1,5 @@
-( function _ModuleJunction_s_( ) {
+( function _ModuleJunction_s_()
+{
 
 'use strict';
 
@@ -316,7 +317,7 @@ function reform()
 
     _.assert( !will.junctionMap[ localPath ] );
 
-    let junction2 = new _.will.ModuleJunction({ will : will });
+    let junction2 = new _.will.ModuleJunction({ will });
     junction2.localPaths.push( localPath );
     junction2.localPath = localPath;
     peerAssign( junction, junction2 );
@@ -517,8 +518,7 @@ function mergeMaybe( usingPath )
   let fileProvider = will.fileProvider;
   let path = fileProvider.path;
   let logger = will.logger;
-  let junction2;
-  let reset;
+  let junction2, reset;
 
   _.assert( arguments.length === 1 );
 
@@ -864,7 +864,7 @@ function Reform( object, will )
 
   let o = object;
   if( !_.mapIs( o ) )
-  o = { object : object }
+  o = { object }
   if( !o.will )
   o.will = will;
 
@@ -900,7 +900,7 @@ function JunctionFrom( object, will )
 
   let o = object;
   if( !_.mapIs( o ) )
-  o = { object : object }
+  o = { object }
   if( !o.will )
   o.will = will;
 
@@ -969,7 +969,7 @@ function Of( object, will )
 
   let o = object;
   if( !_.mapIs( o ) )
-  o = { object : object }
+  o = { object }
   if( !o.will )
   o.will = will;
 
@@ -1104,7 +1104,13 @@ function _relationAdd( relation )
   _.assert( junction.formed === -1 || junction2 === junction || junction2 === undefined );
   will.objectToJunctionHash.set( relation, junction );
 
-  _.assert( junction.formed === -1 || changed || _.all( junction.PathsOf( relation ), ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction ) );
+  _.assert
+  (
+    junction.formed === -1
+    || changed
+    || _.all( junction.PathsOf( relation ),
+      ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction )
+  );
 
   return changed;
 }
@@ -1183,7 +1189,13 @@ function _openerAdd( opener )
     let junction2 = will.objectToJunctionHash.get( opener );
     _.assert( junction.formed === -1 || junction2 === junction || junction2 === undefined );
     will.objectToJunctionHash.set( opener, junction );
-    _.assert( junction.formed === -1 || changed || _.all( junction.PathsOf( opener ), ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction ) );
+    _.assert
+    (
+      junction.formed === -1
+      || changed
+      || _.all( junction.PathsOf( opener ),
+        ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction )
+    );
   }
   else
   {
@@ -1269,7 +1281,13 @@ function _moduleAdd( module )
   _.assert( junction2 === junction || junction2 === undefined, 'Module can belong only to one junction' );
   will.objectToJunctionHash.set( module, junction );
 
-  _.assert( junction.formed === -1 || changed || _.all( junction.PathsOf( module ), ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction ) );
+  _.assert
+  (
+    junction.formed === -1
+    || changed
+    || _.all( junction.PathsOf( module ),
+      ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction )
+  );
 
   return changed;
 }
@@ -1474,7 +1492,11 @@ function submodulesJunctionsFilter( o )
   if( junction.module && junction.module.peerModule )
   {
     debugger;
-    junction._From({ module : junction.module.peerModule, will : will });
+    junction._From
+    ({
+      module : junction.module.peerModule,
+      will,
+    });
     _.assert( _.longHas( junction.peer.modules, junction.module.peerModule ) );
   }
 
@@ -1501,7 +1523,7 @@ function submodulesJunctionsFilter( o )
       {
         let relation = module.submoduleMap[ s ];
 
-        let junction2 = junction._From({ relation : relation, will : will });
+        let junction2 = junction._From({ relation, will });
         _.assert( !!junction2 );
 
         if( !junction2.peer )
@@ -1509,7 +1531,11 @@ function submodulesJunctionsFilter( o )
         {
           debugger;
           _.assert( 0, 'not tested' );
-          junction2._From({ module : junction2.module.peerModule, will : will });
+          junction2._From
+          ({
+            module : junction2.module.peerModule,
+            will,
+          });
         }
 
         /*
@@ -1703,7 +1729,11 @@ function assertObjectRelationVerify( object )
   let paths = junction.PathsOf( object );
   let junction2 = _.any( paths, ( path ) => will.junctionMap[ path ] );
   if( junction2 )
-  _.assert( junction2.formed !== 1 || _.all( paths, ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction2 ) );
+  _.assert
+  (
+    junction2.formed !== 1
+    || _.all( paths, ( path ) => will.junctionMap[ path ] === undefined || will.junctionMap[ path ] === junction2 )
+  );
   _.assert( junction === junction2 || !junction2 || !junction2.ownSomething() );
   _.assert( arguments.length === 1 );
 
