@@ -3,6 +3,12 @@
 
 'use strict';
 
+/**
+ * @classdesc Class wWillModule provides full interface for work with module.
+ * @class wWillModule
+ * @module Tools/atop/willbe
+ */
+
 /*
 
                                                               download update agree verify
@@ -580,9 +586,9 @@ function outModuleOpen( o )
       catch( err2 )
       {
         debugger;
-        err2 = _.err( err2 );
-        logger.log( _.errOnce( err2 ) );
-        throw err2;
+        let error2 = _.err( err2 );
+        logger.log( _.errOnce( error2 ) );
+        throw error2;
       }
 
       _.assert( !module.isFinited() );
@@ -3404,7 +3410,7 @@ function moduleFixateAct( o )
     catch( err )
     {
       debugger;
-      err = _.err( err, '\nFailed to fixated ' + _.color.strFormat( willfilePath, 'path' ) );
+      let error = _.err( err, '\nFailed to fixated ' + _.color.strFormat( willfilePath, 'path' ) );
       if( o.reportingNegative )
       {
         let r = o.report[ willfilePath ] = Object.create( null );
@@ -3413,13 +3419,13 @@ function moduleFixateAct( o )
         r.willfilePath = willfilePath;
         r.performed = 0;
         r.skipped = 0;
-        r.err = err;
+        r.err = error;
       }
       // if( !o.dry )
-      // throw err;
+      // throw error;
       if( will.verbosity >= 3 )
-      logger.log( _.errOnce( _.errBrief( err ) ) );
-      // _.errLogOnce( _.errBrief( err ) );
+      logger.log( _.errOnce( _.errBrief( error ) ) );
+      // _.errLogOnce( _.errBrief( error ) );
       // if( will.verbosity >= 2 )
       // o.log += '\n  in ' + _.color.strFormat( willfilePath, 'path' ) + ' was not found';
     }

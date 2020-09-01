@@ -1,4 +1,5 @@
-( function _ModuleHandle_s_( ) {
+( function _ModuleHandle_s_()
+{
 
 'use strict';
 
@@ -72,7 +73,7 @@ function From( object, will )
 
   let o = object;
   if( !_.mapIs( o ) )
-  o = { object : object };
+  o = { object };
 
   if( will )
   o.will = will;
