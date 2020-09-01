@@ -243,11 +243,12 @@ function MakeSingle( o )
   }
   catch( err )
   {
+    let error = err;
     let criterion = '';
     if( o.resource.criterion )
     criterion += '\nCriterions\n' + _.toStr( o.resource.criterion );
     if( err.message && _.strHas( err.message, 'Options map for' ) )
-    let error = _.errBrief( err );
+    error = _.errBrief( err );
     throw _.err( error, `\nFailed to make resource ${Cls.KindName}::${o.resource.name}`, criterion );
   }
 
@@ -326,7 +327,7 @@ function copy( o )
 
   let module = o.module !== undefined ? o.module : resource.module;
   if( o.unformedResource )
-  resource.unformedResource = o.unformedResource.cloneExtending({ original : resource, module : module });
+  resource.unformedResource = o.unformedResource.cloneExtending({ original : resource, module });
 
   return result;
 }
@@ -456,7 +457,10 @@ function form1()
   if( resource.original )
   _.assert( module[ resource.MapName ][ resource.name ] === resource.original );
   else if( !resource.phantom )
-  _.assert( module[ resource.MapName ][ resource.name ] === undefined || module[ resource.MapName ][ resource.name ] === resource );
+  _.assert
+  (
+    module[ resource.MapName ][ resource.name ] === undefined || module[ resource.MapName ][ resource.name ] === resource
+  );
 
   if( !resource.original && !resource.phantom )
   {
@@ -935,7 +939,7 @@ function _exportString( o )
   o = _.routineOptions( _exportString, arguments );
 
   result += resource.decoratedAbsoluteName + '\n';
-  result += _.toStr( o.fields, { wrap : 0, levels : 4, multiline : 1, stringWrapper : '', multiline : 1 } );
+  result += _.toStr( o.fields, { wrap : 0, levels : 4, stringWrapper : '', multiline : 1 } );
 
   return result;
 }
