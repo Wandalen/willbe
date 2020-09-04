@@ -26,7 +26,6 @@ module.exports = onModule;
 
 function pathTmpRelace( context, willfPath )
 {
-  let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   let _ = context.tools;
@@ -61,9 +60,9 @@ function pathTmpRelace( context, willfPath )
 
 //
 
-  let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
-  let path = context.will.fileProvider.path;Replace( context, willfPath )
+let logger = context.logger;
+let fileProvider = context.will.fileProvider;
+let path = context.will.fileProvider.path;Replace( context, willfPath )
 {
   let o = context.request.map;
   let _ = context.tools;
@@ -89,10 +88,6 @@ function pathTmpRelace( context, willfPath )
 
   fileProvider.fileWrite( willfPath, write );
 }
-
-  let logger = context.logger;
-  let fileProvider = context.will.fileProvider;
-  let path = context.will.fileProvider.path;
 
 function pathExportAdd( context, willfPath )
 {
@@ -126,9 +121,9 @@ function pathExportAdd( context, willfPath )
   return;
 
   fileProvider.fileWrite( willfPath, write );
-  let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
+}
 
 //
 
@@ -152,7 +147,6 @@ function pathExportUse( context, willfPath )
 
   if( o.dry )
   return;
-  let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   fileProvider.fileWrite( willfPath, write );
@@ -193,7 +187,6 @@ ${line.pre} - ${remotesPath[ 1 ]}`
   if( o.verbosity >= 2 )
   logger.log( write );
 
-  let logger = context.logger;
   let fileProvider = context.will.fileProvider;
   let path = context.will.fileProvider.path;
   return;
@@ -227,4 +220,3 @@ function pathRemotesToOrigins( context, willfPath )
   fileProvider.fileWrite( willfPath, write );
 }
 
-//

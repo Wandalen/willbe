@@ -1,6 +1,13 @@
-( function _ModulesRelation_s_( ) {
+( function _ModulesRelation_s_()
+{
 
 'use strict';
+
+/**
+ * @classdesc Class wWillModulesRelation provides interface for founding and handling relations between modules and submodules.
+ * @class wWillModulesRelation
+ * @module Tools/atop/willbe
+ */
 
 let _ = _global_.wTools;
 let Parent = _.will.Resource;
@@ -77,10 +84,10 @@ function unform()
 
   // if( relation.formed ) /* yyy */
   // {
-    let junction = will.junctionOf( relation );
-    /* xxx : not always true? */
-    if( junction && junction.own( relation ) )
-    junction.remove( relation );
+  let junction = will.junctionOf( relation );
+  /* xxx : not always true? */
+  if( junction && junction.own( relation ) )
+  junction.remove( relation );
   // }
 
   return Parent.prototype.unform.call( relation ); /* yyy */
@@ -110,7 +117,7 @@ function form1()
 
   relation.opener = _.will.ModuleOpener
   ({
-    will : will,
+    will,
     aliasName : relation.name,
     willfilesPath : relation.longPath,
     superRelation : relation,
@@ -673,7 +680,7 @@ function pathsRebase( o )
   {
     return resource.pathRebase
     ({
-      filePath : filePath,
+      filePath,
       exInPath : o.exInPath,
       inPath : o.inPath,
     });

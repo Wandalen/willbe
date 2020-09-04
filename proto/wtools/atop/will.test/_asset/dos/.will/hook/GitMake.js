@@ -49,12 +49,11 @@ function onGitMake( context )
     if( o.verbosity >= 2 )
     logger.log( `remotePath : ${_.color.strFormat( String( remotePath ), 'path' )}` );
 
-    debugger;
     return _.git.repositoryInit
     ({
-      localPath : localPath,
-      remotePath : remotePath,
-      token : token,
+      localPath,
+      remotePath,
+      token,
       local : o.local,
       remote : o.remote,
       verbosity : o.verbosity - 1,
@@ -64,14 +63,14 @@ function onGitMake( context )
   }
   catch( err )
   {
-    err = _.err
+    let error = _.err
     (
-        err
-      , `\nFailed to make an repository for ${context.junction.nameWithLocationGet()}`
-      , `\nlocalPath : ${localPath}`
-      , `\nremotePath : ${remotePath}`
+      err,
+      `\nFailed to make an repository for ${context.junction.nameWithLocationGet()}`,
+      `\nlocalPath : ${localPath}`,
+      `\nremotePath : ${remotePath}`
     );
-    throw _.err( err );
+    throw _.err( error );
   }
 
 }

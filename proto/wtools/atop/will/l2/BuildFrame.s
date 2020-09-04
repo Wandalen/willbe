@@ -1,4 +1,5 @@
-( function _BuildFrame_s_( ) {
+( function _BuildFrame_s_()
+{
 
 'use strict';
 

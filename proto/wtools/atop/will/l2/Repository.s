@@ -1,6 +1,13 @@
-( function _Repository_s_( ) {
+( function _Repository_s_()
+{
 
 'use strict';
+
+/**
+ * @classdesc Class wWillRepository implements interface for work with repository of module.
+ * @class wWillRepository
+ * @module Tools/atop/willbe
+ */
 
 let _ = _global_.wTools;
 let Parent = null;
@@ -147,7 +154,7 @@ function status( o )
     _.assert( !!remoteProvider );
   }
 
-  if( repo.isRemote === false || _.longHasNone( vcs.protocols, [ 'git','npm' ] ) )
+  if( repo.isRemote === false || _.longHasNone( vcs.protocols, [ 'git', 'npm' ] ) )
   {
 
     for( let k in o )

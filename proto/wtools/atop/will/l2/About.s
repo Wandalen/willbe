@@ -1,6 +1,13 @@
-( function _About_s_( ) {
+( function _About_s_()
+{
 
 'use strict';
+
+/**
+ * @classdesc Class wWillParagraphAbout provides initializing and handling data in section about of willfile.
+ * @class wWillParagraphAbout
+ * @module Tools/atop/willbe
+ */
 
 // if( typeof module !== 'undefined' )
 // {

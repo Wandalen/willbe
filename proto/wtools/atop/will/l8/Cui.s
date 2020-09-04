@@ -1,69 +1,13 @@
-( function _MainTop_s_( )
+( function _Cui_s_()
 {
 
 'use strict';
 
-/*
-
-Command routines list
-
-Without selectors :
-
-commandVersion
-commandVersionCheck
-commandSubmodulesFixate
-commandSubmodulesUpgrade
-commandSubmodulesVersionsDownload
-commandSubmodulesVersionsUpdate
-commandSubmodulesVersionsVerify
-commandSubmodulesVersionsAgree
-commandHooksList
-commandClean
-commandSubmodulesClean
-commandModulesTree
-
-With resource selector :
-
-commandResourcesList
-commandPathsList
-commandSubmodulesList
-commandReflectorsList
-commandStepsList
-commandBuildsList
-commandExportsList
-commandAboutList
-commandModulesList
-commandModulesTopologicalList
-commandSubmodulesAdd
-commandGitPreservingHardLinks
-
-With selector of build :
-
-commandBuild
-commandExport
-commandExportPurging
-commandExportRecursive
-
-With other selectors :
-
-commandHelp
-commandImply,
-commandModuleNew
-commandModuleNewWith
-commandWith
-commandEach
-commandPackageInstall
-commandPackageLocalVersions
-commandPackageRemoteVersions
-commandPackageVersion
-
-commandShell
-commandDo
-commandHookCall
-commandNpmFromWillfile
-commandWillfileFromNpm
-
-*/
+/**
+ * @classdesc Class wWillCli implements command line interface of utility. Interface is a collection of routines to run specified commands.
+ * @class wWillCli
+ * @module Tools/atop/willbe
+ */
 
 let _ = _global_.wTools;
 let Parent = _.Will;
@@ -110,7 +54,7 @@ function exec()
       withParsed : 1,
     });
     // return ca.appArgsPerform({ appArgs });
-    /* qqq2 : make use of
+    /* aaa2 : make use of
     return ca.programPerform({ program : appArgs.original });
 
     - commands like .with and .imply should set some field
@@ -118,6 +62,7 @@ function exec()
     - field set by .imply should not be reset to null after command which use the field, but should be reset to null bu another .imply command
     - we drop support of `.command1 ; .command2` syntax. we support only `.command1 .commadn2` syntax
 
+    Dmytro : done
   */
   })
   .then( ( arg ) =>
@@ -409,6 +354,7 @@ function _commandsMake()
     'imply' :                           { e : _.routineJoin( will, will.commandImply )                        },
     'version' :                         { e : _.routineJoin( will, will.commandVersion )                      },
     'version check' :                   { e : _.routineJoin( will, will.commandVersionCheck )                 },
+    'version bump' :                    { e : _.routineJoin( will, will.commandVersionBump )                  },
 
     'modules list' :                    { e : _.routineJoin( will, will.commandModulesList )                  },
     'modules topological list' :        { e : _.routineJoin( will, will.commandModulesTopologicalList )       },
@@ -1334,6 +1280,48 @@ commandVersionCheck.commandProperties =
 
 //
 
+function commandVersionBump( e )
+{
+  let cui = this;
+  let properties = e.propertiesMap;
+  cui._command_pre( commandVersionBump, arguments );
+
+  if( e.subject )
+  properties.versionDelta = e.subject;
+
+  if( _.numberIs( properties.versionDelta ) && !_.intIs( properties.versionDelta ) )
+  properties.versionDelta = _.toStr( properties.versionDelta );
+
+  return cui._commandBuildLike
+  ({
+    event : e,
+    name : 'version bump',
+    onEach : handleEach,
+    commandRoutine : commandVersionBump,
+  });
+
+  function handleEach( it )
+  {
+    return it.opener.openedModule.willfileVersionBump( properties );
+  }
+}
+
+commandVersionBump.defaults =
+{
+  verbosity : 3,
+  v : 3,
+};
+commandVersionBump.hint = 'Use ".version.bump" to increase version in willfile on specified delta.\n\t"will .version.bump 0.1.0" - add 1 to minor version of module.';
+commandVersionBump.commandSubjectHint = 'A string in format "x.x.x" that declares delta for each version.';
+commandVersionBump.commandProperties =
+{
+  versionDelta : 'A string in format "x.x.x" that defines delta for version.',
+  verbosity : 'Set verbosity. Default is 3.',
+  v : 'Set verbosity. Default is 3.',
+};
+
+//
+
 function commandResourcesList( e )
 {
   let cui = this;
@@ -2079,7 +2067,6 @@ function commandSubmodulesGitPrOpen( e )
 commandSubmodulesGitPrOpen.defaults =
 {
   token : null,
-  remotePath : null,
   srcBranch : null,
   dstBranch : null,
   title : null,
@@ -2332,7 +2319,6 @@ function commandModulesGitPrOpen( e )
 commandModulesGitPrOpen.defaults =
 {
   token : null,
-  remotePath : null,
   srcBranch : null,
   dstBranch : null,
   title : null,
@@ -2608,7 +2594,7 @@ function commandSubmodulesClean( e )
   _.routineOptions( commandSubmodulesClean, implyMap );
   cui._propertiesImply( implyMap );
 
-  e.propertiesMap.dry = !!e.propertiesMap.dry;;
+  e.propertiesMap.dry = !!e.propertiesMap.dry;
   if( e.propertiesMap.fast === undefined || e.propertiesMap.fast === null )
   e.propertiesMap.fast = !e.propertiesMap.dry;
   e.propertiesMap.fast = 0; /* xxx */
@@ -2872,7 +2858,6 @@ function commandGitPrOpen( e )
 commandGitPrOpen.defaults =
 {
   token : null,
-  remotePath : null,
   srcBranch : null,
   dstBranch : null,
   title : null,
@@ -3457,6 +3442,12 @@ function commandNpmFromWillfile( e )
   cui._command_pre( commandNpmFromWillfile, arguments );
   _.routineOptions( commandNpmFromWillfile, e.propertiesMap );
 
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply({ withSubmodules : 0 });
+
+  if( e.subject )
+  e.propertiesMap.packagePath = e.subject;
+
   return cui._commandBuildLike
   ({
     event : e,
@@ -3483,17 +3474,17 @@ function commandNpmFromWillfile( e )
 
 commandNpmFromWillfile.defaults =
 {
-  packagePath : null,
+  packagePath : '{path::out}/package.json',
   entryPath : null,
   filesPath : null,
 };
-commandNpmFromWillfile.hint = 'Use "npm from willfile" to generate "package.json" file from willfile.';
-commandNpmFromWillfile.commandSubjectHint = false;
+commandNpmFromWillfile.hint = 'Use ".npm.from.willfile" to generate JSON file from willfile of current module. Default JSON file is "package.json" in directory "out"\n\t"will .npm.from.willfile" - generate "package.json" from unnamed willfiles, file locates in directory "out";\n\t"will .npm.from.willfile package.json" - generate "package.json" from unnamed willfiles, file locates in directory of module.';
+commandNpmFromWillfile.commandSubjectHint = 'A name of resulted JSON file. It has priority over option "packagePath".';
 commandNpmFromWillfile.commandProperties =
 {
-  packagePath : 'Path to generated file. Default is "./package.json".',
-  entryPath : 'Path to source willfiles. Default is current directory "./" and unnamed willfiles.',
-  filesPath : 'Path to directory with files that are included in section "files" of "package.json". By default, "package.json" includes no section "files".',
+  packagePath : 'Path to generated JSON file. Default is "{path::out}/package.json".\n\t"will .npm.from.willfile packagePath:out/package.json" - generate "package.json" from unnamed willfiles, file locates in directory "out".',
+  entryPath : 'Path for field "main" of "package.json". By default "entryPath" is generated from module with path "path/entry".\n\t"will .npm.from.willfile entryPath:proto/wtools/Include.s" - generate "package.json" with field "main" : "proto/wtools/Include.s".',
+  filesPath : 'Path to directory ( file ) for field "files" of "package.json". By default, field "files" is generated from module\n\twith path "path/npm.files"a.\n\t"will .npm.from.willfile filesPath:proto" - generate "package.json" from unnamed willfiles, field "files" will contain all files from directory "proto".',
 };
 
 //
@@ -3505,6 +3496,12 @@ function commandWillfileFromNpm( e )
   e.propertiesMap = _.mapOnly( e.propertiesMap, commandWillfileFromNpm.defaults );
   cui._command_pre( commandWillfileFromNpm, arguments );
   _.routineOptions( commandWillfileFromNpm, e.propertiesMap );
+
+  if( cui.withSubmodules === null || cui.withSubmodules === undefined )
+  cui._propertiesImply({ withSubmodules : 0 });
+
+  if( e.subject )
+  e.propertiesMap.willfilePath = e.subject;
 
   let con = new _.Consequence().take( null );
   if( !cui.currentOpeners )
@@ -3565,12 +3562,12 @@ commandWillfileFromNpm.defaults =
   packagePath : null,
   willfilePath : null,
 };
-commandWillfileFromNpm.hint = 'Use "willfile from npm" to generate ".will.yml" file from "package.json".';
-commandWillfileFromNpm.commandSubjectHint = false;
+commandWillfileFromNpm.hint = 'Use ".willfile.from.npm" to generate willfile from JSON file. Default willfile - "will.yml", default JSON file - "package.json".\n\t"will .npm.from.willfile" - generate willfile "will.yml" from file "package.json";\n\t"will .npm.from.willfile Named" - generate willfile "Named.will.yml" from file "package.json".';
+commandWillfileFromNpm.commandSubjectHint = 'A name of resulted willfile. It has priority over option "willfilePath".';
 commandWillfileFromNpm.commandProperties =
 {
-  packagePath : 'Path to source json file. Default is "./package.json". Could be a selector.',
-  willfilePath : 'Path to generated willfile. Default is "./.will.yml". Could be a selector.',
+  packagePath : 'Path to source json file. Default is "./package.json".\n\t"will .willfile.from.npm packagePath:old.package.json" - generate willfile "will.yml" from JSON file "old.package.json".',
+  willfilePath : 'Path to generated willfile. Default is "./.will.yml".\n\t"will .willfile.from.npm willfilePath:Named" - generate willfile "Named.will.yml" from file "package.json".',
 };
 
 //
@@ -3583,7 +3580,7 @@ function commandWillfileGet( e )
   cui._command_pre( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './(.im|.ex|will)*';
+  e.subject = './';
 
   if( e.subject )
   subjectNormalize();
@@ -3650,7 +3647,7 @@ function commandWillfileGet( e )
     willfilePropertiesMap[ splits[ i ] ] = 1;
 
     if( !e.subject && !cui.currentOpeners )
-    e.subject = './(.im|.ex|will)*';
+    e.subject = './';
   }
 }
 
@@ -3659,12 +3656,12 @@ commandWillfileGet.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileGet.hint = 'Use "willfile get" to get value of separate properties of source willfile.';
+commandWillfileGet.hint = 'Use ".willfile.get" to get value of separate properties of source willfile. Default willfile is unnamed willfile. If no options are provided, command shows all willfile data.\n\t"will .willfile.get" - show all unnamed willfile;\n\t"will .willfile.get Named about/author" - show property "about/author" in willfile "Named.will.yml".';
 commandWillfileGet.commandSubjectHint = 'A path to source willfile.';
 commandWillfileGet.commandProperties =
 {
-  verbosity : 'Set verbosity. Default is 3.',
-  v : 'Set verbosity. Default is 3.',
+  verbosity : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.get path/to/not/existed:1 verbosity:4" - enable output for not existed property.',
+  v : 'Enables output with missed preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.get path/to/not/existed:1 v:4" - enable output for not existed property.',
 };
 
 //
@@ -3677,8 +3674,8 @@ function commandWillfileSet( e )
   cui._command_pre( commandWillfileSet, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  if( _.mapKeys( willfilePropertiesMap ).length >= 1 )
-  e.subject = './(.im|.ex|will)*';
+  if( _.mapKeys( willfilePropertiesMap ).length > 0 )
+  e.subject = './';
 
   if( e.subject )
   {
@@ -3723,13 +3720,13 @@ commandWillfileSet.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileSet.hint = 'Use "willfile set" to set separate properties of destination willfile.';
+commandWillfileSet.hint = 'Use ".willfile.set" to set separate properties in destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.set about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.set Named about/name:MyName" - sets willfile "Named.will.yml" option "about/name" to "MyName".';
 commandWillfileSet.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileSet.commandProperties =
 {
-  structureParse : 'Enable parsing of property value. Default is 0.',
-  verbosity : 'Set verbosity. Default is 3.',
-  v : 'Set verbosity. Default is 3.',
+  structureParse : 'Enable parsing of property value. Experimental feature. Default is 0.\n\t"will .willfile.set path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
+  verbosity : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.set about/author/name:author verbosity:4" - enable output if option "author" has string value.',
+  v : 'Enables output with rewritten preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.set about/author/name:author v:4" - enable output if option "author" has string value.',
 };
 
 //
@@ -3742,7 +3739,7 @@ function commandWillfileDel( e )
   cui._command_pre( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './(.im|.ex|will)*';
+  e.subject = './';
 
   if( e.subject )
   subjectNormalize();
@@ -3809,7 +3806,7 @@ function commandWillfileDel( e )
     willfilePropertiesMap[ splits[ i ] ] = 1;
 
     if( !e.subject && !cui.currentOpeners )
-    e.subject = './(.im|.ex|will)*';
+    e.subject = './';
   }
 }
 
@@ -3818,12 +3815,12 @@ commandWillfileDel.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileDel.hint = 'Use "willfile del" to delete separate properties of destination willfile.';
+commandWillfileDel.hint = 'Use ".willfile.del" to delete separate properties in destination willfile. Default willfile is unnamed willfile. If no options are provided, command clear all config file.\n\t"will .willfile.del" - clear all unnamed willfile;\n\t"will .willfile.del Named about/interpreters" - delete property "interpreters" in willfile "Named.will.yml"';
 commandWillfileDel.commandSubjectHint = 'A path to source willfile.';
 commandWillfileDel.commandProperties =
 {
-  verbosity : 'Set verbosity. Default is 3.',
-  v : 'Set verbosity. Default is 3.',
+  verbosity : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.del about/author verbosity:4" - enable output.',
+  v : 'Enables output with deleted preperties. Output is enabled if verbosity > 3. Default value is 3.\n\t"will .willfile.del about/author v:4" - enable output.',
 };
 
 //
@@ -3836,7 +3833,8 @@ function commandWillfileExtend( e )
   cui._command_pre( commandWillfileExtend, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './(.im|.ex|will)*';
+  if( _.mapKeys( willfilePropertiesMap ).length > 0 )
+  e.subject = './';
 
   if( e.subject )
   {
@@ -3858,6 +3856,8 @@ function commandWillfileExtend( e )
     onEach : handleEach,
     commandRoutine : commandWillfileExtend,
   });
+
+  throw _.errBrief( 'Please, specify at least one option. Format: will .willfile.set about/name:name' );
 
   function handleEach( it )
   {
@@ -3881,11 +3881,11 @@ commandWillfileExtend.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileExtend.hint = 'Use "willfile extend" to extend separate properties of destination willfile.';
+commandWillfileExtend.hint = 'Use ".willfile.extend" to extend separate properties of destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.extend about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.extend Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.';
 commandWillfileExtend.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileExtend.commandProperties =
 {
-  structureParse : 'Enable parsing of property value. Default is 0.',
+  structureParse : 'Enable parsing of property value. Experimental feature. Default is 0.\n\t"will .willfile.extend path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.',
   verbosity : 'Set verbosity. Default is 3.',
   v : 'Set verbosity. Default is 3.',
 };
@@ -3900,7 +3900,7 @@ function commandWillfileSupplement( e )
   cui._command_pre( commandWillfileSupplement, arguments );
 
   if( !e.subject && !cui.currentOpeners )
-  e.subject = './(.im|.ex|will)*';
+  e.subject = './';
 
   if( e.subject )
   {
@@ -3918,7 +3918,7 @@ function commandWillfileSupplement( e )
   return cui._commandBuildLike
   ({
     event : e,
-    name : 'willfile extend',
+    name : 'willfile supplement',
     onEach : handleEach,
     commandRoutine : commandWillfileSupplement,
   });
@@ -3945,9 +3945,10 @@ commandWillfileSupplement.defaults =
   v : 3,
   structureParse : 0,
 };
-commandWillfileSupplement.hint = 'Use "willfile supplement" to extend separate not existed properties of destination willfile.';
+commandWillfileSupplement.hint = 'Use "willfile supplement" to extend separate not existed properties of destination willfile. Default willfile is unnamed willfile. Expects at least one option.\n\t"will .willfile.supplement about/name:MyName" - sets in unnamed willfile option "about/name" to "MyName";\n\t"will .willfile.supplement Named about/interpreters/chromium:73.1.0" - throw error if property "interpreters" has String value.';
 commandWillfileSupplement.commandSubjectHint = 'A path to destination willfile.';
 commandWillfileSupplement.commandProperties = commandWillfileExtend.commandProperties;
+commandWillfileSupplement.commandProperties.structureParse = 'Enable parsing of property value. Experimental feature. Default is 0.\n\t"will .willfile.supplement path/out.debug/criterion:\'debug:[0,1]\'" - will parse criterion as structure.';
 
 //
 
@@ -3970,7 +3971,7 @@ commandWillfileExtendWillfile.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileExtendWillfile.hint = 'Use "willfile extend willfile" to extend existing willfile by data from source configuration files.';
+commandWillfileExtendWillfile.hint = 'Use ".willfile.extend.willfile" to extend willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.extend.willfile ./ Named package.json" - extend unnamed willfile by data from willfile "Named.will.yml" and "package.json".';
 commandWillfileExtendWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
 commandWillfileExtendWillfile.commandProperties =
 {
@@ -4020,7 +4021,7 @@ commandWillfileSupplementWillfile.defaults =
   verbosity : 3,
   v : 3,
 };
-commandWillfileSupplementWillfile.hint = 'Use "willfile supplement willfile" to supplement existing willfile by new data from source configuration files.';
+commandWillfileSupplementWillfile.hint = 'Use ".willfile.supplement.willfile" to supplement willfile by data from source configuration files. If destination willfile does not exists, the "will.yml" file is created\n\t"will .willfile.supplement.willfile ./ Named package.json" - supplement unnamed willfile by data from willfile "Named.will.yml" and "package.json".';
 commandWillfileSupplementWillfile.commandSubjectHint = 'The first argument declares path to destination willfile, others declares paths to source files. Could be a glob';
 commandWillfileSupplementWillfile.commandProperties = commandWillfileExtendWillfile.commandProperties;
 
@@ -4695,8 +4696,10 @@ let Extension =
 
   commandHelp,
   commandImply,
+
   commandVersion,
   commandVersionCheck,
+  commandVersionBump,
 
   commandResourcesList,
   commandPathsList,

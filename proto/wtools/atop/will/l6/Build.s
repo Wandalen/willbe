@@ -1,6 +1,13 @@
-( function _Build_s_( ) {
+( function _Build_s_()
+{
 
 'use strict';
+
+/**
+ * @classdesc Class wWillBuild provides interface for forming and handling build resources.
+ * @class wWillBuild
+ * @module Tools/atop/willbe
+ */
 
 let _ = _global_.wTools;
 let Parent = _.will.Resource;
@@ -252,7 +259,7 @@ function perform( o )
   if( !o.run )
   o.run = new _.will.BuildRun
   ({
-    build : build,
+    build,
   });
 
   _.assert( o.run instanceof _.will.BuildRun );
@@ -348,7 +355,8 @@ function archiveFilePathFor()
   let inModule = module;
   if( inModule.isOut )
   inModule = inModule.peerModule;
-  let inExportFile = inModule.willfileWithRoleMap.export || inModule.willfileWithRoleMap.single || inModule.willfileWithRoleMap.import;
+  let inExportFile =
+  inModule.willfileWithRoleMap.export || inModule.willfileWithRoleMap.single || inModule.willfileWithRoleMap.import;
   // let inFileDirPath = hd.path.dir( inExportFile.filePath );
   let inFileDirPath = inExportFile.dirPath;
 
